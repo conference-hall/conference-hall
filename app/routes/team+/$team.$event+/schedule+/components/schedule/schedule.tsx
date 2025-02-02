@@ -107,8 +107,6 @@ export default function Schedule({
                   </div>
                 </th>
               ))}
-              {/* FIXME: added after tailwindcss 4 upgrade */}
-              {/* <th scope="col" /> */}
             </tr>
           </thead>
 

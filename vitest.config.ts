@@ -1,13 +1,14 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
 
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 const isCI = Boolean(process.env.CI);
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  plugins: [tailwindcss(), tsconfigPaths()],
   server: { watch: { ignored: ['.*\\/node_modules\\/.*', '.*\\/build\\/.*'] } },
   test: {
     globals: true,
