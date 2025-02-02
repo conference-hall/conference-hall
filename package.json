@@ -94,7 +94,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
-    "@vitest/browser": "^2.1.8",
+    "@vitest/browser": "^3.0.4",
     "autoprefixer": "^10.4.20",
     "close-with-grace": "^2.2.0",
     "concurrently": "^9.1.2",
@@ -104,9 +104,9 @@
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
-    "vite": "^5.4.11",
+    "vite": "^6.0.11",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^2.1.8"
+    "vitest": "^3.0.4"
   },
   "engines": {
     "node": "22.x"
