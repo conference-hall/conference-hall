@@ -115,7 +115,7 @@ type LinkProps = {
   to: string;
   icon: React.ComponentType<{ className?: string }>;
   count?: number;
-  onClick: () => void;
+  onClick: VoidFunction;
   children: string;
 };
 
@@ -142,7 +142,7 @@ function MenuLink({ to, icon: Icon, count, onClick, children }: LinkProps) {
   );
 }
 
-type OpenProps = { name: string | null; picture: string | null; notificationsCount: number; onClick: () => void };
+type OpenProps = { name: string | null; picture: string | null; notificationsCount: number; onClick: VoidFunction };
 
 function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
   return (

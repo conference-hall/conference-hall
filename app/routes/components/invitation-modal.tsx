@@ -7,7 +7,7 @@ type InvitationModalProps = {
   description: string;
   invitationLink: string;
   open: boolean;
-  onClose: () => void;
+  onClose: VoidFunction;
 };
 
 export function InvitationModal({ title, description, invitationLink, open, onClose }: InvitationModalProps) {

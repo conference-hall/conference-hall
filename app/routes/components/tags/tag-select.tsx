@@ -50,7 +50,7 @@ type TagsListboxProps = {
   canEditEventTags: boolean;
   children: React.ReactNode;
   open: boolean;
-  onClose?: () => void;
+  onClose?: VoidFunction;
 };
 
 function TagsListbox({ tags, canEditEventTags, children, open, onClose }: TagsListboxProps) {

@@ -19,7 +19,7 @@ export function ProposalDeleteButton({ className }: Props) {
   );
 }
 
-type DeleteProposalModalProps = { isOpen: boolean; onClose: () => void };
+type DeleteProposalModalProps = { isOpen: boolean; onClose: VoidFunction };
 
 function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
   return (

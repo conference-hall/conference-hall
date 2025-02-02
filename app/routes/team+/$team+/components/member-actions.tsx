@@ -37,7 +37,7 @@ type RemoveModalProps = {
   memberId: string;
   memberName: string | null;
   isOpen: boolean;
-  onClose: () => void;
+  onClose: VoidFunction;
 };
 
 function RemoveRoleModal({ memberId, memberName, isOpen, onClose }: RemoveModalProps) {
@@ -91,7 +91,7 @@ type ChangeRoleModalProps = {
   memberName: string | null;
   memberRole: string;
   isOpen: boolean;
-  onClose: () => void;
+  onClose: VoidFunction;
 };
 
 const ALL_ROLES = [

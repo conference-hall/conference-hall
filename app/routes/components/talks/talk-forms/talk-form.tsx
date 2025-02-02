@@ -30,7 +30,7 @@ type Props = {
   categoriesRequired?: boolean;
   categoriesAllowMultiple?: boolean;
   errors: SubmissionErrors;
-  onSubmit?: () => void;
+  onSubmit?: VoidFunction;
 };
 
 export function TalkForm({

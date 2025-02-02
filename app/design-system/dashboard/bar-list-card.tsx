@@ -43,7 +43,7 @@ export function BarListCard({ label, data = [] }: BarListCardProps) {
 
 interface BarListModalProps<T = unknown> extends BarListCardProps<T> {
   open: boolean;
-  onClose: () => void;
+  onClose: VoidFunction;
 }
 
 function BarListModal({ label, data = [], open, onClose }: BarListModalProps) {

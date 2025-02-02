@@ -77,7 +77,7 @@ function EditTrackButton({ initialValues }: EditTrackButtonProps) {
   );
 }
 
-type TrackFormModalProps = { initialValues?: Track; isOpen: boolean; onClose: () => void };
+type TrackFormModalProps = { initialValues?: Track; isOpen: boolean; onClose: VoidFunction };
 
 function TrackFormModal({ initialValues, isOpen, onClose }: TrackFormModalProps) {
   return (

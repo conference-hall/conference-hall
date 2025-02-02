@@ -132,7 +132,7 @@ function AddCoSpeakerButton({ invitationLink }: AddCoSpeakerProps) {
   );
 }
 
-type SpeakerDrawerProps = { speaker: SpeakerProps; canEdit?: boolean; open: boolean; onClose: () => void };
+type SpeakerDrawerProps = { speaker: SpeakerProps; canEdit?: boolean; open: boolean; onClose: VoidFunction };
 
 function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) {
   const Title = () => <SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />;

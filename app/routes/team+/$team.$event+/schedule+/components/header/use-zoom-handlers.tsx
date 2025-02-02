@@ -6,8 +6,8 @@ const ZOOM_LEVEL_MAX = 3;
 
 export type ZoomHandlers = {
   level: number;
-  zoomIn: () => void;
-  zoomOut: () => void;
+  zoomIn: VoidFunction;
+  zoomOut: VoidFunction;
   canZoomIn: boolean;
   canZoomOut: boolean;
 };
