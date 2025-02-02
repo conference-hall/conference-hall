@@ -28,7 +28,7 @@ export function SortMenu({ options, defaultSort, defaultOrder }: SortMenuProps) 
       <MenuTransition>
         <MenuItems
           anchor={{ to: 'bottom end', gap: '8px' }}
-          className="z-10 w-56 rounded-md bg-white shadow-lg ring-1 ring-black/10 focus:outline-hidden"
+          className="z-10 w-56 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden"
         >
           <div className="py-1">
             {options.map(({ name, value }) => {

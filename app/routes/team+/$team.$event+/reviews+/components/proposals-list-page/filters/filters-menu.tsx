@@ -23,7 +23,7 @@ export function FiltersMenu() {
         </PopoverButton>
         <PopoverPanel
           anchor={{ to: 'bottom end', gap: '8px' }}
-          className="z-10 w-96 rounded-md bg-white shadow-lg ring-1 ring-black/10 focus:outline-hidden"
+          className="z-10 w-96 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden"
         >
           {({ close }) => <FiltersContent close={close} />}
         </PopoverPanel>
@@ -36,7 +36,7 @@ export function FiltersMenu() {
           <span>Filters</span>
         </PopoverButton>
         <Background />
-        <PopoverPanel className="fixed bottom-0 left-0 z-10 w-full bg-white shadow-lg ring-1 ring-black/10 focus:outline-hidden">
+        <PopoverPanel className="fixed bottom-0 left-0 z-10 w-full bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden">
           {({ close }) => <FiltersContent close={close} />}
         </PopoverPanel>
       </Popover>

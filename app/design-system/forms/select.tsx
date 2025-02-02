@@ -67,7 +67,7 @@ export default function Select({
               <SelectTransition show={open}>
                 <ListboxOptions
                   anchor={{ to: 'bottom start', gap: '4px' }}
-                  className="z-10 w-[var(--button-width)] rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/10 focus:outline-hidden"
+                  className="z-10 w-[var(--button-width)] rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-hidden"
                 >
                   {options.map((option) => (
                     <ListboxOption
