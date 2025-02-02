@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
+import { userEvent } from '@vitest/browser/context';
+import { render } from 'vitest-browser-react';
 import type { Emoji, EmojiReaction } from '../../../types/emojis.types.ts';
 import { EmojiReactions } from './emoji-reactions.tsx';
 
@@ -17,16 +17,16 @@ describe('EmojiReactions component', () => {
   it('displays emoji reactions', async () => {
     const onChangeEmoji = vi.fn();
 
-    render(<EmojiReactions emojis={EMOJIS} reactions={REACTIONS} onChangeEmoji={onChangeEmoji} />);
+    const screen = render(<EmojiReactions emojis={EMOJIS} reactions={REACTIONS} onChangeEmoji={onChangeEmoji} />);
 
     const addButton = screen.getByRole('button', { name: 'Select a reaction' });
-    expect(addButton).toHaveAttribute('aria-expanded', 'false');
+    await expect.element(addButton).toHaveAttribute('aria-expanded', 'false');
 
-    const thumbsUpButton = await screen.findByRole('button', { name: 'Thumbs up' });
+    const thumbsUpButton = screen.getByRole('button', { name: 'Thumbs up' });
     await userEvent.click(thumbsUpButton);
     expect(onChangeEmoji).toHaveBeenCalledWith(EMOJIS.at(0));
 
-    const thumbsDownButton = await screen.findByRole('button', { name: 'Thumbs down' });
+    const thumbsDownButton = screen.getByRole('button', { name: 'Thumbs down' });
     await userEvent.click(thumbsDownButton);
     expect(onChangeEmoji).toHaveBeenCalledWith(EMOJIS.at(1));
   });

@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
+import { userEvent } from '@vitest/browser/context';
 import { createRoutesStub } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
+import { render } from 'vitest-browser-react';
 import { TagSelect, type TagSelectorProps } from './tag-select.tsx';
 
 describe('TagSelect component', () => {
@@ -23,35 +23,39 @@ describe('TagSelect component', () => {
         ),
       },
     ]);
-    render(<RouteStub />);
+    return render(<RouteStub />);
   };
 
   it('renders the component, opens the dropdown on button click, and sorts selected tags first', async () => {
-    renderComponent({ defaultValues: [tags[2]] });
+    const screen = renderComponent({ defaultValues: [tags[2]] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Tags' }));
 
-    expect(screen.getByText('Apply tags to this proposal')).toBeInTheDocument();
+    await expect.element(screen.getByText('Apply tags to this proposal')).toBeInTheDocument();
 
-    const options = screen.getAllByRole('option').map((option) => option.textContent);
+    const options = screen
+      .getByRole('option')
+      .all()
+      .map((option) => option.element().textContent);
+
     expect(options).toEqual(['Baz', 'Foo', 'Bar']);
   });
 
   it('displays and filters tag options based on search input', async () => {
-    renderComponent();
+    const screen = renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Tags' }));
 
-    const filterElement = await screen.findByPlaceholderText('Filter tags');
+    const filterElement = await screen.getByPlaceholder('Filter tags');
     await userEvent.type(filterElement, 'Bar');
 
-    expect(screen.getByText('Bar')).toBeInTheDocument();
-    expect(screen.queryByText('Foo')).not.toBeInTheDocument();
-    expect(screen.queryByText('Baz')).not.toBeInTheDocument();
+    await expect.element(screen.getByText('Bar')).toBeInTheDocument();
+    await expect.element(screen.getByText('Foo')).not.toBeInTheDocument();
+    await expect.element(screen.getByText('Baz')).not.toBeInTheDocument();
   });
 
   it('calls onChange with the selected tags when user close the select', async () => {
-    renderComponent({ defaultValues: [tags[0]] });
+    const screen = renderComponent({ defaultValues: [tags[0]] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Tags' }));
     await userEvent.click(screen.getByText('Foo'));
@@ -69,7 +73,7 @@ describe('TagSelect component', () => {
   });
 
   it('doest not calls onChange when no changes in tags', async () => {
-    renderComponent({ defaultValues: [tags[0]] });
+    const screen = renderComponent({ defaultValues: [tags[0]] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Tags' }));
     expect(onChangeMock).not.toHaveBeenCalled();
@@ -79,41 +83,41 @@ describe('TagSelect component', () => {
   });
 
   it('displays "Manage tags" link if canEditEventTags is true', async () => {
-    renderComponent({ canEditEventTags: true });
+    const screen = renderComponent({ canEditEventTags: true });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Tags' }));
 
-    expect(screen.getByRole('link', { name: /Manage tags/i })).toHaveAttribute('href', '/settings/tags');
+    await expect.element(screen.getByRole('link', { name: /Manage tags/i })).toHaveAttribute('href', '/settings/tags');
   });
 
   it('does not display "Manage tags" link if canEditEventTags is false', async () => {
-    renderComponent({ canEditEventTags: false });
+    const screen = renderComponent({ canEditEventTags: false });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Tags' }));
 
-    expect(screen.queryByRole('link', { name: /Manage tags/i })).not.toBeInTheDocument();
+    await expect.element(screen.getByRole('link', { name: /Manage tags/i })).not.toBeInTheDocument();
   });
 
   it('resets filter when dropdown is closed', async () => {
-    renderComponent();
+    const screen = renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Tags' }));
     await userEvent.type(screen.getByLabelText('Filter tags'), 'Baz');
 
-    expect(screen.getByText('Baz')).toBeInTheDocument();
+    await expect.element(screen.getByText('Baz')).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Tags' }));
     await userEvent.click(screen.getByRole('button', { name: 'Open Tags' }));
 
-    expect(screen.getByLabelText('Filter tags')).toHaveValue('');
+    await expect.element(screen.getByLabelText('Filter tags')).toHaveValue('');
   });
 
   it('shows "No tags found" message if no tags match filter', async () => {
-    renderComponent();
+    const screen = renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Tags' }));
     await userEvent.type(screen.getByLabelText('Filter tags'), 'Non-existent tag');
 
-    expect(screen.getByText('No tags found')).toBeInTheDocument();
+    await expect.element(screen.getByText('No tags found')).toBeInTheDocument();
   });
 });
