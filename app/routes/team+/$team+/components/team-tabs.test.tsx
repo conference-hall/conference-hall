@@ -1,6 +1,6 @@
-import { render } from '@testing-library/react';
 import type { JSX } from 'react';
 import { createRoutesStub } from 'react-router';
+import { render } from 'vitest-browser-react';
 import { TeamTabs } from './team-tabs.tsx';
 
 describe('TeamTabs component', () => {
@@ -9,30 +9,30 @@ describe('TeamTabs component', () => {
     return render(<RouteStub initialEntries={['/team/t1']} />);
   };
 
-  it('displays tabs for team owners', () => {
+  it('displays tabs for team owners', async () => {
     // biome-ignore lint/a11y/useValidAriaRole: not an aria role
     const screen = renderComponent(<TeamTabs slug="t1" role="OWNER" />);
 
-    expect(screen.queryByRole('link', { name: 'Events' })).toBeVisible();
-    expect(screen.queryByRole('link', { name: 'Settings' })).toBeVisible();
-    expect(screen.queryByText('Owner')).toBeVisible();
+    await expect.element(screen.getByRole('link', { name: 'Events' })).toBeVisible();
+    await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();
+    await expect.element(screen.getByText('Owner')).toBeVisible();
   });
 
-  it('displays tabs for team members', () => {
+  it('displays tabs for team members', async () => {
     // biome-ignore lint/a11y/useValidAriaRole: not an aria role
     const screen = renderComponent(<TeamTabs slug="t1" role="MEMBER" />);
 
-    expect(screen.queryByRole('link', { name: 'Events' })).toBeVisible();
-    expect(screen.queryByRole('link', { name: 'Settings' })).toBeVisible();
-    expect(screen.queryByText('Member')).toBeVisible();
+    await expect.element(screen.getByRole('link', { name: 'Events' })).toBeVisible();
+    await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();
+    await expect.element(screen.getByText('Member')).toBeVisible();
   });
 
-  it('displays tabs for team reviewers', () => {
+  it('displays tabs for team reviewers', async () => {
     // biome-ignore lint/a11y/useValidAriaRole: not an aria role
     const screen = renderComponent(<TeamTabs slug="t1" role="REVIEWER" />);
 
-    expect(screen.queryByRole('link', { name: 'Events' })).toBeVisible();
-    expect(screen.queryByRole('link', { name: 'Settings' })).toBeVisible();
-    expect(screen.queryByText('Reviewer')).toBeVisible();
+    await expect.element(screen.getByRole('link', { name: 'Events' })).toBeVisible();
+    await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();
+    await expect.element(screen.getByText('Reviewer')).toBeVisible();
   });
 });
