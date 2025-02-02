@@ -1,8 +1,5 @@
 import { defineWorkspace } from 'vitest/config';
 
-// FIX: Temporary workaround for --browser.headless CLI option not working
-const isHeadless = process.argv.includes('--browser.headless') || !!process.env.CI;
-
 export default defineWorkspace([
   {
     extends: './vitest.config.ts',
@@ -27,10 +24,8 @@ export default defineWorkspace([
       setupFiles: ['./tests/setup.browser.tsx'],
       browser: {
         enabled: true,
-        headless: isHeadless,
-        name: 'chromium',
         provider: 'playwright',
-        providerOptions: {},
+        instances: [{ browser: 'chromium' }],
         viewport: { width: 1920, height: 1080 },
         screenshotFailures: false,
       },
