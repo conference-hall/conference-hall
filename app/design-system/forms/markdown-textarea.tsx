@@ -17,7 +17,7 @@ type MarkdownTextAreaProps = {
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const baseStyles = 'border-gray-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500';
-const errorStyles = 'border-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500';
+const errorStyles = 'border-red-300 focus:outline-hidden focus:ring-red-500 focus:border-red-500';
 
 export function MarkdownTextArea({
   name,
@@ -35,7 +35,7 @@ export function MarkdownTextArea({
   const handleOpenPreview = () => setPreviewOpen(true);
   const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) => setMarkdown(e.target.value);
 
-  const styles = cx('shadow-sm block w-full text-gray-900 text-sm rounded-md overflow-hidden border mt-1', {
+  const styles = cx('shadow-xs block w-full text-gray-900 text-sm rounded-md overflow-hidden border mt-1', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
   });
@@ -65,7 +65,7 @@ export function MarkdownTextArea({
         </div>
         <div className="absolute inset-x-px bottom-0 flex items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
           <p className="text-xs text-gray-500">Mardown supported.</p>
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <Button type="button" variant="secondary" size="s" onClick={handleOpenPreview}>
               Preview
             </Button>

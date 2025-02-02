@@ -75,7 +75,7 @@ function TagsListbox({ tags, canEditEventTags, children, open, onClose }: TagsLi
 
       <ListboxOptions
         anchor="bottom end"
-        className="bg-white rounded shadow-md border border-gray-200 divide-y divide-gray-200 w-80 [--anchor-gap:8px]"
+        className="bg-white rounded-sm shadow-md border border-gray-200 divide-y divide-gray-200 w-80 [--anchor-gap:8px]"
         modal={false}
       >
         <Text weight="medium" className="px-4 py-2">
@@ -97,7 +97,7 @@ function TagsListbox({ tags, canEditEventTags, children, open, onClose }: TagsLi
             <ListboxOption
               key={tag.id}
               value={tag}
-              className="px-4 py-2 cursor-pointer flex justify-between gap-2 data-[focus]:bg-gray-100"
+              className="px-4 py-2 cursor-pointer flex justify-between gap-2 data-focus:bg-gray-100"
             >
               {({ selected }) => (
                 <>

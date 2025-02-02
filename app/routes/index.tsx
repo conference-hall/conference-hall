@@ -36,7 +36,7 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
     <>
       <Navbar />
 
-      <div className={cx(BG_GRADIENT_COLOR, 'shadow p-4 pt-0 lg:pb-16 lg:pt-10')}>
+      <div className={cx(BG_GRADIENT_COLOR, 'shadow-sm p-4 pt-0 lg:pb-16 lg:pt-10')}>
         <div className="hidden lg:mb-8 lg:block">
           <H1 size="2xl" weight="bold" variant="light" align="center">
             Call for papers for conferences and meetups.

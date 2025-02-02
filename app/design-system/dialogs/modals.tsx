@@ -59,13 +59,13 @@ function Title({
 }) {
   return (
     <div className="flex items-start justify-between">
-      <DialogTitle as="h1" className="text-base font-semibold leading-6 text-gray-900 truncate">
+      <DialogTitle as="h1" className="text-base font-semibold leading-6 text-gray-900">
         {children}
       </DialogTitle>
       <div className="md:-mt-4 md:-mr-4 flex h-7 items-center">
         <button
           type="button"
-          className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
           onClick={onClose}
         >
           <span className="sr-only">Close</span>

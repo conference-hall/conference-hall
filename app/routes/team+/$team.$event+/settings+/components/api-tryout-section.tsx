@@ -28,7 +28,7 @@ export function ApiTryoutSection({ slug, apiKey }: Props) {
       </Card.Title>
 
       <Card.Content>
-        <code className="rounded bg-gray-100 p-4 text-sm">{url}</code>
+        <code className="rounded-sm bg-gray-100 p-4 text-sm">{url}</code>
         <Input
           name="query"
           label="query"

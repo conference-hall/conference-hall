@@ -30,7 +30,7 @@ export function BarListCard({ label, data = [] }: BarListCardProps) {
         {data.length !== 0 ? <BarList data={data} /> : <NoData />}
       </div>
       {data.length > MAX_BAR && (
-        <div className="flex justify-center absolute inset-x-0 rounded-b-md bottom-0 bg-gradient-to-t from-white to-transparent py-7 pt-12">
+        <div className="flex justify-center absolute inset-x-0 rounded-b-md bottom-0 bg-linear-to-t from-white to-transparent py-7 pt-12">
           <Button variant="secondary" onClick={onOpen}>
             Show more
           </Button>

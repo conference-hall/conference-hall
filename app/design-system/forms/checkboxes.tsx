@@ -60,7 +60,7 @@ export function Checkbox({ id, name, description, className, children, ref, ...r
           aria-describedby={description ? `${id}-describe` : undefined}
           name={name}
           type="checkbox"
-          className={cx('h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', {
+          className={cx('h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-indigo-500', {
             'cursor-not-allowed opacity-50': rest?.disabled,
             'mt-1.5': description,
           })}

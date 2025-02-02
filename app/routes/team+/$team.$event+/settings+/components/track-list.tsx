@@ -22,7 +22,7 @@ export function TrackList({ type, tracks }: TrackListProps) {
             </Text>
             <Subtitle truncate>{track.description}</Subtitle>
           </div>
-          <div className="ml-4 flex flex-shrink-0 gap-2">
+          <div className="ml-4 flex shrink-0 gap-2">
             <EditTrackButton type={type} initialValues={track} />
             <Form method="POST">
               <input type="hidden" name="trackId" value={track.id} />

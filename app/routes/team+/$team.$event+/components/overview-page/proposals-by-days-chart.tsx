@@ -119,7 +119,7 @@ function CountByDayChart({ data }: { data: ChartData }) {
 
 function CustomTooltip({ payload, label }: TooltipProps<ValueType, NameType>) {
   return (
-    <div className="border border-gray-200 bg-white text-sm shadow rounded-md" aria-hidden="true">
+    <div className="border border-gray-200 bg-white text-sm shadow-sm rounded-md" aria-hidden="true">
       <div className="p-2 px-3">
         <Text weight="medium">{label ? format(label, DATE_FORMAT) : 'Unknown'}</Text>
       </div>

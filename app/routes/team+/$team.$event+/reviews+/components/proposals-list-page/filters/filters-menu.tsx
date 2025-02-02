@@ -23,7 +23,7 @@ export function FiltersMenu() {
         </PopoverButton>
         <PopoverPanel
           anchor={{ to: 'bottom end', gap: '8px' }}
-          className="z-10 w-96 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          className="z-10 w-96 rounded-md bg-white shadow-lg ring-1 ring-black/10 focus:outline-hidden"
         >
           {({ close }) => <FiltersContent close={close} />}
         </PopoverPanel>
@@ -36,7 +36,7 @@ export function FiltersMenu() {
           <span>Filters</span>
         </PopoverButton>
         <Background />
-        <PopoverPanel className="fixed bottom-0 left-0 z-10 w-full bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <PopoverPanel className="fixed bottom-0 left-0 z-10 w-full bg-white shadow-lg ring-1 ring-black/10 focus:outline-hidden">
           {({ close }) => <FiltersContent close={close} />}
         </PopoverPanel>
       </Popover>
@@ -156,7 +156,7 @@ function FiltersRadio({ label, name, defaultValue, options, className }: Filters
               value={option.value}
               className={({ checked }) =>
                 cx('cursor-pointer', button({ variant: 'secondary', size: 's' }), {
-                  '!bg-indigo-100 ring-indigo-200 text-indigo-700 hover:bg-indigo-100': checked,
+                  'bg-indigo-100! ring-indigo-200 text-indigo-700 hover:bg-indigo-100': checked,
                 })
               }
             >

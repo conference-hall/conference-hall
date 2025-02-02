@@ -31,16 +31,16 @@ export default function ExportProposalsCards({ loaderData: results }: Route.Comp
             </div>
             <div>
               <div className="grid grid-cols-2 grid-rows-2 gap-2">
-                <div className="rounded border border-gray-400 p-2">
+                <div className="rounded-sm border border-gray-400 p-2">
                   <Subtitle truncate>{proposal.formats.map((f) => f.name).join(', ') || '-'}</Subtitle>
                 </div>
-                <div className="rounded border border-gray-400 p-2">
+                <div className="rounded-sm border border-gray-400 p-2">
                   <Subtitle truncate>{proposal.categories.map((c) => c.name).join(', ') || '-'}</Subtitle>
                 </div>
-                <div className="rounded border border-gray-400 p-2">
+                <div className="rounded-sm border border-gray-400 p-2">
                   <Subtitle truncate>{getLevel(proposal.level) || '-'}</Subtitle>
                 </div>
-                <div className="rounded border border-gray-400 p-2">
+                <div className="rounded-sm border border-gray-400 p-2">
                   <Subtitle truncate>{proposal.languages.map(getLanguage).join(', ') || '-'}</Subtitle>
                 </div>
               </div>

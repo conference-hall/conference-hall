@@ -65,7 +65,7 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
                   as="li"
                   key={proposal.id}
                   value={{ intent: 'proposal', proposal }}
-                  className="group flex cursor-default select-none items-center rounded-md px-3 py-2 data-[focus]:bg-gray-100"
+                  className="group flex cursor-default select-none items-center rounded-md px-3 py-2 data-focus:bg-gray-100"
                 >
                   <div className="flex-auto truncate">
                     <p className="font-semibold truncate">{proposal.title}</p>
@@ -84,10 +84,10 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
             <ComboboxOption
               as="li"
               value={{ intent: 'raw-session' }}
-              className="group flex cursor-default select-none items-center rounded-md px-3 py-2 data-[focus]:bg-indigo-600 data-[focus]:text-white"
+              className="group flex cursor-default select-none items-center rounded-md px-3 py-2 data-focus:bg-indigo-600 data-focus:text-white"
             >
               <DocumentPlusIcon
-                className="h-6 w-6 flex-none text-gray-400 group-data-[focus]:text-white"
+                className="h-6 w-6 flex-none text-gray-400 group-data-focus:text-white"
                 aria-hidden="true"
               />
               <span className="ml-3 flex-auto truncate">Create a raw session...</span>

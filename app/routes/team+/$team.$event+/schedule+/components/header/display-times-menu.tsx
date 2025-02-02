@@ -24,7 +24,7 @@ export function DisplayTimesMenu({ startTime, endTime, onChangeDisplayTime }: Pr
 
       <PopoverPanel
         anchor={{ to: 'bottom end', gap: '8px' }}
-        className="z-30 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        className="z-30 rounded-md bg-white shadow-lg ring-1 ring-black/10 focus:outline-hidden"
       >
         {({ close }) => (
           <>

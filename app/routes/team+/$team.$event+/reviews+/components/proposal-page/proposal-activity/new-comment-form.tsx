@@ -25,7 +25,7 @@ export function NewCommentForm({ compact = false, className }: Props) {
       <Form ref={formRef} method="POST" className="relative flex-auto">
         <input type="hidden" name="intent" value="add-comment" />
 
-        <div className="overflow-hidden bg-white rounded-lg pb-12 shadow-sm ring-1 ring-inset ring-gray-200 focus-within:ring-2 focus-within:ring-indigo-600">
+        <div className="overflow-hidden bg-white rounded-lg pb-12 shadow-xs ring-1 ring-inset ring-gray-200 focus-within:ring-2 focus-within:ring-indigo-600">
           <textarea
             id="comment"
             name="comment"

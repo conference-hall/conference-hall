@@ -76,7 +76,7 @@ export default function TeamMembersRoute({ loaderData }: Route.ComponentProps) {
 
         {results.length > 0 ? (
           <Form method="POST" preventScrollReset>
-            <div className="overflow-hidden bg-white sm:rounded-md sm:border sm:border-gray-200 sm:shadow-sm">
+            <div className="overflow-hidden bg-white sm:rounded-md sm:border sm:border-gray-200 sm:shadow-xs">
               <ul aria-label="Members list" className="divide-y divide-gray-200">
                 {results.map((member) => (
                   <li key={member.id}>

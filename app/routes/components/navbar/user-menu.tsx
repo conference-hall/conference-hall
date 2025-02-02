@@ -149,7 +149,7 @@ function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
     <button
       type="button"
       onClick={onClick}
-      className="relative flex flex-shrink-0 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+      className="relative flex shrink-0 rounded-full text-sm focus:outline-hidden focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
     >
       <Avatar picture={picture} name={name} size="s" />
       <span className="sr-only">Open user menu</span>

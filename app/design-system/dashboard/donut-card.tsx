@@ -69,7 +69,7 @@ export default function DonutCard({
                   {data.map((item) => (
                     <li key={item.name} className="relative flex items-center justify-between py-2">
                       <div className="flex items-center space-x-2.5 truncate">
-                        <span className={cx(item.colorLegend, 'size-2.5 shrink-0 rounded-sm')} aria-hidden={true} />
+                        <span className={cx(item.colorLegend, 'size-2.5 shrink-0 rounded-xs')} aria-hidden={true} />
                         {item.to ? (
                           <Link to={item.to} className="underline-offset-2 hover:underline truncate">
                             {item.name}

@@ -10,7 +10,7 @@ export function Logo({ label, variant = 'primary' }: Props) {
     <Link
       to="/"
       title="Go to event search"
-      className="flex items-center gap-4 truncate rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      className="flex items-center gap-4 truncate rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
     >
       <ConferenceHallLogo width="24px" height="24px" aria-hidden className="fill-indigo-400" />
       {label ? (

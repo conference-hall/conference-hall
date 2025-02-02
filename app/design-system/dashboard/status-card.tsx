@@ -49,11 +49,11 @@ function Fallback({ showActions = false }: FallbackProps) {
       <div className="flex flex-col gap-4 p-6 grow">
         <div className="flex flex-col mt-1">
           <div className="flex items-center gap-4">
-            <span className="flex h-4 w-4 flex-shrink-0 rounded-full bg-slate-100" />
-            <div className="h-4 w-40 bg-slate-100 rounded" />
+            <span className="flex h-4 w-4 shrink-0 rounded-full bg-slate-100" />
+            <div className="h-4 w-40 bg-slate-100 rounded-sm" />
           </div>
           <div className="mt-3 ml-8">
-            <div className="h-3 bg-slate-100 rounded" />
+            <div className="h-3 bg-slate-100 rounded-sm" />
           </div>
         </div>
       </div>
@@ -61,7 +61,7 @@ function Fallback({ showActions = false }: FallbackProps) {
         <>
           <Divider />
           <div className="flex flex-row items-center gap-4 justify-end p-3">
-            <div className="h-5 w-16 bg-slate-100 rounded" />
+            <div className="h-5 w-16 bg-slate-100 rounded-sm" />
           </div>
         </>
       ) : null}

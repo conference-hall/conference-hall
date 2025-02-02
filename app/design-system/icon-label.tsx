@@ -21,7 +21,7 @@ const GAP = {
 export function IconLabel({ children, icon: Icon, size = 's', gap = 'base', alt, ...rest }: Props) {
   return (
     <div className={cx('flex items-center', GAP[gap])}>
-      <Icon className="mr-1.5 h-4 w-4 flex-shrink-0 text-gray-400" aria-hidden="true" />
+      <Icon className="mr-1.5 h-4 w-4 shrink-0 text-gray-400" aria-hidden="true" />
       <Text size={size} {...rest}>
         {children}
       </Text>

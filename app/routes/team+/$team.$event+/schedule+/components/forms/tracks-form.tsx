@@ -37,7 +37,7 @@ export function TracksForm({ tracks }: TrackListProps) {
                   {track.name}
                 </Text>
               </div>
-              <div className="ml-4 flex flex-shrink-0 gap-2">
+              <div className="ml-4 flex shrink-0 gap-2">
                 <EditTrackButton initialValues={track} />
                 <Form method="POST">
                   <input type="hidden" name="id" value={track.id} />

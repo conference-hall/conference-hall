@@ -94,7 +94,7 @@ export default function Schedule({
         <table className="min-w-full border-separate border-spacing-0">
           {/* Header */}
           <thead>
-            <tr className="sticky top-[64px] z-30 divide-x divide-gray-200 shadow">
+            <tr className="sticky top-[64px] z-30 divide-x divide-gray-200 shadow-sm">
               {/* Gutter with timezone */}
               <th scope="col" className="h-12 text-xs font-normal text-center bg-white text-gray-400">
                 {getGMTOffset(timezone)}
@@ -107,6 +107,8 @@ export default function Schedule({
                   </div>
                 </th>
               ))}
+              {/* FIXME: added after tailwindcss 4 upgrade */}
+              {/* <th scope="col" /> */}
             </tr>
           </thead>
 
@@ -114,9 +116,11 @@ export default function Schedule({
           <tbody>
             {/* Empty line */}
             <tr className="divide-x divide-gray-200 align-top">
-              <td className="w-8" />
+              <td className="w-12" />
               {tracks.map((track) => (
-                <td key={track.id} className="h-6 border-b" />
+                <td key={track.id} className="h-6 border-b content">
+                  &nbsp;
+                </td>
               ))}
             </tr>
 
@@ -129,8 +133,10 @@ export default function Schedule({
               return (
                 <tr key={`${startHour}-${endHour}`} className="divide-x divide-gray-200 align-top">
                   {/* Gutter time */}
-                  <td className="px-2 -mt-2 whitespace-nowrap text-xs text-gray-500 block">
-                    <time dateTime={startHour}>{startHour}</time>
+                  <td className="relative whitespace-nowrap text-xs text-gray-500">
+                    <time className="absolute -top-2 right-2" dateTime={startHour}>
+                      {startHour}
+                    </time>
                   </td>
 
                   {/* Rows by track */}

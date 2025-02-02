@@ -40,7 +40,7 @@ export function TeamsDropdown({ teams = [], currentTeam }: Props) {
           <MenuTransition>
             <MenuItems
               anchor={{ to: 'bottom start', gap: '8px' }}
-              className="z-10 w-56 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+              className="z-10 w-56 rounded-md bg-white py-1 shadow-lg ring-1 ring-black/10 focus:outline-hidden"
             >
               {teams.map((team) => (
                 <MenuItem key={team.slug} as={Fragment}>

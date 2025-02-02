@@ -12,7 +12,7 @@ export default function DocsRoute() {
       <DocsTabs />
 
       <Page className="prose prose-sm">
-        <main className=" bg-white shadow-sm rounded-lg p-8 border border-gray-200">
+        <main className=" bg-white shadow-xs rounded-lg p-8 border border-gray-200">
           <Outlet />
         </main>
       </Page>

@@ -7,7 +7,7 @@ import { Pagination, PaginationMobile } from '~/design-system/list/pagination.ts
 
 // <List /> component
 export function List({ children }: { children: ReactNode }) {
-  return <div className="overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 rounded-md">{children}</div>;
+  return <div className="overflow-hidden bg-white shadow-xs ring-1 ring-gray-900/5 rounded-md">{children}</div>;
 }
 
 // <List.Header /> component
@@ -49,7 +49,7 @@ export function RowLink({ children, className, ...rest }: RowLinkProps) {
       <Link
         {...rest}
         className={cx(
-          'w-full rounded-sm px-4 py-4 sm:px-6 hover:bg-gray-50 focus-visible:-outline-offset-1',
+          'w-full rounded-xs px-4 py-4 sm:px-6 hover:bg-gray-50 focus-visible:-outline-offset-1',
           className,
         )}
       >

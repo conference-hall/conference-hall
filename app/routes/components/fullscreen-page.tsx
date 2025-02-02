@@ -32,9 +32,9 @@ export function FullscreenPage({ children, navbar, compact, className }: Props) 
       </div>
 
       {/* Right panel */}
-      <div className="bg-gradient-to-b from-gray-800 to-slate-700 h-screen hidden lg:block pt-16 text-white relative">
+      <div className="bg-linear-to-b from-gray-800 to-slate-700 h-screen hidden lg:block pt-16 text-white relative">
         <div className="flex flex-row justify-center items-end h-full">
-          <ConferenceHallLogo className="-mr-60 -mb-16 -rotate-12 text-black opacity-10" width="480px" height="480px" />
+          <ConferenceHallLogo className="-mr-60 -mb-16 -rotate-12 text-black/10" width="480px" height="480px" />
         </div>
       </div>
     </div>
