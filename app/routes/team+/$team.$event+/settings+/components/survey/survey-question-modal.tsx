@@ -130,7 +130,7 @@ function OptionsFieldList({ options, setOptions }: OptionsFieldListProps) {
           <input type="hidden" name={`options[${index}].id`} value={option.id} />
           <Input
             name={`options[${index}].label`}
-            aria-label={`Option ${index}`}
+            aria-label={`Option ${index + 1}`}
             defaultValue={option.label}
             className="w-full"
             required

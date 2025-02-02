@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
+import { userEvent } from '@vitest/browser/context';
 import { createRoutesStub } from 'react-router';
+import { render } from 'vitest-browser-react';
 import type { SurveyQuestion } from '~/.server/event-survey/types.ts';
 import { SurveyQuestionModal } from './survey-question-modal.tsx';
 
@@ -20,39 +20,44 @@ describe('SurveyQuestionModal component', () => {
         ),
       },
     ]);
-    render(<RouteStub />);
+    return render(<RouteStub />);
   };
 
   it('renders the modal in create mode', async () => {
-    renderComponent();
+    const screen = renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
 
-    expect(screen.getByRole('button', { name: 'Add question' })).toBeInTheDocument();
-    expect(screen.getByLabelText('Question')).toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: 'Add question' })).toBeInTheDocument();
+
+    const questionInput = screen.getByLabelText('Question', { exact: true });
+    await expect.element(questionInput).toBeInTheDocument();
   });
 
   it('renders the modal in edit mode', async () => {
-    renderComponent({ id: '1', label: 'Existing Question', type: 'text', required: false });
+    const screen = renderComponent({ id: '1', label: 'Existing Question', type: 'text', required: false });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
 
-    expect(screen.getByRole('button', { name: 'Save question' })).toBeInTheDocument();
-    expect(screen.getByDisplayValue('Existing Question')).toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: 'Save question' })).toBeInTheDocument();
+
+    const questionInput = screen.getByLabelText('Question', { exact: true });
+    await expect.element(questionInput).toHaveValue('Existing Question');
   });
 
   it('adds a new option', async () => {
-    renderComponent({ id: '1', label: 'Question with options', type: 'checkbox', required: false });
+    const screen = renderComponent({ id: '1', label: 'Question with options', type: 'checkbox', required: false });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
-    await userEvent.type(screen.getByPlaceholderText('New answer'), 'Option 1');
+    await userEvent.type(screen.getByPlaceholder('New answer'), 'Option 1');
     await userEvent.click(screen.getByRole('button', { name: 'Add answer' }));
 
-    expect(screen.getByDisplayValue('Option 1')).toBeInTheDocument();
+    const optionInput = screen.getByLabelText('Option 1', { exact: true });
+    await expect.element(optionInput).toHaveValue('Option 1');
   });
 
   it('removes an existing option', async () => {
-    renderComponent({
+    const screen = renderComponent({
       id: '1',
       label: 'Question with options',
       type: 'checkbox',
@@ -61,21 +66,21 @@ describe('SurveyQuestionModal component', () => {
     });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
-    expect(screen.queryByDisplayValue('Option 1')).toBeInTheDocument();
+    await expect.element(screen.getByLabelText('Option 1', { exact: true })).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: 'Remove answer: Option 1' }));
-    expect(screen.queryByDisplayValue('Option 1')).not.toBeInTheDocument();
+    await expect.element(screen.getByLabelText('Option 1', { exact: true })).not.toBeInTheDocument();
   });
 
   it('disables the submit button when no options are provided for checkbox or radio types', async () => {
-    renderComponent({ id: '1', label: 'Question with options', type: 'checkbox', required: false });
+    const screen = renderComponent({ id: '1', label: 'Question with options', type: 'checkbox', required: false });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
     const submitButton = screen.getByRole('button', { name: 'Save question' });
-    expect(submitButton).toBeDisabled();
+    await expect.element(submitButton).toBeDisabled();
 
-    await userEvent.type(screen.getByPlaceholderText('New answer'), 'Option 1');
+    await userEvent.type(screen.getByPlaceholder('New answer'), 'Option 1');
     await userEvent.click(screen.getByRole('button', { name: 'Add answer' }));
-    expect(submitButton).not.toBeDisabled();
+    await expect.element(submitButton).not.toBeDisabled();
   });
 });

@@ -1,5 +1,5 @@
-import { render } from '@testing-library/react';
 import { createRoutesStub } from 'react-router';
+import { render } from 'vitest-browser-react';
 import { SubmissionContextProvider, useSteps, useSubmissionNavigation } from './submission-context.tsx';
 
 describe('SubmissionContext', () => {
@@ -12,88 +12,89 @@ describe('SubmissionContext', () => {
     ));
   }
 
-  it('returns steps for a complete event', () => {
+  it('returns steps for a complete event', async () => {
     const screen = render(
       <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey>
         <TestSubmissionContextComponent />
       </SubmissionContextProvider>,
     );
 
-    const links = screen.getAllByRole('link');
+    const links = screen.getByRole('link').all();
     expect(links).toHaveLength(6);
-    expect(links[0]).toHaveTextContent('Selection');
-    expect(links[0]).toHaveAttribute('href', '/event-1/submission');
-    expect(links[1]).toHaveTextContent('Proposal');
-    expect(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
-    expect(links[2]).toHaveTextContent('Speakers');
-    expect(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
-    expect(links[3]).toHaveTextContent('Tracks');
-    expect(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/tracks');
-    expect(links[4]).toHaveTextContent('Survey');
-    expect(links[4]).toHaveAttribute('href', '/event-1/submission/talk-1/survey');
-    expect(links[5]).toHaveTextContent('Submission');
-    expect(links[5]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
+
+    await expect.element(links[0]).toHaveTextContent('Selection');
+    await expect.element(links[0]).toHaveAttribute('href', '/event-1/submission');
+    await expect.element(links[1]).toHaveTextContent('Proposal');
+    await expect.element(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
+    await expect.element(links[2]).toHaveTextContent('Speakers');
+    await expect.element(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
+    await expect.element(links[3]).toHaveTextContent('Tracks');
+    await expect.element(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/tracks');
+    await expect.element(links[4]).toHaveTextContent('Survey');
+    await expect.element(links[4]).toHaveAttribute('href', '/event-1/submission/talk-1/survey');
+    await expect.element(links[5]).toHaveTextContent('Submission');
+    await expect.element(links[5]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
   });
 
-  it('returns steps for an event without tracks and survey', () => {
+  it('returns steps for an event without tracks and survey', async () => {
     const screen = render(
       <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks={false} hasSurvey={false}>
         <TestSubmissionContextComponent />
       </SubmissionContextProvider>,
     );
 
-    const links = screen.getAllByRole('link');
+    const links = screen.getByRole('link').all();
     expect(links).toHaveLength(4);
-    expect(links[0]).toHaveTextContent('Selection');
-    expect(links[0]).toHaveAttribute('href', '/event-1/submission');
-    expect(links[1]).toHaveTextContent('Proposal');
-    expect(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
-    expect(links[2]).toHaveTextContent('Speakers');
-    expect(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
-    expect(links[3]).toHaveTextContent('Submission');
-    expect(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
+    await expect.element(links[0]).toHaveTextContent('Selection');
+    await expect.element(links[0]).toHaveAttribute('href', '/event-1/submission');
+    await expect.element(links[1]).toHaveTextContent('Proposal');
+    await expect.element(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
+    await expect.element(links[2]).toHaveTextContent('Speakers');
+    await expect.element(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
+    await expect.element(links[3]).toHaveTextContent('Submission');
+    await expect.element(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
   });
 
-  it('returns steps for an event with tracks but without survey', () => {
+  it('returns steps for an event with tracks but without survey', async () => {
     const screen = render(
       <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey={false}>
         <TestSubmissionContextComponent />
       </SubmissionContextProvider>,
     );
 
-    const links = screen.getAllByRole('link');
+    const links = screen.getByRole('link').all();
     expect(links).toHaveLength(5);
-    expect(links[0]).toHaveTextContent('Selection');
-    expect(links[0]).toHaveAttribute('href', '/event-1/submission');
-    expect(links[1]).toHaveTextContent('Proposal');
-    expect(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
-    expect(links[2]).toHaveTextContent('Speakers');
-    expect(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
-    expect(links[3]).toHaveTextContent('Tracks');
-    expect(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/tracks');
-    expect(links[4]).toHaveTextContent('Submission');
-    expect(links[4]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
+    await expect.element(links[0]).toHaveTextContent('Selection');
+    await expect.element(links[0]).toHaveAttribute('href', '/event-1/submission');
+    await expect.element(links[1]).toHaveTextContent('Proposal');
+    await expect.element(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
+    await expect.element(links[2]).toHaveTextContent('Speakers');
+    await expect.element(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
+    await expect.element(links[3]).toHaveTextContent('Tracks');
+    await expect.element(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/tracks');
+    await expect.element(links[4]).toHaveTextContent('Submission');
+    await expect.element(links[4]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
   });
 
-  it('returns steps for an event without tracks but with survey', () => {
+  it('returns steps for an event without tracks but with survey', async () => {
     const screen = render(
       <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks={false} hasSurvey>
         <TestSubmissionContextComponent />
       </SubmissionContextProvider>,
     );
 
-    const links = screen.getAllByRole('link');
+    const links = screen.getByRole('link').all();
     expect(links).toHaveLength(5);
-    expect(links[0]).toHaveTextContent('Selection');
-    expect(links[0]).toHaveAttribute('href', '/event-1/submission');
-    expect(links[1]).toHaveTextContent('Proposal');
-    expect(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
-    expect(links[2]).toHaveTextContent('Speakers');
-    expect(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
-    expect(links[3]).toHaveTextContent('Survey');
-    expect(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/survey');
-    expect(links[4]).toHaveTextContent('Submission');
-    expect(links[4]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
+    await expect.element(links[0]).toHaveTextContent('Selection');
+    await expect.element(links[0]).toHaveAttribute('href', '/event-1/submission');
+    await expect.element(links[1]).toHaveTextContent('Proposal');
+    await expect.element(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
+    await expect.element(links[2]).toHaveTextContent('Speakers');
+    await expect.element(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
+    await expect.element(links[3]).toHaveTextContent('Survey');
+    await expect.element(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/survey');
+    await expect.element(links[4]).toHaveTextContent('Submission');
+    await expect.element(links[4]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
   });
 });
 
@@ -108,7 +109,7 @@ describe('useSubmissionNavigation', () => {
     );
   }
 
-  it('returns first step paths', () => {
+  it('returns first step paths', async () => {
     const path = '/event-1/submission';
     const RouteStub = createRoutesStub([
       {
@@ -124,11 +125,11 @@ describe('useSubmissionNavigation', () => {
 
     const screen = render(<RouteStub initialEntries={[path]} />);
 
-    expect(screen.getByText('Previous: none')).toBeInTheDocument();
-    expect(screen.getByText('Next: /event-1/submission/new')).toBeInTheDocument();
+    await expect.element(screen.getByText('Previous: none')).toBeInTheDocument();
+    await expect.element(screen.getByText('Next: /event-1/submission/new')).toBeInTheDocument();
   });
 
-  it('returns previous and next step paths', () => {
+  it('returns previous and next step paths', async () => {
     const path = '/event-1/submission/talk-1/speakers';
     const RouteStub = createRoutesStub([
       {
@@ -144,11 +145,11 @@ describe('useSubmissionNavigation', () => {
 
     const screen = render(<RouteStub initialEntries={[path]} />);
 
-    expect(screen.getByText('Previous: /event-1/submission/talk-1')).toBeInTheDocument();
-    expect(screen.getByText('Next: /event-1/submission/talk-1/tracks')).toBeInTheDocument();
+    await expect.element(screen.getByText('Previous: /event-1/submission/talk-1')).toBeInTheDocument();
+    await expect.element(screen.getByText('Next: /event-1/submission/talk-1/tracks')).toBeInTheDocument();
   });
 
-  it('returns last step paths', () => {
+  it('returns last step paths', async () => {
     const path = '/event-1/submission/talk-1/submit';
     const RouteStub = createRoutesStub([
       {
@@ -164,7 +165,7 @@ describe('useSubmissionNavigation', () => {
 
     const screen = render(<RouteStub initialEntries={[path]} />);
 
-    expect(screen.getByText('Previous: /event-1/submission/talk-1/survey')).toBeInTheDocument();
-    expect(screen.getByText('Next: none')).toBeInTheDocument();
+    await expect.element(screen.getByText('Previous: /event-1/submission/talk-1/survey')).toBeInTheDocument();
+    await expect.element(screen.getByText('Next: none')).toBeInTheDocument();
   });
 });
