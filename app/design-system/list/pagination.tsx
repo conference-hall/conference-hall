@@ -34,7 +34,7 @@ export function Pagination({ current, total }: Props) {
   if (total <= 1) return null;
 
   return (
-    <nav className="isolate inline-flex -space-x-px rounded-md bg-white shadow-sm" aria-label="Pagination">
+    <nav className="isolate inline-flex -space-x-px rounded-md bg-white shadow-xs" aria-label="Pagination">
       <Link
         key="previous"
         to={{ pathname: location.pathname, search: getPageSearchParams(previous, searchParams) }}

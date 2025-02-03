@@ -52,7 +52,7 @@ function FilterTag({ name, value }: FiltersRadioProps) {
       <button
         type="button"
         onClick={onClick}
-        className="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-blue-600/20"
+        className="group relative -mr-1 h-3.5 w-3.5 rounded-xs hover:bg-blue-600/20"
       >
         <span className="sr-only">Remove</span>
         <svg

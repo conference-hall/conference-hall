@@ -145,7 +145,7 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
 
   return (
     <SlideOver open={open} onClose={onClose} size="l">
-      <SlideOver.Content title={<Title />} onClose={onClose} className="!p-0 border-t border-t-gray-200 divide-y">
+      <SlideOver.Content title={<Title />} onClose={onClose} className="p-0! border-t border-t-gray-200 divide-y">
         <h2 className="sr-only">Speaker information panel</h2>
         {speaker.email && (
           <div className="flex items-center gap-4 p-4 sm:px-6">

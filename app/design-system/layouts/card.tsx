@@ -4,8 +4,8 @@ import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
 
 const ROUNDED = {
-  sm: 'rounded-sm',
-  base: 'rounded',
+  sm: 'rounded-xs',
+  base: 'rounded-sm',
   md: 'rounded-md',
   lg: 'rounded-lg',
   xl: 'rounded-xl',
@@ -35,7 +35,7 @@ export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, noBorder = false,
     <Tag
       className={cx(
         'flex flex-col bg-white',
-        { 'shadow-sm border border-gray-200': !noBorder },
+        { 'shadow-xs border border-gray-200': !noBorder },
         ROUNDED[rounded],
         PADDING[p],
         className,
@@ -57,7 +57,7 @@ export function CardLink({ as, rounded, p, className, children, ...rest }: CardL
       rounded={rounded}
       className="focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:shadow-md"
     >
-      <Link {...rest} className={cx('focus:outline-none', className)}>
+      <Link {...rest} className={cx('focus:outline-hidden', className)}>
         {children}
       </Link>
     </Card>

@@ -34,9 +34,9 @@ const text_sizes = {
 };
 
 const square_sizes = {
-  xs: 'rounded',
-  s: 'rounded',
-  m: 'rounded',
+  xs: 'rounded-sm',
+  s: 'rounded-sm',
+  m: 'rounded-sm',
   l: 'rounded-md',
   xl: 'rounded-md',
   '2xl': 'rounded-md',

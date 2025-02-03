@@ -18,7 +18,7 @@ export default function ColorPicker({ label, value, onChange, srOnly, options, c
       >
         {label}
       </legend>
-      <RadioGroup value={value} onChange={onChange} className="flex items-center space-x-3">
+      <RadioGroup value={value} onChange={onChange} className="flex items-center gap-3">
         {options.map((option) => (
           <Radio
             key={option.name}
@@ -26,13 +26,10 @@ export default function ColorPicker({ label, value, onChange, srOnly, options, c
             aria-label={option.name}
             className={cx(
               option.color,
-              'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-current focus:outline-none data-[checked]:ring-2 data-[focus]:data-[checked]:ring data-[focus]:data-[checked]:ring-offset-1',
+              'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-current focus:outline-hidden data-checked:ring-2 data-focus:data-checked:ring-3 data-focus:data-checked:ring-offset-1',
             )}
           >
-            <span
-              aria-hidden="true"
-              className="h-5 w-5 rounded-full border border-black border-opacity-10 bg-current"
-            />
+            <span aria-hidden="true" className="h-5 w-5 rounded-full border border-black/10 bg-current" />
           </Radio>
         ))}
       </RadioGroup>

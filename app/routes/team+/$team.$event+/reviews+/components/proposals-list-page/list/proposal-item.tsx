@@ -69,7 +69,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
           </Text>
         </div>
 
-        <div className="hidden sm:flex sm:items-center sm:gap-2 sm:[&>*]:w-14">
+        <div className="hidden sm:flex sm:items-center sm:gap-2 sm:*:w-14">
           <ReviewComments count={proposal.comments.count} />
           <UserReviewNote feeling={you.feeling} note={you.note} />
           {summary && <GlobalReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty />}

@@ -42,7 +42,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
       <Listbox name={name} value={selected} onChange={setSelected} multiple>
         {({ open }) => (
           <div className="relative mt-2">
-            <ListboxButton className="relative w-full cursor-default rounded-md border border-gray-300 bg-white h-9 pl-2 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm">
+            <ListboxButton className="relative w-full cursor-default rounded-md border border-gray-300 bg-white h-9 pl-2 pr-10 text-left shadow-xs focus:border-indigo-500 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-sm">
               {selected.length > 0 ? (
                 <div className="space-x-1">
                   <SelectedOptions selectedValues={selected} options={options} />
@@ -61,7 +61,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
               <ListboxOptions
                 modal={false}
                 anchor={{ to: 'bottom start', gap: '4px' }}
-                className="z-40 w-[var(--button-width)] rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                className="z-40 w-[var(--button-width)] rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-hidden"
               >
                 {options.map((option) => (
                   <ListboxOption

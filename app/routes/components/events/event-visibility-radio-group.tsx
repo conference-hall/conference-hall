@@ -29,7 +29,7 @@ export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaul
                     settingIdx === 0 ? 'rounded-tl-md rounded-tr-md' : '',
                     settingIdx === settings.length - 1 ? 'rounded-bl-md rounded-br-md' : '',
                     checked ? 'z-10 border-indigo-200 bg-indigo-50' : 'border-gray-200',
-                    'relative flex cursor-pointer border p-4 focus:outline-none',
+                    'relative flex cursor-pointer border p-4 focus:outline-hidden',
                   )
                 }
               >

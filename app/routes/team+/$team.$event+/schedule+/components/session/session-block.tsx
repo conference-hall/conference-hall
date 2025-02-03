@@ -17,7 +17,7 @@ export function SessionBlock({ session }: SessionBlockProps) {
   const end = toTimeFormat(timeslot.end);
 
   return (
-    <div className={cx('text-xs flex flex-col justify-between h-full px-1 rounded', block)}>
+    <div className={cx('text-xs flex flex-col justify-between h-full px-1 rounded-sm', block)}>
       {proposal ? (
         <>
           <div>

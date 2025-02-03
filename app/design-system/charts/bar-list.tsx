@@ -48,11 +48,11 @@ function BarListInner<T>({
     <div ref={ref} className={cx('flex justify-between space-x-6', className)} aria-sort={sortOrder} {...props}>
       <div className="relative w-full space-y-1.5">
         {sortedData.map((item, index) => (
-          <div key={item.id ?? item.name} className="group w-full rounded">
+          <div key={item.id ?? item.name} className="group w-full rounded-sm">
             <div
               className={cx(
                 // base
-                'flex items-center rounded transition-all',
+                'flex items-center rounded-sm transition-all',
                 rowHeight,
                 // background color
                 'bg-indigo-200',
@@ -70,7 +70,7 @@ function BarListInner<T>({
                     to={item.to}
                     className={cx(
                       // base
-                      'truncate whitespace-nowrap rounded text-sm',
+                      'truncate whitespace-nowrap rounded-sm text-sm',
                       // text color
                       'text-gray-900',
                       // hover

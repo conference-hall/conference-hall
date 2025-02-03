@@ -33,7 +33,7 @@ export function Navbar({ layout = 'default', variant = 'primary', className }: P
           ) : null}
         </div>
 
-        <div className="hidden gap-4 lg:flex lg:flex-shrink-0 lg:items-center lg:justify-end">
+        <div className="hidden gap-4 lg:flex lg:shrink-0 lg:items-center lg:justify-end">
           {/* Navigation links */}
           {layout !== 'auth' ? (
             <Navigation

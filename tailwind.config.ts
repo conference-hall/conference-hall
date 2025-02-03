@@ -4,7 +4,6 @@ import type { Config } from 'tailwindcss';
 import defaultTheme from 'tailwindcss/defaultTheme.js';
 
 module.exports = {
-  mode: 'jit',
   content: ['./app/**/*.{ts,tsx}'],
   theme: {
     extend: {

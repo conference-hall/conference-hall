@@ -49,7 +49,7 @@ export function EventTabs({ teamSlug, eventSlug, eventType, permissions }: Props
         target="_blank"
         iconRight={ArrowTopRightOnSquareIcon}
         weight="medium"
-        className="hidden lg:flex"
+        className="hidden! lg:inline-flex!"
       >
         Event page
       </Link>

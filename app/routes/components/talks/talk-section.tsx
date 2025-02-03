@@ -141,7 +141,7 @@ export function TalkSection({
         <Disclosure defaultOpen={referencesOpen}>
           <DisclosureButton className="px-6 py-4 group flex items-center gap-2 text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:underline border-t border-t-gray-200">
             <span>Talk references</span>
-            <ChevronDownIcon className="h-4 w-4 group-data-[open]:rotate-180" />
+            <ChevronDownIcon className="h-4 w-4 group-data-open:rotate-180" />
           </DisclosureButton>
           <DisclosurePanel as="dd" className="px-6 pb-4">
             <Markdown className="text-gray-700">{talk.references}</Markdown>

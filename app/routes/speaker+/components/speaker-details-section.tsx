@@ -39,7 +39,7 @@ export function SpeakerDetailsSection({ bio, location, socials }: Props) {
         )}
 
         <div className="px-6 py-4 flex items-center gap-3">
-          <LockClosedIcon aria-hidden="true" className="h-4 w-4 flex-shrink-0 text-gray-400" />
+          <LockClosedIcon aria-hidden="true" className="h-4 w-4 shrink-0 text-gray-400" />
           <Text weight="medium" variant="secondary">
             Your speaker activity is private.
           </Text>

@@ -213,7 +213,7 @@ const DonutChart = ({
           )}
           <Pie
             className={cx(
-              'stroke-white [&_.recharts-pie-sector]:outline-none',
+              'stroke-white [&_.recharts-pie-sector]:outline-hidden',
               onValueChange ? 'cursor-pointer' : 'cursor-default',
             )}
             data={parseData(data, categoryColors, category)}

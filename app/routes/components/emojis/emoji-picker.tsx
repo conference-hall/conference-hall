@@ -28,7 +28,7 @@ export function EmojiPicker({
 
       <PopoverPanel
         anchor="top"
-        className="grid grid-cols-5 gap-2 p-2 bg-white border border-gray-200 rounded-2xl shadow [--anchor-gap:8px]"
+        className="grid grid-cols-5 gap-2 p-2 bg-white border border-gray-200 rounded-2xl shadow-sm [--anchor-gap:8px]"
       >
         {({ close }) => (
           <>
