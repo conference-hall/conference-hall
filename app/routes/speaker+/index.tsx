@@ -28,11 +28,10 @@ export default function ProfileRoute({ loaderData }: Route.ComponentProps) {
       <H1 srOnly>Your activity</H1>
 
       <SpeakerDetailsSection
-        email={profile.email}
-        picture={profile.picture}
+        company={profile.company}
         bio={profile.bio}
         location={profile.location}
-        socials={profile.socials}
+        socialLinks={profile.socialLinks}
       />
 
       <SpeakerActivitiesSection

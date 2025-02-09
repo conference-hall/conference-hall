@@ -69,7 +69,7 @@ describe('CfpReviewsExports', () => {
               company: speaker.company,
               location: speaker.location,
               references: speaker.references,
-              socials: speaker.socials,
+              socialLinks: speaker.socialLinks,
             },
           ],
         },

@@ -51,7 +51,7 @@ export class EventApi {
             references: speaker.references,
             picture: speaker.picture,
             location: speaker.location,
-            socials: speaker.socials as SocialLinks,
+            socialLinks: speaker.socialLinks as SocialLinks,
           })),
           review: reviews.summary(),
         };

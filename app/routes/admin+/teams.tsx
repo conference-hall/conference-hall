@@ -66,10 +66,10 @@ export default function AdminTeamsRoute({ loaderData }: Route.ComponentProps) {
                 </Text>
               </div>
               <div className="flex gap-8">
-                <IconLabel icon={UserGroupIcon} gap="xs" variant="secondary">
+                <IconLabel icon={UserGroupIcon} variant="secondary">
                   {team.members.count}
                 </IconLabel>
-                <IconLabel icon={CalendarIcon} gap="xs" variant="secondary">
+                <IconLabel icon={CalendarIcon} variant="secondary">
                   {team.events.count}
                 </IconLabel>
               </div>

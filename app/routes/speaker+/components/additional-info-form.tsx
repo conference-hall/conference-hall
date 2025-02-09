@@ -1,21 +1,22 @@
 import { Form } from 'react-router';
-
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Subtitle } from '~/design-system/typography.tsx';
+import { getSocialIcon } from '~/design-system/social-link.tsx';
+import { H2, Label, Subtitle } from '~/design-system/typography.tsx';
+import { extractSocialProfile } from '~/libs/formatters/social-links.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type Props = {
   company: string | null;
   location: string | null;
-  socials: { github: string | null; twitter: string | null };
+  socialLinks: Array<string>;
   errors: SubmissionErrors;
 };
 
-export function AdditionalInfoForm({ company, location, socials, errors }: Props) {
-  const { github, twitter } = socials;
+const MAX_SOCIAL_LINKS = 4;
 
+export function AdditionalInfoForm({ company, location, socialLinks, errors }: Props) {
   return (
     <Card as="section">
       <Form method="POST" aria-labelledby="additional-info" preventScrollReset>
@@ -34,20 +35,25 @@ export function AdditionalInfoForm({ company, location, socials, errors }: Props
             defaultValue={location || ''}
             error={errors?.location}
           />
-          <Input
-            name="twitter"
-            label="Twitter"
-            addon="https://twitter.com/"
-            defaultValue={twitter || ''}
-            error={errors?.twitter}
-          />
-          <Input
-            name="github"
-            label="GitHub"
-            addon="https://github.com/"
-            defaultValue={github || ''}
-            error={errors?.github}
-          />
+          <div className="flex flex-col gap-2">
+            <Label>Social links</Label>
+            {Array(MAX_SOCIAL_LINKS)
+              .fill('')
+              .map((_, index) => {
+                const { name, url } = extractSocialProfile(socialLinks[index]);
+                return (
+                  <Input
+                    key={`${index}:${url}`}
+                    name={`socialLinks[${index}]`}
+                    aria-label={`Social link ${index + 1}`}
+                    placeholder="Link to social profile"
+                    defaultValue={url || ''}
+                    icon={getSocialIcon(name)}
+                    error={errors?.[`socialLinks[${index}]`]}
+                  />
+                );
+              })}
+          </div>
         </Card.Content>
 
         <Card.Actions>

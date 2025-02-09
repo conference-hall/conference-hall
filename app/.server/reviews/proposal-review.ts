@@ -79,7 +79,7 @@ export class ProposalReview {
           references: speaker.references,
           email: speaker.email,
           location: speaker.location,
-          socials: speaker.socials as SocialLinks,
+          socialLinks: speaker.socialLinks as SocialLinks,
           survey: answers[speaker.id],
         })) || [],
       tags: sortBy(

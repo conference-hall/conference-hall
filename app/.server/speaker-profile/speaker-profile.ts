@@ -21,7 +21,7 @@ export class SpeakerProfile {
       references: user.references,
       company: user.company,
       location: user.location,
-      socials: user.socials as SocialLinks,
+      socialLinks: user.socialLinks as SocialLinks,
     };
   }
 

@@ -1,18 +1,16 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
+import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { Form } from 'react-router';
-
+import type { SurveyDetailedAnswer } from '~/.server/event-survey/types.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
-import { IconExternalLink } from '~/design-system/icon-buttons.tsx';
-import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
-import { TwitterIcon } from '~/design-system/icons/twitter-icon.tsx';
+import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
+import { SocialLink } from '~/design-system/social-link.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
-
-import type { SurveyDetailedAnswer } from '~/.server/event-survey/types.ts';
 import { InvitationModal } from '../invitation-modal.tsx';
 
 export type SpeakerProps = {
@@ -25,10 +23,7 @@ export type SpeakerProps = {
   references?: string | null;
   location?: string | null;
   survey?: Array<SurveyDetailedAnswer>;
-  socials?: {
-    twitter?: string | null;
-    github?: string | null;
-  };
+  socialLinks?: Array<string>;
   isCurrentUser?: boolean;
 };
 
@@ -148,30 +143,11 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
       <SlideOver.Content title={<Title />} onClose={onClose} className="p-0! border-t border-t-gray-200 divide-y">
         <h2 className="sr-only">Speaker information panel</h2>
         {speaker.email && (
-          <div className="flex items-center gap-4 p-4 sm:px-6">
-            <div className="flex-1 overflow-hidden">
-              <Text size="s" variant="secondary" truncate>
-                {speaker.email}
-              </Text>
-            </div>
-            <div className="flex items-center gap-2">
-              {speaker.socials?.twitter && (
-                <IconExternalLink
-                  href={`https://twitter.com/${speaker.socials.twitter}`}
-                  icon={TwitterIcon}
-                  label="Twitter link"
-                  variant="secondary"
-                />
-              )}
-              {speaker.socials?.github && (
-                <IconExternalLink
-                  href={`https://github.com/${speaker.socials.github}`}
-                  icon={GitHubIcon}
-                  label="Github link"
-                  variant="secondary"
-                />
-              )}
-            </div>
+          <div className="flex flex-col gap-2 p-4 sm:px-6">
+            <IconLabel icon={EnvelopeIcon}>{speaker.email}</IconLabel>
+            {speaker.socialLinks?.map((socialLink) => (
+              <SocialLink key={socialLink} url={socialLink} />
+            ))}
           </div>
         )}
 

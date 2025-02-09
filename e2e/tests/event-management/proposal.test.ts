@@ -40,10 +40,7 @@ test.beforeEach(async () => {
       references: 'MJ References',
       location: 'Nantes',
       company: 'MJ Corp',
-      socials: {
-        github: 'mj',
-        twitter: 'mj',
-      },
+      socialLinks: ['https://github.com/mj'],
     },
   });
   const speaker2 = await userFactory({ attributes: { name: 'Robin' } });

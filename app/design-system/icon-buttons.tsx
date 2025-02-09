@@ -62,20 +62,3 @@ export function IconLink({ icon: Icon, label, variant, size, disabled, ...rest }
     </Link>
   );
 }
-
-type IconExternalLinkProps = IconButtonBaseProps & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'children'>;
-
-export function IconExternalLink({ icon: Icon, label, variant, size, ...rest }: IconExternalLinkProps) {
-  return (
-    <a
-      target="_blank"
-      rel="noreferrer"
-      className={button({ variant, size })}
-      aria-label={label}
-      title={label}
-      {...rest}
-    >
-      <Icon className={icon({ size })} aria-hidden="true" />
-    </a>
-  );
-}

@@ -84,7 +84,7 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
         <AdditionalInfoForm
           company={profile.company}
           location={profile.location}
-          socials={profile.socials}
+          socialLinks={profile.socialLinks}
           errors={errors}
         />
       </div>
