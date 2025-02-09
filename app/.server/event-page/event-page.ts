@@ -2,7 +2,7 @@ import { db } from 'prisma/db.server.ts';
 
 import { z } from 'zod';
 import { EventNotFoundError } from '~/libs/errors.server.ts';
-import { TracksMandatorySchema, TracksSchema } from '../cfp-submission-funnel/talk-submission.types.ts';
+import { TracksMandatorySchema, TracksOptionalSchema } from '../cfp-submission-funnel/talk-submission.types.ts';
 import { SurveyConfig } from '../event-survey/survey-config.ts';
 
 export class EventPage {
@@ -63,10 +63,10 @@ export class EventPage {
   }
 
   async buildTracksSchema() {
-    const { formatsRequired, categoriesRequired } = await this.get();
+    const { formatsRequired, categoriesRequired, formats, categories } = await this.get();
     return z.object({
-      formats: formatsRequired ? TracksMandatorySchema : TracksSchema,
-      categories: categoriesRequired ? TracksMandatorySchema : TracksSchema,
+      formats: formatsRequired && formats.length > 0 ? TracksMandatorySchema : TracksOptionalSchema,
+      categories: categoriesRequired && categories.length > 0 ? TracksMandatorySchema : TracksOptionalSchema,
     });
   }
 

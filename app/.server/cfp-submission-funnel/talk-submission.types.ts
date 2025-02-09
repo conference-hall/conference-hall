@@ -10,9 +10,9 @@ export const DraftSaveSchema = z.object({
 
 export const TracksMandatorySchema = z.array(z.string()).nonempty();
 
-export const TracksSchema = z.array(z.string()).optional();
+export const TracksOptionalSchema = z.array(z.string()).optional();
 
-const TracksUpdateSchema = z.object({ formats: TracksSchema, categories: TracksSchema });
+const TracksUpdateSchema = z.object({ formats: TracksOptionalSchema, categories: TracksOptionalSchema });
 
 export type DraftSaveData = z.infer<typeof DraftSaveSchema>;
 export type TrackUpdateData = z.infer<typeof TracksUpdateSchema>;
