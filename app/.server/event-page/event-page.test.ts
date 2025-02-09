@@ -61,7 +61,7 @@ describe('EventPage', () => {
   });
 
   describe('#buildTracksSchema', () => {
-    it('validates tracks form inputs', async () => {
+    it('validates given tracks', async () => {
       const event = await eventFactory();
       const format = await eventFormatFactory({ event });
       const category = await eventCategoryFactory({ event });
@@ -72,7 +72,7 @@ describe('EventPage', () => {
       expect(result.success && result.data).toEqual({ formats: [format.name], categories: [category.name] });
     });
 
-    it('validates tracks when no tracks', async () => {
+    it('validates no tracks given', async () => {
       const event = await eventFactory();
       await eventFormatFactory({ event });
       await eventCategoryFactory({ event });
@@ -83,7 +83,27 @@ describe('EventPage', () => {
       expect(result.success && result.data).toEqual({ formats: [], categories: [] });
     });
 
-    it('returns errors when no tracks and tracks are mandatory', async () => {
+    it('validates given tracks when tracks are mandatory', async () => {
+      const event = await eventFactory({ attributes: { formatsRequired: true, categoriesRequired: true } });
+      const format = await eventFormatFactory({ event });
+      const category = await eventCategoryFactory({ event });
+
+      const schema = await EventPage.of(event.slug).buildTracksSchema();
+      const result = schema.safeParse({ formats: [format.name], categories: [category.name] });
+
+      expect(result.success && result.data).toEqual({ formats: [format.name], categories: [category.name] });
+    });
+
+    it('validates no tracks given when tracks are mandatory but no track created for the event', async () => {
+      const event = await eventFactory({ attributes: { formatsRequired: true, categoriesRequired: true } });
+
+      const schema = await EventPage.of(event.slug).buildTracksSchema();
+      const result = schema.safeParse({ formats: [], categories: [] });
+
+      expect(result.success && result.data).toEqual({ formats: [], categories: [] });
+    });
+
+    it('returns errors when no tracks given but tracks are mandatory', async () => {
       const event = await eventFactory({ attributes: { formatsRequired: true, categoriesRequired: true } });
       await eventFormatFactory({ event });
       await eventCategoryFactory({ event });
