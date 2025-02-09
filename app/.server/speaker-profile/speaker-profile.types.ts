@@ -11,7 +11,7 @@ export const DetailsSchema = z.object({
   references: z.string().trim().nullable().default(null),
 });
 
-export const SocialLinksSchema = makeFilteredArraySchema(z.string().url());
+const SocialLinksSchema = makeFilteredArraySchema(z.string().url().max(100));
 
 export const AdditionalInfoSchema = z.object({
   company: z.string().trim().nullable().default(null),

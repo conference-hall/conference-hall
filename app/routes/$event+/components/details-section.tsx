@@ -1,6 +1,5 @@
 import { EnvelopeIcon, GlobeEuropeAfricaIcon, HeartIcon } from '@heroicons/react/20/solid';
 import { ClockIcon, MapPinIcon } from '@heroicons/react/24/outline';
-
 import { Divider } from '~/design-system/divider.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -45,22 +44,14 @@ export function DetailsSection({
         </Text>
 
         {conferenceStart && conferenceEnd ? (
-          <IconLabel icon={ClockIcon} gap="l">
+          <IconLabel icon={ClockIcon}>
             <ClientOnly>{() => formatConferenceDates(timezone, conferenceStart, conferenceEnd)}</ClientOnly>
           </IconLabel>
         ) : null}
 
-        {location ? (
-          <IconLabel icon={MapPinIcon} gap="l">
-            {location}
-          </IconLabel>
-        ) : null}
+        {location ? <IconLabel icon={MapPinIcon}>{location}</IconLabel> : null}
 
-        {onlineEvent ? (
-          <IconLabel icon={MapPinIcon} gap="l">
-            The event is online
-          </IconLabel>
-        ) : null}
+        {onlineEvent ? <IconLabel icon={MapPinIcon}>The event is online</IconLabel> : null}
       </div>
 
       <Divider />

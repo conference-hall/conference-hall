@@ -3,7 +3,6 @@ import { cva, cx } from 'class-variance-authority';
 import type React from 'react';
 import type { LinkProps as RouterLinkProps } from 'react-router';
 import { Link as RouterLink } from 'react-router';
-
 import type { TypographyVariantProps } from './typography.tsx';
 import { typography } from './typography.tsx';
 
@@ -73,9 +72,9 @@ export function ExternalLink({
 
   return (
     <a href={href} target="_blank" rel="noreferrer" className={cx(defaultStyle, linkStyle)} {...rest}>
-      {IconLeft && <IconLeft className="mr-1.5 h-5 w-5" aria-hidden="true" />}
+      {IconLeft && <IconLeft className="mr-2 size-4 shrink-0 opacity-75" aria-hidden="true" />}
       {children}
-      {IconRight && <IconRight className="ml-1.5 h-5 w-5" aria-hidden="true" />}
+      {IconRight && <IconRight className="ml-2 size-4 shrink-0 opacity-75" aria-hidden="true" />}
     </a>
   );
 }
