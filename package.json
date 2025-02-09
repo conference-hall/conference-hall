@@ -57,7 +57,6 @@
     "express-rate-limit": "^7.5.0",
     "firebase": "^11.3.0",
     "firebase-admin": "^13.1.0",
-    "form-data": "^4.0.1",
     "helmet": "^8.0.0",
     "http-proxy-middleware": "^3.0.3",
     "isbot": "^5.1.22",
