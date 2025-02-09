@@ -18,7 +18,6 @@ model User {
   company               String?
   references            String?
   location              String?
-  socials               Json                   @default("{}")
   socialLinks           Json                   @default("[]")
   admin                 Boolean                @default(false)
   createdAt             DateTime               @default(now())
