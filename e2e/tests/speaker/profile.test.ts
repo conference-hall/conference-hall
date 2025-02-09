@@ -23,6 +23,6 @@ test('display speaker profile', async ({ page }) => {
   await expect(profilePage.toast).toHaveText('Profile updated.');
 
   await profilePage.goto();
-  await profilePage.fillAdditionalInfo('New company', 'New location', 'New twitter', 'New github');
+  await profilePage.fillAdditionalInfo('New company', 'New location', 'https://github.com/my-profile');
   await expect(profilePage.toast).toHaveText('Profile updated.');
 });

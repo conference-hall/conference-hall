@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { type ZodSchema, z } from 'zod';
 
 export const PersonalInfoSchema = z.object({
   name: z.string().trim().min(1),
@@ -11,22 +11,13 @@ export const DetailsSchema = z.object({
   references: z.string().trim().nullable().default(null),
 });
 
-export const SocialLinksSchema = z.object({
-  twitter: z.string().trim().nullable().default(null),
-  github: z.string().trim().nullable().default(null),
-});
+export const SocialLinksSchema = makeFilteredArraySchema(z.string().url());
 
-export const AdditionalInfoSchema = z
-  .object({
-    company: z.string().trim().nullable().default(null),
-    location: z.string().trim().nullable().default(null),
-  })
-  .merge(SocialLinksSchema)
-  .transform(({ company, location, twitter, github }) => ({
-    company,
-    location,
-    socials: { github, twitter },
-  }));
+export const AdditionalInfoSchema = z.object({
+  company: z.string().trim().nullable().default(null),
+  location: z.string().trim().nullable().default(null),
+  socialLinks: SocialLinksSchema.default([]),
+});
 
 export type ProfileData =
   | z.infer<typeof PersonalInfoSchema>
@@ -34,3 +25,9 @@ export type ProfileData =
   | z.infer<typeof AdditionalInfoSchema>;
 
 export type SocialLinks = z.infer<typeof SocialLinksSchema>;
+
+function makeFilteredArraySchema<T extends ZodSchema>(schema: T) {
+  return z
+    .array(schema.nullable().default(null))
+    .transform((items) => items?.filter((item): item is z.infer<T> => schema.safeParse(item).success));
+}

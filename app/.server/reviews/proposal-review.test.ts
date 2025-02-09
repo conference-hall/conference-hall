@@ -73,7 +73,7 @@ describe('ProposalReview', () => {
             picture: speaker.picture,
             company: speaker.company,
             references: speaker.references,
-            socials: speaker.socials,
+            socialLinks: speaker.socialLinks,
             survey: [
               { id: 'info', label: 'Do you have specific information to share?', type: 'text', answer: 'Hello world' },
             ],

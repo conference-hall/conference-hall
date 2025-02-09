@@ -1,12 +1,4 @@
-import {
-  randAvatar,
-  randCity,
-  randCompanyName,
-  randEmail,
-  randFullName,
-  randParagraph,
-  randSequence,
-} from '@ngneat/falso';
+import { randAvatar, randCity, randCompanyName, randEmail, randFullName, randParagraph, randUrl } from '@ngneat/falso';
 import type { Prisma } from '@prisma/client';
 
 import { db } from '../../prisma/db.server.ts';
@@ -56,10 +48,7 @@ export const userFactory = async (options: FactoryOptions = {}) => {
     bio: randParagraph(),
     references: randParagraph(),
     company: randCompanyName(),
-    socials: {
-      github: randSequence(),
-      twitter: randSequence(),
-    },
+    socialLinks: [randUrl(), randUrl()],
   };
 
   if (isOrganizer) {

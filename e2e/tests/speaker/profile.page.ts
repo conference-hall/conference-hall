@@ -10,8 +10,7 @@ export class ProfilePage extends PageObject {
   readonly referencesInput: Locator;
   readonly companyInput: Locator;
   readonly locationInput: Locator;
-  readonly twitterInput: Locator;
-  readonly githubInput: Locator;
+  readonly socialLinkInput: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -23,8 +22,7 @@ export class ProfilePage extends PageObject {
     this.referencesInput = page.getByLabel('Speaker references');
     this.companyInput = page.getByLabel('Company');
     this.locationInput = page.getByLabel('Location (city, country)');
-    this.twitterInput = page.getByLabel('Twitter');
-    this.githubInput = page.getByLabel('GitHub');
+    this.socialLinkInput = page.getByLabel('Social link 1');
   }
 
   async goto() {
@@ -49,11 +47,10 @@ export class ProfilePage extends PageObject {
     await this.page.getByLabel('Speaker details').getByRole('button', { name: 'Save' }).click();
   }
 
-  async fillAdditionalInfo(company: string, location: string, twitter: string, github: string) {
+  async fillAdditionalInfo(company: string, location: string, socialLink: string) {
     await this.companyInput.fill(company);
     await this.locationInput.fill(location);
-    await this.twitterInput.fill(twitter);
-    await this.githubInput.fill(github);
+    await this.socialLinkInput.fill(socialLink);
     await this.page.getByLabel('Additional information').getByRole('button', { name: 'Save' }).click();
   }
 

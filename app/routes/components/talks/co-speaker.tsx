@@ -1,4 +1,4 @@
-import { PlusIcon } from '@heroicons/react/20/solid';
+import { LinkIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { Form } from 'react-router';
@@ -7,8 +7,6 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { IconExternalLink } from '~/design-system/icon-buttons.tsx';
-import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
-import { TwitterIcon } from '~/design-system/icons/twitter-icon.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 
@@ -25,10 +23,7 @@ export type SpeakerProps = {
   references?: string | null;
   location?: string | null;
   survey?: Array<SurveyDetailedAnswer>;
-  socials?: {
-    twitter?: string | null;
-    github?: string | null;
-  };
+  socialLinks?: Array<string>;
   isCurrentUser?: boolean;
 };
 
@@ -155,22 +150,15 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
               </Text>
             </div>
             <div className="flex items-center gap-2">
-              {speaker.socials?.twitter && (
+              {speaker.socialLinks?.map((socialLink, index) => (
                 <IconExternalLink
-                  href={`https://twitter.com/${speaker.socials.twitter}`}
-                  icon={TwitterIcon}
-                  label="Twitter link"
+                  key={socialLink}
+                  href={socialLink}
+                  icon={LinkIcon}
+                  label={`Social link ${index + 1}`}
                   variant="secondary"
                 />
-              )}
-              {speaker.socials?.github && (
-                <IconExternalLink
-                  href={`https://github.com/${speaker.socials.github}`}
-                  icon={GitHubIcon}
-                  label="Github link"
-                  variant="secondary"
-                />
-              )}
+              ))}
             </div>
           </div>
         )}

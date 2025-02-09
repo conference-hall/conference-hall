@@ -32,7 +32,7 @@ export default function ProfileRoute({ loaderData }: Route.ComponentProps) {
         picture={profile.picture}
         bio={profile.bio}
         location={profile.location}
-        socials={profile.socials}
+        socialLinks={profile.socialLinks}
       />
 
       <SpeakerActivitiesSection

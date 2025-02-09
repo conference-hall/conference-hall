@@ -57,7 +57,7 @@ export class CfpReviewsExports {
           picture: speaker.picture,
           location: speaker.location,
           email: speaker.email,
-          socials: speaker.socials as SocialLinks,
+          socialLinks: speaker.socialLinks as SocialLinks,
         })),
         reviews: reviews.summary(),
       };

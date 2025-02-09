@@ -22,7 +22,7 @@ describe('SpeakerProfile', () => {
         references: user.references,
         company: user.company,
         location: user.location,
-        socials: user.socials,
+        socialLinks: user.socialLinks,
       });
     });
 
@@ -43,10 +43,7 @@ describe('SpeakerProfile', () => {
         references: 'impedit quidem quisquam',
         company: 'company',
         location: 'location',
-        socials: {
-          twitter: 'twitter',
-          github: 'github',
-        },
+        socialLinks: ['https://github.com/profile'],
       });
 
       const updated = await profile.get();
@@ -57,7 +54,7 @@ describe('SpeakerProfile', () => {
       expect(updated?.references).toEqual('impedit quidem quisquam');
       expect(updated?.company).toEqual('company');
       expect(updated?.location).toEqual('location');
-      expect(updated?.socials).toEqual({ github: 'github', twitter: 'twitter' });
+      expect(updated?.socialLinks).toEqual(['https://github.com/profile']);
     });
   });
 });
@@ -109,14 +106,13 @@ describe('SpeakerProfile schemas', () => {
       const result = AdditionalInfoSchema.safeParse({
         company: 'company',
         location: 'location',
-        twitter: 'twitter',
-        github: 'github',
+        socialLinks: ['https://github.com/profile'],
       });
 
       expect(result.success && result.data).toEqual({
         company: 'company',
         location: 'location',
-        socials: { github: 'github', twitter: 'twitter' },
+        socialLinks: ['https://github.com/profile'],
       });
     });
   });

@@ -1,9 +1,7 @@
-import { LockClosedIcon, MapPinIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
+import { LinkIcon, LockClosedIcon, MapPinIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
-import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
-import { TwitterIcon } from '~/design-system/icons/twitter-icon.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -13,15 +11,11 @@ type Props = {
   picture: string | null;
   bio: string | null;
   location: string | null;
-  socials: {
-    github: string | null;
-    twitter: string | null;
-  };
+  socialLinks: Array<string>;
 };
 
-export function SpeakerDetailsSection({ bio, location, socials }: Props) {
-  const { github, twitter } = socials;
-  const displayInfo = location || twitter || github;
+export function SpeakerDetailsSection({ bio, location, socialLinks }: Props) {
+  const displayInfo = location || socialLinks.length > 0;
 
   return (
     <div className="hidden sm:block space-y-6">
@@ -33,8 +27,11 @@ export function SpeakerDetailsSection({ bio, location, socials }: Props) {
         {displayInfo && (
           <div className="p-6 space-y-4">
             {location && <IconLabel icon={MapPinIcon}>{location}</IconLabel>}
-            {twitter && <IconLabel icon={TwitterIcon}>{twitter}</IconLabel>}
-            {github && <IconLabel icon={GitHubIcon}>{github}</IconLabel>}
+            {socialLinks.map((socialLink) => (
+              <IconLabel key={socialLink} icon={LinkIcon}>
+                {socialLink}
+              </IconLabel>
+            ))}
           </div>
         )}
 
