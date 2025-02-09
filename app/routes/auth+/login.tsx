@@ -11,7 +11,7 @@ import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { createSession, getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { AuthProviderButton } from '~/routes/components/auth-provider-button.tsx';
+import { type AuthProvider, AuthProviderButton } from '~/routes/components/auth-provider-button.tsx';
 import { Footer } from '../components/footer.tsx';
 import { useHydrated } from '../components/utils/use-hydrated.ts';
 import type { Route } from './+types/login.ts';
@@ -52,7 +52,7 @@ export default function Login() {
   }, [submit, redirectTo]);
 
   const signIn = useCallback(
-    async (provider: string) => {
+    async (provider: AuthProvider) => {
       // Set loading state in url to get it when redirected back from auth
       if (hydrated) {
         const { protocol, host, pathname } = window.location;
@@ -66,7 +66,7 @@ export default function Login() {
         return Firebase.signInWithRedirect(getClientAuth(), authProvider);
       }
 
-      if (provider === 'twitter') {
+      if (provider === 'x') {
         const authProvider = new Firebase.TwitterAuthProvider();
         return Firebase.signInWithRedirect(getClientAuth(), authProvider);
       }
@@ -115,8 +115,8 @@ export default function Login() {
 
                 <div className="mt-8 flex flex-col gap-4">
                   <AuthProviderButton provider="google" onClick={signIn} />
-                  <AuthProviderButton provider="twitter" onClick={signIn} />
                   <AuthProviderButton provider="github" onClick={signIn} />
+                  <AuthProviderButton provider="x" onClick={signIn} />
                 </div>
               </div>
             </Card>

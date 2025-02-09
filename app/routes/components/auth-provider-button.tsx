@@ -1,18 +1,19 @@
 import { cx } from 'class-variance-authority';
-
 import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
 import { GoogleIcon } from '~/design-system/icons/google-icon.tsx';
-import { TwitterIcon } from '~/design-system/icons/twitter-icon.tsx';
+import { XIcon } from '~/design-system/icons/x-icon';
 
 const PROVIDERS = {
-  google: { style: 'bg-[#EA2533] focus-visible:outline-[#EA2533]', label: 'Google', icon: GoogleIcon },
-  twitter: { style: 'bg-[#1D9BF0] focus-visible:outline-[#1D9BF0]', label: 'Twitter', icon: TwitterIcon },
-  github: { style: 'bg-[#24292F] focus-visible:outline-[#24292F]', label: 'GitHub', icon: GitHubIcon },
+  google: { style: 'bg-[#EA2533] focus-visible:outline-[#EA2533] text-white', label: 'Google', icon: GoogleIcon },
+  x: { style: 'bg-white focus-visible:outline-black text-black border-1 border-black', label: 'X.com', icon: XIcon },
+  github: { style: 'bg-[#24292F] focus-visible:outline-[#24292F] text-white', label: 'GitHub', icon: GitHubIcon },
 };
 
+export type AuthProvider = keyof typeof PROVIDERS;
+
 type Props = {
-  provider: keyof typeof PROVIDERS;
-  onClick: (provider: string) => Promise<void>;
+  provider: AuthProvider;
+  onClick: (provider: AuthProvider) => Promise<void>;
 };
 
 export function AuthProviderButton({ provider, onClick }: Props) {
@@ -23,7 +24,7 @@ export function AuthProviderButton({ provider, onClick }: Props) {
       type="button"
       onClick={() => onClick(provider)}
       className={cx(
-        'flex w-full items-center justify-center gap-3 rounded-md px-3 py-1.5 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
+        'flex w-full items-center justify-center gap-3 rounded-md px-3 py-1.5 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2',
         PROVIDERS[provider].style,
       )}
     >
