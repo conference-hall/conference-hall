@@ -1,4 +1,3 @@
-import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import type { IMailgunClient } from 'mailgun.js/Interfaces';
 import { isValidEmail } from '../utils/email.ts';
@@ -9,7 +8,7 @@ export class MailgunProvider implements EmailProvider {
   private domain: string;
 
   constructor(key: string, domain: string) {
-    const mailgun = new Mailgun(formData);
+    const mailgun = new Mailgun(FormData);
     this.client = mailgun.client({ username: 'api', key });
     this.domain = domain;
   }
