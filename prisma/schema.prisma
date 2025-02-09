@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["tracing"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -20,6 +19,7 @@ model User {
   references            String?
   location              String?
   socials               Json                   @default("{}")
+  socialLinks           Json                   @default("[]")
   admin                 Boolean                @default(false)
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
