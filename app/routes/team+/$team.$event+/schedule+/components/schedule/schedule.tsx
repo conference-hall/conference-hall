@@ -96,7 +96,7 @@ export default function Schedule({
           <thead>
             <tr className="sticky top-[64px] z-30 divide-x divide-gray-200 shadow-sm">
               {/* Gutter with timezone */}
-              <th scope="col" className="h-12 text-xs font-normal text-center bg-white text-gray-400">
+              <th scope="col" className="h-12 w-12 text-xs font-normal text-center bg-white text-gray-400">
                 {getGMTOffset(timezone)}
               </th>
               {/* Tracks header */}
@@ -113,12 +113,10 @@ export default function Schedule({
           {/* Content */}
           <tbody>
             {/* Empty line */}
-            <tr className="divide-x divide-gray-200 align-top">
-              <td className="w-12" />
+            <tr className="divide-x divide-gray-200">
+              <td className="h-6 w-12" />
               {tracks.map((track) => (
-                <td key={track.id} className="h-6 border-b content">
-                  &nbsp;
-                </td>
+                <td key={track.id} className="h-6 border-b"></td>
               ))}
             </tr>
 
@@ -129,7 +127,7 @@ export default function Schedule({
               const hourSlots = getDailyTimeSlots(hour.start, hour.end, interval);
 
               return (
-                <tr key={`${startHour}-${endHour}`} className="divide-x divide-gray-200 align-top">
+                <tr key={`${startHour}-${endHour}`} className="divide-x divide-gray-200">
                   {/* Gutter time */}
                   <td className="relative whitespace-nowrap text-xs text-gray-500">
                     <time className="absolute -top-2 right-2" dateTime={startHour}>
@@ -224,6 +222,8 @@ function Timeslot({
         'border-t-2 border-blue-600': isOver,
       })}
     >
+      {/* Invisible span to have content for the table */}
+      <span className="invisible">{`Timeslot ${toTimeFormat(timeslot.start)}`}</span>
       {session ? (
         // Displayed session block
         <SessionWrapper
