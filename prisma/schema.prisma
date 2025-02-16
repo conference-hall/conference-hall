@@ -388,6 +388,8 @@ model ScheduleSession {
   id         String        @id @default(cuid())
   name       String?
   color      String
+  language   String?
+  emojis     String[]      @default([])
   start      DateTime
   end        DateTime
   scheduleId String
