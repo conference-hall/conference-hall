@@ -3,6 +3,7 @@ import { cx } from 'class-variance-authority';
 
 import { formatTimeDifference, toTimeFormat } from '~/libs/datetimes/datetimes.ts';
 
+import { getFlag } from '~/libs/formatters/languages.ts';
 import type { ScheduleProposalData, ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS } from './constants.ts';
 
@@ -20,29 +21,24 @@ export function SessionBlock({ session }: SessionBlockProps) {
   return (
     <div className={cx('text-xs flex flex-col justify-between h-full px-1 rounded-sm', block)}>
       {proposal ? (
-        <>
-          <div>
-            <div className="flex justify-between">
-              <p className="font-semibold">{proposal.title}</p>
-              {deliberationIcon(proposal)}
-            </div>
-            <p className="italic truncate">{proposal.speakers.map((s) => s.name).join(', ')}</p>
-          </div>
+        <div>
           <div className="flex justify-between">
-            <p>
-              <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time>
-            </p>
-            {proposal.languages && <p>[{proposal.languages.join(',')}]</p>}
+            <p className="font-semibold">{proposal.title}</p>
+            {deliberationIcon(proposal)}
           </div>
-        </>
+          <p className="italic truncate">{proposal.speakers.map((s) => s.name).join(', ')}</p>
+        </div>
       ) : (
         <div className="h-full flex flex-col justify-between">
           <p className="font-semibold">{session.name}</p>
-          <p>
-            <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time> <span>({minutes})</span>
-          </p>
         </div>
       )}
+      <div className="flex justify-between text-[10px]">
+        <p>
+          <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time> <span>({minutes})</span>
+        </p>
+        {proposal?.languages ? <p>{proposal.languages.map(getFlag)}</p> : null}
+      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { useFetchers, useSubmit } from 'react-router';
 import { v4 as uuid } from 'uuid';
 
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
-import { areTimeSlotsOverlapping, moveTimeSlotStart } from '~/libs/datetimes/timeslots.ts';
+import { areTimeSlotsOverlapping } from '~/libs/datetimes/timeslots.ts';
 import { formatZonedTimeToUtc } from '~/libs/datetimes/timezone.ts';
 
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
@@ -59,17 +59,16 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
   };
 
   const onUpdate = (session: ScheduleSession, updatedSession: ScheduleSession) => {
-    const updatedTimeslot = moveTimeSlotStart(session.timeslot, updatedSession.timeslot.start);
-
     const conflicting = sessions.some(
       (s) =>
         s.id !== session.id &&
         s.trackId === updatedSession.trackId &&
-        areTimeSlotsOverlapping(updatedTimeslot, s.timeslot),
+        areTimeSlotsOverlapping(updatedSession.timeslot, s.timeslot),
     );
-    if (conflicting) return;
+    if (conflicting) return false;
 
     update(updatedSession);
+    return true;
   };
 
   const onMove = (session: ScheduleSession) => {

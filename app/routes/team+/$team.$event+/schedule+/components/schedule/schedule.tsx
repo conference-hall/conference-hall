@@ -34,7 +34,6 @@ const SLOT_INTERVAL = 5; // minutes
 const TIMESLOT_HEIGHTS = [8, 12, 16, 20]; // px
 const SESSIONS_GAP_PX = 1;
 const DEFAULT_ZOOM_LEVEL = 1;
-const DEBUG_MODE = false;
 
 type ScheduleProps = {
   startTime: Date;
@@ -234,13 +233,10 @@ function Timeslot({
       style={{ height: `${getTimeslotHeight(zoomLevel)}px` }}
       className={cx('relative', {
         'z-10': !hasSession,
-        'bg-red-200': DEBUG_MODE && hasSession && !isTimeslotSessionDragging,
-        'bg-blue-200': DEBUG_MODE && hasSession && isTimeslotSessionDragging,
-        'bg-green-200': DEBUG_MODE && !hasSession,
+        'bg-blue-200': isOver && isMovingAction,
         'hover:bg-gray-50': !hasSession && !isSelected,
         "before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:border-t":
           isFirstTimeslot && !isOver,
-        'border-t-2 border-blue-200': isOver && isMovingAction,
       })}
     >
       {/* Invisible span to have content for the table */}
@@ -346,7 +342,7 @@ function SessionWrapper({ session, sessions, renderSession, onClick, interval, z
         {...movable.listeners}
         {...movable.attributes}
       >
-        <div ref={setDropRef} style={{ height: `${height}px` }} className={cx({ 'opacity-70': DEBUG_MODE })}>
+        <div ref={setDropRef} style={{ height: `${height}px` }}>
           {renderSession(session)}
         </div>
       </div>
