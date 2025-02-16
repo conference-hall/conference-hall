@@ -7,6 +7,7 @@ type EmojiPickerProps = {
   emojis: Array<Emoji>;
   disabledEmojis?: Array<string>;
   label?: string;
+  icon?: React.ComponentType<{ className?: string }>;
   onSelectEmoji: (emoji: Emoji) => void;
 };
 
@@ -14,21 +15,26 @@ export function EmojiPicker({
   emojis,
   disabledEmojis = [],
   label = 'Select a reaction',
+  icon: Icon,
   onSelectEmoji,
 }: EmojiPickerProps) {
   return (
     <Popover className="relative">
       <PopoverButton
-        className="flex items-center justify-center rounded-full shrink-0 h-6 w-6 bg-gray-100 fill-gray-600 hover:bg-white hover:ring-1 hover:ring-gray-600"
+        className="flex items-center justify-center rounded-full shrink-0 h-6 w-6 bg-gray-100 fill-gray-600 cursor-pointer hover:bg-white hover:ring-1 hover:ring-gray-600"
         aria-label={label}
         title={label}
       >
-        <EmojiAddIcon className="h-4 w-4" aria-hidden="true" />
+        {Icon ? (
+          <Icon className="h-4 w-4" aria-hidden="true" />
+        ) : (
+          <EmojiAddIcon className="h-4 w-4" aria-hidden="true" />
+        )}
       </PopoverButton>
 
       <PopoverPanel
         anchor="top"
-        className="grid grid-cols-5 gap-2 p-2 bg-white border border-gray-200 rounded-2xl shadow-sm [--anchor-gap:8px]"
+        className="grid grid-cols-5 gap-2 p-2 bg-white border border-gray-200 rounded-2xl shadow-sm [--anchor-gap:8px] z-50"
       >
         {({ close }) => (
           <>
@@ -40,7 +46,7 @@ export function EmojiPicker({
                   key={emoji.code}
                   type="button"
                   className={cx(
-                    'flex items-center justify-center rounded-lg shrink-0 h-8 w-8 font-serif text-lg hover:bg-gray-100',
+                    'flex items-center justify-center rounded-lg shrink-0 h-8 w-8 cursor-pointer font-serif text-lg hover:bg-gray-100',
                     { 'grayscale cursor-not-allowed': disabled },
                   )}
                   aria-label={emoji.name}

@@ -1,6 +1,8 @@
 import {
   ArrowTopRightOnSquareIcon,
   ClockIcon,
+  FaceSmileIcon,
+  LanguageIcon,
   MagnifyingGlassIcon,
   MapPinIcon,
   PaintBrushIcon,
@@ -19,9 +21,12 @@ import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { getMinutesFromStartOfDay, setMinutesFromStartOfDay } from '~/libs/datetimes/datetimes.ts';
 
+import { PlusIcon } from '@heroicons/react/20/solid';
 import { Callout } from '~/design-system/callout.tsx';
+import { LANGUAGES } from '~/libs/formatters/languages.ts';
+import { EmojiPicker } from '~/routes/components/emojis/emoji-picker.tsx';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
-import { SESSION_COLORS } from './constants.ts';
+import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 import { SearchSessionProposal } from './search-session-proposal.tsx';
 
 type Props = {
@@ -52,15 +57,17 @@ export function SessionForm({
   const [name, setName] = useState(session.name);
   const [color, setColor] = useState(session.color);
   const [trackId, setTrackId] = useState(session.trackId);
+  const [language, setLanguage] = useState<string | null>(); // TODO: set session language
   const [timeslot, setTimeslot] = useState(session.timeslot);
-  const [proposal, setProposal] = useState(session.proposal);
+  const [proposal, setProposal] = useState(session.proposal); // TODO: set session emojis
+  const [emojis, setEmojis] = useState<Array<string>>([]);
   const [error, setError] = useState<string | null>();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: used for refresh
   useEffect(() => {
-    if (inputRef.current) inputRef.current.focus();
+    if (inputRef.current) inputRef.current.focus(); // TODO: use key attribute instead ?
   }, [proposal]);
 
   const handleSubmit = (event: FormEvent) => {
@@ -83,7 +90,7 @@ export function SessionForm({
     <>
       {isSearching && <SearchSessionProposal onChange={setProposal} onClose={onToggleSearch} />}
 
-      <form id="update-session-form" className="flex flex-col gap-8 px-6 py-6" onSubmit={handleSubmit}>
+      <form id="update-session-form" className="flex flex-col gap-6 px-6 py-6" onSubmit={handleSubmit}>
         {proposal ? (
           <div className="flex items-start justify-between gap-6">
             <div>
@@ -130,7 +137,6 @@ export function SessionForm({
 
         <div className="flex items-center gap-6">
           <ClockIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-
           <TimeRangeInput
             nameStart="start-local"
             startTime={getMinutesFromStartOfDay(timeslot.start)}
@@ -152,7 +158,6 @@ export function SessionForm({
 
         <div className="flex items-center gap-6">
           <MapPinIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-
           <SelectNative
             name="trackId"
             label="Track"
@@ -163,10 +168,47 @@ export function SessionForm({
           />
         </div>
 
+        <div className="flex items-center gap-6">
+          <LanguageIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+          <SelectNative
+            name="language"
+            label="Language"
+            value={language || ''}
+            placeholder="No language"
+            onChange={(e) => setLanguage(e.target.value)}
+            options={LANGUAGES.map((lang) => ({ name: lang.label, value: lang.value }))}
+            srOnly
+          />
+        </div>
+
         <div className="flex items-center gap-7">
           <PaintBrushIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-
           <ColorPicker label="Choose a label color" value={color} onChange={setColor} options={SESSION_COLORS} srOnly />
+        </div>
+
+        <div className="flex items-center gap-7">
+          <FaceSmileIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+
+          {/* TODO: Create a component */}
+          <div className="flex gap-3">
+            {emojis?.map((code) => {
+              const emoji = SESSION_EMOJIS.find((e) => e.code === code);
+              return <p key={emoji?.code}>{emoji?.skin}</p>;
+            })}
+            <EmojiPicker
+              label="Choose a emoji"
+              emojis={SESSION_EMOJIS}
+              icon={PlusIcon}
+              onSelectEmoji={(selected) =>
+                setEmojis((current) => {
+                  if (current.includes(selected.code)) {
+                    return current.filter((code) => code !== selected.code);
+                  }
+                  return [...current, selected.code];
+                })
+              }
+            />
+          </div>
         </div>
 
         {error ? <Callout variant="error">{error}</Callout> : null}

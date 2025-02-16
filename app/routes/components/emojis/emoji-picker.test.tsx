@@ -35,10 +35,10 @@ describe('EmojiPicker component', () => {
     const button = screen.getByRole('button', { name: 'Select a reaction' });
     await userEvent.click(button);
 
-    const thumbsUpButton = await screen.getByRole('button', { name: 'Thumbs up' });
+    const thumbsUpButton = screen.getByRole('button', { name: 'Thumbs up' });
     await expect.element(thumbsUpButton).toHaveAttribute('disabled');
 
-    const thumbsDownButton = await screen.getByRole('button', { name: 'Thumbs down' });
+    const thumbsDownButton = screen.getByRole('button', { name: 'Thumbs down' });
     await expect.element(thumbsDownButton).not.toHaveAttribute('disabled');
   });
 });
