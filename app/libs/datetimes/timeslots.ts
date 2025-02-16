@@ -52,6 +52,11 @@ export const totalTimeInMinutes = (slot: TimeSlot): number => {
   return differenceInMinutes(slot.end, slot.start);
 };
 
+// TODO: Add tests
+export const isValidTimeSlot = (timeslot: TimeSlot): boolean => {
+  return isAfter(timeslot.end, timeslot.start);
+};
+
 export const isAfterTimeSlot = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
   return isAfter(slot1.start, slot2.start);
 };

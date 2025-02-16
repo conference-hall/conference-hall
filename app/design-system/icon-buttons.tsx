@@ -5,7 +5,7 @@ import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
 
 const button = cva(
-  ['flex items-center rounded-full shrink-0', 'focus:outline-hidden focus:ring-2 focus:ring-indigo-500'],
+  ['flex items-center rounded-full shrink-0 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 cursor-pointer'],
   {
     variants: {
       variant: {

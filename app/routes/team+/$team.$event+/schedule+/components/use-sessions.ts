@@ -3,7 +3,7 @@ import { useFetchers, useSubmit } from 'react-router';
 import { v4 as uuid } from 'uuid';
 
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
-import { areTimeSlotsOverlapping, moveTimeSlotStart } from '~/libs/datetimes/timeslots.ts';
+import { areTimeSlotsOverlapping } from '~/libs/datetimes/timeslots.ts';
 import { formatZonedTimeToUtc } from '~/libs/datetimes/timezone.ts';
 
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
@@ -59,28 +59,24 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
   };
 
   const onUpdate = (session: ScheduleSession, updatedSession: ScheduleSession) => {
-    const updatedTimeslot = moveTimeSlotStart(session.timeslot, updatedSession.timeslot.start);
-
     const conflicting = sessions.some(
       (s) =>
         s.id !== session.id &&
         s.trackId === updatedSession.trackId &&
-        areTimeSlotsOverlapping(updatedTimeslot, s.timeslot),
+        areTimeSlotsOverlapping(updatedSession.timeslot, s.timeslot),
     );
-    if (conflicting) return;
+    if (conflicting) return false;
 
     update(updatedSession);
+    return true;
   };
 
-  const onMove = (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot) => {
-    const updatedTimeslot = moveTimeSlotStart(session.timeslot, newTimeslot.start);
+  const onMove = (session: ScheduleSession) => {
+    update(session);
+  };
 
-    const conflicting = sessions.some(
-      (s) => s.id !== session.id && s.trackId === newTrackId && areTimeSlotsOverlapping(updatedTimeslot, s.timeslot),
-    );
-    if (conflicting) return;
-
-    update({ ...session, trackId: newTrackId, timeslot: updatedTimeslot });
+  const onResize = (session: ScheduleSession) => {
+    update(session);
   };
 
   const onSwitch = (source: ScheduleSession, target: ScheduleSession) => {
@@ -106,6 +102,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     add: onAdd,
     update: onUpdate,
     move: onMove,
+    resize: onResize,
     switch: onSwitch,
     delete: onDelete,
     data: sessions,

@@ -121,6 +121,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
           onSelectSession={setOpenSession}
           onAddSession={sessions.add}
           onMoveSession={sessions.move}
+          onResizeSession={sessions.resize}
           onSwitchSessions={sessions.switch}
           renderSession={(session) => <SessionBlock session={session} />}
         />
