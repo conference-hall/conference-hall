@@ -44,8 +44,7 @@ type ScheduleProps = {
   sessions: Array<ScheduleSession>;
   renderSession: (session: ScheduleSession) => ReactNode;
   onAddSession: (trackId: string, timeslot: TimeSlot) => void;
-  onMoveSession: (session: ScheduleSession) => void;
-  onResizeSession: (session: ScheduleSession) => void;
+  onUpdateSession: (session: ScheduleSession) => boolean;
   onSelectSession: (session: ScheduleSession) => void;
   onSwitchSessions: (source: ScheduleSession, target: ScheduleSession) => void;
   zoomLevel?: number;
@@ -59,8 +58,7 @@ export default function Schedule({
   sessions = [],
   renderSession,
   onAddSession,
-  onMoveSession,
-  onResizeSession,
+  onUpdateSession,
   onSelectSession,
   onSwitchSessions,
   zoomLevel = DEFAULT_ZOOM_LEVEL,
@@ -70,23 +68,20 @@ export default function Schedule({
   const selector = useTimeslotSelector(sessions, onAddSession);
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    const { action } = active.data.current || {};
+    const { action, session } = active.data.current || {};
     const { type } = over?.data?.current || {};
 
     if (action === 'resize-session' && type === 'timeslot') {
       const { timeslot: targetTimeslot } = over?.data?.current || {};
-      const { session } = active.data.current || {};
-      const newSession = safeSessionResizeToTimeslot(session, targetTimeslot, sessions);
-      onResizeSession(newSession);
+      const updatedSession = safeSessionResizeToTimeslot(session, targetTimeslot, sessions);
+      onUpdateSession(updatedSession);
     } else if (action === 'move-session' && type === 'timeslot') {
-      const { trackId, timeslot } = over?.data?.current || {};
-      const { session } = active.data.current || {};
-      const newSession = safeSessionMoveToTimeslot(session, trackId, timeslot, sessions);
-      onMoveSession(newSession);
+      const { trackId, timeslot: targetTimeslot } = over?.data?.current || {};
+      const updatedSession = safeSessionMoveToTimeslot(session, trackId, targetTimeslot, sessions);
+      onUpdateSession(updatedSession);
     } else if (action === 'move-session' && type === 'session') {
-      const { session: source } = active.data.current || {};
-      const { session: target } = over?.data?.current || {};
-      onSwitchSessions(source, target);
+      const { session: sessionTarget } = over?.data?.current || {};
+      onSwitchSessions(session, sessionTarget);
     }
   };
 
@@ -103,14 +98,14 @@ export default function Schedule({
     >
       <div className={cx('w-full bg-white', { 'select-none': selector.isSelecting })}>
         <table className="min-w-full border-separate border-spacing-0">
-          {/* Header */}
+          {/* header */}
           <thead>
             <tr className="sticky top-[64px] z-30 divide-x divide-gray-200 shadow-sm">
-              {/* Gutter with timezone */}
+              {/* gutter with timezone */}
               <th scope="col" className="h-12 w-12 text-xs font-normal text-center bg-white text-gray-400">
                 {getGMTOffset(timezone)}
               </th>
-              {/* Tracks header */}
+              {/* tracks header */}
               {tracks.map((track) => (
                 <th scope="col" key={track.id} className="h-12 relative bg-white">
                   <div className="absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 overflow-hidden">
@@ -121,9 +116,9 @@ export default function Schedule({
             </tr>
           </thead>
 
-          {/* Content */}
+          {/* content */}
           <tbody>
-            {/* Empty line */}
+            {/* empty line */}
             <tr className="divide-x divide-gray-200">
               <td className="h-6 w-12" />
               {tracks.map((track) => (
@@ -131,7 +126,7 @@ export default function Schedule({
               ))}
             </tr>
 
-            {/* Rows by hours */}
+            {/* rows by hours */}
             {hours.map((hour) => {
               const startHour = toTimeFormat(hour.start);
               const endHour = toTimeFormat(hour.end);
@@ -139,14 +134,14 @@ export default function Schedule({
 
               return (
                 <tr key={`${startHour}-${endHour}`} className="divide-x divide-gray-200">
-                  {/* Gutter time */}
+                  {/* gutter */}
                   <td className="relative whitespace-nowrap text-xs text-gray-500">
                     <time className="absolute -top-2 right-2" dateTime={startHour}>
                       {startHour}
                     </time>
                   </td>
 
-                  {/* Rows by track */}
+                  {/* rows by track */}
                   {tracks.map((track) => (
                     <td key={track.id} className="p-0">
                       {hourSlots.map((timeslot, index) => {
@@ -197,24 +192,26 @@ function Timeslot({
   onSelectSession,
   renderSession,
 }: TimeslotProps) {
+  // global dnd context
+  const { active } = useDndContext();
+
   // selection attributes
   const isSelected = selector.isSelectedSlot(trackId, timeslot);
   const selectedSlot = selector.getSelectedSlot(trackId);
 
-  // Current dragging action
-  const { active } = useDndContext();
-  const { session: draggingSession, action: draggingAction } = active?.data?.current || {};
-
   // is timeslot include a session
   const timeslotSession = sessions.find((s) => s.trackId === trackId && isTimeSlotIncluded(timeslot, s.timeslot));
   const hasSession = Boolean(timeslotSession);
+
+  // current dragging action
+  const { session: draggingSession, action: draggingAction } = active?.data?.current || {};
   const isTimeslotSessionDragging = hasSession && timeslotSession?.id === draggingSession?.id;
   const isMovingAction = draggingAction === 'move-session';
 
   // displayed session on first session timeslot
   const session = timeslotSession && haveSameStartDate(timeslot, timeslotSession.timeslot) ? timeslotSession : null;
 
-  // Droppable for sessions switch
+  // droppable to switch sessions
   const { setNodeRef, isOver } = useDroppable({
     id: `${trackId}-${timeslot.start.toISOString()}`,
     data: { type: 'timeslot', trackId, timeslot },
@@ -239,10 +236,10 @@ function Timeslot({
           isFirstTimeslot && !isOver,
       })}
     >
-      {/* Invisible span to have content for the table */}
+      {/* invisible span to have content for the table */}
       <span className="invisible">{`Timeslot ${toTimeFormat(timeslot.start)}`}</span>
       {session ? (
-        // Displayed session block
+        // displayed session block
         <SessionWrapper
           session={session}
           sessions={sessions}
@@ -252,9 +249,9 @@ function Timeslot({
           zoomLevel={zoomLevel}
         />
       ) : selectedSlot && haveSameStartDate(timeslot, selectedSlot) ? (
-        // Display pre-rendered session on selection
+        // display pre-rendered on session creation
         <SessionWrapper
-          session={{ id: 'selection', trackId, timeslot: selectedSlot, color: 'gray' }}
+          session={{ id: 'selection', trackId, timeslot: selectedSlot, color: 'stone' }}
           sessions={sessions}
           renderSession={renderSession}
           interval={SLOT_INTERVAL}
@@ -346,6 +343,7 @@ function SessionWrapper({ session, sessions, renderSession, onClick, interval, z
           {renderSession(session)}
         </div>
       </div>
+
       {/* resize handler */}
       {currentDraggingAction !== 'move-session' ? (
         <div
@@ -360,6 +358,7 @@ function SessionWrapper({ session, sessions, renderSession, onClick, interval, z
   );
 }
 
+// Get a single timeslot height
 function getTimeslotHeight(zoomLevel: number) {
   if (zoomLevel >= 0 && zoomLevel < TIMESLOT_HEIGHTS.length) {
     return TIMESLOT_HEIGHTS[zoomLevel];
@@ -379,6 +378,7 @@ const collisionDetection: CollisionDetection = (args) => {
   return rectIntersection({ ...args, droppableContainers: prioritizedCollisions });
 };
 
+// Return a valid resized session according given target timeslot
 function safeSessionResizeToTimeslot(
   session: ScheduleSession,
   targetTimeslot: TimeSlot,
@@ -403,6 +403,7 @@ function safeSessionResizeToTimeslot(
   return { ...session, timeslot: { start, end } };
 }
 
+// Return a valid moved session according given target trackId and timeslot
 function safeSessionMoveToTimeslot(
   session: ScheduleSession,
   targetTrackId: string,

@@ -32,7 +32,7 @@ type Props = {
   isSearching: boolean;
   onFinish: VoidFunction;
   onToggleSearch: VoidFunction;
-  onUpdateSession: (current: ScheduleSession, updated: ScheduleSession) => boolean;
+  onUpdateSession: (updated: ScheduleSession) => boolean;
   onDeleteSession: (session: ScheduleSession) => void;
 };
 
@@ -65,7 +65,7 @@ export function SessionForm({
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    const success = onUpdateSession(session, { ...session, name, color, trackId, timeslot, proposal });
+    const success = onUpdateSession({ ...session, name, color, trackId, timeslot, proposal });
     if (success) {
       setError(null);
       onFinish();
