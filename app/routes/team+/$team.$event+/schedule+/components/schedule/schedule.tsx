@@ -16,9 +16,11 @@ import type { ReactNode } from 'react';
 import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import {
+  areTimeSlotsOverlapping,
   countIntervalsInTimeSlot,
   getDailyTimeSlots,
   haveSameStartDate,
+  isAfterTimeSlot,
   isTimeSlotIncluded,
   moveTimeSlotStart,
   totalTimeInMinutes,
@@ -43,7 +45,8 @@ type ScheduleProps = {
   sessions: Array<ScheduleSession>;
   renderSession: (session: ScheduleSession) => ReactNode;
   onAddSession: (trackId: string, timeslot: TimeSlot) => void;
-  onMoveSession: (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot) => void;
+  onMoveSession: (session: ScheduleSession) => void;
+  onResizeSession: (session: ScheduleSession) => void;
   onSelectSession: (session: ScheduleSession) => void;
   onSwitchSessions: (source: ScheduleSession, target: ScheduleSession) => void;
   zoomLevel?: number;
@@ -59,6 +62,7 @@ export default function Schedule({
   renderSession,
   onAddSession,
   onMoveSession,
+  onResizeSession,
   onSelectSession,
   onSwitchSessions,
   zoomLevel = DEFAULT_ZOOM_LEVEL,
@@ -68,13 +72,24 @@ export default function Schedule({
   const selector = useTimeslotSelector(sessions, onAddSession);
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    if (over?.data?.current?.type === 'timeslot') {
-      const { trackId, timeslot } = over.data.current || {};
+    const { action } = active.data.current || {};
+    const { type } = over?.data?.current || {};
+
+    if (action === 'resize-session' && type === 'timeslot') {
+      const { timeslot } = over?.data?.current || {};
       const { session } = active.data.current || {};
-      onMoveSession(session, trackId, timeslot);
-    } else if (over?.data?.current?.type === 'session') {
+      const newTimeslot = { start: session.timeslot.start, end: timeslot.end };
+      const newSession = safeSessionTimeslotUpdate({ ...session, timeslot: newTimeslot }, sessions);
+      onResizeSession(newSession);
+    } else if (action === 'move-session' && type === 'timeslot') {
+      const { trackId, timeslot } = over?.data?.current || {};
+      const { session } = active.data.current || {};
+      const newTimeslot = moveTimeSlotStart(session.timeslot, timeslot.start);
+      const newSession = safeSessionTimeslotUpdate({ ...session, trackId, timeslot: newTimeslot }, sessions);
+      onMoveSession(newSession);
+    } else if (action === 'move-session' && type === 'session') {
       const { session: source } = active.data.current || {};
-      const { session: target } = over.data.current || {};
+      const { session: target } = over?.data?.current || {};
       onSwitchSessions(source, target);
     }
   };
@@ -116,7 +131,7 @@ export default function Schedule({
             <tr className="divide-x divide-gray-200">
               <td className="h-6 w-12" />
               {tracks.map((track) => (
-                <td key={track.id} className="h-6 border-b"></td>
+                <td key={track.id} className="h-6 border-b" />
               ))}
             </tr>
 
@@ -191,10 +206,11 @@ function Timeslot({
   const selectedSlot = selector.getSelectedSlot(trackId);
 
   // is timeslot include a session
-  const { active } = useDndContext();
+  // const { active } = useDndContext();
   const currentSession = sessions.find((s) => s.trackId === trackId && isTimeSlotIncluded(timeslot, s.timeslot));
   const hasSession = Boolean(currentSession);
-  const isCurrentSessionDragging = currentSession && active?.id === currentSession.id;
+  // const isCurrentSessionMoving = Boolean(active) && active?.id === `move:${currentSession?.id}`;
+  // const otherCurrentSessionMoving = Boolean(active) && active?.id !== `move:${currentSession?.id}`;
 
   // displayed session on first session timeslot
   const session = currentSession && haveSameStartDate(timeslot, currentSession.timeslot) ? currentSession : null;
@@ -203,7 +219,7 @@ function Timeslot({
   const { setNodeRef, isOver } = useDroppable({
     id: `${trackId}-${timeslot.start.toISOString()}`,
     data: { type: 'timeslot', trackId, timeslot },
-    disabled: hasSession && !isCurrentSessionDragging,
+    // disabled: hasSession && !isCurrentSessionMoving && !otherCurrentSessionMoving,
   });
 
   return (
@@ -228,6 +244,7 @@ function Timeslot({
         // Displayed session block
         <SessionWrapper
           session={session}
+          sessions={sessions}
           renderSession={renderSession}
           onClick={onSelectSession}
           interval={interval}
@@ -237,6 +254,7 @@ function Timeslot({
         // Display pre-rendered session on selection
         <SessionWrapper
           session={{ id: 'selection', trackId, timeslot: selectedSlot, color: 'gray' }}
+          sessions={sessions}
           renderSession={renderSession}
           interval={interval}
           zoomLevel={zoomLevel}
@@ -248,56 +266,97 @@ function Timeslot({
 
 type SessionWrapperProps = {
   session: ScheduleSession;
+  sessions: Array<ScheduleSession>;
   renderSession: (session: ScheduleSession) => ReactNode;
   onClick?: (session: ScheduleSession) => void;
   interval: number;
   zoomLevel: number;
 };
 
-function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }: SessionWrapperProps) {
+function SessionWrapper({ session, sessions, renderSession, onClick, interval, zoomLevel }: SessionWrapperProps) {
+  const { active } = useDndContext();
+  const isOtherDraggingSession = active?.data?.current?.session?.id !== session.id;
+  const currentDraggingAction = active?.data?.current?.action;
+
   // draggable to move session
-  const { attributes, listeners, setNodeRef, transform, isDragging, over } = useDraggable({
-    id: session.id,
-    data: { session },
+  const movable = useDraggable({
+    id: `move:${session.id}`,
+    data: { session, action: 'move-session' },
+    disabled: isOtherDraggingSession && currentDraggingAction === 'resize-session',
+  });
+
+  // draggable to resize session
+  const resizable = useDraggable({
+    id: `resize:${session.id}`,
+    data: { session, action: 'resize-session' },
+    disabled: isOtherDraggingSession && currentDraggingAction === 'move-session',
   });
 
   // droppable to switch sessions
   const { setNodeRef: setDropRef, isOver } = useDroppable({
     id: `drop:${session.id}`,
     data: { type: 'session', session },
-    disabled: isDragging,
+    disabled: movable.isDragging || resizable.isDragging || currentDraggingAction === 'resize-session',
   });
+
+  // update displayed times on session when dragging
+  if (movable.isDragging && movable.over?.data?.current?.type === 'timeslot') {
+    const { timeslot } = movable.over.data.current || {};
+    const newTimeslot = moveTimeSlotStart(session.timeslot, timeslot.start);
+    session = { ...session, timeslot: newTimeslot };
+  }
+
+  // update displayed times on session resize
+  if (resizable.isDragging && resizable.over?.data?.current?.type === 'timeslot') {
+    const { timeslot: targetSlot } = resizable.over.data.current;
+    const newTimeslot = { start: session.timeslot.start, end: targetSlot.end };
+    session = safeSessionTimeslotUpdate({ ...session, timeslot: newTimeslot }, sessions);
+  }
 
   // compute session height
   const totalTimeMinutes = totalTimeInMinutes(session.timeslot);
   const intervalsCount = countIntervalsInTimeSlot(session.timeslot, interval);
   const height = getTimeslotHeight(zoomLevel) * intervalsCount + Math.ceil(totalTimeMinutes / HOUR_INTERVAL) - 3;
 
-  // update displayed times on session when dragging
-  if (isDragging && over?.data?.current?.type === 'timeslot') {
-    const { timeslot } = over.data.current || {};
-    session = { ...session, timeslot: moveTimeSlotStart(session.timeslot, timeslot.start) };
-  }
-
   return (
-    <div
-      ref={setNodeRef}
-      className={cx('absolute z-20 overflow-hidden text-left', { 'ring-1 ring-blue-600 rounded-md': isOver })}
-      onClick={() => (onClick ? onClick(session) : undefined)}
-      style={{
-        top: '1px',
-        left: '1px',
-        right: '1px',
-        transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-        zIndex: isDragging ? '40' : undefined,
-      }}
-      {...listeners}
-      {...attributes}
-    >
-      <div ref={setDropRef} style={{ height: `${height}px` }}>
-        {renderSession(session)}
+    <>
+      {/* session position & handler */}
+      <div
+        ref={movable.setNodeRef}
+        className={cx('absolute z-20 overflow-hidden text-left', {
+          'ring-1 ring-blue-600 rounded-md': isOver,
+          'cursor-pointer': !currentDraggingAction,
+          'cursor-grabbing': movable.isDragging && currentDraggingAction === 'move-session',
+          'cursor-ns-resize': resizable.isDragging && currentDraggingAction === 'resize-session',
+        })}
+        onClick={() => (onClick ? onClick(session) : undefined)}
+        style={{
+          top: '1px',
+          left: '1px',
+          right: '1px',
+          transform: movable.transform
+            ? `translate3d(${movable.transform.x}px, ${movable.transform.y}px, 0)`
+            : undefined,
+          zIndex: movable.isDragging ? '40' : undefined,
+        }}
+        {...movable.listeners}
+        {...movable.attributes}
+      >
+        <div ref={setDropRef} style={{ height: `${height}px` }} className="overflow-auto">
+          {renderSession(session)}
+        </div>
       </div>
-    </div>
+      {/* resize handler */}
+      {currentDraggingAction !== 'move-session' ? (
+        <div
+          ref={resizable.setNodeRef}
+          style={{ top: `${height}px` }}
+          className="absolute -bottom-1 h-2 w-full cursor-ns-resize z-40"
+          {...resizable.listeners}
+          {...resizable.attributes}
+        />
+      ) : null}
+    </>
   );
 }
 
@@ -319,3 +378,24 @@ const collisionDetection: CollisionDetection = (args) => {
 
   return rectIntersection({ ...args, droppableContainers: prioritizedCollisions });
 };
+
+function safeSessionTimeslotUpdate(session: ScheduleSession, sessions: Array<ScheduleSession>) {
+  const trackSessions = sessions
+    .filter((s) => s.trackId === session.trackId && s.id !== session.id)
+    .sort((a, b) => {
+      if (isAfterTimeSlot(a.timeslot, b.timeslot)) return 1;
+      return -1;
+    });
+
+  const sessionBefore = trackSessions.filter((s) => isAfterTimeSlot(session.timeslot, s.timeslot)).at(-1);
+  const sessionAfter = trackSessions.filter((s) => isAfterTimeSlot(s.timeslot, session.timeslot)).at(0);
+
+  let { start, end } = session.timeslot;
+  if (sessionBefore && areTimeSlotsOverlapping(session.timeslot, sessionBefore.timeslot)) {
+    start = sessionBefore.timeslot.end;
+  }
+  if (sessionAfter && areTimeSlotsOverlapping(session.timeslot, sessionAfter.timeslot)) {
+    end = sessionAfter.timeslot.start;
+  }
+  return { ...session, timeslot: { start, end } };
+}

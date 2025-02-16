@@ -1,7 +1,7 @@
 import { CheckIcon, ClockIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 
-import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
+import { formatTimeDifference, toTimeFormat } from '~/libs/datetimes/datetimes.ts';
 
 import type { ScheduleProposalData, ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS } from './constants.ts';
@@ -15,6 +15,7 @@ export function SessionBlock({ session }: SessionBlockProps) {
 
   const start = toTimeFormat(timeslot.start);
   const end = toTimeFormat(timeslot.end);
+  const minutes = formatTimeDifference(timeslot.start, timeslot.end);
 
   return (
     <div className={cx('text-xs flex flex-col justify-between h-full px-1 rounded-sm', block)}>
@@ -37,8 +38,9 @@ export function SessionBlock({ session }: SessionBlockProps) {
       ) : (
         <div className="h-full flex flex-col justify-between">
           <p className="font-semibold">{session.name}</p>
-          <p>
+          <p className="space-x-1">
             <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time>
+            <span>({minutes})</span>
           </p>
         </div>
       )}

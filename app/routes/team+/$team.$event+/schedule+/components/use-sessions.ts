@@ -72,15 +72,12 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     update(updatedSession);
   };
 
-  const onMove = (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot) => {
-    const updatedTimeslot = moveTimeSlotStart(session.timeslot, newTimeslot.start);
+  const onMove = (session: ScheduleSession) => {
+    update(session);
+  };
 
-    const conflicting = sessions.some(
-      (s) => s.id !== session.id && s.trackId === newTrackId && areTimeSlotsOverlapping(updatedTimeslot, s.timeslot),
-    );
-    if (conflicting) return;
-
-    update({ ...session, trackId: newTrackId, timeslot: updatedTimeslot });
+  const onResize = (session: ScheduleSession) => {
+    update(session);
   };
 
   const onSwitch = (source: ScheduleSession, target: ScheduleSession) => {
@@ -106,6 +103,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     add: onAdd,
     update: onUpdate,
     move: onMove,
+    resize: onResize,
     switch: onSwitch,
     delete: onDelete,
     data: sessions,
