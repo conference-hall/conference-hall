@@ -251,7 +251,7 @@ function Timeslot({
       ) : selectedSlot && haveSameStartDate(timeslot, selectedSlot) ? (
         // display pre-rendered on session creation
         <SessionWrapper
-          session={{ id: 'selection', trackId, timeslot: selectedSlot, color: 'stone' }}
+          session={{ id: 'selection', trackId, timeslot: selectedSlot, color: 'stone', emojis: [], language: null }}
           sessions={sessions}
           renderSession={renderSession}
           interval={SLOT_INTERVAL}

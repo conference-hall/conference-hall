@@ -57,10 +57,10 @@ export function SessionForm({
   const [name, setName] = useState(session.name);
   const [color, setColor] = useState(session.color);
   const [trackId, setTrackId] = useState(session.trackId);
-  const [language, setLanguage] = useState<string | null>(); // TODO: set session language
+  const [language, setLanguage] = useState(session.language);
   const [timeslot, setTimeslot] = useState(session.timeslot);
-  const [proposal, setProposal] = useState(session.proposal); // TODO: set session emojis
-  const [emojis, setEmojis] = useState<Array<string>>([]);
+  const [proposal, setProposal] = useState(session.proposal);
+  const [emojis, setEmojis] = useState(session.emojis);
   const [error, setError] = useState<string | null>();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -72,7 +72,7 @@ export function SessionForm({
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    const success = onUpdateSession({ ...session, name, color, trackId, timeslot, proposal });
+    const success = onUpdateSession({ ...session, name, color, language, emojis, trackId, timeslot, proposal });
     if (success) {
       setError(null);
       onFinish();

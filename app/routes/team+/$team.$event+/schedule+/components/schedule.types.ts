@@ -8,7 +8,9 @@ export type ScheduleSession = {
   trackId: string;
   timeslot: TimeSlot;
   name?: string | null;
+  language: string | null;
   color: string;
+  emojis: string[];
   proposal?: ScheduleProposalData | null;
 };
 
@@ -17,15 +19,16 @@ export type SessionData = {
   trackId: string;
   start: Date;
   end: Date;
-  color: string;
   name?: string | null;
+  language: string | null;
+  color: string;
+  emojis: string[];
   proposal?: ScheduleProposalData | null;
 };
 
 export type ScheduleProposalData = {
   id: string;
   title: string;
-  languages?: Array<string>;
   deliberationStatus: DeliberationStatus;
   confirmationStatus: ConfirmationStatus | null;
   formats?: Array<{ id: string; name: string }>;

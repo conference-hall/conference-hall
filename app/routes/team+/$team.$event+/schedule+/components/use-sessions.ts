@@ -37,25 +37,27 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
   };
 
   const update = (session: ScheduleSession) => {
-    submit(
-      {
-        intent: 'update-session',
-        id: session.id,
-        trackId: session.trackId,
-        start: formatZonedTimeToUtc(session.timeslot.start, timezone),
-        end: formatZonedTimeToUtc(session.timeslot.end, timezone),
-        color: session.color,
-        name: session.name ?? '',
-        proposalId: session.proposal?.id ?? '',
-      },
-      {
-        method: 'POST',
-        navigate: false,
-        fetcherKey: `session:${session.id}`,
-        flushSync: true,
-        preventScrollReset: true,
-      },
-    );
+    const formData = new FormData();
+    formData.set('intent', 'update-session');
+    formData.set('id', session.id);
+    formData.set('trackId', session.trackId);
+    formData.set('start', formatZonedTimeToUtc(session.timeslot.start, timezone));
+    formData.set('end', formatZonedTimeToUtc(session.timeslot.end, timezone));
+    formData.set('color', session.color);
+    formData.set('name', session.name ?? '');
+    formData.set('language', session.language ?? '');
+    formData.set('proposalId', session.proposal?.id ?? '');
+    for (const emoji of session.emojis) {
+      formData.append('emojis', emoji);
+    }
+
+    submit(formData, {
+      method: 'POST',
+      navigate: false,
+      fetcherKey: `session:${session.id}`,
+      flushSync: true,
+      preventScrollReset: true,
+    });
   };
 
   const onUpdate = (updatedSession: ScheduleSession) => {
@@ -105,14 +107,16 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
   };
 
   const sessionsById = new Map(
-    initialSessions.map(({ id, trackId, start, end, name, color, proposal }) => [
+    initialSessions.map(({ id, trackId, start, end, name, language, color, emojis, proposal }) => [
       id,
       {
         id,
         trackId,
         timeslot: { start: toZonedTime(start, timezone), end: toZonedTime(end, timezone) },
         name,
+        language,
         color,
+        emojis,
         proposal,
       },
     ]),
@@ -132,6 +136,8 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
       trackId: String(fetcher.formData?.get('trackId')),
       color: String(fetcher.formData?.get('color') ?? 'gray'),
       name: String(fetcher.formData?.get('name') ?? ''),
+      language: String(fetcher.formData?.get('language') ?? null),
+      emojis: fetcher.formData?.getAll('emojis') as string[],
       timeslot: {
         start: toZonedTime(String(fetcher.formData?.get('start')), timezone),
         end: toZonedTime(String(fetcher.formData?.get('end')), timezone),

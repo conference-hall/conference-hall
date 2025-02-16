@@ -5,12 +5,12 @@ import { formatTimeDifference, toTimeFormat } from '~/libs/datetimes/datetimes.t
 
 import { getFlag } from '~/libs/formatters/languages.ts';
 import type { ScheduleProposalData, ScheduleSession } from '../schedule.types.ts';
-import { SESSION_COLORS } from './constants.ts';
+import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 
 type SessionBlockProps = { session: ScheduleSession };
 
 export function SessionBlock({ session }: SessionBlockProps) {
-  const { timeslot, proposal } = session;
+  const { timeslot, proposal, language, emojis } = session;
 
   const { block } = SESSION_COLORS.find((c) => c.value === session.color) ?? SESSION_COLORS[0];
 
@@ -33,11 +33,17 @@ export function SessionBlock({ session }: SessionBlockProps) {
           <p className="font-semibold">{session.name}</p>
         </div>
       )}
-      <div className="flex justify-between text-[10px]">
+      <div className="flex justify-between items-end text-[10px]">
         <p>
           <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time> <span>({minutes})</span>
         </p>
-        {proposal?.languages ? <p>{proposal.languages.map(getFlag)}</p> : null}
+        <div className="flex items-end gap-2 text-sm">
+          {emojis?.map((code) => {
+            const emoji = SESSION_EMOJIS.find((e) => e.code === code);
+            return <p key={code}>{emoji?.skin}</p>;
+          })}
+          {language ? <p>{getFlag(language)}</p> : null}
+        </div>
       </div>
     </div>
   );

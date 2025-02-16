@@ -58,6 +58,8 @@ export const ScheduleSessionUpdateSchema = ScheduleSessionCreateSchema.extend({
   id: z.string(),
   name: z.string().trim().optional(),
   color: z.string(),
+  emojis: z.array(z.string()),
+  language: z.string().trim().optional(),
   proposalId: z.string().optional(),
 });
 
