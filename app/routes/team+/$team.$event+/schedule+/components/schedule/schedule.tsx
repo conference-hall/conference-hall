@@ -13,20 +13,18 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
+import { addMinutes, isAfter, isBefore } from 'date-fns';
 import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import {
-  areTimeSlotsOverlapping,
   countIntervalsInTimeSlot,
   getDailyTimeSlots,
   haveSameStartDate,
   isAfterTimeSlot,
   isTimeSlotIncluded,
   moveTimeSlotStart,
-  totalTimeInMinutes,
 } from '~/libs/datetimes/timeslots.ts';
 import { getGMTOffset } from '~/libs/datetimes/timezone.ts';
-
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import type { TimeSlotSelector } from './use-timeslot-selector.tsx';
 import { useTimeslotSelector } from './use-timeslot-selector.tsx';
@@ -34,7 +32,9 @@ import { useTimeslotSelector } from './use-timeslot-selector.tsx';
 const HOUR_INTERVAL = 60; // minutes
 const SLOT_INTERVAL = 5; // minutes
 const TIMESLOT_HEIGHTS = [8, 12, 16, 20]; // px
+const SESSIONS_GAP_PX = 1;
 const DEFAULT_ZOOM_LEVEL = 1;
+const DEBUG_MODE = false;
 
 type ScheduleProps = {
   startTime: Date;
@@ -56,7 +56,6 @@ export default function Schedule({
   startTime,
   endTime,
   timezone,
-  interval = SLOT_INTERVAL,
   tracks = [],
   sessions = [],
   renderSession,
@@ -76,16 +75,14 @@ export default function Schedule({
     const { type } = over?.data?.current || {};
 
     if (action === 'resize-session' && type === 'timeslot') {
-      const { timeslot } = over?.data?.current || {};
+      const { timeslot: targetTimeslot } = over?.data?.current || {};
       const { session } = active.data.current || {};
-      const newTimeslot = { start: session.timeslot.start, end: timeslot.end };
-      const newSession = safeSessionTimeslotUpdate({ ...session, timeslot: newTimeslot }, sessions);
+      const newSession = safeSessionResizeToTimeslot(session, targetTimeslot, sessions);
       onResizeSession(newSession);
     } else if (action === 'move-session' && type === 'timeslot') {
       const { trackId, timeslot } = over?.data?.current || {};
       const { session } = active.data.current || {};
-      const newTimeslot = moveTimeSlotStart(session.timeslot, timeslot.start);
-      const newSession = safeSessionTimeslotUpdate({ ...session, trackId, timeslot: newTimeslot }, sessions);
+      const newSession = safeSessionMoveToTimeslot(session, trackId, timeslot, sessions);
       onMoveSession(newSession);
     } else if (action === 'move-session' && type === 'session') {
       const { session: source } = active.data.current || {};
@@ -131,15 +128,15 @@ export default function Schedule({
             <tr className="divide-x divide-gray-200">
               <td className="h-6 w-12" />
               {tracks.map((track) => (
-                <td key={track.id} className="h-6 border-b" />
+                <td key={track.id} className="h-6" />
               ))}
             </tr>
 
             {/* Rows by hours */}
-            {hours.map((hour, rowIndex) => {
+            {hours.map((hour) => {
               const startHour = toTimeFormat(hour.start);
               const endHour = toTimeFormat(hour.end);
-              const hourSlots = getDailyTimeSlots(hour.start, hour.end, interval);
+              const hourSlots = getDailyTimeSlots(hour.start, hour.end, SLOT_INTERVAL);
 
               return (
                 <tr key={`${startHour}-${endHour}`} className="divide-x divide-gray-200">
@@ -152,8 +149,8 @@ export default function Schedule({
 
                   {/* Rows by track */}
                   {tracks.map((track) => (
-                    <td key={track.id} className={cx('p-0', { 'border-b': rowIndex !== hours.length - 1 })}>
-                      {hourSlots.map((timeslot) => {
+                    <td key={track.id} className="p-0">
+                      {hourSlots.map((timeslot, index) => {
                         return (
                           <Timeslot
                             key={toTimeFormat(timeslot.start)}
@@ -161,8 +158,8 @@ export default function Schedule({
                             timeslot={timeslot}
                             sessions={sessions}
                             selector={selector}
-                            interval={interval}
                             zoomLevel={zoomLevel}
+                            isFirstTimeslot={index === 0}
                             onSelectSession={onSelectSession}
                             renderSession={renderSession}
                           />
@@ -185,8 +182,8 @@ type TimeslotProps = {
   timeslot: TimeSlot;
   sessions: Array<ScheduleSession>;
   selector: TimeSlotSelector;
-  interval: number;
   zoomLevel: number;
+  isFirstTimeslot: boolean;
   onSelectSession: (session: ScheduleSession) => void;
   renderSession: (session: ScheduleSession) => ReactNode;
 };
@@ -196,8 +193,8 @@ function Timeslot({
   timeslot,
   sessions,
   selector,
-  interval,
   zoomLevel,
+  isFirstTimeslot,
   onSelectSession,
   renderSession,
 }: TimeslotProps) {
@@ -205,21 +202,24 @@ function Timeslot({
   const isSelected = selector.isSelectedSlot(trackId, timeslot);
   const selectedSlot = selector.getSelectedSlot(trackId);
 
+  // Current dragging action
+  const { active } = useDndContext();
+  const { session: draggingSession, action: draggingAction } = active?.data?.current || {};
+
   // is timeslot include a session
-  // const { active } = useDndContext();
-  const currentSession = sessions.find((s) => s.trackId === trackId && isTimeSlotIncluded(timeslot, s.timeslot));
-  const hasSession = Boolean(currentSession);
-  // const isCurrentSessionMoving = Boolean(active) && active?.id === `move:${currentSession?.id}`;
-  // const otherCurrentSessionMoving = Boolean(active) && active?.id !== `move:${currentSession?.id}`;
+  const timeslotSession = sessions.find((s) => s.trackId === trackId && isTimeSlotIncluded(timeslot, s.timeslot));
+  const hasSession = Boolean(timeslotSession);
+  const isTimeslotSessionDragging = hasSession && timeslotSession?.id === draggingSession?.id;
+  const isMovingAction = draggingAction === 'move-session';
 
   // displayed session on first session timeslot
-  const session = currentSession && haveSameStartDate(timeslot, currentSession.timeslot) ? currentSession : null;
+  const session = timeslotSession && haveSameStartDate(timeslot, timeslotSession.timeslot) ? timeslotSession : null;
 
   // Droppable for sessions switch
   const { setNodeRef, isOver } = useDroppable({
     id: `${trackId}-${timeslot.start.toISOString()}`,
     data: { type: 'timeslot', trackId, timeslot },
-    // disabled: hasSession && !isCurrentSessionMoving && !otherCurrentSessionMoving,
+    disabled: hasSession && isMovingAction && !isTimeslotSessionDragging,
   });
 
   return (
@@ -234,8 +234,13 @@ function Timeslot({
       style={{ height: `${getTimeslotHeight(zoomLevel)}px` }}
       className={cx('relative', {
         'z-10': !hasSession,
+        'bg-red-200': DEBUG_MODE && hasSession && !isTimeslotSessionDragging,
+        'bg-blue-200': DEBUG_MODE && hasSession && isTimeslotSessionDragging,
+        'bg-green-200': DEBUG_MODE && !hasSession,
         'hover:bg-gray-50': !hasSession && !isSelected,
-        'border-t-2 border-blue-600': isOver,
+        "before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:border-t":
+          isFirstTimeslot && !isOver,
+        'border-t-2 border-blue-200': isOver && isMovingAction,
       })}
     >
       {/* Invisible span to have content for the table */}
@@ -247,7 +252,7 @@ function Timeslot({
           sessions={sessions}
           renderSession={renderSession}
           onClick={onSelectSession}
-          interval={interval}
+          interval={SLOT_INTERVAL}
           zoomLevel={zoomLevel}
         />
       ) : selectedSlot && haveSameStartDate(timeslot, selectedSlot) ? (
@@ -256,7 +261,7 @@ function Timeslot({
           session={{ id: 'selection', trackId, timeslot: selectedSlot, color: 'gray' }}
           sessions={sessions}
           renderSession={renderSession}
-          interval={interval}
+          interval={SLOT_INTERVAL}
           zoomLevel={zoomLevel}
         />
       ) : null}
@@ -309,14 +314,12 @@ function SessionWrapper({ session, sessions, renderSession, onClick, interval, z
   // update displayed times on session resize
   if (resizable.isDragging && resizable.over?.data?.current?.type === 'timeslot') {
     const { timeslot: targetSlot } = resizable.over.data.current;
-    const newTimeslot = { start: session.timeslot.start, end: targetSlot.end };
-    session = safeSessionTimeslotUpdate({ ...session, timeslot: newTimeslot }, sessions);
+    session = safeSessionResizeToTimeslot(session, targetSlot, sessions);
   }
 
   // compute session height
-  const totalTimeMinutes = totalTimeInMinutes(session.timeslot);
   const intervalsCount = countIntervalsInTimeSlot(session.timeslot, interval);
-  const height = getTimeslotHeight(zoomLevel) * intervalsCount + Math.ceil(totalTimeMinutes / HOUR_INTERVAL) - 3;
+  const height = getTimeslotHeight(zoomLevel) * intervalsCount - SESSIONS_GAP_PX;
 
   return (
     <>
@@ -325,13 +328,14 @@ function SessionWrapper({ session, sessions, renderSession, onClick, interval, z
         ref={movable.setNodeRef}
         className={cx('absolute z-20 overflow-hidden text-left', {
           'ring-1 ring-blue-600 rounded-md': isOver,
+          'shadow-lg': movable.isDragging,
           'cursor-pointer': !currentDraggingAction,
           'cursor-grabbing': movable.isDragging && currentDraggingAction === 'move-session',
           'cursor-ns-resize': resizable.isDragging && currentDraggingAction === 'resize-session',
         })}
         onClick={() => (onClick ? onClick(session) : undefined)}
         style={{
-          top: '1px',
+          top: '0px',
           left: '1px',
           right: '1px',
           transform: movable.transform
@@ -342,7 +346,7 @@ function SessionWrapper({ session, sessions, renderSession, onClick, interval, z
         {...movable.listeners}
         {...movable.attributes}
       >
-        <div ref={setDropRef} style={{ height: `${height}px` }} className="overflow-auto">
+        <div ref={setDropRef} style={{ height: `${height}px` }} className={cx({ 'opacity-70': DEBUG_MODE })}>
           {renderSession(session)}
         </div>
       </div>
@@ -351,7 +355,7 @@ function SessionWrapper({ session, sessions, renderSession, onClick, interval, z
         <div
           ref={resizable.setNodeRef}
           style={{ top: `${height}px` }}
-          className="absolute -bottom-1 h-2 w-full cursor-ns-resize z-40"
+          className="absolute -bottom-1 h-1 w-full cursor-ns-resize z-40"
           {...resizable.listeners}
           {...resizable.attributes}
         />
@@ -379,7 +383,11 @@ const collisionDetection: CollisionDetection = (args) => {
   return rectIntersection({ ...args, droppableContainers: prioritizedCollisions });
 };
 
-function safeSessionTimeslotUpdate(session: ScheduleSession, sessions: Array<ScheduleSession>) {
+function safeSessionResizeToTimeslot(
+  session: ScheduleSession,
+  targetTimeslot: TimeSlot,
+  sessions: Array<ScheduleSession>,
+) {
   const trackSessions = sessions
     .filter((s) => s.trackId === session.trackId && s.id !== session.id)
     .sort((a, b) => {
@@ -387,15 +395,36 @@ function safeSessionTimeslotUpdate(session: ScheduleSession, sessions: Array<Sch
       return -1;
     });
 
-  const sessionBefore = trackSessions.filter((s) => isAfterTimeSlot(session.timeslot, s.timeslot)).at(-1);
   const sessionAfter = trackSessions.filter((s) => isAfterTimeSlot(s.timeslot, session.timeslot)).at(0);
-
   let { start, end } = session.timeslot;
-  if (sessionBefore && areTimeSlotsOverlapping(session.timeslot, sessionBefore.timeslot)) {
-    start = sessionBefore.timeslot.end;
-  }
-  if (sessionAfter && areTimeSlotsOverlapping(session.timeslot, sessionAfter.timeslot)) {
-    end = sessionAfter.timeslot.start;
+  if (sessionAfter && isAfter(targetTimeslot.end, sessionAfter.timeslot.start)) {
+    end = sessionAfter.timeslot.start; // end cannot be after the next session
+  } else if (isBefore(targetTimeslot.end, start)) {
+    end = addMinutes(start, SLOT_INTERVAL); // end cannot be before the start
+  } else {
+    end = targetTimeslot.end;
   }
   return { ...session, timeslot: { start, end } };
+}
+
+function safeSessionMoveToTimeslot(
+  session: ScheduleSession,
+  targetTrackId: string,
+  targetTimeslot: TimeSlot,
+  sessions: Array<ScheduleSession>,
+) {
+  const trackSessions = sessions
+    .filter((s) => s.trackId === targetTrackId && s.id !== session.id)
+    .sort((a, b) => {
+      if (isAfterTimeSlot(a.timeslot, b.timeslot)) return 1;
+      return -1;
+    });
+
+  let { start, end } = moveTimeSlotStart(session.timeslot, targetTimeslot.start);
+  const sessionAfter = trackSessions.filter((s) => isAfterTimeSlot(s.timeslot, { start, end })).at(0);
+
+  if (sessionAfter && isAfter(end, sessionAfter.timeslot.start)) {
+    end = sessionAfter.timeslot.start; // end cannot be after the next session
+  }
+  return { ...session, trackId: targetTrackId, timeslot: { start, end } };
 }

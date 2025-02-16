@@ -38,9 +38,8 @@ export function SessionBlock({ session }: SessionBlockProps) {
       ) : (
         <div className="h-full flex flex-col justify-between">
           <p className="font-semibold">{session.name}</p>
-          <p className="space-x-1">
-            <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time>
-            <span>({minutes})</span>
+          <p>
+            <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time> <span>({minutes})</span>
           </p>
         </div>
       )}
