@@ -48,10 +48,6 @@ const generateDailyTimeSlots = (day: Date, intervalMinutes: number): Array<TimeS
   return timeSlots;
 };
 
-export const totalTimeInMinutes = (slot: TimeSlot): number => {
-  return differenceInMinutes(slot.end, slot.start);
-};
-
 export const isAfterTimeSlot = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
   return isAfter(slot1.start, slot2.start);
 };

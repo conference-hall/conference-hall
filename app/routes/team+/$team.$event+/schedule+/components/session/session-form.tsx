@@ -19,6 +19,7 @@ import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { getMinutesFromStartOfDay, setMinutesFromStartOfDay } from '~/libs/datetimes/datetimes.ts';
 
+import { Callout } from '~/design-system/callout.tsx';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS } from './constants.ts';
 import { SearchSessionProposal } from './search-session-proposal.tsx';
@@ -31,7 +32,7 @@ type Props = {
   isSearching: boolean;
   onFinish: VoidFunction;
   onToggleSearch: VoidFunction;
-  onUpdateSession: (current: ScheduleSession, updated: ScheduleSession) => void;
+  onUpdateSession: (updated: ScheduleSession) => boolean;
   onDeleteSession: (session: ScheduleSession) => void;
 };
 
@@ -53,6 +54,7 @@ export function SessionForm({
   const [trackId, setTrackId] = useState(session.trackId);
   const [timeslot, setTimeslot] = useState(session.timeslot);
   const [proposal, setProposal] = useState(session.proposal);
+  const [error, setError] = useState<string | null>();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -63,8 +65,13 @@ export function SessionForm({
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    onUpdateSession(session, { ...session, name, color, trackId, timeslot, proposal });
-    onFinish();
+    const success = onUpdateSession({ ...session, name, color, trackId, timeslot, proposal });
+    if (success) {
+      setError(null);
+      onFinish();
+    } else {
+      setError('This session overlaps with an existing session. Please choose a different time slot.');
+    }
   };
 
   const handleDelete = () => {
@@ -161,11 +168,13 @@ export function SessionForm({
 
           <ColorPicker label="Choose a label color" value={color} onChange={setColor} options={SESSION_COLORS} srOnly />
         </div>
+
+        {error ? <Callout variant="error">{error}</Callout> : null}
       </form>
 
       {/* Footer */}
       <div className="flex items-center justify-between gap-2 p-6">
-        <Button variant="secondary" iconLeft={TrashIcon} onClick={handleDelete}>
+        <Button variant="important" iconLeft={TrashIcon} onClick={handleDelete}>
           Remove
         </Button>
         <div className="flex justify-end gap-3">

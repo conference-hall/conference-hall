@@ -7,7 +7,6 @@ import {
   isTimeSlotIncluded,
   mergeTimeslots,
   moveTimeSlotStart,
-  totalTimeInMinutes,
 } from './timeslots.ts';
 
 describe('timeslots', () => {
@@ -61,19 +60,6 @@ describe('timeslots', () => {
 
       expect(timeslots.at(-1)?.start.toISOString()).toBe('2020-02-26T12:00:00.000Z');
       expect(timeslots.at(-1)?.end.toISOString()).toBe('2020-02-26T12:30:00.000Z');
-    });
-  });
-
-  describe('#totalTimeInMinutes', () => {
-    it('returns the number of minutes in a timeslot', async () => {
-      const timeslot = {
-        start: new Date('2020-02-26T10:00:00.000Z'),
-        end: new Date('2020-02-26T10:30:00.000Z'),
-      };
-
-      const result = totalTimeInMinutes(timeslot);
-
-      expect(result).toBe(30);
     });
   });
 
