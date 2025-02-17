@@ -25,17 +25,19 @@ export function SessionBlock({ session, height }: SessionBlockProps) {
       className={cx(
         'flex flex-col h-full px-1 rounded-sm',
         {
-          'text-[10px] leading-2.5 items-center flex-row': size === 'sm',
-          'text-[10px] leading-2.5 flex-row': size === 'md',
+          'text-[10px] items-center gap-1 flex-row': size === 'sm',
+          'text-[10px] items-baseline leading-3 gap-1 flex-row': size === 'md',
           'text-xs leading-3.5 justify-between': size === 'lg' || size === 'xl',
         },
         block,
       )}
     >
-      <div className={cx({ truncate: size !== 'xl' })}>
-        {title ? <p className={cx('font-semibold', { truncate: size !== 'xl' })}>{title}</p> : null}
-        <SessionSpeakers speakers={proposal?.speakers} size={size} />
-      </div>
+      {title ? (
+        <div className={cx({ truncate: size !== 'xl' })}>
+          <p className={cx('font-semibold', { truncate: size !== 'xl' })}>{title}</p>
+          <SessionSpeakers speakers={proposal?.speakers} size={size} />
+        </div>
+      ) : null}
       <div className={cx('flex shrink-0 gap-1', { 'mt-0.5': size === 'md', 'items-end': !title })}>
         <SessionTime timeslot={timeslot} size={size} />
         <SessionEmojis emojis={emojis} size={size} />
@@ -110,7 +112,7 @@ function SessionLanguage({ language, size }: SessionLanguageProps) {
 
 function getSize(height: number): Size {
   if (height < 8) return 'xs';
-  if (height < 16) return 'sm';
+  if (height < 24) return 'sm';
   if (height < 40) return 'md';
   if (height < 56) return 'lg';
   return 'xl';

@@ -61,13 +61,13 @@ describe('EventSchedule types', () => {
       });
     });
 
-    it('returns errors when mandatory fields are missing', async () => {
+    it('returns errors when times input are not numbers', async () => {
       const result = ScheduleDisplayTimesUpdateSchema.safeParse({});
 
       expect(result.success).toBe(false);
       expect(result.error?.flatten().fieldErrors).toEqual({
-        displayStartMinutes: ['Required'],
-        displayEndMinutes: ['Required'],
+        displayStartMinutes: ['Expected number, received nan'],
+        displayEndMinutes: ['Expected number, received nan'],
       });
     });
 
