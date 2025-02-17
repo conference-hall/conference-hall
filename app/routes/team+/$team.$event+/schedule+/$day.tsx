@@ -5,7 +5,6 @@ import { redirect } from 'react-router';
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import {
   SchedulSessionIdSchema,
-  ScheduleDayIdSchema,
   ScheduleDisplayTimesUpdateSchema,
   ScheduleSessionCreateSchema,
   ScheduleSessionUpdateSchema,
@@ -27,10 +26,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
 
-  const result = ScheduleDayIdSchema.safeParse(params.day);
-  if (!result.success) return redirect(`/team/${params.team}/${params.event}`);
-
-  const schedule = await eventSchedule.getSchedulesByDay(result.data);
+  const schedule = await eventSchedule.getSchedulesByDay();
   if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
 
   return schedule;
@@ -73,16 +69,14 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentProps) {
   const sessions = useSessions(schedule.sessions, schedule.timezone);
-  const displayTimes = useDisplayTimes(
-    schedule.currentDay,
-    schedule.displayStartMinutes,
-    schedule.displayEndMinutes,
-    schedule.timezone,
-  );
+  const displayTimes = useDisplayTimes(schedule);
   const { isFullscreen } = useScheduleFullscreen();
   const zoomHandlers = useZoomHandlers();
   const [openSession, setOpenSession] = useState<ScheduleSession | null>(null);
   const onCloseSession = () => setOpenSession(null);
+
+  const firstDay = displayTimes.scheduleDays.at(0);
+  if (!firstDay) return null;
 
   return (
     <main className={cx({ 'px-8 my-8 mx-auto max-w-7xl': !isFullscreen })}>
@@ -92,8 +86,8 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
         {openSession && (
           <SessionModal
             session={openSession}
-            startTime={displayTimes.startTime}
-            endTime={displayTimes.endTime}
+            startTime={firstDay.startTime}
+            endTime={firstDay.endTime}
             tracks={schedule.tracks}
             onUpdateSession={sessions.update}
             onDeleteSession={sessions.delete}
@@ -102,18 +96,16 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
         )}
 
         <ScheduleHeader
-          currentDay={displayTimes.currentDay}
-          startTime={displayTimes.startTime}
-          endTime={displayTimes.endTime}
-          previousDayIndex={schedule.previousDayIndex}
-          nextDayIndex={schedule.nextDayIndex}
+          startTime={firstDay.startTime}
+          endTime={firstDay.endTime}
+          previousDayIndex={null}
+          nextDayIndex={null}
           zoomHandlers={zoomHandlers}
           onChangeDisplayTime={displayTimes.update}
         />
 
         <Schedule
-          startTime={displayTimes.startTime}
-          endTime={displayTimes.endTime}
+          displayedDays={displayTimes.scheduleDays}
           timezone={schedule.timezone}
           tracks={schedule.tracks}
           sessions={sessions.data}

@@ -19,7 +19,6 @@ import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 
 type Props = {
-  currentDay: Date;
   startTime: Date;
   endTime: Date;
   previousDayIndex: number | null;
@@ -29,7 +28,6 @@ type Props = {
 };
 
 export function ScheduleHeader({
-  currentDay,
   startTime,
   endTime,
   previousDayIndex,
@@ -60,7 +58,7 @@ export function ScheduleHeader({
           preventScrollReset
         />
         <H2 truncate>
-          {currentDay ? <time dateTime={format(currentDay, 'yyyy-MM-dd')}>{format(currentDay, 'PPPP')}</time> : null}
+          {startTime ? <time dateTime={format(startTime, 'yyyy-MM-dd')}>{format(startTime, 'PPPP')}</time> : null}
         </H2>
         <IconLink
           icon={ChevronRightIcon}

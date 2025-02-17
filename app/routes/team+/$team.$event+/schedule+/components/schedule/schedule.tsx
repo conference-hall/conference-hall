@@ -36,8 +36,7 @@ const SESSIONS_GAP_PX = 1;
 const DEFAULT_ZOOM_LEVEL = 1;
 
 type ScheduleProps = {
-  startTime: Date;
-  endTime: Date;
+  displayedDays: Array<{ startTime: Date; endTime: Date }>;
   timezone: string;
   interval?: number;
   tracks: Array<Track>;
@@ -51,8 +50,7 @@ type ScheduleProps = {
 };
 
 export default function Schedule({
-  startTime,
-  endTime,
+  displayedDays,
   timezone,
   tracks = [],
   sessions = [],
@@ -63,10 +61,6 @@ export default function Schedule({
   onSwitchSessions,
   zoomLevel = DEFAULT_ZOOM_LEVEL,
 }: ScheduleProps) {
-  const hours = getDailyTimeSlots(startTime, endTime, HOUR_INTERVAL, true);
-
-  const selector = useTimeslotSelector(sessions, onAddSession);
-
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     const { action, session } = active.data.current || {};
     const { type } = over?.data?.current || {};
@@ -96,76 +90,85 @@ export default function Schedule({
       collisionDetection={collisionDetection}
       modifiers={[restrictToWindowEdges]}
     >
-      <div className={cx('w-full bg-white', { 'select-none': selector.isSelecting })}>
-        <table className="min-w-full border-separate border-spacing-0">
-          {/* header */}
-          <thead>
-            <tr className="sticky top-[64px] z-30 divide-x divide-gray-200 shadow-sm">
-              {/* gutter with timezone */}
-              <th scope="col" className="h-12 w-12 text-xs font-normal text-center bg-white text-gray-400">
-                {getGMTOffset(timezone)}
-              </th>
-              {/* tracks header */}
-              {tracks.map((track) => (
-                <th scope="col" key={track.id} className="h-12 relative bg-white">
-                  <div className="absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 overflow-hidden">
-                    <p className="p-2 text-sm font-semibold text-gray-900 truncate">{track.name}</p>
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
+      <div className="flex">
+        {displayedDays.map(({ startTime, endTime }, index) => {
+          const hours = getDailyTimeSlots(startTime, endTime, HOUR_INTERVAL, true);
+          const selector = useTimeslotSelector(sessions, onAddSession);
 
-          {/* content */}
-          <tbody>
-            {/* empty line */}
-            <tr className="divide-x divide-gray-200">
-              <td className="h-6 w-12" />
-              {tracks.map((track) => (
-                <td key={track.id} className="h-6" />
-              ))}
-            </tr>
+          return (
+            <div key={index} className={cx('w-full bg-white', { 'select-none': selector.isSelecting })}>
+              <table className="min-w-full border-separate border-spacing-0">
+                {/* header */}
+                <thead>
+                  <tr className="sticky top-[64px] z-30 divide-x divide-gray-200 shadow-sm">
+                    {/* gutter with timezone */}
+                    <th scope="col" className="h-12 w-12 text-xs font-normal text-center bg-white text-gray-400">
+                      {getGMTOffset(timezone)}
+                    </th>
+                    {/* tracks header */}
+                    {tracks.map((track) => (
+                      <th scope="col" key={track.id} className="h-12 relative bg-white">
+                        <div className="absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 overflow-hidden">
+                          <p className="p-2 text-sm font-semibold text-gray-900 truncate">{track.name}</p>
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
 
-            {/* rows by hours */}
-            {hours.map((hour) => {
-              const startHour = toTimeFormat(hour.start);
-              const endHour = toTimeFormat(hour.end);
-              const hourSlots = getDailyTimeSlots(hour.start, hour.end, SLOT_INTERVAL);
+                {/* content */}
+                <tbody>
+                  {/* empty line */}
+                  <tr className="divide-x divide-gray-200">
+                    <td className="h-6 w-12" />
+                    {tracks.map((track) => (
+                      <td key={track.id} className="h-6" />
+                    ))}
+                  </tr>
 
-              return (
-                <tr key={`${startHour}-${endHour}`} className="divide-x divide-gray-200">
-                  {/* gutter */}
-                  <td className="relative whitespace-nowrap text-xs text-gray-500">
-                    <time className="absolute -top-2 right-2" dateTime={startHour}>
-                      {startHour}
-                    </time>
-                  </td>
+                  {/* rows by hours */}
+                  {hours.map((hour) => {
+                    const startHour = toTimeFormat(hour.start);
+                    const endHour = toTimeFormat(hour.end);
+                    const hourSlots = getDailyTimeSlots(hour.start, hour.end, SLOT_INTERVAL);
 
-                  {/* rows by track */}
-                  {tracks.map((track) => (
-                    <td key={track.id} className="p-0">
-                      {hourSlots.map((timeslot, index) => {
-                        return (
-                          <Timeslot
-                            key={toTimeFormat(timeslot.start)}
-                            trackId={track.id}
-                            timeslot={timeslot}
-                            sessions={sessions}
-                            selector={selector}
-                            zoomLevel={zoomLevel}
-                            isFirstTimeslot={index === 0}
-                            onSelectSession={onSelectSession}
-                            renderSession={renderSession}
-                          />
-                        );
-                      })}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                    return (
+                      <tr key={`${startHour}-${endHour}`} className="divide-x divide-gray-200">
+                        {/* gutter */}
+                        <td className="relative whitespace-nowrap text-xs text-gray-500">
+                          <time className="absolute -top-2 right-2" dateTime={startHour}>
+                            {startHour}
+                          </time>
+                        </td>
+
+                        {/* rows by track */}
+                        {tracks.map((track) => (
+                          <td key={track.id} className="p-0">
+                            {hourSlots.map((timeslot, index) => {
+                              return (
+                                <Timeslot
+                                  key={toTimeFormat(timeslot.start)}
+                                  trackId={track.id}
+                                  timeslot={timeslot}
+                                  sessions={sessions}
+                                  selector={selector}
+                                  zoomLevel={zoomLevel}
+                                  isFirstTimeslot={index === 0}
+                                  onSelectSession={onSelectSession}
+                                  renderSession={renderSession}
+                                />
+                              );
+                            })}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
       </div>
     </DndContext>
   );
