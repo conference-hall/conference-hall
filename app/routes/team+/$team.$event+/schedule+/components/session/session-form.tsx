@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 
 import { Button } from '~/design-system/buttons.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import ColorPicker from '~/design-system/forms/color-picker.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
@@ -20,11 +21,8 @@ import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { getMinutesFromStartOfDay, setMinutesFromStartOfDay } from '~/libs/datetimes/datetimes.ts';
-
-import { PlusIcon } from '@heroicons/react/20/solid';
-import { Callout } from '~/design-system/callout.tsx';
 import { LANGUAGES } from '~/libs/formatters/languages.ts';
-import { EmojiPicker } from '~/routes/components/emojis/emoji-picker.tsx';
+import { EmojiSelect } from '~/routes/components/emojis/emoji-select.tsx';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 import { SearchSessionProposal } from './search-session-proposal.tsx';
@@ -188,27 +186,7 @@ export function SessionForm({
 
         <div className="flex items-center gap-7">
           <FaceSmileIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-
-          {/* TODO: Create a component */}
-          <div className="flex gap-3">
-            {emojis?.map((code) => {
-              const emoji = SESSION_EMOJIS.find((e) => e.code === code);
-              return <p key={emoji?.code}>{emoji?.skin}</p>;
-            })}
-            <EmojiPicker
-              label="Choose a emoji"
-              emojis={SESSION_EMOJIS}
-              icon={PlusIcon}
-              onSelectEmoji={(selected) =>
-                setEmojis((current) => {
-                  if (current.includes(selected.code)) {
-                    return current.filter((code) => code !== selected.code);
-                  }
-                  return [...current, selected.code];
-                })
-              }
-            />
-          </div>
+          <EmojiSelect emojis={SESSION_EMOJIS} selectedEmojis={emojis} onChangeEmojis={setEmojis} />
         </div>
 
         {error ? <Callout variant="error">{error}</Callout> : null}

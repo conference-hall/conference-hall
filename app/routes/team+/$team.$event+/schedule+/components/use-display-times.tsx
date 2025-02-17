@@ -8,7 +8,6 @@ export function useDisplayTimes(
   displayEndMinutes: number,
   timezone: string,
 ) {
-  const currentDayDate = toZonedTime(currentDay, timezone);
   const fetcher = useFetcher();
 
   // optimistic update
@@ -21,6 +20,7 @@ export function useDisplayTimes(
     }
   }
 
+  const currentDayDate = toZonedTime(currentDay, timezone);
   const startTime = addMinutes(currentDayDate, displayStartMinutes);
   const endTime = addMinutes(currentDayDate, displayEndMinutes);
 

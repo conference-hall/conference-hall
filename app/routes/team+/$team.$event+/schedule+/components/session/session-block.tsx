@@ -1,61 +1,117 @@
-import { CheckIcon, ClockIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import {} from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 
 import { formatTimeDifference, toTimeFormat } from '~/libs/datetimes/datetimes.ts';
-
+import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import { getFlag } from '~/libs/formatters/languages.ts';
-import type { ScheduleProposalData, ScheduleSession } from '../schedule.types.ts';
+import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 
-type SessionBlockProps = { session: ScheduleSession };
+type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-export function SessionBlock({ session }: SessionBlockProps) {
+type SessionBlockProps = { session: ScheduleSession; height: number };
+export function SessionBlock({ session, height }: SessionBlockProps) {
   const { timeslot, proposal, language, emojis } = session;
 
   const { block } = SESSION_COLORS.find((c) => c.value === session.color) ?? SESSION_COLORS[0];
 
-  const start = toTimeFormat(timeslot.start);
-  const end = toTimeFormat(timeslot.end);
-  const minutes = formatTimeDifference(timeslot.start, timeslot.end);
+  const size = getSize(height);
+  const title = proposal ? proposal.title : session.name;
+
+  if (size === 'xs') return <div className={cx('h-full', block)} />;
 
   return (
-    <div className={cx('text-[10px] leading-3 flex flex-col justify-between h-full px-1 rounded-sm', block)}>
-      {proposal ? (
-        <div>
-          <div className="flex justify-between">
-            <p className="font-semibold">{proposal.title}</p>
-            {deliberationIcon(proposal)}
-          </div>
-          <p className="italic truncate">{proposal.speakers.map((s) => s.name).join(', ')}</p>
-        </div>
-      ) : (
-        <div className="h-full flex flex-col justify-between">
-          <p className="font-semibold">{session.name}</p>
-        </div>
+    <div
+      className={cx(
+        'flex flex-col h-full px-1 rounded-sm',
+        {
+          'text-[10px] leading-2.5 items-center flex-row': size === 'sm',
+          'text-[10px] leading-2.5 flex-row': size === 'md',
+          'text-xs leading-3.5 justify-between': size === 'lg' || size === 'xl',
+        },
+        block,
       )}
-      <div className="flex justify-between items-end text-[10px]">
-        <p>
-          <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time> <span>({minutes})</span>
-        </p>
-        <div className="flex items-end gap-2 text-sm">
-          {emojis?.map((code) => {
-            const emoji = SESSION_EMOJIS.find((e) => e.code === code);
-            return <p key={code}>{emoji?.skin}</p>;
-          })}
-          {language ? <p>{getFlag(language)}</p> : null}
-        </div>
+    >
+      <div className={cx({ truncate: size !== 'xl' })}>
+        {title ? <p className={cx('font-semibold', { truncate: size !== 'xl' })}>{title}</p> : null}
+        <SessionSpeakers speakers={proposal?.speakers} size={size} />
+      </div>
+      <div className={cx('flex shrink-0 gap-1', { 'mt-0.5': size === 'md', 'items-end': !title })}>
+        <SessionTime timeslot={timeslot} size={size} />
+        <SessionEmojis emojis={emojis} size={size} />
+        <SessionLanguage language={language} size={size} />
       </div>
     </div>
   );
 }
 
-function deliberationIcon({ deliberationStatus, confirmationStatus }: ScheduleProposalData) {
-  if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'PENDING') {
-    return <ClockIcon className="inline shrink-0 ml-1 mb-0.5 w-4 h-4 text-gray-600" aria-hidden />;
-  } else if (deliberationStatus === 'REJECTED' || confirmationStatus === 'DECLINED') {
-    return <XMarkIcon className="inline shrink-0 ml-0.5 mb-0.5 w-4 h-4 text-red-600" aria-hidden />;
-  } else if (deliberationStatus === 'ACCEPTED' || confirmationStatus === 'CONFIRMED') {
-    return <CheckIcon className="inline shrink-0 ml-0.5 mb-0.5 w-4 h-4 text-green-600" aria-hidden />;
-  }
-  return null;
+type SessionSpeakersProps = { speakers?: Array<{ name: string | null; picture: string | null }>; size: Size };
+function SessionSpeakers({ speakers, size }: SessionSpeakersProps) {
+  if (!speakers) return null;
+  const firstSpeaker = speakers.at(0);
+  const speakersCount = speakers.length;
+  const suffix = speakersCount > 1 ? ` (+${speakersCount})` : '';
+
+  if (size === 'xs' || size === 'sm') return null;
+  return <p className={cx('text-[10px]', { truncate: size !== 'xl' })}>{`${firstSpeaker?.name}${suffix}`}</p>;
+}
+
+type SessionTimeProps = { timeslot: TimeSlot; size: Size };
+function SessionTime({ timeslot, size }: SessionTimeProps) {
+  const start = toTimeFormat(timeslot.start);
+  const end = toTimeFormat(timeslot.end);
+  const minutes = formatTimeDifference(timeslot.start, timeslot.end);
+
+  return (
+    <p className="text-[10px]">
+      {size === 'sm' || size === 'md' ? (
+        <time dateTime={start}>{start}</time>
+      ) : (
+        <>
+          <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time> <span>({minutes})</span>
+        </>
+      )}
+    </p>
+  );
+}
+
+type SessionEmojisProps = { emojis: Array<string>; size: Size };
+function SessionEmojis({ emojis, size }: SessionEmojisProps) {
+  return emojis?.map((code) => {
+    const emoji = SESSION_EMOJIS.find((e) => e.code === code);
+    return (
+      <p
+        key={code}
+        className={cx({
+          'text-[10px]': size === 'sm' || size === 'md',
+          'text-xs': size === 'lg' || size === 'xl',
+        })}
+      >
+        {emoji?.skin}
+      </p>
+    );
+  });
+}
+
+type SessionLanguageProps = { language: string | null; size: Size };
+function SessionLanguage({ language, size }: SessionLanguageProps) {
+  if (!language) return null;
+  return (
+    <p
+      className={cx({
+        'text-[10px]': size === 'sm' || size === 'md',
+        'text-xs': size === 'lg' || size === 'xl',
+      })}
+    >
+      {getFlag(language)}
+    </p>
+  );
+}
+
+function getSize(height: number): Size {
+  if (height < 8) return 'xs';
+  if (height < 16) return 'sm';
+  if (height < 40) return 'md';
+  if (height < 56) return 'lg';
+  return 'xl';
 }

@@ -31,7 +31,7 @@ import { useTimeslotSelector } from './use-timeslot-selector.tsx';
 
 const HOUR_INTERVAL = 60; // minutes
 const SLOT_INTERVAL = 5; // minutes
-const TIMESLOT_HEIGHTS = [8, 12, 16, 20]; // px
+const TIMESLOT_HEIGHTS = [8, 16, 24, 32]; // px
 const SESSIONS_GAP_PX = 1;
 const DEFAULT_ZOOM_LEVEL = 1;
 
@@ -42,7 +42,7 @@ type ScheduleProps = {
   interval?: number;
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
-  renderSession: (session: ScheduleSession) => ReactNode;
+  renderSession: (session: ScheduleSession, height: number) => ReactNode;
   onAddSession: (trackId: string, timeslot: TimeSlot) => void;
   onUpdateSession: (session: ScheduleSession) => boolean;
   onSelectSession: (session: ScheduleSession) => void;
@@ -179,7 +179,7 @@ type TimeslotProps = {
   zoomLevel: number;
   isFirstTimeslot: boolean;
   onSelectSession: (session: ScheduleSession) => void;
-  renderSession: (session: ScheduleSession) => ReactNode;
+  renderSession: (session: ScheduleSession, height: number) => ReactNode;
 };
 
 function Timeslot({
@@ -265,7 +265,7 @@ function Timeslot({
 type SessionWrapperProps = {
   session: ScheduleSession;
   sessions: Array<ScheduleSession>;
-  renderSession: (session: ScheduleSession) => ReactNode;
+  renderSession: (session: ScheduleSession, height: number) => ReactNode;
   onClick?: (session: ScheduleSession) => void;
   interval: number;
   zoomLevel: number;
@@ -340,7 +340,7 @@ function SessionWrapper({ session, sessions, renderSession, onClick, interval, z
         {...movable.attributes}
       >
         <div ref={setDropRef} style={{ height: `${height}px` }}>
-          {renderSession(session)}
+          {renderSession(session, height)}
         </div>
       </div>
 

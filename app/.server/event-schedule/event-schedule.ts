@@ -106,10 +106,10 @@ export class EventSchedule {
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
     if (!schedule) throw new NotFoundError('Schedule not found');
 
-    let language = data.language;
+    let language = data.language ?? null;
     if (!language && data.proposalId) {
       const proposal = await db.proposal.findUnique({ where: { id: data.proposalId } });
-      language = (proposal?.languages as Languages).at(0);
+      language = (proposal?.languages as Languages).at(0) ?? null;
     }
 
     return db.scheduleSession.update({
@@ -118,7 +118,7 @@ export class EventSchedule {
         start: data.start,
         end: data.end,
         color: data.color,
-        name: !data.proposalId ? data.name : null,
+        name: !data.proposalId ? (data.name ?? null) : null,
         proposalId: data.proposalId ? data.proposalId : null,
         emojis: data.emojis,
         language,
