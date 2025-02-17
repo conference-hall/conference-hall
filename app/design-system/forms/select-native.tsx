@@ -7,11 +7,12 @@ type Props = {
   name: string;
   label: string;
   options: Array<{ name: string; value: string }>;
+  placeholder?: string;
   inline?: boolean;
   srOnly?: boolean;
 } & SelectHTMLAttributes<HTMLSelectElement>;
 
-export function SelectNative({ name, label, options, inline, srOnly, className, ...rest }: Props) {
+export function SelectNative({ name, label, options, placeholder, inline, srOnly, className, ...rest }: Props) {
   return (
     <div className={cx({ 'flex items-center gap-2': inline })}>
       <Label htmlFor={name} className={cx({ 'sr-only': srOnly })}>
@@ -27,6 +28,7 @@ export function SelectNative({ name, label, options, inline, srOnly, className, 
         )}
         {...rest}
       >
+        {placeholder ? <option value="">{placeholder}</option> : null}
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.name}

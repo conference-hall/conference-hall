@@ -209,7 +209,7 @@ describe('EventSchedule', () => {
   });
 
   describe('#updateSession', () => {
-    it('updates a session with a proposal to a schedule', async () => {
+    it('updates a session with a proposal', async () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
       const track1 = await eventSchedule.saveTrack({ name: 'Room' });
       const track2 = await eventSchedule.saveTrack({ name: 'Room 2' });
@@ -225,6 +225,8 @@ describe('EventSchedule', () => {
         id: session.id,
         trackId: track2.id,
         color: 'gray',
+        language: 'fr',
+        emojis: ['heart'],
         start: new Date(schedule.end),
         end: new Date(schedule.end),
         proposalId: proposal.id,
@@ -233,7 +235,35 @@ describe('EventSchedule', () => {
       expect(actual?.trackId).toBe(track2.id);
       expect(actual?.start).toEqual(schedule.end);
       expect(actual?.end).toEqual(schedule.end);
+      expect(actual?.language).toEqual('fr');
+      expect(actual?.emojis).toEqual(['heart']);
       expect(actual?.proposalId).toBe(proposal.id);
+    });
+
+    it('updates a session without a proposal', async () => {
+      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
+      const track1 = await eventSchedule.saveTrack({ name: 'Room' });
+      const session = await eventSchedule.addSession({
+        trackId: track1.id,
+        start: new Date(schedule.start),
+        end: new Date(schedule.start),
+      });
+
+      const actual = await eventSchedule.updateSession({
+        id: session.id,
+        trackId: track1.id,
+        color: 'gray',
+        language: 'fr',
+        emojis: ['heart'],
+        start: new Date(schedule.end),
+        end: new Date(schedule.end),
+      });
+
+      expect(actual?.trackId).toBe(track1.id);
+      expect(actual?.start).toEqual(schedule.end);
+      expect(actual?.end).toEqual(schedule.end);
+      expect(actual?.language).toEqual('fr');
+      expect(actual?.emojis).toEqual(['heart']);
     });
 
     it('throws not found Error when no schedule defined for the event', async () => {
@@ -243,6 +273,7 @@ describe('EventSchedule', () => {
           id: 'id',
           trackId: 'track',
           color: 'gray',
+          emojis: [],
           start: new Date(schedule.end),
           end: new Date(schedule.end),
           proposalId: 'proposal',
@@ -256,6 +287,7 @@ describe('EventSchedule', () => {
           id: 'id',
           trackId: 'track',
           color: 'gray',
+          emojis: [],
           start: new Date(schedule.end),
           end: new Date(schedule.end),
           proposalId: 'proposal',
@@ -270,6 +302,7 @@ describe('EventSchedule', () => {
           id: 'id',
           trackId: 'track',
           color: 'gray',
+          emojis: [],
           start: new Date(schedule.end),
           end: new Date(schedule.end),
           proposalId: 'proposal',
@@ -412,6 +445,7 @@ describe('EventSchedule', () => {
         id: session.id,
         trackId: track.id,
         color: 'gray',
+        emojis: ['heart'],
         start: new Date(schedule.start),
         end: new Date(schedule.start),
         proposalId: proposal.id,
@@ -434,13 +468,14 @@ describe('EventSchedule', () => {
             start: session.start,
             end: session.end,
             name: null,
+            language: 'en',
+            emojis: ['heart'],
             color: 'gray',
             proposal: {
               id: proposal.id,
               title: proposal.title,
               confirmationStatus: proposal.confirmationStatus,
               deliberationStatus: proposal.deliberationStatus,
-              languages: proposal.languages,
               categories: [],
               formats: [],
               speakers: [
@@ -448,7 +483,6 @@ describe('EventSchedule', () => {
                   id: owner.id,
                   name: owner.name,
                   picture: owner.picture,
-                  bio: owner.bio,
                   company: owner.company,
                 },
               ],

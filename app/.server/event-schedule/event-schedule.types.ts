@@ -34,11 +34,11 @@ export const ScheduleTrackSaveSchema = z.object({
 
 export const ScheduleDisplayTimesUpdateSchema = z
   .object({
-    displayStartMinutes: z
+    displayStartMinutes: z.coerce
       .number()
       .min(0)
       .max(23 * 60),
-    displayEndMinutes: z
+    displayEndMinutes: z.coerce
       .number()
       .min(0)
       .max(23 * 60),
@@ -58,6 +58,8 @@ export const ScheduleSessionUpdateSchema = ScheduleSessionCreateSchema.extend({
   id: z.string(),
   name: z.string().trim().optional(),
   color: z.string(),
+  emojis: z.array(z.string()),
+  language: z.string().trim().optional(),
   proposalId: z.string().optional(),
 });
 

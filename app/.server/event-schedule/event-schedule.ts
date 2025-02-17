@@ -4,6 +4,7 @@ import { db } from 'prisma/db.server.ts';
 
 import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/libs/errors.server.ts';
 
+import type { Languages } from '~/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import type {
   ScheduleCreateData,
@@ -105,14 +106,22 @@ export class EventSchedule {
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
     if (!schedule) throw new NotFoundError('Schedule not found');
 
+    let language = data.language ?? null;
+    if (!language && data.proposalId) {
+      const proposal = await db.proposal.findUnique({ where: { id: data.proposalId } });
+      language = (proposal?.languages as Languages).at(0) ?? null;
+    }
+
     return db.scheduleSession.update({
       data: {
         trackId: data.trackId,
         start: data.start,
         end: data.end,
         color: data.color,
-        name: !data.proposalId ? data.name : null,
+        name: !data.proposalId ? (data.name ?? null) : null,
         proposalId: data.proposalId ? data.proposalId : null,
+        emojis: data.emojis,
+        language,
       },
       where: { id: data.id, scheduleId: schedule.id },
     });
@@ -188,18 +197,19 @@ export class EventSchedule {
       tracks: [...schedule.tracks]
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),
-      sessions: sessions.map(({ id, trackId, start, end, name, color, proposal }) => ({
+      sessions: sessions.map(({ id, trackId, start, end, name, language, color, emojis, proposal }) => ({
         id: id,
         trackId: trackId,
         start: start,
         end: end,
-        color: color,
         name: name,
+        language: language,
+        emojis: emojis,
+        color: color,
         proposal: proposal
           ? {
               id: proposal.id,
               title: proposal.title,
-              languages: proposal.languages as string[],
               deliberationStatus: proposal.deliberationStatus,
               confirmationStatus: proposal.confirmationStatus,
               formats: proposal.formats.map((f) => ({ id: f.id, name: f.name })),
@@ -208,7 +218,6 @@ export class EventSchedule {
                 id: s.id,
                 name: s.name,
                 picture: s.picture,
-                bio: s.bio,
                 company: s.company,
               })),
             }

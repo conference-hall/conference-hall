@@ -122,7 +122,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
           onAddSession={sessions.add}
           onUpdateSession={sessions.update}
           onSwitchSessions={sessions.switch}
-          renderSession={(session) => <SessionBlock session={session} />}
+          renderSession={(session, height) => <SessionBlock session={session} height={height} />}
         />
       </div>
     </main>
