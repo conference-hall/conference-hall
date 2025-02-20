@@ -1,8 +1,11 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
-import { format } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Text } from '~/design-system/typography.tsx';
+
+const NEXT = 1;
+const PREVIOUS = -1;
 
 type Props = {
   scheduleDays: Array<Date>;
@@ -11,32 +14,43 @@ type Props = {
 };
 
 export function DisplayDays({ scheduleDays, displayedDays, onChangeDisplayDays }: Props) {
-  const scheduleStartDay = scheduleDays.at(0);
-  const scheduleEndDay = scheduleDays.at(-1);
-  const displayedStartDay = displayedDays.at(0);
-  const displayedEndDay = displayedDays.at(-1);
+  const scheduleStartDay = scheduleDays.at(0)!;
+  const scheduleEndDay = scheduleDays.at(-1)!;
+  const displayedStartDay = displayedDays.at(0)!;
+  const displayedEndDay = displayedDays.at(-1)!;
 
-  const handeDaysChange = (start: Date | null, end: Date | null) => {
+  const handeDaysSelect = (start: Date | null, end: Date | null) => {
     if (!start || !end) return;
     onChangeDisplayDays(start, end);
   };
 
-  if (!displayedStartDay || !displayedEndDay) return null;
+  const handleDaysChange = (direction: number) => {
+    if (!displayedStartDay || !displayedEndDay) return;
 
-  const title = displayedStartDay ? format(displayedStartDay, 'PPPP') : 'Out of schedule';
+    const startIndex = scheduleDays.findIndex((day) => isSameDay(day, displayedStartDay)) + direction;
+    if (startIndex < 0) return;
+
+    const endIndex = scheduleDays.findIndex((day) => isSameDay(day, displayedEndDay)) + direction;
+    if (endIndex > scheduleDays.length - 1) return;
+
+    onChangeDisplayDays(scheduleDays[startIndex], scheduleDays[endIndex]);
+  };
 
   return (
     <div className="relative flex items-center rounded-md bg-white shadow-xs md:items-stretch">
       <button
         type="button"
-        className="flex h-9 w-12 items-center justify-center rounded-l-md border-y border-l border-gray-300 pr-1 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:pr-0 md:hover:bg-gray-50 cursor-pointer"
+        onClick={() => handleDaysChange(PREVIOUS)}
+        className="flex size-9 items-center justify-center rounded-l-md border-y border-l border-gray-300 text-gray-400 enabled:hover:text-gray-500 focus:relative enabled:hover:bg-gray-50 cursor-pointer disabled:cursor-not-allowed"
+        disabled={isSameDay(scheduleStartDay, displayedStartDay)}
       >
         <span className="sr-only">Next month</span>
         <ChevronLeftIcon className="size-5 shrink-0" aria-hidden="true" />
       </button>
+
       <Popover>
         <PopoverButton className="hidden h-full border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 cursor-pointer focus:relative md:block">
-          {title}
+          {formatDays(displayedStartDay, displayedEndDay)}
         </PopoverButton>
         <PopoverPanel
           anchor={{ to: 'bottom start', gap: '4px', offset: '-34px' }}
@@ -54,20 +68,27 @@ export function DisplayDays({ scheduleDays, displayedDays, onChangeDisplayDays }
               min={scheduleStartDay}
               max={scheduleEndDay}
               timezone="Europe/Paris"
-              onChange={handeDaysChange}
+              onChange={handeDaysSelect}
             />
           </div>
         </PopoverPanel>
       </Popover>
 
-      <span className="relative -mx-px h-5 w-px bg-gray-300 md:hidden" />
       <button
         type="button"
-        className="flex h-9 w-12 items-center justify-center rounded-r-md border-y border-r border-gray-300 pl-1 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:pl-0 md:hover:bg-gray-50 cursor-pointer"
+        onClick={() => handleDaysChange(NEXT)}
+        className="flex size-9 items-center justify-center rounded-r-md border-y border-r border-gray-300 text-gray-400 enabled:hover:text-gray-500 focus:relative enabled:hover:bg-gray-50 cursor-pointer disabled:cursor-not-allowed"
+        disabled={isSameDay(scheduleEndDay, displayedEndDay)}
       >
         <span className="sr-only">Next month</span>
         <ChevronRightIcon className="size-5 shrink-0" aria-hidden="true" />
       </button>
     </div>
   );
+}
+
+function formatDays(start: Date, end: Date) {
+  if (!start) return null;
+  if (start === end) return format(start, 'PPP');
+  return `${format(start, 'MMM d')} to ${format(end, 'PP')}`;
 }

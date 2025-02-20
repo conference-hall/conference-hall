@@ -1,6 +1,6 @@
 import { addDays, isSameDay } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { useFetcher, useParams } from 'react-router';
 
 type ScheduleSettings = {
@@ -15,6 +15,7 @@ export function useDisplaySettings(settings: ScheduleSettings) {
   const navigate = useNavigate();
   const fetcher = useFetcher();
   const params = useParams();
+  const [searchParams] = useSearchParams();
   const [displayedStart, displayedEnd] = params.day?.split('-').map(Number) ?? [];
 
   const { start, end, timezone, displayStartMinutes, displayEndMinutes } = settings;
@@ -42,7 +43,7 @@ export function useDisplaySettings(settings: ScheduleSettings) {
   const updateDisplayDays = (start: Date, end: Date) => {
     const startIndex = scheduleDays.findIndex((day) => isSameDay(day, start));
     const endIndex = scheduleDays.findIndex((day) => isSameDay(day, end));
-    navigate(`/team/${params.team}/${params.event}/schedule/${startIndex}-${endIndex}`);
+    navigate(`/team/${params.team}/${params.event}/schedule/${startIndex}-${endIndex}?${searchParams}`);
   };
 
   return { scheduleDays, displayedDays, displayedTimes, updateDisplayTimes, updateDisplayDays };

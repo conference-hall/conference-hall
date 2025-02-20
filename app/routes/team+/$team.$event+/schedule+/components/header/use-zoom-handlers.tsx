@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-const ZOOM_LEVEL_DEFAULT = 0;
+const ZOOM_LEVEL_DEFAULT = 1;
 const ZOOM_LEVEL_MIN = 0;
-const ZOOM_LEVEL_MAX = 3;
+const ZOOM_LEVEL_MAX = 4;
 
 export type ZoomHandlers = {
   level: number;

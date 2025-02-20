@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { redirect } from 'react-router';
@@ -9,6 +10,8 @@ import {
   ScheduleSessionCreateSchema,
   ScheduleSessionUpdateSchema,
 } from '~/.server/event-schedule/event-schedule.types.ts';
+import { ButtonLink } from '~/design-system/buttons.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import type { Route } from './+types/$day.ts';
@@ -75,8 +78,17 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
   const [openSession, setOpenSession] = useState<ScheduleSession | null>(null);
   const onCloseSession = () => setOpenSession(null);
 
-  const firstDay = settings.displayedDays.at(0);
-  if (!firstDay) return null;
+  if (settings.displayedDays.length === 0) {
+    return (
+      <main className="px-8 my-8 mx-auto max-w-7xl">
+        <EmptyState icon={CalendarDaysIcon} label="No schedule found for the day">
+          <ButtonLink to=".." relative="path">
+            Go to schedule
+          </ButtonLink>
+        </EmptyState>
+      </main>
+    );
+  }
 
   return (
     <main className={cx({ 'px-8 my-8 mx-auto max-w-7xl': !isFullscreen })}>
