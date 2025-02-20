@@ -31,13 +31,13 @@ test('displays event schedule', async ({ page }) => {
 
   // Check the schedule page
   await expect(page.getByRole('heading', { name: `${event.name} schedule` })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Saturday, January 1st, 2022' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'January 1st, 2022' })).toBeVisible();
   await expect(page.getByText('09:00 to 18:00')).toBeVisible();
   await expect(page.getByText('Main stage')).toBeVisible();
 
   // Go to the next day
   await schedulePage.clickOnNextDay();
-  await expect(page.getByRole('heading', { name: 'Sunday, January 2nd, 2022' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'January 2nd, 2022' })).toBeVisible();
 
   // Open the settings
   await schedulePage.clickOnSettings();

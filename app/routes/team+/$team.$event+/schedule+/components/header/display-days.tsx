@@ -44,7 +44,7 @@ export function DisplayDays({ scheduleDays, displayedDays, onChangeDisplayDays }
         className="flex size-9 items-center justify-center rounded-l-md border-y border-l border-gray-300 text-gray-400 enabled:hover:text-gray-500 focus:relative enabled:hover:bg-gray-50 cursor-pointer disabled:cursor-not-allowed"
         disabled={isSameDay(scheduleStartDay, displayedStartDay)}
       >
-        <span className="sr-only">Next month</span>
+        <span className="sr-only">Previous</span>
         <ChevronLeftIcon className="size-5 shrink-0" aria-hidden="true" />
       </button>
 
@@ -80,7 +80,7 @@ export function DisplayDays({ scheduleDays, displayedDays, onChangeDisplayDays }
         className="flex size-9 items-center justify-center rounded-r-md border-y border-r border-gray-300 text-gray-400 enabled:hover:text-gray-500 focus:relative enabled:hover:bg-gray-50 cursor-pointer disabled:cursor-not-allowed"
         disabled={isSameDay(scheduleEndDay, displayedEndDay)}
       >
-        <span className="sr-only">Next month</span>
+        <span className="sr-only">Next</span>
         <ChevronRightIcon className="size-5 shrink-0" aria-hidden="true" />
       </button>
     </div>
