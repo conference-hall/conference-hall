@@ -29,8 +29,7 @@ import { SearchSessionProposal } from './search-session-proposal.tsx';
 
 type Props = {
   session: ScheduleSession;
-  startTime: Date;
-  endTime: Date;
+  displayedTimes: { start: number; end: number };
   tracks: Array<Track>;
   isSearching: boolean;
   onFinish: VoidFunction;
@@ -41,8 +40,7 @@ type Props = {
 
 export function SessionForm({
   session,
-  startTime,
-  endTime,
+  displayedTimes,
   tracks,
   isSearching,
   onFinish,
@@ -137,11 +135,11 @@ export function SessionForm({
           <ClockIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
           <TimeRangeInput
             nameStart="start-local"
-            startTime={getMinutesFromStartOfDay(timeslot.start)}
             nameEnd="end-local"
-            endTime={getMinutesFromStartOfDay(timeslot.end)}
-            min={getMinutesFromStartOfDay(startTime)}
-            max={getMinutesFromStartOfDay(endTime) + 59}
+            start={getMinutesFromStartOfDay(timeslot.start)}
+            end={getMinutesFromStartOfDay(timeslot.end)}
+            min={displayedTimes.start}
+            max={displayedTimes.end + 59}
             step={5}
             startRelative
             hideFromLabel

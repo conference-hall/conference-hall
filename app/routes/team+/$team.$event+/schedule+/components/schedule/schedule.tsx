@@ -13,7 +13,7 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
-import { addMinutes, isAfter, isBefore } from 'date-fns';
+import { addMinutes, format, isAfter, isBefore } from 'date-fns';
 import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import {
@@ -31,13 +31,12 @@ import { useTimeslotSelector } from './use-timeslot-selector.tsx';
 
 const HOUR_INTERVAL = 60; // minutes
 const SLOT_INTERVAL = 5; // minutes
-const TIMESLOT_HEIGHTS = [8, 16, 24, 32]; // px
+const TIMESLOT_HEIGHTS = [4, 8, 16, 20, 24]; // px
 const SESSIONS_GAP_PX = 1;
-const DEFAULT_ZOOM_LEVEL = 1;
 
 type ScheduleProps = {
-  startTime: Date;
-  endTime: Date;
+  displayedDays: Array<Date>;
+  displayedTimes: { start: number; end: number };
   timezone: string;
   interval?: number;
   tracks: Array<Track>;
@@ -47,12 +46,12 @@ type ScheduleProps = {
   onUpdateSession: (session: ScheduleSession) => boolean;
   onSelectSession: (session: ScheduleSession) => void;
   onSwitchSessions: (source: ScheduleSession, target: ScheduleSession) => void;
-  zoomLevel?: number;
+  zoomLevel: number;
 };
 
 export default function Schedule({
-  startTime,
-  endTime,
+  displayedDays,
+  displayedTimes,
   timezone,
   tracks = [],
   sessions = [],
@@ -61,12 +60,8 @@ export default function Schedule({
   onUpdateSession,
   onSelectSession,
   onSwitchSessions,
-  zoomLevel = DEFAULT_ZOOM_LEVEL,
+  zoomLevel,
 }: ScheduleProps) {
-  const hours = getDailyTimeSlots(startTime, endTime, HOUR_INTERVAL, true);
-
-  const selector = useTimeslotSelector(sessions, onAddSession);
-
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     const { action, session } = active.data.current || {};
     const { type } = over?.data?.current || {};
@@ -96,78 +91,139 @@ export default function Schedule({
       collisionDetection={collisionDetection}
       modifiers={[restrictToWindowEdges]}
     >
-      <div className={cx('w-full bg-white', { 'select-none': selector.isSelecting })}>
-        <table className="min-w-full border-separate border-spacing-0">
-          {/* header */}
-          <thead>
-            <tr className="sticky top-[64px] z-30 divide-x divide-gray-200 shadow-sm">
-              {/* gutter with timezone */}
-              <th scope="col" className="h-12 w-12 text-xs font-normal text-center bg-white text-gray-400">
-                {getGMTOffset(timezone)}
+      <div className="flex divide-x-3">
+        {displayedDays.map((day, index) => (
+          <ScheduleDay
+            key={format(day, 'yyyy-MM-dd')}
+            day={day}
+            dayIndex={index}
+            displayedTimes={displayedTimes}
+            timezone={timezone}
+            tracks={tracks}
+            sessions={sessions}
+            renderSession={renderSession}
+            onAddSession={onAddSession}
+            onSelectSession={onSelectSession}
+            zoomLevel={zoomLevel}
+            displayMultipleDays={displayedDays.length > 1}
+          />
+        ))}
+      </div>
+    </DndContext>
+  );
+}
+
+type ScheduleDayProps = {
+  day: Date;
+  dayIndex: number;
+  timezone: string;
+  displayedTimes: { start: number; end: number };
+  tracks: Array<Track>;
+  sessions: Array<ScheduleSession>;
+  renderSession: (session: ScheduleSession, height: number) => ReactNode;
+  onAddSession: (trackId: string, timeslot: TimeSlot) => void;
+  onSelectSession: (session: ScheduleSession) => void;
+  zoomLevel: number;
+  displayMultipleDays: boolean;
+};
+
+function ScheduleDay({
+  day,
+  dayIndex,
+  timezone,
+  displayedTimes,
+  tracks,
+  sessions,
+  renderSession,
+  onAddSession,
+  onSelectSession,
+  zoomLevel,
+  displayMultipleDays,
+}: ScheduleDayProps) {
+  const startTime = addMinutes(day, displayedTimes.start);
+  const endTime = addMinutes(day, displayedTimes.end);
+  const hours = getDailyTimeSlots(startTime, endTime, HOUR_INTERVAL, true);
+  const selector = useTimeslotSelector(sessions, onAddSession);
+
+  return (
+    <div className={cx('w-full bg-white', { 'select-none': selector.isSelecting })}>
+      <table className="min-w-full border-separate border-spacing-0">
+        {/* header */}
+        <thead className="sticky top-[64px] bg-white z-30 shadow-sm">
+          {displayMultipleDays && (
+            <tr className="h-8">
+              <th className="border-b text-sm font-semibold" colSpan={tracks.length + 1}>
+                {format(day, 'PPP')}
               </th>
-              {/* tracks header */}
-              {tracks.map((track) => (
-                <th scope="col" key={track.id} className="h-12 relative bg-white">
-                  <div className="absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 overflow-hidden">
-                    <p className="p-2 text-sm font-semibold text-gray-900 truncate">{track.name}</p>
-                  </div>
-                </th>
-              ))}
             </tr>
-          </thead>
+          )}
+          <tr className={cx('divide-x', { 'h-12': !displayMultipleDays, 'h-8': displayMultipleDays })}>
+            {/* gutter */}
+            {dayIndex === 0 && (
+              <th className="w-12 text-xs font-normal text-center bg-white text-gray-400">{getGMTOffset(timezone)}</th>
+            )}
+            {/* tracks header */}
+            {tracks.map((track) => (
+              <th key={track.id} className="text-sm font-semibold text-gray-900 truncate">
+                {track.name}
+              </th>
+            ))}
+          </tr>
+        </thead>
 
-          {/* content */}
-          <tbody>
-            {/* empty line */}
-            <tr className="divide-x divide-gray-200">
-              <td className="h-6 w-12" />
-              {tracks.map((track) => (
-                <td key={track.id} className="h-6" />
-              ))}
-            </tr>
+        {/* content */}
+        <tbody>
+          {/* empty line */}
+          <tr className="divide-x">
+            {dayIndex === 0 && <td className="h-6 w-12" />}
+            {tracks.map((track) => (
+              <td key={track.id} className="h-6" />
+            ))}
+          </tr>
 
-            {/* rows by hours */}
-            {hours.map((hour) => {
-              const startHour = toTimeFormat(hour.start);
-              const endHour = toTimeFormat(hour.end);
-              const hourSlots = getDailyTimeSlots(hour.start, hour.end, SLOT_INTERVAL);
+          {/* rows by hours */}
+          {hours.map((hour) => {
+            const startHour = toTimeFormat(hour.start);
+            const endHour = toTimeFormat(hour.end);
+            const hourSlots = getDailyTimeSlots(hour.start, hour.end, SLOT_INTERVAL);
 
-              return (
-                <tr key={`${startHour}-${endHour}`} className="divide-x divide-gray-200">
-                  {/* gutter */}
+            return (
+              <tr key={`${startHour}-${endHour}`} className="divide-x">
+                {/* gutter */}
+                {dayIndex === 0 && (
                   <td className="relative whitespace-nowrap text-xs text-gray-500">
                     <time className="absolute -top-2 right-2" dateTime={startHour}>
                       {startHour}
                     </time>
                   </td>
+                )}
 
-                  {/* rows by track */}
-                  {tracks.map((track) => (
-                    <td key={track.id} className="p-0">
-                      {hourSlots.map((timeslot, index) => {
-                        return (
-                          <Timeslot
-                            key={toTimeFormat(timeslot.start)}
-                            trackId={track.id}
-                            timeslot={timeslot}
-                            sessions={sessions}
-                            selector={selector}
-                            zoomLevel={zoomLevel}
-                            isFirstTimeslot={index === 0}
-                            onSelectSession={onSelectSession}
-                            renderSession={renderSession}
-                          />
-                        );
-                      })}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </DndContext>
+                {/* rows by track */}
+                {tracks.map((track) => (
+                  <td key={track.id} className="p-0">
+                    {hourSlots.map((timeslot, index) => {
+                      return (
+                        <Timeslot
+                          key={toTimeFormat(timeslot.start)}
+                          trackId={track.id}
+                          timeslot={timeslot}
+                          sessions={sessions}
+                          selector={selector}
+                          zoomLevel={zoomLevel}
+                          isFirstTimeslot={index === 0}
+                          onSelectSession={onSelectSession}
+                          renderSession={renderSession}
+                        />
+                      );
+                    })}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -363,7 +419,7 @@ function getTimeslotHeight(zoomLevel: number) {
   if (zoomLevel >= 0 && zoomLevel < TIMESLOT_HEIGHTS.length) {
     return TIMESLOT_HEIGHTS[zoomLevel];
   }
-  return TIMESLOT_HEIGHTS[DEFAULT_ZOOM_LEVEL];
+  return TIMESLOT_HEIGHTS[0];
 }
 
 // Check for collisions prioritizing the top of droppable elements

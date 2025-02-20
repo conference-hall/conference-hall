@@ -1,15 +1,17 @@
 import { parseWithZod } from '@conform-to/zod';
+import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { redirect } from 'react-router';
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import {
   SchedulSessionIdSchema,
-  ScheduleDayIdSchema,
   ScheduleDisplayTimesUpdateSchema,
   ScheduleSessionCreateSchema,
   ScheduleSessionUpdateSchema,
 } from '~/.server/event-schedule/event-schedule.types.ts';
+import { ButtonLink } from '~/design-system/buttons.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import type { Route } from './+types/$day.ts';
@@ -20,17 +22,14 @@ import type { ScheduleSession } from './components/schedule.types.ts';
 import Schedule from './components/schedule/schedule.tsx';
 import { SessionBlock } from './components/session/session-block.tsx';
 import { SessionModal } from './components/session/session-modal.tsx';
-import { useDisplayTimes } from './components/use-display-times.tsx';
+import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
 
-  const result = ScheduleDayIdSchema.safeParse(params.day);
-  if (!result.success) return redirect(`/team/${params.team}/${params.event}`);
-
-  const schedule = await eventSchedule.getSchedulesByDay(result.data);
+  const schedule = await eventSchedule.getScheduleSessions();
   if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
 
   return schedule;
@@ -73,16 +72,23 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentProps) {
   const sessions = useSessions(schedule.sessions, schedule.timezone);
-  const displayTimes = useDisplayTimes(
-    schedule.currentDay,
-    schedule.displayStartMinutes,
-    schedule.displayEndMinutes,
-    schedule.timezone,
-  );
+  const settings = useDisplaySettings(schedule);
   const { isFullscreen } = useScheduleFullscreen();
   const zoomHandlers = useZoomHandlers();
   const [openSession, setOpenSession] = useState<ScheduleSession | null>(null);
   const onCloseSession = () => setOpenSession(null);
+
+  if (settings.displayedDays.length === 0) {
+    return (
+      <main className="px-8 my-8 mx-auto max-w-7xl">
+        <EmptyState icon={CalendarDaysIcon} label="No schedule found for the day">
+          <ButtonLink to=".." relative="path">
+            Go to schedule
+          </ButtonLink>
+        </EmptyState>
+      </main>
+    );
+  }
 
   return (
     <main className={cx({ 'px-8 my-8 mx-auto max-w-7xl': !isFullscreen })}>
@@ -92,8 +98,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
         {openSession && (
           <SessionModal
             session={openSession}
-            startTime={displayTimes.startTime}
-            endTime={displayTimes.endTime}
+            displayedTimes={settings.displayedTimes}
             tracks={schedule.tracks}
             onUpdateSession={sessions.update}
             onDeleteSession={sessions.delete}
@@ -102,18 +107,17 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
         )}
 
         <ScheduleHeader
-          currentDay={displayTimes.currentDay}
-          startTime={displayTimes.startTime}
-          endTime={displayTimes.endTime}
-          previousDayIndex={schedule.previousDayIndex}
-          nextDayIndex={schedule.nextDayIndex}
+          scheduleDays={settings.scheduleDays}
+          displayedDays={settings.displayedDays}
+          displayedTimes={settings.displayedTimes}
           zoomHandlers={zoomHandlers}
-          onChangeDisplayTime={displayTimes.update}
+          onChangeDisplayDays={settings.updateDisplayDays}
+          onChangeDisplayTime={settings.updateDisplayTimes}
         />
 
         <Schedule
-          startTime={displayTimes.startTime}
-          endTime={displayTimes.endTime}
+          displayedDays={settings.displayedDays}
+          displayedTimes={settings.displayedTimes}
           timezone={schedule.timezone}
           tracks={schedule.tracks}
           sessions={sessions.data}

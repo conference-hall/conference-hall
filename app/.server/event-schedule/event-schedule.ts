@@ -1,5 +1,4 @@
 import type { Prisma } from '@prisma/client';
-import { addDays, isAfter, isBefore } from 'date-fns';
 import { db } from 'prisma/db.server.ts';
 
 import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/libs/errors.server.ts';
@@ -162,7 +161,7 @@ export class EventSchedule {
     return db.scheduleTrack.delete({ where: { id: trackId } });
   }
 
-  async getSchedulesByDay(dayIndex: number) {
+  async getScheduleSessions() {
     const event = await this.userEvent.needsPermission('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
@@ -172,28 +171,18 @@ export class EventSchedule {
     });
     if (!schedule) return null;
 
-    const currentDay = addDays(schedule.start, dayIndex);
-
-    if (isBefore(currentDay, schedule.start) || isAfter(currentDay, schedule.end)) {
-      throw new NotFoundError('Day not in schedule');
-    }
-
     const sessions = await db.scheduleSession.findMany({
       where: { scheduleId: schedule.id },
       include: { proposal: { include: { speakers: true, formats: true, categories: true } } },
     });
 
-    const hasPreviousDay = !isBefore(addDays(currentDay, dayIndex - 1), schedule.start);
-    const hasNextDay = !isAfter(addDays(currentDay, dayIndex + 1), schedule.end);
-
     return {
       name: schedule.name,
+      start: schedule.start,
+      end: schedule.end,
       timezone: schedule.timezone,
-      currentDay: currentDay,
       displayStartMinutes: schedule.displayStartMinutes,
       displayEndMinutes: schedule.displayEndMinutes,
-      previousDayIndex: hasPreviousDay ? dayIndex - 1 : null,
-      nextDayIndex: hasNextDay ? dayIndex + 1 : null,
       tracks: [...schedule.tracks]
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),

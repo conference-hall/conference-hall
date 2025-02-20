@@ -31,7 +31,7 @@ export class SchedulePage extends PageObject {
   }
 
   async clickOnNextDay() {
-    await this.page.getByRole('link', { name: 'Next day' }).click();
+    await this.page.getByRole('button', { name: 'Next' }).click();
   }
 
   async clickOnSettings() {

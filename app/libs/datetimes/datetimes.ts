@@ -1,4 +1,12 @@
-import { addMinutes, differenceInMinutes, format, formatDuration, intervalToDuration, startOfDay } from 'date-fns';
+import {
+  addMinutes,
+  differenceInMinutes,
+  format,
+  formatDuration,
+  intervalToDuration,
+  setMinutes,
+  startOfDay,
+} from 'date-fns';
 
 // Returns total of minutes from the start of a day
 export function getMinutesFromStartOfDay(date: Date): number {
@@ -10,8 +18,11 @@ export function setMinutesFromStartOfDay(date: Date, minutes: number): Date {
   return addMinutes(startOfDay(date), minutes);
 }
 
-// Format a date to a time HH:mm
-export function toTimeFormat(time: Date): string {
+// Format a date or number in minutes to a time HH:mm
+export function toTimeFormat(time: Date | number): string {
+  if (typeof time === 'number') {
+    time = setMinutes(startOfDay(new Date()), time);
+  }
   return format(time, 'HH:mm');
 }
 

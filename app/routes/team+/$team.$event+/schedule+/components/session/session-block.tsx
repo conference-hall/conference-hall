@@ -34,7 +34,7 @@ export function SessionBlock({ session, height }: SessionBlockProps) {
     >
       {title ? (
         <div className={cx({ truncate: size !== 'xl' })}>
-          <p className={cx('font-semibold', { truncate: size !== 'xl' })}>{title}</p>
+          <p className={cx('font-semibold line-clamp-3', { truncate: size !== 'xl' })}>{title}</p>
           <SessionSpeakers speakers={proposal?.speakers} size={size} />
         </div>
       ) : null}
