@@ -29,7 +29,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
 
-  const schedule = await eventSchedule.getSchedulesByDay();
+  const schedule = await eventSchedule.getScheduleSessions();
   if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
 
   return schedule;

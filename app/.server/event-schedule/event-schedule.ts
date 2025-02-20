@@ -161,7 +161,7 @@ export class EventSchedule {
     return db.scheduleTrack.delete({ where: { id: trackId } });
   }
 
-  async getSchedulesByDay() {
+  async getScheduleSessions() {
     const event = await this.userEvent.needsPermission('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 

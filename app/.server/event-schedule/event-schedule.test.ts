@@ -323,7 +323,7 @@ describe('EventSchedule', () => {
 
       await eventSchedule.deleteSession(session.id);
 
-      const actual = await eventSchedule.getSchedulesByDay(0);
+      const actual = await eventSchedule.getScheduleSessions();
       expect(actual?.sessions.length).toBe(0);
     });
 
@@ -430,8 +430,8 @@ describe('EventSchedule', () => {
     });
   });
 
-  describe('#getSchedulesByDay', () => {
-    it('get schedule data for a day', async () => {
+  describe('#getScheduleSessions', () => {
+    it('get schedule data and sessions', async () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
       const track = await eventSchedule.saveTrack({ name: 'Room' });
       const session = await eventSchedule.addSession({
@@ -451,15 +451,14 @@ describe('EventSchedule', () => {
         proposalId: proposal.id,
       });
 
-      const firstDay = await eventSchedule.getSchedulesByDay(0);
-      expect(firstDay).toEqual({
+      const scheduleSessions = await eventSchedule.getScheduleSessions();
+      expect(scheduleSessions).toEqual({
         name: schedule.name,
-        currentDay: schedule.start,
+        start: schedule.start,
+        end: schedule.end,
         timezone: 'Europe/Paris',
         displayEndMinutes: 1080,
         displayStartMinutes: 540,
-        nextDayIndex: 1,
-        previousDayIndex: null,
         tracks: [{ id: track.id, name: track.name }],
         sessions: [
           {
@@ -490,34 +489,23 @@ describe('EventSchedule', () => {
           },
         ],
       });
-
-      const nextDay = await eventSchedule.getSchedulesByDay(1);
-      expect(nextDay?.currentDay).toEqual(schedule.end);
-      expect(nextDay?.nextDayIndex).toBe(null);
-      expect(nextDay?.previousDayIndex).toBe(0);
     });
 
     it('returns null when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
-      const result = await EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).getSchedulesByDay(0);
+      const result = await EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).getScheduleSessions();
       expect(result).toBe(null);
     });
 
-    it('throws an error for an unknown day', async () => {
-      await expect(EventSchedule.for(owner.id, team.slug, event.slug).getSchedulesByDay(3)).rejects.toThrowError(
-        NotFoundError,
-      );
-    });
-
     it('throws forbidden error for reviewers', async () => {
-      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).getSchedulesByDay(0)).rejects.toThrowError(
+      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).getScheduleSessions()).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).getSchedulesByDay(0)).rejects.toThrowError(
+      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).getScheduleSessions()).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
