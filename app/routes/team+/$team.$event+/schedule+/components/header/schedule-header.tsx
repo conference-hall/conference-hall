@@ -1,41 +1,36 @@
 import {
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   Cog6ToothIcon,
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon,
 } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
-import { format } from 'date-fns';
-import { useSearchParams } from 'react-router';
 
 import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
-import { H2 } from '~/design-system/typography.tsx';
 
-import { DisplayTimesMenu } from './display-times-menu.tsx';
+import { DisplayDays } from './display-days.tsx';
+import { DisplayTimes } from './display-times.tsx';
 import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 
 type Props = {
-  startTime: Date;
-  endTime: Date;
-  previousDayIndex: number | null;
-  nextDayIndex: number | null;
+  scheduleDays: Array<Date>;
+  displayedDays: Array<Date>;
+  displayedTimes: { start: number; end: number };
   zoomHandlers: ZoomHandlers;
+  onChangeDisplayDays: (start: Date, end: Date) => void;
   onChangeDisplayTime: (start: number, end: number) => void;
 };
 
 export function ScheduleHeader({
-  startTime,
-  endTime,
-  previousDayIndex,
-  nextDayIndex,
+  scheduleDays,
+  displayedDays,
+  displayedTimes,
   zoomHandlers,
+  onChangeDisplayDays,
   onChangeDisplayTime,
 }: Props) {
-  const [searchParams] = useSearchParams();
   const scheduleFullscreen = useScheduleFullscreen();
 
   return (
@@ -48,33 +43,15 @@ export function ScheduleHeader({
       )}
     >
       <div className="flex items-center gap-3 shrink">
-        <IconLink
-          icon={ChevronLeftIcon}
-          label="Previous day"
-          to={{ pathname: `../${previousDayIndex}`, search: searchParams.toString() }}
-          relative="path"
-          disabled={previousDayIndex === null}
-          variant="secondary"
-          preventScrollReset
+        <DisplayDays
+          scheduleDays={scheduleDays}
+          displayedDays={displayedDays}
+          onChangeDisplayDays={onChangeDisplayDays}
         />
-        <H2 truncate>
-          {startTime ? <time dateTime={format(startTime, 'yyyy-MM-dd')}>{format(startTime, 'PPPP')}</time> : null}
-        </H2>
-        <IconLink
-          icon={ChevronRightIcon}
-          label="Next day"
-          to={{ pathname: `../${nextDayIndex}`, search: searchParams.toString() }}
-          relative="path"
-          disabled={nextDayIndex === null}
-          variant="secondary"
-          preventScrollReset
-        />
+        <DisplayTimes displayedTimes={displayedTimes} onChangeDisplayTime={onChangeDisplayTime} />
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="mr-1 pr-6 border-r border-gray-300">
-          <DisplayTimesMenu startTime={startTime} endTime={endTime} onChangeDisplayTime={onChangeDisplayTime} />
-        </div>
         <IconButton
           icon={MagnifyingGlassPlusIcon}
           label="Zoom in"

@@ -1,14 +1,15 @@
-import { format, setMinutes, startOfDay } from 'date-fns';
+import {} from 'date-fns';
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
 
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
+import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
 
 type Props = {
   nameStart?: string;
-  startTime: number;
   nameEnd?: string;
-  endTime: number;
+  start: number;
+  end: number;
   step: number;
   min?: number;
   max?: number;
@@ -22,9 +23,9 @@ const MINUTES_IN_DAY = 23 * 60 + 59;
 
 export function TimeRangeInput({
   nameStart = 'start',
-  startTime,
   nameEnd = 'end',
-  endTime,
+  start,
+  end,
   min = 0,
   max = MINUTES_IN_DAY,
   step = 60,
@@ -33,20 +34,20 @@ export function TimeRangeInput({
   hideToLabel,
   onChange,
 }: Props) {
-  const [start, setStart] = useState(startTime);
-  const [end, setEnd] = useState(endTime);
+  const [startTime, setStart] = useState(start);
+  const [endTime, setEnd] = useState(end);
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const minutes = Number(event.target.value);
     if (event.target.name === nameStart) {
-      const minutesEnd = startRelative ? minutes + (end - start) : end;
+      const minutesEnd = startRelative ? minutes + (endTime - startTime) : endTime;
       setStart(minutes);
       setEnd(minutesEnd);
       onChange(minutes, minutesEnd);
     }
     if (event.target.name === nameEnd) {
       setEnd(minutes);
-      onChange(start, minutes);
+      onChange(startTime, minutes);
     }
   };
 
@@ -55,8 +56,8 @@ export function TimeRangeInput({
       <SelectNative
         name={nameStart}
         label="From"
-        value={start}
-        options={generateTimeOptions(step, min, max).filter((o) => startRelative || Number(o.value) <= end)}
+        value={startTime}
+        options={generateTimeOptions(step, min, max).filter((o) => startRelative || Number(o.value) <= endTime)}
         onChange={handleSelectChange}
         srOnly={hideFromLabel}
         inline
@@ -65,8 +66,8 @@ export function TimeRangeInput({
       <SelectNative
         name={nameEnd}
         label="To"
-        value={end}
-        options={generateTimeOptions(step, min, max).filter((o) => Number(o.value) >= start)}
+        value={endTime}
+        options={generateTimeOptions(step, min, max).filter((o) => Number(o.value) >= startTime)}
         onChange={handleSelectChange}
         srOnly={hideToLabel}
         inline
@@ -84,9 +85,4 @@ function generateTimeOptions(step: number, min: number, max: number) {
     name: toTimeFormat(minutes),
     value: String(minutes),
   }));
-}
-
-function toTimeFormat(minutes: number): string {
-  const date = setMinutes(startOfDay(new Date()), minutes);
-  return format(date, 'HH:mm');
 }

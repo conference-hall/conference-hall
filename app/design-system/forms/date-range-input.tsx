@@ -11,12 +11,15 @@ type Props = {
   start: { name: string; label: string; value: Date | null };
   end: { name: string; label: string; value: Date | null };
   timezone: string;
+  min?: Date;
+  max?: Date;
   required?: boolean;
   error?: SubmissionError;
+  onChange?: (start: Date | null, end: Date | null) => void;
   className?: string;
 };
 
-export function DateRangeInput({ start, end, timezone, required, error, className }: Props) {
+export function DateRangeInput({ start, end, timezone, min, max, required, error, onChange, className }: Props) {
   const [startDate, setStartDate] = useState<Date | null>(start.value ? toZonedTime(start.value, timezone) : null);
   const [endDate, setEndDate] = useState<Date | null>(end.value ? toZonedTime(end.value, timezone) : null);
 
@@ -24,20 +27,29 @@ export function DateRangeInput({ start, end, timezone, required, error, classNam
     (event: ChangeEvent<HTMLInputElement>) => {
       const newStartDate = event.target.valueAsDate ? toZonedTime(event.target.valueAsDate, timezone) : null;
       setStartDate(newStartDate);
-      if (!newStartDate) return setEndDate(null);
-      if (!endDate) return setEndDate(newStartDate);
-      if (newStartDate >= endDate) return setEndDate(newStartDate);
+      let newEndDate = endDate;
+      if (!newStartDate) {
+        newEndDate = null;
+      } else if (!endDate) {
+        newEndDate = newStartDate;
+      } else if (newStartDate >= endDate) {
+        newEndDate = newStartDate;
+      }
+      setEndDate(newEndDate);
+      if (onChange) onChange(newStartDate, newEndDate);
     },
-    [endDate, timezone],
+    [endDate, timezone, onChange],
   );
 
   const handleEndDate = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const newEndDate = event.target.valueAsDate ? toZonedTime(event.target.valueAsDate, timezone) : null;
+      const newStartDate = !startDate ? newEndDate : startDate;
       setEndDate(newEndDate);
-      if (!startDate) return setStartDate(newEndDate);
+      setStartDate(newStartDate);
+      if (onChange) onChange(newStartDate, newEndDate);
     },
-    [startDate, timezone],
+    [startDate, timezone, onChange],
   );
 
   return (
@@ -49,6 +61,8 @@ export function DateRangeInput({ start, end, timezone, required, error, classNam
           label={start.label}
           autoComplete="off"
           value={toDayFormat(startDate)}
+          min={toDayFormat(min)}
+          max={toDayFormat(max)}
           onChange={handleStartDate}
           className="col-span-2 sm:col-span-1"
           required={required}
@@ -59,7 +73,8 @@ export function DateRangeInput({ start, end, timezone, required, error, classNam
           name={end.name}
           label={end.label}
           autoComplete="off"
-          min={toDayFormat(startDate)}
+          min={toDayFormat(startDate) || toDayFormat(min)}
+          max={toDayFormat(max)}
           value={toDayFormat(endDate)}
           onChange={handleEndDate}
           className="col-span-2 sm:col-span-1"
@@ -72,7 +87,7 @@ export function DateRangeInput({ start, end, timezone, required, error, classNam
   );
 }
 
-function toDayFormat(date: Date | null) {
-  if (!date) return '';
+function toDayFormat(date?: Date | null) {
+  if (!date) return undefined;
   return format(date, 'yyyy-MM-dd');
 }

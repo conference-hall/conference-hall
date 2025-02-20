@@ -19,7 +19,7 @@ import type { ScheduleSession } from './components/schedule.types.ts';
 import Schedule from './components/schedule/schedule.tsx';
 import { SessionBlock } from './components/session/session-block.tsx';
 import { SessionModal } from './components/session/session-modal.tsx';
-import { useDisplayTimes } from './components/use-display-times.tsx';
+import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
@@ -69,13 +69,13 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentProps) {
   const sessions = useSessions(schedule.sessions, schedule.timezone);
-  const displayTimes = useDisplayTimes(schedule);
+  const settings = useDisplaySettings(schedule);
   const { isFullscreen } = useScheduleFullscreen();
   const zoomHandlers = useZoomHandlers();
   const [openSession, setOpenSession] = useState<ScheduleSession | null>(null);
   const onCloseSession = () => setOpenSession(null);
 
-  const firstDay = displayTimes.scheduleDays.at(0);
+  const firstDay = settings.displayedDays.at(0);
   if (!firstDay) return null;
 
   return (
@@ -83,11 +83,11 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
       <h1 className="sr-only">{schedule.name}</h1>
 
       <div className={cx({ 'border border-gray-200 rounded-t-lg': !isFullscreen })}>
+        {/* Move on DAY schedule */}
         {openSession && (
           <SessionModal
             session={openSession}
-            startTime={firstDay.startTime}
-            endTime={firstDay.endTime}
+            displayedTimes={settings.displayedTimes}
             tracks={schedule.tracks}
             onUpdateSession={sessions.update}
             onDeleteSession={sessions.delete}
@@ -96,16 +96,17 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
         )}
 
         <ScheduleHeader
-          startTime={firstDay.startTime}
-          endTime={firstDay.endTime}
-          previousDayIndex={null}
-          nextDayIndex={null}
+          scheduleDays={settings.scheduleDays}
+          displayedDays={settings.displayedDays}
+          displayedTimes={settings.displayedTimes}
           zoomHandlers={zoomHandlers}
-          onChangeDisplayTime={displayTimes.update}
+          onChangeDisplayDays={settings.updateDisplayDays}
+          onChangeDisplayTime={settings.updateDisplayTimes}
         />
 
         <Schedule
-          displayedDays={displayTimes.scheduleDays}
+          displayedDays={settings.displayedDays}
+          displayedTimes={settings.displayedTimes}
           timezone={schedule.timezone}
           tracks={schedule.tracks}
           sessions={sessions.data}

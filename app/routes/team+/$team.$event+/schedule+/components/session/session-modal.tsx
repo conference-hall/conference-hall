@@ -8,8 +8,7 @@ import { SessionForm } from './session-form.tsx';
 
 type SessionModalProps = {
   session: ScheduleSession;
-  startTime: Date;
-  endTime: Date;
+  displayedTimes: { start: number; end: number };
   tracks: Array<Track>;
   onClose: VoidFunction;
   onUpdateSession: (updated: ScheduleSession) => boolean;
@@ -18,8 +17,7 @@ type SessionModalProps = {
 
 export function SessionModal({
   session,
-  startTime,
-  endTime,
+  displayedTimes,
   tracks,
   onClose,
   onUpdateSession,
@@ -46,8 +44,7 @@ export function SessionModal({
 
             <SessionForm
               session={session}
-              startTime={startTime}
-              endTime={endTime}
+              displayedTimes={displayedTimes}
               tracks={tracks}
               isSearching={isSearching}
               onFinish={handleClose}
