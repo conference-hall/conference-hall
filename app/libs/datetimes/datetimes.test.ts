@@ -20,5 +20,10 @@ describe('datetimes', () => {
       const formatted = toTimeFormat(new Date('2020-02-26T01:10:00.000Z'));
       expect(formatted).toBe('01:10');
     });
+
+    it('format a number in minutes to a time HH:mm', async () => {
+      const formatted = toTimeFormat(120);
+      expect(formatted).toBe('02:00');
+    });
   });
 });

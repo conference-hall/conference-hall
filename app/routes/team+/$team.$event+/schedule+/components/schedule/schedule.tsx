@@ -31,7 +31,7 @@ import { useTimeslotSelector } from './use-timeslot-selector.tsx';
 
 const HOUR_INTERVAL = 60; // minutes
 const SLOT_INTERVAL = 5; // minutes
-const TIMESLOT_HEIGHTS = [4, 8, 16, 24, 32]; // px
+const TIMESLOT_HEIGHTS = [4, 8, 16, 20, 24]; // px
 const SESSIONS_GAP_PX = 1;
 
 type ScheduleProps = {
@@ -94,7 +94,7 @@ export default function Schedule({
       <div className="flex divide-x-3">
         {displayedDays.map((day, index) => (
           <ScheduleDay
-            key={index}
+            key={format(day, 'yyyy-MM-dd')}
             day={day}
             dayIndex={index}
             displayedTimes={displayedTimes}

@@ -95,7 +95,6 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
       <h1 className="sr-only">{schedule.name}</h1>
 
       <div className={cx({ 'border border-gray-200 rounded-t-lg': !isFullscreen })}>
-        {/* Move on DAY schedule */}
         {openSession && (
           <SessionModal
             session={openSession}

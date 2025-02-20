@@ -18,7 +18,6 @@ export function setMinutesFromStartOfDay(date: Date, minutes: number): Date {
   return addMinutes(startOfDay(date), minutes);
 }
 
-// TODO: add tests (for numbers)
 // Format a date or number in minutes to a time HH:mm
 export function toTimeFormat(time: Date | number): string {
   if (typeof time === 'number') {

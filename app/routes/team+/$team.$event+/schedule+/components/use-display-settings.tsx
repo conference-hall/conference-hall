@@ -27,7 +27,7 @@ export function useDisplaySettings(settings: ScheduleSettings) {
   const displayedDays = scheduleDays.slice(displayedStart, (displayedEnd || displayedStart) + 1);
   const displayedTimes = { start: displayStartMinutes, end: displayEndMinutes };
 
-  // Optimistic update
+  // optimistic update
   if (fetcher.formData?.get('intent') === 'update-display-times') {
     displayedTimes.start = Number(fetcher.formData?.get('displayStartMinutes'));
     displayedTimes.end = Number(fetcher.formData?.get('displayEndMinutes'));
