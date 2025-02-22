@@ -2,7 +2,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 import { CalendarDaysIcon, CodeBracketIcon, Squares2X2Icon, TableCellsIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
-import { Fragment } from 'react';
+import { Fragment, type HTMLProps } from 'react';
 import { Form, useFetchers, useParams, useSearchParams } from 'react-router';
 
 import { button } from '~/design-system/buttons.tsx';
@@ -55,6 +55,8 @@ export function ExportMenu() {
             <ExportMenuLink
               icon={Squares2X2Icon}
               href={`/team/${params.team}/${params.event}/export/cards?${searchParams.toString()}`}
+              target="_blank"
+              rel="noreferrer"
             >
               As printable cards
             </ExportMenuLink>
@@ -78,16 +80,16 @@ type ExportMenuLinkProps = {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   children: React.ReactNode;
-};
+} & HTMLProps<HTMLLinkElement>;
 
-function ExportMenuLink({ href, icon: Icon, children }: ExportMenuLinkProps) {
+function ExportMenuLink({ href, icon: Icon, children, target, rel }: ExportMenuLinkProps) {
   return (
     <MenuItem as={Fragment}>
       {({ focus }) => (
         <a
           href={href}
-          target="_blank"
-          rel="noreferrer"
+          target={target}
+          rel={rel}
           className={cx(
             'relative flex items-center gap-3 px-4 py-2 text-sm',
             focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',

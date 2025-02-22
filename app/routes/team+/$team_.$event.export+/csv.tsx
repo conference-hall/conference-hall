@@ -25,7 +25,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return new Response(csvContent, {
     headers: {
       'Content-Type': 'text/csv; charset=utf-8',
-      'Content-Disposition': `attachment; filename="conference-hall.csv"`,
+      'Content-Disposition': `attachment; filename="${params.event}-reviews.csv"`,
     },
   });
 };
