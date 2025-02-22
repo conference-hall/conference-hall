@@ -30,7 +30,7 @@ export function formatCFPState(state: CfpState, start?: Date | null, end?: Date 
 
   switch (state) {
     case 'CLOSED':
-      return 'Call for paper not open yet';
+      return 'Opening soon';
     case 'OPENED':
       return 'Call for paper open';
     case 'FINISHED':

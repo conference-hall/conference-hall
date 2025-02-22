@@ -41,11 +41,13 @@ function CardContent({ name, type, logoUrl, cfpState, cfpStart, cfpEnd }: CardCo
       <Avatar picture={logoUrl} name={name} size="2xl" square className="lg:hidden rounded-r-none" />
 
       <div className="flex flex-1 flex-col justify-between overflow-hidden py-2 px-4 lg:p-4">
-        <Text size="l" weight="semibold" truncate>
+        <Text size="base" weight="semibold" className="lg:text-lg" truncate>
           {name}
         </Text>
-        <div className="flex flex-row-reverse items-center lg:flex-col lg:items-start flex-1 justify-between">
-          <Subtitle weight="medium">{type === 'CONFERENCE' ? 'Conference' : 'Meetup'}</Subtitle>
+        <div className="flex flex-1 justify-between items-end sm:flex-row-reverse lg:flex-col lg:items-start truncate">
+          <Subtitle weight="medium" className="hidden sm:block">
+            {type === 'CONFERENCE' ? 'Conference' : 'Meetup'}
+          </Subtitle>
           <CfpElapsedTime cfpState={cfpState} cfpStart={cfpStart} cfpEnd={cfpEnd} />
         </div>
       </div>

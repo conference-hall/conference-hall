@@ -30,7 +30,7 @@ export function EventsDropdown({ events = [], currentTeam, currentEvent }: Props
   const eventsDisplayed = events.filter((event) => !event.archived || event.slug === currentEvent.slug);
 
   return (
-    <Menu as="div" className="hidden sm:flex relative z-20 shrink-0">
+    <Menu as="div" className="flex relative z-20 shrink-0">
       {({ open }) => (
         <>
           <MenuButton className={menuStyle}>

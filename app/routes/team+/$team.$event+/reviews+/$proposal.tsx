@@ -125,46 +125,44 @@ export default function ProposalReviewLayoutRoute({ loaderData, actionData: erro
     <Page>
       <ReviewHeader {...pagination} />
 
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-          <div className="space-y-4 lg:col-span-8">
-            <TalkSection
-              talk={proposal}
-              errors={errors}
-              event={currentEvent}
-              canEditTalk={canEditEventProposals}
-              canEditSpeakers={false}
-              canArchive={false}
-              showFormats={hasFormats}
-              showCategories={hasCategories}
-            >
-              <Suspense fallback={null}>
-                <Await resolve={otherProposalsPromise}>
-                  {(proposals) => <OtherProposalsDisclosure proposals={proposals} />}
-                </Await>
-              </Suspense>
-            </TalkSection>
-
-            <Suspense fallback={<LoadingActivities />}>
-              <Await resolve={activityPromise}>{(activity) => <Feed activity={activity} />}</Await>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <div className="space-y-4 lg:col-span-8">
+          <TalkSection
+            talk={proposal}
+            errors={errors}
+            event={currentEvent}
+            canEditTalk={canEditEventProposals}
+            canEditSpeakers={false}
+            canArchive={false}
+            showFormats={hasFormats}
+            showCategories={hasCategories}
+          >
+            <Suspense fallback={null}>
+              <Await resolve={otherProposalsPromise}>
+                {(proposals) => <OtherProposalsDisclosure proposals={proposals} />}
+              </Await>
             </Suspense>
-          </div>
+          </TalkSection>
 
-          <div className="lg:col-span-4 space-y-4">
-            <ReviewSidebar
-              proposal={proposal}
-              reviewEnabled={currentEvent.reviewEnabled}
-              canDeliberate={canDeliberateEventProposals}
-            />
+          <Suspense fallback={<LoadingActivities />}>
+            <Await resolve={activityPromise}>{(activity) => <Feed activity={activity} />}</Await>
+          </Suspense>
+        </div>
 
-            <TagsCard
-              proposalId={proposal.id}
-              eventTags={currentEvent.tags}
-              proposalTags={proposal.tags}
-              canEditProposalTags={canEditEventProposals}
-              canEditEventTags={canEditEvent}
-            />
-          </div>
+        <div className="lg:col-span-4 space-y-4">
+          <ReviewSidebar
+            proposal={proposal}
+            reviewEnabled={currentEvent.reviewEnabled}
+            canDeliberate={canDeliberateEventProposals}
+          />
+
+          <TagsCard
+            proposalId={proposal.id}
+            eventTags={currentEvent.tags}
+            proposalTags={proposal.tags}
+            canEditProposalTags={canEditEventProposals}
+            canEditEventTags={canEditEvent}
+          />
         </div>
       </div>
     </Page>
