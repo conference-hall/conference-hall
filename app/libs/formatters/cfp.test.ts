@@ -51,7 +51,7 @@ describe('#formatCFPState', () => {
       new Date('2020-10-05T00:00:00.000Z'),
       new Date('2020-10-07T00:00:00.000Z'),
     );
-    expect(message).toBe('Call for paper not open yet');
+    expect(message).toBe('Opening soon');
   });
 
   it('return opened cfp message', () => {

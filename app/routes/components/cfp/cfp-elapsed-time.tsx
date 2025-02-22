@@ -11,7 +11,7 @@ type Props = { cfpState: CfpState; cfpStart: Date | null; cfpEnd: Date | null; c
 
 export function CfpElapsedTime({ cfpState, cfpStart, cfpEnd, className }: Props) {
   return (
-    <div className={cx('flex items-center space-x-2', className)}>
+    <div className={cx('flex items-center space-x-2 truncate', className)}>
       <StatusPill status={cfpColorStatus(cfpState, cfpStart, cfpEnd)} />
       <ClientOnly>
         {() => (

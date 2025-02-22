@@ -19,7 +19,7 @@ export function ReviewHeader({ current, total, reviewed, nextId, previousId }: P
   const nextPath = nextId !== undefined ? `/team/${params.team}/${params.event}/reviews/${nextId}` : undefined;
 
   return (
-    <header className="max-w-7xl m-auto flex justify-between items-center gap-4 pb-4 px-4 lg:-mt-4">
+    <header className="flex justify-between items-center gap-4 pb-4 lg:-mt-4">
       <nav className="flex items-center gap-2 lg:gap-4">
         <IconLink
           to={{ pathname: previousPath, search }}
