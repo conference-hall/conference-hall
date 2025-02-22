@@ -3,7 +3,7 @@ import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import type { Route } from './+types/api.ts';
-import { ApiTryoutSection } from './components/api-tryout-section.tsx';
+import { EventProposalApiTryout, EventScheduleApiTryout } from './components/api-tryout-section.tsx';
 import { EnableApiSection } from './components/enable-api-section.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
@@ -31,12 +31,17 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 export default function EventApiSettingsRoute() {
-  const { slug, apiKey } = useCurrentEvent();
+  const { slug, apiKey, type } = useCurrentEvent();
 
   return (
     <>
       <EnableApiSection apiKey={apiKey} />
-      {apiKey && <ApiTryoutSection slug={slug} apiKey={apiKey} />}
+      {apiKey ? (
+        <>
+          <EventProposalApiTryout slug={slug} apiKey={apiKey} />
+          {type === 'CONFERENCE' ? <EventScheduleApiTryout slug={slug} apiKey={apiKey} /> : null}
+        </>
+      ) : null}
     </>
   );
 }
