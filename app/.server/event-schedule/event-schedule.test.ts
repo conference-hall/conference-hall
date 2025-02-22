@@ -6,7 +6,13 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/libs/errors.server.ts';
+import {
+  ApiKeyInvalidError,
+  EventNotFoundError,
+  ForbiddenError,
+  ForbiddenOperationError,
+  NotFoundError,
+} from '~/libs/errors.server.ts';
 
 import { EventSchedule } from './event-schedule.ts';
 
@@ -21,7 +27,7 @@ describe('EventSchedule', () => {
     owner = await userFactory();
     reviewer = await userFactory();
     team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
-    event = await eventFactory({ team, traits: ['conference'] });
+    event = await eventFactory({ team, traits: ['conference'], attributes: { apiKey: '123' } });
     schedule = await scheduleFactory({ event });
     await eventFactory({ team, traits: ['conference', 'withSchedule'] });
   });
@@ -508,6 +514,103 @@ describe('EventSchedule', () => {
       await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).getScheduleSessions()).rejects.toThrowError(
         ForbiddenOperationError,
       );
+    });
+  });
+
+  describe('#forJsonExport', () => {
+    it('exports schedule as JSON', async () => {
+      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
+      const track = await eventSchedule.saveTrack({ name: 'Room' });
+      const session = await eventSchedule.addSession({
+        trackId: track.id,
+        start: new Date(schedule.start),
+        end: new Date(schedule.start),
+      });
+      const talk = await talkFactory({ speakers: [owner] });
+      const proposal = await proposalFactory({ event, talk });
+      await eventSchedule.updateSession({
+        id: session.id,
+        trackId: track.id,
+        color: 'gray',
+        emojis: [],
+        start: new Date(schedule.start),
+        end: new Date(schedule.start),
+        proposalId: proposal.id,
+      });
+
+      const json = await eventSchedule.forJsonExport();
+
+      expect(json).toEqual({
+        name: schedule.name,
+        days: expect.any(Array),
+        timeZone: schedule.timezone,
+        sessions: [
+          {
+            id: session.id,
+            start: expect.any(String),
+            end: expect.any(String),
+            track: track.name,
+            title: proposal.title,
+            language: 'en',
+            proposal: {
+              id: proposal.id,
+              abstract: proposal.abstract,
+              level: proposal.level || null,
+              formats: [],
+              categories: [],
+              speakers: [
+                {
+                  id: owner.id,
+                  name: owner.name,
+                  bio: owner.bio || null,
+                  company: owner.company || null,
+                  picture: owner.picture || null,
+                  socialLinks: owner.socialLinks,
+                },
+              ],
+            },
+          },
+        ],
+      });
+    });
+
+    it('throws forbidden error for reviewers', async () => {
+      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).forJsonExport()).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
+    });
+
+    it('throws forbidden error for meetups', async () => {
+      const meetup = await eventFactory({ team, traits: ['meetup'] });
+      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).forJsonExport()).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
+    });
+  });
+
+  describe('#forJsonApi', () => {
+    it('exports schedule as JSON via API', async () => {
+      const json = await EventSchedule.forJsonApi(event.slug, '123');
+
+      expect(json).toEqual({
+        name: schedule.name,
+        days: expect.any(Array),
+        timeZone: schedule.timezone,
+        sessions: expect.any(Array),
+      });
+    });
+
+    it('throws EventNotFoundError for invalid event slug', async () => {
+      await expect(EventSchedule.forJsonApi('invalid-slug', '123')).rejects.toThrowError(EventNotFoundError);
+    });
+
+    it('throws ApiKeyInvalidError for invalid API key', async () => {
+      await expect(EventSchedule.forJsonApi(event.slug, 'invalid-api-key')).rejects.toThrowError(ApiKeyInvalidError);
+    });
+
+    it('throws forbidden error for meetups', async () => {
+      const meetup = await eventFactory({ team, traits: ['meetup'], attributes: { apiKey: '123' } });
+      await expect(EventSchedule.forJsonApi(meetup.slug, '123')).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

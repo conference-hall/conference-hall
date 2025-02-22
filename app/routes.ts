@@ -82,6 +82,7 @@ export default [
       route('schedule', './routes/team+/$team.$event+/schedule+/index.tsx'),
       route('schedule/:day', './routes/team+/$team.$event+/schedule+/$day.tsx'),
       route('schedule/settings', './routes/team+/$team.$event+/schedule+/settings.tsx'),
+      route('schedule/export/json', './routes/team+/$team.$event+/schedule+/export/json.tsx'),
 
       // Event settings pages
       route('settings', './routes/team+/$team.$event+/settings+/_layout.tsx', [
@@ -125,6 +126,7 @@ export default [
 
   // Api pages
   route('api/v1/event/:event', './routes/api+/v1.event.$event.tsx'),
+  route('api/v1/event/:event/schedule', './routes/api+/v1.event.$event.schedule.tsx'),
 
   // SEO routes
   route('robots.txt', './routes/_misc+/robots[.txt].ts'),
