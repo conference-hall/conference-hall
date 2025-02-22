@@ -1,8 +1,16 @@
-import type { Prisma } from '@prisma/client';
+import type { EventType, Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 
-import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/libs/errors.server.ts';
+import {
+  ApiKeyInvalidError,
+  EventNotFoundError,
+  ForbiddenError,
+  ForbiddenOperationError,
+  NotFoundError,
+} from '~/libs/errors.server.ts';
 
+import { toZonedTime } from 'date-fns-tz';
+import { getDatesRange } from '~/libs/datetimes/datetimes.ts';
 import type { Languages } from '~/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import type {
@@ -208,6 +216,66 @@ export class EventSchedule {
                 name: s.name,
                 picture: s.picture,
                 company: s.company,
+              })),
+            }
+          : null,
+      })),
+    };
+  }
+
+  async forJsonExport() {
+    const event = await this.userEvent.needsPermission('canEditEventSchedule');
+
+    return EventSchedule.toJson(event.id, event.type);
+  }
+
+  static async forJsonApi(eventSlug: string, apiKey: string) {
+    const event = await db.event.findFirst({ where: { slug: eventSlug } });
+
+    if (!event) throw new EventNotFoundError();
+    if (event.apiKey !== apiKey) throw new ApiKeyInvalidError();
+
+    return EventSchedule.toJson(event.id, event.type);
+  }
+
+  static async toJson(eventId: string, eventType: EventType) {
+    if (eventType === 'MEETUP') throw new ForbiddenOperationError();
+
+    const schedule = await db.schedule.findFirst({ where: { eventId }, include: { sessions: true } });
+    if (!schedule) return null;
+
+    const sessions = await db.scheduleSession.findMany({
+      where: { scheduleId: schedule.id },
+      include: { proposal: { include: { speakers: true, formats: true, categories: true } }, track: true },
+    });
+
+    const days = getDatesRange(schedule.start, schedule.end);
+
+    return {
+      name: schedule.name,
+      days: days.map((day) => toZonedTime(day, schedule.timezone).toISOString()),
+      timeZone: schedule.timezone,
+      sessions: sessions.map(({ proposal, track, ...session }) => ({
+        id: session.id,
+        start: toZonedTime(session.start, schedule.timezone).toISOString(),
+        end: toZonedTime(session.end, schedule.timezone).toISOString(),
+        track: track.name,
+        title: proposal ? proposal.title : session.name,
+        language: session.language || null,
+        proposal: proposal
+          ? {
+              id: proposal.id,
+              abstract: proposal.abstract,
+              level: proposal.level || null,
+              formats: proposal.formats.map(({ name }) => name),
+              categories: proposal.categories.map(({ name }) => name),
+              speakers: proposal.speakers.map((speaker) => ({
+                id: speaker.id,
+                name: speaker.name,
+                bio: speaker.bio || null,
+                company: speaker.company || null,
+                picture: speaker.picture || null,
+                socialLinks: speaker.socialLinks,
               })),
             }
           : null,

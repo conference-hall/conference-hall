@@ -9,7 +9,7 @@ import { H2, Subtitle } from '~/design-system/typography.tsx';
 
 type Props = { slug: string; apiKey: string };
 
-export function ApiTryoutSection({ slug, apiKey }: Props) {
+export function EventProposalApiTryout({ slug, apiKey }: Props) {
   const [query, setQuery] = useState<string>('');
   const [status, setStatus] = useState<string>('');
 
@@ -47,6 +47,32 @@ export function ApiTryoutSection({ slug, apiKey }: Props) {
           defaultValue={status}
           onChange={(_name, value) => setStatus(value)}
         />
+      </Card.Content>
+
+      <Card.Actions>
+        <ExternalLink href={url} target="_blank" iconRight={ArrowRightIcon} weight="medium">
+          Try out
+        </ExternalLink>
+      </Card.Actions>
+    </Card>
+  );
+}
+
+export function EventScheduleApiTryout({ slug, apiKey }: Props) {
+  const params = new URLSearchParams();
+  params.set('key', apiKey);
+
+  const url = `/api/v1/event/${slug}/schedule?${params.toString()}`;
+
+  return (
+    <Card as="section">
+      <Card.Title>
+        <H2>Event schedule API</H2>
+        <Subtitle>List sessions with times, tracks, talks and speakers for the event schedule.</Subtitle>
+      </Card.Title>
+
+      <Card.Content>
+        <code className="rounded-sm bg-gray-100 p-4 text-sm">{url}</code>
       </Card.Content>
 
       <Card.Actions>

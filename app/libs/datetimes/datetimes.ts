@@ -1,4 +1,5 @@
 import {
+  addDays,
   addMinutes,
   differenceInMinutes,
   format,
@@ -26,7 +27,7 @@ export function toTimeFormat(time: Date | number): string {
   return format(time, 'HH:mm');
 }
 
-// TODO: add tests
+// Format the difference between two dates to a string like '2h 10m'
 export function formatTimeDifference(date1: Date, date2: Date) {
   const duration = intervalToDuration({ start: date1, end: date2 });
   return formatDuration(duration, {
@@ -46,4 +47,17 @@ export function formatTimeDifference(date1: Date, date2: Date) {
       },
     },
   });
+}
+
+// Get an array of dates between two dates, inclusive
+export function getDatesRange(startDate: Date, endDate: Date) {
+  const dates = [];
+  let currentDate = startDate;
+
+  while (currentDate <= endDate) {
+    dates.push(currentDate);
+    currentDate = addDays(currentDate, 1);
+  }
+
+  return dates;
 }

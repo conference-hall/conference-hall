@@ -25,7 +25,10 @@ export function EnableApiSection({ apiKey }: Props) {
             value={apiKey || ''}
             placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
           />
-          <Callout title="Rate limit">The API is limited to 5 requests every hour.</Callout>
+          <Callout title="Rate limit">
+            The web API is limited to <strong>60 requests per hour</strong> maximum to avoid server overload by external
+            services.
+          </Callout>
         </Form>
       </Card.Content>
 
