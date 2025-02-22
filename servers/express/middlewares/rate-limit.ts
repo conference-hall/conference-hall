@@ -3,7 +3,8 @@ import rateLimit from 'express-rate-limit';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-// TODO: use rate limiting in Redis instead of in memory
+const API_WINDOW_MS = 60 * 1000; // 1h
+const API_MAX_CALLS = 60;
 
 // Disable rate limiting on dev and test environments
 const maxMultiple = isProduction ? 1 : 10_000;
@@ -23,38 +24,15 @@ const defaultRateLimit = {
 
 const apiRateLimit = rateLimit({
   ...defaultRateLimit,
-  windowMs: 60 * 1000,
-  max: 5 * maxMultiple,
+  windowMs: API_WINDOW_MS,
+  max: API_MAX_CALLS,
 });
-
-// const strongestRateLimit = rateLimit({
-//   ...defaultRateLimit,
-//   windowMs: 60 * 1000,
-//   max: 10 * maxMultiple,
-// });
-
-// const strongRateLimit = rateLimit({
-//   ...defaultRateLimit,
-//   windowMs: 60 * 1000,
-//   max: 100 * maxMultiple,
-// });
-
-// const strongPaths: Array<string> = [];
-
 export function applyRateLimits(app: express.Application) {
   app.use((req, res, next) => {
-    // if (req.method !== 'GET' && req.method !== 'HEAD') {
-    //   if (strongPaths.some((p) => req.path.includes(p))) {
-    //     return strongestRateLimit(req, res, next);
-    //   }
-    //   return strongRateLimit(req, res, next);
-    // }
-
     // Rate limit for GET /api/
     if (req.path.startsWith('/api/')) {
       return apiRateLimit(req, res, next);
     }
-
     next();
   });
 }
