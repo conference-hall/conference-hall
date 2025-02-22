@@ -29,7 +29,7 @@ export function ExportMenu() {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <MenuButton className={button({ variant: 'secondary', loading })} disabled={loading}>
-        <ArrowDownTrayIcon className="h-4 w-4 text-gray-500" />
+        <ArrowDownTrayIcon className="size-4 text-gray-500" aria-hidden="true" />
         <span>{loading ? 'Exporting...' : 'Export'}</span>
       </MenuButton>
       <MenuTransition>

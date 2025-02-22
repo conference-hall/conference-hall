@@ -1,4 +1,5 @@
 import {
+  ArrowDownTrayIcon,
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
   Cog6ToothIcon,
@@ -7,8 +8,9 @@ import {
 } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 
-import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
+import { IconButton, IconLink, iconButton } from '~/design-system/icon-buttons.tsx';
 
+import { useParams } from 'react-router';
 import { DisplayDays } from './display-days.tsx';
 import { DisplayTimes } from './display-times.tsx';
 import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
@@ -31,6 +33,7 @@ export function ScheduleHeader({
   onChangeDisplayDays,
   onChangeDisplayTime,
 }: Props) {
+  const params = useParams();
   const scheduleFullscreen = useScheduleFullscreen();
 
   return (
@@ -72,6 +75,13 @@ export function ScheduleHeader({
           onClick={scheduleFullscreen.toggle}
           variant="secondary"
         />
+        <a
+          href={`/team/${params.team}/${params.event}/schedule/export/json`}
+          aria-label="JSON export"
+          className={iconButton({ variant: 'secondary' })}
+        >
+          <ArrowDownTrayIcon className="size-4 text-gray-500" aria-hidden="true" />
+        </a>
         <IconLink icon={Cog6ToothIcon} label="Settings" to="../settings" relative="path" variant="secondary" />
       </div>
     </header>

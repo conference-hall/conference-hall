@@ -4,7 +4,7 @@ import type React from 'react';
 import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
 
-const button = cva(
+export const iconButton = cva(
   ['flex items-center rounded-full shrink-0 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 cursor-pointer'],
   {
     variants: {
@@ -27,14 +27,14 @@ const icon = cva('', {
 type IconButtonBaseProps = {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-} & VariantProps<typeof button>;
+} & VariantProps<typeof iconButton>;
 
 type IconButtonProps = IconButtonBaseProps & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'>;
 
 export function IconButton({ icon: Icon, label, variant, size, disabled, ...rest }: IconButtonProps) {
   return (
     <button
-      className={button({ variant, size, disabled })}
+      className={iconButton({ variant, size, disabled })}
       aria-label={label}
       title={label}
       disabled={disabled}
@@ -50,14 +50,14 @@ type IconLinkProps = IconButtonBaseProps & Omit<LinkProps, 'children'>;
 export function IconLink({ icon: Icon, label, variant, size, disabled, ...rest }: IconLinkProps) {
   if (disabled) {
     return (
-      <div className={button({ variant, size, disabled })} aria-disabled="true">
+      <div className={iconButton({ variant, size, disabled })} aria-disabled="true">
         <Icon className={icon({ size })} aria-hidden="true" />
       </div>
     );
   }
 
   return (
-    <Link className={button({ variant, size, disabled })} aria-label={label} title={label} {...rest}>
+    <Link className={iconButton({ variant, size, disabled })} aria-label={label} title={label} {...rest}>
       <Icon className={icon({ size })} aria-hidden="true" />
     </Link>
   );
