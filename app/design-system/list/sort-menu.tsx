@@ -30,39 +30,37 @@ export function SortMenu({ options, defaultSort, defaultOrder }: SortMenuProps) 
           anchor={{ to: 'bottom end', gap: '8px' }}
           className="z-10 w-56 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden"
         >
-          <div className="py-1">
-            {options.map(({ name, value }) => {
-              const selected = value === sort;
-              const orderValue = selected && order === 'asc' ? 'desc' : 'asc';
-              const search = new URLSearchParams({ ...others, sort: value, order: orderValue });
+          {options.map(({ name, value }) => {
+            const selected = value === sort;
+            const orderValue = selected && order === 'asc' ? 'desc' : 'asc';
+            const search = new URLSearchParams({ ...others, sort: value, order: orderValue });
 
-              return (
-                <MenuItem as={Fragment} key={value}>
-                  {({ focus }) => (
-                    <Link
-                      to={{ pathname: location.pathname, search: search.toString() }}
-                      className={cx(
-                        'relative block px-4 py-2 text-sm',
-                        focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        selected ? 'font-semibold' : '',
-                      )}
-                    >
-                      {name}
-                      {selected ? (
-                        <span className="absolute inset-y-0 right-0 flex items-center pr-4">
-                          {order === 'asc' ? (
-                            <ArrowDownIcon className="size-5" aria-label="Ascending sort" />
-                          ) : (
-                            <ArrowUpIcon className="size-5" aria-label="Descending sort" />
-                          )}
-                        </span>
-                      ) : null}
-                    </Link>
-                  )}
-                </MenuItem>
-              );
-            })}
-          </div>
+            return (
+              <MenuItem as={Fragment} key={value}>
+                {({ focus }) => (
+                  <Link
+                    to={{ pathname: location.pathname, search: search.toString() }}
+                    className={cx(
+                      'relative block px-4 py-2 text-sm',
+                      focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      selected ? 'font-semibold' : '',
+                    )}
+                  >
+                    {name}
+                    {selected ? (
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-4">
+                        {order === 'asc' ? (
+                          <ArrowDownIcon className="size-5" aria-label="Ascending sort" />
+                        ) : (
+                          <ArrowUpIcon className="size-5" aria-label="Descending sort" />
+                        )}
+                      </span>
+                    ) : null}
+                  </Link>
+                )}
+              </MenuItem>
+            );
+          })}
         </MenuItems>
       </MenuTransition>
     </Menu>

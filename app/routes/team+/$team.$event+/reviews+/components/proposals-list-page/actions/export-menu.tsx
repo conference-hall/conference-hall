@@ -37,39 +37,37 @@ export function ExportMenu() {
           anchor={{ to: 'bottom end', gap: '8px' }}
           className="z-10 w-56 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden"
         >
-          <div className="py-1">
-            <ExportMenuLink
-              icon={CodeBracketIcon}
-              href={`/team/${params.team}/${params.event}/export/json?${searchParams.toString()}`}
-            >
-              As JSON
-            </ExportMenuLink>
+          <ExportMenuLink
+            icon={CodeBracketIcon}
+            href={`/team/${params.team}/${params.event}/export/json?${searchParams.toString()}`}
+          >
+            As JSON
+          </ExportMenuLink>
 
-            <ExportMenuLink
-              icon={TableCellsIcon}
-              href={`/team/${params.team}/${params.event}/export/csv?${searchParams.toString()}`}
-            >
-              As CSV
-            </ExportMenuLink>
+          <ExportMenuLink
+            icon={TableCellsIcon}
+            href={`/team/${params.team}/${params.event}/export/csv?${searchParams.toString()}`}
+          >
+            As CSV
+          </ExportMenuLink>
 
-            <ExportMenuLink
-              icon={Squares2X2Icon}
-              href={`/team/${params.team}/${params.event}/export/cards?${searchParams.toString()}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              As printable cards
-            </ExportMenuLink>
+          <ExportMenuLink
+            icon={Squares2X2Icon}
+            href={`/team/${params.team}/${params.event}/export/cards?${searchParams.toString()}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            As printable cards
+          </ExportMenuLink>
 
-            {isOpenPlannerEnabled ? (
-              <ExportMenuForm
-                icon={CalendarDaysIcon}
-                action={`/team/${params.team}/${params.event}/export/open-planner?${searchParams.toString()}`}
-              >
-                To OpenPlanner
-              </ExportMenuForm>
-            ) : null}
-          </div>
+          {isOpenPlannerEnabled ? (
+            <ExportMenuForm
+              icon={CalendarDaysIcon}
+              action={`/team/${params.team}/${params.event}/export/open-planner?${searchParams.toString()}`}
+            >
+              To OpenPlanner
+            </ExportMenuForm>
+          ) : null}
         </MenuItems>
       </MenuTransition>
     </Menu>
