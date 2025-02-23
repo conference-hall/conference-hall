@@ -1,4 +1,4 @@
-import type { Event, Schedule, Team, User } from '@prisma/client';
+import type { Event, Schedule, ScheduleTrack, Team, User } from '@prisma/client';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { scheduleFactory } from 'tests/factories/schedule.ts';
@@ -14,6 +14,7 @@ import {
   NotFoundError,
 } from '~/libs/errors.server.ts';
 
+import { scheduleTrackFactory } from 'tests/factories/schedule-track.ts';
 import { EventSchedule } from './event-schedule.ts';
 
 describe('EventSchedule', () => {
@@ -22,6 +23,8 @@ describe('EventSchedule', () => {
   let team: Team;
   let event: Event;
   let schedule: Schedule;
+  let track: ScheduleTrack;
+  let track2: ScheduleTrack;
 
   beforeEach(async () => {
     owner = await userFactory();
@@ -29,13 +32,14 @@ describe('EventSchedule', () => {
     team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
     event = await eventFactory({ team, traits: ['conference'], attributes: { apiKey: '123' } });
     schedule = await scheduleFactory({ event });
+    track = await scheduleTrackFactory({ name: 'Room 1', schedule });
+    track2 = await scheduleTrackFactory({ name: 'Room 2', schedule });
     await eventFactory({ team, traits: ['conference', 'withSchedule'] });
   });
 
   describe('#get', () => {
     it('get schedule', async () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const track = await eventSchedule.saveTrack({ name: 'Room' });
 
       const actual = await eventSchedule.get();
       expect(actual).toEqual({
@@ -44,7 +48,10 @@ describe('EventSchedule', () => {
         start: schedule.start,
         end: schedule.end,
         timezone: 'Europe/Paris',
-        tracks: [{ id: track.id, name: track.name }],
+        tracks: [
+          { id: track.id, name: track.name },
+          { id: track2.id, name: track2.name },
+        ],
       });
     });
 
@@ -167,7 +174,6 @@ describe('EventSchedule', () => {
   describe('#addSession', () => {
     it('adds a session to a schedule', async () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const track = await eventSchedule.saveTrack({ name: 'Room' });
 
       const session = await eventSchedule.addSession({
         trackId: track.id,
@@ -217,10 +223,8 @@ describe('EventSchedule', () => {
   describe('#updateSession', () => {
     it('updates a session with a proposal', async () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const track1 = await eventSchedule.saveTrack({ name: 'Room' });
-      const track2 = await eventSchedule.saveTrack({ name: 'Room 2' });
       const session = await eventSchedule.addSession({
-        trackId: track1.id,
+        trackId: track.id,
         start: new Date(schedule.start),
         end: new Date(schedule.start),
       });
@@ -248,16 +252,15 @@ describe('EventSchedule', () => {
 
     it('updates a session without a proposal', async () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const track1 = await eventSchedule.saveTrack({ name: 'Room' });
       const session = await eventSchedule.addSession({
-        trackId: track1.id,
+        trackId: track.id,
         start: new Date(schedule.start),
         end: new Date(schedule.start),
       });
 
       const actual = await eventSchedule.updateSession({
         id: session.id,
-        trackId: track1.id,
+        trackId: track.id,
         color: 'gray',
         language: 'fr',
         emojis: ['heart'],
@@ -265,7 +268,7 @@ describe('EventSchedule', () => {
         end: new Date(schedule.end),
       });
 
-      expect(actual?.trackId).toBe(track1.id);
+      expect(actual?.trackId).toBe(track.id);
       expect(actual?.start).toEqual(schedule.end);
       expect(actual?.end).toEqual(schedule.end);
       expect(actual?.language).toEqual('fr');
@@ -320,7 +323,6 @@ describe('EventSchedule', () => {
   describe('#deleteSession', () => {
     it('deletes a session from a schedule', async () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const track = await eventSchedule.saveTrack({ name: 'Room' });
       const session = await eventSchedule.addSession({
         trackId: track.id,
         start: new Date(schedule.start),
@@ -357,80 +359,54 @@ describe('EventSchedule', () => {
   describe('#saveTracks', () => {
     it('adds a new track', async () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      await eventSchedule.saveTrack({ name: 'Room 1' });
+      await eventSchedule.saveTracks([track, track2, { id: 'NEW-track3', name: 'Room 3' }]);
+
+      const actual = await eventSchedule.get();
+      expect(actual?.tracks[0].name).toBe('Room 1');
+      expect(actual?.tracks[1].name).toBe('Room 2');
+      expect(actual?.tracks[2].name).toBe('Room 3');
+    });
+
+    it('updates a track', async () => {
+      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
+      await eventSchedule.saveTracks([track, { ...track2, name: 'Room 2 updated' }]);
+
+      const actual = await eventSchedule.get();
+      expect(actual?.tracks[0].name).toBe('Room 1');
+      expect(actual?.tracks[1].name).toBe('Room 2 updated');
+    });
+
+    it('deletes a track', async () => {
+      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
+      await eventSchedule.saveTracks([track]);
 
       const actual = await eventSchedule.get();
       expect(actual?.tracks.length).toBe(1);
       expect(actual?.tracks[0].name).toBe('Room 1');
     });
 
-    it('updates a schedule track', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const track = await eventSchedule.saveTrack({ name: 'Room 1' });
-
-      await eventSchedule.saveTrack({ id: track.id, name: 'Room 2' });
-
-      const actual = await eventSchedule.get();
-      expect(actual?.tracks.length).toBe(1);
-      expect(actual?.tracks[0].name).toBe('Room 2');
+    it('must remain at least one track', async () => {
+      await expect(EventSchedule.for(owner.id, team.slug, event.slug).saveTracks([])).rejects.toThrowError(
+        ForbiddenError,
+      );
     });
 
     it('throws not found Error when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
       await expect(
-        EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).saveTrack({ name: 'Room 1' }),
+        EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).saveTracks([]),
       ).rejects.toThrowError(NotFoundError);
     });
 
     it('throws forbidden error for reviewers', async () => {
-      await expect(
-        EventSchedule.for(reviewer.id, team.slug, event.slug).saveTrack({ name: 'Room 1' }),
-      ).rejects.toThrowError(ForbiddenOperationError);
-    });
-
-    it('throws forbidden error for meetups', async () => {
-      const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(
-        EventSchedule.for(owner.id, team.slug, meetup.slug).saveTrack({ name: 'Room 1' }),
-      ).rejects.toThrowError(ForbiddenOperationError);
-    });
-  });
-
-  describe('#deleteTrack', () => {
-    it('deletes a schedule track', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const track1 = await eventSchedule.saveTrack({ name: 'Room 1' });
-      const track2 = await eventSchedule.saveTrack({ name: 'Room 2' });
-
-      await eventSchedule.deleteTrack(track1.id);
-
-      const actual = await eventSchedule.get();
-      expect(actual?.tracks.length).toBe(1);
-      expect(actual?.tracks[0].name).toBe(track2.name);
-    });
-
-    it('throws a forbidden Error when trying to delete the last track', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const track = await eventSchedule.saveTrack({ name: 'Room 1' });
-      await expect(eventSchedule.deleteTrack(track.id)).rejects.toThrowError(ForbiddenError);
-    });
-
-    it('throws not found Error when no schedule defined for the event', async () => {
-      const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
-      await expect(
-        EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).deleteTrack('x'),
-      ).rejects.toThrowError(NotFoundError);
-    });
-
-    it('throws forbidden error for reviewers', async () => {
-      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).deleteTrack('x')).rejects.toThrowError(
+      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).saveTracks([])).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).deleteTrack('x')).rejects.toThrowError(
+      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).saveTracks([])).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
@@ -439,7 +415,6 @@ describe('EventSchedule', () => {
   describe('#getScheduleSessions', () => {
     it('get schedule data and sessions', async () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const track = await eventSchedule.saveTrack({ name: 'Room' });
       const session = await eventSchedule.addSession({
         trackId: track.id,
         start: new Date(schedule.start),
@@ -465,7 +440,10 @@ describe('EventSchedule', () => {
         timezone: 'Europe/Paris',
         displayEndMinutes: 1080,
         displayStartMinutes: 540,
-        tracks: [{ id: track.id, name: track.name }],
+        tracks: [
+          { id: track.id, name: track.name },
+          { id: track2.id, name: track2.name },
+        ],
         sessions: [
           {
             id: session.id,
@@ -520,7 +498,6 @@ describe('EventSchedule', () => {
   describe('#forJsonExport', () => {
     it('exports schedule as JSON', async () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const track = await eventSchedule.saveTrack({ name: 'Room' });
       const session = await eventSchedule.addSession({
         trackId: track.id,
         start: new Date(schedule.start),

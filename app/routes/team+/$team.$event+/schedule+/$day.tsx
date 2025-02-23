@@ -9,6 +9,7 @@ import {
   ScheduleDisplayTimesUpdateSchema,
   ScheduleSessionCreateSchema,
   ScheduleSessionUpdateSchema,
+  ScheduleTracksSaveSchema,
 } from '~/.server/event-schedule/event-schedule.types.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
@@ -66,6 +67,16 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       await eventSchedule.update(result.value);
       break;
     }
+    case 'save-tracks': {
+      const result = parseWithZod(form, { schema: ScheduleTracksSaveSchema });
+      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+      await eventSchedule.saveTracks(result.value.tracks);
+      break;
+    }
+    case 'delete-schedule': {
+      await eventSchedule.delete();
+      break;
+    }
   }
   return null;
 };
@@ -110,6 +121,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
           scheduleDays={settings.scheduleDays}
           displayedDays={settings.displayedDays}
           displayedTimes={settings.displayedTimes}
+          tracks={schedule.tracks}
           zoomHandlers={zoomHandlers}
           onChangeDisplayDays={settings.updateDisplayDays}
           onChangeDisplayTime={settings.updateDisplayTimes}

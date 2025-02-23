@@ -17,7 +17,7 @@ import type {
   ScheduleCreateData,
   ScheduleSessionCreateData,
   ScheduleSessionUpdateData,
-  ScheduleTrackSaveData,
+  ScheduleTracksSaveData,
 } from './event-schedule.types.ts';
 
 export class EventSchedule {
@@ -145,28 +145,28 @@ export class EventSchedule {
     await db.scheduleSession.deleteMany({ where: { id: sessionId, scheduleId: schedule.id } });
   }
 
-  async saveTrack(data: ScheduleTrackSaveData) {
-    const event = await this.userEvent.needsPermission('canEditEventSchedule');
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
-
-    if (data.id) {
-      return db.scheduleTrack.update({ where: { id: data.id }, data: { name: data.name } });
-    }
-    return db.scheduleTrack.create({ data: { name: data.name, schedule: { connect: { id: schedule.id } } } });
-  }
-
-  async deleteTrack(trackId: string) {
+  async saveTracks(tracks: ScheduleTracksSaveData['tracks']) {
     const event = await this.userEvent.needsPermission('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id }, include: { tracks: true } });
     if (!schedule) throw new NotFoundError('Schedule not found');
-    if (schedule.tracks.length <= 1) throw new ForbiddenError('You must have at least one room defined');
 
-    return db.scheduleTrack.delete({ where: { id: trackId } });
+    const deletedTracks = schedule.tracks.filter((t) => !tracks.find((ut) => ut.id === t.id));
+
+    if (schedule.tracks.length - deletedTracks.length <= 0) {
+      throw new ForbiddenError('You must have at least one track defined');
+    } else if (deletedTracks.length > 0) {
+      await db.scheduleTrack.deleteMany({ where: { id: { in: deletedTracks.map((t) => t.id) } } });
+    }
+
+    for (const track of tracks) {
+      if (track.id.startsWith('NEW')) {
+        await db.scheduleTrack.create({ data: { name: track.name, schedule: { connect: { id: schedule.id } } } });
+      } else {
+        await db.scheduleTrack.update({ where: { id: track.id }, data: { name: track.name } });
+      }
+    }
   }
 
   async getScheduleSessions() {
