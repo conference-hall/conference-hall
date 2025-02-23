@@ -81,7 +81,6 @@ export default [
       // Event schedule pages
       route('schedule', './routes/team+/$team.$event+/schedule+/index.tsx'),
       route('schedule/:day', './routes/team+/$team.$event+/schedule+/$day.tsx'),
-      route('schedule/settings', './routes/team+/$team.$event+/schedule+/settings.tsx'),
       route('schedule/export/json', './routes/team+/$team.$event+/schedule+/export/json.tsx'),
 
       // Event settings pages
