@@ -4,21 +4,16 @@ import { cx } from 'class-variance-authority';
 import { Link } from 'react-router';
 import { Fragment } from 'react/jsx-runtime';
 import { Avatar } from '~/design-system/avatar.tsx';
+import { menuItem, menuItems } from '~/design-system/styles/menu.styles.ts';
 
 import { MenuTransition } from '~/design-system/transitions.tsx';
 
 const menuStyle = cx(
   'flex items-center gap-1',
-  'text-sm font-semibold whitespace-nowrap',
+  'text-sm font-semibold whitespace-nowrap cursor-pointer',
   'text-gray-300 hover:bg-gray-900 hover:text-white focus-visible:outline-white',
   'px-3 py-2 rounded-md focus-visible:outline focus-visible:outline-2',
 );
-
-const itemStyle = (focus = false, active = false) =>
-  cx('group flex w-full items-center px-4 py-2 text-sm text-gray-700', {
-    'font-semibold': active,
-    'bg-gray-100 text-gray-900': focus,
-  });
 
 type Props = {
   currentTeam: { slug: string; name: string };
@@ -50,21 +45,16 @@ export function EventsDropdown({ events = [], currentTeam, currentEvent }: Props
             )}
           </MenuButton>
           <MenuTransition>
-            <MenuItems
-              anchor={{ to: 'bottom start', gap: '8px' }}
-              className="z-10 w-56 rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-hidden"
-            >
+            <MenuItems anchor={{ to: 'bottom start', gap: '8px' }} className={menuItems()}>
               {eventsDisplayed.map(({ slug, name, logoUrl }) => (
                 <MenuItem key={slug} as={Fragment}>
-                  {({ focus }) => (
-                    <Link
-                      to={`/team/${currentTeam.slug}/${slug}`}
-                      className={itemStyle(focus, slug === currentEvent.slug)}
-                    >
-                      <Avatar size="xs" picture={logoUrl} name={name} square aria-hidden className="mr-2" />
-                      {name}
-                    </Link>
-                  )}
+                  <Link
+                    to={`/team/${currentTeam.slug}/${slug}`}
+                    className={cx(menuItem(), { 'font-semibold': slug === currentEvent.slug })}
+                  >
+                    <Avatar size="xs" picture={logoUrl} name={name} square aria-hidden className="mr-2" />
+                    {name}
+                  </Link>
                 </MenuItem>
               ))}
             </MenuItems>

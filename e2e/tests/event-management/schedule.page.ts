@@ -34,7 +34,11 @@ export class SchedulePage extends PageObject {
     await this.page.getByRole('button', { name: 'Next' }).click();
   }
 
-  async clickOnSettings() {
-    await this.page.getByLabel('Settings').click();
+  async clickOnOptions() {
+    await this.page.getByRole('button', { name: 'Options' }).click();
+  }
+
+  async clickOnManageTracksMenu() {
+    await this.page.getByRole('menuitem', { name: 'Manage tracks' }).click();
   }
 }
