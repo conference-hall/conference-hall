@@ -40,8 +40,9 @@ test('displays event schedule', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'January 2nd, 2022' })).toBeVisible();
 
   // Open the settings
-  await schedulePage.clickOnSettings();
-  await expect(page.getByRole('heading', { name: 'Tracks' })).toBeVisible();
+  await schedulePage.clickOnOptions();
+  await schedulePage.clickOnManageTracksMenu();
+  await expect(page.getByRole('heading', { name: 'Schedule tracks configuration' })).toBeVisible();
 
   // TODO: Add more tests on the settings
 });
