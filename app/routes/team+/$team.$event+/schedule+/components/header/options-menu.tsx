@@ -9,29 +9,12 @@ import {
   TrashIcon,
   ViewColumnsIcon,
 } from '@heroicons/react/16/solid';
-import { cva } from 'class-variance-authority';
 import { useParams, useSubmit } from 'react-router';
 import { button } from '~/design-system/buttons.tsx';
+import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import { useScheduleFullscreen } from './use-schedule-fullscreen';
 import type { ZoomHandlers } from './use-zoom-handlers';
-
-// TODO: Use it in other menus ?
-const menuItem = cva(['flex items-center w-full gap-3 px-4 py-2 text-sm cursor-pointer'], {
-  variants: {
-    variant: {
-      primary:
-        'text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[disabled]:text-gray-400 data-[disabled]:cursor-not-allowed',
-      important: 'font-semibold text-red-700 data-[focus]:bg-red-100 data-[disabled]:text-red-400',
-    },
-  },
-  defaultVariants: { variant: 'primary' },
-});
-
-const menuItemIcon = cva(['size-4'], {
-  variants: { variant: { primary: 'text-gray-500', important: 'text-red-700' } },
-  defaultVariants: { variant: 'primary' },
-});
 
 type Props = { openTracksModal: VoidFunction; zoomHandlers: ZoomHandlers };
 
@@ -55,10 +38,7 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
       </MenuButton>
 
       <MenuTransition>
-        <MenuItems
-          anchor={{ to: 'bottom end', gap: '8px' }}
-          className="z-30 w-52 rounded-md bg-white shadow-md ring-1 ring-black/5 focus:outline-hidden"
-        >
+        <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()}>
           <MenuSection>
             <MenuItem
               as="button"

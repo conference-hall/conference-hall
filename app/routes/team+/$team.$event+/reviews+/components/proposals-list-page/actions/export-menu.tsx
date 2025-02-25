@@ -1,11 +1,11 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { CalendarDaysIcon, CodeBracketIcon, Squares2X2Icon, TableCellsIcon } from '@heroicons/react/16/solid';
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
-import { CalendarDaysIcon, CodeBracketIcon, Squares2X2Icon, TableCellsIcon } from '@heroicons/react/24/outline';
-import { cx } from 'class-variance-authority';
 import { Fragment, type HTMLProps } from 'react';
 import { Form, useFetchers, useParams, useSearchParams } from 'react-router';
 
 import { button } from '~/design-system/buttons.tsx';
+import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
@@ -33,10 +33,7 @@ export function ExportMenu() {
         <span>{loading ? 'Exporting...' : 'Export'}</span>
       </MenuButton>
       <MenuTransition>
-        <MenuItems
-          anchor={{ to: 'bottom end', gap: '8px' }}
-          className="z-10 w-56 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden"
-        >
+        <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()}>
           <ExportMenuLink
             icon={CodeBracketIcon}
             href={`/team/${params.team}/${params.event}/export/json?${searchParams.toString()}`}
@@ -83,20 +80,10 @@ type ExportMenuLinkProps = {
 function ExportMenuLink({ href, icon: Icon, children, target, rel }: ExportMenuLinkProps) {
   return (
     <MenuItem as={Fragment}>
-      {({ focus }) => (
-        <a
-          href={href}
-          target={target}
-          rel={rel}
-          className={cx(
-            'relative flex items-center gap-3 px-4 py-2 text-sm',
-            focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-          )}
-        >
-          <Icon className="h-4 w-4 text-gray-400" aria-hidden="true" />
-          {children}
-        </a>
-      )}
+      <a href={href} target={target} rel={rel} className={menuItem()}>
+        <Icon className={menuItemIcon()} aria-hidden="true" />
+        {children}
+      </a>
     </MenuItem>
   );
 }
@@ -110,23 +97,12 @@ type ExportMenuFormProps = {
 function ExportMenuForm({ action, icon: Icon, children }: ExportMenuFormProps) {
   return (
     <MenuItem as={Fragment}>
-      {({ focus }) => (
-        <Form
-          method="POST"
-          action={action}
-          navigate={false}
-          fetcherKey="exports"
-          className={cx(
-            'relative flex items-center gap-3 px-4 py-2 text-sm',
-            focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-          )}
-        >
-          <Icon className="h-4 w-4 text-gray-400" aria-hidden="true" />
-          <button type="submit" className="w-full text-left">
-            {children}
-          </button>
-        </Form>
-      )}
+      <Form method="POST" action={action} navigate={false} fetcherKey="exports" className={menuItem()}>
+        <Icon className={menuItemIcon()} aria-hidden="true" />
+        <button type="submit" className="w-full text-left">
+          {children}
+        </button>
+      </Form>
     </MenuItem>
   );
 }
