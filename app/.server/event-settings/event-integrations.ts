@@ -5,13 +5,19 @@ import { OpenPlanner } from '~/libs/integrations/open-planner.ts';
 import type { EventIntegrationConfigData } from './event-integrations.types.ts';
 import { UserEvent } from './user-event.ts';
 
-export class EventIntegrations extends UserEvent {
+export class EventIntegrations {
+  private userEvent: UserEvent;
+
+  constructor(userId: string, teamSlug: string, eventSlug: string) {
+    this.userEvent = new UserEvent(userId, teamSlug, eventSlug);
+  }
+
   static for(userId: string, teamSlug: string, eventSlug: string) {
     return new EventIntegrations(userId, teamSlug, eventSlug);
   }
 
   async getConfiguration(name: EventIntegrationName) {
-    const event = await this.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canEditEvent');
     const integration = await db.eventIntegrationConfig.findFirst({ where: { eventId: event.id, name } });
 
     if (!integration) return null;
@@ -24,7 +30,7 @@ export class EventIntegrations extends UserEvent {
   }
 
   async save(data: EventIntegrationConfigData) {
-    const event = await this.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canEditEvent');
 
     if (!data.id) {
       await db.eventIntegrationConfig.create({ data: { ...data, eventId: event.id } });
@@ -41,7 +47,7 @@ export class EventIntegrations extends UserEvent {
   }
 
   async delete(id: string) {
-    const event = await this.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canEditEvent');
     await db.eventIntegrationConfig.delete({ where: { id, eventId: event.id } });
   }
 }
