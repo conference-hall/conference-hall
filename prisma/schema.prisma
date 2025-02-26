@@ -96,7 +96,7 @@ model Event {
   type                     EventType                @default(CONFERENCE)
   visibility               EventVisibility          @default(PRIVATE)
   teamId                   String
-  team                     Team                     @relation(fields: [teamId], references: [id])
+  team                     Team                     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   location                 String?
   onlineEvent              Boolean                  @default(false)
   timezone                 String
@@ -155,7 +155,7 @@ model EventFormat {
   name        String
   description String?
   migrationId String?
-  event       Event      @relation(fields: [eventId], references: [id])
+  event       Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId     String
   proposals   Proposal[] @relation("proposals_formats")
 
@@ -167,7 +167,7 @@ model EventCategory {
   name        String
   description String?
   migrationId String?
-  event       Event      @relation(fields: [eventId], references: [id])
+  event       Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId     String
   proposals   Proposal[] @relation("proposals_categories")
 
@@ -178,7 +178,7 @@ model EventProposalTag {
   id        String     @id @default(cuid())
   name      String
   color     String
-  event     Event      @relation(fields: [eventId], references: [id])
+  event     Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId   String
   proposals Proposal[] @relation("proposal_to_event_proposal_tags")
   createdAt DateTime   @default(now())
@@ -190,7 +190,7 @@ model EventIntegrationConfig {
   id            String               @id @default(cuid())
   name          EventIntegrationName
   configuration Json                 @default("{}")
-  event         Event                @relation(fields: [eventId], references: [id])
+  event         Event                @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId       String
 
   @@map("event_integration_configurations")
@@ -217,7 +217,7 @@ model Team {
 model TeamMember {
   member    User     @relation(fields: [memberId], references: [id])
   memberId  String
-  team      Team     @relation(fields: [teamId], references: [id])
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId    String
   role      TeamRole @default(REVIEWER)
   createdAt DateTime @default(now())
@@ -237,7 +237,7 @@ model Proposal {
   talkId             String?
   talk               Talk?               @relation(fields: [talkId], references: [id])
   eventId            String
-  event              Event               @relation(fields: [eventId], references: [id])
+  event              Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
   title              String
   abstract           String
   level              TalkLevel?
@@ -287,7 +287,7 @@ model Survey {
   userId      String
   user        User     @relation(fields: [userId], references: [id])
   eventId     String
-  event       Event    @relation(fields: [eventId], references: [id])
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   answers     Json     @default("{}")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -397,7 +397,7 @@ model ScheduleSession {
   trackId    String
   track      ScheduleTrack @relation(fields: [trackId], references: [id], onDelete: Cascade)
   proposalId String?
-  proposal   Proposal?     @relation(fields: [proposalId], references: [id])
+  proposal   Proposal?     @relation(fields: [proposalId], references: [id], onDelete: Cascade)
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
 
