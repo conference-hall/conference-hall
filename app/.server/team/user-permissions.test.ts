@@ -10,6 +10,7 @@ describe('UserPermissions', () => {
       expect(permissions).toEqual({
         canAccessTeam: true,
         canEditTeam: true,
+        canDeleteTeam: true,
         canManageTeamMembers: true,
         canLeaveTeam: false,
         canAccessEvent: true,
@@ -30,6 +31,7 @@ describe('UserPermissions', () => {
       expect(permissions).toEqual({
         canAccessTeam: true,
         canEditTeam: false,
+        canDeleteTeam: false,
         canManageTeamMembers: false,
         canLeaveTeam: true,
         canAccessEvent: true,
@@ -50,6 +52,7 @@ describe('UserPermissions', () => {
       expect(permissions).toEqual({
         canAccessTeam: true,
         canEditTeam: false,
+        canDeleteTeam: false,
         canManageTeamMembers: false,
         canLeaveTeam: true,
         canAccessEvent: true,
