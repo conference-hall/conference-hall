@@ -85,6 +85,11 @@ export class UserEvent {
     return db.event.update({ where: { id: event.id }, data: { ...data } });
   }
 
+  async delete() {
+    const event = await this.needsPermission('canDeleteEvent');
+    return db.event.delete({ where: { id: event.id } });
+  }
+
   async buildGeneralSettingsSchema() {
     return EventGeneralSettingsSchema.refine(
       async ({ slug }) => {
