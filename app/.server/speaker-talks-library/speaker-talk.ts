@@ -97,7 +97,7 @@ export class SpeakerTalk {
       where: {
         talk: { id: this.talkId },
         event: { slug: eventSlug },
-        speakers: { some: { id: this.speakerId } },
+        legacySpeakers: { some: { id: this.speakerId } },
         isDraft: false,
       },
     });

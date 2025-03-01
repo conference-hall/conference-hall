@@ -53,7 +53,7 @@ export const proposalFactory = (options: FactoryOptions) => {
     languages: talk?.languages || ['en'],
     level: talk?.level || TalkLevel.INTERMEDIATE,
     talk: { connect: { id: talk.id } },
-    speakers: { connect: talk.speakers.map(({ id }) => ({ id })) },
+    legacySpeakers: { connect: talk.speakers.map(({ id }) => ({ id })) },
     event: { connect: { id: event.id } },
     isDraft: false,
     createdAt: new Date(),

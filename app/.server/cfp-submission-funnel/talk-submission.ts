@@ -39,7 +39,7 @@ export class TalkSubmission {
         level: talk.level,
         references: talk.references,
         languages: talk.languages || [],
-        speakers: { set: [], connect: speakers },
+        legacySpeakers: { set: [], connect: speakers },
       },
       create: {
         title: talk.title,
@@ -49,7 +49,7 @@ export class TalkSubmission {
         languages: talk.languages || [],
         talk: { connect: { id: talk.id } },
         event: { connect: { id: event.id } },
-        speakers: { connect: speakers },
+        legacySpeakers: { connect: speakers },
       },
     });
 
@@ -59,7 +59,7 @@ export class TalkSubmission {
   async saveTracks(talkId: string, data: TrackUpdateData) {
     const proposal = await db.proposal.findFirst({
       select: { id: true },
-      where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { id: this.speakerId } } },
+      where: { talkId, event: { slug: this.eventSlug }, legacySpeakers: { some: { id: this.speakerId } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
@@ -81,7 +81,7 @@ export class TalkSubmission {
       const nbProposals = await db.proposal.count({
         where: {
           eventId: event.id,
-          speakers: { some: { id: this.speakerId } },
+          legacySpeakers: { some: { id: this.speakerId } },
           id: { not: { equals: talkId } },
           isDraft: false,
         },
@@ -90,8 +90,8 @@ export class TalkSubmission {
     }
 
     const proposal = await db.proposal.findFirst({
-      where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { id: this.speakerId } } },
-      include: { speakers: true },
+      where: { talkId, event: { slug: this.eventSlug }, legacySpeakers: { some: { id: this.speakerId } } },
+      include: { legacySpeakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
@@ -107,8 +107,8 @@ export class TalkSubmission {
 
   async get(talkId: string) {
     const proposal = await db.proposal.findFirst({
-      include: { talk: true, speakers: true, formats: true, categories: true },
-      where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { id: this.speakerId } } },
+      include: { talk: true, legacySpeakers: true, formats: true, categories: true },
+      where: { talkId, event: { slug: this.eventSlug }, legacySpeakers: { some: { id: this.speakerId } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
@@ -122,7 +122,7 @@ export class TalkSubmission {
       isOwner: this.speakerId === proposal?.talk?.creatorId,
       invitationLink: proposal.invitationLink,
       createdAt: proposal.createdAt,
-      speakers: proposal.speakers
+      speakers: proposal.legacySpeakers
         .map((speaker) => ({
           id: speaker.id,
           name: speaker.name,
@@ -139,13 +139,13 @@ export class TalkSubmission {
   async removeCoSpeaker(talkId: string, coSpeakerId: string) {
     const proposal = await db.proposal.findFirst({
       select: { id: true },
-      where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { id: this.speakerId } } },
+      where: { talkId, event: { slug: this.eventSlug }, legacySpeakers: { some: { id: this.speakerId } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
     await db.proposal.update({
       where: { id: proposal.id },
-      data: { speakers: { disconnect: { id: coSpeakerId } } },
+      data: { legacySpeakers: { disconnect: { id: coSpeakerId } } },
     });
   }
 }

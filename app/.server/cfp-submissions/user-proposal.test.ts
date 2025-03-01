@@ -170,10 +170,10 @@ describe('UserProposal', () => {
 
       const proposalUpdated = await db.proposal.findUnique({
         where: { id: proposal.id },
-        include: { speakers: true },
+        include: { legacySpeakers: true },
       });
 
-      const speakers = proposalUpdated?.speakers.map(({ id }) => id);
+      const speakers = proposalUpdated?.legacySpeakers.map(({ id }) => id);
       expect(speakers?.length).toBe(1);
       expect(speakers).toContain(speaker.id);
     });

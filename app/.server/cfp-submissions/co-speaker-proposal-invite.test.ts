@@ -52,13 +52,13 @@ describe('CoSpeakerProposalInvite', () => {
 
       const resultProposal = await db.proposal.findUnique({
         where: { id: proposal.id },
-        include: { speakers: true, talk: { include: { speakers: true } } },
+        include: { legacySpeakers: true, talk: { include: { speakers: true } } },
       });
 
       expect(result?.event.slug).toEqual(event.slug);
       expect(result?.id).toEqual(proposal.id);
 
-      const speakersProposal = resultProposal?.speakers.map(({ id }) => id);
+      const speakersProposal = resultProposal?.legacySpeakers.map(({ id }) => id);
       expect(speakersProposal?.length).toBe(2);
       expect(speakersProposal).toContain(speaker.id);
       expect(speakersProposal).toContain(cospeaker.id);

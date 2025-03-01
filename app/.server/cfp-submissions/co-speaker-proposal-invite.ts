@@ -11,7 +11,7 @@ export class CoSpeakerProposalInvite {
 
   async check() {
     const proposal = await db.proposal.findUnique({
-      include: { event: true, speakers: true },
+      include: { event: true, legacySpeakers: true },
       where: { invitationCode: this.code },
     });
     if (!proposal) throw new InvitationNotFoundError();
@@ -20,7 +20,11 @@ export class CoSpeakerProposalInvite {
       id: proposal.id,
       title: proposal.title,
       description: proposal.abstract,
-      speakers: proposal.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, picture: speaker.picture })),
+      speakers: proposal.legacySpeakers.map((speaker) => ({
+        id: speaker.id,
+        name: speaker.name,
+        picture: speaker.picture,
+      })),
       event: {
         name: proposal.event.name,
         slug: proposal.event.slug,
@@ -40,7 +44,7 @@ export class CoSpeakerProposalInvite {
       await db.$transaction(async (trx) => {
         const updated = await trx.proposal.update({
           where: { id: proposal.id },
-          data: { speakers: { connect: { id: coSpeakerId } } },
+          data: { legacySpeakers: { connect: { id: coSpeakerId } } },
         });
 
         if (updated.talkId) {

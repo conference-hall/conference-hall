@@ -47,7 +47,7 @@ describe('TalkSubmission', () => {
       expect(talk?.level).toEqual(data.level);
       expect(talk?.speakers[0].id).toEqual(speaker.id);
 
-      const proposal = await db.proposal.findFirst({ where: { talkId }, include: { speakers: true } });
+      const proposal = await db.proposal.findFirst({ where: { talkId }, include: { legacySpeakers: true } });
       expect(proposal?.title).toEqual(data.title);
       expect(proposal?.abstract).toEqual(data.abstract);
       expect(proposal?.references).toEqual(data.references);
@@ -55,7 +55,7 @@ describe('TalkSubmission', () => {
       expect(proposal?.eventId).toEqual(event.id);
       expect(proposal?.languages).toEqual(data.languages);
       expect(proposal?.level).toEqual(data.level);
-      expect(proposal?.speakers[0].id).toEqual(speaker.id);
+      expect(proposal?.legacySpeakers[0].id).toEqual(speaker.id);
     });
 
     it('create a new draft proposal from a existing talk', async () => {
@@ -81,7 +81,7 @@ describe('TalkSubmission', () => {
       expect(updatedTalk?.level).toEqual(data.level);
       expect(updatedTalk?.speakers[0].id).toEqual(speaker.id);
 
-      const proposal = await db.proposal.findFirst({ where: { talkId }, include: { speakers: true } });
+      const proposal = await db.proposal.findFirst({ where: { talkId }, include: { legacySpeakers: true } });
       expect(proposal?.title).toEqual(data.title);
       expect(proposal?.abstract).toEqual(data.abstract);
       expect(proposal?.references).toEqual(data.references);
@@ -89,7 +89,7 @@ describe('TalkSubmission', () => {
       expect(proposal?.eventId).toEqual(event.id);
       expect(proposal?.languages).toEqual(data.languages);
       expect(proposal?.level).toEqual(data.level);
-      expect(proposal?.speakers[0].id).toEqual(speaker.id);
+      expect(proposal?.legacySpeakers[0].id).toEqual(speaker.id);
     });
 
     it('throws an error when talk not found', async () => {
@@ -386,10 +386,10 @@ describe('TalkSubmission', () => {
 
       const proposalUpdated = await db.proposal.findUnique({
         where: { id: proposal.id },
-        include: { speakers: true },
+        include: { legacySpeakers: true },
       });
 
-      const speakers = proposalUpdated?.speakers.map(({ id }) => id);
+      const speakers = proposalUpdated?.legacySpeakers.map(({ id }) => id);
       expect(speakers?.length).toBe(1);
       expect(speakers).toContain(speaker.id);
     });
