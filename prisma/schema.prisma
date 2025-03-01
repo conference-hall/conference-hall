@@ -35,6 +35,7 @@ model User {
   authenticationMethods AuthenticationMethod[]
   comments              Comment[]
   commentReactions      CommentReaction[]
+  eventsSpeaker         EventSpeaker[]
 
   @@map("users")
 }
@@ -136,6 +137,7 @@ model Event {
   schedules                Schedule[]
   proposalTags             EventProposalTag[]
   integrations             EventIntegrationConfig[]
+  speakers                 EventSpeaker[]
 
   @@map("events")
 }
@@ -243,7 +245,8 @@ model Proposal {
   level              TalkLevel?
   languages          Json                @default("[]")
   references         String?
-  speakers           User[]              @relation("speakers_proposals")
+  legacySpeakers     User[]              @relation("speakers_proposals")
+  newSpeakers        EventSpeaker[]      @relation("proposals_speakers")
   formats            EventFormat[]       @relation("proposals_formats")
   categories         EventCategory[]     @relation("proposals_categories")
   tags               EventProposalTag[]  @relation("proposal_to_event_proposal_tags")
@@ -280,6 +283,27 @@ enum ConfirmationStatus {
   PENDING
   CONFIRMED
   DECLINED
+}
+
+model EventSpeaker {
+  id          String     @id @default(cuid())
+  name        String
+  email       String
+  bio         String?
+  picture     String?
+  company     String?
+  location    String?
+  references  String?
+  socialLinks Json       @default("[]")
+  eventId     String
+  event       Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?      @relation(fields: [userId], references: [id])
+  proposals   Proposal[] @relation("proposals_speakers")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("event-speakers")
 }
 
 model Survey {
