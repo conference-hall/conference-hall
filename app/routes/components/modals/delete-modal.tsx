@@ -6,7 +6,7 @@ import { Callout } from '~/design-system/callout.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 
-type DeleteModalButtonProps = {
+export type DeleteModalButtonProps = {
   title: string;
   description: string;
   confirmationText: string;
