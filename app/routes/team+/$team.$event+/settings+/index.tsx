@@ -10,9 +10,9 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import { DeleteModalButton } from '~/routes/components/delete-modal.tsx';
 import { EventDetailsForm } from '~/routes/components/events/event-details-form.tsx';
 import { EventForm } from '~/routes/components/events/event-form.tsx';
+import { DeleteModalButton } from '~/routes/components/modals/delete-modal.tsx';
 import type { Route } from './+types/index.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

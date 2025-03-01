@@ -8,7 +8,7 @@ import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import { DeleteModalButton } from '~/routes/components/delete-modal.tsx';
+import { DeleteModalButton } from '~/routes/components/modals/delete-modal.tsx';
 import { TeamForm } from '~/routes/components/teams/team-form.tsx';
 import type { Route } from './+types/settings.index.ts';
 
