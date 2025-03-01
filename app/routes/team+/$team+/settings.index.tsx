@@ -79,7 +79,7 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
           <H2>Danger zone</H2>
         </Card.Title>
 
-        <ul className="divide-y border-t mt-6">
+        <ul className="divide-y border-t mt-8">
           {canLeaveTeam ? (
             <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
               <div className="space-y-1 grow">

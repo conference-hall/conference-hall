@@ -55,8 +55,8 @@ test('updates event settings', async ({ page }) => {
   await expect(generalPage.locationInput).not.toBeVisible();
 
   // Archive and restore
-  await generalPage.archiveButton.click();
+  await generalPage.archiveButton('New name').click();
   await expect(generalPage.toast).toHaveText('Event archived.');
-  await generalPage.restoreButton.click();
+  await generalPage.restoreButton('New name').click();
   await expect(generalPage.toast).toHaveText('Event restored.');
 });

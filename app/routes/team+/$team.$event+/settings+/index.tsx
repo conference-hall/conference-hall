@@ -113,7 +113,7 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
           <H2>Danger zone</H2>
         </Card.Title>
 
-        <ul className="divide-y border-t mt-6">
+        <ul className="divide-y border-t mt-8">
           <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
             <div className="space-y-1 grow">
               <Text weight="semibold">{currentEvent.archived ? 'Restore this event' : 'Archive this event'}</Text>
@@ -126,9 +126,9 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
               <input type="hidden" name="archived" value={currentEvent.archived ? '' : 'true'} />
               <Button
                 type="submit"
-                variant="important"
                 name="intent"
                 value="archive-event"
+                variant={currentEvent.archived ? 'secondary' : 'important'}
                 iconLeft={currentEvent.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
                 className="w-full"
               >
