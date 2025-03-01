@@ -11,7 +11,7 @@ import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { SocialLink } from '~/design-system/social-link.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
-import { InvitationModal } from '../invitation-modal.tsx';
+import { InvitationModal } from '../modals/invitation-modal.tsx';
 
 export type SpeakerProps = {
   id: string;

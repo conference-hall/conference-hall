@@ -19,7 +19,7 @@ export default defineConfig({
   fullyParallel: false,
   forbidOnly: CI,
   retries: CI ? 2 : 0,
-  reporter: CI ? 'dot' : 'list',
+  reporter: 'list',
 
   projects: [
     { name: 'setup', testMatch: /.*\.setup\.ts/ },

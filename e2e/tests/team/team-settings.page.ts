@@ -1,26 +1,17 @@
-import type { Locator, Page } from '@playwright/test';
+import type { Locator } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
 import { ActivityPage } from 'e2e/tests/speaker/activity.page.ts';
 
 export class TeamSettingsPage extends PageObject {
-  readonly heading: Locator;
-  readonly generalPage: Locator;
-  readonly membersPage: Locator;
-  readonly nameInput: Locator;
-  readonly slugInput: Locator;
-  readonly members: Locator;
-  readonly findMember: Locator;
-
-  constructor(page: Page) {
-    super(page);
-    this.heading = page.getByRole('heading', { name: 'Team settings' });
-    this.generalPage = page.getByRole('heading', { name: 'General' });
-    this.membersPage = page.getByRole('heading', { name: 'Members' });
-    this.nameInput = page.getByRole('textbox', { name: 'Team name' });
-    this.slugInput = page.getByRole('textbox', { name: 'Team URL' });
-    this.members = page.getByRole('list', { name: 'Members list' }).locator('>li');
-    this.findMember = page.getByLabel('Find member');
-  }
+  readonly heading: Locator = this.page.getByRole('heading', { name: 'Team settings' });
+  readonly generalPage: Locator = this.page.getByRole('heading', { name: 'General' });
+  readonly membersPage: Locator = this.page.getByRole('heading', { name: 'Members' });
+  readonly nameInput: Locator = this.page.getByRole('textbox', { name: 'Team name' });
+  readonly slugInput: Locator = this.page.getByRole('textbox', { name: 'Team URL' });
+  readonly members: Locator = this.page.getByRole('list', { name: 'Members list' }).locator('>li');
+  readonly findMember: Locator = this.page.getByLabel('Find member');
+  readonly deleteButton = (eventName: string) => this.page.getByRole('button', { name: `Delete "${eventName}"` });
+  readonly deleteDialog = (eventName: string) => this.page.getByRole('dialog', { name: `Delete "${eventName}"` });
 
   async goto(slug: string) {
     await this.page.goto(`/team/${slug}/settings`);

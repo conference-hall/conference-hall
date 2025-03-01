@@ -1,4 +1,5 @@
 import { expect, loginWith, test } from 'e2e/fixtures.ts';
+import { TeamHomePage } from 'e2e/tests/team/team-home.page.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
@@ -54,9 +55,24 @@ test('updates event settings', async ({ page }) => {
   await expect(generalPage.switchOnlineEvent()).toBeChecked();
   await expect(generalPage.locationInput).not.toBeVisible();
 
-  // Archive and restore
-  await generalPage.archiveButton.click();
+  // Archive and restore event
+  await generalPage.archiveButton('New name').click();
   await expect(generalPage.toast).toHaveText('Event archived.');
-  await generalPage.restoreButton.click();
+  await generalPage.restoreButton('New name').click();
   await expect(generalPage.toast).toHaveText('Event restored.');
+
+  // Delete event
+  await generalPage.deleteButton('New name').click();
+  await expect(generalPage.deleteDialog('New name')).toHaveAttribute('data-open');
+
+  // Delete event modal
+  const deleteButton = generalPage.deleteDialog('New name').getByRole('button', { name: 'Delete "New name"' });
+  await expect(deleteButton).toBeDisabled();
+  const deleteInput = generalPage.deleteDialog('New name').getByRole('textbox');
+  await deleteInput.fill('new-slug');
+  await deleteButton.click();
+  await expect(generalPage.toast).toHaveText('Event deleted.');
+
+  const teamHomePage = new TeamHomePage(page);
+  await expect(teamHomePage.heading).toBeVisible();
 });

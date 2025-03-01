@@ -1,6 +1,7 @@
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
+import { ActivityPage } from '../speaker/activity.page.ts';
 import { TeamSettingsPage } from './team-settings.page.ts';
 
 loginWith('clark-kent');
@@ -10,7 +11,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('as a team owner', () => {
-  test('can edit the team but cannot leave the team', async ({ page }) => {
+  test('can manage the team but cannot leave the team', async ({ page }) => {
     const user = await userFactory({ traits: ['clark-kent'] });
     const team = await teamFactory({ owners: [user] });
     const team2 = await teamFactory({ owners: [user] });
@@ -22,17 +23,32 @@ test.describe('as a team owner', () => {
     await expect(settingsPage.leaveTeamButton(team.name)).not.toBeVisible();
 
     // Edit team with invalid slug
-    await settingsPage.fillForm('Awesome team updated', team2.slug);
+    await settingsPage.fillForm('New name', team2.slug);
     await settingsPage.clickOnSave();
     const inputError = await settingsPage.getInputDescription(settingsPage.slugInput);
     await expect(inputError).toHaveText('This URL already exists.');
 
     // Edit team with valid data
-    await settingsPage.fillForm('Awesome team updated', 'awesome-team-updated');
+    await settingsPage.fillForm('New name', 'new-slug');
     await settingsPage.clickOnSave();
     await expect(settingsPage.toast).toHaveText('Team settings saved.');
-    await expect(settingsPage.nameInput).toHaveValue('Awesome team updated');
-    await expect(settingsPage.slugInput).toHaveValue('awesome-team-updated');
+    await expect(settingsPage.nameInput).toHaveValue('New name');
+    await expect(settingsPage.slugInput).toHaveValue('new-slug');
+
+    // Delete team
+    await settingsPage.deleteButton('New name').click();
+    await expect(settingsPage.deleteDialog('New name')).toHaveAttribute('data-open');
+
+    // Delete team modal
+    const deleteButton = settingsPage.deleteDialog('New name').getByRole('button', { name: 'Delete "New name"' });
+    await expect(deleteButton).toBeDisabled();
+    const deleteInput = settingsPage.deleteDialog('New name').getByRole('textbox');
+    await deleteInput.fill('new-slug');
+    await deleteButton.click();
+    await expect(settingsPage.toast).toHaveText('Team deleted.');
+
+    const speakerActivityPage = new ActivityPage(page);
+    await expect(speakerActivityPage.heading).toBeVisible();
   });
 
   test('can manage team members', async ({ page }) => {

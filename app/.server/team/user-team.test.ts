@@ -4,6 +4,8 @@ import { userFactory } from 'tests/factories/users.ts';
 import { appUrl } from '~/libs/env/env.server.ts';
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 
+import { db } from 'prisma/db.server.ts';
+import { eventFactory } from 'tests/factories/events.ts';
 import { UserTeam } from './user-team.ts';
 
 describe('UserTeam', () => {
@@ -80,6 +82,35 @@ describe('UserTeam', () => {
 
     it('throws an error when team not found', async () => {
       await expect(UserTeam.for(user.id, 'XXX').get()).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
+  describe('delete', () => {
+    it('deletes the team and its relations', async () => {
+      const team = await teamFactory({ owners: [user], attributes: { name: 'My team', slug: 'my-team' } });
+      const event = await eventFactory({ team });
+
+      await UserTeam.for(user.id, team.slug).delete();
+
+      const deletedEvent = await db.event.findUnique({ where: { id: event.id } });
+      expect(deletedEvent).toBeNull();
+
+      const deletedMember = await db.teamMember.findUnique({
+        where: { memberId_teamId: { memberId: user.id, teamId: team.id } },
+      });
+      expect(deletedMember).toBeNull();
+
+      const deletedTeam = await db.team.findUnique({ where: { id: team.id } });
+      expect(deletedTeam).toBeNull();
+    });
+
+    it('throws an error if user is not owner', async () => {
+      const team = await teamFactory({ members: [user] });
+      await expect(UserTeam.for(user.id, team.slug).delete()).rejects.toThrowError(ForbiddenOperationError);
+    });
+
+    it('throws an error when team not found', async () => {
+      await expect(UserTeam.for(user.id, 'XXX').delete()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 

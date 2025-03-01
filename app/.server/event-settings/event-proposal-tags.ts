@@ -5,13 +5,19 @@ import { Pagination } from '../shared/pagination.ts';
 import type { TagFilters, TagSaveData } from './event-proposal-tags.types.ts';
 import { UserEvent } from './user-event.ts';
 
-export class EventProposalTags extends UserEvent {
+export class EventProposalTags {
+  private userEvent: UserEvent;
+
+  constructor(userId: string, teamSlug: string, eventSlug: string) {
+    this.userEvent = new UserEvent(userId, teamSlug, eventSlug);
+  }
+
   static for(userId: string, teamSlug: string, eventSlug: string) {
     return new EventProposalTags(userId, teamSlug, eventSlug);
   }
 
   async list(filters: TagFilters, page = 1, pageSize?: number) {
-    const event = await this.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canEditEvent');
 
     const tagsWhereInput: Prisma.EventProposalTagWhereInput = {
       eventId: event.id,
@@ -36,13 +42,10 @@ export class EventProposalTags extends UserEvent {
   }
 
   async save(data: TagSaveData) {
-    const event = await this.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canEditEvent');
 
     if (data.id) {
-      return db.eventProposalTag.update({
-        where: { id: data.id },
-        data: { name: data.name, color: data.color },
-      });
+      return db.eventProposalTag.update({ where: { id: data.id }, data: { name: data.name, color: data.color } });
     }
 
     return db.eventProposalTag.create({
@@ -51,7 +54,7 @@ export class EventProposalTags extends UserEvent {
   }
 
   async delete(tagId: string) {
-    await this.needsPermission('canEditEvent');
+    await this.userEvent.needsPermission('canEditEvent');
 
     return db.eventProposalTag.delete({ where: { id: tagId } });
   }

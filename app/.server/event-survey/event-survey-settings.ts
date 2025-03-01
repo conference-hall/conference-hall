@@ -4,13 +4,19 @@ import { UserEvent } from '../event-settings/user-event.ts';
 import { SurveyConfig } from './survey-config.ts';
 import type { SurveyMoveQuestion, SurveyQuestion } from './types.ts';
 
-export class EventSurveySettings extends UserEvent {
+export class EventSurveySettings {
+  private userEvent: UserEvent;
+
+  constructor(userId: string, teamSlug: string, eventSlug: string) {
+    this.userEvent = new UserEvent(userId, teamSlug, eventSlug);
+  }
+
   static for(userId: string, teamSlug: string, eventSlug: string) {
     return new EventSurveySettings(userId, teamSlug, eventSlug);
   }
 
   async getConfig() {
-    const event = await this.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canEditEvent');
     const survey = new SurveyConfig(event.surveyConfig);
 
     return {
@@ -21,7 +27,7 @@ export class EventSurveySettings extends UserEvent {
   }
 
   async toggleSurvey() {
-    const event = await this.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canEditEvent');
     const survey = new SurveyConfig(event.surveyConfig);
     survey.toggle();
     await db.event.update({ data: { surveyConfig: survey.toConfig() }, where: { id: event.id } });
@@ -29,7 +35,7 @@ export class EventSurveySettings extends UserEvent {
   }
 
   async addQuestion(question: SurveyQuestion) {
-    const event = await this.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canEditEvent');
     const survey = new SurveyConfig(event.surveyConfig);
     survey.addQuestion(question);
     if (survey.questions.length > 8) {
@@ -39,21 +45,21 @@ export class EventSurveySettings extends UserEvent {
   }
 
   async updateQuestion(question: SurveyQuestion) {
-    const event = await this.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canEditEvent');
     const survey = new SurveyConfig(event.surveyConfig);
     survey.updateQuestion(question);
     await db.event.update({ data: { surveyConfig: survey.toConfig() }, where: { id: event.id } });
   }
 
   async removeQuestion(questionId: string) {
-    const event = await this.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canEditEvent');
     const survey = new SurveyConfig(event.surveyConfig);
     survey.removeQuestion(questionId);
     await db.event.update({ data: { surveyConfig: survey.toConfig() }, where: { id: event.id } });
   }
 
   async moveQuestion({ id, direction }: SurveyMoveQuestion) {
-    const event = await this.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canEditEvent');
     const survey = new SurveyConfig(event.surveyConfig);
     survey.moveQuestion(id, direction);
     await db.event.update({ data: { surveyConfig: survey.toConfig() }, where: { id: event.id } });

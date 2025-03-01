@@ -3,11 +3,13 @@ import { TeamRole } from '@prisma/client';
 export type UserPermissions = {
   canAccessTeam: boolean;
   canEditTeam: boolean;
+  canDeleteTeam: boolean;
   canManageTeamMembers: boolean;
   canLeaveTeam: boolean;
   canAccessEvent: boolean;
   canCreateEvent: boolean;
   canEditEvent: boolean;
+  canDeleteEvent: boolean;
   canEditEventProposals: boolean;
   canExportEventProposals: boolean;
   canDeliberateEventProposals: boolean;
@@ -20,11 +22,13 @@ export type Permission = keyof UserPermissions;
 const TEAM_OWNER_PERMISSIONS: UserPermissions = {
   canAccessTeam: true,
   canEditTeam: true,
+  canDeleteTeam: true,
   canManageTeamMembers: true,
   canLeaveTeam: false,
   canCreateEvent: true,
   canAccessEvent: true,
   canEditEvent: true,
+  canDeleteEvent: true,
   canEditEventProposals: true,
   canExportEventProposals: true,
   canDeliberateEventProposals: true,
@@ -35,11 +39,13 @@ const TEAM_OWNER_PERMISSIONS: UserPermissions = {
 const TEAM_MEMBER_PERMISSIONS: UserPermissions = {
   canAccessTeam: true,
   canEditTeam: false,
+  canDeleteTeam: false,
   canManageTeamMembers: false,
   canLeaveTeam: true,
   canAccessEvent: true,
   canCreateEvent: false,
   canEditEvent: true,
+  canDeleteEvent: false,
   canEditEventProposals: true,
   canExportEventProposals: false,
   canDeliberateEventProposals: true,
@@ -50,11 +56,13 @@ const TEAM_MEMBER_PERMISSIONS: UserPermissions = {
 const TEAM_REVIEWER_PERMISSIONS: UserPermissions = {
   canAccessTeam: true,
   canEditTeam: false,
+  canDeleteTeam: false,
   canManageTeamMembers: false,
   canLeaveTeam: true,
   canAccessEvent: true,
   canCreateEvent: false,
   canEditEvent: false,
+  canDeleteEvent: false,
   canEditEventProposals: false,
   canExportEventProposals: false,
   canDeliberateEventProposals: false,

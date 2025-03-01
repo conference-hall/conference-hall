@@ -4,14 +4,15 @@ import { Form, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventDetailsSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
-import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Subtitle } from '~/design-system/typography.tsx';
+import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context';
+import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { EventDetailsForm } from '~/routes/components/events/event-details-form.tsx';
 import { EventForm } from '~/routes/components/events/event-form.tsx';
+import { DeleteModalButton } from '~/routes/components/modals/delete-modal.tsx';
 import type { Route } from './+types/index.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
@@ -40,10 +41,15 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       await event.update(result.value);
       return toast('success', 'Event details saved.');
     }
-    case 'archive': {
+    case 'archive-event': {
       const archived = Boolean(form.get('archived'));
       await event.update({ archived });
       return toast('success', `Event ${archived ? 'archived' : 'restored'}.`);
+    }
+    case 'delete-event': {
+      await event.delete();
+      const headers = await toastHeaders('success', 'Event deleted.');
+      return redirect(`/team/${params.team}`, { headers });
     }
   }
   return null;
@@ -51,6 +57,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function EventGeneralSettingsRoute({ actionData: errors }: Route.ComponentProps) {
   const currentEvent = useCurrentEvent();
+  const { userPermissions } = useCurrentTeam();
 
   return (
     <>
@@ -101,32 +108,53 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
         </Card.Actions>
       </Card>
 
-      <Card as="section">
+      <Card as="section" className="border-red-300">
         <Card.Title>
-          <H2>Archiving</H2>
+          <H2>Danger zone</H2>
         </Card.Title>
 
-        <Card.Content>
-          <Callout title="Be careful">
-            Archived events are not displayed anymore in the team list and in the Conference Hall search. Nothing is
-            deleted, you can restore them when you want.
-          </Callout>
-        </Card.Content>
-
-        <Card.Actions>
-          <Form method="POST">
-            <input type="hidden" name="archived" value={currentEvent.archived ? '' : 'true'} />
-            <Button
-              type="submit"
-              variant={currentEvent.archived ? 'secondary' : 'important'}
-              name="intent"
-              value="archive"
-              iconLeft={currentEvent.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
-            >
-              {currentEvent.archived ? 'Restore event' : 'Archive event'}
-            </Button>
-          </Form>
-        </Card.Actions>
+        <ul className="divide-y border-t mt-8">
+          <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
+            <div className="space-y-1 grow">
+              <Text weight="semibold">{currentEvent.archived ? 'Restore this event' : 'Archive this event'}</Text>
+              <Subtitle>
+                Archived events are not displayed anymore in the team list and in the Conference Hall search. Nothing is
+                deleted, you can restore them when you want.
+              </Subtitle>
+            </div>
+            <Form method="POST" className="w-full sm:w-auto">
+              <input type="hidden" name="archived" value={currentEvent.archived ? '' : 'true'} />
+              <Button
+                type="submit"
+                name="intent"
+                value="archive-event"
+                variant={currentEvent.archived ? 'secondary' : 'important'}
+                iconLeft={currentEvent.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
+                className="w-full"
+              >
+                {currentEvent.archived ? `Restore "${currentEvent.name}"` : `Archive "${currentEvent.name}"`}
+              </Button>
+            </Form>
+          </li>
+          {userPermissions.canDeleteEvent ? (
+            <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
+              <div className="space-y-1 grow">
+                <Text weight="semibold">Delete this event</Text>
+                <Subtitle>
+                  This will <strong>permanently delete the "{currentEvent.name}"</strong> event, speakers proposals,
+                  reviews, comments, schedule, and settings. This action cannot be undone.
+                </Subtitle>
+              </div>
+              <DeleteModalButton
+                intent="delete-event"
+                title={`Delete "${currentEvent.name}"`}
+                description={`This will permanently delete the "${currentEvent.name}" event, speakers proposals,
+              reviews, comments, schedule, and settings. This action cannot be undone.`}
+                confirmationText={currentEvent.slug}
+              />
+            </li>
+          ) : null}
+        </ul>
       </Card>
     </>
   );

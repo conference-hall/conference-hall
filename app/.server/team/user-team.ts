@@ -53,6 +53,11 @@ export class UserTeam {
     };
   }
 
+  async delete() {
+    const { teamId } = await this.needsPermission('canEditTeam');
+    return db.team.delete({ where: { id: teamId } });
+  }
+
   async updateSettings(data: z.infer<typeof TeamUpdateSchema>) {
     await this.needsPermission('canEditTeam');
     return db.team.update({ where: { slug: this.slug }, data });

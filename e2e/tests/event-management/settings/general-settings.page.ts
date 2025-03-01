@@ -14,8 +14,10 @@ export class GeneralSettingsPage extends PageObject {
   readonly contactEmailInput = this.page.getByLabel('Contact email');
   readonly saveGeneralButton = this.page.getByRole('button', { name: 'Update event', exact: true });
   readonly saveDetailsButton = this.page.getByRole('button', { name: 'Update event details' });
-  readonly archiveButton = this.page.getByRole('button', { name: 'Archive event' });
-  readonly restoreButton = this.page.getByRole('button', { name: 'Restore event' });
+  readonly archiveButton = (eventName: string) => this.page.getByRole('button', { name: `Archive "${eventName}"` });
+  readonly restoreButton = (eventName: string) => this.page.getByRole('button', { name: `Restore "${eventName}"` });
+  readonly deleteButton = (eventName: string) => this.page.getByRole('button', { name: `Delete "${eventName}"` });
+  readonly deleteDialog = (eventName: string) => this.page.getByRole('dialog', { name: `Delete "${eventName}"` });
 
   async goto(team: string, event: string) {
     await this.page.goto(`/team/${team}/${event}/settings`);
