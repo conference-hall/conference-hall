@@ -5,10 +5,14 @@ import { proposalExtension } from './extensions/proposal.ts';
 import { talkExtension } from './extensions/talk.ts';
 import { teamExtension } from './extensions/team.ts';
 
-let db: ReturnType<typeof getClient>;
+export type DbClient = ReturnType<typeof getClient>;
+
+export type DbTransaction = Omit<DbClient, '$extends' | '$transaction' | '$disconnect' | '$connect' | '$on' | '$use'>;
+
+let db: DbClient;
 
 declare global {
-  var __db: ReturnType<typeof getClient> | undefined;
+  var __db: DbClient | undefined;
 }
 
 // this is needed because in development we don't want to restart

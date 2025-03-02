@@ -1,6 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 
 import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/libs/errors.server.ts';
+import { EventSpeaker } from '../shared/event-speaker.ts';
 
 export class CoSpeakerProposalInvite {
   constructor(private code: string) {}
@@ -11,7 +12,7 @@ export class CoSpeakerProposalInvite {
 
   async check() {
     const proposal = await db.proposal.findUnique({
-      include: { event: true, speakers: true },
+      include: { event: true, legacySpeakers: true },
       where: { invitationCode: this.code },
     });
     if (!proposal) throw new InvitationNotFoundError();
@@ -20,8 +21,13 @@ export class CoSpeakerProposalInvite {
       id: proposal.id,
       title: proposal.title,
       description: proposal.abstract,
-      speakers: proposal.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, picture: speaker.picture })),
+      speakers: proposal.legacySpeakers.map((speaker) => ({
+        id: speaker.id,
+        name: speaker.name,
+        picture: speaker.picture,
+      })),
       event: {
+        id: proposal.event.id,
         name: proposal.event.name,
         slug: proposal.event.slug,
         type: proposal.event.type,
@@ -33,20 +39,17 @@ export class CoSpeakerProposalInvite {
     };
   }
 
-  async addCoSpeaker(coSpeakerId: string) {
+  async addCoSpeaker(userId: string) {
     const proposal = await this.check();
 
     try {
       await db.$transaction(async (trx) => {
-        const updated = await trx.proposal.update({
-          where: { id: proposal.id },
-          data: { speakers: { connect: { id: coSpeakerId } } },
-        });
+        const updated = await EventSpeaker.for(proposal.event.id, trx).addSpeakerToProposal(proposal.id, userId);
 
         if (updated.talkId) {
           await trx.talk.update({
             where: { id: updated.talkId },
-            data: { speakers: { connect: { id: coSpeakerId } } },
+            data: { speakers: { connect: { id: userId } } },
           });
         }
       });

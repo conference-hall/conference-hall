@@ -6,18 +6,18 @@ import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 
 function buildPayload(
   event: Event & { team: Team },
-  proposal: Proposal & { speakers: User[]; categories: EventCategory[]; formats: EventFormat[] },
+  proposal: Proposal & { legacySpeakers: User[]; categories: EventCategory[]; formats: EventFormat[] },
 ) {
   const attachment = {
     fallback: `New Talk submitted to ${event.name}`,
     pretext: `*New talk submitted to ${event.name}*`,
-    author_name: `by ${sortBy(proposal.speakers, 'name')
+    author_name: `by ${sortBy(proposal.legacySpeakers, 'name')
       .map((s) => s.name)
       .join(' & ')}`,
     title: proposal.title,
     text: proposal.abstract,
     title_link: `${appUrl()}/team/${event.team.slug}/${event.slug}/reviews/${proposal.id}`,
-    thumb_url: proposal.speakers[0].picture,
+    thumb_url: proposal.legacySpeakers[0].picture,
     color: '#ffab00',
     fields: [] as unknown[],
   };
@@ -57,7 +57,7 @@ export async function sendSubmittedTalkSlackMessage(eventId: string, proposalId:
 
   const proposal = await db.proposal.findUnique({
     where: { id: proposalId },
-    include: { speakers: true, formats: true, categories: true },
+    include: { legacySpeakers: true, formats: true, categories: true },
   });
 
   if (!proposal) return;

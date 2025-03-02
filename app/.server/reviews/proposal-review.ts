@@ -31,7 +31,7 @@ export class ProposalReview {
 
     const proposal = await db.proposal.findFirst({
       include: {
-        speakers: event.displayProposalsSpeakers,
+        legacySpeakers: event.displayProposalsSpeakers,
         formats: true,
         categories: true,
         reviews: true,
@@ -44,11 +44,11 @@ export class ProposalReview {
     const reviews = new ReviewDetails(proposal.reviews);
 
     let answers: Record<string, Array<SurveyDetailedAnswer>> = {};
-    if (proposal.speakers) {
+    if (proposal.legacySpeakers) {
       const survey = SpeakerSurvey.for(event.slug);
       answers = await survey.getMultipleSpeakerAnswers(
         event,
-        proposal.speakers.map((s) => s.id),
+        proposal.legacySpeakers.map((s) => s.id),
       );
     }
 
@@ -70,7 +70,7 @@ export class ProposalReview {
         summary: event.displayProposalsReviews ? reviews.summary() : null,
       },
       speakers:
-        proposal.speakers?.map((speaker) => ({
+        proposal.legacySpeakers?.map((speaker) => ({
           id: speaker.id,
           name: speaker.name,
           picture: speaker.picture,
@@ -95,10 +95,10 @@ export class ProposalReview {
     if (!event.displayProposalsSpeakers) return [];
 
     const proposals = await db.proposal.findMany({
-      include: { reviews: true, speakers: true },
+      include: { reviews: true, legacySpeakers: true },
       where: {
         id: { not: this.proposalId },
-        speakers: { some: { id: { in: speakerIds } } },
+        legacySpeakers: { some: { id: { in: speakerIds } } },
         eventId: event.id,
         isDraft: false,
       },
@@ -110,7 +110,7 @@ export class ProposalReview {
         id: proposal.id,
         title: proposal.title,
         review: event.displayProposalsReviews ? reviews.summary().average : null,
-        speakers: proposal.speakers.map((speaker) => speaker.name),
+        speakers: proposal.legacySpeakers.map((speaker) => speaker.name),
       };
     });
   }

@@ -14,7 +14,7 @@ type EmailData = {
     emailNotifications: any;
     team: { slug: string };
   };
-  proposal: { id: string; title: string; speakers: Array<{ name: string }> };
+  proposal: { id: string; title: string; legacySpeakers: Array<{ name: string }> };
 };
 
 export function sendProposalDeclinedEmailToOrganizers(data: EmailData) {
@@ -41,7 +41,7 @@ export default function ProposalDeclinedEmail({ event, proposal }: EmailData) {
         <Text>
           <strong>{proposal.title}</strong>
           <br />
-          <i>by {proposal.speakers.map((speaker) => speaker.name).join(', ')}</i>
+          <i>by {proposal.legacySpeakers.map((speaker) => speaker.name).join(', ')}</i>
         </Text>
       </Section>
 

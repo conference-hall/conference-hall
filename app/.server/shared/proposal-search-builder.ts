@@ -29,7 +29,7 @@ export class ProposalSearchBuilder {
   async proposalsByPage(pagination: Pagination) {
     return db.proposal.findMany({
       include: {
-        speakers: this.options.withSpeakers,
+        legacySpeakers: this.options.withSpeakers,
         reviews: this.options.withReviews,
         _count: {
           select: { comments: true },
@@ -46,7 +46,7 @@ export class ProposalSearchBuilder {
   async proposals(select: { reviews: boolean } = { reviews: true }) {
     return db.proposal.findMany({
       include: {
-        speakers: this.options.withSpeakers,
+        legacySpeakers: this.options.withSpeakers,
         reviews: select.reviews,
         formats: true,
         categories: true,
@@ -108,7 +108,7 @@ export class ProposalSearchBuilder {
 
     const byTitle: Prisma.ProposalWhereInput = { title: { contains: query, mode: 'insensitive' } };
     const bySpeakers: Prisma.ProposalWhereInput = {
-      speakers: { some: { name: { contains: query, mode: 'insensitive' } } },
+      legacySpeakers: { some: { name: { contains: query, mode: 'insensitive' } } },
     };
     if (this.options.withSpeakers) return [byTitle, bySpeakers];
 
