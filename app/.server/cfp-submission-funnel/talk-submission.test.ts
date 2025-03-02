@@ -47,7 +47,10 @@ describe('TalkSubmission', () => {
       expect(talk?.level).toEqual(data.level);
       expect(talk?.speakers[0].id).toEqual(speaker.id);
 
-      const proposal = await db.proposal.findFirst({ where: { talkId }, include: { legacySpeakers: true } });
+      const proposal = await db.proposal.findFirst({
+        where: { talkId },
+        include: { legacySpeakers: true, newSpeakers: true },
+      });
       expect(proposal?.title).toEqual(data.title);
       expect(proposal?.abstract).toEqual(data.abstract);
       expect(proposal?.references).toEqual(data.references);
@@ -56,12 +59,26 @@ describe('TalkSubmission', () => {
       expect(proposal?.languages).toEqual(data.languages);
       expect(proposal?.level).toEqual(data.level);
       expect(proposal?.legacySpeakers[0].id).toEqual(speaker.id);
+      expect(proposal?.newSpeakers).toEqual([
+        expect.objectContaining({
+          userId: speaker.id,
+          eventId: event.id,
+          name: speaker.name,
+          email: speaker.email,
+          picture: speaker.picture,
+          bio: speaker.bio,
+          company: speaker.company,
+          location: speaker.location,
+          socialLinks: speaker.socialLinks,
+        }),
+      ]);
     });
 
     it('create a new draft proposal from a existing talk', async () => {
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
-      const talk = await talkFactory({ speakers: [speaker] });
+      const speaker2 = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker, speaker2] });
 
       const data = {
         title: 'New title',
@@ -80,8 +97,12 @@ describe('TalkSubmission', () => {
       expect(updatedTalk?.languages).toEqual(data.languages);
       expect(updatedTalk?.level).toEqual(data.level);
       expect(updatedTalk?.speakers[0].id).toEqual(speaker.id);
+      expect(updatedTalk?.speakers[1].id).toEqual(speaker2.id);
 
-      const proposal = await db.proposal.findFirst({ where: { talkId }, include: { legacySpeakers: true } });
+      const proposal = await db.proposal.findFirst({
+        where: { talkId },
+        include: { legacySpeakers: true, newSpeakers: true },
+      });
       expect(proposal?.title).toEqual(data.title);
       expect(proposal?.abstract).toEqual(data.abstract);
       expect(proposal?.references).toEqual(data.references);
@@ -90,6 +111,31 @@ describe('TalkSubmission', () => {
       expect(proposal?.languages).toEqual(data.languages);
       expect(proposal?.level).toEqual(data.level);
       expect(proposal?.legacySpeakers[0].id).toEqual(speaker.id);
+      expect(proposal?.legacySpeakers[1].id).toEqual(speaker2.id);
+      expect(proposal?.newSpeakers).toEqual([
+        expect.objectContaining({
+          userId: speaker.id,
+          eventId: event.id,
+          name: speaker.name,
+          email: speaker.email,
+          picture: speaker.picture,
+          bio: speaker.bio,
+          company: speaker.company,
+          location: speaker.location,
+          socialLinks: speaker.socialLinks,
+        }),
+        expect.objectContaining({
+          userId: speaker2.id,
+          eventId: event.id,
+          name: speaker2.name,
+          email: speaker2.email,
+          picture: speaker2.picture,
+          bio: speaker2.bio,
+          company: speaker2.company,
+          location: speaker2.location,
+          socialLinks: speaker2.socialLinks,
+        }),
+      ]);
     });
 
     it('throws an error when talk not found', async () => {
@@ -386,12 +432,16 @@ describe('TalkSubmission', () => {
 
       const proposalUpdated = await db.proposal.findUnique({
         where: { id: proposal.id },
-        include: { legacySpeakers: true },
+        include: { legacySpeakers: true, newSpeakers: true },
       });
 
-      const speakers = proposalUpdated?.legacySpeakers.map(({ id }) => id);
-      expect(speakers?.length).toBe(1);
-      expect(speakers).toContain(speaker.id);
+      const legacySpeakers = proposalUpdated?.legacySpeakers.map(({ id }) => id);
+      expect(legacySpeakers?.length).toBe(1);
+      expect(legacySpeakers).toContain(speaker.id);
+
+      const newSpeakers = proposalUpdated?.newSpeakers.map(({ userId }) => userId);
+      expect(newSpeakers?.length).toBe(1);
+      expect(newSpeakers).toContain(speaker.id);
     });
 
     it('throws an error when talk doesnt belong to the speaker', async () => {

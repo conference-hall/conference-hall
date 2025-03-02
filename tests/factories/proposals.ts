@@ -1,7 +1,7 @@
 import { randParagraph, randPost } from '@ngneat/falso';
 import type { Event, EventCategory, EventFormat, EventProposalTag, Prisma, Talk, User } from '@prisma/client';
 import { ConfirmationStatus, DeliberationStatus, PublicationStatus, TalkLevel } from '@prisma/client';
-
+import { EventSpeaker } from '~/.server/shared/event-speaker.ts';
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 
@@ -43,8 +43,11 @@ type FactoryOptions = {
   traits?: Trait[];
 };
 
-export const proposalFactory = (options: FactoryOptions) => {
+export const proposalFactory = async (options: FactoryOptions) => {
   const { attributes = {}, traits = [], talk, event, formats, categories, tags } = options;
+
+  // TEMP: To use when speaker double-write is removed
+  const newSpeakers = await EventSpeaker.for(event.id).upsertForUsers(talk.speakers);
 
   const defaultAttributes: Prisma.ProposalCreateInput = {
     title: talk?.title || randPost().title,
@@ -54,6 +57,7 @@ export const proposalFactory = (options: FactoryOptions) => {
     level: talk?.level || TalkLevel.INTERMEDIATE,
     talk: { connect: { id: talk.id } },
     legacySpeakers: { connect: talk.speakers.map(({ id }) => ({ id })) },
+    newSpeakers: { connect: newSpeakers.map(({ id }) => ({ id })) },
     event: { connect: { id: event.id } },
     isDraft: false,
     createdAt: new Date(),

@@ -4,21 +4,22 @@ import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts'
 
 import { sendProposalConfirmedEmailToOrganizers } from '~/emails/templates/organizers/proposal-confirmed.tsx';
 import { sendProposalDeclinedEmailToOrganizers } from '~/emails/templates/organizers/proposal-declined.tsx';
+import { EventSpeaker } from '../shared/event-speaker.ts';
 import type { ProposalSaveData } from './user-proposal.types';
 
 export class UserProposal {
   constructor(
-    private speakerId: string,
+    private userId: string,
     private proposalId: string,
   ) {}
 
-  static for(speakerId: string, proposalId: string) {
-    return new UserProposal(speakerId, proposalId);
+  static for(userId: string, proposalId: string) {
+    return new UserProposal(userId, proposalId);
   }
 
   async get() {
     const proposal = await db.proposal.findFirst({
-      where: { legacySpeakers: { some: { id: this.speakerId } }, id: this.proposalId },
+      where: { legacySpeakers: { some: { id: this.userId } }, id: this.proposalId },
       include: {
         event: true,
         legacySpeakers: true,
@@ -43,21 +44,21 @@ export class UserProposal {
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
       invitationLink: proposal.invitationLink,
-      isOwner: this.speakerId === proposal?.talk?.creatorId,
+      isOwner: this.userId === proposal?.talk?.creatorId,
       speakers: proposal.legacySpeakers.map((speaker) => ({
         id: speaker.id,
         name: speaker.name,
         bio: speaker.bio,
         picture: speaker.picture,
         company: speaker.company,
-        isCurrentUser: this.speakerId === speaker.id,
+        isCurrentUser: this.userId === speaker.id,
       })),
     };
   }
 
   async update(data: ProposalSaveData) {
     const proposal = await db.proposal.findFirst({
-      where: { id: this.proposalId, legacySpeakers: { some: { id: this.speakerId } } },
+      where: { id: this.proposalId, legacySpeakers: { some: { id: this.userId } } },
       include: { event: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
@@ -81,30 +82,27 @@ export class UserProposal {
     }
   }
 
-  async removeCoSpeaker(coSpeakerId: string) {
+  async removeCoSpeaker(coSpeakerUserId: string) {
     const proposal = await db.proposal.findFirst({
       where: {
         id: this.proposalId,
-        legacySpeakers: { some: { id: this.speakerId } },
+        legacySpeakers: { some: { id: this.userId } },
       },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
-    await db.proposal.update({
-      where: { id: this.proposalId },
-      data: { legacySpeakers: { disconnect: { id: coSpeakerId } } },
-    });
+    await EventSpeaker.for(proposal.eventId).removeSpeakerFromProposal(this.proposalId, coSpeakerUserId);
   }
 
   async delete() {
     await db.proposal.deleteMany({
-      where: { id: this.proposalId, legacySpeakers: { some: { id: this.speakerId } } },
+      where: { id: this.proposalId, legacySpeakers: { some: { id: this.userId } } },
     });
   }
 
   async confirm(participation: 'CONFIRMED' | 'DECLINED') {
     const proposal = await db.proposal.findFirst({
-      where: { id: this.proposalId, legacySpeakers: { some: { id: this.speakerId } } },
+      where: { id: this.proposalId, legacySpeakers: { some: { id: this.userId } } },
       include: { event: { include: { team: true } }, legacySpeakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
