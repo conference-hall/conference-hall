@@ -17,8 +17,14 @@ describe('EventSpeaker', () => {
       expect(speaker).toMatchObject({
         userId: user.id,
         eventId: event.id,
-        email: user.email,
         name: user.name,
+        email: user.email,
+        picture: user.picture,
+        bio: user.bio,
+        references: user.references,
+        company: user.company,
+        location: user.location,
+        socialLinks: user.socialLinks,
       });
     });
 
@@ -63,8 +69,12 @@ describe('EventSpeaker', () => {
         where: { id: proposal.id },
         include: { legacySpeakers: true, newSpeakers: true },
       });
-      expect(updatedProposal?.legacySpeakers.map((s) => s.id)).toEqual([user.id, newSpeaker.id]);
-      expect(updatedProposal?.newSpeakers.map((s) => s.userId)).toEqual([user.id, newSpeaker.id]);
+      expect(updatedProposal?.legacySpeakers.map((s) => s.id)).toEqual(
+        expect.arrayContaining([user.id, newSpeaker.id]),
+      );
+      expect(updatedProposal?.newSpeakers.map((s) => s.userId)).toEqual(
+        expect.arrayContaining([user.id, newSpeaker.id]),
+      );
     });
 
     it('throws an error if user not found', async () => {

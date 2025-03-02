@@ -88,6 +88,7 @@ describe('SpeakerProfile', () => {
         email: 'john.doe@email.com',
         picture: 'https://example.com/photo.jpg',
         bio: 'lorem ipsum',
+        references: 'impedit quidem quisquam',
         company: 'company',
         location: 'location',
         socialLinks: ['https://github.com/profile'],

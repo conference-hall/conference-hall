@@ -37,6 +37,7 @@ export class SpeakerProfile {
           picture: user.picture,
           company: user.company,
           location: user.location,
+          references: user.references,
           socialLinks: user.socialLinks as SocialLinks,
         },
       });

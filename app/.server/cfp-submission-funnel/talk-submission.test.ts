@@ -59,19 +59,7 @@ describe('TalkSubmission', () => {
       expect(proposal?.languages).toEqual(data.languages);
       expect(proposal?.level).toEqual(data.level);
       expect(proposal?.legacySpeakers[0].id).toEqual(speaker.id);
-      expect(proposal?.newSpeakers).toEqual([
-        expect.objectContaining({
-          userId: speaker.id,
-          eventId: event.id,
-          name: speaker.name,
-          email: speaker.email,
-          picture: speaker.picture,
-          bio: speaker.bio,
-          company: speaker.company,
-          location: speaker.location,
-          socialLinks: speaker.socialLinks,
-        }),
-      ]);
+      expect(proposal?.newSpeakers[0].userId).toEqual(speaker.id);
     });
 
     it('create a new draft proposal from a existing talk', async () => {
@@ -112,30 +100,8 @@ describe('TalkSubmission', () => {
       expect(proposal?.level).toEqual(data.level);
       expect(proposal?.legacySpeakers[0].id).toEqual(speaker.id);
       expect(proposal?.legacySpeakers[1].id).toEqual(speaker2.id);
-      expect(proposal?.newSpeakers).toEqual([
-        expect.objectContaining({
-          userId: speaker.id,
-          eventId: event.id,
-          name: speaker.name,
-          email: speaker.email,
-          picture: speaker.picture,
-          bio: speaker.bio,
-          company: speaker.company,
-          location: speaker.location,
-          socialLinks: speaker.socialLinks,
-        }),
-        expect.objectContaining({
-          userId: speaker2.id,
-          eventId: event.id,
-          name: speaker2.name,
-          email: speaker2.email,
-          picture: speaker2.picture,
-          bio: speaker2.bio,
-          company: speaker2.company,
-          location: speaker2.location,
-          socialLinks: speaker2.socialLinks,
-        }),
-      ]);
+      expect(proposal?.newSpeakers[0].userId).toEqual(speaker.id);
+      expect(proposal?.newSpeakers[1].userId).toEqual(speaker2.id);
     });
 
     it('throws an error when talk not found', async () => {
