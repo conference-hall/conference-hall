@@ -1,4 +1,5 @@
 import { db } from 'prisma/db.server.ts';
+import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
@@ -31,9 +32,7 @@ describe('EventSpeaker', () => {
     it('updates an existing speaker', async () => {
       const event = await eventFactory();
       const user = await userFactory();
-      await db.eventSpeaker.create({
-        data: { userId: user.id, eventId: event.id, email: user.email, name: user.name },
-      }); // TODO: replace by factory
+      await eventSpeakerFactory({ event, user });
 
       const updatedUser = { ...user, name: 'Updated Name' };
       const speaker = await EventSpeaker.for(event.id).upsertForUser(updatedUser);
