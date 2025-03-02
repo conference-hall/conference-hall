@@ -28,7 +28,7 @@ export class SpeakerProfile {
     return db.$transaction(async (trx) => {
       const user = await trx.user.update({ where: { id: this.userId }, data });
 
-      await trx.speaker.updateMany({
+      await trx.eventSpeaker.updateMany({
         where: { userId: this.userId },
         data: {
           name: user.name,

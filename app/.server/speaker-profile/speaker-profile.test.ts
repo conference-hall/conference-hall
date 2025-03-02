@@ -80,7 +80,7 @@ describe('SpeakerProfile', () => {
       socialLinks: ['https://github.com/profile'],
     });
 
-    const eventSpeakers = await db.speaker.findMany({ where: { userId: user.id } });
+    const eventSpeakers = await db.eventSpeaker.findMany({ where: { userId: user.id } });
     expect(eventSpeakers).toEqual([
       expect.objectContaining({
         eventId: event.id,

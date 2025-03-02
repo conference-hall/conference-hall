@@ -25,7 +25,9 @@ describe('EventSpeaker', () => {
     it('updates an existing speaker', async () => {
       const event = await eventFactory();
       const user = await userFactory();
-      await db.speaker.create({ data: { userId: user.id, eventId: event.id, email: user.email, name: user.name } }); // TODO: replace by factory
+      await db.eventSpeaker.create({
+        data: { userId: user.id, eventId: event.id, email: user.email, name: user.name },
+      }); // TODO: replace by factory
 
       const updatedUser = { ...user, name: 'Updated Name' };
       const speaker = await EventSpeaker.for(event.id).upsertForUser(updatedUser);

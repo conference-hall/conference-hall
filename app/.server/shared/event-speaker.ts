@@ -14,9 +14,9 @@ export class EventSpeaker {
   }
 
   async upsertForUser(user: User) {
-    const speaker = await this.trx.speaker.findFirst({ where: { userId: user.id, eventId: this.eventId } });
+    const speaker = await this.trx.eventSpeaker.findFirst({ where: { userId: user.id, eventId: this.eventId } });
     if (speaker) {
-      return this.trx.speaker.update({
+      return this.trx.eventSpeaker.update({
         where: { id: speaker.id },
         data: {
           eventId: this.eventId,
@@ -31,7 +31,7 @@ export class EventSpeaker {
       });
     }
 
-    return this.trx.speaker.create({
+    return this.trx.eventSpeaker.create({
       data: {
         userId: user.id,
         eventId: this.eventId,
@@ -77,7 +77,7 @@ export class EventSpeaker {
 
   async removeSpeakerFromProposal(proposalId: string, userId: string) {
     // TEMP: Double-write speakers to legacy and new tables
-    const newSpeaker = await this.trx.speaker.findFirst({ where: { userId, eventId: this.eventId } });
+    const newSpeaker = await this.trx.eventSpeaker.findFirst({ where: { userId, eventId: this.eventId } });
 
     // TODO: check remains at least one speaker
 
