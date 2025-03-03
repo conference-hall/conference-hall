@@ -25,7 +25,7 @@ export class Publication {
 
     const proposals = await db.proposal.findMany({
       where: { eventId: event.id, publicationStatus: 'NOT_PUBLISHED', deliberationStatus: status },
-      include: { legacySpeakers: true, formats: true },
+      include: { newSpeakers: true, formats: true },
     });
     if (!proposals.length) throw new ForbiddenOperationError();
 
@@ -53,7 +53,7 @@ export class Publication {
         publicationStatus: 'NOT_PUBLISHED',
         deliberationStatus: { in: ['ACCEPTED', 'REJECTED'] },
       },
-      include: { legacySpeakers: true, formats: true },
+      include: { newSpeakers: true, formats: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
 

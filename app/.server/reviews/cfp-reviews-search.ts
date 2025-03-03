@@ -42,7 +42,7 @@ export class CfpReviewsSearch {
           confirmationStatus: proposal.confirmationStatus,
           createdAt: proposal.createdAt,
           speakers: event.displayProposalsSpeakers
-            ? proposal.legacySpeakers.map(({ name, picture }) => ({ name, picture }))
+            ? proposal.newSpeakers.map(({ name, picture }) => ({ name, picture }))
             : [],
           tags: sortBy(
             proposal.tags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),
@@ -77,7 +77,7 @@ export class CfpReviewsSearch {
         deliberationStatus: proposal.deliberationStatus,
         confirmationStatus: proposal.confirmationStatus,
         speakers: event.displayProposalsSpeakers
-          ? proposal.legacySpeakers.map(({ name, picture }) => ({ name, picture }))
+          ? proposal.newSpeakers.map(({ name, picture }) => ({ name, picture }))
           : [],
       };
     });

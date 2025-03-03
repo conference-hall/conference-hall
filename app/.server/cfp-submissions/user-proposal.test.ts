@@ -41,7 +41,7 @@ describe('UserProposal', () => {
         isOwner: true,
         speakers: [
           {
-            id: speaker.id,
+            userId: speaker.id,
             name: speaker.name,
             bio: speaker.bio,
             picture: speaker.picture,
@@ -170,12 +170,8 @@ describe('UserProposal', () => {
 
       const proposalUpdated = await db.proposal.findUnique({
         where: { id: proposal.id },
-        include: { legacySpeakers: true, newSpeakers: true },
+        include: { newSpeakers: true },
       });
-
-      const legacySpeakers = proposalUpdated?.legacySpeakers.map(({ id }) => id);
-      expect(legacySpeakers?.length).toBe(1);
-      expect(legacySpeakers).toContain(speaker.id);
 
       const newSpeakers = proposalUpdated?.newSpeakers.map(({ userId }) => userId);
       expect(newSpeakers?.length).toBe(1);

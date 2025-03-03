@@ -17,10 +17,10 @@ export class UserProposal {
 
   async get() {
     const proposal = await db.proposal.findFirst({
-      where: { legacySpeakers: { some: { id: this.userId } }, id: this.proposalId },
+      where: { newSpeakers: { some: { userId: this.userId } }, id: this.proposalId },
       include: {
         event: true,
-        legacySpeakers: true,
+        newSpeakers: true,
         formats: true,
         categories: true,
         talk: true,
@@ -43,20 +43,20 @@ export class UserProposal {
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
       invitationLink: proposal.invitationLink,
       isOwner: this.userId === proposal?.talk?.creatorId,
-      speakers: proposal.legacySpeakers.map((speaker) => ({
-        id: speaker.id,
+      speakers: proposal.newSpeakers.map((speaker) => ({
+        userId: speaker.userId,
         name: speaker.name,
         bio: speaker.bio,
         picture: speaker.picture,
         company: speaker.company,
-        isCurrentUser: this.userId === speaker.id,
+        isCurrentUser: this.userId === speaker.userId,
       })),
     };
   }
 
   async update(data: ProposalSaveData) {
     const proposal = await db.proposal.findFirst({
-      where: { id: this.proposalId, legacySpeakers: { some: { id: this.userId } } },
+      where: { id: this.proposalId, newSpeakers: { some: { userId: this.userId } } },
       include: { event: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
@@ -84,7 +84,7 @@ export class UserProposal {
     const proposal = await db.proposal.findFirst({
       where: {
         id: this.proposalId,
-        legacySpeakers: { some: { id: this.userId } },
+        newSpeakers: { some: { userId: this.userId } },
       },
     });
     if (!proposal) throw new ProposalNotFoundError();
@@ -94,14 +94,14 @@ export class UserProposal {
 
   async delete() {
     await db.proposal.deleteMany({
-      where: { id: this.proposalId, legacySpeakers: { some: { id: this.userId } } },
+      where: { id: this.proposalId, newSpeakers: { some: { userId: this.userId } } },
     });
   }
 
   async confirm(participation: 'CONFIRMED' | 'DECLINED') {
     const proposal = await db.proposal.findFirst({
-      where: { id: this.proposalId, legacySpeakers: { some: { id: this.userId } } },
-      include: { event: { include: { team: true } }, legacySpeakers: true },
+      where: { id: this.proposalId, newSpeakers: { some: { userId: this.userId } } },
+      include: { event: { include: { team: true } }, newSpeakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
 

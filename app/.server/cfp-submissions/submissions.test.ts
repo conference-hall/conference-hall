@@ -51,7 +51,6 @@ describe('Submissions', () => {
           createdAt: proposal.createdAt,
           speakers: [
             {
-              id: speaker.id,
               name: speaker.name,
               picture: speaker.picture,
             },
@@ -79,7 +78,7 @@ describe('Submissions', () => {
         {
           id: talk2.id,
           title: talk2.title,
-          speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
+          speakers: [{ name: speaker.name, picture: speaker.picture }],
         },
       ]);
     });

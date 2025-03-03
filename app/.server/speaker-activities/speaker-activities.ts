@@ -22,8 +22,8 @@ export class SpeakerActivities {
       include: {
         team: true,
         proposals: {
-          where: { legacySpeakers: { some: { id: this.userId } } },
-          include: { legacySpeakers: true, talk: true },
+          where: { newSpeakers: { some: { userId: this.userId } } },
+          include: { newSpeakers: true, talk: true },
         },
       },
     });
@@ -44,8 +44,7 @@ export class SpeakerActivities {
               id: proposal.id,
               title: proposal.title,
               status: proposal.getStatusForSpeaker(event.isCfpOpen),
-              speakers: proposal.legacySpeakers.map((speaker) => ({
-                id: speaker.id,
+              speakers: proposal.newSpeakers.map((speaker) => ({
                 name: speaker.name,
                 picture: speaker.picture,
               })),
@@ -58,13 +57,14 @@ export class SpeakerActivities {
   }
 }
 
-async function lastEventsSubmitted(speakerId: string) {
+async function lastEventsSubmitted(userId: string) {
   const results = await db.$queryRaw<Array<{ id: string }>>(
     Prisma.sql`
       SELECT DISTINCT(events.id), MAX(proposals."updatedAt") AS lastUpdate
       FROM events
-      JOIN proposals ON proposals."eventId" = events.id
-      JOIN _speakers_proposals ON _speakers_proposals."A" = proposals.id AND _speakers_proposals."B" = ${speakerId}
+      JOIN event_speakers ON event_speakers."userId" = ${userId} and event_speakers."eventId" = events.id
+      JOIN _proposals_speakers ON _proposals_speakers."A" = event_speakers.id
+      JOIN proposals ON proposals."id" = _proposals_speakers."B"
       GROUP BY 1
       ORDER BY lastUpdate DESC
     `,

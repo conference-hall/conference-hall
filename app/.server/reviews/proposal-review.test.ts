@@ -65,7 +65,7 @@ describe('ProposalReview', () => {
         tags: [{ id: tag.id, name: tag.name, color: tag.color }],
         speakers: [
           {
-            id: speaker.id,
+            userId: speaker.id,
             name: speaker.name,
             bio: speaker.bio,
             location: speaker.location,

@@ -13,7 +13,7 @@ export class Notifications {
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'PENDING',
         publicationStatus: 'PUBLISHED',
-        legacySpeakers: { some: { id: this.userId } },
+        newSpeakers: { some: { userId: this.userId } },
       },
     });
   }
@@ -25,7 +25,7 @@ export class Notifications {
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'PENDING',
         publicationStatus: 'PUBLISHED',
-        legacySpeakers: { some: { id: this.userId } },
+        newSpeakers: { some: { userId: this.userId } },
       },
       orderBy: { updatedAt: 'desc' },
     });

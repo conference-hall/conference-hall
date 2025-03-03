@@ -65,31 +65,25 @@ export class EventSpeaker {
     const user = await this.trx.user.findUnique({ where: { id: userId } });
     if (!user) throw new UserNotFoundError();
 
-    // TEMP: Double-write speakers to legacy and new tables
     const newSpeaker = await this.upsertForUser(user);
 
     return this.trx.proposal.update({
       where: { id: proposalId },
-      data: {
-        legacySpeakers: { connect: { id: userId } },
-        newSpeakers: { connect: { id: newSpeaker.id } },
-      },
+      data: { newSpeakers: { connect: { id: newSpeaker.id } } },
     });
   }
 
   async removeSpeakerFromProposal(proposalId: string, userId: string) {
-    // TEMP: Double-write speakers to legacy and new tables
     const newSpeaker = await this.trx.eventSpeaker.findFirst({ where: { userId, eventId: this.eventId } });
 
+    // TODO: throw error if speaker not found ?
     // TODO: check remains at least one speaker
 
     await this.trx.proposal.update({
       where: { id: proposalId },
-      data: {
-        legacySpeakers: { disconnect: { id: userId } },
-        newSpeakers: newSpeaker ? { disconnect: { id: newSpeaker.id } } : undefined,
-      },
+      data: { newSpeakers: newSpeaker ? { disconnect: { id: newSpeaker.id } } : undefined },
     });
+
     // TEMP: check event speakers to delete from event ?
   }
 }

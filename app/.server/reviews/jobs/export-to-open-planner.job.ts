@@ -43,7 +43,7 @@ export const exportToOpenPlanner = job<ExportToOpenPlannerPayload>({
             abstract: proposal.abstract,
             language: languages.at(0),
             level: proposal.level,
-            speakerIds: proposal.legacySpeakers.map((s) => s.id),
+            speakerIds: proposal.newSpeakers.map((s) => s.id),
             formatId: format?.id,
             formatName: format?.name,
             categoryId: category?.id,
@@ -52,7 +52,7 @@ export const exportToOpenPlanner = job<ExportToOpenPlannerPayload>({
         );
 
         // add speakers
-        for (const speaker of proposal.legacySpeakers) {
+        for (const speaker of proposal.newSpeakers) {
           if (result.speakers.some((s) => s.id === speaker.id)) {
             continue;
           }

@@ -100,7 +100,7 @@ describe('Publication', () => {
         1,
         expect.objectContaining({
           template: 'speakers/proposal-accepted',
-          to: [speaker1.email, speaker2.email],
+          to: expect.arrayContaining([speaker1.email, speaker2.email]),
         }),
       );
 
@@ -108,7 +108,7 @@ describe('Publication', () => {
         2,
         expect.objectContaining({
           template: 'speakers/proposal-accepted',
-          to: [speaker1.email, speaker2.email],
+          to: expect.arrayContaining([speaker1.email, speaker2.email]),
         }),
       );
     });
@@ -166,7 +166,7 @@ describe('Publication', () => {
       expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
           template: 'speakers/proposal-accepted',
-          to: [speaker1.email, speaker2.email],
+          to: expect.arrayContaining([speaker1.email, speaker2.email]),
         }),
       );
     });

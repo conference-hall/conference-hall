@@ -66,11 +66,8 @@ describe('EventSpeaker', () => {
 
       const updatedProposal = await db.proposal.findUnique({
         where: { id: proposal.id },
-        include: { legacySpeakers: true, newSpeakers: true },
+        include: { newSpeakers: true },
       });
-      expect(updatedProposal?.legacySpeakers.map((s) => s.id)).toEqual(
-        expect.arrayContaining([user.id, newSpeaker.id]),
-      );
       expect(updatedProposal?.newSpeakers.map((s) => s.userId)).toEqual(
         expect.arrayContaining([user.id, newSpeaker.id]),
       );
@@ -101,9 +98,8 @@ describe('EventSpeaker', () => {
 
       const updatedProposal = await db.proposal.findUnique({
         where: { id: proposal.id },
-        include: { legacySpeakers: true, newSpeakers: true },
+        include: { newSpeakers: true },
       });
-      expect(updatedProposal?.legacySpeakers.map((s) => s.id)).toEqual([user1.id]);
       expect(updatedProposal?.newSpeakers.map((s) => s.userId)).toEqual([user1.id]);
     });
   });
