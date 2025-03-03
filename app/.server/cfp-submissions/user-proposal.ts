@@ -1,11 +1,9 @@
 import { db } from 'prisma/db.server.ts';
-
-import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
-
 import { sendProposalConfirmedEmailToOrganizers } from '~/emails/templates/organizers/proposal-confirmed.tsx';
 import { sendProposalDeclinedEmailToOrganizers } from '~/emails/templates/organizers/proposal-declined.tsx';
+import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 import { EventSpeaker } from '../shared/event-speaker.ts';
-import type { ProposalSaveData } from './user-proposal.types';
+import type { ProposalSaveData } from './user-proposal.types.ts';
 
 export class UserProposal {
   constructor(

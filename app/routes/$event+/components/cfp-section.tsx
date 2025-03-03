@@ -2,7 +2,7 @@ import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { cfpColorStatus, formatCFPDate, formatCFPElapsedTime } from '~/libs/formatters/cfp.ts';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
-import type { CfpState } from '~/types/events.types';
+import type { CfpState } from '~/types/events.types.ts';
 
 type Props = { cfpState: CfpState; cfpStart: Date | null; cfpEnd: Date | null; timezone: string; className?: string };
 

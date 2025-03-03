@@ -8,7 +8,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
-import { useCurrentEvent } from '~/routes/components/contexts/event-team-context';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { EventDetailsForm } from '~/routes/components/events/event-details-form.tsx';
 import { EventForm } from '~/routes/components/events/event-form.tsx';

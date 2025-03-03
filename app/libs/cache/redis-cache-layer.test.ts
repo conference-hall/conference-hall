@@ -1,5 +1,5 @@
-import type Redis from 'ioredis';
-import { RedisCacheLayer } from './redis-cache-layer';
+import type { Redis } from 'ioredis';
+import { RedisCacheLayer } from './redis-cache-layer.ts';
 
 describe('RedisCacheLayer', () => {
   let cache: RedisCacheLayer;

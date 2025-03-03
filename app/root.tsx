@@ -7,7 +7,7 @@ import { destroySession, getSessionUserId } from './libs/auth/session.ts';
 import { getPublicEnv } from './libs/env/env.server.ts';
 import { flags } from './libs/feature-flags/flags.server.ts';
 import { useNonce } from './libs/nonce/use-nonce.ts';
-import type { Toast } from './libs/toasts/toast.server';
+import type { Toast } from './libs/toasts/toast.server.ts';
 import { getToast } from './libs/toasts/toast.server.ts';
 import { Toaster } from './libs/toasts/toaster.tsx';
 import { FlagsProvider } from './routes/components/contexts/flags-context.tsx';

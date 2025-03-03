@@ -1,6 +1,6 @@
 import { useFetchers, useSubmit } from 'react-router';
 import { EmojiReactions } from '~/routes/components/emojis/emoji-reactions.tsx';
-import type { Emoji, EmojiReaction } from '~/types/emojis.types';
+import type { Emoji, EmojiReaction } from '~/types/emojis.types.ts';
 
 export const EMOJIS: Array<Emoji> = [
   { code: '+1', skin: '👍', name: 'Thumbs up' },

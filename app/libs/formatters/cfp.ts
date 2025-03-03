@@ -1,7 +1,6 @@
 import { formatDistanceToNow, isSameDay } from 'date-fns';
 import { format as formatInTimeZone, toZonedTime } from 'date-fns-tz';
-
-import type { CfpState, EventType } from '~/types/events.types';
+import type { CfpState, EventType } from '~/types/events.types.ts';
 
 export function formatEventType(type: EventType) {
   switch (type) {

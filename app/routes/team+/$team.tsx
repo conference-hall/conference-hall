@@ -6,7 +6,7 @@ import { CurrentTeamProvider } from '../components/contexts/team-context.tsx';
 import { Navbar } from '../components/navbar/navbar.tsx';
 import { EventTabs } from './$team+/components/event-tabs.tsx';
 import { TeamTabs } from './$team+/components/team-tabs.tsx';
-import type { loader as routeEventLoader } from './$team.$event+/_layout';
+import type { loader as routeEventLoader } from './$team.$event+/_layout.tsx';
 import { useScheduleFullscreen } from './$team.$event+/schedule+/components/header/use-schedule-fullscreen.tsx';
 import type { Route } from './+types/$team.ts';
 

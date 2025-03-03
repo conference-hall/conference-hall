@@ -1,10 +1,10 @@
 import Mailgun from 'mailgun.js';
-import type { IMailgunClient } from 'mailgun.js/Interfaces';
+import type { Interfaces } from 'mailgun.js/definitions';
 import { isValidEmail } from '../utils/email.ts';
 import type { Email, EmailProvider } from './provider.ts';
 
 export class MailgunProvider implements EmailProvider {
-  private client: IMailgunClient;
+  private client: Interfaces.IMailgunClient;
   private domain: string;
 
   constructor(key: string, domain: string) {

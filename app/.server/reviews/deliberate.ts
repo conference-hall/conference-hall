@@ -1,8 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
-
-import type { DeliberationStatus } from '~/types/proposals.types';
-
+import type { DeliberationStatus } from '~/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { ProposalSearchBuilder } from '../shared/proposal-search-builder.ts';
 import type { ProposalsFilters } from '../shared/proposal-search-builder.types.ts';

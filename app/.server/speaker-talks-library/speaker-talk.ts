@@ -1,8 +1,6 @@
 import { db } from 'prisma/db.server.ts';
-
 import { TalkNotFoundError } from '~/libs/errors.server.ts';
-
-import type { TalkSaveData } from './talks-library.types';
+import type { TalkSaveData } from './talks-library.types.ts';
 
 export class SpeakerTalk {
   constructor(

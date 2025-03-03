@@ -1,10 +1,9 @@
 import { Form } from 'react-router';
-
 import { BadgeDot } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import type { DeliberationStatus, PublicationStatus } from '~/types/proposals.types';
+import type { DeliberationStatus, PublicationStatus } from '~/types/proposals.types.ts';
 
 type Props = { deliberationStatus: DeliberationStatus; publicationStatus: PublicationStatus };
 

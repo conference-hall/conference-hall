@@ -1,7 +1,6 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Form, useSearchParams } from 'react-router';
-
-import type { SearchFilters } from '~/.server/event-search/event-search.types';
+import type { SearchFilters } from '~/.server/event-search/event-search.types.ts';
 import { Input } from '~/design-system/forms/input.tsx';
 
 type Props = { filters: SearchFilters };

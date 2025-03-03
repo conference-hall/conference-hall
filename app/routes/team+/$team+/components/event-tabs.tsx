@@ -1,11 +1,10 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 import { CalendarIcon, Cog6ToothIcon, HomeIcon, MegaphoneIcon, QueueListIcon } from '@heroicons/react/24/outline';
 import { useSearchParams } from 'react-router';
-
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
-import type { EventType } from '~/types/events.types';
+import type { EventType } from '~/types/events.types.ts';
 import type { UserPermissions } from '~/types/team.types.ts';
 
 type Props = { teamSlug: string; eventSlug: string; eventType: EventType; permissions: UserPermissions };

@@ -1,17 +1,15 @@
+import { format } from 'date-fns';
 import type { ChangeEvent } from 'react';
 import { Link, useSearchParams } from 'react-router';
-
 import { BadgeDot } from '~/design-system/badges.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { GlobalReviewNote, UserReviewNote } from '~/routes/components/reviews/review-note.tsx';
-
-import { format } from 'date-fns';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import { ReviewComments } from '~/routes/components/reviews/review-comments';
+import { ReviewComments } from '~/routes/components/reviews/review-comments.tsx';
+import { GlobalReviewNote, UserReviewNote } from '~/routes/components/reviews/review-note.tsx';
 import { Tag } from '~/routes/components/tags/tag.tsx';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
-import type { ProposalData } from './types';
+import type { ProposalData } from './types.ts';
 
 type ProposalItemProps = {
   proposal: ProposalData;

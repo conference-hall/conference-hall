@@ -1,6 +1,6 @@
 import { type ReactNode, createContext, useContext } from 'react';
 import type { loader } from '~/root.tsx';
-import type { SerializeFrom } from '~/types/react-router.types';
+import type { SerializeFrom } from '~/types/react-router.types.ts';
 
 type User = SerializeFrom<typeof loader>['user'];
 

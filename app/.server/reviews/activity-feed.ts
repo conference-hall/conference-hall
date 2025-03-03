@@ -1,9 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-
 import type { EmojiReaction } from '~/types/emojis.types.ts';
-import type { ReviewFeeling } from '~/types/proposals.types';
-
+import type { ReviewFeeling } from '~/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { Comments } from './comments.ts';
 

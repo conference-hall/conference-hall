@@ -1,9 +1,8 @@
 import { cx } from 'class-variance-authority';
-
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
-import type { CfpState, EventType } from '~/types/events.types';
+import type { CfpState, EventType } from '~/types/events.types.ts';
 
 type Props = {
   slug: string;

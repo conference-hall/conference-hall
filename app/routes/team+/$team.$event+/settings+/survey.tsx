@@ -1,5 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
-import { EventSurveySettings } from '~/.server/event-survey/event-survey-settings';
+import { EventSurveySettings } from '~/.server/event-survey/event-survey-settings.ts';
 import {
   SurveyMoveQuestionSchema,
   SurveyQuestionSchema,
