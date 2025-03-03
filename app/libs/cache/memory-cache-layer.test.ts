@@ -1,4 +1,4 @@
-import { MemoryCacheLayer } from './memory-cache-layer';
+import { MemoryCacheLayer } from './memory-cache-layer.ts';
 
 describe('MemoryCacheLayer', () => {
   let cache: MemoryCacheLayer;

@@ -2,7 +2,6 @@ import { ArrowTopRightOnSquareIcon, ChevronRightIcon } from '@heroicons/react/20
 import { FireIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { Link as RouterLink } from 'react-router';
-
 import { Avatar } from '~/design-system/avatar.tsx';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
@@ -11,7 +10,7 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H2, H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { ProposalStatusLabel } from '~/routes/components/proposals/proposal-status-label.tsx';
-import type { CfpState } from '~/types/events.types';
+import type { CfpState } from '~/types/events.types.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 interface Props {

@@ -10,7 +10,7 @@ import {
 import { EventSpeaker } from '../shared/event-speaker.ts';
 import { TalksLibrary } from '../speaker-talks-library/talks-library.ts';
 import { sendSubmittedTalkSlackMessage } from './slack/slack.services.ts';
-import type { DraftSaveData, TrackUpdateData } from './talk-submission.types';
+import type { DraftSaveData, TrackUpdateData } from './talk-submission.types.ts';
 
 export class TalkSubmission {
   constructor(

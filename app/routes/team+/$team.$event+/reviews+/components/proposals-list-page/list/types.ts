@@ -4,7 +4,7 @@ import type {
   GlobalReview,
   PublicationStatus,
   UserReview,
-} from '~/types/proposals.types';
+} from '~/types/proposals.types.ts';
 import type { Tag } from '~/types/tags.types.ts';
 
 export type ProposalData = {

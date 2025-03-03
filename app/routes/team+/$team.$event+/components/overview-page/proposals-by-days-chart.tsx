@@ -1,8 +1,7 @@
 import { format } from 'date-fns';
 import type { TooltipProps } from 'recharts';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
-
+import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent.js';
 import { NoData } from '~/design-system/dashboard/no-data.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Text } from '~/design-system/typography.tsx';

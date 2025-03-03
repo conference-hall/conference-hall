@@ -14,7 +14,7 @@ import { getLanguage } from '~/libs/formatters/languages.ts';
 import { getLevel } from '~/libs/formatters/levels.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 import { ClientOnly } from '../utils/client-only.tsx';
-import type { SpeakerProps } from './co-speaker';
+import type { SpeakerProps } from './co-speaker.tsx';
 import { CoSpeakers } from './co-speaker.tsx';
 import { TalkArchiveButton } from './talk-forms/talk-archive-button.tsx';
 import { TalkEditButton } from './talk-forms/talk-form-drawer.tsx';

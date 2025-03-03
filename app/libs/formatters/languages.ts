@@ -1,4 +1,4 @@
-import languages from './languages.json';
+import languages from './languages.json' with { type: 'json' };
 
 export type LanguageValues = Array<{ value: string; label: string }>;
 

@@ -1,9 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-
-import type { Pagination } from '~/.server/shared/pagination';
-
-import type { ProposalsFilters, ReviewsFilter, StatusFilter } from './proposal-search-builder.types';
+import type { Pagination } from '~/.server/shared/pagination.ts';
+import type { ProposalsFilters, ReviewsFilter, StatusFilter } from './proposal-search-builder.types.ts';
 
 type SearchOptions = { withSpeakers: boolean; withReviews: boolean };
 

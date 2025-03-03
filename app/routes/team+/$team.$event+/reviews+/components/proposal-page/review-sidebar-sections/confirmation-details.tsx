@@ -1,6 +1,6 @@
 import { BadgeDot } from '~/design-system/badges.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import type { ConfirmationStatus } from '~/types/proposals.types';
+import type { ConfirmationStatus } from '~/types/proposals.types.ts';
 
 type Props = { confirmationStatus: ConfirmationStatus };
 

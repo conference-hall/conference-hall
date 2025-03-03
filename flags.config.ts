@@ -1,4 +1,4 @@
-import { defineFlagsConfig } from './app/libs/feature-flags/flags-client';
+import { defineFlagsConfig } from './app/libs/feature-flags/flags-client.ts';
 
 export default defineFlagsConfig({
   seo: {

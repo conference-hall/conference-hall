@@ -3,11 +3,10 @@ import { CalendarDaysIcon, CodeBracketIcon, Squares2X2Icon, TableCellsIcon } fro
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 import { Fragment, type HTMLProps } from 'react';
 import { Form, useFetchers, useParams, useSearchParams } from 'react-router';
-
 import { button } from '~/design-system/buttons.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
-import { useCurrentEvent } from '~/routes/components/contexts/event-team-context';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 
 export function ExportMenu() {

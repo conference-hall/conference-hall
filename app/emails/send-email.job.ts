@@ -1,4 +1,4 @@
-import { renderEmail } from '~/emails/email.renderer';
+import { renderEmail } from '~/emails/email.renderer.tsx';
 import { getEnv } from '~/libs/jobs/env.ts';
 import { job } from '~/libs/jobs/job.ts';
 import { getEmailProvider } from './providers/provider.ts';

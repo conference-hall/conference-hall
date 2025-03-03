@@ -2,8 +2,7 @@ import { Fieldset, Label, Radio, RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
-
-import type { ReviewFeeling } from '~/types/proposals.types';
+import type { ReviewFeeling } from '~/types/proposals.types.ts';
 
 export type Option = {
   label: string;

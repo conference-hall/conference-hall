@@ -1,4 +1,4 @@
-import type Redis from 'ioredis';
+import type { Redis } from 'ioredis';
 import { getRedisClient } from '../redis.ts';
 import type { CacheLayer } from './cache-layer.ts';
 

@@ -6,7 +6,7 @@ import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
-import { Text } from '~/design-system/typography';
+import { Text } from '~/design-system/typography.tsx';
 
 type TracksModalProps = {
   initialValues: Array<{ id: string; name: string }>;

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { db } from '../../../../prisma/db.server';
-import { MemoryCacheLayer } from '../../cache/memory-cache-layer';
+import { db } from '../../../../prisma/db.server.ts';
+import { MemoryCacheLayer } from '../../cache/memory-cache-layer.ts';
 import type { FlagConfig } from '../types.ts';
-import { DbStorage } from './db-storage';
+import { DbStorage } from './db-storage.ts';
 
 describe('DbStorage', () => {
   let dbStorage: DbStorage;
