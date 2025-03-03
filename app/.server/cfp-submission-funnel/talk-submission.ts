@@ -31,7 +31,7 @@ export class TalkSubmission {
     const talk = talkId === 'new' ? await library.add(data) : await library.talk(talkId).update(data);
 
     await db.$transaction(async (trx) => {
-      const newSpeakers = await EventSpeaker.for(event.id, trx).upsertForUsers(talk.speakers);
+      const speakers = await EventSpeaker.for(event.id, trx).upsertForUsers(talk.speakers);
 
       await trx.proposal.upsert({
         where: { talkId_eventId: { talkId: talk.id, eventId: event.id } },
@@ -41,7 +41,7 @@ export class TalkSubmission {
           level: talk.level,
           references: talk.references,
           languages: talk.languages || [],
-          newSpeakers: { set: [], connect: newSpeakers.map(({ id }) => ({ id })) },
+          speakers: { set: [], connect: speakers.map(({ id }) => ({ id })) },
         },
         create: {
           title: talk.title,
@@ -51,7 +51,7 @@ export class TalkSubmission {
           languages: talk.languages || [],
           talk: { connect: { id: talk.id } },
           event: { connect: { id: event.id } },
-          newSpeakers: { connect: newSpeakers.map(({ id }) => ({ id })) },
+          speakers: { connect: speakers.map(({ id }) => ({ id })) },
         },
       });
       // TEMP: check event speakers to delete from event ?
@@ -63,7 +63,7 @@ export class TalkSubmission {
   async saveTracks(talkId: string, data: TrackUpdateData) {
     const proposal = await db.proposal.findFirst({
       select: { id: true },
-      where: { talkId, event: { slug: this.eventSlug }, newSpeakers: { some: { userId: this.userId } } },
+      where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { userId: this.userId } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
@@ -85,7 +85,7 @@ export class TalkSubmission {
       const nbProposals = await db.proposal.count({
         where: {
           eventId: event.id,
-          newSpeakers: { some: { userId: this.userId } },
+          speakers: { some: { userId: this.userId } },
           id: { not: { equals: talkId } },
           isDraft: false,
         },
@@ -94,8 +94,8 @@ export class TalkSubmission {
     }
 
     const proposal = await db.proposal.findFirst({
-      where: { talkId, event: { slug: this.eventSlug }, newSpeakers: { some: { userId: this.userId } } },
-      include: { newSpeakers: true },
+      where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { userId: this.userId } } },
+      include: { speakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
@@ -111,8 +111,8 @@ export class TalkSubmission {
 
   async get(talkId: string) {
     const proposal = await db.proposal.findFirst({
-      include: { talk: true, newSpeakers: true, formats: true, categories: true },
-      where: { talkId, event: { slug: this.eventSlug }, newSpeakers: { some: { userId: this.userId } } },
+      include: { talk: true, speakers: true, formats: true, categories: true },
+      where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { userId: this.userId } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
@@ -126,7 +126,7 @@ export class TalkSubmission {
       isOwner: this.userId === proposal?.talk?.creatorId,
       invitationLink: proposal.invitationLink,
       createdAt: proposal.createdAt,
-      speakers: proposal.newSpeakers
+      speakers: proposal.speakers
         .map((speaker) => ({
           userId: speaker.userId,
           name: speaker.name,
@@ -143,7 +143,7 @@ export class TalkSubmission {
   async removeCoSpeaker(talkId: string, userId: string) {
     const proposal = await db.proposal.findFirst({
       select: { id: true, eventId: true },
-      where: { talkId, event: { slug: this.eventSlug }, newSpeakers: { some: { userId: this.userId } } },
+      where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { userId: this.userId } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
 

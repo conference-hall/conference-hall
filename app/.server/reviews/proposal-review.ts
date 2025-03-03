@@ -31,7 +31,7 @@ export class ProposalReview {
 
     const proposal = await db.proposal.findFirst({
       include: {
-        newSpeakers: event.displayProposalsSpeakers,
+        speakers: event.displayProposalsSpeakers,
         formats: true,
         categories: true,
         reviews: true,
@@ -44,9 +44,9 @@ export class ProposalReview {
     const reviews = new ReviewDetails(proposal.reviews);
 
     let answers: Record<string, Array<SurveyDetailedAnswer>> = {};
-    if (proposal.newSpeakers) {
+    if (proposal.speakers) {
       const survey = SpeakerSurvey.for(event.slug);
-      const userIds = proposal.newSpeakers.map((s) => s.userId).filter((id) => id !== null);
+      const userIds = proposal.speakers.map((s) => s.userId).filter((id) => id !== null);
       answers = await survey.getMultipleSpeakerAnswers(event, userIds);
     }
 
@@ -68,7 +68,7 @@ export class ProposalReview {
         summary: event.displayProposalsReviews ? reviews.summary() : null,
       },
       speakers:
-        proposal.newSpeakers?.map((speaker) => ({
+        proposal.speakers?.map((speaker) => ({
           userId: speaker.userId,
           name: speaker.name,
           picture: speaker.picture,
@@ -93,10 +93,10 @@ export class ProposalReview {
     if (!event.displayProposalsSpeakers) return [];
 
     const proposals = await db.proposal.findMany({
-      include: { reviews: true, newSpeakers: true },
+      include: { reviews: true, speakers: true },
       where: {
         id: { not: this.proposalId },
-        newSpeakers: { some: { userId: { in: speakerIds } } },
+        speakers: { some: { userId: { in: speakerIds } } },
         eventId: event.id,
         isDraft: false,
       },
@@ -108,7 +108,7 @@ export class ProposalReview {
         id: proposal.id,
         title: proposal.title,
         review: event.displayProposalsReviews ? reviews.summary().average : null,
-        speakers: proposal.newSpeakers.map((speaker) => speaker.name),
+        speakers: proposal.speakers.map((speaker) => speaker.name),
       };
     });
   }

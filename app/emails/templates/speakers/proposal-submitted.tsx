@@ -6,7 +6,7 @@ import BaseEventEmail from '../base-event-email.tsx';
 
 type EmailData = {
   event: { name: string; logoUrl: string | null };
-  proposal: { title: string; newSpeakers: Array<{ email: string }> };
+  proposal: { title: string; speakers: Array<{ email: string }> };
 };
 
 export function sendProposalSubmittedEmailToSpeakers(data: EmailData) {
@@ -14,7 +14,7 @@ export function sendProposalSubmittedEmailToSpeakers(data: EmailData) {
     template: 'speakers/proposal-submitted',
     subject: `[${data.event.name}] Submission confirmed`,
     from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
-    to: data.proposal.newSpeakers.map((speaker) => speaker.email),
+    to: data.proposal.speakers.map((speaker) => speaker.email),
     data,
   });
 }

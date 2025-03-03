@@ -69,7 +69,7 @@ export class EventSpeaker {
 
     return this.trx.proposal.update({
       where: { id: proposalId },
-      data: { newSpeakers: { connect: { id: newSpeaker.id } } },
+      data: { speakers: { connect: { id: newSpeaker.id } } },
     });
   }
 
@@ -81,7 +81,7 @@ export class EventSpeaker {
 
     await this.trx.proposal.update({
       where: { id: proposalId },
-      data: { newSpeakers: newSpeaker ? { disconnect: { id: newSpeaker.id } } : undefined },
+      data: { speakers: newSpeaker ? { disconnect: { id: newSpeaker.id } } : undefined },
     });
 
     // TEMP: check event speakers to delete from event ?

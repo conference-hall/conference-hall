@@ -22,8 +22,8 @@ export class SpeakerActivities {
       include: {
         team: true,
         proposals: {
-          where: { newSpeakers: { some: { userId: this.userId } } },
-          include: { newSpeakers: true, talk: true },
+          where: { speakers: { some: { userId: this.userId } } },
+          include: { speakers: true, talk: true },
         },
       },
     });
@@ -44,7 +44,7 @@ export class SpeakerActivities {
               id: proposal.id,
               title: proposal.title,
               status: proposal.getStatusForSpeaker(event.isCfpOpen),
-              speakers: proposal.newSpeakers.map((speaker) => ({
+              speakers: proposal.speakers.map((speaker) => ({
                 name: speaker.name,
                 picture: speaker.picture,
               })),

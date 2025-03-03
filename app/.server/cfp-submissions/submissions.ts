@@ -14,7 +14,7 @@ export class Submissions {
     return db.proposal.count({
       where: {
         event: { slug: this.eventSlug },
-        newSpeakers: { some: { userId: this.speakerId } },
+        speakers: { some: { userId: this.speakerId } },
         isDraft: false,
       },
     });
@@ -23,10 +23,10 @@ export class Submissions {
   async list() {
     const proposals = await db.proposal.findMany({
       where: {
-        newSpeakers: { some: { userId: this.speakerId } },
+        speakers: { some: { userId: this.speakerId } },
         event: { slug: this.eventSlug },
       },
-      include: { newSpeakers: true, event: true },
+      include: { speakers: true, event: true },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -36,7 +36,7 @@ export class Submissions {
       talkId: proposal.talkId,
       status: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
       createdAt: proposal.createdAt,
-      speakers: proposal.newSpeakers.map((speaker) => ({
+      speakers: proposal.speakers.map((speaker) => ({
         name: speaker.name,
         picture: speaker.picture,
       })),
@@ -45,10 +45,10 @@ export class Submissions {
 
   async drafts() {
     const drafts = await db.proposal.findMany({
-      include: { newSpeakers: true },
+      include: { speakers: true },
       where: {
         event: { slug: this.eventSlug },
-        newSpeakers: { some: { userId: this.speakerId } },
+        speakers: { some: { userId: this.speakerId } },
         isDraft: true,
       },
       orderBy: { createdAt: 'desc' },
@@ -57,7 +57,7 @@ export class Submissions {
     return drafts.map((draft) => ({
       id: draft.talkId!,
       title: draft.title,
-      speakers: draft.newSpeakers.map((speaker) => ({
+      speakers: draft.speakers.map((speaker) => ({
         name: speaker.name,
         picture: speaker.picture,
       })),

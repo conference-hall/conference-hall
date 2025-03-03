@@ -244,7 +244,7 @@ model Proposal {
   level              TalkLevel?
   languages          Json                @default("[]")
   references         String?
-  newSpeakers        EventSpeaker[]      @relation("proposals_speakers")
+  speakers           EventSpeaker[]      @relation("proposals_speakers")
   formats            EventFormat[]       @relation("proposals_formats")
   categories         EventCategory[]     @relation("proposals_categories")
   tags               EventProposalTag[]  @relation("proposal_to_event_proposal_tags")

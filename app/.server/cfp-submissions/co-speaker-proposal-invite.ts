@@ -12,7 +12,7 @@ export class CoSpeakerProposalInvite {
 
   async check() {
     const proposal = await db.proposal.findUnique({
-      include: { event: true, newSpeakers: true },
+      include: { event: true, speakers: true },
       where: { invitationCode: this.code },
     });
     if (!proposal) throw new InvitationNotFoundError();
@@ -21,7 +21,7 @@ export class CoSpeakerProposalInvite {
       id: proposal.id,
       title: proposal.title,
       description: proposal.abstract,
-      speakers: proposal.newSpeakers.map((speaker) => ({
+      speakers: proposal.speakers.map((speaker) => ({
         name: speaker.name,
         picture: speaker.picture,
       })),

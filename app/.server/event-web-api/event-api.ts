@@ -44,7 +44,7 @@ export class EventApi {
           categories: proposal.categories.map((c) => c.name),
           tags: proposal.tags.map((tag) => tag.name),
           languages: proposal.languages as string[],
-          speakers: proposal.newSpeakers.map((speaker) => ({
+          speakers: proposal.speakers.map((speaker) => ({
             name: speaker.name,
             bio: speaker.bio,
             company: speaker.company,

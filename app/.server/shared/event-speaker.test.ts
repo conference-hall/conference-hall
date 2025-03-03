@@ -66,11 +66,9 @@ describe('EventSpeaker', () => {
 
       const updatedProposal = await db.proposal.findUnique({
         where: { id: proposal.id },
-        include: { newSpeakers: true },
+        include: { speakers: true },
       });
-      expect(updatedProposal?.newSpeakers.map((s) => s.userId)).toEqual(
-        expect.arrayContaining([user.id, newSpeaker.id]),
-      );
+      expect(updatedProposal?.speakers.map((s) => s.userId)).toEqual(expect.arrayContaining([user.id, newSpeaker.id]));
     });
 
     it('throws an error if user not found', async () => {
@@ -98,9 +96,9 @@ describe('EventSpeaker', () => {
 
       const updatedProposal = await db.proposal.findUnique({
         where: { id: proposal.id },
-        include: { newSpeakers: true },
+        include: { speakers: true },
       });
-      expect(updatedProposal?.newSpeakers.map((s) => s.userId)).toEqual([user1.id]);
+      expect(updatedProposal?.speakers.map((s) => s.userId)).toEqual([user1.id]);
     });
   });
 });

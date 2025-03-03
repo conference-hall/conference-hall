@@ -181,7 +181,7 @@ export class EventSchedule {
 
     const sessions = await db.scheduleSession.findMany({
       where: { scheduleId: schedule.id },
-      include: { proposal: { include: { newSpeakers: true, formats: true, categories: true } } },
+      include: { proposal: { include: { speakers: true, formats: true, categories: true } } },
     });
 
     return {
@@ -211,7 +211,7 @@ export class EventSchedule {
               confirmationStatus: proposal.confirmationStatus,
               formats: proposal.formats.map((f) => ({ id: f.id, name: f.name })),
               categories: proposal.categories.map((c) => ({ id: c.id, name: c.name })),
-              speakers: proposal.newSpeakers.map((s) => ({
+              speakers: proposal.speakers.map((s) => ({
                 id: s.id,
                 name: s.name,
                 picture: s.picture,
@@ -246,7 +246,7 @@ export class EventSchedule {
 
     const sessions = await db.scheduleSession.findMany({
       where: { scheduleId: schedule.id },
-      include: { proposal: { include: { newSpeakers: true, formats: true, categories: true } }, track: true },
+      include: { proposal: { include: { speakers: true, formats: true, categories: true } }, track: true },
     });
 
     const days = getDatesRange(schedule.start, schedule.end);
@@ -269,7 +269,7 @@ export class EventSchedule {
               level: proposal.level || null,
               formats: proposal.formats.map(({ name }) => name),
               categories: proposal.categories.map(({ name }) => name),
-              speakers: proposal.newSpeakers.map((speaker) => ({
+              speakers: proposal.speakers.map((speaker) => ({
                 id: speaker.id,
                 name: speaker.name,
                 bio: speaker.bio || null,

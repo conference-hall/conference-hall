@@ -170,12 +170,12 @@ describe('UserProposal', () => {
 
       const proposalUpdated = await db.proposal.findUnique({
         where: { id: proposal.id },
-        include: { newSpeakers: true },
+        include: { speakers: true },
       });
 
-      const newSpeakers = proposalUpdated?.newSpeakers.map(({ userId }) => userId);
-      expect(newSpeakers?.length).toBe(1);
-      expect(newSpeakers).toContain(speaker.id);
+      const speakers = proposalUpdated?.speakers.map(({ userId }) => userId);
+      expect(speakers?.length).toBe(1);
+      expect(speakers).toContain(speaker.id);
     });
 
     it('throws an error when proposal doesnt belong to the speaker', async () => {
