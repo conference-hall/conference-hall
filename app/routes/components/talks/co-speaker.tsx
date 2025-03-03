@@ -14,7 +14,7 @@ import { H2, Text } from '~/design-system/typography.tsx';
 import { InvitationModal } from '../modals/invitation-modal.tsx';
 
 export type SpeakerProps = {
-  id: string;
+  userId: string | null;
   name: string | null;
   email?: string;
   picture?: string | null;
@@ -77,7 +77,7 @@ export function SpeakerPillButton({ speaker, canEdit }: SpeakerPillButtonProps) 
   );
 }
 
-type SpeakerPillProps = { speaker: SpeakerProps; className?: string };
+type SpeakerPillProps = { speaker: Pick<SpeakerProps, 'name' | 'picture'>; className?: string };
 
 export function SpeakerPill({ speaker, className }: SpeakerPillProps) {
   return (
@@ -156,9 +156,9 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
           </div>
         )}
 
-        {canEdit && (
+        {canEdit && speaker.userId && (
           <div className="p-6">
-            <RemoveCoSpeakerButton speakerId={speaker.id} speakerName={speaker.name} />
+            <RemoveCoSpeakerButton speakerId={speaker.userId} speakerName={speaker.name} />
           </div>
         )}
 

@@ -43,7 +43,9 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
   const activityPromise = activityFeed.activity();
   const proposal = await proposalReview.get();
-  const otherProposalsPromise = proposalReview.getOtherProposals(proposal.speakers.map((s) => s.id));
+  const otherProposalsPromise = proposalReview.getOtherProposals(
+    proposal.speakers.map((s) => s.userId).filter((s) => s !== null),
+  );
   const pagination = await proposalReview.getPreviousAndNextReviews(filters);
 
   return { proposal, pagination, activityPromise, otherProposalsPromise };

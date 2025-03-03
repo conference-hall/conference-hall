@@ -26,7 +26,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
     speaker,
     invitationLink: proposal.invitationLink,
     isOwner: proposal.isOwner,
-    speakers: proposal.speakers.filter((speaker) => speaker.id !== userId),
+    speakers: proposal.speakers.filter((speaker) => speaker.userId !== userId),
   };
 };
 

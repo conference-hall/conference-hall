@@ -8,7 +8,6 @@ type Props = {
     id: string;
     title: string;
     speakers: Array<{
-      id: string;
       name: string | null;
       picture?: string | null;
     }>;
