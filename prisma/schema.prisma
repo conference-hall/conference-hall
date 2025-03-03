@@ -26,7 +26,6 @@ model User {
   organizerKey          String?
   organizerKeyAccess    OrganizerKeyAccess?    @relation(fields: [organizerKey], references: [id])
   talks                 Talk[]                 @relation("speakers_talks")
-  proposals             Proposal[]             @relation("speakers_proposals")
   teams                 TeamMember[]
   reviews               Review[]
   surveys               Survey[]
@@ -245,7 +244,6 @@ model Proposal {
   level              TalkLevel?
   languages          Json                @default("[]")
   references         String?
-  legacySpeakers     User[]              @relation("speakers_proposals")
   newSpeakers        EventSpeaker[]      @relation("proposals_speakers")
   formats            EventFormat[]       @relation("proposals_formats")
   categories         EventCategory[]     @relation("proposals_categories")
