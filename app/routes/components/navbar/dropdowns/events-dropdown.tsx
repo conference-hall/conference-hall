@@ -2,10 +2,8 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { Link } from 'react-router';
-import { Fragment } from 'react/jsx-runtime';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { menuItem, menuItems } from '~/design-system/styles/menu.styles.ts';
-
 import { MenuTransition } from '~/design-system/transitions.tsx';
 
 const menuStyle = cx(
@@ -25,10 +23,10 @@ export function EventsDropdown({ events = [], currentTeam, currentEvent }: Props
   const eventsDisplayed = events.filter((event) => !event.archived || event.slug === currentEvent.slug);
 
   return (
-    <Menu as="div" className="flex relative z-20 shrink-0">
-      {({ open }) => (
-        <>
-          <MenuButton className={menuStyle}>
+    <Menu>
+      <MenuButton className={menuStyle}>
+        {({ open }) => (
+          <>
             <Avatar
               size="xs"
               picture={currentEvent.logoUrl}
@@ -39,28 +37,29 @@ export function EventsDropdown({ events = [], currentTeam, currentEvent }: Props
             />
             {currentEvent.name}
             {open ? (
-              <ChevronUpIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+              <ChevronUpIcon className="size-5 shrink-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
             ) : (
-              <ChevronDownIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+              <ChevronDownIcon className="size-5 shrink-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
             )}
-          </MenuButton>
-          <MenuTransition>
-            <MenuItems anchor={{ to: 'bottom start', gap: '8px' }} className={menuItems()}>
-              {eventsDisplayed.map(({ slug, name, logoUrl }) => (
-                <MenuItem key={slug} as={Fragment}>
-                  <Link
-                    to={`/team/${currentTeam.slug}/${slug}`}
-                    className={cx(menuItem(), { 'font-semibold': slug === currentEvent.slug })}
-                  >
-                    <Avatar size="xs" picture={logoUrl} name={name} square aria-hidden className="mr-2" />
-                    {name}
-                  </Link>
-                </MenuItem>
-              ))}
-            </MenuItems>
-          </MenuTransition>
-        </>
-      )}
+          </>
+        )}
+      </MenuButton>
+
+      <MenuTransition>
+        <MenuItems anchor={{ to: 'bottom start', gap: '8px' }} className={menuItems()}>
+          {eventsDisplayed.map(({ slug, name, logoUrl }) => (
+            <MenuItem
+              key={slug}
+              as={Link}
+              to={`/team/${currentTeam.slug}/${slug}`}
+              className={cx(menuItem(), { 'font-semibold': slug === currentEvent.slug })}
+            >
+              <Avatar size="xs" picture={logoUrl} name={name} square aria-hidden />
+              {name}
+            </MenuItem>
+          ))}
+        </MenuItems>
+      </MenuTransition>
     </Menu>
   );
 }
