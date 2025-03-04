@@ -2,7 +2,6 @@ import type { Locator, Page } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
 
 export class TalkEditFormComponent extends PageObject {
-  readonly heading: Locator;
   readonly titleInput: Locator;
   readonly abstractInput: Locator;
   readonly languageSelect: Locator;
@@ -10,7 +9,6 @@ export class TalkEditFormComponent extends PageObject {
 
   constructor(page: Page) {
     super(page);
-    this.heading = page.getByRole('heading', { name: 'Edit talk' });
     this.titleInput = page.getByLabel('Title');
     this.abstractInput = page.getByLabel('Abstract');
     this.languageSelect = page.getByLabel('Languages');
@@ -18,7 +16,7 @@ export class TalkEditFormComponent extends PageObject {
   }
 
   async waitFor() {
-    await this.heading.waitFor();
+    await this.titleInput.waitFor();
   }
 
   async fillForm(title: string, abstract: string, level: string, language: string, references: string) {

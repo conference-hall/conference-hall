@@ -1,13 +1,13 @@
 import { Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { VariantProps } from 'class-variance-authority';
 import { cva, cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
 import { Background, ModalTransition } from '../transitions.tsx';
+import { CloseButton } from './close-button.tsx';
 
 const layout = cva(
-  'relative transform overflow-hidden rounded-lg bg-white text:left shadow-xl transition-all w-full p-4 md:p-8',
+  'relative transform overflow-hidden rounded-xl bg-white text:left shadow-xl transition-all w-full p-4 md:p-8',
   {
     variants: {
       size: {
@@ -62,16 +62,7 @@ function Title({
       <DialogTitle as="h1" className="text-base font-semibold leading-6 text-gray-900">
         {children}
       </DialogTitle>
-      <div className="md:-mt-4 md:-mr-4 flex h-7 items-center">
-        <button
-          type="button"
-          className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
-          onClick={onClose}
-        >
-          <span className="sr-only">Close</span>
-          <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-        </button>
-      </div>
+      <CloseButton onClose={onClose} />
     </div>
   );
 }

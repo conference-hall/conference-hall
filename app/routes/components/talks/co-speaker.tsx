@@ -159,7 +159,7 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
 
         <dl className="divide-y">
           {details.map((detail) => (
-            <div key={detail.label} className="px-4 py-6 sm:px-6">
+            <div key={detail.label} className="p-4 sm:px-6">
               <dt className="text-sm font-medium leading-6 text-gray-900">{detail.label}</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 break-words">
                 {(detail.key === 'bio' || detail.key === 'references') && detail.value ? (
@@ -173,7 +173,7 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
         </dl>
 
         {speaker.survey && speaker.survey.length > 0 ? (
-          <section className="px-4 py-6 sm:px-6 space-y-6">
+          <section className="p-4 sm:px-6 space-y-6">
             <H2 variant="secondary">Survey</H2>
             <dl className="space-y-4">
               {speaker.survey?.map((question) => (
@@ -200,7 +200,7 @@ function SpeakerTitle({ name, picture, company }: SpeakerTitleProps) {
       <Avatar picture={picture} name={name} size="l" />
 
       <div className="overflow-hidden">
-        <Text weight="bold" size="xl" truncate>
+        <Text weight="semibold" size="base" truncate>
           {name}
         </Text>
         <Text variant="secondary" weight="normal" truncate>
