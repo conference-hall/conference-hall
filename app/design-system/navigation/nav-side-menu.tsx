@@ -3,8 +3,8 @@ import { NavLink } from 'react-router';
 
 import { SponsorLink } from '~/routes/components/sponsor-link.tsx';
 import { Badge } from '../badges.tsx';
-import { IconLabel } from '../icon-label.tsx';
 import { Card } from '../layouts/card.tsx';
+import { Text } from '../typography.tsx';
 
 type NavItem = { to: string; icon: React.ComponentType<{ className?: string }>; label: string; isNew?: boolean };
 
@@ -13,10 +13,13 @@ type Props = { items: Array<NavItem>; noActive?: boolean; className?: string };
 export function NavSideMenu({ items, noActive, className, ...rest }: Props) {
   return (
     <aside className={cx('w-1/5 space-y-4', className)}>
-      <Card p={4} as="nav" className="space-y-1" {...rest}>
+      <Card as="nav" className="space-y-1 p-2" {...rest}>
         {items.map((item) => (
           <NavLink key={item.to} to={item.to} className={({ isActive }) => menuStyles(isActive, noActive)} end>
-            <IconLabel icon={item.icon}>{item.label}</IconLabel>
+            <div className="flex items-center">
+              <item.icon className="mr-2 size-4 shrink-0" aria-hidden="true" />
+              <Text>{item.label}</Text>
+            </div>
             {item.isNew ? (
               <Badge color="blue" compact>
                 New
