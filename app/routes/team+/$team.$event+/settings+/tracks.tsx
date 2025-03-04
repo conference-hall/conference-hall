@@ -9,7 +9,6 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import type { Route } from './+types/tracks.ts';
-import { NewTrackButton } from './components/save-track-form.tsx';
 import { TrackList } from './components/track-list.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
@@ -76,12 +75,9 @@ export default function EventTracksSettingsRoute() {
   return (
     <>
       <Card as="section" p={8} className="space-y-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <H2>Formats</H2>
-            <Subtitle>Define talk formats available for your event proposals.</Subtitle>
-          </div>
-          <NewTrackButton type="formats" />
+        <div>
+          <H2>Formats</H2>
+          <Subtitle>Define talk formats available for your event proposals.</Subtitle>
         </div>
 
         {currentEvent.formats.length > 0 && (
@@ -104,12 +100,9 @@ export default function EventTracksSettingsRoute() {
       </Card>
 
       <Card as="section" p={8} className="space-y-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <H2>Categories</H2>
-            <Subtitle>Define talk categories available for your event proposals.</Subtitle>
-          </div>
-          <NewTrackButton type="categories" />
+        <div>
+          <H2>Categories</H2>
+          <Subtitle>Define talk categories available for your event proposals.</Subtitle>
         </div>
 
         {currentEvent.categories.length > 0 && (
