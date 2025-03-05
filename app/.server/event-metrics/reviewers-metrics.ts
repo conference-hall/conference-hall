@@ -56,10 +56,10 @@ export class ReviewersMetrics {
         id: reviewer.id,
         name: reviewer.name,
         picture: reviewer.picture,
-        reviewsCount: Number(reviewer.reviewsCount),
-        averageNote: reviewer.averageNote.toNumber(),
-        positiveCount: Number(reviewer.positiveCount),
-        negativeCount: Number(reviewer.negativeCount),
+        reviewsCount: Number(reviewer.reviewsCount ?? 0),
+        averageNote: reviewer.averageNote?.toNumber() ?? 0,
+        positiveCount: Number(reviewer.positiveCount ?? 0),
+        negativeCount: Number(reviewer.negativeCount ?? 0),
       })),
     };
   }
