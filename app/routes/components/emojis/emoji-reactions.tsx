@@ -43,7 +43,7 @@ export function EmojiReactions({ emojis, reactions, onChangeEmoji, className }: 
                 onClick={() => onChangeEmoji(emoji)}
                 className={emojiReactionStyles({ reacted: reaction.reacted })}
               >
-                <span className="font-serif text-s">{emoji.skin}</span>
+                <span className="font-serif text-[13px]">{emoji.skin}</span>
                 <Text size="xs" weight="medium">
                   {reaction.reactedBy.length}
                 </Text>
