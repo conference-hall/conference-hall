@@ -11,10 +11,8 @@ export function ChartSelector({ selected, onSelect }: Props) {
         type="button"
         onClick={() => onSelect('count')}
         className={cx(
-          'flex items-center rounded-md py-1 px-3 text-sm font-semibold outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
-          {
-            'bg-white shadow-sm': selected === 'count',
-          },
+          'flex items-center rounded-md py-1 px-3 text-sm font-semibold outline-hidden cursor-pointer focus-within:ring-2 focus-within:ring-indigo-500',
+          { 'bg-white shadow-sm': selected === 'count' },
         )}
       >
         Count
@@ -23,10 +21,8 @@ export function ChartSelector({ selected, onSelect }: Props) {
         type="button"
         onClick={() => onSelect('cumulative')}
         className={cx(
-          'flex items-center rounded-md py-1 px-3 text-sm font-semibold outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
-          {
-            'bg-white shadow-sm': selected === 'cumulative',
-          },
+          'flex items-center rounded-md py-1 px-3 text-sm font-semibold outline-hidden cursor-pointer focus-within:ring-2 focus-within:ring-indigo-500',
+          { 'bg-white shadow-sm': selected === 'cumulative' },
         )}
       >
         Cumulative

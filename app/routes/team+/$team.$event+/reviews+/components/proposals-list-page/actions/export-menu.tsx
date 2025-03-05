@@ -1,7 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { CalendarDaysIcon, CodeBracketIcon, Squares2X2Icon, TableCellsIcon } from '@heroicons/react/16/solid';
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
-import { Fragment, type HTMLProps } from 'react';
 import { Form, useFetchers, useParams, useSearchParams } from 'react-router';
 import { button } from '~/design-system/buttons.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
@@ -26,82 +25,58 @@ export function ExportMenu() {
   if (!currentTeam.userPermissions.canExportEventProposals) return null;
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu>
       <MenuButton className={button({ variant: 'secondary', loading })} disabled={loading}>
         <ArrowDownTrayIcon className="size-4 text-gray-500" aria-hidden="true" />
         <span>{loading ? 'Exporting...' : 'Export'}</span>
       </MenuButton>
+
       <MenuTransition>
         <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()}>
-          <ExportMenuLink
-            icon={CodeBracketIcon}
+          <MenuItem
+            as="a"
             href={`/team/${params.team}/${params.event}/export/json?${searchParams.toString()}`}
+            className={menuItem()}
           >
+            <CodeBracketIcon className={menuItemIcon()} aria-hidden="true" />
             As JSON
-          </ExportMenuLink>
+          </MenuItem>
 
-          <ExportMenuLink
-            icon={TableCellsIcon}
+          <MenuItem
+            as="a"
             href={`/team/${params.team}/${params.event}/export/csv?${searchParams.toString()}`}
+            className={menuItem()}
           >
+            <TableCellsIcon className={menuItemIcon()} aria-hidden="true" />
             As CSV
-          </ExportMenuLink>
+          </MenuItem>
 
-          <ExportMenuLink
-            icon={Squares2X2Icon}
+          <MenuItem
+            as="a"
             href={`/team/${params.team}/${params.event}/export/cards?${searchParams.toString()}`}
-            target="_blank"
-            rel="noreferrer"
+            className={menuItem()}
           >
+            <Squares2X2Icon className={menuItemIcon()} aria-hidden="true" />
             As printable cards
-          </ExportMenuLink>
+          </MenuItem>
 
           {isOpenPlannerEnabled ? (
-            <ExportMenuForm
-              icon={CalendarDaysIcon}
+            <MenuItem
+              as={Form}
+              method="POST"
               action={`/team/${params.team}/${params.event}/export/open-planner?${searchParams.toString()}`}
+              navigate={false}
+              fetcherKey="exports"
+              className={menuItem()}
             >
-              To OpenPlanner
-            </ExportMenuForm>
+              <CalendarDaysIcon className={menuItemIcon()} aria-hidden="true" />
+              <button type="submit" className="w-full text-left cursor-pointer">
+                To OpenPlanner
+              </button>
+            </MenuItem>
           ) : null}
         </MenuItems>
       </MenuTransition>
     </Menu>
-  );
-}
-
-type ExportMenuLinkProps = {
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  children: React.ReactNode;
-} & HTMLProps<HTMLLinkElement>;
-
-function ExportMenuLink({ href, icon: Icon, children, target, rel }: ExportMenuLinkProps) {
-  return (
-    <MenuItem as={Fragment}>
-      <a href={href} target={target} rel={rel} className={menuItem()}>
-        <Icon className={menuItemIcon()} aria-hidden="true" />
-        {children}
-      </a>
-    </MenuItem>
-  );
-}
-
-type ExportMenuFormProps = {
-  action: string;
-  icon: React.ComponentType<{ className?: string }>;
-  children: React.ReactNode;
-};
-
-function ExportMenuForm({ action, icon: Icon, children }: ExportMenuFormProps) {
-  return (
-    <MenuItem as={Fragment}>
-      <Form method="POST" action={action} navigate={false} fetcherKey="exports" className={menuItem()}>
-        <Icon className={menuItemIcon()} aria-hidden="true" />
-        <button type="submit" className="w-full text-left">
-          {children}
-        </button>
-      </Form>
-    </MenuItem>
   );
 }

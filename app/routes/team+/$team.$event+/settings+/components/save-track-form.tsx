@@ -1,13 +1,10 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { Form } from 'react-router';
-
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
-import { IconButton } from '~/design-system/icon-buttons.tsx';
 
 type TrackType = 'formats' | 'categories';
 type TrackData = { id: string; name: string; description?: string | null };
@@ -17,7 +14,7 @@ export function NewTrackButton({ type }: NewTrackButtonProps) {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <Button iconLeft={PlusIcon} onClick={() => setModalOpen(true)} variant="secondary">
+      <Button iconLeft={PlusIcon} onClick={() => setModalOpen(true)} size="s" variant="secondary">
         {type === 'formats' ? 'New format' : 'New category'}
       </Button>
       <SaveTrackFormModal type={type} isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
@@ -31,12 +28,9 @@ export function EditTrackButton({ type, initialValues }: EditTrackButtonProps) {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <IconButton
-        icon={PencilSquareIcon}
-        onClick={() => setModalOpen(true)}
-        variant="secondary"
-        label={`Edit ${initialValues.name}`}
-      />
+      <Button onClick={() => setModalOpen(true)} size="s" variant="secondary">
+        Edit
+      </Button>
       <SaveTrackFormModal
         type={type}
         initialValues={initialValues}

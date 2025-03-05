@@ -1,12 +1,10 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { ArrowDownIcon, ArrowUpIcon, ArrowsUpDownIcon } from '@heroicons/react/20/solid';
-import { Fragment } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router';
-
+import { ArrowDownIcon, ArrowUpIcon, ArrowsUpDownIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
+import { Link, useLocation, useSearchParams } from 'react-router';
 import { button } from '~/design-system/buttons.tsx';
 import { MenuTransition } from '~/design-system/transitions.tsx';
-import { menuItem, menuItems } from '../styles/menu.styles.ts';
+import { menuItem, menuItemIcon, menuItems } from '../styles/menu.styles.ts';
 
 type SortMenuProps = {
   options: Array<{ name: string; value: string }>;
@@ -20,9 +18,9 @@ export function SortMenu({ options, defaultSort, defaultOrder }: SortMenuProps) 
   const { sort = defaultSort, order = defaultOrder, ...others } = Object.fromEntries(params.entries());
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu>
       <MenuButton className={button({ variant: 'secondary' })}>
-        <ArrowsUpDownIcon className="h-4 w-4 text-gray-500" />
+        <ArrowsUpDownIcon className="size-4 text-gray-500" />
         <span>Sort by</span>
       </MenuButton>
 
@@ -34,22 +32,18 @@ export function SortMenu({ options, defaultSort, defaultOrder }: SortMenuProps) 
             const search = new URLSearchParams({ ...others, sort: value, order: orderValue });
 
             return (
-              <MenuItem as={Fragment} key={value}>
-                <Link
-                  to={{ pathname: location.pathname, search: search.toString() }}
-                  className={cx('relative', menuItem())}
-                >
-                  {name}
-                  {selected ? (
-                    <span className="absolute inset-y-0 right-0 flex items-center pr-4">
-                      {order === 'asc' ? (
-                        <ArrowDownIcon className="size-5" aria-label="Ascending sort" />
-                      ) : (
-                        <ArrowUpIcon className="size-5" aria-label="Descending sort" />
-                      )}
-                    </span>
-                  ) : null}
-                </Link>
+              <MenuItem
+                key={value}
+                as={Link}
+                to={{ pathname: location.pathname, search: search.toString() }}
+                className={cx('flex items-center justify-between', menuItem(), { 'font-semibold': selected })}
+              >
+                {name}
+                {selected && order === 'asc' ? (
+                  <ArrowDownIcon className={menuItemIcon()} aria-label="Ascending sort" />
+                ) : selected && order === 'desc' ? (
+                  <ArrowUpIcon className={menuItemIcon()} aria-label="Descending sort" />
+                ) : null}
               </MenuItem>
             );
           })}

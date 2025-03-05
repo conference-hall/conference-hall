@@ -58,7 +58,12 @@ export function SpeakerPillButton({ speaker, canEdit }: SpeakerPillButtonProps) 
 
   return (
     <>
-      <button type="button" aria-label={`View ${speaker.name} profile`} onClick={() => setOpen(true)}>
+      <button
+        type="button"
+        aria-label={`View ${speaker.name} profile`}
+        onClick={() => setOpen(true)}
+        className="cursor-pointer"
+      >
         <SpeakerPill speaker={speaker} className="hover:bg-gray-100" />
       </button>
 
@@ -108,7 +113,7 @@ function AddCoSpeakerButton({ invitationLink }: AddCoSpeakerProps) {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Add a co-speaker"
-        className="flex items-center gap-1 hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200"
+        className="flex items-center gap-1 hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200 cursor-pointer"
       >
         <PlusIcon className="h-6 w-6 text-gray-400 shrink-0" aria-hidden />
         <Text variant="secondary" size="xs">
@@ -159,7 +164,7 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
 
         <dl className="divide-y">
           {details.map((detail) => (
-            <div key={detail.label} className="px-4 py-6 sm:px-6">
+            <div key={detail.label} className="p-4 sm:px-6">
               <dt className="text-sm font-medium leading-6 text-gray-900">{detail.label}</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 break-words">
                 {(detail.key === 'bio' || detail.key === 'references') && detail.value ? (
@@ -173,7 +178,7 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
         </dl>
 
         {speaker.survey && speaker.survey.length > 0 ? (
-          <section className="px-4 py-6 sm:px-6 space-y-6">
+          <section className="p-4 sm:px-6 space-y-6">
             <H2 variant="secondary">Survey</H2>
             <dl className="space-y-4">
               {speaker.survey?.map((question) => (
@@ -200,7 +205,7 @@ function SpeakerTitle({ name, picture, company }: SpeakerTitleProps) {
       <Avatar picture={picture} name={name} size="l" />
 
       <div className="overflow-hidden">
-        <Text weight="bold" size="xl" truncate>
+        <Text weight="semibold" size="base" truncate>
           {name}
         </Text>
         <Text variant="secondary" weight="normal" truncate>

@@ -1,8 +1,8 @@
 import { Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 
 import { Background, SlideOverTransition } from '../transitions.tsx';
+import { CloseButton } from './close-button.tsx';
 
 type Props = {
   open: boolean;
@@ -29,7 +29,9 @@ export function SlideOver({ open, size = 'm', onClose, children }: Props) {
                     'max-w-4xl': size === 'xl',
                   })}
                 >
-                  <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">{children}</div>
+                  <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl sm:rounded-l-xl">
+                    {children}
+                  </div>
                 </DialogPanel>
               </SlideOverTransition>
             </div>
@@ -41,7 +43,7 @@ export function SlideOver({ open, size = 'm', onClose, children }: Props) {
 }
 
 type ContentProps = {
-  title: React.ReactNode;
+  title?: React.ReactNode;
   children: React.ReactNode;
   onClose: VoidFunction;
   className?: string;
@@ -49,24 +51,12 @@ type ContentProps = {
 
 function Content({ title, children, onClose, className }: ContentProps) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-6">
-      <div className="px-4 sm:px-6">
-        <div className="flex items-start justify-between">
-          <DialogTitle className="text-base font-semibold leading-6 text-gray-900">{title}</DialogTitle>
-          <div className="ml-3 flex h-7 items-center">
-            <button
-              type="button"
-              className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
-              onClick={onClose}
-            >
-              <span className="absolute -inset-2.5" />
-              <span className="sr-only">Close</span>
-              <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
+    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-4">
+      <div className="flex items-start justify-between px-4">
+        {title ? <DialogTitle className="text-base font-semibold leading-6 text-gray-900">{title}</DialogTitle> : null}
+        <CloseButton onClose={onClose} />
       </div>
-      <div className={cx('relative mt-6 flex-1 px-4 sm:px-6', className)}>{children}</div>
+      <div className={cx('relative mt-4 flex-1 px-4', className)}>{children}</div>
     </div>
   );
 }

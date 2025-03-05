@@ -1,5 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
-import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
+import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import {
   AdditionalInfoSchema,

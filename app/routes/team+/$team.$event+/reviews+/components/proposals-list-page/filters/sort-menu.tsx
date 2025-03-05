@@ -1,13 +1,10 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { ArrowsUpDownIcon, CheckIcon } from '@heroicons/react/20/solid';
+import { ArrowsUpDownIcon, CheckIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
-import { Fragment } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router';
-
 import { button } from '~/design-system/buttons.tsx';
+import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
-
-import { menuItem, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { sortByCommentsOptions, sortByDatesOptions, sortByReviewsOptions } from './filters.ts';
 
@@ -24,11 +21,12 @@ export function SortMenu() {
   ];
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu>
       <MenuButton className={button({ variant: 'secondary' })}>
-        <ArrowsUpDownIcon className="h-4 w-4 text-gray-500" />
+        <ArrowsUpDownIcon className="size-4 text-gray-500" />
         <span>Sort</span>
       </MenuButton>
+
       <MenuTransition>
         <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()}>
           {options.map(({ name, value }) => {
@@ -36,18 +34,14 @@ export function SortMenu() {
             const search = new URLSearchParams({ ...filters, sort: value });
 
             return (
-              <MenuItem as={Fragment} key={value}>
-                <Link
-                  to={{ pathname: location.pathname, search: search.toString() }}
-                  className={cx('relative', menuItem(), { 'font-semibold': selected })}
-                >
-                  {name}
-                  {selected ? (
-                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600">
-                      <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                  ) : null}
-                </Link>
+              <MenuItem
+                key={value}
+                as={Link}
+                to={{ pathname: location.pathname, search: search.toString() }}
+                className={cx('flex items-center justify-between', menuItem(), { 'font-semibold': selected })}
+              >
+                {name}
+                {selected ? <CheckIcon className={menuItemIcon()} aria-hidden="true" /> : null}
               </MenuItem>
             );
           })}

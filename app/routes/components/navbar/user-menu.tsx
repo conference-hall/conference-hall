@@ -6,7 +6,7 @@ import {
   MicrophoneIcon,
   PlusIcon,
   Square3Stack3DIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { Form, Link } from 'react-router';
 
@@ -124,14 +124,14 @@ function MenuLink({ to, icon: Icon, count, onClick, children }: LinkProps) {
     <li>
       <Link
         to={to}
-        className="group flex items-center gap-x-3 rounded-md p-2 text-sm leading-6 font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100"
+        className="group flex items-center gap-x-2 rounded-md p-2 text-sm leading-6 font-medium text-gray-700 hover:bg-gray-100"
         onClick={onClick}
       >
-        <Icon className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600" aria-hidden="true" />
+        <Icon className="size-5 shrink-0 text-gray-500" aria-hidden="true" />
         {children}
         {count && count > 0 ? (
           <>
-            <span className="h-2 w-2 rounded-full bg-red-400" aria-hidden="true" />
+            <span className="size-2 rounded-full bg-red-400" aria-hidden="true" />
             <span className="ml-auto w-9 min-w-max whitespace-nowrap rounded-full bg-white px-2.5 py-0.5 text-center text-xs font-medium leading-5 text-gray-600 ring-1 ring-inset ring-gray-200">
               {count}
             </span>
@@ -149,12 +149,12 @@ function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
     <button
       type="button"
       onClick={onClick}
-      className="relative flex shrink-0 rounded-full text-sm focus:outline-hidden focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+      className="relative flex shrink-0 rounded-full text-sm focus:outline-hidden focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 cursor-pointer"
     >
       <Avatar picture={picture} name={name} size="s" />
       <span className="sr-only">Open user menu</span>
       {notificationsCount > 0 && (
-        <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-gray-800" />
+        <span className="absolute bottom-0 right-0 block size-2 rounded-full bg-red-400 ring-2 ring-gray-800" />
       )}
     </button>
   );
@@ -172,12 +172,9 @@ function SignOutMenu() {
         <button
           type="submit"
           onClick={handleSignout}
-          className="group flex items-center gap-x-3 w-full text-left rounded-md p-2 text-sm leading-6 font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100"
+          className="group flex items-center gap-x-3 w-full text-left rounded-md p-2 text-sm leading-6 font-medium text-gray-700 hover:bg-gray-100 cursor-pointer"
         >
-          <ArrowRightStartOnRectangleIcon
-            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-            aria-hidden="true"
-          />
+          <ArrowRightStartOnRectangleIcon className="size-5 shrink-0 text-gray-400" aria-hidden="true" />
           Sign out
         </button>
       </Form>

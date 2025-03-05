@@ -11,7 +11,7 @@ type EmojiReactionsProps = {
   className?: string;
 };
 
-const emojiReactionStyles = cva('flex items-center gap-2 rounded-full shrink-0 h-6 px-2', {
+const emojiReactionStyles = cva('flex items-center gap-2 rounded-full shrink-0 h-6 px-2 cursor-pointer', {
   variants: {
     reacted: {
       true: 'bg-blue-50 ring-1 ring-blue-600',
@@ -43,7 +43,7 @@ export function EmojiReactions({ emojis, reactions, onChangeEmoji, className }: 
                 onClick={() => onChangeEmoji(emoji)}
                 className={emojiReactionStyles({ reacted: reaction.reacted })}
               >
-                <span className="font-serif text-s">{emoji.skin}</span>
+                <span className="font-serif text-[13px]">{emoji.skin}</span>
                 <Text size="xs" weight="medium">
                   {reaction.reactedBy.length}
                 </Text>

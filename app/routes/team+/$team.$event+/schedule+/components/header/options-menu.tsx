@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/16/solid';
 import { useParams, useSubmit } from 'react-router';
 import { button } from '~/design-system/buttons.tsx';
-import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
+import { menuItem, menuItemIcon, menuItems, menuSection, menuSeparator } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 import type { ZoomHandlers } from './use-zoom-handlers.tsx';
@@ -39,7 +39,7 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
 
       <MenuTransition>
         <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()}>
-          <MenuSection>
+          <MenuSection className={menuSection()}>
             <MenuItem
               as="button"
               onClick={zoomHandlers.zoomIn}
@@ -64,9 +64,9 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
             </MenuItem>
           </MenuSection>
 
-          <MenuSeparator className="h-px bg-gray-200" />
+          <MenuSeparator className={menuSeparator()} />
 
-          <MenuSection>
+          <MenuSection className={menuSection()}>
             <MenuItem as="button" onClick={openTracksModal} className={menuItem()}>
               <ViewColumnsIcon className={menuItemIcon()} aria-hidden="true" />
               Manage tracks
@@ -77,9 +77,9 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
             </MenuItem>
           </MenuSection>
 
-          <MenuSeparator className="h-px bg-gray-200" />
+          <MenuSeparator className={menuSeparator()} />
 
-          <MenuSection>
+          <MenuSection className={menuSection()}>
             <MenuItem as="button" className={menuItem({ variant: 'important' })} onClick={handleDelete}>
               <TrashIcon className={menuItemIcon({ variant: 'important' })} aria-hidden="true" />
               Delete schedule

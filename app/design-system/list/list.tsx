@@ -2,20 +2,17 @@ import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
-
 import { Pagination, PaginationMobile } from '~/design-system/list/pagination.tsx';
 
 // <List /> component
 export function List({ children }: { children: ReactNode }) {
-  return <div className="overflow-hidden bg-white shadow-xs ring-1 ring-gray-900/5 rounded-md">{children}</div>;
+  return <div className="overflow-hidden bg-white shadow-xs ring-1 ring-gray-200 rounded-md">{children}</div>;
 }
 
 // <List.Header /> component
 function Header({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cx('flex items-center justify-between border-b border-gray-200 px-4 py-4 sm:px-6', className)}>
-      {children}
-    </div>
+    <div className={cx('flex items-center justify-between border-b border-gray-200 p-4', className)}>{children}</div>
   );
 }
 
