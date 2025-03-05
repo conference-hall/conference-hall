@@ -80,9 +80,10 @@ export default function EventTracksSettingsRoute() {
           <Subtitle>Define talk formats available for your event proposals.</Subtitle>
         </div>
 
+        <TrackList type="formats" tracks={currentEvent.formats} />
+
         {currentEvent.formats.length > 0 && (
           <>
-            <TrackList type="formats" tracks={currentEvent.formats} />
             <ToggleGroup
               label="Format selection required"
               description="When a speaker submit a proposal, the format selection is mandatory."
@@ -105,9 +106,10 @@ export default function EventTracksSettingsRoute() {
           <Subtitle>Define talk categories available for your event proposals.</Subtitle>
         </div>
 
+        <TrackList type="categories" tracks={currentEvent.categories} />
+
         {currentEvent.categories.length > 0 && (
           <>
-            <TrackList type="categories" tracks={currentEvent.categories} />
             <ToggleGroup
               label="Category selection required"
               description="When a speaker submit a proposal, the category selection is mandatory."

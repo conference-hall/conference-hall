@@ -50,7 +50,7 @@ test('adds, edits and removes a format', async ({ page }) => {
   await expect(tracksPage.formatsAllowMultipleSwitch).toBeChecked();
 
   // Delete a format
-  await format.getByRole('button', { name: 'Remove' }).click();
+  await format.getByRole('button', { name: 'Delete' }).click();
   await expect(tracksPage.toast).toContainText('Track setting updated.');
   await expect(tracksPage.formatsList).toHaveCount(0);
 });
@@ -99,7 +99,7 @@ test('adds, edits and removes a category', async ({ page }) => {
   await expect(tracksPage.categoriesAllowMultipleSwitch).toBeChecked();
 
   // Delete a category
-  await category.getByRole('button', { name: 'Remove' }).click();
+  await category.getByRole('button', { name: 'Delete' }).click();
   await expect(tracksPage.toast).toContainText('Track setting updated.');
   await expect(tracksPage.formatsList).toHaveCount(0);
 });
