@@ -16,7 +16,9 @@ export class EventMetrics {
     return new EventMetrics(userId, userEvent);
   }
 
-  async globalMetrics() {
+  async get() {
+    await this.userEvent.needsPermission('canAccessEvent');
+
     const { id, formats, categories } = await this.userEvent.get();
 
     const proposalsCount = await this.proposalsCount(id);

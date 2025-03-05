@@ -49,10 +49,15 @@ test.describe('As a team owner', () => {
     await expect(overviewPage.dashboardCardLink('The event is public', 'Change')).toBeVisible();
     await expect(overviewPage.dashboardCardLink('Reviews are enabled', 'Change')).toBeVisible();
 
+    await overviewPage.reviewersTab.click();
+    await expect(overviewPage.reviewersList).toBeVisible();
+    await expect(overviewPage.reviewersList.getByText('Clark Kent')).toBeVisible();
+    await expect(overviewPage.reviewersList.getByText('67%')).toBeVisible();
+
+    await overviewPage.callForPaperTab.click();
     await expect(overviewPage.dashboardCard('Proposals').getByText('3')).toBeVisible();
     await expect(overviewPage.dashboardCard('Speakers').getByText('1')).toBeVisible();
     await expect(overviewPage.dashboardCard('Proposals reviewed by you.').getByText('67%')).toBeVisible();
-
     await expect(overviewPage.dashboardCardLink('Proposals by formats', format.name)).toBeVisible();
     await expect(overviewPage.dashboardCardLink('Proposals by categories', category.name)).toBeVisible();
   });

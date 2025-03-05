@@ -1,13 +1,11 @@
-import type { Locator, Page } from '@playwright/test';
+import type { Locator } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
 
 export class OverviewPage extends PageObject {
-  readonly heading: Locator;
-
-  constructor(page: Page) {
-    super(page);
-    this.heading = page.getByRole('heading', { name: 'Event overview' });
-  }
+  readonly heading: Locator = this.page.getByRole('heading', { name: 'Event overview' });
+  readonly callForPaperTab: Locator = this.page.getByRole('link', { name: 'Call for paper' });
+  readonly reviewersTab: Locator = this.page.getByRole('link', { name: 'Reviewers' });
+  readonly reviewersList: Locator = this.page.getByRole('list', { name: 'Reviewers' });
 
   async goto(team: string, event: string) {
     await this.page.goto(`/team/${team}/${event}`);
