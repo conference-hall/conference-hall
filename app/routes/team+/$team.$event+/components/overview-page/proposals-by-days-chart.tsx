@@ -1,24 +1,37 @@
+import { cx } from 'class-variance-authority';
 import { format } from 'date-fns';
+import { useState } from 'react';
 import type { TooltipProps } from 'recharts';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent.js';
 import { NoData } from '~/design-system/dashboard/no-data.tsx';
 import { Divider } from '~/design-system/divider.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 
-export type ChartType = 'cumulative' | 'count';
+type ChartType = 'cumulative' | 'count';
+
 type ChartData = Array<{ date: Date; count: number; cumulative: number }>;
 
-type ProposalsByDayChartProps = { type: ChartType; data: ChartData };
+type ProposalsByDayChartProps = { data: ChartData; className?: string };
 
-export function ProposalsByDayChart({ type, data }: ProposalsByDayChartProps) {
+export function ProposalsByDayChart({ data, className }: ProposalsByDayChartProps) {
+  const [type, setType] = useState<ChartType>('cumulative');
+
   if (data.length === 0) return <NoData />;
 
   return (
-    <ClientOnly fallback={<ChartPlaceholder />}>
-      {() => (type === 'cumulative' ? <CumulativeByDayChart data={data} /> : <CountByDayChart data={data} />)}
-    </ClientOnly>
+    <Card className={className}>
+      <div className="flex flex-row items-center justify-between">
+        <H2>Submissions by day</H2>
+        <ChartSelector selected={type} onSelect={setType} />
+      </div>
+
+      <ClientOnly fallback={<ChartPlaceholder />}>
+        {() => (type === 'cumulative' ? <CumulativeByDayChart data={data} /> : <CountByDayChart data={data} />)}
+      </ClientOnly>
+    </Card>
   );
 }
 
@@ -136,4 +149,33 @@ function CustomTooltip({ payload, label }: TooltipProps<ValueType, NameType>) {
 
 function ChartPlaceholder() {
   return <div className="h-full min-h-60 grow animate-pulse p-4" aria-hidden="true" />;
+}
+
+type ChartSelectorProps = { selected: ChartType; onSelect: (value: ChartType) => void };
+
+function ChartSelector({ selected, onSelect }: ChartSelectorProps) {
+  return (
+    <div className="flex gap-1  w-fit rounded-lg bg-slate-100 p-1 ring-1 ring-inset ring-gray-200">
+      <button
+        type="button"
+        onClick={() => onSelect('count')}
+        className={cx(
+          'flex items-center rounded-md py-1 px-3 text-sm font-semibold outline-hidden cursor-pointer focus-within:ring-2 focus-within:ring-indigo-500',
+          { 'bg-white shadow-sm': selected === 'count' },
+        )}
+      >
+        Count
+      </button>
+      <button
+        type="button"
+        onClick={() => onSelect('cumulative')}
+        className={cx(
+          'flex items-center rounded-md py-1 px-3 text-sm font-semibold outline-hidden cursor-pointer focus-within:ring-2 focus-within:ring-indigo-500',
+          { 'bg-white shadow-sm': selected === 'cumulative' },
+        )}
+      >
+        Cumulative
+      </button>
+    </div>
+  );
 }

@@ -8,6 +8,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
+import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { EventMetrics } from './event-metrics.ts';
 
 describe('EventMetrics', () => {
@@ -63,9 +64,9 @@ describe('EventMetrics', () => {
     vi.useRealTimers();
   });
 
-  describe('#metrics', () => {
+  describe('#get', () => {
     it('returns metrics for an event with proposals', async () => {
-      const metrics = await EventMetrics.for(owner.id, team.slug, event.slug).globalMetrics();
+      const metrics = await EventMetrics.for(owner.id, team.slug, event.slug).get();
 
       expect(metrics.proposalsCount).toBe(2);
       expect(metrics.speakersCount).toBe(2);
@@ -94,7 +95,7 @@ describe('EventMetrics', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
 
-      const metrics = await EventMetrics.for(owner.id, team.slug, event.slug).globalMetrics();
+      const metrics = await EventMetrics.for(owner.id, team.slug, event.slug).get();
 
       expect(metrics.proposalsCount).toBe(0);
       expect(metrics.speakersCount).toBe(0);
@@ -110,7 +111,7 @@ describe('EventMetrics', () => {
       const talk = await talkFactory({ speakers: [owner] });
       await proposalFactory({ event, talk });
 
-      const metrics = await EventMetrics.for(owner.id, team.slug, event.slug).globalMetrics();
+      const metrics = await EventMetrics.for(owner.id, team.slug, event.slug).get();
 
       expect(metrics.proposalsCount).toBe(1);
       expect(metrics.speakersCount).toBe(1);
@@ -118,6 +119,12 @@ describe('EventMetrics', () => {
       expect(metrics.byCategories).toBe(null);
       expect(metrics.byFormats).toBe(null);
       expect(metrics.byDays.length).toBe(1);
+    });
+
+    it('throws an error if the user does not have permission to access the event', async () => {
+      await expect(EventMetrics.for(owner.id, team.slug, event2.slug).get()).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
   });
 });

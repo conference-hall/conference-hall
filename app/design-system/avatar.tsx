@@ -121,17 +121,18 @@ type AvatarNameProps = {
   name?: string | null;
   subtitle?: string | null;
   variant?: 'primary' | 'secondary';
+  truncate?: boolean;
 } & AvatarProps;
 
-export function AvatarName({ name, subtitle, variant = 'primary', ...rest }: AvatarNameProps) {
+export function AvatarName({ name, subtitle, variant = 'primary', truncate, ...rest }: AvatarNameProps) {
   return (
     <div className="flex items-center">
       <Avatar name={name} {...rest} aria-hidden />
-      <div className="ml-3 text-left">
-        <Text variant={variant === 'primary' ? 'primary' : 'light'} weight="medium">
+      <div className={cx('ml-3 text-left', { truncate })}>
+        <Text variant={variant === 'primary' ? 'primary' : 'light'} weight="medium" truncate={truncate}>
           {name || 'Unknown'}
         </Text>
-        <Text variant={variant === 'primary' ? 'secondary' : 'light'} size="xs">
+        <Text variant={variant === 'primary' ? 'secondary' : 'light'} size="xs" truncate={truncate}>
           {subtitle}
         </Text>
       </div>

@@ -1,9 +1,7 @@
 import { HeartIcon, NoSymbolIcon, StarIcon, UserCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
-
 import { Text } from '~/design-system/typography.tsx';
 import { formatReviewNote } from '~/libs/formatters/reviews.ts';
-
 import { ClientOnly } from '../utils/client-only.tsx';
 
 const REVIEWS = {
@@ -52,9 +50,12 @@ export function UserReviewNote({ feeling, note }: Props) {
               {formattedNote}
             </Text>
             {feeling === 'NEUTRAL' ? (
-              <UserCircleIcon className="size-5 text-gray-700 shrink-0" aria-label={`Your review: ${formattedNote}`} />
+              <UserCircleIcon className="size-5 text-gray-700 shrink-0" aria-label={`Review: ${formattedNote}`} />
             ) : (
-              <Icon className={cx('size-5 shrink-0', color, stroke)} aria-label={`Your review: ${label}`} />
+              <Icon
+                className={cx('size-5 shrink-0', color, stroke)}
+                aria-label={`Review: ${formattedNote} (${label})`}
+              />
             )}
           </>
         )}
