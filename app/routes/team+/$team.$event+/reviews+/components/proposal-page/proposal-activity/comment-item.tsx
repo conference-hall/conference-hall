@@ -24,7 +24,12 @@ export function CommentItem({ item }: { item: FeedItem }) {
                 <span>&nbsp;&bull;&nbsp;</span>
                 <Form method="POST" className="inline-block">
                   <input type="hidden" name="commentId" value={item.id} />
-                  <button type="submit" name="intent" value="delete-comment" className="font-medium hover:underline">
+                  <button
+                    type="submit"
+                    name="intent"
+                    value="delete-comment"
+                    className="font-medium hover:underline cursor-pointer"
+                  >
                     delete
                   </button>
                 </Form>

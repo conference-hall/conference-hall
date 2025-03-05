@@ -58,7 +58,12 @@ export function SpeakerPillButton({ speaker, canEdit }: SpeakerPillButtonProps) 
 
   return (
     <>
-      <button type="button" aria-label={`View ${speaker.name} profile`} onClick={() => setOpen(true)}>
+      <button
+        type="button"
+        aria-label={`View ${speaker.name} profile`}
+        onClick={() => setOpen(true)}
+        className="cursor-pointer"
+      >
         <SpeakerPill speaker={speaker} className="hover:bg-gray-100" />
       </button>
 
@@ -108,7 +113,7 @@ function AddCoSpeakerButton({ invitationLink }: AddCoSpeakerProps) {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Add a co-speaker"
-        className="flex items-center gap-1 hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200"
+        className="flex items-center gap-1 hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200 cursor-pointer"
       >
         <PlusIcon className="h-6 w-6 text-gray-400 shrink-0" aria-hidden />
         <Text variant="secondary" size="xs">

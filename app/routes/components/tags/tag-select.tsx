@@ -71,7 +71,7 @@ function TagsListbox({ tags, canEditEventTags, children, open, onClose }: TagsLi
 
   return (
     <>
-      <ListboxButton>{children}</ListboxButton>
+      <ListboxButton className="cursor-pointer">{children}</ListboxButton>
 
       <ListboxOptions
         anchor="bottom end"
