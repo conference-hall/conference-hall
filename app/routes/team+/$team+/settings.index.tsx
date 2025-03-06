@@ -98,7 +98,7 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
                 }}
               >
                 <Button type="submit" name="intent" value="leave-team" variant="important">
-                  Leave "{currentTeam.name}" team
+                  Leave team
                 </Button>
               </Form>
             </li>
@@ -115,7 +115,7 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
               </div>
               <DeleteModalButton
                 intent="delete-team"
-                title={`Delete "${currentTeam.name}"`}
+                title="Delete team"
                 description={`This will permanently delete the "${currentTeam.name}" team, events, speakers proposals,
               reviews, comments, schedule, and settings. This action cannot be undone.`}
                 confirmationText={currentTeam.slug}

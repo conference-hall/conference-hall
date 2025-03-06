@@ -42,7 +42,7 @@ export function TeamsDropdown({ teams = [], currentTeam }: Props) {
               to={`/team/${team.slug}`}
               className={cx(menuItem(), { 'font-semibold': team.slug === currentTeam?.slug })}
             >
-              {team.name}
+              <span className="truncate">{team.name}</span>
             </MenuItem>
           ))}
 

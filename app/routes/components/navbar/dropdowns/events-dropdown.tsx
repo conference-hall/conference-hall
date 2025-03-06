@@ -55,7 +55,7 @@ export function EventsDropdown({ events = [], currentTeam, currentEvent }: Props
               className={cx(menuItem(), { 'font-semibold': slug === currentEvent.slug })}
             >
               <Avatar size="xs" picture={logoUrl} name={name} square aria-hidden />
-              {name}
+              <span className="truncate">{name}</span>
             </MenuItem>
           ))}
         </MenuItems>
