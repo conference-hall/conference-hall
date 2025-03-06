@@ -56,19 +56,19 @@ test('updates event settings', async ({ page }) => {
   await expect(generalPage.locationInput).not.toBeVisible();
 
   // Archive and restore event
-  await generalPage.archiveButton('New name').click();
+  await generalPage.archiveButton.click();
   await expect(generalPage.toast).toHaveText('Event archived.');
-  await generalPage.restoreButton('New name').click();
+  await generalPage.restoreButton.click();
   await expect(generalPage.toast).toHaveText('Event restored.');
 
   // Delete event
-  await generalPage.deleteButton('New name').click();
-  await expect(generalPage.deleteDialog('New name')).toHaveAttribute('data-open');
+  await generalPage.deleteButton.click();
+  await expect(generalPage.deleteDialog).toHaveAttribute('data-open');
 
   // Delete event modal
-  const deleteButton = generalPage.deleteDialog('New name').getByRole('button', { name: 'Delete "New name"' });
+  const deleteButton = generalPage.deleteDialog.getByRole('button', { name: 'Delete event' });
   await expect(deleteButton).toBeDisabled();
-  const deleteInput = generalPage.deleteDialog('New name').getByRole('textbox');
+  const deleteInput = generalPage.deleteDialog.getByRole('textbox');
   await deleteInput.fill('new-slug');
   await deleteButton.click();
   await expect(generalPage.toast).toHaveText('Event deleted.');

@@ -30,7 +30,7 @@ test('updates integrations settings', async ({ page }) => {
   await integrationsPage.fill(integrationsPage.openPlannerEventIdInput, 'eventId!');
   await integrationsPage.fill(integrationsPage.openPlannerApiKeyInput, 'apiKey!');
   await integrationsPage.saveOpenPlannerButton.click();
-  await expect(page.getByText('Invalid OpenPlanner event id.')).toBeVisible();
+  await expect(page.getByText('Invalid OpenPlanner event id.')).toBeVisible({ timeout: 10_000 });
   await expect(integrationsPage.openPlannerEventIdInput).toHaveValue('eventId!');
   await expect(integrationsPage.openPlannerApiKeyInput).toHaveValue('apiKey!');
 

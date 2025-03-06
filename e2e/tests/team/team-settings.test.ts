@@ -20,7 +20,7 @@ test.describe('as a team owner', () => {
     await settingsPage.goto(team.slug);
 
     // Check available navigation and actions
-    await expect(settingsPage.leaveTeamButton(team.name)).not.toBeVisible();
+    await expect(settingsPage.leaveTeamButton).not.toBeVisible();
 
     // Edit team with invalid slug
     await settingsPage.fillForm('New name', team2.slug);
@@ -36,13 +36,13 @@ test.describe('as a team owner', () => {
     await expect(settingsPage.slugInput).toHaveValue('new-slug');
 
     // Delete team
-    await settingsPage.deleteButton('New name').click();
-    await expect(settingsPage.deleteDialog('New name')).toHaveAttribute('data-open');
+    await settingsPage.deleteButton.click();
+    await expect(settingsPage.deleteDialog).toHaveAttribute('data-open');
 
     // Delete team modal
-    const deleteButton = settingsPage.deleteDialog('New name').getByRole('button', { name: 'Delete "New name"' });
+    const deleteButton = settingsPage.deleteDialog.getByRole('button', { name: 'Delete team' });
     await expect(deleteButton).toBeDisabled();
-    const deleteInput = settingsPage.deleteDialog('New name').getByRole('textbox');
+    const deleteInput = settingsPage.deleteDialog.getByRole('textbox');
     await deleteInput.fill('new-slug');
     await deleteButton.click();
     await expect(settingsPage.toast).toHaveText('Team deleted.');
@@ -108,10 +108,10 @@ test.describe('as a team member', () => {
     // Check available navigation and actions
     await settingsPage.goto(team.slug);
     await expect(settingsPage.generalPage).not.toBeVisible();
-    await expect(settingsPage.leaveTeamButton(team.name)).toBeVisible();
+    await expect(settingsPage.leaveTeamButton).toBeVisible();
 
     // Leave team
-    const speakerActivity = await settingsPage.clickOnLeaveTeam(team.name);
+    const speakerActivity = await settingsPage.clickOnLeaveTeam();
     await expect(settingsPage.toast).toHaveText("You've successfully left the team.");
     await speakerActivity.waitFor();
   });
@@ -136,10 +136,10 @@ test.describe('as a team reviewer', () => {
     // Check available navigation and actions
     await settingsPage.goto(team.slug);
     await expect(settingsPage.generalPage).not.toBeVisible();
-    await expect(settingsPage.leaveTeamButton(team.name)).toBeVisible();
+    await expect(settingsPage.leaveTeamButton).toBeVisible();
 
     // Leave team
-    const speakerActivity = await settingsPage.clickOnLeaveTeam(team.name);
+    const speakerActivity = await settingsPage.clickOnLeaveTeam();
     await expect(settingsPage.toast).toHaveText("You've successfully left the team.");
     await speakerActivity.waitFor();
   });

@@ -31,7 +31,7 @@ export const button = cva(
   },
 );
 
-const icon = cva('', {
+const icon = cva('shrink-0', {
   variants: {
     variant: {
       primary: '',

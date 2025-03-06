@@ -132,7 +132,7 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
                 iconLeft={currentEvent.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
                 className="w-full"
               >
-                {currentEvent.archived ? `Restore "${currentEvent.name}"` : `Archive "${currentEvent.name}"`}
+                {currentEvent.archived ? 'Restore event' : 'Archive event'}
               </Button>
             </Form>
           </li>
@@ -147,7 +147,7 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
               </div>
               <DeleteModalButton
                 intent="delete-event"
-                title={`Delete "${currentEvent.name}"`}
+                title="Delete event"
                 description={`This will permanently delete the "${currentEvent.name}" event, speakers proposals,
               reviews, comments, schedule, and settings. This action cannot be undone.`}
                 confirmationText={currentEvent.slug}

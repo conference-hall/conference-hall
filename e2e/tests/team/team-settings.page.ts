@@ -10,8 +10,9 @@ export class TeamSettingsPage extends PageObject {
   readonly slugInput: Locator = this.page.getByRole('textbox', { name: 'Team URL' });
   readonly members: Locator = this.page.getByRole('list', { name: 'Members list' }).locator('>li');
   readonly findMember: Locator = this.page.getByLabel('Find member');
-  readonly deleteButton = (eventName: string) => this.page.getByRole('button', { name: `Delete "${eventName}"` });
-  readonly deleteDialog = (eventName: string) => this.page.getByRole('dialog', { name: `Delete "${eventName}"` });
+  readonly leaveTeamButton: Locator = this.page.getByRole('button', { name: 'Leave team' });
+  readonly deleteButton: Locator = this.page.getByRole('button', { name: 'Delete team' });
+  readonly deleteDialog: Locator = this.page.getByRole('dialog', { name: 'Delete team' });
 
   async goto(slug: string) {
     await this.page.goto(`/team/${slug}/settings`);
@@ -33,12 +34,8 @@ export class TeamSettingsPage extends PageObject {
     await this.page.getByRole('button', { name: 'Save' }).click();
   }
 
-  leaveTeamButton(teamName: string) {
-    return this.page.getByRole('button', { name: `Leave "${teamName}" team` });
-  }
-
-  async clickOnLeaveTeam(teamName: string) {
-    await this.leaveTeamButton(teamName).click();
+  async clickOnLeaveTeam() {
+    await this.leaveTeamButton.click();
     return new ActivityPage(this.page);
   }
 
