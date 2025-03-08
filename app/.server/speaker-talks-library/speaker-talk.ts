@@ -4,7 +4,7 @@ import type { TalkSaveData } from './talks-library.types.ts';
 
 export class SpeakerTalk {
   constructor(
-    private speakerId: string,
+    private userId: string,
     private talkId: string,
   ) {}
 
@@ -15,7 +15,7 @@ export class SpeakerTalk {
   async get() {
     const talk = await db.talk.findFirst({
       where: {
-        speakers: { some: { id: this.speakerId } },
+        speakers: { some: { id: this.userId } },
         id: this.talkId,
       },
       include: {
@@ -34,16 +34,16 @@ export class SpeakerTalk {
       references: talk.references,
       archived: talk.archived,
       createdAt: talk.createdAt,
-      isOwner: this.speakerId === talk.creatorId,
+      isOwner: this.userId === talk.creatorId,
       speakers: talk.speakers
-        .map((speaker) => ({
-          id: speaker.id,
-          name: speaker.name,
-          picture: speaker.picture,
-          company: speaker.company,
-          bio: speaker.bio,
-          isOwner: speaker.id === talk.creatorId,
-          isCurrentUser: speaker.id === this.speakerId,
+        .map((user) => ({
+          userId: user.id,
+          name: user.name,
+          picture: user.picture,
+          company: user.company,
+          bio: user.bio,
+          isOwner: user.id === talk.creatorId,
+          isCurrentUser: user.id === this.userId,
         }))
         .sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
       submissions: talk.proposals
@@ -95,7 +95,7 @@ export class SpeakerTalk {
       where: {
         talk: { id: this.talkId },
         event: { slug: eventSlug },
-        legacySpeakers: { some: { id: this.speakerId } },
+        speakers: { some: { userId: this.userId } },
         isDraft: false,
       },
     });
@@ -103,7 +103,7 @@ export class SpeakerTalk {
   }
 
   private async allowed(talkId: string) {
-    const count = await db.talk.count({ where: { id: talkId, speakers: { some: { id: this.speakerId } } } });
+    const count = await db.talk.count({ where: { id: talkId, speakers: { some: { id: this.userId } } } });
     return count > 0;
   }
 }

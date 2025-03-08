@@ -49,7 +49,7 @@ export class CfpReviewsExports {
         })),
         tags: proposal.tags.map((tag) => tag.name),
         languages: proposal.languages,
-        speakers: proposal.legacySpeakers.map((speaker) => ({
+        speakers: proposal.speakers.map((speaker) => ({
           name: speaker.name,
           bio: speaker.bio,
           company: speaker.company,
@@ -84,7 +84,7 @@ export class CfpReviewsExports {
         formats: proposal.formats,
         categories: proposal.categories,
         languages: proposal.languages as string[],
-        speakers: proposal.legacySpeakers.map((speaker) => speaker.name),
+        speakers: proposal.speakers.map((speaker) => speaker.name),
         reviews: reviews.summary(),
       };
     });

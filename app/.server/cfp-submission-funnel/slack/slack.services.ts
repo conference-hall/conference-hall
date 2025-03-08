@@ -1,4 +1,4 @@
-import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, EventSpeaker, Proposal, Team } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 
 import { appUrl } from '~/libs/env/env.server.ts';
@@ -6,18 +6,18 @@ import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 
 function buildPayload(
   event: Event & { team: Team },
-  proposal: Proposal & { legacySpeakers: User[]; categories: EventCategory[]; formats: EventFormat[] },
+  proposal: Proposal & { speakers: EventSpeaker[]; categories: EventCategory[]; formats: EventFormat[] },
 ) {
   const attachment = {
     fallback: `New Talk submitted to ${event.name}`,
     pretext: `*New talk submitted to ${event.name}*`,
-    author_name: `by ${sortBy(proposal.legacySpeakers, 'name')
+    author_name: `by ${sortBy(proposal.speakers, 'name')
       .map((s) => s.name)
       .join(' & ')}`,
     title: proposal.title,
     text: proposal.abstract,
     title_link: `${appUrl()}/team/${event.team.slug}/${event.slug}/reviews/${proposal.id}`,
-    thumb_url: proposal.legacySpeakers[0].picture,
+    thumb_url: proposal.speakers[0].picture,
     color: '#ffab00',
     fields: [] as unknown[],
   };
@@ -57,7 +57,7 @@ export async function sendSubmittedTalkSlackMessage(eventId: string, proposalId:
 
   const proposal = await db.proposal.findUnique({
     where: { id: proposalId },
-    include: { legacySpeakers: true, formats: true, categories: true },
+    include: { speakers: true, formats: true, categories: true },
   });
 
   if (!proposal) return;

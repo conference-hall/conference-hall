@@ -4,24 +4,23 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import { appUrl } from '~/libs/env/env.server.ts';
 import { TalkNotFoundError } from '~/libs/errors.server.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
-
 import { SpeakerTalk } from './speaker-talk.ts';
 
 describe('SpeakerTalk', () => {
-  let speaker: User;
+  let speakerUser: User;
+
   beforeEach(async () => {
-    speaker = await userFactory();
+    speakerUser = await userFactory();
   });
 
   describe('#get', () => {
     it('returns speaker talk', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
+      const talk = await talkFactory({ speakers: [speakerUser] });
 
-      const result = await SpeakerTalk.for(speaker.id, talk.id).get();
+      const result = await SpeakerTalk.for(speakerUser.id, talk.id).get();
 
       expect(result).toEqual({
         id: talk.id,
@@ -36,11 +35,11 @@ describe('SpeakerTalk', () => {
         isOwner: true,
         speakers: [
           {
-            id: speaker.id,
-            name: speaker.name,
-            bio: speaker.bio,
-            picture: speaker.picture,
-            company: speaker.company,
+            userId: speakerUser.id,
+            name: speakerUser.name,
+            bio: speakerUser.bio,
+            picture: speakerUser.picture,
+            company: speakerUser.company,
             isOwner: true,
             isCurrentUser: true,
           },
@@ -50,30 +49,30 @@ describe('SpeakerTalk', () => {
     });
 
     it('returns cospeaker talk', async () => {
-      const owner = await userFactory();
-      await talkFactory({ speakers: [owner] });
-      const talk = await talkFactory({ speakers: [owner, speaker] });
+      const ownerUser = await userFactory();
+      await talkFactory({ speakers: [ownerUser] });
+      const talk = await talkFactory({ speakers: [ownerUser, speakerUser] });
 
-      const result = await SpeakerTalk.for(speaker.id, talk.id).get();
+      const result = await SpeakerTalk.for(speakerUser.id, talk.id).get();
 
       expect(result.id).toBe(talk.id);
       expect(result.isOwner).toBe(false);
       expect(result.speakers).toEqual([
         {
-          id: owner.id,
-          name: owner.name,
-          bio: owner.bio,
-          picture: owner.picture,
-          company: owner.company,
+          userId: ownerUser.id,
+          name: ownerUser.name,
+          bio: ownerUser.bio,
+          picture: ownerUser.picture,
+          company: ownerUser.company,
           isOwner: true,
           isCurrentUser: false,
         },
         {
-          id: speaker.id,
-          name: speaker.name,
-          bio: speaker.bio,
-          picture: speaker.picture,
-          company: speaker.company,
+          userId: speakerUser.id,
+          name: speakerUser.name,
+          bio: speakerUser.bio,
+          picture: speakerUser.picture,
+          company: speakerUser.company,
           isOwner: false,
           isCurrentUser: true,
         },
@@ -115,7 +114,7 @@ describe('SpeakerTalk', () => {
   describe('#update', () => {
     it('updates a talk into the speaker talks library', async () => {
       const { id: talkId } = await talkFactory({
-        speakers: [speaker],
+        speakers: [speakerUser],
         attributes: {
           title: 'Talk title',
           abstract: 'Talk abstract',
@@ -125,7 +124,7 @@ describe('SpeakerTalk', () => {
         },
       });
 
-      const speakerTalk = new SpeakerTalk(speaker.id, talkId);
+      const speakerTalk = new SpeakerTalk(speakerUser.id, talkId);
       const talk = await speakerTalk.update({
         title: 'Talk title updated',
         abstract: 'Talk abstract updated',
@@ -145,7 +144,7 @@ describe('SpeakerTalk', () => {
       const otherSpeaker = await userFactory();
       const talk = await talkFactory({ speakers: [otherSpeaker] });
 
-      const speakerTalk = new SpeakerTalk(speaker.id, talk.id);
+      const speakerTalk = new SpeakerTalk(speakerUser.id, talk.id);
       await expect(
         speakerTalk.update({
           title: 'Talk title',
@@ -158,7 +157,7 @@ describe('SpeakerTalk', () => {
     });
 
     it('throws an error when talk not found', async () => {
-      const speakerTalk = new SpeakerTalk(speaker.id, 'XXX');
+      const speakerTalk = new SpeakerTalk(speakerUser.id, 'XXX');
       await expect(
         speakerTalk.update({
           title: 'Talk title',
@@ -173,34 +172,34 @@ describe('SpeakerTalk', () => {
 
   describe('#archive', () => {
     it('archives a talk', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
+      const talk = await talkFactory({ speakers: [speakerUser] });
 
-      await SpeakerTalk.for(speaker.id, talk.id).archive();
+      await SpeakerTalk.for(speakerUser.id, talk.id).archive();
 
       const talkUpdated = await db.talk.findUnique({ where: { id: talk.id } });
       expect(talkUpdated?.archived).toBe(true);
     });
 
     it('throws an error when talk doesnt belong to the speaker', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
+      const talk = await talkFactory({ speakers: [speakerUser] });
       const updater = await userFactory();
 
       await expect(SpeakerTalk.for(updater.id, talk.id).archive()).rejects.toThrowError(TalkNotFoundError);
     });
 
     it('throws an error when talk not found', async () => {
-      await expect(SpeakerTalk.for(speaker.id, 'XXX').archive()).rejects.toThrowError(TalkNotFoundError);
+      await expect(SpeakerTalk.for(speakerUser.id, 'XXX').archive()).rejects.toThrowError(TalkNotFoundError);
     });
   });
 
   describe('#restore', () => {
     it('restores a archived talk', async () => {
       const talk = await talkFactory({
-        speakers: [speaker],
+        speakers: [speakerUser],
         attributes: { archived: true },
       });
 
-      await SpeakerTalk.for(speaker.id, talk.id).restore();
+      await SpeakerTalk.for(speakerUser.id, talk.id).restore();
 
       const talkUpdated = await db.talk.findUnique({ where: { id: talk.id } });
       expect(talkUpdated?.archived).toBe(false);
@@ -208,7 +207,7 @@ describe('SpeakerTalk', () => {
 
     it('throws an error when talk doesnt belong to the speaker', async () => {
       const talk = await talkFactory({
-        speakers: [speaker],
+        speakers: [speakerUser],
         attributes: { archived: true },
       });
       const updater = await userFactory();
@@ -217,16 +216,16 @@ describe('SpeakerTalk', () => {
     });
 
     it('throws an error when talk not found', async () => {
-      await expect(SpeakerTalk.for(speaker.id, 'XXX').restore()).rejects.toThrowError(TalkNotFoundError);
+      await expect(SpeakerTalk.for(speakerUser.id, 'XXX').restore()).rejects.toThrowError(TalkNotFoundError);
     });
   });
 
   describe('#removeCoSpeaker', () => {
     it('removes a cospeaker from the talk', async () => {
       const cospeaker = await userFactory();
-      const talk = await talkFactory({ speakers: [speaker, cospeaker] });
+      const talk = await talkFactory({ speakers: [speakerUser, cospeaker] });
 
-      await SpeakerTalk.for(speaker.id, talk.id).removeCoSpeaker(cospeaker.id);
+      await SpeakerTalk.for(speakerUser.id, talk.id).removeCoSpeaker(cospeaker.id);
 
       const talkUpdated = await db.talk.findUnique({
         where: { id: talk.id },
@@ -235,12 +234,12 @@ describe('SpeakerTalk', () => {
 
       const speakers = talkUpdated?.speakers.map(({ id }) => id);
       expect(speakers?.length).toBe(1);
-      expect(speakers).toContain(speaker.id);
+      expect(speakers).toContain(speakerUser.id);
     });
 
     it('throws an error when talk doesnt belong to the speaker', async () => {
       const cospeaker = await userFactory();
-      const talk = await talkFactory({ speakers: [speaker, cospeaker] });
+      const talk = await talkFactory({ speakers: [speakerUser, cospeaker] });
 
       const updater = await userFactory();
       await expect(SpeakerTalk.for(updater.id, talk.id).removeCoSpeaker(cospeaker.id)).rejects.toThrowError(
@@ -250,7 +249,7 @@ describe('SpeakerTalk', () => {
 
     it('throws an error when talk not found', async () => {
       const cospeaker = await userFactory();
-      await expect(SpeakerTalk.for(speaker.id, 'XXX').removeCoSpeaker(cospeaker.id)).rejects.toThrowError(
+      await expect(SpeakerTalk.for(speakerUser.id, 'XXX').removeCoSpeaker(cospeaker.id)).rejects.toThrowError(
         TalkNotFoundError,
       );
     });

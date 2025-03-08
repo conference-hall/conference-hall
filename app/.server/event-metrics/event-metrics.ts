@@ -52,7 +52,7 @@ export class EventMetrics {
   }
 
   private async speakersCount(eventId: string) {
-    return db.user.count({ where: { proposals: { some: { eventId, isDraft: false } } } });
+    return db.user.count({ where: { eventsSpeaker: { some: { eventId } } } });
   }
 
   private async proposalsByFormats(eventId: string, formats: Array<TrackType>) {

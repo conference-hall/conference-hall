@@ -41,7 +41,7 @@ describe('UserProposal', () => {
         isOwner: true,
         speakers: [
           {
-            id: speaker.id,
+            userId: speaker.id,
             name: speaker.name,
             bio: speaker.bio,
             picture: speaker.picture,
@@ -170,16 +170,12 @@ describe('UserProposal', () => {
 
       const proposalUpdated = await db.proposal.findUnique({
         where: { id: proposal.id },
-        include: { legacySpeakers: true, newSpeakers: true },
+        include: { speakers: true },
       });
 
-      const legacySpeakers = proposalUpdated?.legacySpeakers.map(({ id }) => id);
-      expect(legacySpeakers?.length).toBe(1);
-      expect(legacySpeakers).toContain(speaker.id);
-
-      const newSpeakers = proposalUpdated?.newSpeakers.map(({ userId }) => userId);
-      expect(newSpeakers?.length).toBe(1);
-      expect(newSpeakers).toContain(speaker.id);
+      const speakers = proposalUpdated?.speakers.map(({ userId }) => userId);
+      expect(speakers?.length).toBe(1);
+      expect(speakers).toContain(speaker.id);
     });
 
     it('throws an error when proposal doesnt belong to the speaker', async () => {

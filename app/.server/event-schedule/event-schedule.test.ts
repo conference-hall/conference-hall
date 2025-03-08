@@ -463,10 +463,10 @@ describe('EventSchedule', () => {
               formats: [],
               speakers: [
                 {
-                  id: owner.id,
-                  name: owner.name,
-                  picture: owner.picture,
-                  company: owner.company,
+                  id: proposal.speakers.at(0)?.id,
+                  name: proposal.speakers.at(0)?.name,
+                  picture: proposal.speakers.at(0)?.picture,
+                  company: proposal.speakers.at(0)?.company,
                 },
               ],
             },
@@ -537,12 +537,12 @@ describe('EventSchedule', () => {
               categories: [],
               speakers: [
                 {
-                  id: owner.id,
-                  name: owner.name,
-                  bio: owner.bio || null,
-                  company: owner.company || null,
-                  picture: owner.picture || null,
-                  socialLinks: owner.socialLinks,
+                  id: proposal.speakers.at(0)?.id,
+                  name: proposal.speakers.at(0)?.name,
+                  bio: proposal.speakers.at(0)?.bio || null,
+                  company: proposal.speakers.at(0)?.company || null,
+                  picture: proposal.speakers.at(0)?.picture || null,
+                  socialLinks: proposal.speakers.at(0)?.socialLinks,
                 },
               ],
             },

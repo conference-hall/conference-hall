@@ -12,7 +12,7 @@ export class AdminDashboard {
 
   async usersMetrics() {
     const total = await db.user.count();
-    const speakers = await db.user.count({ where: { proposals: { some: {} } } });
+    const speakers = await db.user.count({ where: { eventsSpeaker: { some: {} } } });
     const organizers = await db.teamMember.count();
 
     return { total, speakers, organizers };

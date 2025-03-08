@@ -1,8 +1,8 @@
-import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
+import { type ProposalFactory, proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
@@ -17,17 +17,17 @@ vi.mock('~/libs/integrations/open-planner.ts', () => {
 describe('Job: exportToOpenPlanner', () => {
   const postSessionsAndSpeakersMock = OpenPlanner.postSessionsAndSpeakers as Mock;
   let owner: User;
-  let speaker: User;
+  let speakerUser: User;
   let team: Team;
   let event: Event;
   let format: EventFormat;
   let category: EventCategory;
-  let proposal1: Proposal;
-  let proposal2: Proposal;
+  let proposal1: ProposalFactory;
+  let proposal2: ProposalFactory;
 
   beforeEach(async () => {
     owner = await userFactory({ traits: ['clark-kent'] });
-    speaker = await userFactory({ traits: ['peter-parker'] });
+    speakerUser = await userFactory({ traits: ['peter-parker'] });
     team = await teamFactory({ owners: [owner] });
     event = await eventFactory({ team, traits: ['withIntegration'] });
     format = await eventFormatFactory({ event });
@@ -35,12 +35,12 @@ describe('Job: exportToOpenPlanner', () => {
     proposal1 = await proposalFactory({
       event,
       formats: [format],
-      talk: await talkFactory({ speakers: [speaker] }),
+      talk: await talkFactory({ speakers: [speakerUser] }),
     });
     proposal2 = await proposalFactory({
       event,
       categories: [category],
-      talk: await talkFactory({ speakers: [speaker] }),
+      talk: await talkFactory({ speakers: [speakerUser] }),
     });
 
     postSessionsAndSpeakersMock.mockReset();
@@ -59,7 +59,7 @@ describe('Job: exportToOpenPlanner', () => {
           abstract: proposal2.abstract,
           level: proposal2.level,
           language: 'en',
-          speakerIds: [speaker.id],
+          speakerIds: proposal2.speakers.map((s) => s.id),
           categoryId: category.id,
           categoryName: category.name,
         },
@@ -69,18 +69,18 @@ describe('Job: exportToOpenPlanner', () => {
           abstract: proposal1.abstract,
           level: proposal1.level,
           language: 'en',
-          speakerIds: [speaker.id],
+          speakerIds: proposal1.speakers.map((s) => s.id),
           formatId: format.id,
           formatName: format.name,
         },
       ],
       speakers: [
         {
-          id: speaker.id,
-          name: speaker.name,
-          bio: speaker.bio,
-          company: speaker.company,
-          photoUrl: speaker.picture,
+          id: proposal1.speakers.at(0)?.id,
+          name: proposal1.speakers.at(0)?.name,
+          bio: proposal1.speakers.at(0)?.bio,
+          company: proposal1.speakers.at(0)?.company,
+          photoUrl: proposal1.speakers.at(0)?.picture,
           socials: [],
         },
       ],

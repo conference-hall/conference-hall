@@ -5,6 +5,8 @@ import { EventSpeaker } from '~/.server/shared/event-speaker.ts';
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 
+export type ProposalFactory = Awaited<ReturnType<typeof proposalFactory>>;
+
 const TRAITS = {
   draft: { isDraft: true },
   accepted: { deliberationStatus: DeliberationStatus.ACCEPTED },
@@ -46,8 +48,7 @@ type FactoryOptions = {
 export const proposalFactory = async (options: FactoryOptions) => {
   const { attributes = {}, traits = [], talk, event, formats, categories, tags } = options;
 
-  // TEMP: To use when speaker double-write is removed
-  const newSpeakers = await EventSpeaker.for(event.id).upsertForUsers(talk.speakers);
+  const speakers = await EventSpeaker.for(event.id).upsertForUsers(talk.speakers);
 
   const defaultAttributes: Prisma.ProposalCreateInput = {
     title: talk?.title || randPost().title,
@@ -56,8 +57,7 @@ export const proposalFactory = async (options: FactoryOptions) => {
     languages: talk?.languages || ['en'],
     level: talk?.level || TalkLevel.INTERMEDIATE,
     talk: { connect: { id: talk.id } },
-    legacySpeakers: { connect: talk.speakers.map(({ id }) => ({ id })) },
-    newSpeakers: { connect: newSpeakers.map(({ id }) => ({ id })) },
+    speakers: { connect: speakers.map(({ id }) => ({ id })) },
     event: { connect: { id: event.id } },
     isDraft: false,
     createdAt: new Date(),
@@ -79,5 +79,5 @@ export const proposalFactory = async (options: FactoryOptions) => {
     ...attributes,
   };
 
-  return db.proposal.create({ data, include: { event: true } });
+  return db.proposal.create({ data, include: { event: true, speakers: true } });
 };

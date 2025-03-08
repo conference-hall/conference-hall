@@ -29,10 +29,10 @@ export class TalksLibrary {
       title: talk.title,
       archived: talk.archived,
       createdAt: talk.createdAt,
-      speakers: talk.speakers.map((speaker) => ({
-        id: speaker.id,
-        name: speaker.name,
-        picture: speaker.picture,
+      speakers: talk.speakers.map((user) => ({
+        userId: user.id,
+        name: user.name,
+        picture: user.picture,
       })),
     }));
   }
@@ -51,10 +51,10 @@ export class TalksLibrary {
     return talks.map((talk) => ({
       id: talk.id,
       title: talk.title,
-      speakers: talk.speakers.map((speaker) => ({
-        id: speaker.id,
-        name: speaker.name,
-        picture: speaker.picture,
+      speakers: talk.speakers.map((user) => ({
+        userId: user.id,
+        name: user.name,
+        picture: user.picture,
       })),
     }));
   }
