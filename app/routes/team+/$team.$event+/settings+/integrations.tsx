@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { Form } from 'react-router';
 import { z } from 'zod';
 import { EventIntegrations } from '~/.server/event-settings/event-integrations.ts';
@@ -46,14 +47,22 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
       const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
       const data = { id: resultId.value.id, name: 'OPEN_PLANNER', configuration: resultConfig.value } as const;
-
       await eventIntegrations.save(data);
+      return toast('success', 'OpenPlanner integration is enabled.');
+    }
+    case 'check-open-planner-integration': {
+      const resultId = parseWithZod(form, { schema: z.object({ id: z.string().optional() }) });
+      if (resultId.status !== 'success') return toast('error', 'Something went wrong.');
+
+      const resultConfig = parseWithZod(form, { schema: OpenPlannerConfigSchema });
+      if (resultConfig.status !== 'success') return resultConfig.error;
+
+      const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
+      const data = { id: resultId.value.id, name: 'OPEN_PLANNER', configuration: resultConfig.value } as const;
       const result = await eventIntegrations.checkConfiguration(data);
 
-      if (result && !result.success) {
-        return { configurationError: [result.error] } as Record<string, string[]>;
-      }
-      return toast('success', 'Integration is enabled.');
+      if (!result?.success) return toast('error', `OpenPlanner issue: ${result?.error}`);
+      return toast('success', 'OpenPlanner integration is working.');
     }
     case 'disable-integration': {
       const resultId = parseWithZod(form, { schema: z.object({ id: z.string() }) });
@@ -134,9 +143,6 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
               defaultValue={openPlanner?.configuration?.apiKey ?? ''}
               error={errors?.apiKey}
             />
-
-            {errors?.configurationError ? <Callout title={errors.configurationError[0]} variant="error" /> : null}
-
             <input type="hidden" name="id" value={openPlanner?.id} />
           </Form>
 
@@ -149,15 +155,28 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
 
         <Card.Actions>
           {openPlanner ? (
-            <Button
-              type="submit"
-              name="intent"
-              value="disable-integration"
-              variant="important"
-              form="openplanner-integration-form"
-            >
-              Disable
-            </Button>
+            <>
+              <Button
+                type="submit"
+                name="intent"
+                value="disable-integration"
+                variant="important"
+                form="openplanner-integration-form"
+                iconLeft={XCircleIcon}
+              >
+                Disable
+              </Button>
+              <Button
+                type="submit"
+                name="intent"
+                value="check-open-planner-integration"
+                variant="secondary"
+                form="openplanner-integration-form"
+                iconLeft={CheckCircleIcon}
+              >
+                Test connection
+              </Button>
+            </>
           ) : null}
           <Button type="submit" name="intent" value="save-open-planner-integration" form="openplanner-integration-form">
             Save OpenPlanner integration
