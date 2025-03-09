@@ -9,6 +9,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
+import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -49,8 +50,8 @@ export default function ResetPassword() {
       setLoading(true);
       await Firebase.confirmPasswordReset(getClientAuth(), oobCode, password);
       navigate(getPathFromContinueUrl(continueUrl));
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      setError(getFirebaseError(error));
     } finally {
       setLoading(false);
     }

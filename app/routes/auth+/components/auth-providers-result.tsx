@@ -2,6 +2,7 @@ import * as Firebase from 'firebase/auth';
 import { useEffect } from 'react';
 import { useFetcher } from 'react-router';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
+import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 
 type AuthProvidersResultProps = {
@@ -23,7 +24,7 @@ export function AuthProvidersResult({ redirectTo, setError }: AuthProvidersResul
         const token = await credentials.user.getIdToken();
         submit({ token, redirectTo }, { method: 'POST', action: '/auth/login' });
       })
-      .catch((error) => setError(error.message));
+      .catch((error) => setError(getFirebaseError(error)));
   }, [submit, redirectTo, setError]);
 
   return (

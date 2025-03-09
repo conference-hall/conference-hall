@@ -5,6 +5,7 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
+import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { PasswordInput } from './password-input.tsx';
 
@@ -31,8 +32,8 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
       await Firebase.updateProfile(credentials.user, { displayName: name });
       const token = await credentials.user.getIdToken(true);
       await fetcher.submit({ token, redirectTo }, { method: 'POST', action: '/auth/login' });
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      setError(getFirebaseError(error));
     } finally {
       setSubmitting(false);
     }
