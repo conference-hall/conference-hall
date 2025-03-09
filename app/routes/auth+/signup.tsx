@@ -32,7 +32,7 @@ export default function Signup() {
   const redirectTo = searchParams.get('redirectTo') || '/';
 
   return (
-    <Page className="flex flex-col items-center justify-center">
+    <Page>
       <div className="flex flex-col items-center pt-8 sm:pt-16 sm:mx-auto sm:w-full sm:max-w-md">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
         <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -40,17 +40,15 @@ export default function Signup() {
         </h2>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-        <Card className="p-6 sm:p-12 space-y-8">
-          <EmailPasswordSignup redirectTo={redirectTo} />
+      <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
+        <EmailPasswordSignup redirectTo={redirectTo} />
 
-          <DividerWithLabel label="Or continue with" />
+        <DividerWithLabel label="Or" />
 
-          <AuthProvidersSignin redirectTo={redirectTo} />
-        </Card>
-      </div>
+        <AuthProvidersSignin redirectTo={redirectTo} withEmailPasswordSignin />
+      </Card>
 
-      <Subtitle>
+      <Subtitle className="text-center my-8">
         Already have an account?{' '}
         <Link to={{ pathname: '/auth/login', search: `${searchParams}` }} weight="semibold">
           Sign in

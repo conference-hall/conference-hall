@@ -45,7 +45,7 @@ export default function Login({ loaderData }: Route.ComponentProps) {
   }
 
   return (
-    <Page className="flex flex-col items-center justify-center">
+    <Page>
       <div className="flex flex-col items-center pt-8 sm:pt-16 sm:mx-auto sm:w-full sm:max-w-md">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
         <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -53,20 +53,18 @@ export default function Login({ loaderData }: Route.ComponentProps) {
         </h2>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-        <Card className="p-6 sm:p-12 space-y-8">
-          {withEmailPasswordSignin ? <EmailPasswordSignin redirectTo={redirectTo} /> : null}
+      <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
+        {withEmailPasswordSignin ? <EmailPasswordSignin redirectTo={redirectTo} /> : null}
 
-          <DividerWithLabel label={withEmailPasswordSignin ? 'Or continue with' : 'Continue with'} />
+        <DividerWithLabel label={withEmailPasswordSignin ? 'Or' : 'Continue with'} />
 
-          <AuthProvidersSignin redirectTo={redirectTo} />
+        <AuthProvidersSignin redirectTo={redirectTo} withEmailPasswordSignin={withEmailPasswordSignin} />
 
-          {providerError ? <Callout variant="error">{providerError}</Callout> : null}
-        </Card>
-      </div>
+        {providerError ? <Callout variant="error">{providerError}</Callout> : null}
+      </Card>
 
       {withEmailPasswordSignin ? (
-        <Subtitle>
+        <Subtitle className="text-center my-8">
           Don't have an account?{' '}
           <Link to={{ pathname: '/auth/signup', search: `${searchParams}` }} weight="semibold">
             Create your account
