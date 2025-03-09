@@ -12,6 +12,7 @@ export type InputProps = {
   icon?: React.ComponentType<{ className?: string }>;
   size?: 'm' | 'l';
   color?: 'light' | 'dark';
+  children?: React.ReactNode;
 } & Omit<React.ComponentProps<'input'>, 'size'>;
 
 export function Input({
@@ -25,6 +26,7 @@ export function Input({
   color,
   size,
   className,
+  children,
   ref,
   ...rest
 }: InputProps) {
@@ -53,6 +55,7 @@ export function Input({
           aria-invalid={Boolean(error)}
           aria-describedby={`${name}-describe`}
         />
+        {children}
       </div>
       {(error || description) && (
         <p id={`${name}-describe`} className={descriptionStyle({ color, error: !!error })}>

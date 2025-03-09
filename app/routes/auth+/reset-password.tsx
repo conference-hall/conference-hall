@@ -3,7 +3,6 @@ import { type FormEvent, useState } from 'react';
 import { Form, redirect, useNavigate, useSearchParams } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -14,6 +13,7 @@ import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/login.ts';
+import { PasswordInput } from './components/password-input.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Reset password | Conference Hall' }]);
@@ -71,15 +71,8 @@ export default function ResetPassword() {
         </Subtitle>
 
         <Form className="space-y-4" onSubmit={resetPassword}>
-          <Input
-            label="New password"
-            placeholder="••••••••"
-            name="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <PasswordInput value={password} onChange={setPassword} isNewPassword />
+
           <Button type="submit" variant="primary" disabled={loading} className="w-full mt-2">
             {loading ? <LoadingIcon className="size-4" /> : 'Change your password'}
           </Button>

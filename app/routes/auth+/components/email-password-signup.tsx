@@ -6,6 +6,7 @@ import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
+import { PasswordInput } from './password-input.tsx';
 
 type EmailPasswordSignupProps = { redirectTo: string; defaultEmail: string | null };
 
@@ -57,15 +58,7 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
         onChange={(e) => setEmail(e.target.value)}
         required
       />
-      <Input
-        label="Password"
-        placeholder="••••••••"
-        name="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
+      <PasswordInput value={password} onChange={setPassword} isNewPassword />
 
       <Button type="submit" variant="primary" disabled={loading} className="w-full mt-2">
         {loading ? <LoadingIcon className="size-4" /> : 'Create your account'}
