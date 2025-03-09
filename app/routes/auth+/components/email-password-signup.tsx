@@ -7,12 +7,12 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 
-type EmailPasswordSignupProps = { redirectTo: string };
+type EmailPasswordSignupProps = { redirectTo: string; defaultEmail: string | null };
 
-export function EmailPasswordSignup({ redirectTo }: EmailPasswordSignupProps) {
+export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordSignupProps) {
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [email, setEmail] = useState('');
+  const [error, setError] = useState<string>('');
+  const [email, setEmail] = useState(defaultEmail || '');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
@@ -23,6 +23,7 @@ export function EmailPasswordSignup({ redirectTo }: EmailPasswordSignupProps) {
   const signUp = async () => {
     if (loading) return;
     try {
+      setError('');
       setSubmitting(true);
       const clientAuth = getClientAuth();
       const credentials = await Firebase.createUserWithEmailAndPassword(clientAuth, email, password);
@@ -56,18 +57,15 @@ export function EmailPasswordSignup({ redirectTo }: EmailPasswordSignupProps) {
         onChange={(e) => setEmail(e.target.value)}
         required
       />
-
-      <div>
-        <Input
-          label="Password"
-          placeholder="••••••••"
-          name="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </div>
+      <Input
+        label="Password"
+        placeholder="••••••••"
+        name="password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
 
       <Button type="submit" variant="primary" disabled={loading} className="w-full mt-2">
         {loading ? <LoadingIcon className="size-4" /> : 'Create your account'}

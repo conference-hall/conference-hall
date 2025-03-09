@@ -9,12 +9,12 @@ import { Link } from '~/design-system/links.tsx';
 import { Label } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 
-type EmailPasswordSigninProps = { redirectTo: string };
+type EmailPasswordSigninProps = { redirectTo: string; defaultEmail: string | null };
 
-export function EmailPasswordSignin({ redirectTo }: EmailPasswordSigninProps) {
+export function EmailPasswordSignin({ redirectTo, defaultEmail }: EmailPasswordSigninProps) {
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [email, setEmail] = useState('');
+  const [error, setError] = useState<string>('');
+  const [email, setEmail] = useState(defaultEmail || '');
   const [password, setPassword] = useState('');
 
   const fetcher = useFetcher();
@@ -24,6 +24,7 @@ export function EmailPasswordSignin({ redirectTo }: EmailPasswordSigninProps) {
   const signIn = async () => {
     if (loading) return;
     try {
+      setError('');
       setSubmitting(true);
       const credentials = await Firebase.signInWithEmailAndPassword(getClientAuth(), email, password);
       const token = await credentials.user.getIdToken();
@@ -50,7 +51,10 @@ export function EmailPasswordSignin({ redirectTo }: EmailPasswordSigninProps) {
       <div>
         <div className="flex justify-between mb-1">
           <Label htmlFor="password">Password</Label>
-          <Link to="/auth/forgot-password" weight="semibold">
+          <Link
+            to={{ pathname: '/auth/forgot-password', search: email ? `?email=${email}` : undefined }}
+            weight="semibold"
+          >
             Forgot password?
           </Link>
         </div>

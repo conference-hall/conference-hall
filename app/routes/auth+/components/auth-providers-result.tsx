@@ -13,9 +13,8 @@ export function AuthProvidersResult({ redirectTo, setError }: AuthProvidersResul
   const { submit } = useFetcher();
 
   useEffect(() => {
-    const clientAuth = getClientAuth();
-
-    Firebase.getRedirectResult(clientAuth)
+    setError('');
+    Firebase.getRedirectResult(getClientAuth())
       .then(async (credentials) => {
         if (!credentials) {
           setError('Sign in failed. Please try again.');
