@@ -13,7 +13,7 @@ import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import type { Route } from './+types/login.ts';
+import type { Route } from './+types/reset-password.ts';
 import { PasswordInput } from './components/password-input.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
