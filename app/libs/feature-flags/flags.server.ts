@@ -15,7 +15,7 @@ async function getClient() {
     return global.__flags as FlagsClient<typeof flagsConfig>;
   }
 
-  if (!isTest) {
+  if (!isTest && isProduction) {
     console.info('🚩 Feature flags config loaded.');
   }
 

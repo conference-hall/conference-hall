@@ -26,11 +26,14 @@ export default defineConfig({
     { name: 'browser', use: { ...devices['Desktop Chrome'] }, dependencies: ['setup'] },
   ],
 
-  webServer: {
-    command: CI ? 'npm run start' : 'npm run dev',
-    url: APP_URL,
-    reuseExistingServer: !CI,
-  },
+  webServer: [
+    { command: 'npm run jobs:start' },
+    {
+      command: CI ? 'npm run start' : 'npm run dev',
+      url: APP_URL,
+      reuseExistingServer: !CI,
+    },
+  ],
 
   use: {
     baseURL: APP_URL,
