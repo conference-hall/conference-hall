@@ -40,3 +40,18 @@ export class ForgotPasswordPage extends PageObject {
     await this.heading.waitFor();
   }
 }
+
+export class ResetPasswordPage extends PageObject {
+  readonly heading: Locator = this.page.getByRole('heading', { name: 'Change your password' });
+  readonly passwordInput: Locator = this.page.getByLabel('Password');
+  readonly resetPasswordButton: Locator = this.page.getByRole('button', { name: 'Change your password' });
+
+  async goto() {
+    await this.page.goto('/auth/reset-password');
+    await this.waitFor();
+  }
+
+  async waitFor() {
+    await this.heading.waitFor();
+  }
+}
