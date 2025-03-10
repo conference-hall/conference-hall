@@ -1,6 +1,6 @@
 import type { Session } from 'react-router';
 import { createCookieSessionStorage, redirect } from 'react-router';
-import { UserRegistration } from '~/.server/user-registration/user-registration.ts';
+import { UserAccount } from '~/.server/user-registration/user-account.ts';
 import { auth as serverAuth } from './firebase.server.ts';
 
 const MAX_AGE_SEC = 60 * 60 * 24 * 10; // 10 days
@@ -36,7 +36,7 @@ export async function createSession(request: Request) {
     const { uid, name, email, email_verified, picture, firebase } = await serverAuth.verifyIdToken(token, true);
 
     const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
-    const userId = await UserRegistration.register({
+    const userId = await UserAccount.register({
       uid,
       name,
       email,

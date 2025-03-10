@@ -1,12 +1,18 @@
 import { db } from 'prisma/db.server.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import type { Mock } from 'vitest';
+import { sendEmail } from '~/emails/send-email.job.ts';
+import { auth } from '../../libs/auth/firebase.server.ts';
+import { UserAccount } from './user-account.ts';
 
-import { UserRegistration } from './user-registration.ts';
+vi.mock('../../libs/auth/firebase.server.ts', () => ({
+  auth: { generatePasswordResetLink: vi.fn() },
+}));
 
-describe('UserRegistration', () => {
+describe('UserAccount', () => {
   describe('register', () => {
     it('register a new user if doesnt exists', async () => {
-      const userId = await UserRegistration.register({
+      const userId = await UserAccount.register({
         uid: '123',
         name: 'Bob',
         email: 'bob@example.com',
@@ -29,7 +35,7 @@ describe('UserRegistration', () => {
     });
 
     it('register a new user with some default values', async () => {
-      const userId = await UserRegistration.register({
+      const userId = await UserAccount.register({
         uid: '123',
         name: 'Bob',
         provider: 'google.com',
@@ -54,7 +60,7 @@ describe('UserRegistration', () => {
 
       if (!account) throw new Error('Account not found');
 
-      const userId = await UserRegistration.register({
+      const userId = await UserAccount.register({
         uid: account.uid,
         name: 'Bob',
         email: 'bob@example.com',
@@ -63,6 +69,47 @@ describe('UserRegistration', () => {
       });
 
       expect(userId).toEqual(user.id);
+    });
+  });
+
+  describe('sendResetPasswordEmail', () => {
+    it('sends a reset password email', async () => {
+      const generatePasswordResetLinkMock = auth.generatePasswordResetLink as Mock;
+      generatePasswordResetLinkMock.mockResolvedValue('https://firebase.app/auth?mode=resetPassword&oobCode=my-code');
+
+      await UserAccount.sendResetPasswordEmail('foo@example.com');
+
+      expect(generatePasswordResetLinkMock).toHaveBeenCalledWith('foo@example.com');
+      expect(sendEmail.trigger).toHaveBeenCalledWith({
+        template: 'auth/reset-password',
+        from: 'Conference Hall <no-reply@mg.conference-hall.io>',
+        to: ['foo@example.com'],
+        subject: 'Reset your password for Conference Hall',
+        data: {
+          email: 'foo@example.com',
+          passwordResetUrl: 'http://127.0.0.1:3000/auth/reset-password?oobCode=my-code&email=foo%40example.com',
+        },
+      });
+    });
+
+    it('does nothing if no oobCode returned by firebase', async () => {
+      const generatePasswordResetLinkMock = auth.generatePasswordResetLink as Mock;
+      generatePasswordResetLinkMock.mockResolvedValue('https://firebase.app/auth?mode=resetPassword');
+
+      await UserAccount.sendResetPasswordEmail('foo@example.com');
+
+      expect(generatePasswordResetLinkMock).toHaveBeenCalledWith('foo@example.com');
+      expect(sendEmail.trigger).not.toHaveBeenCalled();
+    });
+
+    it('does nothing if firebase fails to generate the email link (eg. if account does not exist)', async () => {
+      const generatePasswordResetLinkMock = auth.generatePasswordResetLink as Mock;
+      generatePasswordResetLinkMock.mockRejectedValue('User account does not exist');
+
+      await UserAccount.sendResetPasswordEmail('foo@example.com');
+
+      expect(generatePasswordResetLinkMock).toHaveBeenCalledWith('foo@example.com');
+      expect(sendEmail.trigger).not.toHaveBeenCalled();
     });
   });
 });
