@@ -7,4 +7,10 @@ export default defineFlagsConfig({
     defaultValue: false,
     tags: ['frontend'] as const,
   },
+  emailPasswordSignin: {
+    description: 'Enables email and password sign in.',
+    type: 'boolean',
+    defaultValue: false,
+    tags: ['frontend'] as const,
+  },
 });

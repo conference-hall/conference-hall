@@ -1,14 +1,19 @@
 import type { Locator, Page } from '@playwright/test';
+import { UserMenuComponent } from './common/user-menu.component.ts';
 
 export class PageObject {
   readonly page: Page;
   readonly toast: Locator;
   readonly forbiddenPage: Locator;
+  readonly loginLink: Locator;
+  readonly userMenu: UserMenuComponent;
 
   constructor(page: Page) {
     this.page = page;
     this.toast = page.getByLabel('Notifications').locator('[data-sonner-toast]').first();
     this.forbiddenPage = page.getByRole('heading', { name: 'Forbidden action', exact: true });
+    this.loginLink = this.page.getByRole('link', { name: 'Login' });
+    this.userMenu = new UserMenuComponent(page);
   }
 
   async closeModal() {
