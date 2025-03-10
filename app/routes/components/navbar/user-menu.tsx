@@ -8,7 +8,7 @@ import {
   Square3Stack3DIcon,
 } from '@heroicons/react/20/solid';
 import { useState } from 'react';
-import { Form, Link } from 'react-router';
+import { Link, useSubmit } from 'react-router';
 
 import { Avatar, AvatarName } from '~/design-system/avatar.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
@@ -161,23 +161,26 @@ function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
 }
 
 function SignOutMenu() {
-  const handleSignout = async () => {
-    const clientAuth = getClientAuth();
-    await clientAuth.signOut();
+  const submit = useSubmit();
+
+  const signOut = async () => {
+    try {
+      await getClientAuth().signOut();
+    } finally {
+      await submit({}, { method: 'POST', action: '/auth/logout' });
+    }
   };
 
   return (
     <li>
-      <Form method="POST" onSubmit={handleSignout} action="/auth/logout">
-        <button
-          type="submit"
-          onClick={handleSignout}
-          className="group flex items-center gap-x-3 w-full text-left rounded-md p-2 text-sm leading-6 font-medium text-gray-700 hover:bg-gray-100 cursor-pointer"
-        >
-          <ArrowRightStartOnRectangleIcon className="size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          Sign out
-        </button>
-      </Form>
+      <button
+        type="submit"
+        onClick={signOut}
+        className="group flex items-center gap-x-3 w-full text-left rounded-md p-2 text-sm leading-6 font-medium text-gray-700 hover:bg-gray-100 cursor-pointer"
+      >
+        <ArrowRightStartOnRectangleIcon className="size-5 shrink-0 text-gray-400" aria-hidden="true" />
+        Sign out
+      </button>
     </li>
   );
 }
