@@ -1,17 +1,8 @@
 import * as Firebase from 'firebase/auth';
 import { useCallback } from 'react';
 import { Button } from '~/design-system/buttons.tsx';
-import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
-import { GoogleIcon } from '~/design-system/icons/google-icon.tsx';
-import { XIcon } from '~/design-system/icons/x-icon.tsx';
-import { getClientAuth } from '~/libs/auth/firebase.ts';
+import { PROVIDERS, type ProviderId, getClientAuth } from '~/libs/auth/firebase.ts';
 import { useHydrated } from '~/routes/components/utils/use-hydrated.ts';
-
-const PROVIDERS = {
-  google: { label: 'Google', icon: GoogleIcon },
-  github: { label: 'GitHub', icon: GitHubIcon },
-  x: { label: 'X.com', icon: XIcon },
-} as const;
 
 type AuthProvidersSigninProps = { redirectTo: string; withEmailPasswordSignin: boolean };
 
@@ -19,7 +10,7 @@ export function AuthProvidersSignin({ redirectTo, withEmailPasswordSignin }: Aut
   const hydrated = useHydrated();
 
   const signIn = useCallback(
-    (provider: string) => {
+    (provider: ProviderId) => {
       // Set "from" in url to set loading state when redirected back from auth
       if (hydrated) {
         const { protocol, host } = window.location;
@@ -27,19 +18,19 @@ export function AuthProvidersSignin({ redirectTo, withEmailPasswordSignin }: Aut
         window.history.pushState({ path: newurl }, '', newurl);
       }
 
-      if (provider === 'google') {
+      if (provider === 'google.com') {
         const authProvider = new Firebase.GoogleAuthProvider();
         authProvider.setCustomParameters({ prompt: 'select_account' });
         return Firebase.signInWithRedirect(getClientAuth(), authProvider);
       }
 
-      if (provider === 'x') {
-        const authProvider = new Firebase.TwitterAuthProvider();
+      if (provider === 'github.com') {
+        const authProvider = new Firebase.GithubAuthProvider();
         return Firebase.signInWithRedirect(getClientAuth(), authProvider);
       }
 
-      if (provider === 'github') {
-        const authProvider = new Firebase.GithubAuthProvider();
+      if (provider === 'twitter.com') {
+        const authProvider = new Firebase.TwitterAuthProvider();
         return Firebase.signInWithRedirect(getClientAuth(), authProvider);
       }
     },
@@ -48,8 +39,8 @@ export function AuthProvidersSignin({ redirectTo, withEmailPasswordSignin }: Aut
 
   return (
     <div className="flex flex-col gap-4">
-      {Object.entries(PROVIDERS).map(([provider, { label, icon: Icon }]) => (
-        <Button key={provider} type="button" onClick={() => signIn(provider)} variant="secondary" className="w-full">
+      {PROVIDERS.map(({ id, label, icon: Icon }) => (
+        <Button key={id} type="button" onClick={() => signIn(id)} variant="secondary" className="w-full">
           <Icon className="size-4" />
           {withEmailPasswordSignin ? `Continue with ${label}` : label}
         </Button>
