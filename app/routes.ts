@@ -44,7 +44,10 @@ export default [
   // Speaker pages
   route('speaker', './routes/speaker+/_layout.tsx', [
     index('./routes/speaker+/index.tsx'),
-    route('profile', './routes/speaker+/profile.tsx'),
+    route('profile', './routes/speaker+/profile.tsx', [
+      index('./routes/speaker+/profile.index.tsx'),
+      route('security', './routes/speaker+/profile.security.tsx'),
+    ]),
     route('talks', './routes/speaker+/talks.index.tsx'),
     route('talks/new', './routes/speaker+/talks.new.tsx'),
     route('talks/:talk', './routes/speaker+/talks.$talk.index.tsx'),
