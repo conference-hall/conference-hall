@@ -30,14 +30,16 @@ test('Signup flow with email and password', async ({ page }) => {
   await signupPage.passwordInput.fill('password123');
   await signupPage.signupButton.click();
 
-  // signout
-  await homePage.waitFor();
-  await homePage.userMenu.openButton.click({ force: true });
-  await homePage.userMenu.waitForDialogOpen(uniqueEmail);
-  await homePage.userMenu.signOutButton.click();
+  // check email verification
+  await signupPage.emailVerificationSent();
+  await mailbox.goto();
+  await mailbox.waitForEmail('Verify your email address for Conference Hall');
+  const emailVerificationLink = await mailbox.emailContent
+    .getByRole('link', { name: 'Verify your email address' })
+    .getAttribute('href');
 
   // forgot password
-  await homePage.loginLink.click();
+  await page.goto(emailVerificationLink || '');
   await loginPage.forgotPasswordLink.click();
   await forgotPasswordPage.waitFor();
   await forgotPasswordPage.emailInput.fill(uniqueEmail);
@@ -64,8 +66,10 @@ test('Signup flow with email and password', async ({ page }) => {
   await loginPage.passwordInput.fill('123password');
   await loginPage.signinButton.click();
 
-  // check connected user
+  // signout
   await homePage.waitFor();
   await homePage.userMenu.openButton.click({ force: true });
   await homePage.userMenu.waitForDialogOpen(uniqueEmail);
+  await homePage.userMenu.signOutButton.click();
+  await expect(homePage.loginLink).toBeVisible();
 });

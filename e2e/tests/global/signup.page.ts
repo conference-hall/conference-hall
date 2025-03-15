@@ -17,4 +17,8 @@ export class SignupPage extends PageObject {
   async waitFor() {
     await this.heading.waitFor();
   }
+
+  async emailVerificationSent() {
+    await this.page.getByRole('heading', { name: 'Email verification' }).waitFor();
+  }
 }

@@ -6,7 +6,7 @@ import { auth } from '../../libs/auth/firebase.server.ts';
 import { UserAccount } from './user-account.ts';
 
 vi.mock('../../libs/auth/firebase.server.ts', () => ({
-  auth: { generatePasswordResetLink: vi.fn() },
+  auth: { generatePasswordResetLink: vi.fn(), generateEmailVerificationLink: vi.fn() },
 }));
 
 describe('UserAccount', () => {
@@ -109,6 +109,75 @@ describe('UserAccount', () => {
       await UserAccount.sendResetPasswordEmail('foo@example.com');
 
       expect(generatePasswordResetLinkMock).toHaveBeenCalledWith('foo@example.com');
+      expect(sendEmail.trigger).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('checkEmailVerification', () => {
+    it('returns true and sends the verification email', async () => {
+      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
+      generateEmailVerificationLinkMock.mockResolvedValue('https://firebase.app/verification-link');
+
+      const needVerification = await UserAccount.checkEmailVerification({
+        email: 'foo@example.com',
+        email_verified: false,
+        firebase: { sign_in_provider: 'password', identities: {} },
+      });
+
+      expect(needVerification).toEqual(true);
+      expect(generateEmailVerificationLinkMock).toHaveBeenCalledWith('foo@example.com', {
+        url: 'http://127.0.0.1:3000/auth/login?email=foo@example.com',
+      });
+      expect(sendEmail.trigger).toHaveBeenCalledWith({
+        template: 'auth/email-verification',
+        from: 'Conference Hall <no-reply@mg.conference-hall.io>',
+        to: ['foo@example.com'],
+        subject: 'Verify your email address for Conference Hall',
+        data: {
+          email: 'foo@example.com',
+          emailVerificationUrl: 'https://firebase.app/verification-link',
+        },
+      });
+    });
+
+    it('returns false when no email', async () => {
+      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
+
+      const needVerification = await UserAccount.checkEmailVerification({
+        email_verified: false,
+        firebase: { sign_in_provider: 'password', identities: {} },
+      });
+
+      expect(needVerification).toEqual(false);
+      expect(generateEmailVerificationLinkMock).not.toHaveBeenCalled();
+      expect(sendEmail.trigger).not.toHaveBeenCalled();
+    });
+
+    it('returns false when no email is verified', async () => {
+      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
+
+      const needVerification = await UserAccount.checkEmailVerification({
+        email: 'foo@example.com',
+        email_verified: true,
+        firebase: { sign_in_provider: 'password', identities: {} },
+      });
+
+      expect(needVerification).toEqual(false);
+      expect(generateEmailVerificationLinkMock).not.toHaveBeenCalled();
+      expect(sendEmail.trigger).not.toHaveBeenCalled();
+    });
+
+    it('returns false when auth provider is not password', async () => {
+      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
+
+      const needVerification = await UserAccount.checkEmailVerification({
+        email: 'foo@example.com',
+        email_verified: false,
+        firebase: { sign_in_provider: 'google.com', identities: {} },
+      });
+
+      expect(needVerification).toEqual(false);
+      expect(generateEmailVerificationLinkMock).not.toHaveBeenCalled();
       expect(sendEmail.trigger).not.toHaveBeenCalled();
     });
   });

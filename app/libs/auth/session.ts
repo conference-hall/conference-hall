@@ -17,11 +17,11 @@ const sessionStorage = createCookieSessionStorage({
   },
 });
 
-export async function getSession(request: Request) {
+async function getSession(request: Request) {
   return sessionStorage.getSession(request.headers.get('cookie'));
 }
 
-export async function commitSession(session: Session) {
+async function commitSession(session: Session) {
   return sessionStorage.commitSession(session, { maxAge: MAX_AGE_SEC });
 }
 
@@ -32,34 +32,33 @@ export async function createSession(request: Request) {
 
   if (!token) return destroySession(request);
 
-  try {
-    const { uid, name, email, email_verified, picture, firebase } = await serverAuth.verifyIdToken(token, true);
+  const idToken = await serverAuth.verifyIdToken(token, true);
+  const { uid, name, email, email_verified, picture, firebase } = idToken;
 
-    const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
-    const userId = await UserAccount.register({
-      uid,
-      name,
-      email,
-      emailVerified: email_verified,
-      picture,
-      provider: firebase.sign_in_provider,
-    });
+  const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
+  const userId = await UserAccount.register({
+    uid,
+    name,
+    email,
+    emailVerified: email_verified,
+    picture,
+    provider: firebase.sign_in_provider,
+  });
 
-    const session = await getSession(request);
-    session.set('jwt', jwt);
-    session.set('uid', uid);
-    session.set('userId', userId);
+  const needVerification = await UserAccount.checkEmailVerification(idToken);
+  if (needVerification) return destroySession(request, '/auth/email-verification');
 
-    return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const session = await getSession(request);
+  session.set('jwt', jwt);
+  session.set('uid', uid);
+  session.set('userId', userId);
+
+  return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
 }
 
-export async function destroySession(request: Request) {
+export async function destroySession(request: Request, redirectTo = '/') {
   const session = await getSession(request);
-  throw redirect('/', { headers: { 'Set-Cookie': await sessionStorage.destroySession(session) } });
+  throw redirect(redirectTo, { headers: { 'Set-Cookie': await sessionStorage.destroySession(session) } });
 }
 
 export async function requireSession(request: Request): Promise<string> {
@@ -85,14 +84,12 @@ export async function getSessionUserId(request: Request): Promise<string | null>
   }
 
   try {
-    const token = await serverAuth.verifySessionCookie(jwt, true);
-    if (uid === token.uid) {
-      return userId;
-    } else {
-      await destroySession(request);
-    }
+    const idToken = await serverAuth.verifySessionCookie(jwt, true);
+    if (uid !== idToken.uid) throw new Error('Invalid token uid');
   } catch (_error) {
     await destroySession(request);
+    return null;
   }
-  return null;
+
+  return userId;
 }
