@@ -10,7 +10,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useSpeakerProfile } from '../components/contexts/speaker-profile-context.tsx';
-import type { Route } from './+types/profile.ts';
+import type { Route } from './+types/profile.index.ts';
 import { AdditionalInfoForm } from './components/additional-info-form.tsx';
 import { PersonalInfoForm } from './components/personal-info-form.tsx';
 import { SpeakerDetailsForm } from './components/speaker-details-form.tsx';

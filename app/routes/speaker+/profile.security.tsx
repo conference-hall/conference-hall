@@ -1,10 +1,19 @@
+import { EnvelopeIcon } from '@heroicons/react/24/outline';
+import * as Firebase from 'firebase/auth';
+import { useEffect, useState } from 'react';
 import { redirect } from 'react-router';
-import { H1 } from '~/design-system/typography.tsx';
+import { Callout } from '~/design-system/callout.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { List } from '~/design-system/list/list.tsx';
+import { H1, H2, Subtitle, Text } from '~/design-system/typography.tsx';
+import { PROVIDERS, type ProviderId, getClientAuth } from '~/libs/auth/firebase.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import type { Route } from './+types/profile.ts';
+import type { Route } from './+types/profile.security.ts';
+import { EmailProviderSettings } from './components/security/email-provider-settings.tsx';
+import { LinkProvider, UnlinkProvider } from './components/security/social-providers-settings..tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Security | Conference Hall' }]);
@@ -26,11 +35,100 @@ export const action = async ({ request }: Route.ActionArgs) => {
 };
 
 export default function SecurityRoute() {
+  const [error, setError] = useState<string>('');
+  const [currentProviders, setCurrentProviders] = useState<Firebase.UserInfo[]>([]);
+
+  useEffect(() => {
+    // Get error messages from the redirect result after linking a provider
+    Firebase.getRedirectResult(getClientAuth()).catch((error) => setError(error.message));
+    // Listen to auth state changes to update the list of providers
+    Firebase.onAuthStateChanged(getClientAuth(), (user) => {
+      if (!user) return;
+      setCurrentProviders(user.providerData);
+    });
+  }, []);
+
+  const loading = currentProviders.length === 0;
+  const canUnlink = currentProviders.length > 1;
+  const passwordProvider = currentProviders.find((p) => p.providerId === 'password');
+
+  const removeProvider = (providerId: ProviderId | 'password') => {
+    setCurrentProviders((providers) => providers.filter((p) => p.providerId !== providerId));
+  };
+
   return (
     <div className="space-y-4 lg:space-y-6 lg:col-span-9">
       <H1 srOnly>Security</H1>
 
-      <div>Security</div>
+      <Card as="section">
+        <Card.Title>
+          <H2>Authentication methods</H2>
+          <Subtitle>Connect with your favorite providers</Subtitle>
+        </Card.Title>
+
+        <Card.Content>
+          {error ? <Callout variant="error">{error}</Callout> : null}
+
+          <List>
+            <List.Content>
+              <ProviderItem
+                label="Email & password"
+                icon={EnvelopeIcon}
+                email={passwordProvider?.email}
+                loading={loading}
+              >
+                <EmailProviderSettings
+                  passwordProvider={passwordProvider}
+                  canUnlink={canUnlink}
+                  onUnlink={removeProvider}
+                />
+              </ProviderItem>
+
+              {PROVIDERS.map((provider) => {
+                const userProvider = currentProviders.find((p) => p.providerId === provider.id);
+                return (
+                  <ProviderItem
+                    key={provider.id}
+                    label={provider.label}
+                    icon={provider.icon}
+                    email={userProvider?.email}
+                    loading={loading}
+                  >
+                    {userProvider ? (
+                      <UnlinkProvider providerId={provider.id} disabled={!canUnlink} onUnlink={removeProvider} />
+                    ) : (
+                      <LinkProvider providerId={provider.id} />
+                    )}
+                  </ProviderItem>
+                );
+              })}
+            </List.Content>
+          </List>
+        </Card.Content>
+      </Card>
     </div>
+  );
+}
+
+type ProviderItemProps = {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  email?: string | null;
+  loading: boolean;
+  children: React.ReactNode;
+};
+
+function ProviderItem({ icon: Icon, label, email, loading, children }: ProviderItemProps) {
+  return (
+    <List.Row className="flex-col sm:flex-row justify-between gap-4 p-4">
+      <div className="flex items-center gap-4">
+        <Icon className="size-5 shrink-0" aria-hidden="true" />
+        <div>
+          <Text weight="semibold">{label}</Text>
+          {email ? <Subtitle size="xs">{email}</Subtitle> : null}
+        </div>
+      </div>
+      {!loading ? children : null}
+    </List.Row>
   );
 }
