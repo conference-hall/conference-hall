@@ -44,14 +44,7 @@ const icon = cva('shrink-0', {
       'square-s': 'size-5',
       'square-m': 'size-5',
     },
-    dir: { left: '', right: '' },
   },
-  compoundVariants: [
-    { size: 's', dir: 'left', className: '-mx-1' },
-    { size: 's', dir: 'right', className: '-mx-1' },
-    { size: 'm', dir: 'left', className: '-mx-1' },
-    { size: 'm', dir: 'right', className: '-mx-1' },
-  ],
   defaultVariants: { size: 'm' },
 });
 
@@ -80,9 +73,9 @@ export function Button({
 
   return (
     <button className={styles} disabled={disabled} aria-disabled={disabled} {...rest}>
-      {IconLeft && <IconLeft className={icon({ variant, size, dir: 'left' })} aria-hidden="true" />}
+      {IconLeft && <IconLeft className={icon({ variant, size })} aria-hidden="true" />}
       {children}
-      {IconRight && <IconRight className={icon({ variant, size, dir: 'right' })} aria-hidden="true" />}
+      {IconRight && <IconRight className={icon({ variant, size })} aria-hidden="true" />}
     </button>
   );
 }
@@ -105,9 +98,9 @@ export function ButtonLink({
 
   return (
     <Link className={styles} {...rest}>
-      {IconLeft && <IconLeft className={icon({ variant, size, dir: 'left' })} aria-hidden="true" />}
+      {IconLeft && <IconLeft className={icon({ variant, size })} aria-hidden="true" />}
       {children}
-      {IconRight && <IconRight className={icon({ variant, size, dir: 'right' })} aria-hidden="true" />}
+      {IconRight && <IconRight className={icon({ variant, size })} aria-hidden="true" />}
     </Link>
   );
 }
