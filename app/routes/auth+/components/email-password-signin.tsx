@@ -1,5 +1,5 @@
 import * as Firebase from 'firebase/auth';
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { useFetcher } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -22,7 +22,8 @@ export function EmailPasswordSignin({ redirectTo, defaultEmail }: EmailPasswordS
   const loading = submitting || fetcher.state !== 'idle';
   const forgotPasswordPath = email ? `/auth/forgot-password?email=${email}` : '/auth/forgot-password';
 
-  const signIn = async () => {
+  const signIn = async (event: FormEvent) => {
+    event.preventDefault();
     if (loading) return;
     try {
       setError('');
