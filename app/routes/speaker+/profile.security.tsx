@@ -75,7 +75,7 @@ export default function SecurityRoute() {
           {error ? <Callout variant="error">{error}</Callout> : null}
 
           <List>
-            <List.Content>
+            <List.Content aria-label="Authentication methods list">
               <ProviderItem
                 label="Email & password"
                 icon={EnvelopeIcon}

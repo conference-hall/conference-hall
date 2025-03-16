@@ -44,7 +44,7 @@ export function NewEmailProviderModal() {
         Link account
       </Button>
 
-      <Modal title="Link email & password" onClose={() => setOpen(false)} open={open}>
+      <Modal title="Link with email & password" onClose={() => setOpen(false)} open={open}>
         <Modal.Content className="space-y-6">
           <Subtitle>Link your account with an email and password to enable password-based authentication.</Subtitle>
           <fetcher.Form id="new-email-provider" onSubmit={linkAccount} className="space-y-4">

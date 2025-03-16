@@ -1,4 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
+import { AuthEmulator } from './common/auth-emulator.page.ts';
 import { UserMenuComponent } from './common/user-menu.component.ts';
 
 export class PageObject {
@@ -7,6 +8,7 @@ export class PageObject {
   readonly forbiddenPage: Locator;
   readonly loginLink: Locator;
   readonly userMenu: UserMenuComponent;
+  readonly authEmulator: AuthEmulator;
 
   constructor(page: Page) {
     this.page = page;
@@ -14,6 +16,7 @@ export class PageObject {
     this.forbiddenPage = page.getByRole('heading', { name: 'Forbidden action', exact: true });
     this.loginLink = this.page.getByRole('link', { name: 'Login' });
     this.userMenu = new UserMenuComponent(page);
+    this.authEmulator = new AuthEmulator(page);
   }
 
   async closeModal() {

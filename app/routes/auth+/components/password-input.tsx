@@ -21,7 +21,7 @@ export function PasswordInput({ label, name, value, onChange, forgotPasswordPath
   return (
     <div>
       <div className="flex justify-between mb-1">
-        <Label htmlFor="password">{label || 'Password'}</Label>
+        <Label htmlFor={name || 'password'}>{label || 'Password'}</Label>
         {forgotPasswordPath ? (
           <Link to={forgotPasswordPath} weight="semibold">
             Forgot password?
