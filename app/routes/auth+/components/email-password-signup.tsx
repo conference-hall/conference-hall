@@ -28,6 +28,7 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
     try {
       setError('');
       setSubmitting(true);
+      // TODO: Validate email and password with zod
       const clientAuth = getClientAuth();
       const credentials = await Firebase.createUserWithEmailAndPassword(clientAuth, email, password);
       await Firebase.updateProfile(credentials.user, { displayName: name });

@@ -30,12 +30,15 @@ export function LinkProvider({ providerId }: LinkProviderProps) {
 
 type UnlinkProviderProps = {
   providerId: ProviderId | 'password';
-  disabled: boolean;
+  disabled?: boolean;
   onUnlink: (providerId: ProviderId | 'password') => void;
 };
 
 export function UnlinkProvider({ providerId, disabled, onUnlink }: UnlinkProviderProps) {
   const unlinkProvider = async () => {
+    const confirm = window.confirm('Are you sure you want to unlink this account?');
+    if (!confirm) return;
+
     if (disabled) return;
     const { currentUser } = getClientAuth();
     if (!currentUser) return;
