@@ -20,8 +20,8 @@ export class LoginPage extends PageObject {
 
   async signInWithGoogle(username: string) {
     await this.page.getByRole('button', { name: 'Google' }).click();
-    await this.page.getByText('Please select an existing account in the Auth Emulator or add a new one:').waitFor();
-    await this.page.getByText(username).click({ delay: 200 });
+    await this.authEmulator.waitFor('Google');
+    await this.authEmulator.selectAccount(username);
   }
 }
 

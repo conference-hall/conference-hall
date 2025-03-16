@@ -1,5 +1,5 @@
 import * as Firebase from 'firebase/auth';
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { useFetcher } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -22,11 +22,13 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
 
   const loading = submitting || fetcher.state !== 'idle';
 
-  const signUp = async () => {
+  const signUp = async (event: FormEvent) => {
+    event.preventDefault();
     if (loading) return;
     try {
       setError('');
       setSubmitting(true);
+      // TODO: Validate email and password with zod
       const clientAuth = getClientAuth();
       const credentials = await Firebase.createUserWithEmailAndPassword(clientAuth, email, password);
       await Firebase.updateProfile(credentials.user, { displayName: name });

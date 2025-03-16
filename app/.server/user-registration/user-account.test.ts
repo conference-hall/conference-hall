@@ -118,11 +118,7 @@ describe('UserAccount', () => {
       const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
       generateEmailVerificationLinkMock.mockResolvedValue('https://firebase.app/verification-link');
 
-      const needVerification = await UserAccount.checkEmailVerification({
-        email: 'foo@example.com',
-        email_verified: false,
-        firebase: { sign_in_provider: 'password', identities: {} },
-      });
+      const needVerification = await UserAccount.checkEmailVerification('foo@example.com', false, 'password');
 
       expect(needVerification).toEqual(true);
       expect(generateEmailVerificationLinkMock).toHaveBeenCalledWith('foo@example.com', {
@@ -143,10 +139,7 @@ describe('UserAccount', () => {
     it('returns false when no email', async () => {
       const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
 
-      const needVerification = await UserAccount.checkEmailVerification({
-        email_verified: false,
-        firebase: { sign_in_provider: 'password', identities: {} },
-      });
+      const needVerification = await UserAccount.checkEmailVerification(undefined, false, 'password');
 
       expect(needVerification).toEqual(false);
       expect(generateEmailVerificationLinkMock).not.toHaveBeenCalled();
@@ -156,11 +149,7 @@ describe('UserAccount', () => {
     it('returns false when no email is verified', async () => {
       const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
 
-      const needVerification = await UserAccount.checkEmailVerification({
-        email: 'foo@example.com',
-        email_verified: true,
-        firebase: { sign_in_provider: 'password', identities: {} },
-      });
+      const needVerification = await UserAccount.checkEmailVerification('foo@example.com', true, 'password');
 
       expect(needVerification).toEqual(false);
       expect(generateEmailVerificationLinkMock).not.toHaveBeenCalled();
@@ -170,11 +159,7 @@ describe('UserAccount', () => {
     it('returns false when auth provider is not password', async () => {
       const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
 
-      const needVerification = await UserAccount.checkEmailVerification({
-        email: 'foo@example.com',
-        email_verified: false,
-        firebase: { sign_in_provider: 'google.com', identities: {} },
-      });
+      const needVerification = await UserAccount.checkEmailVerification('foo@example.com', false, 'google.com');
 
       expect(needVerification).toEqual(false);
       expect(generateEmailVerificationLinkMock).not.toHaveBeenCalled();

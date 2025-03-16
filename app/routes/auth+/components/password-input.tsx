@@ -6,20 +6,22 @@ import { Link } from '~/design-system/links.tsx';
 import { Label, Subtitle } from '~/design-system/typography.tsx';
 
 type PasswordInputProps = {
+  label?: string;
+  name?: string;
   value: string;
   onChange: (password: string) => void;
   forgotPasswordPath?: string;
   isNewPassword?: boolean;
 };
 
-export function PasswordInput({ value, onChange, forgotPasswordPath, isNewPassword }: PasswordInputProps) {
+export function PasswordInput({ label, name, value, onChange, forgotPasswordPath, isNewPassword }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
   const ToggleIcon = showPassword ? EyeSlashIcon : EyeIcon;
 
   return (
     <div>
       <div className="flex justify-between mb-1">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor={name || 'password'}>{label || 'Password'}</Label>
         {forgotPasswordPath ? (
           <Link to={forgotPasswordPath} weight="semibold">
             Forgot password?
@@ -28,7 +30,7 @@ export function PasswordInput({ value, onChange, forgotPasswordPath, isNewPasswo
       </div>
 
       <Input
-        name="password"
+        name={name || 'password'}
         placeholder="••••••••"
         type={showPassword ? 'text' : 'password'}
         value={value}

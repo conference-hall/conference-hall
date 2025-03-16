@@ -45,7 +45,7 @@ export async function createSession(request: Request) {
     provider: firebase.sign_in_provider,
   });
 
-  const needVerification = await UserAccount.checkEmailVerification(idToken);
+  const needVerification = await UserAccount.checkEmailVerification(email, email_verified, firebase.sign_in_provider);
   if (needVerification) return destroySession(request, '/auth/email-verification');
 
   const session = await getSession(request);
@@ -56,7 +56,7 @@ export async function createSession(request: Request) {
   return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
 }
 
-export async function destroySession(request: Request, redirectTo = '/') {
+export async function destroySession(request: Request, redirectTo = '/auth/login') {
   const session = await getSession(request);
   throw redirect(redirectTo, { headers: { 'Set-Cookie': await sessionStorage.destroySession(session) } });
 }
@@ -92,4 +92,22 @@ export async function getSessionUserId(request: Request): Promise<string | null>
   }
 
   return userId;
+}
+
+export async function verifyEmail(request: Request) {
+  const session = await getSession(request);
+  const jwt = session.get('jwt');
+  const uid = session.get('uid');
+  if (!jwt || !uid) return;
+
+  const idToken = await serverAuth.verifySessionCookie(jwt, true);
+  if (uid !== idToken.uid) return null;
+
+  const firebaseUser = await serverAuth.getUser(uid);
+  if (!firebaseUser) return null;
+
+  const provider = firebaseUser.providerData.find((p) => p.providerId === 'password');
+  if (!provider) return null;
+
+  await UserAccount.checkEmailVerification(provider.email, false, 'password');
 }

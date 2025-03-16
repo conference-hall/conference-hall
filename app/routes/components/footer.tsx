@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer className="py-8 text-sm text-gray-500">
       <Container className="flex gap-4 justify-center items-center">
-        <span className="hidden sm:inline">&copy; 2024 Conference Hall.</span>
+        <span className="hidden sm:inline">&copy; 2025 Conference Hall.</span>
         <LegalLinks />
       </Container>
     </footer>

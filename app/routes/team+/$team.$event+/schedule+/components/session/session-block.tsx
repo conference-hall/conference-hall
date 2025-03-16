@@ -1,6 +1,4 @@
-import {} from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-
 import { formatTimeDifference, toTimeFormat } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import { getFlag } from '~/libs/formatters/languages.ts';
