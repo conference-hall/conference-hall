@@ -1,29 +1,27 @@
-import { EnvelopeIcon, KeyIcon } from '@heroicons/react/24/outline';
 import type * as Firebase from 'firebase/auth';
-import { Button } from '~/design-system/buttons.tsx';
 import type { ProviderId } from '~/libs/auth/firebase.ts';
-import { NewEmailProviderModal } from './email-provider-modals.tsx';
+import { ChangePasswordModal, NewEmailProviderModal, VerifyEmailButton } from './email-provider-actions.tsx';
 import { UnlinkProvider } from './social-providers-settings..tsx';
 
 type Props = {
   passwordProvider?: Firebase.UserInfo;
+  emailVerified: boolean;
   canUnlink: boolean;
   onUnlink: (providerId: ProviderId | 'password') => void;
 };
 
-export function EmailProviderSettings({ passwordProvider, canUnlink, onUnlink }: Props) {
+export function EmailProviderSettings({ passwordProvider, emailVerified, canUnlink, onUnlink }: Props) {
   if (!passwordProvider) {
     return <NewEmailProviderModal />;
   }
 
+  if (!emailVerified) {
+    return <VerifyEmailButton />;
+  }
+
   return (
     <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
-      <Button type="button" variant="secondary" size="s" iconLeft={EnvelopeIcon} className="grow">
-        Change email
-      </Button>
-      <Button type="button" variant="secondary" size="s" iconLeft={KeyIcon} className="grow">
-        Change password
-      </Button>
+      {passwordProvider.email ? <ChangePasswordModal email={passwordProvider.email} /> : null}
       {canUnlink ? <UnlinkProvider providerId="password" onUnlink={onUnlink} /> : null}
     </div>
   );

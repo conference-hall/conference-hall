@@ -6,8 +6,9 @@ import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, H2, Subtitle, Text } from '~/design-system/typography.tsx';
+import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { PROVIDERS, type ProviderId, getClientAuth } from '~/libs/auth/firebase.ts';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireSession, verifyEmail } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -27,23 +28,27 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  await requireSession(request);
   const form = await request.formData();
   const intent = form.get('intent') as string;
-  console.log({ intent, userId });
-  return toast('success', 'Profile updated.');
+  if (intent === 'verify-email') {
+    await verifyEmail(request);
+    return toast('success', 'Verification email sent');
+  }
 };
 
 export default function SecurityRoute() {
   const [error, setError] = useState<string>('');
+  const [emailVerified, setEmailVerified] = useState<boolean>(false);
   const [currentProviders, setCurrentProviders] = useState<Firebase.UserInfo[]>([]);
 
   useEffect(() => {
     // Get error messages from the redirect result after linking a provider
-    Firebase.getRedirectResult(getClientAuth()).catch((error) => setError(error.message));
+    Firebase.getRedirectResult(getClientAuth()).catch((error) => setError(getFirebaseError(error)));
     // Listen to auth state changes to update the list of providers
     Firebase.onAuthStateChanged(getClientAuth(), (user) => {
       if (!user) return;
+      setEmailVerified(user.emailVerified);
       setCurrentProviders(user.providerData);
     });
   }, []);
@@ -74,11 +79,16 @@ export default function SecurityRoute() {
               <ProviderItem
                 label="Email & password"
                 icon={EnvelopeIcon}
-                email={passwordProvider?.email}
+                email={
+                  passwordProvider?.email && !emailVerified
+                    ? `${passwordProvider?.email} • ⚠️ Not verified`
+                    : passwordProvider?.email
+                }
                 loading={loading}
               >
                 <EmailProviderSettings
                   passwordProvider={passwordProvider}
+                  emailVerified={emailVerified}
                   canUnlink={canUnlink}
                   onUnlink={removeProvider}
                 />

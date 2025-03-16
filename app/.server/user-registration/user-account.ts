@@ -1,4 +1,3 @@
-import type { DecodedIdToken } from 'firebase-admin/auth';
 import { db } from 'prisma/db.server.ts';
 import { sendVerificationEmail } from '~/emails/templates/auth/email-verification.tsx';
 import { sendResetPasswordEmail } from '~/emails/templates/auth/reset-password.tsx';
@@ -65,10 +64,10 @@ export class UserAccount {
     }
   }
 
-  static async checkEmailVerification({ email, email_verified, firebase }: Partial<DecodedIdToken>) {
+  static async checkEmailVerification(email: string | undefined, emailVerified: boolean | undefined, provider: string) {
     if (!email) return false;
-    if (email_verified) return false;
-    if (firebase?.sign_in_provider !== 'password') return false;
+    if (emailVerified) return false;
+    if (provider !== 'password') return false;
 
     try {
       const emailVerificationUrl = await firebaseAuth.generateEmailVerificationLink(email, {
