@@ -16,7 +16,12 @@ export function EmailProviderSettings({ passwordProvider, emailVerified, canUnli
   }
 
   if (!emailVerified) {
-    return <VerifyEmailButton />;
+    return (
+      <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+        <VerifyEmailButton />
+        {canUnlink ? <UnlinkProvider providerId="password" onUnlink={onUnlink} /> : null}
+      </div>
+    );
   }
 
   return (
