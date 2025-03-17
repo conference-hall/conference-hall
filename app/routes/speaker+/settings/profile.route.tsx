@@ -47,9 +47,7 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
       <Card as="section">
         <Form method="POST" aria-labelledby="speaker-profile" preventScrollReset>
           <Card.Title>
-            <H2 id="speaker-profile" className="scroll-mt-12">
-              Speaker profile
-            </H2>
+            <H2 id="speaker-profile">Speaker profile</H2>
             <Subtitle>
               Give more information about you, these information will be visible by organizers when you submit a talk.
             </Subtitle>
