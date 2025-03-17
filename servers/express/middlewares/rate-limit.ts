@@ -3,15 +3,10 @@ import rateLimit from 'express-rate-limit';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const API_WINDOW_MS = 60 * 1000; // 1h
-const API_MAX_CALLS = 60;
-
 // Disable rate limiting on dev and test environments
 const maxMultiple = isProduction ? 1 : 10_000;
 
 const defaultRateLimit = {
-  windowMs: 60 * 1000, // every minutes
-  max: 1000 * maxMultiple,
   standardHeaders: true,
   legacyHeaders: false,
   validate: { trustProxy: false },
@@ -24,14 +19,27 @@ const defaultRateLimit = {
 
 const apiRateLimit = rateLimit({
   ...defaultRateLimit,
-  windowMs: API_WINDOW_MS,
-  max: API_MAX_CALLS,
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 60 * maxMultiple,
 });
+
+const strongRateLimit = rateLimit({
+  ...defaultRateLimit,
+  windowMs: 60 * 1000, // 1 minute
+  max: 10 * maxMultiple,
+});
+
+const securedPaths = ['/auth/login', '/auth/forgot-password', '/speaker/profile/security', '/admin'];
+
 export function applyRateLimits(app: express.Application) {
   app.use((req, res, next) => {
     // Rate limit for GET /api/
     if (req.path.startsWith('/api/')) {
       return apiRateLimit(req, res, next);
+    }
+    // Rate limit for secured paths
+    if (req.method !== 'GET' && req.method !== 'HEAD' && securedPaths.some((p) => req.path.includes(p))) {
+      return strongRateLimit(req, res, next);
     }
     next();
   });
