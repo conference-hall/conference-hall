@@ -69,7 +69,11 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
         {loading ? <LoadingIcon className="size-4" /> : 'Create your account'}
       </Button>
 
-      {error ? <Callout variant="error">{error}</Callout> : null}
+      {error ? (
+        <Callout variant="error" role="alert">
+          {error}
+        </Callout>
+      ) : null}
     </fetcher.Form>
   );
 }

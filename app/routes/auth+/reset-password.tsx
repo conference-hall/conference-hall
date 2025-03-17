@@ -84,7 +84,11 @@ export default function ResetPassword() {
             {loading ? <LoadingIcon className="size-4" /> : 'Change your password'}
           </Button>
 
-          {error ? <Callout variant="error">{error}</Callout> : null}
+          {error ? (
+            <Callout variant="error" role="alert">
+              {error}
+            </Callout>
+          ) : null}
         </Form>
       </Card>
 

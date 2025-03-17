@@ -56,7 +56,11 @@ export function EmailPasswordSignin({ redirectTo, defaultEmail }: EmailPasswordS
         {loading ? <LoadingIcon className="size-4" /> : 'Sign in'}
       </Button>
 
-      {error ? <Callout variant="error">{error}</Callout> : null}
+      {error ? (
+        <Callout variant="error" role="alert">
+          {error}
+        </Callout>
+      ) : null}
     </fetcher.Form>
   );
 }

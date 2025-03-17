@@ -72,7 +72,11 @@ export default function SecurityRoute() {
         </Card.Title>
 
         <Card.Content>
-          {error ? <Callout variant="error">{error}</Callout> : null}
+          {error ? (
+            <Callout variant="error" role="alert">
+              {error}
+            </Callout>
+          ) : null}
 
           <List>
             <List.Content aria-label="Authentication methods list">

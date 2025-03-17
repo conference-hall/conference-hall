@@ -67,7 +67,11 @@ export function NewEmailProviderModal() {
               required
             />
             <PasswordInput value={password} onChange={setPassword} isNewPassword error={fieldErrors?.password} />
-            {error && <Callout variant="error">{error}</Callout>}
+            {error && (
+              <Callout variant="error" role="alert">
+                {error}
+              </Callout>
+            )}
           </fetcher.Form>
         </Modal.Content>
 
@@ -148,7 +152,11 @@ export function ChangePasswordModal({ email }: ChangePasswordProps) {
               isNewPassword
               error={fieldErrors?.password}
             />
-            {error && <Callout variant="error">{error}</Callout>}
+            {error && (
+              <Callout variant="error" role="alert">
+                {error}
+              </Callout>
+            )}
           </Form>
         </Modal.Content>
 
