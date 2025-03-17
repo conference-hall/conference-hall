@@ -116,14 +116,12 @@ describe('UserAccount', () => {
   describe('checkEmailVerification', () => {
     it('returns true and sends the verification email', async () => {
       const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
-      generateEmailVerificationLinkMock.mockResolvedValue('https://firebase.app/verification-link');
+      generateEmailVerificationLinkMock.mockResolvedValue('https://firebase.app/verification-link?oobCode=my-code');
 
       const needVerification = await UserAccount.checkEmailVerification('foo@example.com', false, 'password');
 
       expect(needVerification).toEqual(true);
-      expect(generateEmailVerificationLinkMock).toHaveBeenCalledWith('foo@example.com', {
-        url: 'http://127.0.0.1:3000/auth/login?email=foo@example.com',
-      });
+      expect(generateEmailVerificationLinkMock).toHaveBeenCalledWith('foo@example.com');
       expect(sendEmail.trigger).toHaveBeenCalledWith({
         template: 'auth/email-verification',
         from: 'Conference Hall <no-reply@mg.conference-hall.io>',
@@ -131,7 +129,7 @@ describe('UserAccount', () => {
         subject: 'Verify your email address for Conference Hall',
         data: {
           email: 'foo@example.com',
-          emailVerificationUrl: 'https://firebase.app/verification-link',
+          emailVerificationUrl: 'http://127.0.0.1:3000/auth/verify-email?oobCode=my-code&email=foo%40example.com',
         },
       });
     });

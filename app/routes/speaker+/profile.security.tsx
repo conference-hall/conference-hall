@@ -8,7 +8,7 @@ import { List } from '~/design-system/list/list.tsx';
 import { H1, H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { PROVIDERS, type ProviderId, getClientAuth } from '~/libs/auth/firebase.ts';
-import { requireSession, verifyEmail } from '~/libs/auth/session.ts';
+import { requireSession, sendEmailVerification } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -32,7 +32,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const form = await request.formData();
   const intent = form.get('intent') as string;
   if (intent === 'verify-email') {
-    await verifyEmail(request);
+    await sendEmailVerification(request);
     return toast('success', 'Verification email sent');
   }
 };

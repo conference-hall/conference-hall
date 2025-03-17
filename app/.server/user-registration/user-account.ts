@@ -70,11 +70,17 @@ export class UserAccount {
     if (provider !== 'password') return false;
 
     try {
-      const emailVerificationUrl = await firebaseAuth.generateEmailVerificationLink(email, {
-        url: `${appUrl()}/auth/login?email=${email}`,
-      });
-      await sendVerificationEmail({ email, emailVerificationUrl });
+      const firebaseVerificationLink = await firebaseAuth.generateEmailVerificationLink(email);
+      const firebaseVerificationUrl = new URL(firebaseVerificationLink);
+      const oobCode = firebaseVerificationUrl.searchParams.get('oobCode');
 
+      if (!oobCode) return false;
+
+      const emailVerificationUrl = new URL(`${appUrl()}/auth/verify-email`);
+      emailVerificationUrl.searchParams.set('oobCode', oobCode);
+      emailVerificationUrl.searchParams.set('email', email);
+
+      await sendVerificationEmail({ email, emailVerificationUrl: emailVerificationUrl.toString() });
       return true;
     } catch (_error: any) {
       console.error(_error?.message);

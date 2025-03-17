@@ -1,6 +1,7 @@
 import * as Firebase from 'firebase/auth';
 import { type FormEvent, useState } from 'react';
 import { Form, redirect, useNavigate, useSearchParams } from 'react-router';
+import { toast } from 'sonner';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
@@ -37,7 +38,7 @@ export default function ResetPassword() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const oobCode = searchParams.get('oobCode');
-  const continueUrl = searchParams.get('continueUrl');
+  const email = searchParams.get('email');
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
@@ -55,7 +56,8 @@ export default function ResetPassword() {
       setError('');
       setLoading(true);
       await Firebase.confirmPasswordReset(getClientAuth(), oobCode, password);
-      navigate(getPathFromContinueUrl(continueUrl));
+      toast.success('Password changed. You can now login.');
+      navigate({ pathname: '/auth/login', search: `?email=${email}` });
     } catch (error) {
       setError(getFirebaseError(error));
     } finally {
@@ -99,15 +101,4 @@ export default function ResetPassword() {
       </footer>
     </Page>
   );
-}
-
-function getPathFromContinueUrl(continueUrl: string | null) {
-  if (!continueUrl) return '/auth/login';
-  try {
-    const url = new URL(continueUrl);
-    if (url.origin !== window.location.origin) return '/auth/login';
-    return url.pathname + url.search;
-  } catch {
-    return '/auth/login';
-  }
 }
