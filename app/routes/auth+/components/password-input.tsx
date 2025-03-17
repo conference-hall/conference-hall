@@ -4,17 +4,27 @@ import { useState } from 'react';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { Label, Subtitle } from '~/design-system/typography.tsx';
+import type { SubmissionError } from '~/types/errors.types.ts';
 
 type PasswordInputProps = {
   label?: string;
   name?: string;
   value: string;
-  onChange: (password: string) => void;
+  error?: SubmissionError;
   forgotPasswordPath?: string;
   isNewPassword?: boolean;
+  onChange: (password: string) => void;
 };
 
-export function PasswordInput({ label, name, value, onChange, forgotPasswordPath, isNewPassword }: PasswordInputProps) {
+export function PasswordInput({
+  label,
+  name,
+  value,
+  error,
+  forgotPasswordPath,
+  isNewPassword,
+  onChange,
+}: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
   const ToggleIcon = showPassword ? EyeSlashIcon : EyeIcon;
 
@@ -36,6 +46,8 @@ export function PasswordInput({ label, name, value, onChange, forgotPasswordPath
         value={value}
         onChange={(e) => onChange(e.target.value)}
         autoComplete={isNewPassword ? 'new-password' : 'current-password'}
+        description={isNewPassword ? 'Min. 8 characters with uppercase, lowercase and number.' : undefined}
+        error={error}
         required
       >
         <button
