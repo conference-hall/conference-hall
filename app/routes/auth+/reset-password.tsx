@@ -13,6 +13,8 @@ import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { validatePassword } from '~/libs/validators/auth.ts';
+import type { SubmissionErrors } from '~/types/errors.types.ts';
 import type { Route } from './+types/reset-password.ts';
 import { PasswordInput } from './components/password-input.tsx';
 
@@ -39,11 +41,15 @@ export default function ResetPassword() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
+  const [fieldErrors, setFieldErrors] = useState<SubmissionErrors>(null);
   const [password, setPassword] = useState('');
 
   const resetPassword = async (event: FormEvent) => {
     event.preventDefault();
     if (loading || !oobCode) return;
+
+    const fieldErrors = validatePassword(password);
+    if (fieldErrors) return setFieldErrors(fieldErrors);
 
     try {
       setError('');
@@ -72,13 +78,17 @@ export default function ResetPassword() {
         </Subtitle>
 
         <Form className="space-y-4" onSubmit={resetPassword}>
-          <PasswordInput value={password} onChange={setPassword} isNewPassword />
+          <PasswordInput value={password} onChange={setPassword} isNewPassword error={fieldErrors?.password} />
 
           <Button type="submit" variant="primary" disabled={loading} className="w-full mt-2">
             {loading ? <LoadingIcon className="size-4" /> : 'Change your password'}
           </Button>
 
-          {error ? <Callout variant="error">{error}</Callout> : null}
+          {error ? (
+            <Callout variant="error" role="alert">
+              {error}
+            </Callout>
+          ) : null}
         </Form>
       </Card>
 

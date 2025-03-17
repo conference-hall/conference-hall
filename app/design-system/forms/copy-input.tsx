@@ -17,7 +17,7 @@ export function CopyInput({ id, type = 'text', value, className, error, ...rest 
 
   return (
     <div className={className}>
-      <div className="mt-1 flex rounded-md shadow-xs">
+      <div className="mt-1 flex rounded-md">
         <div className="relative flex grow items-stretch focus-within:z-10">
           <input
             id={id}

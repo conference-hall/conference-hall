@@ -67,7 +67,7 @@ export function Input({
 }
 
 const containerStyle = cva(
-  'flex w-full rounded-md shadow-xs ring-1 ring-inset focus-within:ring-2 focus-within:ring-inset border-0',
+  'flex w-full rounded-md ring-1 ring-inset focus-within:ring-2 focus-within:ring-inset border-0',
   {
     variants: {
       color: {

@@ -27,7 +27,10 @@ test('Signup flow with email and password', async ({ page }) => {
   await signupPage.waitFor();
   await signupPage.fullnameInput.fill('John Doe');
   await signupPage.emailInput.fill(uniqueEmail);
-  await signupPage.passwordInput.fill('password123');
+  await signupPage.passwordInput.fill('abc');
+  await signupPage.signupButton.click();
+  await expect(page.getByText('Minimum 8 characters. Missing uppercase letter. Missing number')).toBeVisible();
+  await signupPage.passwordInput.fill('Password123');
   await signupPage.signupButton.click();
 
   // check email verification
@@ -57,13 +60,13 @@ test('Signup flow with email and password', async ({ page }) => {
   // reset password
   await page.goto(resetPasswordLink || '');
   await resetPasswordPage.waitFor();
-  await resetPasswordPage.passwordInput.fill('123password');
+  await resetPasswordPage.passwordInput.fill('123Password');
   await resetPasswordPage.resetPasswordButton.click();
 
   // signin
   await loginPage.waitFor();
   await loginPage.emailInput.fill(uniqueEmail);
-  await loginPage.passwordInput.fill('123password');
+  await loginPage.passwordInput.fill('123Password');
   await loginPage.signinButton.click();
 
   // signout

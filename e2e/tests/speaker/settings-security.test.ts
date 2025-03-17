@@ -23,7 +23,7 @@ test('Authentication methods actions and flows', async ({ page }) => {
   await signupPage.goto();
   await signupPage.fullnameInput.fill('John Doe');
   await signupPage.emailInput.fill(uniqueEmail);
-  await signupPage.passwordInput.fill('password');
+  await signupPage.passwordInput.fill('Password123');
   await signupPage.signupButton.click();
   await signupPage.emailVerificationSent();
 
@@ -36,7 +36,7 @@ test('Authentication methods actions and flows', async ({ page }) => {
 
   // signin user
   await page.goto(emailVerificationLink || '');
-  await loginPage.passwordInput.fill('password');
+  await loginPage.passwordInput.fill('Password123');
   await loginPage.signinButton.click();
   await homePage.waitFor();
 
@@ -71,12 +71,12 @@ test('Authentication methods actions and flows', async ({ page }) => {
 
   // Change password for password-based provider
   await securityPage.changePasswordButton().click();
-  await securityPage.changePassword('password', 'newpassword');
+  await securityPage.changePassword('Password123', 'NewPassword123');
 
   // Signin with the new password
   await loginPage.waitFor();
   await loginPage.emailInput.fill(uniqueEmail);
-  await loginPage.passwordInput.fill('newpassword');
+  await loginPage.passwordInput.fill('NewPassword123');
   await loginPage.signinButton.click();
   await homePage.waitFor();
 
@@ -86,7 +86,7 @@ test('Authentication methods actions and flows', async ({ page }) => {
 
   // Link new password-based provider
   await securityPage.linkButton('Email & password').click();
-  await securityPage.linkEmailProvider(uniqueEmail, 'password');
+  await securityPage.linkEmailProvider(uniqueEmail, 'Password123');
   await securityPage.emailVerificationSent();
 
   // check email verification received

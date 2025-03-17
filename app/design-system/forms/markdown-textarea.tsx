@@ -35,7 +35,7 @@ export function MarkdownTextArea({
   const handleOpenPreview = () => setPreviewOpen(true);
   const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) => setMarkdown(e.target.value);
 
-  const styles = cx('shadow-xs block w-full text-gray-900 text-sm rounded-md overflow-hidden border mt-1', {
+  const styles = cx('block w-full text-gray-900 text-sm rounded-md overflow-hidden border mt-1', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
   });

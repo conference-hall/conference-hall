@@ -61,7 +61,11 @@ export default function Login({ loaderData }: Route.ComponentProps) {
 
         <AuthProvidersSignin redirectTo={redirectTo} withEmailPasswordSignin={withEmailPasswordSignin} />
 
-        {providerError ? <Callout variant="error">{providerError}</Callout> : null}
+        {providerError ? (
+          <Callout variant="error" role="alert">
+            {providerError}
+          </Callout>
+        ) : null}
       </Card>
 
       {withEmailPasswordSignin ? (

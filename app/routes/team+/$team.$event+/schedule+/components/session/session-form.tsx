@@ -187,7 +187,11 @@ export function SessionForm({
           <EmojiSelect emojis={SESSION_EMOJIS} selectedEmojis={emojis} onChangeEmojis={setEmojis} />
         </div>
 
-        {error ? <Callout variant="error">{error}</Callout> : null}
+        {error ? (
+          <Callout variant="error" role="alert">
+            {error}
+          </Callout>
+        ) : null}
       </form>
 
       {/* Footer */}

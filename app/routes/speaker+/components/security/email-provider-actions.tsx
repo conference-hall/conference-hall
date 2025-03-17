@@ -10,21 +10,29 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
+import { validateEmailAndPassword, validatePassword } from '~/libs/validators/auth.ts';
 import { PasswordInput } from '~/routes/auth+/components/password-input.tsx';
+import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 export function NewEmailProviderModal() {
   const fetcher = useFetcher();
-  const [error, setError] = useState<string>('');
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string>('');
+  const [fieldErrors, setFieldErrors] = useState<SubmissionErrors>(null);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const linkAccount = async (event: FormEvent) => {
-    setError('');
     event.preventDefault();
+    setError('');
+
     const { currentUser } = getClientAuth();
     if (!currentUser) return;
-    // TODO: Validate email and password with zod
+
+    const fieldErrors = validateEmailAndPassword(email, password);
+    if (fieldErrors) return setFieldErrors(fieldErrors);
+
     try {
       const credential = Firebase.EmailAuthProvider.credential(email, password);
       const credentials = await Firebase.linkWithCredential(currentUser, credential);
@@ -55,10 +63,15 @@ export function NewEmailProviderModal() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              error={fieldErrors?.email}
               required
             />
-            <PasswordInput value={password} onChange={setPassword} isNewPassword />
-            {error && <Callout variant="error">{error}</Callout>}
+            <PasswordInput value={password} onChange={setPassword} isNewPassword error={fieldErrors?.password} />
+            {error && (
+              <Callout variant="error" role="alert">
+                {error}
+              </Callout>
+            )}
           </fetcher.Form>
         </Modal.Content>
 
@@ -79,17 +92,23 @@ type ChangePasswordProps = { email: string };
 
 export function ChangePasswordModal({ email }: ChangePasswordProps) {
   const navigate = useNavigate();
-  const [error, setError] = useState<string>('');
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string>('');
+  const [fieldErrors, setFieldErrors] = useState<SubmissionErrors>(null);
+
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
   const changePassword = async (event: FormEvent) => {
-    setError('');
     event.preventDefault();
+    setError('');
+
     const { currentUser } = getClientAuth();
     if (!currentUser) return;
-    // TODO: Validate new password with zod
+
+    const fieldErrors = validatePassword(newPassword);
+    if (fieldErrors) return setFieldErrors(fieldErrors);
+
     try {
       const credential = Firebase.EmailAuthProvider.credential(email, currentPassword);
       await Firebase.reauthenticateWithCredential(currentUser, credential);
@@ -131,8 +150,13 @@ export function ChangePasswordModal({ email }: ChangePasswordProps) {
               value={newPassword}
               onChange={setNewPassword}
               isNewPassword
+              error={fieldErrors?.password}
             />
-            {error && <Callout variant="error">{error}</Callout>}
+            {error && (
+              <Callout variant="error" role="alert">
+                {error}
+              </Callout>
+            )}
           </Form>
         </Modal.Content>
 
