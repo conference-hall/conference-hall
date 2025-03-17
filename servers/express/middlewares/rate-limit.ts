@@ -1,5 +1,6 @@
 import type express from 'express';
 import rateLimit from 'express-rate-limit';
+import { href } from 'react-router';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -29,7 +30,7 @@ const strongRateLimit = rateLimit({
   max: 10 * maxMultiple,
 });
 
-const securedPaths = ['/auth/login', '/auth/forgot-password', '/speaker/profile/security', '/admin'];
+const securedPaths = [href('/auth/login'), href('/auth/forgot-password'), href('/speaker/settings'), href('/admin')];
 
 export function applyRateLimits(app: express.Application) {
   app.use((req, res, next) => {

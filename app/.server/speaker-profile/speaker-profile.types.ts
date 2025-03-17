@@ -1,28 +1,22 @@
 import { type ZodSchema, z } from 'zod';
 
-export const PersonalInfoSchema = z.object({
+const SocialLinksSchema = makeFilteredArraySchema(z.string().url().max(100));
+
+export const AccountInfoSchema = z.object({
   name: z.string().trim().min(1),
   email: z.string().email().trim().min(1),
   picture: z.string().url().trim().nullable().default(null),
 });
 
-export const DetailsSchema = z.object({
+export const ProfileSchema = z.object({
   bio: z.string().trim().nullable().default(null),
   references: z.string().trim().nullable().default(null),
-});
-
-const SocialLinksSchema = makeFilteredArraySchema(z.string().url().max(100));
-
-export const AdditionalInfoSchema = z.object({
   company: z.string().trim().nullable().default(null),
   location: z.string().trim().nullable().default(null),
   socialLinks: SocialLinksSchema.default([]),
 });
 
-export type ProfileData =
-  | z.infer<typeof PersonalInfoSchema>
-  | z.infer<typeof DetailsSchema>
-  | z.infer<typeof AdditionalInfoSchema>;
+export type ProfileData = z.infer<typeof AccountInfoSchema> | z.infer<typeof ProfileSchema>;
 
 export type SocialLinks = z.infer<typeof SocialLinksSchema>;
 

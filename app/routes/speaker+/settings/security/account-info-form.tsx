@@ -1,30 +1,17 @@
 import { Form } from 'react-router';
-
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Subtitle } from '~/design-system/typography.tsx';
+import {} from '~/design-system/typography.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
-type Props = {
-  name: string | null;
-  email: string | null;
-  picture: string | null;
-  errors: SubmissionErrors;
-};
+type Props = { name: string | null; email: string | null; picture: string | null; errors: SubmissionErrors };
 
-export function PersonalInfoForm({ name, email, picture, errors }: Props) {
+export function AccountInfoForm({ name, email, picture, errors }: Props) {
   return (
     <Card as="section">
-      <Form method="POST" aria-labelledby="personal-info" preventScrollReset>
-        <Card.Title>
-          <H2 id="personal-info" className="scroll-mt-12">
-            Personal information
-          </H2>
-          <Subtitle>Use a permanent address where you can receive email.</Subtitle>
-        </Card.Title>
-
+      <Form method="POST" preventScrollReset>
         <Card.Content>
           <Input name="name" label="Full name" defaultValue={name || ''} key={name} error={errors?.name} />
           <Input name="email" label="Email address" defaultValue={email || ''} key={email} error={errors?.email} />
@@ -43,8 +30,8 @@ export function PersonalInfoForm({ name, email, picture, errors }: Props) {
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit" name="intent" value="personal-info">
-            Save
+          <Button type="submit" name="intent" value="account-info">
+            Update account
           </Button>
         </Card.Actions>
       </Form>

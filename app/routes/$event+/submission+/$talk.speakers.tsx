@@ -1,14 +1,14 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { Form, redirect } from 'react-router';
+import { Form, href, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
-import { DetailsSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
+import { ProfileSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { ExternalLink } from '~/design-system/links.tsx';
+import { Link } from '~/design-system/links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CoSpeakers } from '~/routes/components/talks/co-speaker.tsx';
@@ -40,7 +40,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     await TalkSubmission.for(userId, params.event).removeCoSpeaker(params.talk, speakerId);
     return null;
   } else {
-    const result = parseWithZod(form, { schema: DetailsSchema });
+    const result = parseWithZod(form, { schema: ProfileSchema });
     if (result.status !== 'success') return result.error;
     await SpeakerProfile.for(userId).save(result.value);
   }
@@ -71,7 +71,9 @@ export default function SubmissionSpeakerRoute({ loaderData, actionData: errors 
             />
             <Text variant="secondary">
               You can give more information about you from{' '}
-              <ExternalLink href="/speaker/profile">the profile page.</ExternalLink>
+              <Link to={href('/speaker/settings/profile')} target="_blank">
+                the profile page.
+              </Link>
             </Text>
             <input type="hidden" name="references" value={speaker.references || ''} />
           </Form>

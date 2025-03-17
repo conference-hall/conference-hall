@@ -6,7 +6,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { ProfileNotFoundError, SpeakerProfile } from './speaker-profile.ts';
-import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from './speaker-profile.types.ts';
+import { AccountInfoSchema, ProfileSchema } from './speaker-profile.types.ts';
 
 describe('SpeakerProfile', () => {
   let user: User;
@@ -97,10 +97,10 @@ describe('SpeakerProfile', () => {
   });
 });
 
-describe('SpeakerProfile schemas', () => {
-  describe('PersonalInfoSchema', () => {
+describe('Settings schemas', () => {
+  describe('AccountInfoSchema', () => {
     it('validates personal information', async () => {
-      const result = PersonalInfoSchema.safeParse({
+      const result = AccountInfoSchema.safeParse({
         name: 'John Doe',
         email: 'john.doe@email.com',
         picture: 'https://example.com/photo.jpg',
@@ -114,7 +114,7 @@ describe('SpeakerProfile schemas', () => {
     });
 
     it('validates mandatory and format for personal information', async () => {
-      const result = PersonalInfoSchema.safeParse({ name: '', email: '' });
+      const result = AccountInfoSchema.safeParse({ name: '', email: '' });
 
       expect(result.success).toEqual(false);
       if (!result.success) {
@@ -125,29 +125,19 @@ describe('SpeakerProfile schemas', () => {
     });
   });
 
-  describe('DetailsSchema', () => {
+  describe('ProfileSchema', () => {
     it('validates user details', async () => {
-      const result = DetailsSchema.safeParse({
+      const result = ProfileSchema.safeParse({
         bio: 'lorem ipsum',
         references: 'impedit quidem quisquam',
-      });
-
-      expect(result.success && result.data).toEqual({
-        bio: 'lorem ipsum',
-        references: 'impedit quidem quisquam',
-      });
-    });
-  });
-
-  describe('AdditionalInfoSchema', () => {
-    it('validates additional indormation', async () => {
-      const result = AdditionalInfoSchema.safeParse({
         company: 'company',
         location: 'location',
         socialLinks: ['https://github.com/profile'],
       });
 
       expect(result.success && result.data).toEqual({
+        bio: 'lorem ipsum',
+        references: 'impedit quidem quisquam',
         company: 'company',
         location: 'location',
         socialLinks: ['https://github.com/profile'],

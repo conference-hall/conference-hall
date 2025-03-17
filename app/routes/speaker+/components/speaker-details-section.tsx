@@ -1,4 +1,5 @@
 import { BuildingOfficeIcon, LockClosedIcon, MapPinIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import { href } from 'react-router';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -38,7 +39,7 @@ export function SpeakerDetailsSection({ bio, company, location, socialLinks }: P
         </div>
 
         <div className="p-4">
-          <ButtonLink to="profile" variant="secondary" iconLeft={PencilSquareIcon} block>
+          <ButtonLink to={href('/speaker/settings/profile')} variant="secondary" iconLeft={PencilSquareIcon} block>
             Edit your profile
           </ButtonLink>
         </div>

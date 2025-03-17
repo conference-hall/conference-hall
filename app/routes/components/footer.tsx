@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, href } from 'react-router';
 
 import { Container } from '~/design-system/layouts/container.tsx';
 
@@ -16,13 +16,13 @@ export function Footer() {
 export function LegalLinks() {
   return (
     <div className="flex gap-4 justify-center items-center text-sm text-gray-500">
-      <Link to="/docs/terms" target="_blank" className="hover:underline underline-offset-2">
+      <Link to={href('/docs/terms')} target="_blank" className="hover:underline underline-offset-2">
         Terms
       </Link>
-      <Link to="/docs/privacy" target="_blank" className="hover:underline underline-offset-2">
+      <Link to={href('/docs/privacy')} target="_blank" className="hover:underline underline-offset-2">
         Privacy
       </Link>
-      <Link to="/docs/license" target="_blank" className="hover:underline underline-offset-2">
+      <Link to={href('/docs/license')} target="_blank" className="hover:underline underline-offset-2">
         License
       </Link>
       <a
