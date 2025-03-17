@@ -42,7 +42,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
       <Listbox name={name} value={selected} onChange={setSelected} multiple>
         {({ open }) => (
           <div className="relative mt-2">
-            <ListboxButton className="relative w-full cursor-default rounded-md border border-gray-300 bg-white h-9 pl-2 pr-10 text-left shadow-xs focus:border-indigo-500 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-sm">
+            <ListboxButton className="relative w-full cursor-default rounded-md border border-gray-300 bg-white h-9 pl-2 pr-10 text-left focus:border-indigo-500 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-sm">
               {selected.length > 0 ? (
                 <div className="space-x-1">
                   <SelectedOptions selectedValues={selected} options={options} />

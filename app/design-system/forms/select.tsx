@@ -54,7 +54,7 @@ export default function Select({
               {label}
             </Label>
             <div className={cx('relative', { 'mt-1': !srOnly })}>
-              <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-600 text-sm leading-6">
+              <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 ring-1 ring-inset ring-gray-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-600 text-sm leading-6">
                 <span className="flex items-center truncate">
                   {Icon && <Icon className={cx('mr-2 h-4 w-4', iconClassname)} aria-hidden="true" />}
                   {name}
