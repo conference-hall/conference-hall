@@ -11,6 +11,7 @@ export default [
   route('auth/forgot-password', './routes/auth+/forgot-password.tsx'),
   route('auth/reset-password', './routes/auth+/reset-password.tsx'),
   route('auth/email-verification', './routes/auth+/email-verification.tsx'),
+  route('auth/verify-email', './routes/auth+/verify-email.tsx'),
 
   // Event pages
   route(':event', './routes/$event+/_layout.tsx', [

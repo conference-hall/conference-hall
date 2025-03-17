@@ -94,7 +94,7 @@ export async function getSessionUserId(request: Request): Promise<string | null>
   return userId;
 }
 
-export async function verifyEmail(request: Request) {
+export async function sendEmailVerification(request: Request) {
   const session = await getSession(request);
   const jwt = session.get('jwt');
   const uid = session.get('uid');
