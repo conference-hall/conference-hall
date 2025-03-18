@@ -72,7 +72,7 @@ export class SettingsSecurityPage extends PageObject {
   async linkEmailProvider(email: string, password: string) {
     const dialog = this.page.getByRole('dialog');
     await dialog.getByRole('heading', { name: 'Link with email & password' }).waitFor();
-    await dialog.getByRole('textbox', { name: 'example@site.com' }).fill(email);
+    await dialog.getByPlaceholder('example@site.com').fill(email);
     await dialog.getByLabel('Password', { exact: true }).fill(password);
     await dialog.getByRole('button', { name: 'Link account' }).click();
   }

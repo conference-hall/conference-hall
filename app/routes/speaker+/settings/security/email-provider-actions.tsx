@@ -59,7 +59,7 @@ export function NewEmailProviderModal() {
             <Input
               label="Email address"
               placeholder="example@site.com"
-              name="email"
+              name="new-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
