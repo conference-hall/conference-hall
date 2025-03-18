@@ -24,12 +24,14 @@ https://conference-hall.io
 - ⚡️ Make it public or private
 - 👥 Use teams to share an event between organizers
 - 💡 Custom formats and categories for the talks
-- 📥 Send survey to speakers
+- 📥 Custom survey for speakers
+- 📊 Dashboard and metrics on call for paper and reviews
 - ⭐️ Review proposals
 - 💬 Discussion between organizers about a proposal
 - ✅ Mark proposals as accepted, declined...
 - 💌 Publish result to speakers and notify them with emails
 - 👌 Get speaker confirmations
+- 📅 Build your conference schedule
 - 📃 Export the proposals
 - 🌍 Some integrations (Slack, API...)
 
@@ -82,9 +84,9 @@ npm run db:reset
 
 #### Execute tests
 
-The docker image for Postgres DB and Firebase emulators MUST be running.
+The docker image for Postgres DB, Redis and Firebase emulators MUST be running.
 
-Install Playwright browser for Vitest browser tests:
+Install Playwright browser for components and e2e tests:
 
 ```sh
 npx playwright install --with-deps chromium
@@ -96,7 +98,7 @@ Execute unit and integration tests:
 npm run test
 ```
 
-Execute end-to-end tests (Dev server MUST be running):
+Execute end-to-end tests:
 
 ```sh
 npm run test:e2e
