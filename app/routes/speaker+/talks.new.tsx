@@ -30,7 +30,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
 export default function NewTalkRoute({ actionData: errors }: Route.ComponentProps) {
   return (
-    <Page className="md:mt-4 lg:mt-4">
+    <Page>
       <H1 srOnly>Create a new talk</H1>
 
       <Card>

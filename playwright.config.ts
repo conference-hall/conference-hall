@@ -18,7 +18,7 @@ export default defineConfig({
   workers: 1,
   fullyParallel: false,
   forbidOnly: CI,
-  retries: CI ? 2 : 0,
+  retries: 0,
   reporter: 'list',
 
   projects: [

@@ -1,14 +1,15 @@
 import {
   ArrowRightStartOnRectangleIcon,
   BellIcon,
+  Cog6ToothIcon,
   FireIcon,
   MagnifyingGlassIcon,
   MicrophoneIcon,
   PlusIcon,
   Square3Stack3DIcon,
-} from '@heroicons/react/20/solid';
+} from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import { Link, useSubmit } from 'react-router';
+import { Link, href, useSubmit } from 'react-router';
 
 import { Avatar, AvatarName } from '~/design-system/avatar.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
@@ -45,11 +46,10 @@ export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificat
         >
           <nav aria-label="User navigation" className="flex h-full flex-col overflow-y-auto">
             <ul className="relative flex-1 p-0.5">
-              <MenuLink to="/" icon={MagnifyingGlassIcon} onClick={handleClose}>
+              <MenuLink to={href('/')} icon={MagnifyingGlassIcon} onClick={handleClose}>
                 Search events
               </MenuLink>
-
-              <MenuLink to="/notifications" icon={BellIcon} count={notificationsCount} onClick={handleClose}>
+              <MenuLink to={href('/notifications')} icon={BellIcon} count={notificationsCount} onClick={handleClose}>
                 Notifications
               </MenuLink>
 
@@ -61,12 +61,14 @@ export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificat
                 </Text>
               </li>
 
-              <MenuLink to="/speaker" icon={FireIcon} onClick={handleClose}>
+              <MenuLink to={href('/speaker')} icon={FireIcon} onClick={handleClose}>
                 Activity
               </MenuLink>
-
-              <MenuLink to="/speaker/talks" icon={MicrophoneIcon} onClick={handleClose}>
+              <MenuLink to={href('/speaker/talks')} icon={MicrophoneIcon} onClick={handleClose}>
                 Talk library
+              </MenuLink>
+              <MenuLink to={href('/speaker/settings')} icon={Cog6ToothIcon} onClick={handleClose}>
+                Settings
               </MenuLink>
 
               <Divider as="li" className="my-2" />
@@ -80,17 +82,22 @@ export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificat
               )}
 
               {teams.map((team) => (
-                <MenuLink key={team.slug} to={`/team/${team.slug}`} icon={Square3Stack3DIcon} onClick={handleClose}>
+                <MenuLink
+                  key={team.slug}
+                  to={href('/team/:team', { team: team.slug })}
+                  icon={Square3Stack3DIcon}
+                  onClick={handleClose}
+                >
                   {team.name}
                 </MenuLink>
               ))}
 
               {hasTeamAccess ? (
-                <MenuLink to="/team/new" icon={PlusIcon} onClick={handleClose}>
+                <MenuLink to={href('/team/new')} icon={PlusIcon} onClick={handleClose}>
                   New team
                 </MenuLink>
               ) : (
-                <MenuLink to="/team/request" icon={Square3Stack3DIcon} onClick={handleClose}>
+                <MenuLink to={href('/team/request')} icon={Square3Stack3DIcon} onClick={handleClose}>
                   Become organizer
                 </MenuLink>
               )}
@@ -167,7 +174,7 @@ function SignOutMenu() {
     try {
       await getClientAuth().signOut();
     } finally {
-      await submit({}, { method: 'POST', action: '/auth/logout' });
+      await submit({}, { method: 'POST', action: href('/auth/logout') });
     }
   };
 

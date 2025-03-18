@@ -1,32 +1,17 @@
-import type { Locator, Page } from '@playwright/test';
+import type { Locator } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
+import { href } from 'react-router';
 
 export class ProfilePage extends PageObject {
-  readonly heading: Locator;
-  readonly fullNameInput: Locator;
-  readonly emailInput: Locator;
-  readonly avatarInput: Locator;
-  readonly bioInput: Locator;
-  readonly referencesInput: Locator;
-  readonly companyInput: Locator;
-  readonly locationInput: Locator;
-  readonly socialLinkInput: Locator;
-
-  constructor(page: Page) {
-    super(page);
-    this.heading = page.getByRole('heading', { name: 'My profile' });
-    this.fullNameInput = page.getByLabel('Full name');
-    this.emailInput = page.getByLabel('Email address');
-    this.avatarInput = page.getByLabel('Avatar picture URL');
-    this.bioInput = page.getByLabel('Biography');
-    this.referencesInput = page.getByLabel('Speaker references');
-    this.companyInput = page.getByLabel('Company');
-    this.locationInput = page.getByLabel('Location (city, country)');
-    this.socialLinkInput = page.getByLabel('Social link 1');
-  }
+  readonly heading: Locator = this.page.getByRole('heading', { name: 'Profile', exact: true });
+  readonly bioInput: Locator = this.page.getByLabel('Biography');
+  readonly referencesInput: Locator = this.page.getByLabel('Speaker references');
+  readonly companyInput: Locator = this.page.getByLabel('Company');
+  readonly locationInput: Locator = this.page.getByLabel('Location (city, country)');
+  readonly socialLinkInput: Locator = this.page.getByLabel('Social link 1');
 
   async goto() {
-    await this.page.goto('/speaker/profile');
+    await this.page.goto(href('/speaker/settings/profile'));
     await this.waitFor();
   }
 
@@ -34,31 +19,12 @@ export class ProfilePage extends PageObject {
     await this.heading.waitFor();
   }
 
-  async fillPersonalInfoForm(name: string, email: string, avatarUrl: string) {
-    await this.fullNameInput.fill(name);
-    await this.emailInput.fill(email);
-    await this.avatarInput.fill(avatarUrl);
-    await this.page.getByLabel('Personal information').getByRole('button', { name: 'Save' }).click();
-  }
-
-  async fillSpeakerDetails(bio: string, references: string) {
+  async fillProfile(bio: string, references: string, company: string, location: string, socialLink: string) {
     await this.bioInput.fill(bio);
     await this.referencesInput.fill(references);
-    await this.page.getByLabel('Speaker details').getByRole('button', { name: 'Save' }).click();
-  }
-
-  async fillAdditionalInfo(company: string, location: string, socialLink: string) {
     await this.companyInput.fill(company);
     await this.locationInput.fill(location);
     await this.socialLinkInput.fill(socialLink);
-    await this.page.getByLabel('Additional information').getByRole('button', { name: 'Save' }).click();
-  }
-
-  async fullNameError() {
-    return this.getInputDescription(this.fullNameInput);
-  }
-
-  async emailError() {
-    return this.getInputDescription(this.emailInput);
+    await this.page.getByRole('button', { name: 'Save profile' }).click();
   }
 }

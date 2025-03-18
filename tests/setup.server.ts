@@ -24,3 +24,4 @@ vi.mock('../app/libs/jobs/job.ts', () => {
 
 // Mock console
 global.console.info = vi.fn();
+global.console.error = vi.fn();

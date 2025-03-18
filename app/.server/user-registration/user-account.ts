@@ -59,8 +59,8 @@ export class UserAccount {
       passwordResetUrl.searchParams.set('email', email);
 
       await sendResetPasswordEmail({ email, passwordResetUrl: passwordResetUrl.toString() });
-    } catch (_error: any) {
-      console.error(_error?.message);
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -82,8 +82,8 @@ export class UserAccount {
 
       await sendVerificationEmail({ email, emailVerificationUrl: emailVerificationUrl.toString() });
       return true;
-    } catch (_error: any) {
-      console.error(_error?.message);
+    } catch (error) {
+      console.error(error);
       return false;
     }
   }

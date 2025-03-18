@@ -49,7 +49,7 @@ export function TalkForm({
   const hasCategories = categories && categories.length > 0;
 
   return (
-    <Form id={id} method="POST" className="space-y-8 lg:space-y-10" onSubmit={onSubmit}>
+    <Form id={id} method="POST" className="space-y-6 lg:space-y-8" onSubmit={onSubmit}>
       <Input
         name="title"
         type="text"

@@ -2,7 +2,7 @@ import { CheckIcon } from '@heroicons/react/16/solid';
 import { CheckBadgeIcon, KeyIcon } from '@heroicons/react/24/outline';
 import * as Firebase from 'firebase/auth';
 import { type FormEvent, useState } from 'react';
-import { Form, useFetcher, useNavigate, useSubmit } from 'react-router';
+import { Form, href, useFetcher, useNavigate, useSubmit } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
@@ -38,8 +38,8 @@ export function NewEmailProviderModal() {
       const credentials = await Firebase.linkWithCredential(currentUser, credential);
       const token = await credentials.user.getIdToken(true);
       await fetcher.submit(
-        { token, redirectTo: '/speaker/profile/security' },
-        { method: 'POST', action: '/auth/login' },
+        { token, redirectTo: href('/speaker/settings') },
+        { method: 'POST', action: href('/auth/login') },
       );
     } catch (error) {
       setError(getFirebaseError(error));
@@ -59,7 +59,7 @@ export function NewEmailProviderModal() {
             <Input
               label="Email address"
               placeholder="example@site.com"
-              name="email"
+              name="new-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -113,7 +113,7 @@ export function ChangePasswordModal({ email }: ChangePasswordProps) {
       const credential = Firebase.EmailAuthProvider.credential(email, currentPassword);
       await Firebase.reauthenticateWithCredential(currentUser, credential);
       await Firebase.updatePassword(currentUser, newPassword);
-      await navigate('/auth/login');
+      await navigate(href('/auth/login'));
     } catch (error) {
       setError(getFirebaseError(error));
     }
