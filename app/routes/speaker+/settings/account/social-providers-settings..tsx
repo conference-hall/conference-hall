@@ -31,19 +31,18 @@ export function LinkProvider({ providerId }: LinkProviderProps) {
 type UnlinkProviderProps = {
   providerId: ProviderId | 'password';
   disabled?: boolean;
-  onUnlink: (providerId: ProviderId | 'password') => void;
+  onUnlink: (providerId: ProviderId | 'password') => Promise<void>;
 };
 
 export function UnlinkProvider({ providerId, disabled, onUnlink }: UnlinkProviderProps) {
   const unlinkProvider = async () => {
+    if (disabled) return;
     const confirm = window.confirm('Are you sure you want to unlink this account?');
     if (!confirm) return;
-
-    if (disabled) return;
     const { currentUser } = getClientAuth();
     if (!currentUser) return;
     await Firebase.unlink(currentUser, providerId);
-    onUnlink(providerId);
+    await onUnlink(providerId);
   };
 
   return (

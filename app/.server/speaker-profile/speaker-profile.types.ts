@@ -2,13 +2,13 @@ import { type ZodSchema, z } from 'zod';
 
 const SocialLinksSchema = makeFilteredArraySchema(z.string().url().max(100));
 
-export const AccountInfoSchema = z.object({
-  name: z.string().trim().min(1),
+export const EmailSchema = z.object({
   email: z.string().email().trim().min(1),
-  picture: z.string().url().trim().nullable().default(null),
 });
 
 export const ProfileSchema = z.object({
+  name: z.string().trim().min(1),
+  picture: z.string().url().trim().nullable().default(null),
   bio: z.string().trim().nullable().default(null),
   references: z.string().trim().nullable().default(null),
   company: z.string().trim().nullable().default(null),
@@ -16,7 +16,11 @@ export const ProfileSchema = z.object({
   socialLinks: SocialLinksSchema.default([]),
 });
 
-export type ProfileData = z.infer<typeof AccountInfoSchema> | z.infer<typeof ProfileSchema>;
+export const UnlinkProviderSchema = z.object({
+  newEmail: z.string().nullable().default(null),
+});
+
+export type ProfileData = z.infer<typeof EmailSchema> | z.infer<typeof ProfileSchema>;
 
 export type SocialLinks = z.infer<typeof SocialLinksSchema>;
 

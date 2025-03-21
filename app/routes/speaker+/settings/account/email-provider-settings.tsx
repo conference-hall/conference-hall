@@ -7,7 +7,7 @@ type Props = {
   passwordProvider?: Firebase.UserInfo;
   emailVerified: boolean;
   canUnlink: boolean;
-  onUnlink: (providerId: ProviderId | 'password') => void;
+  onUnlink: (providerId: ProviderId | 'password') => Promise<void>;
 };
 
 export function EmailProviderSettings({ passwordProvider, emailVerified, canUnlink, onUnlink }: Props) {

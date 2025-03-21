@@ -6,7 +6,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { ProfileNotFoundError, SpeakerProfile } from './speaker-profile.ts';
-import { AccountInfoSchema, ProfileSchema } from './speaker-profile.types.ts';
+import { EmailSchema, ProfileSchema } from './speaker-profile.types.ts';
 
 describe('SpeakerProfile', () => {
   let user: User;
@@ -98,28 +98,18 @@ describe('SpeakerProfile', () => {
 });
 
 describe('Settings schemas', () => {
-  describe('AccountInfoSchema', () => {
-    it('validates personal information', async () => {
-      const result = AccountInfoSchema.safeParse({
-        name: 'John Doe',
-        email: 'john.doe@email.com',
-        picture: 'https://example.com/photo.jpg',
-      });
-
-      expect(result.success && result.data).toEqual({
-        name: 'John Doe',
-        email: 'john.doe@email.com',
-        picture: 'https://example.com/photo.jpg',
-      });
+  describe('EmailSchema', () => {
+    it('validates email', async () => {
+      const result = EmailSchema.safeParse({ email: 'john.doe@email.com' });
+      expect(result.success && result.data).toEqual({ email: 'john.doe@email.com' });
     });
 
-    it('validates mandatory and format for personal information', async () => {
-      const result = AccountInfoSchema.safeParse({ name: '', email: '' });
+    it('validates mandatory and format', async () => {
+      const result = EmailSchema.safeParse({ email: '' });
 
       expect(result.success).toEqual(false);
       if (!result.success) {
         const { fieldErrors } = result.error.flatten();
-        expect(fieldErrors.name).toEqual(['String must contain at least 1 character(s)']);
         expect(fieldErrors.email).toEqual(['Invalid email', 'String must contain at least 1 character(s)']);
       }
     });
@@ -128,6 +118,8 @@ describe('Settings schemas', () => {
   describe('ProfileSchema', () => {
     it('validates user details', async () => {
       const result = ProfileSchema.safeParse({
+        name: 'John Doe',
+        picture: 'https://example.com/photo.jpg',
         bio: 'lorem ipsum',
         references: 'impedit quidem quisquam',
         company: 'company',
@@ -136,12 +128,32 @@ describe('Settings schemas', () => {
       });
 
       expect(result.success && result.data).toEqual({
+        name: 'John Doe',
+        picture: 'https://example.com/photo.jpg',
         bio: 'lorem ipsum',
         references: 'impedit quidem quisquam',
         company: 'company',
         location: 'location',
         socialLinks: ['https://github.com/profile'],
       });
+    });
+
+    it('validates mandatory and format', async () => {
+      const result = ProfileSchema.safeParse({
+        name: '',
+        picture: 'https://example.com/photo.jpg',
+        bio: 'lorem ipsum',
+        references: 'impedit quidem quisquam',
+        company: 'company',
+        location: 'location',
+        socialLinks: ['https://github.com/profile'],
+      });
+
+      expect(result.success).toEqual(false);
+      if (!result.success) {
+        const { fieldErrors } = result.error.flatten();
+        expect(fieldErrors.name).toEqual(['String must contain at least 1 character(s)']);
+      }
     });
   });
 });
