@@ -37,6 +37,7 @@ test('links and unlinks providers, change password, verify email', async ({ page
 
   // signin user
   await page.goto(emailVerificationLink || '');
+  await loginPage.waitFor();
   await loginPage.passwordInput.fill('Password123');
   await loginPage.signinButton.click();
   await homePage.waitFor();
