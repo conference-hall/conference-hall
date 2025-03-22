@@ -22,9 +22,9 @@ describe('UserAccount', () => {
       });
 
       const user = await db.user.findFirst({ where: { id: userId }, include: { authenticationMethods: true } });
+      expect(user?.uid).toEqual('123');
       expect(user?.name).toEqual('Bob');
       expect(user?.email).toEqual('bob@example.com');
-      expect(user?.emailVerified).toEqual(true);
       expect(user?.termsAccepted).toEqual(false);
       expect(user?.picture).toEqual('https://image.com/image.png');
       expect(user?.authenticationMethods[0].uid).toEqual('123');
@@ -42,9 +42,9 @@ describe('UserAccount', () => {
       });
 
       const user = await db.user.findFirst({ where: { id: userId }, include: { authenticationMethods: true } });
+      expect(user?.uid).toEqual('123');
       expect(user?.name).toEqual('Bob');
       expect(user?.email).toEqual('123@example.com');
-      expect(user?.emailVerified).toEqual(false);
       expect(user?.termsAccepted).toEqual(false);
       expect(user?.picture).toBe(null);
       expect(user?.authenticationMethods[0].uid).toEqual('123');

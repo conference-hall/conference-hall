@@ -22,14 +22,7 @@ export class UserAccount {
 
     if (authentication) return authentication.user.id;
 
-    const {
-      uid,
-      name = '(No name)',
-      email = `${data.uid}@example.com`,
-      emailVerified,
-      picture,
-      provider = 'unknown',
-    } = data;
+    const { uid, name = '(No name)', email = `${data.uid}@example.com`, picture, provider = 'unknown' } = data;
 
     const newAuthentication = await db.authenticationMethod.create({
       data: {
@@ -38,7 +31,7 @@ export class UserAccount {
         email,
         picture,
         provider,
-        user: { create: { name, email, emailVerified, picture } },
+        user: { create: { name, email, picture, uid } },
       },
       include: { user: true },
     });

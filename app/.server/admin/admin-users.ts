@@ -64,7 +64,6 @@ export class AdminUsers {
     return {
       name: user.name,
       email: user.email,
-      emailVerified: user.emailVerified,
       termsAccepted: user.termsAccepted,
       updatedAt: user.updatedAt,
       createdAt: user.createdAt,

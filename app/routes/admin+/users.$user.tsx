@@ -33,14 +33,6 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
           <dl className="divide-y divide-gray-100">
             <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
               <Text as="dt" size="s" weight="medium">
-                Email verified
-              </Text>
-              <Text as="dd" variant="secondary" className="col-span-3">
-                {user.emailVerified ? 'Yes' : 'No'}
-              </Text>
-            </div>
-            <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
-              <Text as="dt" size="s" weight="medium">
                 Terms accepted
               </Text>
               <Text as="dd" variant="secondary" className="col-span-3">
