@@ -92,7 +92,6 @@ describe('AdminUsers', () => {
       expect(user).toEqual({
         name: user1.name,
         email: user1.email,
-        emailVerified: user1.emailVerified,
         termsAccepted: user1.termsAccepted,
         updatedAt: user1.updatedAt,
         createdAt: user1.createdAt,
