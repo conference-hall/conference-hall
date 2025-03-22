@@ -8,7 +8,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import { SponsorLink } from '~/routes/components/sponsor-link.tsx';
 import type { Route } from './+types/index.ts';
 import { CfpStatusCard } from './components/overview-page/cfp-status-card.tsx';
 import { DashboardTabs } from './components/overview-page/dashboard-tabs.tsx';
@@ -82,10 +81,6 @@ export default function OverviewRoute({ loaderData: { tab, metrics } }: Route.Co
               </div>
             )}
           </Card>
-        </div>
-
-        <div className="flex">
-          <SponsorLink />
         </div>
       </div>
     </Page>

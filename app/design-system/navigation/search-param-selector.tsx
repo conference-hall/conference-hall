@@ -3,9 +3,15 @@ import { useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router';
 
 type Selector = { label: string; value: string };
-type SearchParamSelectorProps = { param: string; defaultValue?: string; selectors: Array<Selector> };
 
-export function SearchParamSelector({ param, defaultValue, selectors }: SearchParamSelectorProps) {
+type SearchParamSelectorProps = {
+  param: string;
+  defaultValue?: string;
+  className?: string;
+  selectors: Array<Selector>;
+};
+
+export function SearchParamSelector({ param, defaultValue, className, selectors }: SearchParamSelectorProps) {
   const [searchParams] = useSearchParams();
   const current = searchParams.get(param) ?? defaultValue;
 
@@ -19,7 +25,7 @@ export function SearchParamSelector({ param, defaultValue, selectors }: SearchPa
   );
 
   return (
-    <div className="flex gap-1  w-fit rounded-lg bg-slate-100 p-1 ring-1 ring-inset ring-gray-200">
+    <div className={cx('flex gap-1  w-fit rounded-lg bg-slate-100 p-1 ring-1 ring-inset ring-gray-200', className)}>
       {selectors.map((selector) => (
         <Link
           key={selector.value}

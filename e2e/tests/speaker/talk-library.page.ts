@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
+import { NewTalkPage } from './new-talk.page.ts';
 import { TalkPage } from './talk.page.ts';
 
 export class TalkLibraryPage extends PageObject {
@@ -21,6 +22,11 @@ export class TalkLibraryPage extends PageObject {
 
   async waitFor() {
     await this.heading.waitFor();
+  }
+
+  async clickOnNewTalk() {
+    await this.page.getByRole('link', { name: 'New talk' }).click();
+    return new NewTalkPage(this.page);
   }
 
   talkLink(talkName: string) {

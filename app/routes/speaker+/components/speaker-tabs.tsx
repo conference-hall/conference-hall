@@ -1,9 +1,6 @@
-import { PlusIcon } from '@heroicons/react/20/solid';
 import { Cog6ToothIcon, FireIcon, MicrophoneIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { href } from 'react-router';
-
-import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 
@@ -25,10 +22,6 @@ export function SpeakerTabs({ className }: Props) {
           Settings
         </NavTab>
       </NavTabs>
-
-      <ButtonLink to={href('/speaker/talks/new')} iconLeft={PlusIcon}>
-        New talk
-      </ButtonLink>
     </Page.NavHeader>
   );
 }

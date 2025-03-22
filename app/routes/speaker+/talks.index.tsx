@@ -1,9 +1,11 @@
+import { PlusIcon } from '@heroicons/react/16/solid';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
-import { useSearchParams } from 'react-router';
+import { href, useSearchParams } from 'react-router';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalksListFilterSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
 import { BadgeDot } from '~/design-system/badges.tsx';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -35,15 +37,21 @@ export default function SpeakerTalksRoute({ loaderData: talks }: Route.Component
       <List>
         <List.Header>
           <Text weight="semibold">{`${talks.length} talks`}</Text>
-          <SearchParamSelector
-            param="filter"
-            defaultValue="active"
-            selectors={[
-              { label: 'Archived', value: 'archived' },
-              { label: 'Active', value: 'active' },
-              { label: 'All', value: 'all' },
-            ]}
-          />
+          <div className="flex items-center gap-4">
+            <SearchParamSelector
+              param="filter"
+              defaultValue="active"
+              className="hidden sm:flex"
+              selectors={[
+                { label: 'Archived', value: 'archived' },
+                { label: 'Active', value: 'active' },
+                { label: 'All', value: 'all' },
+              ]}
+            />
+            <ButtonLink to={href('/speaker/talks/new')} iconLeft={PlusIcon}>
+              New talk
+            </ButtonLink>
+          </div>
         </List.Header>
         <List.Content aria-label="Talks list">
           {talks.length === 0 && (
