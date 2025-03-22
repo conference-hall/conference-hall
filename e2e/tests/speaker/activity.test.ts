@@ -60,10 +60,4 @@ test('displays activity page', async ({ page }) => {
     const profilePage = await activityPage.clickOnEditProfile();
     await profilePage.waitFor();
   });
-
-  await test.step('navigates to new talk page', async () => {
-    await activityPage.goto();
-    const newTalkPage = await activityPage.clickOnNewTalk();
-    await newTalkPage.waitFor();
-  });
 });

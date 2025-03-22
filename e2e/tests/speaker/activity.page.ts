@@ -1,7 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
 import { ProposalPage } from '../event-page/proposal.page.ts';
-import { NewTalkPage } from './new-talk.page.ts';
 import { SettingsProfilePage } from './settings-profile.page.ts';
 
 export class ActivityPage extends PageObject {
@@ -39,10 +38,5 @@ export class ActivityPage extends PageObject {
   async clickOnEditProfile() {
     await this.page.getByRole('link', { name: 'Edit your profile' }).click();
     return new SettingsProfilePage(this.page);
-  }
-
-  async clickOnNewTalk() {
-    await this.page.getByRole('link', { name: 'New talk' }).click();
-    return new NewTalkPage(this.page);
   }
 }

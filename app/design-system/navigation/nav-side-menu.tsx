@@ -1,7 +1,7 @@
 import { cx } from 'class-variance-authority';
 import { NavLink } from 'react-router';
 
-import { SponsorLink } from '~/routes/components/sponsor-link.tsx';
+import { HeartIcon } from '@heroicons/react/16/solid';
 import { Badge } from '../badges.tsx';
 import { Card } from '../layouts/card.tsx';
 import { Text } from '../typography.tsx';
@@ -27,9 +27,16 @@ export function NavSideMenu({ items, className, ...rest }: Props) {
             ) : null}
           </NavLink>
         ))}
+        <a
+          href="https://github.com/sponsors/conference-hall"
+          target="_blank"
+          className={menuStyles(false)}
+          rel="noreferrer"
+        >
+          <HeartIcon className="mr-2 size-4 shrink-0 fill-red-300 group-hover:fill-red-400" aria-hidden="true" />
+          <Text className="grow">Support Conference Hall</Text>
+        </a>
       </Card>
-
-      <SponsorLink />
     </aside>
   );
 }

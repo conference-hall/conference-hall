@@ -39,6 +39,14 @@ test.describe('when user has talks in their library', () => {
     await talkPage.waitFor();
     await expect(page.getByRole('heading', { name: 'My Talk 1' })).toBeVisible();
   });
+
+  test('navigates to new talk page', async ({ page }) => {
+    const talkLibraryPage = new TalkLibraryPage(page);
+    await talkLibraryPage.goto();
+
+    const newTalkPage = await talkLibraryPage.clickOnNewTalk();
+    await newTalkPage.waitFor();
+  });
 });
 
 test.describe('when user has no talks in their library', () => {
