@@ -1,7 +1,7 @@
 import { href } from 'react-router';
 import { userFactory } from 'tests/factories/users.ts';
 import { test } from '../../fixtures.ts';
-import { ProfilePage } from '../speaker/profile.page.ts';
+import { SettingsProfilePage } from '../speaker/settings-profile.page.ts';
 import { LoginPage } from './login.page.ts';
 
 test('log in with Google and redirect', async ({ page }) => {
@@ -13,6 +13,6 @@ test('log in with Google and redirect', async ({ page }) => {
   await loginPage.waitFor();
   await loginPage.signInWithGoogle(user.name);
 
-  const profilePage = new ProfilePage(page);
+  const profilePage = new SettingsProfilePage(page);
   await profilePage.waitFor();
 });

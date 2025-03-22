@@ -32,6 +32,8 @@ export default defineConfig({
       command: CI ? 'npm run start' : 'npm run dev',
       url: APP_URL,
       reuseExistingServer: !CI,
+      stderr: CI ? 'ignore' : 'pipe',
+      stdout: CI ? 'ignore' : 'pipe',
     },
   ],
 

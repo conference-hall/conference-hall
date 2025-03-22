@@ -1,6 +1,6 @@
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
-import { SelectNative } from '~/design-system/forms/select-native.tsx';
+import { type Option, SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
@@ -10,10 +10,12 @@ type Props = { email: string; authLoaded: boolean };
 export function ChangeContactEmailForm({ email, authLoaded }: Props) {
   const providers = getClientAuth().currentUser?.providerData ?? [];
 
-  const options = providers
-    .map((provider) => provider.email)
-    .filter((email) => email !== null)
-    .map((email) => ({ name: email, value: email }));
+  const options: Array<Option> = [];
+  for (const provider of providers) {
+    if (provider.email === null) continue;
+    if (options.some((option) => option.value === provider.email)) continue;
+    options.push({ name: provider.email, value: provider.email });
+  }
 
   return (
     <Card as="section">

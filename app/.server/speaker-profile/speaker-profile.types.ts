@@ -16,11 +16,19 @@ export const ProfileSchema = z.object({
   socialLinks: SocialLinksSchema.default([]),
 });
 
+export const FunnelSpeakerSchema = z.object({
+  bio: z.string().trim().nullable().default(null),
+  references: z.string().trim().nullable().default(null),
+});
+
 export const UnlinkProviderSchema = z.object({
   newEmail: z.string().nullable().default(null),
 });
 
-export type ProfileData = z.infer<typeof EmailSchema> | z.infer<typeof ProfileSchema>;
+export type ProfileData =
+  | z.infer<typeof EmailSchema>
+  | z.infer<typeof ProfileSchema>
+  | z.infer<typeof FunnelSpeakerSchema>;
 
 export type SocialLinks = z.infer<typeof SocialLinksSchema>;
 

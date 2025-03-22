@@ -54,7 +54,13 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
         </Card.Title>
 
         <Card.Content>
-          <Form method="POST" id="speaker-profile-form" aria-labelledby="speaker-profile" preventScrollReset>
+          <Form
+            method="POST"
+            id="speaker-profile-form"
+            aria-labelledby="speaker-profile"
+            className="space-y-6"
+            preventScrollReset
+          >
             <Input name="name" label="Full name" defaultValue={name || ''} error={errors?.name} />
             <div className="flex justify-between gap-8">
               <Input

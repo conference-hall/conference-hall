@@ -3,7 +3,7 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Form, href, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
-import { ProfileSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
+import { FunnelSpeakerSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -40,7 +40,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     await TalkSubmission.for(userId, params.event).removeCoSpeaker(params.talk, speakerId);
     return null;
   } else {
-    const result = parseWithZod(form, { schema: ProfileSchema });
+    const result = parseWithZod(form, { schema: FunnelSpeakerSchema });
     if (result.status !== 'success') return result.error;
     await SpeakerProfile.for(userId).save(result.value);
   }
