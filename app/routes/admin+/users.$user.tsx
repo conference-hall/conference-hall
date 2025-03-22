@@ -59,7 +59,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
         </div>
       </Card>
 
-      <List>
+      {/* <List>
         <List.Header>
           <H2 size="s">{`Authentication methods (${user.authenticationMethods.length})`}</H2>
         </List.Header>
@@ -75,7 +75,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
             </List.Row>
           ))}
         </List.Content>
-      </List>
+      </List> */}
 
       <List>
         <List.Header>

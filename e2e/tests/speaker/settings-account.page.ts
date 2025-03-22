@@ -3,7 +3,7 @@ import { PageObject } from 'e2e/page-object.ts';
 import { href } from 'react-router';
 
 export class SettingsAccountPage extends PageObject {
-  readonly heading: Locator = this.page.getByRole('heading', { name: 'Security' });
+  readonly heading: Locator = this.page.getByRole('heading', { name: 'Account' });
   readonly emailInput: Locator = this.page.getByLabel('Email address');
   readonly saveContactEmail: Locator = this.page.getByRole('button', { name: 'Save contact email' });
   readonly authMethods: Locator = this.page.getByRole('list', { name: 'Authentication methods list' });

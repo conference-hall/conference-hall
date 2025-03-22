@@ -20,6 +20,7 @@ export default defineConfig({
   forbidOnly: CI,
   retries: 0,
   reporter: 'list',
+  timeout: 20000,
 
   projects: [
     { name: 'setup', testMatch: /.*\.setup\.ts/ },
@@ -32,8 +33,6 @@ export default defineConfig({
       command: CI ? 'npm run start' : 'npm run dev',
       url: APP_URL,
       reuseExistingServer: !CI,
-      stderr: CI ? 'ignore' : 'pipe',
-      stdout: CI ? 'ignore' : 'pipe',
     },
   ],
 

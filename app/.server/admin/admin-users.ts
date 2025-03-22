@@ -49,10 +49,7 @@ export class AdminUsers {
   }
 
   async getUserInfo(userId: string) {
-    const user = await db.user.findUnique({
-      where: { id: userId },
-      include: { authenticationMethods: true },
-    });
+    const user = await db.user.findUnique({ where: { id: userId } });
 
     if (!user) throw new UserNotFoundError();
 
@@ -67,12 +64,7 @@ export class AdminUsers {
       termsAccepted: user.termsAccepted,
       updatedAt: user.updatedAt,
       createdAt: user.createdAt,
-      authenticationMethods: user.authenticationMethods.map((method) => ({
-        provider: method.provider,
-        email: method.email,
-        uid: method.uid,
-        createdAt: method.createdAt,
-      })),
+      authenticationMethods: [],
       teams: memberships.map((member) => ({
         slug: member.team.slug,
         name: member.team.name,

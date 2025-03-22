@@ -68,7 +68,7 @@ export default function AccountRoute({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="space-y-4 lg:space-y-6 lg:col-span-9">
-      <H1 srOnly>Account & Security</H1>
+      <H1 srOnly>Account</H1>
 
       <ChangeContactEmailForm email={email} authLoaded={authLoaded} />
 

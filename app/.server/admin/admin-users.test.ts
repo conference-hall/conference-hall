@@ -86,7 +86,6 @@ describe('AdminUsers', () => {
       const adminUsers = await AdminUsers.for(admin.id);
       const user = await adminUsers.getUserInfo(user1.id);
 
-      const authMethod = await db.authenticationMethod.findFirst({ where: { userId: user1.id } });
       const teamMember = await db.teamMember.findFirst({ where: { memberId: user1.id, teamId: team.id } });
 
       expect(user).toEqual({
@@ -95,14 +94,7 @@ describe('AdminUsers', () => {
         termsAccepted: user1.termsAccepted,
         updatedAt: user1.updatedAt,
         createdAt: user1.createdAt,
-        authenticationMethods: [
-          {
-            provider: authMethod?.provider,
-            email: authMethod?.email,
-            uid: authMethod?.uid,
-            createdAt: authMethod?.createdAt,
-          },
-        ],
+        authenticationMethods: [],
         teams: [
           {
             slug: team.slug,

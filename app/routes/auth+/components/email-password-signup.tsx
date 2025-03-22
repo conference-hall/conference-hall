@@ -1,6 +1,6 @@
 import * as Firebase from 'firebase/auth';
 import { type FormEvent, useState } from 'react';
-import { useFetcher } from 'react-router';
+import { Form, useNavigation, useSubmit } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -21,8 +21,9 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
   const [email, setEmail] = useState(defaultEmail || '');
   const [password, setPassword] = useState('');
 
-  const fetcher = useFetcher();
-  const loading = fetcher.state !== 'idle';
+  const submit = useSubmit();
+  const navigation = useNavigation();
+  const loading = navigation.state !== 'idle';
 
   const signUp = async (event: FormEvent) => {
     event.preventDefault();
@@ -36,14 +37,14 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
       const credentials = await Firebase.createUserWithEmailAndPassword(clientAuth, email, password);
       await Firebase.updateProfile(credentials.user, { displayName: name });
       const token = await credentials.user.getIdToken(true);
-      await fetcher.submit({ token, redirectTo }, { method: 'POST', action: '/auth/login' });
+      await submit({ token, redirectTo }, { method: 'POST', action: '/auth/login' });
     } catch (error) {
       setError(getFirebaseError(error));
     }
   };
 
   return (
-    <fetcher.Form className="space-y-4" onSubmit={signUp}>
+    <Form className="space-y-4" onSubmit={signUp}>
       <Input
         label="Full name"
         placeholder="John Doe"
@@ -74,6 +75,6 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
           {error}
         </Callout>
       ) : null}
-    </fetcher.Form>
+    </Form>
   );
 }
