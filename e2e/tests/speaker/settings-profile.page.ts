@@ -2,7 +2,7 @@ import type { Locator } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
 import { href } from 'react-router';
 
-export class ProfilePage extends PageObject {
+export class SettingsProfilePage extends PageObject {
   readonly heading: Locator = this.page.getByRole('heading', { name: 'Profile', exact: true });
   readonly bioInput: Locator = this.page.getByLabel('Biography');
   readonly referencesInput: Locator = this.page.getByLabel('Speaker references');

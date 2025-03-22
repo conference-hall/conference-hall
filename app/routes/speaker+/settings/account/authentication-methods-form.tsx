@@ -1,6 +1,7 @@
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import * as Firebase from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { useSubmit } from 'react-router';
 import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -10,35 +11,33 @@ import { PROVIDERS, type ProviderId, getClientAuth } from '~/libs/auth/firebase.
 import { EmailProviderSettings } from './email-provider-settings.tsx';
 import { LinkProvider, UnlinkProvider } from './social-providers-settings..tsx';
 
-export function AuthenticationMethodsForm() {
+type Props = { email: string; authLoaded: boolean };
+
+export function AuthenticationMethodsForm({ email, authLoaded }: Props) {
+  const submit = useSubmit();
+
   const [error, setError] = useState<string>('');
-  const [emailVerified, setEmailVerified] = useState<boolean>(false);
-  const [currentProviders, setCurrentProviders] = useState<Firebase.UserInfo[]>([]);
+  const { emailVerified = false, providerData = [] } = getClientAuth().currentUser ?? {};
 
   useEffect(() => {
     // Get error messages from the redirect result after linking a provider
     Firebase.getRedirectResult(getClientAuth()).catch((error) => setError(getFirebaseError(error)));
-    // Listen to auth state changes to update the list of providers
-    Firebase.onAuthStateChanged(getClientAuth(), (user) => {
-      if (!user) return;
-      setEmailVerified(user.emailVerified);
-      setCurrentProviders(user.providerData);
-    });
   }, []);
 
-  const loading = currentProviders.length === 0;
-  const canUnlink = currentProviders.length > 1;
-  const passwordProvider = currentProviders.find((p) => p.providerId === 'password');
+  const canUnlink = providerData.length > 1;
+  const passwordProvider = providerData.find((p) => p.providerId === 'password');
 
-  const removeProvider = (providerId: ProviderId | 'password') => {
-    setCurrentProviders((providers) => providers.filter((p) => p.providerId !== providerId));
+  const onUnlink = async (providerId: ProviderId | 'password') => {
+    const remainingEmails = providerData.filter((p) => p.providerId !== providerId).map(({ email }) => email);
+    const newEmail = !remainingEmails.includes(email) ? remainingEmails[0] : null;
+    await submit({ newEmail, intent: 'unlink-provider' }, { method: 'POST', navigate: true });
   };
 
   return (
     <Card as="section">
       <Card.Title>
         <H2>Authentication methods</H2>
-        <Subtitle>Connect with your favorite providers</Subtitle>
+        <Subtitle>Connect with your email and favorite providers</Subtitle>
       </Card.Title>
 
       <Card.Content>
@@ -58,28 +57,28 @@ export function AuthenticationMethodsForm() {
                   ? `${passwordProvider?.email} • ⚠️ Not verified`
                   : passwordProvider?.email
               }
-              loading={loading}
+              loading={!authLoaded}
             >
               <EmailProviderSettings
                 passwordProvider={passwordProvider}
                 emailVerified={emailVerified}
                 canUnlink={canUnlink}
-                onUnlink={removeProvider}
+                onUnlink={onUnlink}
               />
             </ProviderItem>
 
             {PROVIDERS.map((provider) => {
-              const userProvider = currentProviders.find((p) => p.providerId === provider.id);
+              const userProvider = providerData.find((p) => p.providerId === provider.id);
               return (
                 <ProviderItem
                   key={provider.id}
                   label={provider.label}
                   icon={provider.icon}
                   email={userProvider?.email}
-                  loading={loading}
+                  loading={!authLoaded}
                 >
                   {userProvider ? (
-                    <UnlinkProvider providerId={provider.id} disabled={!canUnlink} onUnlink={removeProvider} />
+                    <UnlinkProvider providerId={provider.id} disabled={!canUnlink} onUnlink={onUnlink} />
                   ) : (
                     <LinkProvider providerId={provider.id} />
                   )}

@@ -2,6 +2,7 @@ import { parseWithZod } from '@conform-to/zod';
 import { Form } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { ProfileSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
+import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
@@ -38,22 +39,40 @@ export const action = async ({ request }: Route.ActionArgs) => {
 };
 
 export default function ProfileRoute({ actionData: errors }: Route.ComponentProps) {
-  const { bio, company, location, references, socialLinks } = useSpeakerProfile();
+  const { name, picture, bio, company, location, references, socialLinks } = useSpeakerProfile();
 
   return (
     <div className="space-y-4 lg:space-y-6 ">
       <H1 srOnly>Profile</H1>
 
       <Card as="section">
-        <Form method="POST" aria-labelledby="speaker-profile" preventScrollReset>
-          <Card.Title>
-            <H2 id="speaker-profile">Speaker profile</H2>
-            <Subtitle>
-              Give more information about you, these information will be visible by organizers when you submit a talk.
-            </Subtitle>
-          </Card.Title>
+        <Card.Title>
+          <H2 id="speaker-profile">Speaker profile</H2>
+          <Subtitle>
+            Give more information about you, these information will be visible by organizers when you submit a talk.
+          </Subtitle>
+        </Card.Title>
 
-          <Card.Content>
+        <Card.Content>
+          <Form
+            method="POST"
+            id="speaker-profile-form"
+            aria-labelledby="speaker-profile"
+            className="space-y-6"
+            preventScrollReset
+          >
+            <Input name="name" label="Full name" defaultValue={name || ''} error={errors?.name} />
+            <div className="flex justify-between gap-8">
+              <Input
+                name="picture"
+                label="Avatar picture URL"
+                defaultValue={picture || ''}
+                key={picture}
+                error={errors?.picture}
+                className="flex-1"
+              />
+              <Avatar picture={picture} name={name} size="xl" square />
+            </div>
             <Input name="company" label="Company" defaultValue={company || ''} error={errors?.company} />
             <Input
               name="location"
@@ -89,14 +108,14 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
               error={errors?.references}
               defaultValue={references || ''}
             />
-          </Card.Content>
+          </Form>
+        </Card.Content>
 
-          <Card.Actions>
-            <Button type="submit" name="intent" value="speaker-profile">
-              Save profile
-            </Button>
-          </Card.Actions>
-        </Form>
+        <Card.Actions>
+          <Button type="submit" name="intent" value="speaker-profile" form="speaker-profile-form">
+            Save profile
+          </Button>
+        </Card.Actions>
       </Card>
     </div>
   );

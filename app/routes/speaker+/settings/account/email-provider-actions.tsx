@@ -2,7 +2,7 @@ import { CheckIcon } from '@heroicons/react/16/solid';
 import { CheckBadgeIcon, KeyIcon } from '@heroicons/react/24/outline';
 import * as Firebase from 'firebase/auth';
 import { type FormEvent, useState } from 'react';
-import { Form, href, useFetcher, useNavigate, useSubmit } from 'react-router';
+import { Form, href, useNavigate, useSubmit } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
@@ -15,7 +15,7 @@ import { PasswordInput } from '~/routes/auth+/components/password-input.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 export function NewEmailProviderModal() {
-  const fetcher = useFetcher();
+  const submit = useSubmit();
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string>('');
   const [fieldErrors, setFieldErrors] = useState<SubmissionErrors>(null);
@@ -37,10 +37,7 @@ export function NewEmailProviderModal() {
       const credential = Firebase.EmailAuthProvider.credential(email, password);
       const credentials = await Firebase.linkWithCredential(currentUser, credential);
       const token = await credentials.user.getIdToken(true);
-      await fetcher.submit(
-        { token, redirectTo: href('/speaker/settings') },
-        { method: 'POST', action: href('/auth/login') },
-      );
+      await submit({ token, redirectTo: href('/speaker/settings') }, { method: 'POST', action: href('/auth/login') });
     } catch (error) {
       setError(getFirebaseError(error));
     }
@@ -55,7 +52,7 @@ export function NewEmailProviderModal() {
       <Modal title="Link with email & password" onClose={() => setOpen(false)} open={open}>
         <Modal.Content className="space-y-6">
           <Subtitle>Link your account with an email and password to enable password-based authentication.</Subtitle>
-          <fetcher.Form id="new-email-provider" onSubmit={linkAccount} className="space-y-4">
+          <Form id="new-email-provider" onSubmit={linkAccount} className="space-y-4">
             <Input
               label="Email address"
               placeholder="example@site.com"
@@ -72,7 +69,7 @@ export function NewEmailProviderModal() {
                 {error}
               </Callout>
             )}
-          </fetcher.Form>
+          </Form>
         </Modal.Content>
 
         <Modal.Actions>

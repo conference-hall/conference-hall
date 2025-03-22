@@ -3,10 +3,12 @@ import type { SelectHTMLAttributes } from 'react';
 
 import { Label } from '../typography.tsx';
 
+export type Option = { name: string; value: string };
+
 type Props = {
   name: string;
   label: string;
-  options: Array<{ name: string; value: string }>;
+  options: Array<Option>;
   placeholder?: string;
   inline?: boolean;
   srOnly?: boolean;

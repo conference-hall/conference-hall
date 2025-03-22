@@ -16,7 +16,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 const MENU_ITEMS = [
-  { to: href('/speaker/settings'), icon: ShieldCheckIcon, label: 'Account & security' },
+  { to: href('/speaker/settings'), icon: ShieldCheckIcon, label: 'Account' },
   { to: href('/speaker/settings/profile'), icon: UserCircleIcon, label: 'Speaker profile' },
 ];
 

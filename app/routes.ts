@@ -46,7 +46,7 @@ export default [
   route('speaker', './routes/speaker+/_layout.tsx', [
     index('./routes/speaker+/index.tsx'),
     route('settings', './routes/speaker+/settings/layout.tsx', [
-      index('./routes/speaker+/settings/security.route.tsx'),
+      index('./routes/speaker+/settings/account.route.tsx'),
       route('profile', './routes/speaker+/settings/profile.route.tsx'),
     ]),
     route('talks', './routes/speaker+/talks.index.tsx'),
