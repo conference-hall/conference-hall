@@ -36,14 +36,7 @@ export async function createSession(request: Request) {
   const { uid, name, email, email_verified, picture, firebase } = idToken;
 
   const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
-  const userId = await UserAccount.register({
-    uid,
-    name,
-    email,
-    emailVerified: email_verified,
-    picture,
-    provider: firebase.sign_in_provider,
-  });
+  const userId = await UserAccount.register({ uid, name, email, picture });
 
   const needVerification = await UserAccount.checkEmailVerification(email, email_verified, firebase.sign_in_provider);
   if (needVerification) return destroySession(request, '/auth/email-verification');

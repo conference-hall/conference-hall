@@ -8,35 +8,20 @@ type UserAccountCreateInput = {
   uid: string;
   name: string;
   email?: string;
-  emailVerified?: boolean;
   picture?: string;
-  provider: string;
 };
 
 export class UserAccount {
   static async register(data: UserAccountCreateInput) {
-    const authentication = await db.authenticationMethod.findUnique({
-      where: { uid: data.uid },
-      include: { user: true },
-    });
+    const user = await db.user.findFirst({ where: { uid: data.uid } });
 
-    if (authentication) return authentication.user.id;
+    if (user?.uid) return user.id;
 
-    const { uid, name = '(No name)', email = `${data.uid}@example.com`, picture, provider = 'unknown' } = data;
+    const { uid, name = '(No name)', email = `${data.uid}@example.com`, picture } = data;
 
-    const newAuthentication = await db.authenticationMethod.create({
-      data: {
-        uid: uid,
-        name,
-        email,
-        picture,
-        provider,
-        user: { create: { name, email, picture, uid } },
-      },
-      include: { user: true },
-    });
+    const newUser = await db.user.create({ data: { name, email, picture, uid: uid } });
 
-    return newAuthentication.user.id;
+    return newUser.id;
   }
 
   static async sendResetPasswordEmail(email: string) {

@@ -8,18 +8,21 @@ import { organizerKeyFactory } from './organizer-key.ts';
 const TRAITS = {
   'clark-kent': {
     id: '9licQdPND0UtBhShJ7vveJ703sJs',
+    uid: '9licQdPND0UtBhShJ7vveJ703sJs',
     name: 'Clark Kent',
     email: 'superman@example.com',
     picture: 'https://i.pravatar.cc/150?img=13',
   },
   'bruce-wayne': {
     id: 'e9HDr773xNpXbOy2H0C7FDhGD2fc',
+    uid: 'e9HDr773xNpXbOy2H0C7FDhGD2fc',
     name: 'Bruce Wayne',
     email: 'batman@example.com',
     picture: 'https://i.pravatar.cc/150?img=56',
   },
   'peter-parker': {
     id: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
+    uid: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
     name: 'Peter Parker',
     email: 'spiderman@example.com',
     picture: 'https://i.pravatar.cc/150?img=8',
@@ -62,18 +65,5 @@ export const userFactory = async (options: FactoryOptions = {}) => {
     ...attributes,
   };
 
-  const user = await db.user.create({ data });
-
-  await db.authenticationMethod.create({
-    data: {
-      uid: user.id,
-      name: user.name,
-      email: user.email,
-      picture: user.picture,
-      provider: 'google.com',
-      userId: user.id,
-    },
-  });
-
-  return user;
+  return db.user.create({ data });
 };
