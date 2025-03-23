@@ -83,7 +83,7 @@ export class AdminUsers {
   async #getAuthUser(uid: string | null) {
     if (!uid) return null;
     try {
-      const firebaseUser = await auth.getUser('uid');
+      const firebaseUser = await auth.getUser(uid);
       return {
         lastSignInAt: new Date(firebaseUser.metadata.lastSignInTime),
         emailVerified: firebaseUser.emailVerified,
