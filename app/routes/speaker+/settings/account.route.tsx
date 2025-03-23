@@ -14,7 +14,7 @@ import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { EmailPasswordSchema, EmailSchema } from '~/libs/validators/auth.ts';
 import { useSpeakerProfile } from '~/routes/components/contexts/speaker-profile-context.tsx';
 import type { Route } from './+types/account.route.ts';
-import { AuthenticationMethodsForm } from './account/authentication-methods-form.tsx';
+import { AuthenticationMethods } from './account/authentication-methods.tsx';
 import { ChangeContactEmailForm } from './account/change-contact-email-form.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
@@ -54,6 +54,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
       const result = parseWithZod(form, { schema: UnlinkProviderSchema });
       if (result.status !== 'success') return toast('error', 'An error occurred.');
       if (result.value.newEmail) {
+        console.log(result.value.newEmail);
         await SpeakerProfile.for(userId).save({ email: result.value.newEmail });
       }
       return toast('success', 'Authentication method unlinked.');
@@ -86,7 +87,7 @@ export default function AccountRoute({ loaderData }: Route.ComponentProps) {
 
       <ChangeContactEmailForm email={email} authLoaded={authLoaded} />
 
-      {withEmailPasswordSignin ? <AuthenticationMethodsForm email={email} authLoaded={authLoaded} /> : null}
+      {withEmailPasswordSignin ? <AuthenticationMethods email={email} authLoaded={authLoaded} /> : null}
     </div>
   );
 }

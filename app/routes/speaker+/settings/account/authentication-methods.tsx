@@ -13,7 +13,7 @@ import { LinkProvider, UnlinkProvider } from './social-providers-settings..tsx';
 
 type Props = { email: string; authLoaded: boolean };
 
-export function AuthenticationMethodsForm({ email, authLoaded }: Props) {
+export function AuthenticationMethods({ email, authLoaded }: Props) {
   const submit = useSubmit();
 
   const [error, setError] = useState<string>('');
@@ -29,7 +29,7 @@ export function AuthenticationMethodsForm({ email, authLoaded }: Props) {
 
   const onUnlink = async (providerId: ProviderId | 'password') => {
     const remainingEmails = providerData.filter((p) => p.providerId !== providerId).map(({ email }) => email);
-    const newEmail = !remainingEmails.includes(email) ? remainingEmails[0] : null;
+    const newEmail = !remainingEmails.includes(email) ? remainingEmails[0] : '';
     await submit({ newEmail, intent: 'unlink-provider' }, { method: 'POST', navigate: true });
   };
 
