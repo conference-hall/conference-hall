@@ -2,8 +2,12 @@ import type { Team, User } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import type { Mock } from 'vitest';
+import { auth } from '~/libs/auth/firebase.server.ts';
 import { NotAuthorizedError, UserNotFoundError } from '~/libs/errors.server.ts';
 import { AdminUsers } from './admin-users.ts';
+
+vi.mock('~/libs/auth/firebase.server.ts', () => ({ auth: { getUser: vi.fn() } }));
 
 describe('AdminUsers', () => {
   let admin: User;
@@ -83,15 +87,53 @@ describe('AdminUsers', () => {
     });
 
     it('get user info', async () => {
+      const getUser = auth.getUser as Mock;
+      getUser.mockResolvedValue({
+        emailVerified: true,
+        metadata: { lastSignInTime: new Date('2024-02-02').toISOString() },
+        providerData: [{ providerId: 'password', email: user1.email }],
+      });
+
       const adminUsers = await AdminUsers.for(admin.id);
       const user = await adminUsers.getUserInfo(user1.id);
 
       const teamMember = await db.teamMember.findFirst({ where: { memberId: user1.id, teamId: team.id } });
-
       expect(user).toEqual({
+        uid: user1.uid,
         name: user1.name,
         email: user1.email,
+        emailVerified: true,
         termsAccepted: user1.termsAccepted,
+        lastSignInAt: new Date('2024-02-02'),
+        updatedAt: user1.updatedAt,
+        createdAt: user1.createdAt,
+        authenticationMethods: [{ provider: 'password', email: user1.email }],
+        teams: [
+          {
+            slug: team.slug,
+            name: team.name,
+            role: teamMember?.role,
+            createdAt: teamMember?.createdAt,
+          },
+        ],
+      });
+    });
+
+    it('get user info but not found in firebase auth', async () => {
+      const getUser = auth.getUser as Mock;
+      getUser.mockRejectedValue(new Error('User not found'));
+
+      const adminUsers = await AdminUsers.for(admin.id);
+      const user = await adminUsers.getUserInfo(user1.id);
+
+      const teamMember = await db.teamMember.findFirst({ where: { memberId: user1.id, teamId: team.id } });
+      expect(user).toEqual({
+        uid: user1.uid,
+        name: user1.name,
+        email: user1.email,
+        emailVerified: false,
+        termsAccepted: user1.termsAccepted,
+        lastSignInAt: null,
         updatedAt: user1.updatedAt,
         createdAt: user1.createdAt,
         authenticationMethods: [],
