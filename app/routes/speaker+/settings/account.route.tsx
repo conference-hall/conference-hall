@@ -54,7 +54,6 @@ export const action = async ({ request }: Route.ActionArgs) => {
       const result = parseWithZod(form, { schema: UnlinkProviderSchema });
       if (result.status !== 'success') return toast('error', 'An error occurred.');
       if (result.value.newEmail) {
-        console.log(result.value.newEmail);
         await SpeakerProfile.for(userId).save({ email: result.value.newEmail });
       }
       return toast('success', 'Authentication method unlinked.');

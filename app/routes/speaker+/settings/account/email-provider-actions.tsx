@@ -1,16 +1,12 @@
 import { CheckIcon } from '@heroicons/react/16/solid';
-import { CheckBadgeIcon, KeyIcon } from '@heroicons/react/24/outline';
-import * as Firebase from 'firebase/auth';
+import { CheckBadgeIcon } from '@heroicons/react/24/outline';
 import { type FormEvent, useState } from 'react';
-import { Form, href, useNavigate, useSubmit } from 'react-router';
+import { Form, useSubmit } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
-import { Callout } from '~/design-system/callout.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
-import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
-import { getClientAuth } from '~/libs/auth/firebase.ts';
-import { validateEmailAndPassword, validatePassword } from '~/libs/validators/auth.ts';
+import { validateEmailAndPassword } from '~/libs/validators/auth.ts';
 import { PasswordInput } from '~/routes/auth+/components/password-input.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
@@ -61,91 +57,6 @@ export function NewEmailProviderModal() {
           </Button>
           <Button type="submit" variant="primary" form="new-email-provider">
             Link account
-          </Button>
-        </Modal.Actions>
-      </Modal>
-    </>
-  );
-}
-
-type ChangePasswordProps = { email: string };
-
-export function ChangePasswordModal({ email }: ChangePasswordProps) {
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const [error, setError] = useState<string>('');
-  const [fieldErrors, setFieldErrors] = useState<SubmissionErrors>(null);
-
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-
-  const changePassword = async (event: FormEvent) => {
-    event.preventDefault();
-    setError('');
-
-    const { currentUser } = getClientAuth();
-    if (!currentUser) return;
-
-    const fieldErrors = validatePassword(newPassword);
-    if (fieldErrors) return setFieldErrors(fieldErrors);
-
-    try {
-      const credential = Firebase.EmailAuthProvider.credential(email, currentPassword);
-      await Firebase.reauthenticateWithCredential(currentUser, credential);
-      await Firebase.updatePassword(currentUser, newPassword);
-      await navigate(href('/auth/login'));
-    } catch (error) {
-      setError(getFirebaseError(error));
-    }
-  };
-
-  return (
-    <>
-      <Button
-        type="button"
-        variant="secondary"
-        size="s"
-        iconLeft={KeyIcon}
-        onClick={() => setOpen(true)}
-        className="grow"
-      >
-        Change password
-      </Button>
-
-      <Modal title="Change your password" onClose={() => setOpen(false)} open={open}>
-        <Modal.Content className="space-y-6">
-          <Subtitle>
-            Change the password linked to your account. You will need to verify the new password to complete.
-          </Subtitle>
-          <Form id="change-password-form" onSubmit={changePassword} className="space-y-4">
-            <PasswordInput
-              name="currentPassword"
-              label="Current password"
-              value={currentPassword}
-              onChange={setCurrentPassword}
-            />
-            <PasswordInput
-              name="newPassword"
-              label="New password"
-              value={newPassword}
-              onChange={setNewPassword}
-              isNewPassword
-              error={fieldErrors?.password}
-            />
-            {error && (
-              <Callout variant="error" role="alert">
-                {error}
-              </Callout>
-            )}
-          </Form>
-        </Modal.Content>
-
-        <Modal.Actions>
-          <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="primary" form="change-password-form">
-            Change password
           </Button>
         </Modal.Actions>
       </Modal>

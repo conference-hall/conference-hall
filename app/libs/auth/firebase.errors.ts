@@ -11,6 +11,7 @@ const EMAIL_ALREADY_IN_USE = 'auth/email-already-in-use';
 const WRONG_PASSWORD = 'auth/wrong-password';
 const WEAK_PASSWORD = 'auth/weak-password';
 const ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL = 'auth/account-exists-with-different-credential';
+const CREDENTIAL_ALREADY_IN_USE = 'auth/credential-already-in-use';
 
 export function getFirebaseError(error: any): string {
   const { code } = error as AuthError;
@@ -27,6 +28,8 @@ export function getFirebaseError(error: any): string {
       return 'Your password is not secure enough';
     case ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL:
       return 'You need to connect your account with the provider you used to sign up.';
+    case CREDENTIAL_ALREADY_IN_USE:
+      return 'This authentication method is already in use by another account.';
     case EXPIRED_ACTION_CODE:
       return 'Your email link has expired. Please try resetting your password again.';
     case INVALID_ACTION_CODE:

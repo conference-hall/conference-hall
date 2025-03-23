@@ -1,11 +1,10 @@
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
-import { href, redirect } from 'react-router';
+import { href } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
-import { getUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/email-verification.ts';
 
@@ -13,9 +12,7 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Email verification | Conference Hall' }]);
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getUserSession(request);
-  if (userId) return redirect('/');
+export const loader = async () => {
   return null;
 };
 

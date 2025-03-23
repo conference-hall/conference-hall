@@ -33,24 +33,12 @@ export class SettingsAccountPage extends PageObject {
     return this.authMethod(provider).getByRole('button', { name: 'Unlink account', exact: true });
   }
 
-  changePasswordButton() {
-    return this.page.getByRole('button', { name: 'Change password' });
-  }
-
   verifyEmailButton() {
     return this.page.getByRole('button', { name: 'Send verification email' });
   }
 
   emailSent() {
     return this.page.getByRole('button', { name: 'Email sent' });
-  }
-
-  async changePassword(currentPassword: string, newPassword: string) {
-    const dialog = this.page.getByRole('dialog');
-    await dialog.getByRole('heading', { name: 'Change your password' }).waitFor();
-    await dialog.getByLabel('Current password').fill(currentPassword);
-    await dialog.getByLabel('New password').fill(newPassword);
-    await dialog.getByRole('button', { name: 'Change password' }).click();
   }
 
   async linkEmailProvider(email: string, password: string) {

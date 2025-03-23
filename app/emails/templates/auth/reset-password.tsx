@@ -31,7 +31,7 @@ export default function ResetPasswordEmail({ passwordResetUrl }: EmailData) {
 
       <Text>If you didn’t ask to reset your password, you can ignore this email.</Text>
       <Text>Thanks,</Text>
-      <Text>Your Conference Hall team</Text>
+      <Text>Conference Hall team</Text>
     </BaseEventEmail>
   );
 }
