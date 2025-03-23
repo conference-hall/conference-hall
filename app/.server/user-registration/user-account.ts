@@ -23,7 +23,6 @@ export class UserAccount {
     return newUser.id;
   }
 
-  // TODO: Add tests
   static async linkEmailProvider(uid: string, email: string, password: string) {
     try {
       await firebaseAuth.updateUser(uid, { email, password, providerToLink: { uid, email, providerId: 'password' } });

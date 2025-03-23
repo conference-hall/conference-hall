@@ -1,3 +1,5 @@
+import { AuthClientErrorCode } from 'firebase-admin/auth';
+import { FirebaseError } from 'firebase/app';
 import { db } from 'prisma/db.server.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
@@ -6,7 +8,7 @@ import { auth } from '../../libs/auth/firebase.server.ts';
 import { UserAccount } from './user-account.ts';
 
 vi.mock('../../libs/auth/firebase.server.ts', () => ({
-  auth: { generatePasswordResetLink: vi.fn(), generateEmailVerificationLink: vi.fn() },
+  auth: { updateUser: vi.fn(), generatePasswordResetLink: vi.fn(), generateEmailVerificationLink: vi.fn() },
 }));
 
 describe('UserAccount', () => {
@@ -54,6 +56,47 @@ describe('UserAccount', () => {
       });
 
       expect(userId).toEqual(user.id);
+    });
+  });
+
+  describe('linkEmailProvider', () => {
+    it('links email provider and sends the verification email', async () => {
+      const updateUserMock = auth.updateUser as Mock;
+      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
+      generateEmailVerificationLinkMock.mockResolvedValue('https://firebase.app/verification-link?oobCode=my-code');
+
+      await UserAccount.linkEmailProvider('uid123', 'foo@example.com', 'password');
+
+      expect(updateUserMock).toHaveBeenCalledWith('uid123', {
+        email: 'foo@example.com',
+        password: 'password',
+        providerToLink: { uid: 'uid123', email: 'foo@example.com', providerId: 'password' },
+      });
+
+      expect(generateEmailVerificationLinkMock).toHaveBeenCalledWith('foo@example.com');
+      expect(sendEmail.trigger).toHaveBeenCalledWith({
+        template: 'auth/email-verification',
+        from: 'Conference Hall <no-reply@mg.conference-hall.io>',
+        to: ['foo@example.com'],
+        subject: 'Verify your email address for Conference Hall',
+        data: {
+          email: 'foo@example.com',
+          emailVerificationUrl: 'http://127.0.0.1:3000/auth/verify-email?oobCode=my-code&email=foo%40example.com',
+        },
+      });
+    });
+
+    it('returns an error when email already exists', async () => {
+      const updateUserMock = auth.updateUser as Mock;
+      const { code, message } = AuthClientErrorCode.EMAIL_ALREADY_EXISTS;
+      updateUserMock.mockRejectedValue(new FirebaseError(`auth/${code}`, message));
+      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
+
+      const error = await UserAccount.linkEmailProvider('uid123', 'foo@example.com', 'password');
+
+      expect(error).toEqual('Email or password is incorrect.');
+      expect(generateEmailVerificationLinkMock).not.toHaveBeenCalled();
+      expect(sendEmail.trigger).not.toHaveBeenCalled();
     });
   });
 
