@@ -12,14 +12,14 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { TagModal } from '~/routes/components/tags/tag-modal.tsx';
 import { Tag } from '~/routes/components/tags/tag.tsx';
 import type { Route } from './+types/tags.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
   const { count, tags, pagination } = await EventProposalTags.for(userId, params.team, params.event).list(
@@ -30,7 +30,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const intent = form.get('intent');
   const tags = EventProposalTags.for(userId, params.team, params.event);

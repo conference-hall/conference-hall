@@ -7,7 +7,7 @@ import { UnlinkProviderSchema } from '~/.server/speaker-profile/speaker-profile.
 import { UserAccount } from '~/.server/user-registration/user-account.ts';
 import { H1 } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
-import { getUid, requireSession, sendEmailVerification } from '~/libs/auth/session.ts';
+import { requireUserSession, sendEmailVerification } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
@@ -22,13 +22,13 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   const withEmailPasswordSignin = await flags.get('emailPasswordSignin');
   return { withEmailPasswordSignin };
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId, uid } = await requireUserSession(request);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
@@ -44,7 +44,6 @@ export const action = async ({ request }: Route.ActionArgs) => {
       const result = parseWithZod(form, { schema: EmailPasswordSchema });
       if (result.status !== 'success') return toast('error', 'An error occurred.');
 
-      const uid = await getUid(request);
       const error = await UserAccount.linkEmailProvider(uid, result.value.email, result.value.password);
       if (error) return toast('error', error);
 

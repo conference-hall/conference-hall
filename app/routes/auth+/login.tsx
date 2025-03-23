@@ -8,7 +8,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
-import { createSession, getSessionUserId } from '~/libs/auth/session.ts';
+import { createSession, getUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/login.ts';
@@ -21,7 +21,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getSessionUserId(request);
+  const userId = await getUserSession(request);
   if (userId) return redirect('/');
 
   const withEmailPasswordSignin = await flags.get('emailPasswordSignin');

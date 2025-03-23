@@ -4,7 +4,7 @@ import { UserProposal } from '~/.server/cfp-submissions/user-proposal.ts';
 import { ProposalParticipationSchema, getProposalUpdateSchema } from '~/.server/cfp-submissions/user-proposal.types.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 import { useCurrentEvent } from '../components/contexts/event-page-context.tsx';
@@ -13,13 +13,13 @@ import { TalkSection } from '../components/talks/talk-section.tsx';
 import type { Route } from './+types/proposals.$proposal.index.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const proposal = await UserProposal.for(userId, params.proposal).get();
   return proposal;
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const proposal = UserProposal.for(userId, params.proposal);
   const form = await request.formData();
   const intent = form.get('intent');

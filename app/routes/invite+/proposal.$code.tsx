@@ -4,7 +4,7 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { EventCard } from '../components/events/event-card.tsx';
 import { FullscreenPage } from '../components/fullscreen-page.tsx';
@@ -16,13 +16,13 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   const proposal = await CoSpeakerProposalInvite.with(params.code).check();
   return proposal;
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const proposal = await CoSpeakerProposalInvite.with(params.code).addCoSpeaker(userId);
   return redirect(`/${proposal.event.slug}/proposals/${proposal.id}`);
 };

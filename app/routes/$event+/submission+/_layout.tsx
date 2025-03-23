@@ -4,7 +4,7 @@ import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import { NestedErrorBoundary } from '~/routes/components/error-boundary.tsx';
 import type { Route } from './+types/_layout.ts';
@@ -14,7 +14,7 @@ import { SubmissionContextProvider } from './components/submission-context.tsx';
 export const handle = { step: 'root' };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   return null;
 };
 

@@ -10,7 +10,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H3, Subtitle } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { ROLE_NAMES } from '~/libs/formatters/team-roles.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
@@ -19,14 +19,14 @@ import type { Route } from './+types/settings.members.ts';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/member-actions.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
   return TeamMembers.for(userId, params.team).list(filters, page);
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const intent = form.get('intent')!;
   const memberId = String(form.get('memberId'))!;

@@ -15,7 +15,7 @@ import {
 } from '~/.server/reviews/proposal-review.types.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
@@ -36,7 +36,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const filters = parseUrlFilters(request.url);
   const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
   const activityFeed = ActivityFeed.for(userId, params.team, params.event, params.proposal);
@@ -52,7 +52,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 

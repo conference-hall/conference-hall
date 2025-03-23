@@ -2,7 +2,7 @@ import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { SpeakerActivities } from '~/.server/speaker-activities/speaker-activities.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { useSpeakerProfile } from '../components/contexts/speaker-profile-context.tsx';
 import type { Route } from './+types/index.ts';
@@ -14,7 +14,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const page = parseUrlPage(request.url);
   return SpeakerActivities.for(userId).list(page);
 };

@@ -13,7 +13,7 @@ import {
 } from '~/.server/event-schedule/event-schedule.types.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import type { Route } from './+types/$day.ts';
 import { ScheduleHeader } from './components/header/schedule-header.tsx';
@@ -27,7 +27,7 @@ import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
 
   const schedule = await eventSchedule.getScheduleSessions();
@@ -37,7 +37,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');

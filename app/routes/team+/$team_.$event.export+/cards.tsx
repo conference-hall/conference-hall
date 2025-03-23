@@ -1,7 +1,7 @@
 import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { getLanguage } from '~/libs/formatters/languages.ts';
 import { getLevel } from '~/libs/formatters/levels.ts';
 import { formatReviewNote } from '~/libs/formatters/reviews.ts';
@@ -11,7 +11,7 @@ import styles from './cards.css?url';
 export const links = () => [{ rel: 'stylesheet', href: styles }];
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const filters = parseUrlFilters(request.url);
   const exports = CfpReviewsExports.for(userId, params.team, params.event);
   return exports.forCards(filters);

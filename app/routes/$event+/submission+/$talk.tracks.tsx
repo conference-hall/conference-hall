@@ -8,7 +8,7 @@ import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import { CategoriesForm } from '~/routes/components/talks/talk-forms/categories-form.tsx';
 import { FormatsForm } from '~/routes/components/talks/talk-forms/formats-form.tsx';
@@ -18,13 +18,13 @@ import { useSubmissionNavigation } from './components/submission-context.tsx';
 export const handle = { step: 'tracks' };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
   return { formats: proposal.formats.map(({ id }) => id), categories: proposal.categories.map(({ id }) => id) };
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const schema = await EventPage.of(params.event).buildTracksSchema();
   const result = parseWithZod(form, { schema });

@@ -5,7 +5,7 @@ import { ProgressCard } from '~/design-system/dashboard/progress-card.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import type { Route } from './+types/index.ts';
@@ -17,7 +17,7 @@ import { ReviewersList } from './components/overview-page/reviewers-list.tsx';
 import { VisibilityStatusCard } from './components/overview-page/visibility-status-card.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const { searchParams } = new URL(request.url);
 
   if (searchParams.get('tab') === 'reviewers') {

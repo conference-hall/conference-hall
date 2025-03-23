@@ -1,10 +1,10 @@
 import { redirect } from 'react-router';
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import type { Route } from '../export/+types/json.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
 
   const schedule = await eventSchedule.forJsonExport();

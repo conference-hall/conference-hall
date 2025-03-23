@@ -58,23 +58,23 @@ export async function destroySession(request: Request, redirectTo?: string) {
   });
 }
 
-export async function requireSession(request: Request): Promise<string> {
-  const userId = await getSessionUserId(request);
+export async function requireUserSession(request: Request) {
+  const sessionUser = await getUserSession(request);
 
-  if (!userId) {
+  if (!sessionUser) {
     const redirectTo = new URL(request.url).pathname;
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
     throw redirect(`/auth/login?${searchParams}`);
   }
 
-  return userId;
+  return sessionUser;
 }
 
-export async function getSessionUserId(request: Request): Promise<string | null> {
+export async function getUserSession(request: Request) {
   const session = await getSession(request);
-  const jwt = session.get('jwt');
-  const uid = session.get('uid');
-  const userId = session.get('userId');
+  const jwt = session.get('jwt') as string | null;
+  const uid = session.get('uid') as string | null;
+  const userId = session.get('userId') as string | null;
 
   if (!jwt || !uid || !userId) {
     return null;
@@ -83,18 +83,12 @@ export async function getSessionUserId(request: Request): Promise<string | null>
   try {
     const idToken = await serverAuth.verifySessionCookie(jwt, true);
     if (uid !== idToken.uid) throw new Error('Invalid token uid');
+
+    return { userId, uid };
   } catch (_error) {
     await destroySession(request);
     return null;
   }
-
-  return userId;
-}
-
-// TODO: Factorize this function with getSessionUserId and requireSession
-export async function getUid(request: Request) {
-  const session = await getSession(request);
-  return session.get('uid');
 }
 
 export async function sendEmailVerification(request: Request) {

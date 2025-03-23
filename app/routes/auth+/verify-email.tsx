@@ -8,7 +8,7 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
-import { getSessionUserId } from '~/libs/auth/session.ts';
+import { getUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/verify-email.ts';
 
@@ -17,7 +17,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getSessionUserId(request);
+  const userId = await getUserSession(request);
   if (userId) return redirect('/');
   return null;
 };

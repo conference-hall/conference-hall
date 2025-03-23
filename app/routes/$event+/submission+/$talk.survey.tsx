@@ -6,7 +6,7 @@ import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { SurveyForm } from '~/routes/components/talks/talk-forms/survey-form.tsx';
 import type { Route } from './+types/$talk.survey.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
@@ -14,7 +14,7 @@ import { useSubmissionNavigation } from './components/submission-context.tsx';
 export const handle = { step: 'survey' };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const survey = SpeakerSurvey.for(params.event);
   const questions = await survey.getQuestions();
   const answers = await survey.getSpeakerAnswers(userId);
@@ -22,7 +22,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const survey = SpeakerSurvey.for(params.event);
   const schema = await survey.buildSurveySchema();
   const form = await request.formData();

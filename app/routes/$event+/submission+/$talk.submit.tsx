@@ -6,7 +6,7 @@ import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import { TalkSection } from '~/routes/components/talks/talk-section.tsx';
@@ -16,12 +16,12 @@ import { useSubmissionNavigation } from './components/submission-context.tsx';
 export const handle = { step: 'submission' };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   return TalkSubmission.for(userId, params.event).get(params.talk);
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
 
   await TalkSubmission.for(userId, params.event).submit(params.talk);
 

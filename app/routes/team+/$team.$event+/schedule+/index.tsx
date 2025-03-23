@@ -11,11 +11,11 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import type { Route } from './+types/index.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
   if (schedule) return redirect(`/team/${params.team}/${params.event}/schedule/0`);
 
@@ -29,7 +29,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const schedule = EventSchedule.for(userId, params.team, params.event);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ScheduleCreateSchema });

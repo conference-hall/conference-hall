@@ -5,7 +5,7 @@ import { UserTeam } from '~/.server/team/user-team.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { DeleteModalButton } from '~/routes/components/modals/delete-modal.tsx';
@@ -13,12 +13,12 @@ import { TeamForm } from '~/routes/components/teams/team-form.tsx';
 import type { Route } from './+types/settings.index.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
