@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/react';
 import { isRouteErrorResponse, useRouteError } from 'react-router';
 import { ErrorPage } from './errors/error-page.tsx';
 import { Forbidden } from './errors/forbidden.tsx';
@@ -28,8 +27,6 @@ export function NestedErrorBoundary() {
     if (error.status === 500) return <InternalServerError />;
 
     return <NotFound text={error.statusText} />;
-  } else if (error && error instanceof Error) {
-    Sentry.captureException(error);
   }
 
   return <UnexpectedError error={getError(error)} />;
