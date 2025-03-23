@@ -24,58 +24,71 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
         Go back
       </Link>
 
-      <Card>
+      <Card className="divide-y divide-gray-100">
         <div className="px-6 py-4">
           <H1>{user.name}</H1>
           <Subtitle>{user.email}</Subtitle>
         </div>
-        <div className="border-t border-gray-100">
-          <dl className="divide-y divide-gray-100">
+        <dl className="divide-y divide-gray-100">
+          <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
+            <Text as="dt" size="s" weight="medium">
+              Terms accepted
+            </Text>
+            <Text as="dd" variant="secondary" className="col-span-3">
+              {user.termsAccepted ? 'Yes' : 'No'}
+            </Text>
+          </div>
+          <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
+            <Text as="dt" size="s" weight="medium">
+              Email verified
+            </Text>
+            <Text as="dd" variant="secondary" className="col-span-3">
+              {user.emailVerified ? 'Yes' : 'No'}
+            </Text>
+          </div>
+          {user.lastSignInAt ? (
             <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
               <Text as="dt" size="s" weight="medium">
-                Terms accepted
+                Last signed in
               </Text>
               <Text as="dd" variant="secondary" className="col-span-3">
-                {user.termsAccepted ? 'Yes' : 'No'}
+                {format(user.lastSignInAt, DATETIME_FORMAT)}
               </Text>
             </div>
-            <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
-              <Text as="dt" size="s" weight="medium">
-                Created at
-              </Text>
-              <Text as="dd" variant="secondary" className="col-span-3">
-                {format(user.createdAt, DATETIME_FORMAT)}
-              </Text>
-            </div>
-            <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
-              <Text as="dt" size="s" weight="medium">
-                Updated at
-              </Text>
-              <Text as="dd" variant="secondary" className="col-span-3">
-                {format(user.updatedAt, DATETIME_FORMAT)}
-              </Text>
-            </div>
-          </dl>
-        </div>
+          ) : null}
+          <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
+            <Text as="dt" size="s" weight="medium">
+              Created at
+            </Text>
+            <Text as="dd" variant="secondary" className="col-span-3">
+              {format(user.createdAt, DATETIME_FORMAT)}
+            </Text>
+          </div>
+          <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
+            <Text as="dt" size="s" weight="medium">
+              Updated at
+            </Text>
+            <Text as="dd" variant="secondary" className="col-span-3">
+              {format(user.updatedAt, DATETIME_FORMAT)}
+            </Text>
+          </div>
+        </dl>
       </Card>
 
-      {/* <List>
+      <List>
         <List.Header>
           <H2 size="s">{`Authentication methods (${user.authenticationMethods.length})`}</H2>
+          <Subtitle size="xs">{user.uid}</Subtitle>
         </List.Header>
         <List.Content aria-label="Authentication methods list">
           {user.authenticationMethods.map((methods) => (
-            <List.Row key={methods.uid} className="py-4 px-6 flex justify-between items-center">
-              <div className="sm:flex gap-4 items-baseline">
-                <H3>{methods.provider}</H3>
-                <Subtitle size="xs">{methods.email}</Subtitle>
-                <Subtitle size="xs">{methods.uid}</Subtitle>
-              </div>
-              <Text variant="secondary">{format(methods.createdAt, DATETIME_FORMAT)}</Text>
+            <List.Row key={methods.provider} className="py-4 px-6 flex items-center gap-2">
+              <H3>{methods.provider}</H3>
+              <Subtitle size="xs">{methods.email}</Subtitle>
             </List.Row>
           ))}
         </List.Content>
-      </List> */}
+      </List>
 
       <List>
         <List.Header>

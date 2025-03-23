@@ -1,6 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
+import { auth } from '~/libs/auth/firebase.server.ts';
 import { UserNotFoundError } from '~/libs/errors.server.ts';
 import { Pagination } from '../shared/pagination.ts';
 import { needsAdminRole } from './authorization.ts';
@@ -53,18 +54,23 @@ export class AdminUsers {
 
     if (!user) throw new UserNotFoundError();
 
+    const authUser = await this.#getAuthUser(user.uid);
+
     const memberships = await db.teamMember.findMany({
       where: { memberId: userId },
       include: { team: true },
     });
 
     return {
+      uid: user.uid,
       name: user.name,
       email: user.email,
       termsAccepted: user.termsAccepted,
+      emailVerified: authUser?.emailVerified ?? false,
+      lastSignInAt: authUser?.lastSignInAt ?? null,
       updatedAt: user.updatedAt,
       createdAt: user.createdAt,
-      authenticationMethods: [],
+      authenticationMethods: authUser?.authenticationMethods || [],
       teams: memberships.map((member) => ({
         slug: member.team.slug,
         name: member.team.name,
@@ -72,5 +78,22 @@ export class AdminUsers {
         createdAt: member.createdAt,
       })),
     };
+  }
+
+  async #getAuthUser(uid: string | null) {
+    if (!uid) return null;
+    try {
+      const firebaseUser = await auth.getUser('uid');
+      return {
+        lastSignInAt: new Date(firebaseUser.metadata.lastSignInTime),
+        emailVerified: firebaseUser.emailVerified,
+        authenticationMethods: firebaseUser.providerData.map((provider) => ({
+          provider: provider.providerId,
+          email: provider.email,
+        })),
+      };
+    } catch (_) {
+      return null;
+    }
   }
 }
