@@ -2,7 +2,7 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { FullscreenPage } from '~/routes/components/fullscreen-page.tsx';
 import type { EventType } from '~/types/events.types.ts';
@@ -10,7 +10,7 @@ import { EventTypeRadioGroup } from '../../components/events/event-type-radio-gr
 import type { Route } from './+types/index.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   return null;
 };
 

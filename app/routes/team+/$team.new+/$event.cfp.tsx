@@ -6,7 +6,7 @@ import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { CfpConferenceOpeningSchema } from '~/.server/event-settings/user-event.types.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { EventCfpConferenceForm } from '~/routes/components/events/event-cfp-conference-form.tsx';
 import { FullscreenPage } from '~/routes/components/fullscreen-page.tsx';
@@ -14,7 +14,7 @@ import type { Route } from './+types/$event.cfp.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const event = await UserEvent.for(userId, params.team, params.event).get();
   if (event.type === 'MEETUP') {
     return redirect(`/team/${params.team}/${params.event}`);
@@ -23,7 +23,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const event = UserEvent.for(userId, params.team, params.event);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: CfpConferenceOpeningSchema });

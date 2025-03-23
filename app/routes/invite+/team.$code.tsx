@@ -3,7 +3,7 @@ import { TeamMemberInvite } from '~/.server/team/team-member-invite.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { FullscreenPage } from '../components/fullscreen-page.tsx';
 import type { Route } from './+types/team.$code.ts';
@@ -13,13 +13,13 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   const team = await TeamMemberInvite.with(params.code).check();
   return { name: team.name };
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const team = await TeamMemberInvite.with(params.code).addMember(userId);
   return redirect(`/team/${team.slug}`);
 };

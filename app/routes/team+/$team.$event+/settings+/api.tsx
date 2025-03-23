@@ -1,18 +1,18 @@
 import { v4 as uuid } from 'uuid';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import type { Route } from './+types/api.ts';
 import { EventProposalApiTryout, EventScheduleApiTryout } from './components/api-tryout-section.tsx';
 import { EnableApiSection } from './components/enable-api-section.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const intent = form.get('intent');
   const event = UserEvent.for(userId, params.team, params.event);

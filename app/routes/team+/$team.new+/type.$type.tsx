@@ -4,7 +4,7 @@ import { Form, redirect } from 'react-router';
 import { EventCreateSchema, TeamEvents } from '~/.server/team/team-events.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { FullscreenPage } from '~/routes/components/fullscreen-page.tsx';
 import type { EventType } from '~/types/events.types.ts';
 import { EventForm } from '../../components/events/event-form.tsx';
@@ -12,12 +12,12 @@ import type { Route } from './+types/type.$type.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const result = await parseWithZod(form, { schema: EventCreateSchema, async: true });
   if (result.status !== 'success') return result.error;

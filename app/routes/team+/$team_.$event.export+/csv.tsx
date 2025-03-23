@@ -1,12 +1,12 @@
 import { json2csv } from 'json-2-csv';
 import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import type { Languages } from '~/types/proposals.types.ts';
 import type { Route } from './+types/csv.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const filters = parseUrlFilters(request.url);
   const exports = CfpReviewsExports.for(userId, params.team, params.event);
   const results = await exports.forJson(filters);

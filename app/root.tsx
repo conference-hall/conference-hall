@@ -3,7 +3,7 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration, data } from 'react-rou
 import type { Route } from './+types/root.ts';
 import { UserInfo } from './.server/user-registration/user-info.ts';
 import { initializeFirebaseClient } from './libs/auth/firebase.ts';
-import { destroySession, getSessionUserId } from './libs/auth/session.ts';
+import { destroySession, getUserSession } from './libs/auth/session.ts';
 import { getPublicEnv } from './libs/env/env.server.ts';
 import { flags } from './libs/feature-flags/flags.server.ts';
 import { useNonce } from './libs/nonce/use-nonce.ts';
@@ -50,7 +50,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
   const { toast, headers: toastHeaders } = await getToast(request);
 
-  const userId = await getSessionUserId(request);
+  const { userId } = (await getUserSession(request)) || {};
   const user = await UserInfo.get(userId);
   if (userId && !user) await destroySession(request);
 

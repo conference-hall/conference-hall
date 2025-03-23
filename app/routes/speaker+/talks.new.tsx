@@ -6,7 +6,7 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { TalkForm } from '../components/talks/talk-forms/talk-form.tsx';
@@ -17,7 +17,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TalkSaveSchema });
   if (result.status !== 'success') return result.error;

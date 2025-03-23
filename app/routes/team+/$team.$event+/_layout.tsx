@@ -1,11 +1,11 @@
 import { Outlet } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { CurrentEventTeamProvider } from '~/routes/components/contexts/event-team-context.tsx';
 import type { Route } from './+types/_layout.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   return UserEvent.for(userId, params.team, params.event).get();
 };
 

@@ -5,11 +5,11 @@ import { KpiProgressBar } from '~/design-system/dashboard/kpi-progress-bar.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import type { Route } from './+types/index.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const dashboard = await AdminDashboard.for(userId);
   return {
     users: dashboard.usersMetrics(),

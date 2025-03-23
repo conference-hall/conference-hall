@@ -12,7 +12,7 @@ import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
-import { getSessionUserId } from '~/libs/auth/session.ts';
+import { getUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { validatePassword } from '~/libs/validators/auth.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
@@ -24,7 +24,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getSessionUserId(request);
+  const userId = await getUserSession(request);
   if (userId) return redirect('/');
 
   const url = new URL(request.url);

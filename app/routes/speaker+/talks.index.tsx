@@ -11,7 +11,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/talks.index.ts';
 
@@ -20,7 +20,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const { searchParams } = new URL(request.url);
   const filter = TalksListFilterSchema.safeParse(searchParams.get('filter'));
   return TalksLibrary.of(userId).list(filter.data);

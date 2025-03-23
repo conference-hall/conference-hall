@@ -1,10 +1,7 @@
 import { type ZodSchema, z } from 'zod';
+import type { EmailSchema } from '~/libs/validators/auth.ts';
 
 const SocialLinksSchema = makeFilteredArraySchema(z.string().url().max(100));
-
-export const EmailSchema = z.object({
-  email: z.string().email().trim().min(1),
-});
 
 export const ProfileSchema = z.object({
   name: z.string().trim().min(1),

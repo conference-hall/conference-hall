@@ -6,13 +6,13 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, H2, H3, Subtitle, Text } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import type { Route } from './+types/users.$user.ts';
 
 const DATETIME_FORMAT = 'dd/MM/yyyy HH:mm';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const adminUsers = await AdminUsers.for(userId);
   return adminUsers.getUserInfo(params.user);
 };

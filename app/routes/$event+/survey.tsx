@@ -3,13 +3,13 @@ import { SpeakerSurvey } from '~/.server/event-survey/speaker-survey.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { SurveyForm } from '../components/talks/talk-forms/survey-form.tsx';
 import type { Route } from './+types/survey.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const survey = SpeakerSurvey.for(params.event);
   const questions = await survey.getQuestions();
   const answers = await survey.getSpeakerAnswers(userId);
@@ -18,7 +18,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const survey = SpeakerSurvey.for(params.event);
   const schema = await survey.buildSurveySchema();
   const form = await request.formData();

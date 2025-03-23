@@ -11,10 +11,14 @@ export function ChangeContactEmailForm({ email, authLoaded }: Props) {
   const providers = getClientAuth().currentUser?.providerData ?? [];
 
   const options: Array<Option> = [];
-  for (const provider of providers) {
-    if (provider.email === null) continue;
-    if (options.some((option) => option.value === provider.email)) continue;
-    options.push({ name: provider.email, value: provider.email });
+  if (!providers.length) {
+    options.push({ name: email, value: email });
+  } else {
+    for (const provider of providers) {
+      if (provider.email === null) continue;
+      if (options.some((option) => option.value === provider.email)) continue;
+      options.push({ name: provider.email, value: provider.email });
+    }
   }
 
   return (

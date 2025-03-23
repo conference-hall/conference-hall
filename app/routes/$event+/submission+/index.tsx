@@ -5,7 +5,7 @@ import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import type { Route } from './+types/index.ts';
 import { MaxProposalsAlert, MaxProposalsReached } from './components/max-proposals.tsx';
@@ -15,9 +15,9 @@ import { SubmissionTalksList } from './components/submission-talks-list.tsx';
 export const handle = { step: 'selection' };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const speakerId = await requireSession(request);
-  const speakerProposals = Submissions.for(speakerId, params.event);
-  const talkLibrary = TalksLibrary.of(speakerId);
+  const { userId } = await requireUserSession(request);
+  const speakerProposals = Submissions.for(userId, params.event);
+  const talkLibrary = TalksLibrary.of(userId);
   return {
     proposalsCount: await speakerProposals.count(),
     drafts: await speakerProposals.drafts(),

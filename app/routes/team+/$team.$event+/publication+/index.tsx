@@ -9,19 +9,19 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { BadRequestError } from '~/libs/errors.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import type { Route } from './+types/index.ts';
 import { PublicationButton } from './components/publication-confirm-modal.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   return Publication.for(userId, params.team, params.event).statistics();
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: PublishResultFormSchema });
   if (result.status !== 'success') throw new BadRequestError('Invalid form data');

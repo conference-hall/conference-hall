@@ -3,7 +3,7 @@ import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { TalkSection } from '../components/talks/talk-section.tsx';
@@ -15,12 +15,12 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   return TalksLibrary.of(userId).talk(params.talk).get();
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const talk = TalksLibrary.of(userId).talk(params.talk);
   const form = await request.formData();
   const intent = form.get('intent');

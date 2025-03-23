@@ -1,10 +1,11 @@
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
-import { redirect } from 'react-router';
+import { href, redirect } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
-import { getSessionUserId } from '~/libs/auth/session.ts';
+import { getUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/email-verification.ts';
 
@@ -13,7 +14,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getSessionUserId(request);
+  const userId = await getUserSession(request);
   if (userId) return redirect('/');
   return null;
 };
@@ -37,6 +38,13 @@ export default function EmailVerification() {
           </Subtitle>
         </div>
       </Card>
+
+      <footer className="flex justify-center gap-1 my-8">
+        <Subtitle>Go back to</Subtitle>
+        <Link to={href('/auth/login')} weight="semibold">
+          Sign in
+        </Link>
+      </footer>
     </Page>
   );
 }

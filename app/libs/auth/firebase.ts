@@ -31,7 +31,7 @@ export function initializeFirebaseClient(config?: FirebaseConfig) {
   });
 
   const auth = getAuth(app);
-  setPersistence(auth, browserLocalPersistence); // TODO: Destroy cookie session when user not logged in ? expiration time ?
+  setPersistence(auth, browserLocalPersistence);
 
   if (config.USE_EMULATORS) {
     connectAuthEmulator(auth, `http://${config.FIREBASE_AUTH_EMULATOR_HOST}`, { disableWarnings: true });

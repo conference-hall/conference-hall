@@ -4,7 +4,7 @@ import { Deliberate, DeliberateBulkSchema } from '~/.server/reviews/deliberate.t
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { getObjectHash } from '~/libs/utils/object-hash.ts';
 import type { Route } from './+types/index.ts';
@@ -16,14 +16,14 @@ import { SortMenu } from './components/proposals-list-page/filters/sort-menu.tsx
 import { ProposalsList } from './components/proposals-list-page/proposals-list.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
   return CfpReviewsSearch.for(userId, params.team, params.event).search(filters, page);
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: DeliberateBulkSchema });
   if (result.status !== 'success') return null;

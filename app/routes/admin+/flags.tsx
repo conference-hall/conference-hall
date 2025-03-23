@@ -7,18 +7,18 @@ import { Toggle } from '~/design-system/forms/toggles.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import type { Route } from './+types/flags.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const adminFlags = await AdminFlags.for(userId);
   const flags = await adminFlags.list();
   return flags;
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const formData = await request.formData();
   const key = formData.get('key') as string;
   const value = formData.get('value') as string;

@@ -9,7 +9,7 @@ import { ButtonFileUpload } from '~/design-system/forms/file-upload-button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
@@ -19,12 +19,12 @@ const MAX_FILE_SIZE = 300 * 1024; // 300kB
 const FILE_SCHEMA = z.object({ name: z.string().url() });
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const event = await UserEvent.for(userId, params.team, params.event);
   await event.needsPermission('canEditEvent');
 

@@ -2,7 +2,7 @@ import { ShieldCheckIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { Outlet, href } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/layout.ts';
 
@@ -11,7 +11,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   return null;
 };
 

@@ -1,6 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 import { sendVerificationEmail } from '~/emails/templates/auth/email-verification.tsx';
 import { sendResetPasswordEmail } from '~/emails/templates/auth/reset-password.tsx';
+import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { appUrl } from '~/libs/env/env.server.ts';
 import { auth as firebaseAuth } from '../../libs/auth/firebase.server.ts';
 
@@ -14,14 +15,22 @@ type UserAccountCreateInput = {
 export class UserAccount {
   static async register(data: UserAccountCreateInput) {
     const user = await db.user.findFirst({ where: { uid: data.uid } });
-
     if (user?.uid) return user.id;
 
     const { uid, name = '(No name)', email = `${data.uid}@example.com`, picture } = data;
-
     const newUser = await db.user.create({ data: { name, email, picture, uid: uid } });
 
     return newUser.id;
+  }
+
+  static async linkEmailProvider(uid: string, email: string, password: string) {
+    try {
+      await firebaseAuth.updateUser(uid, { email, password, providerToLink: { uid, email, providerId: 'password' } });
+
+      await UserAccount.checkEmailVerification(email, false, 'password');
+    } catch (error) {
+      return getFirebaseError(error);
+    }
   }
 
   static async sendResetPasswordEmail(email: string) {

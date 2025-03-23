@@ -5,19 +5,19 @@ import {
   SurveyQuestionSchema,
   SurveyRemoveQuestionSchema,
 } from '~/.server/event-survey/types.ts';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import type { Route } from './+types/survey.ts';
 import { SurveySettingsForm } from './components/survey/survey-settings-form.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const surveySettings = EventSurveySettings.for(userId, params.team, params.event);
   return surveySettings.getConfig();
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const surveySettings = EventSurveySettings.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');

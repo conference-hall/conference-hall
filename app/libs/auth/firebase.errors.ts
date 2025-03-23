@@ -22,11 +22,11 @@ export function getFirebaseError(error: any): string {
     case EMAIL_ALREADY_EXISTS:
     case EMAIL_ALREADY_IN_USE:
     case WRONG_PASSWORD:
-      return 'Email or password is incorrect';
+      return 'Email or password is incorrect.';
     case WEAK_PASSWORD:
       return 'Your password is not secure enough';
     case ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL:
-      return 'You need to connect your account with the provider you used to sign up';
+      return 'You need to connect your account with the provider you used to sign up.';
     case EXPIRED_ACTION_CODE:
       return 'Your email link has expired. Please try resetting your password again.';
     case INVALID_ACTION_CODE:

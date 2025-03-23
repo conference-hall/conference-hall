@@ -5,7 +5,7 @@ import { UserTeams } from '../team/user-teams.ts';
 import { Notifications } from '../user-notifications/notifications.ts';
 
 export class UserInfo {
-  static async get(userId: string | null) {
+  static async get(userId: string | undefined) {
     if (!userId) return null;
 
     const user = await db.user.findUnique({ where: { id: userId } });

@@ -5,14 +5,14 @@ import { TeamEvents } from '~/.server/team/team-events.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { EventCardLink } from '~/routes/components/events/event-card.tsx';
 import type { Route } from './+types/index.ts';
 import { ArchivedFilters } from './components/archived-filter.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const url = new URL(request.url);
   const archived = url.searchParams.get('archived') === 'true';
   return TeamEvents.for(userId, params.team).list(archived);

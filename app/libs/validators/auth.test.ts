@@ -1,4 +1,4 @@
-import { validateEmailAndPassword, validatePassword } from './auth.ts';
+import { EmailSchema, validateEmailAndPassword, validatePassword } from './auth.ts';
 
 describe('validatePassword', () => {
   it('validates a correct password', () => {
@@ -49,5 +49,22 @@ describe('validateEmailAndPassword', () => {
       email: ['Invalid email address.'],
       password: ['Minimum 8 characters. Missing uppercase letter. Missing number.'],
     });
+  });
+});
+
+describe('EmailSchema', () => {
+  it('validates email', async () => {
+    const result = EmailSchema.safeParse({ email: 'john.doe@email.com' });
+    expect(result.success && result.data).toEqual({ email: 'john.doe@email.com' });
+  });
+
+  it('validates mandatory and format', async () => {
+    const result = EmailSchema.safeParse({ email: '' });
+
+    expect(result.success).toEqual(false);
+    if (!result.success) {
+      const { fieldErrors } = result.error.flatten();
+      expect(fieldErrors.email).toEqual(['Invalid email address.', 'String must contain at least 1 character(s)']);
+    }
   });
 });

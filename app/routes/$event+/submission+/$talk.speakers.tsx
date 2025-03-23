@@ -10,7 +10,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { CoSpeakers } from '~/routes/components/talks/co-speaker.tsx';
 import type { Route } from './+types/$talk.speakers.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
@@ -18,7 +18,7 @@ import { useSubmissionNavigation } from './components/submission-context.tsx';
 export const handle = { step: 'speakers' };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const speaker = await SpeakerProfile.for(userId).get();
   const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
 
@@ -31,7 +31,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const intent = form.get('intent');
 

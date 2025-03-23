@@ -6,7 +6,7 @@ import { Button, button } from '~/design-system/buttons.tsx';
 import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { FullscreenPage } from '../components/fullscreen-page.tsx';
 import type { Route } from './+types/request.ts';
@@ -16,12 +16,12 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   return null;
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
 
   try {

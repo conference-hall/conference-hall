@@ -3,18 +3,18 @@ import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import type { Route } from './+types/review.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const event = UserEvent.for(userId, params.team, params.event);
   const form = await request.formData();
   const settingName = form.get('_setting') as string;

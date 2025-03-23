@@ -8,7 +8,7 @@ import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { TalkAlreadySubmittedError } from '~/libs/errors.server.ts';
 import { TalkForm } from '~/routes/components/talks/talk-forms/talk-form.tsx';
 import type { Route } from './+types/$talk.index.ts';
@@ -17,7 +17,7 @@ import { useSubmissionNavigation } from './components/submission-context.tsx';
 export const handle = { step: 'proposal' };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   if (params.talk === 'new') return null;
 
   const talk = TalksLibrary.of(userId).talk(params.talk);
@@ -28,7 +28,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TalkSaveSchema });
   if (result.status !== 'success') return result.error;

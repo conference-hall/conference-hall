@@ -49,28 +49,32 @@ export async function createSession(request: Request) {
   return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
 }
 
-export async function destroySession(request: Request, redirectTo = '/auth/login') {
+export async function destroySession(request: Request, redirectTo?: string) {
   const session = await getSession(request);
-  throw redirect(redirectTo, { headers: { 'Set-Cookie': await sessionStorage.destroySession(session) } });
+  const url = new URL(request.url);
+
+  throw redirect(redirectTo ?? url.pathname, {
+    headers: { 'Set-Cookie': await sessionStorage.destroySession(session) },
+  });
 }
 
-export async function requireSession(request: Request): Promise<string> {
-  const userId = await getSessionUserId(request);
+export async function requireUserSession(request: Request) {
+  const sessionUser = await getUserSession(request);
 
-  if (!userId) {
+  if (!sessionUser) {
     const redirectTo = new URL(request.url).pathname;
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
     throw redirect(`/auth/login?${searchParams}`);
   }
 
-  return userId;
+  return sessionUser;
 }
 
-export async function getSessionUserId(request: Request): Promise<string | null> {
+export async function getUserSession(request: Request) {
   const session = await getSession(request);
-  const jwt = session.get('jwt');
-  const uid = session.get('uid');
-  const userId = session.get('userId');
+  const jwt = session.get('jwt') as string | null;
+  const uid = session.get('uid') as string | null;
+  const userId = session.get('userId') as string | null;
 
   if (!jwt || !uid || !userId) {
     return null;
@@ -79,12 +83,12 @@ export async function getSessionUserId(request: Request): Promise<string | null>
   try {
     const idToken = await serverAuth.verifySessionCookie(jwt, true);
     if (uid !== idToken.uid) throw new Error('Invalid token uid');
+
+    return { userId, uid };
   } catch (_error) {
     await destroySession(request);
     return null;
   }
-
-  return userId;
 }
 
 export async function sendEmailVerification(request: Request) {

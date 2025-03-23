@@ -9,7 +9,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
-import { getSessionUserId } from '~/libs/auth/session.ts';
+import { getUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/forgot-password.ts';
 
@@ -18,7 +18,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getSessionUserId(request);
+  const userId = await getUserSession(request);
   if (userId) return redirect('/');
   return null;
 };

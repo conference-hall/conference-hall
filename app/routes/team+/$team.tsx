@@ -1,6 +1,6 @@
 import { Outlet, useMatch, useRouteLoaderData } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { CurrentTeamProvider } from '../components/contexts/team-context.tsx';
 import { Navbar } from '../components/navbar/navbar.tsx';
@@ -15,7 +15,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   return UserTeam.for(userId, params.team).get();
 };
 

@@ -9,7 +9,7 @@ import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { getSocialIcon } from '~/design-system/social-link.tsx';
 import { H1, H2, Label, Subtitle } from '~/design-system/typography.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { extractSocialProfile } from '~/libs/formatters/social-links.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -23,12 +23,12 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   return null;
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
 
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ProfileSchema });

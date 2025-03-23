@@ -5,7 +5,7 @@ import {
   CfpMeetupOpeningSchema,
   CfpPreferencesSchema,
 } from '~/.server/event-settings/user-event.types.ts';
-import { requireSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import type { Route } from './+types/cfp.ts';
@@ -14,12 +14,12 @@ import { ConferenceCfpOpening } from './components/conference-cfp-opening.tsx';
 import { MeetupCfpOpening } from './components/meetup-cfp-opening.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireSession(request);
+  await requireUserSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
-  const userId = await requireSession(request);
+  const { userId } = await requireUserSession(request);
   const event = UserEvent.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');
