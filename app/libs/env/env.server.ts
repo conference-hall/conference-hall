@@ -14,7 +14,6 @@ const schema = z.object({
   FIREBASE_SERVICE_ACCOUNT: z.string().optional(),
   FIREBASE_STORAGE: z.string(),
   COOKIE_SIGNED_SECRET: z.string(),
-  SENTRY_DSN: z.string().optional(),
   MAINTENANCE_ENABLED: z.string().optional(),
 });
 
@@ -49,7 +48,6 @@ export function getPublicEnv() {
     FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
     FIREBASE_AUTH_EMULATOR_HOST: process.env.FIREBASE_AUTH_EMULATOR_HOST,
-    SENTRY_DSN: process.env.SENTRY_DSN,
   };
 }
 

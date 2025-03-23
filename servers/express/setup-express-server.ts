@@ -2,7 +2,6 @@ import compression from 'compression';
 import express from 'express';
 
 import { initEnvironment } from '~/libs/env/env.server.ts';
-import { initMonitoring } from '~/libs/monitoring/monitoring.server.ts';
 import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
 import { applyLogging } from './middlewares/logging.ts';
 import { applyProxyFirebaseAuth } from './middlewares/proxy-firebase-auth.ts';
@@ -12,7 +11,6 @@ import { applySeoHeader } from './middlewares/seo.ts';
 import { applyUrlCleaning } from './middlewares/url-cleaning.ts';
 
 initEnvironment();
-initMonitoring();
 
 const HOST = process.env.HOST || 'localhost';
 const PORT = Number.parseInt(process.env.PORT || '3000');
