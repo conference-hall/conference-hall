@@ -25,8 +25,7 @@ export class UserAccount {
 
   static async linkEmailProvider(uid: string, email: string, password: string) {
     try {
-      await firebaseAuth.updateUser(uid, { email, password, providerToLink: { uid, email, providerId: 'password' } });
-
+      await firebaseAuth.updateUser(uid, { email, password, emailVerified: false });
       await UserAccount.checkEmailVerification(email, false, 'password');
     } catch (error) {
       return getFirebaseError(error);
