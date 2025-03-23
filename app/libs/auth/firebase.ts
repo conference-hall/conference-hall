@@ -1,11 +1,9 @@
-// TODO: Rename to firebase.client.ts
 import { getApps, initializeApp } from 'firebase/app';
 import { browserLocalPersistence, connectAuthEmulator, getAuth, setPersistence } from 'firebase/auth';
 import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
 import { GoogleIcon } from '~/design-system/icons/google-icon.tsx';
 import { XIcon } from '~/design-system/icons/x-icon.tsx';
 
-// TODO: Move to firebase.types.ts
 export type ProviderId = 'google.com' | 'github.com' | 'twitter.com';
 export type ProviderInfo = { id: ProviderId; label: string; icon: React.ComponentType<{ className?: string }> };
 
@@ -33,7 +31,7 @@ export function initializeFirebaseClient(config?: FirebaseConfig) {
   });
 
   const auth = getAuth(app);
-  setPersistence(auth, browserLocalPersistence); // TODO: Destroy cookie session when user not logged in ? expiration time ?
+  setPersistence(auth, browserLocalPersistence);
 
   if (config.USE_EMULATORS) {
     connectAuthEmulator(auth, `http://${config.FIREBASE_AUTH_EMULATOR_HOST}`, { disableWarnings: true });

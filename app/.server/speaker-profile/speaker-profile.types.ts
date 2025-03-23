@@ -1,22 +1,7 @@
 import { type ZodSchema, z } from 'zod';
+import type { EmailSchema } from '~/libs/validators/auth.ts';
 
 const SocialLinksSchema = makeFilteredArraySchema(z.string().url().max(100));
-
-// TODO: see to factorize with validators/auth.ts
-export const EmailSchema = z.object({
-  email: z.string().email().trim().min(1),
-});
-
-// TODO: see to factorize with validators/auth.ts
-export const EmailPasswordSchema = z.object({
-  email: z.string().email().trim().min(1),
-  password: z
-    .string()
-    .min(8, { message: 'Minimum 8 characters.' })
-    .refine((password) => /[A-Z]/.test(password), { message: 'Missing uppercase letter.' })
-    .refine((password) => /[a-z]/.test(password), { message: 'Missing lowercase letter.' })
-    .refine((password) => /[0-9]/.test(password), { message: 'Missing number.' }),
-});
 
 export const ProfileSchema = z.object({
   name: z.string().trim().min(1),

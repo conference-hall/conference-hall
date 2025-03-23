@@ -3,11 +3,7 @@ import * as Firebase from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { href, redirect } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
-import {
-  EmailPasswordSchema,
-  EmailSchema,
-  UnlinkProviderSchema,
-} from '~/.server/speaker-profile/speaker-profile.types.ts';
+import { UnlinkProviderSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
 import { UserAccount } from '~/.server/user-registration/user-account.ts';
 import { H1 } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
@@ -15,6 +11,7 @@ import { getUid, requireSession, sendEmailVerification } from '~/libs/auth/sessi
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
+import { EmailPasswordSchema, EmailSchema } from '~/libs/validators/auth.ts';
 import { useSpeakerProfile } from '~/routes/components/contexts/speaker-profile-context.tsx';
 import type { Route } from './+types/account.route.ts';
 import { AuthenticationMethodsForm } from './account/authentication-methods-form.tsx';
