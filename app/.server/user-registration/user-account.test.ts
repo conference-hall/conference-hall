@@ -70,7 +70,7 @@ describe('UserAccount', () => {
       expect(updateUserMock).toHaveBeenCalledWith('uid123', {
         email: 'foo@example.com',
         password: 'password',
-        providerToLink: { uid: 'uid123', email: 'foo@example.com', providerId: 'password' },
+        emailVerified: false,
       });
 
       expect(generateEmailVerificationLinkMock).toHaveBeenCalledWith('foo@example.com');
