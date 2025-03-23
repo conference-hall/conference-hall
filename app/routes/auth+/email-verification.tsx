@@ -1,7 +1,8 @@
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
-import { redirect } from 'react-router';
+import { href, redirect } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { getSessionUserId } from '~/libs/auth/session.ts';
@@ -37,6 +38,13 @@ export default function EmailVerification() {
           </Subtitle>
         </div>
       </Card>
+
+      <footer className="flex justify-center gap-1 my-8">
+        <Subtitle>Go back to</Subtitle>
+        <Link to={href('/auth/login')} weight="semibold">
+          Sign in
+        </Link>
+      </footer>
     </Page>
   );
 }

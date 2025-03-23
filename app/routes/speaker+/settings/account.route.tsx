@@ -1,14 +1,20 @@
 import { parseWithZod } from '@conform-to/zod';
 import * as Firebase from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { href, redirect } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
-import { EmailSchema, UnlinkProviderSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
+import {
+  EmailPasswordSchema,
+  EmailSchema,
+  UnlinkProviderSchema,
+} from '~/.server/speaker-profile/speaker-profile.types.ts';
+import { UserAccount } from '~/.server/user-registration/user-account.ts';
 import { H1 } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
-import { requireSession, sendEmailVerification } from '~/libs/auth/session.ts';
+import { getUid, requireSession, sendEmailVerification } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { toast } from '~/libs/toasts/toast.server.ts';
+import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useSpeakerProfile } from '~/routes/components/contexts/speaker-profile-context.tsx';
 import type { Route } from './+types/account.route.ts';
 import { AuthenticationMethodsForm } from './account/authentication-methods-form.tsx';
@@ -33,8 +39,20 @@ export const action = async ({ request }: Route.ActionArgs) => {
     case 'change-contact-email': {
       const result = parseWithZod(form, { schema: EmailSchema });
       if (result.status !== 'success') return toast('error', 'An error occurred.');
+
       await SpeakerProfile.for(userId).save(result.value);
       return toast('success', 'Contact email changed.');
+    }
+    case 'link-email-provider': {
+      const result = parseWithZod(form, { schema: EmailPasswordSchema });
+      if (result.status !== 'success') return toast('error', 'An error occurred.');
+
+      const uid = await getUid(request);
+      const error = await UserAccount.linkEmailProvider(uid, result.value.email, result.value.password);
+      if (error) return toast('error', error);
+
+      const headers = await toastHeaders('success', 'Authentication method linked.');
+      return redirect(href('/auth/email-verification'), { headers });
     }
     case 'unlink-provider': {
       const result = parseWithZod(form, { schema: UnlinkProviderSchema });

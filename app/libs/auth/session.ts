@@ -49,9 +49,13 @@ export async function createSession(request: Request) {
   return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
 }
 
-export async function destroySession(request: Request, redirectTo = '/auth/login') {
+export async function destroySession(request: Request, redirectTo?: string) {
   const session = await getSession(request);
-  throw redirect(redirectTo, { headers: { 'Set-Cookie': await sessionStorage.destroySession(session) } });
+  const url = new URL(request.url);
+
+  throw redirect(redirectTo ?? url.pathname, {
+    headers: { 'Set-Cookie': await sessionStorage.destroySession(session) },
+  });
 }
 
 export async function requireSession(request: Request): Promise<string> {
@@ -85,6 +89,12 @@ export async function getSessionUserId(request: Request): Promise<string | null>
   }
 
   return userId;
+}
+
+// TODO: Factorize this function with getSessionUserId and requireSession
+export async function getUid(request: Request) {
+  const session = await getSession(request);
+  return session.get('uid');
 }
 
 export async function sendEmailVerification(request: Request) {

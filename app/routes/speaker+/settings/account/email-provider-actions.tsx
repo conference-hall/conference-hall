@@ -17,7 +17,6 @@ import type { SubmissionErrors } from '~/types/errors.types.ts';
 export function NewEmailProviderModal() {
   const submit = useSubmit();
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState<string>('');
   const [fieldErrors, setFieldErrors] = useState<SubmissionErrors>(null);
 
   const [email, setEmail] = useState('');
@@ -25,22 +24,11 @@ export function NewEmailProviderModal() {
 
   const linkAccount = async (event: FormEvent) => {
     event.preventDefault();
-    setError('');
-
-    const { currentUser } = getClientAuth();
-    if (!currentUser) return;
 
     const fieldErrors = validateEmailAndPassword(email, password);
     if (fieldErrors) return setFieldErrors(fieldErrors);
 
-    try {
-      const credential = Firebase.EmailAuthProvider.credential(email, password);
-      const credentials = await Firebase.linkWithCredential(currentUser, credential);
-      const token = await credentials.user.getIdToken(true);
-      await submit({ token, redirectTo: href('/speaker/settings') }, { method: 'POST', action: href('/auth/login') });
-    } catch (error) {
-      setError(getFirebaseError(error));
-    }
+    await submit({ intent: 'link-email-provider', email, password }, { method: 'POST' });
   };
 
   return (
@@ -64,11 +52,6 @@ export function NewEmailProviderModal() {
               required
             />
             <PasswordInput value={password} onChange={setPassword} isNewPassword error={fieldErrors?.password} />
-            {error && (
-              <Callout variant="error" role="alert">
-                {error}
-              </Callout>
-            )}
           </Form>
         </Modal.Content>
 
