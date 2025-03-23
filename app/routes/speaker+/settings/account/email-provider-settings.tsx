@@ -1,6 +1,6 @@
 import type * as Firebase from 'firebase/auth';
 import type { ProviderId } from '~/libs/auth/firebase.ts';
-import { ChangePasswordModal, NewEmailProviderModal, VerifyEmailButton } from './email-provider-actions.tsx';
+import { NewEmailProviderModal, VerifyEmailButton } from './email-provider-actions.tsx';
 import { UnlinkProvider } from './social-providers-settings..tsx';
 
 type Props = {
@@ -15,19 +15,10 @@ export function EmailProviderSettings({ passwordProvider, emailVerified, canUnli
     return <NewEmailProviderModal />;
   }
 
-  if (!emailVerified) {
-    return (
-      <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
-        <VerifyEmailButton />
-        {canUnlink ? <UnlinkProvider providerId="password" onUnlink={onUnlink} /> : null}
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
-      {passwordProvider.email ? <ChangePasswordModal email={passwordProvider.email} /> : null}
-      {canUnlink ? <UnlinkProvider providerId="password" onUnlink={onUnlink} /> : null}
+      {!emailVerified ? <VerifyEmailButton /> : null}
+      <UnlinkProvider providerId="password" onUnlink={onUnlink} disabled={!canUnlink} />
     </div>
   );
 }

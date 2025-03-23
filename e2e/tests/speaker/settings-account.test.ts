@@ -44,7 +44,6 @@ test('links and unlinks providers, change password, verify email', async ({ page
 
   // check authentication methods
   await accountPage.goto();
-  await expect(accountPage.changePasswordButton()).toBeVisible();
   await expect(accountPage.linkButton('Google')).toBeVisible();
   await expect(accountPage.linkButton('Github')).toBeVisible();
   await expect(accountPage.linkButton('X.com')).toBeVisible();
@@ -85,19 +84,7 @@ test('links and unlinks providers, change password, verify email', async ({ page
   await expect(accountPage.emailInput.getByRole('option')).toHaveCount(1);
   await expect(accountPage.emailInput).toHaveValue(uniqueEmail);
 
-  // change password for password-based provider
-  await accountPage.changePasswordButton().click();
-  await accountPage.changePassword('Password123', 'NewPassword123');
-
-  // signin with the new password
-  await loginPage.waitFor();
-  await loginPage.emailInput.fill(uniqueEmail);
-  await loginPage.passwordInput.fill('NewPassword123');
-  await loginPage.signinButton.click();
-  await homePage.waitFor();
-
   // unlink password-based provider
-  await accountPage.goto();
   await accountPage.unlinkButton('Email & password').click();
 
   // link new password-based provider

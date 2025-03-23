@@ -31,7 +31,7 @@ export default function VerificationEmail({ emailVerificationUrl }: EmailData) {
 
       <Text>If you didn’t sign up for Conference Hall, you can ignore this email.</Text>
       <Text>Thanks,</Text>
-      <Text>Your Conference Hall team</Text>
+      <Text>Conference Hall team</Text>
     </BaseEventEmail>
   );
 }

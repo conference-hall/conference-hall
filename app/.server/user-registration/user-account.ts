@@ -28,6 +28,7 @@ export class UserAccount {
       await firebaseAuth.updateUser(uid, { email, password, emailVerified: false });
       await UserAccount.checkEmailVerification(email, false, 'password');
     } catch (error) {
+      console.error('linkEmailProvider', error);
       return getFirebaseError(error);
     }
   }
@@ -46,7 +47,7 @@ export class UserAccount {
 
       await sendResetPasswordEmail({ email, passwordResetUrl: passwordResetUrl.toString() });
     } catch (error) {
-      console.error(error);
+      console.error('sendResetPasswordEmail', error);
     }
   }
 
@@ -69,7 +70,7 @@ export class UserAccount {
       await sendVerificationEmail({ email, emailVerificationUrl: emailVerificationUrl.toString() });
       return true;
     } catch (error) {
-      console.error(error);
+      console.error('checkEmailVerification', error);
       return false;
     }
   }

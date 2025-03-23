@@ -1,14 +1,13 @@
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import * as Firebase from 'firebase/auth';
 import { useEffect, useState } from 'react';
-import { redirect, useNavigate, useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
-import { getUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/verify-email.ts';
 
@@ -16,9 +15,7 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Verify email | Conference Hall' }]);
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getUserSession(request);
-  if (userId) return redirect('/');
+export const loader = async () => {
   return null;
 };
 
