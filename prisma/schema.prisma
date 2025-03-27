@@ -8,50 +8,35 @@ datasource db {
 }
 
 model User {
-  id                    String                 @id @default(cuid())
-  uid                   String?
-  name                  String
-  email                 String
-  bio                   String?
-  picture               String?
-  company               String?
-  references            String?
-  location              String?
-  socialLinks           Json                   @default("[]")
-  termsAccepted         Boolean                @default(false)
-  admin                 Boolean                @default(false)
-  createdAt             DateTime               @default(now())
-  updatedAt             DateTime               @updatedAt
-  migrationId           String?
-  organizerKey          String?
-  organizerKeyAccess    OrganizerKeyAccess?    @relation(fields: [organizerKey], references: [id])
-  talks                 Talk[]                 @relation("speakers_talks")
-  teams                 TeamMember[]
-  reviews               Review[]
-  surveys               Survey[]
-  createdTalks          Talk[]
-  createdEvents         Event[]
-  authenticationMethods AuthenticationMethod[]
-  comments              Comment[]
-  commentReactions      CommentReaction[]
-  eventsSpeaker         EventSpeaker[]
+  id                 String              @id @default(cuid())
+  uid                String?
+  name               String
+  email              String
+  bio                String?
+  picture            String?
+  company            String?
+  references         String?
+  location           String?
+  socialLinks        Json                @default("[]")
+  termsAccepted      Boolean             @default(false)
+  admin              Boolean             @default(false)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  migrationId        String?
+  organizerKey       String?
+  organizerKeyAccess OrganizerKeyAccess? @relation(fields: [organizerKey], references: [id])
+  talks              Talk[]              @relation("speakers_talks")
+  teams              TeamMember[]
+  reviews            Review[]
+  surveys            Survey[]
+  createdTalks       Talk[]
+  createdEvents      Event[]
+  comments           Comment[]
+  commentReactions   CommentReaction[]
+  eventsSpeaker      EventSpeaker[]
 
   @@index([uid])
   @@map("users")
-}
-
-model AuthenticationMethod {
-  uid       String   @id
-  email     String
-  name      String
-  picture   String?
-  provider  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("authentication_methods")
 }
 
 model OrganizerKeyAccess {
