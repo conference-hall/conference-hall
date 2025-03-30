@@ -19,6 +19,7 @@ describe('UserAccount', () => {
         name: 'Bob',
         email: 'bob@example.com',
         picture: 'https://image.com/image.png',
+        locale: 'fr',
       });
 
       const user = await db.user.findFirst({ where: { id: userId } });
@@ -27,12 +28,14 @@ describe('UserAccount', () => {
       expect(user?.email).toEqual('bob@example.com');
       expect(user?.picture).toEqual('https://image.com/image.png');
       expect(user?.termsAccepted).toEqual(false);
+      expect(user?.locale).toEqual('fr');
     });
 
     it('register a new user with some default values', async () => {
       const userId = await UserAccount.register({
         uid: '123',
         name: 'Bob',
+        locale: 'fr',
       });
 
       const user = await db.user.findFirst({ where: { id: userId } });
@@ -41,6 +44,7 @@ describe('UserAccount', () => {
       expect(user?.email).toEqual('123@example.com');
       expect(user?.picture).toBe(null);
       expect(user?.termsAccepted).toEqual(false);
+      expect(user?.locale).toEqual('fr');
     });
 
     it('returns existing user id if already exists', async () => {
@@ -53,9 +57,27 @@ describe('UserAccount', () => {
         name: 'Bob',
         email: 'bob@example.com',
         picture: 'https://image.com/image.png',
+        locale: 'en',
       });
 
       expect(userId).toEqual(user.id);
+    });
+
+    it('updates locale if different when user exists', async () => {
+      const user = await userFactory({ traits: ['clark-kent'], attributes: { locale: 'fr' } });
+
+      if (!user.uid) throw new Error('Account not found');
+
+      const userId = await UserAccount.register({
+        uid: user.uid,
+        name: 'Bob',
+        email: 'bob@example.com',
+        picture: 'https://image.com/image.png',
+        locale: 'es',
+      });
+
+      const updated = await db.user.findFirst({ where: { id: userId } });
+      expect(updated?.locale).toEqual('es');
     });
   });
 

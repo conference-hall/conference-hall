@@ -10,15 +10,22 @@ type UserAccountCreateInput = {
   name: string;
   email?: string;
   picture?: string;
+  locale: string;
 };
 
 export class UserAccount {
   static async register(data: UserAccountCreateInput) {
     const user = await db.user.findFirst({ where: { uid: data.uid } });
-    if (user?.uid) return user.id;
 
-    const { uid, name = '(No name)', email = `${data.uid}@example.com`, picture } = data;
-    const newUser = await db.user.create({ data: { name, email, picture, uid: uid } });
+    if (user?.uid) {
+      if (user.locale !== data.locale) {
+        await db.user.update({ where: { id: user.id }, data: { locale: data.locale } });
+      }
+      return user.id;
+    }
+
+    const { uid, name = '(No name)', email = `${data.uid}@example.com`, picture, locale } = data;
+    const newUser = await db.user.create({ data: { name, email, picture, uid, locale } });
 
     return newUser.id;
   }
