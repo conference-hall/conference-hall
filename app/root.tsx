@@ -105,8 +105,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
 
   useChangeLanguage(locale);
 
-  // todo(i18n): use the locale to init firebase client ?
-  initializeFirebaseClient(env);
+  initializeFirebaseClient(locale, env);
 
   return (
     <FlagsProvider flags={flags}>
