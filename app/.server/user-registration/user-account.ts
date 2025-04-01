@@ -19,7 +19,7 @@ export class UserAccount {
 
     if (user?.uid) {
       if (user.locale !== data.locale) {
-        await db.user.update({ where: { id: user.id }, data: { locale: data.locale } });
+        await UserAccount.changeLocale(user.id, data.locale);
       }
       return user.id;
     }
@@ -28,6 +28,14 @@ export class UserAccount {
     const newUser = await db.user.create({ data: { name, email, picture, uid, locale } });
 
     return newUser.id;
+  }
+
+  static async changeLocale(userId: string, locale: string) {
+    return db.$transaction(async (trx) => {
+      const user = await trx.user.update({ where: { id: userId }, data: { locale } });
+      await trx.eventSpeaker.updateMany({ where: { userId }, data: { locale } });
+      return user;
+    });
   }
 
   static async linkEmailProvider(uid: string, email: string, password: string) {

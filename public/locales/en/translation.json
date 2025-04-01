@@ -1,3 +1,4 @@
 {
-  "greeting": "Hello"
+  "language": "Language",
+  "settings.preferences.success": "Preferences saved successfully"
 }

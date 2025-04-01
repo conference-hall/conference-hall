@@ -1,3 +1,4 @@
 {
-  "greeting": "Bonjour"
+  "language": "Langue",
+  "settings.preferences.success": "Préférences enregistrées avec succès"
 }

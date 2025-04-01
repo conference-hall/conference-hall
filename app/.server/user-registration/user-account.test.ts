@@ -1,6 +1,9 @@
 import { AuthClientErrorCode } from 'firebase-admin/auth';
 import { FirebaseError } from 'firebase/app';
 import { db } from 'prisma/db.server.ts';
+import { eventFactory } from 'tests/factories/events.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
 import { sendEmail } from '~/emails/send-email.job.ts';
@@ -78,6 +81,20 @@ describe('UserAccount', () => {
 
       const updated = await db.user.findFirst({ where: { id: userId } });
       expect(updated?.locale).toEqual('es');
+    });
+  });
+
+  describe('changeLocale', () => {
+    it('changes the locale for the user and event speakers', async () => {
+      const event = await eventFactory();
+      const user = await userFactory({ traits: ['clark-kent'] });
+      await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
+
+      const updatedUser = await UserAccount.changeLocale(user.id, 'fr');
+      const eventSpeakers = await db.eventSpeaker.findMany({ where: { userId: user.id, eventId: event.id } });
+
+      expect(updatedUser.locale).toEqual('fr');
+      expect(eventSpeakers[0].locale).toEqual('fr');
     });
   });
 

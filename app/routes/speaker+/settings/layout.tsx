@@ -1,4 +1,4 @@
-import { ShieldCheckIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { AdjustmentsVerticalIcon, ShieldCheckIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { Outlet, href } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
@@ -18,6 +18,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 const MENU_ITEMS = [
   { to: href('/speaker/settings'), icon: ShieldCheckIcon, label: 'Account' },
   { to: href('/speaker/settings/profile'), icon: UserCircleIcon, label: 'Speaker profile' },
+  { to: href('/speaker/settings/preferences'), icon: AdjustmentsVerticalIcon, label: 'Preferences' },
 ];
 
 export default function UserSettingsRoute() {

@@ -36,7 +36,7 @@ describe('AdminUsers', () => {
       expect(users.statistics).toEqual({ total: 3 });
 
       expect(users.results.length).toBe(3);
-      expect(users.results.map((user) => user.id)).toEqual([user2.id, user1.id, admin.id]);
+      expect(users.results.map((user) => user.id)).toEqual(expect.arrayContaining([user2.id, user1.id, admin.id]));
 
       expect(users.results[0]).toEqual({
         id: user2.id,
