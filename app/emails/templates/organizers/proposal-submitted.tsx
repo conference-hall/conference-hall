@@ -15,6 +15,7 @@ type EmailData = {
     team: { slug: string };
   };
   proposal: { id: string; title: string; speakers: Array<{ name: string }> };
+  locale: string;
 };
 
 export function sendProposalSubmittedEmailToOrganizers(data: EmailData) {
@@ -24,6 +25,7 @@ export function sendProposalSubmittedEmailToOrganizers(data: EmailData) {
   if (!data.event.emailOrganizer) return;
 
   return sendEmail.trigger({
+    locale: data.locale,
     template: 'organizers/proposal-submitted',
     subject: `[${data.event.name}] New proposal applied`,
     from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
@@ -32,9 +34,9 @@ export function sendProposalSubmittedEmailToOrganizers(data: EmailData) {
   });
 }
 
-export default function ProposalSubmittedEmail({ event, proposal }: EmailData) {
+export default function ProposalSubmittedEmail({ event, proposal, locale }: EmailData) {
   return (
-    <BaseEventEmail logoUrl={event.logoUrl}>
+    <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>New proposal applied!</Heading>
 
       <Section className={styles.card}>
@@ -62,4 +64,5 @@ ProposalSubmittedEmail.PreviewProps = {
     team: { slug: 'awesome-team' },
   },
   proposal: { id: '123', title: 'My awesome proposal', speakers: [{ name: 'John Doe' }] },
-};
+  locale: 'en',
+} as EmailData;

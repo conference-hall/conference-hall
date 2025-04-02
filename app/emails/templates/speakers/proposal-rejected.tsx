@@ -3,13 +3,16 @@ import { sendEmail } from '~/emails/send-email.job.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
+// todo(i18n): add locale to speaker
 type EmailData = {
   event: { name: string; logoUrl: string | null };
   proposal: { title: string; speakers: Array<{ email: string }> };
+  locale: string;
 };
 
 export function sendProposalRejectedEmailToSpeakers(data: EmailData) {
   return sendEmail.trigger({
+    locale: data.locale,
     template: 'speakers/proposal-rejected',
     subject: `[${data.event.name}] Your proposal has been declined`,
     from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
@@ -18,9 +21,9 @@ export function sendProposalRejectedEmailToSpeakers(data: EmailData) {
   });
 }
 
-export default function ProposalRejectedEmail({ event, proposal }: EmailData) {
+export default function ProposalRejectedEmail({ event, proposal, locale }: EmailData) {
   return (
-    <BaseEventEmail logoUrl={event.logoUrl}>
+    <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>Proposal declined.</Heading>
 
       <Text>
@@ -49,4 +52,5 @@ export default function ProposalRejectedEmail({ event, proposal }: EmailData) {
 ProposalRejectedEmail.PreviewProps = {
   event: { name: 'Awesome event', logoUrl: 'https://picsum.photos/seed/123/128' },
   proposal: { title: 'My awesome proposal', speakers: [{ email: 'john@email.com' }] },
+  locale: 'en',
 };

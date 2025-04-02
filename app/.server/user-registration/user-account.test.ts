@@ -119,9 +119,9 @@ describe('UserAccount', () => {
         to: ['foo@example.com'],
         subject: 'Verify your email address for Conference Hall',
         data: {
-          email: 'foo@example.com',
           emailVerificationUrl: 'http://127.0.0.1:3000/auth/verify-email?oobCode=my-code&email=foo%40example.com',
         },
+        locale: 'en',
       });
     });
 
@@ -152,10 +152,8 @@ describe('UserAccount', () => {
         from: 'Conference Hall <no-reply@mg.conference-hall.io>',
         to: ['foo@example.com'],
         subject: 'Reset your password for Conference Hall',
-        data: {
-          email: 'foo@example.com',
-          passwordResetUrl: 'http://127.0.0.1:3000/auth/reset-password?oobCode=my-code&email=foo%40example.com',
-        },
+        data: { passwordResetUrl: 'http://127.0.0.1:3000/auth/reset-password?oobCode=my-code&email=foo%40example.com' },
+        locale: 'en',
       });
     });
 
@@ -195,9 +193,9 @@ describe('UserAccount', () => {
         to: ['foo@example.com'],
         subject: 'Verify your email address for Conference Hall',
         data: {
-          email: 'foo@example.com',
           emailVerificationUrl: 'http://127.0.0.1:3000/auth/verify-email?oobCode=my-code&email=foo%40example.com',
         },
+        locale: 'en',
       });
     });
 

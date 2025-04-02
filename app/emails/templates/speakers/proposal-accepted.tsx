@@ -4,13 +4,16 @@ import { buildSpeakerProposalUrl } from '~/emails/utils/urls.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
+// todo(i18n): add locale to speaker
 type EmailData = {
   event: { slug: string; name: string; logoUrl: string | null };
   proposal: { id: string; title: string; formats: Array<{ name: string }>; speakers: Array<{ email: string }> };
+  locale: string;
 };
 
 export function sendProposalAcceptedEmailToSpeakers(data: EmailData) {
   return sendEmail.trigger({
+    locale: data.locale,
     template: 'speakers/proposal-accepted',
     subject: `[${data.event.name}] Congrats! Your proposal has been accepted`,
     from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
@@ -19,9 +22,9 @@ export function sendProposalAcceptedEmailToSpeakers(data: EmailData) {
   });
 }
 
-export default function ProposalAcceptedEmail({ event, proposal }: EmailData) {
+export default function ProposalAcceptedEmail({ event, proposal, locale }: EmailData) {
   return (
-    <BaseEventEmail logoUrl={event.logoUrl}>
+    <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>Proposal accepted!</Heading>
 
       <Text>
@@ -55,4 +58,5 @@ ProposalAcceptedEmail.PreviewProps = {
     formats: [{ name: 'Talk' }],
     speakers: [{ email: 'john@email.com' }],
   },
-};
+  locale: 'en',
+} as EmailData;

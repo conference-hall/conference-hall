@@ -15,6 +15,7 @@ type EmailData = {
     team: { slug: string };
   };
   proposal: { id: string; title: string; speakers: Array<{ name: string }> };
+  locale: string;
 };
 
 export function sendProposalConfirmedEmailToOrganizers(data: EmailData) {
@@ -24,6 +25,7 @@ export function sendProposalConfirmedEmailToOrganizers(data: EmailData) {
   if (!data.event.emailOrganizer) return;
 
   return sendEmail.trigger({
+    locale: data.locale,
     template: 'organizers/proposal-confirmed',
     subject: `[${data.event.name}] Proposal confirmed by speaker`,
     from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
@@ -32,9 +34,9 @@ export function sendProposalConfirmedEmailToOrganizers(data: EmailData) {
   });
 }
 
-export default function ProposalConfirmedEmail({ event, proposal }: EmailData) {
+export default function ProposalConfirmedEmail({ event, proposal, locale }: EmailData) {
   return (
-    <BaseEventEmail logoUrl={event.logoUrl}>
+    <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>Proposal confirmed by speaker(s)!</Heading>
 
       <Section className={styles.card}>
@@ -62,4 +64,5 @@ ProposalConfirmedEmail.PreviewProps = {
     team: { slug: 'awesome-team' },
   },
   proposal: { id: '123', title: 'My awesome proposal', speakers: [{ name: 'John Doe' }] },
-};
+  locale: 'en',
+} as EmailData;

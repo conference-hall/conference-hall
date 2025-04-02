@@ -114,10 +114,11 @@ export class UserProposal {
 
     if (result.count <= 0) return;
 
+    // todo(i18n): set correct locale
     if (participation === 'CONFIRMED') {
-      await sendProposalConfirmedEmailToOrganizers({ event: proposal.event, proposal });
+      await sendProposalConfirmedEmailToOrganizers({ event: proposal.event, proposal, locale: 'en' });
     } else if (participation === 'DECLINED') {
-      await sendProposalDeclinedEmailToOrganizers({ event: proposal.event, proposal });
+      await sendProposalDeclinedEmailToOrganizers({ event: proposal.event, proposal, locale: 'en' });
     }
   }
 }

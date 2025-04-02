@@ -3,21 +3,24 @@ import { sendEmail } from '~/emails/send-email.job.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
-type EmailData = { email: string; emailVerificationUrl: string };
+type TemplateData = { emailVerificationUrl: string };
 
-export function sendVerificationEmail(data: EmailData) {
+export function sendVerificationEmail(email: string, locale: string, data: TemplateData) {
   return sendEmail.trigger({
     template: 'auth/email-verification',
     subject: 'Verify your email address for Conference Hall',
     from: 'Conference Hall <no-reply@mg.conference-hall.io>',
-    to: [data.email],
+    to: [email],
     data,
+    locale,
   });
 }
 
-export default function VerificationEmail({ emailVerificationUrl }: EmailData) {
+type EmailProps = TemplateData & { locale: string };
+
+export default function VerificationEmail({ emailVerificationUrl, locale }: EmailProps) {
   return (
-    <BaseEventEmail>
+    <BaseEventEmail locale={locale}>
       <Heading className={styles.h1}>Welcome to Conference Hall</Heading>
 
       <Text>Hello,</Text>
@@ -37,6 +40,6 @@ export default function VerificationEmail({ emailVerificationUrl }: EmailData) {
 }
 
 VerificationEmail.PreviewProps = {
-  email: 'bob@example.com',
   emailVerificationUrl: 'http://localhost:3000/auth/email-verification',
-};
+  locale: 'en',
+} as EmailProps;

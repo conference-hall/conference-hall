@@ -60,7 +60,8 @@ export class UserAccount {
       passwordResetUrl.searchParams.set('oobCode', oobCode);
       passwordResetUrl.searchParams.set('email', email);
 
-      await sendResetPasswordEmail({ email, passwordResetUrl: passwordResetUrl.toString() });
+      // todo(i18n): set correct locale
+      await sendResetPasswordEmail(email, 'en', { passwordResetUrl: passwordResetUrl.toString() });
     } catch (error) {
       console.error('sendResetPasswordEmail', error);
     }
@@ -82,7 +83,8 @@ export class UserAccount {
       emailVerificationUrl.searchParams.set('oobCode', oobCode);
       emailVerificationUrl.searchParams.set('email', email);
 
-      await sendVerificationEmail({ email, emailVerificationUrl: emailVerificationUrl.toString() });
+      // todo(i18n): set correct locale
+      await sendVerificationEmail(email, 'en', { emailVerificationUrl: emailVerificationUrl.toString() });
       return true;
     } catch (error) {
       console.error('checkEmailVerification', error);

@@ -34,12 +34,18 @@ export class Publication {
       data: { publicationStatus: 'PUBLISHED', confirmationStatus: status === 'ACCEPTED' ? 'PENDING' : null },
     });
 
+    // todo(i18n): set correct locale
     if (withEmails && status === 'ACCEPTED') {
-      await Promise.all(proposals.map((proposal) => sendProposalAcceptedEmailToSpeakers({ event, proposal })));
+      await Promise.all(
+        proposals.map((proposal) => sendProposalAcceptedEmailToSpeakers({ event, proposal, locale: 'en' })),
+      );
     }
 
+    // todo(i18n): set correct locale
     if (withEmails && status === 'REJECTED') {
-      await Promise.all(proposals.map((proposal) => sendProposalRejectedEmailToSpeakers({ event, proposal })));
+      await Promise.all(
+        proposals.map((proposal) => sendProposalRejectedEmailToSpeakers({ event, proposal, locale: 'en' })),
+      );
     }
   }
 
@@ -65,12 +71,14 @@ export class Publication {
       },
     });
 
+    // todo(i18n): set correct locale
     if (withEmails && proposal.deliberationStatus === 'ACCEPTED') {
-      await sendProposalAcceptedEmailToSpeakers({ event, proposal });
+      await sendProposalAcceptedEmailToSpeakers({ event, proposal, locale: 'en' });
     }
 
+    // todo(i18n): set correct locale
     if (withEmails && proposal.deliberationStatus === 'REJECTED') {
-      await sendProposalRejectedEmailToSpeakers({ event, proposal });
+      await sendProposalRejectedEmailToSpeakers({ event, proposal, locale: 'en' });
     }
   }
 

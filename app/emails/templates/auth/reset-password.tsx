@@ -3,21 +3,24 @@ import { sendEmail } from '~/emails/send-email.job.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
-type EmailData = { email: string; passwordResetUrl: string };
+type TemplateData = { passwordResetUrl: string };
 
-export function sendResetPasswordEmail(data: EmailData) {
+export function sendResetPasswordEmail(email: string, locale: string, data: TemplateData) {
   return sendEmail.trigger({
     template: 'auth/reset-password',
     subject: 'Reset your password for Conference Hall',
     from: 'Conference Hall <no-reply@mg.conference-hall.io>',
-    to: [data.email],
+    to: [email],
     data,
+    locale,
   });
 }
 
-export default function ResetPasswordEmail({ passwordResetUrl }: EmailData) {
+type EmailProps = TemplateData & { locale: string };
+
+export default function ResetPasswordEmail({ passwordResetUrl, locale }: EmailProps) {
   return (
-    <BaseEventEmail>
+    <BaseEventEmail locale={locale}>
       <Heading className={styles.h1}>Reset your password</Heading>
 
       <Text>Hello,</Text>
@@ -37,6 +40,6 @@ export default function ResetPasswordEmail({ passwordResetUrl }: EmailData) {
 }
 
 ResetPasswordEmail.PreviewProps = {
-  email: 'bob@example.com',
   passwordResetUrl: 'http://localhost:3000/auth/reset-password',
-};
+  locale: 'en',
+} as EmailProps;
