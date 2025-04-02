@@ -11,6 +11,7 @@ import { SUPPORTED_LOCALES } from '~/libs/i18n/i18n.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { combineHeaders } from '~/libs/utils/headers.ts';
+import { useFlags } from '~/routes/components/contexts/flags-context.tsx';
 import type { Route } from './+types/preferences.route.ts';
 
 export const meta = (args: Route.MetaArgs) => {
@@ -46,6 +47,9 @@ const LOCALES = Object.entries(SUPPORTED_LOCALES).map(([key, value]) => ({ name:
 export default function PreferencesRoute({ loaderData }: Route.ComponentProps) {
   const { locale } = loaderData;
   const { t } = useTranslation();
+
+  const flags = useFlags();
+  if (!flags.userPreferences) return null;
 
   return (
     <div className="space-y-4 lg:space-y-6 ">
