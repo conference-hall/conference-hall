@@ -7,9 +7,9 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n, setLocaleCookie } from '~/libs/i18n/i18n.server.ts';
-import { SUPPORTED_LOCALES } from '~/libs/i18n/i18n.ts';
+import { SUPPORTED_LANGUAGES } from '~/libs/i18n/i18n.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
+import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { combineHeaders } from '~/libs/utils/headers.ts';
 import { useFlags } from '~/routes/components/contexts/flags-context.tsx';
 import type { Route } from './+types/preferences.route.ts';
@@ -29,7 +29,6 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   const form = await request.formData();
   const locale = form.get('locale') as string;
-  if (!locale) return toast('error', 'An error occurred.');
 
   await UserAccount.changeLocale(userId, locale);
 
@@ -37,12 +36,10 @@ export const action = async ({ request }: Route.ActionArgs) => {
   return data(null, {
     headers: combineHeaders(
       await setLocaleCookie(locale),
-      await toastHeaders('success', t('settings.preferences.success')),
+      await toastHeaders('success', t('speaker.settings.preferences.saved')),
     ),
   });
 };
-
-const LOCALES = Object.entries(SUPPORTED_LOCALES).map(([key, value]) => ({ name: value, value: key }));
 
 export default function PreferencesRoute({ loaderData }: Route.ComponentProps) {
   const { locale } = loaderData;
@@ -51,25 +48,35 @@ export default function PreferencesRoute({ loaderData }: Route.ComponentProps) {
   const flags = useFlags();
   if (!flags.userPreferences) return null;
 
+  const locales = SUPPORTED_LANGUAGES.map((locale) => ({
+    name: t(`speaker.settings.preferences.language.${locale}`),
+    value: locale,
+  }));
+
   return (
     <div className="space-y-4 lg:space-y-6 ">
-      <H1 srOnly>Preferences</H1>
+      <H1 srOnly>{t('speaker.settings.preferences')}</H1>
 
       <Card as="section">
         <Card.Title>
-          <H2 id="language">{t('language')}</H2>
-          <Subtitle>Select the language for the user interface</Subtitle>
+          <H2 id="language">{t('speaker.settings.preferences.language')}</H2>
+          <Subtitle>{t('speaker.settings.preferences.language.subtitle')}</Subtitle>
         </Card.Title>
 
         <Card.Content>
           <Form method="POST" id="language-form" aria-labelledby="language" preventScrollReset>
-            <SelectNative name="locale" label={t('language')} defaultValue={locale} options={LOCALES} />
+            <SelectNative
+              name="locale"
+              label={t('speaker.settings.preferences.language')}
+              defaultValue={locale}
+              options={locales}
+            />
           </Form>
         </Card.Content>
 
         <Card.Actions>
           <Button type="submit" form="language-form">
-            Change language
+            {t('speaker.settings.preferences.language.save')}
           </Button>
         </Card.Actions>
       </Card>

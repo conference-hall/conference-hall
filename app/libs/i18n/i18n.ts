@@ -1,9 +1,6 @@
-export const SUPPORTED_LOCALES = {
-  en: 'English',
-  fr: 'French',
-};
+export const SUPPORTED_LANGUAGES = ['en', 'fr'] as const;
 
 export const i18nConfig = {
-  supportedLngs: Object.keys(SUPPORTED_LOCALES),
+  supportedLngs: SUPPORTED_LANGUAGES as unknown as string[],
   fallbackLng: 'en',
 };

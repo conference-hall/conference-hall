@@ -1,4 +1,10 @@
 {
-  "language": "Language",
-  "settings.preferences.success": "Preferences saved successfully"
+  "error.global": "An error occurred, please try again.",
+  "speaker.settings.preferences": "Preferences",
+  "speaker.settings.preferences.language": "Language",
+  "speaker.settings.preferences.language.en": "English",
+  "speaker.settings.preferences.language.fr": "Français",
+  "speaker.settings.preferences.language.subtitle": "Select the language for the user interface",
+  "speaker.settings.preferences.language.save": "Change Language",
+  "speaker.settings.preferences.saved": "Preferences saved successfully"
 }
