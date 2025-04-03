@@ -22,6 +22,7 @@ Ideally you should talk about it on [Discussions](https://github.com/conference-
 
 - [Getting started](../README.md#development)
 - [Feature flags](./feature-flags.md)
+- [I18N](./i18n.md)
 - [Timezones](./timezones.md)
 
 ## Legals
