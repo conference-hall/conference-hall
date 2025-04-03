@@ -6,7 +6,7 @@ import type { Route } from './+types/root.ts';
 import { UserInfo } from './.server/user-registration/user-info.ts';
 import { initializeFirebaseClient } from './libs/auth/firebase.ts';
 import { destroySession, getUserSession } from './libs/auth/session.ts';
-import { getPublicEnv } from './libs/env/env.server.ts';
+import { getBrowserEnv } from './libs/env/env.server.ts';
 import { flags } from './libs/feature-flags/flags.server.ts';
 import { i18n } from './libs/i18n/i18n.server.ts';
 import { useNonce } from './libs/nonce/use-nonce.ts';
@@ -61,7 +61,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
   const frontendFlags = await flags.withTag('frontend');
 
-  return data({ locale, user, toast, env: getPublicEnv(), flags: frontendFlags }, { headers: toastHeaders || {} });
+  return data({ locale, user, toast, env: getBrowserEnv(), flags: frontendFlags }, { headers: toastHeaders || {} });
 };
 
 type DocumentProps = {
