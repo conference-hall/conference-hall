@@ -1,5 +1,6 @@
 import { Button, Heading, Section, Text } from '@react-email/components';
 import { sendEmail } from '~/emails/send-email.job.ts';
+import { getEmailI18n } from '~/libs/i18n/i18n.emails.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
@@ -19,9 +20,11 @@ export function sendVerificationEmail(email: string, locale: string, data: Templ
 type EmailProps = TemplateData & { locale: string };
 
 export default function VerificationEmail({ emailVerificationUrl, locale }: EmailProps) {
+  const t = getEmailI18n(locale);
+
   return (
     <BaseEventEmail locale={locale}>
-      <Heading className={styles.h1}>Welcome to Conference Hall</Heading>
+      <Heading className={styles.h1}>{t('emails.email-verification.title')}</Heading>
 
       <Text>Hello,</Text>
       <Text>Thanks for signing up to Conference Hall! Click on the button to verify your email address.</Text>

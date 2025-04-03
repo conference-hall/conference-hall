@@ -1,5 +1,6 @@
 {
   "error.global": "An error occurred, please try again.",
+  "emails.email-verification.title": "Welcome to Conference Hall",
   "speaker.settings.preferences": "Preferences",
   "speaker.settings.preferences.language": "Language",
   "speaker.settings.preferences.language.en": "English",

@@ -1,4 +1,4 @@
-import type { i18nResources } from './i18n.server.ts';
+import type { i18nResources } from './i18n.resources.ts';
 
 const defaultNS = 'translation';
 
