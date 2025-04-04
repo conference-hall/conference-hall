@@ -9,10 +9,9 @@ const MAX_AGE_SEC = 60 * 60 * 24 * 365; // 1 year
 
 const localeCookie = createCookie('locale', {
   path: '/',
-  httpOnly: true,
   secure: true,
   secrets: [process.env.COOKIE_SIGNED_SECRET],
-  sameSite: 'lax', // todo(i18n): 'strict' or 'lax'? 'strict' is not supported in Safari?
+  sameSite: 'lax',
 });
 
 export const i18n = new RemixI18Next({
