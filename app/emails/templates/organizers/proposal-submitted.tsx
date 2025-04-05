@@ -5,7 +5,7 @@ import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
-type EmailData = {
+type TemplateData = {
   event: {
     slug: string;
     name: string;
@@ -15,26 +15,27 @@ type EmailData = {
     team: { slug: string };
   };
   proposal: { id: string; title: string; speakers: Array<{ name: string }> };
-  locale: string;
 };
 
-export function sendProposalSubmittedEmailToOrganizers(data: EmailData) {
+export function sendProposalSubmittedEmailToOrganizers(data: TemplateData) {
   const notifications = data.event.emailNotifications as EventEmailNotificationsKeys;
   if (!notifications.includes('submitted')) return;
 
   if (!data.event.emailOrganizer) return;
 
   return sendEmail.trigger({
-    locale: data.locale,
     template: 'organizers/proposal-submitted',
     subject: `[${data.event.name}] New proposal applied`,
     from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
     to: [data.event.emailOrganizer],
     data,
+    locale: 'en',
   });
 }
 
-export default function ProposalSubmittedEmail({ event, proposal, locale }: EmailData) {
+type EmailProps = TemplateData & { locale: string };
+
+export default function ProposalSubmittedEmail({ event, proposal, locale }: EmailProps) {
   return (
     <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>New proposal applied!</Heading>
@@ -64,5 +65,4 @@ ProposalSubmittedEmail.PreviewProps = {
     team: { slug: 'awesome-team' },
   },
   proposal: { id: '123', title: 'My awesome proposal', speakers: [{ name: 'John Doe' }] },
-  locale: 'en',
-} as EmailData;
+} as EmailProps;

@@ -38,17 +38,17 @@ export class UserAccount {
     });
   }
 
-  static async linkEmailProvider(uid: string, email: string, password: string) {
+  static async linkEmailProvider(uid: string, email: string, password: string, locale: string) {
     try {
       await firebaseAuth.updateUser(uid, { email, password, emailVerified: false });
-      await UserAccount.checkEmailVerification(email, false, 'password');
+      await UserAccount.checkEmailVerification(email, false, 'password', locale);
     } catch (error) {
       console.error('linkEmailProvider', error);
       return getFirebaseError(error);
     }
   }
 
-  static async sendResetPasswordEmail(email: string) {
+  static async sendResetPasswordEmail(email: string, locale: string) {
     try {
       const firebaseResetLink = await firebaseAuth.generatePasswordResetLink(email);
       const firebaseResetUrl = new URL(firebaseResetLink);
@@ -60,14 +60,18 @@ export class UserAccount {
       passwordResetUrl.searchParams.set('oobCode', oobCode);
       passwordResetUrl.searchParams.set('email', email);
 
-      // todo(i18n): set correct locale
-      await sendResetPasswordEmail(email, 'en', { passwordResetUrl: passwordResetUrl.toString() });
+      await sendResetPasswordEmail(email, locale, { passwordResetUrl: passwordResetUrl.toString() });
     } catch (error) {
       console.error('sendResetPasswordEmail', error);
     }
   }
 
-  static async checkEmailVerification(email: string | undefined, emailVerified: boolean | undefined, provider: string) {
+  static async checkEmailVerification(
+    email: string | undefined,
+    emailVerified: boolean | undefined,
+    provider: string,
+    locale: string,
+  ) {
     if (!email) return false;
     if (emailVerified) return false;
     if (provider !== 'password') return false;
@@ -83,8 +87,7 @@ export class UserAccount {
       emailVerificationUrl.searchParams.set('oobCode', oobCode);
       emailVerificationUrl.searchParams.set('email', email);
 
-      // todo(i18n): set correct locale
-      await sendVerificationEmail(email, 'en', { emailVerificationUrl: emailVerificationUrl.toString() });
+      await sendVerificationEmail(email, locale, { emailVerificationUrl: emailVerificationUrl.toString() });
       return true;
     } catch (error) {
       console.error('checkEmailVerification', error);

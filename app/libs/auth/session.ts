@@ -40,7 +40,12 @@ export async function createSession(request: Request) {
   const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
   const userId = await UserAccount.register({ uid, name, email, picture, locale });
 
-  const needVerification = await UserAccount.checkEmailVerification(email, email_verified, firebase.sign_in_provider);
+  const needVerification = await UserAccount.checkEmailVerification(
+    email,
+    email_verified,
+    firebase.sign_in_provider,
+    locale,
+  );
   if (needVerification) return destroySession(request, '/auth/email-verification');
 
   const session = await getSession(request);
@@ -108,5 +113,6 @@ export async function sendEmailVerification(request: Request) {
   const provider = firebaseUser.providerData.find((p) => p.providerId === 'password');
   if (!provider) return null;
 
-  await UserAccount.checkEmailVerification(provider.email, false, 'password');
+  const locale = await i18n.getLocale(request);
+  await UserAccount.checkEmailVerification(provider.email, false, 'password', locale);
 }

@@ -101,9 +101,8 @@ export class TalkSubmission {
 
     await db.proposal.update({ data: { isDraft: false }, where: { id: proposal.id } });
 
-    // todo(i18n): set correct locale
-    await sendProposalSubmittedEmailToSpeakers({ event, proposal, locale: 'en' });
-    await sendProposalSubmittedEmailToOrganizers({ event, proposal, locale: 'en' });
+    await sendProposalSubmittedEmailToSpeakers({ event, proposal });
+    await sendProposalSubmittedEmailToOrganizers({ event, proposal });
 
     if (event.slackWebhookUrl) {
       await sendSubmittedTalkSlackMessage(event.id, proposal.id);
