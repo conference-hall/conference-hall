@@ -1,13 +1,15 @@
+import { useTranslation } from 'react-i18next';
 import { Link, href } from 'react-router';
 
 import { Container } from '~/design-system/layouts/container.tsx';
 
 export function Footer() {
+  const { t } = useTranslation();
   const year = new Date().getFullYear();
   return (
     <footer className="py-8 text-sm text-gray-500">
       <Container className="flex gap-4 justify-center items-center">
-        <span className="hidden sm:inline">&copy; {year} Conference Hall.</span>
+        <span className="hidden sm:inline">{t('footer.copyright', { year })}</span>
         <LegalLinks />
       </Container>
     </footer>
@@ -15,16 +17,17 @@ export function Footer() {
 }
 
 export function LegalLinks() {
+  const { t } = useTranslation();
   return (
     <div className="flex gap-4 justify-center items-center text-sm text-gray-500">
       <Link to={href('/docs/terms')} target="_blank" className="hover:underline underline-offset-2">
-        Terms
+        {t('footer.terms')}
       </Link>
       <Link to={href('/docs/privacy')} target="_blank" className="hover:underline underline-offset-2">
-        Privacy
+        {t('footer.privacy')}
       </Link>
       <Link to={href('/docs/license')} target="_blank" className="hover:underline underline-offset-2">
-        License
+        {t('footer.license')}
       </Link>
       <a
         href="https://github.com/conference-hall/conference-hall"
@@ -32,7 +35,7 @@ export function LegalLinks() {
         className="hover:underline underline-offset-2"
         rel="noreferrer"
       >
-        GitHub
+        {t('footer.source')}
       </a>
       <a
         href="https://github.com/sponsors/conference-hall"
@@ -40,7 +43,7 @@ export function LegalLinks() {
         className="hover:underline underline-offset-2"
         rel="noreferrer"
       >
-        Sponsor
+        {t('footer.sponsor')}
       </a>
     </div>
   );
