@@ -31,11 +31,9 @@ export class UserAccount {
   }
 
   static async changeLocale(userId: string, locale: string) {
-    return db.$transaction(async (trx) => {
-      const user = await trx.user.update({ where: { id: userId }, data: { locale } });
-      await trx.eventSpeaker.updateMany({ where: { userId }, data: { locale } });
-      return user;
-    });
+    const user = await db.user.update({ where: { id: userId }, data: { locale } });
+    await db.eventSpeaker.updateMany({ where: { userId }, data: { locale } });
+    return user;
   }
 
   static async linkEmailProvider(uid: string, email: string, password: string, locale: string) {

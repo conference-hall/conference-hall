@@ -37,11 +37,9 @@ export class UserTeams {
     const hasBetaAccess = TeamBetaAccess.hasAccess(user, user?.teams?.length);
     if (!hasBetaAccess) throw new ForbiddenOperationError();
 
-    return await db.$transaction(async (trx) => {
-      const team = await trx.team.create({ data });
-      await trx.teamMember.create({ data: { memberId: this.userId, teamId: team.id, role: 'OWNER' } });
-      return team;
-    });
+    const team = await db.team.create({ data });
+    await db.teamMember.create({ data: { memberId: this.userId, teamId: team.id, role: 'OWNER' } });
+    return team;
   }
 
   static async isSlugValid(slug: string) {

@@ -25,24 +25,23 @@ export class SpeakerProfile {
   }
 
   async save(data: ProfileData) {
-    return db.$transaction(async (trx) => {
-      const user = await trx.user.update({ where: { id: this.userId }, data });
+    const user = await db.user.update({ where: { id: this.userId }, data });
 
-      await trx.eventSpeaker.updateMany({
-        where: { userId: this.userId },
-        data: {
-          name: user.name,
-          email: user.email,
-          bio: user.bio,
-          picture: user.picture,
-          company: user.company,
-          location: user.location,
-          references: user.references,
-          socialLinks: user.socialLinks as SocialLinks,
-        },
-      });
-      return user;
+    await db.eventSpeaker.updateMany({
+      where: { userId: this.userId },
+      data: {
+        name: user.name,
+        email: user.email,
+        bio: user.bio,
+        picture: user.picture,
+        company: user.company,
+        location: user.location,
+        references: user.references,
+        socialLinks: user.socialLinks as SocialLinks,
+      },
     });
+
+    return user;
   }
 }
 
