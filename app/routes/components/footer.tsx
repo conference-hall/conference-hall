@@ -3,10 +3,11 @@ import { Link, href } from 'react-router';
 import { Container } from '~/design-system/layouts/container.tsx';
 
 export function Footer() {
+  const year = new Date().getFullYear();
   return (
     <footer className="py-8 text-sm text-gray-500">
       <Container className="flex gap-4 justify-center items-center">
-        <span className="hidden sm:inline">&copy; 2025 Conference Hall.</span>
+        <span className="hidden sm:inline">&copy; {year} Conference Hall.</span>
         <LegalLinks />
       </Container>
     </footer>
