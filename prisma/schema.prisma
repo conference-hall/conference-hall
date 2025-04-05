@@ -19,6 +19,7 @@ model User {
   location           String?
   socialLinks        Json                @default("[]")
   termsAccepted      Boolean             @default(false)
+  locale             String              @default("en")
   admin              Boolean             @default(false)
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
@@ -279,6 +280,7 @@ model EventSpeaker {
   location    String?
   references  String?
   socialLinks Json       @default("[]")
+  locale      String     @default("en")
   eventId     String
   event       Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   userId      String?

@@ -28,6 +28,7 @@ export class EventSpeaker {
           company: user.company,
           location: user.location,
           socialLinks: user.socialLinks as SocialLinks,
+          locale: user.locale,
         },
       });
     }
@@ -44,6 +45,7 @@ export class EventSpeaker {
         company: user.company,
         location: user.location,
         socialLinks: user.socialLinks as SocialLinks,
+        locale: user.locale,
       },
     });
   }

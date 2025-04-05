@@ -4,24 +4,34 @@ import { buildSpeakerProposalUrl } from '~/emails/utils/urls.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
-type EmailData = {
+type TemplateData = {
   event: { slug: string; name: string; logoUrl: string | null };
-  proposal: { id: string; title: string; formats: Array<{ name: string }>; speakers: Array<{ email: string }> };
+  proposal: {
+    id: string;
+    title: string;
+    formats: Array<{ name: string }>;
+    speakers: Array<{ email: string; locale: string }>;
+  };
 };
 
-export function sendProposalAcceptedEmailToSpeakers(data: EmailData) {
+export function sendProposalAcceptedEmailToSpeakers(data: TemplateData) {
+  const locale = data.proposal.speakers[0]?.locale ?? 'en';
+
   return sendEmail.trigger({
     template: 'speakers/proposal-accepted',
     subject: `[${data.event.name}] Congrats! Your proposal has been accepted`,
     from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
     to: data.proposal.speakers.map((speaker) => speaker.email),
     data,
+    locale,
   });
 }
 
-export default function ProposalAcceptedEmail({ event, proposal }: EmailData) {
+type EmailProps = TemplateData & { locale: string };
+
+export default function ProposalAcceptedEmail({ event, proposal, locale }: EmailProps) {
   return (
-    <BaseEventEmail logoUrl={event.logoUrl}>
+    <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>Proposal accepted!</Heading>
 
       <Text>
@@ -53,6 +63,6 @@ ProposalAcceptedEmail.PreviewProps = {
     id: '123',
     title: 'My awesome proposal',
     formats: [{ name: 'Talk' }],
-    speakers: [{ email: 'john@email.com' }],
+    speakers: [{ email: 'john@email.com', locale: 'en' }],
   },
-};
+} as EmailProps;

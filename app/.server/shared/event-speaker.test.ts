@@ -26,6 +26,7 @@ describe('EventSpeaker', () => {
         company: user.company,
         location: user.location,
         socialLinks: user.socialLinks,
+        locale: user.locale,
       });
     });
 
@@ -34,10 +35,11 @@ describe('EventSpeaker', () => {
       const user = await userFactory();
       await eventSpeakerFactory({ event, user });
 
-      const updatedUser = { ...user, name: 'Updated Name' };
+      const updatedUser = { ...user, name: 'Updated Name', locale: 'fr' };
       const speaker = await EventSpeaker.for(event.id).upsertForUser(updatedUser);
 
       expect(speaker.name).toBe('Updated Name');
+      expect(speaker.locale).toBe('fr');
     });
   });
 

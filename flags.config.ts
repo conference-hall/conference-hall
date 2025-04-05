@@ -13,4 +13,10 @@ export default defineFlagsConfig({
     defaultValue: false,
     tags: ['frontend'] as const,
   },
+  userPreferences: {
+    description: 'Enabled user preferences settings.',
+    type: 'boolean',
+    defaultValue: false,
+    tags: ['frontend'] as const,
+  },
 });

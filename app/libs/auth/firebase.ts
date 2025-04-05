@@ -21,7 +21,7 @@ type FirebaseConfig = {
   USE_EMULATORS: boolean;
 };
 
-export function initializeFirebaseClient(config?: FirebaseConfig) {
+export function initializeFirebaseClient(locale: string, config?: FirebaseConfig) {
   if (!config || getApps().length) return;
 
   const app = initializeApp({
@@ -31,6 +31,7 @@ export function initializeFirebaseClient(config?: FirebaseConfig) {
   });
 
   const auth = getAuth(app);
+  auth.languageCode = locale;
   setPersistence(auth, browserLocalPersistence);
 
   if (config.USE_EMULATORS) {

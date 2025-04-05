@@ -2,13 +2,15 @@ import { PassThrough } from 'node:stream';
 import { createReadableStreamFromReadable } from '@react-router/node';
 import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
+import { I18nextProvider } from 'react-i18next';
 import type { ActionFunctionArgs, AppLoadContext, EntryContext, LoaderFunctionArgs } from 'react-router';
 import { ServerRouter } from 'react-router';
+import { initializeI18n } from './libs/i18n/i18n.server.ts';
 import { NonceContext } from './libs/nonce/use-nonce.ts';
 
 export const streamTimeout = 5_000;
 
-export default function handleRequest(
+export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
@@ -17,13 +19,17 @@ export default function handleRequest(
 ) {
   const callbackName = isbot(request.headers.get('user-agent')) ? 'onAllReady' : 'onShellReady';
 
+  const i18n = await initializeI18n(request, reactRouterContext);
+
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const nonce = String(loadContext.cspNonce) ?? undefined;
     const { pipe, abort } = renderToPipeableStream(
-      <NonceContext.Provider value={nonce}>
-        <ServerRouter context={reactRouterContext} url={request.url} nonce={nonce} />
-      </NonceContext.Provider>,
+      <I18nextProvider i18n={i18n}>
+        <NonceContext.Provider value={nonce}>
+          <ServerRouter context={reactRouterContext} url={request.url} nonce={nonce} />
+        </NonceContext.Provider>
+      </I18nextProvider>,
       {
         [callbackName]() {
           shellRendered = true;

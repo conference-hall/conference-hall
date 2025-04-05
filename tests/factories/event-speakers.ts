@@ -30,6 +30,7 @@ export const eventSpeakerFactory = async (options: FactoryOptions) => {
       company: user.company,
       location: user.location,
       socialLinks: user.socialLinks as SocialLinks,
+      locale: user.locale,
       user: { connect: { id: user.id } },
     };
   }

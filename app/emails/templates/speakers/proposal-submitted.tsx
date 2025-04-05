@@ -4,24 +4,29 @@ import { buildSpeakerProfileUrl } from '~/emails/utils/urls.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
-type EmailData = {
+type TemplateData = {
   event: { name: string; logoUrl: string | null };
-  proposal: { title: string; speakers: Array<{ email: string }> };
+  proposal: { title: string; speakers: Array<{ email: string; locale: string }> };
 };
 
-export function sendProposalSubmittedEmailToSpeakers(data: EmailData) {
+export function sendProposalSubmittedEmailToSpeakers(data: TemplateData) {
+  const locale = data.proposal.speakers[0]?.locale ?? 'en';
+
   return sendEmail.trigger({
     template: 'speakers/proposal-submitted',
     subject: `[${data.event.name}] Submission confirmed`,
     from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
     to: data.proposal.speakers.map((speaker) => speaker.email),
     data,
+    locale,
   });
 }
 
-export default function ProposalSubmittedEmail({ event, proposal }: EmailData) {
+type EmailProps = TemplateData & { locale: string };
+
+export default function ProposalSubmittedEmail({ event, proposal, locale }: EmailProps) {
   return (
-    <BaseEventEmail logoUrl={event.logoUrl}>
+    <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>Thank you for your proposal!</Heading>
 
       <Text>
@@ -41,5 +46,5 @@ export default function ProposalSubmittedEmail({ event, proposal }: EmailData) {
 
 ProposalSubmittedEmail.PreviewProps = {
   event: { name: 'Awesome event', logoUrl: 'https://picsum.photos/seed/123/128' },
-  proposal: { title: 'My awesome proposal', speakers: [{ email: 'john@email.com' }] },
-};
+  proposal: { title: 'My awesome proposal', speakers: [{ email: 'john@email.com', locale: 'en' }] },
+} as EmailProps;
