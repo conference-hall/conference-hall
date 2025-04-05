@@ -1,4 +1,7 @@
 {
+  "app.title": "Conference Hall",
+  "app.description": "Open SaaS platform for call for papers.",
+  "common.loading": "Loading",
   "error.global": "An error occurred, please try again.",
   "emails.email-verification.title": "Welcome to Conference Hall",
   "speaker.settings.preferences": "Preferences",
