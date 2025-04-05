@@ -1,5 +1,6 @@
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 
+// todo(i18n)
 const selectors = [
   { label: 'All', value: 'all' },
   { label: 'Conferences', value: 'conference' },

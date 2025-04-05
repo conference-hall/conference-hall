@@ -28,6 +28,5 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "i18n-ally.localesPaths": ["public/locales"],
-  "tailwindCSS.experimental.classRegex": [["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]],
-  "i18n-ally.keystyle": "auto"
+  "tailwindCSS.experimental.classRegex": [["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]]
 }

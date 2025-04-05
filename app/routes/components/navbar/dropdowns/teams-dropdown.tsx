@@ -1,7 +1,8 @@
 import { Menu, MenuButton, MenuItem, MenuItems, MenuSeparator } from '@headlessui/react';
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Link, href } from 'react-router';
 import { menuItem, menuItemIcon, menuItems, menuSeparator } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 
@@ -18,12 +19,13 @@ type Props = {
 };
 
 export function TeamsDropdown({ teams = [], currentTeam }: Props) {
+  const { t } = useTranslation();
   return (
     <Menu>
       <MenuButton className={menuStyle}>
         {({ open }) => (
           <>
-            {currentTeam ? currentTeam.name : 'My teams'}
+            {currentTeam ? currentTeam.name : t('navbar.teams')}
             {open ? (
               <ChevronUpIcon className="size-5 shrinl-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
             ) : (
@@ -39,7 +41,7 @@ export function TeamsDropdown({ teams = [], currentTeam }: Props) {
             <MenuItem
               key={team.slug}
               as={Link}
-              to={`/team/${team.slug}`}
+              to={href('/team/:team', { team: team.slug })}
               className={cx(menuItem(), { 'font-semibold': team.slug === currentTeam?.slug })}
             >
               <span className="truncate">{team.name}</span>
@@ -48,9 +50,9 @@ export function TeamsDropdown({ teams = [], currentTeam }: Props) {
 
           <MenuSeparator className={menuSeparator()} />
 
-          <MenuItem as={Link} to="/team/new" className={menuItem()}>
+          <MenuItem as={Link} to={href('/team/new')} className={menuItem()}>
             <PlusIcon className={menuItemIcon()} aria-hidden="true" />
-            New team
+            {t('navbar.teams.create')}
           </MenuItem>
         </MenuItems>
       </MenuTransition>
