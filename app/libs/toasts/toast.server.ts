@@ -18,12 +18,12 @@ export type Toast = z.infer<typeof ToastSchema>;
 
 export const toastSessionStorage = createCookieSessionStorage({
   cookie: {
-    name: '__toast',
+    name: 'toast',
     path: '/',
     httpOnly: true,
     secure: true,
     secrets: [process.env.COOKIE_SIGNED_SECRET],
-    sameSite: 'strict',
+    sameSite: 'lax',
   },
 });
 

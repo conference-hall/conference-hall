@@ -4,6 +4,7 @@ import { job } from '~/libs/jobs/job.ts';
 import { getEmailProvider } from './providers/provider.ts';
 
 type Email = {
+  locale: string;
   template: string;
   from: string;
   to: string[];
@@ -22,7 +23,7 @@ export const sendEmail = job<Email>({
 
     if (!emailProvider) return Promise.reject('Email provider not found');
 
-    const emailRendered = await renderEmail(payload.template, payload.data);
+    const emailRendered = await renderEmail(payload.template, payload.data, payload.locale);
 
     if (!emailRendered) return Promise.reject('Email rendering failed');
 

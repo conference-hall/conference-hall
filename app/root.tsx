@@ -1,11 +1,14 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, data } from 'react-router';
+import { useChangeLanguage } from 'remix-i18next/react';
 import type { Route } from './+types/root.ts';
 import { UserInfo } from './.server/user-registration/user-info.ts';
 import { initializeFirebaseClient } from './libs/auth/firebase.ts';
 import { destroySession, getUserSession } from './libs/auth/session.ts';
-import { getPublicEnv } from './libs/env/env.server.ts';
+import { getBrowserEnv } from './libs/env/env.server.ts';
 import { flags } from './libs/feature-flags/flags.server.ts';
+import { i18n } from './libs/i18n/i18n.server.ts';
 import { useNonce } from './libs/nonce/use-nonce.ts';
 import type { Toast } from './libs/toasts/toast.server.ts';
 import { getToast } from './libs/toasts/toast.server.ts';
@@ -44,6 +47,8 @@ export const links: Route.LinksFunction = () => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
+  const locale = await i18n.getLocale(request);
+
   if (isMaintenanceMode) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
@@ -56,14 +61,21 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
   const frontendFlags = await flags.withTag('frontend');
 
-  return data({ user, toast, env: getPublicEnv(), flags: frontendFlags }, { headers: toastHeaders || {} });
+  return data({ locale, user, toast, env: getBrowserEnv(), flags: frontendFlags }, { headers: toastHeaders || {} });
 };
 
-type DocumentProps = { children: ReactNode; toast?: Toast | null; nonce: string; env?: Record<string, unknown> };
+type DocumentProps = {
+  locale: string;
+  nonce: string;
+  env?: Record<string, unknown>;
+  toast?: Toast | null;
+  children: ReactNode;
+};
 
-function Document({ children, toast, nonce, env = {} }: DocumentProps) {
+function Document({ locale, nonce, env = {}, toast, children }: DocumentProps) {
+  const { i18n } = useTranslation();
   return (
-    <html lang="en">
+    <html lang={locale} dir={i18n.dir()}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -88,15 +100,17 @@ function Document({ children, toast, nonce, env = {} }: DocumentProps) {
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  const { user, env, toast, flags } = loaderData;
+  const { locale, user, env, toast, flags } = loaderData;
   const nonce = useNonce();
 
-  initializeFirebaseClient(env);
+  useChangeLanguage(locale);
+
+  initializeFirebaseClient(locale, env);
 
   return (
     <FlagsProvider flags={flags}>
       <UserProvider user={user}>
-        <Document toast={toast} env={env} nonce={nonce}>
+        <Document locale={locale} toast={toast} env={env} nonce={nonce}>
           <Outlet />
         </Document>
       </UserProvider>
@@ -107,8 +121,9 @@ export default function App({ loaderData }: Route.ComponentProps) {
 export function ErrorBoundary() {
   const nonce = useNonce();
 
+  // TODO: Manage error boundary in main layouts to manage locale
   return (
-    <Document nonce={nonce}>
+    <Document locale="en" nonce={nonce}>
       <GeneralErrorBoundary />
     </Document>
   );

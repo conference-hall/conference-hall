@@ -9,6 +9,7 @@ import { H1 } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { requireUserSession, sendEmailVerification } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { EmailPasswordSchema, EmailSchema } from '~/libs/validators/auth.ts';
@@ -28,6 +29,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
+  const locale = await i18n.getLocale(request);
   const { userId, uid } = await requireUserSession(request);
   const form = await request.formData();
   const intent = form.get('intent') as string;
@@ -44,7 +46,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
       const result = parseWithZod(form, { schema: EmailPasswordSchema });
       if (result.status !== 'success') return toast('error', 'An error occurred.');
 
-      const error = await UserAccount.linkEmailProvider(uid, result.value.email, result.value.password);
+      const error = await UserAccount.linkEmailProvider(uid, result.value.email, result.value.password, locale);
       if (error) return toast('error', error);
 
       const headers = await toastHeaders('success', 'Authentication method linked.');

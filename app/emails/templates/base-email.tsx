@@ -3,14 +3,14 @@ import { cx } from 'class-variance-authority';
 
 export type BaseEmailProps = {
   children: React.ReactNode;
-  lang?: string;
+  locale: string;
 };
 
 const APP_URL = process.env.APP_URL;
 
-export default function BaseEmail({ children, lang = 'en' }: BaseEmailProps) {
+export default function BaseEmail({ children, locale }: BaseEmailProps) {
   return (
-    <Html lang={lang}>
+    <Html lang={locale}>
       <Head />
 
       <Tailwind>
@@ -43,4 +43,5 @@ export const styles = {
 BaseEmail.PreviewProps = {
   preview: 'Email preview',
   children: 'Email content',
+  locale: 'en',
 } as BaseEmailProps;

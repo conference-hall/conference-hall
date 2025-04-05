@@ -10,6 +10,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { getUserSession } from '~/libs/auth/session.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/forgot-password.ts';
 
@@ -24,9 +25,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
+  const locale = await i18n.getLocale(request);
   const form = await request.formData();
   const email = z.string().email().parse(form.get('email'));
-  await UserAccount.sendResetPasswordEmail(email);
+  await UserAccount.sendResetPasswordEmail(email, locale);
   return { emailSent: true };
 };
 
