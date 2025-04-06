@@ -63,7 +63,7 @@ export default function EventRoute({ loaderData: event }: Route.ComponentProps) 
               {event.name}
             </H1>
             <Text variant="secondary-light" weight="medium">
-              {t('common.by', { author: event.teamName })}
+              {t('common.by', { names: [event.teamName] })}
             </Text>
           </div>
         </Container>

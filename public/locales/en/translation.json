@@ -73,7 +73,7 @@
   "common.full-name.placeholder": "John Doe",
   "auth.verify-email.success": "Email verified. You can now login.",
   "auth.verify-email.error.invalid-link": "Invalid email verification link!",
-  "common.by": "by {{author}}",
+  "common.by": "by {{names, list}}",
   "event.nav.proposals": "Your proposals",
   "event.nav.survey": "Survey",
   "event.nav.submit-proposal": "Submit a proposal",
@@ -115,5 +115,17 @@
   "speaker.references": "References",
   "speaker.location": "Location",
   "speaker.panel.heading": "Speaker information panel",
-  "speaker.survey": "Survey"
+  "speaker.survey": "Survey",
+  "event.proposals.heading": "Your proposals",
+  "event.proposals.list": "Proposals list",
+  "event.proposals.list.empty": "No proposals submitted!",
+  "event.proposals.list.header_zero": "No proposals submitted",
+  "event.proposals.list.header_one": "1 proposal submitted",
+  "event.proposals.list.header": "{{count}} proposals submitted",
+  "event.proposals.status.draft": "Draft",
+  "event.proposals.status.submitted": "Applied",
+  "event.proposals.status.accepted": "Accepted",
+  "event.proposals.status.declined": "Declined",
+  "event.proposals.status.confirmed": "Confirmed",
+  "event.proposals.status.declined-by-speaker": "Declined by you"
 }
