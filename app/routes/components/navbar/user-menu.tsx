@@ -61,13 +61,13 @@ export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificat
               </li>
 
               <MenuLink to={href('/speaker')} icon={FireIcon} onClick={handleClose}>
-                {t('navbar.user-menu.activity')}
+                {t('speaker.nav.activity')}
               </MenuLink>
               <MenuLink to={href('/speaker/talks')} icon={MicrophoneIcon} onClick={handleClose}>
-                {t('navbar.user-menu.talks')}
+                {t('speaker.nav.talks')}
               </MenuLink>
               <MenuLink to={href('/speaker/settings')} icon={Cog6ToothIcon} onClick={handleClose}>
-                {t('navbar.user-menu.settings')}
+                {t('speaker.nav.settings')}
               </MenuLink>
 
               <Divider as="li" className="my-2" />
