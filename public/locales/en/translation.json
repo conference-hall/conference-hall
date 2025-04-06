@@ -66,9 +66,11 @@
   "auth.reset-password.heading": "Change your password",
   "auth.reset-password.description": "Enter a new password for your account. We recommend using a strong password that you don't use elsewhere.",
   "auth.reset-password.submit": "Change your password",
-  "auth.reset-password.go-back": "Go back to login",
+  "auth.common.go-back-login": "Go back to login",
   "auth.reset-password.toast.success": "Password changed. You can now login.",
   "auth.signup.has-account": "Already have an account?",
   "common.full-name": "Full name",
-  "common.full-name.placeholder": "John Doe"
+  "common.full-name.placeholder": "John Doe",
+  "auth.verify-email.success": "Email verified. You can now login.",
+  "auth.verify-email.error.invalid-link": "Invalid email verification link!"
 }

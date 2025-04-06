@@ -1,6 +1,7 @@
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import * as Firebase from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
@@ -12,6 +13,7 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/verify-email.ts';
 
 export const meta = (args: Route.MetaArgs) => {
+  // todo(18n)
   return mergeMeta(args.matches, [{ title: 'Verify email | Conference Hall' }]);
 };
 
@@ -20,7 +22,8 @@ export const loader = async () => {
 };
 
 export default function VerifyEmail() {
-  const [error, setError] = useState<string>('Invalid email verification link!');
+  const { t } = useTranslation();
+  const [error, setError] = useState<string>(t('auth.verify-email.error.invalid-link'));
   const [loading, setLoading] = useState<boolean>(true);
 
   const navigate = useNavigate();
@@ -33,16 +36,17 @@ export default function VerifyEmail() {
 
     Firebase.applyActionCode(getClientAuth(), oobCode)
       .then(() => {
-        toast.success('Email verified. You can now login.');
+        toast.success(t('auth.verify-email.success'));
         navigate({ pathname: '/auth/login', search: `?email=${email}` });
       })
       .catch((error) => {
+        // todo(18n)
         setError(getFirebaseError(error));
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [oobCode, email, navigate]);
+  }, [oobCode, email, navigate, t]);
 
   if (loading) {
     return (
@@ -60,7 +64,7 @@ export default function VerifyEmail() {
         className="flex flex-col items-center pt-8 sm:pt-16 sm:mx-auto sm:w-full sm:max-w-md"
       >
         <Link to="/auth/login" weight="semibold">
-          Go back to login
+          {t('auth.common.go-back-login')}
         </Link>
       </EmptyState>
     </div>

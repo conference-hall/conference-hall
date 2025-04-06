@@ -98,7 +98,7 @@ export default function ResetPassword() {
 
       <footer className="text-center my-8">
         <Link to="/auth/login" weight="semibold">
-          {t('auth.reset-password.go-back')}
+          {t('auth.common.go-back-login')}
         </Link>
       </footer>
     </Page>
