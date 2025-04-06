@@ -62,5 +62,10 @@
   "common.continue-with": "Continue with",
   "auth.signin.no-account": "Don't have an account?",
   "auth.common.sign-up": "Create your account",
-  "auth.signin.auth-provider": "Continue with {{label}}"
+  "auth.signin.auth-provider": "Continue with {{label}}",
+  "auth.reset-password.heading": "Change your password",
+  "auth.reset-password.description": "Enter a new password for your account. We recommend using a strong password that you don't use elsewhere.",
+  "auth.reset-password.submit": "Change your password",
+  "auth.reset-password.go-back": "Go back to login",
+  "auth.reset-password.toast.success": "Password changed. You can now login."
 }
