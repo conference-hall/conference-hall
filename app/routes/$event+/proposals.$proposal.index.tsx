@@ -30,19 +30,19 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   switch (intent) {
     case 'proposal-delete': {
       await proposal.delete();
-      const headers = await toastHeaders('success', t('proposal.feedbacks.submissions-removed'));
+      const headers = await toastHeaders('success', t('event.proposal.feedbacks.submissions-removed'));
       return redirect(href('/:event/proposals', { event: params.event }), { headers });
     }
     case 'proposal-confirmation': {
       const result = parseWithZod(form, { schema: ProposalParticipationSchema });
       if (result.status !== 'success') return null;
       await proposal.confirm(result.value.participation);
-      return toast('success', t('proposal.feedbacks.confirmed'));
+      return toast('success', t('event.proposal.feedbacks.confirmed'));
     }
     case 'remove-speaker': {
       const speakerId = form.get('_speakerId')?.toString() as string;
       await proposal.removeCoSpeaker(speakerId);
-      return toast('success', t('proposal.feedbacks.cospeaker-removed'));
+      return toast('success', t('event.proposal.feedbacks.cospeaker-removed'));
     }
     case 'edit-talk': {
       const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
@@ -50,7 +50,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       if (result.status !== 'success') return result.error;
 
       await proposal.update(result.value);
-      return toast('success', t('proposal.feedbacks.saved'));
+      return toast('success', t('event.proposal.feedbacks.saved'));
     }
     default:
       return null;
@@ -64,7 +64,7 @@ export default function ProposalRoute({ loaderData: proposal, actionData: errors
 
   return (
     <Page>
-      <h1 className="sr-only">{t('proposal.heading')}</h1>
+      <h1 className="sr-only">{t('event.proposal.heading')}</h1>
       <div className="space-y-4 lg:space-y-6">
         <ProposalStatusSection proposal={proposal} event={currentEvent} />
 

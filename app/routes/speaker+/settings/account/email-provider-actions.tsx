@@ -1,6 +1,7 @@
 import { CheckIcon } from '@heroicons/react/16/solid';
 import { CheckBadgeIcon } from '@heroicons/react/24/outline';
 import { type FormEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
@@ -11,6 +12,7 @@ import { PasswordInput } from '~/routes/auth+/components/password-input.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 export function NewEmailProviderModal() {
+  const { t } = useTranslation();
   const submit = useSubmit();
   const [open, setOpen] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<SubmissionErrors>(null);
@@ -20,26 +22,28 @@ export function NewEmailProviderModal() {
 
   const linkAccount = async (event: FormEvent) => {
     event.preventDefault();
-
     const fieldErrors = validateEmailAndPassword(email, password);
     if (fieldErrors) return setFieldErrors(fieldErrors);
-
     await submit({ intent: 'link-email-provider', email, password }, { method: 'POST' });
   };
 
   return (
     <>
       <Button type="button" variant="secondary" size="s" onClick={() => setOpen(true)}>
-        Link account
+        {t('settings.account.authentication-methods.link-button')}
       </Button>
 
-      <Modal title="Link with email & password" onClose={() => setOpen(false)} open={open}>
+      <Modal
+        title={t('settings.account.authentication-methods.email-modal.title')}
+        onClose={() => setOpen(false)}
+        open={open}
+      >
         <Modal.Content className="space-y-6">
-          <Subtitle>Link your account with an email and password to enable password-based authentication.</Subtitle>
+          <Subtitle>{t('settings.account.authentication-methods.email-modal.description')}</Subtitle>
           <Form id="new-email-provider" onSubmit={linkAccount} className="space-y-4">
             <Input
-              label="Email address"
-              placeholder="example@site.com"
+              label={t('common.email')}
+              placeholder={t('common.email.placeholder')}
               name="new-email"
               type="email"
               value={email}
@@ -53,10 +57,10 @@ export function NewEmailProviderModal() {
 
         <Modal.Actions>
           <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button type="submit" variant="primary" form="new-email-provider">
-            Link account
+            {t('settings.account.authentication-methods.link-button')}
           </Button>
         </Modal.Actions>
       </Modal>
@@ -65,6 +69,7 @@ export function NewEmailProviderModal() {
 }
 
 export function VerifyEmailButton() {
+  const { t } = useTranslation();
   const [sent, setSent] = useState(false);
   const submit = useSubmit();
 
@@ -76,13 +81,13 @@ export function VerifyEmailButton() {
   if (sent) {
     return (
       <Button type="button" variant="secondary" size="s" iconLeft={CheckIcon} disabled>
-        Email sent
+        {t('settings.account.authentication-methods.email-sent')}
       </Button>
     );
   }
   return (
     <Button type="button" variant="secondary" size="s" iconLeft={CheckBadgeIcon} onClick={sendVerificationEmail}>
-      Send verification email
+      {t('settings.account.authentication-methods.send-verification-button')}
     </Button>
   );
 }
