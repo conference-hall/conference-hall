@@ -47,7 +47,14 @@
   "speaker.settings.preferences.saved": "Preferences saved successfully",
   "auth.email-verification.heading": "Email verification",
   "auth.email-verification.confirmation": "A verification email has been sent to your email address.",
-  "auth.email-verification.check-inbox": "Please check your inbox.",
   "auth.common.go-back": "Go back to",
-  "auth.common.sign-in": "Sign in"
+  "auth.common.sign-in": "Sign in",
+  "auth.forgot-password.sent.confirmation": "If an account with that email exists, we sent you an email with instructions to reset your password.",
+  "auth.common.check-inbox": "Please check your inbox.",
+  "auth.forgot-password.form.description": "Enter your email address and we will send you a link to reset your password.",
+  "common.email": "Email address",
+  "common.email.placeholder": "example@site.com",
+  "auth.forgot-password.form.submit": "Send reset password email",
+  "auth.forgot-password.form.heading": "Forgot your password?",
+  "auth.forgot-password.sent.heading": "Password reset email sent!"
 }
