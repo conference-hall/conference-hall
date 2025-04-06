@@ -6,6 +6,7 @@ import type { CfpState } from '~/types/events.types.ts';
 
 type Props = { cfpState: CfpState; cfpStart: Date | null; cfpEnd: Date | null; timezone: string; className?: string };
 
+// todo(18n)
 export function CfpSection({ cfpState, cfpStart, cfpEnd, timezone }: Props) {
   return (
     <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
