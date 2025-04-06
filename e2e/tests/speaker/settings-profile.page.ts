@@ -5,7 +5,7 @@ import { href } from 'react-router';
 export class SettingsProfilePage extends PageObject {
   readonly heading: Locator = this.page.getByRole('heading', { name: 'Profile', exact: true });
   readonly bioInput: Locator = this.page.getByLabel('Biography');
-  readonly referencesInput: Locator = this.page.getByLabel('Speaker references');
+  readonly referencesInput: Locator = this.page.getByLabel('References');
   readonly companyInput: Locator = this.page.getByLabel('Company');
   readonly locationInput: Locator = this.page.getByLabel('Location (city, country)');
   readonly socialLinkInput: Locator = this.page.getByLabel('Social link 1');

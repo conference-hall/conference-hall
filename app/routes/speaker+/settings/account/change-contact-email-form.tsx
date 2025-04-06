@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { type Option, SelectNative } from '~/design-system/forms/select-native.tsx';
@@ -8,6 +9,7 @@ import { getClientAuth } from '~/libs/auth/firebase.ts';
 type Props = { email: string; authLoaded: boolean };
 
 export function ChangeContactEmailForm({ email, authLoaded }: Props) {
+  const { t } = useTranslation();
   const providers = getClientAuth().currentUser?.providerData ?? [];
 
   const options: Array<Option> = [];
@@ -24,8 +26,8 @@ export function ChangeContactEmailForm({ email, authLoaded }: Props) {
   return (
     <Card as="section">
       <Card.Title>
-        <H2>Contact email</H2>
-        <Subtitle>Email address used for account notifications and communication with events organizers.</Subtitle>
+        <H2>{t('settings.account.contact.heading')}</H2>
+        <Subtitle>t('settings.account.contact.description')</Subtitle>
       </Card.Title>
 
       <Card.Content>
@@ -33,7 +35,7 @@ export function ChangeContactEmailForm({ email, authLoaded }: Props) {
           <SelectNative
             name="email"
             key={email}
-            label="Email address"
+            label={t('common.email')}
             defaultValue={email || ''}
             options={options}
             disabled={!authLoaded}
@@ -49,7 +51,7 @@ export function ChangeContactEmailForm({ email, authLoaded }: Props) {
           form="change-contact-email-form"
           disabled={!authLoaded}
         >
-          Save contact email
+          {t('settings.account.contact.submit')}
         </Button>
       </Card.Actions>
     </Card>

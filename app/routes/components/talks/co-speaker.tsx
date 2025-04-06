@@ -141,9 +141,9 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
   const Title = () => <SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />;
 
   const details = [
-    { key: 'bio', label: t('speaker.biography'), value: speaker.bio },
-    { key: 'references', label: t('speaker.references'), value: speaker.references },
-    { key: 'location', label: t('speaker.location'), value: speaker.location },
+    { key: 'bio', label: t('speaker.profile.biography'), value: speaker.bio },
+    { key: 'references', label: t('speaker.profile.references'), value: speaker.references },
+    { key: 'location', label: t('speaker.profile.location'), value: speaker.location },
   ].filter((detail) => Boolean(detail.value));
 
   return (
