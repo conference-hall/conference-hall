@@ -1,12 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import { Checkbox, CheckboxHeadingGroup } from '~/design-system/forms/checkboxes.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 
 type FormProps = {
-  formats: Array<{
-    id: string;
-    name: string;
-    description?: string | null;
-  }>;
+  formats: Array<{ id: string; name: string; description?: string | null }>;
   required?: boolean;
   initialValues?: string[];
 };
@@ -21,13 +18,17 @@ export function FormatsForm({ formatsAllowMultiple, ...formProps }: Props) {
 }
 
 function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
+  const { t } = useTranslation();
   return (
-    <CheckboxHeadingGroup label="Select proposal formats" description={required ? '(required)' : '(optional)'}>
+    <CheckboxHeadingGroup
+      label={t('event.submission.tracks.select-formats')}
+      description={required ? t('common.required') : t('common.optional')}
+    >
       {formats.map((format) => (
         <Checkbox
+          name="formats"
           key={format.id}
           id={format.id}
-          name="formats"
           value={format.id}
           defaultChecked={initialValues?.includes(format.id)}
           description={format.description}
@@ -40,13 +41,17 @@ function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
 }
 
 function FormatsRadioForm({ formats, required, initialValues }: FormProps) {
+  const { t } = useTranslation();
   return (
-    <RadioGroup label="Select proposal formats" description={required ? '(required)' : '(optional)'}>
+    <RadioGroup
+      label={t('event.submission.tracks.select-formats')}
+      description={required ? t('common.required') : t('common.optional')}
+    >
       {formats.map((format) => (
         <Radio
+          name="formats"
           key={format.id}
           id={format.id}
-          name="formats"
           value={format.id}
           defaultChecked={initialValues?.includes(format.id)}
           description={format.description}

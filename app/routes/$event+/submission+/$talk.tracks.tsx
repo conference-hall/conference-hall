@@ -1,5 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
@@ -32,11 +33,11 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   const submission = TalkSubmission.for(userId, params.event);
   await submission.saveTracks(params.talk, result.value);
-
   return redirect(String(form.get('redirectTo')));
 };
 
 export default function SubmissionTracksRoute({ loaderData: proposal, actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const currentEvent = useCurrentEvent();
   const { previousPath, nextPath } = useSubmissionNavigation();
 
@@ -44,49 +45,43 @@ export default function SubmissionTracksRoute({ loaderData: proposal, actionData
     <Page>
       <Card>
         <Card.Title>
-          <H2>Proposal tracks</H2>
+          <H2>{t('event.submission.tracks.heading')}</H2>
         </Card.Title>
 
         <Card.Content>
-          <Form id="tracks-form" method="POST">
-            <div className="space-y-12">
-              {currentEvent.formats?.length > 0 && (
-                <section>
-                  <FormatsForm
-                    formatsAllowMultiple={currentEvent.formatsAllowMultiple}
-                    formats={currentEvent.formats}
-                    required={currentEvent.formatsRequired}
-                    initialValues={proposal.formats}
-                  />
-                  {errors?.formats && (
-                    <Callout title="You must select at least one proposal format." variant="error" className="mt-4" />
-                  )}
-                </section>
-              )}
+          <Form id="tracks-form" method="POST" className="space-y-12">
+            {currentEvent.formats?.length > 0 && (
+              <section className="space-y-4">
+                <FormatsForm
+                  formatsAllowMultiple={currentEvent.formatsAllowMultiple}
+                  formats={currentEvent.formats}
+                  required={currentEvent.formatsRequired}
+                  initialValues={proposal.formats}
+                />
+                {errors?.formats && <Callout title={t('talk.errors.formats.required')} variant="error" />}
+              </section>
+            )}
 
-              {currentEvent.categories?.length > 0 && (
-                <section>
-                  <CategoriesForm
-                    categoriesAllowMultiple={currentEvent.categoriesAllowMultiple}
-                    categories={currentEvent.categories}
-                    required={currentEvent.categoriesRequired}
-                    initialValues={proposal.categories}
-                  />
-                  {errors?.categories && (
-                    <Callout title="You must select at least one proposal category." variant="error" className="mt-4" />
-                  )}
-                </section>
-              )}
-            </div>
+            {currentEvent.categories?.length > 0 && (
+              <section className="space-y-4">
+                <CategoriesForm
+                  categoriesAllowMultiple={currentEvent.categoriesAllowMultiple}
+                  categories={currentEvent.categories}
+                  required={currentEvent.categoriesRequired}
+                  initialValues={proposal.categories}
+                />
+                {errors?.categories && <Callout title={t('talk.errors.categories.required')} variant="error" />}
+              </section>
+            )}
           </Form>
         </Card.Content>
 
         <Card.Actions>
           <ButtonLink to={previousPath} variant="secondary">
-            Go back
+            {t('common.go-back')}
           </ButtonLink>
           <Button type="submit" form="tracks-form" name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
-            Continue
+            {t('common.continue')}
           </Button>
         </Card.Actions>
       </Card>
