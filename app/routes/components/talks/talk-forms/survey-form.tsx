@@ -25,7 +25,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
               key={question.id}
               name={question.id}
               label={question.label}
-              description={question.required ? t('common.required') : undefined}
+              description={question.required ? t('common.required') : t('common.optional')}
               defaultValue={initialValues[question.id] as string}
               error={errors?.[question.id]}
               required={question.required}
@@ -38,7 +38,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
             <CheckboxGroup
               key={question.id}
               label={question.label}
-              description={question.required ? t('common.required') : undefined}
+              description={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
               inline
             >
@@ -60,7 +60,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
             <RadioGroup
               key={question.id}
               label={question.label}
-              description={question.required ? t('common.required') : undefined}
+              description={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
               inline
             >

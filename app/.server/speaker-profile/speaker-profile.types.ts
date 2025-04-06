@@ -15,7 +15,6 @@ export const ProfileSchema = z.object({
 
 export const FunnelSpeakerSchema = z.object({
   bio: z.string().trim().nullable().default(null),
-  references: z.string().trim().nullable().default(null),
 });
 
 export const UnlinkProviderSchema = z.object({
