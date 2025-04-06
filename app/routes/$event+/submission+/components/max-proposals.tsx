@@ -1,5 +1,4 @@
 import { FireIcon } from '@heroicons/react/24/outline';
-
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
