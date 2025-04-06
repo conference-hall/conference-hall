@@ -167,5 +167,11 @@
   "talk.invitation.for-event": "You have been invited to be co-speaker on a talk for the {{event}} event.",
   "common.accept-invitation": "Accept invitation",
   "talk.invitation.for-talk": "You have been invited to be co-speaker on a talk.",
-  "team.invitation.description": "You have been invited to join the {{team}} team in Conference Hall."
+  "team.invitation.description": "You have been invited to join the {{team}} team in Conference Hall.",
+  "notifications.heading": "Notifications",
+  "notifications.description": "Notifications from events organizers about your proposals.",
+  "notifications.list": "Notifications list",
+  "notifications.empty": "No notifications",
+  "notifications.item.description": "Please confirm or decline your participation.",
+  "notifications.item.title": "<0>{{title}}</0> has been accepted to <1>{{eventName}}</1>."
 }
