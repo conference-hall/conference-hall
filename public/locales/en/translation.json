@@ -72,5 +72,15 @@
   "common.full-name": "Full name",
   "common.full-name.placeholder": "John Doe",
   "auth.verify-email.success": "Email verified. You can now login.",
-  "auth.verify-email.error.invalid-link": "Invalid email verification link!"
+  "auth.verify-email.error.invalid-link": "Invalid email verification link!",
+  "common.by": "by {{author}}",
+  "event.nav.proposals": "Your proposals",
+  "event.nav.survey": "Survey",
+  "event.nav.submit-proposal": "Submit a proposal",
+  "event.page.online": "The event is online",
+  "event.page.website": "Website",
+  "event.page.contacts": "Contacts",
+  "event.page.code-of-conduct": "Code of conduct",
+  "common.tracks.formats": "Formats",
+  "common.tracks.categories": "Categories"
 }
