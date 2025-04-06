@@ -162,5 +162,10 @@
   "event.submission.survey.heading": "We have some questions for you",
   "event.submission.submit.feedback.submitted": "Congratulation! Proposal submitted!",
   "event.submission.submit.finish": "Submit proposal",
-  "event.submission.submit.agree-cod": "Please agree with the <0>code of conduct</0> of the event."
+  "event.submission.submit.agree-cod": "Please agree with the <0>code of conduct</0> of the event.",
+  "talk.invitation.heading": "Talk invitation.",
+  "talk.invitation.for-event": "You have been invited to be co-speaker on a talk for the {{event}} event.",
+  "common.accept-invitation": "Accept invitation",
+  "talk.invitation.for-talk": "You have been invited to be co-speaker on a talk.",
+  "team.invitation.description": "You have been invited to join the {{team}} team in Conference Hall."
 }

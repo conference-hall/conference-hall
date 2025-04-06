@@ -1,4 +1,5 @@
-import { Form, redirect } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Form, href, redirect } from 'react-router';
 import { CoSpeakerTalkInvite } from '~/.server/speaker-talks-library/co-speaker-talk-invite.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -23,19 +24,20 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
   const talk = await CoSpeakerTalkInvite.with(params.code).addCoSpeaker(userId);
-  return redirect(`/speaker/talks/${talk.id}`);
+  return redirect(href('/speaker/talks/:talk', { talk: talk.id }));
 };
 
 export default function InvitationRoute({ loaderData: talk }: Route.ComponentProps) {
+  const { t } = useTranslation();
   return (
     <FullscreenPage navbar="default">
-      <FullscreenPage.Title title="Talk invitation." subtitle="You have been invited to be co-speaker on a talk." />
+      <FullscreenPage.Title title={t('talk.invitation.heading')} subtitle={t('talk.invitation.for-talk')} />
 
       <Card>
         <Card.Content>
           <H2 size="l">{talk.title}</H2>
 
-          <ul aria-label="Speakers" className="flex flex-row flex-wrap gap-3">
+          <ul aria-label={t('speaker.list')} className="flex flex-row flex-wrap gap-3">
             {talk.speakers.map((speaker) => (
               <li key={speaker.name}>
                 <SpeakerPill speaker={speaker} />
@@ -48,7 +50,7 @@ export default function InvitationRoute({ loaderData: talk }: Route.ComponentPro
 
         <Card.Actions>
           <Form method="POST">
-            <Button type="submit">Accept invitation</Button>
+            <Button type="submit">{t('common.accept-invitation')}</Button>
           </Form>
         </Card.Actions>
       </Card>
