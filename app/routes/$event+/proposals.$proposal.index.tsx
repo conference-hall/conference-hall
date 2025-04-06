@@ -1,10 +1,12 @@
 import { parseWithZod } from '@conform-to/zod';
-import { redirect } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { href, redirect } from 'react-router';
 import { UserProposal } from '~/.server/cfp-submissions/user-proposal.ts';
 import { ProposalParticipationSchema, getProposalUpdateSchema } from '~/.server/cfp-submissions/user-proposal.types.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 import { useCurrentEvent } from '../components/contexts/event-page-context.tsx';
@@ -19,6 +21,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
+  const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
   const proposal = UserProposal.for(userId, params.proposal);
   const form = await request.formData();
@@ -27,19 +30,19 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   switch (intent) {
     case 'proposal-delete': {
       await proposal.delete();
-      const headers = await toastHeaders('success', 'Proposal submission removed.');
-      return redirect(`/${params.event}/proposals`, { headers });
+      const headers = await toastHeaders('success', t('proposal.feedbacks.submissions-removed'));
+      return redirect(href('/:event/proposals', { event: params.event }), { headers });
     }
     case 'proposal-confirmation': {
       const result = parseWithZod(form, { schema: ProposalParticipationSchema });
       if (result.status !== 'success') return null;
       await proposal.confirm(result.value.participation);
-      return toast('success', 'Your response has been sent to organizers.');
+      return toast('success', t('proposal.feedbacks.confirmed'));
     }
     case 'remove-speaker': {
       const speakerId = form.get('_speakerId')?.toString() as string;
       await proposal.removeCoSpeaker(speakerId);
-      return toast('success', 'Co-speaker removed from proposal.');
+      return toast('success', t('proposal.feedbacks.cospeaker-removed'));
     }
     case 'edit-talk': {
       const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
@@ -47,7 +50,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       if (result.status !== 'success') return result.error;
 
       await proposal.update(result.value);
-      return toast('success', 'Proposal saved.');
+      return toast('success', t('proposal.feedbacks.saved'));
     }
     default:
       return null;
@@ -55,12 +58,13 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 export default function ProposalRoute({ loaderData: proposal, actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const currentEvent = useCurrentEvent();
   const canEdit = proposal.status === SpeakerProposalStatus.Submitted;
 
   return (
     <Page>
-      <h1 className="sr-only">Proposal page</h1>
+      <h1 className="sr-only">{t('proposal.heading')}</h1>
       <div className="space-y-4 lg:space-y-6">
         <ProposalStatusSection proposal={proposal} event={currentEvent} />
 

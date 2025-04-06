@@ -5,6 +5,7 @@ import type { TalkLevel } from '@prisma/client';
 import { cx } from 'class-variance-authority';
 import { format } from 'date-fns';
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Badge } from '~/design-system/badges.tsx';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -69,12 +70,14 @@ export function TalkSection({
   showCategories = false,
   referencesOpen = false,
 }: Props) {
+  const { t } = useTranslation();
+
   return (
     <Card as="section">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pl-6 pr-3 py-3 border-b border-b-gray-200">
         <div className={cx('flex items-center gap-2 min-w-0', { '-ml-2': showBackButton })}>
           {showBackButton ? (
-            <IconLink icon={ChevronLeftIcon} label="Go back" to=".." variant="secondary" relative="path" />
+            <IconLink icon={ChevronLeftIcon} label={t('common.go-back')} to=".." variant="secondary" relative="path" />
           ) : null}
           <H1 size="base">{talk.title}</H1>
         </div>
@@ -95,13 +98,14 @@ export function TalkSection({
           className="grow"
         />
         <Text size="xs" variant="secondary" className="text-nowrap hidden sm:block">
+          {/* todo(18n) */}
           <ClientOnly>{() => format(talk.createdAt, "'Created on' MMM d, y")}</ClientOnly>
         </Text>
       </div>
 
       <dl className="p-6 pt-4 flex flex-col gap-8">
         <div>
-          <dt className="sr-only">Abstract</dt>
+          <dt className="sr-only">{t('talk.abstract')}</dt>
           <Markdown as="dd" className="text-gray-700">
             {talk.abstract}
           </Markdown>
@@ -109,7 +113,7 @@ export function TalkSection({
 
         {showFormats && talk.formats && talk.formats?.length > 0 && (
           <div>
-            <dt className="text-sm font-medium leading-6 text-gray-900">Formats</dt>
+            <dt className="text-sm font-medium leading-6 text-gray-900">{t('tracks.formats')}</dt>
             <dd className="text-sm leading-6 text-gray-700">
               {talk.formats?.map(({ id, name }) => (
                 <p key={id}>{name}</p>
@@ -120,7 +124,7 @@ export function TalkSection({
 
         {showCategories && talk.categories && talk.categories?.length > 0 && (
           <div>
-            <dt className="text-sm font-medium leading-6 text-gray-900">Categories</dt>
+            <dt className="text-sm font-medium leading-6 text-gray-900">{t('tracks.categories')}</dt>
             <dd className="text-sm leading-6 text-gray-700">
               {talk.categories?.map(({ id, name }) => (
                 <p key={id}>{name}</p>
@@ -140,7 +144,7 @@ export function TalkSection({
       {talk.references ? (
         <Disclosure defaultOpen={referencesOpen}>
           <DisclosureButton className="px-6 py-4 group flex items-center gap-2 text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:underline border-t border-t-gray-200">
-            <span>Talk references</span>
+            <span>{t('talk.references')}</span>
             <ChevronDownIcon className="h-4 w-4 group-data-open:rotate-180" />
           </DisclosureButton>
           <DisclosurePanel as="dd" className="px-6 pb-4">

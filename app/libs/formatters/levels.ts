@@ -4,6 +4,7 @@ export const LEVELS = [
   { key: 'ADVANCED', label: 'Advanced' },
 ];
 
+// todo(i18n)
 export function getLevel(code: string | null) {
   return LEVELS.find(({ key }) => key === code)?.label;
 }

@@ -1,5 +1,5 @@
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
@@ -8,7 +8,6 @@ import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { LANGUAGES } from '~/libs/formatters/languages.ts';
 import { LEVELS } from '~/libs/formatters/levels.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
-
 import { CategoriesForm } from './categories-form.tsx';
 import { FormatsForm } from './formats-form.tsx';
 
@@ -45,6 +44,8 @@ export function TalkForm({
   errors,
   onSubmit,
 }: Props) {
+  const { t } = useTranslation();
+
   const hasFormats = formats && formats.length > 0;
   const hasCategories = categories && categories.length > 0;
 
@@ -53,7 +54,7 @@ export function TalkForm({
       <Input
         name="title"
         type="text"
-        label="Title"
+        label={t('talk.title')}
         required
         defaultValue={initialValues?.title}
         error={errors?.title}
@@ -61,15 +62,15 @@ export function TalkForm({
 
       <MarkdownTextArea
         name="abstract"
-        label="Abstract"
-        description="Brief description of the talk. Markdown is supported "
+        label={t('talk.abstract')}
+        description={t('talk.abstract.description')}
         required
         rows={6}
         defaultValue={initialValues?.abstract}
         error={errors?.abstract}
       />
 
-      <RadioGroup label="Level" inline>
+      <RadioGroup label={t('talk.level')} inline>
         {LEVELS.map(({ key, label }) => (
           <Radio name="level" key={key} id={key} value={key} defaultChecked={initialValues?.level === key}>
             {label}
@@ -79,8 +80,8 @@ export function TalkForm({
 
       <MultiSelect
         name="languages"
-        label="Languages"
-        placeholder="Select spoken languages for the talk."
+        label={t('talk.languages')}
+        placeholder={t('talk.languages.placeholder')}
         options={LANGUAGES}
         defaultValues={initialValues?.languages ?? []}
       />
@@ -93,7 +94,7 @@ export function TalkForm({
           initialValues={initialValues?.formats?.map(({ id }) => id)}
         />
       )}
-      {errors?.formats && <Callout title="You have to select at least one proposal format." variant="error" />}
+      {errors?.formats && <Callout title={t('talk.errors.formats.required')} variant="error" />}
 
       {hasCategories && (
         <CategoriesForm
@@ -103,12 +104,12 @@ export function TalkForm({
           initialValues={initialValues?.categories?.map(({ id }) => id)}
         />
       )}
-      {errors?.categories && <Callout title="You have to select at least one proposal category." variant="error" />}
+      {errors?.categories && <Callout title={t('talk.errors.categories.required')} variant="error" />}
 
       <MarkdownTextArea
         name="references"
-        label="References"
-        description="Give more info about your talk: slides, workshop pre-requities, github repo, video, summary, steps of the talk, which conference or meetup where it has been already given?"
+        label={t('talk.references')}
+        description={t('talk.references.description')}
         rows={4}
         defaultValue={initialValues?.references ?? ''}
         error={errors?.references}
