@@ -16,6 +16,7 @@ type PasswordInputProps = {
   onChange: (password: string) => void;
 };
 
+// todo(i18n)
 export function PasswordInput({
   label,
   name,

@@ -8,6 +8,7 @@ export type ProviderId = 'google.com' | 'github.com' | 'twitter.com';
 
 type ProviderInfo = { id: ProviderId; label: string; icon: React.ComponentType<{ className?: string }> };
 
+// todo(i18n)
 export const PROVIDERS: Array<ProviderInfo> = [
   { id: 'google.com', label: 'Google', icon: GoogleIcon },
   { id: 'github.com', label: 'GitHub', icon: GitHubIcon },

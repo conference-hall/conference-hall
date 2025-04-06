@@ -56,5 +56,11 @@
   "common.email.placeholder": "example@site.com",
   "auth.forgot-password.form.submit": "Send reset password email",
   "auth.forgot-password.form.heading": "Forgot your password?",
-  "auth.forgot-password.sent.heading": "Password reset email sent!"
+  "auth.forgot-password.sent.heading": "Password reset email sent!",
+  "auth.signin.heading": "Sign in to your account",
+  "common.or": "Or",
+  "common.continue-with": "Continue with",
+  "auth.signin.no-account": "Don't have an account?",
+  "auth.common.sign-up": "Create your account",
+  "auth.signin.auth-provider": "Continue with {{label}}"
 }
