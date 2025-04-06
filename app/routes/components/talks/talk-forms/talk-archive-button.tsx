@@ -1,4 +1,5 @@
 import { ArchiveBoxIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 
 import { Button } from '~/design-system/buttons.tsx';
@@ -6,8 +7,10 @@ import { Button } from '~/design-system/buttons.tsx';
 type Props = { archived: boolean };
 
 export function TalkArchiveButton({ archived }: Props) {
+  const { t } = useTranslation();
+
   const action = archived ? 'restore-talk' : 'archive-talk';
-  const label = archived ? 'Restore' : 'Archive';
+  const label = archived ? t('common.restore') : t('common.archive');
   const icon = archived ? ArchiveBoxXMarkIcon : ArchiveBoxIcon;
 
   return (

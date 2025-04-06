@@ -1,11 +1,9 @@
 import { ArrowRightIcon, CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { Form } from 'react-router';
-
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
-
 import { ProposalDeleteButton } from './proposal-delete.tsx';
 
 type Props = {
@@ -36,6 +34,7 @@ export function ProposalStatusSection(props: Props) {
   }
 }
 
+// todo(18n)
 function Draft({ proposal, event }: Props) {
   return (
     <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
