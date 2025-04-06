@@ -64,7 +64,7 @@ export default function SubmissionSpeakerRoute({ loaderData, actionData: errors 
           <Form id="speakers-form" method="POST">
             <MarkdownTextArea
               name="bio"
-              label={t('speaker.biography')}
+              label={t('speaker.profile.biography')}
               rows={5}
               error={errors?.bio}
               defaultValue={speaker.bio || ''}

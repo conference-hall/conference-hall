@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { ProfileSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
@@ -11,6 +12,7 @@ import { getSocialIcon } from '~/design-system/social-link.tsx';
 import { H1, H2, Label, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { extractSocialProfile } from '~/libs/formatters/social-links.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useSpeakerProfile } from '~/routes/components/contexts/speaker-profile-context.tsx';
@@ -28,6 +30,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
+  const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
 
   const form = await request.formData();
@@ -35,22 +38,21 @@ export const action = async ({ request }: Route.ActionArgs) => {
   if (result.status !== 'success') return result.error;
 
   await SpeakerProfile.for(userId).save(result.value);
-  return toast('success', 'Profile updated.');
+  return toast('success', t('settings.profile.feebacks.updated'));
 };
 
 export default function ProfileRoute({ actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const { name, picture, bio, company, location, references, socialLinks } = useSpeakerProfile();
 
   return (
     <div className="space-y-4 lg:space-y-6 ">
-      <H1 srOnly>Profile</H1>
+      <H1 srOnly>{t('settings.profile.heading')}</H1>
 
       <Card as="section">
         <Card.Title>
-          <H2 id="speaker-profile">Speaker profile</H2>
-          <Subtitle>
-            Give more information about you, these information will be visible by organizers when you submit a talk.
-          </Subtitle>
+          <H2 id="speaker-profile">{t('settings.profile.speaker-profile')}</H2>
+          <Subtitle>{t('settings.profile.speaker-profile.description')}</Subtitle>
         </Card.Title>
 
         <Card.Content>
@@ -61,11 +63,11 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
             className="space-y-6"
             preventScrollReset
           >
-            <Input name="name" label="Full name" defaultValue={name || ''} error={errors?.name} />
+            <Input name="name" label={t('common.full-name')} defaultValue={name || ''} error={errors?.name} />
             <div className="flex justify-between gap-8">
               <Input
                 name="picture"
-                label="Avatar picture URL"
+                label={t('speaker.profile.picture-url')}
                 defaultValue={picture || ''}
                 key={picture}
                 error={errors?.picture}
@@ -73,16 +75,27 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
               />
               <Avatar picture={picture} name={name} size="xl" square />
             </div>
-            <Input name="company" label="Company" defaultValue={company || ''} error={errors?.company} />
+            <Input
+              name="company"
+              label={t('speaker.profile.company')}
+              defaultValue={company || ''}
+              error={errors?.company}
+            />
             <Input
               name="location"
-              label="Location (city, country)"
+              label={t('speaker.profile.location')}
               defaultValue={location || ''}
               error={errors?.location}
             />
-            <MarkdownTextArea name="bio" label="Biography" rows={5} error={errors?.bio} defaultValue={bio || ''} />
+            <MarkdownTextArea
+              name="bio"
+              label={t('speaker.profile.biography')}
+              rows={5}
+              error={errors?.bio}
+              defaultValue={bio || ''}
+            />
             <div className="flex flex-col gap-2">
-              <Label>Social links</Label>
+              <Label>{t('speaker.profile.social-links')}</Label>
               {Array(MAX_SOCIAL_LINKS)
                 .fill('')
                 .map((_, index) => {
@@ -91,8 +104,8 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
                     <Input
                       key={`${index}:${url}`}
                       name={`socialLinks[${index}]`}
-                      aria-label={`Social link ${index + 1}`}
-                      placeholder="Link to social profile"
+                      aria-label={t('speaker.profile.social-links.label', { index: index + 1 })}
+                      placeholder={t('speaker.profile.social-links.placeholder')}
                       defaultValue={url || ''}
                       icon={getSocialIcon(name)}
                       error={errors?.[`socialLinks[${index}]`]}
@@ -102,8 +115,8 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
             </div>
             <MarkdownTextArea
               name="references"
-              label="Speaker references"
-              description="Give some information about your speaker experience: your already-given talks, conferences or meetups as speaker, video links..."
+              label={t('speaker.profile.references')}
+              description={t('speaker.profile.references.placeholder')}
               rows={5}
               error={errors?.references}
               defaultValue={references || ''}
@@ -113,7 +126,7 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
 
         <Card.Actions>
           <Button type="submit" name="intent" value="speaker-profile" form="speaker-profile-form">
-            Save profile
+            {t('speaker.profile.submit')}
           </Button>
         </Card.Actions>
       </Card>
