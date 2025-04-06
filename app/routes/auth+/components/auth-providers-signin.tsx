@@ -1,5 +1,6 @@
 import * as Firebase from 'firebase/auth';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/buttons.tsx';
 import { PROVIDERS, type ProviderId, getClientAuth } from '~/libs/auth/firebase.ts';
 import { useHydrated } from '~/routes/components/utils/use-hydrated.ts';
@@ -7,6 +8,7 @@ import { useHydrated } from '~/routes/components/utils/use-hydrated.ts';
 type AuthProvidersSigninProps = { redirectTo: string };
 
 export function AuthProvidersSignin({ redirectTo }: AuthProvidersSigninProps) {
+  const { t } = useTranslation();
   const hydrated = useHydrated();
 
   const signIn = useCallback(
@@ -42,7 +44,7 @@ export function AuthProvidersSignin({ redirectTo }: AuthProvidersSigninProps) {
       {PROVIDERS.map(({ id, label, icon: Icon }) => (
         <Button key={id} type="button" onClick={() => signIn(id)} variant="secondary" className="w-full">
           <Icon className="size-4" />
-          {`Continue with ${label}`}
+          {t('auth.signin.auth-provider', { label })}
         </Button>
       ))}
     </div>
