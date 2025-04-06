@@ -1,6 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { redirect } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { href, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
@@ -35,17 +36,18 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   const submission = TalkSubmission.for(userId, params.event);
   const proposal = await submission.saveDraft(params.talk, result.value);
-  return redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
+  return redirect(href('/:event/submission/:talk/speakers', { event: params.event, talk: proposal.talkId }));
 };
 
 export default function SubmissionTalkRoute({ loaderData: talk, actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const { previousPath } = useSubmissionNavigation();
 
   return (
     <Page>
       <Card>
         <Card.Title>
-          <H2>Your proposal</H2>
+          <H2>{t('event.submission.proposal.heading')}</H2>
         </Card.Title>
 
         <Card.Content>
@@ -54,10 +56,10 @@ export default function SubmissionTalkRoute({ loaderData: talk, actionData: erro
 
         <Card.Actions>
           <ButtonLink to={previousPath} variant="secondary">
-            Go back
+            {t('common.go-back')}
           </ButtonLink>
           <Button type="submit" form="talk-form" iconRight={ArrowRightIcon}>
-            Continue
+            {t('common.continue')}
           </Button>
         </Card.Actions>
       </Card>

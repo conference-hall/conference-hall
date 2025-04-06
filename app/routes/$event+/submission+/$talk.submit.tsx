@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Form, redirect } from 'react-router';
+import { Trans, useTranslation } from 'react-i18next';
+import { Form, href, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
@@ -7,6 +8,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import { TalkSection } from '~/routes/components/talks/talk-section.tsx';
@@ -21,15 +23,17 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
+  const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
 
   await TalkSubmission.for(userId, params.event).submit(params.talk);
 
-  const headers = await toastHeaders('success', 'Congratulation! Proposal submitted!');
-  return redirect(`/${params.event}/proposals`, { headers });
+  const headers = await toastHeaders('success', t('event.submission.submit.feedback.submitted'));
+  return redirect(href('/:event/proposals', { event: params.event }), { headers });
 };
 
 export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const currentEvent = useCurrentEvent();
   const [acceptedCod, setAcceptCod] = useState(!currentEvent.codeOfConductUrl);
   const { previousPath } = useSubmissionNavigation();
@@ -55,8 +59,10 @@ export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.Co
                 value="agree"
                 onChange={() => setAcceptCod(!acceptedCod)}
               >
-                Please agree with the <ExternalLink href={currentEvent.codeOfConductUrl}>code of conduct</ExternalLink>{' '}
-                of the event.
+                <Trans
+                  i18nKey="event.submission.submit.agree-cod"
+                  components={[<ExternalLink key="cod" href={currentEvent.codeOfConductUrl} />]}
+                />
               </Checkbox>
             ) : (
               <div />
@@ -64,10 +70,10 @@ export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.Co
 
             <div className="flex flex-row justify-end items-center gap-4">
               <ButtonLink to={previousPath} variant="secondary">
-                Go back
+                {t('common.go-back')}
               </ButtonLink>
               <Button type="submit" form="submit-form" disabled={!acceptedCod}>
-                Submit proposal
+                {t('event.submission.submit.finish')}
               </Button>
             </div>
           </Form>
