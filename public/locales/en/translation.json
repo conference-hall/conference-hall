@@ -132,5 +132,14 @@
   "event.survey.description": "This information are asked by the organizers to give you a better speaker experience.",
   "event.survey.form.submit": "Save survey",
   "event.survey.feedback.saved": "Survey saved.",
-  "common.required": "Required"
+  "common.required": "Required",
+  "event.submission.cfp-not-open": "The call for papers is not open yet.",
+  "event.submission.steps.selection": "Selection",
+  "event.submission.steps.proposal": "Proposal",
+  "event.submission.steps.speakers": "Speakers",
+  "event.submission.steps.tracks": "Tracks",
+  "event.submission.steps.survey": "Survey",
+  "event.submission.steps.submission": "Submission",
+  "event.submission.steps.nav.label": "Progress",
+  "event.submission.steps.nav.progress": "Step {{current}} of {{total}}"
 }
