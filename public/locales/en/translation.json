@@ -127,5 +127,10 @@
   "event.proposals.status.accepted": "Accepted",
   "event.proposals.status.declined": "Declined",
   "event.proposals.status.confirmed": "Confirmed",
-  "event.proposals.status.declined-by-speaker": "Declined by you"
+  "event.proposals.status.declined-by-speaker": "Declined by you",
+  "event.survey.heading": "We have some questions for you.",
+  "event.survey.description": "This information are asked by the organizers to give you a better speaker experience.",
+  "event.survey.form.submit": "Save survey",
+  "event.survey.feedback.saved": "Survey saved.",
+  "common.required": "Required"
 }
