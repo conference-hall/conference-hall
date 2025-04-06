@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { SpeakerActivities } from '~/.server/speaker-activities/speaker-activities.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -20,12 +21,13 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function ProfileRoute({ loaderData }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const profile = useSpeakerProfile();
   const { activities, nextPage, hasNextPage } = loaderData;
 
   return (
     <Page className="grid grid-cols-1 items-start lg:grid-cols-3">
-      <H1 srOnly>Your activity</H1>
+      <H1 srOnly>{t('speaker.activity.heading')}</H1>
 
       <SpeakerDetailsSection
         company={profile.company}
