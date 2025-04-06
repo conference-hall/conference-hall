@@ -44,5 +44,10 @@
   "speaker.settings.preferences.language.fr": "Français",
   "speaker.settings.preferences.language.subtitle": "Select the language for the user interface",
   "speaker.settings.preferences.language.save": "Change Language",
-  "speaker.settings.preferences.saved": "Preferences saved successfully"
+  "speaker.settings.preferences.saved": "Preferences saved successfully",
+  "auth.email-verification.heading": "Email verification",
+  "auth.email-verification.confirmation": "A verification email has been sent to your email address.",
+  "auth.email-verification.check-inbox": "Please check your inbox.",
+  "auth.common.go-back": "Go back to",
+  "auth.common.sign-in": "Sign in"
 }
