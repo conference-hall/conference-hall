@@ -1,11 +1,14 @@
 import { CheckIcon } from '@heroicons/react/16/solid';
 import * as Firebase from 'firebase/auth';
+import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/buttons.tsx';
 import { type ProviderId, getClientAuth } from '~/libs/auth/firebase.ts';
 
 type LinkProviderProps = { providerId: ProviderId };
 
 export function LinkProvider({ providerId }: LinkProviderProps) {
+  const { t } = useTranslation();
+
   const linkProvider = async () => {
     const { currentUser } = getClientAuth();
     if (!currentUser) return;
@@ -23,7 +26,7 @@ export function LinkProvider({ providerId }: LinkProviderProps) {
 
   return (
     <Button type="button" variant="secondary" onClick={linkProvider} size="s">
-      Link account
+      {t('settings.account.authentication-methods.link-button')}
     </Button>
   );
 }
@@ -35,9 +38,11 @@ type UnlinkProviderProps = {
 };
 
 export function UnlinkProvider({ providerId, disabled, onUnlink }: UnlinkProviderProps) {
+  const { t } = useTranslation();
+
   const unlinkProvider = async () => {
     if (disabled) return;
-    const confirm = window.confirm('Are you sure you want to unlink this account?');
+    const confirm = window.confirm(t('settings.account.authentication-methods.confirm-unlink'));
     if (!confirm) return;
     const { currentUser } = getClientAuth();
     if (!currentUser) return;
@@ -54,7 +59,9 @@ export function UnlinkProvider({ providerId, disabled, onUnlink }: UnlinkProvide
       disabled={disabled}
       size="s"
     >
-      {disabled ? 'Account linked' : 'Unlink account'}
+      {disabled
+        ? t('settings.account.authentication-methods.account-linked')
+        : t('settings.account.authentication-methods.unlink-button')}
     </Button>
   );
 }

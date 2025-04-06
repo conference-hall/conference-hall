@@ -72,6 +72,6 @@ export class ProposalPage extends PageObject {
   }
 
   async clickOnReferences() {
-    await this.page.getByText('Talk references').click();
+    await this.page.getByRole('button', { name: 'References' }).click();
   }
 }

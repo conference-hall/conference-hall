@@ -1,5 +1,6 @@
+import { useTranslation } from 'react-i18next';
+import { href } from 'react-router';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
-
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
 import { LoginButton } from './login-button.tsx';
 
@@ -10,14 +11,16 @@ type Props = {
 };
 
 export function Navigation({ authenticated, teams = [], withTeams = false }: Props) {
+  const { t } = useTranslation();
+
   if (!authenticated) {
     return <LoginButton />;
   }
 
   return (
     <NavTabs variant="dark">
-      <NavTab to="/speaker" end variant="dark">
-        My profile
+      <NavTab to={href('/speaker')} end variant="dark">
+        {t('navbar.speaker')}
       </NavTab>
       {withTeams ? <TeamsDropdown teams={teams} /> : null}
     </NavTabs>

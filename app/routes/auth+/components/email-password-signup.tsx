@@ -1,5 +1,6 @@
 import * as Firebase from 'firebase/auth';
 import { type FormEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form, useNavigation, useSubmit } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -14,6 +15,7 @@ import { PasswordInput } from './password-input.tsx';
 type EmailPasswordSignupProps = { redirectTo: string; defaultEmail: string | null };
 
 export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordSignupProps) {
+  const { t } = useTranslation();
   const [error, setError] = useState<string>('');
   const [fieldErrors, setFieldErrors] = useState<SubmissionErrors>(null);
 
@@ -39,6 +41,7 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
       const token = await credentials.user.getIdToken(true);
       await submit({ token, redirectTo }, { method: 'POST', action: '/auth/login' });
     } catch (error) {
+      // todo(18n)
       setError(getFirebaseError(error));
     }
   };
@@ -46,8 +49,8 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
   return (
     <Form className="space-y-4" onSubmit={signUp}>
       <Input
-        label="Full name"
-        placeholder="John Doe"
+        label={t('common.full-name')}
+        placeholder={t('common.full-name.placeholder')}
         name="name"
         type="text"
         value={name}
@@ -55,8 +58,8 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
         required
       />
       <Input
-        label="Email address"
-        placeholder="example@site.com"
+        label={t('common.email')}
+        placeholder={t('common.email.placeholder')}
         name="email"
         type="email"
         value={email}
@@ -67,7 +70,7 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
       <PasswordInput value={password} onChange={setPassword} error={fieldErrors?.password} isNewPassword />
 
       <Button type="submit" variant="primary" disabled={loading} className="w-full mt-2">
-        {loading ? <LoadingIcon className="size-4" /> : 'Create your account'}
+        {loading ? <LoadingIcon className="size-4" /> : t('auth.common.sign-up')}
       </Button>
 
       {error ? (

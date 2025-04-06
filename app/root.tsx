@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, data } from 'react-router';
+import type { MetaDescriptors } from 'react-router/route-module';
 import { useChangeLanguage } from 'remix-i18next/react';
 import type { Route } from './+types/root.ts';
 import { UserInfo } from './.server/user-registration/user-info.ts';
@@ -25,10 +26,7 @@ const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
 const isMaintenanceMode = process.env.MAINTENANCE_ENABLED === 'true';
 
 export const meta = ({ data }: Route.MetaArgs) => {
-  const metatags = [
-    { title: 'Conference Hall' },
-    { name: 'description', content: 'Open SaaS app for call for papers.' },
-  ];
+  const metatags: MetaDescriptors = [{ title: data.title }, { name: 'description', content: data.description }];
   const isSeoEnabled = data?.flags?.seo;
   if (!isSeoEnabled) metatags.push({ name: 'robots', content: 'noindex' });
   return metatags;
@@ -47,21 +45,27 @@ export const links: Route.LinksFunction = () => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const locale = await i18n.getLocale(request);
-
   if (isMaintenanceMode) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
-
-  const { toast, headers: toastHeaders } = await getToast(request);
 
   const { userId } = (await getUserSession(request)) || {};
   const user = await UserInfo.get(userId);
   if (userId && !user) await destroySession(request);
 
+  const { toast, headers: toastHeaders } = await getToast(request);
+
   const frontendFlags = await flags.withTag('frontend');
 
-  return data({ locale, user, toast, env: getBrowserEnv(), flags: frontendFlags }, { headers: toastHeaders || {} });
+  const locale = await i18n.getLocale(request);
+  const t = await i18n.getFixedT(locale);
+  const title = t('app.title');
+  const description = t('app.description');
+
+  return data(
+    { title, description, user, locale, toast, env: getBrowserEnv(), flags: frontendFlags },
+    { headers: toastHeaders || {} },
+  );
 };
 
 type DocumentProps = {

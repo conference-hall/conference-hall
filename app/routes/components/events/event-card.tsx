@@ -1,8 +1,8 @@
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Card, CardLink } from '~/design-system/layouts/card.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
+import { formatEventType } from '~/libs/formatters/cfp.ts';
 import type { CfpState } from '~/types/events.types.ts';
-
 import { CfpElapsedTime } from '../cfp/cfp-elapsed-time.tsx';
 
 type CardContentProps = {
@@ -46,8 +46,10 @@ function CardContent({ name, type, logoUrl, cfpState, cfpStart, cfpEnd }: CardCo
         </Text>
         <div className="flex flex-1 justify-between items-end sm:flex-row-reverse lg:flex-col lg:items-start truncate">
           <Subtitle weight="medium" className="hidden sm:block">
-            {type === 'CONFERENCE' ? 'Conference' : 'Meetup'}
+            {/* todo(i18n) */}
+            {formatEventType(type)}
           </Subtitle>
+          {/* todo(i18n) */}
           <CfpElapsedTime cfpState={cfpState} cfpStart={cfpStart} cfpEnd={cfpEnd} />
         </div>
       </div>

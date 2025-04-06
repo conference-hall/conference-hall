@@ -29,5 +29,5 @@
   },
   "i18n-ally.localesPaths": ["public/locales"],
   "tailwindCSS.experimental.classRegex": [["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]],
-  "i18n-ally.keystyle": "auto"
+  "i18n-ally.keystyle": "flat"
 }
