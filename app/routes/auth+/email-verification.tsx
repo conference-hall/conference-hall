@@ -34,7 +34,7 @@ export default function EmailVerification() {
         <div className="flex flex-col items-center gap-4">
           <Subtitle align="center">{t('auth.email-verification.confirmation')}</Subtitle>
           <Subtitle align="center" weight="semibold">
-            {t('auth.email-verification.check-inbox')}
+            {t('auth.common.check-inbox')}
           </Subtitle>
         </div>
       </Card>
