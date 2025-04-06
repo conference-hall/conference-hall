@@ -1,5 +1,6 @@
 import { EnvelopeIcon, GlobeEuropeAfricaIcon, HeartIcon } from '@heroicons/react/20/solid';
 import { ClockIcon, MapPinIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import { Divider } from '~/design-system/divider.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -35,23 +36,27 @@ export function DetailsSection({
   type,
   timezone,
 }: Props) {
+  const { t } = useTranslation();
   const hasDetails = websiteUrl || contactEmail || codeOfConductUrl;
+
   return (
     <Card as="section" p={8} className="space-y-8">
       <div className="space-y-2">
         <Text weight="semibold" size="base" mb={6}>
+          {/* todo(i18n) */}
           {formatEventType(type)}
         </Text>
 
         {conferenceStart && conferenceEnd ? (
           <IconLabel icon={ClockIcon}>
+            {/* todo(i18n) */}
             <ClientOnly>{() => formatConferenceDates(timezone, conferenceStart, conferenceEnd)}</ClientOnly>
           </IconLabel>
         ) : null}
 
         {location ? <IconLabel icon={MapPinIcon}>{location}</IconLabel> : null}
 
-        {onlineEvent ? <IconLabel icon={MapPinIcon}>The event is online</IconLabel> : null}
+        {onlineEvent ? <IconLabel icon={MapPinIcon}>{t('event.page.online')}</IconLabel> : null}
       </div>
 
       <Divider />
@@ -64,17 +69,17 @@ export function DetailsSection({
         <div className="flex flex-col gap-4 sm:flex-row sm:gap-16">
           {websiteUrl && (
             <ExternalLink href={websiteUrl} iconLeft={GlobeEuropeAfricaIcon}>
-              Website
+              {t('event.page.website')}
             </ExternalLink>
           )}
           {contactEmail && (
             <ExternalLink href={`mailto:${contactEmail}`} iconLeft={EnvelopeIcon}>
-              Contacts
+              {t('event.page.contacts')}
             </ExternalLink>
           )}
           {codeOfConductUrl && (
             <ExternalLink href={codeOfConductUrl} iconLeft={HeartIcon}>
-              Code of conduct
+              {t('event.page.code-of-conduct')}
             </ExternalLink>
           )}
         </div>
