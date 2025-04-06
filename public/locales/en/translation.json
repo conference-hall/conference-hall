@@ -67,5 +67,8 @@
   "auth.reset-password.description": "Enter a new password for your account. We recommend using a strong password that you don't use elsewhere.",
   "auth.reset-password.submit": "Change your password",
   "auth.reset-password.go-back": "Go back to login",
-  "auth.reset-password.toast.success": "Password changed. You can now login."
+  "auth.reset-password.toast.success": "Password changed. You can now login.",
+  "auth.signup.has-account": "Already have an account?",
+  "common.full-name": "Full name",
+  "common.full-name.placeholder": "John Doe"
 }
