@@ -1,6 +1,8 @@
 import { EventIntegrations } from '~/.server/event-settings/event-integrations.ts';
 import { ProposalSearchBuilder } from '~/.server/shared/proposal-search-builder.ts';
 import type { ProposalsFilters } from '~/.server/shared/proposal-search-builder.types.ts';
+import type { SocialLinks } from '~/.server/speaker-profile/speaker-profile.types.ts';
+import { extractSocialProfile } from '~/libs/formatters/social-links.ts';
 import { OpenPlanner, type OpenPlannerSessionsPayload } from '~/libs/integrations/open-planner.ts';
 import { job } from '~/libs/jobs/job.ts';
 import { compactObject } from '~/libs/utils/object-compact.ts';
@@ -56,14 +58,23 @@ export const exportToOpenPlanner = job<ExportToOpenPlannerPayload>({
           if (result.speakers.some((s) => s.id === speaker.id)) {
             continue;
           }
+
+          const socialLinks = speaker.socialLinks as SocialLinks;
+          const socials = socialLinks.map((link) => {
+            const { name, url } = extractSocialProfile(link);
+            return { name, icon: name, link: url };
+          });
+
           result.speakers.push(
             compactObject({
               id: speaker.id,
               name: speaker.name,
+              email: speaker.email,
               bio: speaker.bio,
               company: speaker.company,
               photoUrl: speaker.picture,
-              socials: [],
+              geolocation: speaker.location,
+              socials,
             }),
           );
         }
