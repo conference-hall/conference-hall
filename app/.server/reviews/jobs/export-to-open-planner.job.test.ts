@@ -7,6 +7,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
+import type { SocialLinks } from '~/.server/speaker-profile/speaker-profile.types.ts';
 import { OpenPlanner } from '~/libs/integrations/open-planner.ts';
 import { exportToOpenPlanner } from './export-to-open-planner.job.ts';
 
@@ -51,6 +52,9 @@ describe('Job: exportToOpenPlanner', () => {
 
     await exportToOpenPlanner.config.run({ userId: owner.id, eventSlug: event.slug, teamSlug: team.slug, filters: {} });
 
+    const expectedSpeaker = proposal1.speakers.at(0);
+    const expectedSocialLinks = expectedSpeaker?.socialLinks as SocialLinks;
+
     expect(postSessionsAndSpeakersMock).toHaveBeenCalledWith('open-planner-event-id', 'open-planner-api-key', {
       sessions: [
         {
@@ -76,12 +80,17 @@ describe('Job: exportToOpenPlanner', () => {
       ],
       speakers: [
         {
-          id: proposal1.speakers.at(0)?.id,
-          name: proposal1.speakers.at(0)?.name,
-          bio: proposal1.speakers.at(0)?.bio,
-          company: proposal1.speakers.at(0)?.company,
-          photoUrl: proposal1.speakers.at(0)?.picture,
-          socials: [],
+          id: expectedSpeaker?.id,
+          name: expectedSpeaker?.name,
+          email: expectedSpeaker?.email,
+          bio: expectedSpeaker?.bio,
+          company: expectedSpeaker?.company,
+          geolocation: expectedSpeaker?.location,
+          photoUrl: expectedSpeaker?.picture,
+          socials: expect.arrayContaining([
+            { icon: 'link', name: 'link', link: expectedSocialLinks[0] },
+            { icon: 'link', name: 'link', link: expectedSocialLinks[1] },
+          ]),
         },
       ],
     });
