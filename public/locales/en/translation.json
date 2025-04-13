@@ -261,5 +261,21 @@
   "team.events-list.description": "Manage your team events call for papers",
   "team.events-list.new-event-button": "New event",
   "team.events-list.empty": "Welcome to {{team}}!",
-  "team.events-list.empty.archived": "No events archived"
+  "team.events-list.empty.archived": "No events archived",
+  "team.settings.feedbacks.saved": "Team settings saved.",
+  "team.settings.feedbacks.team-left": "You've successfully left the team.",
+  "team.settings.feedbacks.deleted": "Team deleted.",
+  "team.settings.team-edit.heading": "General",
+  "team.settings.team-edit.description": "Change team name and URL.",
+  "team.settings.team-edit.form.submit": "Save",
+  "team.settings.danger.heading": "Danger zone",
+  "team.settings.danger.leave-team.heading": "Leave this team",
+  "team.settings.danger.description": "If you leave the team, you’ll lose access to it and won’t be able to manage its events.",
+  "team.settings.danger.leave-team.button": "Leave team",
+  "team.settings.danger.leave-team.confirm": "Are you sure you want to leave the \"{{team}}\" team?",
+  "team.settings.danger.delete-team.heading": "Delete this team",
+  "team.settings.danger.delete-team.description": "This will <0>permanently delete the \"{{team}}\"</0> team, events, speakers proposals, reviews, comments, schedule, and settings. This action cannot be undone.",
+  "team.settings.danger.delete-team.modal.heading": "Delete team",
+  "team.settings.danger.delete-team.modal.description": "This will permanently delete the \"{{team}}\" team, events, speakers proposals, reviews, comments, schedule, and settings. This action cannot be undone.",
+  "common.confirm-delete-input": "To confirm, type \"{{confirmationText}}\" in the box bellow"
 }
