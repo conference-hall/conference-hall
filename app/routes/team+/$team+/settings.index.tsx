@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { Trans, useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { TeamMembers } from '~/.server/team/team-members.ts';
 import { UserTeam } from '~/.server/team/user-team.ts';
@@ -6,6 +7,7 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { DeleteModalButton } from '~/routes/components/modals/delete-modal.tsx';
@@ -19,6 +21,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+  const t = await i18n.getFixedT(request);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
@@ -30,17 +33,17 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       if (result.status !== 'success') return result.error;
 
       const team = await userTeam.updateSettings(result.value);
-      const headers = await toastHeaders('success', 'Team settings saved.');
+      const headers = await toastHeaders('success', t('team.settings.feedbacks.saved'));
       return redirect(`/team/${team.slug}/settings`, { headers });
     }
     case 'leave-team': {
       await TeamMembers.for(userId, params.team).leave();
-      const headers = await toastHeaders('success', "You've successfully left the team.");
+      const headers = await toastHeaders('success', t('team.settings.feedbacks.team-left'));
       return redirect('/speaker', { headers });
     }
     case 'delete-team': {
       await UserTeam.for(userId, params.team).delete();
-      const headers = await toastHeaders('success', 'Team deleted.');
+      const headers = await toastHeaders('success', t('team.settings.feedbacks.deleted'));
       return redirect('/speaker', { headers });
     }
   }
@@ -48,6 +51,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 export default function TeamSettingsRoute({ actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const { canEditTeam, canLeaveTeam, canDeleteTeam } = currentTeam.userPermissions;
 
@@ -57,8 +61,8 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
         <Card as="section">
           <Form method="POST" preventScrollReset>
             <Card.Title>
-              <H2>General</H2>
-              <Subtitle>Change team name and URL.</Subtitle>
+              <H2>{t('team.settings.team-edit.heading')}</H2>
+              <Subtitle>{t('team.settings.team-edit.description')}</Subtitle>
             </Card.Title>
 
             <Card.Content>
@@ -67,7 +71,7 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
 
             <Card.Actions>
               <Button type="submit" name="intent" value="save-team">
-                Save
+                {t('team.settings.team-edit.form.submit')}
               </Button>
             </Card.Actions>
           </Form>
@@ -76,29 +80,27 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
 
       <Card as="section" className="border-red-300">
         <Card.Title>
-          <H2>Danger zone</H2>
+          <H2>{t('team.settings.danger.heading')}</H2>
         </Card.Title>
 
         <ul className="divide-y border-t mt-8">
           {canLeaveTeam ? (
             <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
               <div className="space-y-1 grow">
-                <Text weight="semibold">Leave this team</Text>
-                <Subtitle>
-                  If you leave the team, you’ll lose access to it and won’t be able to manage its events.
-                </Subtitle>
+                <Text weight="semibold">{t('team.settings.danger.leave-team.heading')}</Text>
+                <Subtitle>{t('team.settings.danger.description')}</Subtitle>
               </div>
               <Form
                 method="POST"
                 preventScrollReset
                 onSubmit={(event) => {
-                  if (!confirm(`Are you sure you want to leave the "${currentTeam.name}" team?`)) {
+                  if (!confirm(t('team.settings.danger.leave-team.confirm', { team: currentTeam.name }))) {
                     event.preventDefault();
                   }
                 }}
               >
                 <Button type="submit" name="intent" value="leave-team" variant="important">
-                  Leave team
+                  {t('team.settings.danger.leave-team.button')}
                 </Button>
               </Form>
             </li>
@@ -107,17 +109,19 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
           {canDeleteTeam ? (
             <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
               <div className="space-y-1 grow">
-                <Text weight="semibold">Delete this team</Text>
+                <Text weight="semibold">{t('team.settings.danger.delete-team.heading')}</Text>
                 <Subtitle>
-                  This will <strong>permanently delete the "{currentTeam.name}"</strong> team, events, speakers
-                  proposals, reviews, comments, schedule, and settings. This action cannot be undone.
+                  <Trans
+                    i18nKey="team.settings.danger.delete-team.description"
+                    values={{ team: currentTeam.name }}
+                    components={[<strong key="1" />]}
+                  />
                 </Subtitle>
               </div>
               <DeleteModalButton
                 intent="delete-team"
-                title="Delete team"
-                description={`This will permanently delete the "${currentTeam.name}" team, events, speakers proposals,
-              reviews, comments, schedule, and settings. This action cannot be undone.`}
+                title={t('team.settings.danger.delete-team.modal.heading')}
+                description={t('team.settings.danger.delete-team.modal.description', { team: currentTeam.name })}
                 confirmationText={currentTeam.slug}
               />
             </li>

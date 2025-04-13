@@ -1,5 +1,6 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -42,6 +43,7 @@ type DeleteModalProps = {
 };
 
 function DeleteModal({ title, description, confirmationText, intent, open, onClose }: DeleteModalProps) {
+  const { t } = useTranslation();
   const [confirmation, setConfirmation] = useState('');
 
   return (
@@ -49,14 +51,14 @@ function DeleteModal({ title, description, confirmationText, intent, open, onClo
       <Modal.Content className="space-y-4">
         <Callout variant="error">{description}</Callout>
         <Input
-          label={`To confirm, type "${confirmationText}" in the box bellow`}
+          label={t('common.confirm-delete-input', { confirmationText })}
           value={confirmation}
           onChange={(e) => setConfirmation(e.target.value)}
         />
       </Modal.Content>
       <Modal.Actions>
         <Button variant="secondary" onClick={onClose}>
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Form method="POST" preventScrollReset>
           <Button
