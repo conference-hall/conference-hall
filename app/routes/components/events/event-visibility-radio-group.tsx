@@ -1,7 +1,9 @@
 import { Description, Field, Fieldset, Label, Legend, Radio, RadioGroup } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
+// todo(i18n)
 const settings = [
   { name: 'Private', value: 'PRIVATE', description: 'This event would be available to anyone who has the link.' },
   {
@@ -12,11 +14,12 @@ const settings = [
 ];
 
 export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaultValue?: 'PUBLIC' | 'PRIVATE' }) {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState(defaultValue);
 
   return (
     <Fieldset>
-      <Legend className="text-sm font-medium text-gray-900"> Visibility </Legend>
+      <Legend className="text-sm font-medium text-gray-900">{t('event-management.fields.visibility')}</Legend>
 
       <RadioGroup name="visibility" value={selected} onChange={setSelected}>
         <div className="mt-2 -space-y-px rounded-md bg-white">

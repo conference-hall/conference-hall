@@ -28,7 +28,7 @@ export default function TeamSettingsLayout() {
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
-      <H2 srOnly>Team settings</H2>
+      <H2 srOnly>{t('team.settings.heading')}</H2>
 
       <NavSideMenu
         aria-label={t('team.settings.menu')}

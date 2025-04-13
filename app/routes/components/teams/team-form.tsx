@@ -19,7 +19,7 @@ export function TeamForm({ initialValues, errors }: TeamFormProps) {
     <>
       <Input
         name="name"
-        label={t('team.new.form.name')}
+        label={t('team.fields.name')}
         required
         autoComplete="off"
         value={name}
@@ -31,7 +31,7 @@ export function TeamForm({ initialValues, errors }: TeamFormProps) {
       />
       <Input
         name="slug"
-        label={t('team.new.form.slug')}
+        label={t('team.fields.slug')}
         addon="https://conference-hall.io/team/"
         required
         autoComplete="off"
