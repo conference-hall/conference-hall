@@ -244,5 +244,12 @@
   "talk.title": "Title",
   "team.invitation.description": "You have been invited to join the {{team}} team in Conference Hall.",
   "tracks.categories": "Categories",
-  "tracks.formats": "Formats"
+  "tracks.formats": "Formats",
+  "error.invalid-access-key": "Invalid access key",
+  "team.request.heading": "Become event organizer.",
+  "team.request.description": "Conference Hall for event organizers is in closed-beta access, you need a key to access it.",
+  "team.request.form.access-key": "Beta access key",
+  "team.request.form.access-key.placeholder": "Paste your beta access key here...",
+  "team.request.form.submit": "Get access",
+  "team.request.request-link": "Request a beta access key"
 }
