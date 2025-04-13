@@ -1,6 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { Form, redirect } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Form, href, redirect } from 'react-router';
 import { EventCreateSchema, TeamEvents } from '~/.server/team/team-events.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -23,19 +24,20 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   if (result.status !== 'success') return result.error;
 
   const event = await TeamEvents.for(userId, params.team).create(result.value);
-  return redirect(`/team/${params.team}/new/${event.slug}/details`);
+  return redirect(href('/team/:team/new/:event/details', { team: params.team, event: event.slug }));
 };
 
 export default function NewEventRoute({ params, actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const type = (params.type || 'CONFERENCE') as EventType;
-  const title = type === 'CONFERENCE' ? 'Create a new conference.' : 'Create a new meetup.';
+  const title =
+    type === 'CONFERENCE'
+      ? t('event-management.new.event-form.heading.conference')
+      : t('event-management.new.event-form.heading.meetup');
 
   return (
     <>
-      <FullscreenPage.Title
-        title={title}
-        subtitle="You will able to setup the call for paper later and make the event public or private."
-      />
+      <FullscreenPage.Title title={title} subtitle={t('event-management.new.event-form.description')} />
 
       <EventCreationStepper type={type} currentStep={0} />
 
@@ -49,10 +51,10 @@ export default function NewEventRoute({ params, actionData: errors }: Route.Comp
 
         <Card.Actions>
           <ButtonLink to=".." variant="secondary">
-            Go back
+            {t('common.go-back')}
           </ButtonLink>
           <Button type="submit" form="create-event-form" iconRight={ArrowRightIcon}>
-            Continue
+            {t('common.continue')}
           </Button>
         </Card.Actions>
       </Card>

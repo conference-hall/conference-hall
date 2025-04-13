@@ -1,8 +1,10 @@
 import { Description, Field, Fieldset, Label, Legend, Radio, RadioGroup } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
+import { useTranslation } from 'react-i18next';
 
 import type { EventType } from '~/types/events.types.ts';
 
+// todo(i18n)
 const settings = [
   {
     name: 'Conference',
@@ -19,9 +21,10 @@ const settings = [
 type Props = { selected: EventType; onSelect: (type: EventType) => void };
 
 export function EventTypeRadioGroup({ selected, onSelect }: Props) {
+  const { t } = useTranslation();
   return (
     <Fieldset>
-      <Legend className="text-sm font-medium text-gray-900">Event type</Legend>
+      <Legend className="text-sm font-medium text-gray-900">{t('event-management.fields.type')}</Legend>
 
       <RadioGroup name="type" value={selected} onChange={onSelect}>
         <div className="mt-4 -space-y-px rounded-md bg-white">

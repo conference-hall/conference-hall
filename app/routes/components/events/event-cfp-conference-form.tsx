@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 
 import { Callout } from '~/design-system/callout.tsx';
@@ -12,19 +13,17 @@ type Props = {
 };
 
 export function EventCfpConferenceForm({ timezone, cfpStart, cfpEnd, errors }: Props) {
+  const { t } = useTranslation();
   return (
     <Form id="cfp-conference-form" method="POST">
       <div className="space-y-4">
         <DateRangeInput
-          start={{ name: 'cfpStart', label: 'Opening date', value: cfpStart }}
-          end={{ name: 'cfpEnd', label: 'Closing date', value: cfpEnd }}
+          start={{ name: 'cfpStart', label: t('event-management.fields.cfp-start'), value: cfpStart }}
+          end={{ name: 'cfpEnd', label: t('event-management.fields.cfp-end'), value: cfpEnd }}
           timezone={timezone}
           error={errors?.cfpStart}
         />
-        <Callout title="Call for Papers period">
-          Specify the period during which the call for papers will be open. The CFP will automatically open and close
-          based on these dates and times.
-        </Callout>
+        <Callout title="Call for Papers period">{t('event-management.fields.cfp-dates.description')}</Callout>
         <input type="hidden" name="timezone" value={timezone} />
       </div>
     </Form>

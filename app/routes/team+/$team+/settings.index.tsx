@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { Trans, useTranslation } from 'react-i18next';
-import { Form, redirect } from 'react-router';
+import { Form, href, redirect } from 'react-router';
 import { TeamMembers } from '~/.server/team/team-members.ts';
 import { UserTeam } from '~/.server/team/user-team.ts';
 import { Button } from '~/design-system/buttons.tsx';
@@ -34,17 +34,17 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
       const team = await userTeam.updateSettings(result.value);
       const headers = await toastHeaders('success', t('team.settings.feedbacks.saved'));
-      return redirect(`/team/${team.slug}/settings`, { headers });
+      return redirect(href('/team/:team/settings', { team: team.slug }), { headers });
     }
     case 'leave-team': {
       await TeamMembers.for(userId, params.team).leave();
       const headers = await toastHeaders('success', t('team.settings.feedbacks.team-left'));
-      return redirect('/speaker', { headers });
+      return redirect(href('/speaker'), { headers });
     }
     case 'delete-team': {
       await UserTeam.for(userId, params.team).delete();
       const headers = await toastHeaders('success', t('team.settings.feedbacks.deleted'));
-      return redirect('/speaker', { headers });
+      return redirect(href('/speaker'), { headers });
     }
   }
   return null;
