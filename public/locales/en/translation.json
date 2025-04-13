@@ -251,5 +251,10 @@
   "team.request.form.access-key": "Beta access key",
   "team.request.form.access-key.placeholder": "Paste your beta access key here...",
   "team.request.form.submit": "Get access",
-  "team.request.request-link": "Request a beta access key"
+  "team.request.request-link": "Request a beta access key",
+  "team.new.heading": "Create a new team.",
+  "team.new.description": "Give a cool name to your team. You will be able to invite members and create your first event.",
+  "team.new.form.submit": "Create team",
+  "team.new.form.name": "Team name",
+  "team.new.form.slug": "Team URL"
 }

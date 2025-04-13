@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { TeamCreateSchema, UserTeams } from '~/.server/team/user-teams.ts';
 import { Button } from '~/design-system/buttons.tsx';
@@ -24,12 +25,10 @@ export const action = async ({ request }: Route.ActionArgs) => {
 };
 
 export default function NewTeamRoute({ actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   return (
     <FullscreenPage navbar="default">
-      <FullscreenPage.Title
-        title="Create a new team."
-        subtitle="Give a cool name to your team. You will be able to invite members and create your first event."
-      />
+      <FullscreenPage.Title title={t('team.new.heading')} subtitle={t('team.new.description')} />
 
       <Card>
         <Card.Content>
@@ -39,7 +38,7 @@ export default function NewTeamRoute({ actionData: errors }: Route.ComponentProp
         </Card.Content>
         <Card.Actions>
           <Button type="submit" className="mt-4" form="new-team-form">
-            Create team
+            {t('team.new.form.submit')}
           </Button>
         </Card.Actions>
       </Card>
