@@ -1,7 +1,8 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { CheckIcon, ClockIcon } from '@heroicons/react/24/outline';
-import { redirect } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { href, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventDetailsSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
@@ -27,18 +28,19 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   await event.update(result.value);
 
-  return redirect(`/team/${params.team}/new/${params.event}/cfp`);
+  return redirect(href('/team/:team/new/:event/cfp', params));
 };
 
 export default function NewEventDetailsRoute({ loaderData: event, actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const isConference = event.type === 'CONFERENCE';
 
   return (
     <>
       <FullscreenPage.Title
-        title={`${event.name} information.`}
-        subtitle="Provide details about the event, like address, dates and description to generate the event page."
+        title={t('event-management.new.details-form.heading', { eventName: event.name })}
+        subtitle={t('event-management.new.details-form.description')}
       />
 
       <EventCreationStepper type={event.type} currentStep={1} />
@@ -61,16 +63,20 @@ export default function NewEventDetailsRoute({ loaderData: event, actionData: er
         </Card.Content>
 
         <Card.Actions>
-          <ButtonLink to={`/team/${currentTeam.slug}/${event.slug}`} iconLeft={ClockIcon} variant="secondary">
-            Do it later
+          <ButtonLink
+            to={href('/team/:team/:event', { team: currentTeam.slug, event: event.slug })}
+            iconLeft={ClockIcon}
+            variant="secondary"
+          >
+            {t('common.do-it-later')}
           </ButtonLink>
           {isConference ? (
             <Button type="submit" form="details-form" iconRight={ArrowRightIcon}>
-              Continue
+              {t('common.continue')}
             </Button>
           ) : (
             <Button type="submit" form="details-form" iconLeft={CheckIcon}>
-              Finish
+              {t('common.finish')}
             </Button>
           )}
         </Card.Actions>
