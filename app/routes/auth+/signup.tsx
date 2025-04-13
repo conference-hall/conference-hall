@@ -7,7 +7,6 @@ import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { getUserSession } from '~/libs/auth/session.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/signup.ts';
 import { AuthProvidersSignin } from './components/auth-providers-signin.tsx';
@@ -20,10 +19,6 @@ export const meta = (args: Route.MetaArgs) => {
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await getUserSession(request);
   if (userId) return redirect('/');
-
-  const withEmailPasswordSignin = await flags.get('emailPasswordSignin');
-  if (!withEmailPasswordSignin) return redirect('/auth/login');
-
   return null;
 };
 
@@ -46,7 +41,7 @@ export default function Signup() {
 
         <DividerWithLabel label="Or" />
 
-        <AuthProvidersSignin redirectTo={redirectTo} withEmailPasswordSignin />
+        <AuthProvidersSignin redirectTo={redirectTo} />
       </Card>
 
       <footer className="flex justify-center gap-2 my-8">

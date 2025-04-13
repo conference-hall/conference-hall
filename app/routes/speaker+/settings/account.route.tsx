@@ -8,7 +8,6 @@ import { UserAccount } from '~/.server/user-registration/user-account.ts';
 import { H1 } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { requireUserSession, sendEmailVerification } from '~/libs/auth/session.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
@@ -24,8 +23,7 @@ export const meta = (args: Route.MetaArgs) => {
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);
-  const withEmailPasswordSignin = await flags.get('emailPasswordSignin');
-  return { withEmailPasswordSignin };
+  return null;
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
@@ -69,9 +67,8 @@ export const action = async ({ request }: Route.ActionArgs) => {
   }
 };
 
-export default function AccountRoute({ loaderData }: Route.ComponentProps) {
+export default function AccountRoute() {
   const [authLoaded, setAuthLoaded] = useState(false);
-  const { withEmailPasswordSignin } = loaderData;
   const { email } = useSpeakerProfile();
 
   useEffect(() => {
@@ -88,7 +85,7 @@ export default function AccountRoute({ loaderData }: Route.ComponentProps) {
 
       <ChangeContactEmailForm email={email} authLoaded={authLoaded} />
 
-      {withEmailPasswordSignin ? <AuthenticationMethods email={email} authLoaded={authLoaded} /> : null}
+      <AuthenticationMethods email={email} authLoaded={authLoaded} />
     </div>
   );
 }

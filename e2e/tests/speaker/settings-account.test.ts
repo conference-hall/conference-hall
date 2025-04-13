@@ -1,6 +1,5 @@
 import { MailBox } from 'e2e/common/mailbox.page.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { expect, test } from '../../fixtures.ts';
 import { HomePage } from '../global/home.page.ts';
 import { LoginPage } from '../global/login.page.ts';
@@ -8,7 +7,6 @@ import { SignupPage } from '../global/signup.page.ts';
 import { SettingsAccountPage } from './settings-account.page.ts';
 
 test('links and unlinks providers, change password, verify email', async ({ page }) => {
-  await flags.set('emailPasswordSignin', true);
   await userFactory({ traits: ['clark-kent'] });
 
   const mailbox = new MailBox(page);

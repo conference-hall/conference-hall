@@ -1,5 +1,4 @@
 import { MailBox } from 'e2e/common/mailbox.page.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { expect, resetMailbox, test } from '../../fixtures.ts';
 import { HomePage } from './home.page.ts';
 import { ForgotPasswordPage, LoginPage, ResetPasswordPage } from './login.page.ts';
@@ -7,7 +6,6 @@ import { SignupPage } from './signup.page.ts';
 
 test.beforeEach(async () => {
   await resetMailbox();
-  await flags.set('emailPasswordSignin', true);
 });
 
 test('Signup flow with email and password', async ({ page }) => {
