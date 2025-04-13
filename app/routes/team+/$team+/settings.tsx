@@ -1,6 +1,6 @@
 import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { Outlet } from 'react-router';
+import { Outlet, href } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
@@ -16,9 +16,9 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 // todo(i18n)
-const getMenuItems = (team?: string) => [
-  { to: `/team/${team}/settings`, icon: Cog6ToothIcon, label: 'General' },
-  { to: `/team/${team}/settings/members`, icon: UserGroupIcon, label: 'Members' },
+const getMenuItems = (team: string) => [
+  { to: href('/team/:team/settings', { team }), icon: Cog6ToothIcon, label: 'General' },
+  { to: href('/team/:team/settings/members', { team }), icon: UserGroupIcon, label: 'Members' },
 ];
 
 export default function TeamSettingsLayout() {
