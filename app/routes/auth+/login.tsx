@@ -9,7 +9,6 @@ import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { createSession, getUserSession } from '~/libs/auth/session.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/login.ts';
 import { AuthProvidersResult } from './components/auth-providers-result.tsx';
@@ -23,18 +22,14 @@ export const meta = (args: Route.MetaArgs) => {
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await getUserSession(request);
   if (userId) return redirect('/');
-
-  const withEmailPasswordSignin = await flags.get('emailPasswordSignin');
-  return { withEmailPasswordSignin };
+  return null;
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
   return createSession(request);
 };
 
-export default function Login({ loaderData }: Route.ComponentProps) {
-  const { withEmailPasswordSignin } = loaderData;
-
+export default function Login() {
   const [providerError, setProviderError] = useState<string>('');
   const [searchParams] = useSearchParams();
   const defaultEmail = searchParams.get('email');
@@ -55,11 +50,11 @@ export default function Login({ loaderData }: Route.ComponentProps) {
       </header>
 
       <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
-        {withEmailPasswordSignin ? <EmailPasswordSignin redirectTo={redirectTo} defaultEmail={defaultEmail} /> : null}
+        <EmailPasswordSignin redirectTo={redirectTo} defaultEmail={defaultEmail} />
 
-        <DividerWithLabel label={withEmailPasswordSignin ? 'Or' : 'Continue with'} />
+        <DividerWithLabel label="Or" />
 
-        <AuthProvidersSignin redirectTo={redirectTo} withEmailPasswordSignin={withEmailPasswordSignin} />
+        <AuthProvidersSignin redirectTo={redirectTo} />
 
         {providerError ? (
           <Callout variant="error" role="alert">
@@ -68,14 +63,12 @@ export default function Login({ loaderData }: Route.ComponentProps) {
         ) : null}
       </Card>
 
-      {withEmailPasswordSignin ? (
-        <footer className="flex justify-center gap-2 my-8">
-          <Subtitle>Don't have an account?</Subtitle>
-          <Link to={{ pathname: '/auth/signup', search: `${searchParams}` }} weight="semibold">
-            Create your account
-          </Link>
-        </footer>
-      ) : null}
+      <footer className="flex justify-center gap-2 my-8">
+        <Subtitle>Don't have an account?</Subtitle>
+        <Link to={{ pathname: '/auth/signup', search: `${searchParams}` }} weight="semibold">
+          Create your account
+        </Link>
+      </footer>
     </Page>
   );
 }

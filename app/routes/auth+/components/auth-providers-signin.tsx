@@ -4,9 +4,9 @@ import { Button } from '~/design-system/buttons.tsx';
 import { PROVIDERS, type ProviderId, getClientAuth } from '~/libs/auth/firebase.ts';
 import { useHydrated } from '~/routes/components/utils/use-hydrated.ts';
 
-type AuthProvidersSigninProps = { redirectTo: string; withEmailPasswordSignin: boolean };
+type AuthProvidersSigninProps = { redirectTo: string };
 
-export function AuthProvidersSignin({ redirectTo, withEmailPasswordSignin }: AuthProvidersSigninProps) {
+export function AuthProvidersSignin({ redirectTo }: AuthProvidersSigninProps) {
   const hydrated = useHydrated();
 
   const signIn = useCallback(
@@ -42,7 +42,7 @@ export function AuthProvidersSignin({ redirectTo, withEmailPasswordSignin }: Aut
       {PROVIDERS.map(({ id, label, icon: Icon }) => (
         <Button key={id} type="button" onClick={() => signIn(id)} variant="secondary" className="w-full">
           <Icon className="size-4" />
-          {withEmailPasswordSignin ? `Continue with ${label}` : label}
+          {`Continue with ${label}`}
         </Button>
       ))}
     </div>
