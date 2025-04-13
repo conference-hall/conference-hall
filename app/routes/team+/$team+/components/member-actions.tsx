@@ -148,7 +148,7 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
           {t('common.cancel')}
         </Button>
         <Button type="submit" name="intent" value="change-role" form="change-role-form">
-          {t('team.settings.members.change-role-modal.button')}
+          {t('team.settings.members.change-role-modal.confirm.button', { memberName })}
         </Button>
       </Modal.Actions>
     </Modal>
