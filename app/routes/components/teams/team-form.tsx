@@ -1,5 +1,6 @@
 import slugify from '@sindresorhus/slugify';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Input } from '~/design-system/forms/input.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
@@ -10,6 +11,7 @@ type TeamFormProps = {
 };
 
 export function TeamForm({ initialValues, errors }: TeamFormProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState<string>(initialValues?.name ?? '');
   const [slug, setSlug] = useState<string>(initialValues?.slug ?? '');
 
@@ -17,7 +19,7 @@ export function TeamForm({ initialValues, errors }: TeamFormProps) {
     <>
       <Input
         name="name"
-        label="Team name"
+        label={t('team.new.form.name')}
         required
         autoComplete="off"
         value={name}
@@ -29,7 +31,7 @@ export function TeamForm({ initialValues, errors }: TeamFormProps) {
       />
       <Input
         name="slug"
-        label="Team URL"
+        label={t('team.new.form.slug')}
         addon="https://conference-hall.io/team/"
         required
         autoComplete="off"
