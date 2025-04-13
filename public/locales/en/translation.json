@@ -256,5 +256,10 @@
   "team.new.description": "Give a cool name to your team. You will be able to invite members and create your first event.",
   "team.new.form.submit": "Create team",
   "team.new.form.name": "Team name",
-  "team.new.form.slug": "Team URL"
+  "team.new.form.slug": "Team URL",
+  "team.events-list.heading": "Team events",
+  "team.events-list.description": "Manage your team events call for papers",
+  "team.events-list.new-event-button": "New event",
+  "team.events-list.empty": "Welcome to {{team}}!",
+  "team.events-list.empty.archived": "No events archived"
 }
