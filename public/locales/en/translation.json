@@ -292,6 +292,7 @@
   "team.settings.members.remove-modal.description": "The member will be removed from the team and won't be able to access it anymore.",
   "common.remove-item": "Remove {{item}}",
   "team.settings.members.change-role-modal.button.label": "Change role of {{memberName}}",
+  "team.settings.members.change-role-modal.confirm.button": "Change {{memberName}}'s role",
   "team.settings.members.change-role-modal.button": "Change role",
   "team.settings.members.change-role-modal.heading": "Change the role of {{memberName}}?",
   "team.settings.members.invite-modal.heading": "Invite a member",
@@ -300,5 +301,12 @@
   "common.copy-invitation-link": "Copy invitation link",
   "common.copy": "Copy",
   "common.copied": "Copied!",
-  "team.settings.menu": "Team settings menu"
+  "team.settings.menu": "Team settings menu",
+  "common.events": "Events",
+  "common.settings": "Settings",
+  "event-management.nav.overview": "Overview",
+  "event-management.nav.proposals": "Proposals",
+  "event-management.nav.publication": "Publication",
+  "event-management.nav.schedule": "Schedule",
+  "event-management.nav.event-page-link": "Event page"
 }
