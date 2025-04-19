@@ -27,7 +27,10 @@
   "[css]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "i18n-ally.localesPaths": ["public/locales"],
   "tailwindCSS.experimental.classRegex": [["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]],
-  "i18n-ally.keystyle": "flat"
+  "i18n-ally.keystyle": "flat",
+  "i18n-ally.sortKeys": true,
+  "i18n-ally.localesPaths": ["app/locales"],
+  "i18n-ally.pathMatcher": "{locale}.json",
+  "i18n-ally.sourceLanguage": "en"
 }

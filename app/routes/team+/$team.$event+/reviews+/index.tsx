@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { useTranslation } from 'react-i18next';
 import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
 import { Deliberate, DeliberateBulkSchema } from '~/.server/reviews/deliberate.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
@@ -41,12 +42,13 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 export default function ReviewsRoute({ loaderData }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const { results, filters, pagination, statistics } = loaderData;
   const filtersHash = getObjectHash(filters);
 
   return (
     <Page>
-      <h2 className="sr-only">Event proposals</h2>
+      <h2 className="sr-only">{t('common.proposals')}</h2>
 
       <div className="space-y-4">
         <div className="space-y-4">

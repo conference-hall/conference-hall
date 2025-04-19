@@ -1,5 +1,7 @@
 import { userEvent } from '@vitest/browser/context';
+import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
+import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
 import { DeleteModalButton, type DeleteModalButtonProps } from './delete-modal.tsx';
 
@@ -8,7 +10,11 @@ describe('DeleteModal component', () => {
     const RouteStub = createRoutesStub([
       {
         path: '/',
-        Component: () => <DeleteModalButton {...props} />,
+        Component: () => (
+          <I18nextProvider i18n={i18nTest}>
+            <DeleteModalButton {...props} />
+          </I18nextProvider>
+        ),
       },
     ]);
     return render(<RouteStub />);
