@@ -1,9 +1,11 @@
 import { ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import { Text } from '~/design-system/typography.tsx';
 
 type Props = { count: number };
 
 export function ReviewComments({ count }: Props) {
+  const { t } = useTranslation();
   if (count === 0) return null;
 
   return (
@@ -11,7 +13,10 @@ export function ReviewComments({ count }: Props) {
       <Text weight="semibold" variant="secondary">
         {count}
       </Text>
-      <ChatBubbleBottomCenterTextIcon className="size-5 shrink-0 text-gray-600" aria-label={`${count} comment(s)`} />
+      <ChatBubbleBottomCenterTextIcon
+        className="size-5 shrink-0 text-gray-600"
+        aria-label={t('event-management.proposals.list.comments', { count })}
+      />
     </div>
   );
 }
