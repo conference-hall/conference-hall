@@ -2,6 +2,8 @@ import { formatDistanceToNow, isSameDay } from 'date-fns';
 import { format as formatInTimeZone, toZonedTime } from 'date-fns-tz';
 import type { CfpState, EventType } from '~/types/events.types.ts';
 
+// todo(i18n): add i18n support
+
 export function formatEventType(type: EventType) {
   switch (type) {
     case 'CONFERENCE':

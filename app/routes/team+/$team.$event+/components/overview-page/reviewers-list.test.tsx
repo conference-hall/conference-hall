@@ -1,5 +1,7 @@
 import type { JSX } from 'react';
+import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
+import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
 import { ReviewersList } from './reviewers-list.tsx';
 
@@ -11,23 +13,27 @@ describe('ReviewersList component', () => {
 
   it('displays reviewers metrics', async () => {
     const screen = renderComponent(
-      <ReviewersList
-        proposalsCount={2}
-        reviewersMetrics={[
-          {
-            id: 'r1',
-            name: 'Reviewer 1',
-            picture: 'https://example.com/picture.jpg',
-            reviewsCount: 1,
-            averageNote: 3,
-            positiveCount: 1,
-            negativeCount: 0,
-          },
-        ]}
-      />,
+      <I18nextProvider i18n={i18nTest}>
+        <ReviewersList
+          proposalsCount={2}
+          reviewersMetrics={[
+            {
+              id: 'r1',
+              name: 'Reviewer 1',
+              picture: 'https://example.com/picture.jpg',
+              reviewsCount: 1,
+              averageNote: 3,
+              positiveCount: 1,
+              negativeCount: 0,
+            },
+          ]}
+        />
+      </I18nextProvider>,
     );
 
-    await expect.element(screen.getByRole('list')).toHaveAttribute('aria-label', 'Reviewers metrics');
+    await expect
+      .element(screen.getByRole('list'))
+      .toHaveAttribute('aria-label', 'event-management.overview.reviewers.heading');
 
     const reviewerListItem = screen.getByRole('listitem', { name: 'Reviewer 1' });
     await expect.element(reviewerListItem).toBeInTheDocument();
@@ -40,8 +46,12 @@ describe('ReviewersList component', () => {
   });
 
   it('displays empty state', async () => {
-    const screen = renderComponent(<ReviewersList proposalsCount={0} reviewersMetrics={[]} />);
+    const screen = renderComponent(
+      <I18nextProvider i18n={i18nTest}>
+        <ReviewersList proposalsCount={0} reviewersMetrics={[]} />
+      </I18nextProvider>,
+    );
 
-    await expect.element(screen.getByText('No reviews yet')).toBeInTheDocument();
+    await expect.element(screen.getByText('event-management.overview.reviewers.empty')).toBeInTheDocument();
   });
 });
