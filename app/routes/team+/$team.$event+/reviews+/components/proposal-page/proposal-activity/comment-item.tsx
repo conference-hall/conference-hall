@@ -1,12 +1,13 @@
 import { formatDistanceToNowStrict } from 'date-fns';
+import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { useUser } from '~/routes/components/contexts/user-context.tsx';
 import { CommentReactions } from './comment-reactions.tsx';
 
 export function CommentItem({ item }: { item: FeedItem }) {
+  const { t } = useTranslation();
   const user = useUser();
 
   if (item.type !== 'comment') return null;
@@ -18,7 +19,11 @@ export function CommentItem({ item }: { item: FeedItem }) {
       <div className="w-full rounded-md p-3 ring-1 ring-inset ring-gray-200 bg-white min-w-0">
         <div className="flex justify-between gap-x-4">
           <div className="py-0.5 text-xs leading-5 text-gray-500">
-            <span className="font-medium text-gray-900">{item.user}</span> commented
+            <Trans
+              i18nKey="event-management.proposal-page.activity-feed.commented"
+              values={{ name: item.user }}
+              components={[<span key="1" className="font-medium text-gray-900" />]}
+            />
             {user?.id === item.userId && (
               <>
                 <span>&nbsp;&bull;&nbsp;</span>
@@ -30,13 +35,14 @@ export function CommentItem({ item }: { item: FeedItem }) {
                     value="delete-comment"
                     className="font-medium hover:underline cursor-pointer"
                   >
-                    delete
+                    {t('common.delete')}
                   </button>
                 </Form>
               </>
             )}
           </div>
           <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
+            {/* todo(i18n) */}
             {formatDistanceToNowStrict(item.timestamp)} ago
           </time>
         </div>

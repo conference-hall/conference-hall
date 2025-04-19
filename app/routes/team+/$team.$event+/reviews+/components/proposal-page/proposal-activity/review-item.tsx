@@ -1,6 +1,6 @@
 import { HeartIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { formatDistanceToNowStrict } from 'date-fns';
-
+import { Trans } from 'react-i18next';
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
 
 export function ReviewItem({ item }: { item: FeedItem }) {
@@ -24,10 +24,14 @@ export function ReviewItem({ item }: { item: FeedItem }) {
         </div>
       )}
       <p className="flex-auto py-0.5 text-xs leading-5 text-gray-500">
-        <span className="font-medium text-gray-900">{item.user}</span> reviewed the proposal with{' '}
-        <strong>{item.note} stars.</strong>
+        <Trans
+          i18nKey="event-management.proposal-page.activity-feed.reviewed"
+          values={{ name: item.user, note: item.note }}
+          components={[<span key="1" className="font-medium text-gray-900" />, <strong key="2" />]}
+        />
       </p>
       <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 pr-3 text-xs leading-5 text-gray-500">
+        {/* todo(i18n) */}
         {formatDistanceToNowStrict(item.timestamp)} ago
       </time>
     </>

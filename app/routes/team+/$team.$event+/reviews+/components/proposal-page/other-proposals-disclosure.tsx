@@ -1,5 +1,6 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote } from '~/routes/components/reviews/review-note.tsx';
@@ -14,12 +15,14 @@ type OtherProposalsDisclosureProps = {
 };
 
 export function OtherProposalsDisclosure({ proposals }: OtherProposalsDisclosureProps) {
+  const { t } = useTranslation();
+
   if (proposals.length === 0) return null;
 
   return (
     <Disclosure defaultOpen={false}>
       <DisclosureButton className="group px-6 py-4 flex items-center gap-2 text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:underline border-t border-t-gray-200">
-        <Text>Other proposals by speakers ({proposals.length})</Text>
+        <Text>{t('event-management.proposal-page.other-proposals', { count: proposals.length })}</Text>
         <ChevronDownIcon className="h-4 w-4 group-data-open:rotate-180" />
       </DisclosureButton>
 
@@ -35,7 +38,7 @@ export function OtherProposalsDisclosure({ proposals }: OtherProposalsDisclosure
               <span>
                 <Text weight="semibold">{proposal.title}</Text>
                 <Text size="xs" variant="secondary">
-                  by {proposal.speakers.join(', ')}
+                  {t('common.by', { names: proposal.speakers })}
                 </Text>
               </span>
               <GlobalReviewNote feeling="NEUTRAL" note={proposal.review} hideEmpty />
