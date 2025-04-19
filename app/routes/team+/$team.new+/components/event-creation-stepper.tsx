@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { EventType } from '~/types/events.types.ts';
 
 type Props = {
@@ -6,15 +7,14 @@ type Props = {
 };
 
 export function EventCreationStepper({ type, currentStep }: Props) {
-  const totalSteps = type === 'CONFERENCE' ? 3 : 2;
+  const { t } = useTranslation();
+  const total = type === 'CONFERENCE' ? 3 : 2;
 
-  const steps = Array(totalSteps).fill(0);
+  const steps = Array(total).fill(0);
 
   return (
     <nav className="flex items-center" aria-label="Progress">
-      <p className="text-sm font-bold">
-        Step {currentStep + 1} of {totalSteps}
-      </p>
+      <p className="text-sm font-bold">{t('event-management.new.steps', { current: currentStep + 1, total })}</p>
       <ol className="ml-8 flex items-center space-x-5">
         {steps.map((_, stepIdx) => (
           <li key={stepIdx}>

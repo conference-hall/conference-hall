@@ -1,14 +1,16 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'react-i18next';
 import { Submissions } from '~/.server/cfp-submissions/submissions.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import type { Route } from './+types/index.ts';
-import { MaxProposalsAlert, MaxProposalsReached } from './components/max-proposals.tsx';
+import { MaxProposalsReached } from './components/max-proposals.tsx';
 import { NoSubmissionState } from './components/no-submissions-state.tsx';
 import { SubmissionTalksList } from './components/submission-talks-list.tsx';
 
@@ -26,6 +28,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export default function EventSubmitRoute({ loaderData }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const { proposalsCount, drafts, talks } = loaderData;
   const { maxProposals } = useCurrentEvent();
   const hasMaxProposals = maxProposals && proposalsCount >= maxProposals;
@@ -44,22 +47,22 @@ export default function EventSubmitRoute({ loaderData }: Route.ComponentProps) {
       <Card>
         <Card.Title className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
           <div>
-            <H1 className="text-2xl font-bold">Submit a proposal</H1>
-            <Subtitle>Select a talk from your library or create a new proposal</Subtitle>
+            <H1 className="text-2xl font-bold">{t('event.submission.selection.heading')}</H1>
+            <Subtitle>{t('event.submission.selection.description')}</Subtitle>
           </div>
           {hasTalksToSubmit && (
             <ButtonLink to="new" variant="primary" iconLeft={PlusIcon}>
-              New proposal
+              {t('event.submission.selection.new-proposal')}
             </ButtonLink>
           )}
         </Card.Title>
 
         <Card.Content>
-          {maxProposals && <MaxProposalsAlert maxProposals={maxProposals} proposalsCount={proposalsCount} />}
+          {maxProposals && <Callout title={t('event.submission.selection.max-limit', { maxProposals })} />}
 
-          {drafts.length > 0 && <SubmissionTalksList label="Your draft proposals" talks={drafts} />}
+          {drafts.length > 0 && <SubmissionTalksList label={t('event.submission.selection.drafts')} talks={drafts} />}
 
-          {talks.length > 0 && <SubmissionTalksList label="Your talks library" talks={talks} />}
+          {talks.length > 0 && <SubmissionTalksList label={t('event.submission.selection.talks')} talks={talks} />}
 
           {!hasTalksToSubmit && <NoSubmissionState />}
         </Card.Content>

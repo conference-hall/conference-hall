@@ -1,5 +1,7 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { href } from 'react-router';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
@@ -15,12 +17,16 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function NewEventTypeRoute() {
+  const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const [type, setType] = useState<EventType>('CONFERENCE');
 
   return (
     <>
-      <FullscreenPage.Title title="Select your event type." subtitle="Is it a conference or a meetup?" />
+      <FullscreenPage.Title
+        title={t('event-management.new.type-form.heading')}
+        subtitle={t('event-management.new.type-form.description')}
+      />
 
       <Card>
         <Card.Content>
@@ -28,16 +34,16 @@ export default function NewEventTypeRoute() {
         </Card.Content>
 
         <Card.Actions>
-          <ButtonLink to={`/team/${currentTeam.slug}`} type="button" variant="secondary">
-            Cancel
+          <ButtonLink to={href('/team/:team', { team: currentTeam.slug })} type="button" variant="secondary">
+            {t('common.cancel')}
           </ButtonLink>
           <ButtonLink
-            to={`/team/${currentTeam.slug}/new/type/${type}`}
+            to={href('/team/:team/new/type/:type', { team: currentTeam.slug, type })}
             type="button"
             replace
             iconRight={ArrowRightIcon}
           >
-            Continue
+            {t('common.continue')}
           </ButtonLink>
         </Card.Actions>
       </Card>

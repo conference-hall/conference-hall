@@ -1,5 +1,6 @@
 import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
-import { Outlet } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Outlet, href } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
@@ -14,21 +15,23 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return null;
 };
 
-const getMenuItems = (team?: string) => [
-  { to: `/team/${team}/settings`, icon: Cog6ToothIcon, label: 'General' },
-  { to: `/team/${team}/settings/members`, icon: UserGroupIcon, label: 'Members' },
+// todo(i18n)
+const getMenuItems = (team: string) => [
+  { to: href('/team/:team/settings', { team }), icon: Cog6ToothIcon, label: 'General' },
+  { to: href('/team/:team/settings/members', { team }), icon: UserGroupIcon, label: 'Members' },
 ];
 
 export default function TeamSettingsLayout() {
+  const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const menus = getMenuItems(currentTeam.slug);
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
-      <H2 srOnly>Team settings</H2>
+      <H2 srOnly>{t('team.settings.heading')}</H2>
 
       <NavSideMenu
-        aria-label="Team settings menu"
+        aria-label={t('team.settings.menu')}
         items={menus}
         className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
       />

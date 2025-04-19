@@ -16,6 +16,7 @@ import {
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
@@ -52,6 +53,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
+  const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const intent = form.get('intent') as string;
@@ -59,7 +61,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   switch (intent) {
     case 'add-review': {
       const result = parseWithZod(form, { schema: ReviewUpdateDataSchema });
-      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+      if (result.status !== 'success') return toast('error', t('error.global'));
       const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await review.addReview(result.value);
       break;
@@ -79,13 +81,13 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     case 'react-to-comment': {
       const discussions = Comments.for(userId, params.team, params.event, params.proposal);
       const result = parseWithZod(form, { schema: CommentReactionSchema });
-      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+      if (result.status !== 'success') return toast('error', t('error.global'));
       await discussions.reactToComment(result.value);
       break;
     }
     case 'change-deliberation-status': {
       const result = parseWithZod(form, { schema: DeliberateSchema });
-      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+      if (result.status !== 'success') return toast('error', t('error.global'));
       const deliberate = Deliberate.for(userId, params.team, params.event);
       await deliberate.mark([params.proposal], result.value.status);
       break;
@@ -101,11 +103,11 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
       const proposal = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await proposal.update(result.value);
-      return toast('success', 'Proposal saved.');
+      return toast('success', t('event-management.proposal-page.feedbacks.saved'));
     }
     case 'save-tags': {
       const result = parseWithZod(form, { schema: ProposalSaveTagsSchema });
-      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+      if (result.status !== 'success') return toast('error', t('error.global'));
 
       const proposal = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await proposal.saveTags(result.value);

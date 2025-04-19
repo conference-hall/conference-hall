@@ -1,6 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ArrowsUpDownIcon, CheckIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useSearchParams } from 'react-router';
 import { button } from '~/design-system/buttons.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
@@ -9,6 +10,7 @@ import { useCurrentEvent } from '~/routes/components/contexts/event-team-context
 import { sortByCommentsOptions, sortByDatesOptions, sortByReviewsOptions } from './filters.ts';
 
 export function SortMenu() {
+  const { t } = useTranslation();
   const location = useLocation();
   const [params] = useSearchParams();
   const { sort = 'newest', ...filters } = Object.fromEntries(params.entries());
@@ -24,7 +26,7 @@ export function SortMenu() {
     <Menu>
       <MenuButton className={button({ variant: 'secondary' })}>
         <ArrowsUpDownIcon className="size-4 text-gray-500" />
-        <span>Sort</span>
+        <span>{t('common.sort')}</span>
       </MenuButton>
 
       <MenuTransition>

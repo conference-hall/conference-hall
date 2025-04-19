@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
@@ -35,14 +36,15 @@ export function EventDetailsForm({
   compact,
   errors,
 }: Props) {
+  const { t } = useTranslation();
   const [onlineChecked, setOnlineChanged] = useState<boolean>(onlineEvent);
 
   return (
     <Form id="details-form" method="POST" className="space-y-4 lg:space-y-6">
       {type === 'CONFERENCE' && (
         <DateRangeInput
-          start={{ name: 'conferenceStart', label: 'Start date', value: conferenceStart }}
-          end={{ name: 'conferenceEnd', label: 'End date', value: conferenceEnd }}
+          start={{ name: 'conferenceStart', label: t('event-management.fields.start-date'), value: conferenceStart }}
+          end={{ name: 'conferenceEnd', label: t('event-management.fields.end-date'), value: conferenceEnd }}
           timezone={timezone}
           error={errors?.conferenceStart}
         />
@@ -50,8 +52,8 @@ export function EventDetailsForm({
 
       <ToggleGroup
         name="onlineEvent"
-        label="Is online event?"
-        description="Indicate whether the event will be held online."
+        label={t('event-management.fields.online')}
+        description={t('event-management.fields.online.description')}
         value={onlineChecked}
         onChange={setOnlineChanged}
         reverse
@@ -60,7 +62,7 @@ export function EventDetailsForm({
       {!onlineChecked ? (
         <Input
           name="location"
-          label="Venue location (address, city, country)"
+          label={t('event-management.fields.location')}
           autoComplete="off"
           defaultValue={location || ''}
           error={errors?.location}
@@ -69,7 +71,7 @@ export function EventDetailsForm({
 
       <MarkdownTextArea
         name="description"
-        label="Description"
+        label={t('event-management.fields.description')}
         defaultValue={description || ''}
         rows={5}
         autoComplete="off"
@@ -77,13 +79,18 @@ export function EventDetailsForm({
       />
 
       {!compact ? (
-        <Input name="websiteUrl" label="Website URL" defaultValue={websiteUrl || ''} error={errors?.websiteUrl} />
+        <Input
+          name="websiteUrl"
+          label={t('event-management.fields.website')}
+          defaultValue={websiteUrl || ''}
+          error={errors?.websiteUrl}
+        />
       ) : null}
 
       {!compact ? (
         <Input
           name="contactEmail"
-          label="Contact email"
+          label={t('event-management.fields.contact-email')}
           defaultValue={contactEmail || ''}
           error={errors?.contactEmail}
         />

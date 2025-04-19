@@ -3,6 +3,7 @@ import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router';
 
+import { useTranslation } from 'react-i18next';
 import { ButtonLink } from '../buttons.tsx';
 
 const pageStyle = cva('relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20', {
@@ -23,6 +24,7 @@ function getPageSearchParams(page: number, searchParams: URLSearchParams) {
 }
 
 export function Pagination({ current, total }: Props) {
+  const { t } = useTranslation();
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
@@ -34,14 +36,14 @@ export function Pagination({ current, total }: Props) {
   if (total <= 1) return null;
 
   return (
-    <nav className="isolate inline-flex -space-x-px rounded-md bg-white shadow-xs" aria-label="Pagination">
+    <nav className="isolate inline-flex -space-x-px rounded-md bg-white shadow-xs" aria-label={t('pagination')}>
       <Link
         key="previous"
         to={{ pathname: location.pathname, search: getPageSearchParams(previous, searchParams) }}
         preventScrollReset
         className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
       >
-        <span className="sr-only">Previous</span>
+        <span className="sr-only">{t('pagination.previous')}</span>
         <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
       </Link>
       {pages.map((page) => {
@@ -72,7 +74,7 @@ export function Pagination({ current, total }: Props) {
         preventScrollReset
         className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
       >
-        <span className="sr-only">Next</span>
+        <span className="sr-only">{t('pagination.next')}</span>
         <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
       </Link>
     </nav>
@@ -80,6 +82,7 @@ export function Pagination({ current, total }: Props) {
 }
 
 export function PaginationMobile({ current, total }: Props) {
+  const { t } = useTranslation();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const previous = current - 1 > 0 ? current - 1 : 1;
@@ -94,14 +97,14 @@ export function PaginationMobile({ current, total }: Props) {
         to={{ pathname: location.pathname, search: getPageSearchParams(previous, searchParams) }}
         preventScrollReset
       >
-        Previous
+        {t('pagination.previous')}
       </ButtonLink>
       <ButtonLink
         variant="secondary"
         to={{ pathname: location.pathname, search: getPageSearchParams(next, searchParams) }}
         preventScrollReset
       >
-        Next
+        {t('pagination.next')}
       </ButtonLink>
     </div>
   );

@@ -1,5 +1,6 @@
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
+import { Trans } from 'react-i18next';
 import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
 import { Pagination, PaginationMobile } from '~/design-system/list/pagination.tsx';
@@ -73,8 +74,15 @@ function PaginationFooter({ current, pages, total }: { current: number; pages: n
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{current}</span> to <span className="font-medium">{pages}</span> of{' '}
-            <span className="font-medium">{total}</span> results
+            <Trans
+              i18nKey="pagination.list"
+              values={{ current, pages, total }}
+              components={[
+                <span key="1" className="font-medium" />,
+                <span key="2" className="font-medium" />,
+                <span key="3" className="font-medium" />,
+              ]}
+            />
           </p>
         </div>
         <div>
