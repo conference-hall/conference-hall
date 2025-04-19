@@ -3,12 +3,14 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router';
 import type { ProposalsFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Text } from '~/design-system/typography.tsx';
 
+import { useTranslation } from 'react-i18next';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { reviewOptions, statusOptions } from './filters.ts';
 
 type FiltersBadgesProps = { filters: ProposalsFilters };
 
 export function FiltersTags({ filters }: FiltersBadgesProps) {
+  const { t } = useTranslation();
   const { formats, categories, tags } = useCurrentEvent();
 
   const hasFilters = Boolean(
@@ -20,7 +22,7 @@ export function FiltersTags({ filters }: FiltersBadgesProps) {
   return (
     <div className="flex flex-wrap items-baseline gap-2">
       <Text variant="secondary" weight="medium">
-        Filters:
+        {t('event-management.proposals.filters.badges')}
       </Text>
       <FilterTag name="query" value={filters.query} />
       <FilterTag name="reviews" value={reviewOptions.find((review) => review.value === filters.reviews)?.name} />
@@ -35,6 +37,7 @@ export function FiltersTags({ filters }: FiltersBadgesProps) {
 type FiltersRadioProps = { name: string; value?: string };
 
 function FilterTag({ name, value }: FiltersRadioProps) {
+  const { t } = useTranslation();
   const location = useLocation();
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -54,7 +57,7 @@ function FilterTag({ name, value }: FiltersRadioProps) {
         onClick={onClick}
         className="group relative -mr-1 h-3.5 w-3.5 rounded-xs hover:bg-blue-600/20"
       >
-        <span className="sr-only">Remove</span>
+        <span className="sr-only">{t('common.remove')}</span>
         <svg
           role="presentation"
           viewBox="0 0 14 14"

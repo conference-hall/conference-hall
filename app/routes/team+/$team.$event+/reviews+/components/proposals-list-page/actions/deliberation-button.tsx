@@ -2,6 +2,7 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 
 import { Button } from '~/design-system/buttons.tsx';
@@ -9,6 +10,7 @@ import { Callout } from '~/design-system/callout.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
+// todo(i18n)
 const statuses = {
   ACCEPTED: { label: 'Accepted', icon: CheckIcon, color: 'text-green-600' },
   PENDING: { label: 'Not deliberated', icon: QuestionMarkCircleIcon, color: 'text-gray-600' },
@@ -23,12 +25,18 @@ type Props = {
 };
 
 export function DeliberationButton({ status, selection, isAllPagesSelected, totalSelected }: Props) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const { label, icon: Icon, color } = statuses[status];
 
   const Title = () => (
     <Text size="base" weight="semibold" mb={4}>
-      Are you sure you want to mark the {totalSelected} selected proposals as <span className={color}>{label}</span>?
+      {t('event-management.proposals.deliberate.modal.title')}
+      <Trans
+        i18nKey="event-management.proposals.deliberate.modal.title"
+        values={{ totalSelected, label }}
+        components={[<span key="1" className={color} />]}
+      />
     </Text>
   );
 
@@ -41,9 +49,8 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
       <Modal title={<Title />} open={open} onClose={() => setOpen(false)}>
         <Modal.Content>
           <Form id="change-status" method="POST" onSubmit={() => setOpen(false)}>
-            <Callout title="Be careful">
-              If you change the status of published proposals, they will be unpublished. You will have to republish them
-              to make them visible again to the speakers.
+            <Callout title={t('common.warning')}>
+              {t('event-management.proposals.deliberate.modal.description')}
             </Callout>
             <input type="hidden" name="status" value={status} />
             <input type="hidden" name="allPagesSelected" value={String(isAllPagesSelected)} />
@@ -54,10 +61,10 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
         </Modal.Content>
         <Modal.Actions>
           <Button variant="secondary" onClick={() => setOpen(false)}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button type="submit" form="change-status">
-            {`Mark as ${label}`}
+            {t('event-management.proposals.deliberate.modal.submit', { label })}
           </Button>
         </Modal.Actions>
       </Modal>

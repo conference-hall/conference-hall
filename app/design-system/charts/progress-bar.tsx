@@ -1,7 +1,7 @@
 // Tremor Raw ProgressBar [v0.0.1]
-
 import { cx } from 'class-variance-authority';
 import type React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ProgressBarProps extends React.ComponentProps<'div'> {
   value?: number;
@@ -10,6 +10,7 @@ interface ProgressBarProps extends React.ComponentProps<'div'> {
 }
 
 export const ProgressBar = ({ value = 0, max = 100, label, className, ref, ...props }: ProgressBarProps) => {
+  const { t } = useTranslation();
   const safeValue = Math.min(max, Math.max(value, 0));
 
   const background = 'bg-gray-200';
@@ -19,7 +20,7 @@ export const ProgressBar = ({ value = 0, max = 100, label, className, ref, ...pr
     <div ref={ref} className={cx('flex w-full items-center', className)}>
       <div
         className={cx('relative flex h-1.5 w-full items-center rounded-full', background)}
-        aria-label="progress bar"
+        aria-label={t('common.progress-bar')}
         aria-valuenow={value}
         aria-valuemax={max}
         {...props}
