@@ -21,7 +21,6 @@ import type { Route } from './+types/reset-password.ts';
 import { PasswordInput } from './components/password-input.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
-  // todo(i18n)
   return mergeMeta(args.matches, [{ title: 'Reset password | Conference Hall' }]);
 };
 

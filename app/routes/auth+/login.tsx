@@ -17,7 +17,6 @@ import { AuthProvidersSignin } from './components/auth-providers-signin.tsx';
 import { EmailPasswordSignin } from './components/email-password-signin.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
-  // todo(i18n)
   return mergeMeta(args.matches, [{ title: 'Login | Conference Hall' }]);
 };
 

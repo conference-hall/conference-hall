@@ -11,6 +11,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
+// todo(i18n): all admin pages should be translated
 export default function AdminLayoutRoute() {
   return (
     <>

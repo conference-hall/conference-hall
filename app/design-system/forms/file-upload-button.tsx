@@ -1,5 +1,4 @@
 import { cx } from 'class-variance-authority';
-
 import type { ButtonStylesProps } from '../buttons.tsx';
 import { button } from '../buttons.tsx';
 import { Label } from '../typography.tsx';

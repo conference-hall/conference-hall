@@ -13,6 +13,7 @@ const WEAK_PASSWORD = 'auth/weak-password';
 const ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL = 'auth/account-exists-with-different-credential';
 const CREDENTIAL_ALREADY_IN_USE = 'auth/credential-already-in-use';
 
+// todo(i18n): add translations for these error messages
 export function getFirebaseError(error: any): string {
   const { code } = error as AuthError;
   switch (code) {

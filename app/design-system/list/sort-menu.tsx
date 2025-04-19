@@ -1,6 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ArrowDownIcon, ArrowUpIcon, ArrowsUpDownIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useSearchParams } from 'react-router';
 import { button } from '~/design-system/buttons.tsx';
 import { MenuTransition } from '~/design-system/transitions.tsx';
@@ -13,6 +14,7 @@ type SortMenuProps = {
 };
 
 export function SortMenu({ options, defaultSort, defaultOrder }: SortMenuProps) {
+  const { t } = useTranslation();
   const location = useLocation();
   const [params] = useSearchParams();
   const { sort = defaultSort, order = defaultOrder, ...others } = Object.fromEntries(params.entries());
@@ -21,7 +23,7 @@ export function SortMenu({ options, defaultSort, defaultOrder }: SortMenuProps) 
     <Menu>
       <MenuButton className={button({ variant: 'secondary' })}>
         <ArrowsUpDownIcon className="size-4 text-gray-500" />
-        <span>Sort by</span>
+        <span>{t('common.sort')}</span>
       </MenuButton>
 
       <MenuTransition>

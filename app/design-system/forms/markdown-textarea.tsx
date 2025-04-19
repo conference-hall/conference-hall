@@ -1,9 +1,8 @@
 import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
-
+import { useTranslation } from 'react-i18next';
 import type { SubmissionError } from '~/types/errors.types.ts';
-
 import { Button } from '../buttons.tsx';
 import { Modal } from '../dialogs/modals.tsx';
 import { Markdown } from '../markdown.tsx';
@@ -28,6 +27,7 @@ export function MarkdownTextArea({
   defaultValue,
   ...rest
 }: MarkdownTextAreaProps) {
+  const { t } = useTranslation();
   const [isPreviewOpen, setPreviewOpen] = useState(false);
   const [markdown, setMarkdown] = useState(defaultValue);
 
@@ -64,10 +64,10 @@ export function MarkdownTextArea({
           </div>
         </div>
         <div className="absolute inset-x-px bottom-0 flex items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
-          <p className="text-xs text-gray-500">Mardown supported.</p>
+          <p className="text-xs text-gray-500">{t('common.markdown-supported')}</p>
           <div className="shrink-0">
             <Button type="button" variant="secondary" size="s" onClick={handleOpenPreview}>
-              Preview
+              {t('common.preview')}
             </Button>
             <MardownPreviewModal
               label={label}
@@ -94,10 +94,11 @@ type MardownPreviewModalProps = {
 };
 
 function MardownPreviewModal({ label, markdown, isOpen, onClose }: MardownPreviewModalProps) {
+  const { t } = useTranslation();
   return (
     <Modal title={label} size="full" open={isOpen} onClose={onClose}>
       <Modal.Content className="space-y-4">
-        {markdown ? <Markdown>{markdown}</Markdown> : <p>Nothing to preview.</p>}
+        {markdown ? <Markdown>{markdown}</Markdown> : <p>{t('common.no-preview')}</p>}
       </Modal.Content>
     </Modal>
   );

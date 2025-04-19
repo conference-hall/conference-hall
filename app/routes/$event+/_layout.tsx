@@ -14,7 +14,6 @@ import { useUser } from '../components/contexts/user-context.tsx';
 import type { Route } from './+types/_layout.ts';
 import { EventTabs } from './components/event-tabs.tsx';
 
-// todo(i18n)
 export const meta = (args: Route.MetaArgs) => {
   const { data, matches } = args;
   return mergeMeta(matches, [

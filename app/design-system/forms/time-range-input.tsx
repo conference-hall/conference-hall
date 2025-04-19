@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
 
@@ -32,6 +33,7 @@ export function TimeRangeInput({
   hideToLabel,
   onChange,
 }: Props) {
+  const { t } = useTranslation();
   const [startTime, setStart] = useState(start);
   const [endTime, setEnd] = useState(end);
 
@@ -53,7 +55,7 @@ export function TimeRangeInput({
     <div className="flex items-center gap-2">
       <SelectNative
         name={nameStart}
-        label="From"
+        label={t('common.from')}
         value={startTime}
         options={generateTimeOptions(step, min, max).filter((o) => startRelative || Number(o.value) <= endTime)}
         onChange={handleSelectChange}
@@ -63,7 +65,7 @@ export function TimeRangeInput({
 
       <SelectNative
         name={nameEnd}
-        label="To"
+        label={t('common.to')}
         value={endTime}
         options={generateTimeOptions(step, min, max).filter((o) => Number(o.value) >= startTime)}
         onChange={handleSelectChange}

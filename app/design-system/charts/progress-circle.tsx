@@ -1,7 +1,7 @@
 // Tremor Raw ProgressCircle [v0.0.0]
-
 import { cx } from 'class-variance-authority';
 import type React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ProgressCircleProps extends Omit<React.SVGProps<SVGSVGElement>, 'value'> {
   value?: number;
@@ -23,6 +23,7 @@ export const ProgressCircle = ({
   ref,
   ...props
 }: ProgressCircleProps) => {
+  const { t } = useTranslation();
   const safeValue = Math.min(max, Math.max(value, 0));
   const normalizedRadius = radius - strokeWidth / 2;
   const circumference = normalizedRadius * 2 * Math.PI;
@@ -41,7 +42,7 @@ export const ProgressCircle = ({
           height={radius * 2}
           viewBox={`0 0 ${radius * 2} ${radius * 2}`}
           className={cx('-rotate-90 transform', className)}
-          aria-label="progress bar"
+          aria-label={t('common.progress-bar')}
           aria-valuenow={value}
           aria-valuemin={0}
           aria-valuemax={max}

@@ -34,7 +34,7 @@ export function ProposalStatusSection(props: Props) {
   }
 }
 
-// todo(18n)
+// todo(18n) !!!
 function Draft({ proposal, event }: Props) {
   return (
     <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
