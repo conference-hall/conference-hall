@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import type { ChangeEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
 import { BadgeDot } from '~/design-system/badges.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
@@ -19,6 +20,7 @@ type ProposalItemProps = {
 };
 
 export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle }: ProposalItemProps) {
+  const { t } = useTranslation();
   const [params] = useSearchParams();
 
   const currentTeam = useCurrentTeam();
@@ -31,7 +33,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
     <>
       {canDeliberateEventProposals ? (
         <Checkbox
-          aria-label={`Select proposal "${title}"`}
+          aria-label={t('event-management.proposals.list.select-item', { title })}
           value={id}
           checked={isSelected}
           disabled={isAllPagesSelected}
@@ -42,7 +44,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
 
       <Link
         to={{ pathname: id, search: params.toString() }}
-        aria-label={`Open proposal "${title}"`}
+        aria-label={t('event-management.proposals.list.open', { title })}
         className="flex items-center justify-between gap-4 py-3 grow min-w-0 hover:text-indigo-700"
       >
         <div className="space-y-2 md:space-y-1 min-w-0">
@@ -62,7 +64,8 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
           </div>
 
           <Text size="xs" variant="secondary">
-            {proposal.speakers.length ? `by ${proposal.speakers.map((a) => a.name).join(', ')}` : null}
+            {proposal.speakers.length ? t('common.by', { names: proposal.speakers.map((a) => a.name) }) : null}
+            {/* todo(i18n) */}
             <ClientOnly>{() => format(proposal.createdAt, " 'on' MMM d, y")}</ClientOnly>
           </Text>
         </div>
@@ -78,19 +81,21 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
 }
 
 function deliberationBadge({ deliberationStatus, confirmationStatus }: ProposalData) {
+  const { t } = useTranslation();
+
   if (confirmationStatus) return null;
 
   switch (deliberationStatus) {
     case 'ACCEPTED':
       return (
         <BadgeDot pill compact color="green">
-          Accepted
+          {t('common.accepted')}
         </BadgeDot>
       );
     case 'REJECTED':
       return (
         <BadgeDot pill compact color="red">
-          Rejected
+          {t('common.rejected')}
         </BadgeDot>
       );
     case 'PENDING':
@@ -99,12 +104,14 @@ function deliberationBadge({ deliberationStatus, confirmationStatus }: ProposalD
 }
 
 function publicationBadge({ deliberationStatus, publicationStatus, confirmationStatus }: ProposalData) {
+  const { t } = useTranslation();
+
   if (deliberationStatus === 'PENDING') return null;
 
   if (deliberationStatus === 'ACCEPTED' && publicationStatus === 'PUBLISHED' && confirmationStatus === 'PENDING') {
     return (
       <BadgeDot pill compact color="blue">
-        Waiting for confirmation
+        {t('common.waiting-for-confirmation')}
       </BadgeDot>
     );
   } else if (
@@ -114,7 +121,7 @@ function publicationBadge({ deliberationStatus, publicationStatus, confirmationS
   ) {
     return (
       <BadgeDot pill compact color="green">
-        Confirmed by speakers
+        {t('common.confirmed-by-speakers')}
       </BadgeDot>
     );
   } else if (
@@ -124,13 +131,13 @@ function publicationBadge({ deliberationStatus, publicationStatus, confirmationS
   ) {
     return (
       <BadgeDot pill compact color="red">
-        Declined by speakers
+        {t('common.declined-by-speakers')}
       </BadgeDot>
     );
   } else if (publicationStatus === 'NOT_PUBLISHED') {
     return (
       <BadgeDot pill compact color="gray">
-        Not published
+        {t('common.not-published')}
       </BadgeDot>
     );
   }
