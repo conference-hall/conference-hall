@@ -1,6 +1,5 @@
 import { Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
-
 import { Background, SlideOverTransition } from '../transitions.tsx';
 import { CloseButton } from './close-button.tsx';
 

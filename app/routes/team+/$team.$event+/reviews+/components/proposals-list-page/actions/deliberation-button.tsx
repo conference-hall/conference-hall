@@ -31,7 +31,6 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
 
   const Title = () => (
     <Text size="base" weight="semibold" mb={4}>
-      {t('event-management.proposals.deliberate.modal.title')}
       <Trans
         i18nKey="event-management.proposals.deliberate.modal.title"
         values={{ totalSelected, label }}

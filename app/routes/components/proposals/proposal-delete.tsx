@@ -1,19 +1,19 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 type Props = { className?: string };
 
-// todo(i18n)
 export function ProposalDeleteButton({ className }: Props) {
+  const { t } = useTranslation();
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
       <Button variant="secondary" onClick={() => setModalOpen(true)} className={className}>
-        Remove proposal
+        {t('event.proposal.delete.button')}
       </Button>
       <ProposalDeleteModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
     </>
@@ -23,18 +23,19 @@ export function ProposalDeleteButton({ className }: Props) {
 type DeleteProposalModalProps = { isOpen: boolean; onClose: VoidFunction };
 
 function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
+  const { t } = useTranslation();
   return (
-    <Modal title="Are you sure you want to remove your submission?" open={isOpen} onClose={onClose}>
+    <Modal title={t('event.proposal.delete.modal.title')} open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
         <Modal.Content>
-          <Text>The talk will still be in your profile, so you will be able to submit it again later.</Text>
+          <Text>{t('event.proposal.delete.modal.description')}</Text>
         </Modal.Content>
         <Modal.Actions>
           <Button onClick={onClose} type="button" variant="secondary">
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button type="submit" name="intent" value="proposal-delete">
-            Remove proposal
+            {t('event.proposal.delete.button')}
           </Button>
         </Modal.Actions>
       </Form>

@@ -45,6 +45,7 @@ export function TalkSubmissionsSection({ submissions }: Props) {
                   </Text>
                   <Subtitle size="xs">
                     <ClientOnly fallback="-">
+                      {/* todo(i18n) */}
                       {() => `${formatDistanceToNowStrict(submission.createdAt)} ago`}
                     </ClientOnly>
                   </Subtitle>

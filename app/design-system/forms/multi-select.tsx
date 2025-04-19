@@ -2,7 +2,6 @@ import { Field, Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } f
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
-
 import { Badge } from '../badges.tsx';
 import { SelectTransition } from '../transitions.tsx';
 import { Text } from '../typography.tsx';

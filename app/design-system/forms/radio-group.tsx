@@ -1,6 +1,5 @@
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
-
 import type { SubmissionError } from '~/types/errors.types.ts';
 import { Label, Text } from '../typography.tsx';
 
