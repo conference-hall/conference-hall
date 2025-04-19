@@ -1,6 +1,7 @@
 import { cx } from 'class-variance-authority';
 import { format } from 'date-fns';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { TooltipProps } from 'recharts';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent.js';
@@ -17,6 +18,7 @@ type ChartData = Array<{ date: Date; count: number; cumulative: number }>;
 type ProposalsByDayChartProps = { data: ChartData; className?: string };
 
 export function ProposalsByDayChart({ data, className }: ProposalsByDayChartProps) {
+  const { t } = useTranslation();
   const [type, setType] = useState<ChartType>('cumulative');
 
   if (data.length === 0) return <NoData />;
@@ -24,7 +26,7 @@ export function ProposalsByDayChart({ data, className }: ProposalsByDayChartProp
   return (
     <Card className={className}>
       <div className="flex flex-row items-center justify-between">
-        <H2>Submissions by day</H2>
+        <H2>{t('event-management.overview.submissions-by-day.heading')}</H2>
         <ChartSelector selected={type} onSelect={setType} />
       </div>
 
@@ -130,16 +132,17 @@ function CountByDayChart({ data }: { data: ChartData }) {
 }
 
 function CustomTooltip({ payload, label }: TooltipProps<ValueType, NameType>) {
+  const { t } = useTranslation();
   return (
     <div className="border border-gray-200 bg-white text-sm shadow-sm rounded-md" aria-hidden="true">
       <div className="p-2 px-3">
-        <Text weight="medium">{label ? format(label, DATE_FORMAT) : 'Unknown'}</Text>
+        <Text weight="medium">{label ? format(label, DATE_FORMAT) : t('common.unknown')}</Text>
       </div>
       <Divider />
       <div className="flex flex-row items-center space-between p-2 px-3 space-x-16">
         <div className="flex items-center space-x-2">
           <span className="h-0.5 w-3 bg-indigo-500" aria-hidden={true} />
-          <Text variant="secondary">Proposals</Text>
+          <Text variant="secondary">{t('common.proposals')}</Text>
         </div>
         <Text weight="medium">{payload?.[0]?.value}</Text>
       </div>
@@ -154,6 +157,7 @@ function ChartPlaceholder() {
 type ChartSelectorProps = { selected: ChartType; onSelect: (value: ChartType) => void };
 
 function ChartSelector({ selected, onSelect }: ChartSelectorProps) {
+  const { t } = useTranslation();
   return (
     <div className="flex gap-1  w-fit rounded-lg bg-slate-100 p-1 ring-1 ring-inset ring-gray-200">
       <button
@@ -164,7 +168,7 @@ function ChartSelector({ selected, onSelect }: ChartSelectorProps) {
           { 'bg-white shadow-sm': selected === 'count' },
         )}
       >
-        Count
+        {t('event-management.overview.submissions-by-day.count')}
       </button>
       <button
         type="button"
@@ -174,7 +178,7 @@ function ChartSelector({ selected, onSelect }: ChartSelectorProps) {
           { 'bg-white shadow-sm': selected === 'cumulative' },
         )}
       >
-        Cumulative
+        {t('event-management.overview.submissions-by-day.cumulative')}
       </button>
     </div>
   );
