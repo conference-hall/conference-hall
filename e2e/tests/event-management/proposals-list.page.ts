@@ -32,6 +32,8 @@ export class ProposalsListPage extends PageObject {
   }
 
   proposalCount(count: number) {
+    if (count === 0) return this.page.getByText('No proposals');
+    if (count === 1) return this.page.getByText('1 proposal');
     return this.page.getByText(`${count} proposals`);
   }
 

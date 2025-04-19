@@ -111,7 +111,7 @@ function publicationBadge({ deliberationStatus, publicationStatus, confirmationS
   if (deliberationStatus === 'ACCEPTED' && publicationStatus === 'PUBLISHED' && confirmationStatus === 'PENDING') {
     return (
       <BadgeDot pill compact color="blue">
-        {t('common.waiting-for-confirmation')}
+        {t('common.proposals-status.waiting-confirmation')}
       </BadgeDot>
     );
   } else if (
@@ -121,7 +121,7 @@ function publicationBadge({ deliberationStatus, publicationStatus, confirmationS
   ) {
     return (
       <BadgeDot pill compact color="green">
-        {t('common.confirmed-by-speakers')}
+        {t('common.proposals-status.confirmed')}
       </BadgeDot>
     );
   } else if (
@@ -131,7 +131,7 @@ function publicationBadge({ deliberationStatus, publicationStatus, confirmationS
   ) {
     return (
       <BadgeDot pill compact color="red">
-        {t('common.declined-by-speakers')}
+        {t('common.proposals-status.declined')}
       </BadgeDot>
     );
   } else if (publicationStatus === 'NOT_PUBLISHED') {
