@@ -26,17 +26,17 @@ describe('SubmissionContext', () => {
     const links = screen.getByRole('link').all();
     expect(links).toHaveLength(6);
 
-    await expect.element(links[0]).toHaveTextContent('event.submission.steps.selection');
+    await expect.element(links[0]).toHaveTextContent('Selection');
     await expect.element(links[0]).toHaveAttribute('href', '/event-1/submission');
-    await expect.element(links[1]).toHaveTextContent('event.submission.steps.proposal');
+    await expect.element(links[1]).toHaveTextContent('Proposal');
     await expect.element(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
-    await expect.element(links[2]).toHaveTextContent('event.submission.steps.speakers');
+    await expect.element(links[2]).toHaveTextContent('Speakers');
     await expect.element(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
-    await expect.element(links[3]).toHaveTextContent('event.submission.steps.tracks');
+    await expect.element(links[3]).toHaveTextContent('Tracks');
     await expect.element(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/tracks');
-    await expect.element(links[4]).toHaveTextContent('event.submission.steps.survey');
+    await expect.element(links[4]).toHaveTextContent('Survey');
     await expect.element(links[4]).toHaveAttribute('href', '/event-1/submission/talk-1/survey');
-    await expect.element(links[5]).toHaveTextContent('event.submission.steps.submission');
+    await expect.element(links[5]).toHaveTextContent('Submission');
     await expect.element(links[5]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
   });
 
@@ -51,13 +51,13 @@ describe('SubmissionContext', () => {
 
     const links = screen.getByRole('link').all();
     expect(links).toHaveLength(4);
-    await expect.element(links[0]).toHaveTextContent('event.submission.steps.selection');
+    await expect.element(links[0]).toHaveTextContent('Selection');
     await expect.element(links[0]).toHaveAttribute('href', '/event-1/submission');
-    await expect.element(links[1]).toHaveTextContent('event.submission.steps.proposal');
+    await expect.element(links[1]).toHaveTextContent('Proposal');
     await expect.element(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
-    await expect.element(links[2]).toHaveTextContent('event.submission.steps.speakers');
+    await expect.element(links[2]).toHaveTextContent('Speakers');
     await expect.element(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
-    await expect.element(links[3]).toHaveTextContent('event.submission.steps.submission');
+    await expect.element(links[3]).toHaveTextContent('Submission');
     await expect.element(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
   });
 
@@ -72,15 +72,15 @@ describe('SubmissionContext', () => {
 
     const links = screen.getByRole('link').all();
     expect(links).toHaveLength(5);
-    await expect.element(links[0]).toHaveTextContent('event.submission.steps.selection');
+    await expect.element(links[0]).toHaveTextContent('Selection');
     await expect.element(links[0]).toHaveAttribute('href', '/event-1/submission');
-    await expect.element(links[1]).toHaveTextContent('event.submission.steps.proposal');
+    await expect.element(links[1]).toHaveTextContent('Proposal');
     await expect.element(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
-    await expect.element(links[2]).toHaveTextContent('event.submission.steps.speakers');
+    await expect.element(links[2]).toHaveTextContent('Speakers');
     await expect.element(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
-    await expect.element(links[3]).toHaveTextContent('event.submission.steps.tracks');
+    await expect.element(links[3]).toHaveTextContent('Tracks');
     await expect.element(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/tracks');
-    await expect.element(links[4]).toHaveTextContent('event.submission.steps.submission');
+    await expect.element(links[4]).toHaveTextContent('Submission');
     await expect.element(links[4]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
   });
 
@@ -95,15 +95,15 @@ describe('SubmissionContext', () => {
 
     const links = screen.getByRole('link').all();
     expect(links).toHaveLength(5);
-    await expect.element(links[0]).toHaveTextContent('event.submission.steps.selection');
+    await expect.element(links[0]).toHaveTextContent('Selection');
     await expect.element(links[0]).toHaveAttribute('href', '/event-1/submission');
-    await expect.element(links[1]).toHaveTextContent('event.submission.steps.proposal');
+    await expect.element(links[1]).toHaveTextContent('Proposal');
     await expect.element(links[1]).toHaveAttribute('href', '/event-1/submission/talk-1');
-    await expect.element(links[2]).toHaveTextContent('event.submission.steps.speakers');
+    await expect.element(links[2]).toHaveTextContent('Speakers');
     await expect.element(links[2]).toHaveAttribute('href', '/event-1/submission/talk-1/speakers');
-    await expect.element(links[3]).toHaveTextContent('event.submission.steps.survey');
+    await expect.element(links[3]).toHaveTextContent('Survey');
     await expect.element(links[3]).toHaveAttribute('href', '/event-1/submission/talk-1/survey');
-    await expect.element(links[4]).toHaveTextContent('event.submission.steps.submission');
+    await expect.element(links[4]).toHaveTextContent('Submission');
     await expect.element(links[4]).toHaveAttribute('href', '/event-1/submission/talk-1/submit');
   });
 });

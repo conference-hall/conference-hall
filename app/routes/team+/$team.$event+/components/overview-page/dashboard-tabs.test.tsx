@@ -18,11 +18,11 @@ describe('DashboardTabs component', () => {
       </I18nextProvider>,
     );
 
-    const callForPaperLink = screen.getByRole('link', { name: 'common.call-for-paper' });
+    const callForPaperLink = screen.getByRole('link', { name: 'Call for paper' });
     await expect.element(callForPaperLink).toHaveAttribute('href', '/team/t1/e1');
     await expect.element(callForPaperLink).toHaveAttribute('aria-current', 'page');
 
-    const reviewersLink = screen.getByRole('link', { name: 'common.reviewers' });
+    const reviewersLink = screen.getByRole('link', { name: 'Reviewers' });
     await expect.element(reviewersLink).toHaveAttribute('href', '/team/t1/e1?tab=reviewers');
     await expect.element(reviewersLink).not.toHaveAttribute('aria-current', 'page');
   });
@@ -34,11 +34,11 @@ describe('DashboardTabs component', () => {
       </I18nextProvider>,
     );
 
-    const callForPaperLink = screen.getByRole('link', { name: 'common.call-for-paper' });
+    const callForPaperLink = screen.getByRole('link', { name: 'Call for paper' });
     await expect.element(callForPaperLink).toHaveAttribute('href', '/team/t1/e1');
     await expect.element(callForPaperLink).not.toHaveAttribute('aria-current', 'page');
 
-    const reviewersLink = screen.getByRole('link', { name: 'common.reviewers' });
+    const reviewersLink = screen.getByRole('link', { name: 'Reviewers' });
     await expect.element(reviewersLink).toHaveAttribute('href', '/team/t1/e1?tab=reviewers');
     await expect.element(reviewersLink).toHaveAttribute('aria-current', 'page');
   });

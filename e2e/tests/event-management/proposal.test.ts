@@ -114,9 +114,9 @@ test('displays proposal data and review the proposal', async ({ page }) => {
   await expect(page.getByText('Talk 2')).toBeVisible();
 
   // Review proposal
-  await expect(page.getByLabel('Score: 3')).toBeVisible();
+  await expect(page.getByLabel('Review: 3 (Score)')).toBeVisible();
   await page.getByRole('radio', { name: 'Love it, 5 stars' }).click();
-  await expect(page.getByLabel('Score: 4')).toBeVisible();
+  await expect(page.getByLabel('Review: 4 (Score)')).toBeVisible();
 
   // Check activity feed
   await expect(proposalPage.activityFeed).toHaveCount(3);
