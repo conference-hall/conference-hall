@@ -7,6 +7,7 @@ import { Text } from '~/design-system/typography.tsx';
 
 type Props = { className?: string };
 
+// todo(i18n)
 export function ProposalDeleteButton({ className }: Props) {
   const [isModalOpen, setModalOpen] = useState(false);
   return (

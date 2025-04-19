@@ -1,5 +1,7 @@
 import type { JSX } from 'react';
+import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
+import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
 import { TeamTabs } from './team-tabs.tsx';
 
@@ -10,8 +12,12 @@ describe('TeamTabs component', () => {
   };
 
   it('displays tabs for team owners', async () => {
-    // biome-ignore lint/a11y/useValidAriaRole: not an aria role
-    const screen = renderComponent(<TeamTabs slug="t1" role="OWNER" />);
+    const screen = renderComponent(
+      <I18nextProvider i18n={i18nTest}>
+        {/* biome-ignore lint/a11y/useValidAriaRole: not an aria role */}
+        <TeamTabs slug="t1" role="OWNER" />
+      </I18nextProvider>,
+    );
 
     await expect.element(screen.getByRole('link', { name: 'Events' })).toBeVisible();
     await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();
@@ -19,8 +25,12 @@ describe('TeamTabs component', () => {
   });
 
   it('displays tabs for team members', async () => {
-    // biome-ignore lint/a11y/useValidAriaRole: not an aria role
-    const screen = renderComponent(<TeamTabs slug="t1" role="MEMBER" />);
+    const screen = renderComponent(
+      <I18nextProvider i18n={i18nTest}>
+        {/* biome-ignore lint/a11y/useValidAriaRole: not an aria role */}
+        <TeamTabs slug="t1" role="MEMBER" />
+      </I18nextProvider>,
+    );
 
     await expect.element(screen.getByRole('link', { name: 'Events' })).toBeVisible();
     await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();
@@ -28,8 +38,12 @@ describe('TeamTabs component', () => {
   });
 
   it('displays tabs for team reviewers', async () => {
-    // biome-ignore lint/a11y/useValidAriaRole: not an aria role
-    const screen = renderComponent(<TeamTabs slug="t1" role="REVIEWER" />);
+    const screen = renderComponent(
+      <I18nextProvider i18n={i18nTest}>
+        {/* biome-ignore lint/a11y/useValidAriaRole: not an aria role */}
+        <TeamTabs slug="t1" role="REVIEWER" />
+      </I18nextProvider>,
+    );
 
     await expect.element(screen.getByRole('link', { name: 'Events' })).toBeVisible();
     await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();

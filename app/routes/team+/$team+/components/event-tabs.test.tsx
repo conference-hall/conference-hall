@@ -24,24 +24,20 @@ describe('EventTabs component', () => {
         </I18nextProvider>,
       );
 
+      await expect.element(screen.getByRole('link', { name: 'Overview' })).toHaveAttribute('href', '/team/t1/e1');
       await expect
-        .element(screen.getByRole('link', { name: 'event-management.nav.overview' }))
-        .toHaveAttribute('href', '/team/t1/e1');
-      await expect
-        .element(screen.getByRole('link', { name: 'event-management.nav.proposals' }))
+        .element(screen.getByRole('link', { name: 'Proposals' }))
         .toHaveAttribute('href', '/team/t1/e1/reviews');
       await expect
-        .element(screen.getByRole('link', { name: 'event-management.nav.publication' }))
+        .element(screen.getByRole('link', { name: 'Publication' }))
         .toHaveAttribute('href', '/team/t1/e1/publication');
       await expect
-        .element(screen.getByRole('link', { name: 'event-management.nav.schedule' }))
+        .element(screen.getByRole('link', { name: 'Schedule' }))
         .toHaveAttribute('href', '/team/t1/e1/schedule');
       await expect
-        .element(screen.getByRole('link', { name: 'common.settings' }))
+        .element(screen.getByRole('link', { name: 'Settings' }))
         .toHaveAttribute('href', '/team/t1/e1/settings');
-      await expect
-        .element(screen.getByRole('link', { name: 'event-management.nav.event-page-link' }))
-        .toHaveAttribute('href', '/e1');
+      await expect.element(screen.getByRole('link', { name: 'Event page' })).toHaveAttribute('href', '/e1');
     });
 
     it('team members can access to all features', async () => {
@@ -51,11 +47,11 @@ describe('EventTabs component', () => {
         </I18nextProvider>,
       );
 
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.overview' })).toBeVisible();
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.proposals' })).toBeVisible();
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.publication' })).toBeVisible();
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.schedule' })).toBeVisible();
-      await expect.element(screen.getByRole('link', { name: 'common.settings' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Proposals' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Publication' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Schedule' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();
     });
 
     it('team reviewers can access to limited set of features', async () => {
@@ -65,13 +61,11 @@ describe('EventTabs component', () => {
         </I18nextProvider>,
       );
 
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.overview' })).toBeVisible();
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.proposals' })).toBeVisible();
-      await expect
-        .element(screen.getByRole('link', { name: 'event-management.nav.publication' }))
-        .not.toBeInTheDocument();
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.schedule' })).not.toBeInTheDocument();
-      await expect.element(screen.getByRole('link', { name: 'common.settings' })).not.toBeInTheDocument();
+      await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Proposals' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Publication' })).not.toBeInTheDocument();
+      await expect.element(screen.getByRole('link', { name: 'Schedule' })).not.toBeInTheDocument();
+      await expect.element(screen.getByRole('link', { name: 'Settings' })).not.toBeInTheDocument();
     });
   });
 
@@ -83,13 +77,11 @@ describe('EventTabs component', () => {
         </I18nextProvider>,
       );
 
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.overview' })).toBeVisible();
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.proposals' })).toBeVisible();
-      await expect
-        .element(screen.getByRole('link', { name: 'event-management.nav.publication' }))
-        .not.toBeInTheDocument();
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.schedule' })).not.toBeInTheDocument();
-      await expect.element(screen.getByRole('link', { name: 'common.settings' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Proposals' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Publication' })).not.toBeInTheDocument();
+      await expect.element(screen.getByRole('link', { name: 'Schedule' })).not.toBeInTheDocument();
+      await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();
     });
 
     it('team members can access to all features', async () => {
@@ -99,13 +91,11 @@ describe('EventTabs component', () => {
         </I18nextProvider>,
       );
 
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.overview' })).toBeVisible();
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.proposals' })).toBeVisible();
-      await expect
-        .element(screen.getByRole('link', { name: 'event-management.nav.publication' }))
-        .not.toBeInTheDocument();
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.schedule' })).not.toBeInTheDocument();
-      await expect.element(screen.getByRole('link', { name: 'common.settings' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Proposals' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Publication' })).not.toBeInTheDocument();
+      await expect.element(screen.getByRole('link', { name: 'Schedule' })).not.toBeInTheDocument();
+      await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();
     });
 
     it('team reviewers can access to limited set of features', async () => {
@@ -115,13 +105,11 @@ describe('EventTabs component', () => {
         </I18nextProvider>,
       );
 
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.overview' })).toBeVisible();
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.proposals' })).toBeVisible();
-      await expect
-        .element(screen.getByRole('link', { name: 'event-management.nav.publication' }))
-        .not.toBeInTheDocument();
-      await expect.element(screen.getByRole('link', { name: 'event-management.nav.schedule' })).not.toBeInTheDocument();
-      await expect.element(screen.getByRole('link', { name: 'common.settings' })).not.toBeInTheDocument();
+      await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Proposals' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Publication' })).not.toBeInTheDocument();
+      await expect.element(screen.getByRole('link', { name: 'Schedule' })).not.toBeInTheDocument();
+      await expect.element(screen.getByRole('link', { name: 'Settings' })).not.toBeInTheDocument();
     });
   });
 });

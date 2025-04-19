@@ -12,6 +12,7 @@ const RESERVED_SLUGS = [
   'new',
   'admin',
   'request',
+  'locales',
   'api',
   'auth',
   'team',

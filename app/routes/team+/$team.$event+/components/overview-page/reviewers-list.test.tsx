@@ -31,9 +31,7 @@ describe('ReviewersList component', () => {
       </I18nextProvider>,
     );
 
-    await expect
-      .element(screen.getByRole('list'))
-      .toHaveAttribute('aria-label', 'event-management.overview.reviewers.heading');
+    await expect.element(screen.getByRole('list')).toHaveAttribute('aria-label', 'Reviewers metrics');
 
     const reviewerListItem = screen.getByRole('listitem', { name: 'Reviewer 1' });
     await expect.element(reviewerListItem).toBeInTheDocument();
@@ -42,7 +40,7 @@ describe('ReviewersList component', () => {
     await expect.element(reviewerListItem.getByText('50%')).toBeInTheDocument();
     await expect.element(reviewerListItem.getByLabelText('Review: 0 (No way)')).toBeInTheDocument();
     await expect.element(reviewerListItem.getByLabelText('Review: 1 (Love it)')).toBeInTheDocument();
-    await expect.element(reviewerListItem.getByLabelText('Score: 3')).toBeInTheDocument();
+    await expect.element(reviewerListItem.getByLabelText('Review: 3 (Score)')).toBeInTheDocument();
   });
 
   it('displays empty state', async () => {
@@ -52,6 +50,6 @@ describe('ReviewersList component', () => {
       </I18nextProvider>,
     );
 
-    await expect.element(screen.getByText('event-management.overview.reviewers.empty')).toBeInTheDocument();
+    await expect.element(screen.getByText('No reviews yet')).toBeInTheDocument();
   });
 });

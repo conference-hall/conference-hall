@@ -11,7 +11,7 @@ export class ProposalsListPage extends PageObject {
 
   constructor(page: Page) {
     super(page);
-    this.heading = page.getByRole('heading', { name: 'Event proposals' });
+    this.heading = page.getByRole('heading', { name: 'Proposals' });
     this.proposals = page.getByRole('list', { name: 'Proposals list' }).locator('>li');
     this.noProposals = page.getByText('No proposals found');
     this.searchInput = page.getByLabel('Search proposals');
