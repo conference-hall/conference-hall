@@ -1,4 +1,5 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'react-i18next';
 import type { Emoji } from '~/types/emojis.types.ts';
 import { EmojiPicker } from './emoji-picker.tsx';
 
@@ -10,6 +11,8 @@ type EmojiReactionsProps = {
 };
 
 export function EmojiSelect({ emojis, selectedEmojis, onChangeEmojis }: EmojiReactionsProps) {
+  const { t } = useTranslation();
+
   const handleSelect = (selected?: Emoji) => {
     if (!selected) return;
     if (selectedEmojis.includes(selected.code)) {
@@ -35,7 +38,7 @@ export function EmojiSelect({ emojis, selectedEmojis, onChangeEmojis }: EmojiRea
         );
       })}
 
-      <EmojiPicker label="Choose an emoji" emojis={emojis} icon={PlusIcon} onSelectEmoji={handleSelect} />
+      <EmojiPicker label={t('common.choose-an-emoji')} emojis={emojis} icon={PlusIcon} onSelectEmoji={handleSelect} />
     </div>
   );
 }

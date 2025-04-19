@@ -1,9 +1,8 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router';
-
 import { useTranslation } from 'react-i18next';
+import { Link, useLocation, useSearchParams } from 'react-router';
 import { ButtonLink } from '../buttons.tsx';
 
 const pageStyle = cva('relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20', {

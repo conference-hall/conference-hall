@@ -10,7 +10,6 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/email-verification.ts';
 
 export const meta = (args: Route.MetaArgs) => {
-  // todo(i18n)
   return mergeMeta(args.matches, [{ title: 'Email verification | Conference Hall' }]);
 };
 

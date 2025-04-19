@@ -23,7 +23,7 @@ export function NavSideMenu({ items, className, ...rest }: Props) {
             </div>
             {item.isNew ? (
               <Badge color="blue" compact>
-                New
+                {t('common.new')}
               </Badge>
             ) : null}
           </NavLink>
