@@ -1,14 +1,14 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router';
-
 import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Text } from '~/design-system/typography.tsx';
-
 import { ReviewsProgress } from '../proposals-list-page/list/reviews-progress.tsx';
 
 type Props = { current: number; total: number; reviewed: number; nextId?: string; previousId?: string };
 
 export function ReviewHeader({ current, total, reviewed, nextId, previousId }: Props) {
+  const { t } = useTranslation();
   const params = useParams();
   const [searchParams] = useSearchParams();
 
@@ -24,7 +24,7 @@ export function ReviewHeader({ current, total, reviewed, nextId, previousId }: P
         <IconLink
           to={{ pathname: previousPath, search }}
           icon={ChevronLeftIcon}
-          label="Previous proposal"
+          label={t('event-management.proposal-page.previous')}
           variant="secondary"
           aria-disabled={!previousPath}
         />
@@ -32,7 +32,7 @@ export function ReviewHeader({ current, total, reviewed, nextId, previousId }: P
         <IconLink
           to={{ pathname: nextPath, search }}
           icon={ChevronRightIcon}
-          label="Next proposal"
+          label={t('event-management.proposal-page.next')}
           variant="secondary"
           aria-disabled={!nextPath}
         />

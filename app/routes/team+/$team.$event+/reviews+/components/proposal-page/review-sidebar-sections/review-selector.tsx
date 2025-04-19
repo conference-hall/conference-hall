@@ -12,6 +12,7 @@ export type Option = {
   fill: string;
 };
 
+// todo(i18n)
 export const options: Array<Option> = [
   { label: 'No opinion', Icon: NoSymbolIcon, value: null, feeling: 'NO_OPINION', fill: 'fill-red-100' },
   { label: 'Nope, 0 star', Icon: XCircleIcon, value: 0, feeling: 'NEGATIVE', fill: 'fill-gray-300' },
