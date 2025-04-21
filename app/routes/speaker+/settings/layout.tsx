@@ -1,4 +1,5 @@
 import { AdjustmentsVerticalIcon, ShieldCheckIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Outlet, href } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -17,14 +18,18 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-// todo(i18n)
-const menuItems = (userPreferences: boolean) => {
+const menuItems = (userPreferences: boolean, t: TFunction) => {
   const items = [
-    { to: href('/speaker/settings'), icon: ShieldCheckIcon, label: 'Account' },
-    { to: href('/speaker/settings/profile'), icon: UserCircleIcon, label: 'Speaker profile' },
+    { to: href('/speaker/settings'), icon: ShieldCheckIcon, label: t('settings.nav.account') },
+    { to: href('/speaker/settings/profile'), icon: UserCircleIcon, label: t('settings.nav.profile') },
   ];
+
   if (userPreferences) {
-    items.push({ to: href('/speaker/settings/preferences'), icon: AdjustmentsVerticalIcon, label: 'Preferences' });
+    items.push({
+      to: href('/speaker/settings/preferences'),
+      icon: AdjustmentsVerticalIcon,
+      label: t('settings.nav.preferences'),
+    });
   }
   return items;
 };
@@ -36,8 +41,8 @@ export default function SettingsRoute() {
   return (
     <Page className="lg:grid lg:grid-cols-12">
       <NavSideMenu
-        aria-label={t('speaker.settings.menu')}
-        items={menuItems(flags.userPreferences)}
+        aria-label={t('settings.menu')}
+        items={menuItems(flags.userPreferences, t)}
         className="hidden sm:block w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
       />
 

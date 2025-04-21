@@ -1,7 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Card, CardLink } from '~/design-system/layouts/card.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
-import { formatEventType } from '~/libs/formatters/cfp.ts';
 import type { CfpState } from '~/types/events.types.ts';
 import { CfpElapsedTime } from '../cfp/cfp-elapsed-time.tsx';
 
@@ -33,6 +33,8 @@ export function EventCard(props: CardContentProps) {
 }
 
 function CardContent({ name, type, logoUrl, cfpState, cfpStart, cfpEnd }: CardContentProps) {
+  const { t } = useTranslation();
+
   return (
     <span className="flex h-20 lg:h-32 justify-between">
       {/* Desktop */}
@@ -46,10 +48,8 @@ function CardContent({ name, type, logoUrl, cfpState, cfpStart, cfpEnd }: CardCo
         </Text>
         <div className="flex flex-1 justify-between items-end sm:flex-row-reverse lg:flex-col lg:items-start truncate">
           <Subtitle weight="medium" className="hidden sm:block">
-            {/* todo(i18n) */}
-            {formatEventType(type)}
+            {t(`common.event.type.label.${type}`)}
           </Subtitle>
-          {/* todo(i18n) */}
           <CfpElapsedTime cfpState={cfpState} cfpStart={cfpStart} cfpEnd={cfpEnd} />
         </div>
       </div>

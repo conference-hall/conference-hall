@@ -8,6 +8,7 @@ import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 import { useTranslation } from 'react-i18next';
+import { TEAM_ROLES } from '~/libs/constants.ts';
 import { InvitationModal } from '../../../components/modals/invitation-modal.tsx';
 
 type RemoveButtonProps = { memberId: string; memberName: string | null };
@@ -98,27 +99,6 @@ type ChangeRoleModalProps = {
   onClose: VoidFunction;
 };
 
-// todo(i18n)
-const ALL_ROLES = [
-  {
-    label: 'Owner',
-    value: 'OWNER',
-    description:
-      'Full control over team and events, including member management, event creation, and proposal publishing.',
-  },
-  {
-    label: 'Member',
-    value: 'MEMBER',
-    description:
-      'Can view team, access and edit events, deliberate on proposals, and publish results. Cannot create events or manage team settings.',
-  },
-  {
-    label: 'Reviewer',
-    value: 'REVIEWER',
-    description: 'Read-only access to team and events, with no editing or publishing rights.',
-  },
-];
-
 function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: ChangeRoleModalProps) {
   const { t } = useTranslation();
   return (
@@ -127,17 +107,17 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
         <Form id="change-role-form" method="POST" onSubmit={onClose}>
           <input type="hidden" name="memberId" value={memberId} />
           <RadioGroup>
-            {ALL_ROLES.map((role) => (
+            {TEAM_ROLES.map((role) => (
               <Radio
-                key={role.value}
-                id={role.value}
+                key={role}
+                id={role}
                 name="memberRole"
-                value={role.value}
-                description={role.description}
-                defaultChecked={memberRole === role.value}
+                value={role}
+                description={t(`common.member.role.description.${role}`)}
+                defaultChecked={memberRole === role}
                 required
               >
-                {role.label}
+                {t(`common.member.role.label.${role}`)}
               </Radio>
             ))}
           </RadioGroup>

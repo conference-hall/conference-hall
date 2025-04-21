@@ -12,7 +12,6 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { getLanguage } from '~/libs/formatters/languages.ts';
-import { getLevel } from '~/libs/formatters/levels.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 import { ClientOnly } from '../utils/client-only.tsx';
 import type { SpeakerProps } from './co-speaker.tsx';
@@ -134,7 +133,7 @@ export function TalkSection({
         )}
 
         <div className="flex gap-2 flex-wrap">
-          {talk.level && <Badge color="indigo">{getLevel(talk.level)}</Badge>}
+          {talk.level && <Badge color="indigo">{t(`common.level.${talk.level}`)}</Badge>}
           {talk.languages.map((language) => (
             <Badge key={language}>{getLanguage(language)}</Badge>
           ))}

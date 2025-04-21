@@ -1,17 +1,8 @@
 import { formatDistanceToNow, isSameDay } from 'date-fns';
 import { format as formatInTimeZone, toZonedTime } from 'date-fns-tz';
-import type { CfpState, EventType } from '~/types/events.types.ts';
+import type { CfpState } from '~/types/events.types.ts';
 
-// todo(i18n): add i18n support
-
-export function formatEventType(type: EventType) {
-  switch (type) {
-    case 'CONFERENCE':
-      return 'Conference';
-    case 'MEETUP':
-      return 'Meetup';
-  }
-}
+// todo(i18n): manage cfp translations
 
 export function formatConferenceDates(timeZone: string, start: Date, end: Date) {
   const startDate = toZonedTime(start, timeZone);
@@ -26,7 +17,7 @@ export function formatConferenceDates(timeZone: string, start: Date, end: Date) 
   return `${startFormatted} to ${endFormatted}`;
 }
 
-export function formatCFPState(state: CfpState, start?: Date | null, end?: Date | null) {
+export function formatCFPState(state: CfpState, start: Date | null, end: Date | null) {
   if (!start && !end) return 'Call for paper is disabled';
 
   switch (state) {
@@ -39,7 +30,7 @@ export function formatCFPState(state: CfpState, start?: Date | null, end?: Date 
   }
 }
 
-export function formatCFPElapsedTime(state: CfpState, start?: Date | null, end?: Date | null) {
+export function formatCFPElapsedTime(state: CfpState, start: Date | null, end: Date | null) {
   if (!start && !end) return 'Call for paper is disabled';
   if (!start || !end) return formatCFPState(state, start, end);
 

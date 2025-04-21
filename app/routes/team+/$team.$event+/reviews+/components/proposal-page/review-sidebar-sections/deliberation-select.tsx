@@ -8,13 +8,6 @@ import type { DeliberationStatus, PublicationStatus } from '~/types/proposals.ty
 
 type Props = { deliberationStatus: DeliberationStatus; publicationStatus: PublicationStatus };
 
-// todo(i18n): move to i18n
-const statuses = {
-  ACCEPTED: { name: 'Accepted', icon: CheckIcon, iconClassname: 'text-green-600' },
-  REJECTED: { name: 'Rejected', icon: XMarkIcon, iconClassname: 'text-red-600' },
-  PENDING: { name: 'Not deliberated', icon: QuestionMarkCircleIcon, iconClassname: 'text-gray-600' },
-};
-
 export function DeliberationSelect({ deliberationStatus, publicationStatus }: Props) {
   const { t } = useTranslation();
   const submit = useSubmit();
@@ -26,6 +19,17 @@ export function DeliberationSelect({ deliberationStatus, publicationStatus }: Pr
     submit({ intent: 'change-deliberation-status', status: value }, { method: 'POST' });
   };
 
+  const options = [
+    { id: 'ACCEPTED', name: t('common.accepted'), icon: CheckIcon, iconClassname: 'text-green-600' },
+    { id: 'REJECTED', name: t('common.rejected'), icon: XMarkIcon, iconClassname: 'text-red-600' },
+    {
+      id: 'PENDING',
+      name: t('common.not-deliberated'),
+      icon: QuestionMarkCircleIcon,
+      iconClassname: 'text-gray-600',
+    },
+  ];
+
   return (
     <div className="space-y-4 p-4 lg:p-6">
       <div className="flex items-center justify-between">
@@ -36,12 +40,7 @@ export function DeliberationSelect({ deliberationStatus, publicationStatus }: Pr
         label={t('event-management.proposal-page.deliberate.change')}
         value={deliberationStatus}
         onChange={handleSubmit}
-        options={Object.entries(statuses).map(([value, { name, icon, iconClassname }]) => ({
-          id: value,
-          name,
-          icon,
-          iconClassname,
-        }))}
+        options={options}
         srOnly
       />
     </div>

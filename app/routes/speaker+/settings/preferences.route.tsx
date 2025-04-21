@@ -36,7 +36,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   return data(null, {
     headers: combineHeaders(
       await setLocaleCookie(locale),
-      await toastHeaders('success', t('speaker.settings.preferences.saved')),
+      await toastHeaders('success', t('settings.preferences.saved')),
     ),
   });
 };
@@ -49,25 +49,25 @@ export default function PreferencesRoute({ loaderData }: Route.ComponentProps) {
   if (!flags.userPreferences) return null;
 
   const locales = SUPPORTED_LANGUAGES.map((locale) => ({
-    name: t(`speaker.settings.preferences.language.${locale}`),
+    name: t(`settings.preferences.language.${locale}`),
     value: locale,
   }));
 
   return (
     <div className="space-y-4 lg:space-y-6 ">
-      <H1 srOnly>{t('speaker.settings.preferences')}</H1>
+      <H1 srOnly>{t('settings.preferences')}</H1>
 
       <Card as="section">
         <Card.Title>
-          <H2 id="language">{t('speaker.settings.preferences.language')}</H2>
-          <Subtitle>{t('speaker.settings.preferences.language.subtitle')}</Subtitle>
+          <H2 id="language">{t('settings.preferences.language')}</H2>
+          <Subtitle>{t('settings.preferences.language.subtitle')}</Subtitle>
         </Card.Title>
 
         <Card.Content>
           <Form method="POST" id="language-form" aria-labelledby="language" preventScrollReset>
             <SelectNative
               name="locale"
-              label={t('speaker.settings.preferences.language')}
+              label={t('settings.preferences.language')}
               defaultValue={locale}
               options={locales}
             />
@@ -76,7 +76,7 @@ export default function PreferencesRoute({ loaderData }: Route.ComponentProps) {
 
         <Card.Actions>
           <Button type="submit" form="language-form">
-            {t('speaker.settings.preferences.language.save')}
+            {t('settings.preferences.language.save')}
           </Button>
         </Card.Actions>
       </Card>

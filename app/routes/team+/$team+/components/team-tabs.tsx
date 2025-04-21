@@ -2,10 +2,8 @@ import { Cog6ToothIcon, StarIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
 import { Badge } from '~/design-system/badges.tsx';
-
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
-import { ROLE_NAMES } from '~/libs/formatters/team-roles.ts';
 import type { TeamRole } from '~/types/team.types.ts';
 
 type Props = { slug: string; role: TeamRole };
@@ -22,7 +20,7 @@ export function TeamTabs({ slug, role }: Props) {
           {t('common.settings')}
         </NavTab>
       </NavTabs>
-      <Badge color="blue">{ROLE_NAMES[role]}</Badge>
+      <Badge color="blue">{t(`common.member.role.label.${role}`)}</Badge>
     </Page.NavHeader>
   );
 }

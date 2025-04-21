@@ -7,7 +7,7 @@ export const LANGUAGES: LanguageValues = Object.entries(languages).map(([id, dat
   label: data.language,
 }));
 
-// todo(i18n)
+// todo(i18n): manage languages translation
 export function getLanguage(code: string | null) {
   return LANGUAGES.find(({ value }) => value === code)?.label;
 }

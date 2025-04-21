@@ -15,16 +15,18 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return null;
 };
 
-// todo(i18n)
-const getMenuItems = (team: string) => [
-  { to: href('/team/:team/settings', { team }), icon: Cog6ToothIcon, label: 'General' },
-  { to: href('/team/:team/settings/members', { team }), icon: UserGroupIcon, label: 'Members' },
-];
-
 export default function TeamSettingsLayout() {
   const { t } = useTranslation();
-  const currentTeam = useCurrentTeam();
-  const menus = getMenuItems(currentTeam.slug);
+  const { slug } = useCurrentTeam();
+
+  const menus = [
+    { to: href('/team/:team/settings', { team: slug }), icon: Cog6ToothIcon, label: t('team.settings.nav.general') },
+    {
+      to: href('/team/:team/settings/members', { team: slug }),
+      icon: UserGroupIcon,
+      label: t('team.settings.nav.members'),
+    },
+  ];
 
   return (
     <Page className="lg:grid lg:grid-cols-12">

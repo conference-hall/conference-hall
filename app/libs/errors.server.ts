@@ -1,3 +1,4 @@
+// todo(i18n): manage server errors
 export class NotFoundError extends Response {
   constructor(message: string) {
     super(message, { status: 404, statusText: message });

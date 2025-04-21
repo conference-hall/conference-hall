@@ -5,8 +5,8 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import MultiSelect from '~/design-system/forms/multi-select.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
+import { TALK_LEVELS } from '~/libs/constants.ts';
 import { LANGUAGES } from '~/libs/formatters/languages.ts';
-import { LEVELS } from '~/libs/formatters/levels.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 import { CategoriesForm } from './categories-form.tsx';
 import { FormatsForm } from './formats-form.tsx';
@@ -71,9 +71,9 @@ export function TalkForm({
       />
 
       <RadioGroup label={t('talk.level')} inline>
-        {LEVELS.map(({ key, label }) => (
-          <Radio name="level" key={key} id={key} value={key} defaultChecked={initialValues?.level === key}>
-            {label}
+        {TALK_LEVELS.map((level) => (
+          <Radio name="level" key={level} id={level} value={level} defaultChecked={initialValues?.level === level}>
+            {t(`common.level.${level}`)}
           </Radio>
         ))}
       </RadioGroup>
