@@ -1,6 +1,8 @@
 import { userEvent } from '@vitest/browser/context';
 import { type JSX, useState } from 'react';
+import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
+import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
 import { PasswordInput } from './password-input.tsx';
 
@@ -8,7 +10,11 @@ type PasswordInputWrapperProps = Omit<React.ComponentProps<typeof PasswordInput>
 
 function PasswordInputWrapper(props: PasswordInputWrapperProps) {
   const [value, onChange] = useState(props.value);
-  return <PasswordInput {...props} value={value} onChange={onChange} />;
+  return (
+    <I18nextProvider i18n={i18nTest}>
+      <PasswordInput {...props} value={value} onChange={onChange} />
+    </I18nextProvider>
+  );
 }
 
 describe('PasswordInput component', () => {
@@ -53,10 +59,10 @@ describe('PasswordInput component', () => {
       await expect.element(screen.getByText('Weak')).toBeVisible();
 
       await userEvent.fill(passwordInput, 'aBcDeF1!');
-      await expect.element(screen.getByText('Medium')).toBeVisible();
+      await expect.element(screen.getByText('Strong')).toBeVisible();
 
       await userEvent.fill(passwordInput, 'aBcDeF1!gH');
-      await expect.element(screen.getByText('Strong')).toBeVisible();
+      await expect.element(screen.getByText('Very strong')).toBeVisible();
     });
   });
 

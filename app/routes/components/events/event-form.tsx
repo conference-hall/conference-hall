@@ -1,10 +1,8 @@
 import slugify from '@sindresorhus/slugify';
 import { useState } from 'react';
-
+import { useTranslation } from 'react-i18next';
 import { Input } from '~/design-system/forms/input.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
-
-import { useTranslation } from 'react-i18next';
 import { InputTimezone } from '../../../design-system/forms/input-timezone.tsx';
 import { EventVisibilityRadioGroup } from './event-visibility-radio-group.tsx';
 

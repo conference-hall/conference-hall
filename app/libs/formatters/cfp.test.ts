@@ -1,23 +1,4 @@
-import {
-  cfpColorStatus,
-  formatCFPDate,
-  formatCFPElapsedTime,
-  formatCFPState,
-  formatConferenceDates,
-  formatEventType,
-} from './cfp.ts';
-
-describe('#formatEventType', () => {
-  it('return conference label', () => {
-    const message = formatEventType('CONFERENCE');
-    expect(message).toBe('Conference');
-  });
-
-  it('return meetup label', () => {
-    const message = formatEventType('MEETUP');
-    expect(message).toBe('Meetup');
-  });
-});
+import { cfpColorStatus, formatCFPDate, formatCFPElapsedTime, formatCFPState, formatConferenceDates } from './cfp.ts';
 
 describe('#formatConferenceDates', () => {
   it('return one day conference info', () => {
@@ -41,7 +22,7 @@ describe('#formatConferenceDates', () => {
 
 describe('#formatCFPState', () => {
   it('return disabled cfp message', () => {
-    const message = formatCFPState('CLOSED');
+    const message = formatCFPState('CLOSED', null, null);
     expect(message).toBe('Call for paper is disabled');
   });
 
@@ -83,7 +64,7 @@ describe('#formatCFPElapsedTime', () => {
   });
 
   it('return "CFP disabled" if no dates', () => {
-    const message = formatCFPElapsedTime('CLOSED');
+    const message = formatCFPElapsedTime('CLOSED', null, null);
     expect(message).toBe('Call for paper is disabled');
   });
 

@@ -2,16 +2,7 @@ import { Description, Field, Fieldset, Label, Legend, Radio, RadioGroup } from '
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-// todo(i18n)
-const settings = [
-  { name: 'Private', value: 'PRIVATE', description: 'This event would be available to anyone who has the link.' },
-  {
-    name: 'Public',
-    value: 'PUBLIC',
-    description: 'This event will be available in the Conference Hall search and visible to anyone.',
-  },
-];
+import { EVENT_VISIBILITY } from '~/libs/constants.ts';
 
 export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaultValue?: 'PUBLIC' | 'PRIVATE' }) {
   const { t } = useTranslation();
@@ -23,14 +14,14 @@ export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaul
 
       <RadioGroup name="visibility" value={selected} onChange={setSelected}>
         <div className="mt-2 -space-y-px rounded-md bg-white">
-          {settings.map((setting, settingIdx) => (
-            <Field key={setting.name}>
+          {EVENT_VISIBILITY.map((visibility, index) => (
+            <Field key={t(`common.event.visibility.label.${visibility}`)}>
               <Radio
-                value={setting.value}
+                value={visibility}
                 className={({ checked }) =>
                   cx(
-                    settingIdx === 0 ? 'rounded-tl-md rounded-tr-md' : '',
-                    settingIdx === settings.length - 1 ? 'rounded-bl-md rounded-br-md' : '',
+                    index === 0 ? 'rounded-tl-md rounded-tr-md' : '',
+                    index === EVENT_VISIBILITY.length - 1 ? 'rounded-bl-md rounded-br-md' : '',
                     checked ? 'z-10 border-indigo-200 bg-indigo-50' : 'border-gray-200',
                     'relative flex cursor-pointer border p-4 focus:outline-hidden',
                   )
@@ -50,10 +41,10 @@ export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaul
                     </span>
                     <span className="ml-3 flex flex-col">
                       <Label className={cx(checked ? 'text-indigo-900' : 'text-gray-900', 'block text-sm font-medium')}>
-                        {setting.name}
+                        {t(`common.event.visibility.label.${visibility}`)}
                       </Label>
                       <Description className={cx(checked ? 'text-indigo-700' : 'text-gray-500', 'block text-sm')}>
-                        {setting.description}
+                        {t(`common.event.visibility.description.${visibility}`)}
                       </Description>
                     </span>
                   </>

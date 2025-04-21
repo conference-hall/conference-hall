@@ -12,7 +12,6 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H3, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
-import { ROLE_NAMES } from '~/libs/formatters/team-roles.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
@@ -88,7 +87,7 @@ export default function TeamMembersRoute({ loaderData }: Route.ComponentProps) {
                       <AvatarName
                         picture={member.picture}
                         name={member.name || t('common.unknown')}
-                        subtitle={ROLE_NAMES[member.role]}
+                        subtitle={t(`common.member.role.label.${member.role}`)}
                       />
                       {canManageTeamMembers && user?.id !== member.id && (
                         <div className="flex w-full gap-2 mt-4 sm:mt-0 sm:w-auto">
