@@ -10,12 +10,11 @@ import { Callout } from '~/design-system/callout.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
-// todo(i18n)
 const statuses = {
-  ACCEPTED: { label: 'Accepted', icon: CheckIcon, color: 'text-green-600' },
-  PENDING: { label: 'Not deliberated', icon: QuestionMarkCircleIcon, color: 'text-gray-600' },
-  REJECTED: { label: 'Rejected', icon: XMarkIcon, color: 'text-red-600' },
-};
+  ACCEPTED: { i18nKey: 'common.accepted', icon: CheckIcon, color: 'text-green-600' },
+  PENDING: { i18nKey: 'common.not-deliberated', icon: QuestionMarkCircleIcon, color: 'text-gray-600' },
+  REJECTED: { i18nKey: 'common.rejected', icon: XMarkIcon, color: 'text-red-600' },
+} as const;
 
 type Props = {
   status: keyof typeof statuses;
@@ -27,17 +26,17 @@ type Props = {
 export function DeliberationButton({ status, selection, isAllPagesSelected, totalSelected }: Props) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const { label, icon: Icon, color } = statuses[status];
+  const { i18nKey, icon: Icon, color } = statuses[status];
 
   return (
     <>
       <Button variant="secondary" size="s" onClick={() => setOpen(true)}>
         <Icon className={cx('w-4 h-4', color)} aria-hidden />
-        {label}
+        {t(i18nKey)}
       </Button>
 
       <Modal
-        title={<DeliberateModalTitle {...{ label, color, totalSelected }} />}
+        title={<DeliberateModalTitle {...{ label: t(i18nKey), color, totalSelected }} />}
         open={open}
         onClose={() => setOpen(false)}
       >
@@ -58,7 +57,7 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
             {t('common.cancel')}
           </Button>
           <Button type="submit" form="change-status">
-            {t('event-management.proposals.deliberate.modal.submit', { label })}
+            {t('event-management.proposals.deliberate.modal.submit', { label: t(i18nKey) })}
           </Button>
         </Modal.Actions>
       </Modal>

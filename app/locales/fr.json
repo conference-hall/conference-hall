@@ -1,11 +1,11 @@
 {
   "error.global": "Une erreur s'est produite, veuillez réessayer.",
   "emails.email-verification.title": "Bienvenue sur Conference Hall",
-  "speaker.settings.preferences": "Préférences",
-  "speaker.settings.preferences.language": "Langue",
-  "speaker.settings.preferences.language.en": "English",
-  "speaker.settings.preferences.language.fr": "Français",
-  "speaker.settings.preferences.language.subtitle": "Sélectionnez la langue de l'interface utilisateur",
-  "speaker.settings.preferences.language.save": "Changer la langue",
-  "speaker.settings.preferences.saved": "Préférences enregistrées avec succès"
+  "settings.preferences": "Préférences",
+  "settings.preferences.language": "Langue",
+  "settings.preferences.language.en": "English",
+  "settings.preferences.language.fr": "Français",
+  "settings.preferences.language.subtitle": "Sélectionnez la langue de l'interface utilisateur",
+  "settings.preferences.language.save": "Changer la langue",
+  "settings.preferences.saved": "Préférences enregistrées avec succès"
 }

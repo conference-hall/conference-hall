@@ -7,7 +7,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { formatConferenceDates, formatEventType } from '~/libs/formatters/cfp.ts';
+import { formatConferenceDates } from '~/libs/formatters/cfp.ts';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 
 type Props = {
@@ -43,13 +43,11 @@ export function DetailsSection({
     <Card as="section" p={8} className="space-y-8">
       <div className="space-y-2">
         <Text weight="semibold" size="base" mb={6}>
-          {/* todo(i18n) */}
-          {formatEventType(type)}
+          {t(`common.event.type.label.${type}`)}
         </Text>
 
         {conferenceStart && conferenceEnd ? (
           <IconLabel icon={ClockIcon}>
-            {/* todo(i18n) */}
             <ClientOnly>{() => formatConferenceDates(timezone, conferenceStart, conferenceEnd)}</ClientOnly>
           </IconLabel>
         ) : null}
