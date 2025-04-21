@@ -1,5 +1,7 @@
 import { userEvent } from '@vitest/browser/context';
+import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
+import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { TagSelect, type TagSelectorProps } from './tag-select.tsx';
@@ -17,9 +19,11 @@ describe('TagSelect component', () => {
       {
         path: '/',
         Component: () => (
-          <TagSelect tags={tags} defaultValues={[]} onChange={onChangeMock} canEditEventTags {...props}>
-            Open Tags
-          </TagSelect>
+          <I18nextProvider i18n={i18nTest}>
+            <TagSelect tags={tags} defaultValues={[]} onChange={onChangeMock} canEditEventTags {...props}>
+              Open Tags
+            </TagSelect>
+          </I18nextProvider>
         ),
       },
     ]);
