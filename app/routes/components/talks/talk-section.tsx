@@ -3,7 +3,6 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import type { TalkLevel } from '@prisma/client';
 import { cx } from 'class-variance-authority';
-import { format } from 'date-fns';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '~/design-system/badges.tsx';
@@ -11,6 +10,7 @@ import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
+import { formatDate } from '~/libs/datetimes/datetimes.ts';
 import { getLanguage } from '~/libs/formatters/languages.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 import { ClientOnly } from '../utils/client-only.tsx';
@@ -69,7 +69,8 @@ export function TalkSection({
   showCategories = false,
   referencesOpen = false,
 }: Props) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
 
   return (
     <Card as="section">
@@ -97,8 +98,14 @@ export function TalkSection({
           className="grow"
         />
         <Text size="xs" variant="secondary" className="text-nowrap hidden sm:block">
-          {/* todo(18n) */}
-          <ClientOnly>{() => format(talk.createdAt, "'Created on' MMM d, y")}</ClientOnly>
+          <ClientOnly>
+            {() =>
+              t('common.created-on', {
+                date: formatDate(talk.createdAt, { format: 'long', locale }),
+                interpolation: { escapeValue: false },
+              })
+            }
+          </ClientOnly>
         </Text>
       </div>
 

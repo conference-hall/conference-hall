@@ -1,13 +1,14 @@
-import { formatDistanceToNowStrict } from 'date-fns';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
+import { formatDistanceFromNow } from '~/libs/datetimes/datetimes.ts';
 import { useUser } from '~/routes/components/contexts/user-context.tsx';
+import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 import { CommentReactions } from './comment-reactions.tsx';
 
 export function CommentItem({ item }: { item: FeedItem }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const user = useUser();
 
   if (item.type !== 'comment') return null;
@@ -41,10 +42,16 @@ export function CommentItem({ item }: { item: FeedItem }) {
               </>
             )}
           </div>
-          <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
-            {/* todo(i18n) */}
-            {formatDistanceToNowStrict(item.timestamp)} ago
-          </time>
+          <ClientOnly>
+            {() => (
+              <time
+                dateTime={item.timestamp.toISOString()}
+                className="flex-none py-0.5 text-xs leading-5 text-gray-500"
+              >
+                {formatDistanceFromNow(item.timestamp, i18n.language)}
+              </time>
+            )}
+          </ClientOnly>
         </div>
 
         <p className="text-sm leading-6 text-gray-700 whitespace-pre-line break-words">{item.comment}</p>

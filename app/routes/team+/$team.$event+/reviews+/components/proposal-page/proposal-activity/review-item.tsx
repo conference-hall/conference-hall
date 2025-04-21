@@ -1,9 +1,11 @@
 import { HeartIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import { formatDistanceToNowStrict } from 'date-fns';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
+import { formatDistanceFromNow } from '~/libs/datetimes/datetimes.ts';
+import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 
 export function ReviewItem({ item }: { item: FeedItem }) {
+  const { i18n } = useTranslation();
   if (item.type !== 'review') return null;
 
   return (
@@ -30,10 +32,13 @@ export function ReviewItem({ item }: { item: FeedItem }) {
           components={[<span key="1" className="font-medium text-gray-900" />, <strong key="2" />]}
         />
       </p>
-      <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 pr-3 text-xs leading-5 text-gray-500">
-        {/* todo(i18n) */}
-        {formatDistanceToNowStrict(item.timestamp)} ago
-      </time>
+      <ClientOnly>
+        {() => (
+          <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
+            {formatDistanceFromNow(item.timestamp, i18n.language)}
+          </time>
+        )}
+      </ClientOnly>
     </>
   );
 }
