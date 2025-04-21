@@ -61,8 +61,7 @@ export default function ResetPassword() {
       toast.success(t('auth.reset-password.toast.success'));
       navigate({ pathname: '/auth/login', search: `?email=${email}` });
     } catch (error) {
-      // todo(i18n)
-      setError(getFirebaseError(error));
+      setError(getFirebaseError(error, t));
     } finally {
       setLoading(false);
     }
