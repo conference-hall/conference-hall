@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import { db } from 'prisma/db.server.ts';
 import { sendVerificationEmail } from '~/emails/templates/auth/email-verification.tsx';
 import { sendResetPasswordEmail } from '~/emails/templates/auth/reset-password.tsx';
@@ -36,13 +37,13 @@ export class UserAccount {
     return user;
   }
 
-  static async linkEmailProvider(uid: string, email: string, password: string, locale: string) {
+  static async linkEmailProvider(uid: string, email: string, password: string, locale: string, t: TFunction) {
     try {
       await firebaseAuth.updateUser(uid, { email, password, emailVerified: false });
       await UserAccount.checkEmailVerification(email, false, 'password', locale);
     } catch (error) {
       console.error('linkEmailProvider', error);
-      return getFirebaseError(error);
+      return getFirebaseError(error, t);
     }
   }
 

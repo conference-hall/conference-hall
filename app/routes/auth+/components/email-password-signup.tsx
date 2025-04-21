@@ -41,8 +41,7 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
       const token = await credentials.user.getIdToken(true);
       await submit({ token, redirectTo }, { method: 'POST', action: '/auth/login' });
     } catch (error) {
-      // todo(18n)
-      setError(getFirebaseError(error));
+      setError(getFirebaseError(error, t));
     }
   };
 

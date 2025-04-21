@@ -1,5 +1,6 @@
 import { AuthClientErrorCode } from 'firebase-admin/auth';
 import { FirebaseError } from 'firebase/app';
+import type { TFunction } from 'i18next';
 import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
@@ -100,11 +101,12 @@ describe('UserAccount', () => {
 
   describe('linkEmailProvider', () => {
     it('links email provider and sends the verification email', async () => {
+      const t = vi.fn() as unknown as TFunction;
       const updateUserMock = auth.updateUser as Mock;
       const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
       generateEmailVerificationLinkMock.mockResolvedValue('https://firebase.app/verification-link?oobCode=my-code');
 
-      await UserAccount.linkEmailProvider('uid123', 'foo@example.com', 'password', 'en');
+      await UserAccount.linkEmailProvider('uid123', 'foo@example.com', 'password', 'en', t);
 
       expect(updateUserMock).toHaveBeenCalledWith('uid123', {
         email: 'foo@example.com',
@@ -126,14 +128,16 @@ describe('UserAccount', () => {
     });
 
     it('returns an error when email already exists', async () => {
+      const t = vi.fn(() => 'Email or password is incorrect.') as unknown as TFunction;
       const updateUserMock = auth.updateUser as Mock;
       const { code, message } = AuthClientErrorCode.EMAIL_ALREADY_EXISTS;
       updateUserMock.mockRejectedValue(new FirebaseError(`auth/${code}`, message));
       const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
 
-      const error = await UserAccount.linkEmailProvider('uid123', 'foo@example.com', 'password', 'en');
+      const error = await UserAccount.linkEmailProvider('uid123', 'foo@example.com', 'password', 'en', t);
 
       expect(error).toEqual('Email or password is incorrect.');
+      expect(t).toHaveBeenCalledWith('error.auth.email-password-incorrect');
       expect(generateEmailVerificationLinkMock).not.toHaveBeenCalled();
       expect(sendEmail.trigger).not.toHaveBeenCalled();
     });
