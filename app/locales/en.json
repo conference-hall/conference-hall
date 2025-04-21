@@ -45,6 +45,7 @@
   "common.copied": "Copied!",
   "common.copy": "Copy",
   "common.copy-invitation-link": "Copy invitation link",
+  "common.created-on": "Created on {{date}}",
   "common.delete": "Delete",
   "common.deliberation": "Deliberation",
   "common.do-it-later": "Do it later",

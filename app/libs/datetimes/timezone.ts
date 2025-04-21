@@ -4,6 +4,8 @@ import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 // TODO: Add missing tests
 // TODO: Move all usages of `date-fns-tz` in this file
 
+// todo(i18n): use locale in date formatting
+
 // Get user timezone
 export function getUserTimezone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
