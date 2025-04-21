@@ -40,8 +40,7 @@ export default function VerifyEmail() {
         navigate({ pathname: '/auth/login', search: `?email=${email}` });
       })
       .catch((error) => {
-        // todo(18n)
-        setError(getFirebaseError(error));
+        setError(getFirebaseError(error, t));
       })
       .finally(() => {
         setLoading(false);

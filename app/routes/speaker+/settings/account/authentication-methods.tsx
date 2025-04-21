@@ -22,10 +22,9 @@ export function AuthenticationMethods({ email, authLoaded }: Props) {
   const { emailVerified = false, providerData = [] } = getClientAuth().currentUser ?? {};
 
   useEffect(() => {
-    // todo(i18n)
     // Get error messages from the redirect result after linking a provider
-    Firebase.getRedirectResult(getClientAuth()).catch((error) => setError(getFirebaseError(error)));
-  }, []);
+    Firebase.getRedirectResult(getClientAuth()).catch((error) => setError(getFirebaseError(error, t)));
+  }, [t]);
 
   const canUnlink = providerData.length > 1;
   const passwordProvider = providerData.find((p) => p.providerId === 'password');

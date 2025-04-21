@@ -46,7 +46,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
       const result = parseWithZod(form, { schema: EmailPasswordSchema });
       if (result.status !== 'success') return toast('error', t('error.global'));
 
-      const error = await UserAccount.linkEmailProvider(uid, result.value.email, result.value.password, locale);
+      const error = await UserAccount.linkEmailProvider(uid, result.value.email, result.value.password, locale, t);
       if (error) return toast('error', error);
 
       const headers = await toastHeaders('success', t('settings.account.feedbacks.authentication-method-linked'));

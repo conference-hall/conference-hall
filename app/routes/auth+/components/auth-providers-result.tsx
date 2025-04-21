@@ -26,7 +26,7 @@ export function AuthProvidersResult({ redirectTo, setError }: AuthProvidersResul
         const token = await credentials.user.getIdToken();
         submit({ token, redirectTo }, { method: 'POST', action: '/auth/login' });
       })
-      .catch((error) => setError(getFirebaseError(error)));
+      .catch((error) => setError(getFirebaseError(error, t)));
   }, [submit, redirectTo, setError, t]);
 
   return (
