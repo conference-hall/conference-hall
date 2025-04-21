@@ -2,21 +2,35 @@ import {
   addDays,
   addMinutes,
   differenceInMinutes,
-  format,
+  format as formatDFNS,
   formatDuration,
   intervalToDuration,
+  intlFormatDistance,
   setMinutes,
   startOfDay,
 } from 'date-fns';
 
-// Returns total of minutes from the start of a day
-export function getMinutesFromStartOfDay(date: Date): number {
-  return differenceInMinutes(date, startOfDay(date));
+// todo(i18n): use locale in date formatting
+
+type FormatType = 'short' | 'medium' | 'long';
+type FormatOption = { format: FormatType; locale: string };
+
+const DATE_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
+  short: { day: 'numeric', month: 'numeric', year: 'numeric' },
+  medium: { day: 'numeric', month: 'short', year: 'numeric' },
+  long: { day: 'numeric', month: 'long', year: 'numeric' },
+};
+
+// todo(tests)
+export function formatDate(date: Date, options: FormatOption): string {
+  const { format, locale } = options;
+  return new Intl.DateTimeFormat(locale, DATE_FORMATS[format]).format(date);
 }
 
-// Add minutes to the start of a day
-export function setMinutesFromStartOfDay(date: Date, minutes: number): Date {
-  return addMinutes(startOfDay(date), minutes);
+// todo(tests)
+export function formatDistanceFromNow(date: Date, locale: string): string {
+  const now = new Date();
+  return intlFormatDistance(date, now, { locale });
 }
 
 // Format a date or number in minutes to a time HH:mm
@@ -24,7 +38,7 @@ export function toTimeFormat(time: Date | number): string {
   if (typeof time === 'number') {
     time = setMinutes(startOfDay(new Date()), time);
   }
-  return format(time, 'HH:mm');
+  return formatDFNS(time, 'HH:mm');
 }
 
 // Format the difference between two dates to a string like '2h 10m'
@@ -47,6 +61,16 @@ export function formatTimeDifference(date1: Date, date2: Date) {
       },
     },
   });
+}
+
+// Returns total of minutes from the start of a day
+export function getMinutesFromStartOfDay(date: Date): number {
+  return differenceInMinutes(date, startOfDay(date));
+}
+
+// Add minutes to the start of a day
+export function setMinutesFromStartOfDay(date: Date, minutes: number): Date {
+  return addMinutes(startOfDay(date), minutes);
 }
 
 // Get an array of dates between two dates, inclusive

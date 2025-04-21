@@ -1,5 +1,4 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
-import { formatDistanceToNowStrict } from 'date-fns';
 import { Link, href } from 'react-router';
 
 import { Avatar } from '~/design-system/avatar.tsx';
@@ -8,6 +7,7 @@ import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import type { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { useTranslation } from 'react-i18next';
+import { formatDistanceFromNow } from '~/libs/datetimes/datetimes.ts';
 import { ProposalStatusLabel } from '../proposals/proposal-status-label.tsx';
 import { ClientOnly } from '../utils/client-only.tsx';
 
@@ -22,7 +22,7 @@ type Props = {
 };
 
 export function TalkSubmissionsSection({ submissions }: Props) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   return (
     <Card as="section" className="divide-y divide-gray-200">
       <div className="px-4 py-4">
@@ -44,10 +44,7 @@ export function TalkSubmissionsSection({ submissions }: Props) {
                     {submission.name}
                   </Text>
                   <Subtitle size="xs">
-                    <ClientOnly fallback="-">
-                      {/* todo(i18n) */}
-                      {() => `${formatDistanceToNowStrict(submission.createdAt)} ago`}
-                    </ClientOnly>
+                    <ClientOnly>{() => formatDistanceFromNow(submission.createdAt, i18n.language)}</ClientOnly>
                   </Subtitle>
                 </div>
               </div>

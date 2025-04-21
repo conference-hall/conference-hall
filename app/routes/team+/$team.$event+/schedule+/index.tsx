@@ -39,6 +39,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   return redirect(`/team/${params.team}/${params.event}/schedule`);
 };
 
+// todo(i18n): translate schedule
 export default function ScheduleRoute({ loaderData: schedule, actionData: errors }: Route.ComponentProps) {
   return (
     <Page>

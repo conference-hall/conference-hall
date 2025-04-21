@@ -1,10 +1,10 @@
-import { format } from 'date-fns';
 import type { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
 import { BadgeDot } from '~/design-system/badges.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import { formatDate } from '~/libs/datetimes/datetimes.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { ReviewComments } from '~/routes/components/reviews/review-comments.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/routes/components/reviews/review-note.tsx';
@@ -20,7 +20,8 @@ type ProposalItemProps = {
 };
 
 export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle }: ProposalItemProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
   const [params] = useSearchParams();
 
   const currentTeam = useCurrentTeam();
@@ -65,8 +66,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
 
           <Text size="xs" variant="secondary">
             {proposal.speakers.length ? t('common.by', { names: proposal.speakers.map((a) => a.name) }) : null}
-            {/* todo(i18n) */}
-            <ClientOnly>{() => format(proposal.createdAt, " 'on' MMM d, y")}</ClientOnly>
+            <ClientOnly>{() => ` - ${formatDate(proposal.createdAt, { format: 'medium', locale })}`}</ClientOnly>
           </Text>
         </div>
 
