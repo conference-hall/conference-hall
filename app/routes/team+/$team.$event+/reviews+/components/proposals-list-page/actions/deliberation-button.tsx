@@ -29,23 +29,18 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
   const [open, setOpen] = useState(false);
   const { label, icon: Icon, color } = statuses[status];
 
-  const Title = () => (
-    <Text size="base" weight="semibold" mb={4}>
-      <Trans
-        i18nKey="event-management.proposals.deliberate.modal.title"
-        values={{ totalSelected, label }}
-        components={[<span key="1" className={color} />]}
-      />
-    </Text>
-  );
-
   return (
     <>
       <Button variant="secondary" size="s" onClick={() => setOpen(true)}>
         <Icon className={cx('w-4 h-4', color)} aria-hidden />
         {label}
       </Button>
-      <Modal title={<Title />} open={open} onClose={() => setOpen(false)}>
+
+      <Modal
+        title={<DeliberateModalTitle {...{ label, color, totalSelected }} />}
+        open={open}
+        onClose={() => setOpen(false)}
+      >
         <Modal.Content>
           <Form id="change-status" method="POST" onSubmit={() => setOpen(false)}>
             <Callout title={t('common.warning')}>
@@ -68,5 +63,23 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
         </Modal.Actions>
       </Modal>
     </>
+  );
+}
+
+type ModalTitleProps = {
+  label: string;
+  color: string;
+  totalSelected: number;
+};
+
+function DeliberateModalTitle({ label, color, totalSelected }: ModalTitleProps) {
+  return (
+    <Text size="base" weight="semibold" mb={4}>
+      <Trans
+        i18nKey="event-management.proposals.deliberate.modal.title"
+        values={{ totalSelected, label }}
+        components={[<span key="1" className={color} />]}
+      />
+    </Text>
   );
 }

@@ -51,12 +51,12 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-semibold">{title}</span>
 
-            {canDeliberateEventProposals && proposal.deliberationStatus !== 'PENDING' ? (
+            {canDeliberateEventProposals && proposal.deliberationStatus !== 'PENDING' && (
               <>
-                {deliberationBadge(proposal)}
-                {publicationBadge(proposal)}
+                <DeliberationBadge {...proposal} />
+                <PublicationBadge {...proposal} />
               </>
-            ) : null}
+            )}
 
             {proposal.tags.map((tag) => (
               <Tag key={tag.id} tag={tag} isSearchLink={false} />
@@ -80,7 +80,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
   );
 }
 
-function deliberationBadge({ deliberationStatus, confirmationStatus }: ProposalData) {
+function DeliberationBadge({ deliberationStatus, confirmationStatus }: ProposalData) {
   const { t } = useTranslation();
 
   if (confirmationStatus) return null;
@@ -103,7 +103,7 @@ function deliberationBadge({ deliberationStatus, confirmationStatus }: ProposalD
   }
 }
 
-function publicationBadge({ deliberationStatus, publicationStatus, confirmationStatus }: ProposalData) {
+function PublicationBadge({ deliberationStatus, publicationStatus, confirmationStatus }: ProposalData) {
   const { t } = useTranslation();
 
   if (deliberationStatus === 'PENDING') return null;

@@ -1,5 +1,7 @@
 import { userEvent } from '@vitest/browser/context';
+import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
+import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
 import type { SurveyQuestion } from '~/.server/event-survey/types.ts';
 import { SurveyQuestionModal } from './survey-question-modal.tsx';
@@ -10,13 +12,15 @@ describe('SurveyQuestionModal component', () => {
       {
         path: '/',
         Component: () => (
-          <SurveyQuestionModal initialValues={initialValues}>
-            {({ onOpen }) => (
-              <button type="button" onClick={onOpen}>
-                Open Modal
-              </button>
-            )}
-          </SurveyQuestionModal>
+          <I18nextProvider i18n={i18nTest}>
+            <SurveyQuestionModal initialValues={initialValues}>
+              {({ onOpen }) => (
+                <button type="button" onClick={onOpen}>
+                  Open Modal
+                </button>
+              )}
+            </SurveyQuestionModal>
+          </I18nextProvider>
         ),
       },
     ]);
