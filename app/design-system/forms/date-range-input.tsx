@@ -1,10 +1,8 @@
-import { format } from 'date-fns';
-import { toZonedTime } from 'date-fns-tz';
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
-
+import { toISODate } from '~/libs/datetimes/datetimes.ts';
+import { toZonedTime } from '~/libs/datetimes/timezone.ts';
 import type { SubmissionError } from '~/types/errors.types.ts';
-
 import { Input } from './input.tsx';
 
 type Props = {
@@ -60,9 +58,9 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
           name={start.name}
           label={start.label}
           autoComplete="off"
-          value={toDayFormat(startDate)}
-          min={toDayFormat(min)}
-          max={toDayFormat(max)}
+          value={toISODate(startDate)}
+          min={toISODate(min)}
+          max={toISODate(max)}
           onChange={handleStartDate}
           className="col-span-2 sm:col-span-1"
           required={required}
@@ -73,9 +71,9 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
           name={end.name}
           label={end.label}
           autoComplete="off"
-          min={toDayFormat(startDate) || toDayFormat(min)}
-          max={toDayFormat(max)}
-          value={toDayFormat(endDate)}
+          min={toISODate(startDate) || toISODate(min)}
+          max={toISODate(max)}
+          value={toISODate(endDate)}
           onChange={handleEndDate}
           className="col-span-2 sm:col-span-1"
           required={required}
@@ -85,9 +83,4 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );
-}
-
-function toDayFormat(date?: Date | null) {
-  if (!date) return undefined;
-  return format(date, 'yyyy-MM-dd');
 }

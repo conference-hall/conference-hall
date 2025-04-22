@@ -1,6 +1,7 @@
 import type { EventType, Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-
+import { getDatesRange } from '~/libs/datetimes/datetimes.ts';
+import { toZonedTime } from '~/libs/datetimes/timezone.ts';
 import {
   ApiKeyInvalidError,
   EventNotFoundError,
@@ -8,9 +9,6 @@ import {
   ForbiddenOperationError,
   NotFoundError,
 } from '~/libs/errors.server.ts';
-
-import { toZonedTime } from 'date-fns-tz';
-import { getDatesRange } from '~/libs/datetimes/datetimes.ts';
 import type { Language, Languages } from '~/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import type {

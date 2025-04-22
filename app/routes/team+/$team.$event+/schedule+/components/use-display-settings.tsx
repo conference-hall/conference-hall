@@ -1,8 +1,8 @@
 import { isSameDay } from 'date-fns';
-import { toZonedTime } from 'date-fns-tz';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useFetcher, useParams } from 'react-router';
 import { getDatesRange } from '~/libs/datetimes/datetimes.ts';
+import { toZonedTime } from '~/libs/datetimes/timezone.ts';
 
 type ScheduleSettings = {
   start: Date;
