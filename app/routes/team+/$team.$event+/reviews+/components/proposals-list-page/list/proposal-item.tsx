@@ -89,13 +89,13 @@ function DeliberationBadge({ deliberationStatus, confirmationStatus }: ProposalD
     case 'ACCEPTED':
       return (
         <BadgeDot pill compact color="green">
-          {t('common.accepted')}
+          {t('common.proposals.status.accepted')}
         </BadgeDot>
       );
     case 'REJECTED':
       return (
         <BadgeDot pill compact color="red">
-          {t('common.rejected')}
+          {t('common.proposals.status.rejected')}
         </BadgeDot>
       );
     case 'PENDING':
@@ -111,7 +111,7 @@ function PublicationBadge({ deliberationStatus, publicationStatus, confirmationS
   if (deliberationStatus === 'ACCEPTED' && publicationStatus === 'PUBLISHED' && confirmationStatus === 'PENDING') {
     return (
       <BadgeDot pill compact color="blue">
-        {t('common.proposals-status.waiting-confirmation')}
+        {t('common.proposals.status.not-answered')}
       </BadgeDot>
     );
   } else if (
@@ -121,7 +121,7 @@ function PublicationBadge({ deliberationStatus, publicationStatus, confirmationS
   ) {
     return (
       <BadgeDot pill compact color="green">
-        {t('common.proposals-status.confirmed')}
+        {t('common.proposals.status.confirmed')}
       </BadgeDot>
     );
   } else if (
@@ -131,7 +131,7 @@ function PublicationBadge({ deliberationStatus, publicationStatus, confirmationS
   ) {
     return (
       <BadgeDot pill compact color="red">
-        {t('common.proposals-status.declined')}
+        {t('common.proposals.status.declined')}
       </BadgeDot>
     );
   } else if (publicationStatus === 'NOT_PUBLISHED') {
