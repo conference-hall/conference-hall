@@ -1,5 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { CalendarIcon, MagnifyingGlassIcon, UserGroupIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { AdminTeams, TeamsSearchFiltersSchema } from '~/.server/admin/admin-teams.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
@@ -22,39 +23,39 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return adminTeams.listTeams(filters, page);
 };
 
-const options = [
-  { name: 'Name', value: 'name' },
-  { name: 'Creation date', value: 'createdAt' },
-  { name: 'Members', value: 'members' },
-  { name: 'Events', value: 'events' },
-];
+const options = ['name', 'createdAt', 'members', 'events'] as const;
 
 export default function AdminTeamsRoute({ loaderData }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const { results, filters, pagination, statistics } = loaderData;
 
   return (
     <Page>
-      <H1 srOnly>Teams</H1>
+      <H1 srOnly>{t('admin.nav.teams')}</H1>
 
       <List>
         <List.Header className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
-          <Text weight="semibold">{`${statistics.total} teams`}</Text>
+          <Text weight="semibold">{t('admin.teams.total', { count: statistics.total })}</Text>
           <div className="flex gap-2">
             <Form method="GET">
               <Input
                 name="query"
                 icon={MagnifyingGlassIcon}
                 defaultValue={filters.query}
-                aria-label="Search by name"
-                placeholder="Search by name"
+                aria-label={t('admin.teams.search')}
+                placeholder={t('admin.teams.search')}
                 className="w-full sm:w-72"
               />
             </Form>
-            <SortMenu options={options} defaultSort="createdAt" defaultOrder="desc" />
+            <SortMenu
+              options={options.map((value) => ({ value, name: t(`admin.teams.sort.${value}`) }))}
+              defaultSort="createdAt"
+              defaultOrder="desc"
+            />
           </div>
         </List.Header>
 
-        <List.Content aria-label="Teams list">
+        <List.Content aria-label={t('admin.nav.teams')}>
           {results.map((team) => (
             <List.Row key={team.id} className="flex justify-between items-center gap-4 px-4 py-4 sm:px-6">
               <div className="min-w-0">

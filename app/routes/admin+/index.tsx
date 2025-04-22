@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Await } from 'react-router';
 import { AdminDashboard } from '~/.server/admin/admin-dashboard.ts';
 import { KpiProgressBar } from '~/design-system/dashboard/kpi-progress-bar.tsx';
@@ -21,72 +22,93 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function AdminDashboardRoute({ loaderData }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const { users, conferences, meetups, teams, proposals } = loaderData;
 
   return (
     <Page>
-      <H1 srOnly>Dashboard</H1>
+      <H1 srOnly>{t('admin.nav.dashboard')}</H1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-        <Suspense fallback="Loading...">
+        <Suspense fallback={t('common.loading')}>
           <Await resolve={users}>
             {(users) => (
-              <StatisticCard label="Total users" stat={users.total}>
+              <StatisticCard label={t('admin.dashboard.users.label')} stat={users.total}>
                 <StatisticCard.Content className="space-y-3">
-                  <KpiProgressBar label="Speakers" value={users.speakers} max={users.total} />
-                  <KpiProgressBar label="Organizers" value={users.organizers} max={users.total} />
+                  <KpiProgressBar label={t('common.speakers')} value={users.speakers} max={users.total} />
+                  <KpiProgressBar label={t('common.organizers')} value={users.organizers} max={users.total} />
                 </StatisticCard.Content>
               </StatisticCard>
             )}
           </Await>
         </Suspense>
 
-        <Suspense fallback="Loading...">
+        <Suspense fallback={t('common.loading')}>
           <Await resolve={teams}>
             {(teams) => (
-              <StatisticCard label="Total teams" stat={teams.total}>
+              <StatisticCard label={t('admin.dashboard.teams.label')} stat={teams.total}>
                 <StatisticCard.Content className="space-y-3">
-                  <KpiProgressBar label="Owners" value={teams.owners} max={teams.organizers} />
-                  <KpiProgressBar label="Members" value={teams.members} max={teams.organizers} />
-                  <KpiProgressBar label="Reviewers" value={teams.reviewers} max={teams.organizers} />
+                  <KpiProgressBar label={t('common.owners')} value={teams.owners} max={teams.organizers} />
+                  <KpiProgressBar label={t('common.members')} value={teams.members} max={teams.organizers} />
+                  <KpiProgressBar label={t('common.reviewers')} value={teams.reviewers} max={teams.organizers} />
                 </StatisticCard.Content>
               </StatisticCard>
             )}
           </Await>
         </Suspense>
 
-        <Suspense fallback="Loading...">
+        <Suspense fallback={t('common.loading')}>
           <Await resolve={conferences}>
             {(conferences) => (
-              <StatisticCard label="Total conferences" stat={conferences.total}>
+              <StatisticCard label={t('admin.dashboard.conferences.label')} stat={conferences.total}>
                 <StatisticCard.Content className="space-y-3">
-                  <KpiProgressBar label="Public conferences" value={conferences.public} max={conferences.total} />
-                  <KpiProgressBar label="With CFP open" value={conferences.cfpOpen} max={conferences.total} />
+                  <KpiProgressBar
+                    label={t('admin.dashboard.conferences.public')}
+                    value={conferences.public}
+                    max={conferences.total}
+                  />
+                  <KpiProgressBar
+                    label={t('admin.dashboard.conferences.cfp-open')}
+                    value={conferences.cfpOpen}
+                    max={conferences.total}
+                  />
                 </StatisticCard.Content>
               </StatisticCard>
             )}
           </Await>
         </Suspense>
 
-        <Suspense fallback="Loading...">
+        <Suspense fallback={t('common.loading')}>
           <Await resolve={meetups}>
             {(meetups) => (
-              <StatisticCard label="Total meetups" stat={meetups.total}>
+              <StatisticCard label={t('admin.dashboard.meetups.label')} stat={meetups.total}>
                 <StatisticCard.Content className="space-y-3">
-                  <KpiProgressBar label="Public meetups" value={meetups.public} max={meetups.total} />
-                  <KpiProgressBar label="With CFP open" value={meetups.cfpOpen} max={meetups.total} />
+                  <KpiProgressBar
+                    label={t('admin.dashboard.meetups.public')}
+                    value={meetups.public}
+                    max={meetups.total}
+                  />
+                  <KpiProgressBar
+                    label={t('admin.dashboard.meetups.cfp-open')}
+                    value={meetups.cfpOpen}
+                    max={meetups.total}
+                  />
                 </StatisticCard.Content>
               </StatisticCard>
             )}
           </Await>
         </Suspense>
 
-        <Suspense fallback="Loading...">
+        <Suspense fallback={t('common.loading')}>
           <Await resolve={proposals}>
             {(proposals) => (
-              <StatisticCard label="Total proposals" stat={proposals.total}>
+              <StatisticCard label={t('admin.dashboard.proposals.label')} stat={proposals.total}>
                 <StatisticCard.Content className="space-y-3">
-                  <KpiProgressBar label="Submitted" value={proposals.submitted} max={proposals.total} />
+                  <KpiProgressBar
+                    label={t('admin.dashboard.proposals.submitted')}
+                    value={proposals.submitted}
+                    max={proposals.total}
+                  />
                 </StatisticCard.Content>
               </StatisticCard>
             )}

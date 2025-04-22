@@ -10,6 +10,7 @@ import {
 } from 'date-fns';
 
 // todo(i18n): use locale in date formatting
+// merge formatDate, formatTime, formatDatetime into one function ?
 
 type FormatType = 'short' | 'medium' | 'long';
 type FormatOption = { format: FormatType; locale: string };
@@ -17,7 +18,7 @@ type FormatOption = { format: FormatType; locale: string };
 const DATE_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
   short: { day: 'numeric', month: 'numeric', year: 'numeric' },
   medium: { day: 'numeric', month: 'short', year: 'numeric' },
-  long: { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' },
+  long: { day: 'numeric', month: 'long', year: 'numeric' },
 };
 
 // todo(tests)
@@ -45,6 +46,18 @@ export function formatTime(time: Date | number, options: FormatOption): string {
   }
   const { format, locale } = options;
   return new Intl.DateTimeFormat(locale, TIME_FORMATS[format]).format(time);
+}
+
+const DATETIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
+  short: { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false },
+  medium: { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric' },
+  long: { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric', timeZoneName: 'short' },
+};
+
+// todo(tests)
+export function formatDatetime(date: Date, options: FormatOption): string {
+  const { format, locale } = options;
+  return new Intl.DateTimeFormat(locale, DATETIME_FORMATS[format]).format(date);
 }
 
 // Format the difference between two dates to a string like '2h 10m'
