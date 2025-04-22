@@ -93,21 +93,21 @@ export default function PublicationRoute({ loaderData: statistics }: Route.Compo
             noDataHint={t('event-management.publication.deliberation-chart.empty')}
             data={[
               {
-                name: t('common.proposals-status.accepted'),
+                name: t('common.proposals.status.accepted'),
                 amount: statistics.deliberation.accepted,
                 colorChart: 'green',
                 colorLegend: 'bg-green-500',
                 to: '../reviews?status=accepted',
               },
               {
-                name: t('common.proposals-status.rejected'),
+                name: t('common.proposals.status.rejected'),
                 amount: statistics.deliberation.rejected,
                 colorChart: 'red',
                 colorLegend: 'bg-red-500',
                 to: '../reviews?status=rejected',
               },
               {
-                name: t('common.proposals-status.not-deliberated'),
+                name: t('common.proposals.status.pending'),
                 amount: statistics.deliberation.pending,
                 colorChart: 'blue',
                 colorLegend: 'bg-blue-500',
@@ -127,21 +127,21 @@ export default function PublicationRoute({ loaderData: statistics }: Route.Compo
             noDataHint={t('event-management.publication.confirmation-chart.empty')}
             data={[
               {
-                name: t('common.proposals-status.confirmed'),
+                name: t('common.proposals.status.confirmed'),
                 amount: statistics.confirmations.confirmed,
                 colorChart: 'green',
                 colorLegend: 'bg-green-500',
                 to: '../reviews?status=confirmed',
               },
               {
-                name: t('common.proposals-status.declined'),
+                name: t('common.proposals.status.declined'),
                 amount: statistics.confirmations.declined,
                 colorChart: 'red',
                 colorLegend: 'bg-red-500',
                 to: '../reviews?status=declined',
               },
               {
-                name: t('common.proposals-status.waiting-confirmation'),
+                name: t('common.proposals.status.not-answered'),
                 amount: statistics.confirmations.pending,
                 colorChart: 'blue',
                 colorLegend: 'bg-blue-500',

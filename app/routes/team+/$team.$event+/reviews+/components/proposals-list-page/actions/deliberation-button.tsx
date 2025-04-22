@@ -11,9 +11,9 @@ import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 const statuses = {
-  ACCEPTED: { i18nKey: 'common.accepted', icon: CheckIcon, color: 'text-green-600' },
-  PENDING: { i18nKey: 'common.not-deliberated', icon: QuestionMarkCircleIcon, color: 'text-gray-600' },
-  REJECTED: { i18nKey: 'common.rejected', icon: XMarkIcon, color: 'text-red-600' },
+  ACCEPTED: { i18nKey: 'common.proposals.status.accepted', icon: CheckIcon, color: 'text-green-600' },
+  PENDING: { i18nKey: 'common.proposals.status.pending', icon: QuestionMarkCircleIcon, color: 'text-gray-600' },
+  REJECTED: { i18nKey: 'common.proposals.status.rejected', icon: XMarkIcon, color: 'text-red-600' },
 } as const;
 
 type Props = {
