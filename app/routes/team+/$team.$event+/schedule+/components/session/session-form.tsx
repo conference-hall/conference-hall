@@ -12,6 +12,7 @@ import type { FormEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 
+import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import ColorPicker from '~/design-system/forms/color-picker.tsx';
@@ -48,6 +49,7 @@ export function SessionForm({
   onUpdateSession,
   onDeleteSession,
 }: Props) {
+  const { t } = useTranslation();
   const { team, event } = useParams();
 
   const [name, setName] = useState(session.name);
@@ -73,7 +75,7 @@ export function SessionForm({
       setError(null);
       onFinish();
     } else {
-      setError('This session overlaps with an existing session. Please choose a different time slot.');
+      setError(t('event-management.schedule.edit-session.errors.overlap'));
     }
   };
 
@@ -96,14 +98,14 @@ export function SessionForm({
             <div className="flex gap-2 shrink-0">
               <IconLink
                 icon={ArrowTopRightOnSquareIcon}
-                label="See proposal"
+                label={t('event-management.schedule.edit-session.proposal.see')}
                 to={`/team/${team}/${event}/reviews/${proposal?.id}`}
                 variant="secondary"
                 target="_blank"
               />
               <IconButton
                 icon={MagnifyingGlassIcon}
-                label="Search proposals"
+                label={t('event-management.schedule.edit-session.proposal.search')}
                 type="button"
                 onClick={onToggleSearch}
                 variant="secondary"
@@ -117,13 +119,13 @@ export function SessionForm({
               name="name"
               value={name ?? ''}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Session name"
-              aria-label="Session name"
+              placeholder={t('event-management.schedule.edit-session.name')}
+              aria-label={t('event-management.schedule.edit-session.name')}
               className="grow"
             />
             <IconButton
               icon={MagnifyingGlassIcon}
-              label="Search proposals"
+              label={t('event-management.schedule.edit-session.proposal.search')}
               type="button"
               onClick={onToggleSearch}
               variant="secondary"
@@ -156,7 +158,7 @@ export function SessionForm({
           <MapPinIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
           <SelectNative
             name="trackId"
-            label="Track"
+            label={t('common.track')}
             value={trackId}
             onChange={(e) => setTrackId(e.target.value)}
             options={tracks.map((t) => ({ name: t.name, value: t.id }))}
@@ -168,9 +170,9 @@ export function SessionForm({
           <LanguageIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
           <SelectNative
             name="language"
-            label="Language"
+            label={t('common.language')}
             value={language || ''}
-            placeholder="No language"
+            placeholder={t('common.no-language')}
             onChange={(e) => setLanguage(e.target.value)}
             options={LANGUAGES.map((lang) => ({ name: lang.label, value: lang.value }))}
             srOnly
@@ -179,7 +181,13 @@ export function SessionForm({
 
         <div className="flex items-center gap-7">
           <PaintBrushIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-          <ColorPicker label="Choose a label color" value={color} onChange={setColor} options={SESSION_COLORS} srOnly />
+          <ColorPicker
+            label={t('event-management.schedule.edit-session.color')}
+            value={color}
+            onChange={setColor}
+            options={SESSION_COLORS}
+            srOnly
+          />
         </div>
 
         <div className="flex items-center gap-7">
@@ -197,14 +205,14 @@ export function SessionForm({
       {/* Footer */}
       <div className="flex items-center justify-between gap-2 p-6">
         <Button variant="important" iconLeft={TrashIcon} onClick={handleDelete}>
-          Remove
+          {t('common.remove')}
         </Button>
         <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={onFinish}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button form="update-session-form" type="submit">
-            Save session
+            {t('event-management.schedule.edit-session.submit')}
           </Button>
         </div>
       </div>
