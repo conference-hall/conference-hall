@@ -1,7 +1,7 @@
 import type { EventType, Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { getDatesRange } from '~/libs/datetimes/datetimes.ts';
-import { toZonedTime } from '~/libs/datetimes/timezone.ts';
+import { utcToTimezone } from '~/libs/datetimes/timezone.ts';
 import {
   ApiKeyInvalidError,
   EventNotFoundError,
@@ -251,12 +251,12 @@ export class EventSchedule {
 
     return {
       name: schedule.name,
-      days: days.map((day) => toZonedTime(day, schedule.timezone).toISOString()),
+      days: days.map((day) => utcToTimezone(day, schedule.timezone).toISOString()),
       timeZone: schedule.timezone,
       sessions: sessions.map(({ proposal, track, ...session }) => ({
         id: session.id,
-        start: toZonedTime(session.start, schedule.timezone).toISOString(),
-        end: toZonedTime(session.end, schedule.timezone).toISOString(),
+        start: utcToTimezone(session.start, schedule.timezone).toISOString(),
+        end: utcToTimezone(session.end, schedule.timezone).toISOString(),
         track: track.name,
         title: proposal ? proposal.title : session.name,
         language: session.language || null,

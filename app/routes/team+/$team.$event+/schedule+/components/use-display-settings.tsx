@@ -2,7 +2,7 @@ import { isSameDay } from 'date-fns';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useFetcher, useParams } from 'react-router';
 import { getDatesRange } from '~/libs/datetimes/datetimes.ts';
-import { toZonedTime } from '~/libs/datetimes/timezone.ts';
+import { utcToTimezone } from '~/libs/datetimes/timezone.ts';
 
 type ScheduleSettings = {
   start: Date;
@@ -22,8 +22,8 @@ export function useDisplaySettings(settings: ScheduleSettings) {
   const { start, end, timezone, displayStartMinutes, displayEndMinutes } = settings;
 
   // compute schedule days
-  const startTz = toZonedTime(start, timezone);
-  const endTz = toZonedTime(end, timezone);
+  const startTz = utcToTimezone(start, timezone);
+  const endTz = utcToTimezone(end, timezone);
   const scheduleDays = getDatesRange(startTz, endTz);
   const displayedDays = scheduleDays.slice(displayedStart, (displayedEnd || displayedStart) + 1);
   const displayedTimes = { start: displayStartMinutes, end: displayEndMinutes };
