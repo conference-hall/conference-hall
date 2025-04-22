@@ -5,18 +5,15 @@ import { Link } from '~/design-system/links.tsx';
 
 type Props = { reviewEnabled: boolean; showActions: boolean };
 
-// todo(i18n)
-const STATUSES = {
-  enabled: { status: 'success', label: 'Reviews are enabled', subtitle: 'All team members can review proposals.' },
-  disabled: { status: 'disabled', label: 'Reviews are disabled', subtitle: 'No one can review the proposals.' },
-} as const;
-
 export function ReviewStatusCard({ reviewEnabled, showActions }: Props) {
   const { t } = useTranslation();
-  const props = STATUSES[reviewEnabled ? 'enabled' : 'disabled'];
+
+  const status = reviewEnabled ? 'success' : 'disabled';
+  const label = t(`event-management.overview.review.${status}.heading`);
+  const subtitle = t(`event-management.overview.review.${status}.description`);
 
   return (
-    <StatusCard {...props}>
+    <StatusCard status={status} label={label} subtitle={subtitle}>
       {showActions ? (
         <Link to="settings/review" iconRight={ArrowRightIcon} weight="medium">
           {t('common.change')}
