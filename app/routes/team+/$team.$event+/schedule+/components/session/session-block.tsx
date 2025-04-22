@@ -2,7 +2,7 @@ import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { formatTime, formatTimeDifference } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
-import { getFlag } from '~/libs/formatters/languages.ts';
+import type { Language } from '~/types/proposals.types.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 
@@ -97,8 +97,9 @@ function SessionEmojis({ emojis, size }: SessionEmojisProps) {
   });
 }
 
-type SessionLanguageProps = { language: string | null; size: Size };
+type SessionLanguageProps = { language: Language | null; size: Size };
 function SessionLanguage({ language, size }: SessionLanguageProps) {
+  const { t } = useTranslation();
   if (!language) return null;
   return (
     <p
@@ -107,7 +108,7 @@ function SessionLanguage({ language, size }: SessionLanguageProps) {
         'text-xs': size === 'lg' || size === 'xl',
       })}
     >
-      {getFlag(language)}
+      {t(`common.languages.${language}.flag`)}
     </p>
   );
 }

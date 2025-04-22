@@ -1,5 +1,5 @@
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
-import type { ConfirmationStatus, DeliberationStatus } from '~/types/proposals.types.ts';
+import type { ConfirmationStatus, DeliberationStatus, Language } from '~/types/proposals.types.ts';
 
 export type Track = { id: string; name: string };
 
@@ -8,7 +8,7 @@ export type ScheduleSession = {
   trackId: string;
   timeslot: TimeSlot;
   name?: string | null;
-  language: string | null;
+  language: Language | null;
   color: string;
   emojis: string[];
   proposal?: ScheduleProposalData | null;
@@ -20,7 +20,7 @@ export type SessionData = {
   start: Date;
   end: Date;
   name?: string | null;
-  language: string | null;
+  language: Language | null;
   color: string;
   emojis: string[];
   proposal?: ScheduleProposalData | null;
