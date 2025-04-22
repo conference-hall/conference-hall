@@ -1,19 +1,16 @@
 import { endOfDay, parse, startOfDay } from 'date-fns';
-import { format as formatZT, fromZonedTime as fromZT, toZonedTime as toZT } from 'date-fns-tz';
-
-// TODO: Add missing tests
-// TODO: Move all usages of `date-fns-tz` in this file
+import { format as formatZT, fromZonedTime, toZonedTime } from 'date-fns-tz';
 
 // todo(i18n): use locale in date formatting
 
 // todo(tests)
-export function toZonedTime(date: Date | string, timezone: string) {
-  return toZT(date, timezone);
+export function utcToTimezone(date: Date | string, timezone: string) {
+  return toZonedTime(date, timezone);
 }
 
 // todo(tests)
-export function fromZonedTime(date: Date | string, timezone: string) {
-  return fromZT(date, timezone);
+export function timezoneToUtc(date: Date | string, timezone: string) {
+  return fromZonedTime(date, timezone);
 }
 
 // todo(tests)
@@ -21,12 +18,17 @@ export function formatInTimeZone(date: Date, format: string, timezone: string) {
   return formatZT(date, format, { timeZone: timezone });
 }
 
-// Get user timezone
+/** Convert a timezoned date to UTC and format it to ISO format */
+export function formatTimezoneToUtc(date: Date, timezone: string) {
+  return timezoneToUtc(date, timezone).toISOString();
+}
+
+/** Get user timezone */
 export function getUserTimezone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
-// List all timzones
+/** List all timezones */
 export function getTimezonesList() {
   const timezones = Intl.supportedValuesOf('timeZone');
 
@@ -50,7 +52,7 @@ export function getTimezonesList() {
     };
   });
 
-  // Sort timezoneObjects
+  // Sort timezones by offset and name
   return timezoneObjects
     .sort((a, b) => {
       if (a.offset !== b.offset) {
@@ -64,7 +66,7 @@ export function getTimezonesList() {
     .map(({ id, name }) => ({ id, name }));
 }
 
-// Get GMT offset from a timezone
+/** Get GMT offset from a timezone */
 export function getGMTOffset(timezone: string) {
   const date = new Date();
   const formatter = new Intl.DateTimeFormat('en-US', { timeZone: timezone, timeZoneName: 'short' });
@@ -76,7 +78,7 @@ export function getGMTOffset(timezone: string) {
   return gmtOffsetPart.value.replace('UTC', 'GMT');
 }
 
-// Function to parse offset string to number
+/** Parse offset string to number */
 function parseOffset(offset?: string) {
   if (offset === undefined) return -1000;
   const [hours, minutes] = offset.replace('GMT', '').split(':');
@@ -84,17 +86,16 @@ function parseOffset(offset?: string) {
   return parsedOffset;
 }
 
-// Parse a string date from a timezone and convert it to start of the day and UTC
-export function parseToUtcStartOfDay(date: string, timezone: string, format = 'yyyy-MM-dd') {
-  return fromZonedTime(startOfDay(parse(date, format, toZonedTime(new Date(), timezone))), timezone);
+/** Parse a string date from a timezone and convert it to start of the day and UTC */
+export function parseToUtcStartOfDay(date: string, timezone: string) {
+  const refDate = utcToTimezone(new Date(), timezone);
+  const parsedDate = parse(date, 'yyyy-MM-dd', refDate);
+  return timezoneToUtc(startOfDay(parsedDate), timezone);
 }
 
-// Parse a string date from a timezone and convert it to end of the day and UTC
-export function parseToUtcEndOfDay(date: string, timezone: string, format = 'yyyy-MM-dd') {
-  return fromZonedTime(endOfDay(parse(date, format, toZonedTime(new Date(), timezone))), timezone);
-}
-
-// Convert a timezoned date to UTC and format it to ISO format
-export function formatZonedTimeToUtc(date: Date, timezone: string) {
-  return fromZonedTime(date, timezone).toISOString();
+/** Parse a string date from a timezone and convert it to end of the day and UTC */
+export function parseToUtcEndOfDay(date: string, timezone: string) {
+  const refDate = utcToTimezone(new Date(), timezone);
+  const parsedDate = parse(date, 'yyyy-MM-dd', refDate);
+  return timezoneToUtc(endOfDay(parsedDate), timezone);
 }

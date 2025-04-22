@@ -1,12 +1,12 @@
 import { formatDistanceToNow, isSameDay } from 'date-fns';
 import type { CfpState } from '~/types/events.types.ts';
-import { formatInTimeZone, toZonedTime } from '../datetimes/timezone.ts';
+import { formatInTimeZone, utcToTimezone } from '../datetimes/timezone.ts';
 
 // todo(i18n): manage cfp translations
 
 export function formatConferenceDates(timezone: string, start: Date, end: Date) {
-  const startDate = toZonedTime(start, timezone);
-  const endDate = toZonedTime(end, timezone);
+  const startDate = utcToTimezone(start, timezone);
+  const endDate = utcToTimezone(end, timezone);
 
   if (isSameDay(startDate, endDate)) {
     return formatInTimeZone(startDate, 'PPP (z)', timezone);
@@ -55,8 +55,8 @@ export function formatCFPDate(
   format = 'PPPPp (z)',
 ) {
   if (!start || !end) return undefined;
-  const startDate = toZonedTime(start, timezone);
-  const endDate = toZonedTime(end, timezone);
+  const startDate = utcToTimezone(start, timezone);
+  const endDate = utcToTimezone(end, timezone);
 
   switch (state) {
     case 'CLOSED':

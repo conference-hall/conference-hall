@@ -23,8 +23,8 @@ export const EventDetailsSettingsSchema = z
   .transform(({ conferenceStart, conferenceEnd, timezone, ...rest }) => ({
     ...rest,
     timezone,
-    conferenceStart: conferenceStart ? parseToUtcStartOfDay(conferenceStart, timezone, 'yyyy-MM-dd') : null,
-    conferenceEnd: conferenceEnd ? parseToUtcEndOfDay(conferenceEnd, timezone, 'yyyy-MM-dd') : null,
+    conferenceStart: conferenceStart ? parseToUtcStartOfDay(conferenceStart, timezone) : null,
+    conferenceEnd: conferenceEnd ? parseToUtcEndOfDay(conferenceEnd, timezone) : null,
   }))
   .refine(
     ({ conferenceStart, conferenceEnd }) => {
@@ -54,8 +54,8 @@ export const CfpConferenceOpeningSchema = z
   .transform(({ cfpStart, cfpEnd, timezone, ...rest }) => ({
     ...rest,
     timezone,
-    cfpStart: cfpStart ? parseToUtcStartOfDay(cfpStart, timezone, 'yyyy-MM-dd') : null,
-    cfpEnd: cfpEnd ? parseToUtcEndOfDay(cfpEnd, timezone, 'yyyy-MM-dd') : null,
+    cfpStart: cfpStart ? parseToUtcStartOfDay(cfpStart, timezone) : null,
+    cfpEnd: cfpEnd ? parseToUtcEndOfDay(cfpEnd, timezone) : null,
   }))
   .refine(
     ({ cfpStart, cfpEnd }) => {
