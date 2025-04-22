@@ -1,19 +1,19 @@
 import { formatDistanceToNow, isSameDay } from 'date-fns';
-import { format as formatInTimeZone, toZonedTime } from 'date-fns-tz';
 import type { CfpState } from '~/types/events.types.ts';
+import { formatInTimeZone, toZonedTime } from '../datetimes/timezone.ts';
 
 // todo(i18n): manage cfp translations
 
-export function formatConferenceDates(timeZone: string, start: Date, end: Date) {
-  const startDate = toZonedTime(start, timeZone);
-  const endDate = toZonedTime(end, timeZone);
+export function formatConferenceDates(timezone: string, start: Date, end: Date) {
+  const startDate = toZonedTime(start, timezone);
+  const endDate = toZonedTime(end, timezone);
 
   if (isSameDay(startDate, endDate)) {
-    return formatInTimeZone(startDate, 'PPP (z)', { timeZone });
+    return formatInTimeZone(startDate, 'PPP (z)', timezone);
   }
 
-  const startFormatted = formatInTimeZone(startDate, 'MMMM do', { timeZone });
-  const endFormatted = formatInTimeZone(endDate, 'PPP (z)', { timeZone });
+  const startFormatted = formatInTimeZone(startDate, 'MMMM do', timezone);
+  const endFormatted = formatInTimeZone(endDate, 'PPP (z)', timezone);
   return `${startFormatted} to ${endFormatted}`;
 }
 
@@ -49,22 +49,22 @@ export function formatCFPElapsedTime(state: CfpState, start: Date | null, end: D
 
 export function formatCFPDate(
   state: CfpState,
-  timeZone: string,
+  timezone: string,
   start: Date | null,
   end: Date | null,
   format = 'PPPPp (z)',
 ) {
   if (!start || !end) return undefined;
-  const startDate = toZonedTime(start, timeZone);
-  const endDate = toZonedTime(end, timeZone);
+  const startDate = toZonedTime(start, timezone);
+  const endDate = toZonedTime(end, timezone);
 
   switch (state) {
     case 'CLOSED':
-      return `Open on ${formatInTimeZone(startDate, format, { timeZone })}`;
+      return `Open on ${formatInTimeZone(startDate, format, timezone)}`;
     case 'OPENED':
-      return `Open until ${formatInTimeZone(endDate, format, { timeZone })}`;
+      return `Open until ${formatInTimeZone(endDate, format, timezone)}`;
     case 'FINISHED':
-      return `Closed since ${formatInTimeZone(endDate, format, { timeZone })}`;
+      return `Closed since ${formatInTimeZone(endDate, format, timezone)}`;
   }
 }
 

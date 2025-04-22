@@ -15,6 +15,7 @@ import { EventForm } from '~/routes/components/events/event-form.tsx';
 import { DeleteModalButton } from '~/routes/components/modals/delete-modal.tsx';
 import type { Route } from './+types/index.ts';
 
+// todo(i18n): translate event settings
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);
   return null;

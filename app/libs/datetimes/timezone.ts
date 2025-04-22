@@ -1,10 +1,25 @@
 import { endOfDay, parse, startOfDay } from 'date-fns';
-import { fromZonedTime, toZonedTime } from 'date-fns-tz';
+import { format as formatZT, fromZonedTime as fromZT, toZonedTime as toZT } from 'date-fns-tz';
 
 // TODO: Add missing tests
 // TODO: Move all usages of `date-fns-tz` in this file
 
 // todo(i18n): use locale in date formatting
+
+// todo(tests)
+export function toZonedTime(date: Date | string, timezone: string) {
+  return toZT(date, timezone);
+}
+
+// todo(tests)
+export function fromZonedTime(date: Date | string, timezone: string) {
+  return fromZT(date, timezone);
+}
+
+// todo(tests)
+export function formatInTimeZone(date: Date, format: string, timezone: string) {
+  return formatZT(date, format, { timeZone: timezone });
+}
 
 // Get user timezone
 export function getUserTimezone() {
