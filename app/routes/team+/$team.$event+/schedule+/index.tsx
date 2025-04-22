@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
 import { Form } from 'react-router';
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
@@ -39,23 +40,23 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   return redirect(`/team/${params.team}/${params.event}/schedule`);
 };
 
-// todo(i18n): translate schedule
 export default function ScheduleRoute({ loaderData: schedule, actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   return (
     <Page>
       <Card as="section">
         <Card.Title>
-          <H2>New schedule</H2>
-          <Subtitle>Create a schedule to plan your conference sessions.</Subtitle>
+          <H2>{t('event-management.schedule.new.heading')}</H2>
+          <Subtitle>{t('event-management.schedule.description')}</Subtitle>
         </Card.Title>
 
         <Card.Content>
           <Form id="create-schedule-form" method="POST" className="space-y-4 lg:space-y-6">
-            <Input name="name" label="Name" defaultValue={schedule.name} required error={errors?.name} />
-            <InputTimezone name="timezone" label="Timezone" defaultValue={schedule.timezone} />
+            <Input name="name" label={t('common.name')} defaultValue={schedule.name} required error={errors?.name} />
+            <InputTimezone name="timezone" label={t('common.timezone')} defaultValue={schedule.timezone} />
             <DateRangeInput
-              start={{ name: 'start', label: 'Start date', value: schedule.start }}
-              end={{ name: 'end', label: 'End date', value: schedule.end }}
+              start={{ name: 'start', label: t('common.start-date'), value: schedule.start }}
+              end={{ name: 'end', label: t('common.end-date'), value: schedule.end }}
               timezone={schedule.timezone}
               error={errors?.start}
             />
@@ -63,7 +64,7 @@ export default function ScheduleRoute({ loaderData: schedule, actionData: errors
         </Card.Content>
         <Card.Actions>
           <Button type="submit" form="create-schedule-form">
-            New schedule
+            {t('event-management.schedule.new.submit')}
           </Button>
         </Card.Actions>
       </Card>

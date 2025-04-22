@@ -2,6 +2,7 @@ import { parseWithZod } from '@conform-to/zod';
 import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import {
@@ -14,6 +15,7 @@ import {
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import type { Route } from './+types/$day.ts';
 import { ScheduleHeader } from './components/header/schedule-header.tsx';
@@ -37,6 +39,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
+  const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
   const form = await request.formData();
@@ -45,31 +48,31 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   switch (intent) {
     case 'add-session': {
       const result = parseWithZod(form, { schema: ScheduleSessionCreateSchema });
-      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+      if (result.status !== 'success') return toast('error', t('error.global'));
       await eventSchedule.addSession(result.value);
       break;
     }
     case 'update-session': {
       const result = parseWithZod(form, { schema: ScheduleSessionUpdateSchema });
-      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+      if (result.status !== 'success') return toast('error', t('error.global'));
       await eventSchedule.updateSession(result.value);
       break;
     }
     case 'delete-session': {
       const result = SchedulSessionIdSchema.safeParse(form.get('id'));
-      if (!result.success) return toast('error', 'Something went wrong.');
+      if (!result.success) return toast('error', t('error.global'));
       await eventSchedule.deleteSession(result.data);
       break;
     }
     case 'update-display-times': {
       const result = parseWithZod(form, { schema: ScheduleDisplayTimesUpdateSchema });
-      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+      if (result.status !== 'success') return toast('error', t('error.global'));
       await eventSchedule.update(result.value);
       break;
     }
     case 'save-tracks': {
       const result = parseWithZod(form, { schema: ScheduleTracksSaveSchema });
-      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+      if (result.status !== 'success') return toast('error', t('error.global'));
       await eventSchedule.saveTracks(result.value.tracks);
       break;
     }
@@ -82,6 +85,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const sessions = useSessions(schedule.sessions, schedule.timezone);
   const settings = useDisplaySettings(schedule);
   const { isFullscreen } = useScheduleFullscreen();
@@ -92,9 +96,9 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
   if (settings.displayedDays.length === 0) {
     return (
       <main className="px-8 my-8 mx-auto max-w-7xl">
-        <EmptyState icon={CalendarDaysIcon} label="No schedule found for the day">
+        <EmptyState icon={CalendarDaysIcon} label={t('event-management.schedule.empty')}>
           <ButtonLink to=".." relative="path">
-            Go to schedule
+            {t('event-management.schedule.go-to')}
           </ButtonLink>
         </EmptyState>
       </main>

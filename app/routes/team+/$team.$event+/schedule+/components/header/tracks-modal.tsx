@@ -2,6 +2,7 @@ import { PlusIcon } from '@heroicons/react/20/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import slugify from '@sindresorhus/slugify';
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
@@ -15,6 +16,7 @@ type TracksModalProps = {
 };
 
 export function TracksModal({ initialValues, open, onClose }: TracksModalProps) {
+  const { t } = useTranslation();
   const [tracks, setTracks] = useState(initialValues);
   const [newTrackLabel, setNewTrackLabel] = useState('');
   const newInputRef = useRef<HTMLInputElement>(null);
@@ -37,9 +39,9 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
   };
 
   return (
-    <Modal title="Schedule tracks configuration" size="l" open={open} onClose={onClose}>
+    <Modal title={t('event-management.schedule.tracks.heading')} size="l" open={open} onClose={onClose}>
       <Modal.Content className="space-y-4">
-        <Text>Manage your schedule tracks by adding, editing, or removing items such as rooms or themes.</Text>
+        <Text>{t('event-management.schedule.tracks.description')}</Text>
 
         <Form id="save-tracks" method="POST" onSubmit={onClose} className="space-y-4">
           {tracks.map((track, index) => (
@@ -47,7 +49,7 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
               <input type="hidden" name={`tracks[${index}].id`} value={track.id} />
               <Input
                 name={`tracks[${index}].name`}
-                aria-label={`Track ${index + 1}`}
+                aria-label={t('event-management.schedule.tracks.edit-label', { name: index + 1 })}
                 defaultValue={track.name}
                 className="w-full"
                 onChange={(event) => handleUpdate(index, event.target.value)}
@@ -55,7 +57,7 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
               />
               <Button
                 type="button"
-                aria-label={`Remove track: ${track.name}`}
+                aria-label={t('event-management.schedule.tracks.remove-label', { name: track.name })}
                 variant="important"
                 size="square-m"
                 onClick={() => handleRemove(index)}
@@ -70,8 +72,8 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
         <div className="flex gap-2">
           <Input
             ref={newInputRef}
-            aria-label="New track"
-            placeholder="New track"
+            aria-label={t('event-management.schedule.tracks.new')}
+            placeholder={t('event-management.schedule.tracks.new')}
             value={newTrackLabel}
             onChange={(event) => setNewTrackLabel(event.target.value)}
             onKeyUp={(event) => event.key === 'Enter' && handleAdd()}
@@ -81,7 +83,7 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
           <Button
             type="button"
             variant="secondary"
-            aria-label="Add track"
+            aria-label={t('event-management.schedule.tracks.add')}
             disabled={!newTrackLabel}
             size="square-m"
             onClick={handleAdd}
@@ -93,10 +95,10 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
 
       <Modal.Actions>
         <Button type="button" variant="secondary" onClick={onClose}>
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button type="submit" name="intent" value="save-tracks" form="save-tracks">
-          Save
+          {t('common.save')}
         </Button>
       </Modal.Actions>
     </Modal>
