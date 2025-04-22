@@ -7,7 +7,10 @@ import { button } from '~/design-system/buttons.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
-import { sortByCommentsOptions, sortByDatesOptions, sortByReviewsOptions } from './filters.ts';
+
+const sortByDatesOptions = ['newest', 'oldest'] as const;
+const sortByReviewsOptions = ['highest', 'lowest'] as const;
+const sortByCommentsOptions = ['most-comments', 'fewest-comments'] as const;
 
 export function SortMenu() {
   const { t } = useTranslation();
@@ -31,7 +34,7 @@ export function SortMenu() {
 
       <MenuTransition>
         <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()}>
-          {options.map(({ name, value }) => {
+          {options.map((value) => {
             const selected = value === sort;
             const search = new URLSearchParams({ ...filters, sort: value });
 
@@ -42,7 +45,7 @@ export function SortMenu() {
                 to={{ pathname: location.pathname, search: search.toString() }}
                 className={cx('flex items-center justify-between', menuItem(), { 'font-semibold': selected })}
               >
-                {name}
+                {t(`common.sort.${value}`)}
                 {selected ? <CheckIcon className={menuItemIcon()} aria-hidden="true" /> : null}
               </MenuItem>
             );

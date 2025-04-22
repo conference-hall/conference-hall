@@ -22,10 +22,10 @@ function ConfirmationLabel({ confirmationStatus }: Props) {
   const { t } = useTranslation();
 
   if (confirmationStatus === 'PENDING') {
-    return <BadgeDot color="blue">{t('common.proposals-status.waiting-confirmation')}</BadgeDot>;
+    return <BadgeDot color="blue">{t('common.proposals.status.not-answered')}</BadgeDot>;
   } else if (confirmationStatus === 'CONFIRMED') {
-    return <BadgeDot color="green">{t('common.proposals-status.confirmed')}</BadgeDot>;
+    return <BadgeDot color="green">{t('common.proposals.status.confirmed')}</BadgeDot>;
   } else if (confirmationStatus === 'DECLINED') {
-    return <BadgeDot color="red">{t('common.proposals-status.declined')}</BadgeDot>;
+    return <BadgeDot color="red">{t('common.proposals.status.declined')}</BadgeDot>;
   }
 }

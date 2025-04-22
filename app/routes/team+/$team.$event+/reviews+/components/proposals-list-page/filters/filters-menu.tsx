@@ -9,7 +9,9 @@ import { Background } from '~/design-system/transitions.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import { reviewOptions, statusOptions } from './filters.ts';
+
+export const reviewOptions = ['reviewed', 'not-reviewed', 'my-favorites'] as const;
+export const statusOptions = ['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined'] as const;
 
 export function FiltersMenu() {
   const { t } = useTranslation();
@@ -71,7 +73,10 @@ function FiltersContent({ close }: FiltersContentProps) {
         label={t('common.reviews')}
         name="reviews"
         defaultValue={params.get('reviews')}
-        options={reviewOptions}
+        options={reviewOptions.map((value) => ({
+          value,
+          name: t(`common.review.status.${value}`),
+        }))}
         className="px-4 py-3"
       />
 
@@ -80,7 +85,10 @@ function FiltersContent({ close }: FiltersContentProps) {
           label={t('common.proposals')}
           name="status"
           defaultValue={params.get('status')}
-          options={statusOptions}
+          options={statusOptions.map((value) => ({
+            value,
+            name: t(`common.proposals.status.${value}`),
+          }))}
           className="px-4 py-3"
         />
       )}

@@ -5,7 +5,6 @@ import { Text } from '~/design-system/typography.tsx';
 
 import { useTranslation } from 'react-i18next';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
-import { reviewOptions, statusOptions } from './filters.ts';
 
 type FiltersBadgesProps = { filters: ProposalsFilters };
 
@@ -25,8 +24,8 @@ export function FiltersTags({ filters }: FiltersBadgesProps) {
         {t('event-management.proposals.filters.badges')}
       </Text>
       <FilterTag name="query" value={filters.query} />
-      <FilterTag name="reviews" value={reviewOptions.find((review) => review.value === filters.reviews)?.name} />
-      <FilterTag name="status" value={statusOptions.find((status) => status.value === filters.status)?.name} />
+      <FilterTag name="reviews" value={filters.reviews ? t(`common.review.status.${filters.reviews}`) : undefined} />
+      <FilterTag name="status" value={filters.status ? t(`common.proposals.status.${filters.status}`) : undefined} />
       <FilterTag name="formats" value={formats.find((format) => format.id === filters.formats)?.name} />
       <FilterTag name="categories" value={categories.find((category) => category.id === filters.categories)?.name} />
       <FilterTag name="tags" value={tags.find((tag) => tag.id === filters.tags)?.name} />

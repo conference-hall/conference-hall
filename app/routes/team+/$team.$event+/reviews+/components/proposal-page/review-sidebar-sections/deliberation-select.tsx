@@ -20,11 +20,11 @@ export function DeliberationSelect({ deliberationStatus, publicationStatus }: Pr
   };
 
   const options = [
-    { id: 'ACCEPTED', name: t('common.accepted'), icon: CheckIcon, iconClassname: 'text-green-600' },
-    { id: 'REJECTED', name: t('common.rejected'), icon: XMarkIcon, iconClassname: 'text-red-600' },
+    { id: 'ACCEPTED', name: t('common.proposals.status.accepted'), icon: CheckIcon, iconClassname: 'text-green-600' },
+    { id: 'REJECTED', name: t('common.proposals.status.rejected'), icon: XMarkIcon, iconClassname: 'text-red-600' },
     {
       id: 'PENDING',
-      name: t('common.not-deliberated'),
+      name: t('common.proposals.status.pending'),
       icon: QuestionMarkCircleIcon,
       iconClassname: 'text-gray-600',
     },
