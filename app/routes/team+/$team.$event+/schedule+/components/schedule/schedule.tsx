@@ -14,7 +14,8 @@ import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
 import { addMinutes, format, isAfter, isBefore } from 'date-fns';
-import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
+import { useTranslation } from 'react-i18next';
+import { formatTime } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import {
   countIntervalsInTimeSlot,
@@ -140,6 +141,9 @@ function ScheduleDay({
   zoomLevel,
   displayMultipleDays,
 }: ScheduleDayProps) {
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
+
   const startTime = addMinutes(day, displayedTimes.start);
   const endTime = addMinutes(day, displayedTimes.end);
   const hours = getDailyTimeSlots(startTime, endTime, HOUR_INTERVAL, true);
@@ -183,8 +187,8 @@ function ScheduleDay({
 
           {/* rows by hours */}
           {hours.map((hour) => {
-            const startHour = toTimeFormat(hour.start);
-            const endHour = toTimeFormat(hour.end);
+            const startHour = formatTime(hour.start, { format: 'short', locale });
+            const endHour = formatTime(hour.end, { format: 'short', locale });
             const hourSlots = getDailyTimeSlots(hour.start, hour.end, SLOT_INTERVAL);
 
             return (
@@ -204,7 +208,7 @@ function ScheduleDay({
                     {hourSlots.map((timeslot, index) => {
                       return (
                         <Timeslot
-                          key={toTimeFormat(timeslot.start)}
+                          key={formatTime(timeslot.start, { format: 'short', locale })}
                           trackId={track.id}
                           timeslot={timeslot}
                           sessions={sessions}
@@ -248,6 +252,9 @@ function Timeslot({
   onSelectSession,
   renderSession,
 }: TimeslotProps) {
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
+
   // global dnd context
   const { active } = useDndContext();
 
@@ -279,7 +286,7 @@ function Timeslot({
       ref={setNodeRef}
       role="button"
       tabIndex={0}
-      aria-label={`Timeslot ${toTimeFormat(timeslot.start)}`}
+      aria-label={`Timeslot ${formatTime(timeslot.start, { format: 'short', locale })}`}
       onMouseDown={!hasSession ? selector.onSelectStart(trackId, timeslot) : undefined}
       onMouseEnter={!hasSession ? selector.onSelectHover(trackId, timeslot) : undefined}
       onMouseUp={selector.onSelect}
@@ -293,7 +300,7 @@ function Timeslot({
       })}
     >
       {/* invisible span to have content for the table */}
-      <span className="invisible">{`Timeslot ${toTimeFormat(timeslot.start)}`}</span>
+      <span className="invisible">{`Timeslot ${formatTime(timeslot.start, { format: 'short', locale })}`}</span>
       {session ? (
         // displayed session block
         <SessionWrapper

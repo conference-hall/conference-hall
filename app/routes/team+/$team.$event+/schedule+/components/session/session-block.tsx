@@ -1,5 +1,6 @@
 import { cx } from 'class-variance-authority';
-import { formatTimeDifference, toTimeFormat } from '~/libs/datetimes/datetimes.ts';
+import { useTranslation } from 'react-i18next';
+import { formatTime, formatTimeDifference } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import { getFlag } from '~/libs/formatters/languages.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
@@ -58,8 +59,11 @@ function SessionSpeakers({ speakers, size }: SessionSpeakersProps) {
 
 type SessionTimeProps = { timeslot: TimeSlot; size: Size };
 function SessionTime({ timeslot, size }: SessionTimeProps) {
-  const start = toTimeFormat(timeslot.start);
-  const end = toTimeFormat(timeslot.end);
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
+
+  const start = formatTime(timeslot.start, { format: 'short', locale });
+  const end = formatTime(timeslot.end, { format: 'short', locale });
   const minutes = formatTimeDifference(timeslot.start, timeslot.end);
 
   return (

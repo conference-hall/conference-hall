@@ -2,7 +2,6 @@ import {
   addDays,
   addMinutes,
   differenceInMinutes,
-  format as formatDFNS,
   formatDuration,
   intervalToDuration,
   intlFormatDistance,
@@ -18,7 +17,7 @@ type FormatOption = { format: FormatType; locale: string };
 const DATE_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
   short: { day: 'numeric', month: 'numeric', year: 'numeric' },
   medium: { day: 'numeric', month: 'short', year: 'numeric' },
-  long: { day: 'numeric', month: 'long', year: 'numeric' },
+  long: { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' },
 };
 
 // todo(tests)
@@ -33,12 +32,19 @@ export function formatDistanceFromNow(date: Date, locale: string): string {
   return intlFormatDistance(date, now, { locale });
 }
 
-// Format a date or number in minutes to a time HH:mm
-export function toTimeFormat(time: Date | number): string {
+const TIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
+  short: { hour: '2-digit', minute: '2-digit', hour12: false },
+  medium: { hour: 'numeric', minute: 'numeric' },
+  long: { hour: 'numeric', minute: 'numeric', timeZoneName: 'short' },
+};
+
+// todo(tests)
+export function formatTime(time: Date | number, options: FormatOption): string {
   if (typeof time === 'number') {
     time = setMinutes(startOfDay(new Date()), time);
   }
-  return formatDFNS(time, 'HH:mm');
+  const { format, locale } = options;
+  return new Intl.DateTimeFormat(locale, TIME_FORMATS[format]).format(time);
 }
 
 // Format the difference between two dates to a string like '2h 10m'
@@ -73,7 +79,7 @@ export function setMinutesFromStartOfDay(date: Date, minutes: number): Date {
   return addMinutes(startOfDay(date), minutes);
 }
 
-// Get an array of dates between two dates, inclusive
+// Get an array of days between two dates, inclusive
 export function getDatesRange(startDate: Date, endDate: Date) {
   const dates = [];
   let currentDate = startDate;
