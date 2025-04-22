@@ -115,7 +115,7 @@ test('displays proposal data and review the proposal', async ({ page }) => {
 
   // Review proposal
   await expect(page.getByLabel('Review: 3 (Score)')).toBeVisible();
-  await page.getByRole('radio', { name: 'Love it, 5 stars' }).click();
+  await page.getByRole('radio', { name: 'Love it' }).click();
   await expect(page.getByLabel('Review: 4 (Score)')).toBeVisible();
 
   // Check activity feed
