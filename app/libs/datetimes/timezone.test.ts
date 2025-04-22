@@ -1,5 +1,5 @@
 import {
-  formatZonedTimeToUtc,
+  formatTimezoneToUtc,
   getGMTOffset,
   getTimezonesList,
   parseToUtcEndOfDay,
@@ -14,6 +14,13 @@ describe('timezone', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  describe('#formatTimezoneToUtc', () => {
+    it('converts a timezoned date to UTC and format it to ISO format', async () => {
+      const utc = formatTimezoneToUtc(new Date('2024-01-01T00:00:00.000Z'), 'Europe/Paris');
+      expect(utc).toBe('2023-12-31T23:00:00.000Z');
+    });
   });
 
   describe('#getTimezonesList', () => {
@@ -49,13 +56,6 @@ describe('timezone', () => {
     it('parses a string date from a timezone and convert it to end of the day and UTC', async () => {
       const utcEndOfDay = parseToUtcEndOfDay('2024-01-01', 'Europe/Paris');
       expect(utcEndOfDay.toISOString()).toBe('2024-01-01T22:59:59.999Z');
-    });
-  });
-
-  describe('#formatZonedTimeToUtc', () => {
-    it('converts a timezoned date to UTC and format it to ISO format', async () => {
-      const utc = formatZonedTimeToUtc(new Date('2024-01-01T00:00:00.000Z'), 'Europe/Paris');
-      expect(utc).toBe('2023-12-31T23:00:00.000Z');
     });
   });
 });
