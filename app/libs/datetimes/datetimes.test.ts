@@ -1,9 +1,9 @@
 import {
+  formatTime,
   formatTimeDifference,
   getDatesRange,
   getMinutesFromStartOfDay,
   setMinutesFromStartOfDay,
-  toTimeFormat,
 } from './datetimes.ts';
 
 describe('datetimes', () => {
@@ -21,14 +21,14 @@ describe('datetimes', () => {
     });
   });
 
-  describe('#toTimeFormat', () => {
+  describe('#formatTime', () => {
     it('format a date to a time HH:mm', async () => {
-      const formatted = toTimeFormat(new Date('2020-02-26T01:10:00.000Z'));
+      const formatted = formatTime(new Date('2020-02-26T01:10:00.000Z'), { format: 'short', locale: 'en' });
       expect(formatted).toBe('01:10');
     });
 
     it('format a number in minutes to a time HH:mm', async () => {
-      const formatted = toTimeFormat(120);
+      const formatted = formatTime(120, { format: 'short', locale: 'en' });
       expect(formatted).toBe('02:00');
     });
   });
