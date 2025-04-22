@@ -12,6 +12,12 @@ import {
 // todo(i18n): use locale in date formatting
 // merge formatDate, formatTime, formatDatetime into one function ?
 
+// todo(tests)
+export function toISODate(date?: Date | null) {
+  if (!date) return undefined;
+  return date.toISOString().split('T')[0];
+}
+
 type FormatType = 'short' | 'medium' | 'long';
 type FormatOption = { format: FormatType; locale: string };
 

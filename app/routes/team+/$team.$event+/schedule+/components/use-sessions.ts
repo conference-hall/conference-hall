@@ -1,11 +1,8 @@
-import { toZonedTime } from 'date-fns-tz';
 import { useFetchers, useSubmit } from 'react-router';
 import { v4 as uuid } from 'uuid';
-
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import { areTimeSlotsOverlapping } from '~/libs/datetimes/timeslots.ts';
-import { formatZonedTimeToUtc } from '~/libs/datetimes/timezone.ts';
-
+import { formatZonedTimeToUtc, toZonedTime } from '~/libs/datetimes/timezone.ts';
 import type { Language } from '~/types/proposals.types.ts';
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
 

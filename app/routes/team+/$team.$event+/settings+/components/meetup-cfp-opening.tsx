@@ -1,9 +1,8 @@
-import { format } from 'date-fns';
-import { fromZonedTime } from 'date-fns-tz';
 import { Form, useFetcher } from 'react-router';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
+import { formatZonedTimeToUtc } from '~/libs/datetimes/timezone.ts';
 import type { action } from '../cfp.tsx';
 
 type Props = { cfpStart: Date | null; timezone: string };
@@ -15,7 +14,7 @@ export function MeetupCfpOpening({ cfpStart, timezone }: Props) {
     fetcher.submit(
       {
         intent: 'save-cfp-meetup-opening',
-        cfpStart: checked ? format(fromZonedTime(new Date(), timezone), 'yyyy-MM-dd') : '',
+        cfpStart: checked ? formatZonedTimeToUtc(new Date(), timezone) : '',
       },
       { method: 'POST' },
     );
