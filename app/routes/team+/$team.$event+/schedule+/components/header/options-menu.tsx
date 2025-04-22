@@ -9,6 +9,7 @@ import {
   TrashIcon,
   ViewColumnsIcon,
 } from '@heroicons/react/16/solid';
+import { useTranslation } from 'react-i18next';
 import { useParams, useSubmit } from 'react-router';
 import { button } from '~/design-system/buttons.tsx';
 import { menuItem, menuItemIcon, menuItems, menuSection, menuSeparator } from '~/design-system/styles/menu.styles.ts';
@@ -19,6 +20,7 @@ import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 type Props = { openTracksModal: VoidFunction; zoomHandlers: ZoomHandlers };
 
 export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
+  const { t } = useTranslation();
   const submit = useSubmit();
   const params = useParams();
 
@@ -26,7 +28,7 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
   const FullscreenIcon = scheduleFullscreen.isFullscreen ? ArrowsPointingInIcon : ArrowsPointingOutIcon;
 
   const handleDelete = () => {
-    if (!confirm('Are you sure you want to delete this schedule? This action cannot be undone.')) return;
+    if (!confirm(t('event-management.schedule.actions.delete.confirm'))) return;
     submit({ intent: 'delete-schedule' }, { method: 'POST' });
   };
 
@@ -34,7 +36,7 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
     <Menu>
       <MenuButton className={button({ variant: 'secondary' })}>
         <Cog6ToothIcon className="size-4 text-gray-500" aria-hidden="true" />
-        Options
+        {t('common.options')}
       </MenuButton>
 
       <MenuTransition>
@@ -47,7 +49,7 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
               className={menuItem()}
             >
               <MagnifyingGlassPlusIcon className={menuItemIcon()} aria-hidden="true" />
-              Zoom in
+              {t('common.zoom-in')}
             </MenuItem>
             <MenuItem
               as="button"
@@ -56,11 +58,13 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
               className={menuItem()}
             >
               <MagnifyingGlassMinusIcon className={menuItemIcon()} aria-hidden="true" />
-              Zoom out
+              {t('common.zoom-out')}
             </MenuItem>
             <MenuItem as="button" onClick={scheduleFullscreen.toggle} className={menuItem()}>
               <FullscreenIcon className={menuItemIcon()} aria-hidden="true" />
-              {scheduleFullscreen.isFullscreen ? 'Exit fullscreen' : 'Expand schedule'}
+              {scheduleFullscreen.isFullscreen
+                ? t('event-management.schedule.actions.fullscreen.on')
+                : t('event-management.schedule.actions.fullscreen.off')}
             </MenuItem>
           </MenuSection>
 
@@ -69,11 +73,11 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
           <MenuSection className={menuSection()}>
             <MenuItem as="button" onClick={openTracksModal} className={menuItem()}>
               <ViewColumnsIcon className={menuItemIcon()} aria-hidden="true" />
-              Manage tracks
+              {t('event-management.schedule.actions.tracks')}
             </MenuItem>
             <MenuItem as="a" href={`/team/${params.team}/${params.event}/schedule/export/json`} className={menuItem()}>
               <ArrowDownTrayIcon className={menuItemIcon()} aria-hidden="true" />
-              Export as JSON
+              {t('event-management.schedule.actions.export.json')}
             </MenuItem>
           </MenuSection>
 
@@ -82,7 +86,7 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
           <MenuSection className={menuSection()}>
             <MenuItem as="button" className={menuItem({ variant: 'important' })} onClick={handleDelete}>
               <TrashIcon className={menuItemIcon({ variant: 'important' })} aria-hidden="true" />
-              Delete schedule
+              {t('event-management.schedule.actions.delete.button')}
             </MenuItem>
           </MenuSection>
         </MenuItems>

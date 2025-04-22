@@ -12,7 +12,7 @@ type Props = {
 };
 
 export function DisplayTimes({ displayedTimes, onChangeDisplayTime }: Props) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { start, end } = displayedTimes;
 
   const timeStart = formatTime(start, { format: 'short', locale: i18n.language });
@@ -31,7 +31,7 @@ export function DisplayTimes({ displayedTimes, onChangeDisplayTime }: Props) {
       >
         <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-b-gray-200 rounded-t-md">
           <Text variant="secondary" weight="semibold">
-            Display times
+            {t('event-management.schedule.actions.times')}
           </Text>
         </div>
         <div className="p-4">
