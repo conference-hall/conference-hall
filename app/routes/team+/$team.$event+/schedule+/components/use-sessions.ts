@@ -6,6 +6,7 @@ import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import { areTimeSlotsOverlapping } from '~/libs/datetimes/timeslots.ts';
 import { formatZonedTimeToUtc } from '~/libs/datetimes/timezone.ts';
 
+import type { Language } from '~/types/proposals.types.ts';
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
 export function useSessions(initialSessions: Array<SessionData>, timezone: string) {
@@ -136,7 +137,7 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
       trackId: String(fetcher.formData?.get('trackId')),
       color: String(fetcher.formData?.get('color') ?? 'gray'),
       name: String(fetcher.formData?.get('name') ?? ''),
-      language: String(fetcher.formData?.get('language') ?? null),
+      language: String(fetcher.formData?.get('language') ?? null) as Language | null,
       emojis: fetcher.formData?.getAll('emojis') as string[],
       timeslot: {
         start: toZonedTime(String(fetcher.formData?.get('start')), timezone),

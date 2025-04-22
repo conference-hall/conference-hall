@@ -2,6 +2,7 @@ import { db } from 'prisma/db.server.ts';
 
 import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.server.ts';
 
+import type { Languages } from '~/types/proposals.types.ts';
 import { ReviewDetails } from '../reviews/review-details.ts';
 import { ProposalSearchBuilder } from '../shared/proposal-search-builder.ts';
 import type { ProposalsFilters } from '../shared/proposal-search-builder.types.ts';
@@ -43,7 +44,7 @@ export class EventApi {
           formats: proposal.formats.map((f) => f.name),
           categories: proposal.categories.map((c) => c.name),
           tags: proposal.tags.map((tag) => tag.name),
-          languages: proposal.languages as string[],
+          languages: proposal.languages as Languages,
           speakers: proposal.speakers.map((speaker) => ({
             name: speaker.name,
             bio: speaker.bio,
