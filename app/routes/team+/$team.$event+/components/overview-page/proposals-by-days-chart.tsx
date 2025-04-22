@@ -1,5 +1,4 @@
 import { cx } from 'class-variance-authority';
-import { format } from 'date-fns';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TooltipProps } from 'recharts';
@@ -9,6 +8,7 @@ import { NoData } from '~/design-system/dashboard/no-data.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
+import { formatDay } from '~/libs/datetimes/datetimes.ts';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 
 type ChartType = 'cumulative' | 'count';
@@ -37,9 +37,10 @@ export function ProposalsByDayChart({ data, className }: ProposalsByDayChartProp
   );
 }
 
-const DATE_FORMAT = 'LLL dd';
-
 function CumulativeByDayChart({ data }: { data: ChartData }) {
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
+
   return (
     <ResponsiveContainer width="100%" height={250}>
       <AreaChart data={data} margin={{ bottom: 10, top: 10 }} aria-hidden="true">
@@ -64,7 +65,7 @@ function CumulativeByDayChart({ data }: { data: ChartData }) {
           className="fill-gray-500"
           interval="equidistantPreserveStart"
           alignmentBaseline="baseline"
-          tickFormatter={(date) => format(date, DATE_FORMAT)}
+          tickFormatter={(date) => formatDay(date, { format: 'medium', locale })}
           tick={{ transform: 'translate(0, 6)' }}
           minTickGap={5}
         />
@@ -89,6 +90,9 @@ function CumulativeByDayChart({ data }: { data: ChartData }) {
 }
 
 function CountByDayChart({ data }: { data: ChartData }) {
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
+
   return (
     <ResponsiveContainer width="100%" height={250}>
       <BarChart data={data} margin={{ bottom: 10, top: 10 }} aria-hidden="true">
@@ -113,7 +117,7 @@ function CountByDayChart({ data }: { data: ChartData }) {
           className="fill-gray-500"
           interval="equidistantPreserveStart"
           alignmentBaseline="baseline"
-          tickFormatter={(date) => format(date, DATE_FORMAT)}
+          tickFormatter={(date) => formatDay(date, { format: 'medium', locale })}
           tick={{ transform: 'translate(0, 6)' }}
           minTickGap={5}
         />
@@ -132,11 +136,12 @@ function CountByDayChart({ data }: { data: ChartData }) {
 }
 
 function CustomTooltip({ payload, label }: TooltipProps<ValueType, NameType>) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
   return (
     <div className="border border-gray-200 bg-white text-sm shadow-sm rounded-md" aria-hidden="true">
       <div className="p-2 px-3">
-        <Text weight="medium">{label ? format(label, DATE_FORMAT) : t('common.unknown')}</Text>
+        <Text weight="medium">{label ? formatDay(label, { format: 'long', locale }) : t('common.unknown')}</Text>
       </div>
       <Divider />
       <div className="flex flex-row items-center space-between p-2 px-3 space-x-16">

@@ -21,6 +21,15 @@ export function toISODate(date?: Date | null) {
 type FormatType = 'short' | 'medium' | 'long';
 type FormatOption = { format: FormatType; locale: string };
 
+const DATETIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
+  // 10/1/2023, 10:00
+  short: { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false },
+  // 1 Oct 2023, 10:00 AM
+  medium: { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric' },
+  // 1 October 2023, 10:00 AM GMT+2
+  long: { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric', timeZoneName: 'short' },
+};
+
 const DATE_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
   // 10/1/2023
   short: { day: 'numeric', month: 'numeric', year: 'numeric' },
@@ -28,6 +37,15 @@ const DATE_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
   medium: { day: 'numeric', month: 'short', year: 'numeric' },
   // 1 October 2023
   long: { day: 'numeric', month: 'long', year: 'numeric' },
+};
+
+const DAY_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
+  // 10
+  short: { day: 'numeric' },
+  // 1 Oct
+  medium: { day: 'numeric', month: 'short' },
+  // 1 October
+  long: { day: 'numeric', month: 'long' },
 };
 
 const TIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
@@ -39,14 +57,11 @@ const TIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
   long: { hour: 'numeric', minute: 'numeric', timeZoneName: 'short' },
 };
 
-const DATETIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
-  // 10/1/2023, 10:00
-  short: { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false },
-  // 1 Oct 2023, 10:00 AM
-  medium: { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric' },
-  // 1 October 2023, 10:00 AM GMT+2
-  long: { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric', timeZoneName: 'short' },
-};
+// todo(tests)
+export function formatDatetime(date: Date, options: FormatOption): string {
+  const { format, locale } = options;
+  return new Intl.DateTimeFormat(locale, DATETIME_FORMATS[format]).format(date);
+}
 
 // todo(tests)
 export function formatDate(date: Date, options: FormatOption): string {
@@ -55,12 +70,10 @@ export function formatDate(date: Date, options: FormatOption): string {
 }
 
 // todo(tests)
-// todo: use Intl.RelativeTimeFormat instead of date-fns
-export function formatDistanceFromNow(date: Date, locale: string): string {
-  const now = new Date();
-  return intlFormatDistance(date, now, { locale });
+export function formatDay(date: Date, options: FormatOption): string {
+  const { format, locale } = options;
+  return new Intl.DateTimeFormat(locale, DAY_FORMATS[format]).format(date);
 }
-
 // todo(tests)
 export function formatTime(time: Date | number, options: FormatOption): string {
   if (typeof time === 'number') {
@@ -71,9 +84,10 @@ export function formatTime(time: Date | number, options: FormatOption): string {
 }
 
 // todo(tests)
-export function formatDatetime(date: Date, options: FormatOption): string {
-  const { format, locale } = options;
-  return new Intl.DateTimeFormat(locale, DATETIME_FORMATS[format]).format(date);
+// todo: use Intl.RelativeTimeFormat instead of date-fns
+export function formatDistanceFromNow(date: Date, locale: string): string {
+  const now = new Date();
+  return intlFormatDistance(date, now, { locale });
 }
 
 // todo: use Intl.DurationFormat instead of date-fns
