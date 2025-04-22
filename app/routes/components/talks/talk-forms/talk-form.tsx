@@ -5,8 +5,7 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import MultiSelect from '~/design-system/forms/multi-select.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
-import { TALK_LEVELS } from '~/libs/constants.ts';
-import { LANGUAGES } from '~/libs/formatters/languages.ts';
+import { LANGUAGES, TALK_LEVELS } from '~/libs/constants.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 import { CategoriesForm } from './categories-form.tsx';
 import { FormatsForm } from './formats-form.tsx';
@@ -82,7 +81,10 @@ export function TalkForm({
         name="languages"
         label={t('talk.languages')}
         placeholder={t('talk.languages.placeholder')}
-        options={LANGUAGES}
+        options={LANGUAGES.map((lang) => ({
+          value: lang,
+          label: t(`common.languages.${lang}.label`),
+        }))}
         defaultValues={initialValues?.languages ?? []}
       />
 

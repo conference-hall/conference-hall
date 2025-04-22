@@ -2,6 +2,7 @@ import { db } from 'prisma/db.server.ts';
 import { sendProposalConfirmedEmailToOrganizers } from '~/emails/templates/organizers/proposal-confirmed.tsx';
 import { sendProposalDeclinedEmailToOrganizers } from '~/emails/templates/organizers/proposal-declined.tsx';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
+import type { Languages } from '~/types/proposals.types.ts';
 import { EventSpeaker } from '../shared/event-speaker.ts';
 import type { ProposalSaveData } from './user-proposal.types.ts';
 
@@ -38,7 +39,7 @@ export class UserProposal {
       references: proposal.references,
       status: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
       createdAt: proposal.createdAt,
-      languages: proposal.languages as string[],
+      languages: proposal.languages as Languages,
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
       invitationLink: proposal.invitationLink,

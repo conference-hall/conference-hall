@@ -11,7 +11,7 @@ import {
 
 import { toZonedTime } from 'date-fns-tz';
 import { getDatesRange } from '~/libs/datetimes/datetimes.ts';
-import type { Languages } from '~/types/proposals.types.ts';
+import type { Language, Languages } from '~/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import type {
   ScheduleCreateData,
@@ -200,7 +200,7 @@ export class EventSchedule {
         start: start,
         end: end,
         name: name,
-        language: language,
+        language: language as Language | null,
         emojis: emojis,
         color: color,
         proposal: proposal

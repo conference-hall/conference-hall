@@ -1,3 +1,4 @@
+import type { Languages } from '~/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { ProposalSearchBuilder } from '../shared/proposal-search-builder.ts';
 import type { ProposalsFilters } from '../shared/proposal-search-builder.types.ts';
@@ -83,7 +84,7 @@ export class CfpReviewsExports {
         level: proposal.level,
         formats: proposal.formats,
         categories: proposal.categories,
-        languages: proposal.languages as string[],
+        languages: proposal.languages as Languages,
         speakers: proposal.speakers.map((speaker) => speaker.name),
         reviews: reviews.summary(),
       };

@@ -1,3 +1,5 @@
+import type { LANGUAGES } from '~/libs/constants.ts';
+
 export type DeliberationStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED';
 
 export type PublicationStatus = 'NOT_PUBLISHED' | 'PUBLISHED';
@@ -10,4 +12,6 @@ export type GlobalReview = { negatives: number; positives: number; average: numb
 
 export type UserReview = { feeling: ReviewFeeling | null; note: number | null; comment?: string | null };
 
-export type Languages = Array<string>;
+export type Language = (typeof LANGUAGES)[number];
+
+export type Languages = Array<Language>;

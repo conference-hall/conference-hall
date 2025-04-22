@@ -11,8 +11,8 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { formatDate } from '~/libs/datetimes/datetimes.ts';
-import { getLanguage } from '~/libs/formatters/languages.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
+import type { Languages } from '~/types/proposals.types.ts';
 import { ClientOnly } from '../utils/client-only.tsx';
 import type { SpeakerProps } from './co-speaker.tsx';
 import { CoSpeakers } from './co-speaker.tsx';
@@ -27,7 +27,7 @@ type Props = {
     abstract: string;
     references: string | null;
     level: TalkLevel | null;
-    languages: Array<string>;
+    languages: Languages;
     speakers: Array<SpeakerProps>;
     invitationLink?: string;
     archived?: boolean;
@@ -142,7 +142,7 @@ export function TalkSection({
         <div className="flex gap-2 flex-wrap">
           {talk.level && <Badge color="indigo">{t(`common.level.${talk.level}`)}</Badge>}
           {talk.languages.map((language) => (
-            <Badge key={language}>{getLanguage(language)}</Badge>
+            <Badge key={language}>{t(`common.languages.${language}.label`)}</Badge>
           ))}
         </div>
       </dl>

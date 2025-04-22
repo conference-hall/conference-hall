@@ -10,9 +10,8 @@ import {
 } from '@heroicons/react/24/outline';
 import type { FormEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router';
-
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import ColorPicker from '~/design-system/forms/color-picker.tsx';
@@ -21,9 +20,10 @@ import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
+import { LANGUAGES } from '~/libs/constants.ts';
 import { getMinutesFromStartOfDay, setMinutesFromStartOfDay } from '~/libs/datetimes/datetimes.ts';
-import { LANGUAGES } from '~/libs/formatters/languages.ts';
 import { EmojiSelect } from '~/routes/components/emojis/emoji-select.tsx';
+import type { Language } from '~/types/proposals.types.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 import { SearchSessionProposal } from './search-session-proposal.tsx';
@@ -173,8 +173,8 @@ export function SessionForm({
             label={t('common.language')}
             value={language || ''}
             placeholder={t('common.no-language')}
-            onChange={(e) => setLanguage(e.target.value)}
-            options={LANGUAGES.map((lang) => ({ name: lang.label, value: lang.value }))}
+            onChange={(e) => setLanguage(e.target.value as Language)}
+            options={LANGUAGES.map((lang) => ({ name: t(`common.languages.${lang}.label`), value: lang }))}
             srOnly
           />
         </div>

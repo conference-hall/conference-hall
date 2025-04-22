@@ -7,6 +7,7 @@ import {
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
 } from '~/libs/errors.server.ts';
+import type { Languages } from '~/types/proposals.types.ts';
 import { EventSpeaker } from '../shared/event-speaker.ts';
 import { TalksLibrary } from '../speaker-talks-library/talks-library.ts';
 import type { TalkSaveData } from '../speaker-talks-library/talks-library.types.ts';
@@ -122,7 +123,7 @@ export class TalkSubmission {
       title: proposal.title,
       abstract: proposal.abstract,
       level: proposal.level,
-      languages: (proposal.languages || []) as string[],
+      languages: (proposal.languages || []) as Languages,
       references: proposal.references,
       isOwner: this.userId === proposal?.talk?.creatorId,
       invitationLink: proposal.invitationLink,
