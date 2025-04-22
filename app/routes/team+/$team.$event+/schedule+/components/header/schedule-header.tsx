@@ -12,6 +12,7 @@ type Props = {
   scheduleDays: Array<Date>;
   displayedDays: Array<Date>;
   displayedTimes: { start: number; end: number };
+  timezone: string;
   tracks: Array<{ id: string; name: string }>;
   zoomHandlers: ZoomHandlers;
   onChangeDisplayDays: (start: Date, end: Date) => void;
@@ -22,6 +23,7 @@ export function ScheduleHeader({
   scheduleDays,
   displayedDays,
   displayedTimes,
+  timezone,
   tracks,
   zoomHandlers,
   onChangeDisplayDays,
@@ -41,6 +43,7 @@ export function ScheduleHeader({
         <DisplayDays
           scheduleDays={scheduleDays}
           displayedDays={displayedDays}
+          timezone={timezone}
           onChangeDisplayDays={onChangeDisplayDays}
         />
         <DisplayTimes displayedTimes={displayedTimes} onChangeDisplayTime={onChangeDisplayTime} />
