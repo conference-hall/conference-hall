@@ -9,7 +9,7 @@ export const TagSaveSchema = z.object({
 
 export const TagDeleteSchema = z.object({ id: z.string() });
 
-export const TagFiltersSchema = z.object({
+const TagFiltersSchema = z.object({
   query: z.string().trim().optional(),
 });
 

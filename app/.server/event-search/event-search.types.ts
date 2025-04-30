@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { z } from 'zod';
 
-export const SearchFiltersSchema = z.object({
+const SearchFiltersSchema = z.object({
   query: z.string().trim().optional(),
   type: z.enum(['all', 'conference', 'meetup']).optional(),
   talkId: z.string().optional(),

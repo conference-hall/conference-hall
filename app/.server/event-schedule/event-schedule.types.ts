@@ -2,8 +2,6 @@ import { z } from 'zod';
 
 import { parseToUtcEndOfDay, parseToUtcStartOfDay } from '~/libs/datetimes/timezone.ts';
 
-export const INTERVALS = [5, 10, 15] as const;
-
 export const ScheduleCreateSchema = z
   .object({
     name: z.string().trim().min(1).max(255),
@@ -63,10 +61,8 @@ export const ScheduleSessionUpdateSchema = ScheduleSessionCreateSchema.extend({
 });
 
 export const SchedulSessionIdSchema = z.string();
-export const ScheduleDayIdSchema = z.coerce.number().int();
 
 export type ScheduleCreateData = z.infer<typeof ScheduleCreateSchema>;
 export type ScheduleTracksSaveData = z.infer<typeof ScheduleTracksSaveSchema>;
 export type ScheduleSessionCreateData = z.infer<typeof ScheduleSessionCreateSchema>;
 export type ScheduleSessionUpdateData = z.infer<typeof ScheduleSessionUpdateSchema>;
-export type ScheduleDisplayTimesUpdateData = z.infer<typeof ScheduleDisplayTimesUpdateSchema>;

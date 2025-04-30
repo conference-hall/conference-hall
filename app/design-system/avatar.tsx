@@ -83,40 +83,6 @@ export function Avatar({
   return <AvatarColor name={name} size={size} className={styles} />;
 }
 
-type AvatarGroupProps = {
-  avatars: Array<{ picture?: string | null; name?: string | null }>;
-  size?: keyof typeof sizes;
-  ring?: boolean;
-  ringColor?: keyof typeof ringsColor;
-  displayNames?: boolean;
-};
-
-export function AvatarGroup({ avatars, displayNames = false }: AvatarGroupProps) {
-  return (
-    <div className="-space-x-1 overflow-hidden truncate shrink-0">
-      {avatars.map((avatar) => (
-        <Avatar
-          key={avatar.name}
-          picture={avatar.picture}
-          name={avatar.name}
-          size="xs"
-          ring
-          ringColor="white"
-          className="inline-block"
-          aria-hidden
-        />
-      ))}
-      {displayNames && (
-        <span className="pl-3">
-          <Text as="span" variant="secondary" size="s">
-            by {avatars.map((a) => a.name).join(', ')}
-          </Text>
-        </span>
-      )}
-    </div>
-  );
-}
-
 type AvatarNameProps = {
   name?: string | null;
   subtitle?: string | null;

@@ -12,7 +12,7 @@ interface ProgressCircleProps extends Omit<React.SVGProps<SVGSVGElement>, 'value
   children?: React.ReactNode;
 }
 
-const ProgressCircle = ({
+export const ProgressCircle = ({
   value = 0,
   max = 100,
   radius = 32,
@@ -83,5 +83,3 @@ const ProgressCircle = ({
     </>
   );
 };
-
-export { ProgressCircle, type ProgressCircleProps };

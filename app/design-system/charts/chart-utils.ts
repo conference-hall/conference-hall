@@ -1,8 +1,8 @@
 // Tremor Raw chartColors [v0.0.0]
 
-export type ColorUtility = 'bg' | 'stroke' | 'fill' | 'text';
+type ColorUtility = 'bg' | 'stroke' | 'fill' | 'text';
 
-export const chartColors = {
+const chartColors = {
   blue: {
     bg: 'bg-blue-500',
     stroke: 'stroke-blue-500',

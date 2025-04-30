@@ -8,7 +8,7 @@ import { job } from '~/libs/jobs/job.ts';
 import { compactObject } from '~/libs/utils/object-compact.ts';
 import type { Languages } from '~/types/proposals.types.ts';
 
-export type ExportToOpenPlannerPayload = {
+type ExportToOpenPlannerPayload = {
   userId: string;
   teamSlug: string;
   eventSlug: string;

@@ -23,6 +23,7 @@ export function sendProposalRejectedEmailToSpeakers(data: TemplateData) {
 
 type EmailProps = TemplateData & { locale: string };
 
+/** @public */
 export default function ProposalRejectedEmail({ event, proposal, locale }: EmailProps) {
   return (
     <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>

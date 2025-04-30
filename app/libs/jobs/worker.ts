@@ -5,7 +5,7 @@ import { logger } from './logger.ts';
 
 export const DEFAULT_QUEUE = 'default';
 
-export type JobWorker = { queue: string; close: () => Promise<void> };
+type JobWorker = { queue: string; close: () => Promise<void> };
 
 export function createJobWorkers(jobs: Array<Job<any>>): Array<JobWorker> {
   const jobsByQueue = new Map();

@@ -53,7 +53,7 @@ export function CoSpeakers({ speakers, invitationLink, canEdit, className }: CoS
 
 type SpeakerPillButtonProps = { speaker: SpeakerProps; canEdit?: boolean };
 
-export function SpeakerPillButton({ speaker, canEdit }: SpeakerPillButtonProps) {
+function SpeakerPillButton({ speaker, canEdit }: SpeakerPillButtonProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -92,7 +92,7 @@ export function SpeakerPill({ speaker, className }: SpeakerPillProps) {
 
 type RemoveCoSpeakerButtonProps = { speakerId: string; speakerName: string | null };
 
-export function RemoveCoSpeakerButton({ speakerId, speakerName }: RemoveCoSpeakerButtonProps) {
+function RemoveCoSpeakerButton({ speakerId, speakerName }: RemoveCoSpeakerButtonProps) {
   return (
     <Form method="POST">
       <input type="hidden" name="_speakerId" value={speakerId} />

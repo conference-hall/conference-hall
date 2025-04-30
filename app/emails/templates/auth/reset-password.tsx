@@ -18,6 +18,7 @@ export function sendResetPasswordEmail(email: string, locale: string, data: Temp
 
 type EmailProps = TemplateData & { locale: string };
 
+/** @public */
 export default function ResetPasswordEmail({ passwordResetUrl, locale }: EmailProps) {
   return (
     <BaseEventEmail locale={locale}>

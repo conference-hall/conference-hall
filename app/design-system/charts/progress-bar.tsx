@@ -9,7 +9,7 @@ interface ProgressBarProps extends React.ComponentProps<'div'> {
   label?: string;
 }
 
-const ProgressBar = ({ value = 0, max = 100, label, className, ref, ...props }: ProgressBarProps) => {
+export const ProgressBar = ({ value = 0, max = 100, label, className, ref, ...props }: ProgressBarProps) => {
   const safeValue = Math.min(max, Math.max(value, 0));
 
   const background = 'bg-gray-200';
@@ -46,5 +46,3 @@ const ProgressBar = ({ value = 0, max = 100, label, className, ref, ...props }: 
     </div>
   );
 };
-
-export { ProgressBar, type ProgressBarProps };

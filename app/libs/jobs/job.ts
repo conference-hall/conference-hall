@@ -2,7 +2,7 @@ import { Queue } from 'bullmq';
 import { getRedisClient } from '../redis.ts';
 import { DEFAULT_QUEUE } from './worker.ts';
 
-export type JobConfig<Payload> = {
+type JobConfig<Payload> = {
   name: string;
   queue?: string;
   run: (payload: Payload) => Promise<void>;

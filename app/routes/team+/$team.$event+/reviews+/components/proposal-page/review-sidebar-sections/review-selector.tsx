@@ -4,7 +4,7 @@ import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
 import type { ReviewFeeling } from '~/types/proposals.types.ts';
 
-export type Option = {
+type Option = {
   label: string;
   value: number | null;
   Icon: React.ComponentType<{ className?: string }>;
@@ -12,7 +12,7 @@ export type Option = {
   fill: string;
 };
 
-export const options: Array<Option> = [
+const options: Array<Option> = [
   { label: 'No opinion', Icon: NoSymbolIcon, value: null, feeling: 'NO_OPINION', fill: 'fill-red-100' },
   { label: 'Nope, 0 star', Icon: XCircleIcon, value: 0, feeling: 'NEGATIVE', fill: 'fill-gray-300' },
   { label: '1 star', Icon: StarIcon, value: 1, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },

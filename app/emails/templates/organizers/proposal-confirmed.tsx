@@ -35,6 +35,7 @@ export function sendProposalConfirmedEmailToOrganizers(data: TemplateData) {
 
 type EmailProps = TemplateData & { locale: string };
 
+/** @public */
 export default function ProposalConfirmedEmail({ event, proposal, locale }: EmailProps) {
   return (
     <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>

@@ -40,7 +40,7 @@ List.Row = Row;
 
 type RowLinkProps = { children: ReactNode } & LinkProps;
 
-export function RowLink({ children, className, ...rest }: RowLinkProps) {
+function RowLink({ children, className, ...rest }: RowLinkProps) {
   return (
     <li className="flex">
       <Link

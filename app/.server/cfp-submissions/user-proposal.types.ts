@@ -1,14 +1,7 @@
 import { z } from 'zod';
+import { TalkSaveSchema } from '../speaker-talks-library/talks-library.types.ts';
 
-const TalkSaveSchema = z.object({
-  title: z.string().trim().min(1),
-  abstract: z.string().trim().min(1),
-  references: z.string().nullable().default(null),
-  level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable().default(null),
-  languages: z.array(z.string()),
-});
-
-export const ProposalSaveSchema = TalkSaveSchema.extend({
+const ProposalSaveSchema = TalkSaveSchema.extend({
   formats: z.array(z.string()).optional(),
   categories: z.array(z.string()).optional(),
 });

@@ -16,6 +16,8 @@ export const FlagsProvider = ({ children, flags }: FlagsProviderProps) => {
 };
 
 /**
+ * @public
+ *
  * Returns the feature flags
  * @returns {Flags}
  */
@@ -28,6 +30,8 @@ export function useFlags(): Flags {
 }
 
 /**
+ * @public
+ *
  * Returns the flag value for the given key
  * @param key flag key
  * @returns {boolean}

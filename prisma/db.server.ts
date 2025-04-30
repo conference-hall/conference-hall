@@ -5,7 +5,7 @@ import { proposalExtension } from './extensions/proposal.ts';
 import { talkExtension } from './extensions/talk.ts';
 import { teamExtension } from './extensions/team.ts';
 
-export type DbClient = ReturnType<typeof getClient>;
+type DbClient = ReturnType<typeof getClient>;
 
 export type DbTransaction = Omit<DbClient, '$extends' | '$transaction' | '$disconnect' | '$connect' | '$on' | '$use'>;
 

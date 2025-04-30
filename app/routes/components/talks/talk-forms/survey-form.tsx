@@ -6,7 +6,7 @@ import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
-export type Props = {
+type Props = {
   id: string;
   questions: Array<SurveyQuestion>;
   initialValues: { [key: string]: unknown };

@@ -32,6 +32,9 @@ jobs:
       - name: Typescript checking
         run: npm run tsc
 
+      - name: Knip checking
+        run: npm run knip
+
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-latest
