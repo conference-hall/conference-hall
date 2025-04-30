@@ -46,13 +46,9 @@ function buildClientWithLogger(): PrismaClient {
 
   const client = new PrismaClient({
     log: [
-      { emit: 'event', level: 'info' },
       { emit: 'event', level: 'warn' },
       { emit: 'event', level: 'error' },
     ],
-  });
-  client.$on('info', (event) => {
-    console.log(JSON.stringify({ level: 'info', message: event.message, timestamp: event.timestamp.toISOString() }));
   });
   client.$on('warn', (event) => {
     console.log(JSON.stringify({ level: 'warn', message: event.message, timestamp: event.timestamp.toISOString() }));
