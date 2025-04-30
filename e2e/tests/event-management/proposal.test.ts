@@ -248,12 +248,13 @@ test('edit proposal', async ({ page }) => {
   // checks edited talk values
   await talkEdit.waitFor();
   await expect(page.getByRole('heading', { name: 'New title' })).toBeVisible();
-  await expect(page.getByText('New abstract')).toBeVisible();
-  await expect(page.getByText('Beginner')).toBeVisible();
-  await expect(page.getByText('French')).toBeVisible();
-  await expect(page.getByText('English')).toBeVisible();
-  await expect(page.getByText('Format 2')).toBeVisible();
-  await expect(page.getByText('Category 2')).toBeVisible();
+  await expect(page.getByRole('paragraph').filter({ hasText: 'New abstract' })).toBeVisible();
+  await expect(page.getByRole('main').getByText('Beginner')).toBeVisible();
+  await expect(page.getByRole('main').getByText('French')).toBeVisible();
+  await expect(page.getByRole('main').getByText('English')).toBeVisible();
+  await expect(page.getByRole('main').getByText('Format 2')).toBeVisible();
+  await expect(page.getByRole('main').getByText('Category 2')).toBeVisible();
+
   await proposalPage.referencesToggle.click();
   await expect(page.getByText('New references')).toBeVisible();
 });

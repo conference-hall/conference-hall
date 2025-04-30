@@ -97,12 +97,12 @@ test('edits a proposal', async ({ page }) => {
   await test.step('checks edited talk values', async () => {
     await talkEdit.waitFor();
     await expect(page.getByRole('heading', { name: 'New title' })).toBeVisible();
-    await expect(page.getByText('New abstract')).toBeVisible();
-    await expect(page.getByText('Advanced')).toBeVisible();
-    await expect(page.getByText('French')).toBeVisible();
-    await expect(page.getByText('English')).toBeVisible();
-    await expect(page.getByText('Workshop')).toBeVisible();
-    await expect(page.getByText('Cloud')).toBeVisible();
+    await expect(page.getByRole('paragraph').filter({ hasText: 'New abstract' })).toBeVisible();
+    await expect(page.getByRole('main').getByText('Advanced')).toBeVisible();
+    await expect(page.getByRole('main').getByText('French')).toBeVisible();
+    await expect(page.getByRole('main').getByText('English')).toBeVisible();
+    await expect(page.getByRole('main').getByText('Workshop')).toBeVisible();
+    await expect(page.getByRole('main').getByText('Cloud')).toBeVisible();
 
     await proposalPage.clickOnReferences();
     await expect(page.getByText('New references')).toBeVisible();
