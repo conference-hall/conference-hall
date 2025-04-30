@@ -49,7 +49,7 @@ interface CalloutProps extends React.ComponentProps<'div'>, VariantProps<typeof 
   icon?: React.ElementType;
 }
 
-const Callout = ({ title, icon: Icon, className, variant, children, ref, ...props }: CalloutProps) => {
+export const Callout = ({ title, icon: Icon, className, variant, children, ref, ...props }: CalloutProps) => {
   return (
     <div ref={ref} className={cx(calloutVariants({ variant }), className)} {...props}>
       {title ? (
@@ -66,5 +66,3 @@ const Callout = ({ title, icon: Icon, className, variant, children, ref, ...prop
     </div>
   );
 };
-
-export { Callout, type CalloutProps, calloutVariants };

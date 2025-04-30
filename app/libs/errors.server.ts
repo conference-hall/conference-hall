@@ -70,12 +70,6 @@ export class UserNotFoundError extends NotFoundError {
   }
 }
 
-export class SpeakerNotFoundError extends NotFoundError {
-  constructor() {
-    super('Speaker not found');
-  }
-}
-
 export class TeamNotFoundError extends NotFoundError {
   constructor() {
     super('Team not found');

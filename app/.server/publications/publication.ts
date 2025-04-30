@@ -6,8 +6,6 @@ import { sendProposalAcceptedEmailToSpeakers } from '~/emails/templates/speakers
 import { sendProposalRejectedEmailToSpeakers } from '~/emails/templates/speakers/proposal-rejected.tsx';
 import { UserEvent } from '../event-settings/user-event.ts';
 
-export type ResultsStatistics = Awaited<ReturnType<typeof Publication.prototype.statistics>>;
-
 export class Publication {
   constructor(
     private userId: string,

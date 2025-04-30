@@ -56,7 +56,7 @@ export function TagsCard({
   );
 }
 
-export function useOptimisticUpdateTags(proposalTags: Array<TagType>, eventTags: Array<TagType>) {
+function useOptimisticUpdateTags(proposalTags: Array<TagType>, eventTags: Array<TagType>) {
   const fetcher = useFetcher();
 
   // optimistic update

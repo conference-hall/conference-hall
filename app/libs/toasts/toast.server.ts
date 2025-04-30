@@ -2,7 +2,7 @@ import { createCookieSessionStorage, data } from 'react-router';
 import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
 
-export const toastKey = 'toast';
+const toastKey = 'toast';
 
 const TypeSchema = z.enum(['message', 'success', 'error']);
 
@@ -16,7 +16,7 @@ type ToastType = z.infer<typeof TypeSchema>;
 
 export type Toast = z.infer<typeof ToastSchema>;
 
-export const toastSessionStorage = createCookieSessionStorage({
+const toastSessionStorage = createCookieSessionStorage({
   cookie: {
     name: 'toast',
     path: '/',

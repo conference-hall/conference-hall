@@ -7,7 +7,7 @@ const StatusFilterSchema = z
   .enum(['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined'])
   .optional();
 
-export const ProposalsFiltersSchema = z.object({
+const ProposalsFiltersSchema = z.object({
   query: z.string().trim().optional(),
   sort: z.enum(['newest', 'oldest', 'highest', 'lowest', 'most-comments', 'fewest-comments']).optional(),
   reviews: ReviewsFiltersSchema,

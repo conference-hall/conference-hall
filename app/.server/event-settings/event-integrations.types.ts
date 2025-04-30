@@ -5,7 +5,7 @@ export const OpenPlannerConfigSchema = z.object({
   apiKey: z.string().trim().min(1).max(255),
 });
 
-export const EventIntegrationConfigSchema = z.discriminatedUnion('name', [
+const EventIntegrationConfigSchema = z.discriminatedUnion('name', [
   z.object({
     id: z.string().optional(),
     name: z.literal('OPEN_PLANNER'),
@@ -13,5 +13,4 @@ export const EventIntegrationConfigSchema = z.discriminatedUnion('name', [
   }),
 ]);
 
-export type OpenPlannerConfig = z.infer<typeof OpenPlannerConfigSchema>;
 export type EventIntegrationConfigData = z.infer<typeof EventIntegrationConfigSchema>;

@@ -19,6 +19,7 @@ export function sendVerificationEmail(email: string, locale: string, data: Templ
 
 type EmailProps = TemplateData & { locale: string };
 
+/** @public */
 export default function VerificationEmail({ emailVerificationUrl, locale }: EmailProps) {
   const t = getEmailI18n(locale);
 

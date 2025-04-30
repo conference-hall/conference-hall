@@ -5,7 +5,8 @@ import { GoogleIcon } from '~/design-system/icons/google-icon.tsx';
 import { XIcon } from '~/design-system/icons/x-icon.tsx';
 
 export type ProviderId = 'google.com' | 'github.com' | 'twitter.com';
-export type ProviderInfo = { id: ProviderId; label: string; icon: React.ComponentType<{ className?: string }> };
+
+type ProviderInfo = { id: ProviderId; label: string; icon: React.ComponentType<{ className?: string }> };
 
 export const PROVIDERS: Array<ProviderInfo> = [
   { id: 'google.com', label: 'Google', icon: GoogleIcon },

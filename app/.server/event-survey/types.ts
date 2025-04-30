@@ -17,7 +17,6 @@ export const SurveyConfigSchema = z.object({
   questions: z.array(SurveyQuestionSchema),
 });
 
-export type SurveyRemoveQuestion = z.infer<typeof SurveyRemoveQuestionSchema>;
 export type SurveyMoveQuestion = z.infer<typeof SurveyMoveQuestionSchema>;
 export type SurveyConfigType = z.infer<typeof SurveyConfigSchema>;
 export type SurveyQuestion = z.infer<typeof SurveyQuestionSchema>;

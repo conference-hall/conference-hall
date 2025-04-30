@@ -141,7 +141,7 @@ interface DonutChartProps extends React.ComponentProps<'div'> {
   customTooltip?: React.ComponentType<TooltipProps>;
 }
 
-const DonutChart = ({
+export const DonutChart = ({
   data = [],
   value,
   category,
@@ -275,5 +275,3 @@ const DonutChart = ({
     </div>
   );
 };
-
-export { DonutChart, type DonutChartEventProps, type TooltipProps };

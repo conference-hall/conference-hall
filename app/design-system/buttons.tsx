@@ -55,7 +55,7 @@ export type ButtonStylesProps = ButtonVariants & {
   iconRight?: React.ComponentType<{ className?: string }>;
 };
 
-export type ButtonProps = ButtonStylesProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
+type ButtonProps = ButtonStylesProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
   children,
@@ -80,7 +80,7 @@ export function Button({
   );
 }
 
-export type ButtonLinkProps = ButtonStylesProps & LinkProps;
+type ButtonLinkProps = ButtonStylesProps & LinkProps;
 
 export function ButtonLink({
   children,
