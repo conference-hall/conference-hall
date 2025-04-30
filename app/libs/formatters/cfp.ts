@@ -30,6 +30,7 @@ export function formatCFPState(state: CfpState, start: Date | null, end: Date | 
   }
 }
 
+// todo(i18n): should use timezone here ?
 export function formatCFPElapsedTime(state: CfpState, start: Date | null, end: Date | null) {
   if (!start && !end) return 'Call for paper is disabled';
   if (!start || !end) return formatCFPState(state, start, end);
