@@ -4,26 +4,16 @@ import {
   differenceInMinutes,
   formatDuration,
   intervalToDuration,
-  intlFormatDistance,
   setMinutes,
   startOfDay,
 } from 'date-fns';
-
-// todo(i18n): use locale in date formatting
-// todo: merge formatDate, formatTime, formatDatetime into one function ?
-
-// todo(tests)
-export function toISODate(date?: Date | null) {
-  if (!date) return undefined;
-  return date.toISOString().split('T')[0];
-}
 
 type FormatType = 'short' | 'medium' | 'long';
 type FormatOption = { format: FormatType; locale: string };
 
 const DATETIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
   // 10/1/2023, 10:00
-  short: { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false },
+  short: { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false },
   // 1 Oct 2023, 10:00 AM
   medium: { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric' },
   // 1 October 2023, 10:00 AM GMT+2
@@ -32,11 +22,11 @@ const DATETIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
 
 const DATE_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
   // 10/1/2023
-  short: { day: 'numeric', month: 'numeric', year: 'numeric' },
+  short: { day: '2-digit', month: '2-digit', year: 'numeric' },
   // 1 Oct 2023
   medium: { day: 'numeric', month: 'short', year: 'numeric' },
   // 1 October 2023
-  long: { day: 'numeric', month: 'long', year: 'numeric' },
+  long: { day: '2-digit', month: 'long', year: 'numeric' },
 };
 
 const DAY_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
@@ -74,6 +64,20 @@ export function formatDay(date: Date, options: FormatOption): string {
   const { format, locale } = options;
   return new Intl.DateTimeFormat(locale, DAY_FORMATS[format]).format(date);
 }
+
+// todo(tests)
+export function formatDateRange(startDate: Date, endDate: Date, locale: string): string {
+  if (!startDate) return '';
+
+  if (startDate === endDate) {
+    return new Intl.DateTimeFormat(locale, DATE_FORMATS.long).format(startDate);
+  }
+
+  const startDay = formatDay(startDate, { locale, format: 'medium' });
+  const endDay = formatDate(endDate, { locale, format: 'medium' });
+  return `${startDay} / ${endDay}`;
+}
+
 // todo(tests)
 export function formatTime(time: Date | number, options: FormatOption): string {
   if (typeof time === 'number') {
@@ -84,13 +88,32 @@ export function formatTime(time: Date | number, options: FormatOption): string {
 }
 
 // todo(tests)
-// todo: use Intl.RelativeTimeFormat instead of date-fns
-export function formatDistanceFromNow(date: Date, locale: string): string {
-  const now = new Date();
-  return intlFormatDistance(date, now, { locale });
+export function toDateInput(date?: Date | null) {
+  if (!date) return undefined;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
-// todo: use Intl.DurationFormat instead of date-fns
+// todo(tests)
+export function formatDistanceFromNow(date: Date, locale: string): string {
+  const minutes = Math.abs(differenceInMinutes(Date.now(), date));
+  const options: Intl.RelativeTimeFormatOptions = { numeric: 'auto', style: 'long', localeMatcher: 'best fit' };
+  const rtf = new Intl.RelativeTimeFormat(locale, options);
+  if (minutes < 60) {
+    return rtf.format(-minutes, 'minute');
+  } else if (minutes < 1440) {
+    return rtf.format(Math.round(-minutes / 60), 'hour');
+  } else if (minutes < 43200) {
+    return rtf.format(Math.round(-minutes / 1440), 'day');
+  } else if (minutes < 525600) {
+    return rtf.format(Math.round(-minutes / 43200), 'month');
+  }
+  return rtf.format(Math.round(-minutes / 525600), 'year');
+}
+
+// todo(i18n) use Intl.DurationFormat instead of date-fns (needs Node 23+)
 /** Format the difference between two dates to a string like '2h 10m' */
 export function formatTimeDifference(date1: Date, date2: Date) {
   const duration = intervalToDuration({ start: date1, end: date2 });

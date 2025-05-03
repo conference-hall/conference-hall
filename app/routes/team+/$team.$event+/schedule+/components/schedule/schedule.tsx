@@ -11,10 +11,10 @@ import {
 } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { cx } from 'class-variance-authority';
-import { addMinutes, format, isAfter, isBefore } from 'date-fns';
+import { addMinutes, isAfter, isBefore } from 'date-fns';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatTime, toISODate } from '~/libs/datetimes/datetimes.ts';
+import { formatDate, formatTime, toDateInput } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import {
   countIntervalsInTimeSlot,
@@ -94,7 +94,7 @@ export default function Schedule({
       <div className="flex divide-x-3">
         {displayedDays.map((day, index) => (
           <ScheduleDay
-            key={toISODate(day)}
+            key={toDateInput(day)}
             day={day}
             dayIndex={index}
             displayedTimes={displayedTimes}
@@ -156,7 +156,7 @@ function ScheduleDay({
           {displayMultipleDays && (
             <tr className="h-8">
               <th className="border-b text-sm font-semibold" colSpan={tracks.length + 1}>
-                {format(day, 'PPP')}
+                {formatDate(day, { format: 'long', locale })}
               </th>
             </tr>
           )}
