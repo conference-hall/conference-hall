@@ -1,4 +1,5 @@
 import { ArrowDownIcon, ArrowUpIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { Trans, useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
 import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/buttons.tsx';
@@ -8,13 +9,14 @@ import { List } from '~/design-system/list/list.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import type { SerializeFrom } from '~/types/react-router.types.ts';
 import type { action, loader } from '../../survey.tsx';
-import { QUESTION_TYPES, SurveyQuestionModal } from './survey-question-modal.tsx';
+import { SurveyQuestionModal } from './survey-question-modal.tsx';
 
 const MAX_QUESTIONS = 8;
 
 export type SurveySettingsFormProps = { config: SerializeFrom<typeof loader> };
 
 export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
+  const { t } = useTranslation();
   const { questions } = config;
 
   const fetcher = useFetcher<typeof action>();
@@ -31,16 +33,13 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
   return (
     <Card as="section">
       <Card.Title className="flex items-center gap-3">
-        <H2>Speaker survey</H2>
-        <Badge color="blue" compact>
-          New
-        </Badge>
+        <H2>{t('event-management.settings.survey.heading')}</H2>
       </Card.Title>
 
       <Card.Content>
         <ToggleGroup
-          label="Speaker survey activation"
-          description="When enabled, your questions will be asked to speakers when they submit a proposal."
+          label={t('event-management.settings.survey.toggle.label')}
+          description={t('event-management.settings.survey.toggle.description')}
           value={config.enabled}
           onChange={() => fetcher.submit({ intent: 'toggle-survey' }, { method: 'POST' })}
         />
@@ -48,9 +47,11 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
         <List>
           <List.Header className="flex justify-between">
             <div className="flex items-baseline gap-2">
-              <Text weight="medium">{questions.length} questions</Text>
+              <Text weight="medium">
+                {t('event-management.settings.survey.questions', { count: questions.length })}
+              </Text>
               <Text size="xs" variant="secondary">
-                {`(maximum of ${MAX_QUESTIONS})`}
+                {t('event-management.settings.survey.max-questions', { max: MAX_QUESTIONS })}
               </Text>
             </div>
             <SurveyQuestionModal>
@@ -62,13 +63,13 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                   iconLeft={PlusIcon}
                   disabled={questions.length >= MAX_QUESTIONS}
                 >
-                  Add question
+                  {t('event-management.settings.survey.add-question')}
                 </Button>
               )}
             </SurveyQuestionModal>
           </List.Header>
 
-          <List.Content aria-label="Questions list">
+          <List.Content aria-label={t('event-management.settings.survey.list.label')}>
             {questions.map((question, index) => (
               <List.Row
                 key={question.id}
@@ -81,7 +82,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                       {question.required ? <span className="text-red-600"> *</span> : null}
                     </Text>
                     <Badge color="gray" compact>
-                      {QUESTION_TYPES.find((t) => t.value === question.type)?.name}
+                      {t(`event-management.settings.survey.question-types.${question.type}`)}
                     </Badge>
                   </div>
                   {['checkbox', 'radio'].includes(question.type) ? (
@@ -111,12 +112,12 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                   <SurveyQuestionModal initialValues={question}>
                     {({ onOpen }) => (
                       <Button onClick={onOpen} variant="secondary" size="s">
-                        Edit
+                        {t('common.edit')}
                       </Button>
                     )}
                   </SurveyQuestionModal>
                   <Button variant="important" size="s" onClick={handleRemoveQuestion(question.id)}>
-                    Delete
+                    {t('common.delete')}
                   </Button>
                 </div>
               </List.Row>
@@ -125,7 +126,10 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
 
           <List.Footer>
             <Text size="xs" variant="secondary">
-              <span className="text-red-600">*</span> Required questions.
+              <Trans
+                i18nKey="event-management.settings.survey.required-questions"
+                components={[<span key="1" className="text-red-600" />]}
+              />
             </Text>
           </List.Footer>
         </List>

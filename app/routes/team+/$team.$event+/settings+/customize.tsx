@@ -1,5 +1,6 @@
 import { parseFormData } from '@mjackson/form-data-parser';
 import type { ChangeEvent } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
 import { z } from 'zod';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -10,6 +11,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
@@ -24,6 +26,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
+  const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
   const event = await UserEvent.for(userId, params.team, params.event);
   await event.needsPermission('canEditEvent');
@@ -32,13 +35,14 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const result = FILE_SCHEMA.safeParse(formData.get('logo'));
   if (result.success) {
     await event.update({ logoUrl: result.data.name });
-    return toast('success', 'Logo updated.');
+    return toast('success', t('event-management.settings.customize.feedbacks.logo-updated'));
   } else {
-    return { status: 'error', message: 'An error occurred during upload, you may exceed max file size.' };
+    return { status: 'error', message: t('event-management.settings.customize.errors.upload') };
   }
 };
 
 export default function EventGeneralSettingsRoute({ actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const { name, logoUrl } = useCurrentEvent();
   const submit = useSubmit();
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
@@ -50,19 +54,17 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
   return (
     <Card as="section">
       <Card.Title>
-        <H2>Customize event logo</H2>
-        <Subtitle>Upload a beautiful logo for your event.</Subtitle>
+        <H2>{t('event-management.settings.customize.logo.heading')}</H2>
+        <Subtitle>{t('event-management.settings.customize.logo.description')}</Subtitle>
       </Card.Title>
 
       <Card.Content>
         <Avatar picture={logoUrl} name={`${name} logo`} square size="4xl" />
         <Callout title="Logo format">
-          JPEG, PNG, WEBP or AVIF formats supported with optimal resolution of 500x500.
-          <br />
-          300kB max. You can optimize your logo with{' '}
-          <ExternalLink href="https://squoosh.app" variant="secondary">
-            squoosh.app
-          </ExternalLink>
+          <Trans
+            i18nKey="event-management.settings.customize.logo.info"
+            components={[<br key="1" />, <ExternalLink key="2" href="https://squoosh.app" weight="medium" />]}
+          />
         </Callout>
         {errors?.status === 'error' && <p className="text-sm text-red-600">{errors.message}</p>}
       </Card.Content>
@@ -70,7 +72,7 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
       <Card.Actions>
         <Form method="POST" encType="multipart/form-data" onChange={handleSubmit}>
           <ButtonFileUpload name="logo" accept="image/jpeg,image/png,image/webp,image/avif">
-            Change logo
+            {t('event-management.settings.customize.logo.submit')}
           </ButtonFileUpload>
         </Form>
       </Card.Actions>
