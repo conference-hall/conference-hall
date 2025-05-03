@@ -9,7 +9,7 @@ export function utcToTimezone(date: Date | string, timezone: string) {
 }
 
 // todo(tests)
-export function timezoneToUtc(date: Date | string, timezone: string) {
+function timezoneToUtc(date: Date | string, timezone: string) {
   return fromZonedTime(date, timezone);
 }
 
