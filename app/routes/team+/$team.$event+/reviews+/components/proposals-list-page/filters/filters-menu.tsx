@@ -10,8 +10,8 @@ import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 
-export const reviewOptions = ['reviewed', 'not-reviewed', 'my-favorites'] as const;
-export const statusOptions = ['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined'] as const;
+const reviewOptions = ['reviewed', 'not-reviewed', 'my-favorites'] as const;
+const statusOptions = ['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined'] as const;
 
 export function FiltersMenu() {
   const { t } = useTranslation();
