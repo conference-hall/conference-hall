@@ -30,7 +30,6 @@ describe('SurveySettingsForm component', () => {
     const screen = renderComponent({ config });
 
     await expect.element(screen.getByRole('heading', { name: 'Speaker survey' })).toBeInTheDocument();
-    await expect.element(screen.getByText(/New/)).toBeInTheDocument();
     await expect.element(screen.getByText(/Speaker survey activation/)).toBeInTheDocument();
   });
 

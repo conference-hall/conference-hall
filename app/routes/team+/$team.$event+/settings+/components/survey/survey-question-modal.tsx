@@ -2,6 +2,7 @@ import { PlusIcon } from '@heroicons/react/20/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import slugify from '@sindresorhus/slugify';
 import { type ReactNode, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { v4 as uuid } from 'uuid';
 import type { SurveyQuestion } from '~/.server/event-survey/types.ts';
@@ -12,13 +13,9 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
-export const QUESTION_TYPES: Array<{ name: string; value: QuestionType }> = [
-  { name: 'Free text', value: 'text' },
-  { name: 'Multi choice', value: 'checkbox' },
-  { name: 'Single choice', value: 'radio' },
-];
-
 type QuestionType = 'text' | 'checkbox' | 'radio';
+
+const QUESTION_TYPES: Array<QuestionType> = ['text', 'checkbox', 'radio'] as const;
 
 type SurveyModalProps = {
   initialValues?: SurveyQuestion;
@@ -49,14 +46,19 @@ type SurveyQuestionModalContentProps = {
 };
 
 function SurveyQuestionModalContent({ initialValues, open, onClose }: SurveyQuestionModalContentProps) {
+  const { t } = useTranslation();
   const [type, setType] = useState(initialValues?.type || 'text');
   const [options, setOptions] = useState(initialValues?.options || []);
 
   const isCreateMode = !initialValues;
   const isOptionsEnabled = ['checkbox', 'radio'].includes(type);
   const canSubmit = (isOptionsEnabled && options.length > 0) || type === 'text';
-  const modalTitle = isCreateMode ? 'Add question' : 'Edit question';
-  const submitLabel = isCreateMode ? 'Add question' : 'Save question';
+  const modalTitle = isCreateMode
+    ? t('event-management.settings.survey.add-question')
+    : t('event-management.settings.survey.edit-question');
+  const submitLabel = isCreateMode
+    ? t('event-management.settings.survey.add-question')
+    : t('event-management.settings.survey.save-question');
   const submitIntent = isCreateMode ? 'add-question' : 'update-question';
 
   return (
@@ -66,7 +68,7 @@ function SurveyQuestionModalContent({ initialValues, open, onClose }: SurveyQues
           <div className="flex items-end gap-2">
             <Input
               name="label"
-              label="Question"
+              label={t('event-management.settings.survey.question.label')}
               defaultValue={initialValues?.label}
               className="w-full"
               maxLength={255}
@@ -74,11 +76,14 @@ function SurveyQuestionModalContent({ initialValues, open, onClose }: SurveyQues
             />
             <SelectNative
               name="type"
-              label="type"
+              label={t('event-management.settings.survey.question.type')}
               value={type}
               onChange={(event) => setType(event.target.value as QuestionType)}
               className="w-36"
-              options={QUESTION_TYPES}
+              options={QUESTION_TYPES.map((type) => ({
+                value: type,
+                name: t(`event-management.settings.survey.question-types.${type}`),
+              }))}
               srOnly
             />
           </div>
@@ -86,7 +91,7 @@ function SurveyQuestionModalContent({ initialValues, open, onClose }: SurveyQues
           {isOptionsEnabled ? <OptionsFieldList options={options} setOptions={setOptions} /> : null}
 
           <Checkbox id="required" name="required" defaultChecked={initialValues?.required ?? false}>
-            This question is required
+            {t('event-management.settings.survey.question.required')}
           </Checkbox>
 
           <input type="hidden" name="id" value={isCreateMode ? uuid() : initialValues?.id} />
@@ -95,7 +100,7 @@ function SurveyQuestionModalContent({ initialValues, open, onClose }: SurveyQues
 
       <Modal.Actions>
         <Button type="button" variant="secondary" onClick={onClose}>
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button type="submit" name="intent" value={submitIntent} form="save-question" disabled={!canSubmit}>
           {submitLabel}
@@ -111,6 +116,8 @@ type OptionsFieldListProps = {
 };
 
 function OptionsFieldList({ options, setOptions }: OptionsFieldListProps) {
+  const { t } = useTranslation();
+
   const handleUpdateOption = (index: number, value: string) => {
     const newOptions = [...options];
     newOptions[index] = { ...options[index], label: value };
@@ -123,14 +130,14 @@ function OptionsFieldList({ options, setOptions }: OptionsFieldListProps) {
 
   return (
     <div className="space-y-1.5">
-      <Text weight="medium">Answers</Text>
+      <Text weight="medium">{t('event-management.settings.survey.answers.label')}</Text>
 
       {options.map((option, index) => (
         <div key={option.id} className="flex gap-2">
           <input type="hidden" name={`options[${index}].id`} value={option.id} />
           <Input
             name={`options[${index}].label`}
-            aria-label={`Option ${index + 1}`}
+            aria-label={t('event-management.settings.survey.answers.option', { index: index + 1 })}
             defaultValue={option.label}
             className="w-full"
             required
@@ -138,7 +145,7 @@ function OptionsFieldList({ options, setOptions }: OptionsFieldListProps) {
           />
           <Button
             type="button"
-            aria-label={`Remove answer: ${option.label}`}
+            aria-label={t('event-management.settings.survey.answers.remove', { label: option.label })}
             variant="important"
             size="square-m"
             onClick={() => handleRemoveOption(index)}
@@ -158,6 +165,7 @@ type NewOptionInputProps = {
 };
 
 function NewOptionInput({ setOptions }: NewOptionInputProps) {
+  const { t } = useTranslation();
   const [label, setLabel] = useState('');
 
   const handleAddOption = () => {
@@ -171,8 +179,8 @@ function NewOptionInput({ setOptions }: NewOptionInputProps) {
   return (
     <div className="flex gap-2">
       <Input
-        aria-label="New answer"
-        placeholder="New answer"
+        aria-label={t('event-management.settings.survey.answers.new')}
+        placeholder={t('event-management.settings.survey.answers.new')}
         value={label}
         onChange={(event) => setLabel(event.target.value)}
         className="w-full"
@@ -181,7 +189,7 @@ function NewOptionInput({ setOptions }: NewOptionInputProps) {
       <Button
         type="button"
         variant="secondary"
-        aria-label="Add answer"
+        aria-label={t('event-management.settings.survey.answers.add-answer')}
         disabled={!label}
         size="square-m"
         onClick={handleAddOption}

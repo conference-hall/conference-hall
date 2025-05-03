@@ -6,6 +6,7 @@ import {
   CfpPreferencesSchema,
 } from '~/.server/event-settings/user-event.types.ts';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import type { Route } from './+types/cfp.ts';
@@ -19,6 +20,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
+  const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
   const event = UserEvent.for(userId, params.team, params.event);
   const form = await request.formData();
@@ -45,7 +47,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     }
   }
 
-  return toast('success', 'Call for paper updated.');
+  return toast('success', t('event-management.settings.cfp.feedbacks.updated'));
 };
 
 export default function EventCfpSettingsRoute({ actionData: errors }: Route.ComponentProps) {

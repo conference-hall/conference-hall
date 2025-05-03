@@ -23,7 +23,9 @@ export function EventCfpConferenceForm({ timezone, cfpStart, cfpEnd, errors }: P
           timezone={timezone}
           error={errors?.cfpStart}
         />
-        <Callout title="Call for Papers period">{t('event-management.fields.cfp-dates.description')}</Callout>
+        <Callout title={t('event-management.fields.cfp-dates.heading')}>
+          {t('event-management.fields.cfp-dates.description')}
+        </Callout>
         <input type="hidden" name="timezone" value={timezone} />
       </div>
     </Form>
