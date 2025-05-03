@@ -1,6 +1,6 @@
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
-import { toISODate } from '~/libs/datetimes/datetimes.ts';
+import { toDateInput } from '~/libs/datetimes/datetimes.ts';
 import { utcToTimezone } from '~/libs/datetimes/timezone.ts';
 import type { SubmissionError } from '~/types/errors.types.ts';
 import { Input } from './input.tsx';
@@ -20,6 +20,8 @@ type Props = {
 export function DateRangeInput({ start, end, timezone, min, max, required, error, onChange, className }: Props) {
   const [startDate, setStartDate] = useState<Date | null>(start.value ? utcToTimezone(start.value, timezone) : null);
   const [endDate, setEndDate] = useState<Date | null>(end.value ? utcToTimezone(end.value, timezone) : null);
+
+  console.log(startDate?.toString());
 
   const handleStartDate = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -58,9 +60,9 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
           name={start.name}
           label={start.label}
           autoComplete="off"
-          value={toISODate(startDate)}
-          min={toISODate(min)}
-          max={toISODate(max)}
+          value={toDateInput(startDate)}
+          min={toDateInput(min)}
+          max={toDateInput(max)}
           onChange={handleStartDate}
           className="col-span-2 sm:col-span-1"
           required={required}
@@ -71,9 +73,9 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
           name={end.name}
           label={end.label}
           autoComplete="off"
-          min={toISODate(startDate) || toISODate(min)}
-          max={toISODate(max)}
-          value={toISODate(endDate)}
+          min={toDateInput(startDate) || toDateInput(min)}
+          max={toDateInput(max)}
+          value={toDateInput(endDate)}
           onChange={handleEndDate}
           className="col-span-2 sm:col-span-1"
           required={required}

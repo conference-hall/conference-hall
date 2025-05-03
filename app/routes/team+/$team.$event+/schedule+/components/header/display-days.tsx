@@ -1,9 +1,10 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
-import { format, isSameDay } from 'date-fns';
+import { isSameDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import { formatDateRange } from '~/libs/datetimes/datetimes.ts';
 
 const NEXT = 1;
 const PREVIOUS = -1;
@@ -16,7 +17,7 @@ type Props = {
 };
 
 export function DisplayDays({ scheduleDays, displayedDays, timezone, onChangeDisplayDays }: Props) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const scheduleStartDay = scheduleDays.at(0)!;
   const scheduleEndDay = scheduleDays.at(-1)!;
   const displayedStartDay = displayedDays.at(0)!;
@@ -53,7 +54,7 @@ export function DisplayDays({ scheduleDays, displayedDays, timezone, onChangeDis
 
       <Popover>
         <PopoverButton className="hidden h-full border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 cursor-pointer focus:relative md:block">
-          {formatDays(displayedStartDay, displayedEndDay)}
+          {formatDateRange(displayedStartDay, displayedEndDay, i18n.language)}
         </PopoverButton>
         <PopoverPanel
           anchor={{ to: 'bottom start', gap: '4px', offset: '-34px' }}
@@ -88,10 +89,4 @@ export function DisplayDays({ scheduleDays, displayedDays, timezone, onChangeDis
       </button>
     </div>
   );
-}
-
-function formatDays(start: Date, end: Date) {
-  if (!start) return null;
-  if (start === end) return format(start, 'PPP');
-  return `${format(start, 'MMM d')} to ${format(end, 'PP')}`;
 }
