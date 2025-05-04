@@ -27,7 +27,7 @@ export class PageObject {
     await input.scrollIntoViewIfNeeded();
     await input.focus();
     await input.clear();
-    await input.pressSequentially(value);
+    await input.fill(value);
   }
 
   async getInputDescription(input: Locator) {

@@ -89,8 +89,8 @@ export function formatTime(time: Date | number, options: FormatOption): string {
 
 // todo(tests)
 export function toDateInput(date?: Date | null) {
-  if (!date) return undefined;
-  const year = date.getFullYear();
+  if (!date) return null;
+  const year = String(date.getFullYear()).padStart(4, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
