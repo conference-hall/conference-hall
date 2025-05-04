@@ -3,7 +3,7 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { Card, CardLink } from '~/design-system/layouts/card.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
 import type { CfpState } from '~/types/events.types.ts';
-import { CfpElapsedTime } from '../cfp/cfp-elapsed-time.tsx';
+import { CfpStatus } from '../cfp/cfp-status.tsx';
 
 type CardContentProps = {
   name: string;
@@ -50,7 +50,7 @@ function CardContent({ name, type, logoUrl, cfpState, cfpStart, cfpEnd }: CardCo
           <Subtitle weight="medium" className="hidden sm:block">
             {t(`common.event.type.label.${type}`)}
           </Subtitle>
-          <CfpElapsedTime cfpState={cfpState} cfpStart={cfpStart} cfpEnd={cfpEnd} />
+          <CfpStatus cfpState={cfpState} cfpStart={cfpStart} cfpEnd={cfpEnd} />
         </div>
       </div>
     </span>

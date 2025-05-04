@@ -7,7 +7,7 @@ import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import type { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { useTranslation } from 'react-i18next';
-import { formatDistanceFromNow } from '~/libs/datetimes/datetimes.ts';
+import { formatDistance } from '~/libs/datetimes/datetimes.ts';
 import { ProposalStatusLabel } from '../proposals/proposal-status-label.tsx';
 import { ClientOnly } from '../utils/client-only.tsx';
 
@@ -44,7 +44,7 @@ export function TalkSubmissionsSection({ submissions }: Props) {
                     {submission.name}
                   </Text>
                   <Subtitle size="xs">
-                    <ClientOnly>{() => formatDistanceFromNow(submission.createdAt, i18n.language)}</ClientOnly>
+                    <ClientOnly>{() => formatDistance(submission.createdAt, i18n.language)}</ClientOnly>
                   </Subtitle>
                 </div>
               </div>

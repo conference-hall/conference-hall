@@ -13,7 +13,6 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/verify-email.ts';
 
 export const meta = (args: Route.MetaArgs) => {
-  // todo(18n)
   return mergeMeta(args.matches, [{ title: 'Verify email | Conference Hall' }]);
 };
 

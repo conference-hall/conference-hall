@@ -2,7 +2,7 @@ import { useFetchers, useSubmit } from 'react-router';
 import { v4 as uuid } from 'uuid';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import { areTimeSlotsOverlapping } from '~/libs/datetimes/timeslots.ts';
-import { formatTimezoneToUtc, utcToTimezone } from '~/libs/datetimes/timezone.ts';
+import { convertTimezoneToUtcString, utcToTimezone } from '~/libs/datetimes/timezone.ts';
 import type { Language } from '~/types/proposals.types.ts';
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
@@ -21,8 +21,8 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
         intent: 'add-session',
         id,
         trackId: trackId,
-        start: formatTimezoneToUtc(timeslot.start, timezone),
-        end: formatTimezoneToUtc(timeslot.end, timezone),
+        start: convertTimezoneToUtcString(timeslot.start, timezone),
+        end: convertTimezoneToUtcString(timeslot.end, timezone),
       },
       {
         method: 'POST',
@@ -39,8 +39,8 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     formData.set('intent', 'update-session');
     formData.set('id', session.id);
     formData.set('trackId', session.trackId);
-    formData.set('start', formatTimezoneToUtc(session.timeslot.start, timezone));
-    formData.set('end', formatTimezoneToUtc(session.timeslot.end, timezone));
+    formData.set('start', convertTimezoneToUtcString(session.timeslot.start, timezone));
+    formData.set('end', convertTimezoneToUtcString(session.timeslot.end, timezone));
     formData.set('color', session.color);
     formData.set('name', session.name ?? '');
     formData.set('language', session.language ?? '');

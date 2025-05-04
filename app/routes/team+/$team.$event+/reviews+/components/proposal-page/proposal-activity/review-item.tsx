@@ -1,7 +1,7 @@
 import { HeartIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { Trans, useTranslation } from 'react-i18next';
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
-import { formatDistanceFromNow } from '~/libs/datetimes/datetimes.ts';
+import { formatDistance } from '~/libs/datetimes/datetimes.ts';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 
 export function ReviewItem({ item }: { item: FeedItem }) {
@@ -35,7 +35,7 @@ export function ReviewItem({ item }: { item: FeedItem }) {
       <ClientOnly>
         {() => (
           <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
-            {formatDistanceFromNow(item.timestamp, i18n.language)}
+            {formatDistance(item.timestamp, i18n.language)}
           </time>
         )}
       </ClientOnly>
