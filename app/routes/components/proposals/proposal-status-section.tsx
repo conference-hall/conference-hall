@@ -1,4 +1,5 @@
 import { ArrowRightIcon, CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -34,16 +35,16 @@ export function ProposalStatusSection(props: Props) {
   }
 }
 
-// todo(i18n) !!!
 function Draft({ proposal, event }: Props) {
+  const { t } = useTranslation();
   return (
     <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
       <div>
-        <H2 mb={1}>Draft proposal!</H2>
+        <H2 mb={1}>{t('speaker.proposal-status.draft.heading')}</H2>
         {event.isCfpOpen ? (
-          <Subtitle>The proposal is not yet submitted to {event.name}. Do it before the CFP closes.</Subtitle>
+          <Subtitle>{t('speaker.proposal-status.draft.cfp-open', { event: event.name })}</Subtitle>
         ) : (
-          <Subtitle>The CFP is closed, sorry but you miss the submission timeframe 😔</Subtitle>
+          <Subtitle>{t('speaker.proposal-status.draft.cfp-close')}</Subtitle>
         )}
       </div>
       <div className="mt-5 flex gap-4">
@@ -51,7 +52,7 @@ function Draft({ proposal, event }: Props) {
           <>
             <ProposalDeleteButton />
             <ButtonLink to={`../submission/${proposal.talkId}`} iconRight={ArrowRightIcon}>
-              Continue submission
+              {t('speaker.proposal-status.draft.continue')}
             </ButtonLink>
           </>
         ) : (
@@ -63,17 +64,15 @@ function Draft({ proposal, event }: Props) {
 }
 
 function Submitted({ event }: Props) {
+  const { t } = useTranslation();
   return (
     <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
       <div>
-        <H2 mb={1}>Submitted to {event.name}!</H2>
+        <H2 mb={1}>{t('speaker.proposal-status.submitted.heading', { event: event.name })}</H2>
         {event.isCfpOpen ? (
-          <Subtitle>You can edit or delete your proposal as long as the CFP is open.</Subtitle>
+          <Subtitle>{t('speaker.proposal-status.submitted.cfp-open')}</Subtitle>
         ) : (
-          <Subtitle>
-            The CFP is closed, the event organizers are reviewing the proposals. You will received the result by email
-            soon.
-          </Subtitle>
+          <Subtitle>{t('speaker.proposal-status.submitted.cfp-close')}</Subtitle>
         )}
       </div>
       {event.isCfpOpen && (
@@ -86,38 +85,34 @@ function Submitted({ event }: Props) {
 }
 
 function DeliberationPending() {
+  const { t } = useTranslation();
   return (
     <Card as="section" p={8}>
-      <H2 mb={1}>Deliberation pending</H2>
-      <Subtitle>
-        The organizers are currently deliberating, you will be notified by email when the proposal is accepted or
-        declined.
-      </Subtitle>
+      <H2 mb={1}>{t('speaker.proposal-status.pending.heading')}</H2>
+      <Subtitle>{t('speaker.proposal-status.pending.description')}</Subtitle>
     </Card>
   );
 }
 
 function AcceptedByOrganizers({ event }: Props) {
+  const { t } = useTranslation();
   return (
     <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
       <div>
-        <H2 mb={1}>Proposal has been accepted to {event.name}!</H2>
-        <Text variant="secondary">
-          Please confirm or decline your participation to the event. Don't forget to check the event location and dates
-          before.
-        </Text>
+        <H2 mb={1}>{t('speaker.proposal-status.accepted.heading', { event: event.name })}</H2>
+        <Text variant="secondary">{t('speaker.proposal-status.accepted.description')}</Text>
       </div>
       <div className="flex gap-4">
         <Form method="POST">
           <input type="hidden" name="participation" value="DECLINED" />
           <Button type="submit" name="intent" value="proposal-confirmation" variant="secondary" iconRight={XMarkIcon}>
-            Decline
+            {t('common.decline')}
           </Button>
         </Form>
         <Form method="POST">
           <input type="hidden" name="participation" value="CONFIRMED" />
           <Button type="submit" name="intent" value="proposal-confirmation" iconRight={CheckIcon}>
-            Confirm
+            {t('common.confirm')}
           </Button>
         </Form>
       </div>
@@ -126,28 +121,31 @@ function AcceptedByOrganizers({ event }: Props) {
 }
 
 function RejectedByOrganizers({ event }: Props) {
+  const { t } = useTranslation();
   return (
     <Card as="section" p={8}>
-      <H2 mb={1}>Proposal has been declined by {event.name}.</H2>
-      <Text variant="secondary">Thank you for your submission.</Text>
+      <H2 mb={1}>{t('speaker.proposal-status.rejected.heading', { event: event.name })}</H2>
+      <Text variant="secondary">{t('speaker.proposal-status.rejected.description')}</Text>
     </Card>
   );
 }
 
 function ConfirmedBySpeaker({ event }: Props) {
+  const { t } = useTranslation();
   return (
     <Card as="section" p={8}>
-      <H2 mb={1}>Your participation to {event.name} is confirmed, Thanks!</H2>
-      <Text variant="secondary">We are happy to see you there.</Text>
+      <H2 mb={1}>{t('speaker.proposal-status.confirmed.heading', { event: event.name })}</H2>
+      <Text variant="secondary">{t('speaker.proposal-status.confirmed.description')}</Text>
     </Card>
   );
 }
 
 function DeclinedBySpeaker({ event }: Props) {
+  const { t } = useTranslation();
   return (
     <Card as="section" p={8}>
-      <H2 mb={1}>You have declined this proposal for {event.name}.</H2>
-      <Text variant="secondary">Organizers will be notified. Thanks for the notice.</Text>
+      <H2 mb={1}>{t('speaker.proposal-status.declined.heading', { event: event.name })}</H2>
+      <Text variant="secondary">{t('speaker.proposal-status.declined.description')}</Text>
     </Card>
   );
 }
