@@ -18,36 +18,45 @@ type Props = {
 };
 
 export function DateRangeInput({ start, end, timezone, min, max, required, error, onChange, className }: Props) {
-  const [startDate, setStartDate] = useState<Date | null>(start.value ? utcToTimezone(start.value, timezone) : null);
-  const [endDate, setEndDate] = useState<Date | null>(end.value ? utcToTimezone(end.value, timezone) : null);
+  const defaultStart = start.value ? toDateInput(utcToTimezone(start.value, timezone)) : null;
+  const defaultEnd = end.value ? toDateInput(utcToTimezone(end.value, timezone)) : null;
 
-  console.log(startDate?.toString());
+  const [startDate, setStartDate] = useState(defaultStart);
+  const [endDate, setEndDate] = useState(defaultEnd || defaultStart);
 
   const handleStartDate = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const newStartDate = event.target.valueAsDate ? utcToTimezone(event.target.valueAsDate, timezone) : null;
-      setStartDate(newStartDate);
+      const newStartDate = event.target.valueAsDate
+        ? toDateInput(utcToTimezone(event.target.valueAsDate, timezone))
+        : null;
+
       let newEndDate = endDate;
       if (!newStartDate) {
         newEndDate = null;
       } else if (!endDate) {
         newEndDate = newStartDate;
-      } else if (newStartDate >= endDate) {
+      } else if (new Date(newStartDate) >= new Date(endDate)) {
         newEndDate = newStartDate;
       }
+      setStartDate(newStartDate);
       setEndDate(newEndDate);
-      if (onChange) onChange(newStartDate, newEndDate);
+
+      if (onChange) onChange(newStartDate ? new Date(newStartDate) : null, newEndDate ? new Date(newEndDate) : null);
     },
     [endDate, timezone, onChange],
   );
 
   const handleEndDate = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const newEndDate = event.target.valueAsDate ? utcToTimezone(event.target.valueAsDate, timezone) : null;
+      const newEndDate = event.target.valueAsDate
+        ? toDateInput(utcToTimezone(event.target.valueAsDate, timezone))
+        : null;
+
       const newStartDate = !startDate ? newEndDate : startDate;
-      setEndDate(newEndDate);
       setStartDate(newStartDate);
-      if (onChange) onChange(newStartDate, newEndDate);
+      setEndDate(newEndDate);
+
+      if (onChange) onChange(newStartDate ? new Date(newStartDate) : null, newEndDate ? new Date(newEndDate) : null);
     },
     [startDate, timezone, onChange],
   );
@@ -60,9 +69,9 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
           name={start.name}
           label={start.label}
           autoComplete="off"
-          value={toDateInput(startDate)}
-          min={toDateInput(min)}
-          max={toDateInput(max)}
+          value={startDate || ''}
+          min={toDateInput(min) || ''}
+          max={toDateInput(max) || ''}
           onChange={handleStartDate}
           className="col-span-2 sm:col-span-1"
           required={required}
@@ -73,9 +82,9 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
           name={end.name}
           label={end.label}
           autoComplete="off"
-          min={toDateInput(startDate) || toDateInput(min)}
-          max={toDateInput(max)}
-          value={toDateInput(endDate)}
+          min={startDate || toDateInput(min) || ''}
+          max={toDateInput(max) || ''}
+          value={endDate || ''}
           onChange={handleEndDate}
           className="col-span-2 sm:col-span-1"
           required={required}
