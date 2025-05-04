@@ -9,15 +9,23 @@ import {
 } from 'date-fns';
 
 type FormatType = 'short' | 'medium' | 'long';
-type FormatOption = { format: FormatType; locale: string };
+type FormatOption = { format: FormatType; locale: string; timezone?: string };
 
 const DATETIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
   // 10/1/2023, 10:00
   short: { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false },
   // 1 Oct 2023, 10:00 AM
   medium: { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric' },
-  // 1 October 2023, 10:00 AM GMT+2
-  long: { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric', timeZoneName: 'short' },
+  // Monday, 1 October 2023 at 10:00 AM GMT+2
+  long: {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    timeZoneName: 'short',
+  },
 };
 
 const DATE_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
@@ -26,7 +34,7 @@ const DATE_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
   // 1 Oct 2023
   medium: { day: 'numeric', month: 'short', year: 'numeric' },
   // 1 October 2023
-  long: { day: '2-digit', month: 'long', year: 'numeric' },
+  long: { day: '2-digit', month: 'long', year: 'numeric', timeZoneName: 'short' },
 };
 
 const DAY_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
@@ -49,20 +57,23 @@ const TIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
 
 // todo(tests)
 export function formatDatetime(date: Date, options: FormatOption): string {
-  const { format, locale } = options;
-  return new Intl.DateTimeFormat(locale, DATETIME_FORMATS[format]).format(date);
+  const { format, locale, timezone } = options;
+  const intlFormat = { ...DATETIME_FORMATS[format], timeZone: timezone };
+  return new Intl.DateTimeFormat(locale, intlFormat).format(date);
 }
 
 // todo(tests)
 export function formatDate(date: Date, options: FormatOption): string {
-  const { format, locale } = options;
-  return new Intl.DateTimeFormat(locale, DATE_FORMATS[format]).format(date);
+  const { format, locale, timezone } = options;
+  const intlFormat = { ...DATE_FORMATS[format], timeZone: timezone };
+  return new Intl.DateTimeFormat(locale, intlFormat).format(date);
 }
 
 // todo(tests)
 export function formatDay(date: Date, options: FormatOption): string {
-  const { format, locale } = options;
-  return new Intl.DateTimeFormat(locale, DAY_FORMATS[format]).format(date);
+  const { format, locale, timezone } = options;
+  const intlFormat = { ...DAY_FORMATS[format], timeZone: timezone };
+  return new Intl.DateTimeFormat(locale, intlFormat).format(date);
 }
 
 // todo(tests)
@@ -83,8 +94,9 @@ export function formatTime(time: Date | number, options: FormatOption): string {
   if (typeof time === 'number') {
     time = setMinutes(startOfDay(new Date()), time);
   }
-  const { format, locale } = options;
-  return new Intl.DateTimeFormat(locale, TIME_FORMATS[format]).format(time);
+  const { format, locale, timezone } = options;
+  const intlFormat = { ...TIME_FORMATS[format], timeZone: timezone };
+  return new Intl.DateTimeFormat(locale, intlFormat).format(time);
 }
 
 // todo(tests)
@@ -97,20 +109,23 @@ export function toDateInput(date?: Date | null) {
 }
 
 // todo(tests)
-export function formatDistanceFromNow(date: Date, locale: string): string {
+export function formatDistance(date: Date, locale: string, direction: 'from' | 'to' = 'from'): string {
   const minutes = Math.abs(differenceInMinutes(Date.now(), date));
+
   const options: Intl.RelativeTimeFormatOptions = { numeric: 'auto', style: 'long', localeMatcher: 'best fit' };
   const rtf = new Intl.RelativeTimeFormat(locale, options);
+
+  const duration = direction === 'from' ? -minutes : minutes;
   if (minutes < 60) {
-    return rtf.format(-minutes, 'minute');
+    return rtf.format(duration, 'minute');
   } else if (minutes < 1440) {
-    return rtf.format(Math.round(-minutes / 60), 'hour');
+    return rtf.format(Math.round(duration / 60), 'hour');
   } else if (minutes < 43200) {
-    return rtf.format(Math.round(-minutes / 1440), 'day');
+    return rtf.format(Math.round(duration / 1440), 'day');
   } else if (minutes < 525600) {
-    return rtf.format(Math.round(-minutes / 43200), 'month');
+    return rtf.format(Math.round(duration / 43200), 'month');
   }
-  return rtf.format(Math.round(-minutes / 525600), 'year');
+  return rtf.format(Math.round(duration / 525600), 'year');
 }
 
 // todo(i18n) use Intl.DurationFormat instead of date-fns (needs Node 23+)
