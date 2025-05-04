@@ -2,7 +2,7 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
 import { Link } from '~/design-system/links.tsx';
-import { cfpColorStatus, formatCFPDate, formatCFPState } from '~/libs/formatters/cfp.ts';
+import { CallForPaperDateLabel, CallForPaperStatusLabel, cfpColorStatus } from '~/routes/components/cfp/cfp.tsx';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 import type { CfpState } from '~/types/events.types.ts';
 
@@ -15,8 +15,10 @@ export function CfpStatusCard({ cfpState, cfpStart, cfpEnd, timezone, showAction
       {() => (
         <StatusCard
           status={cfpColorStatus(cfpState, cfpStart, cfpEnd)}
-          label={formatCFPState(cfpState, cfpStart, cfpEnd)}
-          subtitle={formatCFPDate(cfpState, timezone, cfpStart, cfpEnd, 'Pp (z)')}
+          label={<CallForPaperStatusLabel state={cfpState} start={cfpStart} end={cfpEnd} />}
+          subtitle={
+            <CallForPaperDateLabel state={cfpState} start={cfpStart} end={cfpEnd} timezone={timezone} format="short" />
+          }
         >
           {showActions ? (
             <Link to="settings/cfp" iconRight={ArrowRightIcon} weight="medium">

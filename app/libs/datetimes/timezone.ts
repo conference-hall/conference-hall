@@ -1,7 +1,5 @@
 import { endOfDay, parse, startOfDay } from 'date-fns';
-import { format as formatZT, fromZonedTime, toZonedTime } from 'date-fns-tz';
-
-// todo(i18n): use locale in date formatting
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 
 // todo(tests)
 export function utcToTimezone(date: Date | string, timezone: string) {
@@ -13,13 +11,8 @@ function timezoneToUtc(date: Date | string, timezone: string) {
   return fromZonedTime(date, timezone);
 }
 
-// todo(tests)
-export function formatInTimeZone(date: Date, format: string, timezone: string) {
-  return formatZT(date, format, { timeZone: timezone });
-}
-
 /** Convert a timezoned date to UTC and format it to ISO format */
-export function formatTimezoneToUtc(date: Date, timezone: string) {
+export function convertTimezoneToUtcString(date: Date, timezone: string) {
   return timezoneToUtc(date, timezone).toISOString();
 }
 
