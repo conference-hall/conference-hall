@@ -51,7 +51,7 @@ function DeleteModal({ title, description, confirmationText, intent, open, onClo
       <Modal.Content className="space-y-4">
         <Callout variant="error">{description}</Callout>
         <Input
-          label={t('common.confirm-delete-input', { confirmationText })}
+          label={t('common.confirmation-delete-input', { confirmationText })}
           value={confirmation}
           onChange={(e) => setConfirmation(e.target.value)}
         />

@@ -61,7 +61,7 @@ export default function AdminDebugPage({ actionData: errors }: Route.ComponentPr
             method="GET"
             action="/admin/debug/heap-snapshot"
             onSubmit={() => {
-              if (!confirm(t('common.confirm'))) return;
+              if (!confirm(t('common.confirmation'))) return;
             }}
           >
             <Button type="submit" variant="secondary">
