@@ -50,6 +50,7 @@ export const exportToOpenPlanner = job<ExportToOpenPlannerPayload>({
             formatName: format?.name,
             categoryId: category?.id,
             categoryName: category?.name,
+            showInFeedback: true,
           }),
         );
 

@@ -15,6 +15,7 @@ const OpenPlannerSessionsPayloadSchema = z.object({
       formatName: z.string().nullish(),
       categoryId: z.string().nullish(),
       categoryName: z.string().nullish(),
+      showInFeedback: z.boolean().nullish(),
     }),
   ),
   speakers: z.array(

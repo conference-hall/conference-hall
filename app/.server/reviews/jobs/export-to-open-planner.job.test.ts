@@ -66,6 +66,7 @@ describe('Job: exportToOpenPlanner', () => {
           speakerIds: proposal2.speakers.map((s) => s.id),
           categoryId: category.id,
           categoryName: category.name,
+          showInFeedback: true,
         },
         {
           id: proposal1.id,
@@ -76,6 +77,7 @@ describe('Job: exportToOpenPlanner', () => {
           speakerIds: proposal1.speakers.map((s) => s.id),
           formatId: format.id,
           formatName: format.name,
+          showInFeedback: true,
         },
       ],
       speakers: [
