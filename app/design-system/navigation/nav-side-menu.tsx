@@ -1,7 +1,7 @@
-import { cx } from 'class-variance-authority';
-import { NavLink } from 'react-router';
-
 import { HeartIcon } from '@heroicons/react/16/solid';
+import { cx } from 'class-variance-authority';
+import { useTranslation } from 'react-i18next';
+import { NavLink } from 'react-router';
 import { Badge } from '../badges.tsx';
 import { Card } from '../layouts/card.tsx';
 import { Text } from '../typography.tsx';
@@ -11,6 +11,7 @@ type NavItem = { to: string; icon: React.ComponentType<{ className?: string }>; 
 type Props = { items: Array<NavItem>; className?: string };
 
 export function NavSideMenu({ items, className, ...rest }: Props) {
+  const { t } = useTranslation();
   return (
     <aside className={cx('w-1/5 space-y-4', className)}>
       <Card as="nav" className="space-y-1 p-2" {...rest}>
@@ -22,7 +23,7 @@ export function NavSideMenu({ items, className, ...rest }: Props) {
             </div>
             {item.isNew ? (
               <Badge color="blue" compact>
-                New
+                {t('common.new')}
               </Badge>
             ) : null}
           </NavLink>
@@ -34,7 +35,7 @@ export function NavSideMenu({ items, className, ...rest }: Props) {
           rel="noreferrer"
         >
           <HeartIcon className="mr-2 size-4 shrink-0 fill-red-300 group-hover:fill-red-400" aria-hidden="true" />
-          <Text className="grow">Support Conference Hall</Text>
+          <Text className="grow">{t('common.sponsor')}</Text>
         </a>
       </Card>
     </aside>

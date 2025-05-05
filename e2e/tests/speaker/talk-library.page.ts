@@ -10,7 +10,7 @@ export class TalkLibraryPage extends PageObject {
 
   constructor(page: Page) {
     super(page);
-    this.heading = page.getByRole('heading', { name: 'Talk library' });
+    this.heading = page.getByRole('heading', { name: 'Talks library' });
     this.talks = this.page.getByRole('list', { name: 'Talks list' }).locator('>li');
     this.noTalks = this.page.getByText('No talks found.');
   }

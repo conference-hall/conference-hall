@@ -136,6 +136,9 @@ export default [
   route('api/v1/event/:event', './routes/api+/v1.event.$event.tsx'),
   route('api/v1/event/:event/schedule', './routes/api+/v1.event.$event.schedule.tsx'),
 
+  // Locales route
+  route('locales/:lng/:ns', './routes/_misc+/locales.ts'),
+
   // SEO routes
   route('robots.txt', './routes/_misc+/robots[.txt].ts'),
   route('sitemap.xml', './routes/_misc+/sitemap[.]xml.ts'),

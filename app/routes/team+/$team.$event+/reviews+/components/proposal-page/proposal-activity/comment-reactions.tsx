@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useFetchers, useSubmit } from 'react-router';
 import { EmojiReactions } from '~/routes/components/emojis/emoji-reactions.tsx';
 import type { Emoji, EmojiReaction } from '~/types/emojis.types.ts';
@@ -45,6 +46,9 @@ export function CommentReactions({ commentId, reactions }: CommentReactions) {
 }
 
 function useOptimisticReactions(commentId: string, initialReactions: Array<EmojiReaction>) {
+  const { t } = useTranslation();
+  const you = t('common.you');
+
   type PendingReactions = ReturnType<typeof useFetchers>[number] & {
     formData: FormData;
   };
@@ -69,21 +73,21 @@ function useOptimisticReactions(commentId: string, initialReactions: Array<Emoji
 
     // add reaction
     if (!current) {
-      reactionsByCode.set(reaction.code, { code: reaction.code, reacted: true, reactedBy: ['You'] });
+      reactionsByCode.set(reaction.code, { code: reaction.code, reacted: true, reactedBy: [you] });
       continue;
     }
 
     // increment reaction
     if (!current.reacted) {
       current.reacted = true;
-      current.reactedBy.push('You');
+      current.reactedBy.push(you);
       continue;
     }
 
     // decrement reaction
     if (current.reacted && current.reactedBy.length > 1) {
       current.reacted = false;
-      current.reactedBy = current.reactedBy.filter((user) => user !== 'You');
+      current.reactedBy = current.reactedBy.filter((user) => user !== you);
       continue;
     }
 

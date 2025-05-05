@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { EventMetrics } from '~/.server/event-metrics/event-metrics.ts';
 import { ReviewersMetrics } from '~/.server/event-metrics/reviewers-metrics.ts';
 import { BarListCard } from '~/design-system/dashboard/bar-list-card.tsx';
@@ -30,13 +31,14 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export default function OverviewRoute({ loaderData: { tab, metrics } }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
   const { canEditEvent } = currentTeam.userPermissions;
 
   return (
     <Page>
-      <h1 className="sr-only">Event overview</h1>
+      <h1 className="sr-only">{t('event-management.overview.heading')}</h1>
       <div className="space-y-4 lg:space-y-6">
         <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
           <CfpStatusCard
@@ -59,10 +61,10 @@ export default function OverviewRoute({ loaderData: { tab, metrics } }: Route.Co
             {tab === 'call-for-paper' ? (
               <div className="px-6 space-y-8">
                 <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
-                  <StatisticCard label="Proposals" stat={`${metrics.proposalsCount}`} />
-                  <StatisticCard label="Speakers" stat={`${metrics.speakersCount}`} />
+                  <StatisticCard label={t('common.proposals')} stat={`${metrics.proposalsCount}`} />
+                  <StatisticCard label={t('common.speakers')} stat={`${metrics.speakersCount}`} />
                   <ProgressCard
-                    label="Proposals reviewed by you."
+                    label={t('event-management.overview.reviewed-by-you')}
                     value={metrics.reviewsCount}
                     max={metrics.proposalsCount}
                   />
@@ -71,8 +73,15 @@ export default function OverviewRoute({ loaderData: { tab, metrics } }: Route.Co
                 <ProposalsByDayChart data={metrics.byDays} className="p-6 space-y-6" />
 
                 <div className="grid grid-cols-1 gap-4 lg:gap-6 sm:grid-cols-2">
-                  {metrics.byFormats && <BarListCard label="Proposals by formats" data={metrics.byFormats} />}
-                  {metrics.byCategories && <BarListCard label="Proposals by categories" data={metrics.byCategories} />}
+                  {metrics.byFormats && (
+                    <BarListCard label={t('event-management.overview.proposals-by-formats')} data={metrics.byFormats} />
+                  )}
+                  {metrics.byCategories && (
+                    <BarListCard
+                      label={t('event-management.overview.proposals-by-categories')}
+                      data={metrics.byCategories}
+                    />
+                  )}
                 </div>
               </div>
             ) : (

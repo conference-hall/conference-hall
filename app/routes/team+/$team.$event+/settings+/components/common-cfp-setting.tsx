@@ -1,5 +1,5 @@
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -13,36 +13,37 @@ type Props = {
 };
 
 export function CommonCfpSetting({ maxProposals, codeOfConductUrl, errors }: Props) {
+  const { t } = useTranslation();
   return (
     <Card as="section">
       <Card.Title>
-        <H2>Call for paper preferences</H2>
+        <H2>{t('event-management.settings.cfp.preferences.heading')}</H2>
       </Card.Title>
 
       <Form method="POST">
         <Card.Content>
           <Input
             name="maxProposals"
-            label="Maximum of proposals per speaker"
+            label={t('event-management.settings.cfp.preferences.max-proposals.label')}
+            description={t('event-management.settings.cfp.preferences.max-proposals.description')}
             type="number"
             defaultValue={maxProposals || ''}
             min={1}
             autoComplete="off"
-            description="Optional. Limits the number of proposals a speaker can submit to the event."
             error={errors?.maxProposals}
           />
           <Input
             name="codeOfConductUrl"
-            label="Code of conduct URL"
+            label={t('event-management.settings.cfp.preferences.coc-url.label')}
+            description={t('event-management.settings.cfp.preferences.coc-url.description')}
             defaultValue={codeOfConductUrl || ''}
-            description="Optional. Speakers will be required to agree to the code of conduct before submitting their proposal."
             error={errors?.codeOfConductUrl}
           />
         </Card.Content>
 
         <Card.Actions>
           <Button name="intent" value="save-cfp-preferences">
-            Update CFP preferences
+            {t('event-management.settings.cfp.preferences.submit')}
           </Button>
         </Card.Actions>
       </Form>

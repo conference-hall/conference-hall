@@ -3,6 +3,7 @@ import { db } from 'prisma/db.server.ts';
 import { ProposalNotFoundError, ReviewDisabledError } from '~/libs/errors.server.ts';
 
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
+import type { Languages } from '~/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { SpeakerSurvey } from '../event-survey/speaker-survey.ts';
 import type { SurveyDetailedAnswer } from '../event-survey/types.ts';
@@ -60,7 +61,7 @@ export class ProposalReview {
       publicationStatus: proposal.publicationStatus,
       confirmationStatus: proposal.confirmationStatus,
       createdAt: proposal.createdAt,
-      languages: proposal.languages as string[],
+      languages: proposal.languages as Languages,
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
       reviews: {

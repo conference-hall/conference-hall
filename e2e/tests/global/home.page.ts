@@ -6,7 +6,7 @@ export class HomePage extends PageObject {
   readonly heading: Locator = this.page.getByRole('heading', { name: 'Call for papers for conferences and meetups.' });
   readonly searchInput: Locator = this.page.getByLabel('Search conferences and meetups.');
   readonly results: Locator = this.page.getByRole('list', { name: 'Search results' }).locator('li');
-  readonly noResults: Locator = this.page.getByText('No results found!');
+  readonly noResults: Locator = this.page.getByText('No results found');
 
   async goto() {
     await this.page.goto('/');

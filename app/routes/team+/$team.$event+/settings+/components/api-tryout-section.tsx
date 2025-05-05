@@ -1,5 +1,6 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Input } from '~/design-system/forms/input.tsx';
 import Select from '~/design-system/forms/select.tsx';
@@ -10,6 +11,7 @@ import { H2, Subtitle } from '~/design-system/typography.tsx';
 type Props = { slug: string; apiKey: string };
 
 export function EventProposalApiTryout({ slug, apiKey }: Props) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState<string>('');
   const [status, setStatus] = useState<string>('');
 
@@ -23,26 +25,26 @@ export function EventProposalApiTryout({ slug, apiKey }: Props) {
   return (
     <Card as="section">
       <Card.Title>
-        <H2>Event proposals API</H2>
-        <Subtitle>List event proposals, you can filters them around different criterias.</Subtitle>
+        <H2>{t('event-management.settings.web-api.tryout.proposals.heading')}</H2>
+        <Subtitle>{t('event-management.settings.web-api.tryout.proposals.description')}</Subtitle>
       </Card.Title>
 
       <Card.Content>
         <code className="rounded-sm bg-gray-100 p-4 text-sm">{url}</code>
         <Input
           name="query"
-          label="query"
+          label={t('event-management.settings.web-api.tryout.proposals.query.label')}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by term in proposal titles or speaker names"
+          placeholder={t('event-management.settings.web-api.tryout.proposals.query.placeholder')}
         />
         <Select
           name="deliberationStatus"
-          label="deliberationStatus"
+          label={t('event-management.settings.web-api.tryout.proposals.status.label')}
           options={[
-            { id: '', name: 'All (by default)' },
-            { id: 'pending', name: 'Not deliberated' },
-            { id: 'accepted', name: 'Accepted' },
-            { id: 'rejected', name: 'Rejected' },
+            { id: '', name: t('common.all') },
+            { id: 'pending', name: t('common.proposals.status.pending') },
+            { id: 'accepted', name: t('common.proposals.status.accepted') },
+            { id: 'rejected', name: t('common.proposals.status.rejected') },
           ]}
           defaultValue={status}
           onChange={(_name, value) => setStatus(value)}
@@ -51,7 +53,7 @@ export function EventProposalApiTryout({ slug, apiKey }: Props) {
 
       <Card.Actions>
         <ExternalLink href={url} target="_blank" iconRight={ArrowRightIcon} weight="medium">
-          Try out
+          {t('common.try-out')}
         </ExternalLink>
       </Card.Actions>
     </Card>
@@ -59,6 +61,7 @@ export function EventProposalApiTryout({ slug, apiKey }: Props) {
 }
 
 export function EventScheduleApiTryout({ slug, apiKey }: Props) {
+  const { t } = useTranslation();
   const params = new URLSearchParams();
   params.set('key', apiKey);
 
@@ -67,8 +70,8 @@ export function EventScheduleApiTryout({ slug, apiKey }: Props) {
   return (
     <Card as="section">
       <Card.Title>
-        <H2>Event schedule API</H2>
-        <Subtitle>List sessions with times, tracks, talks and speakers for the event schedule.</Subtitle>
+        <H2>{t('event-management.settings.web-api.tryout.schedule.heading')}</H2>
+        <Subtitle>{t('event-management.settings.web-api.tryout.schedule.description')}</Subtitle>
       </Card.Title>
 
       <Card.Content>
@@ -77,7 +80,7 @@ export function EventScheduleApiTryout({ slug, apiKey }: Props) {
 
       <Card.Actions>
         <ExternalLink href={url} target="_blank" iconRight={ArrowRightIcon} weight="medium">
-          Try out
+          {t('common.try-out')}
         </ExternalLink>
       </Card.Actions>
     </Card>

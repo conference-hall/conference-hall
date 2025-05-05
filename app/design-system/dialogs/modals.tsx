@@ -2,7 +2,6 @@ import { Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react'
 import type { VariantProps } from 'class-variance-authority';
 import { cva, cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
-
 import { Background, ModalTransition } from '../transitions.tsx';
 import { CloseButton } from './close-button.tsx';
 

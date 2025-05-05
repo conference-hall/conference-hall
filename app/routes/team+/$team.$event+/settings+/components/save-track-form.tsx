@@ -1,5 +1,6 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
@@ -11,11 +12,14 @@ type TrackData = { id: string; name: string; description?: string | null };
 type NewTrackButtonProps = { type: TrackType };
 
 export function NewTrackButton({ type }: NewTrackButtonProps) {
+  const { t } = useTranslation();
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
       <Button iconLeft={PlusIcon} onClick={() => setModalOpen(true)} size="s" variant="secondary">
-        {type === 'formats' ? 'New format' : 'New category'}
+        {type === 'formats'
+          ? t('event-management.settings.tracks.formats.new')
+          : t('event-management.settings.tracks.categories.new')}
       </Button>
       <SaveTrackFormModal type={type} isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
     </>
@@ -44,14 +48,24 @@ export function EditTrackButton({ type, initialValues }: EditTrackButtonProps) {
 type SaveTrackFormModalProps = { type: TrackType; initialValues?: TrackData; isOpen: boolean; onClose: VoidFunction };
 
 function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackFormModalProps) {
+  const { t } = useTranslation();
   return (
-    <Modal title={type === 'formats' ? 'Format track' : 'Category track'} size="l" open={isOpen} onClose={onClose}>
+    <Modal
+      title={
+        type === 'formats'
+          ? t('event-management.settings.tracks.formats.heading')
+          : t('event-management.settings.tracks.categories.heading')
+      }
+      size="l"
+      open={isOpen}
+      onClose={onClose}
+    >
       <Modal.Content>
         <Form id="save-track-form" method="POST" onSubmit={onClose} className="space-y-4 lg:space-y-6">
           <Input name="name" label="Name" defaultValue={initialValues?.name} required />
           <TextArea
             name="description"
-            label="Description"
+            label={t('common.description')}
             defaultValue={initialValues?.description || ''}
             required
             rows={4}
@@ -61,10 +75,12 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
       </Modal.Content>
       <Modal.Actions>
         <Button onClick={onClose} type="button" variant="secondary">
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button type="submit" name="intent" value={`save-${type}`} form="save-track-form">
-          {type === 'formats' ? 'Save format' : 'Save category'}
+          {type === 'formats'
+            ? t('event-management.settings.tracks.formats.save')
+            : t('event-management.settings.tracks.categories.save')}
         </Button>
       </Modal.Actions>
     </Modal>

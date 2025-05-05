@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
@@ -12,10 +13,11 @@ type Props = {
 };
 
 export function ConferenceCfpOpening({ cfpStart, cfpEnd, timezone, errors }: Props) {
+  const { t } = useTranslation();
   return (
     <Card as="section">
       <Card.Title>
-        <H2>Call for paper opening</H2>
+        <H2>{t('event-management.settings.cfp.openings.heading')}</H2>
       </Card.Title>
 
       <Card.Content>
@@ -23,7 +25,7 @@ export function ConferenceCfpOpening({ cfpStart, cfpEnd, timezone, errors }: Pro
       </Card.Content>
       <Card.Actions>
         <Button name="intent" value="save-cfp-conference-opening" form="cfp-conference-form">
-          Save CFP openings
+          {t('event-management.settings.cfp.openings.submit')}
         </Button>
       </Card.Actions>
     </Card>

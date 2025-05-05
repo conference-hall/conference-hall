@@ -1,4 +1,5 @@
 import type { AuthError } from 'firebase/auth';
+import type { TFunction } from 'i18next';
 
 const EXPIRED_ACTION_CODE = 'auth/expired-action-code';
 const INVALID_ACTION_CODE = 'auth/invalid-action-code';
@@ -13,7 +14,7 @@ const WEAK_PASSWORD = 'auth/weak-password';
 const ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL = 'auth/account-exists-with-different-credential';
 const CREDENTIAL_ALREADY_IN_USE = 'auth/credential-already-in-use';
 
-export function getFirebaseError(error: any): string {
+export function getFirebaseError(error: any, t: TFunction): string {
   const { code } = error as AuthError;
   switch (code) {
     case USER_DISABLED:
@@ -23,19 +24,19 @@ export function getFirebaseError(error: any): string {
     case EMAIL_ALREADY_EXISTS:
     case EMAIL_ALREADY_IN_USE:
     case WRONG_PASSWORD:
-      return 'Email or password is incorrect.';
+      return t('error.auth.email-password-incorrect');
     case WEAK_PASSWORD:
-      return 'Your password is not secure enough';
+      return t('error.auth.weak-password');
     case ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL:
-      return 'You need to connect your account with the provider you used to sign up.';
+      return t('error.auth.account-exists');
     case CREDENTIAL_ALREADY_IN_USE:
-      return 'This authentication method is already in use by another account.';
+      return t('error.auth.method-already-in-use');
     case EXPIRED_ACTION_CODE:
-      return 'Your email link has expired. Please try resetting your password again.';
+      return t('error.auth.expired-action-code');
     case INVALID_ACTION_CODE:
-      return 'Your email link was invalid or has already been used. Please try resetting your password again.';
+      return t('error.auth.invalid-action-code');
     default:
       console.error(error.code);
-      return 'An error occurred. Please try again.';
+      return t('error.global');
   }
 }

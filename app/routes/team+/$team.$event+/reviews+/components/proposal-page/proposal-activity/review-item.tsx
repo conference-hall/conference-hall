@@ -1,9 +1,11 @@
 import { HeartIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import { formatDistanceToNowStrict } from 'date-fns';
-
+import { Trans, useTranslation } from 'react-i18next';
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
+import { formatDistance } from '~/libs/datetimes/datetimes.ts';
+import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 
 export function ReviewItem({ item }: { item: FeedItem }) {
+  const { i18n } = useTranslation();
   if (item.type !== 'review') return null;
 
   return (
@@ -24,12 +26,19 @@ export function ReviewItem({ item }: { item: FeedItem }) {
         </div>
       )}
       <p className="flex-auto py-0.5 text-xs leading-5 text-gray-500">
-        <span className="font-medium text-gray-900">{item.user}</span> reviewed the proposal with{' '}
-        <strong>{item.note} stars.</strong>
+        <Trans
+          i18nKey="event-management.proposal-page.activity-feed.reviewed"
+          values={{ name: item.user, note: item.note }}
+          components={[<span key="1" className="font-medium text-gray-900" />, <strong key="2" />]}
+        />
       </p>
-      <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 pr-3 text-xs leading-5 text-gray-500">
-        {formatDistanceToNowStrict(item.timestamp)} ago
-      </time>
+      <ClientOnly>
+        {() => (
+          <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
+            {formatDistance(item.timestamp, i18n.language)}
+          </time>
+        )}
+      </ClientOnly>
     </>
   );
 }

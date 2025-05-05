@@ -1,7 +1,8 @@
 import { cx } from 'class-variance-authority';
-import { formatTimeDifference, toTimeFormat } from '~/libs/datetimes/datetimes.ts';
+import { useTranslation } from 'react-i18next';
+import { formatTime, formatTimeDifference } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
-import { getFlag } from '~/libs/formatters/languages.ts';
+import type { Language } from '~/types/proposals.types.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 
@@ -58,8 +59,11 @@ function SessionSpeakers({ speakers, size }: SessionSpeakersProps) {
 
 type SessionTimeProps = { timeslot: TimeSlot; size: Size };
 function SessionTime({ timeslot, size }: SessionTimeProps) {
-  const start = toTimeFormat(timeslot.start);
-  const end = toTimeFormat(timeslot.end);
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
+
+  const start = formatTime(timeslot.start, { format: 'short', locale });
+  const end = formatTime(timeslot.end, { format: 'short', locale });
   const minutes = formatTimeDifference(timeslot.start, timeslot.end);
 
   return (
@@ -93,8 +97,9 @@ function SessionEmojis({ emojis, size }: SessionEmojisProps) {
   });
 }
 
-type SessionLanguageProps = { language: string | null; size: Size };
+type SessionLanguageProps = { language: Language | null; size: Size };
 function SessionLanguage({ language, size }: SessionLanguageProps) {
+  const { t } = useTranslation();
   if (!language) return null;
   return (
     <p
@@ -103,7 +108,7 @@ function SessionLanguage({ language, size }: SessionLanguageProps) {
         'text-xs': size === 'lg' || size === 'xl',
       })}
     >
-      {getFlag(language)}
+      {t(`common.languages.${language}.flag`)}
     </p>
   );
 }

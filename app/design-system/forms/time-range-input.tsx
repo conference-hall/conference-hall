@@ -1,7 +1,8 @@
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
-import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
+import { formatTime } from '~/libs/datetimes/datetimes.ts';
 
 type Props = {
   nameStart?: string;
@@ -32,6 +33,8 @@ export function TimeRangeInput({
   hideToLabel,
   onChange,
 }: Props) {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
   const [startTime, setStart] = useState(start);
   const [endTime, setEnd] = useState(end);
 
@@ -53,9 +56,9 @@ export function TimeRangeInput({
     <div className="flex items-center gap-2">
       <SelectNative
         name={nameStart}
-        label="From"
+        label={t('common.from')}
         value={startTime}
-        options={generateTimeOptions(step, min, max).filter((o) => startRelative || Number(o.value) <= endTime)}
+        options={generateTimeOptions(step, min, max, locale).filter((o) => startRelative || Number(o.value) <= endTime)}
         onChange={handleSelectChange}
         srOnly={hideFromLabel}
         inline
@@ -63,9 +66,9 @@ export function TimeRangeInput({
 
       <SelectNative
         name={nameEnd}
-        label="To"
+        label={t('common.to')}
         value={endTime}
-        options={generateTimeOptions(step, min, max).filter((o) => Number(o.value) >= startTime)}
+        options={generateTimeOptions(step, min, max, locale).filter((o) => Number(o.value) >= startTime)}
         onChange={handleSelectChange}
         srOnly={hideToLabel}
         inline
@@ -74,13 +77,13 @@ export function TimeRangeInput({
   );
 }
 
-function generateTimeOptions(step: number, min: number, max: number) {
+function generateTimeOptions(step: number, min: number, max: number, locale: string) {
   const minutesArray: Array<number> = [];
   for (let i = min; i <= max; i += step) {
     minutesArray.push(i);
   }
   return minutesArray.map((minutes) => ({
-    name: toTimeFormat(minutes),
+    name: formatTime(minutes, { format: 'short', locale }),
     value: String(minutes),
   }));
 }

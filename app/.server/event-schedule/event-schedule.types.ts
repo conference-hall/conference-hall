@@ -12,8 +12,8 @@ export const ScheduleCreateSchema = z
   .transform(({ start, end, timezone, ...rest }) => ({
     ...rest,
     timezone,
-    start: parseToUtcStartOfDay(start, timezone, 'yyyy-MM-dd'),
-    end: parseToUtcEndOfDay(end, timezone, 'yyyy-MM-dd'),
+    start: parseToUtcStartOfDay(start, timezone),
+    end: parseToUtcEndOfDay(end, timezone),
   }))
   .refine(
     ({ start, end }) => {

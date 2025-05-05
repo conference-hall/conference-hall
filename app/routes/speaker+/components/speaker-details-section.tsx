@@ -1,4 +1,5 @@
 import { BuildingOfficeIcon, LockClosedIcon, MapPinIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
@@ -15,13 +16,18 @@ type Props = {
 };
 
 export function SpeakerDetailsSection({ bio, company, location, socialLinks }: Props) {
+  const { t } = useTranslation();
   const displayInfo = location || company || socialLinks.length > 0;
 
   return (
     <div className="hidden sm:block space-y-6">
       <Card className="divide-y divide-gray-200">
         <div className="p-6">
-          {bio ? <Markdown className="line-clamp-5">{bio}</Markdown> : <Text variant="secondary">(No profile)</Text>}
+          {bio ? (
+            <Markdown className="line-clamp-5">{bio}</Markdown>
+          ) : (
+            <Text variant="secondary">{t('speaker.activity.no-profile')}</Text>
+          )}
         </div>
 
         {displayInfo && (
@@ -35,12 +41,12 @@ export function SpeakerDetailsSection({ bio, company, location, socialLinks }: P
         )}
 
         <div className="px-6 py-4 flex items-center gap-3">
-          <IconLabel icon={LockClosedIcon}>Your speaker activity is private.</IconLabel>
+          <IconLabel icon={LockClosedIcon}>{t('speaker.activity.visibility')}</IconLabel>
         </div>
 
         <div className="p-4">
           <ButtonLink to={href('/speaker/settings/profile')} variant="secondary" iconLeft={PencilSquareIcon} block>
-            Edit your profile
+            {t('speaker.activity.edit-profile')}
           </ButtonLink>
         </div>
       </Card>

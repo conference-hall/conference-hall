@@ -11,7 +11,7 @@ export class ProposalsListPage extends PageObject {
 
   constructor(page: Page) {
     super(page);
-    this.heading = page.getByRole('heading', { name: 'Event proposals' });
+    this.heading = page.getByRole('heading', { name: 'Proposals' });
     this.proposals = page.getByRole('list', { name: 'Proposals list' }).locator('>li');
     this.noProposals = page.getByText('No proposals found');
     this.searchInput = page.getByLabel('Search proposals');
@@ -32,6 +32,8 @@ export class ProposalsListPage extends PageObject {
   }
 
   proposalCount(count: number) {
+    if (count === 0) return this.page.getByText('No proposals');
+    if (count === 1) return this.page.getByText('1 proposal');
     return this.page.getByText(`${count} proposals`);
   }
 
@@ -93,6 +95,7 @@ export class ProposalsListPage extends PageObject {
 
   async clickOnMarkAs(name: 'Accepted' | 'Rejected' | 'Not deliberated') {
     await this.page.getByRole('button', { name }).click();
+    await this.page.getByText('Are you sure you want to mark').waitFor();
     await this.page.getByRole('button', { name: `Mark as ${name}` }).click();
   }
 
