@@ -1,5 +1,6 @@
 import * as Firebase from 'firebase/auth';
 import { type FormEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form, redirect, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import { Button } from '~/design-system/buttons.tsx';
@@ -35,6 +36,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function ResetPassword() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const oobCode = searchParams.get('oobCode');
@@ -56,10 +58,10 @@ export default function ResetPassword() {
       setError('');
       setLoading(true);
       await Firebase.confirmPasswordReset(getClientAuth(), oobCode, password);
-      toast.success('Password changed. You can now login.');
+      toast.success(t('auth.reset-password.toast.success'));
       navigate({ pathname: '/auth/login', search: `?email=${email}` });
     } catch (error) {
-      setError(getFirebaseError(error));
+      setError(getFirebaseError(error, t));
     } finally {
       setLoading(false);
     }
@@ -70,20 +72,18 @@ export default function ResetPassword() {
       <header className="flex flex-col items-center pt-8 sm:pt-16 sm:mx-auto sm:w-full sm:max-w-md">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
         <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Change your password
+          {t('auth.reset-password.heading')}
         </h2>
       </header>
 
       <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
-        <Subtitle>
-          Enter a new password for your account. We recommend using a strong password that you don't use elsewhere.
-        </Subtitle>
+        <Subtitle>{t('auth.reset-password.description')}</Subtitle>
 
         <Form className="space-y-4" onSubmit={resetPassword}>
           <PasswordInput value={password} onChange={setPassword} isNewPassword error={fieldErrors?.password} />
 
           <Button type="submit" variant="primary" disabled={loading} className="w-full mt-2">
-            {loading ? <LoadingIcon className="size-4" /> : 'Change your password'}
+            {loading ? <LoadingIcon className="size-4" /> : t('auth.reset-password.submit')}
           </Button>
 
           {error ? (
@@ -96,7 +96,7 @@ export default function ResetPassword() {
 
       <footer className="text-center my-8">
         <Link to="/auth/login" weight="semibold">
-          Go back to login
+          {t('auth.common.go-back-login')}
         </Link>
       </footer>
     </Page>

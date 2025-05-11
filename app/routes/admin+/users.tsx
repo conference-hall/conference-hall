@@ -1,5 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ChevronRightIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { AdminUsers, UsersSearchFiltersSchema } from '~/.server/admin/admin-users.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
@@ -21,28 +22,29 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function AdminUsersRoute({ loaderData }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const { results, filters, pagination, statistics } = loaderData;
 
   return (
     <Page>
-      <H1 srOnly>Users</H1>
+      <H1 srOnly>{t('admin.nav.users')}</H1>
 
       <List>
         <List.Header className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
-          <Text weight="semibold">{`${statistics.total} users`}</Text>
+          <Text weight="semibold">{t('admin.users.total', { count: statistics.total })}</Text>
           <Form method="GET">
             <Input
               name="query"
               icon={MagnifyingGlassIcon}
               defaultValue={filters.query}
-              aria-label="Search by name or email"
-              placeholder="Search by name or email"
+              aria-label={t('admin.users.search')}
+              placeholder={t('admin.users.search')}
               className="w-full sm:w-72"
             />
           </Form>
         </List.Header>
 
-        <List.Content aria-label="Users list">
+        <List.Content aria-label={t('admin.nav.users')}>
           {results.map((user) => (
             <List.RowLink key={user.id} to={user.id} className="flex justify-between items-center gap-4">
               <div className="min-w-0">

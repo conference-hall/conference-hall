@@ -1,4 +1,5 @@
-import { Form, redirect } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Form, href, redirect } from 'react-router';
 import { TeamMemberInvite } from '~/.server/team/team-member-invite.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -21,10 +22,11 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
   const team = await TeamMemberInvite.with(params.code).addMember(userId);
-  return redirect(`/team/${team.slug}`);
+  return redirect(href('/team/:team', { team: team.slug }));
 };
 
 export default function InvitationRoute({ loaderData: team }: Route.ComponentProps) {
+  const { t } = useTranslation();
   return (
     <FullscreenPage navbar="default" className="text-center">
       <Card className="p-8 md:p-16 space-y-16">
@@ -32,11 +34,11 @@ export default function InvitationRoute({ loaderData: team }: Route.ComponentPro
           <H1 size="3xl" weight="bold">
             {team.name}
           </H1>
-          <Subtitle>{`You have been invited to join the ${team.name} team in Conference Hall.`}</Subtitle>
+          <Subtitle>{t('team.invitation.description', { team: team.name })}</Subtitle>
         </div>
 
         <Form method="POST">
-          <Button type="submit">Accept invitation</Button>
+          <Button type="submit">{t('common.accept-invitation')}</Button>
         </Form>
       </Card>
     </FullscreenPage>

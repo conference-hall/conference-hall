@@ -1,38 +1,27 @@
 import { Description, Field, Fieldset, Label, Legend, Radio, RadioGroup } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
-
+import { useTranslation } from 'react-i18next';
+import { EVENT_TYPES } from '~/libs/constants.ts';
 import type { EventType } from '~/types/events.types.ts';
-
-const settings = [
-  {
-    name: 'Conference',
-    value: 'CONFERENCE',
-    description: 'With conference, the call for papers is open to proposals for a specific period.',
-  },
-  {
-    name: 'Meetup',
-    value: 'MEETUP',
-    description: 'With meetup, you can manually open or close the call for paper.',
-  },
-];
 
 type Props = { selected: EventType; onSelect: (type: EventType) => void };
 
 export function EventTypeRadioGroup({ selected, onSelect }: Props) {
+  const { t } = useTranslation();
   return (
     <Fieldset>
-      <Legend className="text-sm font-medium text-gray-900">Event type</Legend>
+      <Legend className="text-sm font-medium text-gray-900">{t('event-management.fields.type')}</Legend>
 
       <RadioGroup name="type" value={selected} onChange={onSelect}>
         <div className="mt-4 -space-y-px rounded-md bg-white">
-          {settings.map((setting, settingIdx) => (
-            <Field key={setting.name}>
+          {EVENT_TYPES.map((type, index) => (
+            <Field key={t(`common.event.type.label.${type}`)} className="relative">
               <Radio
-                value={setting.value}
+                value={type}
                 className={({ checked }) =>
                   cx(
-                    settingIdx === 0 ? 'rounded-tl-md rounded-tr-md' : '',
-                    settingIdx === settings.length - 1 ? 'rounded-bl-md rounded-br-md' : '',
+                    index === 0 ? 'rounded-tl-md rounded-tr-md' : '',
+                    index === EVENT_TYPES.length - 1 ? 'rounded-bl-md rounded-br-md' : '',
                     checked ? 'z-10 border-indigo-200 bg-indigo-50' : 'border-gray-200',
                     'relative flex cursor-pointer border p-4 focus:outline-hidden',
                   )
@@ -52,10 +41,10 @@ export function EventTypeRadioGroup({ selected, onSelect }: Props) {
                     </span>
                     <span className="ml-3 flex flex-col gap-2">
                       <Label className={cx(checked ? 'text-indigo-900' : 'text-gray-900', 'block text-sm font-medium')}>
-                        {setting.name}
+                        {t(`common.event.type.label.${type}`)}
                       </Label>
                       <Description className={cx(checked ? 'text-indigo-700' : 'text-gray-500', 'block text-sm')}>
-                        {setting.description}
+                        {t(`common.event.type.description.${type}`)}
                       </Description>
                     </span>
                   </>

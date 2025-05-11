@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
 import { useSearchParams } from 'react-router';
 import { Callout } from '~/design-system/callout.tsx';
@@ -30,6 +31,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 };
 
 export default function Login() {
+  const { t } = useTranslation();
   const [providerError, setProviderError] = useState<string>('');
   const [searchParams] = useSearchParams();
   const defaultEmail = searchParams.get('email');
@@ -45,14 +47,14 @@ export default function Login() {
       <header className="flex flex-col items-center pt-8 sm:pt-16 sm:mx-auto sm:w-full sm:max-w-md">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
         <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Sign in to your account
+          {t('auth.signin.heading')}
         </h2>
       </header>
 
       <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
         <EmailPasswordSignin redirectTo={redirectTo} defaultEmail={defaultEmail} />
 
-        <DividerWithLabel label="Or" />
+        <DividerWithLabel label={t('common.or')} />
 
         <AuthProvidersSignin redirectTo={redirectTo} />
 
@@ -64,9 +66,9 @@ export default function Login() {
       </Card>
 
       <footer className="flex justify-center gap-2 my-8">
-        <Subtitle>Don't have an account?</Subtitle>
+        <Subtitle>{t('auth.signin.no-account')}</Subtitle>
         <Link to={{ pathname: '/auth/signup', search: `${searchParams}` }} weight="semibold">
-          Create your account
+          {t('auth.common.sign-up')}
         </Link>
       </footer>
     </Page>

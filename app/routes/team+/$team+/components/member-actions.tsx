@@ -7,21 +7,24 @@ import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
+import { useTranslation } from 'react-i18next';
+import { TEAM_ROLES } from '~/libs/constants.ts';
 import { InvitationModal } from '../../../components/modals/invitation-modal.tsx';
 
 type RemoveButtonProps = { memberId: string; memberName: string | null };
 
 export function RemoveButton({ memberId, memberName }: RemoveButtonProps) {
+  const { t } = useTranslation();
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
       <Button
-        aria-label={`Remove ${memberName} from team`}
+        aria-label={t('team.settings.members.remove-modal.button.label', { memberName })}
         variant="important"
         size="s"
         onClick={() => setModalOpen(true)}
       >
-        Remove
+        {t('common.remove')}
       </Button>
       <RemoveRoleModal
         memberId={memberId}
@@ -41,20 +44,21 @@ type RemoveModalProps = {
 };
 
 function RemoveRoleModal({ memberId, memberName, isOpen, onClose }: RemoveModalProps) {
+  const { t } = useTranslation();
   return (
-    <Modal title={`Remove ${memberName} from the team?`} open={isOpen} onClose={onClose}>
+    <Modal title={t('team.settings.members.remove-modal.heading', { memberName })} open={isOpen} onClose={onClose}>
       <Modal.Content>
         <Form id="remove-member-form" method="POST" onSubmit={onClose}>
-          <Text>The member will be removed from the team and won't be able to access it anymore.</Text>
+          <Text>{t('team.settings.members.remove-modal.description')}</Text>
           <input type="hidden" name="memberId" value={memberId} />
         </Form>
       </Modal.Content>
       <Modal.Actions>
         <Button onClick={onClose} type="button" variant="secondary">
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button type="submit" name="intent" value="remove-member" form="remove-member-form">
-          Remove {memberName}
+          {t('common.remove-item', { item: memberName })}
         </Button>
       </Modal.Actions>
     </Modal>
@@ -64,16 +68,17 @@ function RemoveRoleModal({ memberId, memberName, isOpen, onClose }: RemoveModalP
 type ChangeRoleButtonProps = { memberId: string; memberName: string | null; memberRole: string };
 
 export function ChangeRoleButton({ memberId, memberName, memberRole }: ChangeRoleButtonProps) {
+  const { t } = useTranslation();
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
       <Button
-        aria-label={`Change role of ${memberName}`}
+        aria-label={t('team.settings.members.change-role-modal.button.label', { memberName })}
         variant="secondary"
         size="s"
         onClick={() => setModalOpen(true)}
       >
-        Change role
+        {t('team.settings.members.change-role-modal.button')}
       </Button>
       <ChangeRoleModal
         memberId={memberId}
@@ -94,44 +99,25 @@ type ChangeRoleModalProps = {
   onClose: VoidFunction;
 };
 
-const ALL_ROLES = [
-  {
-    label: 'Owner',
-    value: 'OWNER',
-    description:
-      'Full control over team and events, including member management, event creation, and proposal publishing.',
-  },
-  {
-    label: 'Member',
-    value: 'MEMBER',
-    description:
-      'Can view team, access and edit events, deliberate on proposals, and publish results. Cannot create events or manage team settings.',
-  },
-  {
-    label: 'Reviewer',
-    value: 'REVIEWER',
-    description: 'Read-only access to team and events, with no editing or publishing rights.',
-  },
-];
-
 function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: ChangeRoleModalProps) {
+  const { t } = useTranslation();
   return (
-    <Modal title={`Change the role of ${memberName}?`} open={isOpen} onClose={onClose}>
+    <Modal title={t('team.settings.members.change-role-modal.heading', { memberName })} open={isOpen} onClose={onClose}>
       <Modal.Content>
         <Form id="change-role-form" method="POST" onSubmit={onClose}>
           <input type="hidden" name="memberId" value={memberId} />
           <RadioGroup>
-            {ALL_ROLES.map((role) => (
+            {TEAM_ROLES.map((role) => (
               <Radio
-                key={role.value}
-                id={role.value}
+                key={role}
+                id={role}
                 name="memberRole"
-                value={role.value}
-                description={role.description}
-                defaultChecked={memberRole === role.value}
+                value={role}
+                description={t(`common.member.role.description.${role}`)}
+                defaultChecked={memberRole === role}
                 required
               >
-                {role.label}
+                {t(`common.member.role.label.${role}`)}
               </Radio>
             ))}
           </RadioGroup>
@@ -139,10 +125,10 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
       </Modal.Content>
       <Modal.Actions>
         <Button onClick={onClose} type="button" variant="secondary">
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button type="submit" name="intent" value="change-role" form="change-role-form">
-          Change {memberName}'s role
+          {t('team.settings.members.change-role-modal.confirm.button', { memberName })}
         </Button>
       </Modal.Actions>
     </Modal>
@@ -152,6 +138,7 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
 type InviteProps = { invitationLink: string | undefined };
 
 export function InviteMemberButton({ invitationLink }: InviteProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   if (!invitationLink) return null;
@@ -159,15 +146,14 @@ export function InviteMemberButton({ invitationLink }: InviteProps) {
   return (
     <>
       <Button onClick={() => setOpen(true)} iconLeft={UserPlusIcon}>
-        Invite member
+        {t('team.settings.members.invite-modal.button')}
       </Button>
       <InvitationModal
         open={open}
         invitationLink={invitationLink}
         onClose={() => setOpen(false)}
-        title="Invite a member"
-        description="You can invite a member to join your team by sharing an invitation link. Copy it and send it by email.
-            The member will be automatically added once the invitation has been accepted."
+        title={t('team.settings.members.invite-modal.heading')}
+        description={t('team.settings.members.invite-modal.description')}
       />
     </>
   );

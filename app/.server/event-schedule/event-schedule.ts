@@ -1,6 +1,7 @@
 import type { EventType, Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-
+import { getDatesRange } from '~/libs/datetimes/datetimes.ts';
+import { utcToTimezone } from '~/libs/datetimes/timezone.ts';
 import {
   ApiKeyInvalidError,
   EventNotFoundError,
@@ -8,10 +9,7 @@ import {
   ForbiddenOperationError,
   NotFoundError,
 } from '~/libs/errors.server.ts';
-
-import { toZonedTime } from 'date-fns-tz';
-import { getDatesRange } from '~/libs/datetimes/datetimes.ts';
-import type { Languages } from '~/types/proposals.types.ts';
+import type { Language, Languages } from '~/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import type {
   ScheduleCreateData,
@@ -200,7 +198,7 @@ export class EventSchedule {
         start: start,
         end: end,
         name: name,
-        language: language,
+        language: language as Language | null,
         emojis: emojis,
         color: color,
         proposal: proposal
@@ -253,12 +251,12 @@ export class EventSchedule {
 
     return {
       name: schedule.name,
-      days: days.map((day) => toZonedTime(day, schedule.timezone).toISOString()),
+      days: days.map((day) => utcToTimezone(day, schedule.timezone).toISOString()),
       timeZone: schedule.timezone,
       sessions: sessions.map(({ proposal, track, ...session }) => ({
         id: session.id,
-        start: toZonedTime(session.start, schedule.timezone).toISOString(),
-        end: toZonedTime(session.end, schedule.timezone).toISOString(),
+        start: utcToTimezone(session.start, schedule.timezone).toISOString(),
+        end: utcToTimezone(session.end, schedule.timezone).toISOString(),
         track: track.name,
         title: proposal ? proposal.title : session.name,
         language: session.language || null,

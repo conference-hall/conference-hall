@@ -1,5 +1,5 @@
+import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -9,25 +9,25 @@ import { H2, Subtitle } from '~/design-system/typography.tsx';
 type Props = { apiKey: string | null };
 
 export function EnableApiSection({ apiKey }: Props) {
+  const { t } = useTranslation();
   return (
     <Card as="section">
       <Card.Title>
-        <H2>Web API</H2>
-        <Subtitle>Use the HTTP API if you want to connect a service to some Conference Hall event.</Subtitle>
+        <H2>{t('event-management.settings.menu.web-api')}</H2>
+        <Subtitle>{t('event-management.settings.web-api.description')}</Subtitle>
       </Card.Title>
 
       <Card.Content>
         <Form method="POST" id="api-integration-form" className="space-y-4">
           <Input
             name="apiKey"
-            label="API key"
+            label={t('event-management.settings.web-api.api-key')}
             disabled
             value={apiKey || ''}
-            placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            placeholder={t('event-management.settings.web-api.api-key.placeholder')}
           />
           <Callout title="Rate limit">
-            The web API is limited to <strong>60 requests per hour</strong> maximum to avoid server overload by external
-            services.
+            <Trans i18nKey="event-management.settings.web-api.info" components={[<strong key="1" />]} />
           </Callout>
         </Form>
       </Card.Content>
@@ -39,7 +39,7 @@ export function EnableApiSection({ apiKey }: Props) {
           value={apiKey ? 'revoke-api-key' : 'generate-api-key'}
           form="api-integration-form"
         >
-          {apiKey ? 'Revoke API key' : 'Generate API key'}
+          {apiKey ? t('event-management.settings.web-api.revoke') : t('event-management.settings.web-api.generate')}
         </Button>
       </Card.Actions>
     </Card>

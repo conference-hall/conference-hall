@@ -1,10 +1,8 @@
-import { format } from 'date-fns';
-import { toZonedTime } from 'date-fns-tz';
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
-
+import { toDateInput } from '~/libs/datetimes/datetimes.ts';
+import { utcToTimezone } from '~/libs/datetimes/timezone.ts';
 import type { SubmissionError } from '~/types/errors.types.ts';
-
 import { Input } from './input.tsx';
 
 type Props = {
@@ -20,34 +18,45 @@ type Props = {
 };
 
 export function DateRangeInput({ start, end, timezone, min, max, required, error, onChange, className }: Props) {
-  const [startDate, setStartDate] = useState<Date | null>(start.value ? toZonedTime(start.value, timezone) : null);
-  const [endDate, setEndDate] = useState<Date | null>(end.value ? toZonedTime(end.value, timezone) : null);
+  const defaultStart = start.value ? toDateInput(utcToTimezone(start.value, timezone)) : null;
+  const defaultEnd = end.value ? toDateInput(utcToTimezone(end.value, timezone)) : null;
+
+  const [startDate, setStartDate] = useState(defaultStart);
+  const [endDate, setEndDate] = useState(defaultEnd || defaultStart);
 
   const handleStartDate = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const newStartDate = event.target.valueAsDate ? toZonedTime(event.target.valueAsDate, timezone) : null;
-      setStartDate(newStartDate);
+      const newStartDate = event.target.valueAsDate
+        ? toDateInput(utcToTimezone(event.target.valueAsDate, timezone))
+        : null;
+
       let newEndDate = endDate;
       if (!newStartDate) {
         newEndDate = null;
       } else if (!endDate) {
         newEndDate = newStartDate;
-      } else if (newStartDate >= endDate) {
+      } else if (new Date(newStartDate) >= new Date(endDate)) {
         newEndDate = newStartDate;
       }
+      setStartDate(newStartDate);
       setEndDate(newEndDate);
-      if (onChange) onChange(newStartDate, newEndDate);
+
+      if (onChange) onChange(newStartDate ? new Date(newStartDate) : null, newEndDate ? new Date(newEndDate) : null);
     },
     [endDate, timezone, onChange],
   );
 
   const handleEndDate = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const newEndDate = event.target.valueAsDate ? toZonedTime(event.target.valueAsDate, timezone) : null;
+      const newEndDate = event.target.valueAsDate
+        ? toDateInput(utcToTimezone(event.target.valueAsDate, timezone))
+        : null;
+
       const newStartDate = !startDate ? newEndDate : startDate;
-      setEndDate(newEndDate);
       setStartDate(newStartDate);
-      if (onChange) onChange(newStartDate, newEndDate);
+      setEndDate(newEndDate);
+
+      if (onChange) onChange(newStartDate ? new Date(newStartDate) : null, newEndDate ? new Date(newEndDate) : null);
     },
     [startDate, timezone, onChange],
   );
@@ -60,9 +69,9 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
           name={start.name}
           label={start.label}
           autoComplete="off"
-          value={toDayFormat(startDate)}
-          min={toDayFormat(min)}
-          max={toDayFormat(max)}
+          value={startDate || ''}
+          min={toDateInput(min) || ''}
+          max={toDateInput(max) || ''}
           onChange={handleStartDate}
           className="col-span-2 sm:col-span-1"
           required={required}
@@ -73,9 +82,9 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
           name={end.name}
           label={end.label}
           autoComplete="off"
-          min={toDayFormat(startDate) || toDayFormat(min)}
-          max={toDayFormat(max)}
-          value={toDayFormat(endDate)}
+          min={startDate || toDateInput(min) || ''}
+          max={toDateInput(max) || ''}
+          value={endDate || ''}
           onChange={handleEndDate}
           className="col-span-2 sm:col-span-1"
           required={required}
@@ -85,9 +94,4 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );
-}
-
-function toDayFormat(date?: Date | null) {
-  if (!date) return undefined;
-  return format(date, 'yyyy-MM-dd');
 }

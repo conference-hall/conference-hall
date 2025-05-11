@@ -1,12 +1,13 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
-import { formatDistanceToNowStrict } from 'date-fns';
-import { Link } from 'react-router';
+import { Link, href } from 'react-router';
 
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import type { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
+import { useTranslation } from 'react-i18next';
+import { formatDistance } from '~/libs/datetimes/datetimes.ts';
 import { ProposalStatusLabel } from '../proposals/proposal-status-label.tsx';
 import { ClientOnly } from '../utils/client-only.tsx';
 
@@ -21,18 +22,19 @@ type Props = {
 };
 
 export function TalkSubmissionsSection({ submissions }: Props) {
+  const { t, i18n } = useTranslation();
   return (
     <Card as="section" className="divide-y divide-gray-200">
       <div className="px-4 py-4">
-        <H3>Talk submissions</H3>
+        <H3>{t('talk.page.submissions.heading')}</H3>
       </div>
 
-      <ul aria-label="Talk submission list" className="flex flex-col divide-y divide-gray-200">
+      <ul aria-label={t('talk.page.submissions.list')} className="flex flex-col divide-y divide-gray-200">
         {submissions.map((submission) => (
           <li key={submission.slug}>
             <Link
-              to={`/${submission.slug}/proposals`}
-              aria-label={`Go to ${submission.name}`}
+              to={href('/:event/proposals', { event: submission.slug })}
+              aria-label={t('common.go-to', { name: submission.name })}
               className="flex items-center gap-4 justify-between hover:bg-gray-100 px-4 py-3"
             >
               <div className="flex items-center gap-4 overflow-hidden">
@@ -42,9 +44,7 @@ export function TalkSubmissionsSection({ submissions }: Props) {
                     {submission.name}
                   </Text>
                   <Subtitle size="xs">
-                    <ClientOnly fallback="-">
-                      {() => `${formatDistanceToNowStrict(submission.createdAt)} ago`}
-                    </ClientOnly>
+                    <ClientOnly>{() => formatDistance(submission.createdAt, i18n.language)}</ClientOnly>
                   </Subtitle>
                 </div>
               </div>
@@ -56,7 +56,7 @@ export function TalkSubmissionsSection({ submissions }: Props) {
           </li>
         ))}
         <li className="flex justify-between items-center px-4 py-3">
-          <Subtitle size="xs">{`${submissions.length} submission(s)`}</Subtitle>
+          <Subtitle size="xs">{t('talk.page.submissions.count', { count: submissions.length })}</Subtitle>
         </li>
       </ul>
     </Card>

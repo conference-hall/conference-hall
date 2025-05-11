@@ -1,10 +1,10 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { ClockIcon } from '@heroicons/react/24/outline';
-
+import { useTranslation } from 'react-i18next';
 import { button } from '~/design-system/buttons.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
+import { formatTime } from '~/libs/datetimes/datetimes.ts';
 
 type Props = {
   displayedTimes: { start: number; end: number };
@@ -12,12 +12,17 @@ type Props = {
 };
 
 export function DisplayTimes({ displayedTimes, onChangeDisplayTime }: Props) {
+  const { t, i18n } = useTranslation();
   const { start, end } = displayedTimes;
+
+  const timeStart = formatTime(start, { format: 'short', locale: i18n.language });
+  const timeEnd = formatTime(end, { format: 'short', locale: i18n.language });
+
   return (
     <Popover className="hidden sm:block">
       <PopoverButton className={button({ variant: 'secondary' })}>
         <ClockIcon className="h-4 w-4 text-gray-500" />
-        <span> {`${toTimeFormat(start)} to ${toTimeFormat(end)}`}</span>
+        <span> {`${timeStart} to ${timeEnd}`}</span>
       </PopoverButton>
 
       <PopoverPanel
@@ -26,7 +31,7 @@ export function DisplayTimes({ displayedTimes, onChangeDisplayTime }: Props) {
       >
         <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-b-gray-200 rounded-t-md">
           <Text variant="secondary" weight="semibold">
-            Display times
+            {t('event-management.schedule.actions.times')}
           </Text>
         </div>
         <div className="p-4">

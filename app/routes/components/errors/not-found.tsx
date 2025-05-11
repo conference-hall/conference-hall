@@ -1,14 +1,16 @@
 import { ButtonLink } from '~/design-system/buttons.tsx';
 
+import { useTranslation } from 'react-i18next';
 import { ErrorDisplay } from './error-display.tsx';
 
 type Props = { text?: string };
 
-export function NotFound({ text = 'Page not found' }: Props) {
+export function NotFound({ text }: Props) {
+  const { t } = useTranslation();
   return (
-    <ErrorDisplay title={text} subtitle="Whoops! That page doesn’t exist.">
+    <ErrorDisplay title={text || t('common.not-found.heading')} subtitle={t('common.not-found.description')}>
       <div className="pt-8">
-        <ButtonLink to="/">Go to Home</ButtonLink>
+        <ButtonLink to="/">{t('common.go-to-home')}</ButtonLink>
       </div>
     </ErrorDisplay>
   );

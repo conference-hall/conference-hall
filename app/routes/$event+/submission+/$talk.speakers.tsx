@@ -1,6 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { Form, href, redirect } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Form, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { FunnelSpeakerSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
@@ -8,8 +9,7 @@ import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { Link } from '~/design-system/links.tsx';
-import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
+import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { CoSpeakers } from '~/routes/components/talks/co-speaker.tsx';
 import type { Route } from './+types/$talk.speakers.ts';
@@ -49,6 +49,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 export default function SubmissionSpeakerRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const { speaker, speakers, isOwner, invitationLink } = loaderData;
   const { previousPath, nextPath } = useSubmissionNavigation();
 
@@ -56,40 +57,33 @@ export default function SubmissionSpeakerRoute({ loaderData, actionData: errors 
     <Page>
       <Card>
         <Card.Title>
-          <H2>Speaker details</H2>
+          <H2>{t('event.submission.speakers.heading')}</H2>
         </Card.Title>
 
         <Card.Content>
           <Form id="speakers-form" method="POST">
             <MarkdownTextArea
               name="bio"
-              label="Biography"
+              label={t('speaker.profile.biography')}
               rows={5}
               error={errors?.bio}
               defaultValue={speaker.bio || ''}
               className="mb-3"
             />
-            <Text variant="secondary">
-              You can give more information about you from{' '}
-              <Link to={href('/speaker/settings/profile')} target="_blank">
-                the profile page.
-              </Link>
-            </Text>
-            <input type="hidden" name="references" value={speaker.references || ''} />
           </Form>
           <div className="mt-4">
-            <H2>Co-speakers</H2>
-            <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the proposal.</Subtitle>
+            <H2>{t('event.submission.speakers.co-speakers')}</H2>
+            <Subtitle>{t('event.submission.speakers.co-speakers.description')}</Subtitle>
             <CoSpeakers speakers={speakers} invitationLink={invitationLink} canEdit={isOwner} className="mt-6" />
           </div>
         </Card.Content>
 
         <Card.Actions>
           <ButtonLink to={previousPath} variant="secondary">
-            Go back
+            {t('common.go-back')}
           </ButtonLink>
           <Button type="submit" form="speakers-form" name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
-            Continue
+            {t('common.continue')}
           </Button>
         </Card.Actions>
       </Card>

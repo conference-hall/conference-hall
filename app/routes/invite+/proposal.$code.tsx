@@ -1,4 +1,5 @@
-import { Form, redirect } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Form, href, redirect } from 'react-router';
 import { CoSpeakerProposalInvite } from '~/.server/cfp-submissions/co-speaker-proposal-invite.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -24,15 +25,17 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
   const proposal = await CoSpeakerProposalInvite.with(params.code).addCoSpeaker(userId);
-  return redirect(`/${proposal.event.slug}/proposals/${proposal.id}`);
+  return redirect(href('/:event/proposals/:proposal', { event: proposal.event.slug, proposal: proposal.id }));
 };
 
 export default function InvitationRoute({ loaderData: proposal }: Route.ComponentProps) {
+  const { t } = useTranslation();
+
   return (
     <FullscreenPage navbar="default">
       <FullscreenPage.Title
-        title="Talk invitation."
-        subtitle={`You have been invited to be co-speaker on a talk for the ${proposal.event.name} event.`}
+        title={t('talk.invitation.heading')}
+        subtitle={t('talk.invitation.for-event', { event: proposal.event.name })}
       />
 
       <div className="space-y-8">
@@ -42,7 +45,7 @@ export default function InvitationRoute({ loaderData: proposal }: Route.Componen
           <Card.Content>
             <H2 size="l">{proposal.title}</H2>
 
-            <ul aria-label="Speakers" className="flex flex-row flex-wrap gap-3">
+            <ul aria-label={t('speaker.list')} className="flex flex-row flex-wrap gap-3">
               {proposal.speakers.map((speaker) => (
                 <li key={speaker.name}>
                   <SpeakerPill speaker={speaker} />
@@ -55,7 +58,7 @@ export default function InvitationRoute({ loaderData: proposal }: Route.Componen
 
           <Card.Actions>
             <Form method="POST">
-              <Button type="submit">Accept invitation</Button>
+              <Button type="submit">{t('common.accept-invitation')}</Button>
             </Form>
           </Card.Actions>
         </Card>

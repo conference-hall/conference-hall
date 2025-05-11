@@ -1,7 +1,8 @@
 import { ArrowTopRightOnSquareIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { FireIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
-import { Link as RouterLink } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Link as RouterLink, href } from 'react-router';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
@@ -41,13 +42,15 @@ const DISPLAYED_PROPOSAL_STATUSES = [
 ];
 
 export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, className }: Props) {
+  const { t } = useTranslation();
+
   if (activities.length === 0) {
-    return <EmptyState icon={FireIcon} className={className} label="Welcome to Conference Hall!" />;
+    return <EmptyState icon={FireIcon} className={className} label={t('speaker.activity.empty')} />;
   }
 
   return (
     <section className={cx('space-y-4', className)}>
-      <ul aria-label="Activities list" className="space-y-4 lg:space-y-6">
+      <ul aria-label={t('speaker.activity.list')} className="space-y-4 lg:space-y-6">
         {activities.map((event) => (
           <Card key={event.slug} as="li" className="flex flex-col">
             <div className="flex items-center justify-between border-b border-b-gray-200 p-4">
@@ -55,25 +58,28 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                 <Avatar picture={event.logoUrl} name={event.name} square size="l" />
                 <div className="truncate">
                   <H2 truncate>{event.name}</H2>
-                  <Subtitle size="xs">by {event.teamName}</Subtitle>
+                  <Subtitle size="xs">{t('common.by', { names: [event.teamName] })}</Subtitle>
                 </div>
               </div>
               <IconLink
-                label={`Open ${event.name} page`}
-                to={`/${event.slug}`}
+                label={t('speaker.activity.open-event', { eventName: event.name })}
+                to={href('/:event', { event: event.slug })}
                 icon={ArrowTopRightOnSquareIcon}
                 variant="secondary"
                 target="_blank"
               />
             </div>
 
-            <ul aria-label={`${event.name} activities`} className="divide-y">
+            <ul
+              aria-label={t('speaker.activity.event-activities-list', { eventName: event.name })}
+              className="divide-y"
+            >
               {event.submissions
                 .filter((proposal) => DISPLAYED_PROPOSAL_STATUSES.includes(proposal.status))
                 .map((submission) => (
                   <li key={submission.id}>
                     <RouterLink
-                      to={`/${event.slug}/proposals/${submission.id}`}
+                      to={href('/:event/proposals/:proposal', { event: event.slug, proposal: submission.id })}
                       className="flex justify-between items-center gap-4 p-4 hover:bg-gray-50 focus-visible:-outline-offset-1"
                     >
                       <div className="overflow-hidden">
@@ -81,9 +87,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                           {submission.title}
                         </H3>
                         <Text size="xs" variant="secondary">
-                          {submission.speakers.length
-                            ? `by ${submission.speakers.map((s) => s.name).join(', ')}`
-                            : null}
+                          {t('common.by', { names: submission.speakers.map((s) => s.name) })}
                         </Text>
                       </div>
                       <div className="flex items-center gap-4">
@@ -94,9 +98,11 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                   </li>
                 ))}
               <li className="flex gap-1 px-4 py-3">
-                <Subtitle size="xs">{`${event.submissions.length} proposal(s) applied · `}</Subtitle>
-                <Link to={`/${event.slug}/proposals`} variant="secondary" size="xs">
-                  See all proposals
+                <Subtitle size="xs">
+                  {t('speaker.activity.proposals-applied', { count: event.submissions.length })} ·{' '}
+                </Subtitle>
+                <Link to={href('/:event/proposals', { event: event.slug })} variant="secondary" size="xs">
+                  {t('speaker.activity.see-all-proposals')}
                 </Link>
               </li>
             </ul>
@@ -106,7 +112,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
 
       {hasNextPage && (
         <ButtonLink to={{ pathname: '/speaker', search: `page=${nextPage}` }} variant="secondary" preventScrollReset>
-          More...
+          {t('common.more')}
         </ButtonLink>
       )}
     </section>

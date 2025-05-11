@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { useTranslation } from 'react-i18next';
 import { Publication } from '~/.server/publications/publication.ts';
 import { PublishResultFormSchema } from '~/.server/publications/publication.types.ts';
 import { Callout } from '~/design-system/callout.tsx';
@@ -11,6 +12,7 @@ import { Link } from '~/design-system/links.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { BadRequestError } from '~/libs/errors.server.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import type { Route } from './+types/index.ts';
 import { PublicationButton } from './components/publication-confirm-modal.tsx';
@@ -21,46 +23,59 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
+  const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: PublishResultFormSchema });
-  if (result.status !== 'success') throw new BadRequestError('Invalid form data');
+  if (result.status !== 'success') throw new BadRequestError(t('error.invalid-form-data'));
 
   const { type, sendEmails } = result.value;
   await Publication.for(userId, params.team, params.event).publishAll(type, sendEmails);
-  return toast('success', type === 'ACCEPTED' ? 'Accepted proposals published.' : 'Rejected proposals published.');
+  return toast(
+    'success',
+    type === 'ACCEPTED'
+      ? t('event-management.publication.feedbacks.accepted-proposals-published')
+      : t('event-management.publication.feedbacks.rejected-proposals-published'),
+  );
 };
 
 export default function PublicationRoute({ loaderData: statistics }: Route.ComponentProps) {
+  const { t } = useTranslation();
   return (
     <Page>
-      <H1 srOnly>Publication</H1>
+      <H1 srOnly>{t('event-management.nav.publication')}</H1>
 
       <div className="space-y-4 lg:space-y-6">
         <Card as="section">
           <Card.Title>
-            <H2>Publish results</H2>
-            <Subtitle>Announce results and send emails to speakers for accepted or rejected proposals.</Subtitle>
+            <H2>{t('event-management.publication.publish.label')}</H2>
+            <Subtitle>{t('event-management.publication.publish.description')}</Subtitle>
           </Card.Title>
 
           <Card.Content className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
             <ProgressCard
-              label="Total results published"
+              label={t('event-management.publication.publish.total-published')}
               value={statistics.accepted.published + statistics.rejected.published}
               max={statistics.deliberation.accepted + statistics.deliberation.rejected}
             >
               <Link to="../reviews" relative="path" size="s" weight="medium">
-                See all proposals &rarr;
+                {t('common.see-all-proposals')} &rarr;
               </Link>
             </ProgressCard>
 
-            <StatisticCard label="Accepted proposals to publish" stat={`${statistics.accepted.notPublished}`}>
+            <StatisticCard
+              label={t('event-management.publication.publish.accepted-to-publish')}
+              stat={`${statistics.accepted.notPublished}`}
+            >
               <StatisticCard.Footer>
                 <PublicationButton type="ACCEPTED" statistics={statistics.accepted} />
               </StatisticCard.Footer>
             </StatisticCard>
 
-            <StatisticCard label="Rejected proposals to publish" stat={`${statistics.rejected.notPublished}`}>
+            <StatisticCard
+              label={t('event-management.publication.publish.rejected-to-publish')}
+              stat={`${statistics.rejected.notPublished}`}
+            >
               <StatisticCard.Footer>
                 <PublicationButton type="REJECTED" statistics={statistics.rejected} />
               </StatisticCard.Footer>
@@ -70,29 +85,29 @@ export default function PublicationRoute({ loaderData: statistics }: Route.Compo
 
         <section className="flex flex-col gap-4 lg:flex-row lg:gap-6">
           <DonutCard
-            title="Deliberation results"
-            subtitle="Proposals accepted or rejected by organizers"
+            title={t('event-management.publication.deliberation-chart.label')}
+            subtitle={t('event-management.publication.deliberation-chart.description')}
             donutLabel={`${statistics.deliberation.total}`}
-            categoryLabel="Deliberation status"
-            amountLabel="Proposals"
-            noDataHint="You need to mark proposals as accepted or rejected."
+            categoryLabel={t('event-management.publication.deliberation-chart.category')}
+            amountLabel={t('common.proposals')}
+            noDataHint={t('event-management.publication.deliberation-chart.empty')}
             data={[
               {
-                name: 'Accepted proposals',
+                name: t('common.proposals.status.accepted'),
                 amount: statistics.deliberation.accepted,
                 colorChart: 'green',
                 colorLegend: 'bg-green-500',
                 to: '../reviews?status=accepted',
               },
               {
-                name: 'Rejected proposals',
+                name: t('common.proposals.status.rejected'),
                 amount: statistics.deliberation.rejected,
                 colorChart: 'red',
                 colorLegend: 'bg-red-500',
                 to: '../reviews?status=rejected',
               },
               {
-                name: 'Not deliberated proposals',
+                name: t('common.proposals.status.pending'),
                 amount: statistics.deliberation.pending,
                 colorChart: 'blue',
                 colorLegend: 'bg-blue-500',
@@ -100,36 +115,33 @@ export default function PublicationRoute({ loaderData: statistics }: Route.Compo
               },
             ]}
           >
-            <Callout>
-              To deliberate, open the proposals page, select and mark proposals as accepted or rejected. You can also
-              change the deliberation status individually on a proposal page.
-            </Callout>
+            <Callout>{t('event-management.publication.deliberation-chart.info')}</Callout>
           </DonutCard>
 
           <DonutCard
-            title="Speaker confirmations"
-            subtitle="Proposals confirmed or declined by speakers."
+            title={t('event-management.publication.confirmation-chart.label')}
+            subtitle={t('event-management.publication.confirmation-chart.description')}
             donutLabel={`${statistics.accepted.published}`}
-            categoryLabel="Confirmation status"
-            amountLabel="Proposals"
-            noDataHint="You need to publish results for accepted proposals."
+            categoryLabel={t('event-management.publication.confirmation-chart.category')}
+            amountLabel={t('common.proposals')}
+            noDataHint={t('event-management.publication.confirmation-chart.empty')}
             data={[
               {
-                name: 'Confirmed by speakers',
+                name: t('common.proposals.status.confirmed'),
                 amount: statistics.confirmations.confirmed,
                 colorChart: 'green',
                 colorLegend: 'bg-green-500',
                 to: '../reviews?status=confirmed',
               },
               {
-                name: 'Declined by speakers',
+                name: t('common.proposals.status.declined'),
                 amount: statistics.confirmations.declined,
                 colorChart: 'red',
                 colorLegend: 'bg-red-500',
                 to: '../reviews?status=declined',
               },
               {
-                name: 'Waiting for confirmation',
+                name: t('common.proposals.status.not-answered'),
                 amount: statistics.confirmations.pending,
                 colorChart: 'blue',
                 colorLegend: 'bg-blue-500',
@@ -137,7 +149,7 @@ export default function PublicationRoute({ loaderData: statistics }: Route.Compo
               },
             ]}
           >
-            <Callout>To get speaker confirmation, organizers must publish results for accepted proposals.</Callout>
+            <Callout>{t('event-management.publication.confirmation-chart.info')}</Callout>
           </DonutCard>
         </section>
       </div>

@@ -1,6 +1,7 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
 import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   label?: string;
@@ -8,6 +9,7 @@ type Props = {
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export function CopyInput({ id, type = 'text', value, className, error, ...rest }: Props) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 
   const handleClick = () => {
@@ -35,12 +37,12 @@ export function CopyInput({ id, type = 'text', value, className, error, ...rest 
           {copied ? (
             <>
               <CheckIcon className="h-5 w-5 text-green-500" aria-hidden="true" />
-              <span>Copied!</span>
+              <span>{t('common.copied')}</span>
             </>
           ) : (
             <>
               <ClipboardDocumentIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-              <span>Copy</span>
+              <span>{t('common.copy')}</span>
             </>
           )}
         </button>

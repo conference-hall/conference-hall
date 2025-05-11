@@ -2,34 +2,35 @@ import { Fieldset, Label, Radio, RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { ReviewFeeling } from '~/types/proposals.types.ts';
 
-type Option = {
-  label: string;
-  value: number | null;
-  Icon: React.ComponentType<{ className?: string }>;
-  feeling: ReviewFeeling;
-  fill: string;
-};
+const options = [
+  {
+    i18nKey: 'common.review.type.NO_OPINION',
+    Icon: NoSymbolIcon,
+    value: null,
+    feeling: 'NO_OPINION',
+    fill: 'fill-red-100',
+  },
+  { i18nKey: 'common.review.type.NEGATIVE', Icon: XCircleIcon, value: 0, feeling: 'NEGATIVE', fill: 'fill-gray-300' },
+  { i18nKey: 'common.review.star', Icon: StarIcon, value: 1, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
+  { i18nKey: 'common.review.star', Icon: StarIcon, value: 2, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
+  { i18nKey: 'common.review.star', Icon: StarIcon, value: 3, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
+  { i18nKey: 'common.review.star', Icon: StarIcon, value: 4, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
+  { i18nKey: 'common.review.star', Icon: StarIcon, value: 5, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
+  { i18nKey: 'common.review.type.POSITIVE', Icon: HeartIcon, value: 5, feeling: 'POSITIVE', fill: 'fill-red-400' },
+] as const;
 
-const options: Array<Option> = [
-  { label: 'No opinion', Icon: NoSymbolIcon, value: null, feeling: 'NO_OPINION', fill: 'fill-red-100' },
-  { label: 'Nope, 0 star', Icon: XCircleIcon, value: 0, feeling: 'NEGATIVE', fill: 'fill-gray-300' },
-  { label: '1 star', Icon: StarIcon, value: 1, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
-  { label: '2 stars', Icon: StarIcon, value: 2, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
-  { label: '3 stars', Icon: StarIcon, value: 3, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
-  { label: '4 stars', Icon: StarIcon, value: 4, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
-  { label: '5 stars', Icon: StarIcon, value: 5, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
-  { label: 'Love it, 5 stars', Icon: HeartIcon, value: 5, feeling: 'POSITIVE', fill: 'fill-red-400' },
-];
-
-type StyleProps = { option: Option; index: number };
+type StyleProps = { option: (typeof options)[number]; index: number };
 
 type Review = { note?: number | null; feeling?: string | null };
 
 type Props = { value: Review; onChange: (feeling: ReviewFeeling, note: number | null) => void };
 
 export function ReviewSelector({ value, onChange }: Props) {
+  const { t } = useTranslation();
+
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
     options.findIndex((option) => option.value === value.note && option.feeling === value.feeling),
   );
@@ -57,14 +58,14 @@ export function ReviewSelector({ value, onChange }: Props) {
 
   return (
     <Fieldset>
-      <Label className="sr-only"> Choose a note</Label>
+      <Label className="sr-only">{t('common.review.choose')}</Label>
       <RadioGroup name="review" value={String(selectedIndex)} onChange={handleChange}>
         <div className="flex gap-1 justify-between items-center" onMouseOut={() => setOverIndex(-1)}>
           {options.map((option, index) => (
-            <Radio key={index} value={String(index)} title={option.label} data-review-input>
+            <Radio key={index} value={String(index)} title={t(option.i18nKey)} data-review-input>
               <div className="cursor-pointer" onMouseOver={() => setOverIndex(index)}>
                 <option.Icon className={iconStyles({ option, index })} />
-                <Label className="sr-only">{option.label}</Label>
+                <Label className="sr-only">{t(option.i18nKey)}</Label>
               </div>
             </Radio>
           ))}
