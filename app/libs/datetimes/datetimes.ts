@@ -55,28 +55,24 @@ const TIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
   long: { hour: 'numeric', minute: 'numeric', timeZoneName: 'short' },
 };
 
-// todo(tests)
 export function formatDatetime(date: Date, options: FormatOption): string {
   const { format, locale, timezone } = options;
   const intlFormat = { ...DATETIME_FORMATS[format], timeZone: timezone };
   return new Intl.DateTimeFormat(locale, intlFormat).format(date);
 }
 
-// todo(tests)
 export function formatDate(date: Date, options: FormatOption): string {
   const { format, locale, timezone } = options;
   const intlFormat = { ...DATE_FORMATS[format], timeZone: timezone };
   return new Intl.DateTimeFormat(locale, intlFormat).format(date);
 }
 
-// todo(tests)
 export function formatDay(date: Date, options: FormatOption): string {
   const { format, locale, timezone } = options;
   const intlFormat = { ...DAY_FORMATS[format], timeZone: timezone };
   return new Intl.DateTimeFormat(locale, intlFormat).format(date);
 }
 
-// todo(tests)
 export function formatDateRange(startDate: Date, endDate: Date, locale: string): string {
   if (!startDate) return '';
 
@@ -89,7 +85,6 @@ export function formatDateRange(startDate: Date, endDate: Date, locale: string):
   return `${startDay} / ${endDay}`;
 }
 
-// todo(tests)
 export function formatTime(time: Date | number, options: FormatOption): string {
   if (typeof time === 'number') {
     time = setMinutes(startOfDay(new Date()), time);
@@ -99,7 +94,6 @@ export function formatTime(time: Date | number, options: FormatOption): string {
   return new Intl.DateTimeFormat(locale, intlFormat).format(time);
 }
 
-// todo(tests)
 export function toDateInput(date?: Date | null) {
   if (!date) return null;
   const year = String(date.getFullYear()).padStart(4, '0');
@@ -108,7 +102,6 @@ export function toDateInput(date?: Date | null) {
   return `${year}-${month}-${day}`;
 }
 
-// todo(tests)
 export function formatDistance(date: Date, locale: string, direction: 'from' | 'to' = 'from'): string {
   const minutes = Math.abs(differenceInMinutes(Date.now(), date));
 
@@ -129,12 +122,17 @@ export function formatDistance(date: Date, locale: string, direction: 'from' | '
 }
 
 // todo(i18n) use Intl.DurationFormat instead of date-fns (needs Node 23+)
-/** Format the difference between two dates to a string like '2h 10m' */
+/**
+ * Format the difference between two dates to a string like '2h 10m'
+ * Note:
+ * - Zero values are omitted (e.g. '2h' instead of '2h 0m')
+ * - When date1 > date2, negative values are returned (e.g. '-2h -10m')
+ */
 export function formatTimeDifference(date1: Date, date2: Date) {
   const duration = intervalToDuration({ start: date1, end: date2 });
   return formatDuration(duration, {
     format: ['hours', 'minutes'],
-    zero: true,
+    zero: false, // Don't include zero values
     delimiter: ' ',
     locale: {
       formatDistance: (token, count) => {
