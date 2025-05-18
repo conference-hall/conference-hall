@@ -78,8 +78,8 @@ describe('timezone', () => {
   });
 
   describe('#getTimezonesList', () => {
-    it('returns the formatted list of timezones', async () => {
-      const timezones = getTimezonesList();
+    it('returns the formatted list of timezones with en-US locale', async () => {
+      const timezones = getTimezonesList('en-US');
 
       const london = timezones.find((t) => t.id === 'Europe/London');
       expect(london).toEqual({
@@ -87,18 +87,36 @@ describe('timezone', () => {
         name: '(GMT+00:00) United Kingdom Time - Europe/London',
       });
     });
+
+    it('returns the formatted list of timezones with other locale', async () => {
+      const timezones = getTimezonesList('fr');
+
+      const london = timezones.find((t) => t.id === 'Europe/London');
+      expect(london).toEqual({
+        id: 'Europe/London',
+        name: expect.stringContaining('Europe/London'),
+      });
+    });
   });
 
   describe('#getGMTOffset', () => {
-    it('returns the formatted GMT offset of a timezone', async () => {
-      const offsetNewYork = getGMTOffset('America/New_York');
+    it('returns the formatted GMT offset of a timezone with en-US locale', async () => {
+      const offsetNewYork = getGMTOffset('America/New_York', 'en-US');
       expect(offsetNewYork).toBe('EST');
 
-      const offsetLondon = getGMTOffset('Europe/London');
+      const offsetLondon = getGMTOffset('Europe/London', 'en-US');
       expect(offsetLondon).toBe('GMT');
 
-      const offsetInvalid = getGMTOffset('Invalid/Timezone');
+      const offsetInvalid = getGMTOffset('Invalid/Timezone', 'en-US');
       expect(offsetInvalid).toBeNull();
+    });
+
+    it('returns the formatted GMT offset of a timezone with other locale', async () => {
+      const offsetNewYork = getGMTOffset('America/New_York', 'fr');
+      expect(offsetNewYork).toBe('UTC−5');
+
+      const offsetLondon = getGMTOffset('Europe/London', 'fr');
+      expect(offsetLondon).toBe('UTC');
     });
   });
 

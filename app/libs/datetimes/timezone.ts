@@ -16,68 +16,43 @@ export function getUserTimezone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
-// todo(i18n): use locale
 /** List all timezones */
-export function getTimezonesList() {
+export function getTimezonesList(locale: string) {
   const timezones = Intl.supportedValuesOf('timeZone');
 
   const timezoneObjects = timezones.map((tz) => {
     const now = new Date();
 
     // TZ Offset
-    const tzFormatShort = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'longOffset' });
+    const tzFormatShort = new Intl.DateTimeFormat(locale, { timeZone: tz, timeZoneName: 'longOffset' });
     const timezoneOffset = tzFormatShort.formatToParts(now).find((part) => part.type === 'timeZoneName')?.value;
     const offsetName = timezoneOffset === 'GMT' ? 'GMT+00:00' : timezoneOffset;
 
     // TZ Long name
-    const tzFormatLong = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'longGeneric' });
+    const tzFormatLong = new Intl.DateTimeFormat(locale, { timeZone: tz, timeZoneName: 'longGeneric' });
     const longName = tzFormatLong.formatToParts(now).find((part) => part.type === 'timeZoneName')?.value;
 
-    return {
-      id: tz,
-      name: `(${offsetName}) ${longName} - ${tz.replace('_', ' ')}`,
-      longName: longName,
-      offset: parseOffset(offsetName), // Convert offset to number for sorting
-    };
+    return { id: tz, name: `(${offsetName}) ${longName} - ${tz.replace('_', ' ')}` };
   });
 
   // Sort timezones by offset and name
-  return timezoneObjects
-    .sort((a, b) => {
-      if (a.offset !== b.offset) {
-        return a.offset - b.offset; // Sort by offset numerically
-      } else if (a.longName && b.longName) {
-        return a.longName.localeCompare(b.longName); // If offset is the same, sort by timeZoneName alphabetically
-      } else {
-        return a.id.localeCompare(b.id); // Fallback, sort by id alphabetically
-      }
-    })
-    .map(({ id, name }) => ({ id, name }));
+  return timezoneObjects.sort((a, b) => a.name.localeCompare(b.name)).map(({ id, name }) => ({ id, name }));
 }
 
-// todo(i18n): use locale
 /** Get GMT offset from a timezone */
-export function getGMTOffset(timezone: string) {
+export function getGMTOffset(timezone: string, locale: string) {
   const date = new Date();
   try {
-    const formatter = new Intl.DateTimeFormat('en-US', { timeZone: timezone, timeZoneName: 'short' });
+    const formatter = new Intl.DateTimeFormat(locale, { timeZone: timezone, timeZoneName: 'short' });
     const parts = formatter.formatToParts(date);
 
     // Find the GMT offset part
     const gmtOffsetPart = parts.find((part) => part.type === 'timeZoneName');
     if (!gmtOffsetPart) return null;
-    return gmtOffsetPart.value.replace('UTC', 'GMT');
+    return gmtOffsetPart.value;
   } catch (_error) {
     return null;
   }
-}
-
-/** Parse offset string to number */
-function parseOffset(offset?: string) {
-  if (offset === undefined) return -1000;
-  const [hours, minutes] = offset.replace('GMT', '').split(':');
-  const parsedOffset = Number.parseInt(hours, 10) * 60 + Number.parseInt(minutes, 10);
-  return parsedOffset;
 }
 
 /** Parse a string date from a timezone and convert it to start of the day and UTC */

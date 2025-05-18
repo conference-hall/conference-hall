@@ -163,7 +163,9 @@ function ScheduleDay({
           <tr className={cx('divide-x', { 'h-12': !displayMultipleDays, 'h-8': displayMultipleDays })}>
             {/* gutter */}
             {dayIndex === 0 && (
-              <th className="w-12 text-xs font-normal text-center bg-white text-gray-400">{getGMTOffset(timezone)}</th>
+              <th className="w-12 text-xs font-normal text-center bg-white text-gray-400">
+                {getGMTOffset(timezone, locale)}
+              </th>
             )}
             {/* tracks header */}
             {tracks.map((track) => (
