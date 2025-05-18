@@ -21,9 +21,16 @@ Prefer named exports over default exports, use this convention for the suggestio
 To run a single test file, use the command `npm test -- run <file>`, and to run all tests, use `npm test -- run` without any arguments.
 
 Integration tests for React components: should be placed in the same directory as the component itself, and they should be named with a `.test.tsx` suffix.
+
 Integration tests for React components: should be rendered using the `render` function from `vitest-browser-react` and should use the `screen` object from `render` to query elementIntegration tests for React components, For example, use `screen.getByText('example')` instead of `getByText('example')`.
+
 Integration tests for React components: if components uses `react-router` components, it should be wrapped using RouteStub component from `createRoutesStub`.
+
 Integration tests for React components: if components uses i18n, it should be wrapped with `I18nextProvider` component from `react-i18next` using `i18nTest` config from `tests/i18n-helpers.tsx`.
+
+In Integration tests for React components and e2e tests, check text with i18n values from `en` locale (don't use the keys). For example, use `Hello world` instead of `'common.hello'` key.
+
+In Integration tests for React components, prefer using "vitest browser" locators (getByRole, getByText, ...), "vitest browser" assertion API or Interactive API.
 
 Integration tests for backend code should be placed in the same directory as the file itself, and they should be named with a `.test.ts` suffix.
 
