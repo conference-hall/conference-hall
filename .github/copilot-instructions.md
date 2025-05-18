@@ -8,7 +8,7 @@ For asynchronous jobs, rely on BullMQ and use our custom abstraction layer to ma
 
 Components are styled using Tailwind CSS, so any styling suggestions should be compatible with Tailwind's utility-first approach.
 
-Our tests are run with Vitest, so please structure all test-related code and examples to align with Vitest’s syntax and best practices.
+Our tests are run with Vitest (never use `jest`), so please structure all test-related code and examples to align with Vitest’s syntax and best practices.
 
 No need to import Vitest functions and helpers, they are declared globally.
 
@@ -19,3 +19,14 @@ All javascript and typescript file imports includes the file extensions (ex: imp
 Prefer named exports over default exports, use this convention for the suggestions.
 
 To run a single test file, use the command `npm test -- run <file>`, and to run all tests, use `npm test -- run` without any arguments.
+
+Integration tests for React components:
+
+1. should be placed in the same directory as the component itself, and they should be named with a `.test.tsx` suffix.
+2. should be rendered using the `render` function from `vitest-browser-react` and should use the `screen` object from `render` to query elements. For example, use `screen.getByText('example')` instead of `getByText('example')`.
+3. if it uses `react-router` components, it should be wrapped using RouteStub component from `createRoutesStub`.
+4. if it has i18n, it should be wrapped with `I18nextProvider` component from `react-i18next` using `i18nTest` config from `tests/i18n-helpers.tsx`.
+
+Integration tests for backend code should be placed in the same directory as the file itself, and they should be named with a `.test.ts` suffix.
+
+To mock dates in tests, use `vi.useFakeTimers` and `vi.setSystemTime(new Date('2023-01-01'))` to set the date to January 1, 2023. This ensures that all date-related functionality in the tests is consistent and predictable.
