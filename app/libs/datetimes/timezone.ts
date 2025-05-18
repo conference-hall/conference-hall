@@ -1,19 +1,14 @@
 import { endOfDay, parse, startOfDay } from 'date-fns';
 import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 
-// todo(tests)
+/** Convert UTC date to a specific timezone */
 export function utcToTimezone(date: Date | string, timezone: string) {
   return toZonedTime(date, timezone);
 }
 
-// todo(tests)
-function timezoneToUtc(date: Date | string, timezone: string) {
+/** Convert a date in a specific timezone to UTC */
+export function timezoneToUtc(date: Date | string, timezone: string) {
   return fromZonedTime(date, timezone);
-}
-
-/** Convert a timezoned date to UTC and format it to ISO format */
-export function convertTimezoneToUtcString(date: Date, timezone: string) {
-  return timezoneToUtc(date, timezone).toISOString();
 }
 
 /** Get user timezone */
@@ -21,6 +16,7 @@ export function getUserTimezone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
+// todo(i18n): use locale
 /** List all timezones */
 export function getTimezonesList() {
   const timezones = Intl.supportedValuesOf('timeZone');
@@ -59,16 +55,21 @@ export function getTimezonesList() {
     .map(({ id, name }) => ({ id, name }));
 }
 
+// todo(i18n): use locale
 /** Get GMT offset from a timezone */
 export function getGMTOffset(timezone: string) {
   const date = new Date();
-  const formatter = new Intl.DateTimeFormat('en-US', { timeZone: timezone, timeZoneName: 'short' });
-  const parts = formatter.formatToParts(date);
+  try {
+    const formatter = new Intl.DateTimeFormat('en-US', { timeZone: timezone, timeZoneName: 'short' });
+    const parts = formatter.formatToParts(date);
 
-  // Find the GMT offset part
-  const gmtOffsetPart = parts.find((part) => part.type === 'timeZoneName');
-  if (!gmtOffsetPart) return null;
-  return gmtOffsetPart.value.replace('UTC', 'GMT');
+    // Find the GMT offset part
+    const gmtOffsetPart = parts.find((part) => part.type === 'timeZoneName');
+    if (!gmtOffsetPart) return null;
+    return gmtOffsetPart.value.replace('UTC', 'GMT');
+  } catch (_error) {
+    return null;
+  }
 }
 
 /** Parse offset string to number */

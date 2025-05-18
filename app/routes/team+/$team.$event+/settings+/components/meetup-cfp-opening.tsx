@@ -3,7 +3,7 @@ import { Form, useFetcher } from 'react-router';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { convertTimezoneToUtcString } from '~/libs/datetimes/timezone.ts';
+import { timezoneToUtc } from '~/libs/datetimes/timezone.ts';
 import type { action } from '../cfp.tsx';
 
 type Props = { cfpStart: Date | null; timezone: string };
@@ -16,7 +16,7 @@ export function MeetupCfpOpening({ cfpStart, timezone }: Props) {
     fetcher.submit(
       {
         intent: 'save-cfp-meetup-opening',
-        cfpStart: checked ? convertTimezoneToUtcString(new Date(), timezone) : '',
+        cfpStart: checked ? timezoneToUtc(new Date(), timezone).toISOString() : '',
       },
       { method: 'POST' },
     );
