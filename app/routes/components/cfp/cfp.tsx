@@ -3,7 +3,6 @@ import { formatDatetime, formatDistance } from '~/libs/datetimes/datetimes.ts';
 import { utcToTimezone } from '~/libs/datetimes/timezone.ts';
 import type { CfpState } from '~/types/events.types.ts';
 
-// todo(test)
 const STATUSES = { OPENED: 'success', CLOSED: 'warning', FINISHED: 'error' } as const;
 
 export function cfpColorStatus(cfpState: CfpState, cfpStart: Date | null, cfpEnd: Date | null) {
@@ -11,7 +10,6 @@ export function cfpColorStatus(cfpState: CfpState, cfpStart: Date | null, cfpEnd
   return STATUSES[cfpState];
 }
 
-// todo(test)
 type CallForPaperStatusLabelProps = { state: CfpState; start: Date | null; end: Date | null };
 
 export function CallForPaperStatusLabel({ state, start, end }: CallForPaperStatusLabelProps) {
@@ -29,7 +27,6 @@ export function CallForPaperStatusLabel({ state, start, end }: CallForPaperStatu
   }
 }
 
-// todo(test)
 type CallForPaperElapsedTimeLabelProps = { state: CfpState; start: Date; end: Date };
 
 export function CallForPaperElapsedTimeLabel({ state, start, end }: CallForPaperElapsedTimeLabelProps) {
@@ -54,7 +51,6 @@ export function CallForPaperElapsedTimeLabel({ state, start, end }: CallForPaper
   }
 }
 
-// todo(test)
 type CallForPaperDateLabelProps = {
   state: CfpState;
   start: Date | null;
