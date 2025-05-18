@@ -17,3 +17,5 @@ Test names must not start with "should" but with a verb.
 All javascript and typescript file imports includes the file extensions (ex: import { Example } from './example.ts' ), use this syntax for the suggestions.
 
 Prefer named exports over default exports, use this convention for the suggestions.
+
+To run a single test file, use the command `npm test -- run <file>`, and to run all tests, use `npm test -- run` without any arguments.
