@@ -25,7 +25,6 @@ type Props = {
   className?: string;
 };
 
-// todo(test)
 export function DetailsSection({
   description,
   websiteUrl,
@@ -89,7 +88,6 @@ export function DetailsSection({
   );
 }
 
-// todo(test)
 function formatConferenceDates(start: Date, end: Date, timezone: string, locale: string) {
   if (isSameDay(start, end)) {
     return formatDate(start, { format: 'long', locale, timezone });
