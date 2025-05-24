@@ -21,7 +21,7 @@ export function FiltersMenu() {
       <Popover className="hidden sm:block">
         <PopoverButton className={button({ variant: 'secondary' })}>
           <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
-          <span>Filters</span>
+          <span>{t('common.filters')}</span>
         </PopoverButton>
         <PopoverPanel
           anchor={{ to: 'bottom end', gap: '8px' }}
