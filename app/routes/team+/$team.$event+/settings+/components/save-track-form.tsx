@@ -29,11 +29,12 @@ export function NewTrackButton({ type }: NewTrackButtonProps) {
 type EditTrackButtonProps = { type: TrackType; initialValues: TrackData };
 
 export function EditTrackButton({ type, initialValues }: EditTrackButtonProps) {
+  const { t } = useTranslation();
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
       <Button onClick={() => setModalOpen(true)} size="s" variant="secondary">
-        Edit
+        {t('common.edit')}
       </Button>
       <SaveTrackFormModal
         type={type}

@@ -11,5 +11,5 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const filters = parseUrlFilters(request.url);
   const exports = CfpReviewsExports.for(userId, params.team, params.event);
   await exports.forOpenPlanner(filters);
-  return toast('success', t('integrations.open-planner.export.feedbacks.in-progress'));
+  return toast('success', t('event-management.proposals.export.open-planner.feedbacks'));
 };

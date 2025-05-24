@@ -27,7 +27,7 @@ export function ChangeContactEmailForm({ email, authLoaded }: Props) {
     <Card as="section">
       <Card.Title>
         <H2>{t('settings.account.contact.heading')}</H2>
-        <Subtitle>t('settings.account.contact.description')</Subtitle>
+        <Subtitle>{t('settings.account.contact.description')}</Subtitle>
       </Card.Title>
 
       <Card.Content>

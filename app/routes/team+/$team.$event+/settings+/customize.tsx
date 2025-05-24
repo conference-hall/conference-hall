@@ -60,7 +60,7 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
 
       <Card.Content>
         <Avatar picture={logoUrl} name={`${name} logo`} square size="4xl" />
-        <Callout title="Logo format">
+        <Callout title={t('event-management.settings.customize.logo.info.heading')}>
           <Trans
             i18nKey="event-management.settings.customize.logo.info"
             components={[<br key="1" />, <ExternalLink key="2" href="https://squoosh.app" weight="medium" />]}
