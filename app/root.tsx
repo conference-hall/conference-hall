@@ -125,7 +125,6 @@ export default function App({ loaderData }: Route.ComponentProps) {
 export function ErrorBoundary() {
   const nonce = useNonce();
 
-  // TODO: Manage error boundary in main layouts to manage locale
   return (
     <Document locale="en" nonce={nonce}>
       <GeneralErrorBoundary />
