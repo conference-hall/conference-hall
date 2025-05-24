@@ -92,8 +92,7 @@ function formatConferenceDates(start: Date, end: Date, timezone: string, locale:
   if (isSameDay(start, end)) {
     return formatDate(start, { format: 'long', locale, timezone });
   }
-
   const startFormatted = formatDay(start, { format: 'medium', locale, timezone });
   const endFormatted = formatDate(end, { format: 'long', locale, timezone });
-  return `${startFormatted} to ${endFormatted}`;
+  return [startFormatted, endFormatted].join(' - ');
 }
