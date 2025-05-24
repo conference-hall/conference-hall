@@ -82,12 +82,12 @@ describe('DateRangeInput', () => {
 
     await userEvent.fill(startInput, '2023-01-12');
     expect(mockOnChange).toHaveBeenCalledWith(new Date('2023-01-12'), new Date('2023-01-12'));
+    await expect.element(endInput).toHaveAttribute('min', '2023-01-12');
+    mockOnChange.mockClear();
 
     await userEvent.fill(endInput, '2023-01-18');
     expect(mockOnChange).toHaveBeenCalledWith(new Date('2023-01-12'), new Date('2023-01-18'));
-
-    await userEvent.fill(endInput, '2023-01-11');
-    expect(mockOnChange).toHaveBeenCalledWith(new Date('2023-01-12'), new Date('2023-01-12'));
+    mockOnChange.mockClear();
   });
 
   it('respects min and max date constraints', async () => {
