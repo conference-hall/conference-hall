@@ -119,7 +119,7 @@ export function TalkSection({
 
         {showFormats && talk.formats && talk.formats?.length > 0 && (
           <div>
-            <dt className="text-sm font-medium leading-6 text-gray-900">{t('tracks.formats')}</dt>
+            <dt className="text-sm font-medium leading-6 text-gray-900">{t('common.formats')}</dt>
             <dd className="text-sm leading-6 text-gray-700">
               {talk.formats?.map(({ id, name }) => (
                 <p key={id}>{name}</p>
@@ -130,7 +130,7 @@ export function TalkSection({
 
         {showCategories && talk.categories && talk.categories?.length > 0 && (
           <div>
-            <dt className="text-sm font-medium leading-6 text-gray-900">{t('tracks.categories')}</dt>
+            <dt className="text-sm font-medium leading-6 text-gray-900">{t('common.categories')}</dt>
             <dd className="text-sm leading-6 text-gray-700">
               {talk.categories?.map(({ id, name }) => (
                 <p key={id}>{name}</p>

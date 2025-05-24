@@ -881,7 +881,5 @@
   "team.settings.nav.members": "Members",
   "team.settings.team-edit.description": "Change team name and URL.",
   "team.settings.team-edit.form.submit": "Save",
-  "team.settings.team-edit.heading": "General",
-  "tracks.categories": "Categories",
-  "tracks.formats": "Formats"
+  "team.settings.team-edit.heading": "General"
 }
