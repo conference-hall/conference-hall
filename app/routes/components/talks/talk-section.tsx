@@ -10,7 +10,7 @@ import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { formatDate } from '~/libs/datetimes/datetimes.ts';
+import { formatDatetime } from '~/libs/datetimes/datetimes.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 import type { Languages } from '~/types/proposals.types.ts';
 import { ClientOnly } from '../utils/client-only.tsx';
@@ -101,7 +101,7 @@ export function TalkSection({
           <ClientOnly>
             {() =>
               t('common.created-on', {
-                date: formatDate(talk.createdAt, { format: 'long', locale }),
+                date: formatDatetime(talk.createdAt, { format: 'medium', locale }),
                 interpolation: { escapeValue: false },
               })
             }

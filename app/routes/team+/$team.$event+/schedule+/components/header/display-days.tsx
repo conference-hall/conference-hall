@@ -54,7 +54,7 @@ export function DisplayDays({ scheduleDays, displayedDays, timezone, onChangeDis
 
       <Popover>
         <PopoverButton className="hidden h-full border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 cursor-pointer focus:relative md:block">
-          {formatDateRange(displayedStartDay, displayedEndDay, i18n.language)}
+          {formatDateRange(displayedStartDay, displayedEndDay, { format: 'medium', locale: i18n.language })}
         </PopoverButton>
         <PopoverPanel
           anchor={{ to: 'bottom start', gap: '4px', offset: '-34px' }}

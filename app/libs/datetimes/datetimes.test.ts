@@ -56,7 +56,7 @@ describe('datetimes', () => {
     it('formats date to long date', async () => {
       const date = new Date('2020-02-26T01:10:00.000Z');
       const formatted = formatDate(date, { format: 'long', locale: 'en' });
-      expect(formatted).toEqual('February 26, 2020 at UTC');
+      expect(formatted).toEqual('February 26, 2020');
     });
 
     it('respects timezone parameter', async () => {
@@ -97,28 +97,46 @@ describe('datetimes', () => {
   describe('#formatDateRange', () => {
     it('formats same start and end date', async () => {
       const date = new Date('2020-02-26T00:00:00.000Z');
-      const formatted = formatDateRange(date, date, 'en');
-      expect(formatted).toEqual('February 26, 2020 at UTC');
+      const formatted = formatDateRange(date, date, { format: 'long', locale: 'en' });
+      expect(formatted).toEqual('February 26, 2020');
     });
 
     it('formats date range with different start and end dates', async () => {
       const startDate = new Date('2020-02-26T00:00:00.000Z');
       const endDate = new Date('2020-02-28T00:00:00.000Z');
-      const formatted = formatDateRange(startDate, endDate, 'en');
+      const formatted = formatDateRange(startDate, endDate, { format: 'medium', locale: 'en' });
       expect(formatted).toEqual('Feb 26 / Feb 28, 2020');
+    });
+
+    it('handles different formats', async () => {
+      const startDate = new Date('2020-02-26T00:00:00.000Z');
+      const endDate = new Date('2020-02-28T00:00:00.000Z');
+      const formatted = formatDateRange(startDate, endDate, { format: 'long', locale: 'en' });
+      expect(formatted).toEqual('February 26 / February 28, 2020');
     });
 
     it('handles different locales', async () => {
       const startDate = new Date('2020-02-26T00:00:00.000Z');
       const endDate = new Date('2020-02-28T00:00:00.000Z');
-      const formatted = formatDateRange(startDate, endDate, 'fr');
+      const formatted = formatDateRange(startDate, endDate, { format: 'medium', locale: 'fr' });
       expect(formatted).toEqual('26 févr. / 28 févr. 2020');
+    });
+
+    it('handles different timezones', async () => {
+      const startDate = new Date('2020-02-26T00:00:00.000Z');
+      const endDate = new Date('2020-02-28T00:00:00.000Z');
+      const formatted = formatDateRange(startDate, endDate, {
+        format: 'medium',
+        locale: 'fr',
+        timezone: 'America/Los_Angeles',
+      });
+      expect(formatted).toEqual('25 févr. / 27 févr. 2020');
     });
 
     it('formats dates from different months', async () => {
       const startDate = new Date('2020-02-26T00:00:00.000Z');
       const endDate = new Date('2020-03-05T00:00:00.000Z');
-      const formatted = formatDateRange(startDate, endDate, 'en');
+      const formatted = formatDateRange(startDate, endDate, { format: 'medium', locale: 'en' });
       expect(formatted).toEqual('Feb 26 / Mar 5, 2020');
     });
   });

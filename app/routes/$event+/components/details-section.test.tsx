@@ -104,7 +104,7 @@ describe('DetailsSection', () => {
       </I18nextProvider>,
     );
 
-    await expect.element(screen.getByText(/Mar 15 - March 17, 2023/)).toBeInTheDocument();
+    await expect.element(screen.getByText('March 15 / March 17, 2023')).toBeInTheDocument();
   });
 
   test('renders website link when provided', async () => {

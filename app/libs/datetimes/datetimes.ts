@@ -34,7 +34,7 @@ const DATE_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
   // 1 Oct 2023
   medium: { day: 'numeric', month: 'short', year: 'numeric' },
   // 1 October 2023
-  long: { day: '2-digit', month: 'long', year: 'numeric', timeZoneName: 'short' },
+  long: { day: '2-digit', month: 'long', year: 'numeric' },
 };
 
 const DAY_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
@@ -73,15 +73,17 @@ export function formatDay(date: Date, options: FormatOption): string {
   return new Intl.DateTimeFormat(locale, intlFormat).format(date);
 }
 
-export function formatDateRange(startDate: Date, endDate: Date, locale: string): string {
+export function formatDateRange(startDate: Date, endDate: Date, options: FormatOption): string {
+  const { format, locale, timezone } = options;
+
   if (!startDate) return '';
 
   if (startDate === endDate) {
-    return new Intl.DateTimeFormat(locale, DATE_FORMATS.long).format(startDate);
+    return formatDate(startDate, { format: 'long', locale, timezone });
   }
 
-  const startDay = formatDay(startDate, { locale, format: 'medium' });
-  const endDay = formatDate(endDate, { locale, format: 'medium' });
+  const startDay = formatDay(startDate, { format, locale, timezone });
+  const endDay = formatDate(endDate, { format, locale, timezone });
   return `${startDay} / ${endDay}`;
 }
 

@@ -1,6 +1,5 @@
 import { EnvelopeIcon, GlobeEuropeAfricaIcon, HeartIcon } from '@heroicons/react/20/solid';
 import { ClockIcon, MapPinIcon } from '@heroicons/react/24/outline';
-import { isSameDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { Divider } from '~/design-system/divider.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
@@ -8,7 +7,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { formatDate, formatDay } from '~/libs/datetimes/datetimes.ts';
+import { formatDateRange } from '~/libs/datetimes/datetimes.ts';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 
 type Props = {
@@ -50,7 +49,9 @@ export function DetailsSection({
 
         {conferenceStart && conferenceEnd ? (
           <IconLabel icon={ClockIcon}>
-            <ClientOnly>{() => formatConferenceDates(conferenceStart, conferenceEnd, timezone, locale)}</ClientOnly>
+            <ClientOnly>
+              {() => formatDateRange(conferenceStart, conferenceEnd, { format: 'long', locale, timezone })}
+            </ClientOnly>
           </IconLabel>
         ) : null}
 
@@ -86,13 +87,4 @@ export function DetailsSection({
       )}
     </Card>
   );
-}
-
-function formatConferenceDates(start: Date, end: Date, timezone: string, locale: string) {
-  if (isSameDay(start, end)) {
-    return formatDate(start, { format: 'long', locale, timezone });
-  }
-  const startFormatted = formatDay(start, { format: 'medium', locale, timezone });
-  const endFormatted = formatDate(end, { format: 'long', locale, timezone });
-  return [startFormatted, endFormatted].join(' - ');
 }
