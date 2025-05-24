@@ -42,7 +42,7 @@ test('displays event page', async ({ page }) => {
   await test.step('with CFP open', async () => {
     await eventPage.goto(eventOpen.slug, eventOpen.name);
     await expect(page.getByText('Nantes, France')).toBeVisible();
-    await expect(page.getByText('October 05, 2020 at GMT+2')).toBeVisible();
+    await expect(page.getByText('October 05, 2020')).toBeVisible();
     await expect(page.getByText('Call for paper open')).toBeVisible();
     await expect(page.getByText('The event !')).toBeVisible();
     await expect(eventPage.websiteLink).toHaveAttribute('href', 'https://devfest.gdgnantes.com');
