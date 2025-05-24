@@ -1,18 +1,20 @@
 import { Fieldset, Label, Legend, Popover, PopoverButton, PopoverPanel, Radio, RadioGroup } from '@headlessui/react';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
+import { useTranslation } from 'react-i18next';
 import { Form, useLocation, useSearchParams } from 'react-router';
-
 import { Button, ButtonLink, button } from '~/design-system/buttons.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Background } from '~/design-system/transitions.tsx';
 import { Text } from '~/design-system/typography.tsx';
-
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import { reviewOptions, statusOptions } from './filters.ts';
+
+const reviewOptions = ['reviewed', 'not-reviewed', 'my-favorites'] as const;
+const statusOptions = ['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined'] as const;
 
 export function FiltersMenu() {
+  const { t } = useTranslation();
   return (
     <>
       {/* Desktop */}
@@ -33,7 +35,7 @@ export function FiltersMenu() {
       <Popover className="sm:hidden">
         <PopoverButton className={button({ variant: 'secondary' })}>
           <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
-          <span>Filters</span>
+          <span>{t('common.filters')}</span>
         </PopoverButton>
         <Background />
         <PopoverPanel className="fixed bottom-0 left-0 z-10 w-full bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden">
@@ -47,6 +49,7 @@ export function FiltersMenu() {
 type FiltersContentProps = { close: VoidFunction };
 
 function FiltersContent({ close }: FiltersContentProps) {
+  const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
 
   const location = useLocation();
@@ -59,7 +62,7 @@ function FiltersContent({ close }: FiltersContentProps) {
     <Form method="GET" onSubmit={close}>
       <div className="px-4 py-3 bg-gray-50 border-b border-b-gray-200 rounded-t-md">
         <Text variant="secondary" weight="semibold">
-          Filters
+          {t('common.filters')}
         </Text>
       </div>
 
@@ -67,19 +70,25 @@ function FiltersContent({ close }: FiltersContentProps) {
       {params.get('sort') && <input type="hidden" name="sort" value={params.get('sort') || ''} />}
 
       <FiltersRadio
-        label="Reviews"
+        label={t('common.reviews')}
         name="reviews"
         defaultValue={params.get('reviews')}
-        options={reviewOptions}
+        options={reviewOptions.map((value) => ({
+          value,
+          name: t(`common.review.status.${value}`),
+        }))}
         className="px-4 py-3"
       />
 
       {currentTeam.userPermissions.canDeliberateEventProposals && (
         <FiltersRadio
-          label="Proposals"
+          label={t('common.proposals')}
           name="status"
           defaultValue={params.get('status')}
-          options={statusOptions}
+          options={statusOptions.map((value) => ({
+            value,
+            name: t(`common.proposals.status.${value}`),
+          }))}
           className="px-4 py-3"
         />
       )}
@@ -87,24 +96,24 @@ function FiltersContent({ close }: FiltersContentProps) {
       {hasTracks && (
         <div className="px-4 py-3 space-y-2">
           <Text variant="secondary" weight="medium" size="s">
-            Tracks
+            {t('common.tracks')}
           </Text>
           <div className="space-y-2">
             {formats.length > 0 && (
               <Select
                 name="formats"
-                label="Formats"
+                label={t('common.formats')}
                 defaultValue={params.get('formats')}
-                options={[{ id: null, name: 'Select a format...' }, ...formats]}
+                options={[{ id: null, name: t('event-management.proposals.filters.formats.placeholder') }, ...formats]}
                 srOnly
               />
             )}
             {categories.length > 0 && (
               <Select
                 name="categories"
-                label="Categories"
+                label={t('common.categories')}
                 defaultValue={params.get('categories')}
-                options={[{ id: null, name: 'Select a category...' }, ...categories]}
+                options={[{ id: null, name: t('event-management.proposals.filters.categories') }, ...categories]}
                 srOnly
               />
             )}
@@ -115,22 +124,22 @@ function FiltersContent({ close }: FiltersContentProps) {
       {tags.length > 0 && (
         <div className="px-4 py-3 space-y-2">
           <Text variant="secondary" weight="medium" size="s">
-            Tags
+            {t('common.tags')}
           </Text>
           <Select
             name="tags"
-            label="Tags"
+            label={t('common.tags')}
             defaultValue={params.get('tags')}
-            options={[{ id: null, name: 'Select a tag...' }, ...tags]}
+            options={[{ id: null, name: t('event-management.proposals.filters.tags') }, ...tags]}
             srOnly
           />
         </div>
       )}
       <div className="mt-2 px-4 py-3 sm:rounded-b-md border-t border-t-gray-200 flex justify-between">
         <ButtonLink to={location.pathname} variant="secondary" onClick={close}>
-          Reset
+          {t('common.reset')}
         </ButtonLink>
-        <Button type="submit">Apply now</Button>
+        <Button type="submit">{t('common.apply-now')}</Button>
       </div>
     </Form>
   );

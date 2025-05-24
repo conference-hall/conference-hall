@@ -5,6 +5,7 @@ import type { ChangeEvent } from 'react';
 import { useFetcher, useParams } from 'react-router';
 import { useDebouncedCallback } from 'use-debounce';
 
+import { useTranslation } from 'react-i18next';
 import type { loader as AutocompleteLoader } from '../../../reviews+/autocomplete.tsx';
 import type { ScheduleProposalData } from '../schedule.types.ts';
 
@@ -14,6 +15,7 @@ type SearchSessionProposalProps = {
 };
 
 export function SearchSessionProposal({ onChange, onClose }: SearchSessionProposalProps) {
+  const { t } = useTranslation();
   const { team, event } = useParams();
 
   const fetcher = useFetcher<typeof AutocompleteLoader>();
@@ -50,7 +52,7 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
         <ComboboxInput
           autoFocus
           className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
-          placeholder="Search by proposal titles or speaker names..."
+          placeholder={t('event-management.schedule.edit-session.proposal.search.placeholder')}
           onChange={debouncedOnChange}
         />
       </div>
@@ -90,7 +92,7 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
                 className="h-6 w-6 flex-none text-gray-400 group-data-focus:text-white"
                 aria-hidden="true"
               />
-              <span className="ml-3 flex-auto truncate">Create a raw session...</span>
+              <span className="ml-3 flex-auto truncate">{t('event-management.schedule.edit-session.create-raw')}</span>
             </ComboboxOption>
           </ul>
         </li>

@@ -1,4 +1,5 @@
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
@@ -22,6 +23,7 @@ export function TagsCard({
   canEditProposalTags,
   canEditEventTags,
 }: TagsCardProps) {
+  const { t } = useTranslation();
   const { tags, update } = useOptimisticUpdateTags(proposalTags, eventTags);
 
   return (
@@ -36,17 +38,17 @@ export function TagsCard({
         >
           <div className="flex items-center justify-between group">
             <H2 size="s" className="group-hover:text-indigo-600">
-              Tags
+              {t('common.tags')}
             </H2>
             <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" role="presentation" />
           </div>
         </TagSelect>
       ) : (
-        <H2 size="s">Tags</H2>
+        <H2 size="s">{t('tags')}</H2>
       )}
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {tags.length === 0 ? <Text size="xs">No tags yet.</Text> : null}
+        {tags.length === 0 ? <Text size="xs">{t('event-management.proposal-page.no-tags')}</Text> : null}
 
         {tags.map((tag) => (
           <Tag key={tag.id} tag={tag} />

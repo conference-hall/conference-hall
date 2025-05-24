@@ -1,6 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { CalendarDaysIcon, CodeBracketIcon, Squares2X2Icon, TableCellsIcon } from '@heroicons/react/16/solid';
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'react-i18next';
 import { Form, useFetchers, useParams, useSearchParams } from 'react-router';
 import { button } from '~/design-system/buttons.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
@@ -9,6 +10,7 @@ import { useCurrentEvent } from '~/routes/components/contexts/event-team-context
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 
 export function ExportMenu() {
+  const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
 
   const params = useParams();
@@ -28,7 +30,9 @@ export function ExportMenu() {
     <Menu>
       <MenuButton className={button({ variant: 'secondary', loading })} disabled={loading}>
         <ArrowDownTrayIcon className="size-4 text-gray-500" aria-hidden="true" />
-        <span>{loading ? 'Exporting...' : 'Export'}</span>
+        <span>
+          {loading ? t('event-management.proposals.export.loading') : t('event-management.proposals.export.label')}
+        </span>
       </MenuButton>
 
       <MenuTransition>
@@ -39,7 +43,7 @@ export function ExportMenu() {
             className={menuItem()}
           >
             <CodeBracketIcon className={menuItemIcon()} aria-hidden="true" />
-            As JSON
+            {t('event-management.proposals.export.json')}
           </MenuItem>
 
           <MenuItem
@@ -48,7 +52,7 @@ export function ExportMenu() {
             className={menuItem()}
           >
             <TableCellsIcon className={menuItemIcon()} aria-hidden="true" />
-            As CSV
+            {t('event-management.proposals.export.csv')}
           </MenuItem>
 
           <MenuItem
@@ -57,7 +61,7 @@ export function ExportMenu() {
             className={menuItem()}
           >
             <Squares2X2Icon className={menuItemIcon()} aria-hidden="true" />
-            As printable cards
+            {t('event-management.proposals.export.cards')}
           </MenuItem>
 
           {isOpenPlannerEnabled ? (
@@ -71,7 +75,7 @@ export function ExportMenu() {
             >
               <CalendarDaysIcon className={menuItemIcon()} aria-hidden="true" />
               <button type="submit" className="w-full text-left cursor-pointer">
-                To OpenPlanner
+                {t('event-management.proposals.export.open-planner')}
               </button>
             </MenuItem>
           ) : null}

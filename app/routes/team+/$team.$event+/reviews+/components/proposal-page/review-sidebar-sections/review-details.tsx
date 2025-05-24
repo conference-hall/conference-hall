@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote } from '~/routes/components/reviews/review-note.tsx';
 import type { GlobalReview, UserReview } from '~/types/proposals.types.ts';
@@ -5,13 +6,15 @@ import type { GlobalReview, UserReview } from '~/types/proposals.types.ts';
 type Props = { review: GlobalReview | null; userReview: UserReview };
 
 export function ReviewDetails({ review, userReview }: Props) {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-4 p-4 lg:p-6">
-      <H2 size="s">Review information</H2>
+      <H2 size="s">{t('event-management.proposal-page.reviews.label')}</H2>
 
       {review && (
         <div className="flex items-center justify-between">
-          <Text weight="medium">Global review</Text>
+          <Text weight="medium">{t('event-management.proposal-page.reviews.global')}</Text>
           <div className="flex gap-4">
             <GlobalReviewNote feeling="NEUTRAL" note={review?.average} />
           </div>
@@ -19,7 +22,7 @@ export function ReviewDetails({ review, userReview }: Props) {
       )}
 
       <div className="flex items-center justify-between">
-        <Text weight="medium">Your review</Text>
+        <Text weight="medium">{t('event-management.proposal-page.your-review')}</Text>
         <GlobalReviewNote feeling={userReview.feeling} note={userReview.note} />
       </div>
     </div>

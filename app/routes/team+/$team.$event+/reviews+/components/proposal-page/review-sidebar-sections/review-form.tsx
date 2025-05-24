@@ -1,13 +1,13 @@
+import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams, useSubmit } from 'react-router';
-
 import { H2 } from '~/design-system/typography.tsx';
 import type { ReviewFeeling, UserReview } from '~/types/proposals.types.ts';
-
 import { ReviewSelector } from './review-selector.tsx';
 
 type Props = { initialValues: UserReview };
 
 export function ReviewForm({ initialValues }: Props) {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const filters = searchParams.toString();
 
@@ -24,7 +24,7 @@ export function ReviewForm({ initialValues }: Props) {
 
   return (
     <div className="space-y-4 p-4 lg:p-6">
-      <H2 size="s">Your review</H2>
+      <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
 
       <ReviewSelector value={initialValues} onChange={handleSubmit} />
     </div>

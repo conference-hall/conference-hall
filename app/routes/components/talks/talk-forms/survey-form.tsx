@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import type { SurveyQuestion } from '~/.server/event-survey/types.ts';
-
 import { Checkbox, CheckboxGroup } from '~/design-system/forms/checkboxes.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
@@ -14,6 +14,8 @@ type Props = {
 };
 
 export function SurveyForm({ id, questions, initialValues, errors }: Props) {
+  const { t } = useTranslation();
+
   return (
     <Form id={id} method="POST" className="space-y-10">
       {questions.map((question) => {
@@ -23,7 +25,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
               key={question.id}
               name={question.id}
               label={question.label}
-              description={question.required ? '(required)' : undefined}
+              description={question.required ? t('common.required') : t('common.optional')}
               defaultValue={initialValues[question.id] as string}
               error={errors?.[question.id]}
               required={question.required}
@@ -36,7 +38,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
             <CheckboxGroup
               key={question.id}
               label={question.label}
-              description={question.required ? '(required)' : undefined}
+              description={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
               inline
             >
@@ -58,7 +60,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
             <RadioGroup
               key={question.id}
               label={question.label}
-              description={question.required ? '(required)' : undefined}
+              description={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
               inline
             >

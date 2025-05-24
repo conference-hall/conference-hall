@@ -1,7 +1,5 @@
 import { cva } from 'class-variance-authority';
-
 import type { SubmissionError } from '~/types/errors.types.ts';
-
 import { Label } from '../typography.tsx';
 
 export type InputProps = {

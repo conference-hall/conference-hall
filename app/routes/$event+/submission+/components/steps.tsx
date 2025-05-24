@@ -1,4 +1,5 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { useCurrentStepName, useSteps } from './submission-context.tsx';
 
@@ -8,12 +9,13 @@ type Props = {
 };
 
 function StepsMobile({ steps, currentStep }: Props) {
+  const { t } = useTranslation();
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
-    <nav className="flex items-center xl:hidden sm:pl-40" aria-label="Progress">
+    <nav aria-label={t('event.submission.steps.nav.label')} className="flex items-center xl:hidden sm:pl-40">
       <p className="text-sm font-bold">
-        Step {currentStepIdx + 1} of {steps.length}
+        {t('event.submission.steps.nav.progress', { current: currentStepIdx + 1, total: steps.length })}
       </p>
       <ol className="ml-8 flex items-center space-x-5">
         {steps.map((step, stepIdx) => (
@@ -43,10 +45,11 @@ function StepsMobile({ steps, currentStep }: Props) {
 }
 
 function StepsDesktop({ steps, currentStep }: Props) {
+  const { t } = useTranslation();
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
-    <nav aria-label="Progress" className="hidden xl:block sm:pl-40">
+    <nav aria-label={t('event.submission.steps.nav.label')} className="hidden xl:block sm:pl-40">
       <ol className="divide-y divide-gray-300 rounded-full border  border-gray-300 md:flex md:divide-y-0">
         {steps.map((step, stepIdx) => (
           <li

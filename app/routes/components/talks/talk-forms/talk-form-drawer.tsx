@@ -1,10 +1,9 @@
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-
+import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/buttons.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
-
 import { TalkForm } from './talk-form.tsx';
 
 type TalkEditProps = {
@@ -29,6 +28,7 @@ type TalkEditProps = {
 };
 
 export function TalkEditButton(props: TalkEditProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const onOpen = () => setOpen(true);
   const onClose = () => setOpen(false);
@@ -36,7 +36,7 @@ export function TalkEditButton(props: TalkEditProps) {
   return (
     <>
       <Button iconLeft={PencilSquareIcon} variant="secondary" onClick={onOpen}>
-        Edit
+        {t('common.edit')}
       </Button>
       <TalkEditDrawer {...props} open={open} onClose={onClose} />
     </>
@@ -49,6 +49,8 @@ type TalkEditDrawerProps = TalkEditProps & {
 };
 
 function TalkEditDrawer({ initialValues, event, errors, open, onClose }: TalkEditDrawerProps) {
+  const { t } = useTranslation();
+
   return (
     <SlideOver open={open} onClose={onClose} size="xl">
       <SlideOver.Content onClose={onClose} className="sm:px-6">
@@ -67,10 +69,10 @@ function TalkEditDrawer({ initialValues, event, errors, open, onClose }: TalkEdi
       </SlideOver.Content>
       <SlideOver.Actions>
         <Button onClick={onClose} variant="secondary">
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button type="submit" form="edit-talk-form" name="intent" value="edit-talk">
-          Save
+          {t('common.save')}
         </Button>
       </SlideOver.Actions>
     </SlideOver>

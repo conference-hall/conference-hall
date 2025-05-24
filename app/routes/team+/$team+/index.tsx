@@ -1,6 +1,7 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
-import { useSearchParams } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { href, useSearchParams } from 'react-router';
 import { TeamEvents } from '~/.server/team/team-events.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
@@ -19,6 +20,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export default function TeamEventsRoute({ loaderData: events }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const [searchParams] = useSearchParams();
   const archived = searchParams.get('archived') === 'true';
@@ -26,21 +28,21 @@ export default function TeamEventsRoute({ loaderData: events }: Route.ComponentP
 
   return (
     <Page>
-      <Page.Heading title="Team events" subtitle="Manage your team events call for papers">
+      <Page.Heading title={t('team.events-list.heading')} subtitle={t('team.events-list.description')}>
         <ArchivedFilters />
         {currentTeam.userPermissions.canCreateEvent ? (
-          <ButtonLink to={`/team/${currentTeam.slug}/new`} variant="secondary" iconLeft={PlusIcon}>
-            New event
+          <ButtonLink to={href('/team/:team/new', { team: currentTeam.slug })} variant="secondary" iconLeft={PlusIcon}>
+            {t('team.events-list.new-event-button')}
           </ButtonLink>
         ) : null}
       </Page.Heading>
 
       {hasEvent ? (
-        <ul aria-label="Events list" className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-2">
+        <ul aria-label={t('team.events-list.list')} className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-2">
           {events.map((event) => (
             <EventCardLink
               key={event.slug}
-              to={`/team/${currentTeam.slug}/${event.slug}`}
+              to={href('/team/:team/:event', { team: currentTeam.slug, event: event.slug })}
               name={event.name}
               type={event.type}
               logoUrl={event.logoUrl}
@@ -53,7 +55,9 @@ export default function TeamEventsRoute({ loaderData: events }: Route.ComponentP
       ) : (
         <EmptyState
           icon={Square3Stack3DIcon}
-          label={archived ? 'No events archived' : `Welcome to "${currentTeam.name}"`}
+          label={
+            archived ? t('team.events-list.empty.archived') : t('team.events-list.empty', { team: currentTeam.name })
+          }
           className="flex flex-col items-center gap-2"
         />
       )}

@@ -1,12 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import { Checkbox, CheckboxHeadingGroup } from '~/design-system/forms/checkboxes.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 
 type FormProps = {
-  categories: Array<{
-    id: string;
-    name: string;
-    description?: string | null;
-  }>;
+  categories: Array<{ id: string; name: string; description?: string | null }>;
   required?: boolean;
   initialValues?: string[];
 };
@@ -21,13 +18,17 @@ export function CategoriesForm({ categoriesAllowMultiple, ...formProps }: Props)
 }
 
 function CategoriesCheckboxForm({ categories, required, initialValues }: FormProps) {
+  const { t } = useTranslation();
   return (
-    <CheckboxHeadingGroup label="Select proposal categories" description={required ? '(required)' : '(optional)'}>
+    <CheckboxHeadingGroup
+      label={t('event.submission.tracks.select-categories')}
+      description={required ? t('common.required') : t('common.optional')}
+    >
       {categories.map((category) => (
         <Checkbox
+          name="categories"
           key={category.id}
           id={category.id}
-          name="categories"
           value={category.id}
           defaultChecked={initialValues?.includes(category.id)}
           description={category.description}
@@ -40,13 +41,17 @@ function CategoriesCheckboxForm({ categories, required, initialValues }: FormPro
 }
 
 function CategoriesRadioForm({ categories, required, initialValues }: FormProps) {
+  const { t } = useTranslation();
   return (
-    <RadioGroup label="Select proposal categories" description={required ? '(required)' : '(optional)'}>
+    <RadioGroup
+      label={t('event.submission.tracks.select-categories')}
+      description={required ? t('common.required') : t('common.optional')}
+    >
       {categories.map((category) => (
         <Radio
+          name="categories"
           key={category.id}
           id={category.id}
-          name="categories"
           value={category.id}
           defaultChecked={initialValues?.includes(category.id)}
           description={category.description}

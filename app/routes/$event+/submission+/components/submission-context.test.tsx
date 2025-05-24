@@ -1,4 +1,6 @@
+import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
+import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
 import { SubmissionContextProvider, useSteps, useSubmissionNavigation } from './submission-context.tsx';
 
@@ -14,9 +16,11 @@ describe('SubmissionContext', () => {
 
   it('returns steps for a complete event', async () => {
     const screen = render(
-      <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey>
-        <TestSubmissionContextComponent />
-      </SubmissionContextProvider>,
+      <I18nextProvider i18n={i18nTest}>
+        <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey>
+          <TestSubmissionContextComponent />
+        </SubmissionContextProvider>
+      </I18nextProvider>,
     );
 
     const links = screen.getByRole('link').all();
@@ -38,9 +42,11 @@ describe('SubmissionContext', () => {
 
   it('returns steps for an event without tracks and survey', async () => {
     const screen = render(
-      <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks={false} hasSurvey={false}>
-        <TestSubmissionContextComponent />
-      </SubmissionContextProvider>,
+      <I18nextProvider i18n={i18nTest}>
+        <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks={false} hasSurvey={false}>
+          <TestSubmissionContextComponent />
+        </SubmissionContextProvider>
+      </I18nextProvider>,
     );
 
     const links = screen.getByRole('link').all();
@@ -57,9 +63,11 @@ describe('SubmissionContext', () => {
 
   it('returns steps for an event with tracks but without survey', async () => {
     const screen = render(
-      <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey={false}>
-        <TestSubmissionContextComponent />
-      </SubmissionContextProvider>,
+      <I18nextProvider i18n={i18nTest}>
+        <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey={false}>
+          <TestSubmissionContextComponent />
+        </SubmissionContextProvider>
+      </I18nextProvider>,
     );
 
     const links = screen.getByRole('link').all();
@@ -78,9 +86,11 @@ describe('SubmissionContext', () => {
 
   it('returns steps for an event without tracks but with survey', async () => {
     const screen = render(
-      <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks={false} hasSurvey>
-        <TestSubmissionContextComponent />
-      </SubmissionContextProvider>,
+      <I18nextProvider i18n={i18nTest}>
+        <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks={false} hasSurvey>
+          <TestSubmissionContextComponent />
+        </SubmissionContextProvider>
+      </I18nextProvider>,
     );
 
     const links = screen.getByRole('link').all();
@@ -116,9 +126,11 @@ describe('useSubmissionNavigation', () => {
         path,
         handle: { step: 'selection' },
         Component: () => (
-          <SubmissionContextProvider eventSlug="event-1" hasTracks hasSurvey>
-            <TestSubmissionNavigationComponent />
-          </SubmissionContextProvider>
+          <I18nextProvider i18n={i18nTest}>
+            <SubmissionContextProvider eventSlug="event-1" hasTracks hasSurvey>
+              <TestSubmissionNavigationComponent />
+            </SubmissionContextProvider>
+          </I18nextProvider>
         ),
       },
     ]);
@@ -136,9 +148,11 @@ describe('useSubmissionNavigation', () => {
         path,
         handle: { step: 'speakers' },
         Component: () => (
-          <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey>
-            <TestSubmissionNavigationComponent />
-          </SubmissionContextProvider>
+          <I18nextProvider i18n={i18nTest}>
+            <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey>
+              <TestSubmissionNavigationComponent />
+            </SubmissionContextProvider>
+          </I18nextProvider>
         ),
       },
     ]);
@@ -156,9 +170,11 @@ describe('useSubmissionNavigation', () => {
         path,
         handle: { step: 'submission' },
         Component: () => (
-          <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey>
-            <TestSubmissionNavigationComponent />
-          </SubmissionContextProvider>
+          <I18nextProvider i18n={i18nTest}>
+            <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey>
+              <TestSubmissionNavigationComponent />
+            </SubmissionContextProvider>
+          </I18nextProvider>
         ),
       },
     ]);

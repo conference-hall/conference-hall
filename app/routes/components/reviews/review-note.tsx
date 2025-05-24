@@ -1,21 +1,26 @@
 import { HeartIcon, NoSymbolIcon, StarIcon, UserCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
+import { useTranslation } from 'react-i18next';
 import { Text } from '~/design-system/typography.tsx';
 import { formatReviewNote } from '~/libs/formatters/reviews.ts';
+import type { ReviewFeeling } from '~/types/proposals.types.ts';
 import { ClientOnly } from '../utils/client-only.tsx';
 
 const REVIEWS = {
-  NO_OPINION: { icon: NoSymbolIcon, color: '', stroke: '', label: 'No opinion' },
-  NEUTRAL: { icon: StarIcon, color: 'fill-yellow-400', stroke: 'text-yellow-400', label: 'Score' },
-  NEGATIVE: { icon: XCircleIcon, color: '', stroke: '', label: 'No way' },
-  POSITIVE: { icon: HeartIcon, color: 'fill-red-400', stroke: 'text-red-400', label: 'Love it' },
+  NO_OPINION: { icon: NoSymbolIcon, color: '', stroke: '' },
+  NEUTRAL: { icon: StarIcon, color: 'fill-yellow-400', stroke: 'text-yellow-400' },
+  NEGATIVE: { icon: XCircleIcon, color: '', stroke: '' },
+  POSITIVE: { icon: HeartIcon, color: 'fill-red-400', stroke: 'text-red-400' },
 };
 
-type Props = { feeling: keyof typeof REVIEWS | null; note: number | null; hideEmpty?: boolean };
+type Props = { feeling: ReviewFeeling | null; note: number | null; hideEmpty?: boolean };
 
 export function GlobalReviewNote({ feeling, note, hideEmpty }: Props) {
-  const { icon: Icon, color, stroke, label } = REVIEWS[feeling || 'NEUTRAL'];
+  const { t } = useTranslation();
+  const reviewType = feeling || 'NEUTRAL';
+  const { icon: Icon, color, stroke } = REVIEWS[reviewType];
   const formattedNote = formatReviewNote(note);
+  const label = t(`common.review.type.${reviewType}`);
 
   if (note === null && feeling !== 'NO_OPINION') return <div />;
 
@@ -27,7 +32,10 @@ export function GlobalReviewNote({ feeling, note, hideEmpty }: Props) {
             <Text weight="semibold" variant="secondary">
               {formattedNote}
             </Text>
-            <Icon className={cx('size-5 shrink-0', color, stroke)} aria-label={`${label}: ${formattedNote}`} />
+            <Icon
+              className={cx('size-5 shrink-0', color, stroke)}
+              aria-label={t('common.review.detail', { note: formattedNote, label })}
+            />
           </>
         )}
       </ClientOnly>
@@ -36,8 +44,11 @@ export function GlobalReviewNote({ feeling, note, hideEmpty }: Props) {
 }
 
 export function UserReviewNote({ feeling, note }: Props) {
-  const { icon: Icon, color, stroke, label } = REVIEWS[feeling || 'NEUTRAL'];
+  const { t } = useTranslation();
+  const reviewType = feeling || 'NEUTRAL';
+  const { icon: Icon, color, stroke } = REVIEWS[reviewType];
   const formattedNote = formatReviewNote(note);
+  const label = t(`common.review.type.${reviewType}`);
 
   if (note === null && feeling !== 'NO_OPINION') return <div />;
 
@@ -50,11 +61,14 @@ export function UserReviewNote({ feeling, note }: Props) {
               {formattedNote}
             </Text>
             {feeling === 'NEUTRAL' ? (
-              <UserCircleIcon className="size-5 text-gray-700 shrink-0" aria-label={`Review: ${formattedNote}`} />
+              <UserCircleIcon
+                className="size-5 text-gray-700 shrink-0"
+                aria-label={t('common.review.user', { note: formattedNote })}
+              />
             ) : (
               <Icon
                 className={cx('size-5 shrink-0', color, stroke)}
-                aria-label={`Review: ${formattedNote} (${label})`}
+                aria-label={t('common.review.detail', { note: formattedNote, label })}
               />
             )}
           </>

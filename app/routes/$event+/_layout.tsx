@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Outlet, useMatch } from 'react-router';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
@@ -28,6 +29,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
 };
 
 export default function EventRoute({ loaderData: event }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const user = useUser();
   const isSubmissionRoute = useMatch('/:event/submission/*');
 
@@ -59,7 +61,9 @@ export default function EventRoute({ loaderData: event }: Route.ComponentProps) 
             <H1 size="2xl" variant="light" truncate>
               {event.name}
             </H1>
-            <Text variant="secondary-light" weight="medium">{`by ${event.teamName}`}</Text>
+            <Text variant="secondary-light" weight="medium">
+              {t('common.by', { names: [event.teamName] })}
+            </Text>
           </div>
         </Container>
       </header>

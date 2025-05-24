@@ -1,4 +1,5 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'react-i18next';
 import { Form, useSearchParams } from 'react-router';
 import type { SearchFilters } from '~/.server/event-search/event-search.types.ts';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -7,6 +8,7 @@ type Props = { filters: SearchFilters };
 
 export function SearchEventsInput({ filters }: Props) {
   const { query, type } = filters;
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const talkId = searchParams.get('talkId');
 
@@ -17,13 +19,13 @@ export function SearchEventsInput({ filters }: Props) {
 
       <Input
         name="query"
-        aria-label="Search conferences and meetups."
-        placeholder="Search conferences and meetups..."
+        type="search"
+        aria-label={t('home.search.label')}
+        placeholder={t('home.search.placeholder')}
         icon={MagnifyingGlassIcon}
         color="dark"
         size="l"
         defaultValue={query}
-        type="search"
         className="w-full"
         min={3}
       />

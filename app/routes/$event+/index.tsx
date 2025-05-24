@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '../components/contexts/event-page-context.tsx';
@@ -6,6 +7,7 @@ import { DetailsSection } from './components/details-section.tsx';
 import { TrackSection } from './components/track-section.tsx';
 
 export default function EventRoute() {
+  const { t } = useTranslation();
   const currentEvent = useCurrentEvent();
 
   const hasTracks = currentEvent.formats.length > 0 || currentEvent.categories.length > 0;
@@ -36,8 +38,8 @@ export default function EventRoute() {
 
       {hasTracks && (
         <div className="mt-4 gap-4 grid grid-cols-1 lg:mt-8 md:grid-cols-2 lg:gap-8">
-          <TrackSection title="Formats" tracks={currentEvent.formats} />
-          <TrackSection title="Categories" tracks={currentEvent.categories} />
+          <TrackSection title={t('common.formats')} tracks={currentEvent.formats} />
+          <TrackSection title={t('common.categories')} tracks={currentEvent.categories} />
         </div>
       )}
     </Page>

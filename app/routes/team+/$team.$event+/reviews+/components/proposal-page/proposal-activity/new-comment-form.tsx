@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form, useNavigation } from 'react-router';
-
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { useUser } from '~/routes/components/contexts/user-context.tsx';
@@ -8,6 +8,7 @@ import { useUser } from '~/routes/components/contexts/user-context.tsx';
 type Props = { compact?: boolean; className?: string };
 
 export function NewCommentForm({ compact = false, className }: Props) {
+  const { t } = useTranslation();
   const user = useUser();
 
   const navigation = useNavigation();
@@ -31,15 +32,15 @@ export function NewCommentForm({ compact = false, className }: Props) {
             name="comment"
             rows={compact ? 1 : 2}
             className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-sm leading-6"
-            placeholder="Add your comment..."
-            aria-label="Add your comment"
+            placeholder={t('event-management.proposal-page.comment.placeholder')}
+            aria-label={t('event-management.proposal-page.comment.label')}
             defaultValue=""
           />
         </div>
 
         <div className="absolute inset-x-0 bottom-0 flex justify-end py-2 pl-3 pr-2">
           <Button type="submit" variant="secondary" size={compact ? 's' : 'm'}>
-            Comment
+            {t('event-management.proposal-page.comment.submit')}
           </Button>
         </div>
       </Form>

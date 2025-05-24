@@ -1,4 +1,5 @@
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -17,29 +18,30 @@ export const loader = async () => {
 };
 
 export default function EmailVerification() {
+  const { t } = useTranslation();
   return (
     <Page>
       <header className="flex flex-col items-center pt-8 sm:pt-16 sm:mx-auto sm:w-full sm:max-w-md">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
         <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Email verification
+          {t('auth.email-verification.heading')}
         </h2>
       </header>
 
       <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
         <EnvelopeIcon className="size-16 mx-auto text-slate-300" />
         <div className="flex flex-col items-center gap-4">
-          <Subtitle align="center">A verification email has been sent to your email address.</Subtitle>
+          <Subtitle align="center">{t('auth.email-verification.confirmation')}</Subtitle>
           <Subtitle align="center" weight="semibold">
-            Please check your inbox.
+            {t('auth.common.check-inbox')}
           </Subtitle>
         </div>
       </Card>
 
       <footer className="flex justify-center gap-1 my-8">
-        <Subtitle>Go back to</Subtitle>
+        <Subtitle>{t('auth.common.go-back')}</Subtitle>
         <Link to={href('/auth/login')} weight="semibold">
-          Sign in
+          {t('auth.common.sign-in')}
         </Link>
       </footer>
     </Page>

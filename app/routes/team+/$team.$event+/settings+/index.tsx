@@ -1,5 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
+import { Trans, useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventDetailsSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
@@ -7,6 +8,7 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
@@ -21,6 +23,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
+  const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
   const event = UserEvent.for(userId, params.team, params.event);
   const form = await request.formData();
@@ -32,23 +35,28 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       const result = await parseWithZod(form, { schema, async: true });
       if (result.status !== 'success') return result.error;
       const updated = await event.update(result.value);
-      const headers = await toastHeaders('success', 'Event saved.');
+      const headers = await toastHeaders('success', t('event-management.settings.feedbacks.general-saved'));
       return redirect(`/team/${params.team}/${updated.slug}/settings`, { headers });
     }
     case 'details': {
       const result = parseWithZod(form, { schema: EventDetailsSettingsSchema });
       if (result.status !== 'success') return result.error;
       await event.update(result.value);
-      return toast('success', 'Event details saved.');
+      return toast('success', t('event-management.settings.feedbacks.details-saved'));
     }
     case 'archive-event': {
       const archived = Boolean(form.get('archived'));
       await event.update({ archived });
-      return toast('success', `Event ${archived ? 'archived' : 'restored'}.`);
+      return toast(
+        'success',
+        archived
+          ? t('event-management.settings.feedbacks.archived')
+          : t('event-management.settings.feedbacks.restored'),
+      );
     }
     case 'delete-event': {
       await event.delete();
-      const headers = await toastHeaders('success', 'Event deleted.');
+      const headers = await toastHeaders('success', t('event-management.settings.feedbacks.deleted'));
       return redirect(`/team/${params.team}`, { headers });
     }
   }
@@ -56,6 +64,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 export default function EventGeneralSettingsRoute({ actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const currentEvent = useCurrentEvent();
   const { userPermissions } = useCurrentTeam();
 
@@ -63,7 +72,7 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
     <>
       <Card as="section">
         <Card.Title>
-          <H2>General</H2>
+          <H2>{t('event-management.settings.menu.general')}</H2>
         </Card.Title>
 
         <Card.Content>
@@ -73,17 +82,15 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
         </Card.Content>
         <Card.Actions>
           <Button type="submit" name="intent" value="general" form="general-form">
-            Update event
+            {t('event-management.settings.general.submit')}
           </Button>
         </Card.Actions>
       </Card>
 
       <Card as="section">
         <Card.Title>
-          <H2>Event details</H2>
-          <Subtitle>
-            Provide details about the event, like address, dates and description to generate the event page.
-          </Subtitle>
+          <H2>{t('event-management.settings.details.heading')}</H2>
+          <Subtitle>{t('event-management.settings.details.description')}</Subtitle>
         </Card.Title>
 
         <Card.Content>
@@ -103,24 +110,25 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
 
         <Card.Actions>
           <Button type="submit" name="intent" value="details" form="details-form">
-            Update event details
+            {t('event-management.settings.details.submit')}
           </Button>
         </Card.Actions>
       </Card>
 
       <Card as="section" className="border-red-300">
         <Card.Title>
-          <H2>Danger zone</H2>
+          <H2>{t('event-management.settings.danger.heading')}</H2>
         </Card.Title>
 
         <ul className="divide-y border-t mt-8">
           <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
             <div className="space-y-1 grow">
-              <Text weight="semibold">{currentEvent.archived ? 'Restore this event' : 'Archive this event'}</Text>
-              <Subtitle>
-                Archived events are not displayed anymore in the team list and in the Conference Hall search. Nothing is
-                deleted, you can restore them when you want.
-              </Subtitle>
+              <Text weight="semibold">
+                {currentEvent.archived
+                  ? t('event-management.settings.danger.restore.heading')
+                  : t('event-management.settings.danger.archive.heading')}
+              </Text>
+              <Subtitle>{t('event-management.settings.danger.archive.description')}</Subtitle>
             </div>
             <Form method="POST" className="w-full sm:w-auto">
               <input type="hidden" name="archived" value={currentEvent.archived ? '' : 'true'} />
@@ -132,24 +140,30 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
                 iconLeft={currentEvent.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
                 className="w-full"
               >
-                {currentEvent.archived ? 'Restore event' : 'Archive event'}
+                {currentEvent.archived
+                  ? t('event-management.settings.danger.restore.submit')
+                  : t('event-management.settings.danger.archive.submit')}
               </Button>
             </Form>
           </li>
           {userPermissions.canDeleteEvent ? (
             <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
               <div className="space-y-1 grow">
-                <Text weight="semibold">Delete this event</Text>
+                <Text weight="semibold">{t('event-management.settings.danger.delete.heading')}</Text>
                 <Subtitle>
-                  This will <strong>permanently delete the "{currentEvent.name}"</strong> event, speakers proposals,
-                  reviews, comments, schedule, and settings. This action cannot be undone.
+                  <Trans
+                    i18nKey="event-management.settings.danger.delete.description"
+                    values={{ name: currentEvent.name }}
+                    components={[<strong key="1" />]}
+                  />
                 </Subtitle>
               </div>
               <DeleteModalButton
                 intent="delete-event"
-                title="Delete event"
-                description={`This will permanently delete the "${currentEvent.name}" event, speakers proposals,
-              reviews, comments, schedule, and settings. This action cannot be undone.`}
+                title={t('event-management.settings.danger.delete.submit')}
+                description={t('event-management.settings.danger.delete.modal-description', {
+                  name: currentEvent.name,
+                })}
                 confirmationText={currentEvent.slug}
               />
             </li>

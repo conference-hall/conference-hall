@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
 import { useSearchParams } from 'react-router';
 import { DividerWithLabel } from '~/design-system/divider.tsx';
@@ -23,6 +24,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function Signup() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const defaultEmail = searchParams.get('email');
   const redirectTo = searchParams.get('redirectTo') || '/';
@@ -32,22 +34,22 @@ export default function Signup() {
       <header className="flex flex-col items-center pt-8 sm:pt-16 sm:mx-auto sm:w-full sm:max-w-md">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
         <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Create your account
+          {t('auth.common.sign-up')}
         </h2>
       </header>
 
       <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
         <EmailPasswordSignup redirectTo={redirectTo} defaultEmail={defaultEmail} />
 
-        <DividerWithLabel label="Or" />
+        <DividerWithLabel label={t('common.or')} />
 
         <AuthProvidersSignin redirectTo={redirectTo} />
       </Card>
 
       <footer className="flex justify-center gap-2 my-8">
-        <Subtitle>Already have an account?</Subtitle>
+        <Subtitle>{t('auth.signup.has-account')}</Subtitle>
         <Link to={{ pathname: '/auth/login', search: `${searchParams}` }} weight="semibold">
-          Sign in
+          {t('auth.common.sign-in')}
         </Link>
       </footer>
     </Page>

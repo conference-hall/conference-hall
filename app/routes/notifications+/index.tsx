@@ -1,4 +1,6 @@
 import { BellSlashIcon } from '@heroicons/react/24/outline';
+import { Trans, useTranslation } from 'react-i18next';
+import { href } from 'react-router';
 import { Notifications } from '~/.server/user-notifications/notifications.ts';
 import { CardLink } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
@@ -20,6 +22,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function OrganizerRoute({ loaderData: notifications }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const hasNotifications = Boolean(notifications && notifications.length > 0);
 
   return (
@@ -27,30 +30,34 @@ export default function OrganizerRoute({ loaderData: notifications }: Route.Comp
       <Navbar />
 
       <Page>
-        <Page.Heading title="Notifications" subtitle="Notifications from events organizers about your proposals." />
+        <Page.Heading title={t('notifications.heading')} subtitle={t('notifications.description')} />
 
         {hasNotifications ? (
-          <ul aria-label="Notifications list" className="space-y-4">
+          <ul aria-label={t('notifications.list')} className="space-y-4">
             {notifications.map(({ event, proposal }) => (
               <CardLink
                 key={`${event.slug}-${proposal.id}`}
                 as="li"
-                to={`/${event.slug}/proposals/${proposal.id}`}
+                to={href('/:event/proposals/:proposal', { event: event.slug, proposal: proposal.id })}
                 className="flex"
                 p={4}
               >
                 <div className="mt-1 flex h-6 w-6 shrink-0">🎉</div>
                 <div className="ml-4">
                   <H2>
-                    <strong>{proposal.title}</strong> has been accepted to <strong>{event.name}</strong>.
+                    <Trans
+                      i18nKey="notifications.item.title"
+                      values={{ title: proposal.title, eventName: event.name }}
+                      components={[<strong key="1" />, <strong key="2" />]}
+                    />
                   </H2>
-                  <p className="text-sm text-gray-500">Please confirm or decline your participation.</p>
+                  <p className="text-sm text-gray-500">{t('notifications.item.description')}</p>
                 </div>
               </CardLink>
             ))}
           </ul>
         ) : (
-          <EmptyState label="No notifications" icon={BellSlashIcon} />
+          <EmptyState label={t('notifications.empty')} icon={BellSlashIcon} />
         )}
       </Page>
 

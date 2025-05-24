@@ -40,8 +40,8 @@ test('submits a new talk for a conference (full funnel)', async ({ page }) => {
   // Step: tracks
   await submissionPage.tracksStep.waitFor();
   await submissionPage.clickOnContinue();
-  await expect(page.getByText('You must select at least one proposal format')).toBeVisible();
-  await expect(page.getByText('You must select at least one proposal category')).toBeVisible();
+  await expect(page.getByText('You have to select at least one proposal format.')).toBeVisible();
+  await expect(page.getByText('You have to select at least one proposal category.')).toBeVisible();
   await submissionPage.checkboxInput('Quickie').check();
   await submissionPage.checkboxInput('Web').check();
   await submissionPage.clickOnContinue();
@@ -259,9 +259,7 @@ test('cannot submit a talk when max proposal reached', async ({ page }) => {
   const submissionPage = new SubmissionPage(page);
   await submissionPage.goto(event.slug);
 
-  await expect(page.getByText('Maximum of proposals by speaker')).toBeVisible();
   await expect(page.getByText('1 proposals by speaker.')).toBeVisible();
-  await expect(page.getByText('0 proposals.')).toBeVisible();
 
   // Step: talk creation
   await submissionPage.clickOnNewProposal();

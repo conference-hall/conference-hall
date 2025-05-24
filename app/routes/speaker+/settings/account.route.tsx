@@ -1,6 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import * as Firebase from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { UnlinkProviderSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
@@ -27,6 +28,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request }: Route.ActionArgs) => {
+  const t = await i18n.getFixedT(request);
   const locale = await i18n.getLocale(request);
   const { userId, uid } = await requireUserSession(request);
   const form = await request.formData();
@@ -35,32 +37,32 @@ export const action = async ({ request }: Route.ActionArgs) => {
   switch (intent) {
     case 'change-contact-email': {
       const result = parseWithZod(form, { schema: EmailSchema });
-      if (result.status !== 'success') return toast('error', 'An error occurred.');
+      if (result.status !== 'success') return toast('error', t('error.global'));
 
       await SpeakerProfile.for(userId).save(result.value);
-      return toast('success', 'Contact email changed.');
+      return toast('success', t('settings.account.feedbacks.contact-changed'));
     }
     case 'link-email-provider': {
       const result = parseWithZod(form, { schema: EmailPasswordSchema });
-      if (result.status !== 'success') return toast('error', 'An error occurred.');
+      if (result.status !== 'success') return toast('error', t('error.global'));
 
-      const error = await UserAccount.linkEmailProvider(uid, result.value.email, result.value.password, locale);
+      const error = await UserAccount.linkEmailProvider(uid, result.value.email, result.value.password, locale, t);
       if (error) return toast('error', error);
 
-      const headers = await toastHeaders('success', 'Authentication method linked.');
+      const headers = await toastHeaders('success', t('settings.account.feedbacks.authentication-method-linked'));
       return redirect(href('/auth/email-verification'), { headers });
     }
     case 'unlink-provider': {
       const result = parseWithZod(form, { schema: UnlinkProviderSchema });
-      if (result.status !== 'success') return toast('error', 'An error occurred.');
+      if (result.status !== 'success') return toast('error', t('error.global'));
       if (result.value.newEmail) {
         await SpeakerProfile.for(userId).save({ email: result.value.newEmail });
       }
-      return toast('success', 'Authentication method unlinked.');
+      return toast('success', t('settings.account.feedbacks.authentication-method-unlinked'));
     }
     case 'verify-email': {
       await sendEmailVerification(request);
-      return toast('success', 'Verification email sent');
+      return toast('success', t('settings.account.feedbacks.verification-email-sent'));
     }
     default:
       return null;
@@ -68,6 +70,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 };
 
 export default function AccountRoute() {
+  const { t } = useTranslation();
   const [authLoaded, setAuthLoaded] = useState(false);
   const { email } = useSpeakerProfile();
 
@@ -81,7 +84,7 @@ export default function AccountRoute() {
 
   return (
     <div className="space-y-4 lg:space-y-6 lg:col-span-9">
-      <H1 srOnly>Account</H1>
+      <H1 srOnly>{t('settings.account.heading')}</H1>
 
       <ChangeContactEmailForm email={email} authLoaded={authLoaded} />
 

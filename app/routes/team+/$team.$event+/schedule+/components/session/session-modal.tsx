@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { Background } from '~/design-system/transitions.tsx';
 
+import { useTranslation } from 'react-i18next';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SessionForm } from './session-form.tsx';
 
@@ -23,6 +24,7 @@ export function SessionModal({
   onUpdateSession,
   onDeleteSession,
 }: SessionModalProps) {
+  const { t } = useTranslation();
   const [isSearching, setSearching] = useState(false);
 
   const handleClose = () => {
@@ -40,7 +42,7 @@ export function SessionModal({
             as="div"
             className="relative transform overflow-hidden rounded-lg bg-white text:left shadow-xl transition-all w-full max-w-2xl"
           >
-            <DialogTitle className="sr-only">Edit session</DialogTitle>
+            <DialogTitle className="sr-only">{t('event-management.schedule.edit-session.heading')}</DialogTitle>
 
             <SessionForm
               session={session}

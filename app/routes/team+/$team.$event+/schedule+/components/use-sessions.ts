@@ -1,11 +1,9 @@
-import { toZonedTime } from 'date-fns-tz';
 import { useFetchers, useSubmit } from 'react-router';
 import { v4 as uuid } from 'uuid';
-
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import { areTimeSlotsOverlapping } from '~/libs/datetimes/timeslots.ts';
-import { formatZonedTimeToUtc } from '~/libs/datetimes/timezone.ts';
-
+import { timezoneToUtc, utcToTimezone } from '~/libs/datetimes/timezone.ts';
+import type { Language } from '~/types/proposals.types.ts';
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
 export function useSessions(initialSessions: Array<SessionData>, timezone: string) {
@@ -23,8 +21,8 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
         intent: 'add-session',
         id,
         trackId: trackId,
-        start: formatZonedTimeToUtc(timeslot.start, timezone),
-        end: formatZonedTimeToUtc(timeslot.end, timezone),
+        start: timezoneToUtc(timeslot.start, timezone).toISOString(),
+        end: timezoneToUtc(timeslot.end, timezone).toISOString(),
       },
       {
         method: 'POST',
@@ -41,8 +39,8 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     formData.set('intent', 'update-session');
     formData.set('id', session.id);
     formData.set('trackId', session.trackId);
-    formData.set('start', formatZonedTimeToUtc(session.timeslot.start, timezone));
-    formData.set('end', formatZonedTimeToUtc(session.timeslot.end, timezone));
+    formData.set('start', timezoneToUtc(session.timeslot.start, timezone).toISOString());
+    formData.set('end', timezoneToUtc(session.timeslot.end, timezone).toISOString());
     formData.set('color', session.color);
     formData.set('name', session.name ?? '');
     formData.set('language', session.language ?? '');
@@ -112,7 +110,7 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
       {
         id,
         trackId,
-        timeslot: { start: toZonedTime(start, timezone), end: toZonedTime(end, timezone) },
+        timeslot: { start: utcToTimezone(start, timezone), end: utcToTimezone(end, timezone) },
         name,
         language,
         color,
@@ -136,11 +134,11 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
       trackId: String(fetcher.formData?.get('trackId')),
       color: String(fetcher.formData?.get('color') ?? 'gray'),
       name: String(fetcher.formData?.get('name') ?? ''),
-      language: String(fetcher.formData?.get('language') ?? null),
+      language: String(fetcher.formData?.get('language') ?? null) as Language | null,
       emojis: fetcher.formData?.getAll('emojis') as string[],
       timeslot: {
-        start: toZonedTime(String(fetcher.formData?.get('start')), timezone),
-        end: toZonedTime(String(fetcher.formData?.get('end')), timezone),
+        start: utcToTimezone(String(fetcher.formData?.get('start')), timezone),
+        end: utcToTimezone(String(fetcher.formData?.get('end')), timezone),
       },
     }));
 

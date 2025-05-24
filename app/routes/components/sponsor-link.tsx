@@ -1,6 +1,8 @@
 import { HeartIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 
 export function SponsorLink() {
+  const { t } = useTranslation();
   return (
     <a
       href="https://github.com/sponsors/conference-hall"
@@ -12,7 +14,7 @@ export function SponsorLink() {
         className="h-6 w-6 shrink-0 fill-red-300 group-hover:fill-red-400 text-transparent"
         aria-hidden="true"
       />
-      Support Conference Hall
+      {t('common.sponsor')}
     </a>
   );
 }

@@ -10,6 +10,8 @@ import {
   SwatchIcon,
   TagIcon,
 } from '@heroicons/react/24/outline';
+import type { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -26,35 +28,56 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return null;
 };
 
-const getMenuItems = (team?: string, event?: string, options?: Record<string, boolean>) => [
-  { to: `/team/${team}/${event}/settings`, icon: Cog6ToothIcon, label: 'General' },
-  { to: `/team/${team}/${event}/settings/cfp`, icon: PaperAirplaneIcon, label: 'Call for paper' },
-  { to: `/team/${team}/${event}/settings/tracks`, icon: SwatchIcon, label: 'Tracks' },
-  { to: `/team/${team}/${event}/settings/tags`, icon: TagIcon, label: 'Proposal tags', isNew: true },
-  { to: `/team/${team}/${event}/settings/customize`, icon: PaintBrushIcon, label: 'Customize' },
+const getMenuItems = (team: string, event: string, options: Record<string, boolean>, t: TFunction) => [
+  { to: `/team/${team}/${event}/settings`, icon: Cog6ToothIcon, label: t('event-management.settings.menu.general') },
+  {
+    to: `/team/${team}/${event}/settings/cfp`,
+    icon: PaperAirplaneIcon,
+    label: t('event-management.settings.menu.cfp'),
+  },
+  { to: `/team/${team}/${event}/settings/tracks`, icon: SwatchIcon, label: t('event-management.settings.menu.tracks') },
+  { to: `/team/${team}/${event}/settings/tags`, icon: TagIcon, label: t('event-management.settings.menu.tags') },
+  {
+    to: `/team/${team}/${event}/settings/customize`,
+    icon: PaintBrushIcon,
+    label: t('event-management.settings.menu.customize'),
+  },
   {
     to: `/team/${team}/${event}/settings/survey`,
     icon: QuestionMarkCircleIcon,
-    label: 'Speaker survey',
+    label: t('event-management.settings.menu.survey'),
     isNew: options?.customSurveyEnabled,
   },
-  { to: `/team/${team}/${event}/settings/review`, icon: StarIcon, label: 'Reviews' },
-  { to: `/team/${team}/${event}/settings/notifications`, icon: EnvelopeIcon, label: 'Email notifications' },
-  { to: `/team/${team}/${event}/settings/integrations`, icon: CpuChipIcon, label: 'Integrations' },
-  { to: `/team/${team}/${event}/settings/api`, icon: CodeBracketIcon, label: 'Web API' },
+  { to: `/team/${team}/${event}/settings/review`, icon: StarIcon, label: t('event-management.settings.menu.reviews') },
+  {
+    to: `/team/${team}/${event}/settings/notifications`,
+    icon: EnvelopeIcon,
+    label: t('event-management.settings.menu.notifications'),
+  },
+  {
+    to: `/team/${team}/${event}/settings/integrations`,
+    icon: CpuChipIcon,
+    label: t('event-management.settings.menu.integrations'),
+  },
+  {
+    to: `/team/${team}/${event}/settings/api`,
+    icon: CodeBracketIcon,
+    label: t('event-management.settings.menu.web-api'),
+  },
 ];
 
 export default function OrganizationSettingsRoute() {
+  const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
-  const menus = getMenuItems(currentTeam.slug, currentEvent.slug, { customSurveyEnabled: true });
+  const menus = getMenuItems(currentTeam.slug, currentEvent.slug, { customSurveyEnabled: true }, t);
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
-      <H2 srOnly>Event settings</H2>
+      <H2 srOnly>{t('event-management.settings.heading')}</H2>
 
       <NavSideMenu
-        aria-label="Event settings menu"
+        aria-label={t('event-management.settings.menu.heading')}
         items={menus}
         className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
       />

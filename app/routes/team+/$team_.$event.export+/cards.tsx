@@ -1,9 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
-import { getLanguage } from '~/libs/formatters/languages.ts';
-import { getLevel } from '~/libs/formatters/levels.ts';
 import { formatReviewNote } from '~/libs/formatters/reviews.ts';
 import type { Route } from './+types/cards.ts';
 import styles from './cards.css?url';
@@ -18,6 +17,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export default function ExportProposalsCards({ loaderData: results }: Route.ComponentProps) {
+  const { t } = useTranslation();
   return (
     <>
       <div className="layout">
@@ -38,10 +38,12 @@ export default function ExportProposalsCards({ loaderData: results }: Route.Comp
                   <Subtitle truncate>{proposal.categories.map((c) => c.name).join(', ') || '-'}</Subtitle>
                 </div>
                 <div className="rounded-sm border border-gray-400 p-2">
-                  <Subtitle truncate>{getLevel(proposal.level) || '-'}</Subtitle>
+                  <Subtitle truncate>{proposal.level ? t(`common.level.${proposal.level}`) : '-'}</Subtitle>
                 </div>
                 <div className="rounded-sm border border-gray-400 p-2">
-                  <Subtitle truncate>{proposal.languages.map(getLanguage).join(', ') || '-'}</Subtitle>
+                  <Subtitle truncate>
+                    {proposal.languages.map((lang) => t(`common.languages.${lang}.label`)).join(', ') || '-'}
+                  </Subtitle>
                 </div>
               </div>
               <div className="flex items-center justify-between pt-4">

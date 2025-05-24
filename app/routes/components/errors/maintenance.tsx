@@ -1,10 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import { ErrorDisplay } from './error-display.tsx';
 
 export function Maintenance() {
-  return (
-    <ErrorDisplay
-      title="Maintenance"
-      subtitle="We're working hard to improve your experience. Please check back soon!"
-    />
-  );
+  const { t } = useTranslation();
+  return <ErrorDisplay title={t('common.maintenance.heading')} subtitle={t('common.maintenance.description')} />;
 }

@@ -1,6 +1,7 @@
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { Input } from '~/design-system/forms/input.tsx';
 import { CheckMicroIcon } from '~/design-system/icons/check-micro-icon.tsx';
@@ -54,6 +55,7 @@ type TagsListboxProps = {
 };
 
 function TagsListbox({ tags, canEditEventTags, children, open, onClose }: TagsListboxProps) {
+  const { t } = useTranslation();
   const [filter, setFilter] = useState('');
   const filteredTags = tags.filter((tag) => tag.name.toLowerCase().includes(filter?.toLowerCase()));
 
@@ -79,7 +81,7 @@ function TagsListbox({ tags, canEditEventTags, children, open, onClose }: TagsLi
         modal={false}
       >
         <Text weight="medium" className="px-4 py-2">
-          Apply tags to this proposal
+          {t('common.tags-list.label')}
         </Text>
 
         <Input
@@ -87,8 +89,8 @@ function TagsListbox({ tags, canEditEventTags, children, open, onClose }: TagsLi
           name="query"
           value={filter}
           onChange={(event) => setFilter(event.target.value)}
-          aria-label="Filter tags"
-          placeholder="Filter tags"
+          aria-label={t('common.tags-list.filter')}
+          placeholder={t('common.tags-list.filter')}
           className="p-2"
         />
 
@@ -119,7 +121,7 @@ function TagsListbox({ tags, canEditEventTags, children, open, onClose }: TagsLi
 
           {filteredTags.length === 0 ? (
             <Text size="xs" variant="secondary" className="px-4 py-2">
-              No tags found
+              {t('common.tags-list.empty')}
             </Text>
           ) : null}
         </div>
@@ -131,7 +133,7 @@ function TagsListbox({ tags, canEditEventTags, children, open, onClose }: TagsLi
             className="text-xs flex items-center gap-2 px-4 py-3 hover:bg-gray-100"
           >
             <PencilSquareMicroIcon className="text-gray-400" />
-            Manage tags
+            {t('common.tags-list.manage')}
           </Link>
         ) : null}
       </ListboxOptions>

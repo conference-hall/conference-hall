@@ -1,4 +1,5 @@
 import { EyeSlashIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import { AvatarName } from '~/design-system/avatar.tsx';
 import { ProgressBar } from '~/design-system/charts/progress-bar.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
@@ -20,12 +21,14 @@ type Props = {
 };
 
 export function ReviewersList({ proposalsCount, reviewersMetrics }: Props) {
+  const { t } = useTranslation();
+
   if (reviewersMetrics.length === 0) {
-    return <EmptyState label="No reviews yet" icon={EyeSlashIcon} noBorder />;
+    return <EmptyState label={t('event-management.overview.reviewers.empty')} icon={EyeSlashIcon} noBorder />;
   }
 
   return (
-    <ul className="space-y-8" aria-label="Reviewers metrics">
+    <ul className="space-y-8" aria-label={t('event-management.overview.reviewers.heading')}>
       {reviewersMetrics.map((reviewer, index) => {
         const max = proposalsCount;
         const value = reviewer.reviewsCount;
@@ -46,20 +49,24 @@ export function ReviewersList({ proposalsCount, reviewersMetrics }: Props) {
             </div>
 
             <div className="flex items-center gap-4 grow">
-              <ProgressBar value={value} max={max} aria-label={`${reviewer.name} reviews progress`} />
+              <ProgressBar
+                value={value}
+                max={max}
+                aria-label={t('event-management.overview.reviewers.progress', { name: reviewer.name })}
+              />
               <Text variant="secondary" weight="semibold" className="w-10 text-right">
                 {Math.round(percentage)}%
               </Text>
             </div>
 
             <div className="sm:w-48 flex gap-8 sm:grid sm:grid-cols-3 sm:gap-4">
-              <Tooltip text="Negatives count">
+              <Tooltip text={t('event-management.overview.reviewers.negatives-count')}>
                 <UserReviewNote feeling="NEGATIVE" note={reviewer.negativeCount} />
               </Tooltip>
-              <Tooltip text="Favorites count">
+              <Tooltip text={t('event-management.overview.reviewers.favorites-count')}>
                 <UserReviewNote feeling="POSITIVE" note={reviewer.positiveCount} />
               </Tooltip>
-              <Tooltip text="Average reviews">
+              <Tooltip text={t('event-management.overview.reviewers.average-reviews')}>
                 <GlobalReviewNote feeling="NEUTRAL" note={reviewer.averageNote} />
               </Tooltip>
             </div>

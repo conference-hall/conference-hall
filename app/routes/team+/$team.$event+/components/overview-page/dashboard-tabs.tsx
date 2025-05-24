@@ -1,17 +1,20 @@
 import { cx } from 'class-variance-authority';
-import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Link, href } from 'react-router';
 
 type Props = { tab: string | null; team: string; event: string };
 
 export function DashboardTabs({ tab, team, event }: Props) {
+  const { t } = useTranslation();
+  const path = href('/team/:team/:event', { team, event });
   return (
     <div className="border-b border-gray-200">
       <nav aria-label="Tabs" className="flex space-x-8 px-6 -mb-px">
-        <DashboardTab to={`/team/${team}/${event}`} current={tab === 'call-for-paper'}>
-          Call for paper
+        <DashboardTab to={path} current={tab === 'call-for-paper'}>
+          {t('common.call-for-paper')}
         </DashboardTab>
-        <DashboardTab to={`/team/${team}/${event}?tab=reviewers`} current={tab === 'reviewers'}>
-          Reviewers
+        <DashboardTab to={`${path}?tab=reviewers`} current={tab === 'reviewers'}>
+          {t('common.reviewers')}
         </DashboardTab>
       </nav>
     </div>

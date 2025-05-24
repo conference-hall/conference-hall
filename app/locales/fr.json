@@ -1,0 +1,10 @@
+{
+  "error.global": "Une erreur s'est produite, veuillez réessayer.",
+  "settings.preferences.language.en": "English",
+  "settings.preferences.language.fr": "Français",
+  "settings.preferences.language.save": "Changer la langue",
+  "settings.preferences.language.subtitle": "Sélectionnez la langue de l'interface utilisateur",
+  "settings.preferences.language": "Langue",
+  "settings.preferences.saved": "Préférences enregistrées avec succès",
+  "settings.preferences": "Préférences"
+}

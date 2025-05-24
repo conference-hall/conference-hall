@@ -15,8 +15,8 @@ test('updates conference CFP settings', async ({ page }) => {
 
   // Update CFP settings
   await cfpPage.goto(team.slug, event.slug);
-  await cfpPage.fill(cfpPage.startInput, '01/01/2022');
-  await cfpPage.fill(cfpPage.endInput, '02/02/2022');
+  await cfpPage.fill(cfpPage.startInput, '2022-01-01');
+  await cfpPage.fill(cfpPage.endInput, '2022-02-02');
   await cfpPage.saveOpeningsButton.click();
   await expect(cfpPage.toast).toHaveText('Call for paper updated.');
 

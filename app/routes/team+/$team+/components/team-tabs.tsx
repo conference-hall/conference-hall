@@ -1,25 +1,26 @@
 import { Cog6ToothIcon, StarIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
+import { href } from 'react-router';
 import { Badge } from '~/design-system/badges.tsx';
-
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
-import { ROLE_NAMES } from '~/libs/formatters/team-roles.ts';
 import type { TeamRole } from '~/types/team.types.ts';
 
 type Props = { slug: string; role: TeamRole };
 
 export function TeamTabs({ slug, role }: Props) {
+  const { t } = useTranslation();
   return (
     <Page.NavHeader className="flex items-center justify-between">
       <NavTabs py={4} scrollable>
-        <NavTab to={`/team/${slug}`} icon={StarIcon} end>
-          Events
+        <NavTab to={href('/team/:team', { team: slug })} icon={StarIcon} end>
+          {t('common.events')}
         </NavTab>
-        <NavTab to={`/team/${slug}/settings`} icon={Cog6ToothIcon}>
-          Settings
+        <NavTab to={href('/team/:team/settings', { team: slug })} icon={Cog6ToothIcon}>
+          {t('common.settings')}
         </NavTab>
       </NavTabs>
-      <Badge color="blue">{ROLE_NAMES[role]}</Badge>
+      <Badge color="blue">{t(`common.member.role.label.${role}`)}</Badge>
     </Page.NavHeader>
   );
 }

@@ -1,5 +1,7 @@
 import { userEvent } from '@vitest/browser/context';
+import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
+import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
 import type { Tag } from '~/types/tags.types.ts';
 import { TagModal } from './tag-modal.tsx';
@@ -10,13 +12,15 @@ describe('TagModal component', () => {
       {
         path: '/',
         Component: () => (
-          <TagModal mode={mode} initialValues={initialValues}>
-            {({ onOpen }) => (
-              <button type="button" onClick={onOpen}>
-                Open Modal
-              </button>
-            )}
-          </TagModal>
+          <I18nextProvider i18n={i18nTest}>
+            <TagModal mode={mode} initialValues={initialValues}>
+              {({ onOpen }) => (
+                <button type="button" onClick={onOpen}>
+                  Open Modal
+                </button>
+              )}
+            </TagModal>
+          </I18nextProvider>
         ),
       },
     ]);

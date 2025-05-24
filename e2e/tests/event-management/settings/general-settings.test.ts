@@ -24,8 +24,8 @@ test('updates event settings', async ({ page }) => {
 
   // Details settings
   await generalPage.goto(team.slug, 'new-slug');
-  await generalPage.fill(generalPage.startDateInput, '01/01/2022');
-  await generalPage.fill(generalPage.endDateInput, '02/02/2022');
+  await generalPage.fill(generalPage.startDateInput, '2022-01-01');
+  await generalPage.fill(generalPage.endDateInput, '2022-02-02');
   await generalPage.fill(generalPage.locationInput, 'New location');
   await generalPage.fill(generalPage.descriptionInput, 'New description');
   await generalPage.fill(generalPage.websiteUrlInput, 'https://new-website.com');

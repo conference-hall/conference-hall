@@ -11,10 +11,10 @@ import {
 } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { cx } from 'class-variance-authority';
+import { addMinutes, isAfter, isBefore } from 'date-fns';
 import type { ReactNode } from 'react';
-
-import { addMinutes, format, isAfter, isBefore } from 'date-fns';
-import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
+import { useTranslation } from 'react-i18next';
+import { formatDate, formatTime, toDateInput } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import {
   countIntervalsInTimeSlot,
@@ -94,7 +94,7 @@ export default function Schedule({
       <div className="flex divide-x-3">
         {displayedDays.map((day, index) => (
           <ScheduleDay
-            key={format(day, 'yyyy-MM-dd')}
+            key={toDateInput(day)}
             day={day}
             dayIndex={index}
             displayedTimes={displayedTimes}
@@ -140,6 +140,9 @@ function ScheduleDay({
   zoomLevel,
   displayMultipleDays,
 }: ScheduleDayProps) {
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
+
   const startTime = addMinutes(day, displayedTimes.start);
   const endTime = addMinutes(day, displayedTimes.end);
   const hours = getDailyTimeSlots(startTime, endTime, HOUR_INTERVAL, true);
@@ -153,14 +156,16 @@ function ScheduleDay({
           {displayMultipleDays && (
             <tr className="h-8">
               <th className="border-b text-sm font-semibold" colSpan={tracks.length + 1}>
-                {format(day, 'PPP')}
+                {formatDate(day, { format: 'long', locale })}
               </th>
             </tr>
           )}
           <tr className={cx('divide-x', { 'h-12': !displayMultipleDays, 'h-8': displayMultipleDays })}>
             {/* gutter */}
             {dayIndex === 0 && (
-              <th className="w-12 text-xs font-normal text-center bg-white text-gray-400">{getGMTOffset(timezone)}</th>
+              <th className="w-12 text-xs font-normal text-center bg-white text-gray-400">
+                {getGMTOffset(timezone, locale)}
+              </th>
             )}
             {/* tracks header */}
             {tracks.map((track) => (
@@ -183,8 +188,8 @@ function ScheduleDay({
 
           {/* rows by hours */}
           {hours.map((hour) => {
-            const startHour = toTimeFormat(hour.start);
-            const endHour = toTimeFormat(hour.end);
+            const startHour = formatTime(hour.start, { format: 'short', locale });
+            const endHour = formatTime(hour.end, { format: 'short', locale });
             const hourSlots = getDailyTimeSlots(hour.start, hour.end, SLOT_INTERVAL);
 
             return (
@@ -204,7 +209,7 @@ function ScheduleDay({
                     {hourSlots.map((timeslot, index) => {
                       return (
                         <Timeslot
-                          key={toTimeFormat(timeslot.start)}
+                          key={formatTime(timeslot.start, { format: 'short', locale })}
                           trackId={track.id}
                           timeslot={timeslot}
                           sessions={sessions}
@@ -248,6 +253,9 @@ function Timeslot({
   onSelectSession,
   renderSession,
 }: TimeslotProps) {
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
+
   // global dnd context
   const { active } = useDndContext();
 
@@ -279,7 +287,7 @@ function Timeslot({
       ref={setNodeRef}
       role="button"
       tabIndex={0}
-      aria-label={`Timeslot ${toTimeFormat(timeslot.start)}`}
+      aria-label={`Timeslot ${formatTime(timeslot.start, { format: 'short', locale })}`}
       onMouseDown={!hasSession ? selector.onSelectStart(trackId, timeslot) : undefined}
       onMouseEnter={!hasSession ? selector.onSelectHover(trackId, timeslot) : undefined}
       onMouseUp={selector.onSelect}
@@ -293,7 +301,7 @@ function Timeslot({
       })}
     >
       {/* invisible span to have content for the table */}
-      <span className="invisible">{`Timeslot ${toTimeFormat(timeslot.start)}`}</span>
+      <span className="invisible">{`Timeslot ${formatTime(timeslot.start, { format: 'short', locale })}`}</span>
       {session ? (
         // displayed session block
         <SessionWrapper

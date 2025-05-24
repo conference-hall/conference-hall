@@ -1,5 +1,6 @@
 import { PaintBrushIcon } from '@heroicons/react/24/outline';
 import { type ReactNode, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
@@ -40,12 +41,18 @@ type TagModalContentProps = {
 };
 
 function TagModaContent({ mode, initialValues, open, onClose }: TagModalContentProps) {
+  const { t } = useTranslation();
   const defaultColor = initialValues?.color || getRandomColor();
 
   const [name, setName] = useState(initialValues?.name);
   const [color, setColor] = useState(defaultColor);
 
-  const TagPreview = <Tag tag={{ id: 'new', color, name: name || 'Tag preview' }} isSearchLink={false} />;
+  const TagPreview = (
+    <Tag
+      tag={{ id: 'new', color, name: name || t('event-management.settings.tags.modal.preview') }}
+      isSearchLink={false}
+    />
+  );
 
   return (
     <Modal title={TagPreview} size="m" open={open} onClose={onClose}>
@@ -54,12 +61,12 @@ function TagModaContent({ mode, initialValues, open, onClose }: TagModalContentP
           <div className="flex gap-2">
             <input type="hidden" name="id" value={initialValues?.id} />
 
-            <Tooltip text="Pick a color" placement="bottom">
+            <Tooltip text={t('event-management.settings.tags.pick-a-color')} placement="bottom">
               <div className="relative h-9 w-12 group">
                 <input
                   type="color"
                   name="color"
-                  aria-label="Pick a color"
+                  aria-label={t('event-management.settings.tags.pick-a-color')}
                   defaultValue={defaultColor}
                   onChange={(event) => setColor(event.target.value)}
                   className="bg-white [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-md [&::-webkit-color-swatch-wrapper]:p-0 h-9 w-12 cursor-pointer"
@@ -74,8 +81,8 @@ function TagModaContent({ mode, initialValues, open, onClose }: TagModalContentP
 
             <Input
               name="name"
-              aria-label="Tag name"
-              placeholder="Tag name"
+              aria-label={t('event-management.settings.tags.tag-name')}
+              placeholder={t('event-management.settings.tags.tag-name')}
               defaultValue={initialValues?.name}
               onChange={(event) => setName(event.target.value?.trim())}
               className="w-full"
@@ -87,10 +94,12 @@ function TagModaContent({ mode, initialValues, open, onClose }: TagModalContentP
 
       <Modal.Actions>
         <Button type="button" variant="secondary" onClick={onClose}>
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button type="submit" name="intent" value="save-tag" form="save-tag" disabled={!name}>
-          {mode === 'create' ? 'Create tag' : 'Save tag'}
+          {mode === 'create'
+            ? t('event-management.settings.tags.create-tag')
+            : t('event-management.settings.tags.save-tag')}
         </Button>
       </Modal.Actions>
     </Modal>

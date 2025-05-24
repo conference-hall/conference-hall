@@ -3,7 +3,7 @@ import { TalkEditFormComponent } from 'e2e/common/talk-edit-form.component.ts';
 import { PageObject } from 'e2e/page-object.ts';
 
 export class ProposalPage extends PageObject {
-  readonly referencesToggle = this.page.getByRole('button', { name: 'Talk references' });
+  readonly referencesToggle = this.page.getByRole('button', { name: 'References' });
   readonly otherProposalsToggle = this.page.getByRole('button', { name: 'Other proposals by speakers' });
 
   readonly activityFeed = this.page.getByRole('list', { name: 'Activity feed' }).locator('>li');
@@ -16,7 +16,7 @@ export class ProposalPage extends PageObject {
   readonly deliberationStatus = this.page.getByLabel('Change deliberation status');
   readonly publicationStatus = this.page.getByRole('heading', { name: 'Publication' });
   readonly publishButton = this.page.getByRole('button', { name: 'Publish result to speakers' });
-  readonly waitingConfirmation = this.page.getByText('Waiting for speakers confirmation');
+  readonly waitingConfirmation = this.page.getByText('Waiting for confirmation');
   readonly resultPublished = this.page.getByText('Result published to speakers');
 
   readonly tagsButton = this.page.getByRole('button', { name: 'Tags' });

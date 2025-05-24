@@ -1,6 +1,7 @@
 import * as Firebase from 'firebase/auth';
 import { type FormEvent, useState } from 'react';
-import { useFetcher } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { href, useFetcher } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -12,6 +13,7 @@ import { PasswordInput } from './password-input.tsx';
 type EmailPasswordSigninProps = { redirectTo: string; defaultEmail: string | null };
 
 export function EmailPasswordSignin({ redirectTo, defaultEmail }: EmailPasswordSigninProps) {
+  const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string>('');
   const [email, setEmail] = useState(defaultEmail || '');
@@ -20,7 +22,7 @@ export function EmailPasswordSignin({ redirectTo, defaultEmail }: EmailPasswordS
   const fetcher = useFetcher();
 
   const loading = submitting || fetcher.state !== 'idle';
-  const forgotPasswordPath = email ? `/auth/forgot-password?email=${email}` : '/auth/forgot-password';
+  const forgotPasswordPath = email ? `${href('/auth/forgot-password')}?email=${email}` : href('/auth/forgot-password');
 
   const signIn = async (event: FormEvent) => {
     event.preventDefault();
@@ -30,9 +32,9 @@ export function EmailPasswordSignin({ redirectTo, defaultEmail }: EmailPasswordS
       setSubmitting(true);
       const credentials = await Firebase.signInWithEmailAndPassword(getClientAuth(), email, password);
       const token = await credentials.user.getIdToken();
-      await fetcher.submit({ token, redirectTo }, { method: 'POST', action: '/auth/login' });
+      await fetcher.submit({ token, redirectTo }, { method: 'POST', action: href('/auth/login') });
     } catch (error) {
-      setError(getFirebaseError(error));
+      setError(getFirebaseError(error, t));
     } finally {
       setSubmitting(false);
     }
@@ -41,8 +43,8 @@ export function EmailPasswordSignin({ redirectTo, defaultEmail }: EmailPasswordS
   return (
     <fetcher.Form className="space-y-4" onSubmit={signIn}>
       <Input
-        label="Email address"
-        placeholder="example@site.com"
+        label={t('common.email')}
+        placeholder={t('common.email.placeholder')}
         name="email"
         type="email"
         value={email}
@@ -53,7 +55,7 @@ export function EmailPasswordSignin({ redirectTo, defaultEmail }: EmailPasswordS
       <PasswordInput value={password} onChange={setPassword} forgotPasswordPath={forgotPasswordPath} />
 
       <Button type="submit" variant="primary" disabled={loading} className="w-full mt-2">
-        {loading ? <LoadingIcon className="size-4" /> : 'Sign in'}
+        {loading ? <LoadingIcon className="size-4" /> : t('auth.common.sign-in')}
       </Button>
 
       {error ? (

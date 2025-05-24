@@ -1,5 +1,5 @@
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
-import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import { AdminUsers } from '~/.server/admin/admin-users.ts';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -7,9 +7,8 @@ import { Link } from '~/design-system/links.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, H2, H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { formatDatetime } from '~/libs/datetimes/datetimes.ts';
 import type { Route } from './+types/users.$user.ts';
-
-const DATETIME_FORMAT = 'dd/MM/yyyy HH:mm';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
@@ -18,10 +17,13 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export default function AdminUserRoute({ loaderData: user }: Route.ComponentProps) {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
+
   return (
     <Page className="space-y-6">
       <Link to="/admin/users" iconLeft={ChevronLeftIcon}>
-        Go back
+        {t('common.go-back')}
       </Link>
 
       <Card className="divide-y divide-gray-100">
@@ -32,44 +34,44 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
         <dl className="divide-y divide-gray-100">
           <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
             <Text as="dt" size="s" weight="medium">
-              Terms accepted
+              {t('admin.users.page.terms-accepted')}
             </Text>
             <Text as="dd" variant="secondary" className="col-span-3">
-              {user.termsAccepted ? 'Yes' : 'No'}
+              {user.termsAccepted ? t('common.yes') : t('common.no')}
             </Text>
           </div>
           <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
             <Text as="dt" size="s" weight="medium">
-              Email verified
+              {t('admin.users.page.email-verified')}
             </Text>
             <Text as="dd" variant="secondary" className="col-span-3">
-              {user.emailVerified ? 'Yes' : 'No'}
+              {user.emailVerified ? t('common.yes') : t('common.no')}
             </Text>
           </div>
           {user.lastSignInAt ? (
             <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
               <Text as="dt" size="s" weight="medium">
-                Last signed in
+                {t('admin.users.page.last-signed-in')}
               </Text>
               <Text as="dd" variant="secondary" className="col-span-3">
-                {format(user.lastSignInAt, DATETIME_FORMAT)}
+                {formatDatetime(user.lastSignInAt, { format: 'short', locale })}
               </Text>
             </div>
           ) : null}
           <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
             <Text as="dt" size="s" weight="medium">
-              Created at
+              {t('common.created-at')}
             </Text>
             <Text as="dd" variant="secondary" className="col-span-3">
-              {format(user.createdAt, DATETIME_FORMAT)}
+              {formatDatetime(user.createdAt, { format: 'short', locale })}
             </Text>
           </div>
           <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
             <Text as="dt" size="s" weight="medium">
-              Updated at
+              {t('common.updated-at')}
             </Text>
             <Text as="dd" variant="secondary" className="col-span-3">
-              {format(user.updatedAt, DATETIME_FORMAT)}
+              {formatDatetime(user.updatedAt, { format: 'short', locale })}
             </Text>
           </div>
         </dl>
@@ -77,10 +79,10 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
 
       <List>
         <List.Header>
-          <H2 size="s">{`Authentication methods (${user.authenticationMethods.length})`}</H2>
+          <H2 size="s">{t('admin.users.page.authentication-methods')}</H2>
           <Subtitle size="xs">{user.uid}</Subtitle>
         </List.Header>
-        <List.Content aria-label="Authentication methods list">
+        <List.Content aria-label={t('admin.users.page.authentication-methods')}>
           {user.authenticationMethods.map((methods) => (
             <List.Row key={methods.provider} className="py-4 px-6 flex items-center gap-2">
               <H3>{methods.provider}</H3>
@@ -92,16 +94,16 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
 
       <List>
         <List.Header>
-          <H2 size="s">{`Teams membership (${user.teams.length})`}</H2>
+          <H2 size="s">{t('admin.users.page.teams-membership')}</H2>
         </List.Header>
-        <List.Content aria-label="Teams list">
+        <List.Content aria-label={t('admin.users.page.teams-membership')}>
           {user.teams.map((team) => (
             <List.Row key={team.slug} className="py-4 px-6 flex justify-between items-center">
               <div className="sm:flex gap-4 items-baseline">
                 <H3>{team.name}</H3>
                 <Subtitle size="xs">{team.role}</Subtitle>
               </div>
-              <Text variant="secondary">{format(team.createdAt, DATETIME_FORMAT)}</Text>
+              <Text variant="secondary">{formatDatetime(team.createdAt, { format: 'short', locale })}</Text>
             </List.Row>
           ))}
         </List.Content>

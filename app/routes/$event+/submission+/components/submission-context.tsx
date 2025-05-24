@@ -1,5 +1,6 @@
 import { type ReactNode, createContext, useContext, useMemo } from 'react';
-import { useMatches } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { href, useMatches } from 'react-router';
 
 type Step = { key: string; name: string; path: string; enabled: boolean };
 
@@ -20,49 +21,50 @@ export const SubmissionContextProvider = ({
   hasSurvey,
   children,
 }: SubmissionContextProviderProps) => {
-  const currentTalkId = talkId || 'new';
+  const { t } = useTranslation();
+  const talk = talkId || 'new';
 
   const steps = useMemo(
     () =>
       [
         {
           key: 'selection',
-          name: 'Selection',
-          path: `/${eventSlug}/submission`,
+          name: t('event.submission.steps.selection'),
+          path: href('/:event/submission', { event: eventSlug }),
           enabled: true,
         },
         {
           key: 'proposal',
-          name: 'Proposal',
-          path: `/${eventSlug}/submission/${currentTalkId}`,
+          name: t('event.submission.steps.proposal'),
+          path: href('/:event/submission/:talk', { event: eventSlug, talk }),
           enabled: true,
         },
         {
           key: 'speakers',
-          name: 'Speakers',
-          path: `/${eventSlug}/submission/${currentTalkId}/speakers`,
+          name: t('event.submission.steps.speakers'),
+          path: href('/:event/submission/:talk/speakers', { event: eventSlug, talk }),
           enabled: true,
         },
         {
           key: 'tracks',
-          name: 'Tracks',
-          path: `/${eventSlug}/submission/${currentTalkId}/tracks`,
+          name: t('event.submission.steps.tracks'),
+          path: href('/:event/submission/:talk/tracks', { event: eventSlug, talk }),
           enabled: hasTracks,
         },
         {
           key: 'survey',
-          name: 'Survey',
-          path: `/${eventSlug}/submission/${currentTalkId}/survey`,
+          name: t('event.submission.steps.survey'),
+          path: href('/:event/submission/:talk/survey', { event: eventSlug, talk }),
           enabled: hasSurvey,
         },
         {
           key: 'submission',
-          name: 'Submission',
-          path: `/${eventSlug}/submission/${currentTalkId}/submit`,
+          name: t('event.submission.steps.submission'),
+          path: href('/:event/submission/:talk/submit', { event: eventSlug, talk }),
           enabled: true,
         },
       ].filter((step) => step.enabled),
-    [eventSlug, currentTalkId, hasTracks, hasSurvey],
+    [eventSlug, talk, hasTracks, hasSurvey, t],
   );
 
   return <SubmissionContext.Provider value={steps}>{children}</SubmissionContext.Provider>;

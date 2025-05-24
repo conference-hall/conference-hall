@@ -2,6 +2,7 @@ import { PlusIcon } from '@heroicons/react/20/solid';
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import type { SurveyDetailedAnswer } from '~/.server/event-survey/types.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
@@ -35,8 +36,9 @@ type CoSpeakersProps = {
 };
 
 export function CoSpeakers({ speakers, invitationLink, canEdit, className }: CoSpeakersProps) {
+  const { t } = useTranslation();
   return (
-    <ul aria-label="Speakers" className={cx('flex flex-row flex-wrap gap-3', className)}>
+    <ul aria-label={t('speaker.list')} className={cx('flex flex-row flex-wrap gap-3', className)}>
       {speakers.map((speaker) => (
         <li key={speaker.name}>
           <SpeakerPillButton speaker={speaker} canEdit={canEdit} />
@@ -54,13 +56,13 @@ export function CoSpeakers({ speakers, invitationLink, canEdit, className }: CoS
 type SpeakerPillButtonProps = { speaker: SpeakerProps; canEdit?: boolean };
 
 function SpeakerPillButton({ speaker, canEdit }: SpeakerPillButtonProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-
   return (
     <>
       <button
         type="button"
-        aria-label={`View ${speaker.name} profile`}
+        aria-label={t('speaker.view-profile', { name: speaker.name })}
         onClick={() => setOpen(true)}
         className="cursor-pointer"
       >
@@ -93,11 +95,12 @@ export function SpeakerPill({ speaker, className }: SpeakerPillProps) {
 type RemoveCoSpeakerButtonProps = { speakerId: string; speakerName: string | null };
 
 function RemoveCoSpeakerButton({ speakerId, speakerName }: RemoveCoSpeakerButtonProps) {
+  const { t } = useTranslation();
   return (
     <Form method="POST">
       <input type="hidden" name="_speakerId" value={speakerId} />
       <Button type="submit" name="intent" value="remove-speaker" variant="secondary">
-        {`Remove "${speakerName}" from the talk`}
+        {t('speaker.remove', { name: speakerName })}
       </Button>
     </Form>
   );
@@ -106,27 +109,26 @@ function RemoveCoSpeakerButton({ speakerId, speakerName }: RemoveCoSpeakerButton
 type AddCoSpeakerProps = { invitationLink: string };
 
 function AddCoSpeakerButton({ invitationLink }: AddCoSpeakerProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   return (
     <>
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="Add a co-speaker"
         className="flex items-center gap-1 hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200 cursor-pointer"
       >
         <PlusIcon className="h-6 w-6 text-gray-400 shrink-0" aria-hidden />
         <Text variant="secondary" size="xs">
-          Add speaker
+          {t('speaker.add')}
         </Text>
       </button>
       <InvitationModal
         open={open}
         invitationLink={invitationLink}
         onClose={() => setOpen(false)}
-        title="Invite a co-speaker"
-        description="You can invite a co-speaker to join your talk by sharing an invitation link. Copy it and send it by email.
-            The co-speaker will be automatically added once the invitation has been accepted."
+        title={t('speaker.invite-modal.heading')}
+        description={t('speaker.invite-modal.description')}
       />
     </>
   );
@@ -135,18 +137,19 @@ function AddCoSpeakerButton({ invitationLink }: AddCoSpeakerProps) {
 type SpeakerDrawerProps = { speaker: SpeakerProps; canEdit?: boolean; open: boolean; onClose: VoidFunction };
 
 function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) {
+  const { t } = useTranslation();
   const Title = () => <SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />;
 
   const details = [
-    { key: 'bio', label: 'Biography', value: speaker.bio },
-    { key: 'references', label: 'References', value: speaker.references },
-    { key: 'location', label: 'Location', value: speaker.location },
+    { key: 'bio', label: t('speaker.profile.biography'), value: speaker.bio },
+    { key: 'references', label: t('speaker.profile.references'), value: speaker.references },
+    { key: 'location', label: t('speaker.profile.location'), value: speaker.location },
   ].filter((detail) => Boolean(detail.value));
 
   return (
     <SlideOver open={open} onClose={onClose} size="l">
       <SlideOver.Content title={<Title />} onClose={onClose} className="p-0! border-t border-t-gray-200 divide-y">
-        <h2 className="sr-only">Speaker information panel</h2>
+        <h2 className="sr-only">{t('speaker.panel.heading')}</h2>
         {speaker.email && (
           <div className="flex flex-col gap-2 p-4 sm:px-6">
             <IconLabel icon={EnvelopeIcon}>{speaker.email}</IconLabel>
@@ -179,7 +182,7 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
 
         {speaker.survey && speaker.survey.length > 0 ? (
           <section className="p-4 sm:px-6 space-y-6">
-            <H2 variant="secondary">Survey</H2>
+            <H2 variant="secondary">{t('speaker.survey')}</H2>
             <dl className="space-y-4">
               {speaker.survey?.map((question) => (
                 <div key={question.id}>

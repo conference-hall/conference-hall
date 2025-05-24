@@ -1,7 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-import { Link } from 'react-router';
+import { Link, href } from 'react-router';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { menuItem, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
@@ -51,7 +51,7 @@ export function EventsDropdown({ events = [], currentTeam, currentEvent }: Props
             <MenuItem
               key={slug}
               as={Link}
-              to={`/team/${currentTeam.slug}/${slug}`}
+              to={href('/team/:team/:event', { team: currentTeam.slug, event: slug })}
               className={cx(menuItem(), { 'font-semibold': slug === currentEvent.slug })}
             >
               <Avatar size="xs" picture={logoUrl} name={name} square aria-hidden />

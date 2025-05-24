@@ -42,8 +42,8 @@ test('displays event page', async ({ page }) => {
   await test.step('with CFP open', async () => {
     await eventPage.goto(eventOpen.slug, eventOpen.name);
     await expect(page.getByText('Nantes, France')).toBeVisible();
-    await expect(page.getByText('October 5th, 2020 (CEST)')).toBeVisible();
-    await expect(page.getByText('Call for paper open for over 69 years')).toBeVisible();
+    await expect(page.getByText('October 05, 2020')).toBeVisible();
+    await expect(page.getByText('Call for paper open')).toBeVisible();
     await expect(page.getByText('The event !')).toBeVisible();
     await expect(eventPage.websiteLink).toHaveAttribute('href', 'https://devfest.gdgnantes.com');
     await expect(eventPage.contactsLink).toHaveAttribute('href', 'mailto:contact@example.com');
@@ -59,12 +59,12 @@ test('displays event page', async ({ page }) => {
 
   await test.step('with CFP in the future', async () => {
     await eventPage.goto(eventFuture.slug, eventFuture.name);
-    await expect(page.getByText('Call for paper open in over 79 years')).toBeVisible();
+    await expect(page.getByText('The call for paper will open in 80 years')).toBeVisible();
   });
 
   await test.step('with CFP in the past', async () => {
     await eventPage.goto(eventPast.slug, eventPast.name);
-    await expect(page.getByText('Call for paper closed since over 19 years')).toBeVisible();
+    await expect(page.getByText('Call for paper closed')).toBeVisible();
   });
 
   await test.step('with legacy URL', async () => {

@@ -1,6 +1,7 @@
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
-import { useSearchParams } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { href, useSearchParams } from 'react-router';
 import { EventsSearch } from '~/.server/event-search/event-search.ts';
 import { parseUrlFilters } from '~/.server/event-search/event-search.types.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
@@ -22,11 +23,11 @@ import { SponsorLink } from './components/sponsor-link.tsx';
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
-  const results = await EventsSearch.with(filters, page).search();
-  return results;
+  return EventsSearch.with(filters, page).search();
 };
 
 export default function IndexRoute({ loaderData }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const user = useUser();
   const { filters, results, pagination } = loaderData;
   const [searchParams] = useSearchParams();
@@ -39,7 +40,7 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
       <div className={cx(BG_GRADIENT_COLOR, 'shadow-sm p-4 pt-0 lg:pb-16 lg:pt-10')}>
         <div className="hidden lg:mb-8 lg:block">
           <H1 size="2xl" weight="bold" variant="light" align="center">
-            Call for papers for conferences and meetups.
+            {t('home.title')}
           </H1>
         </div>
         <div className="flex flex-col w-full items-center">
@@ -47,8 +48,8 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
             <SearchEventsInput filters={filters} />
 
             {!user?.hasTeamAccess ? (
-              <Link to="/team/request" variant="secondary-light" weight="semibold">
-                Or become organizer
+              <Link to={href('/team/request')} variant="secondary-light" weight="semibold">
+                {t('home.become-organizer')}
               </Link>
             ) : null}
           </div>
@@ -57,19 +58,23 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
 
       <Page>
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <H2 size="xl">Incoming call for papers</H2>
+          <H2 size="xl">{t('home.incoming-call-for-papers')}</H2>
           <SearchEventsFilters />
         </div>
 
         {results?.length === 0 ? (
-          <EmptyState icon={FaceFrownIcon} label="No results found!" />
+          <EmptyState icon={FaceFrownIcon} label={t('common.no-results')} />
         ) : (
           <div className="flex flex-col items-center space-y-8">
-            <ul aria-label="Search results" className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 w-full">
+            <ul aria-label={t('home.results')} className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 w-full">
               {results.map((event) => (
                 <EventCardLink
                   key={event.slug}
-                  to={talkId ? `/${event.slug}/submission/${talkId}` : `/${event.slug}`}
+                  to={
+                    talkId
+                      ? href('/:event/submission/:talk', { event: event.slug, talk: talkId })
+                      : href('/:event', { event: event.slug })
+                  }
                   name={event.name}
                   type={event.type}
                   logoUrl={event.logoUrl}

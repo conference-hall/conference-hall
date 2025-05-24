@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -10,6 +11,7 @@ type TrackListProps = {
 };
 
 export function TrackList({ type, tracks }: TrackListProps) {
+  const { t } = useTranslation();
   return (
     <List>
       <List.Header className="flex justify-between">
@@ -33,7 +35,7 @@ export function TrackList({ type, tracks }: TrackListProps) {
               <Form method="POST">
                 <input type="hidden" name="trackId" value={track.id} />
                 <Button type="submit" name="intent" value={`delete-${type}`} variant="important" size="s">
-                  Delete
+                  {t('common.delete')}
                 </Button>
               </Form>
             </div>

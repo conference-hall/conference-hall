@@ -1,5 +1,7 @@
 import type { JSX } from 'react';
+import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
+import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
 import { DashboardTabs } from './dashboard-tabs.tsx';
 
@@ -10,7 +12,11 @@ describe('DashboardTabs component', () => {
   };
 
   it('has call for paper tab selected', async () => {
-    const screen = renderComponent(<DashboardTabs tab="call-for-paper" team="t1" event="e1" />);
+    const screen = renderComponent(
+      <I18nextProvider i18n={i18nTest}>
+        <DashboardTabs tab="call-for-paper" team="t1" event="e1" />
+      </I18nextProvider>,
+    );
 
     const callForPaperLink = screen.getByRole('link', { name: 'Call for paper' });
     await expect.element(callForPaperLink).toHaveAttribute('href', '/team/t1/e1');
@@ -22,7 +28,11 @@ describe('DashboardTabs component', () => {
   });
 
   it('has reviewers tab selected', async () => {
-    const screen = renderComponent(<DashboardTabs tab="reviewers" team="t1" event="e1" />);
+    const screen = renderComponent(
+      <I18nextProvider i18n={i18nTest}>
+        <DashboardTabs tab="reviewers" team="t1" event="e1" />
+      </I18nextProvider>,
+    );
 
     const callForPaperLink = screen.getByRole('link', { name: 'Call for paper' });
     await expect.element(callForPaperLink).toHaveAttribute('href', '/team/t1/e1');

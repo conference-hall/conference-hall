@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
 import { AdminFlags } from '~/.server/admin/admin-flags.ts';
 import { Badge } from '~/design-system/badges.tsx';
@@ -28,15 +29,16 @@ export const action = async ({ request }: Route.ActionArgs) => {
 };
 
 export default function AdminFlagsRoute({ loaderData: flags }: Route.ComponentProps) {
+  const { t } = useTranslation();
   return (
     <Page>
-      <H1 srOnly>Feature flags</H1>
+      <H1 srOnly>{t('admin.nav.flags')}</H1>
       <List>
         <List.Header>
           <Text weight="semibold">{`${flags.length} feature flags`}</Text>
         </List.Header>
 
-        <List.Content aria-label="Feature flags list">
+        <List.Content aria-label={t('admin.flags.list')}>
           {flags.map((flag) => (
             <List.Row key={flag.key} className="flex items-start justify-between px-6 py-4 gap-2">
               <div>
@@ -64,12 +66,13 @@ export default function AdminFlagsRoute({ loaderData: flags }: Route.ComponentPr
 type FlagInputProps = { flag: { key: string; value: boolean | number | string | undefined; type: string | undefined } };
 
 function FlagInput({ flag }: FlagInputProps) {
+  const { t } = useTranslation();
   const inputType = flag.type === 'number' ? 'number' : 'text';
   return (
     <Form method="post" className="flex gap-2">
       <input type="hidden" name="key" value={flag.key} />
       <Input type={inputType} name="value" defaultValue={String(flag.value)} />
-      <Button type="submit">Save</Button>
+      <Button type="submit">{t('common.save')}</Button>
     </Form>
   );
 }

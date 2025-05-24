@@ -1,6 +1,5 @@
 import { cx } from 'class-variance-authority';
 import { type ReactNode, useId } from 'react';
-
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Text } from '~/design-system/typography.tsx';

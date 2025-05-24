@@ -35,6 +35,7 @@ export default defineConfig({
           name: 'browser',
           css: true,
           includeTaskLocation: true,
+          testTimeout: 5_000,
           include: ['./**/*.test.tsx', '!./**/*.test.ts', '!./e2e/**/*'],
           setupFiles: ['./tests/setup.browser.tsx'],
           browser: {

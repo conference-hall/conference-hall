@@ -1,7 +1,6 @@
 import { cx } from 'class-variance-authority';
-
+import { useTranslation } from 'react-i18next';
 import { BG_COLOR } from '~/design-system/colors.ts';
-
 import { useUser } from '../contexts/user-context.tsx';
 import { LoginButton } from './login-button.tsx';
 import { Logo } from './logo.tsx';
@@ -18,6 +17,7 @@ type Props = {
 };
 
 export function Navbar({ layout = 'default', variant = 'primary', className }: Props) {
+  const { t } = useTranslation();
   const user = useUser();
 
   return (
@@ -25,7 +25,7 @@ export function Navbar({ layout = 'default', variant = 'primary', className }: P
       <div className="flex h-16 items-center justify-between px-4 lg:px-8">
         <div className="flex w-full items-center">
           {/* Logo */}
-          <Logo label={layout !== 'team' ? 'Conference Hall' : undefined} variant={variant} />
+          <Logo label={layout !== 'team' ? t('app.title') : undefined} variant={variant} />
 
           {user?.hasTeamAccess && layout === 'team' ? (
             /* Teams breadcrumb */

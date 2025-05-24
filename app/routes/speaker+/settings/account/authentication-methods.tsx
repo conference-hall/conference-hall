@@ -1,6 +1,7 @@
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import * as Firebase from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSubmit } from 'react-router';
 import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -14,6 +15,7 @@ import { LinkProvider, UnlinkProvider } from './social-providers-settings..tsx';
 type Props = { email: string; authLoaded: boolean };
 
 export function AuthenticationMethods({ email, authLoaded }: Props) {
+  const { t } = useTranslation();
   const submit = useSubmit();
 
   const [error, setError] = useState<string>('');
@@ -21,8 +23,8 @@ export function AuthenticationMethods({ email, authLoaded }: Props) {
 
   useEffect(() => {
     // Get error messages from the redirect result after linking a provider
-    Firebase.getRedirectResult(getClientAuth()).catch((error) => setError(getFirebaseError(error)));
-  }, []);
+    Firebase.getRedirectResult(getClientAuth()).catch((error) => setError(getFirebaseError(error, t)));
+  }, [t]);
 
   const canUnlink = providerData.length > 1;
   const passwordProvider = providerData.find((p) => p.providerId === 'password');
@@ -36,8 +38,8 @@ export function AuthenticationMethods({ email, authLoaded }: Props) {
   return (
     <Card as="section">
       <Card.Title>
-        <H2>Authentication methods</H2>
-        <Subtitle>Connect with your email and favorite providers</Subtitle>
+        <H2>{t('settings.account.authentication-methods.heading')}</H2>
+        <Subtitle>{t('settings.account.authentication-methods.description')}</Subtitle>
       </Card.Title>
 
       <Card.Content>
@@ -48,13 +50,13 @@ export function AuthenticationMethods({ email, authLoaded }: Props) {
         ) : null}
 
         <List>
-          <List.Content aria-label="Authentication methods list">
+          <List.Content aria-label={t('settings.account.authentication-methods.list')}>
             <ProviderItem
-              label="Email & password"
+              label={t('settings.account.authentication-methods.password')}
               icon={EnvelopeIcon}
               email={
                 passwordProvider?.email && !emailVerified
-                  ? `${passwordProvider?.email} • ⚠️ Not verified`
+                  ? t('settings.account.authentication-methods.email-not-verified', { email: passwordProvider?.email })
                   : passwordProvider?.email
               }
               loading={!authLoaded}
