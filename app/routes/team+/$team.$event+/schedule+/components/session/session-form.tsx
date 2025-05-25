@@ -35,8 +35,8 @@ type Props = {
   isSearching: boolean;
   onFinish: VoidFunction;
   onToggleSearch: VoidFunction;
-  onUpdateSession: (updated: ScheduleSession) => boolean;
-  onDeleteSession: (session: ScheduleSession) => void;
+  onUpdateSession: (updated: ScheduleSession) => Promise<boolean>;
+  onDeleteSession: (session: ScheduleSession) => Promise<void>;
 };
 
 export function SessionForm({
@@ -68,9 +68,9 @@ export function SessionForm({
     if (inputRef.current) inputRef.current.focus(); // TODO: use key attribute instead ?
   }, [proposal]);
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    const success = onUpdateSession({ ...session, name, color, language, emojis, trackId, timeslot, proposal });
+    const success = await onUpdateSession({ ...session, name, color, language, emojis, trackId, timeslot, proposal });
     if (success) {
       setError(null);
       onFinish();
@@ -79,8 +79,8 @@ export function SessionForm({
     }
   };
 
-  const handleDelete = () => {
-    onDeleteSession(session);
+  const handleDelete = async () => {
+    await onDeleteSession(session);
     onFinish();
   };
 

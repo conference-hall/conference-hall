@@ -37,6 +37,7 @@ export function SessionBlock({ session, height }: SessionBlockProps) {
           <SessionSpeakers speakers={proposal?.speakers} size={size} />
         </div>
       ) : null}
+
       <div className={cx('flex shrink-0 gap-1', { 'mt-0.5': size === 'md', 'items-end': !title })}>
         <SessionTime timeslot={timeslot} size={size} />
         <SessionEmojis emojis={emojis} size={size} />

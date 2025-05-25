@@ -16,12 +16,12 @@ export type TimeSlotSelector = {
   isSelectedSlot: (trackId: string, slot: TimeSlot) => boolean;
   onSelectStart: (trackId: string, slot: TimeSlot) => VoidFunction;
   onSelectHover: (trackId: string, slot: TimeSlot) => VoidFunction;
-  onSelect: VoidFunction;
+  onSelect: () => Promise<void>;
 };
 
 export function useTimeslotSelector(
   sessions: Array<ScheduleSession>,
-  onSelectTimeslot: (trackId: string, timeslot: TimeSlot) => void,
+  onSelectTimeslot: (trackId: string, timeslot: TimeSlot) => Promise<void>,
 ): TimeSlotSelector {
   const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
 
@@ -72,10 +72,10 @@ export function useTimeslotSelector(
     setCurrentSlot(slot);
   };
 
-  const onSelect = () => {
+  const onSelect = async () => {
     if (startSlot === null || selectedTrack === null) return reset();
     const timeslot = mergeTimeslots(startSlot, currentSlot || startSlot);
-    onSelectTimeslot(selectedTrack, timeslot);
+    await onSelectTimeslot(selectedTrack, timeslot);
     reset();
   };
 

@@ -1,18 +1,12 @@
-import type { CollisionDetection, DragEndEvent } from '@dnd-kit/core';
-import {
-  DndContext,
-  PointerSensor,
-  rectIntersection,
-  useDndContext,
-  useDraggable,
-  useDroppable,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import { restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { CollisionPriority, CollisionType } from '@dnd-kit/abstract';
+import type { CollisionDetector } from '@dnd-kit/collision';
+import { RestrictToWindow } from '@dnd-kit/dom/modifiers';
+import { Point, Rectangle } from '@dnd-kit/geometry';
+import { DragDropProvider, PointerSensor, useDragDropMonitor, useDraggable, useDroppable } from '@dnd-kit/react';
 import { cx } from 'class-variance-authority';
-import { addMinutes, isAfter, isBefore } from 'date-fns';
+import { addMinutes } from 'date-fns';
 import type { ReactNode } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatDate, formatTime, toDateInput } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
@@ -42,10 +36,10 @@ type ScheduleProps = {
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
-  onAddSession: (trackId: string, timeslot: TimeSlot) => void;
-  onUpdateSession: (session: ScheduleSession) => boolean;
+  onAddSession: (trackId: string, timeslot: TimeSlot) => Promise<void>;
+  onUpdateSession: (session: ScheduleSession) => Promise<boolean>;
+  onSwitchSessions: (source: ScheduleSession, target: ScheduleSession) => Promise<void>;
   onSelectSession: (session: ScheduleSession) => void;
-  onSwitchSessions: (source: ScheduleSession, target: ScheduleSession) => void;
   zoomLevel: number;
 };
 
@@ -58,38 +52,36 @@ export default function Schedule({
   renderSession,
   onAddSession,
   onUpdateSession,
-  onSelectSession,
   onSwitchSessions,
+  onSelectSession,
   zoomLevel,
 }: ScheduleProps) {
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    const { action, session } = active.data.current || {};
-    const { type } = over?.data?.current || {};
-
-    if (action === 'resize-session' && type === 'timeslot') {
-      const { timeslot: targetTimeslot } = over?.data?.current || {};
-      const updatedSession = safeSessionResizeToTimeslot(session, targetTimeslot, sessions);
-      onUpdateSession(updatedSession);
-    } else if (action === 'move-session' && type === 'timeslot') {
-      const { trackId, timeslot: targetTimeslot } = over?.data?.current || {};
-      const updatedSession = safeSessionMoveToTimeslot(session, trackId, targetTimeslot, sessions);
-      onUpdateSession(updatedSession);
-    } else if (action === 'move-session' && type === 'session') {
-      const { session: sessionTarget } = over?.data?.current || {};
-      onSwitchSessions(session, sessionTarget);
-    }
-  };
-
-  // used to make a session clickable over dnd
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
-
   return (
-    <DndContext
-      id="dnd-schedule"
-      onDragEnd={handleDragEnd}
-      sensors={sensors}
-      collisionDetection={collisionDetection}
-      modifiers={[restrictToWindowEdges]}
+    <DragDropProvider
+      onDragEnd={async (event) => {
+        const { operation, canceled } = event;
+        const { source, target } = operation;
+
+        if (canceled || !source || !target) return;
+
+        const { action, session } = source.data || {};
+        const { type } = target.data || {};
+
+        if (action === 'resize-session' && type === 'timeslot') {
+          const { timeslot: targetTimeslot } = target.data || {};
+          const updatedSession = safeSessionResizeToTimeslot(session, targetTimeslot, sessions);
+          await onUpdateSession(updatedSession);
+        } else if (action === 'move-session' && type === 'timeslot') {
+          const { trackId, timeslot: targetTimeslot } = target.data || {};
+          const updatedSession = safeSessionMoveToTimeslot(session, trackId, targetTimeslot, sessions);
+          await onUpdateSession(updatedSession);
+        } else if (action === 'move-session' && type === 'session') {
+          const { session: sessionTarget } = target.data || {};
+          await onSwitchSessions(session, sessionTarget);
+        }
+      }}
+      sensors={[PointerSensor.configure({ activationConstraints: { distance: { value: 8 } } })]}
+      modifiers={[RestrictToWindow]}
     >
       <div className="flex divide-x-3">
         {displayedDays.map((day, index) => (
@@ -109,7 +101,7 @@ export default function Schedule({
           />
         ))}
       </div>
-    </DndContext>
+    </DragDropProvider>
   );
 }
 
@@ -121,7 +113,7 @@ type ScheduleDayProps = {
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
-  onAddSession: (trackId: string, timeslot: TimeSlot) => void;
+  onAddSession: (trackId: string, timeslot: TimeSlot) => Promise<void>;
   onSelectSession: (session: ScheduleSession) => void;
   zoomLevel: number;
   displayMultipleDays: boolean;
@@ -207,11 +199,16 @@ function ScheduleDay({
                 {tracks.map((track) => (
                   <td key={track.id} className="p-0">
                     {hourSlots.map((timeslot, index) => {
+                      const session = sessions.find(
+                        (s) => s.trackId === track.id && isTimeSlotIncluded(timeslot, s.timeslot),
+                      );
+
                       return (
-                        <Timeslot
+                        <MemoizedTimeslot
                           key={formatTime(timeslot.start, { format: 'short', locale })}
                           trackId={track.id}
                           timeslot={timeslot}
+                          session={session}
                           sessions={sessions}
                           selector={selector}
                           zoomLevel={zoomLevel}
@@ -232,9 +229,21 @@ function ScheduleDay({
   );
 }
 
+// FIXME: It improves performance a lot, but it breaks the session creation with drag and drop (selector)
+const MemoizedTimeslot = React.memo(Timeslot, (prevProps, nextProps) => {
+  return (
+    prevProps.trackId === nextProps.trackId &&
+    prevProps.timeslot.start.getTime() === nextProps.timeslot.start.getTime() &&
+    prevProps.timeslot.end.getTime() === nextProps.timeslot.end.getTime() &&
+    prevProps.session === nextProps.session &&
+    prevProps.zoomLevel === nextProps.zoomLevel
+  );
+});
+
 type TimeslotProps = {
   trackId: string;
   timeslot: TimeSlot;
+  session?: ScheduleSession;
   sessions: Array<ScheduleSession>;
   selector: TimeSlotSelector;
   zoomLevel: number;
@@ -246,6 +255,7 @@ type TimeslotProps = {
 function Timeslot({
   trackId,
   timeslot,
+  session,
   sessions,
   selector,
   zoomLevel,
@@ -256,56 +266,48 @@ function Timeslot({
   const { i18n } = useTranslation();
   const locale = i18n.language;
 
-  // global dnd context
-  const { active } = useDndContext();
-
   // selection attributes
   const isSelected = selector.isSelectedSlot(trackId, timeslot);
   const selectedSlot = selector.getSelectedSlot(trackId);
 
-  // is timeslot include a session
-  const timeslotSession = sessions.find((s) => s.trackId === trackId && isTimeSlotIncluded(timeslot, s.timeslot));
-  const hasSession = Boolean(timeslotSession);
-
-  // current dragging action
-  const { session: draggingSession, action: draggingAction } = active?.data?.current || {};
-  const isTimeslotSessionDragging = hasSession && timeslotSession?.id === draggingSession?.id;
-  const isMovingAction = draggingAction === 'move-session';
-
   // displayed session on first session timeslot
-  const session = timeslotSession && haveSameStartDate(timeslot, timeslotSession.timeslot) ? timeslotSession : null;
+  const displayedSession = session && haveSameStartDate(timeslot, session.timeslot) ? session : undefined;
 
-  // droppable to switch sessions
-  const { setNodeRef, isOver } = useDroppable({
+  // droppable timeslot
+  const droppable = useDroppable({
     id: `${trackId}-${timeslot.start.toISOString()}`,
     data: { type: 'timeslot', trackId, timeslot },
-    disabled: hasSession && isMovingAction && !isTimeslotSessionDragging,
+    accept: (source) => {
+      return !session || source.type !== 'move-session' || (session && session?.id === source.data.session?.id);
+    },
+    collisionDetector: topInsideDroppable,
   });
 
   return (
     <div
-      ref={setNodeRef}
+      ref={droppable.ref}
       role="button"
       tabIndex={0}
       aria-label={`Timeslot ${formatTime(timeslot.start, { format: 'short', locale })}`}
-      onMouseDown={!hasSession ? selector.onSelectStart(trackId, timeslot) : undefined}
-      onMouseEnter={!hasSession ? selector.onSelectHover(trackId, timeslot) : undefined}
+      onMouseDown={!session ? selector.onSelectStart(trackId, timeslot) : undefined}
+      onMouseEnter={!session ? selector.onSelectHover(trackId, timeslot) : undefined}
       onMouseUp={selector.onSelect}
       style={{ height: `${getTimeslotHeight(zoomLevel)}px` }}
       className={cx('relative', {
-        'z-10': !hasSession,
-        'bg-blue-200': isOver && isMovingAction,
-        'hover:bg-gray-50': !hasSession && !isSelected,
+        'z-10': !session,
+        'bg-blue-200': droppable.isDropTarget,
+        'hover:bg-gray-50': !session && !isSelected,
         "before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:border-t":
-          isFirstTimeslot && !isOver,
+          isFirstTimeslot && !droppable.isDropTarget,
       })}
     >
       {/* invisible span to have content for the table */}
       <span className="invisible">{`Timeslot ${formatTime(timeslot.start, { format: 'short', locale })}`}</span>
-      {session ? (
+      {displayedSession ? (
         // displayed session block
         <SessionWrapper
-          session={session}
+          key={displayedSession.id}
+          session={displayedSession}
           sessions={sessions}
           renderSession={renderSession}
           onClick={onSelectSession}
@@ -336,88 +338,75 @@ type SessionWrapperProps = {
 };
 
 function SessionWrapper({ session, sessions, renderSession, onClick, interval, zoomLevel }: SessionWrapperProps) {
-  const { active } = useDndContext();
-  const isOtherDraggingSession = active?.data?.current?.session?.id !== session.id;
-  const currentDraggingAction = active?.data?.current?.action;
+  // Compute session height
+  const intervalsCount = countIntervalsInTimeSlot(session.timeslot, interval);
+  const defaultHeight = getTimeslotHeight(zoomLevel) * intervalsCount - SESSIONS_GAP_PX;
+  const [height, setHeight] = useState(defaultHeight);
+
+  // update height on session resize
+  useDragDropMonitor({
+    onDragMove: ({ operation }) => {
+      if (!operation.target || !operation.source) return;
+      if (operation.source.type !== 'resize-session') return;
+      if (operation.source.data?.session?.id !== session.id) return;
+
+      const { timeslot: targetSlot } = operation.target.data;
+      const resizedSession = safeSessionResizeToTimeslot(session, targetSlot, sessions);
+      const intervalsCount = countIntervalsInTimeSlot(resizedSession.timeslot, interval);
+      setHeight(getTimeslotHeight(zoomLevel) * intervalsCount - SESSIONS_GAP_PX);
+    },
+  });
 
   // draggable to move session
   const movable = useDraggable({
     id: `move:${session.id}`,
+    type: 'move-session',
     data: { session, action: 'move-session' },
-    disabled: isOtherDraggingSession && currentDraggingAction === 'resize-session',
   });
 
   // draggable to resize session
   const resizable = useDraggable({
     id: `resize:${session.id}`,
+    type: 'resize-session',
     data: { session, action: 'resize-session' },
-    disabled: isOtherDraggingSession && currentDraggingAction === 'move-session',
   });
 
   // droppable to switch sessions
-  const { setNodeRef: setDropRef, isOver } = useDroppable({
+  const droppable = useDroppable({
     id: `drop:${session.id}`,
     data: { type: 'session', session },
-    disabled: movable.isDragging || resizable.isDragging || currentDraggingAction === 'resize-session',
+    disabled: movable.isDragging || resizable.isDragging,
+    accept: ['move-session'],
+    collisionDetector: topInsideDroppable,
   });
-
-  // update displayed times on session when dragging
-  if (movable.isDragging && movable.over?.data?.current?.type === 'timeslot') {
-    const { timeslot } = movable.over.data.current || {};
-    const newTimeslot = moveTimeSlotStart(session.timeslot, timeslot.start);
-    session = { ...session, timeslot: newTimeslot };
-  }
-
-  // update displayed times on session resize
-  if (resizable.isDragging && resizable.over?.data?.current?.type === 'timeslot') {
-    const { timeslot: targetSlot } = resizable.over.data.current;
-    session = safeSessionResizeToTimeslot(session, targetSlot, sessions);
-  }
-
-  // compute session height
-  const intervalsCount = countIntervalsInTimeSlot(session.timeslot, interval);
-  const height = getTimeslotHeight(zoomLevel) * intervalsCount - SESSIONS_GAP_PX;
 
   return (
     <>
       {/* session position & handler */}
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
       <div
-        ref={movable.setNodeRef}
+        ref={movable.ref}
         className={cx('absolute z-20 overflow-hidden text-left', {
-          'ring-1 ring-blue-600 rounded-md': isOver,
+          'ring-1 ring-blue-600 rounded-md': droppable.isDropTarget,
           'shadow-lg': movable.isDragging,
-          'cursor-pointer': !currentDraggingAction,
-          'cursor-grabbing': movable.isDragging && currentDraggingAction === 'move-session',
-          'cursor-ns-resize': resizable.isDragging && currentDraggingAction === 'resize-session',
+          'cursor-pointer': !movable.isDragging && !resizable.isDragging,
+          'cursor-grabbing': movable.isDragging && !resizable.isDragging,
+          'cursor-ns-resize': !movable.isDragging && resizable.isDragging,
         })}
         onClick={() => (onClick ? onClick(session) : undefined)}
-        style={{
-          top: '0px',
-          left: '1px',
-          right: '1px',
-          transform: movable.transform
-            ? `translate3d(${movable.transform.x}px, ${movable.transform.y}px, 0)`
-            : undefined,
-          zIndex: movable.isDragging ? '40' : undefined,
-        }}
-        {...movable.listeners}
-        {...movable.attributes}
+        style={{ top: '0px', left: '1px', right: '1px', zIndex: movable.isDragging ? '40' : undefined }}
       >
-        <div ref={setDropRef} style={{ height: `${height}px` }}>
+        <div ref={droppable.ref} style={{ height: `${height}px` }}>
           {renderSession(session, height)}
         </div>
       </div>
 
       {/* resize handler */}
-      {currentDraggingAction !== 'move-session' ? (
-        <div
-          ref={resizable.setNodeRef}
-          style={{ top: `${height}px` }}
-          className="absolute -bottom-1 h-1 w-full cursor-ns-resize z-40"
-          {...resizable.listeners}
-          {...resizable.attributes}
-        />
-      ) : null}
+      <div
+        ref={resizable.ref}
+        style={{ top: `${height}px` }}
+        className="absolute -bottom-1 h-1 w-full cursor-ns-resize z-40"
+      />
     </>
   );
 }
@@ -429,18 +418,6 @@ function getTimeslotHeight(zoomLevel: number) {
   }
   return TIMESLOT_HEIGHTS[0];
 }
-
-// Check for collisions prioritizing the top of droppable elements
-const collisionDetection: CollisionDetection = (args) => {
-  const { droppableContainers, collisionRect } = args;
-
-  const prioritizedCollisions = droppableContainers.filter(({ rect }) => {
-    if (!rect.current) return false;
-    return collisionRect.top >= rect.current.top && collisionRect.top <= rect.current.bottom;
-  });
-
-  return rectIntersection({ ...args, droppableContainers: prioritizedCollisions });
-};
 
 // Return a valid resized session according given target timeslot
 function safeSessionResizeToTimeslot(
@@ -457,9 +434,10 @@ function safeSessionResizeToTimeslot(
 
   const sessionAfter = trackSessions.filter((s) => isAfterTimeSlot(s.timeslot, session.timeslot)).at(0);
   let { start, end } = session.timeslot;
-  if (sessionAfter && isAfter(targetTimeslot.end, sessionAfter.timeslot.start)) {
+
+  if (sessionAfter && targetTimeslot.end > sessionAfter.timeslot.start) {
     end = sessionAfter.timeslot.start; // end cannot be after the next session
-  } else if (isBefore(targetTimeslot.end, start)) {
+  } else if (targetTimeslot.end <= start) {
     end = addMinutes(start, SLOT_INTERVAL); // end cannot be before the start
   } else {
     end = targetTimeslot.end;
@@ -484,8 +462,46 @@ function safeSessionMoveToTimeslot(
   let { start, end } = moveTimeSlotStart(session.timeslot, targetTimeslot.start);
   const sessionAfter = trackSessions.filter((s) => isAfterTimeSlot(s.timeslot, { start, end })).at(0);
 
-  if (sessionAfter && isAfter(end, sessionAfter.timeslot.start)) {
+  if (sessionAfter && end > sessionAfter.timeslot.start) {
     end = sessionAfter.timeslot.start; // end cannot be after the next session
   }
   return { ...session, trackId: targetTrackId, timeslot: { start, end } };
 }
+
+export const topInsideDroppable: CollisionDetector = (input) => {
+  const { dragOperation, droppable } = input;
+  const { shape } = dragOperation;
+
+  if (!droppable.shape || !shape) {
+    return null;
+  }
+
+  const draggableRect = Rectangle.from(shape.current.boundingRectangle);
+  const droppableRect = Rectangle.from(droppable.shape.boundingRectangle);
+
+  const topCenter = {
+    x: (draggableRect.left + draggableRect.right) / 2,
+    y: draggableRect.top,
+  };
+
+  const isTopInside =
+    topCenter.x >= droppableRect.left &&
+    topCenter.x <= droppableRect.right &&
+    topCenter.y >= droppableRect.top &&
+    topCenter.y <= droppableRect.bottom;
+
+  const value = isTopInside
+    ? 1
+    : 1 /
+      Point.distance(topCenter, {
+        x: (droppableRect.left + droppableRect.right) / 2,
+        y: droppableRect.top,
+      });
+
+  return {
+    id: droppable.id,
+    value,
+    type: CollisionType.Collision,
+    priority: CollisionPriority.Normal,
+  };
+};

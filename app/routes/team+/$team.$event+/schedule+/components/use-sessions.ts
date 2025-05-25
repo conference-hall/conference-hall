@@ -11,12 +11,12 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
 
   const submit = useSubmit();
 
-  const onAdd = (trackId: string, timeslot: TimeSlot) => {
+  const onAdd = async (trackId: string, timeslot: TimeSlot) => {
     const conflicting = sessions.some((s) => s.trackId === trackId && areTimeSlotsOverlapping(timeslot, s.timeslot));
     if (conflicting) return;
 
     const id = uuid();
-    submit(
+    await submit(
       {
         intent: 'add-session',
         id,
@@ -34,7 +34,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     );
   };
 
-  const update = (session: ScheduleSession) => {
+  const update = async (session: ScheduleSession) => {
     const formData = new FormData();
     formData.set('intent', 'update-session');
     formData.set('id', session.id);
@@ -49,7 +49,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
       formData.append('emojis', emoji);
     }
 
-    submit(formData, {
+    await submit(formData, {
       method: 'POST',
       navigate: false,
       fetcherKey: `session:${session.id}`,
@@ -58,7 +58,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     });
   };
 
-  const onUpdate = (updatedSession: ScheduleSession) => {
+  const onUpdate = async (updatedSession: ScheduleSession) => {
     const conflicting = sessions.some(
       (s) =>
         s.id !== updatedSession.id &&
@@ -67,26 +67,19 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     );
     if (conflicting) return false;
 
-    update(updatedSession);
+    await update(updatedSession);
     return true;
   };
 
-  const onSwitch = (source: ScheduleSession, target: ScheduleSession) => {
-    update({ ...source, trackId: target.trackId, timeslot: target.timeslot });
-    update({ ...target, trackId: source.trackId, timeslot: source.timeslot });
+  const onSwitch = async (source: ScheduleSession, target: ScheduleSession) => {
+    await update({ ...source, trackId: target.trackId, timeslot: target.timeslot });
+    await update({ ...target, trackId: source.trackId, timeslot: source.timeslot });
   };
 
-  const onDelete = (session: ScheduleSession) => {
-    submit(
-      {
-        intent: 'delete-session',
-        id: session.id,
-      },
-      {
-        method: 'POST',
-        navigate: false,
-        preventScrollReset: true,
-      },
+  const onDelete = async (session: ScheduleSession) => {
+    await submit(
+      { intent: 'delete-session', id: session.id },
+      { method: 'POST', navigate: false, preventScrollReset: true },
     );
   };
 
@@ -134,7 +127,7 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
       trackId: String(fetcher.formData?.get('trackId')),
       color: String(fetcher.formData?.get('color') ?? 'gray'),
       name: String(fetcher.formData?.get('name') ?? ''),
-      language: String(fetcher.formData?.get('language') ?? null) as Language | null,
+      language: String(fetcher.formData?.get('language') ?? '') as Language | null,
       emojis: fetcher.formData?.getAll('emojis') as string[],
       timeslot: {
         start: utcToTimezone(String(fetcher.formData?.get('start')), timezone),

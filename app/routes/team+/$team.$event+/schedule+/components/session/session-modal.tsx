@@ -12,8 +12,8 @@ type SessionModalProps = {
   displayedTimes: { start: number; end: number };
   tracks: Array<Track>;
   onClose: VoidFunction;
-  onUpdateSession: (updated: ScheduleSession) => boolean;
-  onDeleteSession: (session: ScheduleSession) => void;
+  onUpdateSession: (updated: ScheduleSession) => Promise<boolean>;
+  onDeleteSession: (session: ScheduleSession) => Promise<void>;
 };
 
 export function SessionModal({
