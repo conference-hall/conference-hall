@@ -9,6 +9,7 @@ import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 type SessionBlockProps = { session: ScheduleSession; height: number };
+
 export function SessionBlock({ session, height }: SessionBlockProps) {
   const { timeslot, proposal, language, emojis } = session;
 
@@ -48,6 +49,7 @@ export function SessionBlock({ session, height }: SessionBlockProps) {
 }
 
 type SessionSpeakersProps = { speakers?: Array<{ name: string | null; picture: string | null }>; size: Size };
+
 function SessionSpeakers({ speakers, size }: SessionSpeakersProps) {
   if (!speakers) return null;
   const firstSpeaker = speakers.at(0);
@@ -59,6 +61,7 @@ function SessionSpeakers({ speakers, size }: SessionSpeakersProps) {
 }
 
 type SessionTimeProps = { timeslot: TimeSlot; size: Size };
+
 function SessionTime({ timeslot, size }: SessionTimeProps) {
   const { i18n } = useTranslation();
   const locale = i18n.language;
@@ -81,6 +84,7 @@ function SessionTime({ timeslot, size }: SessionTimeProps) {
 }
 
 type SessionEmojisProps = { emojis: Array<string>; size: Size };
+
 function SessionEmojis({ emojis, size }: SessionEmojisProps) {
   return emojis?.map((code) => {
     const emoji = SESSION_EMOJIS.find((e) => e.code === code);
@@ -99,6 +103,7 @@ function SessionEmojis({ emojis, size }: SessionEmojisProps) {
 }
 
 type SessionLanguageProps = { language: Language | null; size: Size };
+
 function SessionLanguage({ language, size }: SessionLanguageProps) {
   const { t } = useTranslation();
   if (!language) return null;

@@ -58,10 +58,15 @@ export const haveSameStartDate = (slot1: TimeSlot, slot2: TimeSlot): boolean => 
 
 export const isTimeSlotIncluded = (slot: TimeSlot, inSlot?: TimeSlot): boolean => {
   if (!inSlot) return false;
-  return (
-    (isAfter(slot.start, inSlot.start) || isEqual(slot.start, inSlot.start)) &&
-    (isBefore(slot.end, inSlot.end) || isEqual(slot.end, inSlot.end))
-  );
+  return slot.start >= inSlot.start && slot.end <= inSlot.end;
+};
+
+// FIXME: improve and test it
+export const isNextTimeslotInWindow = (startSlot: TimeSlot, nextSlot: TimeSlot, intervalMinutes: number): boolean => {
+  const windowStart = startSlot.start;
+  const windowEnd = addMinutes(startSlot.end, intervalMinutes * 20);
+  const window = { start: windowStart, end: windowEnd };
+  return isTimeSlotIncluded(nextSlot, window);
 };
 
 export const areTimeSlotsOverlapping = (slot1: TimeSlot, slot2: TimeSlot): boolean => {

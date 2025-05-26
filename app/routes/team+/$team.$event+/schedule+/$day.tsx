@@ -139,7 +139,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
           tracks={schedule.tracks}
           sessions={sessions.data}
           zoomLevel={zoomHandlers.level}
-          onSelectSession={setOpenSession}
+          onClickSession={setOpenSession}
           onAddSession={sessions.add}
           onUpdateSession={sessions.update}
           onSwitchSessions={sessions.switch}
