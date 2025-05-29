@@ -1,4 +1,4 @@
-import { addMinutes, differenceInMinutes, endOfDay, isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
+import { addMinutes, differenceInMinutes, endOfDay, startOfDay } from 'date-fns';
 
 export type TimeSlot = { start: Date; end: Date };
 
@@ -12,15 +12,9 @@ export const getDailyTimeSlots = (
 
   const result = timeSlots.filter((slot) => {
     if (includeEndSlot) {
-      return (
-        (isAfter(slot.start, start) || isEqual(slot.start, start)) &&
-        (isBefore(slot.start, end) || isEqual(slot.start, end))
-      );
+      return slot.start >= start && slot.start <= end;
     } else {
-      return (
-        (isAfter(slot.start, start) || isEqual(slot.start, start)) &&
-        (isBefore(slot.end, end) || isEqual(slot.end, end))
-      );
+      return slot.start >= start && slot.end <= end;
     }
   });
 
@@ -35,9 +29,9 @@ const generateDailyTimeSlots = (day: Date, intervalMinutes: number): Array<TimeS
 
   let currentStart = start;
 
-  while (isBefore(currentStart, end) || isEqual(currentStart, end)) {
+  while (currentStart <= end) {
     const currentEnd = addMinutes(currentStart, intervalMinutes);
-    if (isAfter(currentEnd, end)) {
+    if (currentEnd > end) {
       timeSlots.push({ start: currentStart, end });
       break;
     }
@@ -49,28 +43,32 @@ const generateDailyTimeSlots = (day: Date, intervalMinutes: number): Array<TimeS
 };
 
 export const isAfterTimeSlot = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
-  return isAfter(slot1.start, slot2.start);
+  return slot1.start > slot2.start;
 };
 
 export const haveSameStartDate = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
-  return isEqual(slot1.start, slot2.start);
+  return slot1.start.getTime() === slot2.start.getTime();
 };
 
 export const isTimeSlotIncluded = (slot: TimeSlot, inSlot?: TimeSlot): boolean => {
   if (!inSlot) return false;
-  return (
-    (isAfter(slot.start, inSlot.start) || isEqual(slot.start, inSlot.start)) &&
-    (isBefore(slot.end, inSlot.end) || isEqual(slot.end, inSlot.end))
-  );
+  return slot.start >= inSlot.start && slot.end <= inSlot.end;
+};
+
+export const isNextTimeslotInWindow = (
+  startSlot: TimeSlot,
+  nextSlot: TimeSlot,
+  intervalMinutes: number,
+  windowSize = 20,
+): boolean => {
+  const windowStart = startSlot.start;
+  const windowEnd = addMinutes(startSlot.end, intervalMinutes * windowSize);
+  const window = { start: windowStart, end: windowEnd };
+  return isTimeSlotIncluded(nextSlot, window);
 };
 
 export const areTimeSlotsOverlapping = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
-  return !(
-    isBefore(slot1.end, slot2.start) ||
-    isEqual(slot1.end, slot2.start) ||
-    isAfter(slot1.start, slot2.end) ||
-    isEqual(slot1.start, slot2.end)
-  );
+  return !(slot1.end <= slot2.start || slot1.start >= slot2.end);
 };
 
 export const countIntervalsInTimeSlot = (slot: TimeSlot, intervalMinutes: number): number => {

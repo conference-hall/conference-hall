@@ -4,6 +4,7 @@ import {
   getDailyTimeSlots,
   haveSameStartDate,
   isAfterTimeSlot,
+  isNextTimeslotInWindow,
   isTimeSlotIncluded,
   mergeTimeslots,
   moveTimeSlotStart,
@@ -208,110 +209,176 @@ describe('timeslots', () => {
     });
   });
 
-  describe('#areTimeSlotsOverlapping', () => {
-    it('returns true a timeslot is included in another one', async () => {
-      const timeslot = {
+  describe('#isNextTimeslotInWindow', () => {
+    it('returns true when next timeslot is within window', async () => {
+      const startSlot = {
         start: new Date('2020-02-26T10:00:00.000Z'),
         end: new Date('2020-02-26T10:30:00.000Z'),
       };
 
-      const inSlot = {
-        start: new Date('2020-02-26T09:00:00.000Z'),
+      const nextSlot = {
+        start: new Date('2020-02-26T11:00:00.000Z'),
         end: new Date('2020-02-26T11:30:00.000Z'),
       };
 
-      const result = areTimeSlotsOverlapping(timeslot, inSlot);
+      const result = isNextTimeslotInWindow(startSlot, nextSlot, 30);
 
       expect(result).toBe(true);
     });
 
-    it('returns true if timeslots are partially overlapped', async () => {
-      const timeslot1 = {
+    it('returns false when next timeslot is outside window', async () => {
+      const startSlot = {
         start: new Date('2020-02-26T10:00:00.000Z'),
         end: new Date('2020-02-26T10:30:00.000Z'),
       };
 
-      const timeslot2 = {
-        start: new Date('2020-02-26T10:15:00.000Z'),
-        end: new Date('2020-02-26T11:30:00.000Z'),
+      const nextSlot = {
+        start: new Date('2020-02-26T22:00:00.000Z'),
+        end: new Date('2020-02-26T22:30:00.000Z'),
       };
 
-      const result = areTimeSlotsOverlapping(timeslot1, timeslot2);
-
-      expect(result).toBe(true);
-    });
-
-    it('returns false if timeslots are not overlapped', async () => {
-      const timeslot1 = {
-        start: new Date('2020-02-26T10:00:00.000Z'),
-        end: new Date('2020-02-26T10:30:00.000Z'),
-      };
-
-      const timeslot2 = {
-        start: new Date('2020-02-26T11:15:00.000Z'),
-        end: new Date('2020-02-26T11:30:00.000Z'),
-      };
-
-      const result = areTimeSlotsOverlapping(timeslot1, timeslot2);
+      const result = isNextTimeslotInWindow(startSlot, nextSlot, 30);
 
       expect(result).toBe(false);
     });
-  });
 
-  describe('#countIntervalsInTimeSlot', () => {
-    it('returns the number of intervals in a timeslot', async () => {
-      const timeslot = {
+    it('works with custom window size', async () => {
+      const startSlot = {
         start: new Date('2020-02-26T10:00:00.000Z'),
         end: new Date('2020-02-26T10:30:00.000Z'),
       };
 
-      const result = countIntervalsInTimeSlot(timeslot, 5);
-
-      expect(result).toBe(6);
-    });
-  });
-
-  describe('#moveTimeSlotStart', () => {
-    it('changes timeslot start keeping its duration', async () => {
-      const timeslot = {
-        start: new Date('2020-02-26T10:00:00.000Z'),
-        end: new Date('2020-02-26T10:30:00.000Z'),
-      };
-
-      const result = moveTimeSlotStart(timeslot, new Date('2020-02-26T11:00:00.000Z'));
-
-      expect(result).toEqual({
+      const nextSlot = {
         start: new Date('2020-02-26T11:00:00.000Z'),
         end: new Date('2020-02-26T11:30:00.000Z'),
-      });
-    });
-  });
+      };
 
-  describe('#mergeTimeslots', () => {
-    it('merges two timeslots', async () => {
-      const timeslot1 = {
+      const result = isNextTimeslotInWindow(startSlot, nextSlot, 30, 1);
+
+      expect(result).toBe(false);
+    });
+
+    it('returns true when next timeslot is exactly at window boundary', async () => {
+      const startSlot = {
         start: new Date('2020-02-26T10:00:00.000Z'),
         end: new Date('2020-02-26T10:30:00.000Z'),
       };
 
-      const timeslot2 = {
-        start: new Date('2020-02-26T10:15:00.000Z'),
-        end: new Date('2020-02-26T11:30:00.000Z'),
+      const nextSlot = {
+        start: new Date('2020-02-26T10:30:00.000Z'),
+        end: new Date('2020-02-26T11:00:00.000Z'),
       };
 
-      const result1 = mergeTimeslots(timeslot1, timeslot2);
+      const result = isNextTimeslotInWindow(startSlot, nextSlot, 30, 2);
 
-      expect(result1).toEqual({
-        start: new Date('2020-02-26T10:00:00.000Z'),
-        end: new Date('2020-02-26T11:30:00.000Z'),
-      });
+      expect(result).toBe(true);
+    });
+  });
+});
 
-      const result2 = mergeTimeslots(timeslot2, timeslot1);
+describe('#areTimeSlotsOverlapping', () => {
+  it('returns true a timeslot is included in another one', async () => {
+    const timeslot = {
+      start: new Date('2020-02-26T10:00:00.000Z'),
+      end: new Date('2020-02-26T10:30:00.000Z'),
+    };
 
-      expect(result2).toEqual({
-        start: new Date('2020-02-26T10:00:00.000Z'),
-        end: new Date('2020-02-26T11:30:00.000Z'),
-      });
+    const inSlot = {
+      start: new Date('2020-02-26T09:00:00.000Z'),
+      end: new Date('2020-02-26T11:30:00.000Z'),
+    };
+
+    const result = areTimeSlotsOverlapping(timeslot, inSlot);
+
+    expect(result).toBe(true);
+  });
+
+  it('returns true if timeslots are partially overlapped', async () => {
+    const timeslot1 = {
+      start: new Date('2020-02-26T10:00:00.000Z'),
+      end: new Date('2020-02-26T10:30:00.000Z'),
+    };
+
+    const timeslot2 = {
+      start: new Date('2020-02-26T10:15:00.000Z'),
+      end: new Date('2020-02-26T11:30:00.000Z'),
+    };
+
+    const result = areTimeSlotsOverlapping(timeslot1, timeslot2);
+
+    expect(result).toBe(true);
+  });
+
+  it('returns false if timeslots are not overlapped', async () => {
+    const timeslot1 = {
+      start: new Date('2020-02-26T10:00:00.000Z'),
+      end: new Date('2020-02-26T10:30:00.000Z'),
+    };
+
+    const timeslot2 = {
+      start: new Date('2020-02-26T11:15:00.000Z'),
+      end: new Date('2020-02-26T11:30:00.000Z'),
+    };
+
+    const result = areTimeSlotsOverlapping(timeslot1, timeslot2);
+
+    expect(result).toBe(false);
+  });
+});
+
+describe('#countIntervalsInTimeSlot', () => {
+  it('returns the number of intervals in a timeslot', async () => {
+    const timeslot = {
+      start: new Date('2020-02-26T10:00:00.000Z'),
+      end: new Date('2020-02-26T10:30:00.000Z'),
+    };
+
+    const result = countIntervalsInTimeSlot(timeslot, 5);
+
+    expect(result).toBe(6);
+  });
+});
+
+describe('#moveTimeSlotStart', () => {
+  it('changes timeslot start keeping its duration', async () => {
+    const timeslot = {
+      start: new Date('2020-02-26T10:00:00.000Z'),
+      end: new Date('2020-02-26T10:30:00.000Z'),
+    };
+
+    const result = moveTimeSlotStart(timeslot, new Date('2020-02-26T11:00:00.000Z'));
+
+    expect(result).toEqual({
+      start: new Date('2020-02-26T11:00:00.000Z'),
+      end: new Date('2020-02-26T11:30:00.000Z'),
+    });
+  });
+});
+
+describe('#mergeTimeslots', () => {
+  it('merges two timeslots', async () => {
+    const timeslot1 = {
+      start: new Date('2020-02-26T10:00:00.000Z'),
+      end: new Date('2020-02-26T10:30:00.000Z'),
+    };
+
+    const timeslot2 = {
+      start: new Date('2020-02-26T10:15:00.000Z'),
+      end: new Date('2020-02-26T11:30:00.000Z'),
+    };
+
+    const result1 = mergeTimeslots(timeslot1, timeslot2);
+
+    expect(result1).toEqual({
+      start: new Date('2020-02-26T10:00:00.000Z'),
+      end: new Date('2020-02-26T11:30:00.000Z'),
+    });
+
+    const result2 = mergeTimeslots(timeslot2, timeslot1);
+
+    expect(result2).toEqual({
+      start: new Date('2020-02-26T10:00:00.000Z'),
+      end: new Date('2020-02-26T11:30:00.000Z'),
     });
   });
 });
