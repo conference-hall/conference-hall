@@ -1,7 +1,4 @@
-import { CollisionPriority, CollisionType } from '@dnd-kit/abstract';
-import type { CollisionDetector } from '@dnd-kit/collision';
 import { RestrictToWindow } from '@dnd-kit/dom/modifiers';
-import { Point, Rectangle } from '@dnd-kit/geometry';
 import { DragDropProvider, PointerSensor, useDragDropMonitor, useDraggable, useDroppable } from '@dnd-kit/react';
 import { cx } from 'class-variance-authority';
 import { addMinutes } from 'date-fns';
@@ -11,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { formatDate, formatTime, toDateInput } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import {
-  countIntervalsInTimeSlot,
   getDailyTimeSlots,
   haveSameStartDate,
   isAfterTimeSlot,
@@ -20,12 +16,10 @@ import {
   moveTimeSlotStart,
 } from '~/libs/datetimes/timeslots.ts';
 import { getGMTOffset } from '~/libs/datetimes/timezone.ts';
+import { deepEqual } from '~/libs/utils/deep-equal.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
-
-const HOUR_INTERVAL = 60; // minutes
-const SLOT_INTERVAL = 5; // minutes
-const TIMESLOT_HEIGHTS = [4, 8, 16, 20, 24]; // px
-const SESSIONS_GAP_PX = 1;
+import { HOUR_INTERVAL, SLOT_INTERVAL } from './config.ts';
+import { getSessionHeight, getTimeslotHeight, topInsideDroppable } from './helpers.ts';
 
 type ScheduleProps = {
   displayedDays: Array<Date>;
@@ -38,7 +32,6 @@ type ScheduleProps = {
   onAddSession: (trackId: string, timeslot: TimeSlot) => Promise<void>;
   onUpdateSession: (session: ScheduleSession) => Promise<boolean>;
   onSwitchSessions: (source: ScheduleSession, target: ScheduleSession) => Promise<void>;
-  onClickSession: (session: ScheduleSession) => void;
   zoomLevel: number;
 };
 
@@ -52,37 +45,35 @@ export default function Schedule({
   onAddSession,
   onUpdateSession,
   onSwitchSessions,
-  onClickSession,
   zoomLevel,
 }: ScheduleProps) {
   return (
     <DragDropProvider
+      sensors={[PointerSensor]}
+      modifiers={[RestrictToWindow]}
       onDragEnd={async (event) => {
         const { operation, canceled } = event;
         const { source, target } = operation;
 
         if (canceled || !source || !target) return;
 
-        const { action, session } = source.data || {};
-        const { type } = target.data || {};
+        const { session } = source.data || {};
 
-        if (action === 'resize-session' && type === 'timeslot') {
+        if (source.type === 'resize-session' && target.type === 'timeslot-drop') {
           const { timeslot: targetTimeslot } = target.data || {};
           const updatedSession = safeSessionResizeToTimeslot(session, targetTimeslot, sessions);
           await onUpdateSession(updatedSession);
-        } else if (action === 'move-session' && type === 'timeslot') {
+        } else if (source.type === 'move-session' && target.type === 'timeslot-drop') {
           const { trackId, timeslot: targetTimeslot } = target.data || {};
           const updatedSession = safeSessionMoveToTimeslot(session, trackId, targetTimeslot, sessions);
           await onUpdateSession(updatedSession);
-        } else if (action === 'move-session' && type === 'session') {
+        } else if (source.type === 'move-session' && target.type === 'session-drop') {
           const { session: sessionTarget } = target.data || {};
           await onSwitchSessions(session, sessionTarget);
         }
       }}
-      sensors={[PointerSensor.configure({ activationConstraints: { distance: { value: 8 } } })]}
-      modifiers={[RestrictToWindow]}
     >
-      <div className="flex divide-x-3">
+      <div className="flex max-w-full divide-x-3">
         {displayedDays.map((day, index) => (
           <ScheduleDay
             key={toDateInput(day)}
@@ -94,7 +85,6 @@ export default function Schedule({
             sessions={sessions}
             renderSession={renderSession}
             onAddSession={onAddSession}
-            onClickSession={onClickSession}
             zoomLevel={zoomLevel}
             displayMultipleDays={displayedDays.length > 1}
           />
@@ -112,7 +102,6 @@ type ScheduleDayProps = {
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
-  onClickSession: (session: ScheduleSession) => void;
   onAddSession: (trackId: string, timeslot: TimeSlot) => Promise<void>;
   zoomLevel: number;
   displayMultipleDays: boolean;
@@ -126,7 +115,6 @@ function ScheduleDay({
   tracks,
   sessions,
   renderSession,
-  onClickSession,
   onAddSession,
   zoomLevel,
   displayMultipleDays,
@@ -147,12 +135,15 @@ function ScheduleDay({
 
   return (
     <div className={cx('w-full bg-white', { 'select-none': newSession !== null })}>
-      <table className="min-w-full border-separate border-spacing-0">
+      <table className="w-full table-fixed border-separate border-spacing-0">
         {/* header */}
         <thead className="sticky top-[64px] bg-white z-30 shadow-sm">
           {displayMultipleDays && (
             <tr className="h-8">
-              <th className="border-b text-sm font-semibold" colSpan={tracks.length + 1}>
+              {/* gutter */}
+              {dayIndex === 0 && <th className="w-12 border-b" />}
+              {/* day */}
+              <th className="border-b text-sm font-semibold" colSpan={tracks.length}>
                 {formatDate(day, { format: 'long', locale })}
               </th>
             </tr>
@@ -166,8 +157,10 @@ function ScheduleDay({
             )}
             {/* tracks header */}
             {tracks.map((track) => (
-              <th key={track.id} className="text-sm font-semibold text-gray-900 truncate">
-                {track.name}
+              <th key={track.id} className="px-2 text-sm font-semibold text-gray-900">
+                <div className="truncate" title={track.name}>
+                  {track.name}
+                </div>
               </th>
             ))}
           </tr>
@@ -209,9 +202,6 @@ function ScheduleDay({
                         (s) => s.trackId === track.id && isTimeSlotIncluded(timeslot, s.timeslot),
                       );
 
-                      if (session && haveSameStartDate(timeslot, session.timeslot)) {
-                        console.log(sessions.map((s) => s.timeslot.end));
-                      }
                       // Check if the timeslot is allowed for a new session
                       const canCreateSession =
                         !session &&
@@ -229,7 +219,6 @@ function ScheduleDay({
                           newSession={canCreateSession ? newSession : undefined}
                           onCreateNewSession={canCreateSession ? handleNewSession : undefined}
                           onChangeNewSession={setNewSession}
-                          onClickSession={onClickSession}
                           renderSession={renderSession}
                         />
                       );
@@ -265,7 +254,6 @@ type TimeslotProps = {
   newSession?: ScheduleSession | null;
   onChangeNewSession?: (session: ScheduleSession | null) => void;
   onCreateNewSession?: () => void;
-  onClickSession: (session: ScheduleSession) => void;
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
 };
 
@@ -278,7 +266,6 @@ function Timeslot({
   newSession,
   onChangeNewSession,
   onCreateNewSession,
-  onClickSession,
   renderSession,
 }: TimeslotProps) {
   const { i18n } = useTranslation();
@@ -290,7 +277,8 @@ function Timeslot({
   // droppable timeslot
   const droppable = useDroppable({
     id: `${trackId}-${timeslot.start.toISOString()}`,
-    data: { type: 'timeslot', trackId, timeslot, currentSessionId: session?.id },
+    type: 'timeslot-drop',
+    data: { trackId, timeslot, currentSessionId: session?.id },
     accept: (source) => {
       return !session || source.type !== 'move-session' || (session && session?.id === source.data.session?.id);
     },
@@ -336,7 +324,6 @@ function Timeslot({
           key={`${displayedSession.id}-${displayedSession.timeslot.start.toISOString()}-${displayedSession.timeslot.end.toISOString()}-${zoomLevel}`}
           session={displayedSession}
           renderSession={renderSession}
-          onClick={onClickSession}
           interval={SLOT_INTERVAL}
           zoomLevel={zoomLevel}
         />
@@ -357,16 +344,13 @@ function Timeslot({
 type SessionWrapperProps = {
   session: ScheduleSession;
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
-  onClick?: (session: ScheduleSession) => void;
   interval: number;
   zoomLevel: number;
 };
 
-function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }: SessionWrapperProps) {
+function SessionWrapper({ session, renderSession, interval, zoomLevel }: SessionWrapperProps) {
   // Compute session height
-  // FIXME: factorize and improve it
-  const intervalsCount = countIntervalsInTimeSlot(session.timeslot, interval);
-  const defaultHeight = getTimeslotHeight(zoomLevel) * intervalsCount - SESSIONS_GAP_PX;
+  const defaultHeight = getSessionHeight(session, interval, zoomLevel);
   const [height, setHeight] = useState(defaultHeight);
 
   // update height on session resize
@@ -378,30 +362,23 @@ function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }
 
       const { timeslot, currentSessionId } = operation.target.data;
       if (currentSessionId && currentSessionId !== session.id) return;
+
       const newTimeslot = { start: session.timeslot.start, end: timeslot.end };
-      const intervalsCount = countIntervalsInTimeSlot(newTimeslot, interval);
-      setHeight(getTimeslotHeight(zoomLevel) * intervalsCount - SESSIONS_GAP_PX);
+      setHeight(getSessionHeight({ ...session, timeslot: newTimeslot }, interval, zoomLevel));
     },
   });
 
   // draggable to move session
-  const movable = useDraggable({
-    id: `move:${session.id}`,
-    type: 'move-session',
-    data: { session, action: 'move-session' },
-  });
+  const movable = useDraggable({ id: `move:${session.id}`, type: 'move-session', data: { session } });
 
   // draggable to resize session
-  const resizable = useDraggable({
-    id: `resize:${session.id}`,
-    type: 'resize-session',
-    data: { session, action: 'resize-session' },
-  });
+  const resizable = useDraggable({ id: `resize:${session.id}`, type: 'resize-session', data: { session } });
 
   // droppable to switch sessions
   const droppable = useDroppable({
     id: `drop:${session.id}`,
-    data: { type: 'session', session },
+    type: 'session-drop',
+    data: { session },
     disabled: movable.isDragging || resizable.isDragging,
     accept: ['move-session'],
     collisionDetector: topInsideDroppable,
@@ -410,17 +387,12 @@ function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }
   return (
     <>
       {/* session position & handler */}
-      {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
       <div
         ref={movable.ref}
-        className={cx('absolute z-20 overflow-hidden text-left', {
+        className={cx('absolute z-20 overflow-hidden', {
           'ring-1 ring-blue-600 rounded-md': droppable.isDropTarget,
           'shadow-lg': movable.isDragging,
-          'cursor-pointer': !movable.isDragging && !resizable.isDragging,
-          'cursor-grabbing': movable.isDragging && !resizable.isDragging,
-          'cursor-ns-resize': !movable.isDragging && resizable.isDragging,
         })}
-        onClick={() => (onClick ? onClick(session) : undefined)}
         style={{ top: '0px', left: '1px', right: '1px', zIndex: movable.isDragging ? '40' : undefined }}
       >
         <div ref={droppable.ref} style={{ height: `${height}px` }}>
@@ -436,14 +408,6 @@ function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }
       />
     </>
   );
-}
-
-// Get a single timeslot height
-function getTimeslotHeight(zoomLevel: number) {
-  if (zoomLevel >= 0 && zoomLevel < TIMESLOT_HEIGHTS.length) {
-    return TIMESLOT_HEIGHTS[zoomLevel];
-  }
-  return TIMESLOT_HEIGHTS[0];
 }
 
 // Return a valid resized session according given target timeslot
@@ -493,79 +457,4 @@ function safeSessionMoveToTimeslot(
     end = sessionAfter.timeslot.start; // end cannot be after the next session
   }
   return { ...session, trackId: targetTrackId, timeslot: { start, end } };
-}
-
-// FIXME: export and test this function
-export const topInsideDroppable: CollisionDetector = (input) => {
-  const { dragOperation, droppable } = input;
-  const { shape } = dragOperation;
-
-  if (!droppable.shape || !shape) {
-    return null;
-  }
-
-  const draggableRect = Rectangle.from(shape.current.boundingRectangle);
-  const droppableRect = Rectangle.from(droppable.shape.boundingRectangle);
-
-  const topCenter = {
-    x: (draggableRect.left + draggableRect.right) / 2,
-    y: draggableRect.top,
-  };
-
-  const isTopInside =
-    topCenter.x >= droppableRect.left &&
-    topCenter.x <= droppableRect.right &&
-    topCenter.y >= droppableRect.top &&
-    topCenter.y <= droppableRect.bottom;
-
-  const value = isTopInside
-    ? 1
-    : 1 /
-      Point.distance(topCenter, {
-        x: (droppableRect.left + droppableRect.right) / 2,
-        y: droppableRect.top,
-      });
-
-  return {
-    id: droppable.id,
-    value,
-    type: CollisionType.Collision,
-    priority: CollisionPriority.Normal,
-  };
-};
-
-// FIXME: export and test this function
-function deepEqual<T>(a: T, b: T): boolean {
-  if (a === b) {
-    return true;
-  }
-
-  if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
-    return false;
-  }
-
-  if (Array.isArray(a) !== Array.isArray(b)) {
-    return false;
-  }
-
-  if (Array.isArray(a) && Array.isArray(b)) {
-    if (a.length !== b.length) return false;
-    for (let i = 0; i < a.length; i++) {
-      if (!deepEqual(a[i], b[i])) return false;
-    }
-    return true;
-  }
-
-  const keysA = Object.keys(a);
-  const keysB = Object.keys(b);
-
-  if (keysA.length !== keysB.length) return false;
-
-  for (const key of keysA) {
-    if (!keysB.includes(key) || !deepEqual((a as any)[key], (b as any)[key])) {
-      return false;
-    }
-  }
-
-  return true;
 }

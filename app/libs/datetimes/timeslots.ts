@@ -61,10 +61,14 @@ export const isTimeSlotIncluded = (slot: TimeSlot, inSlot?: TimeSlot): boolean =
   return slot.start >= inSlot.start && slot.end <= inSlot.end;
 };
 
-// FIXME: improve and test it
-export const isNextTimeslotInWindow = (startSlot: TimeSlot, nextSlot: TimeSlot, intervalMinutes: number): boolean => {
+export const isNextTimeslotInWindow = (
+  startSlot: TimeSlot,
+  nextSlot: TimeSlot,
+  intervalMinutes: number,
+  windowSize = 20,
+): boolean => {
   const windowStart = startSlot.start;
-  const windowEnd = addMinutes(startSlot.end, intervalMinutes * 20);
+  const windowEnd = addMinutes(startSlot.end, intervalMinutes * windowSize);
   const window = { start: windowStart, end: windowEnd };
   return isTimeSlotIncluded(nextSlot, window);
 };

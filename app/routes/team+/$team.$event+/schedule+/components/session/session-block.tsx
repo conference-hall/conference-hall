@@ -1,16 +1,33 @@
 import { cx } from 'class-variance-authority';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatTime, formatTimeDifference } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import type { Language } from '~/types/proposals.types.ts';
-import type { ScheduleSession } from '../schedule.types.ts';
+import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
+import { SessionModal } from './session-modal.tsx';
 
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-type SessionBlockProps = { session: ScheduleSession; height: number };
+type SessionBlockProps = {
+  session: ScheduleSession;
+  height: number;
+  displayedTimes: { start: number; end: number };
+  tracks: Array<Track>;
+  onUpdateSession: (updated: ScheduleSession) => Promise<boolean>;
+  onDeleteSession: (session: ScheduleSession) => Promise<void>;
+};
 
-export function SessionBlock({ session, height }: SessionBlockProps) {
+export function SessionBlock({
+  session,
+  height,
+  displayedTimes,
+  tracks,
+  onUpdateSession,
+  onDeleteSession,
+}: SessionBlockProps) {
+  const [edit, setEdit] = useState(false);
   const { timeslot, proposal, language, emojis } = session;
 
   const { block } = SESSION_COLORS.find((c) => c.value === session.color) ?? SESSION_COLORS[0];
@@ -21,9 +38,11 @@ export function SessionBlock({ session, height }: SessionBlockProps) {
   if (size === 'xs') return <div className={cx('h-full', block)} />;
 
   return (
-    <div
+    <button
+      type="button"
+      onClick={() => setEdit(true)}
       className={cx(
-        'flex flex-col h-full px-1 rounded-sm',
+        'flex flex-col h-full w-full text-left px-1 rounded-sm cursor-pointer',
         {
           'text-[10px] items-center gap-1 flex-row': size === 'sm',
           'text-[10px] items-baseline leading-3 gap-1 flex-row': size === 'md',
@@ -44,7 +63,18 @@ export function SessionBlock({ session, height }: SessionBlockProps) {
         <SessionEmojis emojis={emojis} size={size} />
         <SessionLanguage language={language} size={size} />
       </div>
-    </div>
+
+      {edit && (
+        <SessionModal
+          session={session}
+          displayedTimes={displayedTimes}
+          tracks={tracks}
+          onUpdateSession={onUpdateSession}
+          onDeleteSession={onDeleteSession}
+          onClose={() => setEdit(false)}
+        />
+      )}
+    </button>
   );
 }
 

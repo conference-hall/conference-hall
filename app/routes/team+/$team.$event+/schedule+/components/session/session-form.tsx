@@ -9,7 +9,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import type { FormEvent } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
@@ -62,11 +62,6 @@ export function SessionForm({
   const [error, setError] = useState<string | null>();
 
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: used for refresh
-  useEffect(() => {
-    if (inputRef.current) inputRef.current.focus(); // TODO: use key attribute instead ?
-  }, [proposal]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
