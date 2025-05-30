@@ -185,6 +185,7 @@ model EventIntegrationConfig {
 }
 
 enum EventIntegrationName {
+  OPEN_AI
   OPEN_PLANNER
 }
 
