@@ -397,13 +397,11 @@ export class EventSchedule {
       ${xss(instructions ?? '')}
     `;
 
-    console.log(humanPrompt);
-
     const openai = new OpenAI({ apiKey: openAiConfig.configuration.apiKey });
 
     try {
       const response = await openai.responses.parse({
-        model: 'gpt-4.1-mini',
+        model: 'gpt-4.1',
         temperature: 0,
         input: [
           { role: 'system', content: systemPrompt },
