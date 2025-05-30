@@ -1,8 +1,7 @@
-import { db } from 'prisma/db.server.ts';
-
 import type { EventIntegrationName } from '@prisma/client';
+import { db } from 'prisma/db.server.ts';
 import { OpenPlanner } from '~/libs/integrations/open-planner.ts';
-import type { EventIntegrationConfigData } from './event-integrations.types.ts';
+import { type IntegrationConfigData, IntegrationConfigSchema } from './event-integrations.types.ts';
 import { UserEvent } from './user-event.ts';
 
 export class EventIntegrations {
@@ -17,19 +16,31 @@ export class EventIntegrations {
   }
 
   async getConfiguration(name: EventIntegrationName) {
-    const event = await this.userEvent.needsPermission('canEditEvent');
+    const event = await this.userEvent.needsPermission('canAccessEvent');
     const integration = await db.eventIntegrationConfig.findFirst({ where: { eventId: event.id, name } });
 
     if (!integration) return null;
 
-    return {
+    return IntegrationConfigSchema.parse({
       id: integration.id,
       name: integration.name,
       configuration: integration.configuration,
-    } as EventIntegrationConfigData;
+    });
   }
 
-  async save(data: EventIntegrationConfigData) {
+  // todo(tests)
+  async getConfigurations() {
+    const event = await this.userEvent.needsPermission('canEditEvent');
+    const integrations = await db.eventIntegrationConfig.findMany({ where: { eventId: event.id } });
+
+    return integrations.map((integration) => ({
+      id: integration.id,
+      name: integration.name,
+      configuration: integration.configuration,
+    })) as IntegrationConfigData[];
+  }
+
+  async save(data: IntegrationConfigData) {
     const event = await this.userEvent.needsPermission('canEditEvent');
 
     if (!data.id) {
@@ -39,7 +50,7 @@ export class EventIntegrations {
     }
   }
 
-  async checkConfiguration(data: EventIntegrationConfigData) {
+  async checkConfiguration(data: IntegrationConfigData) {
     if (data.name === 'OPEN_PLANNER') {
       const { eventId, apiKey } = data.configuration;
       return OpenPlanner.checkConfiguration(eventId, apiKey);

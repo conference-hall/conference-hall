@@ -37,12 +37,6 @@ describe('EventIntegrations', () => {
       });
     });
 
-    it('throws an error if user is not owner', async () => {
-      await expect(
-        EventIntegrations.for(reviewer.id, team.slug, event.slug).getConfiguration('OPEN_PLANNER'),
-      ).rejects.toThrowError(ForbiddenOperationError);
-    });
-
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       await expect(
