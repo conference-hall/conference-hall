@@ -59,7 +59,7 @@ export const Callout = ({ title, icon: Icon, className, variant, children, ref, 
         </div>
       ) : null}
 
-      <div className={cx('flex items-start overflow-y-auto', children && title ? 'mt-2' : '')}>
+      <div className={cx('flex items-start wrap-anywhere', children && title ? 'mt-2' : '')}>
         {Icon && !title ? <Icon className={cx('mr-1.5 size-5 shrink-0')} aria-hidden="true" /> : null}
         <span>{children}</span>
       </div>

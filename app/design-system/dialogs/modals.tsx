@@ -66,8 +66,6 @@ function Title({
   );
 }
 
-Modal.Title = Title;
-
 // Modal Content
 
 function Content({

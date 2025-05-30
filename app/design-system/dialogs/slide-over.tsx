@@ -5,12 +5,14 @@ import { CloseButton } from './close-button.tsx';
 
 type Props = {
   open: boolean;
+  title?: React.ReactNode;
   size?: 's' | 'm' | 'l' | 'xl';
+  withBorder?: boolean;
   onClose: VoidFunction;
   children: React.ReactNode;
 };
 
-export function SlideOver({ open, size = 'm', onClose, children }: Props) {
+export function SlideOver({ open, title, size = 'm', withBorder = true, onClose, children }: Props) {
   return (
     <Transition show={open}>
       <Dialog className="relative z-40" onClose={onClose}>
@@ -28,7 +30,19 @@ export function SlideOver({ open, size = 'm', onClose, children }: Props) {
                     'max-w-4xl': size === 'xl',
                   })}
                 >
-                  <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl sm:rounded-l-xl">
+                  <div
+                    className={cx('flex h-full flex-col bg-white shadow-xl sm:rounded-l-xl', {
+                      'divide-y divide-gray-200': withBorder,
+                    })}
+                  >
+                    <div className="flex shrink-0 items-start justify-between z-50">
+                      {title ? (
+                        <DialogTitle className="text-base font-semibold leading-6 text-gray-900 px-4 py-4">
+                          {title}
+                        </DialogTitle>
+                      ) : null}
+                      <CloseButton onClose={onClose} className="self-end" />
+                    </div>
                     {children}
                   </div>
                 </DialogPanel>
@@ -41,21 +55,15 @@ export function SlideOver({ open, size = 'm', onClose, children }: Props) {
   );
 }
 
-type ContentProps = {
-  title?: React.ReactNode;
+interface ContentProps extends Omit<React.ComponentProps<'div'>, 'title'> {
   children: React.ReactNode;
-  onClose: VoidFunction;
   className?: string;
-};
+}
 
-function Content({ title, children, onClose, className }: ContentProps) {
+function Content({ children, className, ref }: ContentProps) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-4">
-      <div className="flex items-start justify-between px-4">
-        {title ? <DialogTitle className="text-base font-semibold leading-6 text-gray-900">{title}</DialogTitle> : null}
-        <CloseButton onClose={onClose} />
-      </div>
-      <div className={cx('relative mt-4 flex-1 px-4', className)}>{children}</div>
+    <div ref={ref} className="flex min-h-0 flex-1 flex-col overflow-y-auto py-4">
+      <div className={cx('relative flex-1 px-4', className)}>{children}</div>
     </div>
   );
 }
