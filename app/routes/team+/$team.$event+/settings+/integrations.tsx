@@ -58,7 +58,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
         const { id, name, ...configuration } = resultConfig.value;
         await eventIntegrations.save({ id, name, configuration });
       }
-      return toast('success', 'Integration saved successfully.'); // todo(i18n): remove old key;
+      return toast('success', t('event-management.settings.integrations.feedbacks.saved'));
     }
     case 'check-open-planner-integration': {
       const resultId = parseWithZod(form, { schema: z.object({ id: z.string().optional() }) });
@@ -80,7 +80,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
       const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
       await eventIntegrations.delete(resultId.value.id);
-      return toast('success', 'Integration disabled successfully.'); // todo(i18n): remove old key
+      return toast('success', t('event-management.settings.integrations.feedbacks.disabled'));
     }
   }
 
@@ -199,19 +199,20 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
         </Card.Actions>
       </Card>
 
+      {/* todo(tests): e2e */}
       {aiIntegrationEnabled ? (
         <Card as="section">
           <Card.Title>
-            <H2>OpenAI Integration</H2>
-            <Subtitle>Use OpenAI to automate tasks and enhance your event management experience.</Subtitle>
+            <H2>{t('event-management.settings.integrations.openai.heading')}</H2>
+            <Subtitle>{t('event-management.settings.integrations.openai.description')}</Subtitle>
           </Card.Title>
 
           <Card.Content>
             <Form method="POST" id="openai-integration-form" key={openAi?.id} className="space-y-4">
               <Input
                 name="apiKey"
-                label="OpenAI API Key"
-                placeholder="sk-..."
+                label={t('event-management.settings.integrations.openai.api-key.label')}
+                placeholder={t('event-management.settings.integrations.openai.api-key.placeholder')}
                 defaultValue={openAi?.configuration?.apiKey ?? ''}
                 error={errors?.apiKey}
               />
@@ -236,7 +237,7 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
               </>
             ) : null}
             <Button type="submit" name="intent" value="save-integration" form="openai-integration-form">
-              Save OpenAI
+              {t('event-management.settings.integrations.openai.submit')}
             </Button>
           </Card.Actions>
         </Card>

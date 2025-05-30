@@ -1,6 +1,7 @@
 import { SparklesIcon } from '@heroicons/react/16/solid';
 import { PaperAirplaneIcon } from '@heroicons/react/20/solid';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { href, useFetcher, useParams } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -11,11 +12,17 @@ import { Text } from '~/design-system/typography.tsx';
 import type { action } from '../../ai/generate.tsx';
 
 export function AIModalButton() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="secondary" size="square-m">
+      <Button
+        onClick={() => setOpen(true)}
+        variant="secondary"
+        size="square-m"
+        aria-label={t('event-management.schedule.ai-assistant.open')}
+      >
         <SparklesIcon className="size-5 text-indigo-500" />
       </Button>
 
@@ -29,6 +36,7 @@ type ChatMessage = { type: 'user' | 'bot' | 'error'; content: string };
 type ModalProps = { open: boolean; onClose: VoidFunction };
 
 function AIModal({ open, onClose }: ModalProps) {
+  const { t } = useTranslation();
   const params = useParams();
   const fetcher = useFetcher<typeof action>();
 
@@ -42,9 +50,9 @@ function AIModal({ open, onClose }: ModalProps) {
     if (fetcher.state === 'idle' && fetcher.data?.success) {
       setChat((prev) => [...prev, { type: 'bot', content: fetcher.data?.response || '' }]);
     } else if (fetcher.state === 'idle' && fetcher.data?.error) {
-      setError(fetcher?.data?.error || 'An error occurred.');
+      setError(fetcher?.data?.error || t('error.global'));
     }
-  }, [fetcher.state, fetcher.data]);
+  }, [fetcher.state, fetcher.data, t]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: scroll to bottom when chat updates
   useEffect(() => {
@@ -68,7 +76,7 @@ function AIModal({ open, onClose }: ModalProps) {
   const loading = fetcher.state === 'submitting' || fetcher.state === 'loading';
 
   return (
-    <SlideOver title="Schedule AI assistant" size="m" open={open} onClose={onClose}>
+    <SlideOver title={t('event-management.schedule.ai-assistant.heading')} size="m" open={open} onClose={onClose}>
       <SlideOver.Content ref={containerRef} className="space-y-4 flex flex-col">
         <div className="grow flex flex-col justify-end gap-4">
           {chat.map((message, index) =>
@@ -88,7 +96,7 @@ function AIModal({ open, onClose }: ModalProps) {
           {loading ? (
             <div className="flex justify-start items-center gap-2">
               <LoadingIcon className="size-4 text-gray-500" aria-hidden="true" />
-              <Text variant="secondary">Reasoning...</Text>
+              <Text variant="secondary">{t('event-management.schedule.ai-assistant.reasoning')}</Text>
             </div>
           ) : null}
         </div>
@@ -98,8 +106,8 @@ function AIModal({ open, onClose }: ModalProps) {
         <div className="overflow-hidden bg-white rounded-lg pb-12 shadow-xs ring-1 ring-inset ring-gray-200 focus-within:ring-2 focus-within:ring-indigo-600 w-full">
           <textarea
             name="instructions"
-            aria-label="Instructions"
-            placeholder="Add additional instructions for the AI to generate the schedule."
+            aria-label={t('event-management.schedule.ai-assistant.instructions.label')}
+            placeholder={t('event-management.schedule.ai-assistant.instructions.placeholder')}
             className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-sm leading-6"
             value={input}
             autoComplete="off"
@@ -118,7 +126,7 @@ function AIModal({ open, onClose }: ModalProps) {
         </div>
 
         <div className="absolute inset-x-0 bottom-4 right-4 flex justify-end py-2 pl-3 pr-2">
-          <Button type="button" variant="secondary" size="square-m" onClick={onSubmit}>
+          <Button type="button" variant="secondary" size="square-m" onClick={onSubmit} aria-label={t('common.send')}>
             <PaperAirplaneIcon className="size-5 text-gray-400" />
           </Button>
         </div>

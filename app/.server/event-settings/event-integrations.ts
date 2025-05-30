@@ -28,7 +28,6 @@ export class EventIntegrations {
     });
   }
 
-  // todo(tests)
   async getConfigurations() {
     const event = await this.userEvent.needsPermission('canEditEvent');
     const integrations = await db.eventIntegrationConfig.findMany({ where: { eventId: event.id } });

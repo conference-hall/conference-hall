@@ -13,6 +13,7 @@ import {
   NotFoundError,
 } from '~/libs/errors.server.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
+import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { SESSION_COLORS } from '~/routes/team+/$team.$event+/schedule+/components/session/constants.ts';
 import type { Language, Languages } from '~/types/proposals.types.ts';
 import { EventIntegrations } from '../event-settings/event-integrations.ts';
@@ -295,6 +296,7 @@ export class EventSchedule {
 
   // todo(tests)
   async generateWithIA({ instructions }: ScheduleIAGenerateData, locale = 'en') {
+    const t = await i18n.getFixedT(locale);
     const event = await this.userEvent.needsPermission('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
@@ -303,11 +305,11 @@ export class EventSchedule {
     const aiIntegrationTeam = await flags.get('aiIntegration');
 
     if (!openAiConfig || openAiConfig.name !== 'OPEN_AI' || aiIntegrationTeam !== teamSlug) {
-      throw new Error('OpenAI integration is not configured for this event.');
+      throw new Error(t('event-management.schedule.ai-assistant.errors.not-configured'));
     }
 
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
+    if (!schedule) throw new NotFoundError(t('event-management.schedule.ai-assistant.errors.schedule-not-found'));
 
     const sessions = await db.scheduleSession.findMany({
       where: { scheduleId: schedule.id, name: null },
@@ -315,7 +317,7 @@ export class EventSchedule {
     });
 
     if (sessions.length === 0) {
-      throw new Error('You must have at least one session slot defined in the schedule before generating.');
+      throw new Error(t('event-management.schedule.ai-assistant.errors.no-slots'));
     }
 
     const proposals = await db.proposal.findMany({
@@ -413,7 +415,7 @@ export class EventSchedule {
       const result = response.output_parsed;
 
       if (!result || result.schedule.length === 0) {
-        return result?.response || 'Nothing changed.';
+        return result?.response || t('event-management.schedule.ai-assistant.no-changes');
       }
 
       for (const session of sessions) {
@@ -433,9 +435,9 @@ export class EventSchedule {
       return result.response;
     } catch (error) {
       if (error instanceof OpenAI.OpenAIError) {
-        throw new Error(`OpenAI API error: ${error.message}`);
+        throw new Error(error.message);
       }
-      throw new Error('An unexpected error occurred while generating the schedule with AI.');
+      throw new Error(t('event-management.schedule.ai-assistant.errors.unexpected'));
     }
   }
 }
