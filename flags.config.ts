@@ -13,4 +13,10 @@ export default defineFlagsConfig({
     defaultValue: false,
     tags: ['frontend'] as const,
   },
+  aiIntegration: {
+    description: 'Enabled AI integration for a team slug.',
+    type: 'string',
+    defaultValue: 'gdg-nantes',
+    tags: ['frontend'] as const,
+  },
 });
