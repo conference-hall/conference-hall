@@ -359,10 +359,9 @@ export class EventSchedule {
         - A schedule associating each proposal id to a timeslot id, the color and the language of the timeslot.
         - All timeslots must be returned, even if they are not filled.
       - response: 
-        - Gives a explanation of the operation
+        - Gives a short and concise explanation of the operation
         - Don't include explanations about the timeslot colors or languages.
         - Don't include explanations about the timeslots which has not been changed.
-        - When explaining a proposal operation, always include the proposal title (in bold) and the timeslot.
         - Never display proposal or timeslot id in it
         - Response must be in ${locale} language
         - Formatted with markdown for better readability
