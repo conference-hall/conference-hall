@@ -9,10 +9,10 @@ export class TalkEditFormComponent extends PageObject {
 
   constructor(page: Page) {
     super(page);
-    this.titleInput = page.getByLabel('Title');
-    this.abstractInput = page.getByLabel('Abstract');
-    this.languageSelect = page.getByLabel('Languages');
-    this.referencesInput = page.getByLabel('References');
+    this.titleInput = page.getByRole('dialog').getByLabel('Title');
+    this.abstractInput = page.getByRole('dialog').getByLabel('Abstract');
+    this.languageSelect = page.getByRole('dialog').getByLabel('Languages');
+    this.referencesInput = page.getByRole('dialog').getByLabel('References');
   }
 
   async waitFor() {

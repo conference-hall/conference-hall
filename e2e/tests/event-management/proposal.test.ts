@@ -239,6 +239,7 @@ test('edit proposal', async ({ page }) => {
   await expect(talkEdit.languageSelect).toHaveText('French');
 
   // edits the talk
+  await talkEdit.waitFor();
   await talkEdit.fillForm('New title', 'New abstract', 'BEGINNER', 'English', 'New references');
   await talkEdit.radioInput('Format 2').click();
   await talkEdit.radioInput('Category 2').click();
@@ -246,9 +247,8 @@ test('edit proposal', async ({ page }) => {
   await expect(talkEdit.toast).toHaveText('Proposal saved.');
 
   // checks edited talk values
-  await talkEdit.waitFor();
-  await expect(page.getByRole('heading', { name: 'New title' })).toBeVisible();
-  await expect(page.getByRole('paragraph').filter({ hasText: 'New abstract' })).toBeVisible();
+  await expect(page.getByRole('main').getByRole('heading', { name: 'New title' })).toBeVisible();
+  await expect(page.getByRole('main').getByRole('paragraph').filter({ hasText: 'New abstract' })).toBeVisible();
   await expect(page.getByRole('main').getByText('Beginner')).toBeVisible();
   await expect(page.getByRole('main').getByText('French')).toBeVisible();
   await expect(page.getByRole('main').getByText('English')).toBeVisible();

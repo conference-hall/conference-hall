@@ -58,7 +58,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
         const { id, name, ...configuration } = resultConfig.value;
         await eventIntegrations.save({ id, name, configuration });
       }
-      return toast('success', 'Integration saved successfully'); // todo(i18n): remove old key;
+      return toast('success', 'Integration saved successfully.'); // todo(i18n): remove old key;
     }
     case 'check-open-planner-integration': {
       const resultId = parseWithZod(form, { schema: z.object({ id: z.string().optional() }) });
@@ -80,7 +80,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
       const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
       await eventIntegrations.delete(resultId.value.id);
-      return toast('success', 'Integration disabled successfully'); // todo(i18n): remove old key
+      return toast('success', 'Integration disabled successfully.'); // todo(i18n): remove old key
     }
   }
 
@@ -236,7 +236,7 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
               </>
             ) : null}
             <Button type="submit" name="intent" value="save-integration" form="openai-integration-form">
-              Save OpenAI Integration
+              Save OpenAI
             </Button>
           </Card.Actions>
         </Card>

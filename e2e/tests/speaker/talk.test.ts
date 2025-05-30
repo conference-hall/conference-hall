@@ -95,15 +95,14 @@ test('edits a talk', async ({ page }) => {
   });
 
   await test.step('checks edited talk values', async () => {
-    await talkEdit.waitFor();
-    await expect(page.getByRole('heading', { name: 'New title' })).toBeVisible();
-    await expect(page.getByRole('paragraph').filter({ hasText: 'New abstract' })).toBeVisible();
+    await expect(page.getByRole('main').getByRole('heading', { name: 'New title' })).toBeVisible();
+    await expect(page.getByRole('main').getByRole('paragraph').filter({ hasText: 'New abstract' })).toBeVisible();
     await expect(page.getByRole('main').getByText('Advanced')).toBeVisible();
     await expect(page.getByRole('main').getByText('French')).toBeVisible();
     await expect(page.getByRole('main').getByText('English')).toBeVisible();
 
     await talkPage.clickOnReferences();
-    await expect(page.getByText('New references')).toBeVisible();
+    await expect(page.getByRole('main').getByText('New references')).toBeVisible();
   });
 });
 
