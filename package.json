@@ -71,6 +71,7 @@
     "marked": "^15.0.12",
     "morgan": "^1.10.0",
     "nodemailer": "^7.0.3",
+    "openai": "^4.103.0",
     "picocolors": "^1.1.1",
     "pretty-cache-header": "^1.0.0",
     "react": "^19.1.0",

@@ -1,6 +1,7 @@
 import { cx } from 'class-variance-authority';
 
 import { useState } from 'react';
+import { AIModalButton } from './ai-modal.tsx';
 import { DisplayDays } from './display-days.tsx';
 import { DisplayTimes } from './display-times.tsx';
 import { OptionsMenu } from './options-menu.tsx';
@@ -15,6 +16,7 @@ type Props = {
   timezone: string;
   tracks: Array<{ id: string; name: string }>;
   zoomHandlers: ZoomHandlers;
+  aiEnabled: boolean;
   onChangeDisplayDays: (start: Date, end: Date) => void;
   onChangeDisplayTime: (start: number, end: number) => void;
 };
@@ -26,6 +28,7 @@ export function ScheduleHeader({
   timezone,
   tracks,
   zoomHandlers,
+  aiEnabled,
   onChangeDisplayDays,
   onChangeDisplayTime,
 }: Props) {
@@ -49,7 +52,10 @@ export function ScheduleHeader({
         <DisplayTimes displayedTimes={displayedTimes} onChangeDisplayTime={onChangeDisplayTime} />
       </div>
 
-      <OptionsMenu openTracksModal={() => setTracksModalOpen(true)} zoomHandlers={zoomHandlers} />
+      <div className="flex items-center gap-3 shrink">
+        {aiEnabled ? <AIModalButton /> : null}
+        <OptionsMenu openTracksModal={() => setTracksModalOpen(true)} zoomHandlers={zoomHandlers} />
+      </div>
 
       <TracksModal
         key={String(tracksModalOpen)}

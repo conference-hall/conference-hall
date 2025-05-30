@@ -22,7 +22,7 @@ export const exportToOpenPlanner = job<ExportToOpenPlannerPayload>({
     const eventIntegrations = await EventIntegrations.for(userId, teamSlug, eventSlug);
 
     const openPlanner = await eventIntegrations.getConfiguration('OPEN_PLANNER');
-    if (!openPlanner) return;
+    if (!openPlanner || openPlanner.name !== 'OPEN_PLANNER') return;
 
     const search = new ProposalSearchBuilder(eventSlug, userId, filters, {
       withSpeakers: true,

@@ -38,11 +38,14 @@ export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificat
     <>
       <OpenButton name={name} picture={picture} notificationsCount={notificationsCount} onClick={handleOpen} />
 
-      <SlideOver open={open} onClose={handleClose} size="s">
-        <SlideOver.Content
-          title={<AvatarName picture={picture} name={name} subtitle={email} size="s" />}
-          onClose={handleClose}
-        >
+      <SlideOver
+        title={<AvatarName picture={picture} name={name} subtitle={email} size="s" />}
+        open={open}
+        withBorder={false}
+        onClose={handleClose}
+        size="s"
+      >
+        <SlideOver.Content>
           <nav aria-label={t('navbar.user-menu')} className="flex h-full flex-col overflow-y-auto">
             <ul className="relative flex-1 p-0.5">
               <MenuLink to={href('/')} icon={MagnifyingGlassIcon} onClick={handleClose}>
@@ -52,7 +55,7 @@ export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificat
                 {t('navbar.user-menu.notifications')}
               </MenuLink>
 
-              <Divider as="li" className="my-2" />
+              <Divider as="li" className="mb-2 mt-4" />
 
               <li className="px-2 pb-2">
                 <Text size="xs" weight="semibold" variant="secondary">
@@ -70,7 +73,7 @@ export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificat
                 {t('speaker.nav.settings')}
               </MenuLink>
 
-              <Divider as="li" className="my-2" />
+              <Divider as="li" className="mb-2 mt-4" />
 
               {teams.length >= 0 && (
                 <li className="px-2 pb-2">
@@ -101,7 +104,7 @@ export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificat
                 </MenuLink>
               )}
 
-              <Divider as="li" className="my-2" />
+              <Divider as="li" className="mb-2 mt-4" />
 
               <SignOutMenu />
             </ul>

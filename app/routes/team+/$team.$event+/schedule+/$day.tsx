@@ -111,6 +111,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
           displayedTimes={settings.displayedTimes}
           timezone={schedule.timezone}
           tracks={schedule.tracks}
+          aiEnabled={schedule.aiEnabled}
           zoomHandlers={zoomHandlers}
           onChangeDisplayDays={settings.updateDisplayDays}
           onChangeDisplayTime={settings.updateDisplayTimes}

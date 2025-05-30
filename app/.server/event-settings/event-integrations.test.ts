@@ -37,12 +37,6 @@ describe('EventIntegrations', () => {
       });
     });
 
-    it('throws an error if user is not owner', async () => {
-      await expect(
-        EventIntegrations.for(reviewer.id, team.slug, event.slug).getConfiguration('OPEN_PLANNER'),
-      ).rejects.toThrowError(ForbiddenOperationError);
-    });
-
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       await expect(
@@ -124,6 +118,49 @@ describe('EventIntegrations', () => {
       const integration = await eventIntegrationFactory({ event });
       const eventIntegrations = EventIntegrations.for(user.id, team.slug, event.slug);
       await expect(eventIntegrations.delete(integration.id)).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
+  describe('#getConfigurations', () => {
+    it('gets all integration configurations for an event', async () => {
+      const integrations = [
+        await eventIntegrationFactory({ event }),
+        await eventIntegrationFactory({ event, attributes: { name: 'OPEN_AI', configuration: { apiKey: '' } } }),
+      ];
+
+      const otherEvent = await eventFactory({ team });
+      await eventIntegrationFactory({ event: otherEvent });
+
+      const eventIntegrations = EventIntegrations.for(owner.id, team.slug, event.slug);
+      const result = await eventIntegrations.getConfigurations();
+
+      expect(result).toEqual(
+        expect.arrayContaining(
+          integrations.map((integration) => ({
+            id: integration.id,
+            name: integration.name,
+            configuration: integration.configuration,
+          })),
+        ),
+      );
+    });
+
+    it('returns an empty array when no integrations exist', async () => {
+      const eventIntegrations = EventIntegrations.for(owner.id, team.slug, event.slug);
+      const result = await eventIntegrations.getConfigurations();
+
+      expect(result).toEqual([]);
+    });
+
+    it('throws an error if user is not owner', async () => {
+      const eventIntegrations = EventIntegrations.for(reviewer.id, team.slug, event.slug);
+      await expect(eventIntegrations.getConfigurations()).rejects.toThrowError(ForbiddenOperationError);
+    });
+
+    it('throws an error if user does not belong to event team', async () => {
+      const user = await userFactory();
+      const eventIntegrations = EventIntegrations.for(user.id, team.slug, event.slug);
+      await expect(eventIntegrations.getConfigurations()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

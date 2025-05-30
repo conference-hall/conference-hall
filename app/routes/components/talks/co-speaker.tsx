@@ -147,8 +147,8 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
   ].filter((detail) => Boolean(detail.value));
 
   return (
-    <SlideOver open={open} onClose={onClose} size="l">
-      <SlideOver.Content title={<Title />} onClose={onClose} className="p-0! border-t border-t-gray-200 divide-y">
+    <SlideOver title={<Title />} open={open} withBorder={false} onClose={onClose} size="l">
+      <SlideOver.Content className="p-0!">
         <h2 className="sr-only">{t('speaker.panel.heading')}</h2>
         {speaker.email && (
           <div className="flex flex-col gap-2 p-4 sm:px-6">

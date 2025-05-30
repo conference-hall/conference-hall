@@ -32,7 +32,7 @@ export class ProposalPage extends PageObject {
 
   async clickOnEdit() {
     await this.page.getByRole('button', { name: 'Edit' }).click();
-    return new TalkEditFormComponent(this.page);
+    return new TalkEditFormComponent(this.page, true);
   }
 
   speaker(name: string) {

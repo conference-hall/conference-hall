@@ -35,7 +35,7 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
   return (
     <Menu>
       <MenuButton className={button({ variant: 'secondary' })}>
-        <Cog6ToothIcon className="size-4 text-gray-500" aria-hidden="true" />
+        <Cog6ToothIcon className="size-4 text-gray-400" aria-hidden="true" />
         {t('common.options')}
       </MenuButton>
 

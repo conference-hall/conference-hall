@@ -2,9 +2,13 @@ import { parseWithZod } from '@conform-to/zod';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
+import { useParams } from 'react-router';
 import { z } from 'zod';
 import { EventIntegrations } from '~/.server/event-settings/event-integrations.ts';
-import { OpenPlannerConfigSchema } from '~/.server/event-settings/event-integrations.types.ts';
+import {
+  OpenPlannerConfigSchema,
+  UpdateIntegrationConfigSchema,
+} from '~/.server/event-settings/event-integrations.types.ts';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventSlackSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
@@ -12,18 +16,19 @@ import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
-import { H2, Text } from '~/design-system/typography.tsx';
+import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { useFlag } from '~/routes/components/contexts/flags-context.tsx';
 import type { Route } from './+types/integrations.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
   const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
-  const openPlanner = await eventIntegrations.getConfiguration('OPEN_PLANNER');
-  return { openPlanner };
+  const integrations = await eventIntegrations.getConfigurations();
+  return integrations;
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
@@ -41,17 +46,19 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       await event.update(result.value);
       break;
     }
-    case 'save-open-planner-integration': {
-      const resultId = parseWithZod(form, { schema: z.object({ id: z.string().optional() }) });
-      if (resultId.status !== 'success') return toast('error', t('error.global'));
-
-      const resultConfig = parseWithZod(form, { schema: OpenPlannerConfigSchema });
+    case 'save-integration': {
+      const resultConfig = parseWithZod(form, { schema: UpdateIntegrationConfigSchema });
       if (resultConfig.status !== 'success') return resultConfig.error;
 
       const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
-      const data = { id: resultId.value.id, name: 'OPEN_PLANNER', configuration: resultConfig.value } as const;
-      await eventIntegrations.save(data);
-      return toast('success', t('event-management.settings.integrations.feedbacks.openplanner-enabled'));
+      if (resultConfig.value.name === 'OPEN_AI') {
+        const { id, name, ...configuration } = resultConfig.value;
+        await eventIntegrations.save({ id, name, configuration });
+      } else if (resultConfig.value.name === 'OPEN_PLANNER') {
+        const { id, name, ...configuration } = resultConfig.value;
+        await eventIntegrations.save({ id, name, configuration });
+      }
+      return toast('success', t('event-management.settings.integrations.feedbacks.saved'));
     }
     case 'check-open-planner-integration': {
       const resultId = parseWithZod(form, { schema: z.object({ id: z.string().optional() }) });
@@ -73,7 +80,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
       const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
       await eventIntegrations.delete(resultId.value.id);
-      return toast('success', t('event-management.settings.integrations.feedbacks.openplanner-disabled'));
+      return toast('success', t('event-management.settings.integrations.feedbacks.disabled'));
     }
   }
 
@@ -82,8 +89,14 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function EventIntegrationsSettingsRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { slackWebhookUrl } = useCurrentEvent();
-  const { openPlanner } = loaderData;
+  const { team } = useParams();
+  const { slackWebhookUrl, type } = useCurrentEvent();
+
+  const aiIntegrationTeam = useFlag('aiIntegration');
+  const aiIntegrationEnabled = aiIntegrationTeam === team && type === 'CONFERENCE';
+
+  const openPlanner = loaderData.find((integration) => integration.name === 'OPEN_PLANNER');
+  const openAi = loaderData.find((integration) => integration.name === 'OPEN_AI');
 
   return (
     <div className="space-y-8">
@@ -144,6 +157,7 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
               error={errors?.apiKey}
             />
             <input type="hidden" name="id" value={openPlanner?.id} />
+            <input type="hidden" name="name" value="OPEN_PLANNER" />
           </Form>
 
           <Callout title={t('event-management.settings.integrations.openplanner.info.heading')}>
@@ -179,11 +193,55 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
               </Button>
             </>
           ) : null}
-          <Button type="submit" name="intent" value="save-open-planner-integration" form="openplanner-integration-form">
+          <Button type="submit" name="intent" value="save-integration" form="openplanner-integration-form">
             {t('event-management.settings.integrations.openplanner.submit')}
           </Button>
         </Card.Actions>
       </Card>
+
+      {/* todo(tests): e2e */}
+      {aiIntegrationEnabled ? (
+        <Card as="section">
+          <Card.Title>
+            <H2>{t('event-management.settings.integrations.openai.heading')}</H2>
+            <Subtitle>{t('event-management.settings.integrations.openai.description')}</Subtitle>
+          </Card.Title>
+
+          <Card.Content>
+            <Form method="POST" id="openai-integration-form" key={openAi?.id} className="space-y-4">
+              <Input
+                name="apiKey"
+                label={t('event-management.settings.integrations.openai.api-key.label')}
+                placeholder={t('event-management.settings.integrations.openai.api-key.placeholder')}
+                defaultValue={openAi?.configuration?.apiKey ?? ''}
+                error={errors?.apiKey}
+              />
+              <input type="hidden" name="id" value={openAi?.id} />
+              <input type="hidden" name="name" value="OPEN_AI" />
+            </Form>
+          </Card.Content>
+
+          <Card.Actions>
+            {openAi ? (
+              <>
+                <Button
+                  type="submit"
+                  name="intent"
+                  value="disable-integration"
+                  variant="important"
+                  form="openai-integration-form"
+                  iconLeft={XCircleIcon}
+                >
+                  {t('common.disable')}
+                </Button>
+              </>
+            ) : null}
+            <Button type="submit" name="intent" value="save-integration" form="openai-integration-form">
+              {t('event-management.settings.integrations.openai.submit')}
+            </Button>
+          </Card.Actions>
+        </Card>
+      ) : null}
     </div>
   );
 }

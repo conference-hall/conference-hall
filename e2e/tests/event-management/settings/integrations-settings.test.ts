@@ -30,11 +30,11 @@ test('updates integrations settings', async ({ page }) => {
   await integrationsPage.fill(integrationsPage.openPlannerEventIdInput, 'eventId!');
   await integrationsPage.fill(integrationsPage.openPlannerApiKeyInput, 'apiKey!');
   await integrationsPage.saveOpenPlannerButton.click();
-  await expect(integrationsPage.toast).toContainText('OpenPlanner integration is enabled.');
+  await expect(integrationsPage.toast).toContainText('Integration saved successfully.');
 
   // Disable OpenPlanner
   await integrationsPage.disableOpenPlannerButton.click();
-  await expect(integrationsPage.toast).toContainText('OpenPlanner integration is disabled.');
+  await expect(integrationsPage.toast).toContainText('Integration disabled successfully.');
   await expect(integrationsPage.openPlannerEventIdInput).toHaveValue('');
   await expect(integrationsPage.openPlannerApiKeyInput).toHaveValue('');
 });

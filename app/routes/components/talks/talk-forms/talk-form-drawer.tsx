@@ -52,8 +52,8 @@ function TalkEditDrawer({ initialValues, event, errors, open, onClose }: TalkEdi
   const { t } = useTranslation();
 
   return (
-    <SlideOver open={open} onClose={onClose} size="xl">
-      <SlideOver.Content onClose={onClose} className="sm:px-6">
+    <SlideOver title={initialValues?.title} open={open} onClose={onClose} size="xl">
+      <SlideOver.Content className="sm:px-6">
         <TalkForm
           id="edit-talk-form"
           initialValues={initialValues}

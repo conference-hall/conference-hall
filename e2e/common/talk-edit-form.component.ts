@@ -7,12 +7,14 @@ export class TalkEditFormComponent extends PageObject {
   readonly languageSelect: Locator;
   readonly referencesInput: Locator;
 
-  constructor(page: Page) {
+  constructor(page: Page, isEdit = false) {
     super(page);
-    this.titleInput = page.getByLabel('Title');
-    this.abstractInput = page.getByLabel('Abstract');
-    this.languageSelect = page.getByLabel('Languages');
-    this.referencesInput = page.getByLabel('References');
+
+    const component = isEdit ? page.getByRole('dialog') : page;
+    this.titleInput = component.getByLabel('Title');
+    this.abstractInput = component.getByLabel('Abstract');
+    this.languageSelect = component.getByLabel('Languages');
+    this.referencesInput = component.getByLabel('References');
   }
 
   async waitFor() {
