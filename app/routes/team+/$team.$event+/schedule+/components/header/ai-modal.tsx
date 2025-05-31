@@ -9,7 +9,7 @@ import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import type { action } from '../../ai/generate.tsx';
+import { ScheduleGenerationErrorSchema, ScheduleGenerationResultSchema } from '../schedule.types.ts';
 
 export function AIModalButton() {
   const { t } = useTranslation();
@@ -31,28 +31,22 @@ export function AIModalButton() {
   );
 }
 
-type ChatMessage = { type: 'user' | 'bot' | 'error'; content: string };
+type ChatMessage = { type: 'user' | 'bot'; content: string };
 
 type ModalProps = { open: boolean; onClose: VoidFunction };
 
 function AIModal({ open, onClose }: ModalProps) {
+  const fetcher = useFetcher();
   const { t } = useTranslation();
   const params = useParams();
-  const fetcher = useFetcher<typeof action>();
 
   const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [chunkCount, setChunkCount] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [chat, setChat] = useState<Array<ChatMessage>>([]);
 
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data?.success) {
-      setChat((prev) => [...prev, { type: 'bot', content: fetcher.data?.response || '' }]);
-    } else if (fetcher.state === 'idle' && fetcher.data?.error) {
-      setError(fetcher?.data?.error || t('error.global'));
-    }
-  }, [fetcher.state, fetcher.data, t]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: scroll to bottom when chat updates
   useEffect(() => {
@@ -60,20 +54,72 @@ function AIModal({ open, onClose }: ModalProps) {
     if (el) requestAnimationFrame(() => el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }));
   }, [chat]);
 
-  const onSubmit = async () => {
+  const handleGenerate = async () => {
     if (loading) return;
     setError(null);
+    setLoading(true);
 
     if (input.trim()) {
       setChat((prev) => [...prev, { type: 'user', content: input.trim() }]);
       setInput('');
     }
 
-    const action = href('/team/:team/:event/schedule/ai/generate', { team: params.team!, event: params.event! });
-    await fetcher.submit({ instructions: input.trim() }, { method: 'POST', action });
-  };
+    try {
+      const path = href('/team/:team/:event/schedule/ai/generate', { team: params.team!, event: params.event! });
+      const res = await fetch(path, {
+        method: 'POST',
+        body: JSON.stringify({ instructions: input.trim() }),
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-  const loading = fetcher.state === 'submitting' || fetcher.state === 'loading';
+      if (!res.ok) {
+        throw new Error(t('error.global'));
+      }
+
+      const reader = res.body?.getReader();
+      if (!reader) {
+        throw new Error(t('error.global'));
+      }
+
+      try {
+        const decoder = new TextDecoder();
+        let output = '';
+        let done = false;
+        while (!done) {
+          const { value, done: readerDone } = await reader.read();
+          setChunkCount((prev) => prev + 1);
+          if (value) {
+            output += decoder.decode(value, { stream: true });
+          }
+          done = readerDone;
+        }
+        output += decoder.decode();
+        const jsonOutput = JSON.parse(output.trim());
+
+        const parsedError = ScheduleGenerationErrorSchema.safeParse(jsonOutput);
+        if (parsedError.success) {
+          throw new Error(parsedError.data.error);
+        }
+
+        const parsedOutput = ScheduleGenerationResultSchema.safeParse(jsonOutput);
+        if (parsedOutput.success) {
+          setChat((prev) => [...prev, { type: 'bot', content: parsedOutput.data.response || '' }]);
+        } else {
+          throw new Error(parsedOutput.error.message);
+        }
+      } finally {
+        reader.releaseLock();
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      }
+    } finally {
+      setLoading(false);
+      setChunkCount(0);
+    }
+    await fetcher.load(href('/team/:team/:event/schedule', { team: params.team!, event: params.event! }));
+  };
 
   return (
     <SlideOver title={t('event-management.schedule.ai-assistant.heading')} size="m" open={open} onClose={onClose}>
@@ -96,7 +142,9 @@ function AIModal({ open, onClose }: ModalProps) {
           {loading ? (
             <div className="flex justify-start items-center gap-2">
               <LoadingIcon className="size-4 text-gray-500" aria-hidden="true" />
-              <Text variant="secondary">{t('event-management.schedule.ai-assistant.reasoning')}</Text>
+              <Text variant="secondary">
+                {t('event-management.schedule.ai-assistant.reasoning')} {` (${chunkCount})`}
+              </Text>
             </div>
           ) : null}
         </div>
@@ -119,14 +167,20 @@ function AIModal({ open, onClose }: ModalProps) {
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                onSubmit();
+                handleGenerate();
               }
             }}
           />
         </div>
 
         <div className="absolute inset-x-0 bottom-4 right-4 flex justify-end py-2 pl-3 pr-2">
-          <Button type="button" variant="secondary" size="square-m" onClick={onSubmit} aria-label={t('common.send')}>
+          <Button
+            type="button"
+            variant="secondary"
+            size="square-m"
+            onClick={handleGenerate}
+            aria-label={t('common.send')}
+          >
             <PaperAirplaneIcon className="size-5 text-gray-400" />
           </Button>
         </div>

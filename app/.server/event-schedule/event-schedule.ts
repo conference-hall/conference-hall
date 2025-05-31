@@ -14,17 +14,17 @@ import {
 } from '~/libs/errors.server.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
+import { ScheduleGenerationResultSchema } from '~/routes/team+/$team.$event+/schedule+/components/schedule.types.ts';
 import { SESSION_COLORS } from '~/routes/team+/$team.$event+/schedule+/components/session/constants.ts';
 import type { Language, Languages } from '~/types/proposals.types.ts';
 import { EventIntegrations } from '../event-settings/event-integrations.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
-import {
-  type ScheduleCreateData,
-  ScheduleGenerationResultSchema,
-  type ScheduleIAGenerateData,
-  type ScheduleSessionCreateData,
-  type ScheduleSessionUpdateData,
-  type ScheduleTracksSaveData,
+import type {
+  ScheduleCreateData,
+  ScheduleIAGenerateData,
+  ScheduleSessionCreateData,
+  ScheduleSessionUpdateData,
+  ScheduleTracksSaveData,
 } from './event-schedule.types.ts';
 
 export class EventSchedule {
@@ -297,6 +297,7 @@ export class EventSchedule {
   // todo(tests)
   async generateWithIA({ instructions }: ScheduleIAGenerateData, locale = 'en') {
     const t = await i18n.getFixedT(locale);
+
     const event = await this.userEvent.needsPermission('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
@@ -398,43 +399,55 @@ export class EventSchedule {
 
     const openai = new OpenAI({ apiKey: openAiConfig.configuration.apiKey });
 
-    try {
-      const response = await openai.responses.parse({
-        model: 'gpt-4.1',
-        temperature: 0,
-        input: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: humanPrompt },
-        ],
-        text: { format: zodTextFormat(ScheduleGenerationResultSchema, 'schedule') },
-      });
+    let openaiStream: any = null;
 
-      const result = response.output_parsed;
+    return new ReadableStream({
+      async start(controller) {
+        try {
+          openaiStream = openai.responses
+            .stream({
+              model: 'gpt-4.1',
+              temperature: 0,
+              input: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: humanPrompt },
+              ],
+              text: { format: zodTextFormat(ScheduleGenerationResultSchema, 'schedule') },
+            })
+            .on('response.output_text.delta', (event) => {
+              controller.enqueue(new TextEncoder().encode(event.delta));
+            });
 
-      if (!result || result.schedule.length === 0) {
-        return result?.response || t('event-management.schedule.ai-assistant.no-changes');
-      }
+          const parsed = await openaiStream.finalResponse();
+          const result = ScheduleGenerationResultSchema.safeParse(parsed.output_parsed);
 
-      for (const session of sessions) {
-        const sheduledSession = result.schedule.find((s) => s.timeslotId === session.id);
+          if (result.success) {
+            for (const session of sessions) {
+              const scheduledSession = result.data.schedule.find((s) => s.timeslotId === session.id);
 
-        await db.scheduleSession.update({
-          where: { id: session.id, scheduleId: schedule.id },
-          data: {
-            name: null,
-            proposalId: sheduledSession?.proposalId || null,
-            language: sheduledSession?.language || null,
-            color: sheduledSession?.color || 'stone',
-          },
-        });
-      }
-
-      return result.response;
-    } catch (error) {
-      if (error instanceof OpenAI.OpenAIError) {
-        throw new Error(error.message);
-      }
-      throw new Error(t('event-management.schedule.ai-assistant.errors.unexpected'));
-    }
+              await db.scheduleSession.update({
+                where: { id: session.id, scheduleId: schedule.id },
+                data: {
+                  name: null,
+                  proposalId: scheduledSession?.proposalId || null,
+                  language: scheduledSession?.language || null,
+                  color: scheduledSession?.color || 'stone',
+                },
+              });
+            }
+          }
+        } catch (error) {
+          let message: string = t('event-management.schedule.ai-assistant.errors.unexpected');
+          if (error instanceof OpenAI.APIError) {
+            message = error.error.message;
+          } else if (error instanceof OpenAI.OpenAIError) {
+            message = error.message;
+          }
+          controller.enqueue(new TextEncoder().encode(JSON.stringify({ error: message })));
+        } finally {
+          controller.close();
+        }
+      },
+    });
   }
 }
