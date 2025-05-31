@@ -62,18 +62,6 @@ export const ScheduleSessionUpdateSchema = ScheduleSessionCreateSchema.extend({
 
 export const SchedulSessionIdSchema = z.string();
 
-export const ScheduleGenerationResultSchema = z.object({
-  schedule: z.array(
-    z.object({
-      timeslotId: z.string(),
-      proposalId: z.string().nullable(),
-      color: z.string(),
-      language: z.string().nullable(),
-    }),
-  ),
-  response: z.string().nullable(),
-});
-
 export const ScheduleIAGenerateSchema = z.object({
   instructions: z.string().optional(),
 });

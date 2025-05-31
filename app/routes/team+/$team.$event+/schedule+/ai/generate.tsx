@@ -1,4 +1,3 @@
-import { parseWithZod } from '@conform-to/zod';
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import { ScheduleIAGenerateSchema } from '~/.server/event-schedule/event-schedule.types.ts';
 import { requireUserSession } from '~/libs/auth/session.ts';
@@ -11,17 +10,26 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   const { userId } = await requireUserSession(request);
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
-  const form = await request.formData();
 
-  const result = parseWithZod(form, { schema: ScheduleIAGenerateSchema });
-  if (result.status !== 'success') return { error: t('error.global'), success: false } as const;
+  const body = await request.json();
+  const result = ScheduleIAGenerateSchema.safeParse(body);
+
+  if (!result.success) return Response.json({ error: result.error.message });
 
   try {
-    const response = await eventSchedule.generateWithIA(result.value, locale);
-    return { errors: null, success: true, response } as const;
+    const stream = await eventSchedule.generateWithIA(result.data, locale);
+
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Transfer-Encoding': 'chunked',
+        'Cache-Control': 'no-store',
+      },
+    });
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message, success: false } as const;
+      return Response.json({ error: error.message });
     }
+    return Response.json({ error: t('error.global') });
   }
 };
