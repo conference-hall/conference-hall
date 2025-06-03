@@ -1,5 +1,5 @@
 import { type ReactNode, createContext, useContext } from 'react';
-import type { loader } from '~/routes/team+/$team.tsx';
+import type { loader } from '~/routes/team/$team.tsx';
 import type { SerializeFrom } from '~/types/react-router.types.ts';
 
 type CurrentTeam = SerializeFrom<typeof loader>;
@@ -16,7 +16,7 @@ export const CurrentTeamProvider = ({ children, team }: TeamProviderProps) => {
 };
 
 /**
- * Returns the current tean under the route "team+/$team"
+ * Returns the current tean under the route "/team/$team"
  * @returns {CurrentTeam}
  */
 export function useCurrentTeam(): CurrentTeam {

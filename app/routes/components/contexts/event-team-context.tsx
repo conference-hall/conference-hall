@@ -1,5 +1,5 @@
 import { type ReactNode, createContext, useContext } from 'react';
-import type { loader } from '~/routes/team+/$team.$event+/_layout.tsx';
+import type { loader } from '~/routes/team/$team.$event/_layout.tsx';
 import type { SerializeFrom } from '~/types/react-router.types.ts';
 
 type CurrentEvent = SerializeFrom<typeof loader>;
@@ -16,7 +16,7 @@ export const CurrentEventTeamProvider = ({ children, event }: EventTeamProviderP
 };
 
 /**
- * Returns the current event under the route "team+/$team.$event+"
+ * Returns the current event under the route "/team/$team.$event"
  * @returns {CurrentEvent}
  */
 export function useCurrentEvent(): CurrentEvent {
