@@ -8,7 +8,7 @@ import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { validateEmailAndPassword } from '~/libs/validators/auth.ts';
-import { PasswordInput } from '~/routes/auth+/components/password-input.tsx';
+import { PasswordInput } from '~/routes/auth/components/password-input.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 export function NewEmailProviderModal() {
