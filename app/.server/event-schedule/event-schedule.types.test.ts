@@ -31,9 +31,23 @@ describe('EventSchedule types', () => {
       });
     });
 
-    it('returns some specific errors', async () => {
+    it('returns "name" errors', async () => {
       const result = ScheduleCreateSchema.safeParse({
         name: '',
+        timezone: 'Europe/Paris',
+        start: '2024-01-02',
+        end: '2024-01-03',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error?.flatten().fieldErrors).toEqual({
+        name: ['String must contain at least 1 character(s)'],
+      });
+    });
+
+    it('returns "dates" errors', async () => {
+      const result = ScheduleCreateSchema.safeParse({
+        name: 'Hello World',
         timezone: 'Europe/Paris',
         start: '2024-01-03',
         end: '2024-01-02',
@@ -41,7 +55,6 @@ describe('EventSchedule types', () => {
 
       expect(result.success).toBe(false);
       expect(result.error?.flatten().fieldErrors).toEqual({
-        name: ['String must contain at least 1 character(s)'],
         start: ['Schedule start date must be before the end date.'],
       });
     });

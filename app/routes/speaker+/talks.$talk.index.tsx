@@ -13,7 +13,7 @@ import { TalkSubmissionsSection } from '../components/talks/talk-submissions-sec
 import type { Route } from './+types/talks.$talk.index.ts';
 
 export const meta = (args: Route.MetaArgs) => {
-  return mergeMeta(args.matches, [{ title: `${args.data.title} | Conference Hall` }]);
+  return mergeMeta(args.matches, [{ title: `${args.data?.title} | Conference Hall` }]);
 };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

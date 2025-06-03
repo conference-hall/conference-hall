@@ -1,4 +1,4 @@
-import type { MetaDescriptors } from 'react-router/route-module';
+import type { MetaDescriptor } from 'react-router';
 import { mergeMeta } from './merge-meta.ts';
 
 describe('mergeMeta', () => {
@@ -54,8 +54,8 @@ describe('mergeMeta', () => {
   });
 
   it('handles empty matches and routeMeta', () => {
-    const matches: Array<{ meta: MetaDescriptors }> = [];
-    const routeMeta: MetaDescriptors = [];
+    const matches: Array<{ meta: MetaDescriptor[] }> = [];
+    const routeMeta: MetaDescriptor[] = [];
 
     const result = mergeMeta(matches, routeMeta);
     expect(result).toEqual([]);

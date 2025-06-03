@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, data } from 'react-router';
-import type { MetaDescriptors } from 'react-router/route-module';
+import { Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestoration, data } from 'react-router';
 import { useChangeLanguage } from 'remix-i18next/react';
 import type { Route } from './+types/root.ts';
 import { UserInfo } from './.server/user-registration/user-info.ts';
@@ -26,7 +25,7 @@ const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
 const isMaintenanceMode = process.env.MAINTENANCE_ENABLED === 'true';
 
 export const meta = ({ data }: Route.MetaArgs) => {
-  const metatags: MetaDescriptors = [{ title: data.title }, { name: 'description', content: data.description }];
+  const metatags: MetaDescriptor[] = [{ title: data?.title }, { name: 'description', content: data?.description }];
   const isSeoEnabled = data?.flags?.seo;
   if (!isSeoEnabled) metatags.push({ name: 'robots', content: 'noindex' });
   return metatags;

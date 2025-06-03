@@ -17,9 +17,9 @@ import { EventTabs } from './components/event-tabs.tsx';
 export const meta = (args: Route.MetaArgs) => {
   const { data, matches } = args;
   return mergeMeta(matches, [
-    { title: `${data.name} | Conference Hall` },
-    { name: 'description', content: `Submit your proposal to ${data.name} call for papers.` },
-    ...eventSocialCard({ name: data.name, slug: data.slug, logoUrl: data.logoUrl }),
+    { title: `${data?.name} | Conference Hall` },
+    { name: 'description', content: `Submit your proposal to ${data?.name} call for papers.` },
+    ...(data ? eventSocialCard({ name: data.name, slug: data.slug, logoUrl: data.logoUrl }) : []),
   ]);
 };
 
