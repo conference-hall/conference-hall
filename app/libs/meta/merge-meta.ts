@@ -1,13 +1,13 @@
-import type { MetaDescriptors } from 'react-router/route-module';
+import type { MetaDescriptor } from 'react-router';
 
-type MetaMatches = Array<{ meta: MetaDescriptors } | undefined>;
+type MetaMatches = Array<{ meta: MetaDescriptor[] } | undefined>;
 
-export function mergeMeta(matches: MetaMatches = [], routeMeta: MetaDescriptors = []) {
+export function mergeMeta(matches: MetaMatches = [], routeMeta: MetaDescriptor[] = []) {
   const parentMeta = matches?.flatMap((match) => match?.meta ?? []);
   return deduplicateMetaTags([...parentMeta, ...routeMeta]);
 }
 
-function deduplicateMetaTags(meta: MetaDescriptors) {
+function deduplicateMetaTags(meta: MetaDescriptor[]) {
   const metaReverse = meta.slice().reverse();
   const seen = new Set();
   return metaReverse.filter((tag) => {

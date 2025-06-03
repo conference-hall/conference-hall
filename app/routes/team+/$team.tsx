@@ -11,7 +11,7 @@ import { useScheduleFullscreen } from './$team.$event+/schedule+/components/head
 import type { Route } from './+types/$team.ts';
 
 export const meta = (args: Route.MetaArgs) => {
-  return mergeMeta(args.matches, [{ title: `${args.data.name} | Conference Hall` }]);
+  return mergeMeta(args.matches, [{ title: `${args.data?.name} | Conference Hall` }]);
 };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
