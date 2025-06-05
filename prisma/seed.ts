@@ -67,9 +67,16 @@ async function seed() {
     team: team2,
   });
 
+  const bdx_io_team = await teamFactory({
+    owners: [user],
+    members: [user2],
+    attributes: { name: 'BDX I/O', slug: 'bdx-io' },
+  });
+
   await eventFactory({
     traits: ['conference-cfp-future'],
-    attributes: { name: 'BDX.io', slug: 'bdx-io' },
+    attributes: { name: 'BDX I/O', slug: 'bdx-io' },
+    team: bdx_io_team,
   });
 
   await eventFactory({
