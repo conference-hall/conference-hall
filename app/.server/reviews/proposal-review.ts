@@ -133,21 +133,19 @@ export class ProposalReview {
     const event = await this.userEvent.needsPermission('canAccessEvent');
     if (!event.reviewEnabled) throw new ReviewDisabledError();
 
-    await db.$transaction(async (trx) => {
-      await trx.review.upsert({
-        where: { userId_proposalId: { userId: this.userId, proposalId: this.proposalId } },
-        create: { userId: this.userId, proposalId: this.proposalId, ...data },
-        update: data,
-      });
-
-      const reviews = await trx.review.findMany({
-        where: { proposalId: this.proposalId, feeling: { not: 'NO_OPINION' } },
-      });
-
-      const reviewsDetails = new ReviewDetails(reviews);
-      const average = reviewsDetails.summary().average ?? null;
-      await trx.proposal.update({ where: { id: this.proposalId }, data: { avgRateForSort: average } });
+    await db.review.upsert({
+      where: { userId_proposalId: { userId: this.userId, proposalId: this.proposalId } },
+      create: { userId: this.userId, proposalId: this.proposalId, ...data },
+      update: data,
     });
+
+    const reviews = await db.review.findMany({
+      where: { proposalId: this.proposalId, feeling: { not: 'NO_OPINION' } },
+    });
+
+    const reviewsDetails = new ReviewDetails(reviews);
+    const average = reviewsDetails.summary().average ?? null;
+    await db.proposal.update({ where: { id: this.proposalId }, data: { avgRateForSort: average } });
   }
 
   async update(data: ProposalUpdateData) {
