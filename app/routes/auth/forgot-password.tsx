@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { UserAccount } from '~/.server/user-registration/user-account.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
-import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
@@ -73,8 +72,8 @@ export default function ForgotPassword({ actionData }: Route.ComponentProps) {
               defaultValue={defaultEmail}
               required
             />
-            <Button type="submit" variant="primary" disabled={loading} className="w-full mt-2">
-              {loading ? <LoadingIcon className="size-4" /> : t('auth.forgot-password.form.submit')}
+            <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
+              {t('auth.forgot-password.form.submit')}
             </Button>
           </Form>
         </Card>
