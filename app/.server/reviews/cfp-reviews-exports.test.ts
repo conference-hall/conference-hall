@@ -52,6 +52,7 @@ describe('CfpReviewsExports', () => {
           title: proposal.title,
           deliberationStatus: proposal.deliberationStatus,
           confirmationStatus: proposal.confirmationStatus,
+          publicationStatus: proposal.publicationStatus,
           abstract: proposal.abstract,
           languages: proposal.languages,
           references: proposal.references,
@@ -59,7 +60,7 @@ describe('CfpReviewsExports', () => {
           formats: [{ id: format.id, name: format.name, description: format.description }],
           categories: [{ id: category.id, name: category.name, description: category.description }],
           tags: [tag.name],
-          reviews: { negatives: 0, positives: 0, average: null },
+          review: { negatives: 0, positives: 0, average: null },
           speakers: [
             {
               name: speaker.name,

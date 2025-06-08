@@ -36,6 +36,7 @@ export class CfpReviewsExports {
         abstract: proposal.abstract,
         deliberationStatus: proposal.deliberationStatus,
         confirmationStatus: proposal.confirmationStatus,
+        publicationStatus: proposal.publicationStatus,
         level: proposal.level,
         references: proposal.references,
         formats: proposal.formats.map((format) => ({
@@ -60,7 +61,7 @@ export class CfpReviewsExports {
           email: speaker.email,
           socialLinks: speaker.socialLinks as SocialLinks,
         })),
-        reviews: reviews.summary(),
+        review: reviews.summary(),
       };
     });
   }

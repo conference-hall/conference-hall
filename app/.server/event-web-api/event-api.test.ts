@@ -59,6 +59,7 @@ describe('#EventApi', () => {
                 references: speaker.references,
                 location: speaker.location,
                 picture: speaker.picture,
+                email: speaker.email,
                 socialLinks: speaker.socialLinks,
               },
             ],
