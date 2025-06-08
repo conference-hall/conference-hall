@@ -56,7 +56,7 @@ export class TalkSubmission {
           speakers: { connect: speakers.map(({ id }) => ({ id })) },
         },
       });
-      // TEMP: check event speakers to delete from event ?
+      // TODO: check event speakers to delete from event ?
     });
 
     return { talkId: talk.id };

@@ -86,6 +86,6 @@ export class EventSpeaker {
       data: { speakers: newSpeaker ? { disconnect: { id: newSpeaker.id } } : undefined },
     });
 
-    // TEMP: check event speakers to delete from event ?
+    // TODO: check event speakers to delete from event ?
   }
 }
