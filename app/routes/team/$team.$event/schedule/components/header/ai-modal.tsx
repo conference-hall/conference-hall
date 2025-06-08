@@ -2,7 +2,7 @@ import { SparklesIcon } from '@heroicons/react/16/solid';
 import { PaperAirplaneIcon } from '@heroicons/react/20/solid';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { href, useFetcher, useParams } from 'react-router';
+import { href, useParams, useRevalidator } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
@@ -36,7 +36,7 @@ type ChatMessage = { type: 'user' | 'bot'; content: string };
 type ModalProps = { open: boolean; onClose: VoidFunction };
 
 function AIModal({ open, onClose }: ModalProps) {
-  const fetcher = useFetcher();
+  const { revalidate } = useRevalidator();
   const { t } = useTranslation();
   const params = useParams();
 
@@ -118,7 +118,8 @@ function AIModal({ open, onClose }: ModalProps) {
       setLoading(false);
       setChunkCount(0);
     }
-    await fetcher.load(href('/team/:team/:event/schedule', { team: params.team!, event: params.event! }));
+
+    await revalidate();
   };
 
   return (
