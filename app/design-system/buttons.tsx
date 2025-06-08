@@ -1,12 +1,13 @@
 import type { VariantProps } from 'class-variance-authority';
-import { cva } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import type React from 'react';
 import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
+import { LoadingIcon } from './icons/loading-icon.tsx';
 
 export const button = cva(
   [
-    'inline-flex items-center justify-center gap-x-2',
+    'inline-flex items-center justify-center gap-x-2 relative',
     'whitespace-nowrap rounded-md shadow-xs cursor-pointer',
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
   ],
@@ -24,7 +25,7 @@ export const button = cva(
         'square-m': 'size-9 text-sm font-semibold',
       },
       disabled: { true: 'opacity-50 disabled:cursor-not-allowed' },
-      loading: { true: 'opacity-50' },
+      loading: { true: 'cursor-not-allowed' },
       block: { true: 'sm:w-full' },
     },
     defaultVariants: { variant: 'primary', size: 'm' },
@@ -44,6 +45,7 @@ const icon = cva('shrink-0', {
       'square-s': 'size-5',
       'square-m': 'size-5',
     },
+    loading: { true: 'invisible' },
   },
   defaultVariants: { size: 'm' },
 });
@@ -69,13 +71,15 @@ export function Button({
   className,
   ...rest
 }: ButtonProps) {
+  const buttonDisabled = Boolean(disabled || loading);
   const styles = button({ variant, size, block, disabled, loading, className });
 
   return (
-    <button className={styles} disabled={disabled} aria-disabled={disabled} {...rest}>
-      {IconLeft && <IconLeft className={icon({ variant, size })} aria-hidden="true" />}
-      {children}
-      {IconRight && <IconRight className={icon({ variant, size })} aria-hidden="true" />}
+    <button className={styles} disabled={buttonDisabled} aria-disabled={buttonDisabled} {...rest}>
+      {IconLeft && <IconLeft className={icon({ variant, size, loading })} aria-hidden="true" />}
+      {loading && <LoadingIcon className={icon({ variant, size, className: 'absolute' })} />}
+      <span className={cx({ invisible: loading })}>{children}</span>
+      {IconRight && <IconRight className={icon({ variant, size, loading })} aria-hidden="true" />}
     </button>
   );
 }
@@ -98,9 +102,10 @@ export function ButtonLink({
 
   return (
     <Link className={styles} {...rest}>
-      {IconLeft && <IconLeft className={icon({ variant, size })} aria-hidden="true" />}
-      {children}
-      {IconRight && <IconRight className={icon({ variant, size })} aria-hidden="true" />}
+      {IconLeft && <IconLeft className={icon({ variant, size, loading })} aria-hidden="true" />}
+      {loading && <LoadingIcon className={icon({ variant, size, className: 'absolute' })} />}
+      <span className={cx({ invisible: loading })}>{children}</span>
+      {IconRight && <IconRight className={icon({ variant, size, loading })} aria-hidden="true" />}
     </Link>
   );
 }

@@ -5,7 +5,6 @@ import { Form, redirect, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
-import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
@@ -82,8 +81,8 @@ export default function ResetPassword() {
         <Form className="space-y-4" onSubmit={resetPassword}>
           <PasswordInput value={password} onChange={setPassword} isNewPassword error={fieldErrors?.password} />
 
-          <Button type="submit" variant="primary" disabled={loading} className="w-full mt-2">
-            {loading ? <LoadingIcon className="size-4" /> : t('auth.reset-password.submit')}
+          <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
+            {t('auth.reset-password.submit')}
           </Button>
 
           {error ? (

@@ -472,7 +472,7 @@
   "event-management.settings.cfp.preferences.heading": "Préférences du call for papers",
   "event-management.settings.cfp.preferences.max-proposals.description": "Facultatif. Limite le nombre de propositions qu'un speaker peut soumettre à l'événement.",
   "event-management.settings.cfp.preferences.max-proposals.label": "Maximum de propositions par speaker",
-  "event-management.settings.cfp.preferences.submit": "Mettre à jour les préférences de la CFP",
+  "event-management.settings.cfp.preferences.submit": "Mettre à jour les préférences du CFP",
   "event-management.settings.customize.errors.upload": "Une erreur s'est produite pendant le téléchargement, il se peut que la taille maximale du fichier soit dépassée.",
   "event-management.settings.customize.feedbacks.logo-updated": "Logo mis à jour.",
   "event-management.settings.customize.logo.description": "Télécharger un logo pour votre événement.",

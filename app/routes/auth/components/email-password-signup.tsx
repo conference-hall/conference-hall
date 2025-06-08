@@ -5,7 +5,6 @@ import { Form, useNavigation, useSubmit } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
-import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { validateEmailAndPassword } from '~/libs/validators/auth.ts';
@@ -68,8 +67,8 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail }: EmailPasswordS
       />
       <PasswordInput value={password} onChange={setPassword} error={fieldErrors?.password} isNewPassword />
 
-      <Button type="submit" variant="primary" disabled={loading} className="w-full mt-2">
-        {loading ? <LoadingIcon className="size-4" /> : t('auth.common.sign-up')}
+      <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
+        {t('auth.common.sign-up')}
       </Button>
 
       {error ? (
