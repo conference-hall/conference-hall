@@ -1,6 +1,5 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
-import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
@@ -30,8 +29,7 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
 
   return (
     <>
-      <Button variant="secondary" size="s" onClick={() => setOpen(true)}>
-        <Icon className={cx('w-4 h-4', color)} aria-hidden />
+      <Button variant="secondary" size="s" iconLeft={Icon} iconClassName={color} onClick={() => setOpen(true)}>
         {t(i18nKey)}
       </Button>
 
