@@ -73,7 +73,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
             {questions.map((question, index) => (
               <List.Row
                 key={question.id}
-                className="p-4 sm:px-6 flex flex-col items-start gap-4 sm:flex-row sm:justify-between"
+                className="p-4 flex flex-col items-start gap-4 sm:flex-row sm:justify-between"
               >
                 <div className="space-y-0.5 grow">
                   <div className="flex gap-2">

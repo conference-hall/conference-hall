@@ -40,7 +40,7 @@ export function ProposalsList({ proposals, pagination, statistics, filtersHash }
       />
       <List.Content aria-label={t('event-management.proposals.list')}>
         {proposals.map((proposal) => (
-          <List.Row key={proposal.id} className="hover:bg-gray-50 px-4 sm:px-6">
+          <List.Row key={proposal.id} className="hover:bg-gray-50 px-4">
             <ProposalItem
               proposal={proposal}
               isSelected={selector.isSelected(proposal.id)}
