@@ -1,10 +1,18 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
-import { CalendarIcon, Cog6ToothIcon, HomeIcon, MegaphoneIcon, QueueListIcon } from '@heroicons/react/24/outline';
+import {
+  CalendarIcon,
+  Cog6ToothIcon,
+  HomeIcon,
+  MegaphoneIcon,
+  QueueListIcon,
+  UserGroupIcon,
+} from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, useSearchParams } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
+import { useFlag } from '~/routes/components/contexts/flags-context.tsx';
 import type { EventType } from '~/types/events.types.ts';
 import type { UserPermissions } from '~/types/team.types.ts';
 
@@ -14,6 +22,7 @@ export function EventTabs({ teamSlug, eventSlug, eventType, permissions }: Props
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const search = searchParams.toString();
+  const speakersPageEnabled = useFlag('speakersPage');
 
   return (
     <Page.NavHeader className="flex items-center space-between">
@@ -32,6 +41,15 @@ export function EventTabs({ teamSlug, eventSlug, eventType, permissions }: Props
         >
           {t('event-management.nav.proposals')}
         </NavTab>
+
+        {speakersPageEnabled ? (
+          <NavTab
+            to={{ pathname: href('/team/:team/:event/speakers', { team: teamSlug, event: eventSlug }), search }}
+            icon={UserGroupIcon}
+          >
+            {t('event-management.nav.speakers')}
+          </NavTab>
+        ) : null}
 
         {eventType === 'CONFERENCE' && permissions.canPublishEventResults ? (
           <NavTab
