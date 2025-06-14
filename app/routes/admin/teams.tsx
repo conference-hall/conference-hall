@@ -57,7 +57,7 @@ export default function AdminTeamsRoute({ loaderData }: Route.ComponentProps) {
 
         <List.Content aria-label={t('admin.nav.teams')}>
           {results.map((team) => (
-            <List.Row key={team.id} className="flex justify-between items-center gap-4 px-4 py-4 sm:px-6">
+            <List.Row key={team.id} className="flex justify-between items-center gap-4 p-4">
               <div className="min-w-0">
                 <Text size="s" weight="medium" truncate>
                   {team.name}

@@ -129,6 +129,7 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
       name: String(fetcher.formData?.get('name') ?? ''),
       language: String(fetcher.formData?.get('language') ?? '') as Language | null,
       emojis: fetcher.formData?.getAll('emojis') as string[],
+      isCreating: fetcher.formData.get('intent') === 'add-session',
       timeslot: {
         start: utcToTimezone(String(fetcher.formData?.get('start')), timezone),
         end: utcToTimezone(String(fetcher.formData?.get('end')), timezone),

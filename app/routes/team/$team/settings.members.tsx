@@ -83,7 +83,7 @@ export default function TeamMembersRoute({ loaderData }: Route.ComponentProps) {
               <ul aria-label={t('team.settings.members.list')} className="divide-y divide-gray-200">
                 {results.map((member) => (
                   <li key={member.id}>
-                    <div className="flex flex-col px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                    <div className="flex flex-col px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
                       <AvatarName
                         picture={member.picture}
                         name={member.name || t('common.unknown')}
