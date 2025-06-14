@@ -19,4 +19,10 @@ export default defineFlagsConfig({
     defaultValue: 'gdg-nantes',
     tags: ['frontend'] as const,
   },
+  speakersPage: {
+    description: 'Enables the speakers page in event management.',
+    type: 'boolean',
+    defaultValue: false,
+    tags: ['frontend'] as const,
+  },
 });
