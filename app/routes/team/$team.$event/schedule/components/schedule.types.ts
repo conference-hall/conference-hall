@@ -13,6 +13,7 @@ export type ScheduleSession = {
   color: string;
   emojis: string[];
   proposal?: ScheduleProposalData | null;
+  isCreating?: boolean;
 };
 
 export type SessionData = {
@@ -25,6 +26,7 @@ export type SessionData = {
   color: string;
   emojis: string[];
   proposal?: ScheduleProposalData | null;
+  isCreating?: boolean;
 };
 
 export type ScheduleProposalData = {

@@ -48,6 +48,7 @@ export function SessionBlock({
             'text-[10px] items-center gap-1 flex-row': size === 'sm',
             'text-[10px] items-baseline leading-3 gap-1 flex-row': size === 'md',
             'text-xs leading-3.5 justify-between': size === 'lg' || size === 'xl',
+            'border-dotted': session.isCreating,
           },
           block,
         )}
