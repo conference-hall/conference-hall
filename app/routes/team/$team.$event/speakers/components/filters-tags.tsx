@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import type { SpeakerSearchFilters } from '~/.server/event-speakers/event-speakers.ts';
 import { FilterTag } from '~/design-system/filter-tag.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
-type FiltersBadgesProps = { filters: SpeakerSearchFilters };
+type FiltersBadgesProps = {
+  filters: { query?: string; proposalStatus?: 'accepted' | 'confirmed' | 'declined' };
+};
 
 export function FiltersTags({ filters }: FiltersBadgesProps) {
   const { t } = useTranslation();

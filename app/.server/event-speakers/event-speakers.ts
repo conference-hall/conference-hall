@@ -5,13 +5,13 @@ import { z } from 'zod';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { Pagination } from '../shared/pagination.ts';
 
-export const SpeakerSearchFiltersSchema = z.object({
+const SpeakerSearchFiltersSchema = z.object({
   query: z.string().trim().optional(),
   proposalStatus: z.enum(['accepted', 'confirmed', 'declined']).optional(),
   sort: z.enum(['name-asc', 'name-desc']).optional(),
 });
 
-export type SpeakerSearchFilters = z.infer<typeof SpeakerSearchFiltersSchema>;
+type SpeakerSearchFilters = z.infer<typeof SpeakerSearchFiltersSchema>;
 
 export class EventSpeakers {
   constructor(private userEvent: UserEvent) {}

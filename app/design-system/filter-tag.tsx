@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router';
 
-export type FilterTagProps = {
+type FilterTagProps = {
   name: string;
   value?: string;
 };
