@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, useSearchParams } from 'react-router';
 import { Input } from '~/design-system/forms/input.tsx';
 import { FiltersMenu } from './filters-menu.tsx';
+import { SortMenu } from './sort-menu.tsx';
 
 export function Filters() {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ export function Filters() {
   const { query, ...filters } = Object.fromEntries(params.entries());
 
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex flex-col gap-2 sm:flex-row">
       <Form method="GET" className="w-full">
         {Object.keys(filters).map((key) => (
           <input key={key} type="hidden" name={key} value={filters[key]} />
@@ -24,7 +25,10 @@ export function Filters() {
           aria-label={t('event-management.speakers.search')}
         />
       </Form>
-      <FiltersMenu />
+      <div className="flex gap-2">
+        <FiltersMenu />
+        <SortMenu />
+      </div>
     </div>
   );
 }

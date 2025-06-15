@@ -251,6 +251,8 @@
   "common.sort.most-comments": "Le plus de commentaires",
   "common.sort.newest": "Le plus récent",
   "common.sort.oldest": "Le plus ancien",
+  "common.sort.name-asc": "Nom A-Z",
+  "common.sort.name-desc": "Nom Z-A",
   "common.sort": "Trier",
   "common.speakers": "Speakers",
   "common.sponsor": "Soutenir Conference Hall",

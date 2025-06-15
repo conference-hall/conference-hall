@@ -251,6 +251,8 @@
   "common.sort.most-comments": "Most comments",
   "common.sort.newest": "Newest",
   "common.sort.oldest": "Oldest",
+  "common.sort.name-asc": "Name A-Z",
+  "common.sort.name-desc": "Name Z-A",
   "common.sort": "Sort",
   "common.speakers": "Speakers",
   "common.sponsor": "Support Conference Hall",

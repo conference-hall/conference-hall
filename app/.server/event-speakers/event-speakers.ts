@@ -8,6 +8,7 @@ import { Pagination } from '../shared/pagination.ts';
 export const SpeakerSearchFiltersSchema = z.object({
   query: z.string().trim().optional(),
   proposalStatus: z.enum(['accepted', 'confirmed', 'declined']).optional(),
+  sort: z.enum(['name-asc', 'name-desc']).optional(),
 });
 
 type SpeakerSearchFilters = z.infer<typeof SpeakerSearchFiltersSchema>;
@@ -23,7 +24,7 @@ export class EventSpeakers {
   async search(filters: SpeakerSearchFilters, page = 1) {
     const event = await this.userEvent.needsPermission('canAccessEvent');
 
-    const { query, proposalStatus } = filters;
+    const { query, proposalStatus, sort = 'name-asc' } = filters;
 
     const whereClause: Prisma.EventSpeakerWhereInput = {
       eventId: event.id,
@@ -61,7 +62,7 @@ export class EventSpeakers {
     const speakers = await db.eventSpeaker.findMany({
       where: whereClause,
       include: { proposals: true },
-      orderBy: { name: 'asc' },
+      orderBy: { name: sort === 'name-desc' ? 'desc' : 'asc' },
       skip: pagination.pageIndex * pagination.pageSize,
       take: pagination.pageSize,
     });
