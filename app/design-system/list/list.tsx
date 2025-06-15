@@ -46,10 +46,7 @@ function RowLink({ children, className, ...rest }: RowLinkProps) {
     <li className="flex">
       <Link
         {...rest}
-        className={cx(
-          'w-full rounded-xs px-4 py-4 sm:px-6 hover:bg-gray-50 focus-visible:-outline-offset-1',
-          className,
-        )}
+        className={cx('w-full rounded-xs p-4 hover:bg-gray-50 focus-visible:-outline-offset-1', className)}
       >
         {children}
       </Link>
@@ -61,7 +58,7 @@ List.RowLink = RowLink;
 
 // <List.Footer /> component
 function Footer({ children }: { children: ReactNode }) {
-  return <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">{children}</div>;
+  return <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3">{children}</div>;
 }
 
 List.Footer = Footer;

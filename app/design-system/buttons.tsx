@@ -7,7 +7,7 @@ import { LoadingIcon } from './icons/loading-icon.tsx';
 
 export const button = cva(
   [
-    'inline-flex items-center justify-center gap-x-2 relative',
+    'inline-flex items-center justify-center relative',
     'whitespace-nowrap rounded-md shadow-xs cursor-pointer',
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
   ],
@@ -19,8 +19,8 @@ export const button = cva(
         important: 'text-red-600 bg-white hover:bg-red-50 ring-1 ring-inset ring-gray-300',
       },
       size: {
-        s: 'h-7 px-2.5 py-1.5 text-xs font-semibold',
-        m: 'h-9 px-3 py-2 text-sm font-semibold',
+        s: 'h-7 px-2.5 py-1.5 text-xs font-semibold gap-x-1',
+        m: 'h-9 px-3 py-2 text-sm font-semibold gap-x-2',
         'square-s': 'size-7 text-xs font-semibold',
         'square-m': 'size-9 text-sm font-semibold',
       },
@@ -40,7 +40,7 @@ const icon = cva('shrink-0', {
       important: 'text-red-500 group-hover:text-red-600',
     },
     size: {
-      s: 'size-5',
+      s: 'size-4',
       m: 'size-5',
       'square-s': 'size-5',
       'square-m': 'size-5',
@@ -55,6 +55,7 @@ type ButtonVariants = VariantProps<typeof button>;
 export type ButtonStylesProps = ButtonVariants & {
   iconLeft?: React.ComponentType<{ className?: string }>;
   iconRight?: React.ComponentType<{ className?: string }>;
+  iconClassName?: string;
 };
 
 type ButtonProps = ButtonStylesProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
@@ -68,6 +69,7 @@ export function Button({
   loading,
   iconLeft: IconLeft,
   iconRight: IconRight,
+  iconClassName,
   className,
   ...rest
 }: ButtonProps) {
@@ -76,10 +78,14 @@ export function Button({
 
   return (
     <button className={styles} disabled={buttonDisabled} aria-disabled={buttonDisabled} {...rest}>
-      {IconLeft && <IconLeft className={icon({ variant, size, loading })} aria-hidden="true" />}
+      {IconLeft && (
+        <IconLeft className={icon({ variant, size, loading, className: iconClassName })} aria-hidden="true" />
+      )}
       {loading && <LoadingIcon className={icon({ variant, size, className: 'absolute' })} />}
       <span className={cx({ invisible: loading })}>{children}</span>
-      {IconRight && <IconRight className={icon({ variant, size, loading })} aria-hidden="true" />}
+      {IconRight && (
+        <IconRight className={icon({ variant, size, loading, className: iconClassName })} aria-hidden="true" />
+      )}
     </button>
   );
 }

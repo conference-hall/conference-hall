@@ -369,10 +369,20 @@ function SessionWrapper({ session, renderSession, interval, zoomLevel }: Session
   });
 
   // draggable to move session
-  const movable = useDraggable({ id: `move:${session.id}`, type: 'move-session', data: { session } });
+  const movable = useDraggable({
+    id: `move:${session.id}`,
+    type: 'move-session',
+    data: { session },
+    disabled: session.isCreating,
+  });
 
   // draggable to resize session
-  const resizable = useDraggable({ id: `resize:${session.id}`, type: 'resize-session', data: { session } });
+  const resizable = useDraggable({
+    id: `resize:${session.id}`,
+    type: 'resize-session',
+    data: { session },
+    disabled: session.isCreating,
+  });
 
   // droppable to switch sessions
   const droppable = useDroppable({
