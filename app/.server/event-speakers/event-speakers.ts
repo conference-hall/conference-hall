@@ -7,29 +7,51 @@ import { Pagination } from '../shared/pagination.ts';
 
 export const SpeakerSearchFiltersSchema = z.object({
   query: z.string().trim().optional(),
+  proposalStatus: z.enum(['accepted', 'confirmed', 'declined']).optional(),
 });
 
 type SpeakerSearchFilters = z.infer<typeof SpeakerSearchFiltersSchema>;
 
 export class EventSpeakers {
-  constructor(
-    private userId: string,
-    private userEvent: UserEvent,
-  ) {}
+  constructor(private userEvent: UserEvent) {}
 
   static for(userId: string, teamSlug: string, eventSlug: string) {
     const userEvent = UserEvent.for(userId, teamSlug, eventSlug);
-    return new EventSpeakers(userId, userEvent);
+    return new EventSpeakers(userEvent);
   }
 
   async search(filters: SpeakerSearchFilters, page = 1) {
     const event = await this.userEvent.needsPermission('canAccessEvent');
 
-    const { query } = filters;
+    const { query, proposalStatus } = filters;
 
     const whereClause: Prisma.EventSpeakerWhereInput = {
       eventId: event.id,
       name: query ? { contains: query, mode: 'insensitive' } : undefined,
+      proposals: proposalStatus
+        ? proposalStatus === 'accepted'
+          ? {
+              some: {
+                deliberationStatus: 'ACCEPTED',
+                isDraft: false,
+              },
+            }
+          : proposalStatus === 'confirmed'
+            ? {
+                some: {
+                  confirmationStatus: 'CONFIRMED',
+                  isDraft: false,
+                },
+              }
+            : proposalStatus === 'declined'
+              ? {
+                  some: {
+                    confirmationStatus: 'DECLINED',
+                    isDraft: false,
+                  },
+                }
+              : undefined
+        : undefined,
     };
 
     const total = await db.eventSpeaker.count({ where: whereClause });

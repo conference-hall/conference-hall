@@ -1,20 +1,17 @@
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { UserGroupIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { data } from 'react-router';
-import { Form, useSearchParams } from 'react-router';
 import { EventSpeakers, parseUrlFilters } from '~/.server/event-speakers/event-speakers.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Badge } from '~/design-system/badges.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
-import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
-import { H1, Subtitle, Text } from '~/design-system/typography.tsx';
+import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import type { Route } from './+types/index.ts';
+import { Filters } from './components/filters.tsx';
+import { SpeakersEmptyState } from './components/speakers-empty-state.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
@@ -30,28 +27,6 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return eventSpeakers.search(filters, page);
 };
 
-function Filters() {
-  const { t } = useTranslation();
-  const [params] = useSearchParams();
-  const { query, ...filters } = Object.fromEntries(params.entries());
-
-  return (
-    <Form method="GET" className="w-full max-w-md">
-      {Object.keys(filters).map((key) => (
-        <input key={key} type="hidden" name={key} value={filters[key]} />
-      ))}
-      <Input
-        name="query"
-        icon={MagnifyingGlassIcon}
-        type="search"
-        defaultValue={query}
-        placeholder={t('event-management.speakers.search')}
-        aria-label={t('event-management.speakers.search')}
-      />
-    </Form>
-  );
-}
-
 export default function SpeakersRoute({ loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
   const { speakers, filters, pagination, statistics } = loaderData;
@@ -64,20 +39,7 @@ export default function SpeakersRoute({ loaderData }: Route.ComponentProps) {
         <Filters />
 
         {speakers.length === 0 ? (
-          <EmptyState
-            icon={UserGroupIcon}
-            label={
-              filters.query
-                ? t('event-management.speakers.empty.search.title')
-                : t('event-management.speakers.empty.title')
-            }
-          >
-            <Subtitle>
-              {filters.query
-                ? t('event-management.speakers.empty.search.description', { query: filters.query })
-                : t('event-management.speakers.empty.description')}
-            </Subtitle>
-          </EmptyState>
+          <SpeakersEmptyState query={filters.query} />
         ) : (
           <List>
             <List.Header>
