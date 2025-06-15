@@ -12,17 +12,21 @@ import { href, useSearchParams } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
-import { useFlag } from '~/routes/components/contexts/flags-context.tsx';
 import type { EventType } from '~/types/events.types.ts';
 import type { UserPermissions } from '~/types/team.types.ts';
 
-type Props = { teamSlug: string; eventSlug: string; eventType: EventType; permissions: UserPermissions };
+type Props = {
+  teamSlug: string;
+  eventSlug: string;
+  eventType: EventType;
+  speakersPageEnabled: boolean;
+  permissions: UserPermissions;
+};
 
-export function EventTabs({ teamSlug, eventSlug, eventType, permissions }: Props) {
+export function EventTabs({ teamSlug, eventSlug, eventType, speakersPageEnabled, permissions }: Props) {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const search = searchParams.toString();
-  const speakersPageEnabled = useFlag('speakersPage');
 
   return (
     <Page.NavHeader className="flex items-center space-between">

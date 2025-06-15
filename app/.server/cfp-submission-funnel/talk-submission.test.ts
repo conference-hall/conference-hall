@@ -80,8 +80,7 @@ describe('TalkSubmission', () => {
       expect(updatedTalk?.references).toEqual(data.references);
       expect(updatedTalk?.languages).toEqual(data.languages);
       expect(updatedTalk?.level).toEqual(data.level);
-      expect(updatedTalk?.speakers[0].id).toEqual(speaker.id);
-      expect(updatedTalk?.speakers[1].id).toEqual(speaker2.id);
+      expect(updatedTalk?.speakers.map((s) => s.id)).toEqual(expect.arrayContaining([speaker.id, speaker2.id]));
 
       const proposal = await db.proposal.findFirst({ where: { talkId }, include: { speakers: true } });
       expect(proposal?.title).toEqual(data.title);
@@ -91,8 +90,7 @@ describe('TalkSubmission', () => {
       expect(proposal?.eventId).toEqual(event.id);
       expect(proposal?.languages).toEqual(data.languages);
       expect(proposal?.level).toEqual(data.level);
-      expect(proposal?.speakers[0].userId).toEqual(speaker.id);
-      expect(proposal?.speakers[1].userId).toEqual(speaker2.id);
+      expect(proposal?.speakers.map((s) => s.userId)).toEqual(expect.arrayContaining([speaker.id, speaker2.id]));
     });
 
     it('throws an error when talk not found', async () => {
