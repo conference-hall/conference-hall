@@ -2,6 +2,7 @@ import { Outlet, useMatch, useRouteLoaderData } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { useFlag } from '../components/contexts/flags-context.tsx';
 import { CurrentTeamProvider } from '../components/contexts/team-context.tsx';
 import { Navbar } from '../components/navbar/navbar.tsx';
 import type { loader as routeEventLoader } from './$team.$event/_layout.tsx';
@@ -23,6 +24,7 @@ export default function TeamLayout({ loaderData: team }: Route.ComponentProps) {
   const event = useRouteLoaderData<typeof routeEventLoader>('team-current-event');
   const { isFullscreen } = useScheduleFullscreen();
   const isEventCreationRoute = Boolean(useMatch('/team/:team/new/*'));
+  const speakersPageEnabled = useFlag('speakersPage');
 
   if (isFullscreen || isEventCreationRoute) {
     return (
@@ -41,6 +43,7 @@ export default function TeamLayout({ loaderData: team }: Route.ComponentProps) {
           teamSlug={team.slug}
           eventSlug={event.slug}
           eventType={event.type}
+          speakersPageEnabled={speakersPageEnabled}
           permissions={team.userPermissions}
         />
       ) : (

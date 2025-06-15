@@ -20,7 +20,13 @@ describe('EventTabs component', () => {
     it('team owners can access to all features', async () => {
       const screen = renderComponent(
         <I18nextProvider i18n={i18nTest}>
-          <EventTabs teamSlug="t1" eventSlug="e1" eventType="CONFERENCE" permissions={ownerPermissions} />
+          <EventTabs
+            teamSlug="t1"
+            eventSlug="e1"
+            eventType="CONFERENCE"
+            speakersPageEnabled={true}
+            permissions={ownerPermissions}
+          />
         </I18nextProvider>,
       );
 
@@ -28,6 +34,9 @@ describe('EventTabs component', () => {
       await expect
         .element(screen.getByRole('link', { name: 'Proposals' }))
         .toHaveAttribute('href', '/team/t1/e1/reviews');
+      await expect
+        .element(screen.getByRole('link', { name: 'Speakers' }))
+        .toHaveAttribute('href', '/team/t1/e1/speakers');
       await expect
         .element(screen.getByRole('link', { name: 'Publication' }))
         .toHaveAttribute('href', '/team/t1/e1/publication');
@@ -43,12 +52,19 @@ describe('EventTabs component', () => {
     it('team members can access to all features', async () => {
       const screen = renderComponent(
         <I18nextProvider i18n={i18nTest}>
-          <EventTabs teamSlug="t1" eventSlug="e1" eventType="CONFERENCE" permissions={memberPermissions} />
+          <EventTabs
+            teamSlug="t1"
+            eventSlug="e1"
+            eventType="CONFERENCE"
+            speakersPageEnabled={true}
+            permissions={memberPermissions}
+          />
         </I18nextProvider>,
       );
 
       await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Proposals' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Speakers' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Publication' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Schedule' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();
@@ -57,12 +73,19 @@ describe('EventTabs component', () => {
     it('team reviewers can access to limited set of features', async () => {
       const screen = renderComponent(
         <I18nextProvider i18n={i18nTest}>
-          <EventTabs teamSlug="t1" eventSlug="e1" eventType="CONFERENCE" permissions={reviewerPermissions} />
+          <EventTabs
+            teamSlug="t1"
+            eventSlug="e1"
+            eventType="CONFERENCE"
+            speakersPageEnabled={true}
+            permissions={reviewerPermissions}
+          />
         </I18nextProvider>,
       );
 
       await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Proposals' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Speakers' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Publication' })).not.toBeInTheDocument();
       await expect.element(screen.getByRole('link', { name: 'Schedule' })).not.toBeInTheDocument();
       await expect.element(screen.getByRole('link', { name: 'Settings' })).not.toBeInTheDocument();
@@ -73,12 +96,19 @@ describe('EventTabs component', () => {
     it('team owners can access to all features', async () => {
       const screen = renderComponent(
         <I18nextProvider i18n={i18nTest}>
-          <EventTabs teamSlug="t1" eventSlug="e1" eventType="MEETUP" permissions={ownerPermissions} />
+          <EventTabs
+            teamSlug="t1"
+            eventSlug="e1"
+            eventType="MEETUP"
+            speakersPageEnabled={true}
+            permissions={ownerPermissions}
+          />
         </I18nextProvider>,
       );
 
       await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Proposals' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Speakers' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Publication' })).not.toBeInTheDocument();
       await expect.element(screen.getByRole('link', { name: 'Schedule' })).not.toBeInTheDocument();
       await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();
@@ -87,12 +117,19 @@ describe('EventTabs component', () => {
     it('team members can access to all features', async () => {
       const screen = renderComponent(
         <I18nextProvider i18n={i18nTest}>
-          <EventTabs teamSlug="t1" eventSlug="e1" eventType="MEETUP" permissions={memberPermissions} />
+          <EventTabs
+            teamSlug="t1"
+            eventSlug="e1"
+            eventType="MEETUP"
+            speakersPageEnabled={true}
+            permissions={memberPermissions}
+          />
         </I18nextProvider>,
       );
 
       await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Proposals' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Speakers' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Publication' })).not.toBeInTheDocument();
       await expect.element(screen.getByRole('link', { name: 'Schedule' })).not.toBeInTheDocument();
       await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeVisible();
@@ -101,12 +138,19 @@ describe('EventTabs component', () => {
     it('team reviewers can access to limited set of features', async () => {
       const screen = renderComponent(
         <I18nextProvider i18n={i18nTest}>
-          <EventTabs teamSlug="t1" eventSlug="e1" eventType="MEETUP" permissions={reviewerPermissions} />
+          <EventTabs
+            teamSlug="t1"
+            eventSlug="e1"
+            eventType="MEETUP"
+            speakersPageEnabled={true}
+            permissions={reviewerPermissions}
+          />
         </I18nextProvider>,
       );
 
       await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Proposals' })).toBeVisible();
+      await expect.element(screen.getByRole('link', { name: 'Speakers' })).toBeVisible();
       await expect.element(screen.getByRole('link', { name: 'Publication' })).not.toBeInTheDocument();
       await expect.element(screen.getByRole('link', { name: 'Schedule' })).not.toBeInTheDocument();
       await expect.element(screen.getByRole('link', { name: 'Settings' })).not.toBeInTheDocument();
