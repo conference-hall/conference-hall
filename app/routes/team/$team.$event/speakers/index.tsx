@@ -1,11 +1,10 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { UserGroupIcon } from '@heroicons/react/24/outline';
-import type { Prisma } from '@prisma/client';
-import { db } from 'prisma/db.server.ts';
 import { useTranslation } from 'react-i18next';
 import { data } from 'react-router';
 import { Form, useSearchParams } from 'react-router';
-import { Pagination, parseUrlPage } from '~/.server/shared/pagination.ts';
+import { EventSpeakers, parseUrlFilters } from '~/.server/event-speakers/event-speakers.ts';
+import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Badge } from '~/design-system/badges.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -15,62 +14,23 @@ import { List } from '~/design-system/list/list.tsx';
 import { H1, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
-import type { Route } from './+types/speakers.ts';
+import type { Route } from './+types/index.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  await requireUserSession(request);
+  const { userId } = await requireUserSession(request);
 
   const speakersPageEnabled = await flags.get('speakersPage');
   if (!speakersPageEnabled) {
     throw data(null, { status: 404 });
   }
 
-  const url = new URL(request.url);
-  const query = url.searchParams.get('query')?.trim() || '';
+  const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
-
-  const whereClause: Prisma.EventSpeakerWhereInput = {
-    event: { slug: params.event },
-    name: query ? { contains: query, mode: 'insensitive' } : undefined,
-  };
-
-  const total = await db.eventSpeaker.count({ where: whereClause });
-
-  const pagination = new Pagination({ page, total });
-
-  const speakers = await db.eventSpeaker.findMany({
-    where: whereClause,
-    include: { proposals: true },
-    orderBy: { name: 'asc' },
-    skip: pagination.pageIndex * pagination.pageSize,
-    take: pagination.pageSize,
-  });
-
-  return {
-    speakers: speakers.map((speaker) => ({
-      id: speaker.id,
-      name: speaker.name,
-      picture: speaker.picture,
-      company: speaker.company,
-      proposals: speaker.proposals
-        .filter((proposal) => !proposal.isDraft)
-        .map((proposal) => ({
-          id: proposal.id,
-          title: proposal.title,
-          deliberationStatus: proposal.deliberationStatus,
-          confirmationStatus: proposal.confirmationStatus,
-        })),
-    })),
-    query,
-    pagination: {
-      current: pagination.page,
-      total: pagination.pageCount,
-    },
-    statistics: { total },
-  };
+  const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
+  return eventSpeakers.search(filters, page);
 };
 
-function SearchInput() {
+function Filters() {
   const { t } = useTranslation();
   const [params] = useSearchParams();
   const { query, ...filters } = Object.fromEntries(params.entries());
@@ -92,28 +52,29 @@ function SearchInput() {
   );
 }
 
-export default function SpeakersRoute({
-  loaderData: { speakers, query, pagination, statistics },
-}: Route.ComponentProps) {
+export default function SpeakersRoute({ loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const { speakers, filters, pagination, statistics } = loaderData;
 
   return (
     <Page>
       <div className="space-y-4">
         <H1 srOnly>{t('event-management.speakers.heading')}</H1>
 
-        <SearchInput />
+        <Filters />
 
         {speakers.length === 0 ? (
           <EmptyState
             icon={UserGroupIcon}
             label={
-              query ? t('event-management.speakers.empty.search.title') : t('event-management.speakers.empty.title')
+              filters.query
+                ? t('event-management.speakers.empty.search.title')
+                : t('event-management.speakers.empty.title')
             }
           >
             <Subtitle>
-              {query
-                ? t('event-management.speakers.empty.search.description', { query })
+              {filters.query
+                ? t('event-management.speakers.empty.search.description', { query: filters.query })
                 : t('event-management.speakers.empty.description')}
             </Subtitle>
           </EmptyState>
@@ -122,6 +83,7 @@ export default function SpeakersRoute({
             <List.Header>
               <Text weight="semibold">{t('event-management.speakers.list.items', { count: statistics.total })}</Text>
             </List.Header>
+
             <List.Content aria-label={t('event-management.speakers.heading')}>
               {speakers.map((speaker) => {
                 const totalProposals = speaker.proposals.length;
