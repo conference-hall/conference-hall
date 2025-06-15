@@ -10,6 +10,7 @@ import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import type { Route } from './+types/index.ts';
+import { FiltersTags } from './components/filters-tags.tsx';
 import { Filters } from './components/filters.tsx';
 import { SpeakersEmptyState } from './components/speakers-empty-state.tsx';
 
@@ -36,7 +37,10 @@ export default function SpeakersRoute({ loaderData }: Route.ComponentProps) {
       <div className="space-y-4">
         <H1 srOnly>{t('event-management.speakers.heading')}</H1>
 
-        <Filters />
+        <div className="space-y-4">
+          <Filters />
+          <FiltersTags filters={filters} />
+        </div>
 
         {speakers.length === 0 ? (
           <SpeakersEmptyState query={filters.query} />

@@ -362,6 +362,7 @@
   "event-management.speakers.empty.search.title": "No speakers found",
   "event-management.speakers.empty.search.description": "Try adjusting your search terms.",
   "event-management.speakers.filters.proposal-status": "Proposal status",
+  "event-management.speakers.filters.badges": "Filters:",
   "event-management.proposal-page.activity-feed.commented": "<0>{{name}}</0> commented",
   "event-management.proposal-page.activity-feed.reviewed": "<0>{{name}}</0> reviewed the proposal with <1>{{note}} stars.</1>",
   "event-management.proposal-page.activity-feed": "Activity feed",

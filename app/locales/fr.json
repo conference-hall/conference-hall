@@ -362,6 +362,7 @@
   "event-management.speakers.empty.search.title": "Aucun speaker trouvé",
   "event-management.speakers.empty.search.description": "Essayez d'ajuster vos termes de recherche.",
   "event-management.speakers.filters.proposal-status": "Statut des propositions",
+  "event-management.speakers.filters.badges": "Filtres :",
   "event-management.proposal-page.activity-feed.commented": "<0>{{name}}</0> a commenté",
   "event-management.proposal-page.activity-feed.reviewed": "<0>{{name}}</0> a évalué la proposition avec <1>{{note}} étoiles.</1>",
   "event-management.proposal-page.activity-feed": "Flux d'activité",

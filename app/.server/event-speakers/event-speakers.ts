@@ -11,7 +11,7 @@ export const SpeakerSearchFiltersSchema = z.object({
   sort: z.enum(['name-asc', 'name-desc']).optional(),
 });
 
-type SpeakerSearchFilters = z.infer<typeof SpeakerSearchFiltersSchema>;
+export type SpeakerSearchFilters = z.infer<typeof SpeakerSearchFiltersSchema>;
 
 export class EventSpeakers {
   constructor(private userEvent: UserEvent) {}
