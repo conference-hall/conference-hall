@@ -84,6 +84,9 @@ export default [
       route('reviews/:proposal', './routes/team/$team.$event/reviews/$proposal.tsx'),
       route('reviews/autocomplete', './routes/team/$team.$event/reviews/autocomplete.tsx'),
 
+      // Event speakers page
+      route('speakers', './routes/team/$team.$event/speakers/index.tsx'),
+
       // Event publication pages
       route('publication', './routes/team/$team.$event/publication/index.tsx'),
 
