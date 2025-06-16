@@ -27,3 +27,7 @@ e2e/results
 
 # other
 .DS_Store
+
+# ai
+.claude
+CLAUDE.md
