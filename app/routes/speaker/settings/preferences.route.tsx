@@ -12,7 +12,6 @@ import { SUPPORTED_LANGUAGES } from '~/libs/i18n/i18n.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { combineHeaders } from '~/libs/utils/headers.ts';
-import { useFlags } from '~/routes/components/contexts/flags-context.tsx';
 import type { Route } from './+types/preferences.route.ts';
 
 export const meta = (args: Route.MetaArgs) => {
@@ -46,9 +45,6 @@ export default function PreferencesRoute({ loaderData }: Route.ComponentProps) {
   const { locale } = loaderData;
   const { t } = useTranslation();
   const formId = useId();
-
-  const flags = useFlags();
-  if (!flags.userPreferences) return null;
 
   const locales = SUPPORTED_LANGUAGES.map((locale) => ({
     name: t(`settings.preferences.language.${locale}`),
