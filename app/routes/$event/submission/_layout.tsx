@@ -1,6 +1,6 @@
 import { LockClosedIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { Outlet, href } from 'react-router';
+import { href, Outlet } from 'react-router';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';

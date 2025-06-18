@@ -1,7 +1,7 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import slugify from '@sindresorhus/slugify';
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
@@ -17,6 +17,7 @@ type TracksModalProps = {
 
 export function TracksModal({ initialValues, open, onClose }: TracksModalProps) {
   const { t } = useTranslation();
+  const formId = useId();
   const [tracks, setTracks] = useState(initialValues);
   const [newTrackLabel, setNewTrackLabel] = useState('');
   const newInputRef = useRef<HTMLInputElement>(null);
@@ -43,7 +44,7 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
       <Modal.Content className="space-y-4">
         <Text>{t('event-management.schedule.tracks.description')}</Text>
 
-        <Form id="save-tracks" method="POST" onSubmit={onClose} className="space-y-4">
+        <Form id={formId} method="POST" onSubmit={onClose} className="space-y-4">
           {tracks.map((track, index) => (
             <div key={track.id} className="flex gap-2">
               <input type="hidden" name={`tracks[${index}].id`} value={track.id} />
@@ -97,7 +98,7 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
         <Button type="button" variant="secondary" onClick={onClose}>
           {t('common.cancel')}
         </Button>
-        <Button type="submit" name="intent" value="save-tracks" form="save-tracks">
+        <Button type="submit" name="intent" value="save-tracks" form={formId}>
           {t('common.save')}
         </Button>
       </Modal.Actions>

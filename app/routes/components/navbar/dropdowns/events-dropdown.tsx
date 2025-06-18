@@ -1,7 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-import { Link, href } from 'react-router';
+import { href, Link } from 'react-router';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { menuItem, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';

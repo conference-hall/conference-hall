@@ -43,9 +43,6 @@ export const ProgressCircle = ({
           viewBox={`0 0 ${radius * 2} ${radius * 2}`}
           className={cx('-rotate-90 transform', className)}
           aria-label={t('common.progress-bar')}
-          aria-valuenow={value}
-          aria-valuemin={0}
-          aria-valuemax={max}
           data-max={max}
           data-value={safeValue ?? null}
           {...props}

@@ -1,14 +1,12 @@
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
+import { reviewFactory } from 'tests/factories/reviews.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.server.ts';
-
-import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
-import { reviewFactory } from 'tests/factories/reviews.ts';
 import { EventApi } from './event-api.ts';
 
 describe('#EventApi', () => {

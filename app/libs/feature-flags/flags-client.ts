@@ -1,12 +1,12 @@
 import type { FlagsStorage } from './storages/flags-storage.ts';
 import type {
   FlagKey,
+  FlagsConfig,
   FlagTaggedConfig,
   FlagTaggedKey,
   FlagTaggedValues,
   FlagValue,
   FlagValues,
-  FlagsConfig,
   Tags,
 } from './types.ts';
 

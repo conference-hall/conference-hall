@@ -8,7 +8,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
-import { PROVIDERS, type ProviderId, getClientAuth } from '~/libs/auth/firebase.ts';
+import { getClientAuth, PROVIDERS, type ProviderId } from '~/libs/auth/firebase.ts';
 import { EmailProviderSettings } from './email-provider-settings.tsx';
 import { LinkProvider, UnlinkProvider } from './social-providers-settings..tsx';
 

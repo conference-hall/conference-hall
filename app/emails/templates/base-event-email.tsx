@@ -1,5 +1,5 @@
 import { Img } from '@react-email/components';
-import BaseEmail, { styles, type BaseEmailProps } from './base-email.tsx';
+import BaseEmail, { type BaseEmailProps, styles } from './base-email.tsx';
 
 type BaseEventEmailProps = BaseEmailProps & { logoUrl?: string | null };
 

@@ -1,7 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import { Callout } from '~/design-system/callout.tsx';
 import { Container } from '~/design-system/layouts/container.tsx';
-
-import { useTranslation } from 'react-i18next';
 import { ErrorDisplay } from './error-display.tsx';
 
 type Props = { error: Error };

@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { UserProposal } from '~/.server/cfp-submissions/user-proposal.ts';
-import { ProposalParticipationSchema, getProposalUpdateSchema } from '~/.server/cfp-submissions/user-proposal.types.ts';
+import { getProposalUpdateSchema, ProposalParticipationSchema } from '~/.server/cfp-submissions/user-proposal.types.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';

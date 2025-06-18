@@ -10,6 +10,7 @@ import type { SubmissionErrors } from '~/types/errors.types.ts';
 import type { EventType } from '~/types/events.types.ts';
 
 type Props = {
+  formId: string;
   type: EventType;
   timezone: string;
   conferenceStart: Date | null;
@@ -24,6 +25,7 @@ type Props = {
 };
 
 export function EventDetailsForm({
+  formId,
   type,
   timezone,
   conferenceStart,
@@ -40,7 +42,7 @@ export function EventDetailsForm({
   const [onlineChecked, setOnlineChanged] = useState<boolean>(onlineEvent);
 
   return (
-    <Form id="details-form" method="POST" className="space-y-4 lg:space-y-6">
+    <Form id={formId} method="POST" className="space-y-4 lg:space-y-6">
       {type === 'CONFERENCE' && (
         <DateRangeInput
           start={{ name: 'conferenceStart', label: t('event-management.fields.start-date'), value: conferenceStart }}

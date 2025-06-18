@@ -1,13 +1,11 @@
 import { UserPlusIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
+import { useId, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { Text } from '~/design-system/typography.tsx';
-
-import { useTranslation } from 'react-i18next';
 import { TEAM_ROLES } from '~/libs/constants.ts';
 import { InvitationModal } from '../../../components/modals/invitation-modal.tsx';
 
@@ -45,10 +43,11 @@ type RemoveModalProps = {
 
 function RemoveRoleModal({ memberId, memberName, isOpen, onClose }: RemoveModalProps) {
   const { t } = useTranslation();
+  const formId = useId();
   return (
     <Modal title={t('team.settings.members.remove-modal.heading', { memberName })} open={isOpen} onClose={onClose}>
       <Modal.Content>
-        <Form id="remove-member-form" method="POST" onSubmit={onClose}>
+        <Form id={formId} method="POST" onSubmit={onClose}>
           <Text>{t('team.settings.members.remove-modal.description')}</Text>
           <input type="hidden" name="memberId" value={memberId} />
         </Form>
@@ -57,7 +56,7 @@ function RemoveRoleModal({ memberId, memberName, isOpen, onClose }: RemoveModalP
         <Button onClick={onClose} type="button" variant="secondary">
           {t('common.cancel')}
         </Button>
-        <Button type="submit" name="intent" value="remove-member" form="remove-member-form">
+        <Button type="submit" name="intent" value="remove-member" form={formId}>
           {t('common.remove-item', { item: memberName })}
         </Button>
       </Modal.Actions>
@@ -101,10 +100,11 @@ type ChangeRoleModalProps = {
 
 function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: ChangeRoleModalProps) {
   const { t } = useTranslation();
+  const formId = useId();
   return (
     <Modal title={t('team.settings.members.change-role-modal.heading', { memberName })} open={isOpen} onClose={onClose}>
       <Modal.Content>
-        <Form id="change-role-form" method="POST" onSubmit={onClose}>
+        <Form id={formId} method="POST" onSubmit={onClose}>
           <input type="hidden" name="memberId" value={memberId} />
           <RadioGroup>
             {TEAM_ROLES.map((role) => (
@@ -127,7 +127,7 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
         <Button onClick={onClose} type="button" variant="secondary">
           {t('common.cancel')}
         </Button>
-        <Button type="submit" name="intent" value="change-role" form="change-role-form">
+        <Button type="submit" name="intent" value="change-role" form={formId}>
           {t('team.settings.members.change-role-modal.confirm.button', { memberName })}
         </Button>
       </Modal.Actions>

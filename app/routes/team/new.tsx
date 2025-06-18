@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { TeamCreateSchema, UserTeams } from '~/.server/team/user-teams.ts';
@@ -26,13 +27,14 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
 export default function NewTeamRoute({ actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const formId = useId();
   return (
     <FullscreenPage navbar="default">
       <FullscreenPage.Title title={t('team.new.heading')} subtitle={t('team.new.description')} />
 
       <Card>
         <Card.Content>
-          <Form id="new-team-form" method="POST" className="space-y-8">
+          <Form id={formId} method="POST" className="space-y-8">
             <TeamForm errors={errors} />
           </Form>
         </Card.Content>

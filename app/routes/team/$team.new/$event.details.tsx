@@ -1,6 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { CheckIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -33,6 +34,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function NewEventDetailsRoute({ loaderData: event, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const formId = useId();
   const currentTeam = useCurrentTeam();
   const isConference = event.type === 'CONFERENCE';
 
@@ -48,6 +50,7 @@ export default function NewEventDetailsRoute({ loaderData: event, actionData: er
       <Card>
         <Card.Content>
           <EventDetailsForm
+            formId={formId}
             type={event.type}
             timezone={event.timezone}
             conferenceStart={event.conferenceStart}
@@ -71,11 +74,11 @@ export default function NewEventDetailsRoute({ loaderData: event, actionData: er
             {t('common.do-it-later')}
           </ButtonLink>
           {isConference ? (
-            <Button type="submit" form="details-form" iconRight={ArrowRightIcon}>
+            <Button type="submit" form={formId} iconRight={ArrowRightIcon}>
               {t('common.continue')}
             </Button>
           ) : (
-            <Button type="submit" form="details-form" iconLeft={CheckIcon}>
+            <Button type="submit" form={formId} iconLeft={CheckIcon}>
               {t('common.finish')}
             </Button>
           )}

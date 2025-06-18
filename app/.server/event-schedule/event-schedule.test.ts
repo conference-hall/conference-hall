@@ -2,10 +2,10 @@ import type { Event, Schedule, ScheduleTrack, Team, User } from '@prisma/client'
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { scheduleFactory } from 'tests/factories/schedule.ts';
+import { scheduleTrackFactory } from 'tests/factories/schedule-track.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import {
   ApiKeyInvalidError,
   EventNotFoundError,
@@ -13,8 +13,6 @@ import {
   ForbiddenOperationError,
   NotFoundError,
 } from '~/libs/errors.server.ts';
-
-import { scheduleTrackFactory } from 'tests/factories/schedule-track.ts';
 import { EventSchedule } from './event-schedule.ts';
 
 describe('EventSchedule', () => {

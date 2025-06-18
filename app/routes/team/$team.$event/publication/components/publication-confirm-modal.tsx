@@ -1,6 +1,6 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
@@ -53,6 +53,7 @@ type ModalProps = {
 
 function PublicationConfirmModal({ type, statistics, open, onClose }: ModalProps) {
   const { t } = useTranslation();
+  const formId = useId();
   const title =
     type === 'ACCEPTED'
       ? t('event-management.publication.publish.modal.title.accepted')
@@ -65,7 +66,7 @@ function PublicationConfirmModal({ type, statistics, open, onClose }: ModalProps
           label={t('event-management.publication.publish.modal.to-publish')}
           stat={`${statistics.notPublished}`}
         />
-        <Form id="result-form" method="POST" onSubmit={onClose}>
+        <Form id={formId} method="POST" onSubmit={onClose}>
           <ToggleGroup
             name="sendEmails"
             label={t('event-management.publication.publish.modal.email.label')}
@@ -79,7 +80,7 @@ function PublicationConfirmModal({ type, statistics, open, onClose }: ModalProps
         <Button onClick={onClose} variant="secondary">
           {t('common.cancel')}
         </Button>
-        <Button type="submit" form="result-form" name="type" value={type}>
+        <Button type="submit" form={formId} name="type" value={type}>
           {t('event-management.publication.publish.modal.confirm')}
         </Button>
       </Modal.Actions>

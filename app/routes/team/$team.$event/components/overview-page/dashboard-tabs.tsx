@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { Link, href } from 'react-router';
+import { href, Link } from 'react-router';
 
 type Props = { tab: string | null; team: string; event: string };
 

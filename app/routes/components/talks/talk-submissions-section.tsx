@@ -1,13 +1,11 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
-import { Link, href } from 'react-router';
-
+import { useTranslation } from 'react-i18next';
+import { href, Link } from 'react-router';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
-import type { SpeakerProposalStatus } from '~/types/speaker.types.ts';
-
-import { useTranslation } from 'react-i18next';
 import { formatDistance } from '~/libs/datetimes/datetimes.ts';
+import type { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 import { ProposalStatusLabel } from '../proposals/proposal-status-label.tsx';
 import { ClientOnly } from '../utils/client-only.tsx';
 

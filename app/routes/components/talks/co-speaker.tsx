@@ -138,7 +138,6 @@ type SpeakerDrawerProps = { speaker: SpeakerProps; canEdit?: boolean; open: bool
 
 function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) {
   const { t } = useTranslation();
-  const Title = () => <SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />;
 
   const details = [
     { key: 'bio', label: t('speaker.profile.biography'), value: speaker.bio },
@@ -147,7 +146,13 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
   ].filter((detail) => Boolean(detail.value));
 
   return (
-    <SlideOver title={<Title />} open={open} withBorder={false} onClose={onClose} size="l">
+    <SlideOver
+      title={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
+      open={open}
+      withBorder={false}
+      onClose={onClose}
+      size="l"
+    >
       <SlideOver.Content className="p-0!">
         <h2 className="sr-only">{t('speaker.panel.heading')}</h2>
         {speaker.email && (

@@ -3,16 +3,14 @@ import { db } from 'prisma/db.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { reviewFactory } from 'tests/factories/reviews.ts';
 import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import { ForbiddenOperationError, ReviewDisabledError } from '~/libs/errors.server.ts';
-
-import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { ProposalReview } from './proposal-review.ts';
 
 describe('ProposalReview', () => {

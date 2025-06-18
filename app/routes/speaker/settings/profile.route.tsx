@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
@@ -43,6 +44,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
 export default function ProfileRoute({ actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const formId = useId();
   const { name, picture, bio, company, location, references, socialLinks } = useSpeakerProfile();
 
   return (
@@ -51,18 +53,12 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
 
       <Card as="section">
         <Card.Title>
-          <H2 id="speaker-profile">{t('settings.profile.speaker-profile')}</H2>
+          <H2>{t('settings.profile.speaker-profile')}</H2>
           <Subtitle>{t('settings.profile.speaker-profile.description')}</Subtitle>
         </Card.Title>
 
         <Card.Content>
-          <Form
-            method="POST"
-            id="speaker-profile-form"
-            aria-labelledby="speaker-profile"
-            className="space-y-6"
-            preventScrollReset
-          >
+          <Form method="POST" id={formId} aria-labelledby="speaker-profile" className="space-y-6" preventScrollReset>
             <Input name="name" label={t('common.full-name')} defaultValue={name || ''} error={errors?.name} />
             <div className="flex justify-between gap-8">
               <Input
@@ -125,7 +121,7 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit" name="intent" value="speaker-profile" form="speaker-profile-form">
+          <Button type="submit" name="intent" value="speaker-profile" form={formId}>
             {t('speaker.profile.submit')}
           </Button>
         </Card.Actions>

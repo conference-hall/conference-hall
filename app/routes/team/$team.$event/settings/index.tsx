@@ -1,5 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
+import { useId } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -68,6 +69,9 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
   const currentEvent = useCurrentEvent();
   const { userPermissions } = useCurrentTeam();
 
+  const generalFormId = useId();
+  const detailsFormId = useId();
+
   return (
     <>
       <Card as="section">
@@ -76,12 +80,12 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
         </Card.Title>
 
         <Card.Content>
-          <Form id="general-form" method="POST" className="space-y-4 lg:space-y-6">
+          <Form id={generalFormId} method="POST" className="space-y-4 lg:space-y-6">
             <EventForm initialValues={currentEvent} errors={errors} />
           </Form>
         </Card.Content>
         <Card.Actions>
-          <Button type="submit" name="intent" value="general" form="general-form">
+          <Button type="submit" name="intent" value="general" form={generalFormId}>
             {t('event-management.settings.general.submit')}
           </Button>
         </Card.Actions>
@@ -95,6 +99,7 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
 
         <Card.Content>
           <EventDetailsForm
+            formId={detailsFormId}
             type={currentEvent.type}
             timezone={currentEvent.timezone}
             conferenceStart={currentEvent.conferenceStart}
@@ -109,7 +114,7 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit" name="intent" value="details" form="details-form">
+          <Button type="submit" name="intent" value="details" form={detailsFormId}>
             {t('event-management.settings.details.submit')}
           </Button>
         </Card.Actions>

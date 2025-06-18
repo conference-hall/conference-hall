@@ -1,14 +1,14 @@
 import { parseWithZod } from '@conform-to/zod';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
-import { redirect } from 'react-router';
-import { Form } from 'react-router';
+import { Form, redirect } from 'react-router';
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import { ScheduleCreateSchema } from '~/.server/event-schedule/event-schedule.types.ts';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
-import { InputTimezone } from '~/design-system/forms/input-timezone.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
+import { InputTimezone } from '~/design-system/forms/input-timezone.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
@@ -42,6 +42,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function ScheduleRoute({ loaderData: schedule, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const formId = useId();
   return (
     <Page>
       <Card as="section">
@@ -51,7 +52,7 @@ export default function ScheduleRoute({ loaderData: schedule, actionData: errors
         </Card.Title>
 
         <Card.Content>
-          <Form id="create-schedule-form" method="POST" className="space-y-4 lg:space-y-6">
+          <Form id={formId} method="POST" className="space-y-4 lg:space-y-6">
             <Input name="name" label={t('common.name')} defaultValue={schedule.name} required error={errors?.name} />
             <InputTimezone name="timezone" label={t('common.timezone')} defaultValue={schedule.timezone} />
             <DateRangeInput
@@ -63,7 +64,7 @@ export default function ScheduleRoute({ loaderData: schedule, actionData: errors
           </Form>
         </Card.Content>
         <Card.Actions>
-          <Button type="submit" form="create-schedule-form">
+          <Button type="submit" form={formId}>
             {t('event-management.schedule.new.submit')}
           </Button>
         </Card.Actions>

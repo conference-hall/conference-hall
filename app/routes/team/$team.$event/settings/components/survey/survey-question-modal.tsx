@@ -1,7 +1,7 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import slugify from '@sindresorhus/slugify';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { v4 as uuid } from 'uuid';
@@ -47,6 +47,7 @@ type SurveyQuestionModalContentProps = {
 
 function SurveyQuestionModalContent({ initialValues, open, onClose }: SurveyQuestionModalContentProps) {
   const { t } = useTranslation();
+  const formId = useId();
   const [type, setType] = useState(initialValues?.type || 'text');
   const [options, setOptions] = useState(initialValues?.options || []);
 
@@ -64,7 +65,7 @@ function SurveyQuestionModalContent({ initialValues, open, onClose }: SurveyQues
   return (
     <Modal title={modalTitle} size="l" open={open} onClose={onClose}>
       <Modal.Content className="space-y-2">
-        <Form id="save-question" method="POST" onSubmit={onClose} className="space-y-4">
+        <Form id={formId} method="POST" onSubmit={onClose} className="space-y-4">
           <div className="flex items-end gap-2">
             <Input
               name="label"
@@ -90,7 +91,7 @@ function SurveyQuestionModalContent({ initialValues, open, onClose }: SurveyQues
 
           {isOptionsEnabled ? <OptionsFieldList options={options} setOptions={setOptions} /> : null}
 
-          <Checkbox id="required" name="required" defaultChecked={initialValues?.required ?? false}>
+          <Checkbox name="required" defaultChecked={initialValues?.required ?? false}>
             {t('event-management.settings.survey.question.required')}
           </Checkbox>
 
@@ -102,7 +103,7 @@ function SurveyQuestionModalContent({ initialValues, open, onClose }: SurveyQues
         <Button type="button" variant="secondary" onClick={onClose}>
           {t('common.cancel')}
         </Button>
-        <Button type="submit" name="intent" value={submitIntent} form="save-question" disabled={!canSubmit}>
+        <Button type="submit" name="intent" value={submitIntent} form={formId} disabled={!canSubmit}>
           {submitLabel}
         </Button>
       </Modal.Actions>

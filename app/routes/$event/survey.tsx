@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SpeakerSurvey } from '~/.server/event-survey/speaker-survey.ts';
 import { Button } from '~/design-system/buttons.tsx';
@@ -35,6 +36,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function EventSurveyRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const formId = useId();
   const { questions, answers } = loaderData;
 
   return (
@@ -43,10 +45,10 @@ export default function EventSurveyRoute({ loaderData, actionData: errors }: Rou
 
       <Card>
         <Card.Content>
-          <SurveyForm id="survey-form" questions={questions} initialValues={answers} errors={errors} />
+          <SurveyForm id={formId} questions={questions} initialValues={answers} errors={errors} />
         </Card.Content>
         <Card.Actions>
-          <Button type="submit" form="survey-form">
+          <Button type="submit" form={formId}>
             {t('event.survey.form.submit')}
           </Button>
         </Card.Actions>

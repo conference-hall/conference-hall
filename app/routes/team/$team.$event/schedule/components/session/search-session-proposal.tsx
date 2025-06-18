@@ -2,10 +2,9 @@ import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headl
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { DocumentPlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import type { ChangeEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFetcher, useParams } from 'react-router';
 import { useDebouncedCallback } from 'use-debounce';
-
-import { useTranslation } from 'react-i18next';
 import type { loader as AutocompleteLoader } from '../../../reviews/autocomplete.tsx';
 import type { ScheduleProposalData } from '../schedule.types.ts';
 

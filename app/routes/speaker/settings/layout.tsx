@@ -1,7 +1,7 @@
 import { AdjustmentsVerticalIcon, ShieldCheckIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { Outlet, href } from 'react-router';
+import { href, Outlet } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';

@@ -31,9 +31,7 @@ function PublicationLabel({ publicationStatus }: Props) {
     return (
       <Form method="POST" className="space-y-4">
         <BadgeDot color="gray">{t('event-management.proposal-page.publication.not-published')}</BadgeDot>
-        <Checkbox id="send-email" name="send-email">
-          {t('event-management.proposal-page.publication.notify')}
-        </Checkbox>
+        <Checkbox name="send-email">{t('event-management.proposal-page.publication.notify')}</Checkbox>
         <Button type="submit" name="intent" value="publish-results" variant="secondary" block>
           {t('event-management.proposal-page.publication.submit')}
         </Button>

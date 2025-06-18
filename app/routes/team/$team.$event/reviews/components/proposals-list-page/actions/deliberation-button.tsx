@@ -1,6 +1,6 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 
@@ -24,6 +24,7 @@ type Props = {
 
 export function DeliberationButton({ status, selection, isAllPagesSelected, totalSelected }: Props) {
   const { t } = useTranslation();
+  const formId = useId();
   const [open, setOpen] = useState(false);
   const { i18nKey, icon: Icon, color } = statuses[status];
 
@@ -39,7 +40,7 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
         onClose={() => setOpen(false)}
       >
         <Modal.Content>
-          <Form id="change-status" method="POST" onSubmit={() => setOpen(false)}>
+          <Form id={formId} method="POST" onSubmit={() => setOpen(false)}>
             <Callout title={t('common.warning')}>
               {t('event-management.proposals.deliberate.modal.description')}
             </Callout>
@@ -54,7 +55,7 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
           <Button variant="secondary" onClick={() => setOpen(false)}>
             {t('common.cancel')}
           </Button>
-          <Button type="submit" form="change-status">
+          <Button type="submit" form={formId}>
             {t('event-management.proposals.deliberate.modal.submit', { label: t(i18nKey) })}
           </Button>
         </Modal.Actions>

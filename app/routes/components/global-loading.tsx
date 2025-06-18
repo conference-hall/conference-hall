@@ -1,12 +1,10 @@
 import { cx } from 'class-variance-authority';
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-router';
 
 // Component copied from Gustavo Guichard
 // source: https://dev.to/gugaguichard/creating-a-github-like-progress-bar-for-your-remix-app-153l
 function GlobalLoadingComponent() {
-  const { t } = useTranslation();
   const { state } = useNavigation();
   const active = state !== 'idle';
 
@@ -23,11 +21,7 @@ function GlobalLoadingComponent() {
   }, [active]);
 
   return (
-    <div
-      aria-hidden={!active}
-      aria-valuetext={active ? t('common.loading') : undefined}
-      className="fixed inset-x-0 left-0 top-0 z-50 h-1"
-    >
+    <div aria-hidden={!active} className="fixed inset-x-0 left-0 top-0 z-50 h-1">
       <div
         ref={ref}
         className={cx(

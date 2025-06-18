@@ -1,5 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
@@ -51,6 +52,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 export default function SubmissionSpeakerRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
   const { speaker, speakers, isOwner, invitationLink } = loaderData;
+  const formId = useId();
   const { previousPath, nextPath } = useSubmissionNavigation();
 
   return (
@@ -61,7 +63,7 @@ export default function SubmissionSpeakerRoute({ loaderData, actionData: errors 
         </Card.Title>
 
         <Card.Content>
-          <Form id="speakers-form" method="POST">
+          <Form id={formId} method="POST">
             <MarkdownTextArea
               name="bio"
               label={t('speaker.profile.biography')}
@@ -82,7 +84,7 @@ export default function SubmissionSpeakerRoute({ loaderData, actionData: errors 
           <ButtonLink to={previousPath} variant="secondary">
             {t('common.go-back')}
           </ButtonLink>
-          <Button type="submit" form="speakers-form" name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
+          <Button type="submit" form={formId} name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
             {t('common.continue')}
           </Button>
         </Card.Actions>

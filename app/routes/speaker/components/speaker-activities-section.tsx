@@ -2,7 +2,7 @@ import { ArrowTopRightOnSquareIcon, ChevronRightIcon } from '@heroicons/react/20
 import { FireIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { Link as RouterLink, href } from 'react-router';
+import { href, Link as RouterLink } from 'react-router';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLink } from '~/design-system/icon-buttons.tsx';

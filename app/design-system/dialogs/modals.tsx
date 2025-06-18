@@ -49,13 +49,7 @@ export function Modal({ title, children, size, open, onClose }: Props) {
 
 // MODAL Title
 
-function Title({
-  children,
-  onClose,
-}: {
-  children: ReactNode;
-  onClose: VoidFunction;
-}) {
+function Title({ children, onClose }: { children: ReactNode; onClose: VoidFunction }) {
   return (
     <div className="flex items-start justify-between">
       <DialogTitle as="h1" className="text-base font-semibold leading-6 text-gray-900">
@@ -68,13 +62,7 @@ function Title({
 
 // Modal Content
 
-function Content({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+function Content({ children, className }: { children: ReactNode; className?: string }) {
   return <div className={cx('pt-6', className)}>{children}</div>;
 }
 

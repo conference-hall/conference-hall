@@ -1,6 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { CheckIcon } from '@heroicons/react/20/solid';
 import { ClockIcon } from '@heroicons/react/24/outline';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -36,6 +37,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function NewEventDetailsRoute({ loaderData: event, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const formId = useId();
   const currentTeam = useCurrentTeam();
 
   return (
@@ -50,6 +52,7 @@ export default function NewEventDetailsRoute({ loaderData: event, actionData: er
       <Card>
         <Card.Content>
           <EventCfpConferenceForm
+            formId={formId}
             cfpStart={event.cfpStart}
             cfpEnd={event.cfpEnd}
             timezone={event.timezone}
@@ -65,7 +68,7 @@ export default function NewEventDetailsRoute({ loaderData: event, actionData: er
           >
             {t('common.do-it-later')}
           </ButtonLink>
-          <Button type="submit" form="cfp-conference-form" iconLeft={CheckIcon}>
+          <Button type="submit" form={formId} iconLeft={CheckIcon}>
             {t('common.finish')}
           </Button>
         </Card.Actions>

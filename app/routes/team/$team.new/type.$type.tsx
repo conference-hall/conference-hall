@@ -1,5 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { EventCreateSchema, TeamEvents } from '~/.server/team/team-events.ts';
@@ -29,6 +30,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function NewEventRoute({ params, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const formId = useId();
   const type = (params.type || 'CONFERENCE') as EventType;
   const title =
     type === 'CONFERENCE'
@@ -43,7 +45,7 @@ export default function NewEventRoute({ params, actionData: errors }: Route.Comp
 
       <Card>
         <Card.Content>
-          <Form id="create-event-form" method="POST" replace className="flex grow flex-col gap-4 lg:gap-6">
+          <Form id={formId} method="POST" replace className="flex grow flex-col gap-4 lg:gap-6">
             <EventForm errors={errors} />
             <input name="type" type="hidden" value={type} />
           </Form>
@@ -53,7 +55,7 @@ export default function NewEventRoute({ params, actionData: errors }: Route.Comp
           <ButtonLink to=".." variant="secondary">
             {t('common.go-back')}
           </ButtonLink>
-          <Button type="submit" form="create-event-form" iconRight={ArrowRightIcon}>
+          <Button type="submit" form={formId} iconRight={ArrowRightIcon}>
             {t('common.continue')}
           </Button>
         </Card.Actions>

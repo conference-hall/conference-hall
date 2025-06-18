@@ -1,6 +1,6 @@
 import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { Outlet, href } from 'react-router';
+import { href, Outlet } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';

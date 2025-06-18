@@ -10,8 +10,8 @@ import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import type { Route } from './+types/index.ts';
-import { FiltersTags } from './components/filters-tags.tsx';
 import { Filters } from './components/filters.tsx';
+import { FiltersTags } from './components/filters-tags.tsx';
 import { SpeakersEmptyState } from './components/speakers-empty-state.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

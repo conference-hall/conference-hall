@@ -45,7 +45,7 @@ function BarListInner<T>({
   const rowHeight = 'h-8';
 
   return (
-    <div ref={ref} className={cx('flex justify-between space-x-6', className)} aria-sort={sortOrder} {...props}>
+    <div ref={ref} className={cx('flex justify-between space-x-6', className)} {...props}>
       <div className="relative w-full space-y-1.5">
         {sortedData.map((item, index) => (
           <div key={item.id ?? item.name} className="group w-full rounded-sm">
