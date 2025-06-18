@@ -15,7 +15,7 @@ export class EventTracksSettings {
   }
 
   async updateSettings(data: TrackSettingsSaveData) {
-    this.userEvent.update(data);
+    await this.userEvent.update(data);
   }
 
   async saveFormat(data: TrackSaveData) {
