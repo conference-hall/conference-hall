@@ -39,7 +39,7 @@ export default function NewTeamRoute({ actionData: errors }: Route.ComponentProp
           </Form>
         </Card.Content>
         <Card.Actions>
-          <Button type="submit" className="mt-4" form="new-team-form">
+          <Button type="submit" className="mt-4" form={formId}>
             {t('team.new.form.submit')}
           </Button>
         </Card.Actions>
