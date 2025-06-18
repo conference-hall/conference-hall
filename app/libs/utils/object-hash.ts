@@ -1,4 +1,4 @@
-export function getObjectHash(obj: Record<string, any>): string {
+export function getObjectHash(obj: Record<string, unknown>): string {
   const sortedObjectString = JSON.stringify(sortObjectKeys(obj));
   return simpleHash(sortedObjectString);
 }
