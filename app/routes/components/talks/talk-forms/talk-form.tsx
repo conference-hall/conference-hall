@@ -71,7 +71,7 @@ export function TalkForm({
 
       <RadioGroup label={t('talk.level')} inline>
         {TALK_LEVELS.map((level) => (
-          <Radio name="level" key={level} id={level} value={level} defaultChecked={initialValues?.level === level}>
+          <Radio name="level" key={level} value={level} defaultChecked={initialValues?.level === level}>
             {t(`common.level.${level}`)}
           </Radio>
         ))}

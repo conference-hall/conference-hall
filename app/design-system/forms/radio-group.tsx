@@ -1,5 +1,5 @@
 import { cx } from 'class-variance-authority';
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 import type { SubmissionError } from '~/types/errors.types.ts';
 import { Label, Text } from '../typography.tsx';
 
@@ -32,9 +32,10 @@ export function RadioGroup({ label, description, inline, className, children, er
 
 type RadioProps = {
   description?: string | null;
-} & React.InputHTMLAttributes<HTMLInputElement>;
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'id'>;
 
-export function Radio({ id, name, description, children, ...rest }: RadioProps) {
+export function Radio({ name, description, children, ...rest }: RadioProps) {
+  const id = useId();
   return (
     <div className="relative flex items-start">
       <div className="flex h-5 items-center mt-0.5">

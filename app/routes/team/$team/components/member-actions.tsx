@@ -110,7 +110,6 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
             {TEAM_ROLES.map((role) => (
               <Radio
                 key={role}
-                id={role}
                 name="memberRole"
                 value={role}
                 description={t(`common.member.role.description.${role}`)}
