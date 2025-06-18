@@ -1,5 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
@@ -41,6 +42,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function SubmissionTalkRoute({ loaderData: talk, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const formId = useId();
   const { previousPath } = useSubmissionNavigation();
 
   return (
@@ -51,14 +53,14 @@ export default function SubmissionTalkRoute({ loaderData: talk, actionData: erro
         </Card.Title>
 
         <Card.Content>
-          <TalkForm id="talk-form" initialValues={talk} errors={errors} />
+          <TalkForm id={formId} initialValues={talk} errors={errors} />
         </Card.Content>
 
         <Card.Actions>
           <ButtonLink to={previousPath} variant="secondary">
             {t('common.go-back')}
           </ButtonLink>
-          <Button type="submit" form="talk-form" iconRight={ArrowRightIcon}>
+          <Button type="submit" form={formId} iconRight={ArrowRightIcon}>
             {t('common.continue')}
           </Button>
         </Card.Actions>

@@ -1,5 +1,5 @@
 import { LinkIcon } from '@heroicons/react/20/solid';
-import { type SocialName, extractSocialProfile } from '~/libs/formatters/social-links.ts';
+import { extractSocialProfile, type SocialName } from '~/libs/formatters/social-links.ts';
 import { BlueSkyIcon } from './icons/bluesky-icon.tsx';
 import { GitHubIcon } from './icons/github-icon.tsx';
 import { InstagramIcon } from './icons/instagram-icon.tsx';

@@ -1,6 +1,6 @@
 import { CheckIcon } from '@heroicons/react/16/solid';
 import { CheckBadgeIcon } from '@heroicons/react/24/outline';
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
@@ -13,6 +13,7 @@ import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 export function NewEmailProviderModal() {
   const { t } = useTranslation();
+  const formId = useId();
   const submit = useSubmit();
   const [open, setOpen] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<SubmissionErrors>(null);
@@ -40,7 +41,7 @@ export function NewEmailProviderModal() {
       >
         <Modal.Content className="space-y-6">
           <Subtitle>{t('settings.account.authentication-methods.email-modal.description')}</Subtitle>
-          <Form id="new-email-provider" onSubmit={linkAccount} className="space-y-4">
+          <Form id={formId} onSubmit={linkAccount} className="space-y-4">
             <Input
               label={t('common.email')}
               placeholder={t('common.email.placeholder')}
@@ -59,7 +60,7 @@ export function NewEmailProviderModal() {
           <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
             {t('common.cancel')}
           </Button>
-          <Button type="submit" variant="primary" form="new-email-provider">
+          <Button type="submit" variant="primary" form={formId}>
             {t('settings.account.authentication-methods.link-button')}
           </Button>
         </Modal.Actions>

@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -14,6 +15,7 @@ type Props = {
 
 export function ConferenceCfpOpening({ cfpStart, cfpEnd, timezone, errors }: Props) {
   const { t } = useTranslation();
+  const formId = useId();
   return (
     <Card as="section">
       <Card.Title>
@@ -21,10 +23,16 @@ export function ConferenceCfpOpening({ cfpStart, cfpEnd, timezone, errors }: Pro
       </Card.Title>
 
       <Card.Content>
-        <EventCfpConferenceForm cfpStart={cfpStart} cfpEnd={cfpEnd} timezone={timezone} errors={errors} />
+        <EventCfpConferenceForm
+          formId={formId}
+          cfpStart={cfpStart}
+          cfpEnd={cfpEnd}
+          timezone={timezone}
+          errors={errors}
+        />
       </Card.Content>
       <Card.Actions>
-        <Button name="intent" value="save-cfp-conference-opening" form="cfp-conference-form">
+        <Button name="intent" value="save-cfp-conference-opening" form={formId}>
           {t('event-management.settings.cfp.openings.submit')}
         </Button>
       </Card.Actions>

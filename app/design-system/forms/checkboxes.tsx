@@ -1,5 +1,5 @@
 import { cx } from 'class-variance-authority';
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 import type { SubmissionError } from '~/types/errors.types.ts';
 import { Label, Text } from '../typography.tsx';
 
@@ -47,9 +47,11 @@ export function CheckboxHeadingGroup({ label, description, inline, className, ch
   );
 }
 
-type CheckboxProps = { description?: string | null; className?: string } & React.ComponentProps<'input'>;
+type CheckboxProps = { description?: string | null; className?: string } & Omit<React.ComponentProps<'input'>, 'id'>;
 
-export function Checkbox({ id, name, description, className, children, ref, ...rest }: CheckboxProps) {
+export function Checkbox({ name, description, className, children, ref, ...rest }: CheckboxProps) {
+  const id = useId();
+
   return (
     <div className={cx('relative flex ', { 'items-start': description, 'items-center': !description }, className)}>
       <div className="flex h-5 items-center">

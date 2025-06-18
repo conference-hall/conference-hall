@@ -1,15 +1,13 @@
 import type { Event, EventCategory, EventFormat, EventProposalTag, Team, User } from '@prisma/client';
+import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
+import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
-
-import { eventCategoryFactory } from 'tests/factories/categories.ts';
-import { eventFormatFactory } from 'tests/factories/formats.ts';
-import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { CfpReviewsExports } from './cfp-reviews-exports.ts';
 import { exportToOpenPlanner } from './jobs/export-to-open-planner.job.ts';
 

@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
@@ -10,6 +11,7 @@ type Props = { email: string; authLoaded: boolean };
 
 export function ChangeContactEmailForm({ email, authLoaded }: Props) {
   const { t } = useTranslation();
+  const formId = useId();
   const providers = getClientAuth().currentUser?.providerData ?? [];
 
   const options: Array<Option> = [];
@@ -31,7 +33,7 @@ export function ChangeContactEmailForm({ email, authLoaded }: Props) {
       </Card.Title>
 
       <Card.Content>
-        <Form id="change-contact-email-form" method="POST" preventScrollReset>
+        <Form id={formId} method="POST" preventScrollReset>
           <SelectNative
             name="email"
             key={email}
@@ -44,13 +46,7 @@ export function ChangeContactEmailForm({ email, authLoaded }: Props) {
       </Card.Content>
 
       <Card.Actions>
-        <Button
-          type="submit"
-          name="intent"
-          value="change-contact-email"
-          form="change-contact-email-form"
-          disabled={!authLoaded}
-        >
+        <Button type="submit" name="intent" value="change-contact-email" form={formId} disabled={!authLoaded}>
           {t('settings.account.contact.submit')}
         </Button>
       </Card.Actions>

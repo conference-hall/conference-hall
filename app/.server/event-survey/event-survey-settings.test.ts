@@ -1,6 +1,5 @@
-import { eventFactory } from 'tests/factories/events.ts';
-
 import type { Event, Team, User } from '@prisma/client';
+import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';

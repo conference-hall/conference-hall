@@ -12,7 +12,7 @@ export function TrackSection({ title, tracks }: Props) {
   return (
     <Card as="section" p={8}>
       <H2 mb={1}>{title}</H2>
-      <dl role="list" className="mt-4 space-y-8">
+      <dl className="mt-4 space-y-8">
         {tracks.map((track) => (
           <div key={track.id}>
             <Text as="dt" mb={1} weight="medium">

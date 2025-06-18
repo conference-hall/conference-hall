@@ -1,8 +1,8 @@
 import { parseWithZod } from '@conform-to/zod';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { useId } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Form } from 'react-router';
-import { useParams } from 'react-router';
+import { Form, useParams } from 'react-router';
 import { z } from 'zod';
 import { EventIntegrations } from '~/.server/event-settings/event-integrations.ts';
 import {
@@ -92,6 +92,10 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
   const { team } = useParams();
   const { slackWebhookUrl, type } = useCurrentEvent();
 
+  const slackFormId = useId();
+  const openPlannerFormId = useId();
+  const openAiFormId = useId();
+
   const aiIntegrationTeam = useFlag('aiIntegration');
   const aiIntegrationEnabled = aiIntegrationTeam === team && type === 'CONFERENCE';
 
@@ -106,7 +110,7 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
         </Card.Title>
 
         <Card.Content>
-          <Form method="POST" id="slack-integration-form">
+          <Form method="POST" id={slackFormId}>
             <Input
               name="slackWebhookUrl"
               label={t('event-management.settings.integrations.slack.url.label')}
@@ -124,7 +128,7 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit" name="intent" value="save-slack-integration" form="slack-integration-form">
+          <Button type="submit" name="intent" value="save-slack-integration" form={slackFormId}>
             {t('event-management.settings.integrations.slack.submit')}
           </Button>
         </Card.Actions>
@@ -143,7 +147,7 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
             />
           </Text>
 
-          <Form method="POST" id="openplanner-integration-form" key={openPlanner?.id} className="space-y-4">
+          <Form method="POST" id={openPlannerFormId} key={openPlanner?.id} className="space-y-4">
             <Input
               name="eventId"
               label={t('event-management.settings.integrations.openplanner.event-id')}
@@ -176,7 +180,7 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
                 name="intent"
                 value="disable-integration"
                 variant="important"
-                form="openplanner-integration-form"
+                form={openPlannerFormId}
                 iconLeft={XCircleIcon}
               >
                 {t('common.disable')}
@@ -186,14 +190,14 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
                 name="intent"
                 value="check-open-planner-integration"
                 variant="secondary"
-                form="openplanner-integration-form"
+                form={openPlannerFormId}
                 iconLeft={CheckCircleIcon}
               >
                 {t('common.test-connection')}
               </Button>
             </>
           ) : null}
-          <Button type="submit" name="intent" value="save-integration" form="openplanner-integration-form">
+          <Button type="submit" name="intent" value="save-integration" form={openPlannerFormId}>
             {t('event-management.settings.integrations.openplanner.submit')}
           </Button>
         </Card.Actions>
@@ -208,7 +212,7 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
           </Card.Title>
 
           <Card.Content>
-            <Form method="POST" id="openai-integration-form" key={openAi?.id} className="space-y-4">
+            <Form method="POST" id={openAiFormId} key={openAi?.id} className="space-y-4">
               <Input
                 name="apiKey"
                 label={t('event-management.settings.integrations.openai.api-key.label')}
@@ -223,20 +227,18 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
 
           <Card.Actions>
             {openAi ? (
-              <>
-                <Button
-                  type="submit"
-                  name="intent"
-                  value="disable-integration"
-                  variant="important"
-                  form="openai-integration-form"
-                  iconLeft={XCircleIcon}
-                >
-                  {t('common.disable')}
-                </Button>
-              </>
+              <Button
+                type="submit"
+                name="intent"
+                value="disable-integration"
+                variant="important"
+                form={openAiFormId}
+                iconLeft={XCircleIcon}
+              >
+                {t('common.disable')}
+              </Button>
             ) : null}
-            <Button type="submit" name="intent" value="save-integration" form="openai-integration-form">
+            <Button type="submit" name="intent" value="save-integration" form={openAiFormId}>
               {t('event-management.settings.integrations.openai.submit')}
             </Button>
           </Card.Actions>

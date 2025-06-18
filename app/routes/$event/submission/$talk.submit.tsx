@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
@@ -35,6 +35,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.ComponentProps) {
   const { t } = useTranslation();
   const currentEvent = useCurrentEvent();
+  const formId = useId();
   const [acceptedCod, setAcceptCod] = useState(!currentEvent.codeOfConductUrl);
   const { previousPath } = useSubmissionNavigation();
 
@@ -51,14 +52,9 @@ export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.Co
       />
       <Card>
         <Card.Content>
-          <Form method="POST" id="submit-form" className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <Form method="POST" id={formId} className="flex flex-col sm:flex-row items-center justify-between gap-4">
             {currentEvent.codeOfConductUrl ? (
-              <Checkbox
-                id="cod-agreement"
-                name="cod-agreement"
-                value="agree"
-                onChange={() => setAcceptCod(!acceptedCod)}
-              >
+              <Checkbox name="cod-agreement" value="agree" onChange={() => setAcceptCod(!acceptedCod)}>
                 <Trans
                   i18nKey="event.submission.submit.agree-cod"
                   components={[<ExternalLink key="cod" href={currentEvent.codeOfConductUrl} />]}
@@ -72,7 +68,7 @@ export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.Co
               <ButtonLink to={previousPath} variant="secondary">
                 {t('common.go-back')}
               </ButtonLink>
-              <Button type="submit" form="submit-form" disabled={!acceptedCod}>
+              <Button type="submit" form={formId} disabled={!acceptedCod}>
                 {t('event.submission.submit.finish')}
               </Button>
             </div>

@@ -1,6 +1,6 @@
 import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { type EntryContext, createCookie } from 'react-router';
+import { createCookie, type EntryContext } from 'react-router';
 import { RemixI18Next } from 'remix-i18next/server';
 import { i18nResources } from './i18n.resources.ts';
 import { i18nConfig } from './i18n.ts';

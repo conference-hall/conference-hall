@@ -1,6 +1,5 @@
-import { ButtonLink } from '~/design-system/buttons.tsx';
-
 import { useTranslation } from 'react-i18next';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { ErrorDisplay } from './error-display.tsx';
 
 type Props = { text?: string };

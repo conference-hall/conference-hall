@@ -1,5 +1,5 @@
-import { AuthClientErrorCode } from 'firebase-admin/auth';
 import { FirebaseError } from 'firebase/app';
+import { AuthClientErrorCode } from 'firebase-admin/auth';
 import type { TFunction } from 'i18next';
 import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';

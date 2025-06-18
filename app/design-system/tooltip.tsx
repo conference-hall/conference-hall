@@ -1,4 +1,4 @@
-import { FloatingArrow, type Placement, arrow, flip, offset, shift, useFloating } from '@floating-ui/react';
+import { arrow, FloatingArrow, flip, offset, type Placement, shift, useFloating } from '@floating-ui/react';
 import type React from 'react';
 import { useRef, useState } from 'react';
 

@@ -27,7 +27,15 @@
       "style": {
         "noUselessElse": "off",
         "noParameterAssign": "off",
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "off",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error"
       },
       "suspicious": {
         "noExplicitAny": "off",
@@ -44,9 +52,7 @@
       "jsxQuoteStyle": "double"
     }
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "vcs": {
     "enabled": true,
     "clientKind": "git",

@@ -4,7 +4,7 @@ import type { TeamRole } from '@prisma/client';
 import { useTranslation } from 'react-i18next';
 import { Form, useSearchParams } from 'react-router';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
-import { TeamMembers, parseUrlFilters } from '~/.server/team/team-members.ts';
+import { parseUrlFilters, TeamMembers } from '~/.server/team/team-members.ts';
 import { AvatarName } from '~/design-system/avatar.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';

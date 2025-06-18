@@ -1,6 +1,7 @@
-import type { SVGProps } from 'react';
+import { type SVGProps, useId } from 'react';
 
 export function ConferenceHallLogo(props: SVGProps<SVGSVGElement>) {
+  const clipPathId = useId();
   return (
     <svg
       role="presentation"
@@ -11,7 +12,7 @@ export function ConferenceHallLogo(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <g clipPath="url(#clip0_515_304)">
+      <g clipPath={`url(#${clipPathId})`}>
         <rect x="512" y="128" width="512" height="128" rx="64" transform="rotate(180 512 128)" />
         <path d="M256 328C216.235 328 184 295.765 184 256V256C184 216.235 216.235 184 256 184V184C295.764 184 328 216.235 328 256V256C328 295.764 295.765 328 256 328V328Z" />
         <path
@@ -21,7 +22,7 @@ export function ConferenceHallLogo(props: SVGProps<SVGSVGElement>) {
         />
       </g>
       <defs>
-        <clipPath id="clip0_515_304">
+        <clipPath id={clipPathId}>
           <rect width="512" height="512" fill="white" transform="translate(512 512) rotate(180)" />
         </clipPath>
       </defs>

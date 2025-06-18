@@ -45,7 +45,6 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
               {question.options?.map((option) => (
                 <Checkbox
                   key={`${question.id}-${option.id}`}
-                  id={`${question.id}-${option.id}`}
                   name={question.id}
                   value={option.id}
                   defaultChecked={value.includes(option.id)}
@@ -67,7 +66,6 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
               {question.options?.map((option) => (
                 <Radio
                   key={`${question.id}-${option.id}`}
-                  id={`${question.id}-${option.id}`}
                   name={question.id}
                   value={option.id}
                   defaultChecked={initialValues[question.id] === option.id}

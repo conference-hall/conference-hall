@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestoration, data } from 'react-router';
+import { data, Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import { useChangeLanguage } from 'remix-i18next/react';
-import type { Route } from './+types/root.ts';
 import { UserInfo } from './.server/user-registration/user-info.ts';
+import type { Route } from './+types/root.ts';
 import { initializeFirebaseClient } from './libs/auth/firebase.ts';
 import { destroySession, getUserSession } from './libs/auth/session.ts';
 import { getBrowserEnv } from './libs/env/env.server.ts';

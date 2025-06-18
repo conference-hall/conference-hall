@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
@@ -33,17 +34,19 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
 export default function NewTalkRoute({ actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const formId = useId();
+
   return (
     <Page>
       <H1 srOnly>{t('talk.new.heading')}</H1>
 
       <Card>
         <Card.Content>
-          <TalkForm id="new-talk-form" errors={errors} />
+          <TalkForm id={formId} errors={errors} />
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit" form="new-talk-form">
+          <Button type="submit" form={formId}>
             {t('talk.new.submit')}
           </Button>
         </Card.Actions>

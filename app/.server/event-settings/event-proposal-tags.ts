@@ -1,6 +1,5 @@
-import { db } from 'prisma/db.server.ts';
-
 import type { Prisma } from '@prisma/client';
+import { db } from 'prisma/db.server.ts';
 import { Pagination } from '../shared/pagination.ts';
 import type { TagFilters, TagSaveData } from './event-proposal-tags.types.ts';
 import { UserEvent } from './user-event.ts';

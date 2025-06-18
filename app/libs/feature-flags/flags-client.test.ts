@@ -1,4 +1,4 @@
-import { FlagsClient, defineFlagsConfig } from './flags-client.ts';
+import { defineFlagsConfig, FlagsClient } from './flags-client.ts';
 
 const flagsConfig = defineFlagsConfig({
   'new-dashboard': {

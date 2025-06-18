@@ -10,7 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, href, useSubmit } from 'react-router';
+import { href, Link, useSubmit } from 'react-router';
 import { Avatar, AvatarName } from '~/design-system/avatar.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Divider } from '~/design-system/divider.tsx';

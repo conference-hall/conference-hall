@@ -28,7 +28,6 @@ function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
         <Checkbox
           name="formats"
           key={format.id}
-          id={format.id}
           value={format.id}
           defaultChecked={initialValues?.includes(format.id)}
           description={format.description}
@@ -51,7 +50,6 @@ function FormatsRadioForm({ formats, required, initialValues }: FormProps) {
         <Radio
           name="formats"
           key={format.id}
-          id={format.id}
           value={format.id}
           defaultChecked={initialValues?.includes(format.id)}
           description={format.description}

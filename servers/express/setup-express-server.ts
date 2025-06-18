@@ -45,7 +45,7 @@ export async function setupExpressServer(environmentConfig: EnvironmentConfig) {
   await applySeoHeader(app);
 
   // custom environment configurations
-  environmentConfig(app);
+  await environmentConfig(app);
 
   // Start the server
   app.listen(PORT, () => {

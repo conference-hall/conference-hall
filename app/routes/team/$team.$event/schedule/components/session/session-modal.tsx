@@ -1,9 +1,7 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { useState } from 'react';
-
-import { Background } from '~/design-system/transitions.tsx';
-
 import { useTranslation } from 'react-i18next';
+import { Background } from '~/design-system/transitions.tsx';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SessionForm } from './session-form.tsx';
 

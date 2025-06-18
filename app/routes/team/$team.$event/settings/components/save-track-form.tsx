@@ -1,5 +1,5 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
@@ -50,6 +50,7 @@ type SaveTrackFormModalProps = { type: TrackType; initialValues?: TrackData; isO
 
 function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackFormModalProps) {
   const { t } = useTranslation();
+  const formId = useId();
   return (
     <Modal
       title={
@@ -62,7 +63,7 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
       onClose={onClose}
     >
       <Modal.Content>
-        <Form id="save-track-form" method="POST" onSubmit={onClose} className="space-y-4 lg:space-y-6">
+        <Form id={formId} method="POST" onSubmit={onClose} className="space-y-4 lg:space-y-6">
           <Input name="name" label="Name" defaultValue={initialValues?.name} required />
           <TextArea
             name="description"
@@ -78,7 +79,7 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
         <Button onClick={onClose} type="button" variant="secondary">
           {t('common.cancel')}
         </Button>
-        <Button type="submit" name="intent" value={`save-${type}`} form="save-track-form">
+        <Button type="submit" name="intent" value={`save-${type}`} form={formId}>
           {type === 'formats'
             ? t('event-management.settings.tracks.formats.save')
             : t('event-management.settings.tracks.categories.save')}

@@ -4,7 +4,7 @@ import { TagIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { EventProposalTags } from '~/.server/event-settings/event-proposal-tags.ts';
-import { TagDeleteSchema, TagSaveSchema, parseUrlFilters } from '~/.server/event-settings/event-proposal-tags.types.ts';
+import { parseUrlFilters, TagDeleteSchema, TagSaveSchema } from '~/.server/event-settings/event-proposal-tags.types.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -16,8 +16,8 @@ import { H2, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { TagModal } from '~/routes/components/tags/tag-modal.tsx';
 import { Tag } from '~/routes/components/tags/tag.tsx';
+import { TagModal } from '~/routes/components/tags/tag-modal.tsx';
 import type { Route } from './+types/tags.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

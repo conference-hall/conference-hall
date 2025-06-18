@@ -9,7 +9,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import type { FormEvent } from 'react';
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
@@ -52,6 +52,7 @@ export function SessionForm({
   const { t } = useTranslation();
   const { team, event } = useParams();
 
+  const formId = useId();
   const [name, setName] = useState(session.name);
   const [color, setColor] = useState(session.color);
   const [trackId, setTrackId] = useState(session.trackId);
@@ -83,7 +84,7 @@ export function SessionForm({
     <>
       {isSearching && <SearchSessionProposal onChange={setProposal} onClose={onToggleSearch} />}
 
-      <form id="update-session-form" className="flex flex-col gap-6 px-6 py-6" onSubmit={handleSubmit}>
+      <form id={formId} className="flex flex-col gap-6 px-6 py-6" onSubmit={handleSubmit}>
         {proposal ? (
           <div className="flex items-start justify-between gap-6">
             <div>
@@ -206,7 +207,7 @@ export function SessionForm({
           <Button variant="secondary" onClick={onFinish}>
             {t('common.cancel')}
           </Button>
-          <Button form="update-session-form" type="submit">
+          <Button form={formId} type="submit">
             {t('event-management.schedule.edit-session.submit')}
           </Button>
         </div>

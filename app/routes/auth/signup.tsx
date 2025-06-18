@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { redirect } from 'react-router';
-import { useSearchParams } from 'react-router';
+import { redirect, useSearchParams } from 'react-router';
 import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';

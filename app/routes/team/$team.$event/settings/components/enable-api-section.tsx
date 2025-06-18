@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
@@ -10,6 +11,7 @@ type Props = { apiKey: string | null };
 
 export function EnableApiSection({ apiKey }: Props) {
   const { t } = useTranslation();
+  const formId = useId();
   return (
     <Card as="section">
       <Card.Title>
@@ -18,7 +20,7 @@ export function EnableApiSection({ apiKey }: Props) {
       </Card.Title>
 
       <Card.Content>
-        <Form method="POST" id="api-integration-form" className="space-y-4">
+        <Form method="POST" id={formId} className="space-y-4">
           <Input
             name="apiKey"
             label={t('event-management.settings.web-api.api-key')}
@@ -33,12 +35,7 @@ export function EnableApiSection({ apiKey }: Props) {
       </Card.Content>
 
       <Card.Actions>
-        <Button
-          type="submit"
-          name="intent"
-          value={apiKey ? 'revoke-api-key' : 'generate-api-key'}
-          form="api-integration-form"
-        >
+        <Button type="submit" name="intent" value={apiKey ? 'revoke-api-key' : 'generate-api-key'} form={formId}>
           {apiKey ? t('event-management.settings.web-api.revoke') : t('event-management.settings.web-api.generate')}
         </Button>
       </Card.Actions>

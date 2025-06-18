@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -48,6 +49,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function EventNotificationsSettingsRoute({ actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const formId = useId();
   const { emailNotifications, emailOrganizer } = useCurrentEvent();
   const fetcher = useFetcher<typeof action>();
 
@@ -76,7 +78,7 @@ export default function EventNotificationsSettingsRoute({ actionData: errors }: 
         </Card.Title>
 
         <Card.Content>
-          <Form method="POST" id="email-notifications-form" className="flex items-end gap-4">
+          <Form method="POST" id={formId} className="flex items-end gap-4">
             <Input
               name="emailOrganizer"
               label={t('event-management.settings.notifications.email.organizer.label')}
@@ -89,7 +91,7 @@ export default function EventNotificationsSettingsRoute({ actionData: errors }: 
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit" name="intent" value="save-email-notifications" form="email-notifications-form">
+          <Button type="submit" name="intent" value="save-email-notifications" form={formId}>
             {t('event-management.settings.notifications.email.submit')}
           </Button>
         </Card.Actions>

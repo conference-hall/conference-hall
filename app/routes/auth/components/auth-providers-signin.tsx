@@ -2,7 +2,7 @@ import * as Firebase from 'firebase/auth';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/buttons.tsx';
-import { PROVIDERS, type ProviderId, getClientAuth } from '~/libs/auth/firebase.ts';
+import { getClientAuth, PROVIDERS, type ProviderId } from '~/libs/auth/firebase.ts';
 import { useHydrated } from '~/routes/components/utils/use-hydrated.ts';
 
 type AuthProvidersSigninProps = { redirectTo: string };

@@ -4,10 +4,8 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
-import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server.ts';
-
 import { sendEmail } from '~/emails/send-email.job.ts';
+import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 import { Publication } from './publication.ts';
 
 describe('Publication', () => {

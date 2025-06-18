@@ -28,7 +28,6 @@ function CategoriesCheckboxForm({ categories, required, initialValues }: FormPro
         <Checkbox
           name="categories"
           key={category.id}
-          id={category.id}
           value={category.id}
           defaultChecked={initialValues?.includes(category.id)}
           description={category.description}
@@ -51,7 +50,6 @@ function CategoriesRadioForm({ categories, required, initialValues }: FormProps)
         <Radio
           name="categories"
           key={category.id}
-          id={category.id}
           value={category.id}
           defaultChecked={initialValues?.includes(category.id)}
           description={category.description}

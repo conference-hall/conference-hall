@@ -1,10 +1,9 @@
 import type { User } from '@prisma/client';
-import { userFactory } from 'tests/factories/users.ts';
-
 import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 import { ProfileNotFoundError, SpeakerProfile } from './speaker-profile.ts';
 import { ProfileSchema } from './speaker-profile.types.ts';
 

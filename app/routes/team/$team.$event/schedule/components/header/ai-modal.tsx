@@ -165,10 +165,10 @@ function AIModal({ open, onClose }: ModalProps) {
             aria-multiline="true"
             rows={3}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
+            onKeyDown={async (e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                handleGenerate();
+                await handleGenerate();
               }
             }}
           />

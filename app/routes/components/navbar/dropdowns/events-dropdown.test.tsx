@@ -1,8 +1,7 @@
 import { userEvent } from '@vitest/browser/context';
+import type { JSX } from 'react';
 import { createRoutesStub } from 'react-router';
 import { render } from 'vitest-browser-react';
-
-import type { JSX } from 'react';
 import { EventsDropdown } from './events-dropdown.tsx';
 
 describe('EventsDropdown component', () => {

@@ -1,7 +1,6 @@
-import { db } from 'prisma/db.server.ts';
-
 import { Prisma } from '@prisma/client';
 import type { Decimal } from '@prisma/client/runtime/library';
+import { db } from 'prisma/db.server.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 
 type ReviewerMetricsInfo = {

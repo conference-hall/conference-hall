@@ -4,8 +4,8 @@ import { useFetcher } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
-import { TagSelect } from '~/routes/components/tags/tag-select.tsx';
 import { Tag } from '~/routes/components/tags/tag.tsx';
+import { TagSelect } from '~/routes/components/tags/tag-select.tsx';
 import type { Tag as TagType } from '~/types/tags.types.ts';
 
 type TagsCardProps = {

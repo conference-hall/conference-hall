@@ -6,16 +6,17 @@ import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type Props = {
+  formId: string;
   timezone: string;
   cfpStart: Date | null;
   cfpEnd: Date | null;
   errors: SubmissionErrors;
 };
 
-export function EventCfpConferenceForm({ timezone, cfpStart, cfpEnd, errors }: Props) {
+export function EventCfpConferenceForm({ formId, timezone, cfpStart, cfpEnd, errors }: Props) {
   const { t } = useTranslation();
   return (
-    <Form id="cfp-conference-form" method="POST">
+    <Form id={formId} method="POST">
       <div className="space-y-4">
         <DateRangeInput
           start={{ name: 'cfpStart', label: t('event-management.fields.cfp-start'), value: cfpStart }}

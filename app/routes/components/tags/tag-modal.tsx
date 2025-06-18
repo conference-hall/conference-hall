@@ -1,5 +1,5 @@
 import { PaintBrushIcon } from '@heroicons/react/24/outline';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
@@ -44,6 +44,7 @@ function TagModaContent({ mode, initialValues, open, onClose }: TagModalContentP
   const { t } = useTranslation();
   const defaultColor = initialValues?.color || getRandomColor();
 
+  const formId = useId();
   const [name, setName] = useState(initialValues?.name);
   const [color, setColor] = useState(defaultColor);
 
@@ -57,7 +58,7 @@ function TagModaContent({ mode, initialValues, open, onClose }: TagModalContentP
   return (
     <Modal title={TagPreview} size="m" open={open} onClose={onClose}>
       <Modal.Content>
-        <Form id="save-tag" method="POST" onSubmit={onClose} className="space-y-4 lg:space-y-6">
+        <Form id={formId} method="POST" onSubmit={onClose} className="space-y-4 lg:space-y-6">
           <div className="flex gap-2">
             <input type="hidden" name="id" value={initialValues?.id} />
 
@@ -96,7 +97,7 @@ function TagModaContent({ mode, initialValues, open, onClose }: TagModalContentP
         <Button type="button" variant="secondary" onClick={onClose}>
           {t('common.cancel')}
         </Button>
-        <Button type="submit" name="intent" value="save-tag" form="save-tag" disabled={!name}>
+        <Button type="submit" name="intent" value="save-tag" form={formId} disabled={!name}>
           {mode === 'create'
             ? t('event-management.settings.tags.create-tag')
             : t('event-management.settings.tags.save-tag')}

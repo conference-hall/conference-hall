@@ -1,5 +1,6 @@
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form, data } from 'react-router';
+import { data, Form } from 'react-router';
 import { UserAccount } from '~/.server/user-registration/user-account.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
@@ -44,6 +45,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 export default function PreferencesRoute({ loaderData }: Route.ComponentProps) {
   const { locale } = loaderData;
   const { t } = useTranslation();
+  const formId = useId();
 
   const flags = useFlags();
   if (!flags.userPreferences) return null;
@@ -59,12 +61,12 @@ export default function PreferencesRoute({ loaderData }: Route.ComponentProps) {
 
       <Card as="section">
         <Card.Title>
-          <H2 id="language">{t('settings.preferences.language')}</H2>
+          <H2>{t('settings.preferences.language')}</H2>
           <Subtitle>{t('settings.preferences.language.subtitle')}</Subtitle>
         </Card.Title>
 
         <Card.Content>
-          <Form method="POST" id="language-form" aria-labelledby="language" preventScrollReset>
+          <Form method="POST" id={formId} aria-labelledby="language" preventScrollReset>
             <SelectNative
               name="locale"
               label={t('settings.preferences.language')}
@@ -75,7 +77,7 @@ export default function PreferencesRoute({ loaderData }: Route.ComponentProps) {
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit" form="language-form">
+          <Button type="submit" form={formId}>
             {t('settings.preferences.language.save')}
           </Button>
         </Card.Actions>

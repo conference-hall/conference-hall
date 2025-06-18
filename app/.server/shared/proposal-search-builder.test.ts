@@ -1,17 +1,15 @@
 import type { Event, EventCategory, EventFormat, EventProposalTag, Proposal, Team, User } from '@prisma/client';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
+import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { reviewFactory } from 'tests/factories/reviews.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import { Pagination } from '~/.server/shared/pagination.ts';
-
-import { commentFactory } from 'tests/factories/comments.ts';
-import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.ts';
 import type { ProposalsFilters } from './proposal-search-builder.types.ts';
 

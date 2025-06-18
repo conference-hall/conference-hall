@@ -1,5 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
@@ -39,6 +40,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 export default function SubmissionTracksRoute({ loaderData: proposal, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
   const currentEvent = useCurrentEvent();
+  const formId = useId();
   const { previousPath, nextPath } = useSubmissionNavigation();
 
   return (
@@ -49,7 +51,7 @@ export default function SubmissionTracksRoute({ loaderData: proposal, actionData
         </Card.Title>
 
         <Card.Content>
-          <Form id="tracks-form" method="POST" className="space-y-12">
+          <Form id={formId} method="POST" className="space-y-12">
             {currentEvent.formats?.length > 0 && (
               <section className="space-y-4">
                 <FormatsForm
@@ -80,7 +82,7 @@ export default function SubmissionTracksRoute({ loaderData: proposal, actionData
           <ButtonLink to={previousPath} variant="secondary">
             {t('common.go-back')}
           </ButtonLink>
-          <Button type="submit" form="tracks-form" name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
+          <Button type="submit" form={formId} name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
             {t('common.continue')}
           </Button>
         </Card.Actions>
