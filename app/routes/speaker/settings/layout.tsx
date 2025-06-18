@@ -6,7 +6,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { useFlags } from '~/routes/components/contexts/flags-context.tsx';
 import type { Route } from './+types/layout.ts';
 
 export const meta = (args: Route.MetaArgs) => {
@@ -18,31 +17,22 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-const menuItems = (userPreferences: boolean, t: TFunction) => {
-  const items = [
+const menuItems = (t: TFunction) => {
+  return [
     { to: href('/speaker/settings'), icon: ShieldCheckIcon, label: t('settings.nav.account') },
     { to: href('/speaker/settings/profile'), icon: UserCircleIcon, label: t('settings.nav.profile') },
+    { to: href('/speaker/settings/preferences'), icon: AdjustmentsVerticalIcon, label: t('settings.nav.preferences') },
   ];
-
-  if (userPreferences) {
-    items.push({
-      to: href('/speaker/settings/preferences'),
-      icon: AdjustmentsVerticalIcon,
-      label: t('settings.nav.preferences'),
-    });
-  }
-  return items;
 };
 
 export default function SettingsRoute() {
   const { t } = useTranslation();
-  const flags = useFlags();
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
       <NavSideMenu
         aria-label={t('settings.menu')}
-        items={menuItems(flags.userPreferences, t)}
+        items={menuItems(t)}
         className="hidden sm:block w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
       />
 
