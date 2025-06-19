@@ -1,3 +1,5 @@
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import type { HTMLAttributes } from 'react';
 import type { LinkProps } from 'react-router';
@@ -99,3 +101,29 @@ function Actions({ children, align = 'right' }: { children: React.ReactNode; ali
 }
 
 Card.Actions = Actions;
+
+// <Card.Disclosure /> component
+
+type CardDisclosureProps = {
+  title: string;
+  as?: React.ElementType;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+  className?: string;
+};
+
+function CardDisclosure({ title, as, children, defaultOpen, className }: CardDisclosureProps) {
+  return (
+    <Disclosure defaultOpen={defaultOpen}>
+      <DisclosureButton className="px-6 py-4 group flex items-center gap-2 text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:underline border-t border-t-gray-200">
+        <span>{title}</span>
+        <ChevronDownIcon className="h-4 w-4 group-data-open:rotate-180" />
+      </DisclosureButton>
+      <DisclosurePanel as={as} className={cx(className, 'px-6 pb-4')}>
+        {children}
+      </DisclosurePanel>
+    </Disclosure>
+  );
+}
+
+Card.Disclosure = CardDisclosure;

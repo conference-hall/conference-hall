@@ -86,6 +86,7 @@ export default [
 
       // Event speakers page
       route('speakers', './routes/team/$team.$event/speakers/index.tsx'),
+      route('speakers/:speaker', './routes/team/$team.$event/speakers/$speaker.index.tsx'),
 
       // Event publication pages
       route('publication', './routes/team/$team.$event/publication/index.tsx'),
