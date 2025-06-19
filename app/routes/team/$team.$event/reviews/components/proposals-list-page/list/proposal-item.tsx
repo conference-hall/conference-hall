@@ -14,12 +14,19 @@ import type { ProposalData } from './types.ts';
 
 type ProposalItemProps = {
   proposal: ProposalData;
-  isSelected: boolean;
-  isAllPagesSelected: boolean;
-  toggle: (event: ChangeEvent<HTMLInputElement>) => void;
+  isSelected?: boolean;
+  isAllPagesSelected?: boolean;
+  toggle?: (event: ChangeEvent<HTMLInputElement>) => void;
+  linkTo?: string;
 };
 
-export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle }: ProposalItemProps) {
+export function ProposalItem({
+  proposal,
+  isSelected = false,
+  isAllPagesSelected = false,
+  toggle,
+  linkTo,
+}: ProposalItemProps) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const [params] = useSearchParams();
@@ -30,9 +37,11 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
   const { id, title, reviews } = proposal;
   const { you, summary } = reviews;
 
+  const defaultLinkTo = linkTo || { pathname: id, search: params.toString() };
+
   return (
     <>
-      {canDeliberateEventProposals ? (
+      {canDeliberateEventProposals && toggle ? (
         <Checkbox
           aria-label={t('event-management.proposals.list.select-item', { title })}
           value={id}
@@ -44,7 +53,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
       ) : undefined}
 
       <Link
-        to={{ pathname: id, search: params.toString() }}
+        to={defaultLinkTo}
         aria-label={t('event-management.proposals.list.open', { title })}
         className="flex items-center justify-between gap-4 py-3 grow min-w-0 hover:text-indigo-700"
       >

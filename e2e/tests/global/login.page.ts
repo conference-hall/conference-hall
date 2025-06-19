@@ -15,6 +15,7 @@ export class LoginPage extends PageObject {
   }
 
   async waitFor() {
+    await this.page.waitForLoadState('networkidle');
     await this.heading.waitFor();
   }
 
@@ -22,6 +23,7 @@ export class LoginPage extends PageObject {
     await this.page.getByRole('button', { name: 'Google' }).click();
     await this.authEmulator.waitFor('Google');
     await this.authEmulator.selectAccount(username);
+    await this.page.waitForLoadState('networkidle');
   }
 }
 
@@ -37,6 +39,7 @@ export class ForgotPasswordPage extends PageObject {
   }
 
   async waitFor() {
+    await this.page.waitForLoadState('networkidle');
     await this.heading.waitFor();
   }
 }
@@ -52,6 +55,7 @@ export class ResetPasswordPage extends PageObject {
   }
 
   async waitFor() {
+    await this.page.waitForLoadState('networkidle');
     await this.heading.waitFor();
   }
 }

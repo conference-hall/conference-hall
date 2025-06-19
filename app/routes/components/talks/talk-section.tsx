@@ -1,5 +1,3 @@
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import type { TalkLevel } from '@prisma/client';
 import { cx } from 'class-variance-authority';
@@ -148,15 +146,9 @@ export function TalkSection({
       </dl>
 
       {talk.references ? (
-        <Disclosure defaultOpen={referencesOpen}>
-          <DisclosureButton className="px-6 py-4 group flex items-center gap-2 text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:underline border-t border-t-gray-200">
-            <span>{t('talk.references')}</span>
-            <ChevronDownIcon className="h-4 w-4 group-data-open:rotate-180" />
-          </DisclosureButton>
-          <DisclosurePanel as="dd" className="px-6 pb-4">
-            <Markdown className="text-gray-700">{talk.references}</Markdown>
-          </DisclosurePanel>
-        </Disclosure>
+        <Card.Disclosure title={t('talk.references')} defaultOpen={referencesOpen}>
+          <Markdown>{talk.references}</Markdown>
+        </Card.Disclosure>
       ) : null}
 
       {children}

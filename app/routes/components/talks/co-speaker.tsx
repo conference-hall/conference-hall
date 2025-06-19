@@ -11,7 +11,7 @@ import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { SocialLink } from '~/design-system/social-link.tsx';
-import { H2, Text } from '~/design-system/typography.tsx';
+import { Text } from '~/design-system/typography.tsx';
 import { InvitationModal } from '../modals/invitation-modal.tsx';
 
 export type SpeakerProps = {
@@ -139,12 +139,6 @@ type SpeakerDrawerProps = { speaker: SpeakerProps; canEdit?: boolean; open: bool
 function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) {
   const { t } = useTranslation();
 
-  const details = [
-    { key: 'bio', label: t('speaker.profile.biography'), value: speaker.bio },
-    { key: 'references', label: t('speaker.profile.references'), value: speaker.references },
-    { key: 'location', label: t('speaker.profile.location'), value: speaker.location },
-  ].filter((detail) => Boolean(detail.value));
-
   return (
     <SlideOver
       title={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
@@ -153,53 +147,16 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
       onClose={onClose}
       size="l"
     >
-      <SlideOver.Content className="p-0!">
+      <SlideOver.Content className="space-y-6">
         <h2 className="sr-only">{t('speaker.panel.heading')}</h2>
-        {speaker.email && (
-          <div className="flex flex-col gap-2 p-4 sm:px-6">
-            <IconLabel icon={EnvelopeIcon}>{speaker.email}</IconLabel>
-            {speaker.socialLinks?.map((socialLink) => (
-              <SocialLink key={socialLink} url={socialLink} />
-            ))}
-          </div>
-        )}
 
-        {canEdit && speaker.userId && (
-          <div className="p-6">
-            <RemoveCoSpeakerButton speakerId={speaker.userId} speakerName={speaker.name} />
-          </div>
-        )}
+        <SpeakerContacts speaker={speaker} />
 
-        <dl className="divide-y">
-          {details.map((detail) => (
-            <div key={detail.label} className="p-4 sm:px-6">
-              <dt className="text-sm font-medium leading-6 text-gray-900">{detail.label}</dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 break-words">
-                {(detail.key === 'bio' || detail.key === 'references') && detail.value ? (
-                  <Markdown>{detail.value as string}</Markdown>
-                ) : (
-                  detail.value
-                )}
-              </dd>
-            </div>
-          ))}
-        </dl>
+        {canEdit && speaker.userId && <RemoveCoSpeakerButton speakerId={speaker.userId} speakerName={speaker.name} />}
 
-        {speaker.survey && speaker.survey.length > 0 ? (
-          <section className="p-4 sm:px-6 space-y-6">
-            <H2 variant="secondary">{t('speaker.survey')}</H2>
-            <dl className="space-y-4">
-              {speaker.survey?.map((question) => (
-                <div key={question.id}>
-                  <dt className="text-sm font-medium leading-6 text-gray-900">{question.label}</dt>
-                  <dd className="text-sm leading-6 text-gray-700 break-words">
-                    {question.type === 'text' ? question.answer : question.answers?.map((a) => a.label).join(', ')}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </section>
-        ) : null}
+        <SpeakerDetails speaker={speaker} />
+
+        <SpeakerSurveyAnswers survey={speaker.survey} />
       </SlideOver.Content>
     </SlideOver>
   );
@@ -207,7 +164,7 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
 
 type SpeakerTitleProps = { name: string | null; picture?: string | null; company?: string | null };
 
-function SpeakerTitle({ name, picture, company }: SpeakerTitleProps) {
+export function SpeakerTitle({ name, picture, company }: SpeakerTitleProps) {
   return (
     <div className="flex items-center gap-4">
       <Avatar picture={picture} name={name} size="l" />
@@ -222,4 +179,60 @@ function SpeakerTitle({ name, picture, company }: SpeakerTitleProps) {
       </div>
     </div>
   );
+}
+
+type SpeakerContactsProps = { speaker: SpeakerProps; className?: string };
+
+export function SpeakerContacts({ speaker, className }: SpeakerContactsProps) {
+  return (
+    <div className={cx('flex flex-col gap-2', className)}>
+      <IconLabel icon={EnvelopeIcon}>{speaker.email}</IconLabel>
+
+      {speaker.socialLinks?.map((socialLink) => (
+        <SocialLink key={socialLink} url={socialLink} />
+      ))}
+    </div>
+  );
+}
+
+type SpeakerDetailsProps = { speaker: SpeakerProps; className?: string };
+
+function SpeakerDetails({ speaker, className }: SpeakerDetailsProps) {
+  const { t } = useTranslation();
+
+  const details = [
+    { key: 'bio', label: t('speaker.profile.biography'), value: speaker.bio },
+    { key: 'references', label: t('speaker.profile.references'), value: speaker.references },
+    { key: 'location', label: t('speaker.profile.location'), value: speaker.location },
+  ].filter((detail) => Boolean(detail.value));
+
+  return details.map((detail) => (
+    <div key={detail.label} className={className}>
+      <div className="text-sm font-medium leading-6 text-gray-900">{detail.label}</div>
+      <div className="mt-1 text-sm leading-6 text-gray-700 break-words">
+        {(detail.key === 'bio' || detail.key === 'references') && detail.value ? (
+          <Markdown>{detail.value as string}</Markdown>
+        ) : (
+          detail.value
+        )}
+      </div>
+    </div>
+  ));
+}
+
+type SpeakerSurveyAnswer = { survey?: Array<SurveyDetailedAnswer>; className?: string };
+
+export function SpeakerSurveyAnswers({ survey, className }: SpeakerSurveyAnswer) {
+  if (!survey || survey.length === 0) {
+    return null;
+  }
+
+  return survey?.map((question) => (
+    <div key={question.id} className={className}>
+      <div className="text-sm font-medium leading-6 text-gray-900">{question.label}</div>
+      <div className="text-sm leading-6 text-gray-700 break-words">
+        {question.type === 'text' ? question.answer : question.answers?.map((a) => a.label).join(', ')}
+      </div>
+    </div>
+  ));
 }

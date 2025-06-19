@@ -3,7 +3,11 @@ import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 import { UserEvent } from '../event-settings/user-event.ts';
+import { SpeakerSurvey } from '../event-survey/speaker-survey.ts';
+import type { SurveyDetailedAnswer } from '../event-survey/types.ts';
+import { ReviewDetails } from '../reviews/review-details.ts';
 import { Pagination } from '../shared/pagination.ts';
+import type { SocialLinks } from '../speaker-profile/speaker-profile.types.ts';
 
 const SpeakerSearchFiltersSchema = z.object({
   query: z.string().trim().optional(),
@@ -85,6 +89,60 @@ export class EventSpeakers {
       filters,
       pagination: { current: pagination.page, total: pagination.pageCount },
       statistics: { total },
+    };
+  }
+
+  async getById(speakerId: string) {
+    const event = await this.userEvent.needsPermission('canAccessEvent');
+
+    const speaker = await db.eventSpeaker.findFirst({
+      where: { id: speakerId, eventId: event.id },
+      include: {
+        proposals: {
+          where: { isDraft: false },
+          include: { speakers: true, reviews: true, comments: true, tags: true },
+        },
+      },
+    });
+
+    if (!speaker) return null;
+
+    let answers: Record<string, Array<SurveyDetailedAnswer>> = {};
+    if (speaker.userId) {
+      const survey = SpeakerSurvey.for(event.slug);
+      answers = await survey.getMultipleSpeakerAnswers(event, [speaker.userId]);
+    }
+
+    return {
+      id: speaker.id,
+      name: speaker.name,
+      email: speaker.email,
+      bio: speaker.bio,
+      picture: speaker.picture,
+      company: speaker.company,
+      location: speaker.location,
+      references: speaker.references,
+      socialLinks: speaker.socialLinks as SocialLinks,
+      userId: speaker.userId,
+      survey: speaker.userId ? answers[speaker.userId] : [],
+      proposals: speaker.proposals.map((proposal) => {
+        const reviews = new ReviewDetails(proposal.reviews);
+        return {
+          id: proposal.id,
+          title: proposal.title,
+          deliberationStatus: proposal.deliberationStatus,
+          publicationStatus: proposal.publicationStatus,
+          confirmationStatus: proposal.confirmationStatus,
+          createdAt: proposal.createdAt,
+          speakers: proposal.speakers.map((speaker) => ({ name: speaker.name })),
+          reviews: {
+            summary: event.displayProposalsReviews ? reviews.summary() : undefined,
+            you: reviews.ofUser(this.userEvent.userId),
+          },
+          comments: { count: proposal.comments.length },
+          tags: proposal.tags,
+        };
+      }),
     };
   }
 }

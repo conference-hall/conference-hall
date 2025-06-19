@@ -14,7 +14,7 @@ export type ProposalData = {
   publicationStatus: PublicationStatus;
   confirmationStatus: ConfirmationStatus | null;
   createdAt: Date;
-  speakers: Array<{ name: string | null; picture: string | null }>;
+  speakers: Array<{ name: string | null }>;
   reviews: { summary?: GlobalReview; you: UserReview };
   comments: { count: number };
   tags: Array<Tag>;
