@@ -156,7 +156,7 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
 
         <SpeakerDetails speaker={speaker} />
 
-        <SpeakerSurveyAnwers survey={speaker.survey} />
+        <SpeakerSurveyAnswers survey={speaker.survey} />
       </SlideOver.Content>
     </SlideOver>
   );
@@ -222,7 +222,7 @@ function SpeakerDetails({ speaker, className }: SpeakerDetailsProps) {
 
 type SpeakerSurveyAnswer = { survey?: Array<SurveyDetailedAnswer>; className?: string };
 
-export function SpeakerSurveyAnwers({ survey, className }: SpeakerSurveyAnswer) {
+export function SpeakerSurveyAnswers({ survey, className }: SpeakerSurveyAnswer) {
   if (!survey || survey.length === 0) {
     return null;
   }

@@ -146,7 +146,7 @@ export function TalkSection({
       </dl>
 
       {talk.references ? (
-        <Card.Disclosure title="References" defaultOpen={referencesOpen}>
+        <Card.Disclosure title={t('talk.references')} defaultOpen={referencesOpen}>
           <Markdown>{talk.references}</Markdown>
         </Card.Disclosure>
       ) : null}

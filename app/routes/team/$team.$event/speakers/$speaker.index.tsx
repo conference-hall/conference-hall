@@ -10,7 +10,7 @@ import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
-import { SpeakerContacts, SpeakerSurveyAnwers, SpeakerTitle } from '~/routes/components/talks/co-speaker.tsx';
+import { SpeakerContacts, SpeakerSurveyAnswers, SpeakerTitle } from '~/routes/components/talks/co-speaker.tsx';
 import { ProposalItem } from '../reviews/components/proposals-list-page/list/proposal-item.tsx';
 import type { Route } from './+types/$speaker.index.ts';
 
@@ -59,7 +59,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
 
         {speaker.survey?.length > 0 ? (
           <Card.Disclosure title={t('speaker.survey')} className="space-y-4">
-            <SpeakerSurveyAnwers survey={speaker.survey} />
+            <SpeakerSurveyAnswers survey={speaker.survey} />
           </Card.Disclosure>
         ) : null}
       </Card>
