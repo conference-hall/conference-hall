@@ -197,7 +197,7 @@ export function SpeakerContacts({ speaker, className }: SpeakerContactsProps) {
 
 type SpeakerDetailsProps = { speaker: SpeakerProps; className?: string };
 
-export function SpeakerDetails({ speaker, className }: SpeakerDetailsProps) {
+function SpeakerDetails({ speaker, className }: SpeakerDetailsProps) {
   const { t } = useTranslation();
 
   const details = [
