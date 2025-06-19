@@ -10,7 +10,7 @@ type ReviewFeed = {
   type: 'review';
   timestamp: Date;
   userId: string;
-  feeling: ReviewFeeling | null;
+  feeling: ReviewFeeling;
   note: number | null;
 };
 
@@ -49,7 +49,7 @@ export class ActivityFeed {
           (
             SELECT id, 'review' AS type, reviews."updatedAt" AS timestamp, reviews."userId", reviews."feeling", reviews."note", NULL AS comment
             FROM reviews
-            WHERE reviews."proposalId" = ${this.proposalId} and reviews."feeling" != 'NO_OPINION'
+            WHERE reviews."proposalId" = ${this.proposalId}
           )
           UNION ALL
           (
