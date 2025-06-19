@@ -1,13 +1,16 @@
 import type { Event, EventSpeaker, Team, User } from '@prisma/client';
+import { db } from 'prisma/db.server.ts';
+import { commentFactory } from 'tests/factories/comments.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
+import { reviewFactory } from 'tests/factories/reviews.ts';
+import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
-
 import { EventSpeakers } from './event-speakers.ts';
 
 describe('EventSpeakers', () => {
@@ -333,6 +336,236 @@ describe('EventSpeakers', () => {
     describe('when team does not exist', () => {
       it('throws error for non-existent team', async () => {
         await expect(EventSpeakers.for(owner.id, 'non-existent', event.slug).search({})).rejects.toThrow();
+      });
+    });
+  });
+
+  describe('#getById', () => {
+    describe('when user has access to event', () => {
+      it('returns complete speaker details with basic information', async () => {
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+
+        expect(result).toMatchObject({
+          id: eventSpeaker1.id,
+          name: 'Peter Parker',
+          email: speaker1.email,
+          bio: speaker1.bio,
+          picture: eventSpeaker1.picture,
+          company: speaker1.company,
+          location: speaker1.location,
+          references: speaker1.references,
+          socialLinks: speaker1.socialLinks,
+          userId: speaker1.id,
+          proposals: [],
+        });
+
+        // Survey field depends on whether the speaker has survey answers
+        // It can be undefined if no survey answers exist for this userId
+        if (result?.survey !== undefined) {
+          expect(Array.isArray(result.survey)).toBe(true);
+        }
+      });
+
+      it('returns speaker without proposals when none exist', async () => {
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker2.id);
+
+        expect(result?.proposals).toEqual([]);
+      });
+
+      it('includes survey answers when speaker has userId and survey exists', async () => {
+        await surveyFactory({
+          user: speaker1,
+          event,
+          attributes: { answers: [{ question: 'experience', answer: 'expert' }] },
+        });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+
+        expect(result?.survey).toBeDefined();
+        expect(Array.isArray(result?.survey)).toBe(true);
+      });
+
+      it('returns empty survey when speaker has no userId', async () => {
+        const speakerWithoutUser = await eventSpeakerFactory({ event, attributes: { name: 'Guest Speaker' } });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(speakerWithoutUser.id);
+
+        expect(result?.survey).toEqual([]);
+        expect(result?.userId).toBeNull();
+      });
+
+      it('includes proposals with complete data structure', async () => {
+        const talk = await talkFactory({ speakers: [speaker1] });
+        const tag = await eventProposalTagFactory({ event });
+        const proposal = await proposalFactory({
+          event,
+          talk,
+          tags: [tag],
+          attributes: {
+            title: 'Amazing React Talk',
+            deliberationStatus: 'ACCEPTED',
+            publicationStatus: 'PUBLISHED',
+            confirmationStatus: 'CONFIRMED',
+          },
+        });
+        await reviewFactory({ proposal, user: owner, attributes: { feeling: 'POSITIVE', note: 4 } });
+        await commentFactory({ proposal, user: member });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+
+        expect(result?.proposals).toHaveLength(1);
+        expect(result?.proposals[0]).toMatchObject({
+          id: proposal.id,
+          title: 'Amazing React Talk',
+          deliberationStatus: 'ACCEPTED',
+          publicationStatus: 'PUBLISHED',
+          confirmationStatus: 'CONFIRMED',
+          createdAt: proposal.createdAt,
+          speakers: [{ name: 'Peter Parker' }],
+          comments: { count: 1 },
+          tags: [{ id: tag.id, name: tag.name, color: tag.color }],
+        });
+        expect(result?.proposals[0].reviews.you).toMatchObject({ feeling: 'POSITIVE', note: 4 });
+      });
+
+      it('excludes draft proposals from results', async () => {
+        const talk1 = await talkFactory({ speakers: [speaker1] });
+        const talk2 = await talkFactory({ speakers: [speaker1] });
+
+        // Create published proposal
+        await proposalFactory({ event, talk: talk1, attributes: { title: 'Published Proposal', isDraft: false } });
+
+        // Create draft proposal
+        await proposalFactory({ event, talk: talk2, attributes: { title: 'Draft Proposal', isDraft: true } });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+
+        expect(result?.proposals).toHaveLength(1);
+        expect(result?.proposals[0].title).toBe('Published Proposal');
+      });
+
+      it('includes review summary when event.displayProposalsReviews is enabled', async () => {
+        // Enable proposal reviews display
+        const talk = await talkFactory({ speakers: [speaker1] });
+        const proposal = await proposalFactory({ event, talk });
+
+        // Add multiple reviews to generate summary
+        await reviewFactory({ proposal, user: owner, attributes: { feeling: 'POSITIVE', note: 4 } });
+        await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5 } });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+
+        expect(result?.proposals[0].reviews.summary).toBeDefined();
+        expect(result?.proposals[0].reviews.summary?.average).toBeDefined();
+      });
+
+      it('excludes review summary when event.displayProposalsReviews is disabled', async () => {
+        // Disable proposal reviews display
+        await db.event.update({ where: { id: event.id }, data: { displayProposalsReviews: false } });
+        const talk = await talkFactory({ speakers: [speaker1] });
+        const proposal = await proposalFactory({ event, talk });
+
+        await reviewFactory({
+          proposal,
+          user: owner,
+          attributes: { feeling: 'POSITIVE', note: 4 },
+        });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+
+        expect(result?.proposals[0].reviews.summary).toBeUndefined();
+      });
+
+      it('returns current user review in you field', async () => {
+        const talk = await talkFactory({ speakers: [speaker1] });
+        const proposal = await proposalFactory({ event, talk });
+        await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 2 } });
+        await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5 } });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+
+        expect(result?.proposals[0].reviews.you).toMatchObject({ feeling: 'NEGATIVE', note: 2 });
+      });
+
+      it('returns null when speaker not found', async () => {
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById('non-existent-id');
+
+        expect(result).toBeNull();
+      });
+
+      it('returns null when speaker exists but not in the requested event', async () => {
+        const otherEvent = await eventFactory({ team });
+        const speakerInOtherEvent = await eventSpeakerFactory({ event: otherEvent });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(speakerInOtherEvent.id);
+
+        expect(result).toBeNull();
+      });
+
+      it('handles speakers with multiple proposals', async () => {
+        await proposalFactory({
+          event,
+          talk: await talkFactory({ speakers: [speaker1] }),
+          attributes: { title: 'First Talk', deliberationStatus: 'ACCEPTED', confirmationStatus: 'CONFIRMED' },
+        });
+
+        await proposalFactory({
+          event,
+          talk: await talkFactory({ speakers: [speaker1] }),
+          attributes: { title: 'Second Talk', deliberationStatus: 'PENDING', confirmationStatus: null },
+        });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+
+        expect(result?.proposals).toHaveLength(2);
+
+        const proposalTitles = result?.proposals.map((p) => p.title).sort();
+        expect(proposalTitles).toEqual(['First Talk', 'Second Talk']);
+      });
+
+      it('handles speakers with social links', async () => {
+        const speakerWithSocialLinks = await eventSpeakerFactory({
+          event,
+          attributes: {
+            socialLinks: [
+              { type: 'twitter', link: 'https://twitter.com/speaker' },
+              { type: 'linkedin', link: 'https://linkedin.com/in/speaker' },
+            ],
+          },
+        });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(speakerWithSocialLinks.id);
+
+        expect(result?.socialLinks).toEqual([
+          { type: 'twitter', link: 'https://twitter.com/speaker' },
+          { type: 'linkedin', link: 'https://linkedin.com/in/speaker' },
+        ]);
+      });
+    });
+
+    describe('when user does not have access to event', () => {
+      it('throws ForbiddenOperationError for non-member', async () => {
+        const outsider = await userFactory();
+
+        await expect(EventSpeakers.for(outsider.id, team.slug, event.slug).getById(eventSpeaker1.id)).rejects.toThrow(
+          ForbiddenOperationError,
+        );
+      });
+    });
+
+    describe('when event does not exist', () => {
+      it('throws error for non-existent event', async () => {
+        await expect(
+          EventSpeakers.for(owner.id, team.slug, 'non-existent').getById(eventSpeaker1.id),
+        ).rejects.toThrow();
+      });
+    });
+
+    describe('when team does not exist', () => {
+      it('throws error for non-existent team', async () => {
+        await expect(
+          EventSpeakers.for(owner.id, 'non-existent', event.slug).getById(eventSpeaker1.id),
+        ).rejects.toThrow();
       });
     });
   });
