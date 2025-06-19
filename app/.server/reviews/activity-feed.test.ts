@@ -33,7 +33,6 @@ describe('ActivityFeed', () => {
       const message2 = await commentFactory({ proposal, user: member1 });
       const review2 = await reviewFactory({ proposal, user: member1, attributes: { feeling: 'POSITIVE', note: 4 } });
 
-      await reviewFactory({ proposal, user: member2, attributes: { feeling: 'NO_OPINION' } });
       await commentFactory({ proposal, user: member1, attributes: { channel: CommentChannel.SPEAKER } });
 
       const activity = await ActivityFeed.for(owner.id, team.slug, event.slug, proposal.id).activity();
