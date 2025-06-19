@@ -27,7 +27,6 @@ export class EventPage extends PageObject {
   }
 
   async waitFor(name: string) {
-    await this.page.waitForLoadState('networkidle');
     await this.heading(name).waitFor();
   }
 

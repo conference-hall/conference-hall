@@ -51,6 +51,7 @@ export class SettingsAccountPage extends PageObject {
   }
 
   async emailVerificationSent() {
+    await this.page.waitForLoadState('networkidle');
     await this.page.getByRole('heading', { name: 'Email verification' }).waitFor();
   }
 }

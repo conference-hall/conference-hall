@@ -16,7 +16,6 @@ export class TeamAccessPage extends PageObject {
 
   async goto() {
     await this.page.goto('/team/request');
-    await this.page.waitForLoadState('networkidle');
     await this.heading.waitFor();
   }
 
