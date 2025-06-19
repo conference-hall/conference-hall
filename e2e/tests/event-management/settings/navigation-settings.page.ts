@@ -37,6 +37,7 @@ export class NavigationSettingsPage extends PageObject {
   }
 
   async waitFor() {
+    await this.page.waitForLoadState('networkidle');
     await this.heading.waitFor();
   }
 
