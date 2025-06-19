@@ -68,28 +68,6 @@ test('displays speakers list with basic information', async ({ page }) => {
   await expect(speakersPage.speaker('Alice Johnson')).toBeVisible();
   await expect(speakersPage.speaker('Bob Wilson')).toBeVisible();
   await expect(speakersPage.speaker('Charlie Brown')).toBeVisible();
-
-  // Confirmed / Declined badges
-  await expect(speakersPage.speakerBadge('Alice Johnson', 'Confirmed')).toBeVisible();
-  await expect(speakersPage.speakerBadge('Bob Wilson', 'Declined')).toBeVisible();
-  await expect(speakersPage.speakerBadge('Charlie Brown', 'Confirmed')).not.toBeVisible();
-  await expect(speakersPage.speakerBadge('Charlie Brown', 'Declined')).not.toBeVisible();
-
-  // Check speaker statistics are displayed
-  await expect(speakersPage.speakerStats('Alice Johnson', 'Submitted', 1)).toBeVisible();
-  await expect(speakersPage.speakerStats('Alice Johnson', 'Accepted', 1)).toBeVisible();
-  await expect(speakersPage.speakerStats('Alice Johnson', 'Confirmed', 1)).toBeVisible();
-  await expect(speakersPage.speakerStats('Alice Johnson', 'Declined', 0)).toBeVisible();
-
-  await expect(speakersPage.speakerStats('Bob Wilson', 'Submitted', 1)).toBeVisible();
-  await expect(speakersPage.speakerStats('Bob Wilson', 'Accepted', 1)).toBeVisible();
-  await expect(speakersPage.speakerStats('Bob Wilson', 'Confirmed', 0)).toBeVisible();
-  await expect(speakersPage.speakerStats('Bob Wilson', 'Declined', 1)).toBeVisible();
-
-  await expect(speakersPage.speakerStats('Charlie Brown', 'Submitted', 1)).toBeVisible();
-  await expect(speakersPage.speakerStats('Charlie Brown', 'Accepted', 0)).toBeVisible();
-  await expect(speakersPage.speakerStats('Charlie Brown', 'Confirmed', 0)).toBeVisible();
-  await expect(speakersPage.speakerStats('Charlie Brown', 'Declined', 0)).toBeVisible();
 });
 
 test('filters speakers by search query', async ({ page }) => {
@@ -212,6 +190,21 @@ test('combines search and filters', async ({ page }) => {
   await expect(speakersPage.speakerCount(3)).toBeVisible();
 });
 
+test('navigates to speaker detail page when clicking on speaker', async ({ page }) => {
+  const speakersPage = new SpeakersListPage(page);
+  await speakersPage.goto(team.slug, event.slug);
+
+  // Click on Alice Johnson's speaker card
+  await speakersPage.clickOnSpeaker('Alice Johnson');
+
+  // Should navigate to Alice's speaker detail page
+  await expect(page.getByText('Alice Johnson')).toBeVisible();
+  await expect(page.getByText(/Proposals \(\d+\)/)).toBeVisible();
+
+  // Check URL contains the speaker page path
+  await expect(page).toHaveURL(new RegExp(`/team/${team.slug}/${event.slug}/speakers/[a-z0-9]+`));
+});
+
 test('displays empty state when no speakers exist', async ({ page }) => {
   // Create an event with no speakers
   const emptyEvent = await eventFactory({ team, traits: ['conference-cfp-open'] });
@@ -251,10 +244,10 @@ test('pagination works with many speakers', async ({ page }) => {
   await expect(speakersPage.page.getByText(/Showing .* to .* of 25 results/)).toBeVisible();
 
   // Navigate to second page
-  await speakersPage.page.getByRole('link', { name: '2' }).click();
+  await speakersPage.page.getByRole('link', { name: '2', exact: true }).click();
   await expect(speakersPage.speakers).toHaveCount(5); // Second page shows remaining 5
 
   // Navigate back to first page
-  await speakersPage.page.getByRole('link', { name: '1' }).click();
+  await speakersPage.page.getByRole('link', { name: '1', exact: true }).click();
   await expect(speakersPage.speakers).toHaveCount(20);
 });

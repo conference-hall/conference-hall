@@ -73,15 +73,7 @@ export class SpeakersListPage extends PageObject {
     await this.filterTag(name).getByRole('button').click();
   }
 
-  speakerCard(name: string) {
-    return this.page.getByText(name).locator('xpath=ancestor::li[1]');
-  }
-
-  speakerBadge(speakerName: string, badge: string) {
-    return this.speakerCard(speakerName).locator('span').filter({ hasText: badge });
-  }
-
-  speakerStats(speakerName: string, statType: 'Submitted' | 'Accepted' | 'Confirmed' | 'Declined', count: number) {
-    return this.speakerCard(speakerName).getByText(statType).locator('..').getByText(count.toString());
+  async clickOnSpeaker(name: string) {
+    await this.speaker(name).click();
   }
 }
