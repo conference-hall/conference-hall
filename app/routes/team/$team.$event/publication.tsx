@@ -14,8 +14,8 @@ import { requireUserSession } from '~/libs/auth/session.ts';
 import { BadRequestError } from '~/libs/errors.server.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import type { Route } from './+types/index.ts';
-import { PublicationButton } from './components/publication-confirm-modal.tsx';
+import type { Route } from './+types/publication.ts';
+import { PublicationButton } from './components/publication-page/publication-confirm-modal.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

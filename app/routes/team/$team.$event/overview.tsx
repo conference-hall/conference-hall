@@ -9,7 +9,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import type { Route } from './+types/index.ts';
+import type { Route } from './+types/overview.ts';
 import { CfpStatusCard } from './components/overview-page/cfp-status-card.tsx';
 import { DashboardTabs } from './components/overview-page/dashboard-tabs.tsx';
 import { ProposalsByDayChart } from './components/overview-page/proposals-by-days-chart.tsx';

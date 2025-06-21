@@ -77,7 +77,7 @@ export default [
 
     // Team event pages
     route(':event', './routes/team/$team.$event/_layout.tsx', { id: 'team-current-event' }, [
-      index('./routes/team/$team.$event/index.tsx'),
+      index('./routes/team/$team.$event/overview.tsx'),
 
       // Event review pages
       route('reviews', './routes/team/$team.$event/reviews/index.tsx'),
@@ -89,7 +89,7 @@ export default [
       route('speakers/:speaker', './routes/team/$team.$event/speakers/$speaker.index.tsx'),
 
       // Event publication pages
-      route('publication', './routes/team/$team.$event/publication/index.tsx'),
+      route('publication', './routes/team/$team.$event/publication.tsx'),
 
       // Event schedule pages
       route('schedule', './routes/team/$team.$event/schedule/index.tsx'),
