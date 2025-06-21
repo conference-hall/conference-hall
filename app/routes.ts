@@ -76,48 +76,48 @@ export default [
     ]),
 
     // Team event pages
-    route(':event', './routes/team/$team.$event/_layout.tsx', { id: 'team-current-event' }, [
-      index('./routes/team/$team.$event/overview.tsx'),
+    route(':event', './routes/team.event-management/_layout.tsx', { id: 'team-current-event' }, [
+      index('./routes/team.event-management/overview.tsx'),
 
       // Event review pages
-      route('reviews', './routes/team/$team.$event/proposals.tsx'),
-      route('reviews/:proposal', './routes/team/$team.$event/proposals/$proposal.tsx'),
-      route('reviews/autocomplete', './routes/team/$team.$event/proposals/autocomplete.tsx'),
+      route('reviews', './routes/team.event-management/proposals.tsx'),
+      route('reviews/:proposal', './routes/team.event-management/proposals/$proposal.tsx'),
+      route('reviews/autocomplete', './routes/team.event-management/proposals/autocomplete.tsx'),
 
       // Event speakers page
-      route('speakers', './routes/team/$team.$event/speakers.tsx'),
-      route('speakers/:speaker', './routes/team/$team.$event/speakers/$speaker.tsx'),
+      route('speakers', './routes/team.event-management/speakers.tsx'),
+      route('speakers/:speaker', './routes/team.event-management/speakers/$speaker.tsx'),
 
       // Event publication pages
-      route('publication', './routes/team/$team.$event/publication.tsx'),
+      route('publication', './routes/team.event-management/publication.tsx'),
 
       // Event schedule pages
-      route('schedule', './routes/team/$team.$event/schedule.tsx'),
-      route('schedule/:day', './routes/team/$team.$event/schedule/$day.tsx'),
-      route('schedule/ai/generate', './routes/team/$team.$event/schedule/ai.tsx'),
-      route('schedule/export/json', './routes/team/$team.$event/schedule/export.json.tsx'),
+      route('schedule', './routes/team.event-management/schedule.tsx'),
+      route('schedule/:day', './routes/team.event-management/schedule/$day.tsx'),
+      route('schedule/ai/generate', './routes/team.event-management/schedule/ai.tsx'),
+      route('schedule/export/json', './routes/team.event-management/schedule/export.json.tsx'),
 
       // Event settings pages
-      route('settings', './routes/team/$team.$event/settings.tsx', [
-        index('./routes/team/$team.$event/settings/general.tsx'),
-        route('cfp', './routes/team/$team.$event/settings/cfp.tsx'),
-        route('tracks', './routes/team/$team.$event/settings/tracks.tsx'),
-        route('tags', './routes/team/$team.$event/settings/tags.tsx'),
-        route('customize', './routes/team/$team.$event/settings/customize.tsx'),
-        route('survey', './routes/team/$team.$event/settings/survey.tsx'),
-        route('review', './routes/team/$team.$event/settings/review.tsx'),
-        route('notifications', './routes/team/$team.$event/settings/notifications.tsx'),
-        route('integrations', './routes/team/$team.$event/settings/integrations.tsx'),
-        route('api', './routes/team/$team.$event/settings/api.tsx'),
+      route('settings', './routes/team.event-management/settings.tsx', [
+        index('./routes/team.event-management/settings/general.tsx'),
+        route('cfp', './routes/team.event-management/settings/cfp.tsx'),
+        route('tracks', './routes/team.event-management/settings/tracks.tsx'),
+        route('tags', './routes/team.event-management/settings/tags.tsx'),
+        route('customize', './routes/team.event-management/settings/customize.tsx'),
+        route('survey', './routes/team.event-management/settings/survey.tsx'),
+        route('review', './routes/team.event-management/settings/review.tsx'),
+        route('notifications', './routes/team.event-management/settings/notifications.tsx'),
+        route('integrations', './routes/team.event-management/settings/integrations.tsx'),
+        route('api', './routes/team.event-management/settings/api.tsx'),
       ]),
     ]),
   ]),
 
   // Event reviews export routes
-  route('team/:team/:event/export/json', './routes/team/$team.$event/proposals/exports/json.tsx'),
-  route('team/:team/:event/export/csv', './routes/team/$team.$event/proposals/exports/csv.tsx'),
-  route('team/:team/:event/export/cards', './routes/team/$team.$event/proposals/exports/cards.tsx'),
-  route('team/:team/:event/export/open-planner', './routes/team/$team.$event/proposals/exports/open-planner.tsx'),
+  route('team/:team/:event/export/json', './routes/team.event-management/proposals/exports/json.tsx'),
+  route('team/:team/:event/export/csv', './routes/team.event-management/proposals/exports/csv.tsx'),
+  route('team/:team/:event/export/cards', './routes/team.event-management/proposals/exports/cards.tsx'),
+  route('team/:team/:event/export/open-planner', './routes/team.event-management/proposals/exports/open-planner.tsx'),
 
   // Admin pages
   route('admin', './routes/admin/_layout.tsx', [

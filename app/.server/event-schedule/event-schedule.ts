@@ -14,8 +14,8 @@ import {
 } from '~/libs/errors.server.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
-import { ScheduleGenerationResultSchema } from '~/routes/team/$team.$event/components/schedule-page/schedule.types.ts';
-import { SESSION_COLORS } from '~/routes/team/$team.$event/components/schedule-page/session/constants.ts';
+import { ScheduleGenerationResultSchema } from '~/routes/team.event-management/components/schedule-page/schedule.types.ts';
+import { SESSION_COLORS } from '~/routes/team.event-management/components/schedule-page/session/constants.ts';
 import type { Language, Languages } from '~/types/proposals.types.ts';
 import { EventIntegrations } from '../event-settings/event-integrations.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
