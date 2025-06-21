@@ -13,8 +13,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { CoSpeakers } from '~/routes/components/talks/co-speaker.tsx';
-import type { Route } from './+types/$talk.speakers.ts';
-import { useSubmissionNavigation } from './components/submission-context.tsx';
+import { useSubmissionNavigation } from '../components/submission-page/submission-context.tsx';
+import type { Route } from './+types/3-speakers.ts';
 
 export const handle = { step: 'speakers' };
 

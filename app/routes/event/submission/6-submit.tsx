@@ -12,8 +12,8 @@ import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import { TalkSection } from '~/routes/components/talks/talk-section.tsx';
-import type { Route } from './+types/$talk.submit.ts';
-import { useSubmissionNavigation } from './components/submission-context.tsx';
+import { useSubmissionNavigation } from '../components/submission-page/submission-context.tsx';
+import type { Route } from './+types/6-submit.ts';
 
 export const handle = { step: 'submission' };
 

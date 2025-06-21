@@ -14,20 +14,20 @@ export default [
   route('auth/verify-email', './routes/auth/verify-email.tsx'),
 
   // Event pages
-  route(':event', './routes/$event/_layout.tsx', [
-    index('./routes/$event/index.tsx'),
-    route('proposals', './routes/$event/proposals.index.tsx'),
-    route('proposals/:proposal', './routes/$event/proposals.$proposal.index.tsx'),
-    route('survey', './routes/$event/survey.tsx'),
+  route(':event', './routes/event/_layout.tsx', [
+    index('./routes/event/event.tsx'),
+    route('proposals', './routes/event/proposals.tsx'),
+    route('proposals/:proposal', './routes/event/proposal.tsx'),
+    route('survey', './routes/event/survey.tsx'),
 
     // Event submission pages
-    route('submission', './routes/$event/submission/_layout.tsx', [
-      index('./routes/$event/submission/index.tsx'),
-      route(':talk', './routes/$event/submission/$talk.index.tsx'),
-      route(':talk/speakers', './routes/$event/submission/$talk.speakers.tsx'),
-      route(':talk/tracks', './routes/$event/submission/$talk.tracks.tsx'),
-      route(':talk/survey', './routes/$event/submission/$talk.survey.tsx'),
-      route(':talk/submit', './routes/$event/submission/$talk.submit.tsx'),
+    route('submission', './routes/event/submission.tsx', [
+      index('./routes/event/submission/1-selection.tsx'),
+      route(':talk', './routes/event/submission/2-talk.tsx'),
+      route(':talk/speakers', './routes/event/submission/3-speakers.tsx'),
+      route(':talk/tracks', './routes/event/submission/4-tracks.tsx'),
+      route(':talk/survey', './routes/event/submission/5-survey.tsx'),
+      route(':talk/submit', './routes/event/submission/6-submit.tsx'),
     ]),
   ]),
 

@@ -10,8 +10,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { SurveyForm } from '~/routes/components/talks/talk-forms/survey-form.tsx';
-import type { Route } from './+types/$talk.survey.ts';
-import { useSubmissionNavigation } from './components/submission-context.tsx';
+import { useSubmissionNavigation } from '../components/submission-page/submission-context.tsx';
+import type { Route } from './+types/5-survey.ts';
 
 export const handle = { step: 'survey' };
 

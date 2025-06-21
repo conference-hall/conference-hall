@@ -12,7 +12,7 @@ import { Navbar } from '~/routes/components/navbar/navbar.tsx';
 import { CurrentEventPageProvider } from '../components/contexts/event-page-context.tsx';
 import { useUser } from '../components/contexts/user-context.tsx';
 import type { Route } from './+types/_layout.ts';
-import { EventTabs } from './components/event-tabs.tsx';
+import { EventTabs } from './components/event-page/event-tabs.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   const { data, matches } = args;

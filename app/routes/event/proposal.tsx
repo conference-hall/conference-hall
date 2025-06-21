@@ -12,7 +12,7 @@ import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 import { useCurrentEvent } from '../components/contexts/event-page-context.tsx';
 import { ProposalStatusSection } from '../components/proposals/proposal-status-section.tsx';
 import { TalkSection } from '../components/talks/talk-section.tsx';
-import type { Route } from './+types/proposals.$proposal.index.ts';
+import type { Route } from './+types/proposal.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

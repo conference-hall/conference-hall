@@ -8,9 +8,9 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import { NestedErrorBoundary } from '~/routes/components/error-boundary.tsx';
-import type { Route } from './+types/_layout.ts';
-import { Steps } from './components/steps.tsx';
-import { SubmissionContextProvider } from './components/submission-context.tsx';
+import type { Route } from './+types/submission.ts';
+import { Steps } from './components/submission-page/steps.tsx';
+import { SubmissionContextProvider } from './components/submission-page/submission-context.tsx';
 
 export const handle = { step: 'root' };
 

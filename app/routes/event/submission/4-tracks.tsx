@@ -14,8 +14,8 @@ import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import { CategoriesForm } from '~/routes/components/talks/talk-forms/categories-form.tsx';
 import { FormatsForm } from '~/routes/components/talks/talk-forms/formats-form.tsx';
-import type { Route } from './+types/$talk.tracks.ts';
-import { useSubmissionNavigation } from './components/submission-context.tsx';
+import { useSubmissionNavigation } from '../components/submission-page/submission-context.tsx';
+import type { Route } from './+types/4-tracks.ts';
 
 export const handle = { step: 'tracks' };
 

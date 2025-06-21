@@ -13,8 +13,8 @@ import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { TalkAlreadySubmittedError } from '~/libs/errors.server.ts';
 import { TalkForm } from '~/routes/components/talks/talk-forms/talk-form.tsx';
-import type { Route } from './+types/$talk.index.ts';
-import { useSubmissionNavigation } from './components/submission-context.tsx';
+import { useSubmissionNavigation } from '../components/submission-page/submission-context.tsx';
+import type { Route } from './+types/2-talk.ts';
 
 export const handle = { step: 'proposal' };
 
