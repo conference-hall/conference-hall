@@ -88,7 +88,7 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.0",
+    "@biomejs/biome": "^2.0.4",
     "@mdx-js/rollup": "^3.1.0",
     "@ngneat/falso": "^7.4.0",
     "@playwright/test": "^1.53.1",
