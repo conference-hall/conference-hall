@@ -20,7 +20,7 @@ import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import type { Route } from './+types/_layout.ts';
+import type { Route } from './+types/settings.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

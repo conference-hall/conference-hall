@@ -8,7 +8,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import type { SerializeFrom } from '~/types/react-router.types.ts';
-import type { action, loader } from '../../survey.tsx';
+import type { action, loader } from '../../../settings/survey.tsx';
 import { SurveyQuestionModal } from './survey-question-modal.tsx';
 
 const MAX_QUESTIONS = 8;

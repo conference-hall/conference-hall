@@ -16,14 +16,14 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import { ScheduleHeader } from '../components/schedule-page/header/schedule-header.tsx';
+import { useScheduleFullscreen } from '../components/schedule-page/header/use-schedule-fullscreen.tsx';
+import { useZoomHandlers } from '../components/schedule-page/header/use-zoom-handlers.tsx';
+import Schedule from '../components/schedule-page/schedule/schedule.tsx';
+import { SessionBlock } from '../components/schedule-page/session/session-block.tsx';
+import { useDisplaySettings } from '../components/schedule-page/use-display-settings.tsx';
+import { useSessions } from '../components/schedule-page/use-sessions.ts';
 import type { Route } from './+types/$day.ts';
-import { ScheduleHeader } from './components/header/schedule-header.tsx';
-import { useScheduleFullscreen } from './components/header/use-schedule-fullscreen.tsx';
-import { useZoomHandlers } from './components/header/use-zoom-handlers.tsx';
-import Schedule from './components/schedule/schedule.tsx';
-import { SessionBlock } from './components/session/session-block.tsx';
-import { useDisplaySettings } from './components/use-display-settings.tsx';
-import { useSessions } from './components/use-sessions.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

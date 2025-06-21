@@ -13,7 +13,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
-import type { Route } from './+types/index.ts';
+import type { Route } from './+types/schedule.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

@@ -10,8 +10,8 @@ import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { TrackList } from '../components/settings-page/track-list.tsx';
 import type { Route } from './+types/tracks.ts';
-import { TrackList } from './components/track-list.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);

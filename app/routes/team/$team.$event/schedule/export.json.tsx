@@ -1,7 +1,7 @@
 import { redirect } from 'react-router';
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import { requireUserSession } from '~/libs/auth/session.ts';
-import type { Route } from '../export/+types/json.ts';
+import type { Route } from './+types/export.json.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

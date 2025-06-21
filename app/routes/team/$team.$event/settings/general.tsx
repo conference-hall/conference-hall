@@ -16,7 +16,7 @@ import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { EventDetailsForm } from '~/routes/components/events/event-details-form.tsx';
 import { EventForm } from '~/routes/components/events/event-form.tsx';
 import { DeleteModalButton } from '~/routes/components/modals/delete-modal.tsx';
-import type { Route } from './+types/index.ts';
+import type { Route } from './+types/general.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);

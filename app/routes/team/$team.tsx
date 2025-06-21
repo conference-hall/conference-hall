@@ -9,7 +9,7 @@ import type { Route } from './+types/$team.ts';
 import { EventTabs } from './$team/components/event-tabs.tsx';
 import { TeamTabs } from './$team/components/team-tabs.tsx';
 import type { loader as routeEventLoader } from './$team.$event/_layout.tsx';
-import { useScheduleFullscreen } from './$team.$event/schedule/components/header/use-schedule-fullscreen.tsx';
+import { useScheduleFullscreen } from './$team.$event/components/schedule-page/header/use-schedule-fullscreen.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: `${args.data?.name} | Conference Hall` }]);

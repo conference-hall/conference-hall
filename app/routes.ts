@@ -92,14 +92,14 @@ export default [
       route('publication', './routes/team/$team.$event/publication.tsx'),
 
       // Event schedule pages
-      route('schedule', './routes/team/$team.$event/schedule/index.tsx'),
+      route('schedule', './routes/team/$team.$event/schedule.tsx'),
       route('schedule/:day', './routes/team/$team.$event/schedule/$day.tsx'),
-      route('schedule/ai/generate', './routes/team/$team.$event/schedule/ai/generate.tsx'),
-      route('schedule/export/json', './routes/team/$team.$event/schedule/export/json.tsx'),
+      route('schedule/ai/generate', './routes/team/$team.$event/schedule/ai.tsx'),
+      route('schedule/export/json', './routes/team/$team.$event/schedule/export.json.tsx'),
 
       // Event settings pages
-      route('settings', './routes/team/$team.$event/settings/_layout.tsx', [
-        index('./routes/team/$team.$event/settings/index.tsx'),
+      route('settings', './routes/team/$team.$event/settings.tsx', [
+        index('./routes/team/$team.$event/settings/general.tsx'),
         route('cfp', './routes/team/$team.$event/settings/cfp.tsx'),
         route('tracks', './routes/team/$team.$event/settings/tracks.tsx'),
         route('tags', './routes/team/$team.$event/settings/tags.tsx'),
