@@ -44,27 +44,27 @@ export default [
 
   // Speaker pages
   route('speaker', './routes/speaker/_layout.tsx', [
-    index('./routes/speaker/index.tsx'),
-    route('settings', './routes/speaker/settings/layout.tsx', [
-      index('./routes/speaker/settings/account.route.tsx'),
-      route('profile', './routes/speaker/settings/profile.route.tsx'),
-      route('preferences', './routes/speaker/settings/preferences.route.tsx'),
+    index('./routes/speaker/activity.tsx'),
+    route('settings', './routes/speaker/settings.tsx', [
+      index('./routes/speaker/settings.account.tsx'),
+      route('profile', './routes/speaker/settings.profile.tsx'),
+      route('preferences', './routes/speaker/settings.preferences.tsx'),
     ]),
-    route('talks', './routes/speaker/talks.index.tsx'),
+    route('talks', './routes/speaker/talks.tsx'),
     route('talks/new', './routes/speaker/talks.new.tsx'),
-    route('talks/:talk', './routes/speaker/talks.$talk.index.tsx'),
+    route('talks/:talk', './routes/speaker/talk.tsx'),
   ]),
 
   // Team pages
-  route('team/new', './routes/team/team-creation.tsx'),
-  route('team/request', './routes/team/team-request-access.tsx'),
+  route('team/new', './routes/team/team.new.tsx'),
+  route('team/request', './routes/team/request-access.tsx'),
   route('team/:team', './routes/team/_layout.tsx', [
     index('./routes/team/events.tsx'),
 
     // Team settings pages
     route('settings', './routes/team/settings.tsx', [
-      index('./routes/team/settings/general.tsx'),
-      route('members', './routes/team/settings/members.tsx'),
+      index('./routes/team/settings.general.tsx'),
+      route('members', './routes/team/settings.members.tsx'),
     ]),
 
     // Team event creation pages

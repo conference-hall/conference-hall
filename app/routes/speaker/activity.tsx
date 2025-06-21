@@ -6,9 +6,9 @@ import { H1 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { useSpeakerProfile } from '../components/contexts/speaker-profile-context.tsx';
-import type { Route } from './+types/index.ts';
-import { SpeakerActivitiesSection } from './components/speaker-activities-section.tsx';
-import { SpeakerDetailsSection } from './components/speaker-details-section.tsx';
+import type { Route } from './+types/activity.ts';
+import { SpeakerActivitiesSection } from './components/activity-page/speaker-activities-section.tsx';
+import { SpeakerDetailsSection } from './components/activity-page/speaker-details-section.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Activity | Conference Hall' }]);

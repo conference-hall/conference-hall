@@ -12,7 +12,7 @@ import { SUPPORTED_LANGUAGES } from '~/libs/i18n/i18n.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { combineHeaders } from '~/libs/utils/headers.ts';
-import type { Route } from './+types/preferences.route.ts';
+import type { Route } from './+types/settings.preferences.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Preferences | Conference Hall' }]);

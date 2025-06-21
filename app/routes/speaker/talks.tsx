@@ -14,7 +14,7 @@ import { SearchParamSelector } from '~/design-system/navigation/search-param-sel
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import type { Route } from './+types/talks.index.ts';
+import type { Route } from './+types/talks.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'My talks library | Conference Hall' }]);

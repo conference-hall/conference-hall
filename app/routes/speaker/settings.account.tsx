@@ -14,9 +14,9 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { EmailPasswordSchema, EmailSchema } from '~/libs/validators/auth.ts';
 import { useSpeakerProfile } from '~/routes/components/contexts/speaker-profile-context.tsx';
-import type { Route } from './+types/account.route.ts';
-import { AuthenticationMethods } from './account/authentication-methods.tsx';
-import { ChangeContactEmailForm } from './account/change-contact-email-form.tsx';
+import type { Route } from './+types/settings.account.ts';
+import { AuthenticationMethods } from './components/settings-page/authentication-methods.tsx';
+import { ChangeContactEmailForm } from './components/settings-page/change-contact-email-form.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Account | Conference Hall' }]);

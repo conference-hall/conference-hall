@@ -8,7 +8,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { FullscreenPage } from '../components/fullscreen-page.tsx';
 import { TeamForm } from '../components/teams/team-form.tsx';
-import type { Route } from './+types/team-creation.ts';
+import type { Route } from './+types/team.new.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);

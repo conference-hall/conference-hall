@@ -10,7 +10,7 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { TalkSection } from '../components/talks/talk-section.tsx';
 import { TalkSubmissionsSection } from '../components/talks/talk-submissions-section.tsx';
-import type { Route } from './+types/talks.$talk.index.ts';
+import type { Route } from './+types/talk.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: `${args.data?.title} | Conference Hall` }]);

@@ -17,7 +17,7 @@ import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useSpeakerProfile } from '~/routes/components/contexts/speaker-profile-context.tsx';
-import type { Route } from './+types/profile.route.ts';
+import type { Route } from './+types/settings.profile.ts';
 
 const MAX_SOCIAL_LINKS = 4;
 

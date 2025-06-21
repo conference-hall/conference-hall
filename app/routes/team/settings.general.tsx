@@ -12,7 +12,7 @@ import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { DeleteModalButton } from '~/routes/components/modals/delete-modal.tsx';
 import { TeamForm } from '~/routes/components/teams/team-form.tsx';
-import type { Route } from './+types/general.ts';
+import type { Route } from './+types/settings.general.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);
