@@ -85,8 +85,8 @@ export default [
       route('reviews/autocomplete', './routes/team/$team.$event/proposals/autocomplete.tsx'),
 
       // Event speakers page
-      route('speakers', './routes/team/$team.$event/speakers/index.tsx'),
-      route('speakers/:speaker', './routes/team/$team.$event/speakers/$speaker.index.tsx'),
+      route('speakers', './routes/team/$team.$event/speakers.tsx'),
+      route('speakers/:speaker', './routes/team/$team.$event/speakers/$speaker.tsx'),
 
       // Event publication pages
       route('publication', './routes/team/$team.$event/publication.tsx'),

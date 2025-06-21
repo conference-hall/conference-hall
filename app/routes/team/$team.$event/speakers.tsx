@@ -8,10 +8,10 @@ import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
-import type { Route } from './+types/index.ts';
-import { Filters } from './components/filters.tsx';
-import { FiltersTags } from './components/filters-tags.tsx';
-import { SpeakersEmptyState } from './components/speakers-empty-state.tsx';
+import type { Route } from './+types/speakers.ts';
+import { Filters } from './components/speakers-page/filters.tsx';
+import { FiltersTags } from './components/speakers-page/filters-tags.tsx';
+import { SpeakersEmptyState } from './components/speakers-page/speakers-empty-state.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
