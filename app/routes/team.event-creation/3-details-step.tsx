@@ -12,7 +12,7 @@ import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { EventDetailsForm } from '~/routes/components/events/event-details-form.tsx';
 import { FullscreenPage } from '~/routes/components/fullscreen-page.tsx';
-import type { Route } from './+types/$event.details.ts';
+import type { Route } from './+types/3-details-step.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

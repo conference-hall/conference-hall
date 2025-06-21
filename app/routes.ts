@@ -68,11 +68,11 @@ export default [
     ]),
 
     // Team event creation pages
-    route('new', './routes/team/$team.new/_layout.tsx', [
-      index('./routes/team/$team.new/index.tsx'),
-      route('type/:type', './routes/team/$team.new/type.$type.tsx'),
-      route(':event/details', './routes/team/$team.new/$event.details.tsx'),
-      route(':event/cfp', './routes/team/$team.new/$event.cfp.tsx'),
+    route('new', './routes/team.event-creation/_layout.tsx', [
+      index('./routes/team.event-creation/1-type-step.tsx'),
+      route('type/:type', './routes/team.event-creation/2-event-step.tsx'),
+      route(':event/details', './routes/team.event-creation/3-details-step.tsx'),
+      route(':event/cfp', './routes/team.event-creation/4-cfp-step.tsx'),
     ]),
 
     // Team event pages

@@ -8,8 +8,8 @@ import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { FullscreenPage } from '~/routes/components/fullscreen-page.tsx';
 import type { EventType } from '~/types/events.types.ts';
-import { EventTypeRadioGroup } from '../../components/events/event-type-radio-group.tsx';
-import type { Route } from './+types/index.ts';
+import { EventTypeRadioGroup } from '../components/events/event-type-radio-group.tsx';
+import type { Route } from './+types/1-type-step.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);

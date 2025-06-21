@@ -12,7 +12,7 @@ import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { EventCfpConferenceForm } from '~/routes/components/events/event-cfp-conference-form.tsx';
 import { FullscreenPage } from '~/routes/components/fullscreen-page.tsx';
-import type { Route } from './+types/$event.cfp.ts';
+import type { Route } from './+types/4-cfp-step.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
