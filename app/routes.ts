@@ -32,7 +32,7 @@ export default [
   ]),
 
   // Event legacy pages routing
-  route('public/event/:legacyId', './routes/_misc/public.event.$legacyId.tsx'),
+  route('public/event/:legacyId', './routes/event/event.legacy.tsx'),
 
   // Invitation pages
   route('invite/proposal/:code', './routes/invite/proposal.$code.tsx'),
