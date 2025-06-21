@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useNavigation } from 'react-router';
 import { Avatar } from '~/design-system/avatar.tsx';
@@ -15,15 +15,11 @@ export function NewCommentForm({ compact = false, className }: Props) {
   const isAdding = navigation.state === 'submitting';
   const formRef = useRef<HTMLFormElement>(null);
 
-  useEffect(() => {
-    if (!isAdding) formRef.current?.reset();
-  }, [isAdding]);
-
   return (
     <div className={className}>
       {!compact && <Avatar picture={user?.picture} name={user?.name} size="xs" />}
 
-      <Form ref={formRef} method="POST" className="relative flex-auto">
+      <Form ref={formRef} method="POST" className="relative flex-auto" key={isAdding ? 'submitting' : 'idle'}>
         <input type="hidden" name="intent" value="add-comment" />
 
         <div className="overflow-hidden bg-white rounded-lg pb-12 shadow-xs ring-1 ring-inset ring-gray-200 focus-within:ring-2 focus-within:ring-indigo-600">
@@ -34,6 +30,12 @@ export function NewCommentForm({ compact = false, className }: Props) {
             placeholder={t('event-management.proposal-page.comment.placeholder')}
             aria-label={t('event-management.proposal-page.comment.label')}
             defaultValue=""
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                formRef.current?.requestSubmit();
+              }
+            }}
           />
         </div>
 
