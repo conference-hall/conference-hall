@@ -16,8 +16,8 @@ import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { useUser } from '~/routes/components/contexts/user-context.tsx';
-import type { Route } from './+types/settings.members.ts';
-import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/member-actions.tsx';
+import { ChangeRoleButton, InviteMemberButton, RemoveButton } from '../components/settings-page/member-actions.tsx';
+import type { Route } from './+types/members.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

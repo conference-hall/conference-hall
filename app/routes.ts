@@ -56,15 +56,15 @@ export default [
   ]),
 
   // Team pages
-  route('team/new', './routes/team/new.tsx'),
-  route('team/request', './routes/team/request.tsx'),
-  route('team/:team', './routes/team/$team.tsx', [
-    index('./routes/team/$team/index.tsx'),
+  route('team/new', './routes/team/team-creation.tsx'),
+  route('team/request', './routes/team/team-request-access.tsx'),
+  route('team/:team', './routes/team/_layout.tsx', [
+    index('./routes/team/events.tsx'),
 
     // Team settings pages
-    route('settings', './routes/team/$team/settings.tsx', [
-      index('./routes/team/$team/settings.index.tsx'),
-      route('members', './routes/team/$team/settings.members.tsx'),
+    route('settings', './routes/team/settings.tsx', [
+      index('./routes/team/settings/general.tsx'),
+      route('members', './routes/team/settings/members.tsx'),
     ]),
 
     // Team event creation pages

@@ -6,11 +6,11 @@ import { TeamEvents } from '~/.server/team/team-events.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { EventCardLink } from '~/routes/components/events/event-card.tsx';
-import type { Route } from './+types/index.ts';
-import { ArchivedFilters } from './components/archived-filter.tsx';
+import type { Route } from './+types/events.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
@@ -29,7 +29,14 @@ export default function TeamEventsRoute({ loaderData: events }: Route.ComponentP
   return (
     <Page>
       <Page.Heading title={t('team.events-list.heading')} subtitle={t('team.events-list.description')}>
-        <ArchivedFilters />
+        <SearchParamSelector
+          param="archived"
+          defaultValue="false"
+          selectors={[
+            { value: 'true', label: t('common.archived') },
+            { value: 'false', label: t('common.active') },
+          ]}
+        />
         {currentTeam.userPermissions.canCreateEvent ? (
           <ButtonLink to={href('/team/:team/new', { team: currentTeam.slug })} variant="secondary" iconLeft={PlusIcon}>
             {t('team.events-list.new-event-button')}

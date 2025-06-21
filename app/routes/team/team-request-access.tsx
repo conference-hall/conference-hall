@@ -11,7 +11,7 @@ import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { FullscreenPage } from '../components/fullscreen-page.tsx';
-import type { Route } from './+types/request.ts';
+import type { Route } from './+types/team-request-access.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Request access | Conference Hall' }]);

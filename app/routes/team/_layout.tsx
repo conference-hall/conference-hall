@@ -6,10 +6,10 @@ import { useFlag } from '../components/contexts/flags-context.tsx';
 import { CurrentTeamProvider } from '../components/contexts/team-context.tsx';
 import { Navbar } from '../components/navbar/navbar.tsx';
 import type { loader as routeEventLoader } from '../team.event-management/_layout.tsx';
+import { EventTabs } from '../team.event-management/components/event-tabs.tsx';
 import { useScheduleFullscreen } from '../team.event-management/components/schedule-page/header/use-schedule-fullscreen.tsx';
-import type { Route } from './+types/$team.ts';
-import { EventTabs } from './$team/components/event-tabs.tsx';
-import { TeamTabs } from './$team/components/team-tabs.tsx';
+import type { Route } from './+types/_layout.ts';
+import { TeamTabs } from './components/team-tabs.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: `${args.data?.name} | Conference Hall` }]);
