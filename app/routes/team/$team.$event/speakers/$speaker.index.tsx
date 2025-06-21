@@ -11,7 +11,7 @@ import { Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { SpeakerContacts, SpeakerSurveyAnswers, SpeakerTitle } from '~/routes/components/talks/co-speaker.tsx';
-import { ProposalItem } from '../reviews/components/proposals-list-page/list/proposal-item.tsx';
+import { ProposalItem } from '../components/proposals-page/list/proposal-item.tsx';
 import type { Route } from './+types/$speaker.index.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

@@ -9,13 +9,13 @@ import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { getObjectHash } from '~/libs/utils/object-hash.ts';
-import type { Route } from './+types/index.ts';
-import { ExportMenu } from './components/proposals-list-page/actions/export-menu.tsx';
-import { FiltersMenu } from './components/proposals-list-page/filters/filters-menu.tsx';
-import { FiltersTags } from './components/proposals-list-page/filters/filters-tags.tsx';
-import { SearchInput } from './components/proposals-list-page/filters/search-input.tsx';
-import { SortMenu } from './components/proposals-list-page/filters/sort-menu.tsx';
-import { ProposalsList } from './components/proposals-list-page/proposals-list.tsx';
+import type { Route } from './+types/proposals.ts';
+import { ExportMenu } from './components/proposals-page/actions/export-menu.tsx';
+import { FiltersMenu } from './components/proposals-page/filters/filters-menu.tsx';
+import { FiltersTags } from './components/proposals-page/filters/filters-tags.tsx';
+import { SearchInput } from './components/proposals-page/filters/search-input.tsx';
+import { SortMenu } from './components/proposals-page/filters/sort-menu.tsx';
+import { ProposalsList } from './components/proposals-page/proposals-list.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

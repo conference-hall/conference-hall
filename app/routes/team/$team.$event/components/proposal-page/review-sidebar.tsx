@@ -1,5 +1,5 @@
 import { Card } from '~/design-system/layouts/card.tsx';
-import type { ProposalData } from '../../$proposal.tsx';
+import type { ProposalData } from '../../proposals/$proposal.tsx';
 import { ConfirmationDetails } from './review-sidebar-sections/confirmation-details.tsx';
 import { DeliberationSelect } from './review-sidebar-sections/deliberation-select.tsx';
 import { PublicationDetails } from './review-sidebar-sections/publication-details.tsx';

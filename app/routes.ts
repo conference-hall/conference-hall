@@ -80,9 +80,9 @@ export default [
       index('./routes/team/$team.$event/overview.tsx'),
 
       // Event review pages
-      route('reviews', './routes/team/$team.$event/reviews/index.tsx'),
-      route('reviews/:proposal', './routes/team/$team.$event/reviews/$proposal.tsx'),
-      route('reviews/autocomplete', './routes/team/$team.$event/reviews/autocomplete.tsx'),
+      route('reviews', './routes/team/$team.$event/proposals.tsx'),
+      route('reviews/:proposal', './routes/team/$team.$event/proposals/$proposal.tsx'),
+      route('reviews/autocomplete', './routes/team/$team.$event/proposals/autocomplete.tsx'),
 
       // Event speakers page
       route('speakers', './routes/team/$team.$event/speakers/index.tsx'),
@@ -114,10 +114,10 @@ export default [
   ]),
 
   // Event reviews export routes
-  route('team/:team/:event/export/json', './routes/team/$team.$event/reviews/exports/json.tsx'),
-  route('team/:team/:event/export/csv', './routes/team/$team.$event/reviews/exports/csv.tsx'),
-  route('team/:team/:event/export/cards', './routes/team/$team.$event/reviews/exports/cards.tsx'),
-  route('team/:team/:event/export/open-planner', './routes/team/$team.$event/reviews/exports/open-planner.tsx'),
+  route('team/:team/:event/export/json', './routes/team/$team.$event/proposals/exports/json.tsx'),
+  route('team/:team/:event/export/csv', './routes/team/$team.$event/proposals/exports/csv.tsx'),
+  route('team/:team/:event/export/cards', './routes/team/$team.$event/proposals/exports/cards.tsx'),
+  route('team/:team/:event/export/open-planner', './routes/team/$team.$event/proposals/exports/open-planner.tsx'),
 
   // Admin pages
   route('admin', './routes/admin/_layout.tsx', [
