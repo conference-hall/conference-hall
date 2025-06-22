@@ -31,11 +31,7 @@ export function EventTabs({ teamSlug, eventSlug, eventType, speakersPageEnabled,
   return (
     <Page.NavHeader className="flex items-center space-between">
       <NavTabs py={4} className="grow" scrollable>
-        <NavTab
-          to={{ pathname: href('/team/:team/:event', { team: teamSlug, event: eventSlug }), search }}
-          icon={HomeIcon}
-          end
-        >
+        <NavTab to={{ pathname: href('/team/:team/:event', { team: teamSlug, event: eventSlug }) }} icon={HomeIcon} end>
           {t('event-management.nav.overview')}
         </NavTab>
 
@@ -48,7 +44,7 @@ export function EventTabs({ teamSlug, eventSlug, eventType, speakersPageEnabled,
 
         {speakersPageEnabled ? (
           <NavTab
-            to={{ pathname: href('/team/:team/:event/speakers', { team: teamSlug, event: eventSlug }), search }}
+            to={{ pathname: href('/team/:team/:event/speakers', { team: teamSlug, event: eventSlug }) }}
             icon={UserGroupIcon}
           >
             {t('event-management.nav.speakers')}
