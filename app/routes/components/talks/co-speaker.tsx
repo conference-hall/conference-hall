@@ -1,5 +1,5 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
-import { EnvelopeIcon } from '@heroicons/react/24/outline';
+import { EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,7 @@ import type { SurveyDetailedAnswer } from '~/.server/event-survey/types.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
-import { IconLabel } from '~/design-system/icon-label.tsx';
+import { ExternalLink } from '~/design-system/links.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { SocialLink } from '~/design-system/social-link.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -181,12 +181,24 @@ export function SpeakerTitle({ name, picture, company }: SpeakerTitleProps) {
   );
 }
 
-type SpeakerContactsProps = { speaker: SpeakerProps; className?: string };
+type SpeakerContactsProps = { speaker: Pick<SpeakerProps, 'location' | 'email' | 'socialLinks'>; className?: string };
 
 export function SpeakerContacts({ speaker, className }: SpeakerContactsProps) {
   return (
     <div className={cx('flex flex-col gap-2', className)}>
-      <IconLabel icon={EnvelopeIcon}>{speaker.email}</IconLabel>
+      {speaker.location ? (
+        <ExternalLink
+          iconLeft={MapPinIcon}
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(speaker.location)}`}
+          variant="secondary"
+        >
+          {speaker.location}
+        </ExternalLink>
+      ) : null}
+
+      <ExternalLink iconLeft={EnvelopeIcon} href={`mailto:${speaker.email}`} variant="secondary">
+        {speaker.email}
+      </ExternalLink>
 
       {speaker.socialLinks?.map((socialLink) => (
         <SocialLink key={socialLink} url={socialLink} />
@@ -203,7 +215,6 @@ function SpeakerDetails({ speaker, className }: SpeakerDetailsProps) {
   const details = [
     { key: 'bio', label: t('speaker.profile.biography'), value: speaker.bio },
     { key: 'references', label: t('speaker.profile.references'), value: speaker.references },
-    { key: 'location', label: t('speaker.profile.location'), value: speaker.location },
   ].filter((detail) => Boolean(detail.value));
 
   return details.map((detail) => (
