@@ -8,7 +8,7 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { href, useSearchParams } from 'react-router';
+import { href, useMatch, useSearchParams } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
@@ -28,6 +28,9 @@ export function EventTabs({ teamSlug, eventSlug, eventType, speakersPageEnabled,
   const [searchParams] = useSearchParams();
   const search = searchParams.toString();
 
+  const isProposalsRoute = Boolean(useMatch('/team/:team/:event/reviews/*'));
+  const isSpeakersRoute = Boolean(useMatch('/team/:team/:event/speakers/*'));
+
   return (
     <Page.NavHeader className="flex items-center space-between">
       <NavTabs py={4} className="grow" scrollable>
@@ -36,7 +39,10 @@ export function EventTabs({ teamSlug, eventSlug, eventType, speakersPageEnabled,
         </NavTab>
 
         <NavTab
-          to={{ pathname: href('/team/:team/:event/reviews', { team: teamSlug, event: eventSlug }), search }}
+          to={{
+            pathname: href('/team/:team/:event/reviews', { team: teamSlug, event: eventSlug }),
+            search: isProposalsRoute ? search : undefined,
+          }}
           icon={QueueListIcon}
         >
           {t('event-management.nav.proposals')}
@@ -44,7 +50,10 @@ export function EventTabs({ teamSlug, eventSlug, eventType, speakersPageEnabled,
 
         {speakersPageEnabled ? (
           <NavTab
-            to={{ pathname: href('/team/:team/:event/speakers', { team: teamSlug, event: eventSlug }) }}
+            to={{
+              pathname: href('/team/:team/:event/speakers', { team: teamSlug, event: eventSlug }),
+              search: isSpeakersRoute ? search : undefined,
+            }}
             icon={UserGroupIcon}
           >
             {t('event-management.nav.speakers')}

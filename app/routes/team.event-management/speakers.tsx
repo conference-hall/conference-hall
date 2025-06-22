@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { data } from 'react-router';
+import { data, useSearchParams } from 'react-router';
 import { EventSpeakers, parseUrlFilters } from '~/.server/event-speakers/event-speakers.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
@@ -29,6 +29,9 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
 export default function SpeakersRoute({ loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const search = searchParams.toString();
+
   const { speakers, filters, pagination, statistics } = loaderData;
 
   return (
@@ -57,7 +60,7 @@ export default function SpeakersRoute({ loaderData }: Route.ComponentProps) {
                 const declinedProposals = speaker.proposals.filter((p) => p.confirmationStatus === 'DECLINED').length;
 
                 return (
-                  <List.RowLink key={speaker.id} to={speaker.id} className="p-4">
+                  <List.RowLink key={speaker.id} to={{ pathname: speaker.id, search }} className="p-4">
                     <div className="flex items-start justify-between w-full">
                       <div className="flex items-center space-x-4 flex-1 min-w-0">
                         <Avatar picture={speaker.picture} name={speaker.name} size="m" />
