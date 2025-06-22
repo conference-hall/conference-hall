@@ -15,6 +15,7 @@ const ProposalsFiltersSchema = z.object({
   formats: z.string().optional(),
   categories: z.string().optional(),
   tags: z.string().optional(),
+  speakers: z.string().optional(),
 });
 
 export type ReviewsFilter = z.infer<typeof ReviewsFiltersSchema>;

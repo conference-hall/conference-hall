@@ -1,6 +1,16 @@
-import type { Event, EventCategory, EventFormat, EventProposalTag, Proposal, Team, User } from '@prisma/client';
+import type {
+  Event,
+  EventCategory,
+  EventFormat,
+  EventProposalTag,
+  EventSpeaker,
+  Proposal,
+  Team,
+  User,
+} from '@prisma/client';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
+import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
@@ -27,6 +37,7 @@ describe('EventProposalsSearch', () => {
   let proposal3: Proposal;
   let proposal4: Proposal;
   let proposal5: Proposal;
+  let eventSpeaker: EventSpeaker;
 
   beforeEach(async () => {
     owner = await userFactory({ traits: ['clark-kent'] });
@@ -37,6 +48,7 @@ describe('EventProposalsSearch', () => {
     category = await eventCategoryFactory({ event });
     tag = await eventProposalTagFactory({ event });
     event2 = await eventFactory();
+    eventSpeaker = await eventSpeakerFactory({ event, user: speaker });
 
     const talk1 = await talkFactory({ speakers: [speaker] });
     const talk2 = await talkFactory({ speakers: [owner] });
@@ -164,6 +176,17 @@ describe('EventProposalsSearch', () => {
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].title).toBe(proposal3.title);
+    });
+
+    it('filters proposals by speakers', async () => {
+      const filters = { speakers: eventSpeaker.id };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(4);
+      expect(proposals[0].title).toBe(proposal5.title);
+      expect(proposals[1].title).toBe(proposal4.title);
+      expect(proposals[2].title).toBe(proposal3.title);
+      expect(proposals[3].title).toBe(proposal1.title);
     });
 
     it('filters proposals by status pending', async () => {

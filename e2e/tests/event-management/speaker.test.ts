@@ -63,7 +63,7 @@ test.describe('Speaker Page', () => {
     await expect(page.getByText('React Hooks Talk')).toBeVisible();
 
     await speakerPage.clickProposal('React Hooks Talk');
-    await expect(page).toHaveURL(`/team/${team.slug}/${event.slug}/reviews/${proposal.id}`);
+    await expect(page).toHaveURL(`/team/${team.slug}/${event.slug}/reviews/${proposal.id}?speakers=${eventSpeaker.id}`);
   });
 
   test('shows 404 for non-existent speaker', async ({ page }) => {

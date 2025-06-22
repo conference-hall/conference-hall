@@ -4,6 +4,7 @@ import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
 import { Deliberate, DeliberateBulkSchema } from '~/.server/reviews/deliberate.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
+import { SearchInput } from '~/design-system/forms/search-input.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
@@ -13,7 +14,6 @@ import type { Route } from './+types/proposals.ts';
 import { ExportMenu } from './components/proposals-page/actions/export-menu.tsx';
 import { FiltersMenu } from './components/proposals-page/filters/filters-menu.tsx';
 import { FiltersTags } from './components/proposals-page/filters/filters-tags.tsx';
-import { SearchInput } from './components/proposals-page/filters/search-input.tsx';
 import { SortMenu } from './components/proposals-page/filters/sort-menu.tsx';
 import { ProposalsList } from './components/proposals-page/proposals-list.tsx';
 
@@ -59,7 +59,10 @@ export default function ReviewsRoute({ loaderData }: Route.ComponentProps) {
       <div className="space-y-4">
         <div className="space-y-4">
           <div className="flex flex-col gap-2 sm:flex-row">
-            <SearchInput />
+            <SearchInput
+              placeholder={t('event-management.proposals.search')}
+              ariaLabel={t('event-management.proposals.search')}
+            />
             <div className="flex gap-2">
               <FiltersMenu />
               <SortMenu />

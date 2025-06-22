@@ -125,24 +125,26 @@ export class EventSpeakers {
       socialLinks: speaker.socialLinks as SocialLinks,
       userId: speaker.userId,
       survey: speaker.userId ? answers[speaker.userId] : [],
-      proposals: speaker.proposals.map((proposal) => {
-        const reviews = new ReviewDetails(proposal.reviews);
-        return {
-          id: proposal.id,
-          title: proposal.title,
-          deliberationStatus: proposal.deliberationStatus,
-          publicationStatus: proposal.publicationStatus,
-          confirmationStatus: proposal.confirmationStatus,
-          createdAt: proposal.createdAt,
-          speakers: proposal.speakers.map((speaker) => ({ name: speaker.name })),
-          reviews: {
-            summary: event.displayProposalsReviews ? reviews.summary() : undefined,
-            you: reviews.ofUser(this.userEvent.userId),
-          },
-          comments: { count: proposal.comments.length },
-          tags: proposal.tags,
-        };
-      }),
+      proposals: speaker.proposals
+        .map((proposal) => {
+          const reviews = new ReviewDetails(proposal.reviews);
+          return {
+            id: proposal.id,
+            title: proposal.title,
+            deliberationStatus: proposal.deliberationStatus,
+            publicationStatus: proposal.publicationStatus,
+            confirmationStatus: proposal.confirmationStatus,
+            createdAt: proposal.createdAt,
+            speakers: proposal.speakers.map((speaker) => ({ name: speaker.name })),
+            reviews: {
+              summary: event.displayProposalsReviews ? reviews.summary() : undefined,
+              you: reviews.ofUser(this.userEvent.userId),
+            },
+            comments: { count: proposal.comments.length },
+            tags: proposal.tags,
+          };
+        })
+        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
     };
   }
 }
