@@ -1,10 +1,10 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { useTranslation } from 'react-i18next';
 import { Form, useSearchParams } from 'react-router';
 import { Input } from '~/design-system/forms/input.tsx';
 
-export function SearchInput() {
-  const { t } = useTranslation();
+type Props = { placeholder: string; ariaLabel: string };
+
+export function SearchInput({ placeholder, ariaLabel }: Props) {
   const [params] = useSearchParams();
   const { query, ...filters } = Object.fromEntries(params.entries());
 
@@ -15,11 +15,12 @@ export function SearchInput() {
       ))}
       <Input
         name="query"
+        key={query}
         icon={MagnifyingGlassIcon}
         type="search"
         defaultValue={query}
-        placeholder={t('event-management.proposals.search')}
-        aria-label={t('event-management.proposals.search')}
+        placeholder={placeholder}
+        aria-label={ariaLabel}
       />
     </Form>
   );
