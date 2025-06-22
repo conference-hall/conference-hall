@@ -84,7 +84,7 @@ export class ProposalSearchBuilder {
       formats: formats ? { some: { id: formats } } : undefined,
       categories: categories ? { some: { id: categories } } : undefined,
       tags: tags ? { some: { id: tags } } : undefined,
-      speakers: speakers ? { some: { id: speakers } } : undefined, // todo: add tests
+      speakers: speakers ? { some: { id: speakers } } : undefined,
       reviews: this.reviewsClause(reviews),
       OR: this.whereSearchClause(query),
       ...this.whereStatus(status),

@@ -150,7 +150,7 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
       <SlideOver.Content className="space-y-6">
         <h2 className="sr-only">{t('speaker.panel.heading')}</h2>
 
-        <SpeakerContacts speaker={speaker} />
+        <SpeakerLinks speaker={speaker} />
 
         {canEdit && speaker.userId && <RemoveCoSpeakerButton speakerId={speaker.userId} speakerName={speaker.name} />}
 
@@ -181,9 +181,9 @@ export function SpeakerTitle({ name, picture, company }: SpeakerTitleProps) {
   );
 }
 
-type SpeakerContactsProps = { speaker: Pick<SpeakerProps, 'location' | 'email' | 'socialLinks'>; className?: string };
+type SpeakerLinksProps = { speaker: Pick<SpeakerProps, 'location' | 'email' | 'socialLinks'>; className?: string };
 
-export function SpeakerContacts({ speaker, className }: SpeakerContactsProps) {
+export function SpeakerLinks({ speaker, className }: SpeakerLinksProps) {
   return (
     <div className={cx('flex flex-col gap-2', className)}>
       {speaker.location ? (

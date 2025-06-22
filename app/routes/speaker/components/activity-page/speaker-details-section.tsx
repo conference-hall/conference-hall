@@ -6,7 +6,7 @@ import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { SpeakerContacts } from '~/routes/components/talks/co-speaker.tsx';
+import { SpeakerLinks } from '~/routes/components/talks/co-speaker.tsx';
 
 type Props = {
   email: string;
@@ -30,7 +30,7 @@ export function SpeakerDetailsSection({ email, bio, location, socialLinks }: Pro
         </div>
 
         <div className="px-6 py-4">
-          <SpeakerContacts speaker={{ location, email, socialLinks }} />
+          <SpeakerLinks speaker={{ location, email, socialLinks }} />
         </div>
 
         <div className="px-6 py-4 flex items-center gap-3">

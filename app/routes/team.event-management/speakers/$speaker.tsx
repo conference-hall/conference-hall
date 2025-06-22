@@ -10,7 +10,7 @@ import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
-import { SpeakerContacts, SpeakerSurveyAnswers, SpeakerTitle } from '~/routes/components/talks/co-speaker.tsx';
+import { SpeakerLinks, SpeakerSurveyAnswers, SpeakerTitle } from '~/routes/components/talks/co-speaker.tsx';
 import { ProposalItem } from '../components/proposals-page/list/proposal-item.tsx';
 import type { Route } from './+types/$speaker.ts';
 
@@ -47,7 +47,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
               <Markdown>{speaker.bio}</Markdown>
             </div>
 
-            <SpeakerContacts speaker={speaker} />
+            <SpeakerLinks speaker={speaker} />
           </div>
         </Card.Content>
 
