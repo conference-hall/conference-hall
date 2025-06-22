@@ -77,14 +77,14 @@ export class ProposalSearchBuilder {
   }
 
   private whereClause(): Prisma.ProposalWhereInput {
-    const { query, reviews, formats, categories, tags, status } = this.filters;
-
+    const { query, reviews, formats, categories, tags, speakers, status } = this.filters;
     return {
       event: { slug: this.eventSlug },
       isDraft: false,
       formats: formats ? { some: { id: formats } } : undefined,
       categories: categories ? { some: { id: categories } } : undefined,
       tags: tags ? { some: { id: tags } } : undefined,
+      speakers: speakers ? { some: { id: speakers } } : undefined, // todo: add tests
       reviews: this.reviewsClause(reviews),
       OR: this.whereSearchClause(query),
       ...this.whereStatus(status),

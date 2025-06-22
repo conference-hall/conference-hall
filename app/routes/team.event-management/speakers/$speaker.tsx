@@ -75,7 +75,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
             <List.Row key={proposal.id} className="hover:bg-gray-50 px-4">
               <ProposalItem
                 proposal={proposal}
-                linkTo={`/team/${params.team}/${params.event}/reviews/${proposal.id}`}
+                linkTo={`/team/${params.team}/${params.event}/reviews/${proposal.id}?speakers=${speaker.id}`}
               />
             </List.Row>
           ))}
