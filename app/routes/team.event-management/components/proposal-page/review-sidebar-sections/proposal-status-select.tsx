@@ -83,7 +83,6 @@ function getOptions(t: TFunction, confirmationStatus: ConfirmationStatus) {
   ];
 }
 
-// todo: add tests for this component
 export function ProposalStatusSelect({ deliberationStatus, publicationStatus, confirmationStatus }: Props) {
   const { t } = useTranslation();
   const submit = useSubmit();

@@ -29,7 +29,6 @@ export class ProposalStatusUpdater {
     return new ProposalStatusUpdater(userId, userEvent);
   }
 
-  // todo: tests
   async update(proposalIds: string[], { confirmationStatus, deliberationStatus }: ProposalStatus) {
     await this.userEvent.needsPermission('canChangeProposalStatus');
 
@@ -52,7 +51,6 @@ export class ProposalStatusUpdater {
     return 0;
   }
 
-  // todo: tests
   async updateAll(filters: ProposalsFilters, deliberationStatus: DeliberationStatus) {
     const event = await this.userEvent.needsPermission('canChangeProposalStatus');
 
