@@ -111,6 +111,144 @@ describe('ProposalStatusUpdater', () => {
         ForbiddenOperationError,
       );
     });
+
+    it('updates the proposal confirmation status', async () => {
+      const proposal1 = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['accepted'],
+      });
+      const proposal2 = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['accepted'],
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.update([proposal1.id, proposal2.id], { confirmationStatus: 'CONFIRMED' });
+
+      expect(result).toBe(2);
+      const proposals = await db.proposal.findMany();
+
+      const updated1 = proposals.find((p) => p.id === proposal1.id);
+      expect(updated1?.deliberationStatus).toBe('ACCEPTED');
+      expect(updated1?.publicationStatus).toBe('PUBLISHED');
+      expect(updated1?.confirmationStatus).toBe('CONFIRMED');
+
+      const updated2 = proposals.find((p) => p.id === proposal2.id);
+      expect(updated2?.deliberationStatus).toBe('ACCEPTED');
+      expect(updated2?.publicationStatus).toBe('PUBLISHED');
+      expect(updated2?.confirmationStatus).toBe('CONFIRMED');
+    });
+
+    it('updates proposal confirmation status to DECLINED', async () => {
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['accepted'],
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.update([proposal.id], { confirmationStatus: 'DECLINED' });
+
+      expect(result).toBe(1);
+      const updated = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(updated?.deliberationStatus).toBe('ACCEPTED');
+      expect(updated?.publicationStatus).toBe('PUBLISHED');
+      expect(updated?.confirmationStatus).toBe('DECLINED');
+    });
+
+    it('updates proposal confirmation status to PENDING', async () => {
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['confirmed'],
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.update([proposal.id], { confirmationStatus: 'PENDING' });
+
+      expect(result).toBe(1);
+      const updated = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(updated?.deliberationStatus).toBe('ACCEPTED');
+      expect(updated?.publicationStatus).toBe('PUBLISHED');
+      expect(updated?.confirmationStatus).toBe('PENDING');
+    });
+
+    it('forces deliberation status to ACCEPTED and publication status to PUBLISHED when updating confirmation status', async () => {
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        // Default is PENDING deliberation status
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.update([proposal.id], { confirmationStatus: 'CONFIRMED' });
+
+      expect(result).toBe(1);
+      const updated = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(updated?.deliberationStatus).toBe('ACCEPTED');
+      expect(updated?.publicationStatus).toBe('PUBLISHED');
+      expect(updated?.confirmationStatus).toBe('CONFIRMED');
+    });
+
+    it('returns 0 when neither deliberationStatus nor confirmationStatus is provided', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.update([proposal.id], {});
+
+      expect(result).toBe(0);
+      // Verify proposal was not modified
+      const updated = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(updated?.deliberationStatus).toBe('PENDING');
+      expect(updated?.publicationStatus).toBe('NOT_PUBLISHED');
+      expect(updated?.confirmationStatus).toBe(null);
+    });
+
+    it('does not update proposals with same deliberation status', async () => {
+      const proposal1 = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['accepted'],
+      });
+      const proposal2 = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['accepted'],
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.update([proposal1.id, proposal2.id], { deliberationStatus: 'ACCEPTED' });
+
+      expect(result).toBe(0); // No updates because they were already ACCEPTED
+    });
+
+    it('only updates proposals that have different deliberation status', async () => {
+      const proposalAccepted = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['accepted'],
+      });
+      const proposalPending = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        // PENDING by default
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.update([proposalAccepted.id, proposalPending.id], {
+        deliberationStatus: 'ACCEPTED',
+      });
+
+      expect(result).toBe(1); // Only the pending one was updated
+
+      const updatedAccepted = await db.proposal.findUnique({ where: { id: proposalAccepted.id } });
+      const updatedPending = await db.proposal.findUnique({ where: { id: proposalPending.id } });
+
+      expect(updatedAccepted?.deliberationStatus).toBe('ACCEPTED');
+      expect(updatedPending?.deliberationStatus).toBe('ACCEPTED');
+    });
   });
 
   describe('#updateAll', () => {
@@ -133,6 +271,98 @@ describe('ProposalStatusUpdater', () => {
 
       const updated2 = proposals.find((p) => p.id === proposal2.id);
       expect(updated2?.deliberationStatus).toBe('REJECTED');
+    });
+
+    it('applies filters correctly when updating proposals', async () => {
+      const format1 = await db.eventFormat.create({
+        data: { name: 'Format 1', description: 'Description 1', eventId: event.id },
+      });
+      const format2 = await db.eventFormat.create({
+        data: { name: 'Format 2', description: 'Description 2', eventId: event.id },
+      });
+
+      const proposal1 = await proposalFactory({
+        event,
+        formats: [format1],
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['accepted'],
+      });
+      const proposal2 = await proposalFactory({
+        event,
+        formats: [format2],
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['accepted'],
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.updateAll(
+        {
+          formats: format1.id, // Use single ID instead of array
+          status: 'accepted',
+        },
+        'REJECTED',
+      );
+
+      expect(result).toBe(1);
+      const proposals = await db.proposal.findMany();
+
+      const updated1 = proposals.find((p) => p.id === proposal1.id);
+      expect(updated1?.deliberationStatus).toBe('REJECTED');
+
+      const updated2 = proposals.find((p) => p.id === proposal2.id);
+      expect(updated2?.deliberationStatus).toBe('ACCEPTED'); // Unchanged
+    });
+
+    it('resets publication and confirmation statuses when changing to PENDING', async () => {
+      await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['accepted-published'],
+      });
+      await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['confirmed'],
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.updateAll({}, 'PENDING');
+
+      expect(result).toBe(2);
+      const proposals = await db.proposal.findMany();
+
+      proposals.forEach((proposal) => {
+        expect(proposal.deliberationStatus).toBe('PENDING');
+        expect(proposal.publicationStatus).toBe('NOT_PUBLISHED');
+        expect(proposal.confirmationStatus).toBe(null);
+      });
+    });
+
+    it('only resets publication status when changing from published to ACCEPTED/REJECTED', async () => {
+      const proposal1 = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['accepted-published'],
+      });
+      const proposal2 = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['rejected-published'],
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.updateAll({ status: 'rejected' }, 'ACCEPTED');
+
+      expect(result).toBe(1); // Only the rejected one was updated
+      const proposals = await db.proposal.findMany();
+
+      const updated1 = proposals.find((p) => p.id === proposal1.id);
+      expect(updated1?.deliberationStatus).toBe('ACCEPTED');
+      expect(updated1?.publicationStatus).toBe('PUBLISHED'); // Unchanged
+
+      const updated2 = proposals.find((p) => p.id === proposal2.id);
+      expect(updated2?.deliberationStatus).toBe('ACCEPTED');
+      expect(updated2?.publicationStatus).toBe('NOT_PUBLISHED'); // Reset
     });
 
     it('throws an error if user has not a owner or member role in the team', async () => {

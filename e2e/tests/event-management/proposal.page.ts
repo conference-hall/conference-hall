@@ -13,10 +13,10 @@ export class ProposalPage extends PageObject {
   readonly nextProposal = this.page.getByLabel('Next proposal');
   readonly previousProposal = this.page.getByLabel('Previous proposal');
 
-  readonly deliberationStatus = this.page.getByLabel('Change deliberation status');
+  readonly deliberationStatus = this.page.getByLabel('Change proposal status');
   readonly publicationStatus = this.page.getByRole('heading', { name: 'Publication' });
   readonly publishButton = this.page.getByRole('button', { name: 'Publish result to speakers' });
-  readonly waitingConfirmation = this.page.getByText('Waiting for confirmation');
+  readonly waitingConfirmation = this.page.getByText('Waiting for speaker confirmation');
   readonly resultPublished = this.page.getByText('Result published to speakers');
 
   readonly tagsButton = this.page.getByRole('button', { name: 'Tags' });
