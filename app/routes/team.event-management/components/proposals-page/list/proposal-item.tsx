@@ -32,7 +32,7 @@ export function ProposalItem({
   const [params] = useSearchParams();
 
   const currentTeam = useCurrentTeam();
-  const { canDeliberateEventProposals } = currentTeam.userPermissions;
+  const { canChangeProposalStatus } = currentTeam.userPermissions;
 
   const { id, title, reviews } = proposal;
   const { you, summary } = reviews;
@@ -41,7 +41,7 @@ export function ProposalItem({
 
   return (
     <>
-      {canDeliberateEventProposals && toggle ? (
+      {canChangeProposalStatus && toggle ? (
         <Checkbox
           aria-label={t('event-management.proposals.list.select-item', { title })}
           value={id}
@@ -61,7 +61,7 @@ export function ProposalItem({
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-semibold">{title}</span>
 
-            {canDeliberateEventProposals && proposal.deliberationStatus !== 'PENDING' && (
+            {canChangeProposalStatus && proposal.deliberationStatus !== 'PENDING' && (
               <>
                 <DeliberationBadge {...proposal} />
                 <PublicationBadge {...proposal} />

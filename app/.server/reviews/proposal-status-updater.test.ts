@@ -5,12 +5,10 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
+import { ProposalStatusUpdater } from './proposal-status-updater.ts';
 
-import { Deliberate } from './deliberate.ts';
-
-describe('Deliberate', () => {
+describe('ProposalStatusUpdater', () => {
   let owner: User;
   let reviewer: User;
   let speaker: User;
@@ -25,13 +23,13 @@ describe('Deliberate', () => {
     event = await eventFactory({ team });
   });
 
-  describe('#mark', () => {
-    it('updates the proposal', async () => {
+  describe('#update', () => {
+    it('updates the proposal deliberation status', async () => {
       const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const reviews = Deliberate.for(owner.id, team.slug, event.slug);
-      const result = await reviews.mark([proposal1.id, proposal2.id], 'ACCEPTED');
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.update([proposal1.id, proposal2.id], { deliberationStatus: 'ACCEPTED' });
 
       expect(result).toBe(2);
       const proposals = await db.proposal.findMany();
@@ -55,8 +53,8 @@ describe('Deliberate', () => {
         traits: ['rejected-published'],
       });
 
-      const deliberate = Deliberate.for(owner.id, team.slug, event.slug);
-      const result = await deliberate.mark([proposal1.id, proposal2.id], 'ACCEPTED');
+      const deliberate = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await deliberate.update([proposal1.id, proposal2.id], { deliberationStatus: 'ACCEPTED' });
 
       expect(result).toBe(1);
       const proposals = await db.proposal.findMany();
@@ -82,8 +80,8 @@ describe('Deliberate', () => {
         traits: ['rejected-published'],
       });
 
-      const deliberate = Deliberate.for(owner.id, team.slug, event.slug);
-      const result = await deliberate.mark([proposal1.id, proposal2.id], 'PENDING');
+      const deliberate = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await deliberate.update([proposal1.id, proposal2.id], { deliberationStatus: 'PENDING' });
 
       expect(result).toBe(2);
       const proposals = await db.proposal.findMany();
@@ -100,19 +98,23 @@ describe('Deliberate', () => {
     });
 
     it('throws an error if user has not a owner or member role in the team', async () => {
-      const deliberate = Deliberate.for(reviewer.id, team.slug, event.slug);
-      await expect(deliberate.mark([], 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);
+      const deliberate = ProposalStatusUpdater.for(reviewer.id, team.slug, event.slug);
+      await expect(deliberate.update([], { deliberationStatus: 'ACCEPTED' })).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      const deliberate = Deliberate.for(user.id, team.slug, event.slug);
-      await expect(deliberate.mark([], 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);
+      const deliberate = ProposalStatusUpdater.for(user.id, team.slug, event.slug);
+      await expect(deliberate.update([], { deliberationStatus: 'ACCEPTED' })).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
   });
 
-  describe('#markAll', () => {
-    it('updates proposals from a search', async () => {
+  describe('#updateAll', () => {
+    it('updates all proposals deliberation status from the search', async () => {
       const proposal1 = await proposalFactory({
         event,
         talk: await talkFactory({ speakers: [speaker] }),
@@ -120,8 +122,8 @@ describe('Deliberate', () => {
       });
       const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const reviews = Deliberate.for(owner.id, team.slug, event.slug);
-      const result = await reviews.markAll({ status: 'pending' }, 'REJECTED');
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.updateAll({ status: 'pending' }, 'REJECTED');
 
       expect(result).toBe(1);
       const proposals = await db.proposal.findMany();
@@ -134,14 +136,14 @@ describe('Deliberate', () => {
     });
 
     it('throws an error if user has not a owner or member role in the team', async () => {
-      const deliberate = Deliberate.for(reviewer.id, team.slug, event.slug);
-      await expect(deliberate.markAll({}, 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);
+      const deliberate = ProposalStatusUpdater.for(reviewer.id, team.slug, event.slug);
+      await expect(deliberate.updateAll({}, 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      const deliberate = Deliberate.for(user.id, team.slug, event.slug);
-      await expect(deliberate.markAll({}, 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);
+      const deliberate = ProposalStatusUpdater.for(user.id, team.slug, event.slug);
+      await expect(deliberate.updateAll({}, 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

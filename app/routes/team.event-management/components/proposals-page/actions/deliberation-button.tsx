@@ -41,10 +41,10 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
       >
         <Modal.Content>
           <Form id={formId} method="POST" onSubmit={() => setOpen(false)}>
-            <Callout title={t('common.warning')}>
+            <Callout title={t('common.warning')} variant="warning">
               {t('event-management.proposals.deliberate.modal.description')}
             </Callout>
-            <input type="hidden" name="status" value={status} />
+            <input type="hidden" name="deliberationStatus" value={status} />
             <input type="hidden" name="allPagesSelected" value={String(isAllPagesSelected)} />
             {selection.map((id) => (
               <input key={id} type="hidden" name="selection" value={id} />

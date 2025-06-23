@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { useTranslation } from 'react-i18next';
 import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
-import { Deliberate, DeliberateBulkSchema } from '~/.server/reviews/deliberate.ts';
+import { ProposalStatusBulkSchema, ProposalStatusUpdater } from '~/.server/reviews/proposal-status-updater.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { SearchInput } from '~/design-system/forms/search-input.tsx';
@@ -28,22 +28,22 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
   const form = await request.formData();
-  const result = parseWithZod(form, { schema: DeliberateBulkSchema });
-  if (result.status !== 'success') return null;
+  const result = parseWithZod(form, { schema: ProposalStatusBulkSchema });
+  if (result.status !== 'success') return toast('error', t('error.global'));
 
-  const { selection, status, allPagesSelected } = result.value;
-  const deliberate = Deliberate.for(userId, params.team, params.event);
+  const { selection, deliberationStatus, allPagesSelected } = result.value;
+  const deliberate = ProposalStatusUpdater.for(userId, params.team, params.event);
   let count = 0;
   if (allPagesSelected) {
     const filters = parseUrlFilters(request.url);
-    count = await deliberate.markAll(filters, status);
+    count = await deliberate.updateAll(filters, deliberationStatus);
   } else {
-    count = await deliberate.mark(selection, status);
+    count = await deliberate.update(selection, { deliberationStatus });
   }
 
   return toast(
     'success',
-    t('event-management.proposals.feedbacks.status-changed', { count, status: status.toLowerCase() }),
+    t('event-management.proposals.feedbacks.status-changed', { count, status: deliberationStatus.toLowerCase() }),
   );
 };
 
