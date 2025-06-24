@@ -31,7 +31,7 @@ const myFlag = await flags.get('my-flag-name');
 To use a flag in the frontend, use the hook `useFlag`, only flags defined with `frontend` tag are available:
 
 ```js
-import { useFlag } from './routes/components/flags-context.tsx';
+import { useFlag } from '~/routes/components/contexts/flags-context.tsx';
 
 const myFlag = useFlag('my-flag-name');
 ```
@@ -57,11 +57,3 @@ test('my test when flags is off', async () => {
 });
 ```
 
-**To change a flag in e2e tests:**
-
-```js
-it('my test when flags is off', async () => {
-  cy.task('setFlag', { key: 'my-flag-name', value: false });
-  // my test...
-});
-```
