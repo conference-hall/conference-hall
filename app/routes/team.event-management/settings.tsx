@@ -28,7 +28,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return null;
 };
 
-const getMenuItems = (team: string, event: string, options: Record<string, boolean>, t: TFunction) => [
+const getMenuItems = (team: string, event: string, t: TFunction) => [
   { to: `/team/${team}/${event}/settings`, icon: Cog6ToothIcon, label: t('event-management.settings.menu.general') },
   {
     to: `/team/${team}/${event}/settings/cfp`,
@@ -46,7 +46,6 @@ const getMenuItems = (team: string, event: string, options: Record<string, boole
     to: `/team/${team}/${event}/settings/survey`,
     icon: QuestionMarkCircleIcon,
     label: t('event-management.settings.menu.survey'),
-    isNew: options?.customSurveyEnabled,
   },
   { to: `/team/${team}/${event}/settings/review`, icon: StarIcon, label: t('event-management.settings.menu.reviews') },
   {
@@ -70,7 +69,7 @@ export default function OrganizationSettingsRoute() {
   const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
-  const menus = getMenuItems(currentTeam.slug, currentEvent.slug, { customSurveyEnabled: true }, t);
+  const menus = getMenuItems(currentTeam.slug, currentEvent.slug, t);
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
