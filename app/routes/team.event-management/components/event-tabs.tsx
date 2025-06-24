@@ -19,11 +19,11 @@ type Props = {
   teamSlug: string;
   eventSlug: string;
   eventType: EventType;
-  speakersPageEnabled: boolean;
+  displaySpeakers: boolean;
   permissions: UserPermissions;
 };
 
-export function EventTabs({ teamSlug, eventSlug, eventType, speakersPageEnabled, permissions }: Props) {
+export function EventTabs({ teamSlug, eventSlug, eventType, displaySpeakers, permissions }: Props) {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const search = searchParams.toString();
@@ -48,7 +48,7 @@ export function EventTabs({ teamSlug, eventSlug, eventType, speakersPageEnabled,
           {t('event-management.nav.proposals')}
         </NavTab>
 
-        {speakersPageEnabled ? (
+        {displaySpeakers ? (
           <NavTab
             to={{
               pathname: href('/team/:team/:event/speakers', { team: teamSlug, event: eventSlug }),

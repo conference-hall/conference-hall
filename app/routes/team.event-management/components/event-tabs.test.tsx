@@ -24,7 +24,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="CONFERENCE"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={ownerPermissions}
           />
         </I18nextProvider>,
@@ -56,7 +56,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="CONFERENCE"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={memberPermissions}
           />
         </I18nextProvider>,
@@ -77,7 +77,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="CONFERENCE"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={reviewerPermissions}
           />
         </I18nextProvider>,
@@ -100,7 +100,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="MEETUP"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={ownerPermissions}
           />
         </I18nextProvider>,
@@ -121,7 +121,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="MEETUP"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={memberPermissions}
           />
         </I18nextProvider>,
@@ -142,7 +142,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="MEETUP"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={reviewerPermissions}
           />
         </I18nextProvider>,
