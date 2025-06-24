@@ -24,7 +24,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="CONFERENCE"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={ownerPermissions}
           />
         </I18nextProvider>,
@@ -56,7 +56,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="CONFERENCE"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={memberPermissions}
           />
         </I18nextProvider>,
@@ -77,7 +77,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="CONFERENCE"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={reviewerPermissions}
           />
         </I18nextProvider>,
@@ -90,6 +90,22 @@ describe('EventTabs component', () => {
       await expect.element(screen.getByRole('link', { name: 'Schedule' })).not.toBeInTheDocument();
       await expect.element(screen.getByRole('link', { name: 'Settings' })).not.toBeInTheDocument();
     });
+
+    it('hides speakers tab when displaySpeakers disabled', async () => {
+      const screen = renderComponent(
+        <I18nextProvider i18n={i18nTest}>
+          <EventTabs
+            teamSlug="t1"
+            eventSlug="e1"
+            eventType="CONFERENCE"
+            displaySpeakers={false}
+            permissions={reviewerPermissions}
+          />
+        </I18nextProvider>,
+      );
+
+      await expect.element(screen.getByRole('link', { name: 'Speakers' })).not.toBeInTheDocument();
+    });
   });
 
   describe('for a meetup', () => {
@@ -100,7 +116,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="MEETUP"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={ownerPermissions}
           />
         </I18nextProvider>,
@@ -121,7 +137,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="MEETUP"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={memberPermissions}
           />
         </I18nextProvider>,
@@ -142,7 +158,7 @@ describe('EventTabs component', () => {
             teamSlug="t1"
             eventSlug="e1"
             eventType="MEETUP"
-            speakersPageEnabled={true}
+            displaySpeakers={true}
             permissions={reviewerPermissions}
           />
         </I18nextProvider>,

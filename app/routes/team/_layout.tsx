@@ -43,7 +43,7 @@ export default function TeamLayout({ loaderData: team }: Route.ComponentProps) {
           teamSlug={team.slug}
           eventSlug={event.slug}
           eventType={event.type}
-          speakersPageEnabled={speakersPageEnabled}
+          displaySpeakers={speakersPageEnabled && event.displayProposalsSpeakers}
           permissions={team.userPermissions}
         />
       ) : (
