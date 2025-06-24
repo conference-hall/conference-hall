@@ -12,7 +12,7 @@ export type UserPermissions = {
   canDeleteEvent: boolean;
   canEditEventProposals: boolean;
   canExportEventProposals: boolean;
-  canDeliberateEventProposals: boolean;
+  canChangeProposalStatus: boolean;
   canPublishEventResults: boolean;
   canEditEventSchedule: boolean;
 };
@@ -31,7 +31,7 @@ const TEAM_OWNER_PERMISSIONS: UserPermissions = {
   canDeleteEvent: true,
   canEditEventProposals: true,
   canExportEventProposals: true,
-  canDeliberateEventProposals: true,
+  canChangeProposalStatus: true,
   canPublishEventResults: true,
   canEditEventSchedule: true,
 };
@@ -48,7 +48,7 @@ const TEAM_MEMBER_PERMISSIONS: UserPermissions = {
   canDeleteEvent: false,
   canEditEventProposals: true,
   canExportEventProposals: false,
-  canDeliberateEventProposals: true,
+  canChangeProposalStatus: true,
   canPublishEventResults: true,
   canEditEventSchedule: true,
 };
@@ -65,7 +65,7 @@ const TEAM_REVIEWER_PERMISSIONS: UserPermissions = {
   canDeleteEvent: false,
   canEditEventProposals: false,
   canExportEventProposals: false,
-  canDeliberateEventProposals: false,
+  canChangeProposalStatus: false,
   canPublishEventResults: false,
   canEditEventSchedule: false,
 };

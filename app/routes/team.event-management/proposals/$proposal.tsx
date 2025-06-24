@@ -4,7 +4,6 @@ import { Await } from 'react-router';
 import { Publication } from '~/.server/publications/publication.ts';
 import { ActivityFeed } from '~/.server/reviews/activity-feed.ts';
 import { Comments } from '~/.server/reviews/comments.ts';
-import { Deliberate, DeliberateSchema } from '~/.server/reviews/deliberate.ts';
 import type { ProposalReviewData } from '~/.server/reviews/proposal-review.ts';
 import { ProposalReview } from '~/.server/reviews/proposal-review.ts';
 import {
@@ -13,6 +12,7 @@ import {
   ProposalUpdateSchema,
   ReviewUpdateDataSchema,
 } from '~/.server/reviews/proposal-review.types.ts';
+import { ProposalStatusSchema, ProposalStatusUpdater } from '~/.server/reviews/proposal-status-updater.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
@@ -85,11 +85,11 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       await discussions.reactToComment(result.value);
       break;
     }
-    case 'change-deliberation-status': {
-      const result = parseWithZod(form, { schema: DeliberateSchema });
+    case 'change-proposal-status': {
+      const result = parseWithZod(form, { schema: ProposalStatusSchema });
       if (result.status !== 'success') return toast('error', t('error.global'));
-      const deliberate = Deliberate.for(userId, params.team, params.event);
-      await deliberate.mark([params.proposal], result.value.status);
+      const deliberate = ProposalStatusUpdater.for(userId, params.team, params.event);
+      await deliberate.update([params.proposal], result.value);
       break;
     }
     case 'publish-results': {
@@ -120,7 +120,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 export default function ProposalReviewLayoutRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
-  const { canEditEvent, canEditEventProposals, canDeliberateEventProposals } = currentTeam.userPermissions;
+  const { canEditEvent, canEditEventProposals, canChangeProposalStatus } = currentTeam.userPermissions;
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
   const hasFormats = proposal.formats && proposal.formats.length > 0;
   const hasCategories = proposal.categories && proposal.categories.length > 0;
@@ -157,7 +157,7 @@ export default function ProposalReviewLayoutRoute({ loaderData, actionData: erro
           <ReviewSidebar
             proposal={proposal}
             reviewEnabled={currentEvent.reviewEnabled}
-            canDeliberate={canDeliberateEventProposals}
+            canDeliberate={canChangeProposalStatus}
           />
 
           <TagsCard

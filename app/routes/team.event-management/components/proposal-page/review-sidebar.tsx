@@ -1,8 +1,6 @@
 import { Card } from '~/design-system/layouts/card.tsx';
 import type { ProposalData } from '../../proposals/$proposal.tsx';
-import { ConfirmationDetails } from './review-sidebar-sections/confirmation-details.tsx';
-import { DeliberationSelect } from './review-sidebar-sections/deliberation-select.tsx';
-import { PublicationDetails } from './review-sidebar-sections/publication-details.tsx';
+import { ProposalStatusSelect } from './review-sidebar-sections/proposal-status-select.tsx';
 import { ReviewDetails } from './review-sidebar-sections/review-details.tsx';
 import { ReviewForm } from './review-sidebar-sections/review-form.tsx';
 
@@ -16,20 +14,12 @@ export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate }: Props)
       <ReviewDetails review={proposal.reviews.summary} userReview={proposal.reviews.you} />
 
       {canDeliberate && (
-        <DeliberationSelect
+        <ProposalStatusSelect
           deliberationStatus={proposal.deliberationStatus}
           publicationStatus={proposal.publicationStatus}
+          confirmationStatus={proposal.confirmationStatus}
         />
       )}
-
-      {canDeliberate && (
-        <PublicationDetails
-          deliberationStatus={proposal.deliberationStatus}
-          publicationStatus={proposal.publicationStatus}
-        />
-      )}
-
-      {canDeliberate && <ConfirmationDetails confirmationStatus={proposal.confirmationStatus} />}
     </Card>
   );
 }

@@ -80,7 +80,7 @@ function FiltersContent({ close }: FiltersContentProps) {
         className="px-4 py-3"
       />
 
-      {currentTeam.userPermissions.canDeliberateEventProposals && (
+      {currentTeam.userPermissions.canChangeProposalStatus && (
         <FiltersRadio
           label={t('common.proposals')}
           name="status"

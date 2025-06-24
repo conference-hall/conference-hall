@@ -2,6 +2,7 @@ import { Field, Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } f
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
+import { menuItem, menuItems } from '../styles/menu.styles.ts';
 import { SelectTransition } from '../transitions.tsx';
 
 type Props = {
@@ -14,6 +15,8 @@ type Props = {
     id?: string | null;
     name: string;
     icon?: React.ComponentType<{ className?: string }>;
+    disabled?: boolean;
+    hidden?: boolean;
     iconClassname?: string;
   }>;
   className?: string;
@@ -54,8 +57,8 @@ export default function Select({
             </Label>
             <div className={cx('relative', { 'mt-1': !srOnly })}>
               <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 ring-1 ring-inset ring-gray-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-600 text-sm leading-6">
-                <span className="flex items-center truncate">
-                  {Icon && <Icon className={cx('mr-2 h-4 w-4', iconClassname)} aria-hidden="true" />}
+                <span className="flex justify-start items-center gap-2 truncate">
+                  {Icon && <Icon className={cx('h-4 w-4 shrink-0', iconClassname)} aria-hidden="true" />}
                   {name}
                 </span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -66,28 +69,41 @@ export default function Select({
               <SelectTransition show={open}>
                 <ListboxOptions
                   anchor={{ to: 'bottom start', gap: '4px' }}
-                  className="z-10 w-[var(--button-width)] rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-hidden"
+                  className={cx(menuItems(), 'w-[var(--button-width)]')}
                 >
-                  {options.map((option) => (
-                    <ListboxOption
-                      key={option.id}
-                      value={option.id}
-                      className={({ focus }) =>
-                        cx('relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900', {
-                          'bg-gray-100': focus,
-                        })
-                      }
-                    >
-                      {({ selected }) => (
-                        <span className={cx(selected ? 'font-semibold' : 'font-normal', 'flex items-center truncate')}>
-                          {option.icon && (
-                            <option.icon className={cx('mr-2 h-4 w-4', option.iconClassname)} aria-hidden="true" />
-                          )}
-                          {option.name}
-                        </span>
-                      )}
-                    </ListboxOption>
-                  ))}
+                  {options
+                    .filter((o) => !o.hidden)
+                    .map((option) => (
+                      <ListboxOption
+                        key={option.id}
+                        value={option.id}
+                        disabled={option.disabled}
+                        className={({ focus, disabled }) =>
+                          cx(menuItem(), {
+                            'bg-gray-100': focus,
+                            'text-gray-900 cursor-pointer': !disabled,
+                            'text-gray-500 cursor-not-allowed': disabled,
+                          })
+                        }
+                      >
+                        {({ selected, disabled }) => (
+                          <span
+                            className={cx(
+                              selected ? 'font-semibold' : 'font-normal',
+                              'flex justify-start items-center gap-2 truncate',
+                            )}
+                          >
+                            {option.icon && (
+                              <option.icon
+                                className={cx('h-4 w-4 shrink-0', { [option.iconClassname || '']: !disabled })}
+                                aria-hidden="true"
+                              />
+                            )}
+                            {option.name}
+                          </span>
+                        )}
+                      </ListboxOption>
+                    ))}
                 </ListboxOptions>
               </SelectTransition>
             </div>

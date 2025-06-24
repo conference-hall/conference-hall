@@ -180,28 +180,30 @@ test('deliberates the proposal', async ({ page }) => {
 
   // Default deliberation status
   await expect(proposalPage.deliberationStatus).toContainText('Not deliberated');
-  await expect(proposalPage.publicationStatus).not.toBeVisible();
+  await expect(proposalPage.publishButton).not.toBeVisible();
 
   // Deliberate as accepted
   await proposalPage.deliberationStatus.click();
   await page.getByRole('option', { name: 'Accepted' }).click();
   await expect(proposalPage.deliberationStatus).toContainText('Accepted');
-  await expect(proposalPage.publicationStatus).toBeVisible();
+  await expect(proposalPage.publishButton).toBeVisible();
 
   // Publish accepted result
   await proposalPage.publishButton.click();
-  await expect(proposalPage.waitingConfirmation).toBeVisible();
+  await page.getByRole('dialog').getByRole('button', { name: 'Publish result to speakers' }).click();
+  await expect(proposalPage.deliberationStatus).toContainText('Waiting for speaker confirmation');
 
-  // Deliberate as rejected
+  // Deliberate as rejected - handle confirmation dialog for published proposals
   page.on('dialog', (dialog) => dialog.accept());
   await proposalPage.deliberationStatus.click();
   await page.getByRole('option', { name: 'Rejected' }).click();
   await expect(proposalPage.deliberationStatus).toContainText('Rejected');
-  await expect(proposalPage.publicationStatus).toBeVisible();
+  await expect(proposalPage.publishButton).toBeVisible();
 
   // Publish rejected result
   await proposalPage.publishButton.click();
-  await expect(proposalPage.resultPublished).toBeVisible();
+  await page.getByRole('dialog').getByRole('button', { name: 'Publish result to speakers' }).click();
+  await expect(proposalPage.deliberationStatus).toContainText('Rejected');
 });
 
 test('manage tags', async ({ page }) => {
@@ -271,12 +273,10 @@ test('hides reviews, speakers following event settings', async ({ page }) => {
 test.describe('As a reviewer', () => {
   loginWith('bruce-wayne');
 
-  test('does not show deliberation, confirmation or publication panels', async ({ page }) => {
+  test('does not show proposal status panel', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
     await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
 
-    await expect(page.getByRole('heading', { name: 'Deliberation' })).not.toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Publication' })).not.toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Confirmation' })).not.toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Proposal status' })).not.toBeVisible();
   });
 });

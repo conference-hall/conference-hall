@@ -119,27 +119,27 @@ test('filters speakers by proposal status', async ({ page }) => {
   await expect(speakersPage.speakerCount(3)).toBeVisible();
 
   // Filter by confirmed proposals
-  await speakersPage.clickOnProposalStatusFilter('Confirmed by speakers');
+  await speakersPage.clickOnProposalStatusFilter('Confirmed by speaker');
   await expect(speakersPage.speakerCount(1)).toBeVisible();
   await expect(speakersPage.speaker('Alice Johnson')).toBeVisible();
   await expect(speakersPage.speaker('Bob Wilson')).not.toBeVisible();
   await expect(speakersPage.speaker('Charlie Brown')).not.toBeVisible();
-  await expect(speakersPage.filterTag('Confirmed by speakers')).toBeVisible();
+  await expect(speakersPage.filterTag('Confirmed by speaker')).toBeVisible();
 
   // Clear filter
   await speakersPage.clickOnClearFilters();
   await expect(speakersPage.speakerCount(3)).toBeVisible();
 
   // Filter by declined proposals
-  await speakersPage.clickOnProposalStatusFilter('Declined by speakers');
+  await speakersPage.clickOnProposalStatusFilter('Declined by speaker');
   await expect(speakersPage.speakerCount(1)).toBeVisible();
   await expect(speakersPage.speaker('Bob Wilson')).toBeVisible();
   await expect(speakersPage.speaker('Alice Johnson')).not.toBeVisible();
   await expect(speakersPage.speaker('Charlie Brown')).not.toBeVisible();
-  await expect(speakersPage.filterTag('Declined by speakers')).toBeVisible();
+  await expect(speakersPage.filterTag('Declined by speaker')).toBeVisible();
 
   // Clear filter using filter tag
-  await speakersPage.removeFilterTag('Declined by speakers');
+  await speakersPage.removeFilterTag('Declined by speaker');
   await expect(speakersPage.speakerCount(3)).toBeVisible();
 });
 

@@ -19,7 +19,7 @@ describe('UserPermissions', () => {
         canDeleteEvent: true,
         canEditEventProposals: true,
         canExportEventProposals: true,
-        canDeliberateEventProposals: true,
+        canChangeProposalStatus: true,
         canPublishEventResults: true,
         canEditEventSchedule: true,
       });
@@ -40,7 +40,7 @@ describe('UserPermissions', () => {
         canDeleteEvent: false,
         canEditEventProposals: true,
         canExportEventProposals: false,
-        canDeliberateEventProposals: true,
+        canChangeProposalStatus: true,
         canPublishEventResults: true,
         canEditEventSchedule: true,
       });
@@ -61,7 +61,7 @@ describe('UserPermissions', () => {
         canDeleteEvent: false,
         canEditEventProposals: false,
         canExportEventProposals: false,
-        canDeliberateEventProposals: false,
+        canChangeProposalStatus: false,
         canPublishEventResults: false,
         canEditEventSchedule: false,
       });
