@@ -15,7 +15,7 @@ export default defineConfig({
     restoreMocks: true,
     reporters: isCI ? ['default', 'junit'] : 'default',
     outputFile: './test-results/unit.xml',
-    workspace: [
+    projects: [
       {
         extends: true,
         test: {
