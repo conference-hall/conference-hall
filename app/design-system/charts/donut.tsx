@@ -1,13 +1,9 @@
-// Tremor Raw DonutChart [v0.0.0]
-
 import { cx } from 'class-variance-authority';
-import React from 'react';
-import { Pie, PieChart, ResponsiveContainer, Sector, Tooltip } from 'recharts';
+import type React from 'react';
+import { Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 import type { AvailableChartColorsKeys } from './chart-utils.ts';
 import { AvailableChartColors, constructCategoryColors, getColorClassName } from './chart-utils.ts';
-
-const sumNumericArray = (arr: number[]): number => arr.reduce((sum, num) => sum + num, 0);
 
 const parseData = (
   data: Record<string, any>[],
@@ -19,20 +15,6 @@ const parseData = (
     color: categoryColors.get(dataPoint[category]) || AvailableChartColors[0],
     className: getColorClassName(categoryColors.get(dataPoint[category]) || AvailableChartColors[0], 'fill'),
   }));
-
-const calculateDefaultLabel = (data: any[], valueKey: string): number =>
-  sumNumericArray(data.map((dataPoint) => dataPoint[valueKey]));
-
-const parseLabelInput = (
-  labelInput: string | undefined,
-  valueFormatter: (value: number) => string,
-  data: any[],
-  valueKey: string,
-): string => labelInput || valueFormatter(calculateDefaultLabel(data, valueKey));
-
-//#region Tooltip
-
-type TooltipProps = Pick<ChartTooltipProps, 'active' | 'payload'>;
 
 type PayloadItem = {
   category: string;
@@ -97,34 +79,7 @@ const ChartTooltip = ({ active, payload, valueFormatter }: ChartTooltipProps) =>
   return null;
 };
 
-const renderInactiveShape = (props: any) => {
-  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, className } = props;
-
-  return (
-    <Sector
-      cx={cx}
-      cy={cy}
-      innerRadius={innerRadius}
-      outerRadius={outerRadius}
-      startAngle={startAngle}
-      endAngle={endAngle}
-      className={className}
-      fill=""
-      opacity={0.3}
-      style={{ outline: 'none' }}
-    />
-  );
-};
-
 type DonutChartVariant = 'donut' | 'pie';
-
-type BaseEventProps = {
-  eventType: 'sector';
-  categoryClicked: string;
-  [key: string]: number | string;
-};
-
-type DonutChartEventProps = BaseEventProps | null | undefined;
 
 interface DonutChartProps extends React.ComponentProps<'div'> {
   data: Record<string, any>[];
@@ -132,13 +87,9 @@ interface DonutChartProps extends React.ComponentProps<'div'> {
   value: string;
   colors?: AvailableChartColorsKeys[];
   variant?: DonutChartVariant;
-  valueFormatter?: (value: number) => string;
   label?: string;
   showLabel?: boolean;
   showTooltip?: boolean;
-  onValueChange?: (value: DonutChartEventProps) => void;
-  tooltipCallback?: (tooltipCallbackContent: TooltipProps) => void;
-  customTooltip?: React.ComponentType<TooltipProps>;
 }
 
 export const DonutChart = ({
@@ -147,59 +98,21 @@ export const DonutChart = ({
   category,
   colors = AvailableChartColors,
   variant = 'donut',
-  valueFormatter = (value: number) => value.toString(),
   label,
   showLabel = false,
   showTooltip = true,
-  onValueChange,
-  tooltipCallback,
-  customTooltip,
   className,
   ref,
   ...other
 }: DonutChartProps) => {
-  const CustomTooltip = customTooltip;
-  const [activeIndex, setActiveIndex] = React.useState<number | undefined>(undefined);
   const isDonut = variant === 'donut';
-  const parsedLabelInput = parseLabelInput(label, valueFormatter, data, value);
-
   const categories = Array.from(new Set(data.map((item) => item[category])));
   const categoryColors = constructCategoryColors(categories, colors);
-
-  const prevActiveRef = React.useRef<boolean | undefined>(undefined);
-  const prevCategoryRef = React.useRef<string | undefined>(undefined);
-
-  const handleShapeClick = (data: any, index: number, event: React.MouseEvent) => {
-    event.stopPropagation();
-    if (!onValueChange) return;
-
-    if (activeIndex === index) {
-      setActiveIndex(undefined);
-      onValueChange(null);
-    } else {
-      setActiveIndex(index);
-      onValueChange({
-        eventType: 'sector',
-        categoryClicked: data.payload[category],
-        ...data.payload,
-      });
-    }
-  };
 
   return (
     <div ref={ref} className={cx('h-40 w-40', className)} {...other}>
       <ResponsiveContainer className="size-full">
-        <PieChart
-          onClick={
-            onValueChange && activeIndex !== undefined
-              ? () => {
-                  setActiveIndex(undefined);
-                  onValueChange(null);
-                }
-              : undefined
-          }
-          margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
-        >
+        <PieChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }}>
           {showLabel && isDonut && (
             <text
               className="text-2xl font-semibold fill-gray-700"
@@ -208,14 +121,11 @@ export const DonutChart = ({
               textAnchor="middle"
               dominantBaseline="middle"
             >
-              {parsedLabelInput}
+              {label}
             </text>
           )}
           <Pie
-            className={cx(
-              'stroke-white [&_.recharts-pie-sector]:outline-hidden',
-              onValueChange ? 'cursor-pointer' : 'cursor-default',
-            )}
+            className="stroke-white [&_.recharts-pie-sector]:outline-hidden"
             data={parseData(data, categoryColors, category)}
             cx="50%"
             cy="50%"
@@ -228,9 +138,6 @@ export const DonutChart = ({
             dataKey={value}
             nameKey={category}
             isAnimationActive={false}
-            onClick={handleShapeClick}
-            activeIndex={activeIndex}
-            inactiveShape={renderInactiveShape}
             style={{ outline: 'none' }}
           />
           {showTooltip && (
@@ -246,26 +153,12 @@ export const DonutChart = ({
                     }))
                   : [];
 
-                const payloadCategory: string = cleanPayload[0]?.category;
-
-                if (
-                  tooltipCallback &&
-                  (active !== prevActiveRef.current || payloadCategory !== prevCategoryRef.current)
-                ) {
-                  tooltipCallback({
-                    active,
-                    payload: cleanPayload,
-                  });
-                  prevActiveRef.current = active;
-                  prevCategoryRef.current = payloadCategory;
-                }
-
                 return showTooltip && active ? (
-                  CustomTooltip ? (
-                    <CustomTooltip active={active} payload={cleanPayload} />
-                  ) : (
-                    <ChartTooltip active={active} payload={cleanPayload} valueFormatter={valueFormatter} />
-                  )
+                  <ChartTooltip
+                    active={active}
+                    payload={cleanPayload}
+                    valueFormatter={(value: number) => value.toString()}
+                  />
                 ) : null;
               }}
             />

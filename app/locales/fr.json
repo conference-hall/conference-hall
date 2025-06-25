@@ -339,7 +339,7 @@
   "event-management.overview.reviewers.heading": "Métriques des évaluateurs",
   "event-management.overview.reviewers.negatives-count": "Évaluations négatives",
   "event-management.overview.reviewers.progress": "Avancement des revues de {{name}}",
-  "event-management.overview.submissions-by-day.count": "Compte",
+  "event-management.overview.submissions-by-day.count": "Par jour",
   "event-management.overview.submissions-by-day.cumulative": "Cumulatif",
   "event-management.overview.submissions-by-day.heading": "Soumissions par jour",
   "event-management.overview.visibility.success.description": "L'événement est disponible dans la recherche.",

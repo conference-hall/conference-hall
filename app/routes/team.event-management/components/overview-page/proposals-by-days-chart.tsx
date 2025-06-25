@@ -1,7 +1,7 @@
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { TooltipProps } from 'recharts';
+import type { TooltipContentProps } from 'recharts';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent.js';
 import { NoData } from '~/design-system/dashboard/no-data.tsx';
@@ -82,7 +82,7 @@ function CumulativeByDayChart({ data }: { data: ChartData }) {
           isAnimationActive={false}
           position={{ y: 0 }}
           cursor={{ stroke: '#d1d5db', strokeWidth: 1 }}
-          content={<CustomTooltip />}
+          content={CustomTooltip}
         />
       </AreaChart>
     </ResponsiveContainer>
@@ -128,20 +128,22 @@ function CountByDayChart({ data }: { data: ChartData }) {
           wrapperStyle={{ outline: 'none' }}
           position={{ y: 0 }}
           cursor={{ fill: '#d1d5db', opacity: '0.15' }}
-          content={<CustomTooltip />}
+          content={CustomTooltip}
         />
       </BarChart>
     </ResponsiveContainer>
   );
 }
 
-function CustomTooltip({ payload, label }: TooltipProps<ValueType, NameType>) {
+function CustomTooltip({ payload }: TooltipContentProps<ValueType, NameType>) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
+  const date = payload?.[0]?.payload?.date;
+
   return (
     <div className="border border-gray-200 bg-white text-sm shadow-sm rounded-md" aria-hidden="true">
       <div className="p-2 px-3">
-        <Text weight="medium">{label ? formatDay(label, { format: 'long', locale }) : t('common.unknown')}</Text>
+        <Text weight="medium">{date ? formatDay(date, { format: 'long', locale }) : t('common.unknown')}</Text>
       </div>
       <Divider />
       <div className="flex flex-row items-center space-between p-2 px-3 space-x-16">
