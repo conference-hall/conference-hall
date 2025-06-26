@@ -1,5 +1,6 @@
 import type { Event, EventCategory, EventFormat, EventProposalTag, Team, User } from '@prisma/client';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
+import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
@@ -34,6 +35,7 @@ describe('CfpReviewsExports', () => {
 
   describe('#forJson', () => {
     it('export reviews to json', async () => {
+      const eventSpeaker = await eventSpeakerFactory({ event, user: speaker });
       const proposal = await proposalFactory({
         event,
         formats: [format],
@@ -61,14 +63,15 @@ describe('CfpReviewsExports', () => {
           review: { negatives: 0, positives: 0, average: null },
           speakers: [
             {
-              name: speaker.name,
-              email: speaker.email,
-              bio: speaker.bio,
-              picture: speaker.picture,
-              company: speaker.company,
-              location: speaker.location,
-              references: speaker.references,
-              socialLinks: speaker.socialLinks,
+              id: eventSpeaker.id,
+              name: eventSpeaker.name,
+              email: eventSpeaker.email,
+              bio: eventSpeaker.bio,
+              picture: eventSpeaker.picture,
+              company: eventSpeaker.company,
+              location: eventSpeaker.location,
+              references: eventSpeaker.references,
+              socialLinks: eventSpeaker.socialLinks,
             },
           ],
         },

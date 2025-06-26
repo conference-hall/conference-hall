@@ -52,6 +52,7 @@ export class CfpReviewsExports {
         tags: proposal.tags.map((tag) => tag.name),
         languages: proposal.languages,
         speakers: proposal.speakers.map((speaker) => ({
+          id: speaker.id,
           name: speaker.name,
           bio: speaker.bio,
           company: speaker.company,
