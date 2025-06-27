@@ -48,7 +48,7 @@ export function ReviewCountDistribution({ totalProposals, reviewCountDistributio
           />
         </div>
 
-        <ReviewCoverageAnalysis totalProposals={totalProposals} reviewCountDistribution={reviewCountDistribution} />
+        <ReviewCountAnalysis totalProposals={totalProposals} reviewCountDistribution={reviewCountDistribution} />
       </div>
     </Card>
   );
@@ -76,9 +76,14 @@ function DistributionLine({ status, label, percentage, count }: DistributionLine
   );
 }
 
-function ReviewCoverageAnalysis({ reviewCountDistribution }: Props) {
+function ReviewCountAnalysis({ reviewCountDistribution }: Props) {
   const { t } = useTranslation();
-  const weightedReviewed = (reviewCountDistribution.wellReviewed * 2 + reviewCountDistribution.adequatelyReviewed) / 3;
+
+  const weightedReviewed =
+    reviewCountDistribution.wellReviewed * 1.0 +
+    reviewCountDistribution.adequatelyReviewed * 0.7 +
+    reviewCountDistribution.underReviewed * 0.3 +
+    reviewCountDistribution.missingReviews * 0.0;
 
   return (
     <div className="pt-5 border-t border-gray-200">
