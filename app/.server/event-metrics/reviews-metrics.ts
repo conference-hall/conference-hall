@@ -42,11 +42,7 @@ export class ReviewsMetrics {
         totalProposals: 0,
         reviewedProposals: 0,
         completionRate: 0,
-        distributionBalance: {
-          underReviewed: 0,
-          adequatelyReviewed: 0,
-          wellReviewed: 0,
-        },
+        distributionBalance: { underReviewed: 0, adequatelyReviewed: 0, wellReviewed: 0 },
         averageNote: 0,
         medianNote: 0,
         positiveReviews: 0,
@@ -63,16 +59,14 @@ export class ReviewsMetrics {
     const reviewedProposals = Number(overallMetrics?.reviewedProposals ?? 0);
     const completionRate = totalProposals > 0 ? (reviewedProposals / totalProposals) * 100 : 0;
 
-    const distributionBalance = this.calculateDistributionBalance(proposalReviewCounts);
-
     return {
       totalProposals,
       reviewedProposals,
       completionRate: Math.round(completionRate * 100) / 100,
-      distributionBalance,
       averageNote: overallMetrics?.averageNote?.toNumber() ?? 0,
       medianNote: Number(overallMetrics?.medianNote ?? 0),
       positiveReviews: Number(overallMetrics?.positiveReviews ?? 0),
+      distributionBalance: this.calculateDistributionBalance(proposalReviewCounts),
       noteDistribution: this.fillMissingNotes(noteDistribution),
     };
   }
@@ -158,18 +152,13 @@ export class ReviewsMetrics {
   private fillMissingNotes(noteDistribution: Array<NoteDistribution>): Array<{ note: number; count: number }> {
     const distributionMap = new Map<number, number>();
 
-    // Add existing notes
     for (const item of noteDistribution) {
       distributionMap.set(Number(item.note), Number(item.count));
     }
 
-    // Fill missing notes 0-5 with count 0
     const completeDistribution: Array<{ note: number; count: number }> = [];
     for (let note = 0; note <= 5; note++) {
-      completeDistribution.push({
-        note,
-        count: distributionMap.get(note) ?? 0,
-      });
+      completeDistribution.push({ note, count: distributionMap.get(note) ?? 0 });
     }
 
     return completeDistribution;

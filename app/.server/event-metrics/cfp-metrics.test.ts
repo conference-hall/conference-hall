@@ -9,9 +9,9 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
-import { EventMetrics } from './event-metrics.ts';
+import { CfpMetrics } from './cfp-metrics.ts';
 
-describe('EventMetrics', () => {
+describe('CfpMetrics', () => {
   let owner: User;
   let speaker: User;
   let team: Team;
@@ -66,7 +66,7 @@ describe('EventMetrics', () => {
 
   describe('#get', () => {
     it('returns metrics for an event with proposals', async () => {
-      const metrics = await EventMetrics.for(owner.id, team.slug, event.slug).get();
+      const metrics = await CfpMetrics.for(owner.id, team.slug, event.slug).get();
 
       expect(metrics.proposalsCount).toBe(2);
       expect(metrics.speakersCount).toBe(2);
@@ -95,7 +95,7 @@ describe('EventMetrics', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
 
-      const metrics = await EventMetrics.for(owner.id, team.slug, event.slug).get();
+      const metrics = await CfpMetrics.for(owner.id, team.slug, event.slug).get();
 
       expect(metrics.proposalsCount).toBe(0);
       expect(metrics.speakersCount).toBe(0);
@@ -111,7 +111,7 @@ describe('EventMetrics', () => {
       const talk = await talkFactory({ speakers: [owner] });
       await proposalFactory({ event, talk });
 
-      const metrics = await EventMetrics.for(owner.id, team.slug, event.slug).get();
+      const metrics = await CfpMetrics.for(owner.id, team.slug, event.slug).get();
 
       expect(metrics.proposalsCount).toBe(1);
       expect(metrics.speakersCount).toBe(1);
@@ -122,7 +122,7 @@ describe('EventMetrics', () => {
     });
 
     it('throws an error if the user does not have permission to access the event', async () => {
-      await expect(EventMetrics.for(owner.id, team.slug, event2.slug).get()).rejects.toThrowError(
+      await expect(CfpMetrics.for(owner.id, team.slug, event2.slug).get()).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });

@@ -1,17 +1,16 @@
 import { useTranslation } from 'react-i18next';
-import { EventMetrics } from '~/.server/event-metrics/event-metrics.ts';
+import { CfpMetrics } from '~/.server/event-metrics/cfp-metrics.ts';
 import { BarListCard } from '~/design-system/dashboard/bar-list-card.tsx';
 import { ProgressCard } from '~/design-system/dashboard/progress-card.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
-import { ProposalsByDayChart } from '../components/overview-page/proposals-by-days-chart.tsx';
+import { ProposalsByDayChart } from '../components/overview-page/cfp-tab/proposals-by-days-chart.tsx';
 import type { Route } from './+types/cfp-tab.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
 
-  //todo: separate global metrics and cfp metrics
-  const metrics = await EventMetrics.for(userId, params.team, params.event).get();
+  const metrics = await CfpMetrics.for(userId, params.team, params.event).get();
   return { metrics };
 };
 

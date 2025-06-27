@@ -27,7 +27,7 @@
     "lint": "biome check",
     "lint:ci": "biome ci",
     "tsc": "react-router typegen && tsc -b",
-    "knip": "knip --cache"
+    "knip": "knip"
   },
   "prisma": {
     "seed": "tsx ./prisma/seed.ts"

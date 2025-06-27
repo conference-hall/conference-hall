@@ -5,7 +5,7 @@ import { UserEvent } from '../event-settings/user-event.ts';
 
 type TrackType = { id: string; name: string };
 
-export class EventMetrics {
+export class CfpMetrics {
   constructor(
     private userId: string,
     private userEvent: UserEvent,
@@ -13,7 +13,7 @@ export class EventMetrics {
 
   static for(userId: string, teamSlug: string, eventSlug: string) {
     const userEvent = UserEvent.for(userId, teamSlug, eventSlug);
-    return new EventMetrics(userId, userEvent);
+    return new CfpMetrics(userId, userEvent);
   }
 
   async get() {
