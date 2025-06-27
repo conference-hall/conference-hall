@@ -2,10 +2,11 @@ import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, NavLink } from 'react-router';
 
-type Props = { team: string; event: string };
+type Props = { team: string; event: string; enableReviewsTab: boolean };
 
-export function DashboardTabs({ team, event }: Props) {
+export function DashboardTabs({ team, event, enableReviewsTab }: Props) {
   const { t } = useTranslation();
+
   return (
     <div className="border-b border-gray-200">
       <nav aria-label="Tabs" className="flex space-x-8 px-6 -mb-px">
@@ -15,9 +16,11 @@ export function DashboardTabs({ team, event }: Props) {
         <DashboardTab to={href('/team/:team/:event/overview/reviewers', { team, event })}>
           {t('common.reviewers')}
         </DashboardTab>
-        <DashboardTab to={href('/team/:team/:event/overview/reviews', { team, event })}>
-          {t('common.reviews')}
-        </DashboardTab>
+        {enableReviewsTab ? (
+          <DashboardTab to={href('/team/:team/:event/overview/reviews', { team, event })}>
+            {t('common.reviews')}
+          </DashboardTab>
+        ) : null}
       </nav>
     </div>
   );

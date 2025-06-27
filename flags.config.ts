@@ -19,4 +19,10 @@ export default defineFlagsConfig({
     defaultValue: false,
     tags: ['frontend'] as const,
   },
+  reviewsDashboard: {
+    description: 'Enables the reviews dashboard in overview.',
+    type: 'string',
+    defaultValue: 'gdg-nantes',
+    tags: ['frontend'] as const,
+  },
 });

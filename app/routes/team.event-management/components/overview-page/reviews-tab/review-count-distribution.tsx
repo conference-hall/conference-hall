@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
@@ -13,33 +14,35 @@ type Props = {
 };
 
 export function ReviewCountDistribution({ totalProposals, reviewCountDistribution }: Props) {
+  const { t } = useTranslation();
+
   return (
     <Card className="p-6">
-      <H2>Review Count Distribution</H2>
+      <H2>{t('event-management.overview.reviews.review-count-distribution.title')}</H2>
 
       <div className="mt-6 flex flex-col gap-4 h-full">
         <div className="grow space-y-3">
           <DistributionLine
             status="error"
-            label="Missing reviews (0 reviews)"
+            label={t('event-management.overview.reviews.review-count-distribution.missing-reviews')}
             percentage={reviewCountDistribution.missingReviews}
             count={Math.round((reviewCountDistribution.missingReviews / 100) * totalProposals)}
           />
           <DistributionLine
             status="warning"
-            label="Needs more reviews (1-2 reviews)"
+            label={t('event-management.overview.reviews.review-count-distribution.needs-more-reviews')}
             percentage={reviewCountDistribution.underReviewed}
             count={Math.round((reviewCountDistribution.underReviewed / 100) * totalProposals)}
           />
           <DistributionLine
             status="info"
-            label="Adequately reviewed (3-5 reviews)"
+            label={t('event-management.overview.reviews.review-count-distribution.adequately-reviewed')}
             percentage={reviewCountDistribution.adequatelyReviewed}
             count={Math.round((reviewCountDistribution.adequatelyReviewed / 100) * totalProposals)}
           />
           <DistributionLine
             status="success"
-            label="Well reviewed (6+ reviews)"
+            label={t('event-management.overview.reviews.review-count-distribution.well-reviewed')}
             percentage={reviewCountDistribution.wellReviewed}
             count={Math.round((reviewCountDistribution.wellReviewed / 100) * totalProposals)}
           />
@@ -74,12 +77,15 @@ function DistributionLine({ status, label, percentage, count }: DistributionLine
 }
 
 function ReviewCoverageAnalysis({ reviewCountDistribution }: Props) {
+  const { t } = useTranslation();
   const weightedReviewed = (reviewCountDistribution.wellReviewed * 2 + reviewCountDistribution.adequatelyReviewed) / 3;
 
   return (
     <div className="pt-5 border-t border-gray-200">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium text-gray-700">Review Quality Score</span>
+        <span className="text-sm font-medium text-gray-700">
+          {t('event-management.overview.reviews.quality-score.title')}
+        </span>
         <div className="flex items-center space-x-2">
           <span className="text-sm font-bold text-gray-900">{Math.round(weightedReviewed)}%</span>
           <span className="text-xs text-gray-500">
@@ -96,7 +102,7 @@ function ReviewCoverageAnalysis({ reviewCountDistribution }: Props) {
         </div>
       </div>
 
-      <p className="text-xs text-gray-500 mt-1"> Based on proposals with 3+ reviews</p>
+      <p className="text-xs text-gray-500 mt-1">{t('event-management.overview.reviews.quality-score.description')}</p>
     </div>
   );
 }

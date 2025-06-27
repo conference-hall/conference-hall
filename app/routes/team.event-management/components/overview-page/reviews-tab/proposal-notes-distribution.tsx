@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { NoData } from '~/design-system/dashboard/no-data.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -7,13 +8,15 @@ import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 type Props = { proposalNotesDistribution: { averageNote: number; count: number }[] };
 
 export function ProposalNotesDistribution({ proposalNotesDistribution }: Props) {
+  const { t } = useTranslation();
+
   if (proposalNotesDistribution.length === 0) {
     return <NoData />;
   }
 
   return (
     <Card className="p-6">
-      <H2>Proposal Notes Distribution</H2>
+      <H2>{t('event-management.overview.reviews.proposal-notes-distribution.title')}</H2>
 
       <div className="mt-6 space-y-4">
         <ClientOnly fallback={<div className="h-48 animate-pulse bg-gray-200 rounded" />}>
@@ -50,9 +53,22 @@ export function ProposalNotesDistribution({ proposalNotesDistribution }: Props) 
                     const percentage = totalProposals > 0 ? Math.round((Number(data.value) / totalProposals) * 100) : 0;
                     return (
                       <div className="border border-gray-200 bg-white text-sm shadow-sm rounded-md p-3">
-                        <div className="font-medium">Average: {data.payload?.averageNote}</div>
-                        <div className="text-gray-600">Proposals: {data.value}</div>
-                        <div className="text-gray-500 text-xs">({percentage}% of all proposals)</div>
+                        <div className="font-medium">
+                          {t('event-management.overview.reviews.proposal-notes-distribution.tooltip.average')}:{' '}
+                          {data.payload?.averageNote}
+                        </div>
+                        <div className="text-gray-600">
+                          {t('event-management.overview.reviews.proposal-notes-distribution.tooltip.proposals', {
+                            count: data.value,
+                          })}
+                        </div>
+                        <div className="text-gray-500 text-xs">
+                          (
+                          {t('event-management.overview.reviews.proposal-notes-distribution.tooltip.percentage', {
+                            percentage,
+                          })}
+                          )
+                        </div>
                       </div>
                     );
                   }}
@@ -71,6 +87,8 @@ export function ProposalNotesDistribution({ proposalNotesDistribution }: Props) 
 }
 
 function ProposalAveragesAnalysis({ proposalNotesDistribution }: Props) {
+  const { t } = useTranslation();
+
   const totalProposals = proposalNotesDistribution.reduce((sum, item) => sum + item.count, 0);
   const excellent = proposalNotesDistribution
     .filter((item) => item.averageNote >= 4.5)
@@ -91,25 +109,33 @@ function ProposalAveragesAnalysis({ proposalNotesDistribution }: Props) {
         <div className="text-lg font-bold text-red-500">
           {totalProposals > 0 ? Math.round((poor / totalProposals) * 100) : 0}%
         </div>
-        <Subtitle size="xs">Poor (&lt;2)</Subtitle>
+        <Subtitle size="xs">
+          {t('event-management.overview.reviews.proposal-notes-distribution.analysis.poor')}
+        </Subtitle>
       </div>
       <div>
         <div className="text-lg font-bold text-orange-500">
           {totalProposals > 0 ? Math.round((average / totalProposals) * 100) : 0}%
         </div>
-        <Subtitle size="xs">Average (2-3)</Subtitle>
+        <Subtitle size="xs">
+          {t('event-management.overview.reviews.proposal-notes-distribution.analysis.average')}
+        </Subtitle>
       </div>
       <div>
         <div className="text-lg font-bold text-blue-500">
           {totalProposals > 0 ? Math.round((good / totalProposals) * 100) : 0}%
         </div>
-        <Subtitle size="xs">Good (3-4.5)</Subtitle>
+        <Subtitle size="xs">
+          {t('event-management.overview.reviews.proposal-notes-distribution.analysis.good')}
+        </Subtitle>
       </div>
       <div>
         <div className="text-lg font-bold text-green-500">
           {totalProposals > 0 ? Math.round((excellent / totalProposals) * 100) : 0}%
         </div>
-        <Subtitle size="xs">Excellent (≥4.5)</Subtitle>
+        <Subtitle size="xs">
+          {t('event-management.overview.reviews.proposal-notes-distribution.analysis.excellent')}
+        </Subtitle>
       </div>
     </div>
   );
