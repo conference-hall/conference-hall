@@ -4,24 +4,24 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H3, Subtitle } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 
-type Props = { noteDistribution: { note: number; count: number }[] };
+type Props = { averageNotesDistribution: { averageNote: number; count: number }[] };
 
-export function ReviewsDistributionChart({ noteDistribution }: Props) {
-  if (noteDistribution.every((item) => item.count === 0)) {
+export function ProposalAveragesChart({ averageNotesDistribution }: Props) {
+  if (averageNotesDistribution.length === 0) {
     return <NoData />;
   }
 
   return (
     <Card className="p-6">
-      <H3>Reviews distribution</H3>
+      <H3>Proposal average notes distribution</H3>
 
       <div className="mt-4 space-y-4">
         <ClientOnly fallback={<div className="h-48 animate-pulse bg-gray-200 rounded" />}>
           {() => (
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={noteDistribution} margin={{ top: 16 }}>
+              <BarChart data={averageNotesDistribution} margin={{ top: 16 }}>
                 <XAxis
-                  dataKey="note"
+                  dataKey="averageNote"
                   tickLine={false}
                   fontSize="12"
                   stroke=""
@@ -46,13 +46,13 @@ export function ReviewsDistributionChart({ noteDistribution }: Props) {
                   content={({ payload }) => {
                     if (!payload || payload.length === 0) return null;
                     const data = payload[0];
-                    const totalScored = noteDistribution.reduce((sum, item) => sum + item.count, 0);
-                    const percentage = totalScored > 0 ? Math.round((Number(data.value) / totalScored) * 100) : 0;
+                    const totalProposals = averageNotesDistribution.reduce((sum, item) => sum + item.count, 0);
+                    const percentage = totalProposals > 0 ? Math.round((Number(data.value) / totalProposals) * 100) : 0;
                     return (
                       <div className="border border-gray-200 bg-white text-sm shadow-sm rounded-md p-3">
-                        <div className="font-medium">Score: {data.payload?.note}/5</div>
-                        <div className="text-gray-600">Count: {data.value}</div>
-                        <div className="text-gray-500 text-xs">({percentage}% of all scores)</div>
+                        <div className="font-medium">Average: {data.payload?.averageNote}/5</div>
+                        <div className="text-gray-600">Proposals: {data.value}</div>
+                        <div className="text-gray-500 text-xs">({percentage}% of all proposals)</div>
                       </div>
                     );
                   }}
@@ -63,39 +63,53 @@ export function ReviewsDistributionChart({ noteDistribution }: Props) {
         </ClientOnly>
 
         <div className="pt-4 border-t border-gray-200">
-          <NoteDistributionAnalysis noteDistribution={noteDistribution} />
+          <ProposalAveragesAnalysis averageNotesDistribution={averageNotesDistribution} />
         </div>
       </div>
     </Card>
   );
 }
 
-function NoteDistributionAnalysis({ noteDistribution }: Props) {
-  const totalScored = noteDistribution.reduce((sum, item) => sum + item.count, 0);
-  const excellent = noteDistribution.filter((item) => item.note === 5).reduce((sum, item) => sum + item.count, 0);
-  const good = noteDistribution.filter((item) => item.note === 4).reduce((sum, item) => sum + item.count, 0);
-  const average = noteDistribution.filter((item) => item.note === 3).reduce((sum, item) => sum + item.count, 0);
-  const poor = noteDistribution.filter((item) => item.note <= 2).reduce((sum, item) => sum + item.count, 0);
+function ProposalAveragesAnalysis({ averageNotesDistribution }: Props) {
+  const totalProposals = averageNotesDistribution.reduce((sum, item) => sum + item.count, 0);
+  const excellent = averageNotesDistribution
+    .filter((item) => item.averageNote >= 4.5)
+    .reduce((sum, item) => sum + item.count, 0);
+  const good = averageNotesDistribution
+    .filter((item) => item.averageNote >= 3 && item.averageNote < 4.5)
+    .reduce((sum, item) => sum + item.count, 0);
+  const average = averageNotesDistribution
+    .filter((item) => item.averageNote >= 2 && item.averageNote < 3)
+    .reduce((sum, item) => sum + item.count, 0);
+  const poor = averageNotesDistribution
+    .filter((item) => item.averageNote < 2)
+    .reduce((sum, item) => sum + item.count, 0);
 
   return (
-    <div className="grid grid-cols-3 gap-4 text-center">
+    <div className="grid grid-cols-4 gap-4 text-center">
       <div>
         <div className="text-lg font-bold text-red-500">
-          {totalScored > 0 ? Math.round((poor / totalScored) * 100) : 0}%
+          {totalProposals > 0 ? Math.round((poor / totalProposals) * 100) : 0}%
         </div>
-        <Subtitle size="xs">Lowest (0-2)</Subtitle>
+        <Subtitle size="xs">Poor (&lt;2)</Subtitle>
       </div>
       <div>
         <div className="text-lg font-bold text-orange-500">
-          {totalScored > 0 ? Math.round((average / totalScored) * 100) : 0}%
+          {totalProposals > 0 ? Math.round((average / totalProposals) * 100) : 0}%
         </div>
-        <Subtitle size="xs">Average (3)</Subtitle>
+        <Subtitle size="xs">Average (2-3)</Subtitle>
+      </div>
+      <div>
+        <div className="text-lg font-bold text-blue-500">
+          {totalProposals > 0 ? Math.round((good / totalProposals) * 100) : 0}%
+        </div>
+        <Subtitle size="xs">Good (3-4.5)</Subtitle>
       </div>
       <div>
         <div className="text-lg font-bold text-green-500">
-          {totalScored > 0 ? Math.round(((excellent + good) / totalScored) * 100) : 0}%
+          {totalProposals > 0 ? Math.round((excellent / totalProposals) * 100) : 0}%
         </div>
-        <Subtitle size="xs">Highest (4-5)</Subtitle>
+        <Subtitle size="xs">Excellent (≥4.5)</Subtitle>
       </div>
     </div>
   );

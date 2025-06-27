@@ -12,14 +12,14 @@ type ReviewsMetricsInfo = {
   positiveReviews: number;
 };
 
-type NoteDistribution = {
-  note: number;
-  count: number;
-};
-
 type ProposalReviewCount = {
   proposalId: string;
   reviewCount: number;
+};
+
+type ProposalAverageNote = {
+  averageNote: Decimal;
+  count: number;
 };
 
 export class ReviewsMetrics {
@@ -47,13 +47,14 @@ export class ReviewsMetrics {
         medianNote: 0,
         positiveReviews: 0,
         noteDistribution: [],
+        averageNotesDistribution: [],
       };
     }
 
-    const [overallMetrics, noteDistribution, proposalReviewCounts] = await Promise.all([
+    const [overallMetrics, proposalReviewCounts, averageNotesDistribution] = await Promise.all([
       this.getOverallMetrics(event.id),
-      this.getNoteDistribution(event.id),
       this.getProposalReviewCounts(event.id),
+      this.getProposalAverageNotes(event.id),
     ]);
 
     const reviewedProposals = Number(overallMetrics?.reviewedProposals ?? 0);
@@ -67,8 +68,15 @@ export class ReviewsMetrics {
       medianNote: Number(overallMetrics?.medianNote ?? 0),
       positiveReviews: Number(overallMetrics?.positiveReviews ?? 0),
       distributionBalance: this.calculateDistributionBalance(proposalReviewCounts),
-      noteDistribution: this.fillMissingNotes(noteDistribution),
+      averageNotesDistribution: averageNotesDistribution.map((item) => ({
+        averageNote: item.averageNote.toNumber(),
+        count: Number(item.count),
+      })),
     };
+  }
+
+  private async proposalsCount(eventId: string) {
+    return db.proposal.count({ where: { eventId, isDraft: false } });
   }
 
   private async getOverallMetrics(eventId: string): Promise<ReviewsMetricsInfo | null> {
@@ -91,21 +99,6 @@ export class ReviewsMetrics {
     `);
 
     return result[0] || null;
-  }
-
-  private async getNoteDistribution(eventId: string): Promise<Array<NoteDistribution>> {
-    return db.$queryRaw<Array<NoteDistribution>>(Prisma.sql`
-      SELECT 
-        reviews.note,
-        COUNT(*) as count
-      FROM reviews
-      JOIN proposals ON reviews."proposalId" = proposals.id
-      WHERE proposals."eventId" = ${eventId} 
-        AND proposals."isDraft" = false
-        AND reviews.note IS NOT NULL
-      GROUP BY reviews.note
-      ORDER BY reviews.note ASC
-    `);
   }
 
   private async getProposalReviewCounts(eventId: string): Promise<Array<ProposalReviewCount>> {
@@ -149,22 +142,23 @@ export class ReviewsMetrics {
     };
   }
 
-  private fillMissingNotes(noteDistribution: Array<NoteDistribution>): Array<{ note: number; count: number }> {
-    const distributionMap = new Map<number, number>();
-
-    for (const item of noteDistribution) {
-      distributionMap.set(Number(item.note), Number(item.count));
-    }
-
-    const completeDistribution: Array<{ note: number; count: number }> = [];
-    for (let note = 0; note <= 5; note++) {
-      completeDistribution.push({ note, count: distributionMap.get(note) ?? 0 });
-    }
-
-    return completeDistribution;
-  }
-
-  private async proposalsCount(eventId: string) {
-    return db.proposal.count({ where: { eventId, isDraft: false } });
+  private async getProposalAverageNotes(eventId: string): Promise<Array<ProposalAverageNote>> {
+    return db.$queryRaw<Array<ProposalAverageNote>>(Prisma.sql`
+      SELECT 
+        ROUND(proposal_avg, 1) as "averageNote",
+        COUNT(*) as count
+      FROM (
+        SELECT 
+          proposals.id,
+          AVG(reviews.note) as proposal_avg
+        FROM proposals
+        INNER JOIN reviews ON reviews."proposalId" = proposals.id AND reviews.note IS NOT NULL
+        WHERE proposals."eventId" = ${eventId} AND proposals."isDraft" = false
+        GROUP BY proposals.id
+        HAVING COUNT(reviews.id) > 0
+      ) proposal_averages
+      GROUP BY ROUND(proposal_avg, 1)
+      ORDER BY "averageNote" ASC
+    `);
   }
 }

@@ -3,8 +3,8 @@ import { ReviewsMetrics } from '~/.server/event-metrics/reviews-metrics.ts';
 import { ProgressCard } from '~/design-system/dashboard/progress-card.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { ProposalAveragesChart } from '../components/overview-page/reviews-tab/proposal-averages-chart.tsx';
 import { ReviewCoverage } from '../components/overview-page/reviews-tab/reviews-coverage-analysis.tsx';
-import { ReviewsDistributionChart } from '../components/overview-page/reviews-tab/reviews-distribution-chart.tsx';
 import type { Route } from './+types/reviews-tab.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
@@ -33,7 +33,7 @@ export default function ReviewsTabRoute({ loaderData: { metrics } }: Route.Compo
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-2">
-        <ReviewsDistributionChart noteDistribution={metrics.noteDistribution} />
+        <ProposalAveragesChart averageNotesDistribution={metrics.averageNotesDistribution} />
         <ReviewCoverage totalProposals={metrics.totalProposals} distributionBalance={metrics.distributionBalance} />
       </div>
     </div>
