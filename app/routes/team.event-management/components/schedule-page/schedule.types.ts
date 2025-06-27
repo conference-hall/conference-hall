@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import type { ConfirmationStatus, DeliberationStatus, Language } from '~/types/proposals.types.ts';
 
@@ -41,19 +40,3 @@ export type ScheduleProposalData = {
     picture: string | null;
   }>;
 };
-
-export const ScheduleGenerationResultSchema = z.object({
-  schedule: z.array(
-    z.object({
-      timeslotId: z.string(),
-      proposalId: z.string().nullable(),
-      color: z.string(),
-      language: z.string().nullable(),
-    }),
-  ),
-  response: z.string().nullable(),
-});
-
-export const ScheduleGenerationErrorSchema = z.object({
-  error: z.string(),
-});

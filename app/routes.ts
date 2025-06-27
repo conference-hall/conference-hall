@@ -98,7 +98,6 @@ export default [
       // Event schedule pages
       route('schedule', './routes/team.event-management/schedule.tsx'),
       route('schedule/:day', './routes/team.event-management/schedule/$day.tsx'),
-      route('schedule/ai/generate', './routes/team.event-management/schedule/ai.tsx'),
       route('schedule/export/json', './routes/team.event-management/schedule/export.json.tsx'),
 
       // Event settings pages
