@@ -1,25 +1,25 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { NoData } from '~/design-system/dashboard/no-data.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { H3, Subtitle } from '~/design-system/typography.tsx';
+import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
 
-type Props = { averageNotesDistribution: { averageNote: number; count: number }[] };
+type Props = { proposalNotesDistribution: { averageNote: number; count: number }[] };
 
-export function ProposalAveragesChart({ averageNotesDistribution }: Props) {
-  if (averageNotesDistribution.length === 0) {
+export function ProposalNotesDistribution({ proposalNotesDistribution }: Props) {
+  if (proposalNotesDistribution.length === 0) {
     return <NoData />;
   }
 
   return (
     <Card className="p-6">
-      <H3>Proposal average notes distribution</H3>
+      <H2>Proposal Notes Distribution</H2>
 
-      <div className="mt-4 space-y-4">
+      <div className="mt-6 space-y-4">
         <ClientOnly fallback={<div className="h-48 animate-pulse bg-gray-200 rounded" />}>
           {() => (
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={averageNotesDistribution} margin={{ top: 16 }}>
+            <ResponsiveContainer width="100%" height={256}>
+              <BarChart data={proposalNotesDistribution} margin={{ top: 16 }}>
                 <XAxis
                   dataKey="averageNote"
                   tickLine={false}
@@ -46,11 +46,11 @@ export function ProposalAveragesChart({ averageNotesDistribution }: Props) {
                   content={({ payload }) => {
                     if (!payload || payload.length === 0) return null;
                     const data = payload[0];
-                    const totalProposals = averageNotesDistribution.reduce((sum, item) => sum + item.count, 0);
+                    const totalProposals = proposalNotesDistribution.reduce((sum, item) => sum + item.count, 0);
                     const percentage = totalProposals > 0 ? Math.round((Number(data.value) / totalProposals) * 100) : 0;
                     return (
                       <div className="border border-gray-200 bg-white text-sm shadow-sm rounded-md p-3">
-                        <div className="font-medium">Average: {data.payload?.averageNote}/5</div>
+                        <div className="font-medium">Average: {data.payload?.averageNote}</div>
                         <div className="text-gray-600">Proposals: {data.value}</div>
                         <div className="text-gray-500 text-xs">({percentage}% of all proposals)</div>
                       </div>
@@ -63,25 +63,25 @@ export function ProposalAveragesChart({ averageNotesDistribution }: Props) {
         </ClientOnly>
 
         <div className="pt-4 border-t border-gray-200">
-          <ProposalAveragesAnalysis averageNotesDistribution={averageNotesDistribution} />
+          <ProposalAveragesAnalysis proposalNotesDistribution={proposalNotesDistribution} />
         </div>
       </div>
     </Card>
   );
 }
 
-function ProposalAveragesAnalysis({ averageNotesDistribution }: Props) {
-  const totalProposals = averageNotesDistribution.reduce((sum, item) => sum + item.count, 0);
-  const excellent = averageNotesDistribution
+function ProposalAveragesAnalysis({ proposalNotesDistribution }: Props) {
+  const totalProposals = proposalNotesDistribution.reduce((sum, item) => sum + item.count, 0);
+  const excellent = proposalNotesDistribution
     .filter((item) => item.averageNote >= 4.5)
     .reduce((sum, item) => sum + item.count, 0);
-  const good = averageNotesDistribution
+  const good = proposalNotesDistribution
     .filter((item) => item.averageNote >= 3 && item.averageNote < 4.5)
     .reduce((sum, item) => sum + item.count, 0);
-  const average = averageNotesDistribution
+  const average = proposalNotesDistribution
     .filter((item) => item.averageNote >= 2 && item.averageNote < 3)
     .reduce((sum, item) => sum + item.count, 0);
-  const poor = averageNotesDistribution
+  const poor = proposalNotesDistribution
     .filter((item) => item.averageNote < 2)
     .reduce((sum, item) => sum + item.count, 0);
 

@@ -1,0 +1,102 @@
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2 } from '~/design-system/typography.tsx';
+
+type Props = {
+  totalProposals: number;
+  reviewCountDistribution: {
+    missingReviews: number;
+    underReviewed: number;
+    adequatelyReviewed: number;
+    wellReviewed: number;
+  };
+};
+
+export function ReviewCountDistribution({ totalProposals, reviewCountDistribution }: Props) {
+  return (
+    <Card className="p-6">
+      <H2>Review Count Distribution</H2>
+
+      <div className="mt-6 flex flex-col gap-4 h-full">
+        <div className="grow space-y-3">
+          <DistributionLine
+            status="error"
+            label="Missing reviews (0 reviews)"
+            percentage={reviewCountDistribution.missingReviews}
+            count={Math.round((reviewCountDistribution.missingReviews / 100) * totalProposals)}
+          />
+          <DistributionLine
+            status="warning"
+            label="Needs more reviews (1-2 reviews)"
+            percentage={reviewCountDistribution.underReviewed}
+            count={Math.round((reviewCountDistribution.underReviewed / 100) * totalProposals)}
+          />
+          <DistributionLine
+            status="info"
+            label="Adequately reviewed (3-5 reviews)"
+            percentage={reviewCountDistribution.adequatelyReviewed}
+            count={Math.round((reviewCountDistribution.adequatelyReviewed / 100) * totalProposals)}
+          />
+          <DistributionLine
+            status="success"
+            label="Well reviewed (6+ reviews)"
+            percentage={reviewCountDistribution.wellReviewed}
+            count={Math.round((reviewCountDistribution.wellReviewed / 100) * totalProposals)}
+          />
+        </div>
+
+        <ReviewCoverageAnalysis totalProposals={totalProposals} reviewCountDistribution={reviewCountDistribution} />
+      </div>
+    </Card>
+  );
+}
+
+type DistributionLineProps = {
+  status: 'error' | 'warning' | 'info' | 'success';
+  label: string;
+  percentage: number;
+  count: number;
+};
+
+function DistributionLine({ status, label, percentage, count }: DistributionLineProps) {
+  return (
+    <div className="flex justify-between items-center">
+      <div className="flex items-center space-x-2">
+        <StatusPill status={status} />
+        <span className="text-sm text-gray-600">{label}</span>
+      </div>
+      <div className="text-right">
+        <span className="text-sm font-medium">{percentage}%</span>
+        <span className="text-xs text-gray-500 ml-1">({count})</span>
+      </div>
+    </div>
+  );
+}
+
+function ReviewCoverageAnalysis({ reviewCountDistribution }: Props) {
+  const weightedReviewed = (reviewCountDistribution.wellReviewed * 2 + reviewCountDistribution.adequatelyReviewed) / 3;
+
+  return (
+    <div className="pt-5 border-t border-gray-200">
+      <div className="flex justify-between items-center">
+        <span className="text-sm font-medium text-gray-700">Review Quality Score</span>
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-bold text-gray-900">{Math.round(weightedReviewed)}%</span>
+          <span className="text-xs text-gray-500">
+            {reviewCountDistribution.wellReviewed >= 60 ? (
+              <StatusPill status="success" />
+            ) : reviewCountDistribution.wellReviewed + reviewCountDistribution.adequatelyReviewed >= 80 ? (
+              <StatusPill status="info" />
+            ) : reviewCountDistribution.missingReviews >= 30 ? (
+              <StatusPill status="error" />
+            ) : (
+              <StatusPill status="warning" />
+            )}
+          </span>
+        </div>
+      </div>
+
+      <p className="text-xs text-gray-500 mt-1"> Based on proposals with 3+ reviews</p>
+    </div>
+  );
+}
