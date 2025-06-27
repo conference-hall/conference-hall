@@ -1,39 +1,54 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { href, Link } from 'react-router';
+import { href, NavLink } from 'react-router';
+import { Badge } from '~/design-system/badges.tsx';
 
-type Props = { tab: string | null; team: string; event: string };
+type Props = { team: string; event: string; enableReviewsTab: boolean };
 
-export function DashboardTabs({ tab, team, event }: Props) {
+export function DashboardTabs({ team, event, enableReviewsTab }: Props) {
   const { t } = useTranslation();
-  const path = href('/team/:team/:event', { team, event });
+
   return (
     <div className="border-b border-gray-200">
       <nav aria-label="Tabs" className="flex space-x-8 px-6 -mb-px">
-        <DashboardTab to={path} current={tab === 'call-for-paper'}>
+        <DashboardTab to={href('/team/:team/:event/overview', { team, event })}>
           {t('common.call-for-paper')}
         </DashboardTab>
-        <DashboardTab to={`${path}?tab=reviewers`} current={tab === 'reviewers'}>
+        <DashboardTab to={href('/team/:team/:event/overview/reviewers', { team, event })}>
           {t('common.reviewers')}
         </DashboardTab>
+        {enableReviewsTab ? (
+          <DashboardTab to={href('/team/:team/:event/overview/reviews', { team, event })} isNew>
+            {t('common.reviews')}
+          </DashboardTab>
+        ) : null}
       </nav>
     </div>
   );
 }
 
-type DashboardTabProps = { to: string; current: boolean; children: React.ReactNode };
+type DashboardTabProps = { to: string; isNew?: boolean; children: React.ReactNode };
 
-function DashboardTab({ to, current, children }: DashboardTabProps) {
+function DashboardTab({ to, isNew, children }: DashboardTabProps) {
+  const { t } = useTranslation();
   return (
-    <Link
+    <NavLink
       to={to}
-      aria-current={current ? 'page' : undefined}
-      className={cx('border-b-2 px-1 p-4 text-sm', {
-        'border-indigo-500 text-indigo-600 font-semibold': current,
-        'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-900 font-medium': !current,
-      })}
+      end
+      discover="render"
+      className={({ isActive }) =>
+        cx('border-b-2 px-1 p-4 text-sm flex gap-2', {
+          'border-indigo-500 text-indigo-600 font-semibold': isActive,
+          'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-900 font-medium': !isActive,
+        })
+      }
     >
-      {children}
-    </Link>
+      <span>{children}</span>
+      {isNew ? (
+        <Badge color="blue" pill compact>
+          {t('common.new')}
+        </Badge>
+      ) : null}
+    </NavLink>
   );
 }

@@ -1,34 +1,32 @@
 import { EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import { ReviewersMetrics } from '~/.server/event-metrics/reviewers-metrics.ts';
 import { AvatarName } from '~/design-system/avatar.tsx';
 import { ProgressBar } from '~/design-system/charts/progress-bar.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Tooltip } from '~/design-system/tooltip.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import { requireUserSession } from '~/libs/auth/session.ts';
 import { GlobalReviewNote, UserReviewNote } from '~/routes/components/reviews/review-note.tsx';
+import type { Route } from './+types/reviewers-tab.ts';
 
-type Props = {
-  proposalsCount: number;
-  reviewersMetrics: Array<{
-    id: string;
-    name: string;
-    picture: string;
-    reviewsCount: number;
-    averageNote: number;
-    positiveCount: number;
-    negativeCount: number;
-  }>;
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { userId } = await requireUserSession(request);
+
+  const metrics = await ReviewersMetrics.for(userId, params.team, params.event).get();
+  return { metrics };
 };
 
-export function ReviewersList({ proposalsCount, reviewersMetrics }: Props) {
+export default function ReviewersTabRoute({ loaderData: { metrics } }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const { reviewersMetrics, proposalsCount } = metrics;
 
   if (reviewersMetrics.length === 0) {
     return <EmptyState label={t('event-management.overview.reviewers.empty')} icon={EyeSlashIcon} noBorder />;
   }
 
   return (
-    <ul className="space-y-8" aria-label={t('event-management.overview.reviewers.heading')}>
+    <ul className="px-6 space-y-8" aria-label={t('event-management.overview.reviewers.heading')}>
       {reviewersMetrics.map((reviewer, index) => {
         const max = proposalsCount;
         const value = reviewer.reviewsCount;

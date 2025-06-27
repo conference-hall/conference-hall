@@ -4,7 +4,7 @@ import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
-type Props = { label: string; stat: string | number; children?: ReactNode };
+type Props = { label: string; stat: string | number | ReactNode; children?: ReactNode };
 
 export function StatisticCard({ label, stat, children }: Props) {
   const id = useId();
@@ -15,7 +15,7 @@ export function StatisticCard({ label, stat, children }: Props) {
         <Text id={id} variant="secondary">
           {label}
         </Text>
-        <p className="text-3xl font-semibold">{stat}</p>
+        <div className="text-3xl font-semibold">{stat}</div>
       </div>
       {children}
     </Card>
