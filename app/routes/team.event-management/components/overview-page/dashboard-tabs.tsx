@@ -16,6 +16,9 @@ export function DashboardTabs({ tab, team, event }: Props) {
         <DashboardTab to={`${path}?tab=reviewers`} current={tab === 'reviewers'}>
           {t('common.reviewers')}
         </DashboardTab>
+        <DashboardTab to={`${path}?tab=reviews`} current={tab === 'reviews'}>
+          {t('common.reviews')}
+        </DashboardTab>
       </nav>
     </div>
   );

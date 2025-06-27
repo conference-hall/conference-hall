@@ -25,6 +25,10 @@ describe('DashboardTabs component', () => {
     const reviewersLink = screen.getByRole('link', { name: 'Reviewers' });
     await expect.element(reviewersLink).toHaveAttribute('href', '/team/t1/e1?tab=reviewers');
     await expect.element(reviewersLink).not.toHaveAttribute('aria-current', 'page');
+
+    const reviewsLink = screen.getByRole('link', { name: 'Reviews' });
+    await expect.element(reviewsLink).toHaveAttribute('href', '/team/t1/e1?tab=reviews');
+    await expect.element(reviewsLink).not.toHaveAttribute('aria-current', 'page');
   });
 
   it('has reviewers tab selected', async () => {
@@ -41,5 +45,29 @@ describe('DashboardTabs component', () => {
     const reviewersLink = screen.getByRole('link', { name: 'Reviewers' });
     await expect.element(reviewersLink).toHaveAttribute('href', '/team/t1/e1?tab=reviewers');
     await expect.element(reviewersLink).toHaveAttribute('aria-current', 'page');
+
+    const reviewsLink = screen.getByRole('link', { name: 'Reviews' });
+    await expect.element(reviewsLink).toHaveAttribute('href', '/team/t1/e1?tab=reviews');
+    await expect.element(reviewsLink).not.toHaveAttribute('aria-current', 'page');
+  });
+
+  it('has reviews tab selected', async () => {
+    const screen = renderComponent(
+      <I18nextProvider i18n={i18nTest}>
+        <DashboardTabs tab="reviews" team="t1" event="e1" />
+      </I18nextProvider>,
+    );
+
+    const callForPaperLink = screen.getByRole('link', { name: 'Call for paper' });
+    await expect.element(callForPaperLink).toHaveAttribute('href', '/team/t1/e1');
+    await expect.element(callForPaperLink).not.toHaveAttribute('aria-current', 'page');
+
+    const reviewersLink = screen.getByRole('link', { name: 'Reviewers' });
+    await expect.element(reviewersLink).toHaveAttribute('href', '/team/t1/e1?tab=reviewers');
+    await expect.element(reviewersLink).not.toHaveAttribute('aria-current', 'page');
+
+    const reviewsLink = screen.getByRole('link', { name: 'Reviews' });
+    await expect.element(reviewsLink).toHaveAttribute('href', '/team/t1/e1?tab=reviews');
+    await expect.element(reviewsLink).toHaveAttribute('aria-current', 'page');
   });
 });
