@@ -5,7 +5,6 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { SpeakerPage } from './speaker.page.ts';
 
@@ -17,8 +16,6 @@ let eventSpeaker: EventSpeaker;
 loginWith('clark-kent');
 
 test.beforeEach(async () => {
-  await flags.set('speakersPage', true);
-
   const owner = await userFactory({ traits: ['clark-kent'] });
   speaker = await userFactory({
     attributes: {

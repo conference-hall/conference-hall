@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { data, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 import { EventSpeakers, parseUrlFilters } from '~/.server/event-speakers/event-speakers.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
@@ -7,7 +7,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
 import type { Route } from './+types/speakers.ts';
 import { Filters } from './components/speakers-page/filters.tsx';
 import { FiltersTags } from './components/speakers-page/filters-tags.tsx';
@@ -15,12 +14,6 @@ import { SpeakersEmptyState } from './components/speakers-page/speakers-empty-st
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-
-  const speakersPageEnabled = await flags.get('speakersPage');
-  if (!speakersPageEnabled) {
-    throw data(null, { status: 404 });
-  }
-
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
   const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
