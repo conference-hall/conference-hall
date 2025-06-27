@@ -438,7 +438,6 @@ describe('EventSchedule', () => {
         timezone: 'Europe/Paris',
         displayEndMinutes: 1080,
         displayStartMinutes: 540,
-        aiEnabled: false,
         tracks: [
           { id: track.id, name: track.name },
           { id: track2.id, name: track2.name },
