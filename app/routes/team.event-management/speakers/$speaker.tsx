@@ -9,19 +9,12 @@ import { List } from '~/design-system/list/list.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { SpeakerLinks, SpeakerSurveyAnswers, SpeakerTitle } from '~/routes/components/talks/co-speaker.tsx';
 import { ProposalItem } from '../components/proposals-page/list/proposal-item.tsx';
 import type { Route } from './+types/$speaker.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-
-  const speakersPageEnabled = await flags.get('speakersPage');
-  if (!speakersPageEnabled) {
-    throw data(null, { status: 404 });
-  }
-
   const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
   const speaker = await eventSpeakers.getById(params.speaker);
 
