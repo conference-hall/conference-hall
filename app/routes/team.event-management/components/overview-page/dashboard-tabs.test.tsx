@@ -7,67 +7,27 @@ import { DashboardTabs } from './dashboard-tabs.tsx';
 
 describe('DashboardTabs component', () => {
   const renderComponent = (Component: JSX.Element) => {
-    const RouteStub = createRoutesStub([{ path: '/team/:team/:event', Component: () => Component }]);
-    return render(<RouteStub initialEntries={['/team/t1/e1']} />);
+    const RouteStub = createRoutesStub([{ path: '/team/:team/:event/overview', Component: () => Component }]);
+    return render(<RouteStub initialEntries={['/team/t1/e1/overview']} />);
   };
 
-  it('has call for paper tab selected', async () => {
+  it('displays the dashboard tabs and links', async () => {
     const screen = renderComponent(
       <I18nextProvider i18n={i18nTest}>
-        <DashboardTabs tab="call-for-paper" team="t1" event="e1" />
+        <DashboardTabs team="t1" event="e1" />
       </I18nextProvider>,
     );
 
     const callForPaperLink = screen.getByRole('link', { name: 'Call for paper' });
-    await expect.element(callForPaperLink).toHaveAttribute('href', '/team/t1/e1');
+    await expect.element(callForPaperLink).toHaveAttribute('href', '/team/t1/e1/overview');
     await expect.element(callForPaperLink).toHaveAttribute('aria-current', 'page');
 
     const reviewersLink = screen.getByRole('link', { name: 'Reviewers' });
-    await expect.element(reviewersLink).toHaveAttribute('href', '/team/t1/e1?tab=reviewers');
+    await expect.element(reviewersLink).toHaveAttribute('href', '/team/t1/e1/overview/reviewers');
     await expect.element(reviewersLink).not.toHaveAttribute('aria-current', 'page');
 
     const reviewsLink = screen.getByRole('link', { name: 'Reviews' });
-    await expect.element(reviewsLink).toHaveAttribute('href', '/team/t1/e1?tab=reviews');
+    await expect.element(reviewsLink).toHaveAttribute('href', '/team/t1/e1/overview/reviews');
     await expect.element(reviewsLink).not.toHaveAttribute('aria-current', 'page');
-  });
-
-  it('has reviewers tab selected', async () => {
-    const screen = renderComponent(
-      <I18nextProvider i18n={i18nTest}>
-        <DashboardTabs tab="reviewers" team="t1" event="e1" />
-      </I18nextProvider>,
-    );
-
-    const callForPaperLink = screen.getByRole('link', { name: 'Call for paper' });
-    await expect.element(callForPaperLink).toHaveAttribute('href', '/team/t1/e1');
-    await expect.element(callForPaperLink).not.toHaveAttribute('aria-current', 'page');
-
-    const reviewersLink = screen.getByRole('link', { name: 'Reviewers' });
-    await expect.element(reviewersLink).toHaveAttribute('href', '/team/t1/e1?tab=reviewers');
-    await expect.element(reviewersLink).toHaveAttribute('aria-current', 'page');
-
-    const reviewsLink = screen.getByRole('link', { name: 'Reviews' });
-    await expect.element(reviewsLink).toHaveAttribute('href', '/team/t1/e1?tab=reviews');
-    await expect.element(reviewsLink).not.toHaveAttribute('aria-current', 'page');
-  });
-
-  it('has reviews tab selected', async () => {
-    const screen = renderComponent(
-      <I18nextProvider i18n={i18nTest}>
-        <DashboardTabs tab="reviews" team="t1" event="e1" />
-      </I18nextProvider>,
-    );
-
-    const callForPaperLink = screen.getByRole('link', { name: 'Call for paper' });
-    await expect.element(callForPaperLink).toHaveAttribute('href', '/team/t1/e1');
-    await expect.element(callForPaperLink).not.toHaveAttribute('aria-current', 'page');
-
-    const reviewersLink = screen.getByRole('link', { name: 'Reviewers' });
-    await expect.element(reviewersLink).toHaveAttribute('href', '/team/t1/e1?tab=reviewers');
-    await expect.element(reviewersLink).not.toHaveAttribute('aria-current', 'page');
-
-    const reviewsLink = screen.getByRole('link', { name: 'Reviews' });
-    await expect.element(reviewsLink).toHaveAttribute('href', '/team/t1/e1?tab=reviews');
-    await expect.element(reviewsLink).toHaveAttribute('aria-current', 'page');
   });
 });
