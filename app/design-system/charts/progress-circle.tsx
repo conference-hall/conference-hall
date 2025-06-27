@@ -33,51 +33,49 @@ export const ProgressCircle = ({
   const circle = 'stroke-indigo-500';
 
   return (
-    <>
-      <div className={cx('relative')}>
-        <svg
-          role="img"
-          ref={ref}
-          width={radius * 2}
-          height={radius * 2}
-          viewBox={`0 0 ${radius * 2} ${radius * 2}`}
-          className={cx('-rotate-90 transform', className)}
-          aria-label={t('common.progress-bar')}
-          data-max={max}
-          data-value={safeValue ?? null}
-          {...props}
-        >
+    <div className={cx('relative')}>
+      <svg
+        role="img"
+        ref={ref}
+        width={radius * 2}
+        height={radius * 2}
+        viewBox={`0 0 ${radius * 2} ${radius * 2}`}
+        className={cx('-rotate-90 transform', className)}
+        aria-label={t('common.progress-bar')}
+        data-max={max}
+        data-value={safeValue ?? null}
+        {...props}
+      >
+        <circle
+          r={normalizedRadius}
+          cx={radius}
+          cy={radius}
+          strokeWidth={strokeWidth}
+          fill="transparent"
+          stroke=""
+          strokeLinecap="round"
+          className={cx('transition-colors ease-linear', background)}
+        />
+        {safeValue >= 0 ? (
           <circle
             r={normalizedRadius}
             cx={radius}
             cy={radius}
             strokeWidth={strokeWidth}
+            strokeDasharray={`${circumference} ${circumference}`}
+            strokeDashoffset={offset}
             fill="transparent"
             stroke=""
             strokeLinecap="round"
-            className={cx('transition-colors ease-linear', background)}
+            className={cx(
+              'transition-colors ease-linear',
+              circle,
+              showAnimation && 'transform-gpu transition-all duration-300 ease-in-out',
+            )}
           />
-          {safeValue >= 0 ? (
-            <circle
-              r={normalizedRadius}
-              cx={radius}
-              cy={radius}
-              strokeWidth={strokeWidth}
-              strokeDasharray={`${circumference} ${circumference}`}
-              strokeDashoffset={offset}
-              fill="transparent"
-              stroke=""
-              strokeLinecap="round"
-              className={cx(
-                'transition-colors ease-linear',
-                circle,
-                showAnimation && 'transform-gpu transition-all duration-300 ease-in-out',
-              )}
-            />
-          ) : null}
-        </svg>
-        <div className={cx('absolute inset-0 flex items-center justify-center')}>{children}</div>
-      </div>
-    </>
+        ) : null}
+      </svg>
+      <div className={cx('absolute inset-0 flex items-center justify-center')}>{children}</div>
+    </div>
   );
 };
