@@ -35,7 +35,7 @@ describe('EventEmailCustomizations', () => {
       const result = await emailCustomizations.list();
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject({
-        emailType: 'PROPOSAL_SUBMITTED',
+        template: 'proposal-submitted',
         locale: 'en',
         subject: 'Custom Subject',
         content: 'Custom Content',
@@ -45,7 +45,7 @@ describe('EventEmailCustomizations', () => {
 
   describe('get', () => {
     test('returns null when customization does not exist', async () => {
-      const result = await emailCustomizations.get('PROPOSAL_SUBMITTED', 'en');
+      const result = await emailCustomizations.get('proposal-submitted', 'en');
       expect(result).toBeNull();
     });
 
@@ -56,10 +56,10 @@ describe('EventEmailCustomizations', () => {
         attributes: { subject: 'Custom Subject' },
       });
 
-      const result = await emailCustomizations.get('PROPOSAL_SUBMITTED', 'en');
+      const result = await emailCustomizations.get('proposal-submitted', 'en');
       expect(result).toMatchObject({
         id: customization.id,
-        emailType: 'PROPOSAL_SUBMITTED',
+        template: 'proposal-submitted',
         locale: 'en',
         subject: 'Custom Subject',
       });
@@ -71,14 +71,13 @@ describe('EventEmailCustomizations', () => {
       const data = {
         subject: 'New Subject',
         content: 'New Content',
-        signature: 'New Signature',
       };
 
-      const result = await emailCustomizations.upsert('PROPOSAL_SUBMITTED', 'en', data);
+      const result = await emailCustomizations.upsert('proposal-submitted', 'en', data);
 
       expect(result).toMatchObject({
         eventId: event.id,
-        emailType: 'PROPOSAL_SUBMITTED',
+        template: 'proposal-submitted',
         locale: 'en',
         ...data,
       });
@@ -94,12 +93,11 @@ describe('EventEmailCustomizations', () => {
       const data = {
         subject: 'Updated Subject',
         content: 'Updated Content',
-        signature: 'Updated Signature',
       };
 
-      const result = await emailCustomizations.upsert('PROPOSAL_SUBMITTED', 'en', data);
+      const result = await emailCustomizations.upsert('proposal-submitted', 'en', data);
 
-      expect(result).toMatchObject({ emailType: 'PROPOSAL_SUBMITTED', locale: 'en', ...data });
+      expect(result).toMatchObject({ template: 'proposal-submitted', locale: 'en', ...data });
     });
   });
 
@@ -111,7 +109,7 @@ describe('EventEmailCustomizations', () => {
         attributes: { subject: 'Subject to Delete' },
       });
 
-      await emailCustomizations.delete('PROPOSAL_SUBMITTED', 'en');
+      await emailCustomizations.delete('proposal-submitted', 'en');
 
       const deleted = await db.eventEmailCustomization.findUnique({ where: { id: customization.id } });
       expect(deleted).toBeNull();
@@ -126,7 +124,7 @@ describe('EventEmailCustomizations', () => {
         attributes: { subject: 'Other Subject' },
       });
 
-      await expect(emailCustomizations.delete('PROPOSAL_SUBMITTED', 'en')).rejects.toThrow();
+      await expect(emailCustomizations.delete('proposal-submitted', 'en')).rejects.toThrow();
     });
   });
 });

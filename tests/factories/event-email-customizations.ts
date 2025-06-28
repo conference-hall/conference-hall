@@ -1,23 +1,14 @@
 import { randParagraph, randText } from '@ngneat/falso';
 import type { Event, Prisma } from '@prisma/client';
-import { EventEmailType } from '@prisma/client';
 import { db } from '../../prisma/db.server.ts';
 import { eventFactory } from './events.ts';
 import { applyTraits } from './helpers/traits.ts';
 
 const TRAITS = {
-  'proposal-submitted': {
-    emailType: EventEmailType.PROPOSAL_SUBMITTED,
-  },
-  'proposal-accepted': {
-    emailType: EventEmailType.PROPOSAL_ACCEPTED,
-  },
-  'proposal-declined': {
-    emailType: EventEmailType.PROPOSAL_DECLINED,
-  },
-  french: {
-    locale: 'fr',
-  },
+  'proposal-submitted': { template: 'proposal-submitted' },
+  'proposal-accepted': { template: 'proposal-accepted' },
+  'proposal-declined': { template: 'proposal-declined' },
+  french: { locale: 'fr' },
   'with-all-fields': {
     subject: 'Custom Subject',
     content: 'Custom markdown content',
@@ -41,11 +32,10 @@ export const eventEmailCustomizationFactory = async (options: FactoryOptions = {
   }
 
   const defaultAttributes: Prisma.EventEmailCustomizationCreateInput = {
-    emailType: EventEmailType.PROPOSAL_SUBMITTED,
+    template: 'proposal-submitted',
     locale: 'en',
     subject: randText(),
     content: randParagraph(),
-    signature: randText(),
     event: { connect: { id: options.event.id } },
   };
 

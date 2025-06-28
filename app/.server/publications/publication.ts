@@ -1,5 +1,6 @@
 import { db } from 'prisma/db.server.ts';
-import { sendProposalAcceptedEmailToSpeakers } from '~/emails/templates/speakers/proposal-accepted.tsx';
+import { sendEmail } from '~/emails/send-email.job.ts';
+import ProposalAcceptedEmail from '~/emails/templates/speakers/proposal-accepted.tsx';
 import { sendProposalRejectedEmailToSpeakers } from '~/emails/templates/speakers/proposal-rejected.tsx';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
@@ -31,7 +32,9 @@ export class Publication {
     });
 
     if (withEmails && status === 'ACCEPTED') {
-      await Promise.all(proposals.map((proposal) => sendProposalAcceptedEmailToSpeakers({ event, proposal })));
+      await Promise.all(
+        proposals.map((proposal) => sendEmail.trigger(ProposalAcceptedEmail.buildPayload({ event, proposal }))),
+      );
     }
 
     if (withEmails && status === 'REJECTED') {
@@ -62,7 +65,7 @@ export class Publication {
     });
 
     if (withEmails && proposal.deliberationStatus === 'ACCEPTED') {
-      await sendProposalAcceptedEmailToSpeakers({ event, proposal });
+      await sendEmail.trigger(ProposalAcceptedEmail.buildPayload({ event, proposal }));
     }
 
     if (withEmails && proposal.deliberationStatus === 'REJECTED') {

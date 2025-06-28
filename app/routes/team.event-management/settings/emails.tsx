@@ -4,8 +4,8 @@ import { Badge } from '~/design-system/badges.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
+import { CUSTOM_TEMPLATES } from '~/emails/email.types.ts';
 import { requireUserSession } from '~/libs/auth/session.ts';
-import { EMAIL_TYPE_LABELS } from '~/libs/constants.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { SUPPORTED_LANGUAGES } from '~/libs/i18n/i18n.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
@@ -32,20 +32,17 @@ export default function EventEmailsSettingsRoute({ loaderData }: Route.Component
   const currentEvent = useCurrentEvent();
   const { customizations } = loaderData;
 
-  const getStatusBadge = (emailType: string, locale: string) => {
-    const customization = customizations.find((c) => c.emailType === emailType && c.locale === locale);
+  const getStatusBadge = (template: string, locale: string) => {
+    const customization = customizations.find((c) => c.template === template && c.locale === locale);
     if (!customization) {
       return <Badge pill>{t('common.default')}</Badge>;
     }
-
     return (
       <Badge color="green" pill>
         {t('common.customized')}
       </Badge>
     );
   };
-
-  const emailTypes = Object.keys(EMAIL_TYPE_LABELS) as Array<keyof typeof EMAIL_TYPE_LABELS>;
 
   return (
     <Card as="section">
@@ -57,12 +54,14 @@ export default function EventEmailsSettingsRoute({ loaderData }: Route.Component
         <Subtitle>{t('event-management.settings.emails.description')}</Subtitle>
 
         <div className="space-y-4">
-          {emailTypes.map((emailType) => (
-            <div key={emailType} className="border border-slate-200 rounded-lg p-4 space-y-3">
+          {CUSTOM_TEMPLATES.map((template) => (
+            <div key={template} className="border border-slate-200 rounded-lg p-4 space-y-3">
               <div>
-                <h3 className="text-sm font-medium text-slate-900">{t(EMAIL_TYPE_LABELS[emailType].i18nKey)}</h3>
+                <h3 className="text-sm font-medium text-slate-900">
+                  {t(`event-management.settings.emails.types.${template}`)}
+                </h3>
                 <p className="text-xs text-slate-500">
-                  {t(`event-management.settings.emails.descriptions.${EMAIL_TYPE_LABELS[emailType].key}`)}
+                  {t(`event-management.settings.emails.descriptions.${template}`)}
                 </p>
               </div>
 
@@ -71,10 +70,10 @@ export default function EventEmailsSettingsRoute({ loaderData }: Route.Component
                   <div key={locale} className="flex items-center justify-between p-3 bg-slate-50 rounded-md">
                     <div className="flex items-center gap-2">
                       <span>{t(`common.languages.${locale}.flag`)}</span>
-                      {getStatusBadge(emailType, locale)}
+                      {getStatusBadge(template, locale)}
                     </div>
                     <Link
-                      to={`/team/${currentTeam.slug}/${currentEvent.slug}/settings/emails/${EMAIL_TYPE_LABELS[emailType].key}?locale=${locale}`}
+                      to={`/team/${currentTeam.slug}/${currentEvent.slug}/settings/emails/${template}?locale=${locale}`}
                       weight="medium"
                       size="xs"
                     >

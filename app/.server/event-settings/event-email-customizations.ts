@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import type { EmailType, EventEmailCustomization } from '~/emails/email.types.ts';
+import type { CustomTemplate, EventEmailCustomization } from '~/emails/email.types.ts';
 import { UserEvent } from './user-event.ts';
 
 export class EventEmailCustomizations {
@@ -18,26 +18,26 @@ export class EventEmailCustomizations {
     return db.eventEmailCustomization.findMany({ where: { eventId: event.id } });
   }
 
-  async get(emailType: EmailType, locale = 'en') {
+  async get(template: CustomTemplate, locale = 'en') {
     const event = await this.userEvent.needsPermission('canEditEvent');
     return db.eventEmailCustomization.findUnique({
-      where: { eventId_emailType_locale: { eventId: event.id, emailType, locale } },
+      where: { eventId_template_locale: { eventId: event.id, template, locale } },
     });
   }
 
-  async upsert(emailType: EmailType, locale: string, data: Omit<EventEmailCustomization, 'emailType' | 'locale'>) {
+  async upsert(template: CustomTemplate, locale: string, data: Omit<EventEmailCustomization, 'template' | 'locale'>) {
     const event = await this.userEvent.needsPermission('canEditEvent');
     return db.eventEmailCustomization.upsert({
-      where: { eventId_emailType_locale: { eventId: event.id, emailType, locale } },
-      create: { ...data, eventId: event.id, emailType, locale },
+      where: { eventId_template_locale: { eventId: event.id, template, locale } },
+      create: { ...data, eventId: event.id, template, locale },
       update: data,
     });
   }
 
-  async delete(emailType: EmailType, locale: string) {
+  async delete(template: CustomTemplate, locale: string) {
     const event = await this.userEvent.needsPermission('canEditEvent');
     return db.eventEmailCustomization.delete({
-      where: { eventId_emailType_locale: { eventId: event.id, emailType, locale } },
+      where: { eventId_template_locale: { eventId: event.id, template, locale } },
     });
   }
 }

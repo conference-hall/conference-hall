@@ -9,9 +9,8 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
-import { type EmailType, EventEmailCustomizationSchema } from '~/emails/email.types.ts';
+import { CustomTemplateSchema, EventEmailCustomizationSchema } from '~/emails/email.types.ts';
 import { requireUserSession } from '~/libs/auth/session.ts';
-import { EMAIL_TYPE_LABELS } from '~/libs/constants.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { isSupportedLanguage } from '~/libs/i18n/i18n.ts';
@@ -19,7 +18,7 @@ import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useFlag } from '~/routes/components/contexts/flags-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import type { Route } from './+types/$emailType.ts';
+import type { Route } from './+types/emails.template.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
@@ -36,20 +35,14 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
     throw new Response('Not Found', { status: 404 });
   }
 
-  // Validate email type
-  const emailTypeKey = params.emailType;
-  const emailType = Object.entries(EMAIL_TYPE_LABELS).find(
-    ([_, label]) => label.key === emailTypeKey,
-  )?.[0] as EmailType;
-
-  if (!emailType) {
-    throw new Response('Not Found', { status: 404 });
-  }
+  const template = params.template;
+  const result = CustomTemplateSchema.safeParse(template);
+  if (!result.success) throw new Response('Bad Request', { status: 400 });
 
   const emailCustomizations = EventEmailCustomizations.for(userId, params.team, params.event);
-  const customization = await emailCustomizations.get(emailType, locale);
+  const customization = await emailCustomizations.get(result.data, locale);
 
-  return { emailType, locale, customization };
+  return { template: result.data, locale, customization };
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
@@ -65,39 +58,34 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const intent = form.get('intent');
   const locale = (form.get('locale') as string) || 'en';
 
-  const emailTypeKey = params.emailType;
-  const emailType = Object.entries(EMAIL_TYPE_LABELS).find(
-    ([_, label]) => label.key === emailTypeKey,
-  )?.[0] as EmailType;
-
-  if (!emailType) {
-    throw new Response('Not Found', { status: 404 });
-  }
+  const template = params.template;
+  const result = CustomTemplateSchema.safeParse(template);
+  if (!result.success) throw new Response('Bad Request', { status: 400 });
 
   const emailCustomizations = EventEmailCustomizations.for(userId, params.team, params.event);
 
   switch (intent) {
     case 'save': {
-      const result = parseWithZod(form, { schema: EventEmailCustomizationSchema });
-      if (result.status !== 'success') return result.error;
+      const data = parseWithZod(form, { schema: EventEmailCustomizationSchema });
+      if (data.status !== 'success') return toast('error', t('error.global'));
 
-      await emailCustomizations.upsert(emailType, locale, result.value);
+      await emailCustomizations.upsert(result.data, locale, data.value);
       return toast('success', t('event-management.settings.emails.feedback.saved'));
     }
     case 'reset': {
-      await emailCustomizations.delete(emailType, locale);
+      await emailCustomizations.delete(result.data, locale);
       return toast('success', t('event-management.settings.emails.feedback.reset'));
     }
   }
   return null;
 };
 
-export default function EmailCustomizationRoute({ loaderData, actionData }: Route.ComponentProps) {
+export default function EmailCustomizationRoute({ loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
   const emailCustomizationEnabled = useFlag('emailCustomization');
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
-  const { emailType, locale, customization } = loaderData;
+  const { template, locale, customization } = loaderData;
   const formId = useId();
 
   if (!emailCustomizationEnabled) {
@@ -105,7 +93,6 @@ export default function EmailCustomizationRoute({ loaderData, actionData }: Rout
   }
 
   const isCustomized = Boolean(customization?.id);
-  const emailTypeLabel = EMAIL_TYPE_LABELS[emailType as keyof typeof EMAIL_TYPE_LABELS];
 
   return (
     <Card as="section">
@@ -119,16 +106,11 @@ export default function EmailCustomizationRoute({ loaderData, actionData }: Rout
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <H2>{t(emailTypeLabel.i18nKey)}</H2>
+              <H2>{t(`event-management.settings.emails.types.${template}`)}</H2>
               <span>{t(`common.languages.${locale}.flag`)}</span>
             </div>
             <Text className="text-sm text-slate-600 space-x-2">
-              {emailType === 'PROPOSAL_SUBMITTED' &&
-                t('event-management.settings.emails.descriptions.proposal-submitted')}
-              {emailType === 'PROPOSAL_ACCEPTED' &&
-                t('event-management.settings.emails.descriptions.proposal-accepted')}
-              {emailType === 'PROPOSAL_DECLINED' &&
-                t('event-management.settings.emails.descriptions.proposal-declined')}
+              {t(`event-management.settings.emails.descriptions.${template}`)}
             </Text>
           </div>
         </div>
@@ -136,14 +118,13 @@ export default function EmailCustomizationRoute({ loaderData, actionData }: Rout
 
       <Card.Content>
         <Form id={formId} method="POST" className="space-y-6" key={customization?.id}>
-          <input type="hidden" name="emailType" value={emailType} />
+          <input type="hidden" name="template" value={template} />
           <input type="hidden" name="locale" value={locale} />
 
           <Input
             name="subject"
             label={t('event-management.settings.emails.form.subject.label')}
             defaultValue={customization?.subject || ''}
-            error={actionData?.subject}
           />
 
           <TextArea
@@ -151,15 +132,6 @@ export default function EmailCustomizationRoute({ loaderData, actionData }: Rout
             label={t('event-management.settings.emails.form.content.label')}
             defaultValue={customization?.content || ''}
             rows={12}
-            error={actionData?.content}
-          />
-
-          <TextArea
-            name="signature"
-            label={t('event-management.settings.emails.form.signature.label')}
-            defaultValue={customization?.signature || ''}
-            rows={3}
-            error={actionData?.signature}
           />
         </Form>
       </Card.Content>

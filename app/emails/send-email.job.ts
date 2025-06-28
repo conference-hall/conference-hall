@@ -2,10 +2,10 @@ import { db } from 'prisma/db.server.ts';
 import { renderEmail } from '~/emails/email.renderer.tsx';
 import { getEnv } from '~/libs/jobs/env.ts';
 import { job } from '~/libs/jobs/job.ts';
-import type { EmailType } from './email.types.ts';
+import type { CustomTemplate } from './email.types.ts';
 import { getEmailProvider } from './providers/provider.ts';
 
-type Email = {
+export type EmailPayload = {
   template: string;
   from: string;
   to: string[];
@@ -17,16 +17,16 @@ type Email = {
 
 type CustomizationIds = {
   eventId: string;
-  emailType: EmailType;
+  template: CustomTemplate;
 };
 
 const env = getEnv();
 
-export const sendEmail = job<Email>({
+export const sendEmail = job<EmailPayload>({
   name: 'send-email',
   queue: 'default',
 
-  run: async (payload: Email) => {
+  run: async (payload: EmailPayload) => {
     const emailProvider = getEmailProvider(env);
 
     if (!emailProvider) return Promise.reject('Email provider not found');
@@ -54,7 +54,7 @@ async function getEmailCustomization(customization: CustomizationIds | undefined
   if (!customization) return null;
 
   const emailCustomization = await db.eventEmailCustomization.findUnique({
-    where: { eventId_emailType_locale: { ...customization, locale } },
+    where: { eventId_template_locale: { ...customization, locale } },
   });
 
   return emailCustomization;
