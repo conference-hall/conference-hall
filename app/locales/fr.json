@@ -574,7 +574,7 @@
   "event-management.settings.notifications.settings.submitted.description": "Recevez un e-mail lorsqu'un speaker soumet une proposition.",
   "event-management.settings.notifications.settings.submitted.label": "Propositions soumises",
   "event-management.settings.emails.heading": "Templates d'e-mails",
-  "event-management.settings.emails.description": "Personnalisez les e-mails envoyés aux speakers lorsque leurs propositions sont soumises, acceptées ou refusées. Vous pouvez personnaliser le sujet, le contenu et la signature pour chaque type d'e-mail et langue.",
+  "event-management.settings.emails.description": "Personnalisez les e-mails envoyés aux speakers.",
   "event-management.settings.emails.types.proposal-submitted": "Proposition soumise",
   "event-management.settings.emails.types.proposal-accepted": "Proposition acceptée",
   "event-management.settings.emails.types.proposal-declined": "Proposition refusée",

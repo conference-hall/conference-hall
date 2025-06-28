@@ -1,4 +1,5 @@
 import { Button, Heading, Section, Text } from '@react-email/components';
+import type { LocaleEmailData } from '~/emails/email.types.ts';
 import { sendEmail } from '~/emails/send-email.job.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
@@ -16,7 +17,7 @@ export function sendResetPasswordEmail(email: string, locale: string, data: Temp
   });
 }
 
-type EmailProps = TemplateData & { locale: string };
+type EmailProps = TemplateData & LocaleEmailData;
 
 /** @public */
 export default function ResetPasswordEmail({ passwordResetUrl, locale }: EmailProps) {

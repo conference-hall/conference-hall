@@ -1,4 +1,5 @@
 import { Button, Heading, Section, Text } from '@react-email/components';
+import type { LocaleEmailData } from '~/emails/email.types.ts';
 import { sendEmail } from '~/emails/send-email.job.ts';
 import { buildSpeakerProfileUrl } from '~/emails/utils/urls.ts';
 import { styles } from '../base-email.tsx';
@@ -22,7 +23,7 @@ export function sendProposalSubmittedEmailToSpeakers(data: TemplateData) {
   });
 }
 
-type EmailProps = TemplateData & { locale: string };
+type EmailProps = TemplateData & LocaleEmailData;
 
 /** @public */
 export default function ProposalSubmittedEmail({ event, proposal, locale }: EmailProps) {

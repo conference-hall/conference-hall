@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// todo(email): apply it to all emails
 export type LocaleEmailData = {
   locale: string;
 };

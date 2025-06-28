@@ -574,7 +574,7 @@
   "event-management.settings.notifications.settings.submitted.description": "Receive an email when a speaker submit a talk.",
   "event-management.settings.notifications.settings.submitted.label": "Submitted proposals",
   "event-management.settings.emails.heading": "Email Templates",
-  "event-management.settings.emails.description": "Customize the emails sent to speakers when their proposals are submitted, accepted, or declined. You can personalize the subject, content, and signature for each email type and language.",
+  "event-management.settings.emails.description": "Customize the emails sent to speakers.",
   "event-management.settings.emails.types.proposal-submitted": "Proposal Submitted",
   "event-management.settings.emails.types.proposal-accepted": "Proposal Accepted",
   "event-management.settings.emails.types.proposal-declined": "Proposal Declined",

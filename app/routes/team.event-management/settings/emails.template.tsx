@@ -1,14 +1,14 @@
 import { parseWithZod } from '@conform-to/zod';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form, Link } from 'react-router';
+import { Form } from 'react-router';
 import { EventEmailCustomizations } from '~/.server/event-settings/event-email-customizations.ts';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Text } from '~/design-system/typography.tsx';
+import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { CustomTemplateSchema, EventEmailCustomizationSchema } from '~/emails/email.types.ts';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
@@ -16,8 +16,8 @@ import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { isSupportedLanguage } from '~/libs/i18n/i18n.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
-import { useFlag } from '~/routes/components/contexts/flags-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { EmailCustomBadge } from '../components/settings-page/email-custom-badge.tsx';
 import type { Route } from './+types/emails.template.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
@@ -31,13 +31,11 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const url = new URL(request.url);
   const locale = url.searchParams.get('locale') || 'en';
 
-  if (!isSupportedLanguage(locale)) {
-    throw new Response('Not Found', { status: 404 });
-  }
+  if (!isSupportedLanguage(locale)) throw new Response('Not Found', { status: 404 });
 
   const template = params.template;
   const result = CustomTemplateSchema.safeParse(template);
-  if (!result.success) throw new Response('Bad Request', { status: 400 });
+  if (!result.success) throw new Response('Not Found', { status: 404 });
 
   const emailCustomizations = EventEmailCustomizations.for(userId, params.team, params.event);
   const customization = await emailCustomizations.get(result.data, locale);
@@ -60,7 +58,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   const template = params.template;
   const result = CustomTemplateSchema.safeParse(template);
-  if (!result.success) throw new Response('Bad Request', { status: 400 });
+  if (!result.success) throw new Response('Not Found', { status: 404 });
 
   const emailCustomizations = EventEmailCustomizations.for(userId, params.team, params.event);
 
@@ -82,38 +80,34 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function EmailCustomizationRoute({ loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const emailCustomizationEnabled = useFlag('emailCustomization');
+  const formId = useId();
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
   const { template, locale, customization } = loaderData;
-  const formId = useId();
 
-  if (!emailCustomizationEnabled) {
-    return null;
-  }
-
-  const isCustomized = Boolean(customization?.id);
+  const customized = Boolean(customization?.id);
 
   return (
     <Card as="section">
-      <Card.Title>
+      <Card.Title className="flex items-start justify-between">
         <div className="flex items-center gap-4">
-          <Link
+          <ButtonLink
+            variant="secondary"
+            size="square-m"
             to={`/team/${currentTeam.slug}/${currentEvent.slug}/settings/emails`}
             className="p-2 hover:bg-slate-100 rounded-md transition-colors"
           >
             <ArrowLeftIcon className="h-4 w-4" />
-          </Link>
+          </ButtonLink>
           <div>
             <div className="flex items-center gap-2">
               <H2>{t(`event-management.settings.emails.types.${template}`)}</H2>
               <span>{t(`common.languages.${locale}.flag`)}</span>
             </div>
-            <Text className="text-sm text-slate-600 space-x-2">
-              {t(`event-management.settings.emails.descriptions.${template}`)}
-            </Text>
+            <Subtitle>{t(`event-management.settings.emails.descriptions.${template}`)}</Subtitle>
           </div>
         </div>
+        <EmailCustomBadge customized={customized} />
       </Card.Title>
 
       <Card.Content>
@@ -137,7 +131,7 @@ export default function EmailCustomizationRoute({ loaderData }: Route.ComponentP
       </Card.Content>
 
       <Card.Actions>
-        {isCustomized && (
+        {customized && (
           <Button type="submit" name="intent" value="reset" form={formId} variant="important">
             {t('event-management.settings.emails.form.reset')}
           </Button>
