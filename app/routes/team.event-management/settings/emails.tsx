@@ -40,38 +40,36 @@ export default function EventEmailsSettingsRoute({ loaderData }: Route.Component
       </Card.Title>
 
       <Card.Content>
-        <div className="space-y-4">
-          {CUSTOM_TEMPLATES.map((template) => (
-            <div key={template} className="border border-slate-200 rounded-lg p-4 space-y-3">
-              <div>
-                <H3 weight="medium">{t(`event-management.settings.emails.types.${template}`)}</H3>
-                <Subtitle size="xs">{t(`event-management.settings.emails.descriptions.${template}`)}</Subtitle>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {SUPPORTED_LANGUAGES.map((locale) => {
-                  const customized = customizations.some((c) => c.template === template && c.locale === locale);
-
-                  return (
-                    <div key={locale} className="flex items-center justify-between p-3 bg-slate-50 rounded-md">
-                      <div className="flex items-center gap-2">
-                        <span>{t(`common.languages.${locale}.flag`)}</span>
-                        <EmailCustomBadge customized={customized} />
-                      </div>
-                      <Link
-                        to={`/team/${currentTeam.slug}/${currentEvent.slug}/settings/emails/${template}?locale=${locale}`}
-                        weight="medium"
-                        size="xs"
-                      >
-                        {t('common.customize')}
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
+        {CUSTOM_TEMPLATES.map((template) => (
+          <div key={template} className="border border-slate-200 rounded-lg p-4 space-y-3">
+            <div>
+              <H3 weight="medium">{t(`event-management.settings.emails.types.${template}`)}</H3>
+              <Subtitle size="xs">{t(`event-management.settings.emails.descriptions.${template}`)}</Subtitle>
             </div>
-          ))}
-        </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {SUPPORTED_LANGUAGES.map((locale) => {
+                const customized = customizations.some((c) => c.template === template && c.locale === locale);
+
+                return (
+                  <div key={locale} className="flex items-center justify-between p-3 bg-slate-50 rounded-md">
+                    <div className="flex items-center gap-2">
+                      <span>{t(`common.languages.${locale}.flag`)}</span>
+                      <EmailCustomBadge customized={customized} />
+                    </div>
+                    <Link
+                      to={`/team/${currentTeam.slug}/${currentEvent.slug}/settings/emails/${template}?locale=${locale}`}
+                      weight="medium"
+                      size="xs"
+                    >
+                      {t('common.customize')}
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </Card.Content>
     </Card>
   );

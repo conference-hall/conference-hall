@@ -1,15 +1,14 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
-import { useId } from 'react';
+import { render } from '@react-email/components';
+import { useId, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form } from 'react-router';
 import { EventEmailCustomizations } from '~/.server/event-settings/event-email-customizations.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
-import { TextArea } from '~/design-system/forms/textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Subtitle } from '~/design-system/typography.tsx';
+import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { CustomTemplateSchema, EventEmailCustomizationSchema } from '~/emails/email.types.ts';
+import ProposalAcceptedEmail from '~/emails/templates/speakers/proposal-accepted.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
@@ -40,7 +39,11 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const emailCustomizations = EventEmailCustomizations.for(userId, params.team, params.event);
   const customization = await emailCustomizations.get(result.data, locale);
 
-  return { template: result.data, locale, customization };
+  // todo(email): generate preview / subject for event
+  // todo(email): add a preview mode on customizatble emails
+  const preview = await render(<ProposalAcceptedEmail {...ProposalAcceptedEmail.PreviewProps} />);
+
+  return { template: result.data, locale, customization, preview };
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
@@ -83,13 +86,14 @@ export default function EmailCustomizationRoute({ loaderData }: Route.ComponentP
   const formId = useId();
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
-  const { template, locale, customization } = loaderData;
+  const { template, locale, customization, preview } = loaderData;
+  const previewRef = useIframeAutoHeight(40);
 
   const customized = Boolean(customization?.id);
 
   return (
     <Card as="section">
-      <Card.Title className="flex items-start justify-between">
+      <Card.Title className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <ButtonLink
             variant="secondary"
@@ -104,20 +108,36 @@ export default function EmailCustomizationRoute({ loaderData }: Route.ComponentP
               <H2>{t(`event-management.settings.emails.types.${template}`)}</H2>
               <span>{t(`common.languages.${locale}.flag`)}</span>
             </div>
-            <Subtitle>{t(`event-management.settings.emails.descriptions.${template}`)}</Subtitle>
+            <Subtitle className="hidden sm:block">
+              {t(`event-management.settings.emails.descriptions.${template}`)}
+            </Subtitle>
           </div>
         </div>
         <EmailCustomBadge customized={customized} />
       </Card.Title>
 
       <Card.Content>
-        <Form id={formId} method="POST" className="space-y-6" key={customization?.id}>
+        <div className="border border-gray-200 rounded-lg space-y-4">
+          <div className="border-b border-gray-200 rounded-t-lg bg-gray-50 p-4">
+            <Text className="py-2 px-1" variant="secondary">
+              <strong>Subject:</strong> [Devfest Nantes] Congrats! Your proposal has been accepted
+            </Text>
+          </div>
+          <iframe ref={previewRef} title="Email Preview" srcDoc={preview} className="w-full rounded-b-lg" />
+        </div>
+        {/* 
+        <Form
+          id={formId}
+          method="POST"
+          key={customization?.id}
+        >
           <input type="hidden" name="template" value={template} />
           <input type="hidden" name="locale" value={locale} />
 
           <Input
             name="subject"
-            label={t('event-management.settings.emails.form.subject.label')}
+            aria-label={t('event-management.settings.emails.form.subject.label')}
+            placeholder={t('event-management.settings.emails.form.subject.label')}
             defaultValue={customization?.subject || ''}
           />
 
@@ -127,7 +147,11 @@ export default function EmailCustomizationRoute({ loaderData }: Route.ComponentP
             defaultValue={customization?.content || ''}
             rows={12}
           />
-        </Form>
+        </Form> */}
+
+        {/* <Button type="submit" name="intent" value="save" form={formId}>
+            {t('event-management.settings.emails.form.save')}
+          </Button> */}
       </Card.Content>
 
       <Card.Actions>
@@ -138,10 +162,51 @@ export default function EmailCustomizationRoute({ loaderData }: Route.ComponentP
         )}
         <div className="flex items-center gap-3">
           <Button type="submit" name="intent" value="save" form={formId}>
-            {t('event-management.settings.emails.form.save')}
+            Edit email
           </Button>
         </div>
       </Card.Actions>
     </Card>
   );
+}
+
+function useIframeAutoHeight(padding = 0) {
+  const ref = useRef<HTMLIFrameElement>(null);
+
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const iframe = ref.current;
+    if (!iframe) return;
+
+    let observer: MutationObserver | null = null;
+
+    const resize = () => {
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!doc) return;
+      iframe.style.height = `${doc.body.scrollHeight + padding}px`;
+    };
+
+    const handleLoad = () => {
+      resize();
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!doc?.body) return;
+
+      observer = new MutationObserver(resize);
+      observer.observe(doc.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+      });
+    };
+
+    iframe.addEventListener('load', handleLoad);
+
+    return () => {
+      iframe.removeEventListener('load', handleLoad);
+      observer?.disconnect?.();
+    };
+  }, [padding]);
+
+  return ref;
 }
