@@ -110,6 +110,8 @@ export default [
         route('survey', './routes/team.event-management/settings/survey.tsx'),
         route('review', './routes/team.event-management/settings/review.tsx'),
         route('notifications', './routes/team.event-management/settings/notifications.tsx'),
+        route('emails', './routes/team.event-management/settings/emails.tsx'),
+        route('emails/:emailType', './routes/team.event-management/settings/emails/$emailType.tsx'),
         route('integrations', './routes/team.event-management/settings/integrations.tsx'),
         route('api', './routes/team.event-management/settings/api.tsx'),
       ]),
