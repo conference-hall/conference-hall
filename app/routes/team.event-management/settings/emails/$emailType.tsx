@@ -4,15 +4,12 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, Link } from 'react-router';
 import { EventEmailCustomizations } from '~/.server/event-settings/event-email-customizations.ts';
-import {
-  type EmailType,
-  EventEmailCustomizationSchema,
-} from '~/.server/event-settings/event-email-customizations.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
+import { type EmailType, EventEmailCustomizationSchema } from '~/emails/email.types.ts';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { EMAIL_TYPE_LABELS } from '~/libs/constants.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';

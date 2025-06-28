@@ -1,5 +1,17 @@
 import { z } from 'zod';
 
+// todo(email): apply it to all emails
+export type LocaleEmailData = {
+  locale: string;
+};
+
+export interface CustomEmailData {
+  customization: {
+    subject?: string;
+    content?: string;
+  } | null;
+}
+
 const EmailTypeSchema = z.enum(['PROPOSAL_SUBMITTED', 'PROPOSAL_ACCEPTED', 'PROPOSAL_DECLINED']);
 
 export const EventEmailCustomizationSchema = z.object({
@@ -11,4 +23,5 @@ export const EventEmailCustomizationSchema = z.object({
 });
 
 export type EmailType = z.infer<typeof EmailTypeSchema>;
+
 export type EventEmailCustomization = z.infer<typeof EventEmailCustomizationSchema>;

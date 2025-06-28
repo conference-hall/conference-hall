@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import type { EmailType, EventEmailCustomization } from './event-email-customizations.types.ts';
+import type { EmailType, EventEmailCustomization } from '~/emails/email.types.ts';
 import { UserEvent } from './user-event.ts';
 
 export class EventEmailCustomizations {
