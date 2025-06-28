@@ -13,4 +13,11 @@ export default defineFlagsConfig({
     defaultValue: 'gdg-nantes',
     tags: ['frontend'] as const,
   },
+  emailCustomization: {
+    description:
+      'Enables custom email templates for speakers (proposal-submitted, proposal-accepted, proposal-declined).',
+    type: 'boolean',
+    defaultValue: false,
+    tags: ['frontend'] as const,
+  },
 });
