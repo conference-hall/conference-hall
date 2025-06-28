@@ -547,6 +547,7 @@
   "event-management.settings.integrations.slack.url.placeholder": "https://hooks.slack.com/services/xxx-yyy-zzz",
   "event-management.settings.menu.cfp": "Call for papers",
   "event-management.settings.menu.customize": "Personnalisation",
+  "event-management.settings.menu.emails": "Templates d'e-mails",
   "event-management.settings.menu.general": "Général",
   "event-management.settings.menu.heading": "Menu des paramètres de l'événement",
   "event-management.settings.menu.integrations": "Intégrations",

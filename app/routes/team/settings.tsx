@@ -20,7 +20,12 @@ export default function TeamSettingsLayout() {
   const { slug } = useCurrentTeam();
 
   const menus = [
-    { to: href('/team/:team/settings', { team: slug }), icon: Cog6ToothIcon, label: t('team.settings.nav.general') },
+    {
+      to: href('/team/:team/settings', { team: slug }),
+      icon: Cog6ToothIcon,
+      label: t('team.settings.nav.general'),
+      end: true,
+    },
     {
       to: href('/team/:team/settings/members', { team: slug }),
       icon: UserGroupIcon,
