@@ -124,6 +124,7 @@ model Event {
   proposalTags             EventProposalTag[]
   integrations             EventIntegrationConfig[]
   speakers                 EventSpeaker[]
+  emailCustomizations      EventEmailCustomization[]
 
   @@map("events")
 }
@@ -413,6 +414,30 @@ model ScheduleSession {
   updatedAt  DateTime      @updatedAt
 
   @@map("schedule_sessions")
+}
+
+model EventEmailCustomization {
+  id           String                  @id @default(cuid())
+  eventId      String
+  event        Event                   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  emailType    EventEmailType
+  locale       String                  @default("en")
+  subject      String?
+  senderEmail  String?
+  content      String?
+  signature    String?
+  isEnabled    Boolean                 @default(true)
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  @@unique([eventId, emailType, locale])
+  @@map("event_email_customizations")
+}
+
+enum EventEmailType {
+  PROPOSAL_SUBMITTED
+  PROPOSAL_ACCEPTED
+  PROPOSAL_DECLINED
 }
 
 model FeatureFlag {
