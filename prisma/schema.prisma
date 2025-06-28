@@ -423,10 +423,8 @@ model EventEmailCustomization {
   emailType    EventEmailType
   locale       String                  @default("en")
   subject      String?
-  senderEmail  String?
   content      String?
   signature    String?
-  isEnabled    Boolean                 @default(true)
   createdAt    DateTime                @default(now())
   updatedAt    DateTime                @updatedAt
 

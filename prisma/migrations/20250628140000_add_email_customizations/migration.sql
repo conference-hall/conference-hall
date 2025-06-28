@@ -8,10 +8,8 @@ CREATE TABLE "event_email_customizations" (
     "emailType" "EventEmailType" NOT NULL,
     "locale" TEXT NOT NULL DEFAULT 'en',
     "subject" TEXT,
-    "senderEmail" TEXT,
     "content" TEXT,
     "signature" TEXT,
-    "isEnabled" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
