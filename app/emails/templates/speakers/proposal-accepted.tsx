@@ -18,7 +18,6 @@ type TemplateData = {
 
 type EmailProps = TemplateData & LocaleEmailData & CustomEmailData;
 
-/** @public */
 export default function ProposalAcceptedEmail({ event, proposal, locale, customization, preview }: EmailProps) {
   return (
     <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>

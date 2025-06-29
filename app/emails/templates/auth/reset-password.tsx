@@ -1,25 +1,13 @@
 import { Button, Heading, Section, Text } from '@react-email/components';
 import type { LocaleEmailData } from '~/emails/email.types.ts';
-import { sendEmail } from '~/emails/send-email.job.ts';
+import type { EmailPayload } from '~/emails/send-email.job.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
 type TemplateData = { passwordResetUrl: string };
 
-export function sendResetPasswordEmail(email: string, locale: string, data: TemplateData) {
-  return sendEmail.trigger({
-    template: 'auth/reset-password',
-    subject: 'Reset your password for Conference Hall',
-    from: 'Conference Hall <no-reply@mg.conference-hall.io>',
-    to: [email],
-    data,
-    locale,
-  });
-}
-
 type EmailProps = TemplateData & LocaleEmailData;
 
-/** @public */
 export default function ResetPasswordEmail({ passwordResetUrl, locale }: EmailProps) {
   return (
     <BaseEventEmail locale={locale}>
@@ -40,6 +28,17 @@ export default function ResetPasswordEmail({ passwordResetUrl, locale }: EmailPr
     </BaseEventEmail>
   );
 }
+
+ResetPasswordEmail.buildPayload = (email: string, locale: string, data: TemplateData): EmailPayload => {
+  return {
+    template: 'auth/reset-password',
+    subject: 'Reset your password for Conference Hall',
+    from: 'Conference Hall <no-reply@mg.conference-hall.io>',
+    to: [email],
+    data,
+    locale,
+  };
+};
 
 ResetPasswordEmail.PreviewProps = {
   passwordResetUrl: 'http://localhost:3000/auth/reset-password',

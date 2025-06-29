@@ -49,7 +49,7 @@ describe('EventEmailCustomizations', () => {
       expect(result).toMatchObject({
         template: 'proposal-submitted',
         customization: null,
-        defaults: { subject: '', from: '' },
+        defaults: { subject: expect.any(String), from: expect.any(String) },
         preview: expect.any(String),
       });
     });
@@ -65,7 +65,7 @@ describe('EventEmailCustomizations', () => {
       expect(result).toMatchObject({
         template: 'proposal-submitted',
         customization,
-        defaults: { subject: '', from: '' },
+        defaults: { subject: expect.any(String), from: expect.any(String) },
         preview: expect.any(String),
       });
     });

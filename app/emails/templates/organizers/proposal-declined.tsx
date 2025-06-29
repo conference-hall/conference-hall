@@ -1,8 +1,7 @@
 import { Button, Heading, Section, Text } from '@react-email/components';
 import type { LocaleEmailData } from '~/emails/email.types.ts';
-import { sendEmail } from '~/emails/send-email.job.ts';
+import type { EmailPayload } from '~/emails/send-email.job.ts';
 import { buildReviewProposalUrl } from '~/emails/utils/urls.ts';
-import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
@@ -18,25 +17,8 @@ type TemplateData = {
   proposal: { id: string; title: string; speakers: Array<{ name: string }> };
 };
 
-export function sendProposalDeclinedEmailToOrganizers(data: TemplateData) {
-  const notifications = data.event.emailNotifications as EventEmailNotificationsKeys;
-  if (!notifications.includes('declined')) return;
-
-  if (!data.event.emailOrganizer) return;
-
-  return sendEmail.trigger({
-    template: 'organizers/proposal-declined',
-    subject: `[${data.event.name}] Proposal declined by speaker`,
-    from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
-    to: [data.event.emailOrganizer],
-    data,
-    locale: 'en',
-  });
-}
-
 type EmailProps = TemplateData & LocaleEmailData;
 
-/** @public */
 export default function ProposalDeclinedEmail({ event, proposal, locale }: EmailProps) {
   return (
     <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
@@ -58,6 +40,20 @@ export default function ProposalDeclinedEmail({ event, proposal, locale }: Email
     </BaseEventEmail>
   );
 }
+
+ProposalDeclinedEmail.buildPayload = (data: TemplateData): EmailPayload => {
+  if (!data.event.emailOrganizer) {
+    throw new Error('Event organizer email is not set');
+  }
+  return {
+    template: 'organizers/proposal-declined',
+    subject: `[${data.event.name}] Proposal declined by speaker`,
+    from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
+    to: [data.event.emailOrganizer],
+    data,
+    locale: 'en',
+  };
+};
 
 ProposalDeclinedEmail.PreviewProps = {
   event: {

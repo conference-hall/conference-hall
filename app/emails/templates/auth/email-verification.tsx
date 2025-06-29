@@ -1,26 +1,14 @@
 import { Button, Heading, Section, Text } from '@react-email/components';
 import type { LocaleEmailData } from '~/emails/email.types.ts';
-import { sendEmail } from '~/emails/send-email.job.ts';
+import type { EmailPayload } from '~/emails/send-email.job.ts';
 import { getEmailI18n } from '~/libs/i18n/i18n.emails.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
 type TemplateData = { emailVerificationUrl: string };
 
-export function sendVerificationEmail(email: string, locale: string, data: TemplateData) {
-  return sendEmail.trigger({
-    template: 'auth/email-verification',
-    subject: 'Verify your email address for Conference Hall',
-    from: 'Conference Hall <no-reply@mg.conference-hall.io>',
-    to: [email],
-    data,
-    locale,
-  });
-}
-
 type EmailProps = TemplateData & LocaleEmailData;
 
-/** @public */
 export default function VerificationEmail({ emailVerificationUrl, locale }: EmailProps) {
   const t = getEmailI18n(locale);
 
@@ -43,6 +31,17 @@ export default function VerificationEmail({ emailVerificationUrl, locale }: Emai
     </BaseEventEmail>
   );
 }
+
+VerificationEmail.buildPayload = (email: string, locale: string, data: TemplateData): EmailPayload => {
+  return {
+    template: 'auth/email-verification',
+    subject: 'Verify your email address for Conference Hall',
+    from: 'Conference Hall <no-reply@mg.conference-hall.io>',
+    to: [email],
+    data,
+    locale,
+  };
+};
 
 VerificationEmail.PreviewProps = {
   emailVerificationUrl: 'http://localhost:3000/auth/email-verification',

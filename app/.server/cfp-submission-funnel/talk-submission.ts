@@ -1,12 +1,14 @@
 import { db } from 'prisma/db.server.ts';
-import { sendProposalSubmittedEmailToOrganizers } from '~/emails/templates/organizers/proposal-submitted.tsx';
-import { sendProposalSubmittedEmailToSpeakers } from '~/emails/templates/speakers/proposal-submitted.tsx';
+import { sendEmail } from '~/emails/send-email.job.ts';
+import OrganizerProposalSubmittedEmail from '~/emails/templates/organizers/proposal-submitted.tsx';
+import SpeakerProposalSubmittedEmail from '~/emails/templates/speakers/proposal-submitted.tsx';
 import {
   CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
 } from '~/libs/errors.server.ts';
+import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 import type { Languages } from '~/types/proposals.types.ts';
 import { EventSpeaker } from '../shared/event-speaker.ts';
 import { TalksLibrary } from '../speaker-talks-library/talks-library.ts';
@@ -103,9 +105,16 @@ export class TalkSubmission {
 
     await db.proposal.update({ data: { isDraft: false }, where: { id: proposal.id } });
 
-    await sendProposalSubmittedEmailToSpeakers({ event, proposal });
-    await sendProposalSubmittedEmailToOrganizers({ event, proposal });
+    // send speaker email
+    await sendEmail.trigger(SpeakerProposalSubmittedEmail.buildPayload({ event, proposal }));
 
+    // send organizer email
+    const emailNotifications = event.emailNotifications as EventEmailNotificationsKeys;
+    if (emailNotifications.includes('submitted') && event.emailOrganizer) {
+      await sendEmail.trigger(OrganizerProposalSubmittedEmail.buildPayload({ event, proposal }));
+    }
+
+    // send slack message
     if (event.slackWebhookUrl) {
       await sendSubmittedTalkSlackMessage(event.id, proposal.id);
     }
