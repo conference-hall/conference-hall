@@ -1,6 +1,7 @@
-import { Button, Heading, Markdown, Section, Text } from '@react-email/components';
+import { Button, Heading, Section, Text } from '@react-email/components';
 import type { CustomEmailData, LocaleEmailData } from '~/emails/email.types.ts';
 import type { EmailPayload } from '~/emails/send-email.job.ts';
+import { EmailMarkdown } from '~/emails/utils/email-mardown.tsx';
 import { buildSpeakerProposalUrl } from '~/emails/utils/urls.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
@@ -18,13 +19,13 @@ type TemplateData = {
 type EmailProps = TemplateData & LocaleEmailData & CustomEmailData;
 
 /** @public */
-export default function ProposalAcceptedEmail({ event, proposal, locale, customization }: EmailProps) {
+export default function ProposalAcceptedEmail({ event, proposal, locale, customization, preview }: EmailProps) {
   return (
     <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>Proposal accepted!</Heading>
 
       {customization?.content ? (
-        <Markdown>{customization.content}</Markdown>
+        <EmailMarkdown>{customization.content}</EmailMarkdown>
       ) : (
         <Text>
           We're thrilled to inform you that your proposal has been accepted for <strong>{event.name}!</strong>
@@ -42,7 +43,7 @@ export default function ProposalAcceptedEmail({ event, proposal, locale, customi
       </Section>
 
       <Section className="text-center my-[32px]">
-        <Button href={buildSpeakerProposalUrl(event.slug, proposal.id)} className={styles.button}>
+        <Button href={!preview ? buildSpeakerProposalUrl(event.slug, proposal.id) : '#'} className={styles.button}>
           Confirm or decline your participation
         </Button>
       </Section>

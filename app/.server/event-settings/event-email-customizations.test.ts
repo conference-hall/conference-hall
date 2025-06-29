@@ -4,7 +4,7 @@ import { eventEmailCustomizationFactory } from 'tests/factories/event-email-cust
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { EventEmailCustomizations } from './event-email-customizations.ts';
+import { EventEmailCustomizations } from './event-email-customizations.tsx';
 
 describe('EventEmailCustomizations', () => {
   let user: User;
@@ -43,10 +43,15 @@ describe('EventEmailCustomizations', () => {
     });
   });
 
-  describe('get', () => {
-    test('returns null when customization does not exist', async () => {
-      const result = await emailCustomizations.get('proposal-submitted', 'en');
-      expect(result).toBeNull();
+  describe('getForPreview', () => {
+    test('returns null customization when  does not exist', async () => {
+      const result = await emailCustomizations.getForPreview('proposal-submitted', 'en');
+      expect(result).toMatchObject({
+        template: 'proposal-submitted',
+        customization: null,
+        defaults: { subject: '', from: '' },
+        preview: expect.any(String),
+      });
     });
 
     test('returns customization when it exists', async () => {
@@ -56,29 +61,29 @@ describe('EventEmailCustomizations', () => {
         attributes: { subject: 'Custom Subject' },
       });
 
-      const result = await emailCustomizations.get('proposal-submitted', 'en');
+      const result = await emailCustomizations.getForPreview('proposal-submitted', 'en');
       expect(result).toMatchObject({
-        id: customization.id,
         template: 'proposal-submitted',
-        locale: 'en',
-        subject: 'Custom Subject',
+        customization,
+        defaults: { subject: '', from: '' },
+        preview: expect.any(String),
       });
     });
   });
 
-  describe('upsert', () => {
+  describe('save', () => {
     test('creates new customization when it does not exist', async () => {
       const data = {
+        template: 'proposal-submitted',
+        locale: 'en',
         subject: 'New Subject',
         content: 'New Content',
-      };
+      } as const;
 
-      const result = await emailCustomizations.upsert('proposal-submitted', 'en', data);
+      const result = await emailCustomizations.save(data);
 
       expect(result).toMatchObject({
         eventId: event.id,
-        template: 'proposal-submitted',
-        locale: 'en',
         ...data,
       });
     });
@@ -91,17 +96,39 @@ describe('EventEmailCustomizations', () => {
       });
 
       const data = {
+        template: 'proposal-submitted',
+        locale: 'en',
         subject: 'Updated Subject',
         content: 'Updated Content',
-      };
+      } as const;
 
-      const result = await emailCustomizations.upsert('proposal-submitted', 'en', data);
+      const result = await emailCustomizations.save(data);
 
-      expect(result).toMatchObject({ template: 'proposal-submitted', locale: 'en', ...data });
+      expect(result).toMatchObject(data);
+    });
+
+    test('resets customization when both subject and content are empty', async () => {
+      const customization = await eventEmailCustomizationFactory({
+        event,
+        traits: ['proposal-submitted'],
+        attributes: { subject: 'Subject to Delete', content: 'Content to Delete' },
+      });
+
+      const data = {
+        template: 'proposal-submitted',
+        locale: 'en',
+        subject: '',
+        content: '',
+      } as const;
+
+      await emailCustomizations.save(data);
+
+      const deleted = await db.eventEmailCustomization.findUnique({ where: { id: customization.id } });
+      expect(deleted).toBeNull();
     });
   });
 
-  describe('delete', () => {
+  describe('reset', () => {
     test('deletes existing customization', async () => {
       const customization = await eventEmailCustomizationFactory({
         event,
@@ -109,22 +136,10 @@ describe('EventEmailCustomizations', () => {
         attributes: { subject: 'Subject to Delete' },
       });
 
-      await emailCustomizations.delete('proposal-submitted', 'en');
+      await emailCustomizations.reset({ template: 'proposal-submitted', locale: 'en' });
 
       const deleted = await db.eventEmailCustomization.findUnique({ where: { id: customization.id } });
       expect(deleted).toBeNull();
-    });
-
-    test('throws error when trying to delete non-existent customization', async () => {
-      const otherEvent = await eventFactory({ team, creator: user });
-
-      await eventEmailCustomizationFactory({
-        event: otherEvent,
-        traits: ['proposal-submitted'],
-        attributes: { subject: 'Other Subject' },
-      });
-
-      await expect(emailCustomizations.delete('proposal-submitted', 'en')).rejects.toThrow();
     });
   });
 });

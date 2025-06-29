@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { EventEmailCustomizations } from '~/.server/event-settings/event-email-customizations.ts';
+import { EventEmailCustomizations } from '~/.server/event-settings/event-email-customizations.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H2, H3, Subtitle } from '~/design-system/typography.tsx';

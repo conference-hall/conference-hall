@@ -1,19 +1,32 @@
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { render } from '@react-email/components';
 
-type EmailRendered = { html: string; text: string };
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export function getEmailTemplateComponent(templateName: string) {
+  try {
+    const templatePath = join(__dirname, `templates/${templateName}.tsx`);
+    return import(/* @vite-ignore */ templatePath).then((module) => module.default);
+  } catch {
+    return null;
+  }
+}
 
 export async function renderEmail(
   name: string,
   data: Record<string, any>,
   locale: string,
   customization: Record<string, any> | null,
-): Promise<EmailRendered | null> {
+): Promise<{ html: string; text: string } | null> {
   try {
-    const EmailTemplate = await import(`./templates/${name}.tsx`).then((module) => module.default);
+    const EmailTemplate = await getEmailTemplateComponent(name);
+    if (!EmailTemplate) {
+      throw new Error(`Email template "${name}" cannot be loaded.`);
+    }
 
-    const html = await render(<EmailTemplate locale={locale} {...data} customization={customization} />, {
-      pretty: true,
-    });
+    const html = await render(<EmailTemplate locale={locale} {...data} customization={customization} />);
     const text = await render(<EmailTemplate locale={locale} {...data} customization={customization} />, {
       plainText: true,
     });
