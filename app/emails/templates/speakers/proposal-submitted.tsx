@@ -3,6 +3,7 @@ import type { CustomEmailData, LocaleEmailData } from '~/emails/email.types.ts';
 import type { EmailPayload } from '~/emails/send-email.job.ts';
 import { EmailMarkdown } from '~/emails/utils/email-mardown.tsx';
 import { buildSpeakerProfileUrl } from '~/emails/utils/urls.ts';
+import { getEmailI18n } from '~/libs/i18n/i18n.emails.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
@@ -14,25 +15,25 @@ type TemplateData = {
 type EmailProps = TemplateData & LocaleEmailData & CustomEmailData;
 
 export default function ProposalSubmittedEmail({ event, proposal, locale, customization, preview }: EmailProps) {
+  const t = getEmailI18n(locale);
+
   return (
     <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
-      <Heading className={styles.h1}>Thank you for your proposal!</Heading>
+      <Heading className={styles.h1}>{t('speakers.proposal-submitted.body.title')}</Heading>
 
       {customization?.content ? (
         <EmailMarkdown>{customization.content}</EmailMarkdown>
       ) : (
         <>
-          <Text>
-            We've successfully received <strong>{proposal.title}</strong> for <strong>{event.name}</strong>.
-          </Text>
+          <Text>{t('speakers.proposal-submitted.body.text1', { proposal: proposal.title, event: event.name })}</Text>
 
-          <Text>To help organizers with the selection process, please complete your speaker profile.</Text>
+          <Text>{t('speakers.proposal-submitted.body.text2')}</Text>
         </>
       )}
 
       <Section className="text-center my-[32px]">
         <Button href={!preview ? buildSpeakerProfileUrl() : '#'} className={styles.button}>
-          Complete your speaker profile
+          {t('speakers.proposal-submitted.body.cta')}
         </Button>
       </Section>
     </BaseEventEmail>
@@ -41,11 +42,12 @@ export default function ProposalSubmittedEmail({ event, proposal, locale, custom
 
 ProposalSubmittedEmail.buildPayload = (data: TemplateData, localeOverride?: string): EmailPayload => {
   const locale = localeOverride || data.proposal.speakers[0]?.locale || 'en';
+  const t = getEmailI18n(locale);
 
   return {
     template: 'speakers/proposal-submitted',
-    subject: `[${data.event.name}] Submission confirmed`,
-    from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
+    subject: t('speakers.proposal-submitted.subject', { event: data.event.name }),
+    from: t('common.email.from.event', { event: data.event.name }),
     to: data.proposal.speakers.map((speaker) => speaker.email),
     data,
     locale,

@@ -6,5 +6,16 @@
   "speakers.proposal-accepted.body.title": "Proposition acceptée !",
   "speakers.proposal-accepted.body.text1": "Nous sommes ravis de vous informer que votre proposition a été acceptée pour {{event}} !",
   "speakers.proposal-accepted.body.formats": "Format(s) : {{formats, list}}",
-  "speakers.proposal-accepted.body.cta": "Confirmez ou déclinez votre participation"
+  "speakers.proposal-accepted.body.cta": "Confirmez ou déclinez votre participation",
+  "speakers.proposal-rejected.subject": "[{{event}}] Votre proposition a été déclinée",
+  "speakers.proposal-rejected.body.title": "Proposition déclinée.",
+  "speakers.proposal-rejected.body.text1": "Merci pour votre intérêt pour le {{event}} et pour avoir soumis votre proposition intitulée \"{{proposal}}\".",
+  "speakers.proposal-rejected.body.text2": "Après une considération attentive et un examen par notre comité de sélection, nous avons le regret de vous informer que votre proposition n'a pas été sélectionnée.",
+  "speakers.proposal-rejected.body.text3": "Bien que votre proposition n'ait pas été sélectionnée cette fois, nous apprécions sincèrement le temps et l'effort que vous avez consacrés à sa rédaction et à sa soumission.",
+  "speakers.proposal-rejected.body.text4": "Nous espérons que vous envisagerez de soumettre des propositions pour de futurs événements. Nous vous remercions de votre intérêt à faire partie de notre évènement.",
+  "speakers.proposal-submitted.subject": "[{{event}}] Soumission confirmée",
+  "speakers.proposal-submitted.body.title": "Merci pour votre proposition !",
+  "speakers.proposal-submitted.body.text1": "Nous avons bien reçu \"{{proposal}}\" pour {{event}}.",
+  "speakers.proposal-submitted.body.text2": "Pour aider les organisateurs dans le processus de sélection, veuillez compléter votre profil de conférencier.",
+  "speakers.proposal-submitted.body.cta": "Compléter votre profil de conférencier"
 }
