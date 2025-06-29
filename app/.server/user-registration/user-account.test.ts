@@ -116,7 +116,7 @@ describe('UserAccount', () => {
 
       expect(generateEmailVerificationLinkMock).toHaveBeenCalledWith('foo@example.com');
       expect(sendEmail.trigger).toHaveBeenCalledWith({
-        template: 'auth/email-verification',
+        template: 'auth-email-verification',
         from: 'Conference Hall <no-reply@mg.conference-hall.io>',
         to: ['foo@example.com'],
         subject: 'Verify your email address for Conference Hall',
@@ -152,7 +152,7 @@ describe('UserAccount', () => {
 
       expect(generatePasswordResetLinkMock).toHaveBeenCalledWith('foo@example.com');
       expect(sendEmail.trigger).toHaveBeenCalledWith({
-        template: 'auth/reset-password',
+        template: 'auth-reset-password',
         from: 'Conference Hall <no-reply@mg.conference-hall.io>',
         to: ['foo@example.com'],
         subject: 'Reset your password for Conference Hall',
@@ -192,7 +192,7 @@ describe('UserAccount', () => {
       expect(needVerification).toEqual(true);
       expect(generateEmailVerificationLinkMock).toHaveBeenCalledWith('foo@example.com');
       expect(sendEmail.trigger).toHaveBeenCalledWith({
-        template: 'auth/email-verification',
+        template: 'auth-email-verification',
         from: 'Conference Hall <no-reply@mg.conference-hall.io>',
         to: ['foo@example.com'],
         subject: 'Verify your email address for Conference Hall',

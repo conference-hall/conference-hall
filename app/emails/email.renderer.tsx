@@ -1,17 +1,22 @@
 import { render } from '@react-email/components';
-
-type EmailRendered = { html: string; text: string };
+import { type EmailTemplateName, getEmailTemplate } from './templates/templates.ts';
 
 export async function renderEmail(
-  name: string,
+  name: EmailTemplateName,
   data: Record<string, any>,
   locale: string,
-): Promise<EmailRendered | null> {
+  customization: Record<string, any> | null,
+): Promise<{ html: string; text: string } | null> {
   try {
-    const EmailTemplate = await import(`./templates/${name}.tsx`).then((module) => module.default);
+    const EmailTemplate = await getEmailTemplate(name);
+    if (!EmailTemplate) {
+      throw new Error(`Email template "${name}" cannot be loaded.`);
+    }
 
-    const html = await render(<EmailTemplate locale={locale} {...data} />, { pretty: true });
-    const text = await render(<EmailTemplate locale={locale} {...data} />, { plainText: true });
+    const html = await render(<EmailTemplate locale={locale} {...data} customization={customization} />);
+    const text = await render(<EmailTemplate locale={locale} {...data} customization={customization} />, {
+      plainText: true,
+    });
 
     return { html: html.replaceAll('http://www.w3.org', 'https://www.w3.org'), text };
   } catch (err) {

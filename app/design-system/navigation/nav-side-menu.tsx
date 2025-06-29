@@ -6,7 +6,14 @@ import { Badge } from '../badges.tsx';
 import { Card } from '../layouts/card.tsx';
 import { Text } from '../typography.tsx';
 
-type NavItem = { to: string; icon: React.ComponentType<{ className?: string }>; label: string; isNew?: boolean };
+type NavItem = {
+  to: string;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  hidden?: boolean;
+  isNew?: boolean;
+  end?: boolean;
+};
 
 type Props = { items: Array<NavItem>; className?: string };
 
@@ -15,19 +22,21 @@ export function NavSideMenu({ items, className, ...rest }: Props) {
   return (
     <aside className={cx('w-1/5 space-y-4', className)}>
       <Card as="nav" className="space-y-1 p-2" {...rest}>
-        {items.map((item) => (
-          <NavLink key={item.to} to={item.to} className={({ isActive }) => menuStyles(isActive)} end>
-            <div className="flex items-center">
-              <item.icon className="mr-2 size-4 shrink-0" aria-hidden="true" />
-              <Text>{item.label}</Text>
-            </div>
-            {item.isNew ? (
-              <Badge color="blue" compact>
-                {t('common.new')}
-              </Badge>
-            ) : null}
-          </NavLink>
-        ))}
+        {items
+          .filter((item) => !item.hidden)
+          .map((item) => (
+            <NavLink key={item.to} to={item.to} className={({ isActive }) => menuStyles(isActive)} end={item.end}>
+              <div className="flex items-center">
+                <item.icon className="mr-2 size-4 shrink-0" aria-hidden="true" />
+                <Text>{item.label}</Text>
+              </div>
+              {item.isNew ? (
+                <Badge color="blue" compact>
+                  {t('common.new')}
+                </Badge>
+              ) : null}
+            </NavLink>
+          ))}
         <a
           href="https://github.com/sponsors/conference-hall"
           target="_blank"

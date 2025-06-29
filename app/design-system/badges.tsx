@@ -4,7 +4,7 @@ import { cva } from 'class-variance-authority';
 const defaultBadge = cva('inline-flex items-center text-nowrap', {
   variants: {
     color: {
-      gray: 'bg-gray-50 text-gray-600 ring-1 ring-inset ring-gray-500/10',
+      gray: 'bg-gray-100 text-gray-800 ring-1 ring-inset ring-gray-500/10',
       red: 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/10',
       yellow: 'bg-yellow-50 text-yellow-800 ring-1 ring-inset ring-yellow-600/20',
       green: 'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20',
@@ -13,7 +13,7 @@ const defaultBadge = cva('inline-flex items-center text-nowrap', {
       purple: 'bg-purple-50 text-purple-700 ring-1 ring-inset ring-purple-700/10',
       pink: 'bg-pink-50 text-pink-700 ring-1 ring-inset ring-pink-700/10',
     },
-    compact: { true: 'px-1.5 py-0.5 h-5 text-[10px] font-medium', false: 'px-2 py-1 text-xs font-medium' },
+    compact: { true: 'px-1.5 py-0.5 h-5 text-[10px] font-medium', false: 'px-2.5 py-0.5 text-xs font-medium' },
     pill: { true: 'rounded-full', false: 'rounded-md' },
   },
   defaultVariants: { color: 'gray', pill: false, compact: false },

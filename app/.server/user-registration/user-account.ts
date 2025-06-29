@@ -1,7 +1,8 @@
 import type { TFunction } from 'i18next';
 import { db } from 'prisma/db.server.ts';
-import { sendVerificationEmail } from '~/emails/templates/auth/email-verification.tsx';
-import { sendResetPasswordEmail } from '~/emails/templates/auth/reset-password.tsx';
+import { sendEmail } from '~/emails/send-email.job.ts';
+import VerificationEmail from '~/emails/templates/auth/email-verification.tsx';
+import ResetPasswordEmail from '~/emails/templates/auth/reset-password.tsx';
 import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { appUrl } from '~/libs/env/env.server.ts';
 import { auth as firebaseAuth } from '../../libs/auth/firebase.server.ts';
@@ -59,7 +60,11 @@ export class UserAccount {
       passwordResetUrl.searchParams.set('oobCode', oobCode);
       passwordResetUrl.searchParams.set('email', email);
 
-      await sendResetPasswordEmail(email, locale, { passwordResetUrl: passwordResetUrl.toString() });
+      await sendEmail.trigger(
+        ResetPasswordEmail.buildPayload(email, locale, {
+          passwordResetUrl: passwordResetUrl.toString(),
+        }),
+      );
     } catch (error) {
       console.warn('sendResetPasswordEmail', error);
     }
@@ -86,7 +91,12 @@ export class UserAccount {
       emailVerificationUrl.searchParams.set('oobCode', oobCode);
       emailVerificationUrl.searchParams.set('email', email);
 
-      await sendVerificationEmail(email, locale, { emailVerificationUrl: emailVerificationUrl.toString() });
+      await sendEmail.trigger(
+        VerificationEmail.buildPayload(email, locale, {
+          emailVerificationUrl: emailVerificationUrl.toString(),
+        }),
+      );
+
       return true;
     } catch (error) {
       console.warn('checkEmailVerification', error);

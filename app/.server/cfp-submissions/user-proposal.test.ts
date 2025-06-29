@@ -246,7 +246,7 @@ describe('UserProposal', () => {
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
-          template: 'organizers/proposal-confirmed',
+          template: 'organizers-proposal-confirmed',
           to: [event.emailOrganizer],
         }),
       );
@@ -270,7 +270,7 @@ describe('UserProposal', () => {
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
-          template: 'organizers/proposal-declined',
+          template: 'organizers-proposal-declined',
           to: [event.emailOrganizer],
         }),
       );

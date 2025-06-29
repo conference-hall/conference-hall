@@ -1,44 +1,49 @@
 import { Button, Heading, Section, Text } from '@react-email/components';
-import { sendEmail } from '~/emails/send-email.job.ts';
+import type { LocaleEmailData } from '~/emails/email.types.ts';
+import type { EmailPayload } from '~/emails/send-email.job.ts';
+import { getEmailI18n } from '~/libs/i18n/i18n.emails.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
 type TemplateData = { passwordResetUrl: string };
 
-export function sendResetPasswordEmail(email: string, locale: string, data: TemplateData) {
-  return sendEmail.trigger({
-    template: 'auth/reset-password',
-    subject: 'Reset your password for Conference Hall',
-    from: 'Conference Hall <no-reply@mg.conference-hall.io>',
-    to: [email],
-    data,
-    locale,
-  });
-}
+type EmailProps = TemplateData & LocaleEmailData;
 
-type EmailProps = TemplateData & { locale: string };
-
-/** @public */
 export default function ResetPasswordEmail({ passwordResetUrl, locale }: EmailProps) {
+  const t = getEmailI18n(locale);
+
   return (
     <BaseEventEmail locale={locale}>
-      <Heading className={styles.h1}>Reset your password</Heading>
+      <Heading className={styles.h1}>{t('auth.reset-password.body.title')}</Heading>
 
-      <Text>Hello,</Text>
-      <Text>Click on the button to reset your Conference Hall password for your account.</Text>
+      <Text>{t('auth.reset-password.body.greeting')}</Text>
+      <Text>{t('auth.reset-password.body.text1')}</Text>
 
       <Section className="text-center my-[32px]">
         <Button href={passwordResetUrl} className={styles.button}>
-          Reset your password
+          {t('auth.reset-password.body.cta')}
         </Button>
       </Section>
 
-      <Text>If you didn’t ask to reset your password, you can ignore this email.</Text>
-      <Text>Thanks,</Text>
-      <Text>Conference Hall team</Text>
+      <Text>{t('auth.reset-password.body.text2')}</Text>
+      <Text>{t('auth.reset-password.body.signature')}</Text>
+      <Text>{t('common.email.signature')}</Text>
     </BaseEventEmail>
   );
 }
+
+ResetPasswordEmail.buildPayload = (email: string, locale: string, data: TemplateData): EmailPayload => {
+  const t = getEmailI18n(locale);
+
+  return {
+    template: 'auth-reset-password',
+    subject: t('auth.reset-password.subject'),
+    from: t('common.email.from.default'),
+    to: [email],
+    data,
+    locale,
+  };
+};
 
 ResetPasswordEmail.PreviewProps = {
   passwordResetUrl: 'http://localhost:3000/auth/reset-password',

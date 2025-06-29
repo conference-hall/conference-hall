@@ -6,7 +6,7 @@ export const typography = cva('', {
   variants: {
     variant: {
       primary: 'text-gray-900',
-      secondary: 'text-gray-600',
+      secondary: 'text-gray-500',
       link: 'text-indigo-600',
       warning: 'text-yellow-700',
       error: 'text-red-600',

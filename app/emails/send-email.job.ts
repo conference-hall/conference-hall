@@ -1,40 +1,62 @@
+import { db } from 'prisma/db.server.ts';
 import { renderEmail } from '~/emails/email.renderer.tsx';
 import { getEnv } from '~/libs/jobs/env.ts';
 import { job } from '~/libs/jobs/job.ts';
+import type { CustomTemplateName } from './email.types.ts';
 import { getEmailProvider } from './providers/provider.ts';
+import type { EmailTemplateName } from './templates/templates.ts';
 
-type Email = {
-  locale: string;
-  template: string;
+export type EmailPayload = {
+  template: EmailTemplateName;
   from: string;
   to: string[];
   subject: string;
   data: Record<string, any>;
+  customEventId?: string;
+  locale: string;
 };
 
 const env = getEnv();
 
-export const sendEmail = job<Email>({
+export const sendEmail = job<EmailPayload>({
   name: 'send-email',
   queue: 'default',
 
-  run: async (payload: Email) => {
+  run: async (payload: EmailPayload) => {
     const emailProvider = getEmailProvider(env);
 
     if (!emailProvider) return Promise.reject('Email provider not found');
 
-    const emailRendered = await renderEmail(payload.template, payload.data, payload.locale);
+    let customization = null;
+    if (payload.customEventId) {
+      customization = await getEmailCustomization(
+        payload.template as CustomTemplateName,
+        payload.locale,
+        payload.customEventId,
+      );
+    }
+
+    const emailRendered = await renderEmail(payload.template, payload.data, payload.locale, customization);
 
     if (!emailRendered) return Promise.reject('Email rendering failed');
 
+    const subject = customization?.subject || payload.subject;
     const { html, text } = emailRendered;
 
     return emailProvider.send({
       from: payload.from,
       to: payload.to.filter(Boolean),
-      subject: payload.subject,
+      subject,
       html,
       text,
     });
   },
 });
+
+async function getEmailCustomization(template: CustomTemplateName, locale: string, eventId: string) {
+  const emailCustomization = await db.eventEmailCustomization.findUnique({
+    where: { eventId_template_locale: { template, locale, eventId } },
+  });
+
+  return emailCustomization;
+}

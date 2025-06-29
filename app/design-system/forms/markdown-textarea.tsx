@@ -13,6 +13,7 @@ type MarkdownTextAreaProps = {
   description?: string;
   defaultValue?: string | null;
   error?: SubmissionError;
+  preview?: boolean;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const baseStyles = 'border-gray-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500';
@@ -25,6 +26,7 @@ export function MarkdownTextArea({
   className,
   error,
   defaultValue,
+  preview = true,
   ...rest
 }: MarkdownTextAreaProps) {
   const { t } = useTranslation();
@@ -63,19 +65,21 @@ export function MarkdownTextArea({
             </div>
           </div>
         </div>
-        <div className="absolute inset-x-px bottom-0 flex items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
+        <div className="absolute inset-x-px bottom-0 flex items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3 h-11">
           <p className="text-xs text-gray-500">{t('common.markdown-supported')}</p>
-          <div className="shrink-0">
-            <Button type="button" variant="secondary" size="s" onClick={handleOpenPreview}>
-              {t('common.preview')}
-            </Button>
-            <MardownPreviewModal
-              label={label}
-              markdown={markdown}
-              isOpen={isPreviewOpen}
-              onClose={handleClosePreview}
-            />
-          </div>
+          {preview ? (
+            <div className="shrink-0">
+              <Button type="button" variant="secondary" size="s" onClick={handleOpenPreview}>
+                {t('common.preview')}
+              </Button>
+              <MardownPreviewModal
+                label={label}
+                markdown={markdown}
+                isOpen={isPreviewOpen}
+                onClose={handleClosePreview}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
       <div id={`${name}-describe`}>

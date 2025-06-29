@@ -239,7 +239,7 @@ describe('TalkSubmission', () => {
       expect(sendEmail.trigger).toHaveBeenNthCalledWith(
         1,
         expect.objectContaining({
-          template: 'speakers/proposal-submitted',
+          template: 'speakers-proposal-submitted',
           to: [speaker.email],
         }),
       );
@@ -247,7 +247,7 @@ describe('TalkSubmission', () => {
       expect(sendEmail.trigger).toHaveBeenNthCalledWith(
         2,
         expect.objectContaining({
-          template: 'organizers/proposal-submitted',
+          template: 'organizers-proposal-submitted',
           to: [event.emailOrganizer],
         }),
       );
