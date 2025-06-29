@@ -7,12 +7,11 @@ import { applyTraits } from './helpers/traits.ts';
 const TRAITS = {
   'proposal-submitted': { template: 'proposal-submitted' },
   'proposal-accepted': { template: 'proposal-accepted' },
-  'proposal-declined': { template: 'proposal-declined' },
+  'proposal-rejected': { template: 'proposal-rejected' },
   french: { locale: 'fr' },
   'with-all-fields': {
     subject: 'Custom Subject',
     content: 'Custom markdown content',
-    signature: 'Best regards,\\nThe Team',
   },
 };
 

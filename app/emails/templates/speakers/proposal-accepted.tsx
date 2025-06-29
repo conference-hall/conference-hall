@@ -1,7 +1,7 @@
 import { Button, Heading, Section, Text } from '@react-email/components';
 import type { CustomEmailData, LocaleEmailData } from '~/emails/email.types.ts';
 import type { EmailPayload } from '~/emails/send-email.job.ts';
-import { EmailMarkdown } from '~/emails/utils/email-mardown.tsx';
+import { EmailMarkdown } from '~/emails/utils/email-markdown.tsx';
 import { buildSpeakerProposalUrl } from '~/emails/utils/urls.ts';
 import { getEmailI18n } from '~/libs/i18n/i18n.emails.ts';
 import { styles } from '../base-email.tsx';
