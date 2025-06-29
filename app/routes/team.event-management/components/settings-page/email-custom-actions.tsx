@@ -72,6 +72,7 @@ function EmailCustomModal({ template, locale, customization, defaults, open, onC
           <MarkdownTextArea
             name="content"
             label={t('event-management.settings.emails.form.content.label')}
+            description={t('event-management.settings.emails.form.content.description')}
             defaultValue={customization?.content || ''}
             rows={12}
             preview={false}
