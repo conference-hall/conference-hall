@@ -1,0 +1,10 @@
+{
+  "common.email.from.default": "Conference Hall <ne-pas-répondre@mg.conference-hall.io>",
+  "common.email.from.event": "{{event}} <ne-pas-répondre@mg.conference-hall.io>",
+  "auth.email-verification.body.title": "Bienvenue sur Conference Hall",
+  "speakers.proposal-accepted.subject": "[{{event}}] Félicitations ! Votre proposition a été acceptée",
+  "speakers.proposal-accepted.body.title": "Proposition acceptée !",
+  "speakers.proposal-accepted.body.text1": "Nous sommes ravis de vous informer que votre proposition a été acceptée pour {{event}} !",
+  "speakers.proposal-accepted.body.formats": "Format(s) : {{formats, list}}",
+  "speakers.proposal-accepted.body.cta": "Confirmez ou déclinez votre participation"
+}

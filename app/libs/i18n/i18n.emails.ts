@@ -17,5 +17,5 @@ function getInstance() {
 }
 
 export function getEmailI18n(locale: string) {
-  return getInstance().getFixedT(locale);
+  return getInstance().getFixedT(locale, 'email');
 }

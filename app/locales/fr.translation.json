@@ -279,7 +279,6 @@
   "common.you": "Vous",
   "common.zoom-in": "Zoom avant",
   "common.zoom-out": "Zoom arrière",
-  "emails.email-verification.title": "Bienvenue sur Conference Hall",
   "error.auth.account-exists": "Vous devez connecter votre compte avec le fournisseur d'identité que vous avez utilisé pour vous inscrire.",
   "error.auth.email-password-incorrect": "L'adresse électronique ou le mot de passe est incorrect.",
   "error.auth.expired-action-code": "Votre lien a expiré. Veuillez essayer de réinitialiser votre mot de passe.",

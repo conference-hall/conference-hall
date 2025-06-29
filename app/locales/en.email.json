@@ -1,0 +1,10 @@
+{
+  "common.email.from.default": "Conference Hall <no-reply@mg.conference-hall.io>",
+  "common.email.from.event": "{{event}} <no-reply@mg.conference-hall.io>",
+  "auth.email-verification.body.title": "Welcome to Conference Hall",
+  "speakers.proposal-accepted.subject": "[{{event}}] Congrats! Your proposal has been accepted",
+  "speakers.proposal-accepted.body.title": "Proposal accepted!",
+  "speakers.proposal-accepted.body.text1": "We're thrilled to inform you that your proposal has been accepted for {{event}}!",
+  "speakers.proposal-accepted.body.formats": "Format(s): {{formats, list}}",
+  "speakers.proposal-accepted.body.cta": "Confirm or decline your participation"
+}
