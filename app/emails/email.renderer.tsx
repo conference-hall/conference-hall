@@ -5,11 +5,22 @@ import { render } from '@react-email/components';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const templateCache: Record<string, any> = {};
+
 export function getEmailTemplateComponent(templateName: string) {
   try {
+    if (templateCache[templateName]) {
+      return Promise.resolve(templateCache[templateName]);
+    }
+
     const templatePath = join(__dirname, `templates/${templateName}.tsx`);
-    return import(/* @vite-ignore */ templatePath).then((module) => module.default);
-  } catch {
+    return import(/* @vite-ignore */ templatePath).then((module) => {
+      const template = module.default;
+      templateCache[templateName] = template;
+      return template;
+    });
+  } catch (error) {
+    console.error(`Failed to load email template "${templateName}":`, error);
     return null;
   }
 }

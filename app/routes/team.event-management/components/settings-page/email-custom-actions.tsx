@@ -6,6 +6,8 @@ import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 
+// todo(email): add translations
+
 type CustomizationProps = {
   template: string;
   locale: string;
