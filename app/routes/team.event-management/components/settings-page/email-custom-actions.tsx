@@ -6,8 +6,6 @@ import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 
-// todo(email): add translations
-
 type CustomizationProps = {
   template: string;
   locale: string;
@@ -36,11 +34,12 @@ export function ResetTemplateButton({ template, locale, customization }: Customi
 }
 
 export function EditTemplateButton(props: CustomizationProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   return (
     <>
       <Button type="button" onClick={() => setOpen(true)}>
-        Edit template
+        {t('event-management.settings.emails.edit.button')}
       </Button>
       <EmailCustomModal {...props} open={open} onClose={() => setOpen(false)} />
     </>
@@ -57,7 +56,7 @@ function EmailCustomModal({ template, locale, customization, defaults, open, onC
   const { t } = useTranslation();
 
   return (
-    <Modal title="Edit template" size="l" open={open} onClose={onClose}>
+    <Modal title={t('event-management.settings.emails.edit.title')} size="l" open={open} onClose={onClose}>
       <Modal.Content>
         <Form id={formId} method="POST" className="space-y-4" onSubmit={onClose}>
           <input type="hidden" name="template" value={template} />
