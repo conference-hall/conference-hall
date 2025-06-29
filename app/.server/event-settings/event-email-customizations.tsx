@@ -46,7 +46,7 @@ export class EventEmailCustomizations {
 
     // Get default subject and from address from the template
     const { subject, from } = EmailTemplate.buildPayload
-      ? (EmailTemplate.buildPayload(templateData) as EmailPayload)
+      ? (EmailTemplate.buildPayload(templateData, locale) as EmailPayload)
       : { subject: '', from: '' };
 
     try {

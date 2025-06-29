@@ -46,8 +46,9 @@ export default function ProposalRejectedEmail({ event, proposal, locale, customi
   );
 }
 
-ProposalRejectedEmail.buildPayload = (data: TemplateData): EmailPayload => {
-  const locale = data.proposal.speakers[0]?.locale ?? 'en';
+ProposalRejectedEmail.buildPayload = (data: TemplateData, localeOverride?: string): EmailPayload => {
+  const locale = localeOverride || data.proposal.speakers[0]?.locale || 'en';
+
   return {
     template: 'speakers/proposal-rejected',
     subject: `[${data.event.name}] Your proposal has been declined`,

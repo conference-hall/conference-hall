@@ -39,8 +39,9 @@ export default function ProposalSubmittedEmail({ event, proposal, locale, custom
   );
 }
 
-ProposalSubmittedEmail.buildPayload = (data: TemplateData): EmailPayload => {
-  const locale = data.proposal.speakers[0]?.locale ?? 'en';
+ProposalSubmittedEmail.buildPayload = (data: TemplateData, localeOverride?: string): EmailPayload => {
+  const locale = localeOverride || data.proposal.speakers[0]?.locale || 'en';
+
   return {
     template: 'speakers/proposal-submitted',
     subject: `[${data.event.name}] Submission confirmed`,

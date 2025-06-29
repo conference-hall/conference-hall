@@ -3,6 +3,7 @@ import type { CustomEmailData, LocaleEmailData } from '~/emails/email.types.ts';
 import type { EmailPayload } from '~/emails/send-email.job.ts';
 import { EmailMarkdown } from '~/emails/utils/email-mardown.tsx';
 import { buildSpeakerProposalUrl } from '~/emails/utils/urls.ts';
+import { getEmailI18n } from '~/libs/i18n/i18n.emails.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
@@ -19,16 +20,16 @@ type TemplateData = {
 type EmailProps = TemplateData & LocaleEmailData & CustomEmailData;
 
 export default function ProposalAcceptedEmail({ event, proposal, locale, customization, preview }: EmailProps) {
+  const t = getEmailI18n(locale);
+
   return (
     <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
-      <Heading className={styles.h1}>Proposal accepted!</Heading>
+      <Heading className={styles.h1}>{t('speakers.proposal-accepted.body.title')}</Heading>
 
       {customization?.content ? (
         <EmailMarkdown>{customization.content}</EmailMarkdown>
       ) : (
-        <Text>
-          We're thrilled to inform you that your proposal has been accepted for <strong>{event.name}!</strong>
-        </Text>
+        <Text>{t('speakers.proposal-accepted.body.text1', { event: event.name })}</Text>
       )}
 
       <Section className={styles.card}>
@@ -36,26 +37,31 @@ export default function ProposalAcceptedEmail({ event, proposal, locale, customi
           <strong>{proposal.title}</strong>
           <br />
           {proposal.formats.length > 0
-            ? `Format(s): ${proposal.formats.map((format) => format.name).join(', ')}`
+            ? t('speakers.proposal-accepted.body.formats', {
+                formats: proposal.formats.map((f) => f.name),
+                interpolation: { escapeValue: false },
+              })
             : null}
         </Text>
       </Section>
 
       <Section className="text-center my-[32px]">
         <Button href={!preview ? buildSpeakerProposalUrl(event.slug, proposal.id) : '#'} className={styles.button}>
-          Confirm or decline your participation
+          {t('speakers.proposal-accepted.body.cta')}
         </Button>
       </Section>
     </BaseEventEmail>
   );
 }
 
-ProposalAcceptedEmail.buildPayload = (data: TemplateData): EmailPayload => {
-  const locale = data.proposal.speakers[0]?.locale ?? 'en';
+ProposalAcceptedEmail.buildPayload = (data: TemplateData, localeOverride?: string): EmailPayload => {
+  const locale = localeOverride || data.proposal.speakers[0]?.locale || 'en';
+  const t = getEmailI18n(locale);
+
   return {
     template: 'speakers/proposal-accepted',
-    subject: `[${data.event.name}] Congrats! Your proposal has been accepted`,
-    from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
+    subject: t('speakers.proposal-accepted.subject', { event: data.event.name }),
+    from: t('common.email.from.event', { event: data.event.name }),
     to: data.proposal.speakers.map((speaker) => speaker.email),
     data,
     locale,
@@ -68,7 +74,7 @@ ProposalAcceptedEmail.PreviewProps = {
   proposal: {
     id: '123',
     title: 'My awesome proposal',
-    formats: [{ name: 'Talk' }],
+    formats: [{ name: 'Quickie' }],
     speakers: [{ email: 'john@email.com', locale: 'en' }],
   },
 } as EmailProps;

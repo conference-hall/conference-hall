@@ -14,7 +14,7 @@ export default function VerificationEmail({ emailVerificationUrl, locale }: Emai
 
   return (
     <BaseEventEmail locale={locale}>
-      <Heading className={styles.h1}>{t('emails.email-verification.title')}</Heading>
+      <Heading className={styles.h1}>{t('auth.email-verification.body.title')}</Heading>
 
       <Text>Hello,</Text>
       <Text>Thanks for signing up to Conference Hall! Click on the button to verify your email address.</Text>
