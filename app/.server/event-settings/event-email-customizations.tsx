@@ -1,9 +1,8 @@
 import { render } from '@react-email/components';
 import { db } from 'prisma/db.server.ts';
 import xss from 'xss';
-import { getEmailTemplateComponent } from '~/emails/email.renderer.tsx';
-import type { CustomTemplate, EventEmailCustomDelete, EventEmailCustomUpsert } from '~/emails/email.types.ts';
-import type { EmailPayload } from '~/emails/send-email.job.ts';
+import type { CustomTemplateName, EventEmailCustomDelete, EventEmailCustomUpsert } from '~/emails/email.types.ts';
+import { getCustomTemplate } from '~/emails/templates/templates.ts';
 import { NotFoundError } from '~/libs/errors.server.ts';
 import { UserEvent } from './user-event.ts';
 
@@ -23,14 +22,14 @@ export class EventEmailCustomizations {
     return db.eventEmailCustomization.findMany({ where: { eventId: event.id } });
   }
 
-  async getForPreview(template: CustomTemplate, locale = 'en') {
+  async getForPreview(template: CustomTemplateName, locale = 'en') {
     const event = await this.userEvent.needsPermission('canEditEvent');
     const customization = await db.eventEmailCustomization.findUnique({
       where: { eventId_template_locale: { eventId: event.id, template, locale } },
     });
 
     // Get the email template component for preview
-    const EmailTemplate = await getEmailTemplateComponent(`speakers/${template}`);
+    const EmailTemplate = await getCustomTemplate(template);
     if (!EmailTemplate) {
       throw new NotFoundError(`Email template "${template}" not found`);
     }
@@ -44,10 +43,7 @@ export class EventEmailCustomizations {
       customization: { subject: customization?.subject, content: customization?.content },
     };
 
-    // Get default subject and from address from the template
-    const { subject, from } = EmailTemplate.buildPayload
-      ? (EmailTemplate.buildPayload(templateData, locale) as EmailPayload)
-      : { subject: '', from: '' };
+    const { subject, from } = EmailTemplate.buildPayload(templateData, locale);
 
     try {
       const preview = await render(<EmailTemplate {...templateData} />);

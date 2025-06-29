@@ -31,7 +31,7 @@ describe('Send Email Job', () => {
 
   describe('sendEmail job', () => {
     const defaultPayload: EmailPayload = {
-      template: 'proposal-submitted',
+      template: 'speakers-proposal-submitted',
       from: 'noreply@example.com',
       to: ['user@example.com'],
       subject: 'Test Email',
@@ -44,7 +44,7 @@ describe('Send Email Job', () => {
 
       await sendEmail.config.run(defaultPayload);
 
-      expect(mockRenderEmail).toHaveBeenCalledWith('proposal-submitted', { name: 'John Doe' }, 'en', null);
+      expect(mockRenderEmail).toHaveBeenCalledWith('speakers-proposal-submitted', { name: 'John Doe' }, 'en', null);
 
       expect(mockEmailProvider.send).toHaveBeenCalledWith({
         from: 'noreply@example.com',
@@ -59,7 +59,7 @@ describe('Send Email Job', () => {
       const event = await eventFactory();
       const customization = await eventEmailCustomizationFactory({
         event,
-        traits: ['proposal-submitted'],
+        traits: ['speakers-proposal-submitted'],
         attributes: {
           locale: 'en',
           subject: 'Custom Subject',
@@ -69,14 +69,19 @@ describe('Send Email Job', () => {
 
       const payloadWithCustomization: EmailPayload = {
         ...defaultPayload,
-        customization: { eventId: event.id, template: 'proposal-submitted' },
+        customEventId: event.id,
       };
 
       mockRenderEmail.mockResolvedValue({ html: '<html>Custom HTML</html>', text: 'Custom Text' });
 
       await sendEmail.config.run(payloadWithCustomization);
 
-      expect(mockRenderEmail).toHaveBeenCalledWith('proposal-submitted', { name: 'John Doe' }, 'en', customization);
+      expect(mockRenderEmail).toHaveBeenCalledWith(
+        'speakers-proposal-submitted',
+        { name: 'John Doe' },
+        'en',
+        customization,
+      );
 
       expect(mockEmailProvider.send).toHaveBeenCalledWith({
         from: 'noreply@example.com',
@@ -91,7 +96,7 @@ describe('Send Email Job', () => {
       const event = await eventFactory();
       await eventEmailCustomizationFactory({
         event,
-        traits: ['proposal-submitted'],
+        traits: ['speakers-proposal-submitted'],
         attributes: {
           locale: 'en',
           subject: null,
@@ -100,10 +105,7 @@ describe('Send Email Job', () => {
 
       const payloadWithCustomization: EmailPayload = {
         ...defaultPayload,
-        customization: {
-          eventId: event.id,
-          template: 'proposal-submitted',
-        },
+        customEventId: event.id,
       };
 
       mockRenderEmail.mockResolvedValue({ html: '<html>HTML</html>', text: 'Text' });
@@ -142,21 +144,26 @@ describe('Send Email Job', () => {
       const event = await eventFactory();
       const customization = await eventEmailCustomizationFactory({
         event,
-        traits: ['proposal-submitted', 'french'],
+        traits: ['speakers-proposal-submitted', 'french'],
         attributes: { subject: 'Sujet personnalisé' },
       });
 
       const frenchPayload: EmailPayload = {
         ...defaultPayload,
         locale: 'fr',
-        customization: { eventId: event.id, template: 'proposal-submitted' },
+        customEventId: event.id,
       };
 
       mockRenderEmail.mockResolvedValue({ html: '<html>Bonjour</html>', text: 'Bonjour' });
 
       await sendEmail.config.run(frenchPayload);
 
-      expect(mockRenderEmail).toHaveBeenCalledWith('proposal-submitted', { name: 'John Doe' }, 'fr', customization);
+      expect(mockRenderEmail).toHaveBeenCalledWith(
+        'speakers-proposal-submitted',
+        { name: 'John Doe' },
+        'fr',
+        customization,
+      );
 
       expect(mockEmailProvider.send).toHaveBeenCalledWith({
         from: 'noreply@example.com',
@@ -172,14 +179,14 @@ describe('Send Email Job', () => {
 
       const payloadWithNonExistentCustomization: EmailPayload = {
         ...defaultPayload,
-        customization: { eventId: event.id, template: 'proposal-submitted' },
+        customEventId: event.id,
       };
 
       mockRenderEmail.mockResolvedValue({ html: '<html>Default</html>', text: 'Default' });
 
       await sendEmail.config.run(payloadWithNonExistentCustomization);
 
-      expect(mockRenderEmail).toHaveBeenCalledWith('proposal-submitted', { name: 'John Doe' }, 'en', null);
+      expect(mockRenderEmail).toHaveBeenCalledWith('speakers-proposal-submitted', { name: 'John Doe' }, 'en', null);
 
       expect(mockEmailProvider.send).toHaveBeenCalledWith({
         from: 'noreply@example.com',

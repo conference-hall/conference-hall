@@ -6,7 +6,8 @@ vi.mock('@react-email/components', () => ({
 }));
 
 import { render } from '@react-email/components';
-import { getEmailTemplateComponent, renderEmail } from './email.renderer.tsx';
+import { renderEmail } from './email.renderer.tsx';
+import { getEmailTemplate } from './templates/templates.ts';
 
 const mockRender = vi.mocked(render);
 
@@ -21,7 +22,7 @@ describe('Email Renderer', () => {
 
   describe('getEmailTemplateComponent', () => {
     it('loads and caches existing email template successfully', async () => {
-      const result = await getEmailTemplateComponent('base-email');
+      const result = await getEmailTemplate('base-email');
 
       expect(result).toBeDefined();
       expect(result).not.toBeNull();
@@ -29,9 +30,9 @@ describe('Email Renderer', () => {
 
     it('returns cached template on subsequent calls', async () => {
       // First call
-      const result1 = await getEmailTemplateComponent('base-email');
+      const result1 = await getEmailTemplate('base-email');
       // Second call should return cached version
-      const result2 = await getEmailTemplateComponent('base-email');
+      const result2 = await getEmailTemplate('base-email');
 
       expect(result1).toBeDefined();
       expect(result2).toBeDefined();
@@ -41,8 +42,8 @@ describe('Email Renderer', () => {
     it('handles template loading gracefully', async () => {
       // Test that the function can handle various template names
       // without throwing unhandled errors
-      const result1 = await getEmailTemplateComponent('base-email');
-      const result2 = await getEmailTemplateComponent('base-event-email');
+      const result1 = await getEmailTemplate('base-email');
+      const result2 = await getEmailTemplate('base-event-email');
 
       expect(result1).toBeDefined();
       expect(result2).toBeDefined();

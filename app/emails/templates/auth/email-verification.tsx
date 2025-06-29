@@ -36,7 +36,7 @@ VerificationEmail.buildPayload = (email: string, locale: string, data: TemplateD
   const t = getEmailI18n(locale);
 
   return {
-    template: 'auth/email-verification',
+    template: 'auth-email-verification',
     subject: t('auth.email-verification.subject'),
     from: t('common.email.from.default'),
     to: [email],

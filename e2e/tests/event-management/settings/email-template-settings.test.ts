@@ -23,16 +23,16 @@ test.describe('Email Template Settings', () => {
 
   test('displays email template customization page', async ({ page }) => {
     const templatePage = new EmailTemplateSettingsPage(page);
-    await templatePage.goto(team.slug, event.slug, 'proposal-submitted', 'en');
+    await templatePage.goto(team.slug, event.slug, 'speakers-proposal-submitted', 'en');
 
-    await expect(templatePage.getTemplateHeading('proposal-submitted')).toBeVisible();
+    await expect(templatePage.getTemplateHeading('speakers-proposal-submitted')).toBeVisible();
     await expect(templatePage.editButton).toBeVisible();
     await expect(templatePage.backButton).toBeVisible();
   });
 
   test('navigates back to emails list', async ({ page }) => {
     const templatePage = new EmailTemplateSettingsPage(page);
-    await templatePage.goto(team.slug, event.slug, 'proposal-submitted', 'en');
+    await templatePage.goto(team.slug, event.slug, 'speakers-proposal-submitted', 'en');
     await templatePage.clickBackButton();
 
     const emailsPage = new EmailsSettingsPage(page);
@@ -41,7 +41,7 @@ test.describe('Email Template Settings', () => {
 
   test('opens edit template modal', async ({ page }) => {
     const templatePage = new EmailTemplateSettingsPage(page);
-    await templatePage.goto(team.slug, event.slug, 'proposal-submitted', 'en');
+    await templatePage.goto(team.slug, event.slug, 'speakers-proposal-submitted', 'en');
     await templatePage.clickEditButton();
 
     await expect(templatePage.subjectInput).toBeVisible();
@@ -51,7 +51,7 @@ test.describe('Email Template Settings', () => {
 
   test('customizes email template', async ({ page }) => {
     const templatePage = new EmailTemplateSettingsPage(page);
-    await templatePage.goto(team.slug, event.slug, 'proposal-submitted', 'en');
+    await templatePage.goto(team.slug, event.slug, 'speakers-proposal-submitted', 'en');
     await templatePage.clickEditButton();
     await templatePage.fillSubject('Custom Subject for Test');
     await templatePage.fillContent('Custom email content for testing purposes.');
@@ -63,7 +63,7 @@ test.describe('Email Template Settings', () => {
 
   test('cancels edit template modal', async ({ page }) => {
     const templatePage = new EmailTemplateSettingsPage(page);
-    await templatePage.goto(team.slug, event.slug, 'proposal-submitted', 'en');
+    await templatePage.goto(team.slug, event.slug, 'speakers-proposal-submitted', 'en');
     await templatePage.clickEditButton();
     await templatePage.fillSubject('Test Subject');
 
@@ -72,7 +72,7 @@ test.describe('Email Template Settings', () => {
 
   test('resets email template to default', async ({ page }) => {
     const templatePage = new EmailTemplateSettingsPage(page);
-    await templatePage.goto(team.slug, event.slug, 'proposal-submitted', 'en');
+    await templatePage.goto(team.slug, event.slug, 'speakers-proposal-submitted', 'en');
     await templatePage.clickEditButton();
     await templatePage.fillSubject('Custom Subject');
     await templatePage.saveChanges();

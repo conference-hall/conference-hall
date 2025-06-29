@@ -5,9 +5,9 @@ import { eventFactory } from './events.ts';
 import { applyTraits } from './helpers/traits.ts';
 
 const TRAITS = {
-  'proposal-submitted': { template: 'proposal-submitted' },
-  'proposal-accepted': { template: 'proposal-accepted' },
-  'proposal-rejected': { template: 'proposal-rejected' },
+  'speakers-proposal-submitted': { template: 'speakers-proposal-submitted' },
+  'speakers-proposal-accepted': { template: 'speakers-proposal-accepted' },
+  'speakers-proposal-rejected': { template: 'speakers-proposal-rejected' },
   french: { locale: 'fr' },
   'with-all-fields': {
     subject: 'Custom Subject',
@@ -31,7 +31,7 @@ export const eventEmailCustomizationFactory = async (options: FactoryOptions = {
   }
 
   const defaultAttributes: Prisma.EventEmailCustomizationCreateInput = {
-    template: 'proposal-submitted',
+    template: 'speakers-proposal-submitted',
     locale: 'en',
     subject: randText(),
     content: randParagraph(),

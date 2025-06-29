@@ -12,11 +12,15 @@ export interface CustomEmailData {
   } | null;
 }
 
-export const CUSTOM_TEMPLATES = ['proposal-submitted', 'proposal-accepted', 'proposal-rejected'] as const;
+export const CUSTOM_EMAIL_TEMPLATES = [
+  'speakers-proposal-submitted',
+  'speakers-proposal-accepted',
+  'speakers-proposal-rejected',
+] as const;
 
-export const CustomTemplateSchema = z.enum(['proposal-submitted', 'proposal-accepted', 'proposal-rejected']);
+export type CustomTemplateName = (typeof CUSTOM_EMAIL_TEMPLATES)[number];
 
-export type CustomTemplate = z.infer<typeof CustomTemplateSchema>;
+export const CustomTemplateSchema = z.enum(CUSTOM_EMAIL_TEMPLATES);
 
 export const EventEmailCustomUpsertSchema = z.object({
   template: CustomTemplateSchema,

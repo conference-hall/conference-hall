@@ -28,14 +28,14 @@ describe('EventEmailCustomizations', () => {
     test('returns customizations for the event', async () => {
       await eventEmailCustomizationFactory({
         event,
-        traits: ['proposal-submitted'],
+        traits: ['speakers-proposal-submitted'],
         attributes: { subject: 'Custom Subject', content: 'Custom Content' },
       });
 
       const result = await emailCustomizations.list();
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject({
-        template: 'proposal-submitted',
+        template: 'speakers-proposal-submitted',
         locale: 'en',
         subject: 'Custom Subject',
         content: 'Custom Content',
@@ -45,9 +45,9 @@ describe('EventEmailCustomizations', () => {
 
   describe('getForPreview', () => {
     test('returns null customization when  does not exist', async () => {
-      const result = await emailCustomizations.getForPreview('proposal-submitted', 'en');
+      const result = await emailCustomizations.getForPreview('speakers-proposal-submitted', 'en');
       expect(result).toMatchObject({
-        template: 'proposal-submitted',
+        template: 'speakers-proposal-submitted',
         customization: null,
         defaults: { subject: expect.any(String), from: expect.any(String) },
         preview: expect.any(String),
@@ -57,13 +57,13 @@ describe('EventEmailCustomizations', () => {
     test('returns customization when it exists', async () => {
       const customization = await eventEmailCustomizationFactory({
         event,
-        traits: ['proposal-submitted'],
+        traits: ['speakers-proposal-submitted'],
         attributes: { subject: 'Custom Subject' },
       });
 
-      const result = await emailCustomizations.getForPreview('proposal-submitted', 'en');
+      const result = await emailCustomizations.getForPreview('speakers-proposal-submitted', 'en');
       expect(result).toMatchObject({
-        template: 'proposal-submitted',
+        template: 'speakers-proposal-submitted',
         customization,
         defaults: { subject: expect.any(String), from: expect.any(String) },
         preview: expect.any(String),
@@ -74,7 +74,7 @@ describe('EventEmailCustomizations', () => {
   describe('save', () => {
     test('creates new customization when it does not exist', async () => {
       const data = {
-        template: 'proposal-submitted',
+        template: 'speakers-proposal-submitted',
         locale: 'en',
         subject: 'New Subject',
         content: 'New Content',
@@ -91,12 +91,12 @@ describe('EventEmailCustomizations', () => {
     test('updates existing customization when it exists', async () => {
       await eventEmailCustomizationFactory({
         event,
-        traits: ['proposal-submitted'],
+        traits: ['speakers-proposal-submitted'],
         attributes: { subject: 'Original Subject' },
       });
 
       const data = {
-        template: 'proposal-submitted',
+        template: 'speakers-proposal-submitted',
         locale: 'en',
         subject: 'Updated Subject',
         content: 'Updated Content',
@@ -110,12 +110,12 @@ describe('EventEmailCustomizations', () => {
     test('resets customization when both subject and content are empty', async () => {
       const customization = await eventEmailCustomizationFactory({
         event,
-        traits: ['proposal-submitted'],
+        traits: ['speakers-proposal-submitted'],
         attributes: { subject: 'Subject to Delete', content: 'Content to Delete' },
       });
 
       const data = {
-        template: 'proposal-submitted',
+        template: 'speakers-proposal-submitted',
         locale: 'en',
         subject: '',
         content: '',
@@ -132,11 +132,11 @@ describe('EventEmailCustomizations', () => {
     test('deletes existing customization', async () => {
       const customization = await eventEmailCustomizationFactory({
         event,
-        traits: ['proposal-submitted'],
+        traits: ['speakers-proposal-submitted'],
         attributes: { subject: 'Subject to Delete' },
       });
 
-      await emailCustomizations.reset({ template: 'proposal-submitted', locale: 'en' });
+      await emailCustomizations.reset({ template: 'speakers-proposal-submitted', locale: 'en' });
 
       const deleted = await db.eventEmailCustomization.findUnique({ where: { id: customization.id } });
       expect(deleted).toBeNull();

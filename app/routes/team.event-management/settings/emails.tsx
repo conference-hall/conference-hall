@@ -3,7 +3,7 @@ import { EventEmailCustomizations } from '~/.server/event-settings/event-email-c
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H2, H3, Subtitle } from '~/design-system/typography.tsx';
-import { CUSTOM_TEMPLATES } from '~/emails/email.types.ts';
+import { CUSTOM_EMAIL_TEMPLATES } from '~/emails/email.types.ts';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { SUPPORTED_LANGUAGES } from '~/libs/i18n/i18n.ts';
@@ -40,7 +40,7 @@ export default function EventEmailsSettingsRoute({ loaderData }: Route.Component
       </Card.Title>
 
       <Card.Content>
-        {CUSTOM_TEMPLATES.map((template) => (
+        {CUSTOM_EMAIL_TEMPLATES.map((template) => (
           <div key={template} className="border border-slate-200 rounded-lg p-4 space-y-3">
             <div>
               <H3 weight="medium">{t(`event-management.settings.emails.types.${template}`)}</H3>

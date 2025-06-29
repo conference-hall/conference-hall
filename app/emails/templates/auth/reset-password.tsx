@@ -36,7 +36,7 @@ ResetPasswordEmail.buildPayload = (email: string, locale: string, data: Template
   const t = getEmailI18n(locale);
 
   return {
-    template: 'auth/reset-password',
+    template: 'auth-reset-password',
     subject: t('auth.reset-password.subject'),
     from: t('common.email.from.default'),
     to: [email],

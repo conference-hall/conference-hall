@@ -1,5 +1,5 @@
 import { PageObject } from 'e2e/page-object.ts';
-import type { CustomTemplate } from '~/emails/email.types.ts';
+import type { CustomTemplateName } from '~/emails/email.types.ts';
 
 export class EmailTemplateSettingsPage extends PageObject {
   readonly backButton = this.page.getByRole('link', { name: 'Go back' });
@@ -16,7 +16,7 @@ export class EmailTemplateSettingsPage extends PageObject {
     await this.page.waitForLoadState('networkidle');
   }
 
-  getTemplateHeading(template: CustomTemplate) {
+  getTemplateHeading(template: CustomTemplateName) {
     return this.page.getByRole('heading', { name: this.getTemplateTitle(template), exact: true });
   }
 
@@ -50,13 +50,13 @@ export class EmailTemplateSettingsPage extends PageObject {
     await this.saveButton.click();
   }
 
-  private getTemplateTitle(template: CustomTemplate): string {
+  private getTemplateTitle(template: CustomTemplateName): string {
     switch (template) {
-      case 'proposal-submitted':
+      case 'speakers-proposal-submitted':
         return 'Proposal Submitted';
-      case 'proposal-accepted':
+      case 'speakers-proposal-accepted':
         return 'Proposal Accepted';
-      case 'proposal-rejected':
+      case 'speakers-proposal-rejected':
         return 'Proposal Rejected';
       default:
         return template;

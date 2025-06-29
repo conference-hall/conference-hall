@@ -2,22 +2,18 @@ import { db } from 'prisma/db.server.ts';
 import { renderEmail } from '~/emails/email.renderer.tsx';
 import { getEnv } from '~/libs/jobs/env.ts';
 import { job } from '~/libs/jobs/job.ts';
-import type { CustomTemplate } from './email.types.ts';
+import type { CustomTemplateName } from './email.types.ts';
 import { getEmailProvider } from './providers/provider.ts';
+import type { EmailTemplateName } from './templates/templates.ts';
 
 export type EmailPayload = {
-  template: string;
+  template: EmailTemplateName;
   from: string;
   to: string[];
   subject: string;
   data: Record<string, any>;
-  customization?: CustomizationIds;
+  customEventId?: string;
   locale: string;
-};
-
-type CustomizationIds = {
-  eventId: string;
-  template: CustomTemplate;
 };
 
 const env = getEnv();
@@ -31,7 +27,14 @@ export const sendEmail = job<EmailPayload>({
 
     if (!emailProvider) return Promise.reject('Email provider not found');
 
-    const customization = await getEmailCustomization(payload.customization, payload.locale);
+    let customization = null;
+    if (payload.customEventId) {
+      customization = await getEmailCustomization(
+        payload.template as CustomTemplateName,
+        payload.locale,
+        payload.customEventId,
+      );
+    }
 
     const emailRendered = await renderEmail(payload.template, payload.data, payload.locale, customization);
 
@@ -50,11 +53,9 @@ export const sendEmail = job<EmailPayload>({
   },
 });
 
-async function getEmailCustomization(customization: CustomizationIds | undefined, locale: string) {
-  if (!customization) return null;
-
+async function getEmailCustomization(template: CustomTemplateName, locale: string, eventId: string) {
   const emailCustomization = await db.eventEmailCustomization.findUnique({
-    where: { eventId_template_locale: { ...customization, locale } },
+    where: { eventId_template_locale: { template, locale, eventId } },
   });
 
   return emailCustomization;

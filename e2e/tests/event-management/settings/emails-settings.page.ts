@@ -1,5 +1,5 @@
 import { PageObject } from 'e2e/page-object.ts';
-import type { CustomTemplate } from '~/emails/email.types.ts';
+import type { CustomTemplateName } from '~/emails/email.types.ts';
 
 export class EmailsSettingsPage extends PageObject {
   readonly heading = this.page.getByRole('heading', { name: 'Email Templates', exact: true });
@@ -14,18 +14,18 @@ export class EmailsSettingsPage extends PageObject {
     await this.heading.waitFor();
   }
 
-  getTemplateSection(template: CustomTemplate) {
+  getTemplateSection(template: CustomTemplateName) {
     return this.page
       .locator('div')
       .filter({ hasText: new RegExp(this.getTemplateTitle(template), 'i') })
       .first();
   }
 
-  getCustomizeLink(template: CustomTemplate, locale: string) {
+  getCustomizeLink(template: CustomTemplateName, locale: string) {
     return this.page.locator(`a[href*="${template}"][href*="locale=${locale}"]`);
   }
 
-  getCustomBadge(template: CustomTemplate) {
+  getCustomBadge(template: CustomTemplateName) {
     const templateSection = this.getTemplateSection(template);
     return templateSection
       .locator('.inline-flex.items-center.text-nowrap.bg-gray-100, .inline-flex.items-center.text-nowrap.bg-blue-100')

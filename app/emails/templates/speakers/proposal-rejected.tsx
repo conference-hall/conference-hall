@@ -42,13 +42,13 @@ ProposalRejectedEmail.buildPayload = (data: TemplateData, localeOverride?: strin
   const t = getEmailI18n(locale);
 
   return {
-    template: 'speakers/proposal-rejected',
+    template: 'speakers-proposal-rejected',
     subject: t('speakers.proposal-rejected.subject', { event: data.event.name }),
     from: t('common.email.from.event', { event: data.event.name }),
     to: data.proposal.speakers.map((speaker) => speaker.email),
     data,
     locale,
-    customization: { eventId: data.event.id, template: 'proposal-rejected' },
+    customEventId: data.event.id,
   };
 };
 

@@ -50,7 +50,7 @@ ProposalDeclinedEmail.buildPayload = (data: TemplateData, locale = 'en'): EmailP
   }
   const t = getEmailI18n(locale);
   return {
-    template: 'organizers/proposal-declined',
+    template: 'organizers-proposal-declined',
     subject: t('organizers.proposal-declined.subject', { event: data.event.name }),
     from: t('common.email.from.event', { event: data.event.name }),
     to: [data.event.emailOrganizer],
