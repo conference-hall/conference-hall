@@ -94,6 +94,7 @@ export default function EmailCustomizationRoute({ loaderData }: Route.ComponentP
             size="square-m"
             to={`/team/${currentTeam.slug}/${currentEvent.slug}/settings/emails`}
             className="p-2 hover:bg-slate-100 rounded-md transition-colors"
+            aria-label={t('common.go-back')}
           >
             <ArrowLeftIcon className="h-4 w-4" />
           </ButtonLink>
