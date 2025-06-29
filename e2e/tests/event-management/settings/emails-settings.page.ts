@@ -32,13 +32,13 @@ export class EmailsSettingsPage extends PageObject {
       .first();
   }
 
-  private getTemplateTitle(template: string): string {
+  private getTemplateTitle(template: CustomTemplateName): string {
     switch (template) {
-      case 'proposal-submitted':
+      case 'speakers-proposal-submitted':
         return 'Proposal Submitted';
-      case 'proposal-accepted':
+      case 'speakers-proposal-accepted':
         return 'Proposal Accepted';
-      case 'proposal-rejected':
+      case 'speakers-proposal-rejected':
         return 'Proposal Rejected';
       default:
         return template;
