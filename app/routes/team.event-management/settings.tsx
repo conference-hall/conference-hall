@@ -1,4 +1,5 @@
 import {
+  BellIcon,
   CodeBracketIcon,
   Cog6ToothIcon,
   CpuChipIcon,
@@ -20,6 +21,7 @@ import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { useFlag } from '../components/contexts/flags-context.tsx';
 import type { Route } from './+types/settings.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
@@ -28,8 +30,13 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return null;
 };
 
-const getMenuItems = (team: string, event: string, t: TFunction) => [
-  { to: `/team/${team}/${event}/settings`, icon: Cog6ToothIcon, label: t('event-management.settings.menu.general') },
+const getMenuItems = (team: string, event: string, t: TFunction, isEmailCustomizationEnabled: boolean) => [
+  {
+    to: `/team/${team}/${event}/settings`,
+    icon: Cog6ToothIcon,
+    label: t('event-management.settings.menu.general'),
+    end: true,
+  },
   {
     to: `/team/${team}/${event}/settings/cfp`,
     icon: PaperAirplaneIcon,
@@ -50,8 +57,15 @@ const getMenuItems = (team: string, event: string, t: TFunction) => [
   { to: `/team/${team}/${event}/settings/review`, icon: StarIcon, label: t('event-management.settings.menu.reviews') },
   {
     to: `/team/${team}/${event}/settings/notifications`,
-    icon: EnvelopeIcon,
+    icon: BellIcon,
     label: t('event-management.settings.menu.notifications'),
+  },
+  {
+    to: `/team/${team}/${event}/settings/emails`,
+    icon: EnvelopeIcon,
+    label: t('event-management.settings.menu.emails'),
+    isNew: true,
+    hidden: !isEmailCustomizationEnabled,
   },
   {
     to: `/team/${team}/${event}/settings/integrations`,
@@ -69,7 +83,8 @@ export default function OrganizationSettingsRoute() {
   const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
-  const menus = getMenuItems(currentTeam.slug, currentEvent.slug, t);
+  const isEmailCustomizationEnabled = useFlag('emailCustomization');
+  const menus = getMenuItems(currentTeam.slug, currentEvent.slug, t, isEmailCustomizationEnabled);
 
   return (
     <Page className="lg:grid lg:grid-cols-12">

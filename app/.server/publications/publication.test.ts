@@ -97,7 +97,7 @@ describe('Publication', () => {
       expect(sendEmail.trigger).toHaveBeenNthCalledWith(
         1,
         expect.objectContaining({
-          template: 'speakers/proposal-accepted',
+          template: 'speakers-proposal-accepted',
           to: expect.arrayContaining([speaker1.email, speaker2.email]),
         }),
       );
@@ -105,7 +105,7 @@ describe('Publication', () => {
       expect(sendEmail.trigger).toHaveBeenNthCalledWith(
         2,
         expect.objectContaining({
-          template: 'speakers/proposal-accepted',
+          template: 'speakers-proposal-accepted',
           to: expect.arrayContaining([speaker1.email, speaker2.email]),
         }),
       );
@@ -124,7 +124,7 @@ describe('Publication', () => {
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
-          template: 'speakers/proposal-rejected',
+          template: 'speakers-proposal-rejected',
           to: [speaker1.email],
         }),
       );
@@ -163,7 +163,7 @@ describe('Publication', () => {
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
-          template: 'speakers/proposal-accepted',
+          template: 'speakers-proposal-accepted',
           to: expect.arrayContaining([speaker1.email, speaker2.email]),
         }),
       );
@@ -182,7 +182,7 @@ describe('Publication', () => {
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
-          template: 'speakers/proposal-rejected',
+          template: 'speakers-proposal-rejected',
           to: [speaker1.email],
         }),
       );

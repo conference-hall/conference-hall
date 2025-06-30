@@ -83,22 +83,45 @@ ExampleEmail.PreviewProps = {
 
 ## Sending Emails
 
-### Using Template Functions
-
-Each template exports a convenience function for sending:
+Each template exports a convenience function for building the payload needed for the job used to send email:
 
 ```typescript
 // app/emails/templates/auth/email-verification.tsx
-export function sendVerificationEmail(email: string, locale: string, data: TemplateData) {
-  return sendEmail.trigger({
+VerificationEmail.buildPayload = (email: string, locale: string, data: TemplateData): EmailPayload => {
+  return {
     template: 'auth/email-verification',
     subject: 'Verify your email address for Conference Hall',
     from: 'Conference Hall <no-reply@mg.conference-hall.io>',
     to: [email],
     data,
     locale,
-  });
-}
+  };
+};
+```
+
+Then the email can be sent with the `sendEmail` job:
+
+```typescript
+import { sendEmail } from '~/emails/send-email.job.ts';
+import VerificationEmail from '~/emails/templates/auth/email-verification.tsx';
+
+const data = { emailVerificationUrl: 'https://...' };
+await sendEmail.trigger(VerificationEmail.buildPayload(email, locale, data));
+```
+
+## Testing sent email
+
+In integration tests, you can check an email has been sent with `sendEmail` job:
+
+```typescript
+expect(sendEmail.trigger).toHaveBeenCalledWith({
+  template: 'auth/email-verification',
+  subject: 'Verify your email address for Conference Hall',
+  from: 'Conference Hall <no-reply@mg.conference-hall.io>',
+  to: ['foo@example.com'],
+  data: { emailVerificationUrl: 'https://...' },
+  locale: 'en',
+});
 ```
 
 ## Environment Configuration

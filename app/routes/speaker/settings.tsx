@@ -19,7 +19,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
 const menuItems = (t: TFunction) => {
   return [
-    { to: href('/speaker/settings'), icon: ShieldCheckIcon, label: t('settings.nav.account') },
+    { to: href('/speaker/settings'), icon: ShieldCheckIcon, label: t('settings.nav.account'), end: true },
     { to: href('/speaker/settings/profile'), icon: UserCircleIcon, label: t('settings.nav.profile') },
     { to: href('/speaker/settings/preferences'), icon: AdjustmentsVerticalIcon, label: t('settings.nav.preferences') },
   ];

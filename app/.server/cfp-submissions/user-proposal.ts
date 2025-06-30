@@ -1,7 +1,9 @@
 import { db } from 'prisma/db.server.ts';
-import { sendProposalConfirmedEmailToOrganizers } from '~/emails/templates/organizers/proposal-confirmed.tsx';
-import { sendProposalDeclinedEmailToOrganizers } from '~/emails/templates/organizers/proposal-declined.tsx';
+import { sendEmail } from '~/emails/send-email.job.ts';
+import ProposalConfirmedEmail from '~/emails/templates/organizers/proposal-confirmed.tsx';
+import ProposalDeclinedEmail from '~/emails/templates/organizers/proposal-declined.tsx';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
+import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 import type { Languages } from '~/types/proposals.types.ts';
 import { EventSpeaker } from '../shared/event-speaker.ts';
 import type { ProposalSaveData } from './user-proposal.types.ts';
@@ -115,10 +117,14 @@ export class UserProposal {
 
     if (result.count <= 0) return;
 
-    if (participation === 'CONFIRMED') {
-      await sendProposalConfirmedEmailToOrganizers({ event: proposal.event, proposal });
-    } else if (participation === 'DECLINED') {
-      await sendProposalDeclinedEmailToOrganizers({ event: proposal.event, proposal });
+    if (!proposal.event.emailOrganizer) return;
+
+    // send email to organizers
+    const emailNotifications = proposal.event.emailNotifications as EventEmailNotificationsKeys;
+    if (participation === 'CONFIRMED' && emailNotifications.includes('confirmed')) {
+      await sendEmail.trigger(ProposalConfirmedEmail.buildPayload({ event: proposal.event, proposal }));
+    } else if (participation === 'DECLINED' && emailNotifications.includes('declined')) {
+      await sendEmail.trigger(ProposalDeclinedEmail.buildPayload({ event: proposal.event, proposal }));
     }
   }
 }

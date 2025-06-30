@@ -5,9 +5,9 @@ import dotenv from 'dotenv';
 const CI = Boolean(process.env.CI);
 
 if (CI) {
-  dotenv.config({ path: path.resolve(import.meta.dirname, '.env.e2e') });
+  dotenv.config({ path: path.resolve(import.meta.dirname, '.env.e2e'), quiet: true });
 } else {
-  dotenv.config({ path: path.resolve(import.meta.dirname, '.env.dev') });
+  dotenv.config({ path: path.resolve(import.meta.dirname, '.env.dev'), quiet: true });
 }
 
 const APP_URL = process.env.APP_URL;
