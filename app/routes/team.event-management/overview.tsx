@@ -5,7 +5,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import { useFlag } from '../components/contexts/flags-context.tsx';
 import type { Route } from './+types/overview.ts';
 import { CfpStatusCard } from './components/overview-page/cfp-tab/cfp-status-card.tsx';
 import { ReviewStatusCard } from './components/overview-page/cfp-tab/review-status-card.tsx';
@@ -17,12 +16,11 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export default function OverviewRoute() {
+export default function OverviewRoute({ params }: Route.ComponentProps) {
   const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
   const { canEditEvent } = currentTeam.userPermissions;
-  const enabledForTeam = useFlag('reviewsDashboard');
 
   return (
     <Page>
@@ -30,6 +28,8 @@ export default function OverviewRoute() {
       <div className="space-y-4 lg:space-y-6">
         <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
           <CfpStatusCard
+            team={params.team}
+            event={params.event}
             cfpState={currentEvent.cfpState}
             cfpStart={currentEvent.cfpStart}
             cfpEnd={currentEvent.cfpEnd}
@@ -37,19 +37,24 @@ export default function OverviewRoute() {
             showActions={canEditEvent}
           />
 
-          <VisibilityStatusCard visibility={currentEvent.visibility} showActions={canEditEvent} />
+          <VisibilityStatusCard
+            team={params.team}
+            event={params.event}
+            visibility={currentEvent.visibility}
+            showActions={canEditEvent}
+          />
 
-          <ReviewStatusCard reviewEnabled={currentEvent.reviewEnabled} showActions={canEditEvent} />
+          <ReviewStatusCard
+            team={params.team}
+            event={params.event}
+            reviewEnabled={currentEvent.reviewEnabled}
+            showActions={canEditEvent}
+          />
         </div>
 
         <div>
           <Card className="pb-6 space-y-8">
-            <DashboardTabs
-              team={currentTeam.slug}
-              event={currentEvent.slug}
-              enableReviewsTab={enabledForTeam === currentTeam.slug}
-            />
-
+            <DashboardTabs team={params.team} event={params.event} />
             <Outlet />
           </Card>
         </div>
