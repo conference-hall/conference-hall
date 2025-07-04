@@ -30,7 +30,9 @@ describe('EventTabs component', () => {
         </I18nextProvider>,
       );
 
-      await expect.element(screen.getByRole('link', { name: 'Overview' })).toHaveAttribute('href', '/team/t1/e1');
+      await expect
+        .element(screen.getByRole('link', { name: 'Overview' }))
+        .toHaveAttribute('href', '/team/t1/e1/overview');
       await expect
         .element(screen.getByRole('link', { name: 'Proposals' }))
         .toHaveAttribute('href', '/team/t1/e1/reviews');
