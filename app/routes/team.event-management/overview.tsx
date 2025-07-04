@@ -17,7 +17,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export default function OverviewRoute() {
+export default function OverviewRoute({ params }: Route.ComponentProps) {
   const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
@@ -30,6 +30,8 @@ export default function OverviewRoute() {
       <div className="space-y-4 lg:space-y-6">
         <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
           <CfpStatusCard
+            team={params.team}
+            event={params.event}
             cfpState={currentEvent.cfpState}
             cfpStart={currentEvent.cfpStart}
             cfpEnd={currentEvent.cfpEnd}
@@ -37,16 +39,26 @@ export default function OverviewRoute() {
             showActions={canEditEvent}
           />
 
-          <VisibilityStatusCard visibility={currentEvent.visibility} showActions={canEditEvent} />
+          <VisibilityStatusCard
+            team={params.team}
+            event={params.event}
+            visibility={currentEvent.visibility}
+            showActions={canEditEvent}
+          />
 
-          <ReviewStatusCard reviewEnabled={currentEvent.reviewEnabled} showActions={canEditEvent} />
+          <ReviewStatusCard
+            team={params.team}
+            event={params.event}
+            reviewEnabled={currentEvent.reviewEnabled}
+            showActions={canEditEvent}
+          />
         </div>
 
         <div>
           <Card className="pb-6 space-y-8">
             <DashboardTabs
-              team={currentTeam.slug}
-              event={currentEvent.slug}
+              team={params.team}
+              event={params.event}
               enableReviewsTab={enabledForTeam === currentTeam.slug}
             />
 

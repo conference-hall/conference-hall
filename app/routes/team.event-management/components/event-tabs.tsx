@@ -34,7 +34,10 @@ export function EventTabs({ teamSlug, eventSlug, eventType, displaySpeakers, per
   return (
     <Page.NavHeader className="flex items-center space-between">
       <NavTabs py={4} className="grow" scrollable>
-        <NavTab to={{ pathname: href('/team/:team/:event', { team: teamSlug, event: eventSlug }) }} icon={HomeIcon} end>
+        <NavTab
+          to={{ pathname: href('/team/:team/:event/overview', { team: teamSlug, event: eventSlug }) }}
+          icon={HomeIcon}
+        >
           {t('event-management.nav.overview')}
         </NavTab>
 

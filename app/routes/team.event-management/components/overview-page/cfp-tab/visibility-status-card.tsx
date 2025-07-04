@@ -1,12 +1,13 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
+import { href } from 'react-router';
 import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
 import { Link } from '~/design-system/links.tsx';
 import type { EventVisibility } from '~/types/events.types.ts';
 
-type Props = { visibility: EventVisibility; showActions: boolean };
+type Props = { team: string; event: string; visibility: EventVisibility; showActions: boolean };
 
-export function VisibilityStatusCard({ visibility, showActions }: Props) {
+export function VisibilityStatusCard({ team, event, visibility, showActions }: Props) {
   const { t } = useTranslation();
 
   const status = visibility === 'PUBLIC' ? 'success' : 'warning';
@@ -16,7 +17,7 @@ export function VisibilityStatusCard({ visibility, showActions }: Props) {
   return (
     <StatusCard status={status} label={label} subtitle={subtitle}>
       {showActions ? (
-        <Link to="settings" iconRight={ArrowRightIcon} weight="medium">
+        <Link to={href('/team/:team/:event/settings', { team, event })} iconRight={ArrowRightIcon} weight="medium">
           {t('common.change')}
         </Link>
       ) : null}

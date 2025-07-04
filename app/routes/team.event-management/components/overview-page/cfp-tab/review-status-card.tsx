@@ -1,11 +1,12 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
+import { href } from 'react-router';
 import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
 import { Link } from '~/design-system/links.tsx';
 
-type Props = { reviewEnabled: boolean; showActions: boolean };
+type Props = { team: string; event: string; reviewEnabled: boolean; showActions: boolean };
 
-export function ReviewStatusCard({ reviewEnabled, showActions }: Props) {
+export function ReviewStatusCard({ team, event, reviewEnabled, showActions }: Props) {
   const { t } = useTranslation();
 
   const status = reviewEnabled ? 'success' : 'disabled';
@@ -15,7 +16,11 @@ export function ReviewStatusCard({ reviewEnabled, showActions }: Props) {
   return (
     <StatusCard status={status} label={label} subtitle={subtitle}>
       {showActions ? (
-        <Link to="settings/review" iconRight={ArrowRightIcon} weight="medium">
+        <Link
+          to={href('/team/:team/:event/settings/review', { team, event })}
+          iconRight={ArrowRightIcon}
+          weight="medium"
+        >
           {t('common.change')}
         </Link>
       ) : null}
