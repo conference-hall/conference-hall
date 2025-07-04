@@ -5,7 +5,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import { useFlag } from '../components/contexts/flags-context.tsx';
 import type { Route } from './+types/overview.ts';
 import { CfpStatusCard } from './components/overview-page/cfp-tab/cfp-status-card.tsx';
 import { ReviewStatusCard } from './components/overview-page/cfp-tab/review-status-card.tsx';
@@ -22,7 +21,6 @@ export default function OverviewRoute({ params }: Route.ComponentProps) {
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
   const { canEditEvent } = currentTeam.userPermissions;
-  const enabledForTeam = useFlag('reviewsDashboard');
 
   return (
     <Page>
@@ -56,12 +54,7 @@ export default function OverviewRoute({ params }: Route.ComponentProps) {
 
         <div>
           <Card className="pb-6 space-y-8">
-            <DashboardTabs
-              team={params.team}
-              event={params.event}
-              enableReviewsTab={enabledForTeam === currentTeam.slug}
-            />
-
+            <DashboardTabs team={params.team} event={params.event} />
             <Outlet />
           </Card>
         </div>

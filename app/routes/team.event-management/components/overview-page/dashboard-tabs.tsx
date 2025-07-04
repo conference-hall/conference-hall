@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { href, NavLink } from 'react-router';
 import { Badge } from '~/design-system/badges.tsx';
 
-type Props = { team: string; event: string; enableReviewsTab: boolean };
+type Props = { team: string; event: string };
 
-export function DashboardTabs({ team, event, enableReviewsTab }: Props) {
+export function DashboardTabs({ team, event }: Props) {
   const { t } = useTranslation();
 
   return (
@@ -17,11 +17,9 @@ export function DashboardTabs({ team, event, enableReviewsTab }: Props) {
         <DashboardTab to={href('/team/:team/:event/overview/reviewers', { team, event })}>
           {t('common.reviewers')}
         </DashboardTab>
-        {enableReviewsTab ? (
-          <DashboardTab to={href('/team/:team/:event/overview/reviews', { team, event })} isNew>
-            {t('common.reviews')}
-          </DashboardTab>
-        ) : null}
+        <DashboardTab to={href('/team/:team/:event/overview/reviews', { team, event })} isNew>
+          {t('common.reviews')}
+        </DashboardTab>
       </nav>
     </div>
   );
