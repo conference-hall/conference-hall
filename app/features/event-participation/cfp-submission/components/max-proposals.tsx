@@ -1,7 +1,7 @@
 import { FireIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { ButtonLink } from '~/shared/design-system/buttons.tsx';
-import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
+import { ButtonLink } from '~/design-system/buttons.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 
 type MaxProposalsReachedProps = { maxProposals: number };
 

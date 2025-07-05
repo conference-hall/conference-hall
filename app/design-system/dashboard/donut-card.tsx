@@ -2,11 +2,11 @@ import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 
-import type { AvailableChartColorsKeys } from '~/shared/design-system/charts/chart-utils.ts';
-import { DonutChart } from '~/shared/design-system/charts/donut.tsx';
-import { NoData } from '~/shared/design-system/dashboard/no-data.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
+import type { AvailableChartColorsKeys } from '~/design-system/charts/chart-utils.ts';
+import { DonutChart } from '~/design-system/charts/donut.tsx';
+import { NoData } from '~/design-system/dashboard/no-data.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2, Subtitle } from '~/design-system/typography.tsx';
 
 type Data = {
   name: string;

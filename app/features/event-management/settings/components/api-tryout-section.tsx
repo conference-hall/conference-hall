@@ -1,11 +1,11 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Input } from '~/shared/design-system/forms/input.tsx';
-import Select from '~/shared/design-system/forms/select.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { ExternalLink } from '~/shared/design-system/links.tsx';
-import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import Select from '~/design-system/forms/select.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { ExternalLink } from '~/design-system/links.tsx';
+import { H2, Subtitle } from '~/design-system/typography.tsx';
 
 type Props = { slug: string; apiKey: string };
 

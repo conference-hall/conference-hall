@@ -2,7 +2,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { Form, useSearchParams } from 'react-router';
 import type { SearchFilters } from '~/.server/event-search/event-search.types.ts';
-import { Input } from '~/shared/design-system/forms/input.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
 
 type Props = { filters: SearchFilters };
 

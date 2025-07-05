@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { Page } from '~/shared/design-system/layouts/page.tsx';
 import type { Route } from './+types/overview.ts';
 import { CfpStatusCard } from './components/cfp-tab/cfp-status-card.tsx';
 import { ReviewStatusCard } from './components/cfp-tab/review-status-card.tsx';

@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Trans } from 'react-i18next';
 import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
-import { Pagination, PaginationMobile } from '~/shared/design-system/list/pagination.tsx';
+import { Pagination, PaginationMobile } from '~/design-system/list/pagination.tsx';
 
 // <List /> component
 export function List({ children }: { children: ReactNode }) {

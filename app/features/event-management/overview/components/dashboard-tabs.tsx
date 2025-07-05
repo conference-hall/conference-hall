@@ -1,7 +1,7 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, NavLink } from 'react-router';
-import { Badge } from '~/shared/design-system/badges.tsx';
+import { Badge } from '~/design-system/badges.tsx';
 
 type Props = { team: string; event: string };
 

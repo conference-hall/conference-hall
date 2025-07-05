@@ -2,12 +2,12 @@ import { parseWithZod } from '@conform-to/zod';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { EventEmailCustomizations } from '~/.server/event-settings/event-email-customizations.tsx';
+import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { ButtonLink } from '~/shared/design-system/buttons.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
 import {
   CustomTemplateSchema,
   EventEmailCustomDeleteSchema,

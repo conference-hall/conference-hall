@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
+import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
+import { Link } from '~/design-system/links.tsx';
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
-import { LoadingIcon } from '~/shared/design-system/icons/loading-icon.tsx';
-import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
-import { Link } from '~/shared/design-system/links.tsx';
 import type { Route } from './+types/email-verification-link.ts';
 
 export const meta = (args: Route.MetaArgs) => {

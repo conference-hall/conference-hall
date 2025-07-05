@@ -1,9 +1,9 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '~/design-system/buttons.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import { EventCfpConferenceForm } from '~/features/event-management/creation/components/event-cfp-conference-form.tsx';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { H2 } from '~/shared/design-system/typography.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 
 type Props = {

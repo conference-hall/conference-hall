@@ -2,10 +2,10 @@ import { useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { TeamMemberInvite } from '~/.server/team/team-member-invite.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
+import { Button } from '~/design-system/buttons.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { H1, Subtitle } from '~/shared/design-system/typography.tsx';
 import { FullscreenPage } from '../../../app-platform/components/fullscreen-page.tsx';
 import type { Route } from './+types/team-invitation.ts';
 

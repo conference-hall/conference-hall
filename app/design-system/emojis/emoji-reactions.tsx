@@ -1,7 +1,7 @@
 import { cva, cx } from 'class-variance-authority';
-import { Tooltip } from '~/shared/design-system/tooltip.tsx';
-import { Text } from '~/shared/design-system/typography.tsx';
-import type { Emoji, EmojiReaction } from '../../types/emojis.types.ts';
+import { Tooltip } from '~/design-system/tooltip.tsx';
+import { Text } from '~/design-system/typography.tsx';
+import type { Emoji, EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { EmojiPicker } from './emoji-picker.tsx';
 
 type EmojiReactionsProps = {

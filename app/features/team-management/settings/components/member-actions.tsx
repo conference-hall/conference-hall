@@ -2,12 +2,12 @@ import { UserPlusIcon } from '@heroicons/react/20/solid';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
+import { Button } from '~/design-system/buttons.tsx';
+import { InvitationModal } from '~/design-system/dialogs/invitation-modal.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
+import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
+import { Text } from '~/design-system/typography.tsx';
 import { TEAM_ROLES } from '~/shared/constants.ts';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
-import { Radio, RadioGroup } from '~/shared/design-system/forms/radio-group.tsx';
-import { Text } from '~/shared/design-system/typography.tsx';
-import { InvitationModal } from '../../../../shared/design-system/dialogs/invitation-modal.tsx';
 
 type RemoveButtonProps = { memberId: string; memberName: string | null };
 

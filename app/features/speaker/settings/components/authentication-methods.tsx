@@ -3,12 +3,12 @@ import * as Firebase from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSubmit } from 'react-router';
+import { Callout } from '~/design-system/callout.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { List } from '~/design-system/list/list.tsx';
+import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
 import { getClientAuth, PROVIDERS, type ProviderId } from '~/shared/auth/firebase.ts';
-import { Callout } from '~/shared/design-system/callout.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { List } from '~/shared/design-system/list/list.tsx';
-import { H2, Subtitle, Text } from '~/shared/design-system/typography.tsx';
 import { EmailProviderSettings } from './email-provider-settings.tsx';
 import { LinkProvider, UnlinkProvider } from './social-providers-settings..tsx';
 

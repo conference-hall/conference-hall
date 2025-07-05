@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams, useSubmit } from 'react-router';
-import { H2 } from '~/shared/design-system/typography.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import type { ReviewFeeling, UserReview } from '~/shared/types/proposals.types.ts';
 import { ReviewSelector } from './review-selector.tsx';
 

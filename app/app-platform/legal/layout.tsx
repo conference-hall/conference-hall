@@ -1,8 +1,8 @@
 import { BookOpenIcon, LockClosedIcon, NewspaperIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
-import { Page } from '~/shared/design-system/layouts/page.tsx';
-import { NavTab, NavTabs } from '~/shared/design-system/navigation/nav-tabs.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { Footer } from '../components/footer.tsx';
 import { Navbar } from '../components/navbar/navbar.tsx';
 

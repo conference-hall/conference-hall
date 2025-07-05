@@ -5,11 +5,11 @@ import type { TFunction } from 'i18next';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
-import { Checkbox } from '~/shared/design-system/forms/checkboxes.tsx';
-import Select from '~/shared/design-system/forms/select.tsx';
-import { H2 } from '~/shared/design-system/typography.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
+import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
+import Select from '~/design-system/forms/select.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '~/shared/types/proposals.types.ts';
 
 type ProposalStatus = { deliberationStatus: DeliberationStatus; confirmationStatus: ConfirmationStatus };

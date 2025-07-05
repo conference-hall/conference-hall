@@ -1,7 +1,7 @@
 import { UserGroupIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
-import { Subtitle } from '~/shared/design-system/typography.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
+import { Subtitle } from '~/design-system/typography.tsx';
 
 type SpeakersEmptyStateProps = {
   query?: string;

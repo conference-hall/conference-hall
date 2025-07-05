@@ -2,18 +2,18 @@ import { InboxIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { data } from 'react-router';
 import { EventSpeakers } from '~/.server/event-speakers/event-speakers.ts';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { List } from '~/design-system/list/list.tsx';
+import { Markdown } from '~/design-system/markdown.tsx';
+import { Text } from '~/design-system/typography.tsx';
 import {
   SpeakerLinks,
   SpeakerSurveyAnswers,
   SpeakerTitle,
 } from '~/features/speaker/talk-library/components/speakers.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
-import { Page } from '~/shared/design-system/layouts/page.tsx';
-import { List } from '~/shared/design-system/list/list.tsx';
-import { Markdown } from '~/shared/design-system/markdown.tsx';
-import { Text } from '~/shared/design-system/typography.tsx';
 import { ProposalItem } from '../proposals/components/proposals-page/list/proposal-item.tsx';
 import type { Route } from './+types/speaker.ts';
 

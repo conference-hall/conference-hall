@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { List } from '~/shared/design-system/list/list.tsx';
-import { Subtitle, Text } from '~/shared/design-system/typography.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { List } from '~/design-system/list/list.tsx';
+import { Subtitle, Text } from '~/design-system/typography.tsx';
 import { EditTrackButton, NewTrackButton } from './save-track-form.tsx';
 
 type TrackListProps = {

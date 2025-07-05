@@ -6,12 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { v4 as uuid } from 'uuid';
 import type { SurveyQuestion } from '~/.server/event-survey/types.ts';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
-import { Checkbox } from '~/shared/design-system/forms/checkboxes.tsx';
-import { Input } from '~/shared/design-system/forms/input.tsx';
-import { SelectNative } from '~/shared/design-system/forms/select-native.tsx';
-import { Text } from '~/shared/design-system/typography.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
+import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import { SelectNative } from '~/design-system/forms/select-native.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 type QuestionType = 'text' | 'checkbox' | 'radio';
 

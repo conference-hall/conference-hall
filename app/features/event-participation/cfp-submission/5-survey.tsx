@@ -4,12 +4,12 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
 import { SpeakerSurvey } from '~/.server/event-survey/speaker-survey.ts';
+import { Button, ButtonLink } from '~/design-system/buttons.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import { SurveyForm } from '~/features/speaker/talk-library/components/talk-forms/survey-form.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { Button, ButtonLink } from '~/shared/design-system/buttons.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { Page } from '~/shared/design-system/layouts/page.tsx';
-import { H2 } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/5-survey.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 

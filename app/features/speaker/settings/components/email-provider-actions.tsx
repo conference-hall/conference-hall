@@ -3,11 +3,11 @@ import { CheckBadgeIcon } from '@heroicons/react/24/outline';
 import { type FormEvent, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
-import { Input } from '~/shared/design-system/forms/input.tsx';
-import { PasswordInput } from '~/shared/design-system/forms/password-input.tsx';
-import { Subtitle } from '~/shared/design-system/typography.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import { PasswordInput } from '~/design-system/forms/password-input.tsx';
+import { Subtitle } from '~/design-system/typography.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { validateEmailAndPassword } from '~/shared/validators/auth.ts';
 

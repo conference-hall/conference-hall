@@ -1,8 +1,8 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
-import { List } from '~/shared/design-system/list/list.tsx';
-import { useListSelection } from '~/shared/design-system/list/use-list-selection.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
+import { List } from '~/design-system/list/list.tsx';
+import { useListSelection } from '~/design-system/list/use-list-selection.tsx';
 import { ListHeader } from './list/header.tsx';
 import { ProposalItem } from './list/proposal-item.tsx';
 import { SelectAllBanner } from './list/select-all-banner.tsx';

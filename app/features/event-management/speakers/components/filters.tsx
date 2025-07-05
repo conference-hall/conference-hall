@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { SearchInput } from '~/shared/design-system/forms/search-input.tsx';
+import { SearchInput } from '~/design-system/forms/search-input.tsx';
 import { FiltersMenu } from './filters-menu.tsx';
 import { SortMenu } from './sort-menu.tsx';
 

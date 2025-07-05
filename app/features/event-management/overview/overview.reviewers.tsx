@@ -1,13 +1,13 @@
 import { EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { ReviewersMetrics } from '~/.server/event-metrics/reviewers-metrics.ts';
+import { AvatarName } from '~/design-system/avatar.tsx';
+import { ProgressBar } from '~/design-system/charts/progress-bar.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
+import { Tooltip } from '~/design-system/tooltip.tsx';
+import { Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/features/event-management/proposals/components/review-note.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { AvatarName } from '~/shared/design-system/avatar.tsx';
-import { ProgressBar } from '~/shared/design-system/charts/progress-bar.tsx';
-import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
-import { Tooltip } from '~/shared/design-system/tooltip.tsx';
-import { Text } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/overview.reviewers.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

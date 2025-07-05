@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useFetchers, useSubmit } from 'react-router';
-import { EmojiReactions } from '~/shared/design-system/emojis/emoji-reactions.tsx';
+import { EmojiReactions } from '~/design-system/emojis/emoji-reactions.tsx';
 import type { Emoji, EmojiReaction } from '~/shared/types/emojis.types.ts';
 
 const EMOJIS: Array<Emoji> = [

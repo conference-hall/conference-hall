@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Checkbox, CheckboxHeadingGroup } from '~/shared/design-system/forms/checkboxes.tsx';
-import { Radio, RadioGroup } from '~/shared/design-system/forms/radio-group.tsx';
+import { Checkbox, CheckboxHeadingGroup } from '~/design-system/forms/checkboxes.tsx';
+import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 
 type FormProps = {
   formats: Array<{ id: string; name: string; description?: string | null }>;

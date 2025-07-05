@@ -1,10 +1,10 @@
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
-import { Input } from '~/shared/design-system/forms/input.tsx';
-import { MarkdownTextArea } from '~/shared/design-system/forms/markdown-textarea.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 
 type CustomizationProps = {
   template: string;

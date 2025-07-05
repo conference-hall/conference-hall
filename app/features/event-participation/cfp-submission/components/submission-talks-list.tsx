@@ -1,7 +1,7 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
-import { List } from '~/shared/design-system/list/list.tsx';
-import { H2, Text } from '~/shared/design-system/typography.tsx';
+import { List } from '~/design-system/list/list.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
 
 type Props = {
   label: string;

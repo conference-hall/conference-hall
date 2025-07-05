@@ -2,7 +2,7 @@ import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
-import type { Emoji } from '../../types/emojis.types.ts';
+import type { Emoji } from '~/shared/types/emojis.types.ts';
 import { EmojiPicker } from './emoji-picker.tsx';
 
 const EMOJIS: Array<Emoji> = [

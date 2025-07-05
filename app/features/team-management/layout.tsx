@@ -4,14 +4,14 @@ import { href, Outlet, useMatch, useRouteLoaderData } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
+import { Badge } from '~/design-system/badges.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { EventTabs } from '~/features/event-management/event-tabs.tsx';
 import type { loader as routeEventLoader } from '~/features/event-management/layout.tsx';
 import { useScheduleFullscreen } from '~/features/event-management/schedule/components/header/use-schedule-fullscreen.tsx';
 import { CurrentTeamProvider } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { Badge } from '~/shared/design-system/badges.tsx';
-import { Page } from '~/shared/design-system/layouts/page.tsx';
-import { NavTab, NavTabs } from '~/shared/design-system/navigation/nav-tabs.tsx';
 import type { Route } from './+types/layout.ts';
 
 export const meta = (args: Route.MetaArgs) => {

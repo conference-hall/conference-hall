@@ -2,13 +2,13 @@ import { PaintBrushIcon } from '@heroicons/react/24/outline';
 import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
+import { Button } from '~/design-system/buttons.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import { Tag } from '~/design-system/tag.tsx';
+import { Tooltip } from '~/design-system/tooltip.tsx';
 import { getContrastColor, getRandomColor } from '~/shared/colors/colors.ts';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
-import { Input } from '~/shared/design-system/forms/input.tsx';
-import { Tooltip } from '~/shared/design-system/tooltip.tsx';
 import type { Tag as TagType } from '~/shared/types/tags.types.ts';
-import { Tag } from '../../../../shared/design-system/tag.tsx';
 
 type TagModalProps = {
   mode: 'create' | 'edit';

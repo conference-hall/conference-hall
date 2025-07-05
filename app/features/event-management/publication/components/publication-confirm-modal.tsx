@@ -3,12 +3,12 @@ import { cx } from 'class-variance-authority';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { StatisticCard } from '~/shared/design-system/dashboard/statistic-card.tsx';
-import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
-import { ToggleGroup } from '~/shared/design-system/forms/toggles.tsx';
-import { link } from '~/shared/design-system/links.tsx';
-import { Text } from '~/shared/design-system/typography.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
+import { link } from '~/design-system/links.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 type PublicationProps = {
   type: 'ACCEPTED' | 'REJECTED';

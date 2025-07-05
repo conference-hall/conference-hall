@@ -15,11 +15,11 @@ import {
 import { ProposalStatusSchema, ProposalStatusUpdater } from '~/.server/reviews/proposal-status-updater.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/proposal.ts';

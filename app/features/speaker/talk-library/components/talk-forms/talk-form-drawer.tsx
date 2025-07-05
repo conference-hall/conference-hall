@@ -1,8 +1,8 @@
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { SlideOver } from '~/shared/design-system/dialogs/slide-over.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { TalkForm } from './talk-form.tsx';
 

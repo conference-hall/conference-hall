@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { SearchParamSelector } from '~/shared/design-system/navigation/search-param-selector.tsx';
+import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 
 export function SearchEventsFilters() {
   const { t } = useTranslation();

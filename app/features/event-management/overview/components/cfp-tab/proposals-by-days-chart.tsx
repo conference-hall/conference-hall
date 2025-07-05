@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import type { TooltipContentProps } from 'recharts';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent.js';
+import { NoData } from '~/design-system/dashboard/no-data.tsx';
+import { Divider } from '~/design-system/divider.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
+import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDay } from '~/shared/datetimes/datetimes.ts';
-import { NoData } from '~/shared/design-system/dashboard/no-data.tsx';
-import { Divider } from '~/shared/design-system/divider.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { H2, Text } from '~/shared/design-system/typography.tsx';
-import { ClientOnly } from '~/shared/design-system/utils/client-only.tsx';
 
 type ChartType = 'cumulative' | 'count';
 

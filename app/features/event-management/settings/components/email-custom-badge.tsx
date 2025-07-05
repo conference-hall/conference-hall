@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Badge } from '~/shared/design-system/badges.tsx';
+import { Badge } from '~/design-system/badges.tsx';
 
 type Props = { customized: boolean };
 

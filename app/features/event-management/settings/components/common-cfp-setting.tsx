@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { Input } from '~/shared/design-system/forms/input.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { H2 } from '~/shared/design-system/typography.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 
 type Props = {

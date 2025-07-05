@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { EventEmailCustomizations } from '~/.server/event-settings/event-email-customizations.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { Link } from '~/design-system/links.tsx';
+import { H2, H3, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { Link } from '~/shared/design-system/links.tsx';
-import { H2, H3, Subtitle } from '~/shared/design-system/typography.tsx';
 import { CUSTOM_EMAIL_TEMPLATES } from '~/shared/emails/email.types.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';

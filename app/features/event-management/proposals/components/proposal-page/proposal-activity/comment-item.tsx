@@ -2,9 +2,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
 import { useUser } from '~/app-platform/components/user-context.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
+import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDistance } from '~/shared/datetimes/datetimes.ts';
-import { Avatar } from '~/shared/design-system/avatar.tsx';
-import { ClientOnly } from '~/shared/design-system/utils/client-only.tsx';
 import { CommentReactions } from './comment-reactions.tsx';
 
 export function CommentItem({ item }: { item: FeedItem }) {

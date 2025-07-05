@@ -1,11 +1,11 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { Avatar } from '~/shared/design-system/avatar.tsx';
-import { StatusPill } from '~/shared/design-system/charts/status-pill.tsx';
-import { Card, CardLink } from '~/shared/design-system/layouts/card.tsx';
-import { Subtitle, Text } from '~/shared/design-system/typography.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
+import { Card, CardLink } from '~/design-system/layouts/card.tsx';
+import { Subtitle, Text } from '~/design-system/typography.tsx';
+import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import type { CfpState } from '~/shared/types/events.types.ts';
-import { ClientOnly } from '../../../shared/design-system/utils/client-only.tsx';
 import { CallForPaperStatusLabel, cfpColorStatus } from '../../event-participation/event-page/components/cfp.tsx';
 
 type CardContentProps = {

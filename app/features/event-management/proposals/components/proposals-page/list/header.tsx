@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
+import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
+import { List } from '~/design-system/list/list.tsx';
+import { Text } from '~/design-system/typography.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
-import { Checkbox } from '~/shared/design-system/forms/checkboxes.tsx';
-import { List } from '~/shared/design-system/list/list.tsx';
-import { Text } from '~/shared/design-system/typography.tsx';
 import { DeliberationButton } from '../actions/deliberation-button.tsx';
 import { ReviewsProgress } from './reviews-progress.tsx';
 

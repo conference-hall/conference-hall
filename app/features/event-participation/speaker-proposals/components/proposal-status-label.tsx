@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { BadgeDot } from '~/shared/design-system/badges.tsx';
+import { BadgeDot } from '~/design-system/badges.tsx';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 
 type Props = { status: SpeakerProposalStatus };

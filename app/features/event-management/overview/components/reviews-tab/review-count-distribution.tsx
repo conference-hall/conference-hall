@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { StatusPill } from '~/shared/design-system/charts/status-pill.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { H2 } from '~/shared/design-system/typography.tsx';
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 
 type Props = {
   totalProposals: number;

@@ -5,14 +5,14 @@ import { href, Outlet } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Footer } from '~/app-platform/components/footer.tsx';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
+import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
+import { Container } from '~/design-system/layouts/container.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
+import { H1, Text } from '~/design-system/typography.tsx';
 import { SpeakerProfileProvider } from '~/features/speaker/speaker-profile-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { Avatar } from '~/shared/design-system/avatar.tsx';
-import { BG_GRADIENT_COLOR } from '~/shared/design-system/colors.ts';
-import { Container } from '~/shared/design-system/layouts/container.tsx';
-import { Page } from '~/shared/design-system/layouts/page.tsx';
-import { NavTab, NavTabs } from '~/shared/design-system/navigation/nav-tabs.tsx';
-import { H1, Text } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/layout.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

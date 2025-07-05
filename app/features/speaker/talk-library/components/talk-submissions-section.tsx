@@ -1,12 +1,12 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { href, Link } from 'react-router';
+import { Avatar } from '~/design-system/avatar.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
+import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDistance } from '~/shared/datetimes/datetimes.ts';
-import { Avatar } from '~/shared/design-system/avatar.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { H3, Subtitle, Text } from '~/shared/design-system/typography.tsx';
 import type { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
-import { ClientOnly } from '../../../../shared/design-system/utils/client-only.tsx';
 import { ProposalStatusLabel } from '../../../event-participation/speaker-proposals/components/proposal-status-label.tsx';
 
 type Props = {

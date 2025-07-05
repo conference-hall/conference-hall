@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 import { type ReactNode, useId } from 'react';
-import { Divider } from '~/shared/design-system/divider.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { Text } from '~/shared/design-system/typography.tsx';
+import { Divider } from '~/design-system/divider.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 type Props = { label: string; stat: string | number | ReactNode; children?: ReactNode };
 

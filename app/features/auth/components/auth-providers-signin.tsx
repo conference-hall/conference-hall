@@ -1,9 +1,9 @@
 import * as Firebase from 'firebase/auth';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '~/design-system/buttons.tsx';
+import { useHydrated } from '~/design-system/utils/use-hydrated.ts';
 import { getClientAuth, PROVIDERS, type ProviderId } from '~/shared/auth/firebase.ts';
-import { Button } from '~/shared/design-system/buttons.tsx';
-import { useHydrated } from '~/shared/design-system/utils/use-hydrated.ts';
 
 type AuthProvidersSigninProps = { redirectTo: string };
 

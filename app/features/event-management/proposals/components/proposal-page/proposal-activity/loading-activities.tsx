@@ -1,4 +1,4 @@
-import { LoadingIcon } from '~/shared/design-system/icons/loading-icon.tsx';
+import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 
 export function LoadingActivities() {
   return (

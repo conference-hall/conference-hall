@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { AdminTeams, TeamsSearchFiltersSchema } from '~/.server/admin/admin-teams.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
+import { Input } from '~/design-system/forms/input.tsx';
+import { IconLabel } from '~/design-system/icon-label.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { List } from '~/design-system/list/list.tsx';
+import { SortMenu } from '~/design-system/list/sort-menu.tsx';
+import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { Input } from '~/shared/design-system/forms/input.tsx';
-import { IconLabel } from '~/shared/design-system/icon-label.tsx';
-import { Page } from '~/shared/design-system/layouts/page.tsx';
-import { List } from '~/shared/design-system/list/list.tsx';
-import { SortMenu } from '~/shared/design-system/list/sort-menu.tsx';
-import { H1, Text } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/teams.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

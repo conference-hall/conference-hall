@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { NavTab, NavTabs } from '~/shared/design-system/navigation/nav-tabs.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
 import { LoginButton } from './login-button.tsx';
 

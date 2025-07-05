@@ -2,9 +2,9 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { href, Link } from 'react-router';
-import { Avatar } from '~/shared/design-system/avatar.tsx';
-import { menuItem, menuItems } from '~/shared/design-system/styles/menu.styles.ts';
-import { MenuTransition } from '~/shared/design-system/transitions.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
+import { menuItem, menuItems } from '~/design-system/styles/menu.styles.ts';
+import { MenuTransition } from '~/design-system/transitions.tsx';
 
 const menuStyle = cx(
   'flex items-center gap-1',

@@ -7,11 +7,11 @@ import { href, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { CfpConferenceOpeningSchema } from '~/.server/event-settings/user-event.types.ts';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
+import { Button, ButtonLink } from '~/design-system/buttons.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
 import { EventCfpConferenceForm } from '~/features/event-management/creation/components/event-cfp-conference-form.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { Button, ButtonLink } from '~/shared/design-system/buttons.tsx';
-import { Card } from '~/shared/design-system/layouts/card.tsx';
 import type { Route } from './+types/4-cfp-step.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 

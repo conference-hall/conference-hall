@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { href, Link } from 'react-router';
 
-import { Container } from '~/shared/design-system/layouts/container.tsx';
+import { Container } from '~/design-system/layouts/container.tsx';
 
 export function Footer() {
   const { t } = useTranslation();

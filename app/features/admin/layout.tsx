@@ -2,9 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
 import { needsAdminRole } from '~/.server/admin/authorization.ts';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { Page } from '~/shared/design-system/layouts/page.tsx';
-import { NavTab, NavTabs } from '~/shared/design-system/navigation/nav-tabs.tsx';
 import type { Route } from './+types/layout.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 
-import { DateRangeInput } from '~/shared/design-system/forms/date-range-input.tsx';
-import { Input } from '~/shared/design-system/forms/input.tsx';
-import { MarkdownTextArea } from '~/shared/design-system/forms/markdown-textarea.tsx';
-import { ToggleGroup } from '~/shared/design-system/forms/toggles.tsx';
+import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import type { EventType } from '~/shared/types/events.types.ts';
 

@@ -5,11 +5,11 @@ import { Notifications } from '~/.server/user-notifications/notifications.ts';
 import { Footer } from '~/app-platform/components/footer.tsx';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
+import { CardLink } from '~/design-system/layouts/card.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { CardLink } from '~/shared/design-system/layouts/card.tsx';
-import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
-import { Page } from '~/shared/design-system/layouts/page.tsx';
-import { H2 } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/notifications.ts';
 
 export const meta = (args: Route.MetaArgs) => {

@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
+import { Callout } from '~/design-system/callout.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
+import MultiSelect from '~/design-system/forms/multi-select.tsx';
+import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { LANGUAGES, TALK_LEVELS } from '~/shared/constants.ts';
-import { Callout } from '~/shared/design-system/callout.tsx';
-import { Input } from '~/shared/design-system/forms/input.tsx';
-import { MarkdownTextArea } from '~/shared/design-system/forms/markdown-textarea.tsx';
-import MultiSelect from '~/shared/design-system/forms/multi-select.tsx';
-import { Radio, RadioGroup } from '~/shared/design-system/forms/radio-group.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { CategoriesForm } from './categories-form.tsx';
 import { FormatsForm } from './formats-form.tsx';

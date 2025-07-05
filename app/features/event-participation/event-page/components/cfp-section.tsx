@@ -1,12 +1,12 @@
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
+import { H2, Subtitle } from '~/design-system/typography.tsx';
+import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import {
   CallForPaperDateLabel,
   CallForPaperElapsedTimeLabel,
   CallForPaperStatusLabel,
   cfpColorStatus,
 } from '~/features/event-participation/event-page/components/cfp.tsx';
-import { StatusPill } from '~/shared/design-system/charts/status-pill.tsx';
-import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
-import { ClientOnly } from '~/shared/design-system/utils/client-only.tsx';
 import type { CfpState } from '~/shared/types/events.types.ts';
 
 type Props = { cfpState: CfpState; cfpStart: Date | null; cfpEnd: Date | null; timezone: string; className?: string };
