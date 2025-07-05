@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
-import { useCurrentEvent } from '../components/contexts/event-page-context.tsx';
-import { CfpSection } from './components/event-page/cfp-section.tsx';
-import { DetailsSection } from './components/event-page/details-section.tsx';
-import { TrackSection } from './components/event-page/track-section.tsx';
+import { useCurrentEvent } from '../../../routes/components/contexts/event-page-context.tsx';
+import { CfpSection } from './components/cfp-section.tsx';
+import { DetailsSection } from './components/details-section.tsx';
+import { TrackSection } from './components/track-section.tsx';
 
 export default function EventRoute() {
   const { t } = useTranslation();

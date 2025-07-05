@@ -10,8 +10,8 @@ import { Button, ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { H2 } from '~/shared/design-system/typography.tsx';
-import { useSubmissionNavigation } from '../components/submission-page/submission-context.tsx';
 import type { Route } from './+types/5-survey.ts';
+import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'survey' };
 

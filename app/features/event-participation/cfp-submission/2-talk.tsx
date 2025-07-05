@@ -13,8 +13,8 @@ import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { H2 } from '~/shared/design-system/typography.tsx';
 import { TalkAlreadySubmittedError } from '~/shared/errors.server.ts';
-import { useSubmissionNavigation } from '../components/submission-page/submission-context.tsx';
 import type { Route } from './+types/2-talk.ts';
+import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'proposal' };
 

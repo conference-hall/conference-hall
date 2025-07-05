@@ -13,8 +13,8 @@ import { MarkdownTextArea } from '~/shared/design-system/forms/markdown-textarea
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
-import { useSubmissionNavigation } from '../components/submission-page/submission-context.tsx';
 import type { Route } from './+types/3-speakers.ts';
+import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'speakers' };
 

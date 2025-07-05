@@ -2,7 +2,7 @@ import { index, type RouteConfig, route } from '@react-router/dev/routes';
 
 export default [
   // Homepage
-  index('./routes/index.tsx'),
+  index('./features/event-search/event-search.tsx'),
 
   // Authentication pages
   route('auth/login', './routes/auth/login.tsx'),
@@ -14,25 +14,25 @@ export default [
   route('auth/verify-email', './routes/auth/verify-email.tsx'),
 
   // Event pages
-  route(':event', './routes/event/_layout.tsx', [
-    index('./routes/event/event.tsx'),
-    route('proposals', './routes/event/proposals.tsx'),
-    route('proposals/:proposal', './routes/event/proposal.tsx'),
-    route('survey', './routes/event/survey.tsx'),
+  route(':event', './features/event-participation/layout.tsx', [
+    index('./features/event-participation/event-page/event-page.tsx'),
+    route('proposals', './features/event-participation/speaker-proposals/speaker-proposals.tsx'),
+    route('proposals/:proposal', './features/event-participation/speaker-proposals/speaker-proposal.tsx'),
+    route('survey', './features/event-participation/speaker-survey/speaker-survey.tsx'),
 
     // Event submission pages
-    route('submission', './routes/event/submission.tsx', [
-      index('./routes/event/submission/1-selection.tsx'),
-      route(':talk', './routes/event/submission/2-talk.tsx'),
-      route(':talk/speakers', './routes/event/submission/3-speakers.tsx'),
-      route(':talk/tracks', './routes/event/submission/4-tracks.tsx'),
-      route(':talk/survey', './routes/event/submission/5-survey.tsx'),
-      route(':talk/submit', './routes/event/submission/6-submit.tsx'),
+    route('submission', './features/event-participation/cfp-submission/cfp-submission.tsx', [
+      index('./features/event-participation/cfp-submission/1-selection.tsx'),
+      route(':talk', './features/event-participation/cfp-submission/2-talk.tsx'),
+      route(':talk/speakers', './features/event-participation/cfp-submission/3-speakers.tsx'),
+      route(':talk/tracks', './features/event-participation/cfp-submission/4-tracks.tsx'),
+      route(':talk/survey', './features/event-participation/cfp-submission/5-survey.tsx'),
+      route(':talk/submit', './features/event-participation/cfp-submission/6-submit.tsx'),
     ]),
   ]),
 
   // Event legacy pages routing
-  route('public/event/:legacyId', './routes/event/event.legacy.tsx'),
+  route('public/event/:legacyId', './features/event-participation/event-page/event-page.legacy.tsx'),
 
   // Invitation pages
   route('invite/proposal/:code', './routes/invite/proposal.$code.tsx'),

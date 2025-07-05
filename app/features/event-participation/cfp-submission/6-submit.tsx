@@ -12,8 +12,8 @@ import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/shared/design-system/links.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
-import { useSubmissionNavigation } from '../components/submission-page/submission-context.tsx';
 import type { Route } from './+types/6-submit.ts';
+import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'submission' };
 

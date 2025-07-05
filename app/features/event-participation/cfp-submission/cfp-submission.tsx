@@ -8,9 +8,9 @@ import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { IconLink } from '~/shared/design-system/icon-buttons.tsx';
 import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
-import type { Route } from './+types/submission.ts';
-import { Steps } from './components/submission-page/steps.tsx';
-import { SubmissionContextProvider } from './components/submission-page/submission-context.tsx';
+import type { Route } from './+types/cfp-submission.ts';
+import { Steps } from './components/steps.tsx';
+import { SubmissionContextProvider } from './components/submission-context.tsx';
 
 export const handle = { step: 'root' };
 

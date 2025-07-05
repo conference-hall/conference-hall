@@ -9,10 +9,10 @@ import { Callout } from '~/shared/design-system/callout.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { H1, Subtitle } from '~/shared/design-system/typography.tsx';
-import { MaxProposalsReached } from '../components/submission-page/max-proposals.tsx';
-import { NoSubmissionState } from '../components/submission-page/no-submissions-state.tsx';
-import { SubmissionTalksList } from '../components/submission-page/submission-talks-list.tsx';
 import type { Route } from './+types/1-selection.ts';
+import { MaxProposalsReached } from './components/max-proposals.tsx';
+import { NoSubmissionState } from './components/no-submissions-state.tsx';
+import { SubmissionTalksList } from './components/submission-talks-list.tsx';
 
 export const handle = { step: 'selection' };
 

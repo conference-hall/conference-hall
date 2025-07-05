@@ -1,6 +1,6 @@
 import { redirect } from 'react-router';
 import { EventPage } from '~/.server/event-page/event-page.ts';
-import type { Route } from './+types/event.legacy.ts';
+import type { Route } from './+types/event-page.legacy.ts';
 
 // Redirect Conference Hall beta event URLs
 export const loader = async ({ params }: Route.LoaderArgs) => {

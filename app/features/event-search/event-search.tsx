@@ -13,12 +13,12 @@ import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { Link } from '~/shared/design-system/links.tsx';
 import { Pagination } from '~/shared/design-system/list/pagination.tsx';
 import { H1, H2 } from '~/shared/design-system/typography.tsx';
-import type { Route } from './+types/index.ts';
-import { useUser } from './components/contexts/user-context.tsx';
-import { EventCardLink } from './components/events/event-card.tsx';
-import { SearchEventsFilters } from './components/search/search-events-filters.tsx';
-import { SearchEventsInput } from './components/search/search-events-input.tsx';
-import { SponsorLink } from './components/sponsor-link.tsx';
+import { useUser } from '../../routes/components/contexts/user-context.tsx';
+import { EventCardLink } from '../../routes/components/events/event-card.tsx';
+import { SearchEventsFilters } from '../../routes/components/search/search-events-filters.tsx';
+import { SearchEventsInput } from '../../routes/components/search/search-events-input.tsx';
+import { SponsorLink } from '../../routes/components/sponsor-link.tsx';
+import type { Route } from './+types/event-search.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const filters = parseUrlFilters(request.url);
