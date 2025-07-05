@@ -1,5 +1,5 @@
 import { type ZodSchema, z } from 'zod';
-import type { EmailSchema } from '~/libs/validators/auth.ts';
+import type { EmailSchema } from '~/shared/validators/auth.ts';
 
 const SocialLinksSchema = makeFilteredArraySchema(z.string().url().max(100));
 

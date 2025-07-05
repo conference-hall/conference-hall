@@ -8,7 +8,7 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
 import type { SocialLinks } from '~/.server/speaker-profile/speaker-profile.types.ts';
-import { OpenPlanner } from '~/libs/integrations/open-planner.ts';
+import { OpenPlanner } from '~/shared/integrations/open-planner.ts';
 import { exportToOpenPlanner } from './export-to-open-planner.job.ts';
 
 vi.mock('~/libs/integrations/open-planner.ts', () => {

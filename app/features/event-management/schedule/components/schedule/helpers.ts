@@ -1,6 +1,6 @@
 import { type CollisionDetector, CollisionPriority, CollisionType } from '@dnd-kit/abstract';
 import { Point, Rectangle } from '@dnd-kit/geometry';
-import { countIntervalsInTimeSlot } from '~/libs/datetimes/timeslots.ts';
+import { countIntervalsInTimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSIONS_GAP_PX, TIMESLOT_HEIGHTS } from './config.ts';
 

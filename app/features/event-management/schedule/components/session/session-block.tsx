@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatTime, formatTimeDifference } from '~/libs/datetimes/datetimes.ts';
-import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
+import { formatTime, formatTimeDifference } from '~/shared/datetimes/datetimes.ts';
+import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';

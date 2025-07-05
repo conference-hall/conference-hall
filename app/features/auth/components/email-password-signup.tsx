@@ -2,7 +2,6 @@ import * as Firebase from 'firebase/auth';
 import { type FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useNavigation, useSubmit } from 'react-router';
-import { validateEmailAndPassword } from '~/libs/validators/auth.ts';
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
@@ -10,6 +9,7 @@ import { Callout } from '~/shared/design-system/callout.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';
 import { PasswordInput } from '~/shared/design-system/forms/password-input.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
+import { validateEmailAndPassword } from '~/shared/validators/auth.ts';
 
 type EmailPasswordSignupProps = { redirectTo: string; defaultEmail: string | null };
 

@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
-import { toDateInput } from '~/libs/datetimes/datetimes.ts';
-import { utcToTimezone } from '~/libs/datetimes/timezone.ts';
+import { toDateInput } from '~/shared/datetimes/datetimes.ts';
+import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { Input } from './input.tsx';
 

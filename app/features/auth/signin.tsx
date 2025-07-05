@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { redirect, useSearchParams } from 'react-router';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { createSession, getUserSession } from '~/shared/auth/session.ts';
 import { Callout } from '~/shared/design-system/callout.tsx';
 import { DividerWithLabel } from '~/shared/design-system/divider.tsx';

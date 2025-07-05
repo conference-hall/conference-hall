@@ -1,4 +1,4 @@
-import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
+import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { Pagination } from '../shared/pagination.ts';
 import { ProposalSearchBuilder } from '../shared/proposal-search-builder.ts';

@@ -3,8 +3,7 @@ import { type FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { validatePassword } from '~/libs/validators/auth.ts';
+import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
 import { getUserSession } from '~/shared/auth/session.ts';
@@ -17,6 +16,7 @@ import { Link } from '~/shared/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/shared/design-system/logo.tsx';
 import { Subtitle } from '~/shared/design-system/typography.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
+import { validatePassword } from '~/shared/validators/auth.ts';
 import type { Route } from './+types/reset-password.ts';
 
 export const meta = (args: Route.MetaArgs) => {

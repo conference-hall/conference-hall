@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
-import { SlugSchema } from '~/libs/validators/slug.ts';
+import { SlugSchema } from '~/shared/validators/slug.ts';
 import { UserTeam } from './user-team.ts';
 
 export class TeamEvents {

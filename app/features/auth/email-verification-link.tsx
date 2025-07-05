@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
 import { LoadingIcon } from '~/shared/design-system/icons/loading-icon.tsx';

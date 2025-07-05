@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { parseToUtcEndOfDay, parseToUtcStartOfDay } from '~/libs/datetimes/timezone.ts';
+import { parseToUtcEndOfDay, parseToUtcStartOfDay } from '~/shared/datetimes/timezone.ts';
 
 export const ScheduleCreateSchema = z
   .object({

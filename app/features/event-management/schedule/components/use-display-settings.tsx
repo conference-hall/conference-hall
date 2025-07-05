@@ -1,7 +1,7 @@
 import { isSameDay } from 'date-fns';
 import { useFetcher, useNavigate, useParams, useSearchParams } from 'react-router';
-import { getDatesRange } from '~/libs/datetimes/datetimes.ts';
-import { utcToTimezone } from '~/libs/datetimes/timezone.ts';
+import { getDatesRange } from '~/shared/datetimes/datetimes.ts';
+import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 
 type ScheduleSettings = {
   start: Date;

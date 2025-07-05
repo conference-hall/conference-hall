@@ -2,11 +2,11 @@ import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
 import { TagSelect } from '~/features/event-management/proposals/components/proposal-page/tag-select.tsx';
-import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Tag } from '~/shared/design-system/tag.tsx';
 import { H2, Text } from '~/shared/design-system/typography.tsx';
 import type { Tag as TagType } from '~/shared/types/tags.types.ts';
+import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 
 type TagsCardProps = {
   proposalId: string;

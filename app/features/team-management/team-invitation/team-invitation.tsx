@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { TeamMemberInvite } from '~/.server/team/team-member-invite.ts';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';

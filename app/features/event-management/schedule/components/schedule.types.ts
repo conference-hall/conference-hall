@@ -1,4 +1,4 @@
-import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
+import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { ConfirmationStatus, DeliberationStatus, Language } from '~/shared/types/proposals.types.ts';
 
 export type Track = { id: string; name: string };

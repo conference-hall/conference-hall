@@ -1,4 +1,4 @@
-import type { LANGUAGES } from '~/libs/constants.ts';
+import type { LANGUAGES } from '~/shared/constants.ts';
 
 export type DeliberationStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED';
 

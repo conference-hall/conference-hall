@@ -4,9 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { ProfileSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
+import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
-import { extractSocialProfile } from '~/libs/formatters/social-links.ts';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Avatar } from '~/shared/design-system/avatar.tsx';
 import { Button } from '~/shared/design-system/buttons.tsx';
@@ -15,6 +14,7 @@ import { MarkdownTextArea } from '~/shared/design-system/forms/markdown-textarea
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { getSocialIcon } from '~/shared/design-system/social-link.tsx';
 import { H1, H2, Label, Subtitle } from '~/shared/design-system/typography.tsx';
+import { extractSocialProfile } from '~/shared/formatters/social-links.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/settings.profile.ts';

@@ -1,7 +1,7 @@
 import { EnvelopeIcon, GlobeEuropeAfricaIcon, HeartIcon } from '@heroicons/react/20/solid';
 import { ClockIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { formatDateRange } from '~/libs/datetimes/datetimes.ts';
+import { formatDateRange } from '~/shared/datetimes/datetimes.ts';
 import { Divider } from '~/shared/design-system/divider.tsx';
 import { IconLabel } from '~/shared/design-system/icon-label.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';

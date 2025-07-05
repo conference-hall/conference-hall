@@ -3,7 +3,7 @@ import { KeyIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { TeamBetaAccess } from '~/.server/team/team-beta-access.ts';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button, button } from '~/shared/design-system/buttons.tsx';
 import { DividerWithLabel } from '~/shared/design-system/divider.tsx';

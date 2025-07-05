@@ -2,7 +2,7 @@ import { Description, Field, Fieldset, Label, Legend, Radio, RadioGroup } from '
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { EVENT_VISIBILITY } from '~/libs/constants.ts';
+import { EVENT_VISIBILITY } from '~/shared/constants.ts';
 
 export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaultValue?: 'PUBLIC' | 'PRIVATE' }) {
   const { t } = useTranslation();

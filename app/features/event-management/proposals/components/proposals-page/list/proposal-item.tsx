@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router';
 import { ReviewComments } from '~/features/event-management/proposals/components/proposals-page/list/review-comments.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/features/event-management/proposals/components/review-note.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
-import { formatDate } from '~/libs/datetimes/datetimes.ts';
+import { formatDate } from '~/shared/datetimes/datetimes.ts';
 import { BadgeDot } from '~/shared/design-system/badges.tsx';
 import { Checkbox } from '~/shared/design-system/forms/checkboxes.tsx';
 import { Tag } from '~/shared/design-system/tag.tsx';

@@ -2,7 +2,7 @@ import { HeartIcon, MinusIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/s
 import { cx } from 'class-variance-authority';
 import { Trans, useTranslation } from 'react-i18next';
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
-import { formatDistance } from '~/libs/datetimes/datetimes.ts';
+import { formatDistance } from '~/shared/datetimes/datetimes.ts';
 import { ClientOnly } from '~/shared/design-system/utils/client-only.tsx';
 
 const ReviewTypes = {

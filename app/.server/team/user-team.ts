@@ -1,7 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
-import { SlugSchema } from '~/libs/validators/slug.ts';
 import { ForbiddenOperationError, TeamNotFoundError } from '~/shared/errors.server.ts';
+import { SlugSchema } from '~/shared/validators/slug.ts';
 import type { Permission } from './user-permissions.ts';
 import { UserPermissions } from './user-permissions.ts';
 

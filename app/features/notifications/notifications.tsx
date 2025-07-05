@@ -4,7 +4,7 @@ import { href } from 'react-router';
 import { Notifications } from '~/.server/user-notifications/notifications.ts';
 import { Footer } from '~/app-platform/components/footer.tsx';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { CardLink } from '~/shared/design-system/layouts/card.tsx';
 import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';

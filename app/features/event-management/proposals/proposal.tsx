@@ -14,10 +14,10 @@ import {
 } from '~/.server/reviews/proposal-review.types.ts';
 import { ProposalStatusSchema, ProposalStatusUpdater } from '~/.server/reviews/proposal-status-updater.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
+import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';

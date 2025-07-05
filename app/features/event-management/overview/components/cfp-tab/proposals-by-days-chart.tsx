@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { TooltipContentProps } from 'recharts';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent.js';
-import { formatDay } from '~/libs/datetimes/datetimes.ts';
+import { formatDay } from '~/shared/datetimes/datetimes.ts';
 import { NoData } from '~/shared/design-system/dashboard/no-data.tsx';
 import { Divider } from '~/shared/design-system/divider.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';

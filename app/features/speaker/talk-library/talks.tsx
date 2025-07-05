@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { href, useSearchParams } from 'react-router';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalksListFilterSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { BadgeDot } from '~/shared/design-system/badges.tsx';
 import { ButtonLink } from '~/shared/design-system/buttons.tsx';

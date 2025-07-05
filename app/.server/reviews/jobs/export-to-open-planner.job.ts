@@ -2,11 +2,11 @@ import { EventIntegrations } from '~/.server/event-settings/event-integrations.t
 import { ProposalSearchBuilder } from '~/.server/shared/proposal-search-builder.ts';
 import type { ProposalsFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import type { SocialLinks } from '~/.server/speaker-profile/speaker-profile.types.ts';
-import { extractSocialProfile } from '~/libs/formatters/social-links.ts';
-import { OpenPlanner, type OpenPlannerSessionsPayload } from '~/libs/integrations/open-planner.ts';
-import { compactObject } from '~/libs/utils/object-compact.ts';
+import { extractSocialProfile } from '~/shared/formatters/social-links.ts';
+import { OpenPlanner, type OpenPlannerSessionsPayload } from '~/shared/integrations/open-planner.ts';
 import { job } from '~/shared/jobs/job.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
+import { compactObject } from '~/shared/utils/object-compact.ts';
 
 type ExportToOpenPlannerPayload = {
   userId: string;

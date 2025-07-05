@@ -2,7 +2,7 @@ import { PaintBrushIcon } from '@heroicons/react/24/outline';
 import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { getContrastColor, getRandomColor } from '~/libs/colors/colors.ts';
+import { getContrastColor, getRandomColor } from '~/shared/colors/colors.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';

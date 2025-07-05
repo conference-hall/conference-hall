@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { LANGUAGES, TALK_LEVELS } from '~/libs/constants.ts';
+import { LANGUAGES, TALK_LEVELS } from '~/shared/constants.ts';
 import { Callout } from '~/shared/design-system/callout.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/shared/design-system/forms/markdown-textarea.tsx';

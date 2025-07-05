@@ -5,8 +5,8 @@ import { addMinutes } from 'date-fns';
 import type { ReactNode } from 'react';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatDate, formatTime, toDateInput } from '~/libs/datetimes/datetimes.ts';
-import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
+import { formatDate, formatTime, toDateInput } from '~/shared/datetimes/datetimes.ts';
+import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import {
   getDailyTimeSlots,
   haveSameStartDate,
@@ -14,9 +14,9 @@ import {
   isNextTimeslotInWindow,
   isTimeSlotIncluded,
   moveTimeSlotStart,
-} from '~/libs/datetimes/timeslots.ts';
-import { getGMTOffset } from '~/libs/datetimes/timezone.ts';
-import { deepEqual } from '~/libs/utils/deep-equal.ts';
+} from '~/shared/datetimes/timeslots.ts';
+import { getGMTOffset } from '~/shared/datetimes/timezone.ts';
+import { deepEqual } from '~/shared/utils/deep-equal.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { HOUR_INTERVAL, SLOT_INTERVAL } from './config.ts';
 import { getSessionHeight, getTimeslotHeight, topInsideDroppable } from './helpers.ts';

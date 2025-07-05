@@ -1,7 +1,7 @@
 import { db } from 'prisma/db.server.ts';
-import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 import { ProposalNotFoundError, ReviewDisabledError } from '~/shared/errors.server.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
+import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { SpeakerSurvey } from '../event-survey/speaker-survey.ts';
 import type { SurveyDetailedAnswer } from '../event-survey/types.ts';

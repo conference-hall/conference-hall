@@ -3,7 +3,7 @@ import type { TalkLevel } from '@prisma/client';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatDatetime } from '~/libs/datetimes/datetimes.ts';
+import { formatDatetime } from '~/shared/datetimes/datetimes.ts';
 import { Badge } from '~/shared/design-system/badges.tsx';
 import { IconLink } from '~/shared/design-system/icon-buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';

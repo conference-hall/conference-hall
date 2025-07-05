@@ -2,7 +2,7 @@ import { UserPlusIcon } from '@heroicons/react/20/solid';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { TEAM_ROLES } from '~/libs/constants.ts';
+import { TEAM_ROLES } from '~/shared/constants.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
 import { Radio, RadioGroup } from '~/shared/design-system/forms/radio-group.tsx';
