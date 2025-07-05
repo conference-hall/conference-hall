@@ -7,7 +7,7 @@ import { KpiProgressBar } from '~/shared/design-system/dashboard/kpi-progress-ba
 import { StatisticCard } from '~/shared/design-system/dashboard/statistic-card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { H1 } from '~/shared/design-system/typography.tsx';
-import type { Route } from './+types/index.ts';
+import type { Route } from './+types/dashboard.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

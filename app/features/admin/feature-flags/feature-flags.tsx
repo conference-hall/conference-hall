@@ -9,7 +9,7 @@ import { Toggle } from '~/shared/design-system/forms/toggles.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { List } from '~/shared/design-system/list/list.tsx';
 import { H1, Text } from '~/shared/design-system/typography.tsx';
-import type { Route } from './+types/flags.ts';
+import type { Route } from './+types/feature-flags.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

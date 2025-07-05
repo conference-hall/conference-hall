@@ -125,14 +125,14 @@ export default [
   route('team/:team/:event/export/open-planner', './routes/team.event-management/proposals/exports/open-planner.tsx'),
 
   // Admin pages
-  route('admin', './routes/admin/_layout.tsx', [
-    index('./routes/admin/index.tsx'),
-    route('users', './routes/admin/users.tsx'),
-    route('users/:user', './routes/admin/users.$user.tsx'),
-    route('teams', './routes/admin/teams.tsx'),
-    route('flags', './routes/admin/flags.tsx'),
-    route('debug', './routes/admin/debug.tsx'),
-    route('debug/heap-snapshot', './routes/admin/debug.heap-snapshot.tsx'),
+  route('admin', './features/admin/layout.tsx', [
+    index('./features/admin/dashboard/dashboard.tsx'),
+    route('users', './features/admin/users/users.tsx'),
+    route('users/:user', './features/admin/users/user.tsx'),
+    route('teams', './features/admin/teams/teams.tsx'),
+    route('flags', './features/admin/feature-flags/feature-flags.tsx'),
+    route('debug', './features/admin/debug/debug.tsx'),
+    route('debug/heap-snapshot', './features/admin/debug/heap-snapshot.tsx'),
   ]),
 
   // Docs pages

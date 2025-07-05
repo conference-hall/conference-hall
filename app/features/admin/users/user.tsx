@@ -8,7 +8,7 @@ import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { Link } from '~/shared/design-system/links.tsx';
 import { List } from '~/shared/design-system/list/list.tsx';
 import { H1, H2, H3, Subtitle, Text } from '~/shared/design-system/typography.tsx';
-import type { Route } from './+types/users.$user.ts';
+import type { Route } from './+types/user.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
