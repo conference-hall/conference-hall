@@ -15,12 +15,12 @@ import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
-import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { NavSideMenu } from '~/shared/design-system/navigation/nav-side-menu.tsx';
+import { H2 } from '~/shared/design-system/typography.tsx';
 import { useFlag } from '../components/contexts/flags-context.tsx';
 import type { Route } from './+types/settings.ts';
 

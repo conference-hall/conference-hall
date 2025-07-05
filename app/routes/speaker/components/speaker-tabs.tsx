@@ -2,8 +2,8 @@ import { Cog6ToothIcon, FireIcon, MicrophoneIcon } from '@heroicons/react/24/out
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { NavTab, NavTabs } from '~/shared/design-system/navigation/nav-tabs.tsx';
 
 type Props = { className?: string };
 

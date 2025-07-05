@@ -3,8 +3,8 @@ import { ArrowDownIcon, ArrowsUpDownIcon, ArrowUpIcon } from '@heroicons/react/1
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useSearchParams } from 'react-router';
-import { button } from '~/design-system/buttons.tsx';
-import { MenuTransition } from '~/design-system/transitions.tsx';
+import { button } from '~/shared/design-system/buttons.tsx';
+import { MenuTransition } from '~/shared/design-system/transitions.tsx';
 import { menuItem, menuItemIcon, menuItems } from '../styles/menu.styles.ts';
 
 type SortMenuProps = {

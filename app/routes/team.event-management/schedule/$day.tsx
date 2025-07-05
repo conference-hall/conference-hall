@@ -11,11 +11,11 @@ import {
   ScheduleTracksSaveSchema,
   SchedulSessionIdSchema,
 } from '~/.server/event-schedule/event-schedule.types.ts';
-import { ButtonLink } from '~/design-system/buttons.tsx';
-import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import { ButtonLink } from '~/shared/design-system/buttons.tsx';
+import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
 import { ScheduleHeader } from '../components/schedule-page/header/schedule-header.tsx';
 import { useScheduleFullscreen } from '../components/schedule-page/header/use-schedule-fullscreen.tsx';
 import { useZoomHandlers } from '../components/schedule-page/header/use-zoom-handlers.tsx';

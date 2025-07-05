@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { ErrorDisplay } from './error-display.tsx';
 
 export function InternalServerError() {

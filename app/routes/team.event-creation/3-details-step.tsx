@@ -6,12 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventDetailsSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
-import { Button, ButtonLink } from '~/design-system/buttons.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { EventDetailsForm } from '~/routes/components/events/event-details-form.tsx';
 import { FullscreenPage } from '~/routes/components/fullscreen-page.tsx';
+import { Button, ButtonLink } from '~/shared/design-system/buttons.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
 import type { Route } from './+types/3-details-step.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 

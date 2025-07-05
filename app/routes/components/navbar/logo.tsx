@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { href, Link } from 'react-router';
 
-import { ConferenceHallLogo } from '~/design-system/logo.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { ConferenceHallLogo } from '~/shared/design-system/logo.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 type Props = { label?: string; variant?: 'primary' | 'secondary' };
 

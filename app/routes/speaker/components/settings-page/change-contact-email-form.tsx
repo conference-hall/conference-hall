@@ -1,11 +1,11 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
-import { type Option, SelectNative } from '~/design-system/forms/select-native.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { type Option, SelectNative } from '~/shared/design-system/forms/select-native.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
 
 type Props = { email: string; authLoaded: boolean };
 

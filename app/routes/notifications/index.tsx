@@ -2,14 +2,14 @@ import { BellSlashIcon } from '@heroicons/react/24/outline';
 import { Trans, useTranslation } from 'react-i18next';
 import { href } from 'react-router';
 import { Notifications } from '~/.server/user-notifications/notifications.ts';
-import { CardLink } from '~/design-system/layouts/card.tsx';
-import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { Footer } from '~/routes/components/footer.tsx';
 import { Navbar } from '~/routes/components/navbar/navbar.tsx';
+import { CardLink } from '~/shared/design-system/layouts/card.tsx';
+import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { H2 } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/index.ts';
 
 export const meta = (args: Route.MetaArgs) => {

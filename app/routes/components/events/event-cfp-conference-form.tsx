@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 
-import { Callout } from '~/design-system/callout.tsx';
-import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
+import { Callout } from '~/shared/design-system/callout.tsx';
+import { DateRangeInput } from '~/shared/design-system/forms/date-range-input.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type Props = {

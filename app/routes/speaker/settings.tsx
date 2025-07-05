@@ -2,10 +2,10 @@ import { AdjustmentsVerticalIcon, ShieldCheckIcon, UserCircleIcon } from '@heroi
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { NavSideMenu } from '~/shared/design-system/navigation/nav-side-menu.tsx';
 import type { Route } from './+types/settings.ts';
 
 export const meta = (args: Route.MetaArgs) => {

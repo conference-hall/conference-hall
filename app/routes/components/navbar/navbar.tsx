@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { BG_COLOR } from '~/design-system/colors.ts';
+import { BG_COLOR } from '~/shared/design-system/colors.ts';
 import { useUser } from '../contexts/user-context.tsx';
 import { LoginButton } from './login-button.tsx';
 import { Logo } from './logo.tsx';

@@ -4,10 +4,10 @@ import slugify from '@sindresorhus/slugify';
 import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
-import { Modal } from '~/design-system/dialogs/modals.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
+import { Input } from '~/shared/design-system/forms/input.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 type TracksModalProps = {
   initialValues: Array<{ id: string; name: string }>;

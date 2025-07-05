@@ -1,12 +1,12 @@
 import { cx } from 'class-variance-authority';
 import { Outlet } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
-import { Avatar } from '~/design-system/avatar.tsx';
-import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
-import { Container } from '~/design-system/layouts/container.tsx';
-import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { Navbar } from '~/routes/components/navbar/navbar.tsx';
+import { Avatar } from '~/shared/design-system/avatar.tsx';
+import { BG_GRADIENT_COLOR } from '~/shared/design-system/colors.ts';
+import { Container } from '~/shared/design-system/layouts/container.tsx';
+import { H1, Text } from '~/shared/design-system/typography.tsx';
 import { SpeakerProfileProvider } from '../components/contexts/speaker-profile-context.tsx';
 import { Footer } from '../components/footer.tsx';
 import type { Route } from './+types/_layout.ts';

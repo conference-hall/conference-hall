@@ -1,13 +1,13 @@
 import { LockClosedIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
-import { ButtonLink } from '~/design-system/buttons.tsx';
-import { IconLink } from '~/design-system/icon-buttons.tsx';
-import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import { NestedErrorBoundary } from '~/routes/components/error-boundary.tsx';
+import { ButtonLink } from '~/shared/design-system/buttons.tsx';
+import { IconLink } from '~/shared/design-system/icon-buttons.tsx';
+import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
 import type { Route } from './+types/submission.ts';
 import { Steps } from './components/submission-page/steps.tsx';
 import { SubmissionContextProvider } from './components/submission-page/submission-context.tsx';

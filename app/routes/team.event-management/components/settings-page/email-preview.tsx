@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text } from '~/design-system/typography.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 type Props = {
   from: string;

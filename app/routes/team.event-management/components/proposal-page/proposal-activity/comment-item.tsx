@@ -1,10 +1,10 @@
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
-import { Avatar } from '~/design-system/avatar.tsx';
 import { formatDistance } from '~/libs/datetimes/datetimes.ts';
 import { useUser } from '~/routes/components/contexts/user-context.tsx';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
+import { Avatar } from '~/shared/design-system/avatar.tsx';
 import { CommentReactions } from './comment-reactions.tsx';
 
 export function CommentItem({ item }: { item: FeedItem }) {

@@ -3,15 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { Form, redirect, useNavigation, useSearchParams } from 'react-router';
 import { z } from 'zod';
 import { UserAccount } from '~/.server/user-registration/user-account.ts';
-import { Button } from '~/design-system/buttons.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { ConferenceHallLogo } from '~/design-system/logo.tsx';
-import { Subtitle } from '~/design-system/typography.tsx';
 import { getUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Input } from '~/shared/design-system/forms/input.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { ConferenceHallLogo } from '~/shared/design-system/logo.tsx';
+import { Subtitle } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/forgot-password.ts';
 
 export const meta = (args: Route.MetaArgs) => {

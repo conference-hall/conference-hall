@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { FilterTag } from '~/design-system/filter-tag.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { FilterTag } from '~/shared/design-system/filter-tag.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 type FiltersBadgesProps = {
   filters: { query?: string; proposalStatus?: 'accepted' | 'confirmed' | 'declined' };

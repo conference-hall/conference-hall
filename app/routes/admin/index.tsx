@@ -2,11 +2,11 @@ import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Await } from 'react-router';
 import { AdminDashboard } from '~/.server/admin/admin-dashboard.ts';
-import { KpiProgressBar } from '~/design-system/dashboard/kpi-progress-bar.tsx';
-import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { H1 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { KpiProgressBar } from '~/shared/design-system/dashboard/kpi-progress-bar.tsx';
+import { StatisticCard } from '~/shared/design-system/dashboard/statistic-card.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { H1 } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/index.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

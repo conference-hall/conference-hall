@@ -2,10 +2,10 @@ import { PlusIcon } from '@heroicons/react/20/solid';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
-import { Modal } from '~/design-system/dialogs/modals.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
-import { TextArea } from '~/design-system/forms/textarea.tsx';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
+import { Input } from '~/shared/design-system/forms/input.tsx';
+import { TextArea } from '~/shared/design-system/forms/textarea.tsx';
 
 type TrackType = 'formats' | 'categories';
 type TrackData = { id: string; name: string; description?: string | null };

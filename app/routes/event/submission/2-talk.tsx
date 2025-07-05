@@ -6,13 +6,13 @@ import { href, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
-import { Button, ButtonLink } from '~/design-system/buttons.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { TalkAlreadySubmittedError } from '~/libs/errors.server.ts';
 import { TalkForm } from '~/routes/components/talks/talk-forms/talk-form.tsx';
+import { Button, ButtonLink } from '~/shared/design-system/buttons.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { H2 } from '~/shared/design-system/typography.tsx';
 import { useSubmissionNavigation } from '../components/submission-page/submission-context.tsx';
 import type { Route } from './+types/2-talk.ts';
 

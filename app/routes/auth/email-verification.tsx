@@ -1,12 +1,12 @@
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { Link } from '~/design-system/links.tsx';
-import { ConferenceHallLogo } from '~/design-system/logo.tsx';
-import { Subtitle } from '~/design-system/typography.tsx';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { Link } from '~/shared/design-system/links.tsx';
+import { ConferenceHallLogo } from '~/shared/design-system/logo.tsx';
+import { Subtitle } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/email-verification.ts';
 
 export const meta = (args: Route.MetaArgs) => {

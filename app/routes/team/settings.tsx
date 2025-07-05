@@ -2,11 +2,11 @@ import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
-import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { NavSideMenu } from '~/shared/design-system/navigation/nav-side-menu.tsx';
+import { H2 } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/settings.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

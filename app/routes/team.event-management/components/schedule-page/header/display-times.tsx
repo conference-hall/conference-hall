@@ -1,10 +1,10 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { ClockIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { button } from '~/design-system/buttons.tsx';
-import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
-import { Text } from '~/design-system/typography.tsx';
 import { formatTime } from '~/libs/datetimes/datetimes.ts';
+import { button } from '~/shared/design-system/buttons.tsx';
+import { TimeRangeInput } from '~/shared/design-system/forms/time-range-input.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 type Props = {
   displayedTimes: { start: number; end: number };

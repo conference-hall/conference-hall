@@ -2,12 +2,12 @@ import * as Firebase from 'firebase/auth';
 import { type FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useNavigation, useSubmit } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
-import { Callout } from '~/design-system/callout.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
 import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { validateEmailAndPassword } from '~/libs/validators/auth.ts';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Callout } from '~/shared/design-system/callout.tsx';
+import { Input } from '~/shared/design-system/forms/input.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 import { PasswordInput } from './password-input.tsx';
 

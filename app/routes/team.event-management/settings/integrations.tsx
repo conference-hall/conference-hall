@@ -11,16 +11,16 @@ import {
 } from '~/.server/event-settings/event-integrations.types.ts';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventSlackSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
-import { Button } from '~/design-system/buttons.tsx';
-import { Callout } from '~/design-system/callout.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { ExternalLink } from '~/design-system/links.tsx';
-import { H2, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Callout } from '~/shared/design-system/callout.tsx';
+import { Input } from '~/shared/design-system/forms/input.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { ExternalLink } from '~/shared/design-system/links.tsx';
+import { H2, Text } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/integrations.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
-import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
-import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
-import { Link } from '~/design-system/links.tsx';
 import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { LoadingIcon } from '~/shared/design-system/icons/loading-icon.tsx';
+import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
+import { Link } from '~/shared/design-system/links.tsx';
 import type { Route } from './+types/verify-email.ts';
 
 export const meta = (args: Route.MetaArgs) => {

@@ -1,6 +1,6 @@
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 
 type Props = { talkId: string };
 

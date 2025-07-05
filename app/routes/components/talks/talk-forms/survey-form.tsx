@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import type { SurveyQuestion } from '~/.server/event-survey/types.ts';
-import { Checkbox, CheckboxGroup } from '~/design-system/forms/checkboxes.tsx';
-import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
-import { TextArea } from '~/design-system/forms/textarea.tsx';
+import { Checkbox, CheckboxGroup } from '~/shared/design-system/forms/checkboxes.tsx';
+import { Radio, RadioGroup } from '~/shared/design-system/forms/radio-group.tsx';
+import { TextArea } from '~/shared/design-system/forms/textarea.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type Props = {

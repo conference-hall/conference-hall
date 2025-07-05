@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Avatar } from '~/design-system/avatar.tsx';
-import { Card, CardLink } from '~/design-system/layouts/card.tsx';
-import { Subtitle, Text } from '~/design-system/typography.tsx';
+import { Avatar } from '~/shared/design-system/avatar.tsx';
+import { Card, CardLink } from '~/shared/design-system/layouts/card.tsx';
+import { Subtitle, Text } from '~/shared/design-system/typography.tsx';
 import type { CfpState } from '~/types/events.types.ts';
 import { CfpStatus } from '../cfp/cfp-status.tsx';
 

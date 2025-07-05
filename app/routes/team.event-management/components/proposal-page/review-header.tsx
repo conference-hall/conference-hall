@@ -1,8 +1,8 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router';
-import { IconLink } from '~/design-system/icon-buttons.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { IconLink } from '~/shared/design-system/icon-buttons.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 import { ReviewsProgress } from '../proposals-page/list/reviews-progress.tsx';
 
 type Props = { current: number; total: number; reviewed: number; nextId?: string; previousId?: string };

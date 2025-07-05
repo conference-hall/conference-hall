@@ -4,10 +4,10 @@ import { useId, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 
-import { Button } from '~/design-system/buttons.tsx';
-import { Callout } from '~/design-system/callout.tsx';
-import { Modal } from '~/design-system/dialogs/modals.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Callout } from '~/shared/design-system/callout.tsx';
+import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 const statuses = {
   ACCEPTED: { i18nKey: 'common.proposals.status.accepted', icon: CheckIcon, color: 'text-green-600' },

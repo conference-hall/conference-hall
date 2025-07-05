@@ -1,8 +1,8 @@
 import { HeartIcon, NoSymbolIcon, StarIcon, UserCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { Text } from '~/design-system/typography.tsx';
 import { formatReviewNote } from '~/libs/formatters/reviews.ts';
+import { Text } from '~/shared/design-system/typography.tsx';
 import type { ReviewFeeling } from '~/types/proposals.types.ts';
 import { ClientOnly } from '../utils/client-only.tsx';
 

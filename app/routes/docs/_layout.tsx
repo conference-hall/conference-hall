@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router';
-import { Page } from '~/design-system/layouts/page.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { Footer } from '../components/footer.tsx';
 import { Navbar } from '../components/navbar/navbar.tsx';
 import { DocsTabs } from './components/docs-tabs.tsx';

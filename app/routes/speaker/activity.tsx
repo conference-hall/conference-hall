@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { SpeakerActivities } from '~/.server/speaker-activities/speaker-activities.ts';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { H1 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { H1 } from '~/shared/design-system/typography.tsx';
 import { useSpeakerProfile } from '../components/contexts/speaker-profile-context.tsx';
 import type { Route } from './+types/activity.ts';
 import { SpeakerActivitiesSection } from './components/activity-page/speaker-activities-section.tsx';

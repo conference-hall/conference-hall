@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { NoData } from '~/design-system/dashboard/no-data.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
+import { NoData } from '~/shared/design-system/dashboard/no-data.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
 
 type Props = { proposalNotesDistribution: { averageNote: number; count: number }[] };
 

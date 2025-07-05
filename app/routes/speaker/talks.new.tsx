@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
-import { Button } from '~/design-system/buttons.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { H1 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { H1 } from '~/shared/design-system/typography.tsx';
 import { TalkForm } from '../components/talks/talk-forms/talk-form.tsx';
 import type { Route } from './+types/talks.new.ts';
 

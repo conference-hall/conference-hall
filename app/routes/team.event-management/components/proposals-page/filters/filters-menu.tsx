@@ -3,12 +3,12 @@ import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Form, useLocation, useSearchParams } from 'react-router';
-import { Button, ButtonLink, button } from '~/design-system/buttons.tsx';
-import Select from '~/design-system/forms/select.tsx';
-import { Background } from '~/design-system/transitions.tsx';
-import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { Button, ButtonLink, button } from '~/shared/design-system/buttons.tsx';
+import Select from '~/shared/design-system/forms/select.tsx';
+import { Background } from '~/shared/design-system/transitions.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 const reviewOptions = ['reviewed', 'not-reviewed', 'my-favorites'] as const;
 const statusOptions = ['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined'] as const;

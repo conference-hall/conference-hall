@@ -1,6 +1,6 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Form, useSearchParams } from 'react-router';
-import { Input } from '~/design-system/forms/input.tsx';
+import { Input } from '~/shared/design-system/forms/input.tsx';
 
 type Props = { placeholder: string; ariaLabel: string };
 

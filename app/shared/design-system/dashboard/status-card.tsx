@@ -1,8 +1,8 @@
 import type React from 'react';
 import { useId } from 'react';
-import { Divider } from '~/design-system/divider.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Subtitle } from '~/design-system/typography.tsx';
+import { Divider } from '~/shared/design-system/divider.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
 import type { StatusPillProps } from '../charts/status-pill.tsx';
 import { StatusPill } from '../charts/status-pill.tsx';
 

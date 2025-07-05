@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '../components/contexts/event-page-context.tsx';
 import { CfpSection } from './components/event-page/cfp-section.tsx';
 import { DetailsSection } from './components/event-page/details-section.tsx';

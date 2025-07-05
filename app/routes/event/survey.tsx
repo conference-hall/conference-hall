@@ -2,12 +2,12 @@ import { parseWithZod } from '@conform-to/zod';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SpeakerSurvey } from '~/.server/event-survey/speaker-survey.ts';
-import { Button } from '~/design-system/buttons.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { SurveyForm } from '../components/talks/talk-forms/survey-form.tsx';
 import type { Route } from './+types/survey.ts';
 

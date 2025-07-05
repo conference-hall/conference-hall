@@ -1,6 +1,6 @@
 import { type ReactNode, useId } from 'react';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { Subtitle, Text } from '~/design-system/typography.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { Subtitle, Text } from '~/shared/design-system/typography.tsx';
 import { ProgressCircle } from '../charts/progress-circle.tsx';
 import { Divider } from '../divider.tsx';
 

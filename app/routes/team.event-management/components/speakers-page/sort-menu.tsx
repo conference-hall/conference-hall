@@ -3,9 +3,9 @@ import { ArrowsUpDownIcon, CheckIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useSearchParams } from 'react-router';
-import { button } from '~/design-system/buttons.tsx';
-import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
-import { MenuTransition } from '~/design-system/transitions.tsx';
+import { button } from '~/shared/design-system/buttons.tsx';
+import { menuItem, menuItemIcon, menuItems } from '~/shared/design-system/styles/menu.styles.ts';
+import { MenuTransition } from '~/shared/design-system/transitions.tsx';
 
 const sortOptions = ['name-asc', 'name-desc'] as const;
 

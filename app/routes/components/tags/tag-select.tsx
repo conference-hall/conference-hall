@@ -3,11 +3,11 @@ import { cx } from 'class-variance-authority';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
-import { Input } from '~/design-system/forms/input.tsx';
-import { CheckMicroIcon } from '~/design-system/icons/check-micro-icon.tsx';
-import { PencilSquareMicroIcon } from '~/design-system/icons/pencil-square-micro-icon.tsx';
-import { XMarkMicroIcon } from '~/design-system/icons/x-mark-micro-icon.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { Input } from '~/shared/design-system/forms/input.tsx';
+import { CheckMicroIcon } from '~/shared/design-system/icons/check-micro-icon.tsx';
+import { PencilSquareMicroIcon } from '~/shared/design-system/icons/pencil-square-micro-icon.tsx';
+import { XMarkMicroIcon } from '~/shared/design-system/icons/x-mark-micro-icon.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 import type { Tag } from '~/types/tags.types.ts';
 
 export type TagSelectorProps = {

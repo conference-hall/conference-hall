@@ -2,16 +2,16 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Form } from 'react-router';
 import { UserAccount } from '~/.server/user-registration/user-account.ts';
-import { Button } from '~/design-system/buttons.tsx';
-import { SelectNative } from '~/design-system/forms/select-native.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n, setLocaleCookie } from '~/libs/i18n/i18n.server.ts';
 import { SUPPORTED_LANGUAGES } from '~/libs/i18n/i18n.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { combineHeaders } from '~/libs/utils/headers.ts';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { SelectNative } from '~/shared/design-system/forms/select-native.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { H1, H2, Subtitle } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/settings.preferences.ts';
 
 export const meta = (args: Route.MetaArgs) => {

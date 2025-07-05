@@ -2,9 +2,9 @@ import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Input } from '~/design-system/forms/input.tsx';
-import { Link } from '~/design-system/links.tsx';
-import { Label, Subtitle } from '~/design-system/typography.tsx';
+import { Input } from '~/shared/design-system/forms/input.tsx';
+import { Link } from '~/shared/design-system/links.tsx';
+import { Label, Subtitle } from '~/shared/design-system/typography.tsx';
 import type { SubmissionError } from '~/types/errors.types.ts';
 
 type PasswordInputProps = {

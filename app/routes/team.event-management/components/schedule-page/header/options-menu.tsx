@@ -11,9 +11,15 @@ import {
 } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSubmit } from 'react-router';
-import { button } from '~/design-system/buttons.tsx';
-import { menuItem, menuItemIcon, menuItems, menuSection, menuSeparator } from '~/design-system/styles/menu.styles.ts';
-import { MenuTransition } from '~/design-system/transitions.tsx';
+import { button } from '~/shared/design-system/buttons.tsx';
+import {
+  menuItem,
+  menuItemIcon,
+  menuItems,
+  menuSection,
+  menuSeparator,
+} from '~/shared/design-system/styles/menu.styles.ts';
+import { MenuTransition } from '~/shared/design-system/transitions.tsx';
 import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 

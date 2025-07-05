@@ -1,9 +1,9 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { ButtonLink } from '~/design-system/buttons.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
+import { ButtonLink } from '~/shared/design-system/buttons.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { NavTab, NavTabs } from '~/shared/design-system/navigation/nav-tabs.tsx';
 import type { CfpState, EventType } from '~/types/events.types.ts';
 
 type Props = {

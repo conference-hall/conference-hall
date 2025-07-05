@@ -1,14 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
 import { AdminFlags } from '~/.server/admin/admin-flags.ts';
-import { Badge } from '~/design-system/badges.tsx';
-import { Button } from '~/design-system/buttons.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
-import { Toggle } from '~/design-system/forms/toggles.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { List } from '~/design-system/list/list.tsx';
-import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { Badge } from '~/shared/design-system/badges.tsx';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Input } from '~/shared/design-system/forms/input.tsx';
+import { Toggle } from '~/shared/design-system/forms/toggles.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { List } from '~/shared/design-system/list/list.tsx';
+import { H1, Text } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/flags.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

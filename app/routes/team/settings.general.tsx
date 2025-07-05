@@ -3,15 +3,15 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { TeamMembers } from '~/.server/team/team-members.ts';
 import { UserTeam } from '~/.server/team/user-team.ts';
-import { Button } from '~/design-system/buttons.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { DeleteModalButton } from '~/routes/components/modals/delete-modal.tsx';
 import { TeamForm } from '~/routes/components/teams/team-form.tsx';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { H2, Subtitle, Text } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/settings.general.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

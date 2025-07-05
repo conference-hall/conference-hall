@@ -5,13 +5,13 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import type { SurveyDetailedAnswer } from '~/.server/event-survey/types.ts';
-import { Avatar } from '~/design-system/avatar.tsx';
-import { Button } from '~/design-system/buttons.tsx';
-import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
-import { ExternalLink } from '~/design-system/links.tsx';
-import { Markdown } from '~/design-system/markdown.tsx';
-import { SocialLink } from '~/design-system/social-link.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { Avatar } from '~/shared/design-system/avatar.tsx';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { SlideOver } from '~/shared/design-system/dialogs/slide-over.tsx';
+import { ExternalLink } from '~/shared/design-system/links.tsx';
+import { Markdown } from '~/shared/design-system/markdown.tsx';
+import { SocialLink } from '~/shared/design-system/social-link.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 import { InvitationModal } from '../modals/invitation-modal.tsx';
 
 export type SpeakerProps = {

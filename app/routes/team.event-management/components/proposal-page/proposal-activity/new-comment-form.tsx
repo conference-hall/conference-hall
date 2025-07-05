@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useNavigation } from 'react-router';
-import { Avatar } from '~/design-system/avatar.tsx';
-import { Button } from '~/design-system/buttons.tsx';
 import { useUser } from '~/routes/components/contexts/user-context.tsx';
+import { Avatar } from '~/shared/design-system/avatar.tsx';
+import { Button } from '~/shared/design-system/buttons.tsx';
 
 type Props = { className?: string };
 

@@ -1,7 +1,7 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { EmojiAddIcon } from '~/design-system/icons/emoji-add-icon.tsx';
+import { EmojiAddIcon } from '~/shared/design-system/icons/emoji-add-icon.tsx';
 import type { Emoji } from '../../../types/emojis.types.ts';
 
 type EmojiPickerProps = {

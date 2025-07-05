@@ -1,8 +1,8 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
-import { Link } from '~/design-system/links.tsx';
+import { StatusCard } from '~/shared/design-system/dashboard/status-card.tsx';
+import { Link } from '~/shared/design-system/links.tsx';
 
 type Props = { team: string; event: string; reviewEnabled: boolean; showActions: boolean };
 

@@ -1,15 +1,15 @@
 import type { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
-import { BadgeDot } from '~/design-system/badges.tsx';
-import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
-import { Text } from '~/design-system/typography.tsx';
 import { formatDate } from '~/libs/datetimes/datetimes.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { ReviewComments } from '~/routes/components/reviews/review-comments.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/routes/components/reviews/review-note.tsx';
 import { Tag } from '~/routes/components/tags/tag.tsx';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
+import { BadgeDot } from '~/shared/design-system/badges.tsx';
+import { Checkbox } from '~/shared/design-system/forms/checkboxes.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 import type { ProposalData } from './types.ts';
 
 type ProposalItemProps = {

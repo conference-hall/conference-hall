@@ -3,9 +3,9 @@ import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Form, useLocation, useSearchParams } from 'react-router';
-import { Button, ButtonLink, button } from '~/design-system/buttons.tsx';
-import { Background } from '~/design-system/transitions.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { Button, ButtonLink, button } from '~/shared/design-system/buttons.tsx';
+import { Background } from '~/shared/design-system/transitions.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 const speakerOptions = ['accepted', 'confirmed', 'declined'] as const;
 

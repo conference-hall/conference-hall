@@ -3,10 +3,10 @@ import { ArrowsUpDownIcon, CheckIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useSearchParams } from 'react-router';
-import { button } from '~/design-system/buttons.tsx';
-import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
-import { MenuTransition } from '~/design-system/transitions.tsx';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { button } from '~/shared/design-system/buttons.tsx';
+import { menuItem, menuItemIcon, menuItems } from '~/shared/design-system/styles/menu.styles.ts';
+import { MenuTransition } from '~/shared/design-system/transitions.tsx';
 
 const sortByDatesOptions = ['newest', 'oldest'] as const;
 const sortByReviewsOptions = ['highest', 'lowest'] as const;

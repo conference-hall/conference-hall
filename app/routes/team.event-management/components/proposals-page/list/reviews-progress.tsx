@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { ProgressBar } from '~/design-system/charts/progress-bar.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { ProgressBar } from '~/shared/design-system/charts/progress-bar.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 type ReviewProgressProps = {
   reviewed: number;

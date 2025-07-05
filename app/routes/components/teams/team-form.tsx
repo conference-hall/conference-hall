@@ -2,7 +2,7 @@ import slugify from '@sindresorhus/slugify';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Input } from '~/design-system/forms/input.tsx';
+import { Input } from '~/shared/design-system/forms/input.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type TeamFormProps = {

@@ -3,13 +3,13 @@ import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, useSearchParams } from 'react-router';
 import { TeamEvents } from '~/.server/team/team-events.ts';
-import { ButtonLink } from '~/design-system/buttons.tsx';
-import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { EventCardLink } from '~/routes/components/events/event-card.tsx';
+import { ButtonLink } from '~/shared/design-system/buttons.tsx';
+import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { SearchParamSelector } from '~/shared/design-system/navigation/search-param-selector.tsx';
 import type { Route } from './+types/events.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

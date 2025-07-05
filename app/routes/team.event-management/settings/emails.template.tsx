@@ -2,9 +2,6 @@ import { parseWithZod } from '@conform-to/zod';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { EventEmailCustomizations } from '~/.server/event-settings/event-email-customizations.tsx';
-import { ButtonLink } from '~/design-system/buttons.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Subtitle } from '~/design-system/typography.tsx';
 import {
   CustomTemplateSchema,
   EventEmailCustomDeleteSchema,
@@ -17,6 +14,9 @@ import { isSupportedLanguage } from '~/libs/i18n/i18n.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { ButtonLink } from '~/shared/design-system/buttons.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
 import { EditTemplateButton, ResetTemplateButton } from '../components/settings-page/email-custom-actions.tsx';
 import { EmailCustomBadge } from '../components/settings-page/email-custom-badge.tsx';
 import { EmailPreview } from '../components/settings-page/email-preview.tsx';

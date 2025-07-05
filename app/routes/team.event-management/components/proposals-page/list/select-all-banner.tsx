@@ -1,5 +1,5 @@
 import { Trans, useTranslation } from 'react-i18next';
-import { Text } from '~/design-system/typography.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 type SelectAllBannerProps = {
   total: number;

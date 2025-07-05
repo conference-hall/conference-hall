@@ -5,9 +5,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventDetailsSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
-import { Button } from '~/design-system/buttons.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
@@ -16,6 +13,9 @@ import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { EventDetailsForm } from '~/routes/components/events/event-details-form.tsx';
 import { EventForm } from '~/routes/components/events/event-form.tsx';
 import { DeleteModalButton } from '~/routes/components/modals/delete-modal.tsx';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { H2, Subtitle, Text } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/general.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

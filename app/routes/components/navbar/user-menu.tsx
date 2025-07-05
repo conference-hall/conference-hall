@@ -11,11 +11,11 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, Link, useSubmit } from 'react-router';
-import { Avatar, AvatarName } from '~/design-system/avatar.tsx';
-import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
-import { Divider } from '~/design-system/divider.tsx';
-import { Text } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
+import { Avatar, AvatarName } from '~/shared/design-system/avatar.tsx';
+import { SlideOver } from '~/shared/design-system/dialogs/slide-over.tsx';
+import { Divider } from '~/shared/design-system/divider.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 import { LegalLinks } from '../footer.tsx';
 import { SponsorLink } from '../sponsor-link.tsx';
 

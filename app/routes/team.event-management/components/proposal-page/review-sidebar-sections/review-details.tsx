@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { H2, Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote } from '~/routes/components/reviews/review-note.tsx';
+import { H2, Text } from '~/shared/design-system/typography.tsx';
 import type { GlobalReview, UserReview } from '~/types/proposals.types.ts';
 
 type Props = { review: GlobalReview | null; userReview: UserReview };

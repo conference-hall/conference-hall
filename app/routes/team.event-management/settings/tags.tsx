@@ -6,18 +6,18 @@ import { Form } from 'react-router';
 import { EventProposalTags } from '~/.server/event-settings/event-proposal-tags.ts';
 import { parseUrlFilters, TagDeleteSchema, TagSaveSchema } from '~/.server/event-settings/event-proposal-tags.types.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
-import { Button } from '~/design-system/buttons.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
-import { List } from '~/design-system/list/list.tsx';
-import { Pagination } from '~/design-system/list/pagination.tsx';
-import { H2, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { Tag } from '~/routes/components/tags/tag.tsx';
 import { TagModal } from '~/routes/components/tags/tag-modal.tsx';
+import { Button } from '~/shared/design-system/buttons.tsx';
+import { Input } from '~/shared/design-system/forms/input.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
+import { List } from '~/shared/design-system/list/list.tsx';
+import { Pagination } from '~/shared/design-system/list/pagination.tsx';
+import { H2, Text } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/tags.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

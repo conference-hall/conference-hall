@@ -2,9 +2,9 @@ import * as Firebase from 'firebase/auth';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
-import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { getFirebaseError } from '~/libs/auth/firebase.errors.ts';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
+import { LoadingIcon } from '~/shared/design-system/icons/loading-icon.tsx';
 
 type AuthProvidersResultProps = {
   redirectTo: string;

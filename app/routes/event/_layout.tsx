@@ -1,14 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { Outlet, useMatch } from 'react-router';
 import { EventPage } from '~/.server/event-page/event-page.ts';
-import { Avatar } from '~/design-system/avatar.tsx';
-import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
-import { Container } from '~/design-system/layouts/container.tsx';
-import { H1, Text } from '~/design-system/typography.tsx';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
 import { Footer } from '~/routes/components/footer.tsx';
 import { Navbar } from '~/routes/components/navbar/navbar.tsx';
+import { Avatar } from '~/shared/design-system/avatar.tsx';
+import { BG_GRADIENT_COLOR } from '~/shared/design-system/colors.ts';
+import { Container } from '~/shared/design-system/layouts/container.tsx';
+import { H1, Text } from '~/shared/design-system/typography.tsx';
 import { CurrentEventPageProvider } from '../components/contexts/event-page-context.tsx';
 import { useUser } from '../components/contexts/user-context.tsx';
 import type { Route } from './+types/_layout.ts';

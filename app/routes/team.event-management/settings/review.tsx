@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { ToggleGroup } from '~/shared/design-system/forms/toggles.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { H2 } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/review.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

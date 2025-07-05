@@ -3,8 +3,8 @@ import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from '@heroicons/react/20/so
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, Link } from 'react-router';
-import { menuItem, menuItemIcon, menuItems, menuSeparator } from '~/design-system/styles/menu.styles.ts';
-import { MenuTransition } from '~/design-system/transitions.tsx';
+import { menuItem, menuItemIcon, menuItems, menuSeparator } from '~/shared/design-system/styles/menu.styles.ts';
+import { MenuTransition } from '~/shared/design-system/transitions.tsx';
 
 const menuStyle = cx(
   'flex items-center gap-1',

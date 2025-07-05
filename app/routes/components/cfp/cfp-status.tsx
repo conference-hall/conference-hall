@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
-import { StatusPill } from '~/design-system/charts/status-pill.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { StatusPill } from '~/shared/design-system/charts/status-pill.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 import type { CfpState } from '~/types/events.types.ts';
 import { ClientOnly } from '../utils/client-only.tsx';
 import { CallForPaperStatusLabel, cfpColorStatus } from './cfp.tsx';

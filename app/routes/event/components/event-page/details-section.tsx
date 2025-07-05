@@ -1,14 +1,14 @@
 import { EnvelopeIcon, GlobeEuropeAfricaIcon, HeartIcon } from '@heroicons/react/20/solid';
 import { ClockIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { Divider } from '~/design-system/divider.tsx';
-import { IconLabel } from '~/design-system/icon-label.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { ExternalLink } from '~/design-system/links.tsx';
-import { Markdown } from '~/design-system/markdown.tsx';
-import { Text } from '~/design-system/typography.tsx';
 import { formatDateRange } from '~/libs/datetimes/datetimes.ts';
 import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
+import { Divider } from '~/shared/design-system/divider.tsx';
+import { IconLabel } from '~/shared/design-system/icon-label.tsx';
+import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { ExternalLink } from '~/shared/design-system/links.tsx';
+import { Markdown } from '~/shared/design-system/markdown.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 type Props = {
   description: string | null;

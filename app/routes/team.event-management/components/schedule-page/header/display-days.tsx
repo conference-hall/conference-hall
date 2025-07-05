@@ -2,9 +2,9 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { isSameDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
-import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
-import { Text } from '~/design-system/typography.tsx';
 import { formatDateRange } from '~/libs/datetimes/datetimes.ts';
+import { DateRangeInput } from '~/shared/design-system/forms/date-range-input.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 
 const NEXT = 1;
 const PREVIOUS = -1;

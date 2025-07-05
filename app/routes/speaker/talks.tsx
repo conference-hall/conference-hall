@@ -5,15 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { href, useSearchParams } from 'react-router';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalksListFilterSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
-import { BadgeDot } from '~/design-system/badges.tsx';
-import { ButtonLink } from '~/design-system/buttons.tsx';
-import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { List } from '~/design-system/list/list.tsx';
-import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
-import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { BadgeDot } from '~/shared/design-system/badges.tsx';
+import { ButtonLink } from '~/shared/design-system/buttons.tsx';
+import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { List } from '~/shared/design-system/list/list.tsx';
+import { SearchParamSelector } from '~/shared/design-system/navigation/search-param-selector.tsx';
+import { H1, Text } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/talks.ts';
 
 export const meta = (args: Route.MetaArgs) => {

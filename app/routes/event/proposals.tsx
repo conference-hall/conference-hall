@@ -2,11 +2,11 @@ import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Submissions } from '~/.server/cfp-submissions/submissions.ts';
-import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { List } from '~/design-system/list/list.tsx';
-import { Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/libs/auth/session.ts';
+import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { List } from '~/shared/design-system/list/list.tsx';
+import { Text } from '~/shared/design-system/typography.tsx';
 import { ProposalStatusLabel } from '../components/proposals/proposal-status-label.tsx';
 import type { Route } from './+types/proposals.ts';
 
