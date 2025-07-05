@@ -143,8 +143,8 @@ export default [
   ]),
 
   // Api pages
-  route('api/v1/event/:event', './routes/api/v1.event.$event.tsx'),
-  route('api/v1/event/:event/schedule', './routes/api/v1.event.$event.schedule.tsx'),
+  route('api/v1/event/:event', './features/event-management/proposals-api/proposals-api.tsx'),
+  route('api/v1/event/:event/schedule', './features/event-management/schedule-api/schedule-api.tsx'),
 
   // Locales route
   route('locales/:lng/:ns', './routes/_misc/locales.ts'),

@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { EventApi } from '~/.server/event-web-api/event-api.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { ForbiddenError } from '~/shared/errors.server.ts';
-import type { Route } from './+types/v1.event.$event.ts';
+import type { Route } from './+types/proposals-api.ts';
 
 const API_KEY_SCHEMA = z.object({ key: z.string() });
 
