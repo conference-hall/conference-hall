@@ -8,7 +8,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
 import { sendEmail } from '~/emails/send-email.job.ts';
-import { auth } from '../../libs/auth/firebase.server.ts';
+import { auth } from '../../shared/auth/firebase.server.ts';
 import { UserAccount } from './user-account.ts';
 
 vi.mock('../../libs/auth/firebase.server.ts', () => ({

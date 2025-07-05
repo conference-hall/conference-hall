@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router';
 import { needsAdminRole } from '~/.server/admin/authorization.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { Navbar } from '~/routes/components/navbar/navbar.tsx';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/_layout.ts';
 import { AdminTabs } from './components/admin-tabs.tsx';
 

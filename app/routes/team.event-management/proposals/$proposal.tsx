@@ -14,13 +14,13 @@ import {
 } from '~/.server/reviews/proposal-review.types.ts';
 import { ProposalStatusSchema, ProposalStatusUpdater } from '~/.server/reviews/proposal-status-updater.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { TalkSection } from '~/routes/components/talks/talk-section.tsx';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { OtherProposalsDisclosure } from '../components/proposal-page/other-proposals-disclosure.tsx';
 import { LoadingActivities } from '../components/proposal-page/proposal-activity/loading-activities.tsx';

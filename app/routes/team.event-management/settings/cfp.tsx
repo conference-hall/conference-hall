@@ -5,10 +5,10 @@ import {
   CfpMeetupOpeningSchema,
   CfpPreferencesSchema,
 } from '~/.server/event-settings/user-event.types.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { CommonCfpSetting } from '../components/settings-page/common-cfp-setting.tsx';
 import { ConferenceCfpOpening } from '../components/settings-page/conference-cfp-opening.tsx';
 import { MeetupCfpOpening } from '../components/settings-page/meetup-cfp-opening.tsx';

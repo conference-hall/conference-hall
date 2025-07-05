@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
 import { AdminFlags } from '~/.server/admin/admin-flags.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { Badge } from '~/shared/design-system/badges.tsx';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';

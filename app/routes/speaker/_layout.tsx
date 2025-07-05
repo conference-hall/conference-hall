@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 import { Outlet } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { Navbar } from '~/routes/components/navbar/navbar.tsx';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { Avatar } from '~/shared/design-system/avatar.tsx';
 import { BG_GRADIENT_COLOR } from '~/shared/design-system/colors.ts';
 import { Container } from '~/shared/design-system/layouts/container.tsx';

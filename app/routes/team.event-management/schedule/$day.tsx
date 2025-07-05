@@ -11,9 +11,9 @@ import {
   ScheduleTracksSaveSchema,
   SchedulSessionIdSchema,
 } from '~/.server/event-schedule/event-schedule.types.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
 import { ScheduleHeader } from '../components/schedule-page/header/schedule-header.tsx';

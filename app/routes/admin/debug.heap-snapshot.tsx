@@ -1,7 +1,7 @@
 import { PassThrough } from 'node:stream';
 import { getHeapSnapshot } from 'node:v8';
 import { needsAdminRole } from '~/.server/admin/authorization.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/debug.heap-snapshot.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

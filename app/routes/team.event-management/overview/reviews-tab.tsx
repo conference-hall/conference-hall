@@ -1,7 +1,7 @@
 import { HeartIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { ReviewsMetrics } from '~/.server/event-metrics/reviews-metrics.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { ProgressCard } from '~/shared/design-system/dashboard/progress-card.tsx';
 import { StatisticCard } from '~/shared/design-system/dashboard/statistic-card.tsx';
 import { ProposalNotesDistribution } from '../components/overview-page/reviews-tab/proposal-notes-distribution.tsx';

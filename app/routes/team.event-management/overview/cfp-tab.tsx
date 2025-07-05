@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { CfpMetrics } from '~/.server/event-metrics/cfp-metrics.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { BarListCard } from '~/shared/design-system/dashboard/bar-list-card.tsx';
 import { ProgressCard } from '~/shared/design-system/dashboard/progress-card.tsx';
 import { StatisticCard } from '~/shared/design-system/dashboard/statistic-card.tsx';

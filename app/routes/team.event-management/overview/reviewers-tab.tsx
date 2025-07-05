@@ -1,8 +1,8 @@
 import { EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { ReviewersMetrics } from '~/.server/event-metrics/reviewers-metrics.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { GlobalReviewNote, UserReviewNote } from '~/routes/components/reviews/review-note.tsx';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { AvatarName } from '~/shared/design-system/avatar.tsx';
 import { ProgressBar } from '~/shared/design-system/charts/progress-bar.tsx';
 import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';

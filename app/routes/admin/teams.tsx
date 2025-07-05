@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { AdminTeams, TeamsSearchFiltersSchema } from '~/.server/admin/admin-teams.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { Input } from '~/shared/design-system/forms/input.tsx';
 import { IconLabel } from '~/shared/design-system/icon-label.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';

@@ -5,7 +5,7 @@ import { Form, redirect } from 'react-router';
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import { ScheduleCreateSchema } from '~/.server/event-schedule/event-schedule.types.ts';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { DateRangeInput } from '~/shared/design-system/forms/date-range-input.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';

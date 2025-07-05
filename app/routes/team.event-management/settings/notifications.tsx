@@ -7,10 +7,10 @@ import {
   EventEmailNotificationsSettingsSchema,
   EventNotificationsSettingsSchema,
 } from '~/.server/event-settings/user-event.types.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';
 import { ToggleGroup } from '~/shared/design-system/forms/toggles.tsx';

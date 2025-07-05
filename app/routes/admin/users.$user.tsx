@@ -1,8 +1,8 @@
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { AdminUsers } from '~/.server/admin/admin-users.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { formatDatetime } from '~/libs/datetimes/datetimes.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { Link } from '~/shared/design-system/links.tsx';

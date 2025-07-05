@@ -1,7 +1,7 @@
 import { Outlet, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { CurrentEventTeamProvider } from '~/routes/components/contexts/event-team-context.tsx';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/_layout.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

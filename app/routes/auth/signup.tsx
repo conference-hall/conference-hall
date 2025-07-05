@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { redirect, useSearchParams } from 'react-router';
-import { getUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { getUserSession } from '~/shared/auth/session.ts';
 import { DividerWithLabel } from '~/shared/design-system/divider.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';

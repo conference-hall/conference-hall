@@ -1,5 +1,5 @@
 import type * as Firebase from 'firebase/auth';
-import type { ProviderId } from '~/libs/auth/firebase.ts';
+import type { ProviderId } from '~/shared/auth/firebase.ts';
 import { NewEmailProviderModal, VerifyEmailButton } from './email-provider-actions.tsx';
 import { UnlinkProvider } from './social-providers-settings..tsx';
 

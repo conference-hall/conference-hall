@@ -1,4 +1,4 @@
-import { storage } from '../../libs/auth/firebase.server.ts';
+import { storage } from '../../shared/auth/firebase.server.ts';
 import type { Route } from './+types/storage.$filename.ts';
 
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;

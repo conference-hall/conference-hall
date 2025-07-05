@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { formatReviewNote } from '~/libs/formatters/reviews.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { Subtitle, Text } from '~/shared/design-system/typography.tsx';
 import type { Route } from './+types/cards.ts';
 import styles from './cards.css?url';

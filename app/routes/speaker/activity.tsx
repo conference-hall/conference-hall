@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { SpeakerActivities } from '~/.server/speaker-activities/speaker-activities.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { H1 } from '~/shared/design-system/typography.tsx';
 import { useSpeakerProfile } from '../components/contexts/speaker-profile-context.tsx';

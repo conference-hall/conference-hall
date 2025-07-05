@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router';
 import { EventSpeakers, parseUrlFilters } from '~/.server/event-speakers/event-speakers.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { Avatar } from '~/shared/design-system/avatar.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { List } from '~/shared/design-system/list/list.tsx';

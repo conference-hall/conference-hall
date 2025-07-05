@@ -1,7 +1,7 @@
 import { Outlet, useMatch, useRouteLoaderData } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { CurrentTeamProvider } from '../components/contexts/team-context.tsx';
 import { Navbar } from '../components/navbar/navbar.tsx';
 import type { loader as routeEventLoader } from '../team.event-management/_layout.tsx';

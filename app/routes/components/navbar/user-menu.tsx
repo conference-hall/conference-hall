@@ -11,7 +11,7 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, Link, useSubmit } from 'react-router';
-import { getClientAuth } from '~/libs/auth/firebase.ts';
+import { getClientAuth } from '~/shared/auth/firebase.ts';
 import { Avatar, AvatarName } from '~/shared/design-system/avatar.tsx';
 import { SlideOver } from '~/shared/design-system/dialogs/slide-over.tsx';
 import { Divider } from '~/shared/design-system/divider.tsx';

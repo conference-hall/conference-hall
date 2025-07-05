@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Await } from 'react-router';
 import { AdminDashboard } from '~/.server/admin/admin-dashboard.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { KpiProgressBar } from '~/shared/design-system/dashboard/kpi-progress-bar.tsx';
 import { StatisticCard } from '~/shared/design-system/dashboard/statistic-card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';

@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { CoSpeakerProposalInvite } from '~/.server/cfp-submissions/co-speaker-proposal-invite.ts';
-import { requireUserSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Markdown } from '~/shared/design-system/markdown.tsx';

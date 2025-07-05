@@ -1,4 +1,4 @@
-import { destroySession } from '~/libs/auth/session.ts';
+import { destroySession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/logout.ts';
 
 export const action = async ({ request }: Route.LoaderArgs) => {

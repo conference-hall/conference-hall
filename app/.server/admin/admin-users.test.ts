@@ -3,8 +3,8 @@ import { db } from 'prisma/db.server.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
-import { auth } from '~/libs/auth/firebase.server.ts';
 import { NotAuthorizedError, UserNotFoundError } from '~/libs/errors.server.ts';
+import { auth } from '~/shared/auth/firebase.server.ts';
 import { AdminUsers } from './admin-users.ts';
 
 vi.mock('~/libs/auth/firebase.server.ts', () => ({ auth: { getUser: vi.fn() } }));

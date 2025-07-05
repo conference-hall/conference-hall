@@ -1,7 +1,7 @@
 import { CheckIcon } from '@heroicons/react/16/solid';
 import * as Firebase from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
-import { getClientAuth, type ProviderId } from '~/libs/auth/firebase.ts';
+import { getClientAuth, type ProviderId } from '~/shared/auth/firebase.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 
 type LinkProviderProps = { providerId: ProviderId };

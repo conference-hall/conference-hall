@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { getClientAuth } from '~/libs/auth/firebase.ts';
+import { getClientAuth } from '~/shared/auth/firebase.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { type Option, SelectNative } from '~/shared/design-system/forms/select-native.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
