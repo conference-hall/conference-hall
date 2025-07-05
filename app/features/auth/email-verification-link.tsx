@@ -10,7 +10,7 @@ import { getClientAuth } from '~/shared/auth/firebase.ts';
 import { LoadingIcon } from '~/shared/design-system/icons/loading-icon.tsx';
 import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
 import { Link } from '~/shared/design-system/links.tsx';
-import type { Route } from './+types/verify-email.ts';
+import type { Route } from './+types/email-verification-link.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Verify email | Conference Hall' }]);
@@ -20,7 +20,7 @@ export const loader = async () => {
   return null;
 };
 
-export default function VerifyEmail() {
+export default function EmailVerificationLink() {
   const { t } = useTranslation();
   const [error, setError] = useState<string>(t('auth.verify-email.error.invalid-link'));
   const [loading, setLoading] = useState<boolean>(true);

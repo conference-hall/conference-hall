@@ -12,7 +12,7 @@ import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { ConferenceHallLogo } from '~/shared/design-system/logo.tsx';
 import { Subtitle } from '~/shared/design-system/typography.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
-import type { Route } from './+types/forgot-password.ts';
+import type { Route } from './+types/reset-password-sent.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Forgot password | Conference Hall' }]);
@@ -32,7 +32,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   return { emailSent: true };
 };
 
-export default function ForgotPassword({ actionData }: Route.ComponentProps) {
+export default function ResetPasswordSent({ actionData }: Route.ComponentProps) {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const { emailSent } = actionData || {};

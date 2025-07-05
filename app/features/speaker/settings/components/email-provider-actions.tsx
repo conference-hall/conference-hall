@@ -4,10 +4,10 @@ import { type FormEvent, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
 import { validateEmailAndPassword } from '~/libs/validators/auth.ts';
-import { PasswordInput } from '~/routes/auth/components/password-input.tsx';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';
+import { PasswordInput } from '~/shared/design-system/forms/password-input.tsx';
 import { Subtitle } from '~/shared/design-system/typography.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 

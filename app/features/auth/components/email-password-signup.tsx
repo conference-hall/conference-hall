@@ -8,8 +8,8 @@ import { getClientAuth } from '~/shared/auth/firebase.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Callout } from '~/shared/design-system/callout.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';
+import { PasswordInput } from '~/shared/design-system/forms/password-input.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
-import { PasswordInput } from './password-input.tsx';
 
 type EmailPasswordSignupProps = { redirectTo: string; defaultEmail: string | null };
 

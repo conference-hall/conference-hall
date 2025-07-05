@@ -7,7 +7,7 @@ import { getClientAuth } from '~/shared/auth/firebase.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Callout } from '~/shared/design-system/callout.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';
-import { PasswordInput } from './password-input.tsx';
+import { PasswordInput } from '~/shared/design-system/forms/password-input.tsx';
 
 type EmailPasswordSigninProps = { redirectTo: string; defaultEmail: string | null };
 

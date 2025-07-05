@@ -10,6 +10,7 @@ import { getClientAuth } from '~/shared/auth/firebase.ts';
 import { getUserSession } from '~/shared/auth/session.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Callout } from '~/shared/design-system/callout.tsx';
+import { PasswordInput } from '~/shared/design-system/forms/password-input.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { Link } from '~/shared/design-system/links.tsx';
@@ -17,7 +18,6 @@ import { ConferenceHallLogo } from '~/shared/design-system/logo.tsx';
 import { Subtitle } from '~/shared/design-system/typography.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 import type { Route } from './+types/reset-password.ts';
-import { PasswordInput } from './components/password-input.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Reset password | Conference Hall' }]);

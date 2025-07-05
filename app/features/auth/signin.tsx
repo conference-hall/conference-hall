@@ -10,7 +10,7 @@ import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { Link } from '~/shared/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/shared/design-system/logo.tsx';
 import { Subtitle } from '~/shared/design-system/typography.tsx';
-import type { Route } from './+types/login.ts';
+import type { Route } from './+types/signin.ts';
 import { AuthProvidersResult } from './components/auth-providers-result.tsx';
 import { AuthProvidersSignin } from './components/auth-providers-signin.tsx';
 import { EmailPasswordSignin } from './components/email-password-signin.tsx';
@@ -29,7 +29,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   return createSession(request);
 };
 
-export default function Login() {
+export default function Signin() {
   const { t } = useTranslation();
   const [providerError, setProviderError] = useState<string>('');
   const [searchParams] = useSearchParams();
