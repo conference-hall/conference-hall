@@ -1,5 +1,5 @@
 import { appUrl } from '~/libs/env/env.server.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 
 const ROBOT_TXT_PRODUCTION = `User-agent: *
 Allow: /

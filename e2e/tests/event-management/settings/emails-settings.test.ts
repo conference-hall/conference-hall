@@ -4,8 +4,8 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { CUSTOM_EMAIL_TEMPLATES } from '~/emails/email.types.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { SUPPORTED_LANGUAGES } from '~/libs/i18n/i18n.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { EmailTemplateSettingsPage } from './email-template-settings.page.ts';
 import { EmailsSettingsPage } from './emails-settings.page.ts';
 

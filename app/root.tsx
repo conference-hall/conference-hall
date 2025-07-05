@@ -5,7 +5,6 @@ import { useChangeLanguage } from 'remix-i18next/react';
 import { UserInfo } from './.server/user-registration/user-info.ts';
 import type { Route } from './+types/root.ts';
 import { getBrowserEnv } from './libs/env/env.server.ts';
-import { flags } from './libs/feature-flags/flags.server.ts';
 import { i18n } from './libs/i18n/i18n.server.ts';
 import { useNonce } from './libs/nonce/use-nonce.ts';
 import type { Toast } from './libs/toasts/toast.server.ts';
@@ -17,6 +16,7 @@ import { GeneralErrorBoundary } from './routes/components/error-boundary.tsx';
 import { GlobalLoading } from './routes/components/global-loading.tsx';
 import { initializeFirebaseClient } from './shared/auth/firebase.ts';
 import { destroySession, getUserSession } from './shared/auth/session.ts';
+import { flags } from './shared/feature-flags/flags.server.ts';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
 

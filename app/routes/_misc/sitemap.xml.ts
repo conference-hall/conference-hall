@@ -2,7 +2,7 @@ import { SitemapStream, streamToPromise } from 'sitemap';
 
 import { getEventsForSitemap } from '~/.server/seo/sitemap.ts';
 import { appUrl } from '~/libs/env/env.server.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 
 let sitemap: Buffer; // TODO: Cache to Redis with a TTL (weekly)
 

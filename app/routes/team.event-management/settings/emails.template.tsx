@@ -7,7 +7,6 @@ import {
   EventEmailCustomDeleteSchema,
   EventEmailCustomUpsertSchema,
 } from '~/emails/email.types.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { isSupportedLanguage } from '~/libs/i18n/i18n.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -17,6 +16,7 @@ import { requireUserSession } from '~/shared/auth/session.ts';
 import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { EditTemplateButton, ResetTemplateButton } from '../components/settings-page/email-custom-actions.tsx';
 import { EmailCustomBadge } from '../components/settings-page/email-custom-badge.tsx';
 import { EmailPreview } from '../components/settings-page/email-preview.tsx';
