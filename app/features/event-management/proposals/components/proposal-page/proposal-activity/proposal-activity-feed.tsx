@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import type { Feed } from '~/.server/reviews/activity-feed.ts';
+import type { Feed } from '~/features/event-management/proposals/services/activity-feed.server.ts';
 import { CommentItem } from './comment-item.tsx';
 import { NewCommentForm } from './new-comment-form.tsx';
 import { ReviewItem } from './review-item.tsx';

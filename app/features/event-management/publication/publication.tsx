@@ -1,7 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import { useTranslation } from 'react-i18next';
-import { Publication } from '~/.server/publications/publication.ts';
-import { PublishResultFormSchema } from '~/.server/publications/publication.types.ts';
 import { Callout } from '~/design-system/callout.tsx';
 import DonutCard from '~/design-system/dashboard/donut-card.tsx';
 import { ProgressCard } from '~/design-system/dashboard/progress-card.tsx';
@@ -16,6 +14,7 @@ import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/publication.ts';
 import { PublicationButton } from './components/publication-confirm-modal.tsx';
+import { Publication, PublishResultFormSchema } from './services/publication.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

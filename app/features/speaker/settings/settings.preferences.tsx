@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Form } from 'react-router';
-import { UserAccount } from '~/.server/user-registration/user-account.ts';
+import { UserAccount } from '~/.server/user-account.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';

@@ -3,8 +3,8 @@ import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/2
 import { useId } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { EventDetailsSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
+import { UserEvent } from '~/.server/user-event.ts';
+import { EventDetailsSettingsSchema } from '~/.server/user-event.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { DeleteModalButton } from '~/design-system/dialogs/delete-modal.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';

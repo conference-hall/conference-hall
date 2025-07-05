@@ -4,13 +4,8 @@ import { useId } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { z } from 'zod';
-import { EventIntegrations } from '~/.server/event-settings/event-integrations.ts';
-import {
-  OpenPlannerConfigSchema,
-  UpdateIntegrationConfigSchema,
-} from '~/.server/event-settings/event-integrations.types.ts';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { EventSlackSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
+import { UserEvent } from '~/.server/user-event.ts';
+import { EventSlackSettingsSchema } from '~/.server/user-event.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -22,6 +17,8 @@ import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/integrations.ts';
+import { OpenPlannerConfigSchema, UpdateIntegrationConfigSchema } from './services/event-integrations.schema.server.ts';
+import { EventIntegrations } from './services/event-integrations.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

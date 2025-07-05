@@ -2,11 +2,8 @@ import { parseWithZod } from '@conform-to/zod';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from 'react-router';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import {
-  EventEmailNotificationsSettingsSchema,
-  EventNotificationsSettingsSchema,
-} from '~/.server/event-settings/user-event.types.ts';
+import { UserEvent } from '~/.server/user-event.ts';
+import { EventEmailNotificationsSettingsSchema, EventNotificationsSettingsSchema } from '~/.server/user-event.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';

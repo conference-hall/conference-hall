@@ -1,10 +1,13 @@
 import { parseWithZod } from '@conform-to/zod';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
-import { UserProposal } from '~/.server/cfp-submissions/user-proposal.ts';
-import { getProposalUpdateSchema, ProposalParticipationSchema } from '~/.server/cfp-submissions/user-proposal.types.ts';
-import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
+import {
+  getProposalUpdateSchema,
+  ProposalParticipationSchema,
+} from '~/features/event-participation/speaker-proposals/services/user-proposal.schema.server.ts';
+import { UserProposal } from '~/features/event-participation/speaker-proposals/services/user-proposal.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';

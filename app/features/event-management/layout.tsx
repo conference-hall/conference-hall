@@ -1,5 +1,5 @@
 import { Outlet, redirect } from 'react-router';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
+import { UserEvent } from '~/.server/user-event.ts';
 import { CurrentEventTeamProvider } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/layout.ts';

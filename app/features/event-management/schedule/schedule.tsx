@@ -3,16 +3,15 @@ import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
-import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
+import { ButtonLink } from '~/design-system/buttons.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import {
   ScheduleDisplayTimesUpdateSchema,
   ScheduleSessionCreateSchema,
   ScheduleSessionUpdateSchema,
   ScheduleTracksSaveSchema,
   SchedulSessionIdSchema,
-} from '~/.server/event-schedule/event-schedule.types.ts';
-import { ButtonLink } from '~/design-system/buttons.tsx';
-import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
+} from '~/features/event-management/schedule/services/schedule.schema.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -24,6 +23,7 @@ import Schedule from './components/schedule/schedule.tsx';
 import { SessionBlock } from './components/session/session-block.tsx';
 import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
+import { EventSchedule } from './services/schedule.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

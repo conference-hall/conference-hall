@@ -1,8 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
-import { TeamMembers } from '~/.server/team/team-members.ts';
-import { UserTeam } from '~/.server/team/user-team.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { DeleteModalButton } from '~/design-system/dialogs/delete-modal.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -13,6 +11,8 @@ import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/settings.general.ts';
+import { TeamMembers } from './services/team-members.server.ts';
+import { UserTeam } from './services/user-team.server.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);

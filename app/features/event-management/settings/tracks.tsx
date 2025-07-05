@@ -1,8 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
-import { EventTracksSettings } from '~/.server/event-settings/event-tracks-settings.ts';
-import { TrackSaveSchema, TracksSettingsSchema } from '~/.server/event-settings/event-tracks-settings.types.ts';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
@@ -12,6 +10,8 @@ import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/tracks.ts';
 import { TrackList } from './components/track-list.tsx';
+import { TrackSaveSchema, TracksSettingsSchema } from './services/event-tracks-settings.schema.server.ts';
+import { EventTracksSettings } from './services/event-tracks-settings.server.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);

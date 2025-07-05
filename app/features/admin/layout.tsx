@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
-import { needsAdminRole } from '~/.server/admin/authorization.ts';
+import { needsAdminRole } from '~/.server/authorization.ts';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';

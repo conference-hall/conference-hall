@@ -1,13 +1,13 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
-import { Submissions } from '~/.server/cfp-submissions/submissions.ts';
-import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
+import { Submissions } from '~/features/event-participation/speaker-proposals/services/submissions.server.ts';
+import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/1-selection.ts';
 import { MaxProposalsReached } from './components/max-proposals.tsx';

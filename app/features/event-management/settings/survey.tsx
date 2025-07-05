@@ -1,15 +1,11 @@
 import { parseWithZod } from '@conform-to/zod';
-import { EventSurveySettings } from '~/.server/event-survey/event-survey-settings.ts';
-import {
-  SurveyMoveQuestionSchema,
-  SurveyQuestionSchema,
-  SurveyRemoveQuestionSchema,
-} from '~/.server/event-survey/types.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/survey.ts';
 import { SurveySettingsForm } from './components/survey-settings-form.tsx';
+import { EventSurveySettings } from './services/event-survey-settings.server.ts';
+import { SurveyMoveQuestionSchema, SurveyQuestionSchema, SurveyRemoveQuestionSchema } from './services/survey.types.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

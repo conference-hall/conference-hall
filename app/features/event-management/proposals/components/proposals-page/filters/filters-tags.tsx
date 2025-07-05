@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { ProposalsFilters } from '~/.server/shared/proposal-search-builder.types.ts';
+import type { ProposalsFilters } from '~/.server/proposal-search-builder.types.ts';
 import { FilterTag } from '~/design-system/filter-tag.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';

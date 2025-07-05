@@ -2,8 +2,7 @@ import { parseWithZod } from '@conform-to/zod';
 import { CalendarIcon, MagnifyingGlassIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { AdminTeams, TeamsSearchFiltersSchema } from '~/.server/admin/admin-teams.ts';
-import { parseUrlPage } from '~/.server/shared/pagination.ts';
+import { parseUrlPage } from '~/.server/pagination.ts';
 import { Input } from '~/design-system/forms/input.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -12,6 +11,7 @@ import { SortMenu } from '~/design-system/list/sort-menu.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/teams.ts';
+import { AdminTeams, TeamsSearchFiltersSchema } from './services/admin-teams.server.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

@@ -1,11 +1,11 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { Submissions } from '~/.server/cfp-submissions/submissions.ts';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import { Submissions } from '~/features/event-participation/speaker-proposals/services/submissions.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/speaker-proposals.ts';
 import { ProposalStatusLabel } from './components/proposal-status-label.tsx';

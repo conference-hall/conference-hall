@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { EventEmailCustomizations } from '~/.server/event-settings/event-email-customizations.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H2, H3, Subtitle } from '~/design-system/typography.tsx';
@@ -11,6 +10,7 @@ import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import type { Route } from './+types/emails.ts';
 import { EmailCustomBadge } from './components/email-custom-badge.tsx';
+import { EventEmailCustomizations } from './services/event-email-customizations.server.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

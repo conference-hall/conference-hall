@@ -1,9 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { useTranslation } from 'react-i18next';
-import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
-import { ProposalStatusBulkSchema, ProposalStatusUpdater } from '~/.server/reviews/proposal-status-updater.ts';
-import { parseUrlPage } from '~/.server/shared/pagination.ts';
-import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
+import { parseUrlPage } from '~/.server/pagination.ts';
+import { parseUrlFilters } from '~/.server/proposal-search-builder.types.ts';
 import { SearchInput } from '~/design-system/forms/search-input.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
@@ -16,6 +14,8 @@ import { FiltersMenu } from './components/proposals-page/filters/filters-menu.ts
 import { FiltersTags } from './components/proposals-page/filters/filters-tags.tsx';
 import { SortMenu } from './components/proposals-page/filters/sort-menu.tsx';
 import { ProposalsList } from './components/proposals-page/proposals-list.tsx';
+import { CfpReviewsSearch } from './services/cfp-reviews-search.server.ts';
+import { ProposalStatusBulkSchema, ProposalStatusUpdater } from './services/proposal-status-updater.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

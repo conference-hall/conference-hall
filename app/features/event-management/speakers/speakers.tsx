@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router';
-import { EventSpeakers, parseUrlFilters } from '~/.server/event-speakers/event-speakers.ts';
-import { parseUrlPage } from '~/.server/shared/pagination.ts';
+import { parseUrlPage } from '~/.server/pagination.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -11,6 +10,7 @@ import type { Route } from './+types/speakers.ts';
 import { Filters } from './components/filters.tsx';
 import { FiltersTags } from './components/filters-tags.tsx';
 import { SpeakersEmptyState } from './components/speakers-empty-state.tsx';
+import { EventSpeakers, parseUrlFilters } from './services/event-speakers.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

@@ -1,11 +1,12 @@
 import { parseWithZod } from '@conform-to/zod';
 import { z } from 'zod';
-import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import { ForbiddenError } from '~/shared/errors.server.ts';
+import { EventSchedule } from '../schedule/services/schedule.server.ts';
 import type { Route } from './+types/schedule-api.ts';
 
 const API_KEY_SCHEMA = z.object({ key: z.string() });
 
+// todo(folders): move export api into its own file service
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const url = new URL(request.url);
   const result = parseWithZod(url.searchParams, { schema: API_KEY_SCHEMA });

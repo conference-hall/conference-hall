@@ -1,6 +1,5 @@
 import { EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { ReviewersMetrics } from '~/.server/event-metrics/reviewers-metrics.ts';
 import { AvatarName } from '~/design-system/avatar.tsx';
 import { ProgressBar } from '~/design-system/charts/progress-bar.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
@@ -9,6 +8,7 @@ import { Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/features/event-management/proposals/components/review-note.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/overview.reviewers.ts';
+import { ReviewersMetrics } from './services/reviewers-metrics.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

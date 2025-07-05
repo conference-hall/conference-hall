@@ -1,7 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { AdminDebug, TestEmailSchema } from '~/.server/admin/admin-debug.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -11,6 +10,7 @@ import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/debug.ts';
+import { AdminDebug, TestEmailSchema } from './services/admin-debug.server.ts';
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);

@@ -14,7 +14,7 @@ import {
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
+import { UserEvent } from '~/.server/user-event.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';

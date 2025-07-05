@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
+import { UserEvent } from '~/.server/user-event.ts';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';

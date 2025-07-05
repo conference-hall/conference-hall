@@ -1,10 +1,10 @@
 import { parseWithZod } from '@conform-to/zod';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
+import { UserEvent } from '~/.server/user-event.ts';
 import {
   CfpConferenceOpeningSchema,
   CfpMeetupOpeningSchema,
   CfpPreferencesSchema,
-} from '~/.server/event-settings/user-event.types.ts';
+} from '~/.server/user-event.types.ts';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';

@@ -1,7 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
-import { EventEmailCustomizations } from '~/.server/event-settings/event-email-customizations.tsx';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
@@ -21,6 +20,7 @@ import type { Route } from './+types/emails.template.ts';
 import { EditTemplateButton, ResetTemplateButton } from './components/email-custom-actions.tsx';
 import { EmailCustomBadge } from './components/email-custom-badge.tsx';
 import { EmailPreview } from './components/email-preview.tsx';
+import { EventEmailCustomizations } from './services/event-email-customizations.server.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
