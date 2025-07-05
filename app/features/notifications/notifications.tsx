@@ -10,7 +10,7 @@ import { CardLink } from '~/shared/design-system/layouts/card.tsx';
 import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { H2 } from '~/shared/design-system/typography.tsx';
-import type { Route } from './+types/index.ts';
+import type { Route } from './+types/notifications.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Notifications | Conference Hall' }]);

@@ -1,5 +1,5 @@
-import { ErrorPage } from '../components/errors/error-page.tsx';
-import { NotFound } from '../components/errors/not-found.tsx';
+import { ErrorPage } from '~/routes/components/errors/error-page.tsx';
+import { NotFound } from '~/routes/components/errors/not-found.tsx';
 
 // Splat routes used to manage POST/PUT/PATCH unknown routes
 export async function action() {

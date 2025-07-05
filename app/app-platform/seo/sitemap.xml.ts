@@ -1,5 +1,4 @@
 import { SitemapStream, streamToPromise } from 'sitemap';
-
 import { getEventsForSitemap } from '~/.server/seo/sitemap.ts';
 import { appUrl } from '~/shared/env.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';

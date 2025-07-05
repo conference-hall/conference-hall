@@ -40,7 +40,7 @@ export default [
   route('invite/team/:code', './features/team-management/team-invitation/team-invitation.tsx'),
 
   // Notifications pages
-  route('notifications', './routes/notifications/index.tsx'),
+  route('notifications', './features/notifications/notifications.tsx'),
 
   // Speaker pages
   route('speaker', './features/speaker/layout.tsx', [
@@ -136,10 +136,10 @@ export default [
   ]),
 
   // Docs pages
-  route('docs', './routes/docs/_layout.tsx', [
-    route('terms', './routes/docs/terms.tsx'),
-    route('privacy', './routes/docs/privacy.tsx'),
-    route('license', './routes/docs/license.tsx'),
+  route('docs', './app-platform/legal/layout.tsx', [
+    route('terms', './app-platform/legal/terms.tsx'),
+    route('privacy', './app-platform/legal/privacy.tsx'),
+    route('license', './app-platform/legal/license.tsx'),
   ]),
 
   // Api pages
@@ -147,18 +147,18 @@ export default [
   route('api/v1/event/:event/schedule', './features/event-management/schedule-api/schedule-api.tsx'),
 
   // Locales route
-  route('locales/:lng/:ns', './routes/_misc/locales.ts'),
+  route('locales/:lng/:ns', './app-platform/locales.ts'),
 
   // SEO routes
-  route('robots.txt', './routes/_misc/robots.txt.ts'),
-  route('sitemap.xml', './routes/_misc/sitemap.xml.ts'),
+  route('robots.txt', './app-platform/seo/robots.txt.ts'),
+  route('sitemap.xml', './app-platform/seo/sitemap.xml.ts'),
 
   // File storage route
-  route('storage/:filename', './routes/_misc/storage.$filename.ts'),
+  route('storage/:filename', './app-platform/storage/storage.ts'),
 
   // Healthcheck route
-  route('healthcheck', './routes/_misc/healthcheck.ts'),
+  route('healthcheck', './app-platform/healthcheck.ts'),
 
   // Catch-all route
-  route('*', './routes/_misc/$.tsx'),
+  route('*', './app-platform/404.tsx'),
 ] satisfies RouteConfig;
