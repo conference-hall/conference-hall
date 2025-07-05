@@ -1,5 +1,5 @@
 import { createContext, type ReactNode, useContext } from 'react';
-import type { loader } from '~/routes/team/_layout.tsx';
+import type { loader } from '~/features/team-management/layout.tsx';
 import type { SerializeFrom } from '~/types/react-router.types.ts';
 
 type CurrentTeam = SerializeFrom<typeof loader>;

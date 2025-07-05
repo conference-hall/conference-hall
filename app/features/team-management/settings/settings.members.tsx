@@ -17,7 +17,7 @@ import { H3, Subtitle } from '~/shared/design-system/typography.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/settings.members.ts';
-import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/settings-page/member-actions.tsx';
+import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/member-actions.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

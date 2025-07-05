@@ -10,7 +10,7 @@ import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { SearchParamSelector } from '~/shared/design-system/navigation/search-param-selector.tsx';
-import type { Route } from './+types/events.ts';
+import type { Route } from './+types/event-list.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

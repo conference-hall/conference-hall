@@ -10,7 +10,7 @@ import { DividerWithLabel } from '~/shared/design-system/divider.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
-import { FullscreenPage } from '../components/fullscreen-page.tsx';
+import { FullscreenPage } from '../../../routes/components/fullscreen-page.tsx';
 import type { Route } from './+types/request-access.ts';
 
 export const meta = (args: Route.MetaArgs) => {
