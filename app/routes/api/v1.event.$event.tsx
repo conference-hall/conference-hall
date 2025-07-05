@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod';
 import { z } from 'zod';
 import { EventApi } from '~/.server/event-web-api/event-api.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
-import { ForbiddenError } from '~/libs/errors.server.ts';
+import { ForbiddenError } from '~/shared/errors.server.ts';
 import type { Route } from './+types/v1.event.$event.ts';
 
 const API_KEY_SCHEMA = z.object({ key: z.string() });

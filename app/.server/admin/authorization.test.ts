@@ -1,5 +1,5 @@
 import { userFactory } from 'tests/factories/users.ts';
-import { NotAuthorizedError } from '~/libs/errors.server.ts';
+import { NotAuthorizedError } from '~/shared/errors.server.ts';
 import { needsAdminRole } from './authorization.ts';
 
 describe('#needsAdminRole', () => {

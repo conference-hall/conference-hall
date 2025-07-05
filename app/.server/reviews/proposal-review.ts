@@ -1,8 +1,6 @@
 import { db } from 'prisma/db.server.ts';
-
-import { ProposalNotFoundError, ReviewDisabledError } from '~/libs/errors.server.ts';
-
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
+import { ProposalNotFoundError, ReviewDisabledError } from '~/shared/errors.server.ts';
 import type { Languages } from '~/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { SpeakerSurvey } from '../event-survey/speaker-survey.ts';

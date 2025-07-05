@@ -2,7 +2,7 @@ import stream from 'node:stream';
 import type { FileUpload, FileUploadHandler } from '@mjackson/form-data-parser';
 import { v4 as uuid } from 'uuid';
 import { storage } from '../../shared/auth/firebase.server.ts';
-import { appUrl } from '../env/env.server.ts';
+import { appUrl } from '../../shared/env.server.ts';
 
 type StorageUploaderOptions = { name: string; maxFileSize?: number };
 

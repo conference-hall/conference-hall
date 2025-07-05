@@ -4,7 +4,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { InvitationNotFoundError } from '~/libs/errors.server.ts';
+import { InvitationNotFoundError } from '~/shared/errors.server.ts';
 
 import { CoSpeakerProposalInvite } from './co-speaker-proposal-invite.ts';
 

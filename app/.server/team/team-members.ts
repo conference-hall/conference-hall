@@ -3,7 +3,7 @@ import type { TeamRole } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
-import { ForbiddenOperationError } from '~/libs/errors.server.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 
 import { Pagination } from '../shared/pagination.ts';
 import { UserTeam } from './user-team.ts';

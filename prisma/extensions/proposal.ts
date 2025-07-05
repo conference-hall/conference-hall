@@ -1,6 +1,6 @@
 import { ConfirmationStatus, DeliberationStatus, Prisma, PublicationStatus } from '@prisma/client';
 
-import { appUrl } from '../../app/libs/env/env.server.ts';
+import { appUrl } from '../../app/shared/env.server.ts';
 import { SpeakerProposalStatus } from '../../app/types/speaker.types.ts';
 
 export const proposalExtension = Prisma.defineExtension({

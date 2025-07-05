@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 
-import { InvalidAccessKeyError } from '~/libs/errors.server.ts';
+import { InvalidAccessKeyError } from '~/shared/errors.server.ts';
 
 export class TeamBetaAccess {
   constructor(private userId: string) {}

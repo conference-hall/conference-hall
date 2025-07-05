@@ -6,7 +6,7 @@ import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { ForbiddenOperationError } from '~/libs/errors.server.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 
 import { EventTracksSettings } from './event-tracks-settings.ts';
 

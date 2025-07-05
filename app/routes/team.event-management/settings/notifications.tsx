@@ -7,7 +7,6 @@ import {
   EventEmailNotificationsSettingsSchema,
   EventNotificationsSettingsSchema,
 } from '~/.server/event-settings/user-event.types.ts';
-import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
@@ -16,6 +15,7 @@ import { ToggleGroup } from '~/shared/design-system/forms/toggles.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { H2 } from '~/shared/design-system/typography.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/notifications.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

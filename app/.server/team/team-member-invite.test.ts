@@ -2,7 +2,7 @@ import { db } from 'prisma/db.server.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { InvitationNotFoundError } from '~/libs/errors.server.ts';
+import { InvitationNotFoundError } from '~/shared/errors.server.ts';
 
 import { TeamMemberInvite } from './team-member-invite.ts';
 

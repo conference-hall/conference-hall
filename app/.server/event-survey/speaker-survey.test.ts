@@ -2,7 +2,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 
 import { surveyFactory } from 'tests/factories/surveys.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.server.ts';
+import { EventNotFoundError, SurveyNotEnabledError } from '~/shared/errors.server.ts';
 import { SpeakerSurvey } from './speaker-survey.ts';
 
 describe('SpeakerSurvey', () => {

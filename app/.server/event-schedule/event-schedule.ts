@@ -8,7 +8,7 @@ import {
   ForbiddenError,
   ForbiddenOperationError,
   NotFoundError,
-} from '~/libs/errors.server.ts';
+} from '~/shared/errors.server.ts';
 import type { Language, Languages } from '~/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import type {

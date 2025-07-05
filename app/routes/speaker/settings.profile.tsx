@@ -6,7 +6,6 @@ import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { ProfileSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
 import { extractSocialProfile } from '~/libs/formatters/social-links.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { toast } from '~/libs/toasts/toast.server.ts';
 import { useSpeakerProfile } from '~/routes/components/contexts/speaker-profile-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Avatar } from '~/shared/design-system/avatar.tsx';
@@ -17,6 +16,7 @@ import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { getSocialIcon } from '~/shared/design-system/social-link.tsx';
 import { H1, H2, Label, Subtitle } from '~/shared/design-system/typography.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/settings.profile.ts';
 
 const MAX_SOCIAL_LINKS = 4;

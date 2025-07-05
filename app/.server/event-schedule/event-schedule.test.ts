@@ -12,7 +12,7 @@ import {
   ForbiddenError,
   ForbiddenOperationError,
   NotFoundError,
-} from '~/libs/errors.server.ts';
+} from '~/shared/errors.server.ts';
 import { EventSchedule } from './event-schedule.ts';
 
 describe('EventSchedule', () => {

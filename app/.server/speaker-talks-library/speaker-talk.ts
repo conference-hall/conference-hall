@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { TalkNotFoundError } from '~/libs/errors.server.ts';
+import { TalkNotFoundError } from '~/shared/errors.server.ts';
 import type { Languages } from '~/types/proposals.types.ts';
 import type { TalkSaveData } from './talks-library.types.ts';
 

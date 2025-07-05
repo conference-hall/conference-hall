@@ -1,7 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 
 import { z } from 'zod';
-import { EventNotFoundError } from '~/libs/errors.server.ts';
+import { EventNotFoundError } from '~/shared/errors.server.ts';
 import { TracksMandatorySchema, TracksOptionalSchema } from '../cfp-submission-funnel/talk-submission.types.ts';
 import { SurveyConfig } from '../event-survey/survey-config.ts';
 

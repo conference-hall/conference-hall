@@ -1,8 +1,8 @@
 import { db } from 'prisma/db.server.ts';
-import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ProposalAcceptedEmail from '~/shared/emails/templates/speakers/proposal-accepted.tsx';
 import ProposalRejectedEmail from '~/shared/emails/templates/speakers/proposal-rejected.tsx';
+import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 
 export class Publication {

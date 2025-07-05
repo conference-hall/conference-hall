@@ -6,7 +6,6 @@ import { Form } from 'react-router';
 import { EventProposalTags } from '~/.server/event-settings/event-proposal-tags.ts';
 import { parseUrlFilters, TagDeleteSchema, TagSaveSchema } from '~/.server/event-settings/event-proposal-tags.types.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
-import { toast } from '~/libs/toasts/toast.server.ts';
 import { Tag } from '~/routes/components/tags/tag.tsx';
 import { TagModal } from '~/routes/components/tags/tag-modal.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
@@ -18,6 +17,7 @@ import { List } from '~/shared/design-system/list/list.tsx';
 import { Pagination } from '~/shared/design-system/list/pagination.tsx';
 import { H2, Text } from '~/shared/design-system/typography.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/tags.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

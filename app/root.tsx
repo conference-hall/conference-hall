@@ -4,19 +4,19 @@ import { data, Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestorat
 import { useChangeLanguage } from 'remix-i18next/react';
 import { UserInfo } from './.server/user-registration/user-info.ts';
 import type { Route } from './+types/root.ts';
-import { getBrowserEnv } from './libs/env/env.server.ts';
 import { useNonce } from './libs/nonce/use-nonce.ts';
-import type { Toast } from './libs/toasts/toast.server.ts';
-import { getToast } from './libs/toasts/toast.server.ts';
-import { Toaster } from './libs/toasts/toaster.tsx';
 import { FlagsProvider } from './routes/components/contexts/flags-context.tsx';
 import { UserProvider } from './routes/components/contexts/user-context.tsx';
 import { GeneralErrorBoundary } from './routes/components/error-boundary.tsx';
 import { GlobalLoading } from './routes/components/global-loading.tsx';
 import { initializeFirebaseClient } from './shared/auth/firebase.ts';
 import { destroySession, getUserSession } from './shared/auth/session.ts';
+import { getBrowserEnv } from './shared/env.server.ts';
 import { flags } from './shared/feature-flags/flags.server.ts';
 import { i18n } from './shared/i18n/i18n.server.ts';
+import type { Toast } from './shared/toasts/toast.server.ts';
+import { getToast } from './shared/toasts/toast.server.ts';
+import { Toaster } from './shared/toasts/toaster.tsx';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
 

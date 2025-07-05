@@ -1,13 +1,13 @@
 import { render } from '@react-email/components';
 import { db } from 'prisma/db.server.ts';
 import xss from 'xss';
-import { NotFoundError } from '~/libs/errors.server.ts';
 import type {
   CustomTemplateName,
   EventEmailCustomDelete,
   EventEmailCustomUpsert,
 } from '~/shared/emails/email.types.ts';
 import { getCustomTemplate } from '~/shared/emails/templates/templates.ts';
+import { NotFoundError } from '~/shared/errors.server.ts';
 import { UserEvent } from './user-event.ts';
 
 export class EventEmailCustomizations {

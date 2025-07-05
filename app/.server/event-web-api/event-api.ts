@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 
-import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.server.ts';
+import { ApiKeyInvalidError, EventNotFoundError } from '~/shared/errors.server.ts';
 
 import type { Languages } from '~/types/proposals.types.ts';
 import { ReviewDetails } from '../reviews/review-details.ts';

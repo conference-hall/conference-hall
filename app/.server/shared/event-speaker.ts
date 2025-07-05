@@ -1,6 +1,6 @@
 import type { User } from '@prisma/client';
 import { type DbTransaction, db } from 'prisma/db.server.ts';
-import { UserNotFoundError } from '~/libs/errors.server.ts';
+import { UserNotFoundError } from '~/shared/errors.server.ts';
 import type { SocialLinks } from '../speaker-profile/speaker-profile.types.ts';
 
 export class EventSpeaker {

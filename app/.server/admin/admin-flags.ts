@@ -1,4 +1,4 @@
-import { NotFoundError } from '~/libs/errors.server.ts';
+import { NotFoundError } from '~/shared/errors.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import type { FlagConfig } from '~/shared/feature-flags/types.ts';
 import { needsAdminRole } from './authorization.ts';

@@ -7,7 +7,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { ForbiddenOperationError } from '~/libs/errors.server.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { CfpReviewsSearch } from './cfp-reviews-search.ts';
 
 describe('CfpReviewsSearch', () => {

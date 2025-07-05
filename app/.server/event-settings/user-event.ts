@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-import { EventNotFoundError, ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
+import { EventNotFoundError, ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 import type { Permission } from '../team/user-permissions.ts';
 import { UserPermissions } from '../team/user-permissions.ts';

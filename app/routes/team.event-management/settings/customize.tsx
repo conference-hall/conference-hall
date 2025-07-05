@@ -5,7 +5,6 @@ import { Form, useSubmit } from 'react-router';
 import { z } from 'zod';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
-import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Avatar } from '~/shared/design-system/avatar.tsx';
@@ -15,6 +14,7 @@ import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/shared/design-system/links.tsx';
 import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/customize.ts';
 
 const MAX_FILE_SIZE = 300 * 1024; // 300kB

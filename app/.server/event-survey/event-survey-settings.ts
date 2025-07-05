@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { SurveyInvalidError } from '~/libs/errors.server.ts';
+import { SurveyInvalidError } from '~/shared/errors.server.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { SurveyConfig } from './survey-config.ts';
 import type { SurveyMoveQuestion, SurveyQuestion } from './types.ts';

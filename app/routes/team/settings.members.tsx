@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { Form, useSearchParams } from 'react-router';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { parseUrlFilters, TeamMembers } from '~/.server/team/team-members.ts';
-import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import { useUser } from '~/routes/components/contexts/user-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
@@ -16,6 +15,7 @@ import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
 import { Pagination } from '~/shared/design-system/list/pagination.tsx';
 import { H3, Subtitle } from '~/shared/design-system/typography.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/settings.members.ts';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/settings-page/member-actions.tsx';
 

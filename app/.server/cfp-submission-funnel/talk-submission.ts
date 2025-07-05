@@ -1,13 +1,13 @@
 import { db } from 'prisma/db.server.ts';
+import { sendEmail } from '~/shared/emails/send-email.job.ts';
+import OrganizerProposalSubmittedEmail from '~/shared/emails/templates/organizers/proposal-submitted.tsx';
+import SpeakerProposalSubmittedEmail from '~/shared/emails/templates/speakers/proposal-submitted.tsx';
 import {
   CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
-} from '~/libs/errors.server.ts';
-import { sendEmail } from '~/shared/emails/send-email.job.ts';
-import OrganizerProposalSubmittedEmail from '~/shared/emails/templates/organizers/proposal-submitted.tsx';
-import SpeakerProposalSubmittedEmail from '~/shared/emails/templates/speakers/proposal-submitted.tsx';
+} from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 import type { Languages } from '~/types/proposals.types.ts';
 import { EventSpeaker } from '../shared/event-speaker.ts';

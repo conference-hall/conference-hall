@@ -1,8 +1,8 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
-import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 import { SlugSchema } from '~/libs/validators/slug.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { TeamBetaAccess } from './team-beta-access.ts';
 
 export class UserTeams {

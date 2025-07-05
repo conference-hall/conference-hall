@@ -4,8 +4,8 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { appUrl } from '~/libs/env/env.server.ts';
-import { TalkNotFoundError } from '~/libs/errors.server.ts';
+import { appUrl } from '~/shared/env.server.ts';
+import { TalkNotFoundError } from '~/shared/errors.server.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 import { SpeakerTalk } from './speaker-talk.ts';
 

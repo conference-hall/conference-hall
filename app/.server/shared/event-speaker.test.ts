@@ -4,7 +4,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { UserNotFoundError } from '~/libs/errors.server.ts';
+import { UserNotFoundError } from '~/shared/errors.server.ts';
 import { EventSpeaker } from './event-speaker.ts';
 
 describe('EventSpeaker', () => {

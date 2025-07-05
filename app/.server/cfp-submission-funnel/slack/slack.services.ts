@@ -1,8 +1,7 @@
 import type { Event, EventCategory, EventFormat, EventSpeaker, Proposal, Team } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-
-import { appUrl } from '~/libs/env/env.server.ts';
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
+import { appUrl } from '~/shared/env.server.ts';
 
 function buildPayload(
   event: Event & { team: Team },
