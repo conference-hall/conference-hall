@@ -1,7 +1,7 @@
 import compression from 'compression';
 import express from 'express';
 
-import { initEnvironment } from '~/libs/env/env.server.ts';
+import { initEnvironment } from '~/shared/env.server.ts';
 import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
 import { applyLogging } from './middlewares/logging.ts';
 import { applyProxyFirebaseAuth } from './middlewares/proxy-firebase-auth.ts';

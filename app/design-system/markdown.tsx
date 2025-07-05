@@ -1,7 +1,7 @@
 import { cx } from 'class-variance-authority';
 import type React from 'react';
 
-import { MarkdownParser } from '~/libs/markdown/markdown-parser.ts';
+import { MarkdownParser } from '~/shared/markdown/markdown-parser.ts';
 
 type Props = { as?: React.ElementType; children: string | null; className?: string };
 

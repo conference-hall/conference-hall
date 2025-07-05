@@ -23,7 +23,7 @@
     "test:e2e:ui": "playwright test --ui --ui-host=localhost",
     "db:migrate": "dotenv -e .env.dev -- prisma migrate dev",
     "db:reset": "dotenv -e .env.dev -- prisma migrate reset -f",
-    "emails": "dotenv -e .env.dev -- npx --yes react-email dev --dir ./app/emails/templates --port 3002",
+    "emails": "dotenv -e .env.dev -- npx --yes react-email dev --dir ./app/shared/emails/templates --port 3002",
     "lint": "biome check",
     "lint:ci": "biome ci",
     "tsc": "react-router typegen && tsc -b",

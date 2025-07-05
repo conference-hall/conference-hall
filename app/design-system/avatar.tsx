@@ -1,5 +1,5 @@
 import { cx } from 'class-variance-authority';
-import { generateGradientColor } from '~/libs/colors/colors.ts';
+import { generateGradientColor } from '~/shared/colors/colors.ts';
 import { Text } from './typography.tsx';
 
 const sizes = {

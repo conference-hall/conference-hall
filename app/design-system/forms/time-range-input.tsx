@@ -2,7 +2,7 @@ import type { ChangeEvent } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
-import { formatTime } from '~/libs/datetimes/datetimes.ts';
+import { formatTime } from '~/shared/datetimes/datetimes.ts';
 
 type Props = {
   nameStart?: string;
