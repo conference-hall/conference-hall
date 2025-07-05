@@ -5,7 +5,6 @@ import { Form } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { ProfileSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
 import { extractSocialProfile } from '~/libs/formatters/social-links.ts';
-import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useSpeakerProfile } from '~/routes/components/contexts/speaker-profile-context.tsx';
@@ -17,6 +16,7 @@ import { MarkdownTextArea } from '~/shared/design-system/forms/markdown-textarea
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { getSocialIcon } from '~/shared/design-system/social-link.tsx';
 import { H1, H2, Label, Subtitle } from '~/shared/design-system/typography.tsx';
+import { i18n } from '~/shared/i18n/i18n.server.ts';
 import type { Route } from './+types/settings.profile.ts';
 
 const MAX_SOCIAL_LINKS = 4;

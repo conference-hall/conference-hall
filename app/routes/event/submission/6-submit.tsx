@@ -2,7 +2,6 @@ import { useId, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
-import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import { TalkSection } from '~/routes/components/talks/talk-section.tsx';
@@ -12,6 +11,7 @@ import { Checkbox } from '~/shared/design-system/forms/checkboxes.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/shared/design-system/links.tsx';
+import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { useSubmissionNavigation } from '../components/submission-page/submission-context.tsx';
 import type { Route } from './+types/6-submit.ts';
 

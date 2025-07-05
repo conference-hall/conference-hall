@@ -1,8 +1,8 @@
 import { Heading, Text } from '@react-email/components';
-import { getEmailI18n } from '~/libs/i18n/i18n.emails.ts';
 import type { CustomEmailData, LocaleEmailData } from '~/shared/emails/email.types.ts';
 import type { EmailPayload } from '~/shared/emails/send-email.job.ts';
 import { EmailMarkdown } from '~/shared/emails/utils/email-markdown.tsx';
+import { getEmailI18n } from '~/shared/i18n/i18n.emails.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 

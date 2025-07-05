@@ -1,8 +1,8 @@
 import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
-import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { i18n } from '~/shared/i18n/i18n.server.ts';
 import type { Route } from './+types/open-planner.ts';
 
 export const action = async ({ request, params }: Route.ActionArgs) => {

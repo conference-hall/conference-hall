@@ -5,8 +5,8 @@ import { renderToPipeableStream } from 'react-dom/server';
 import { I18nextProvider } from 'react-i18next';
 import type { ActionFunctionArgs, AppLoadContext, EntryContext, LoaderFunctionArgs } from 'react-router';
 import { ServerRouter } from 'react-router';
-import { initializeI18n } from './libs/i18n/i18n.server.ts';
 import { NonceContext } from './libs/nonce/use-nonce.ts';
+import { initializeI18n } from './shared/i18n/i18n.server.ts';
 
 export const streamTimeout = 5_000;
 

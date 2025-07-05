@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Form, redirect, useNavigation, useSearchParams } from 'react-router';
 import { z } from 'zod';
 import { UserAccount } from '~/.server/user-registration/user-account.ts';
-import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { getUserSession } from '~/shared/auth/session.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
@@ -12,6 +11,7 @@ import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { ConferenceHallLogo } from '~/shared/design-system/logo.tsx';
 import { Subtitle } from '~/shared/design-system/typography.tsx';
+import { i18n } from '~/shared/i18n/i18n.server.ts';
 import type { Route } from './+types/forgot-password.ts';
 
 export const meta = (args: Route.MetaArgs) => {

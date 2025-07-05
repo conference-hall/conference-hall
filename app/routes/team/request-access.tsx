@@ -3,13 +3,13 @@ import { KeyIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { TeamBetaAccess } from '~/.server/team/team-beta-access.ts';
-import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button, button } from '~/shared/design-system/buttons.tsx';
 import { DividerWithLabel } from '~/shared/design-system/divider.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
+import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { FullscreenPage } from '../components/fullscreen-page.tsx';
 import type { Route } from './+types/request-access.ts';
 

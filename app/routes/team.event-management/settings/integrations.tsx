@@ -11,7 +11,6 @@ import {
 } from '~/.server/event-settings/event-integrations.types.ts';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventSlackSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
-import { i18n } from '~/libs/i18n/i18n.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
@@ -21,6 +20,7 @@ import { Input } from '~/shared/design-system/forms/input.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/shared/design-system/links.tsx';
 import { H2, Text } from '~/shared/design-system/typography.tsx';
+import { i18n } from '~/shared/i18n/i18n.server.ts';
 import type { Route } from './+types/integrations.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
