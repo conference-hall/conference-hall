@@ -1,5 +1,5 @@
 import { createContext, type ReactNode, useContext } from 'react';
-import type { loader } from '~/routes/team.event-management/_layout.tsx';
+import type { loader } from '~/features/event-management/layout.tsx';
 import type { SerializeFrom } from '~/types/react-router.types.ts';
 
 type CurrentEvent = SerializeFrom<typeof loader>;
