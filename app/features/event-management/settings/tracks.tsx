@@ -1,17 +1,18 @@
 import { parseWithZod } from '@conform-to/zod';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
-import { EventTracksSettings } from '~/.server/event-settings/event-tracks-settings.ts';
-import { TrackSaveSchema, TracksSettingsSchema } from '~/.server/event-settings/event-tracks-settings.types.ts';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/tracks.ts';
 import { TrackList } from './components/track-list.tsx';
+import { TrackSaveSchema, TracksSettingsSchema } from './services/event-tracks-settings.schema.server.ts';
+import { EventTracksSettings } from './services/event-tracks-settings.server.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);
@@ -51,7 +52,8 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     case 'update-track-settings': {
       const result = parseWithZod(form, { schema: TracksSettingsSchema });
       if (result.status !== 'success') return result.error;
-      await tracks.updateSettings(result.value);
+      const event = EventSettings.for(userId, params.team, params.event);
+      await event.update(result.value);
       return toast('success', t('event-management.settings.tracks.feedbacks.updated'));
     }
   }

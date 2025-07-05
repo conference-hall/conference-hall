@@ -1,5 +1,5 @@
+import { db } from 'prisma/db.server.ts';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { db } from '../../../../prisma/db.server.ts';
 import { MemoryCacheLayer } from '../../cache/memory-cache-layer.ts';
 import type { FlagConfig } from '../types.ts';
 import { DbStorage } from './db-storage.ts';

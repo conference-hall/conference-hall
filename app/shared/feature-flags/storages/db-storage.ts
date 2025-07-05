@@ -1,4 +1,4 @@
-import { db } from '../../../../prisma/db.server.ts';
+import { db } from 'prisma/db.server.ts';
 import type { CacheLayer } from '../../cache/cache-layer.ts';
 import { RedisCacheLayer } from '../../cache/redis-cache-layer.ts';
 import type { FlagConfig } from '../types.ts';

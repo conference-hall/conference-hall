@@ -1,8 +1,8 @@
 import { HeartIcon, MinusIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { Trans, useTranslation } from 'react-i18next';
-import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
+import type { FeedItem } from '~/features/event-management/proposals/services/activity-feed.server.ts';
 import { formatDistance } from '~/shared/datetimes/datetimes.ts';
 
 const ReviewTypes = {

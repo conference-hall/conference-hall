@@ -2,6 +2,7 @@ import { createContext, type ReactNode, useContext } from 'react';
 import type { loader } from '~/features/event-management/layout.tsx';
 import type { SerializeFrom } from '~/shared/types/react-router.types.ts';
 
+// todo(folders): where to put this file?
 type CurrentEvent = SerializeFrom<typeof loader>;
 
 const EventTeamContext = createContext<CurrentEvent | undefined>(undefined);

@@ -3,7 +3,6 @@ import type { ChangeEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
 import { z } from 'zod';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { uploadToStorageHandler } from '~/app-platform/storage/services/storage.server.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -12,6 +11,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -28,7 +28,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
-  const event = await UserEvent.for(userId, params.team, params.event);
+  const event = await EventSettings.for(userId, params.team, params.event);
   await event.needsPermission('canEditEvent');
 
   const formData = await parseFormData(request, uploadToStorageHandler({ name: 'logo', maxFileSize: MAX_FILE_SIZE }));

@@ -3,8 +3,6 @@ import { CubeTransparentIcon } from '@heroicons/react/24/outline';
 import type { TeamRole } from '@prisma/client';
 import { useTranslation } from 'react-i18next';
 import { Form, useSearchParams } from 'react-router';
-import { parseUrlPage } from '~/.server/shared/pagination.ts';
-import { parseUrlFilters, TeamMembers } from '~/.server/team/team-members.ts';
 import { useUser } from '~/app-platform/components/user-context.tsx';
 import { AvatarName } from '~/design-system/avatar.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -15,9 +13,11 @@ import { H3, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/settings.members.ts';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/member-actions.tsx';
+import { parseUrlFilters, TeamMembers } from './services/team-members.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

@@ -2,11 +2,11 @@ import { parseWithZod } from '@conform-to/zod';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
-import { TeamCreateSchema, UserTeams } from '~/.server/team/user-teams.ts';
+import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
+import { TeamCreateSchema, TeamCreation } from '~/features/team-management/creation/services/team-creation.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { FullscreenPage } from '../../../app-platform/components/fullscreen-page.tsx';
 import type { Route } from './+types/new.ts';
 import { TeamForm } from './components/team-form.tsx';
 
@@ -21,7 +21,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const result = await parseWithZod(form, { schema: TeamCreateSchema, async: true });
   if (result.status !== 'success') return result.error;
 
-  const team = await UserTeams.for(userId).create(result.value);
+  const team = await TeamCreation.for(userId).create(result.value);
   return redirect(`/team/${team.slug}`);
 };
 

@@ -1,16 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
-import { CoSpeakerProposalInvite } from '~/.server/cfp-submissions/co-speaker-proposal-invite.ts';
+import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { FullscreenPage } from '../../../app-platform/components/fullscreen-page.tsx';
 import { EventCard } from '../../event-search/components/event-card.tsx';
 import { SpeakerPill } from '../../speaker/talk-library/components/speakers.tsx';
 import type { Route } from './+types/proposal-invitation.ts';
+import { CoSpeakerProposalInvite } from './services/co-speaker-proposal-invite.server.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Proposal invitation | Conference Hall' }]);

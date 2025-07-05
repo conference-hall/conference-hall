@@ -4,7 +4,6 @@ import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import type { SurveyDetailedAnswer } from '~/.server/event-survey/types.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { InvitationModal } from '~/design-system/dialogs/invitation-modal.tsx';
@@ -13,6 +12,7 @@ import { ExternalLink } from '~/design-system/links.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { SocialLink } from '~/design-system/social-link.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
 
 export type SpeakerProps = {
   userId: string | null;

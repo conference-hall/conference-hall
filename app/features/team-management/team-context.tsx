@@ -2,6 +2,7 @@ import { createContext, type ReactNode, useContext } from 'react';
 import type { loader } from '~/features/team-management/layout.tsx';
 import type { SerializeFrom } from '~/shared/types/react-router.types.ts';
 
+// todo(folders): where to put this file?
 type CurrentTeam = SerializeFrom<typeof loader>;
 
 const TeamContext = createContext<CurrentTeam | undefined>(undefined);

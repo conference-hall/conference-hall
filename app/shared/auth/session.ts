@@ -1,6 +1,6 @@
 import type { Session } from 'react-router';
 import { createCookieSessionStorage, redirect } from 'react-router';
-import { UserAccount } from '~/.server/user-registration/user-account.ts';
+import { UserAccount } from '~/shared/user/user-account.server.ts';
 import { i18n } from '../i18n/i18n.server.ts';
 import { auth as serverAuth } from './firebase.server.ts';
 

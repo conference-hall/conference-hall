@@ -1,7 +1,7 @@
 import { randParagraph, randPost } from '@ngneat/falso';
 import type { Event, EventCategory, EventFormat, EventProposalTag, Prisma, Talk, User } from '@prisma/client';
 import { ConfirmationStatus, DeliberationStatus, PublicationStatus, TalkLevel } from '@prisma/client';
-import { EventSpeaker } from '~/.server/shared/event-speaker.ts';
+import { EventSpeaker } from '~/.server/event-speaker.ts';
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 

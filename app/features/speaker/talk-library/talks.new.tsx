@@ -2,8 +2,6 @@ import { parseWithZod } from '@conform-to/zod';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
-import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
-import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -14,6 +12,8 @@ import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/talks.new.ts';
 import { TalkForm } from './components/talk-forms/talk-form.tsx';
+import { TalkSaveSchema } from './services/talks-library.schema.server.ts';
+import { TalksLibrary } from './services/talks-library.server.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'New talk | Conference Hall' }]);

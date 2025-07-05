@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import { CfpMetrics } from '~/.server/event-metrics/cfp-metrics.ts';
 import { BarListCard } from '~/design-system/dashboard/bar-list-card.tsx';
 import { ProgressCard } from '~/design-system/dashboard/progress-card.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/overview.cfp.ts';
 import { ProposalsByDayChart } from './components/cfp-tab/proposals-by-days-chart.tsx';
+import { CfpMetrics } from './services/cfp-metrics.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

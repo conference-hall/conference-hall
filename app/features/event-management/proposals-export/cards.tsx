@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
-import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
+import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { formatReviewNote } from '~/shared/formatters/reviews.ts';
 import type { Route } from './+types/cards.ts';
 import styles from './cards.css?url';
+import { CfpReviewsExports } from './services/cfp-reviews-exports.server.ts';
 
 export const links = () => [{ rel: 'stylesheet', href: styles }];
 

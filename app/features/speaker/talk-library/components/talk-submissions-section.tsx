@@ -5,9 +5,9 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
+import { ProposalStatusLabel } from '~/features/event-participation/speaker-proposals/components/proposal-status-label.tsx';
 import { formatDistance } from '~/shared/datetimes/datetimes.ts';
 import type { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
-import { ProposalStatusLabel } from '../../../event-participation/speaker-proposals/components/proposal-status-label.tsx';
 
 type Props = {
   submissions: Array<{

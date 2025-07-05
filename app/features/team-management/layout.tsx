@@ -1,7 +1,6 @@
 import { Cog6ToothIcon, StarIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet, useMatch, useRouteLoaderData } from 'react-router';
-import { UserTeam } from '~/.server/team/user-team.ts';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Badge } from '~/design-system/badges.tsx';
@@ -10,6 +9,7 @@ import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { EventTabs } from '~/features/event-management/event-tabs.tsx';
 import type { loader as routeEventLoader } from '~/features/event-management/layout.tsx';
 import { useScheduleFullscreen } from '~/features/event-management/schedule/components/header/use-schedule-fullscreen.tsx';
+import { TeamSettings } from '~/features/team-management/settings/services/team-settings.server.ts';
 import { CurrentTeamProvider } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/layout.ts';
@@ -20,7 +20,7 @@ export const meta = (args: Route.MetaArgs) => {
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-  return UserTeam.for(userId, params.team).get();
+  return TeamSettings.for(userId, params.team).get();
 };
 
 // todo(folders): check how to split layout for team and event management

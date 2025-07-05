@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import { useChangeLanguage } from 'remix-i18next/react';
-import { UserInfo } from './.server/user-registration/user-info.ts';
 import type { Route } from './+types/root.ts';
 import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
@@ -17,6 +16,7 @@ import { i18n } from './shared/i18n/i18n.server.ts';
 import type { Toast } from './shared/toasts/toast.server.ts';
 import { getToast } from './shared/toasts/toast.server.ts';
 import { Toaster } from './shared/toasts/toaster.tsx';
+import { UserAccount } from './shared/user/user-account.server.ts';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
 
@@ -49,7 +49,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   }
 
   const { userId } = (await getUserSession(request)) || {};
-  const user = await UserInfo.get(userId);
+  const user = await UserAccount.get(userId);
   if (userId && !user) await destroySession(request);
 
   const { toast, headers: toastHeaders } = await getToast(request);

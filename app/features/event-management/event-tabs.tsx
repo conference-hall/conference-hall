@@ -23,6 +23,7 @@ type Props = {
   permissions: UserPermissions;
 };
 
+// todo(folders): where to put this file?
 export function EventTabs({ teamSlug, eventSlug, eventType, displaySpeakers, permissions }: Props) {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();

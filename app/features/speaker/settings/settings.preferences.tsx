@@ -1,7 +1,6 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Form } from 'react-router';
-import { UserAccount } from '~/.server/user-registration/user-account.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
@@ -11,6 +10,7 @@ import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n, setLocaleCookie } from '~/shared/i18n/i18n.server.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
+import { UserAccount } from '~/shared/user/user-account.server.ts';
 import { combineHeaders } from '~/shared/utils/headers.ts';
 import type { Route } from './+types/settings.preferences.ts';
 

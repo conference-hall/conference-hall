@@ -2,7 +2,6 @@ import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect, useNavigation, useSearchParams } from 'react-router';
 import { z } from 'zod';
-import { UserAccount } from '~/.server/user-registration/user-account.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -12,6 +11,7 @@ import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { getUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { UserAccount } from '~/shared/user/user-account.server.ts';
 import type { Route } from './+types/reset-password-sent.ts';
 
 export const meta = (args: Route.MetaArgs) => {

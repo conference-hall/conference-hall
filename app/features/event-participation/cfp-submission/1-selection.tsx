@@ -1,13 +1,13 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
-import { Submissions } from '~/.server/cfp-submissions/submissions.ts';
-import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
+import { SpeakerProposals } from '~/features/event-participation/speaker-proposals/services/speaker-proposals.server.ts';
+import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/1-selection.ts';
 import { MaxProposalsReached } from './components/max-proposals.tsx';
@@ -18,7 +18,7 @@ export const handle = { step: 'selection' };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-  const speakerProposals = Submissions.for(userId, params.event);
+  const speakerProposals = SpeakerProposals.for(userId, params.event);
   const talkLibrary = TalksLibrary.of(userId);
   return {
     proposalsCount: await speakerProposals.count(),

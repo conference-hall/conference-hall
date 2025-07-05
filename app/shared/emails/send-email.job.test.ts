@@ -8,9 +8,9 @@ vi.mock('./providers/provider.ts', () => ({
   getEmailProvider: vi.fn(),
 }));
 
+import { eventEmailCustomizationFactory } from 'tests/factories/event-email-customizations.ts';
+import { eventFactory } from 'tests/factories/events.ts';
 import { renderEmail } from '~/shared/emails/email.renderer.tsx';
-import { eventEmailCustomizationFactory } from '../../../tests/factories/event-email-customizations.ts';
-import { eventFactory } from '../../../tests/factories/events.ts';
 import { getEmailProvider } from './providers/provider.ts';
 import type { EmailPayload } from './send-email.job.ts';
 import { sendEmail } from './send-email.job.ts';

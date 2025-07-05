@@ -1,7 +1,6 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { data } from 'react-router';
-import { EventSpeakers } from '~/.server/event-speakers/event-speakers.ts';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -16,6 +15,7 @@ import {
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { ProposalItem } from '../proposals/components/proposals-page/list/proposal-item.tsx';
 import type { Route } from './+types/speaker.ts';
+import { EventSpeakers } from './services/event-speakers.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

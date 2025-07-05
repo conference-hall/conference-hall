@@ -5,22 +5,19 @@ import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { v4 as uuid } from 'uuid';
-import type { SurveyQuestion } from '~/.server/event-survey/types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 
 type QuestionType = 'text' | 'checkbox' | 'radio';
 
 const QUESTION_TYPES: Array<QuestionType> = ['text', 'checkbox', 'radio'] as const;
 
-type SurveyModalProps = {
-  initialValues?: SurveyQuestion;
-  children: (props: { onOpen: VoidFunction }) => ReactNode;
-};
+type SurveyModalProps = { initialValues?: SurveyQuestion; children: (props: { onOpen: VoidFunction }) => ReactNode };
 
 export function SurveyQuestionModal({ initialValues, children }: SurveyModalProps) {
   const [open, setOpen] = useState(false);

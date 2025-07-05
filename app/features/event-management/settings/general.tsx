@@ -3,8 +3,6 @@ import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/2
 import { useId } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { EventDetailsSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { DeleteModalButton } from '~/design-system/dialogs/delete-modal.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -12,6 +10,8 @@ import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { EventDetailsForm } from '~/features/event-management/creation/components/event-details-form.tsx';
 import { EventForm } from '~/features/event-management/creation/components/event-form.tsx';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { EventDetailsSettingsSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
+import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
@@ -26,7 +26,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
-  const event = UserEvent.for(userId, params.team, params.event);
+  const event = EventSettings.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');
 

@@ -2,6 +2,7 @@ import { createContext, type ReactNode, useContext } from 'react';
 import type { loader } from '~/features/speaker/layout.tsx';
 import type { SerializeFrom } from '~/shared/types/react-router.types.ts';
 
+// todo(folders): where to put this file?
 type SpeakerProfile = SerializeFrom<typeof loader>;
 
 const SpeakerProfileContext = createContext<SpeakerProfile | undefined>(undefined);

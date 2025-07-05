@@ -1,6 +1,6 @@
 import { Outlet, redirect } from 'react-router';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { CurrentEventTeamProvider } from '~/features/event-management/event-team-context.tsx';
+import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/layout.ts';
 
@@ -12,7 +12,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
     return redirect(`/team/${params.team}/${params.event}/overview`);
   }
 
-  return UserEvent.for(userId, params.team, params.event).get();
+  return EventSettings.for(userId, params.team, params.event).get();
 };
 
 export default function EventLayoutRoute({ loaderData: event }: Route.ComponentProps) {

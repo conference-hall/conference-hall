@@ -1,7 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import { useTranslation } from 'react-i18next';
-import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
-import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
@@ -11,6 +9,8 @@ import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/talk.ts';
 import { TalkSection } from './components/talk-section.tsx';
 import { TalkSubmissionsSection } from './components/talk-submissions-section.tsx';
+import { TalkSaveSchema } from './services/talks-library.schema.server.ts';
+import { TalksLibrary } from './services/talks-library.server.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: `${args.data?.title} | Conference Hall` }]);

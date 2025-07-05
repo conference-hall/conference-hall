@@ -2,7 +2,6 @@ import { Cog6ToothIcon, FireIcon, MicrophoneIcon } from '@heroicons/react/24/out
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
-import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Footer } from '~/app-platform/components/footer.tsx';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
@@ -11,6 +10,7 @@ import { Container } from '~/design-system/layouts/container.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
+import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { SpeakerProfileProvider } from '~/features/speaker/speaker-profile-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/layout.ts';

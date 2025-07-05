@@ -1,27 +1,16 @@
 import { parseWithZod } from '@conform-to/zod';
 import { Suspense } from 'react';
 import { Await } from 'react-router';
-import { Publication } from '~/.server/publications/publication.ts';
-import { ActivityFeed } from '~/.server/reviews/activity-feed.ts';
-import { Comments } from '~/.server/reviews/comments.ts';
-import type { ProposalReviewData } from '~/.server/reviews/proposal-review.ts';
-import { ProposalReview } from '~/.server/reviews/proposal-review.ts';
-import {
-  CommentReactionSchema,
-  ProposalSaveTagsSchema,
-  ProposalUpdateSchema,
-  ReviewUpdateDataSchema,
-} from '~/.server/reviews/proposal-review.types.ts';
-import { ProposalStatusSchema, ProposalStatusUpdater } from '~/.server/reviews/proposal-status-updater.ts';
-import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
+import { Publication } from '../publication/services/publication.server.ts';
 import type { Route } from './+types/proposal.ts';
 import { OtherProposalsDisclosure } from './components/proposal-page/other-proposals-disclosure.tsx';
 import { LoadingActivities } from './components/proposal-page/proposal-activity/loading-activities.tsx';
@@ -29,6 +18,17 @@ import { ProposalActivityFeed as Feed } from './components/proposal-page/proposa
 import { ReviewHeader } from './components/proposal-page/review-header.tsx';
 import { ReviewSidebar } from './components/proposal-page/review-sidebar.tsx';
 import { TagsCard } from './components/proposal-page/tags-card.tsx';
+import { ActivityFeed } from './services/activity-feed.server.ts';
+import { Comments } from './services/comments.server.ts';
+import {
+  CommentReactionSchema,
+  ProposalSaveTagsSchema,
+  ProposalUpdateSchema,
+  ReviewUpdateDataSchema,
+} from './services/proposal-review.schema.server.ts';
+import type { ProposalReviewData } from './services/proposal-review.server.ts';
+import { ProposalReview } from './services/proposal-review.server.ts';
+import { ProposalStatusSchema, ProposalStatusUpdater } from './services/proposal-status-updater.server.ts';
 
 export type ProposalData = ProposalReviewData;
 

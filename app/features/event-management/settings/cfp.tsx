@@ -1,11 +1,11 @@
 import { parseWithZod } from '@conform-to/zod';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
+import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import {
   CfpConferenceOpeningSchema,
   CfpMeetupOpeningSchema,
   CfpPreferencesSchema,
-} from '~/.server/event-settings/user-event.types.ts';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+} from '~/features/event-management/settings/services/event-settings.schema.server.ts';
+import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -22,7 +22,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
-  const event = UserEvent.for(userId, params.team, params.event);
+  const event = EventSettings.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');
 

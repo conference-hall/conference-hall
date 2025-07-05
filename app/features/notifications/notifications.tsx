@@ -1,7 +1,6 @@
 import { BellSlashIcon } from '@heroicons/react/24/outline';
 import { Trans, useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { Notifications } from '~/.server/user-notifications/notifications.ts';
 import { Footer } from '~/app-platform/components/footer.tsx';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
@@ -11,6 +10,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/notifications.ts';
+import { Notifications } from './services/notifications.server.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Notifications | Conference Hall' }]);

@@ -1,13 +1,13 @@
 import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Await } from 'react-router';
-import { AdminDashboard } from '~/.server/admin/admin-dashboard.ts';
 import { KpiProgressBar } from '~/design-system/dashboard/kpi-progress-bar.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/dashboard.ts';
+import { AdminDashboard } from './services/dashboard.server.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

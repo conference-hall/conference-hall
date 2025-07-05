@@ -1,6 +1,5 @@
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
-import { AdminUsers } from '~/.server/admin/admin-users.ts';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
@@ -9,6 +8,7 @@ import { H1, H2, H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { formatDatetime } from '~/shared/datetimes/datetimes.ts';
 import type { Route } from './+types/user.ts';
+import { AdminUsers } from './services/admin-users.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

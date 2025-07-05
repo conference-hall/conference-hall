@@ -2,9 +2,6 @@ import { parseWithZod } from '@conform-to/zod';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
-import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
-import { ScheduleCreateSchema } from '~/.server/event-schedule/event-schedule.types.ts';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -12,15 +9,18 @@ import { InputTimezone } from '~/design-system/forms/input-timezone.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
+import { ScheduleCreateSchema } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
+import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/new.ts';
+import { EventSchedule } from './services/schedule.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
   if (schedule) return redirect(`/team/${params.team}/${params.event}/schedule/0`);
 
-  const event = await UserEvent.for(userId, params.team, params.event).get();
+  const event = await EventSettings.for(userId, params.team, params.event).get();
   return {
     name: `${event.name} schedule`,
     start: event.conferenceStart,

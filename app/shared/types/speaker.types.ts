@@ -7,3 +7,5 @@ export enum SpeakerProposalStatus {
   ConfirmedBySpeaker = 'ConfirmedBySpeaker',
   DeclinedBySpeaker = 'DeclinedBySpeaker',
 }
+
+export type SocialLinks = Array<string>;

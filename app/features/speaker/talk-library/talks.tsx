@@ -3,8 +3,6 @@ import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, useSearchParams } from 'react-router';
-import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
-import { TalksListFilterSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { BadgeDot } from '~/design-system/badges.tsx';
 import { ButtonLink } from '~/design-system/buttons.tsx';
@@ -15,6 +13,8 @@ import { SearchParamSelector } from '~/design-system/navigation/search-param-sel
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/talks.ts';
+import { TalksListFilterSchema } from './services/talks-library.schema.server.ts';
+import { TalksLibrary } from './services/talks-library.server.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'My talks library | Conference Hall' }]);

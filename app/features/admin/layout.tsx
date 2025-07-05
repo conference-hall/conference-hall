@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
-import { needsAdminRole } from '~/.server/admin/authorization.ts';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { UserAccount } from '~/shared/user/user-account.server.ts';
 import type { Route } from './+types/layout.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-  await needsAdminRole(userId);
+  await UserAccount.needsAdminRole(userId);
   return null;
 };
 

@@ -2,15 +2,15 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { KeyIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
-import { TeamBetaAccess } from '~/.server/team/team-beta-access.ts';
+import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button, button } from '~/design-system/buttons.tsx';
 import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
+import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
-import { FullscreenPage } from '../../../app-platform/components/fullscreen-page.tsx';
 import type { Route } from './+types/request-access.ts';
 
 export const meta = (args: Route.MetaArgs) => {

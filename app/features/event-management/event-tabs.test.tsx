@@ -3,9 +3,10 @@ import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
-import { UserPermissions } from '~/.server/team/user-permissions.ts';
+import { UserPermissions } from '~/shared/user/user-permissions.server.ts';
 import { EventTabs } from './event-tabs.tsx';
 
+// todo(folders): where to put this file?
 const ownerPermissions = UserPermissions.getPermissions('OWNER');
 const memberPermissions = UserPermissions.getPermissions('MEMBER');
 const reviewerPermissions = UserPermissions.getPermissions('REVIEWER');

@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { href, Outlet, useMatch } from 'react-router';
-import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Footer } from '~/app-platform/components/footer.tsx';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
@@ -12,6 +11,7 @@ import { Container } from '~/design-system/layouts/container.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
+import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
 import { useUser } from '../../app-platform/components/user-context.tsx';
 import type { Route } from './+types/layout.ts';
 import { CurrentEventPageProvider } from './event-page-context.tsx';

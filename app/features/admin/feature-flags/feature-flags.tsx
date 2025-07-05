@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
-import { AdminFlags } from '~/.server/admin/admin-flags.ts';
 import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -10,6 +9,7 @@ import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/feature-flags.ts';
+import { AdminFlags } from './services/admin-flags.server.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

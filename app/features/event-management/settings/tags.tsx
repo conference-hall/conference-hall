@@ -3,9 +3,6 @@ import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { TagIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { EventProposalTags } from '~/.server/event-settings/event-proposal-tags.ts';
-import { parseUrlFilters, TagDeleteSchema, TagSaveSchema } from '~/.server/event-settings/event-proposal-tags.types.ts';
-import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -17,8 +14,11 @@ import { H2, Text } from '~/design-system/typography.tsx';
 import { TagModal } from '~/features/event-management/settings/components/tag-modal.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/tags.ts';
+import { parseUrlFilters, TagDeleteSchema, TagSaveSchema } from './services/event-proposal-tags.schema.server.ts';
+import { EventProposalTags } from './services/event-proposal-tags.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

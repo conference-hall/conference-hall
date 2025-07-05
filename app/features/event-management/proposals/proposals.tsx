@@ -1,13 +1,11 @@
 import { parseWithZod } from '@conform-to/zod';
 import { useTranslation } from 'react-i18next';
-import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
-import { ProposalStatusBulkSchema, ProposalStatusUpdater } from '~/.server/reviews/proposal-status-updater.ts';
-import { parseUrlPage } from '~/.server/shared/pagination.ts';
-import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { SearchInput } from '~/design-system/forms/search-input.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { getObjectHash } from '~/shared/utils/object-hash.ts';
 import type { Route } from './+types/proposals.ts';
@@ -16,6 +14,8 @@ import { FiltersMenu } from './components/proposals-page/filters/filters-menu.ts
 import { FiltersTags } from './components/proposals-page/filters/filters-tags.tsx';
 import { SortMenu } from './components/proposals-page/filters/sort-menu.tsx';
 import { ProposalsList } from './components/proposals-page/proposals-list.tsx';
+import { CfpReviewsSearch } from './services/cfp-reviews-search.server.ts';
+import { ProposalStatusBulkSchema, ProposalStatusUpdater } from './services/proposal-status-updater.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

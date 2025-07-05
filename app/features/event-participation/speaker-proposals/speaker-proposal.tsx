@@ -1,10 +1,13 @@
 import { parseWithZod } from '@conform-to/zod';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
-import { UserProposal } from '~/.server/cfp-submissions/user-proposal.ts';
-import { getProposalUpdateSchema, ProposalParticipationSchema } from '~/.server/cfp-submissions/user-proposal.types.ts';
-import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
+import {
+  getProposalUpdateSchema,
+  ProposalParticipationSchema,
+} from '~/features/event-participation/speaker-proposals/services/speaker-proposal.schema.server.ts';
+import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -16,14 +19,14 @@ import { ProposalStatusSection } from './components/proposal-status-section.tsx'
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-  const proposal = await UserProposal.for(userId, params.proposal).get();
+  const proposal = await SpeakerProposal.for(userId, params.proposal).get();
   return proposal;
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
-  const proposal = UserProposal.for(userId, params.proposal);
+  const proposal = SpeakerProposal.for(userId, params.proposal);
   const form = await request.formData();
   const intent = form.get('intent');
 

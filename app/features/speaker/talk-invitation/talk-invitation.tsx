@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
-import { CoSpeakerTalkInvite } from '~/.server/speaker-talks-library/co-speaker-talk-invite.ts';
+import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
+import { CoSpeakerTalkInvite } from '~/features/speaker/talk-invitation/services/co-speaker-talk-invite.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { FullscreenPage } from '../../../app-platform/components/fullscreen-page.tsx';
 import { SpeakerPill } from '../talk-library/components/speakers.tsx';
 import type { Route } from './+types/talk-invitation.ts';
 

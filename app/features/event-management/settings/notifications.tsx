@@ -2,17 +2,17 @@ import { parseWithZod } from '@conform-to/zod';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from 'react-router';
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import {
-  EventEmailNotificationsSettingsSchema,
-  EventNotificationsSettingsSchema,
-} from '~/.server/event-settings/user-event.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import {
+  EventEmailNotificationsSettingsSchema,
+  EventNotificationsSettingsSchema,
+} from '~/features/event-management/settings/services/event-settings.schema.server.ts';
+import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -26,7 +26,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
-  const event = UserEvent.for(userId, params.team, params.event);
+  const event = EventSettings.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');
 
