@@ -4,7 +4,7 @@ import { Button } from '~/shared/design-system/buttons.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { H2 } from '~/shared/design-system/typography.tsx';
-import type { SubmissionErrors } from '~/types/errors.types.ts';
+import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 
 type Props = {
   maxProposals: number | null;

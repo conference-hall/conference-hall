@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { EventType } from '~/types/events.types.ts';
+import type { EventType } from '~/shared/types/events.types.ts';
 
 type Props = {
   type: EventType;

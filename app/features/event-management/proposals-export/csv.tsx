@@ -2,7 +2,7 @@ import { json2csv } from 'json-2-csv';
 import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import type { Languages } from '~/types/proposals.types.ts';
+import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { Route } from './+types/csv.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

@@ -3,7 +3,7 @@ import { FireIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, Link as RouterLink } from 'react-router';
-import { ProposalStatusLabel } from '~/routes/components/proposals/proposal-status-label.tsx';
+import { ProposalStatusLabel } from '~/features/event-participation/speaker-proposals/components/proposal-status-label.tsx';
 import { Avatar } from '~/shared/design-system/avatar.tsx';
 import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { IconLink } from '~/shared/design-system/icon-buttons.tsx';
@@ -11,8 +11,8 @@ import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
 import { Link } from '~/shared/design-system/links.tsx';
 import { H2, H3, Subtitle, Text } from '~/shared/design-system/typography.tsx';
-import type { CfpState } from '~/types/events.types.ts';
-import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
+import type { CfpState } from '~/shared/types/events.types.ts';
+import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 
 interface Props {
   activities: Array<{

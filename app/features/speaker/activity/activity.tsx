@@ -5,7 +5,7 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { H1 } from '~/shared/design-system/typography.tsx';
-import { useSpeakerProfile } from '../../../routes/components/contexts/speaker-profile-context.tsx';
+import { useSpeakerProfile } from '../speaker-profile-context.tsx';
 import type { Route } from './+types/activity.ts';
 import { SpeakerActivitiesSection } from './components/speaker-activities-section.tsx';
 import { SpeakerDetailsSection } from './components/speaker-details-section.tsx';

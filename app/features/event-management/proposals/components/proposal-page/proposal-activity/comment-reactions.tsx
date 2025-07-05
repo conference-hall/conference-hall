@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useFetchers, useSubmit } from 'react-router';
-import { EmojiReactions } from '~/routes/components/emojis/emoji-reactions.tsx';
-import type { Emoji, EmojiReaction } from '~/types/emojis.types.ts';
+import { EmojiReactions } from '~/shared/design-system/emojis/emoji-reactions.tsx';
+import type { Emoji, EmojiReaction } from '~/shared/types/emojis.types.ts';
 
 const EMOJIS: Array<Emoji> = [
   { code: '+1', skin: '👍', name: 'Thumbs up' },

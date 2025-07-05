@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { EventEmailCustomizations } from '~/.server/event-settings/event-email-customizations.tsx';
-import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
-import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Link } from '~/shared/design-system/links.tsx';

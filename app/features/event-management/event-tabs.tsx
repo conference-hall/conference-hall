@@ -12,8 +12,8 @@ import { href, useMatch, useSearchParams } from 'react-router';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { Link } from '~/shared/design-system/links.tsx';
 import { NavTab, NavTabs } from '~/shared/design-system/navigation/nav-tabs.tsx';
-import type { EventType } from '~/types/events.types.ts';
-import type { UserPermissions } from '~/types/team.types.ts';
+import type { EventType } from '~/shared/types/events.types.ts';
+import type { UserPermissions } from '~/shared/types/team.types.ts';
 
 type Props = {
   teamSlug: string;

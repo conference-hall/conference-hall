@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/api.ts';
 import { EventProposalApiTryout, EventScheduleApiTryout } from './components/api-tryout-section.tsx';

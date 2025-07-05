@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { Checkbox } from '~/shared/design-system/forms/checkboxes.tsx';
 import { List } from '~/shared/design-system/list/list.tsx';
 import { Text } from '~/shared/design-system/typography.tsx';

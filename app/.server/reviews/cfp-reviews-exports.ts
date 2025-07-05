@@ -1,4 +1,4 @@
-import type { Languages } from '~/types/proposals.types.ts';
+import type { Languages } from '~/shared/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { ProposalSearchBuilder } from '../shared/proposal-search-builder.ts';
 import type { ProposalsFilters } from '../shared/proposal-search-builder.types.ts';

@@ -2,7 +2,7 @@ import { PlusIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { Submissions } from '~/.server/cfp-submissions/submissions.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
-import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
+import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { Callout } from '~/shared/design-system/callout.tsx';

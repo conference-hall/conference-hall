@@ -2,7 +2,11 @@ import { InboxIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { data } from 'react-router';
 import { EventSpeakers } from '~/.server/event-speakers/event-speakers.ts';
-import { SpeakerLinks, SpeakerSurveyAnswers, SpeakerTitle } from '~/routes/components/talks/co-speaker.tsx';
+import {
+  SpeakerLinks,
+  SpeakerSurveyAnswers,
+  SpeakerTitle,
+} from '~/features/speaker/talk-library/components/speakers.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';

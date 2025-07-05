@@ -5,20 +5,20 @@ import { href, useSearchParams } from 'react-router';
 import { EventsSearch } from '~/.server/event-search/event-search.ts';
 import { parseUrlFilters } from '~/.server/event-search/event-search.types.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
-import { Footer } from '~/routes/components/footer.tsx';
-import { Navbar } from '~/routes/components/navbar/navbar.tsx';
+import { Footer } from '~/app-platform/components/footer.tsx';
+import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
 import { BG_GRADIENT_COLOR } from '~/shared/design-system/colors.ts';
 import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { Link } from '~/shared/design-system/links.tsx';
 import { Pagination } from '~/shared/design-system/list/pagination.tsx';
 import { H1, H2 } from '~/shared/design-system/typography.tsx';
-import { useUser } from '../../routes/components/contexts/user-context.tsx';
-import { EventCardLink } from '../../routes/components/events/event-card.tsx';
-import { SearchEventsFilters } from '../../routes/components/search/search-events-filters.tsx';
-import { SearchEventsInput } from '../../routes/components/search/search-events-input.tsx';
-import { SponsorLink } from '../../routes/components/sponsor-link.tsx';
+import { SponsorLink } from '../../app-platform/components/sponsor-link.tsx';
+import { useUser } from '../../app-platform/components/user-context.tsx';
 import type { Route } from './+types/event-search.ts';
+import { EventCardLink } from './components/event-card.tsx';
+import { SearchEventsFilters } from './components/search-events-filters.tsx';
+import { SearchEventsInput } from './components/search-events-input.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const filters = parseUrlFilters(request.url);

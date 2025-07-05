@@ -4,7 +4,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
+import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { SpeakerActivities } from './speaker-activities.ts';
 
 describe('SpeakerActivities', () => {

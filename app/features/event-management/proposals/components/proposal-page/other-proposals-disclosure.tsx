@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
-import { GlobalReviewNote } from '~/routes/components/reviews/review-note.tsx';
+import { GlobalReviewNote } from '~/features/event-management/proposals/components/review-note.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Text } from '~/shared/design-system/typography.tsx';
 

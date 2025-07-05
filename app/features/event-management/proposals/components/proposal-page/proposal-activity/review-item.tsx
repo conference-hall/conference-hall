@@ -3,7 +3,7 @@ import { cx } from 'class-variance-authority';
 import { Trans, useTranslation } from 'react-i18next';
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
 import { formatDistance } from '~/libs/datetimes/datetimes.ts';
-import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
+import { ClientOnly } from '~/shared/design-system/utils/client-only.tsx';
 
 const ReviewTypes = {
   NO_OPINION: {

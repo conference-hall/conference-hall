@@ -4,14 +4,14 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { EventCreateSchema, TeamEvents } from '~/.server/team/team-events.ts';
-import { FullscreenPage } from '~/routes/components/fullscreen-page.tsx';
+import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button, ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
-import type { EventType } from '~/types/events.types.ts';
-import { EventForm } from '../../../routes/components/events/event-form.tsx';
+import type { EventType } from '~/shared/types/events.types.ts';
 import type { Route } from './+types/2-event-step.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
+import { EventForm } from './components/event-form.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);

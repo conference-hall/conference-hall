@@ -9,7 +9,7 @@ import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';
 import { PasswordInput } from '~/shared/design-system/forms/password-input.tsx';
 import { Subtitle } from '~/shared/design-system/typography.tsx';
-import type { SubmissionErrors } from '~/types/errors.types.ts';
+import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 
 export function NewEmailProviderModal() {
   const { t } = useTranslation();

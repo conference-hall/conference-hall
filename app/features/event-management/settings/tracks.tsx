@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
 import { EventTracksSettings } from '~/.server/event-settings/event-tracks-settings.ts';
 import { TrackSaveSchema, TracksSettingsSchema } from '~/.server/event-settings/event-tracks-settings.types.ts';
-import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { ToggleGroup } from '~/shared/design-system/forms/toggles.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';

@@ -1,7 +1,7 @@
 import { LockClosedIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { SpeakerLinks } from '~/routes/components/talks/co-speaker.tsx';
+import { SpeakerLinks } from '~/features/speaker/talk-library/components/speakers.tsx';
 import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { IconLabel } from '~/shared/design-system/icon-label.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';

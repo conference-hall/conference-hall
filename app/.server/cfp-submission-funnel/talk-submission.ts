@@ -8,8 +8,8 @@ import {
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
 } from '~/shared/errors.server.ts';
-import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
-import type { Languages } from '~/types/proposals.types.ts';
+import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
+import type { Languages } from '~/shared/types/proposals.types.ts';
 import { EventSpeaker } from '../shared/event-speaker.ts';
 import { TalksLibrary } from '../speaker-talks-library/talks-library.ts';
 import type { TalkSaveData } from '../speaker-talks-library/talks-library.types.ts';

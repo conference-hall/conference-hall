@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
 import { StatusCard } from '~/shared/design-system/dashboard/status-card.tsx';
 import { Link } from '~/shared/design-system/links.tsx';
-import type { EventVisibility } from '~/types/events.types.ts';
+import type { EventVisibility } from '~/shared/types/events.types.ts';
 
 type Props = { team: string; event: string; visibility: EventVisibility; showActions: boolean };
 

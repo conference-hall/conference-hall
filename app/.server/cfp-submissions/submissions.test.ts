@@ -3,7 +3,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
+import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 
 import { Submissions } from './submissions.ts';
 

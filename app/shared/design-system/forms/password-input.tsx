@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Input } from '~/shared/design-system/forms/input.tsx';
 import { Link } from '~/shared/design-system/links.tsx';
 import { Label, Subtitle } from '~/shared/design-system/typography.tsx';
-import type { SubmissionError } from '~/types/errors.types.ts';
+import type { SubmissionError } from '~/shared/types/errors.types.ts';
 
 type PasswordInputProps = {
   label?: string;

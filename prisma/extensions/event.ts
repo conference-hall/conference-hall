@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 
-import type { CfpState } from '../../app/types/events.types.ts';
+import type { CfpState } from '../../app/shared/types/events.types.ts';
 
 export const eventExtension = Prisma.defineExtension({
   result: {

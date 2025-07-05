@@ -6,7 +6,7 @@ import { Form, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { FunnelSpeakerSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
-import { CoSpeakers } from '~/routes/components/talks/co-speaker.tsx';
+import { Speakers } from '~/features/speaker/talk-library/components/speakers.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button, ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { MarkdownTextArea } from '~/shared/design-system/forms/markdown-textarea.tsx';
@@ -76,7 +76,7 @@ export default function SubmissionSpeakerRoute({ loaderData, actionData: errors 
           <div className="mt-4">
             <H2>{t('event.submission.speakers.co-speakers')}</H2>
             <Subtitle>{t('event.submission.speakers.co-speakers.description')}</Subtitle>
-            <CoSpeakers speakers={speakers} invitationLink={invitationLink} canEdit={isOwner} className="mt-6" />
+            <Speakers speakers={speakers} invitationLink={invitationLink} canEdit={isOwner} className="mt-6" />
           </div>
         </Card.Content>
 

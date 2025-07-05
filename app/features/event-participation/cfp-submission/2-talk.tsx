@@ -6,7 +6,7 @@ import { href, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
-import { TalkForm } from '~/routes/components/talks/talk-forms/talk-form.tsx';
+import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button, ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';

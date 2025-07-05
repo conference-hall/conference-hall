@@ -3,8 +3,8 @@ import { CalendarDaysIcon, CodeBracketIcon, Squares2X2Icon, TableCellsIcon } fro
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetchers, useParams, useSearchParams } from 'react-router';
-import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
-import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { button } from '~/shared/design-system/buttons.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/shared/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/shared/design-system/transitions.tsx';

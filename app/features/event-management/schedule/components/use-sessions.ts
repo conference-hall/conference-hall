@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import { areTimeSlotsOverlapping } from '~/libs/datetimes/timeslots.ts';
 import { timezoneToUtc, utcToTimezone } from '~/libs/datetimes/timezone.ts';
-import type { Language } from '~/types/proposals.types.ts';
+import type { Language } from '~/shared/types/proposals.types.ts';
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
 export function useSessions(initialSessions: Array<SessionData>, timezone: string) {

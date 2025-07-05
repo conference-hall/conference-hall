@@ -7,9 +7,9 @@ import { Button } from '~/shared/design-system/buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Markdown } from '~/shared/design-system/markdown.tsx';
 import { H2 } from '~/shared/design-system/typography.tsx';
-import { EventCard } from '../../../routes/components/events/event-card.tsx';
-import { FullscreenPage } from '../../../routes/components/fullscreen-page.tsx';
-import { SpeakerPill } from '../../../routes/components/talks/co-speaker.tsx';
+import { FullscreenPage } from '../../../app-platform/components/fullscreen-page.tsx';
+import { EventCard } from '../../event-search/components/event-card.tsx';
+import { SpeakerPill } from '../../speaker/talk-library/components/speakers.tsx';
 import type { Route } from './+types/proposal-invitation.ts';
 
 export const meta = (args: Route.MetaArgs) => {

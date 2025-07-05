@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
-import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
-import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';

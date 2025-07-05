@@ -4,7 +4,7 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
 import { SpeakerSurvey } from '~/.server/event-survey/speaker-survey.ts';
-import { SurveyForm } from '~/routes/components/talks/talk-forms/survey-form.tsx';
+import { SurveyForm } from '~/features/speaker/talk-library/components/talk-forms/survey-form.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button, ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';

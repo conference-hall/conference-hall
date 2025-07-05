@@ -12,8 +12,8 @@ import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { H1 } from '~/shared/design-system/typography.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
-import { TalkForm } from '../../../routes/components/talks/talk-forms/talk-form.tsx';
 import type { Route } from './+types/talks.new.ts';
+import { TalkForm } from './components/talk-forms/talk-form.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'New talk | Conference Hall' }]);

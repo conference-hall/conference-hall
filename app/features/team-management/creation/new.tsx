@@ -6,9 +6,9 @@ import { TeamCreateSchema, UserTeams } from '~/.server/team/user-teams.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
-import { FullscreenPage } from '../../../routes/components/fullscreen-page.tsx';
-import { TeamForm } from '../../../routes/components/teams/team-form.tsx';
+import { FullscreenPage } from '../../../app-platform/components/fullscreen-page.tsx';
 import type { Route } from './+types/new.ts';
+import { TeamForm } from './components/team-form.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);

@@ -6,7 +6,7 @@ import { extractSocialProfile } from '~/libs/formatters/social-links.ts';
 import { OpenPlanner, type OpenPlannerSessionsPayload } from '~/libs/integrations/open-planner.ts';
 import { compactObject } from '~/libs/utils/object-compact.ts';
 import { job } from '~/shared/jobs/job.ts';
-import type { Languages } from '~/types/proposals.types.ts';
+import type { Languages } from '~/shared/types/proposals.types.ts';
 
 type ExportToOpenPlannerPayload = {
   userId: string;

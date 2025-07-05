@@ -3,7 +3,7 @@ import { ArrowsUpDownIcon, CheckIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useSearchParams } from 'react-router';
-import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { button } from '~/shared/design-system/buttons.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/shared/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/shared/design-system/transitions.tsx';

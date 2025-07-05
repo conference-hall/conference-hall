@@ -7,7 +7,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/shared/errors.server.ts';
-import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
+import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { UserProposal } from './user-proposal.ts';
 
 describe('UserProposal', () => {

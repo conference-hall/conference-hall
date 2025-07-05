@@ -9,7 +9,7 @@ import {
   ForbiddenOperationError,
   NotFoundError,
 } from '~/shared/errors.server.ts';
-import type { Language, Languages } from '~/types/proposals.types.ts';
+import type { Language, Languages } from '~/shared/types/proposals.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import type {
   ScheduleCreateData,

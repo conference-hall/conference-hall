@@ -7,7 +7,7 @@ import {
   EventEmailNotificationsSettingsSchema,
   EventNotificationsSettingsSchema,
 } from '~/.server/event-settings/user-event.types.ts';
-import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Input } from '~/shared/design-system/forms/input.tsx';

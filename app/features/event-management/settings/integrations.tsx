@@ -11,7 +11,7 @@ import {
 } from '~/.server/event-settings/event-integrations.types.ts';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventSlackSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
-import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Callout } from '~/shared/design-system/callout.tsx';

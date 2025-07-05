@@ -6,7 +6,7 @@ import { requireUserSession } from '~/shared/auth/session.ts';
 import { Button } from '~/shared/design-system/buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
 import { H1, Subtitle } from '~/shared/design-system/typography.tsx';
-import { FullscreenPage } from '../../../routes/components/fullscreen-page.tsx';
+import { FullscreenPage } from '../../../app-platform/components/fullscreen-page.tsx';
 import type { Route } from './+types/team-invitation.ts';
 
 export const meta = (args: Route.MetaArgs) => {

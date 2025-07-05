@@ -2,7 +2,7 @@ import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { SubmissionError } from '~/types/errors.types.ts';
+import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { Button } from '../buttons.tsx';
 import { Modal } from '../dialogs/modals.tsx';
 import { Markdown } from '../markdown.tsx';

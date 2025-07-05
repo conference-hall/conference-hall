@@ -5,7 +5,7 @@ import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
 import { NewCommentForm } from './new-comment-form.tsx';
 
-vi.mock('~/routes/components/contexts/user-context.tsx', () => ({
+vi.mock('~/app-platform/components/user-context.tsx', () => ({
   useUser: () => ({
     id: '1',
     name: 'John Doe',

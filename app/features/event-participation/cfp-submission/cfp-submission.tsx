@@ -1,8 +1,8 @@
 import { LockClosedIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
-import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
-import { NestedErrorBoundary } from '~/routes/components/error-boundary.tsx';
+import { NestedErrorBoundary } from '~/app-platform/components/errors/error-boundary.tsx';
+import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { IconLink } from '~/shared/design-system/icon-buttons.tsx';

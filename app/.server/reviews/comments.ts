@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 
-import type { EmojiReaction } from '~/types/emojis.types.ts';
+import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import type { CommentReactionData } from './proposal-review.types.ts';
 

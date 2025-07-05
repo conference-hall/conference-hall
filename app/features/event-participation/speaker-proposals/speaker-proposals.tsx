@@ -7,8 +7,8 @@ import { EmptyState } from '~/shared/design-system/layouts/empty-state.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { List } from '~/shared/design-system/list/list.tsx';
 import { Text } from '~/shared/design-system/typography.tsx';
-import { ProposalStatusLabel } from '../../../routes/components/proposals/proposal-status-label.tsx';
 import type { Route } from './+types/speaker-proposals.ts';
+import { ProposalStatusLabel } from './components/proposal-status-label.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

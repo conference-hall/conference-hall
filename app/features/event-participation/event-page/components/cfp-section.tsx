@@ -3,11 +3,11 @@ import {
   CallForPaperElapsedTimeLabel,
   CallForPaperStatusLabel,
   cfpColorStatus,
-} from '~/routes/components/cfp/cfp.tsx';
-import { ClientOnly } from '~/routes/components/utils/client-only.tsx';
+} from '~/features/event-participation/event-page/components/cfp.tsx';
 import { StatusPill } from '~/shared/design-system/charts/status-pill.tsx';
 import { H2, Subtitle } from '~/shared/design-system/typography.tsx';
-import type { CfpState } from '~/types/events.types.ts';
+import { ClientOnly } from '~/shared/design-system/utils/client-only.tsx';
+import type { CfpState } from '~/shared/types/events.types.ts';
 
 type Props = { cfpState: CfpState; cfpStart: Date | null; cfpEnd: Date | null; timezone: string; className?: string };
 

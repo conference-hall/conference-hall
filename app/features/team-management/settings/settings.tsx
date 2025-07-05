@@ -2,7 +2,7 @@ import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
-import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/shared/design-system/navigation/nav-side-menu.tsx';

@@ -16,7 +16,7 @@ import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { Link } from '~/shared/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/shared/design-system/logo.tsx';
 import { Subtitle } from '~/shared/design-system/typography.tsx';
-import type { SubmissionErrors } from '~/types/errors.types.ts';
+import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import type { Route } from './+types/reset-password.ts';
 
 export const meta = (args: Route.MetaArgs) => {

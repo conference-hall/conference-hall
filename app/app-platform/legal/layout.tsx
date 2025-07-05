@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/shared/design-system/navigation/nav-tabs.tsx';
-import { Footer } from '../../routes/components/footer.tsx';
-import { Navbar } from '../../routes/components/navbar/navbar.tsx';
+import { Footer } from '../components/footer.tsx';
+import { Navbar } from '../components/navbar/navbar.tsx';
 
 export default function DocsRoute() {
   const { t } = useTranslation();

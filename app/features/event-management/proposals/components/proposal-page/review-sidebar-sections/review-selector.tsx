@@ -3,7 +3,7 @@ import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react
 import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ReviewFeeling } from '~/types/proposals.types.ts';
+import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
 
 const options = [
   {

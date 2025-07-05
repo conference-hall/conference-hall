@@ -4,7 +4,7 @@ import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '~/types/proposals.types.ts';
+import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '~/shared/types/proposals.types.ts';
 import { ProposalStatusSelect } from './proposal-status-select.tsx';
 
 // Mock the confirm function

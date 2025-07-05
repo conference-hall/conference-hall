@@ -10,7 +10,7 @@ import { Modal } from '~/shared/design-system/dialogs/modals.tsx';
 import { Checkbox } from '~/shared/design-system/forms/checkboxes.tsx';
 import Select from '~/shared/design-system/forms/select.tsx';
 import { H2 } from '~/shared/design-system/typography.tsx';
-import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '~/types/proposals.types.ts';
+import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '~/shared/types/proposals.types.ts';
 
 type ProposalStatus = { deliberationStatus: DeliberationStatus; confirmationStatus: ConfirmationStatus };
 

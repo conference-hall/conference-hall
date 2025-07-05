@@ -2,14 +2,14 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
-import { FullscreenPage } from '~/routes/components/fullscreen-page.tsx';
+import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
+import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { Card } from '~/shared/design-system/layouts/card.tsx';
-import type { EventType } from '~/types/events.types.ts';
-import { EventTypeRadioGroup } from '../../../routes/components/events/event-type-radio-group.tsx';
+import type { EventType } from '~/shared/types/events.types.ts';
 import type { Route } from './+types/1-type-step.ts';
+import { EventTypeRadioGroup } from './components/event-type-radio-group.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);

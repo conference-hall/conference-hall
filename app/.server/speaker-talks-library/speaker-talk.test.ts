@@ -6,7 +6,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { appUrl } from '~/shared/env.server.ts';
 import { TalkNotFoundError } from '~/shared/errors.server.ts';
-import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
+import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { SpeakerTalk } from './speaker-talk.ts';
 
 describe('SpeakerTalk', () => {

@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { href, Outlet, useMatch } from 'react-router';
 import { EventPage } from '~/.server/event-page/event-page.ts';
+import { Footer } from '~/app-platform/components/footer.tsx';
+import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
-import { Footer } from '~/routes/components/footer.tsx';
-import { Navbar } from '~/routes/components/navbar/navbar.tsx';
 import { Avatar } from '~/shared/design-system/avatar.tsx';
 import { ButtonLink } from '~/shared/design-system/buttons.tsx';
 import { BG_GRADIENT_COLOR } from '~/shared/design-system/colors.ts';
@@ -12,9 +12,9 @@ import { Container } from '~/shared/design-system/layouts/container.tsx';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/shared/design-system/navigation/nav-tabs.tsx';
 import { H1, Text } from '~/shared/design-system/typography.tsx';
-import { CurrentEventPageProvider } from '../../routes/components/contexts/event-page-context.tsx';
-import { useUser } from '../../routes/components/contexts/user-context.tsx';
+import { useUser } from '../../app-platform/components/user-context.tsx';
 import type { Route } from './+types/layout.ts';
+import { CurrentEventPageProvider } from './event-page-context.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   const { data, matches } = args;

@@ -8,11 +8,11 @@ import { requireUserSession } from '~/shared/auth/session.ts';
 import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
-import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
-import { useCurrentEvent } from '../../../routes/components/contexts/event-page-context.tsx';
-import { ProposalStatusSection } from '../../../routes/components/proposals/proposal-status-section.tsx';
-import { TalkSection } from '../../../routes/components/talks/talk-section.tsx';
+import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
+import { TalkSection } from '../../speaker/talk-library/components/talk-section.tsx';
+import { useCurrentEvent } from '../event-page-context.tsx';
 import type { Route } from './+types/speaker-proposal.ts';
+import { ProposalStatusSection } from './components/proposal-status-section.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);

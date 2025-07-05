@@ -5,7 +5,7 @@ import {
   CfpMeetupOpeningSchema,
   CfpPreferencesSchema,
 } from '~/.server/event-settings/user-event.types.ts';
-import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
