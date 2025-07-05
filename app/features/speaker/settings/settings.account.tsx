@@ -15,8 +15,8 @@ import { H1 } from '~/shared/design-system/typography.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/settings.account.ts';
-import { AuthenticationMethods } from './components/settings-page/authentication-methods.tsx';
-import { ChangeContactEmailForm } from './components/settings-page/change-contact-email-form.tsx';
+import { AuthenticationMethods } from './components/authentication-methods.tsx';
+import { ChangeContactEmailForm } from './components/change-contact-email-form.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Account | Conference Hall' }]);

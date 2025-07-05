@@ -55,6 +55,7 @@ export default function SpeakerTalksRoute({ loaderData: talks }: Route.Component
             </ButtonLink>
           </div>
         </List.Header>
+
         <List.Content aria-label={t('talk.library.list')}>
           {talks.length === 0 && (
             <EmptyState

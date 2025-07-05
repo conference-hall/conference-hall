@@ -8,8 +8,8 @@ import { Page } from '~/shared/design-system/layouts/page.tsx';
 import { H1 } from '~/shared/design-system/typography.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
-import { TalkSection } from '../components/talks/talk-section.tsx';
-import { TalkSubmissionsSection } from '../components/talks/talk-submissions-section.tsx';
+import { TalkSection } from '../../../routes/components/talks/talk-section.tsx';
+import { TalkSubmissionsSection } from '../../../routes/components/talks/talk-submissions-section.tsx';
 import type { Route } from './+types/talk.ts';
 
 export const meta = (args: Route.MetaArgs) => {

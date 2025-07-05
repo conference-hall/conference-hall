@@ -43,16 +43,16 @@ export default [
   route('notifications', './routes/notifications/index.tsx'),
 
   // Speaker pages
-  route('speaker', './routes/speaker/_layout.tsx', [
-    index('./routes/speaker/activity.tsx'),
-    route('settings', './routes/speaker/settings.tsx', [
-      index('./routes/speaker/settings.account.tsx'),
-      route('profile', './routes/speaker/settings.profile.tsx'),
-      route('preferences', './routes/speaker/settings.preferences.tsx'),
+  route('speaker', './features/speaker/layout.tsx', [
+    index('./features/speaker/activity/activity.tsx'),
+    route('settings', './features/speaker/settings/settings.tsx', [
+      index('./features/speaker/settings/settings.account.tsx'),
+      route('profile', './features/speaker/settings/settings.profile.tsx'),
+      route('preferences', './features/speaker/settings/settings.preferences.tsx'),
     ]),
-    route('talks', './routes/speaker/talks.tsx'),
-    route('talks/new', './routes/speaker/talks.new.tsx'),
-    route('talks/:talk', './routes/speaker/talk.tsx'),
+    route('talks', './features/speaker/talk-library/talks.tsx'),
+    route('talks/new', './features/speaker/talk-library/talks.new.tsx'),
+    route('talks/:talk', './features/speaker/talk-library/talk.tsx'),
   ]),
 
   // Team pages

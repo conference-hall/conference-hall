@@ -1,16 +1,19 @@
+import { Cog6ToothIcon, FireIcon, MicrophoneIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
-import { Outlet } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { href, Outlet } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
+import { SpeakerProfileProvider } from '~/routes/components/contexts/speaker-profile-context.tsx';
+import { Footer } from '~/routes/components/footer.tsx';
 import { Navbar } from '~/routes/components/navbar/navbar.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { Avatar } from '~/shared/design-system/avatar.tsx';
 import { BG_GRADIENT_COLOR } from '~/shared/design-system/colors.ts';
 import { Container } from '~/shared/design-system/layouts/container.tsx';
+import { Page } from '~/shared/design-system/layouts/page.tsx';
+import { NavTab, NavTabs } from '~/shared/design-system/navigation/nav-tabs.tsx';
 import { H1, Text } from '~/shared/design-system/typography.tsx';
-import { SpeakerProfileProvider } from '../components/contexts/speaker-profile-context.tsx';
-import { Footer } from '../components/footer.tsx';
-import type { Route } from './+types/_layout.ts';
-import { SpeakerTabs } from './components/speaker-tabs.tsx';
+import type { Route } from './+types/layout.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
@@ -18,6 +21,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function SpeakerRoute({ loaderData: profile }: Route.ComponentProps) {
+  const { t } = useTranslation();
+
   return (
     <>
       <Navbar />
@@ -45,7 +50,21 @@ export default function SpeakerRoute({ loaderData: profile }: Route.ComponentPro
         </Container>
       </header>
 
-      <SpeakerTabs className="sm:ml-40" />
+      <Page.NavHeader className="flex flex-col pb-2 sm:pb-0 sm:flex-row sm:items-center sm:space-between">
+        <NavTabs py={4} scrollable className="grow sm:ml-40">
+          <NavTab to={href('/speaker')} icon={FireIcon} end>
+            {t('speaker.nav.activity')}
+          </NavTab>
+
+          <NavTab to={href('/speaker/talks')} icon={MicrophoneIcon}>
+            {t('speaker.nav.talks')}
+          </NavTab>
+
+          <NavTab to={href('/speaker/settings')} icon={Cog6ToothIcon}>
+            {t('speaker.nav.settings')}
+          </NavTab>
+        </NavTabs>
+      </Page.NavHeader>
 
       <SpeakerProfileProvider profile={profile}>
         <Outlet />
