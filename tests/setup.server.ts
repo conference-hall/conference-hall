@@ -13,7 +13,7 @@ afterAll(async () => {
 });
 
 // Mock jobs
-vi.mock('../app/libs/jobs/job.ts', () => {
+vi.mock('~/shared/jobs/job.ts', () => {
   return {
     job: vi.fn().mockImplementation((config) => ({
       config,

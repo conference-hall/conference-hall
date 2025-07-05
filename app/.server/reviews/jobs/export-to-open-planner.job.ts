@@ -4,8 +4,8 @@ import type { ProposalsFilters } from '~/.server/shared/proposal-search-builder.
 import type { SocialLinks } from '~/.server/speaker-profile/speaker-profile.types.ts';
 import { extractSocialProfile } from '~/libs/formatters/social-links.ts';
 import { OpenPlanner, type OpenPlannerSessionsPayload } from '~/libs/integrations/open-planner.ts';
-import { job } from '~/libs/jobs/job.ts';
 import { compactObject } from '~/libs/utils/object-compact.ts';
+import { job } from '~/shared/jobs/job.ts';
 import type { Languages } from '~/types/proposals.types.ts';
 
 type ExportToOpenPlannerPayload = {

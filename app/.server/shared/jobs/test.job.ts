@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
-import { job } from '~/libs/jobs/job.ts';
-import { logger } from '../../../libs/jobs/logger.ts';
+import { job } from '~/shared/jobs/job.ts';
+import { logger } from '../../../shared/jobs/logger.ts';
 
 export const testJob = job<string>({
   name: 'test-job',
