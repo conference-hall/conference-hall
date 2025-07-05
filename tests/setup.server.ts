@@ -1,5 +1,5 @@
 import { flags } from '~/libs/feature-flags/flags.server.ts';
-import { disconnectRedis } from '~/libs/redis.ts';
+import { disconnectRedis } from '~/shared/cache/redis.server.ts';
 import { disconnectDB, resetDB } from './db-helpers.ts';
 
 afterEach(async () => {

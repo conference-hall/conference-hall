@@ -1,6 +1,6 @@
 import type { Redis } from 'ioredis';
-import { getRedisClient } from '../redis.ts';
 import type { CacheLayer } from './cache-layer.ts';
+import { getRedisClient } from './redis.server.ts';
 
 const ONE_WEEK_IN_SECONDS = 7 * 24 * 60 * 60;
 

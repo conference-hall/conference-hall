@@ -1,5 +1,5 @@
 import { Queue } from 'bullmq';
-import { getRedisClient } from '../redis.ts';
+import { getRedisClient } from '../../shared/cache/redis.server.ts';
 import { DEFAULT_QUEUE } from './worker.ts';
 
 type JobConfig<Payload> = {
