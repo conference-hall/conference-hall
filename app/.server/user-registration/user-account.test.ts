@@ -7,11 +7,11 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
-import { sendEmail } from '~/emails/send-email.job.ts';
-import { auth } from '../../shared/auth/firebase.server.ts';
+import { auth } from '~/shared/auth/firebase.server.ts';
+import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { UserAccount } from './user-account.ts';
 
-vi.mock('../../libs/auth/firebase.server.ts', () => ({
+vi.mock('~/shared/auth/firebase.server.ts', () => ({
   auth: { updateUser: vi.fn(), generatePasswordResetLink: vi.fn(), generateEmailVerificationLink: vi.fn() },
 }));
 

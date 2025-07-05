@@ -1,8 +1,8 @@
 import { db } from 'prisma/db.server.ts';
-import { sendEmail } from '~/emails/send-email.job.ts';
-import ProposalConfirmedEmail from '~/emails/templates/organizers/proposal-confirmed.tsx';
-import ProposalDeclinedEmail from '~/emails/templates/organizers/proposal-declined.tsx';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
+import { sendEmail } from '~/shared/emails/send-email.job.ts';
+import ProposalConfirmedEmail from '~/shared/emails/templates/organizers/proposal-confirmed.tsx';
+import ProposalDeclinedEmail from '~/shared/emails/templates/organizers/proposal-declined.tsx';
 import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 import type { Languages } from '~/types/proposals.types.ts';
 import { EventSpeaker } from '../shared/event-speaker.ts';

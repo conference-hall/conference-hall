@@ -1,7 +1,7 @@
 import { db } from 'prisma/db.server.ts';
-import { renderEmail } from '~/emails/email.renderer.tsx';
 import { getEnv } from '~/libs/jobs/env.ts';
 import { job } from '~/libs/jobs/job.ts';
+import { renderEmail } from '~/shared/emails/email.renderer.tsx';
 import type { CustomTemplateName } from './email.types.ts';
 import { getEmailProvider } from './providers/provider.ts';
 import type { EmailTemplateName } from './templates/templates.ts';

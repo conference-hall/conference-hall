@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { sendEmail } from '~/emails/send-email.job.ts';
+import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { testJob } from '../shared/jobs/test.job.ts';
 import { needsAdminRole } from './authorization.ts';
 

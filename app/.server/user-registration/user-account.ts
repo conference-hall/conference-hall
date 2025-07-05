@@ -1,10 +1,10 @@
 import type { TFunction } from 'i18next';
 import { db } from 'prisma/db.server.ts';
-import { sendEmail } from '~/emails/send-email.job.ts';
-import VerificationEmail from '~/emails/templates/auth/email-verification.tsx';
-import ResetPasswordEmail from '~/emails/templates/auth/reset-password.tsx';
 import { appUrl } from '~/libs/env/env.server.ts';
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
+import { sendEmail } from '~/shared/emails/send-email.job.ts';
+import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
+import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
 import { auth as firebaseAuth } from '../../shared/auth/firebase.server.ts';
 
 type UserAccountCreateInput = {

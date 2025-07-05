@@ -7,7 +7,6 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
-import { sendEmail } from '~/emails/send-email.job.ts';
 import {
   CfpNotOpenError,
   EventNotFoundError,
@@ -15,6 +14,7 @@ import {
   ProposalNotFoundError,
   TalkNotFoundError,
 } from '~/libs/errors.server.ts';
+import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { sendSubmittedTalkSlackMessage } from './slack/slack.services.ts';
 import { TalkSubmission } from './talk-submission.ts';
 

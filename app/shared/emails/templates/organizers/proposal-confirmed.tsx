@@ -1,8 +1,8 @@
 import { Button, Heading, Section, Text } from '@react-email/components';
-import type { LocaleEmailData } from '~/emails/email.types.ts';
-import type { EmailPayload } from '~/emails/send-email.job.ts';
-import { buildReviewProposalUrl } from '~/emails/utils/urls.ts';
 import { getEmailI18n } from '~/libs/i18n/i18n.emails.ts';
+import type { LocaleEmailData } from '~/shared/emails/email.types.ts';
+import type { EmailPayload } from '~/shared/emails/send-email.job.ts';
+import { buildReviewProposalUrl } from '~/shared/emails/utils/urls.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
@@ -20,12 +20,12 @@ type TemplateData = {
 
 type EmailProps = TemplateData & LocaleEmailData;
 
-export default function ProposalDeclinedEmail({ event, proposal, locale }: EmailProps) {
+export default function ProposalConfirmedEmail({ event, proposal, locale }: EmailProps) {
   const t = getEmailI18n(locale);
 
   return (
     <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
-      <Heading className={styles.h1}>{t('organizers.proposal-declined.body.title')}</Heading>
+      <Heading className={styles.h1}>{t('organizers.proposal-confirmed.body.title')}</Heading>
 
       <Section className={styles.card}>
         <Text>
@@ -37,21 +37,21 @@ export default function ProposalDeclinedEmail({ event, proposal, locale }: Email
 
       <Section className="text-center my-[32px]">
         <Button href={buildReviewProposalUrl(event.team.slug, event.slug, proposal.id)} className={styles.button}>
-          {t('organizers.proposal-declined.body.cta')}
+          {t('organizers.proposal-confirmed.body.cta')}
         </Button>
       </Section>
     </BaseEventEmail>
   );
 }
 
-ProposalDeclinedEmail.buildPayload = (data: TemplateData, locale = 'en'): EmailPayload => {
+ProposalConfirmedEmail.buildPayload = (data: TemplateData, locale = 'en'): EmailPayload => {
   if (!data.event.emailOrganizer) {
     throw new Error('Event organizer email is not set');
   }
   const t = getEmailI18n(locale);
   return {
-    template: 'organizers-proposal-declined',
-    subject: t('organizers.proposal-declined.subject', { event: data.event.name }),
+    template: 'organizers-proposal-confirmed',
+    subject: t('organizers.proposal-confirmed.subject', { event: data.event.name }),
     from: t('common.email.from.event', { event: data.event.name }),
     to: [data.event.emailOrganizer],
     data,
@@ -59,7 +59,7 @@ ProposalDeclinedEmail.buildPayload = (data: TemplateData, locale = 'en'): EmailP
   };
 };
 
-ProposalDeclinedEmail.PreviewProps = {
+ProposalConfirmedEmail.PreviewProps = {
   event: {
     slug: 'awesome-event',
     name: 'Awesome event',

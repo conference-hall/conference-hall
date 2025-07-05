@@ -1,8 +1,7 @@
 import closeWithGrace from 'close-with-grace';
-
 import { exportToOpenPlanner } from '~/.server/reviews/jobs/export-to-open-planner.job.ts';
+import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { testJob } from '../app/.server/shared/jobs/test.job.ts';
-import { sendEmail } from '../app/emails/send-email.job.ts';
 import { logger } from '../app/libs/jobs/logger.ts';
 import { createJobWorkers } from '../app/libs/jobs/worker.ts';
 

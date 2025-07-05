@@ -5,8 +5,8 @@ import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { sendEmail } from '~/emails/send-email.job.ts';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
+import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 import { UserProposal } from './user-proposal.ts';
 

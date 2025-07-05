@@ -7,7 +7,7 @@ import { NotAuthorizedError, UserNotFoundError } from '~/libs/errors.server.ts';
 import { auth } from '~/shared/auth/firebase.server.ts';
 import { AdminUsers } from './admin-users.ts';
 
-vi.mock('~/libs/auth/firebase.server.ts', () => ({ auth: { getUser: vi.fn() } }));
+vi.mock('~/shared/auth/firebase.server.ts', () => ({ auth: { getUser: vi.fn() } }));
 
 describe('AdminUsers', () => {
   let admin: User;
