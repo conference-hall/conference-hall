@@ -3,7 +3,7 @@ import { useFetcher } from 'react-router';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
@@ -27,7 +27,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function EventReviewSettingsRoute() {
   const { t } = useTranslation();
-  const currentEvent = useCurrentEvent();
+  const { event } = useCurrentEventTeam();
   const fetcher = useFetcher<typeof action>();
 
   return (
@@ -38,7 +38,7 @@ export default function EventReviewSettingsRoute() {
         <ToggleGroup
           label={t('event-management.settings.reviews.enable.toggle.label')}
           description={t('event-management.settings.reviews.enable.toggle.description')}
-          value={currentEvent.reviewEnabled}
+          value={event.reviewEnabled}
           onChange={(checked) =>
             fetcher.submit({ _setting: 'reviewEnabled', reviewEnabled: String(checked) }, { method: 'POST' })
           }
@@ -54,7 +54,7 @@ export default function EventReviewSettingsRoute() {
           <ToggleGroup
             label={t('event-management.settings.reviews.settings.toggle-reviews.label')}
             description={t('event-management.settings.reviews.settings.toggle-reviews.description')}
-            value={currentEvent.displayProposalsReviews}
+            value={event.displayProposalsReviews}
             onChange={(checked) =>
               fetcher.submit(
                 { _setting: 'displayProposalsReviews', displayProposalsReviews: String(checked) },
@@ -65,7 +65,7 @@ export default function EventReviewSettingsRoute() {
           <ToggleGroup
             label={t('event-management.settings.reviews.settings.toggle-speakers.label')}
             description={t('event-management.settings.reviews.settings.toggle-speakers.description')}
-            value={currentEvent.displayProposalsSpeakers}
+            value={event.displayProposalsSpeakers}
             onChange={(checked) =>
               fetcher.submit(
                 { _setting: 'displayProposalsSpeakers', displayProposalsSpeakers: String(checked) },

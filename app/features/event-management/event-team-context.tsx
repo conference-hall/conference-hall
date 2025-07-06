@@ -2,28 +2,23 @@ import { createContext, type ReactNode, useContext } from 'react';
 import type { loader } from '~/features/event-management/layout.tsx';
 import type { SerializeFrom } from '~/shared/types/react-router.types.ts';
 
-// todo(folders): where to put this file?
-type CurrentEvent = SerializeFrom<typeof loader>;
+type CurrentEventTeam = SerializeFrom<typeof loader>;
+type EventTeamProviderProps = { children: ReactNode; value: CurrentEventTeam };
 
-const EventTeamContext = createContext<CurrentEvent | undefined>(undefined);
+const EventTeamContext = createContext<CurrentEventTeam | undefined>(undefined);
 
-type EventTeamProviderProps = {
-  children: ReactNode;
-  event: CurrentEvent;
-};
-
-export const CurrentEventTeamProvider = ({ children, event }: EventTeamProviderProps) => {
-  return <EventTeamContext.Provider value={event}>{children}</EventTeamContext.Provider>;
+export const CurrentEventTeamProvider = ({ children, value }: EventTeamProviderProps) => {
+  return <EventTeamContext.Provider value={value}>{children}</EventTeamContext.Provider>;
 };
 
 /**
- * Returns the current event under the route "/team/team.event-management"
- * @returns {CurrentEvent}
+ * Returns the current team and event
+ * @returns {CurrentEventTeam}
  */
-export function useCurrentEvent(): CurrentEvent {
+export function useCurrentEventTeam(): CurrentEventTeam {
   const context = useContext(EventTeamContext);
   if (context === undefined) {
-    throw new Error('useCurrentEvent must be used within a CurrentEventTeamProvider');
+    throw new Error('useCurrentEventTeam must be used within a CurrentEventTeamProvider');
   }
   return context;
 }

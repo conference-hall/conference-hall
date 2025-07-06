@@ -2,22 +2,17 @@ import { createContext, type ReactNode, useContext } from 'react';
 import type { loader } from '~/features/speaker/layout.tsx';
 import type { SerializeFrom } from '~/shared/types/react-router.types.ts';
 
-// todo(folders): where to put this file?
 type SpeakerProfile = SerializeFrom<typeof loader>;
+type SpeakerProfileProviderProps = { children: ReactNode; profile: SpeakerProfile };
 
 const SpeakerProfileContext = createContext<SpeakerProfile | undefined>(undefined);
-
-type SpeakerProfileProviderProps = {
-  children: ReactNode;
-  profile: SpeakerProfile;
-};
 
 export const SpeakerProfileProvider = ({ children, profile }: SpeakerProfileProviderProps) => {
   return <SpeakerProfileContext.Provider value={profile}>{children}</SpeakerProfileContext.Provider>;
 };
 
 /**
- * Returns the speaker profile under the route "/speaker"
+ * Returns the speaker profile
  * @returns {SpeakerProfile}
  */
 export function useSpeakerProfile(): SpeakerProfile {

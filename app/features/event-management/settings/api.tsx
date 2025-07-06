@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/api.ts';
@@ -31,7 +31,8 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 export default function EventApiSettingsRoute() {
-  const { slug, apiKey, type } = useCurrentEvent();
+  const { event } = useCurrentEventTeam();
+  const { slug, apiKey, type } = event;
 
   return (
     <>

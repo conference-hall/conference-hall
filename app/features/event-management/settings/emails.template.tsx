@@ -1,11 +1,10 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
+import { href } from 'react-router';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
-import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import {
   CustomTemplateSchema,
@@ -77,10 +76,8 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   return null;
 };
 
-export default function EmailCustomizationRoute({ loaderData }: Route.ComponentProps) {
+export default function EmailCustomizationRoute({ params, loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const currentTeam = useCurrentTeam();
-  const currentEvent = useCurrentEvent();
   const { template, locale, customization, defaults, preview } = loaderData;
 
   const customized = Boolean(customization?.id);
@@ -92,7 +89,7 @@ export default function EmailCustomizationRoute({ loaderData }: Route.ComponentP
           <ButtonLink
             variant="secondary"
             size="square-m"
-            to={`/team/${currentTeam.slug}/${currentEvent.slug}/settings/emails`}
+            to={href('/team/:team/:event/settings/emails', { team: params.team, event: params.event })}
             className="p-2 hover:bg-slate-100 rounded-md transition-colors"
             aria-label={t('common.go-back')}
           >

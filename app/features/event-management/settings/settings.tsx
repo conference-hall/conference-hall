@@ -17,8 +17,6 @@ import { Outlet } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
-import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
@@ -80,12 +78,10 @@ const getMenuItems = (team: string, event: string, t: TFunction, isEmailCustomiz
   },
 ];
 
-export default function OrganizationSettingsRoute() {
+export default function OrganizationSettingsRoute({ params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const currentTeam = useCurrentTeam();
-  const currentEvent = useCurrentEvent();
   const isEmailCustomizationEnabled = useFlag('emailCustomization');
-  const menus = getMenuItems(currentTeam.slug, currentEvent.slug, t, isEmailCustomizationEnabled);
+  const menus = getMenuItems(params.team, params.event, t, isEmailCustomizationEnabled);
 
   return (
     <Page className="lg:grid lg:grid-cols-12">

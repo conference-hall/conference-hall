@@ -7,7 +7,7 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import {
   EventEmailNotificationsSettingsSchema,
   EventNotificationsSettingsSchema,
@@ -50,7 +50,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 export default function EventNotificationsSettingsRoute({ actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
   const formId = useId();
-  const { emailNotifications, emailOrganizer } = useCurrentEvent();
+  const { event } = useCurrentEventTeam();
   const fetcher = useFetcher<typeof action>();
 
   const handleChangeNotification = (name: string, checked: boolean) => {
@@ -58,12 +58,12 @@ export default function EventNotificationsSettingsRoute({ actionData: errors }: 
     form.set('intent', 'save-notifications');
 
     if (checked) {
-      for (const notification of emailNotifications) {
+      for (const notification of event.emailNotifications) {
         form.append('emailNotifications', notification);
       }
       form.append('emailNotifications', name);
     } else {
-      for (const notification of emailNotifications.filter((n) => n !== name)) {
+      for (const notification of event.emailNotifications.filter((n) => n !== name)) {
         form.append('emailNotifications', notification);
       }
     }
@@ -83,7 +83,7 @@ export default function EventNotificationsSettingsRoute({ actionData: errors }: 
               name="emailOrganizer"
               label={t('event-management.settings.notifications.email.organizer.label')}
               placeholder={t('event-management.settings.notifications.email.organizer.placeholder')}
-              defaultValue={emailOrganizer || ''}
+              defaultValue={event.emailOrganizer || ''}
               error={errors?.emailOrganizer}
               className="grow"
             />
@@ -106,19 +106,19 @@ export default function EventNotificationsSettingsRoute({ actionData: errors }: 
           <ToggleGroup
             label={t('event-management.settings.notifications.settings.submitted.label')}
             description={t('event-management.settings.notifications.settings.submitted.description')}
-            value={emailNotifications?.includes('submitted')}
+            value={event.emailNotifications?.includes('submitted')}
             onChange={(checked) => handleChangeNotification('submitted', checked)}
           />
           <ToggleGroup
             label={t('event-management.settings.notifications.settings.confirmed.label')}
             description={t('event-management.settings.notifications.settings.confirmed.description')}
-            value={emailNotifications?.includes('confirmed')}
+            value={event.emailNotifications?.includes('confirmed')}
             onChange={(checked) => handleChangeNotification('confirmed', checked)}
           />
           <ToggleGroup
             label={t('event-management.settings.notifications.settings.declined.label')}
             description={t('event-management.settings.notifications.settings.declined.description')}
-            value={emailNotifications?.includes('declined')}
+            value={event.emailNotifications?.includes('declined')}
             onChange={(checked) => handleChangeNotification('declined', checked)}
           />
         </Card.Content>

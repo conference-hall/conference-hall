@@ -6,7 +6,7 @@ import { Link, useLocation, useSearchParams } from 'react-router';
 import { button } from '~/design-system/buttons.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 
 const sortByDatesOptions = ['newest', 'oldest'] as const;
 const sortByReviewsOptions = ['highest', 'lowest'] as const;
@@ -18,10 +18,10 @@ export function SortMenu() {
   const [params] = useSearchParams();
   const { sort = 'newest', ...filters } = Object.fromEntries(params.entries());
 
-  const { displayProposalsReviews } = useCurrentEvent();
+  const { event } = useCurrentEventTeam();
   const options = [
     ...sortByDatesOptions,
-    ...(displayProposalsReviews ? sortByReviewsOptions : []),
+    ...(event.displayProposalsReviews ? sortByReviewsOptions : []),
     ...sortByCommentsOptions,
   ];
 

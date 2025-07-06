@@ -9,10 +9,9 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { EventDetailsForm } from '~/features/event-management/creation/components/event-details-form.tsx';
 import { EventForm } from '~/features/event-management/creation/components/event-form.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventDetailsSettingsSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
-import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -66,8 +65,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function EventGeneralSettingsRoute({ actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const currentEvent = useCurrentEvent();
-  const { userPermissions } = useCurrentTeam();
+  const { team, event } = useCurrentEventTeam();
 
   const generalFormId = useId();
   const detailsFormId = useId();
@@ -81,7 +79,7 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
 
         <Card.Content>
           <Form id={generalFormId} method="POST" className="space-y-4 lg:space-y-6">
-            <EventForm initialValues={currentEvent} errors={errors} />
+            <EventForm initialValues={event} errors={errors} />
           </Form>
         </Card.Content>
         <Card.Actions>
@@ -100,15 +98,15 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
         <Card.Content>
           <EventDetailsForm
             formId={detailsFormId}
-            type={currentEvent.type}
-            timezone={currentEvent.timezone}
-            conferenceStart={currentEvent.conferenceStart}
-            conferenceEnd={currentEvent.conferenceEnd}
-            onlineEvent={currentEvent.onlineEvent}
-            location={currentEvent.location}
-            description={currentEvent.description}
-            websiteUrl={currentEvent.websiteUrl}
-            contactEmail={currentEvent.contactEmail}
+            type={event.type}
+            timezone={event.timezone}
+            conferenceStart={event.conferenceStart}
+            conferenceEnd={event.conferenceEnd}
+            onlineEvent={event.onlineEvent}
+            location={event.location}
+            description={event.description}
+            websiteUrl={event.websiteUrl}
+            contactEmail={event.contactEmail}
             errors={errors}
           />
         </Card.Content>
@@ -129,36 +127,36 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
           <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
             <div className="space-y-1 grow">
               <Text weight="semibold">
-                {currentEvent.archived
+                {event.archived
                   ? t('event-management.settings.danger.restore.heading')
                   : t('event-management.settings.danger.archive.heading')}
               </Text>
               <Subtitle>{t('event-management.settings.danger.archive.description')}</Subtitle>
             </div>
             <Form method="POST" className="w-full sm:w-auto">
-              <input type="hidden" name="archived" value={currentEvent.archived ? '' : 'true'} />
+              <input type="hidden" name="archived" value={event.archived ? '' : 'true'} />
               <Button
                 type="submit"
                 name="intent"
                 value="archive-event"
-                variant={currentEvent.archived ? 'secondary' : 'important'}
-                iconLeft={currentEvent.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
+                variant={event.archived ? 'secondary' : 'important'}
+                iconLeft={event.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
                 className="w-full"
               >
-                {currentEvent.archived
+                {event.archived
                   ? t('event-management.settings.danger.restore.submit')
                   : t('event-management.settings.danger.archive.submit')}
               </Button>
             </Form>
           </li>
-          {userPermissions.canDeleteEvent ? (
+          {team.userPermissions.canDeleteEvent ? (
             <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
               <div className="space-y-1 grow">
                 <Text weight="semibold">{t('event-management.settings.danger.delete.heading')}</Text>
                 <Subtitle>
                   <Trans
                     i18nKey="event-management.settings.danger.delete.description"
-                    values={{ name: currentEvent.name }}
+                    values={{ name: event.name }}
                     components={[<strong key="1" />]}
                   />
                 </Subtitle>
@@ -167,9 +165,9 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
                 intent="delete-event"
                 title={t('event-management.settings.danger.delete.submit')}
                 description={t('event-management.settings.danger.delete.modal-description', {
-                  name: currentEvent.name,
+                  name: event.name,
                 })}
-                confirmationText={currentEvent.slug}
+                confirmationText={event.slug}
               />
             </li>
           ) : null}

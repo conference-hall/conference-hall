@@ -7,8 +7,7 @@ import { Button, ButtonLink, button } from '~/design-system/buttons.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Background } from '~/design-system/transitions.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
-import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 
 const reviewOptions = ['reviewed', 'not-reviewed', 'my-favorites'] as const;
 const statusOptions = ['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined'] as const;
@@ -50,12 +49,12 @@ type FiltersContentProps = { close: VoidFunction };
 
 function FiltersContent({ close }: FiltersContentProps) {
   const { t } = useTranslation();
-  const currentTeam = useCurrentTeam();
+  const { event, team } = useCurrentEventTeam();
 
   const location = useLocation();
   const [params] = useSearchParams();
 
-  const { formats, categories, tags } = useCurrentEvent();
+  const { formats, categories, tags } = event;
   const hasTracks = formats.length > 0 || categories.length > 0;
 
   return (
@@ -80,7 +79,7 @@ function FiltersContent({ close }: FiltersContentProps) {
         className="px-4 py-3"
       />
 
-      {currentTeam.userPermissions.canChangeProposalStatus && (
+      {team.userPermissions.canChangeProposalStatus && (
         <FiltersRadio
           label={t('common.proposals')}
           name="status"

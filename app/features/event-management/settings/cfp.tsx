@@ -1,5 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import {
   CfpConferenceOpeningSchema,
   CfpMeetupOpeningSchema,
@@ -51,26 +51,22 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 export default function EventCfpSettingsRoute({ actionData: errors }: Route.ComponentProps) {
-  const currentEvent = useCurrentEvent();
+  const { event } = useCurrentEventTeam();
 
   return (
     <>
-      {currentEvent.type === 'CONFERENCE' ? (
+      {event.type === 'CONFERENCE' ? (
         <ConferenceCfpOpening
-          cfpStart={currentEvent.cfpStart}
-          cfpEnd={currentEvent.cfpEnd}
-          timezone={currentEvent.timezone}
+          cfpStart={event.cfpStart}
+          cfpEnd={event.cfpEnd}
+          timezone={event.timezone}
           errors={errors}
         />
       ) : (
-        <MeetupCfpOpening cfpStart={currentEvent.cfpStart} timezone={currentEvent.timezone} />
+        <MeetupCfpOpening cfpStart={event.cfpStart} timezone={event.timezone} />
       )}
 
-      <CommonCfpSetting
-        maxProposals={currentEvent.maxProposals}
-        codeOfConductUrl={currentEvent.codeOfConductUrl}
-        errors={errors}
-      />
+      <CommonCfpSetting maxProposals={event.maxProposals} codeOfConductUrl={event.codeOfConductUrl} errors={errors} />
     </>
   );
 }

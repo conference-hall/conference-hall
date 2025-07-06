@@ -3,10 +3,9 @@ import { Suspense } from 'react';
 import { Await } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
-import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -118,9 +117,8 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 export default function ProposalReviewLayoutRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
-  const currentTeam = useCurrentTeam();
-  const currentEvent = useCurrentEvent();
-  const { canEditEvent, canEditEventProposals, canChangeProposalStatus } = currentTeam.userPermissions;
+  const { team, event } = useCurrentEventTeam();
+  const { canEditEvent, canEditEventProposals, canChangeProposalStatus } = team.userPermissions;
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
   const hasFormats = proposal.formats && proposal.formats.length > 0;
   const hasCategories = proposal.categories && proposal.categories.length > 0;
@@ -134,7 +132,7 @@ export default function ProposalReviewLayoutRoute({ loaderData, actionData: erro
           <TalkSection
             talk={proposal}
             errors={errors}
-            event={currentEvent}
+            event={event}
             canEditTalk={canEditEventProposals}
             canEditSpeakers={false}
             canArchive={false}
@@ -156,13 +154,13 @@ export default function ProposalReviewLayoutRoute({ loaderData, actionData: erro
         <div className="lg:col-span-4 space-y-4">
           <ReviewSidebar
             proposal={proposal}
-            reviewEnabled={currentEvent.reviewEnabled}
+            reviewEnabled={event.reviewEnabled}
             canDeliberate={canChangeProposalStatus}
           />
 
           <TagsCard
             proposalId={proposal.id}
-            eventTags={currentEvent.tags}
+            eventTags={event.tags}
             proposalTags={proposal.tags}
             canEditProposalTags={canEditEventProposals}
             canEditEventTags={canEditEvent}

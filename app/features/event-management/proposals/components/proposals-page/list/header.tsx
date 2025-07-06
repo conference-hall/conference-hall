@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { DeliberationButton } from '../actions/deliberation-button.tsx';
 import { ReviewsProgress } from './reviews-progress.tsx';
 
@@ -17,12 +17,12 @@ type Props = {
 
 export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, selection, isAllPagesSelected }: Props) {
   const { t } = useTranslation();
-  const currentTeam = useCurrentTeam();
+  const { team } = useCurrentEventTeam();
 
   return (
     <List.Header className="sm:h-16">
       <div className="flex flex-col gap-4 md:flex-row md:items-center ">
-        {currentTeam.userPermissions.canChangeProposalStatus ? (
+        {team.userPermissions.canChangeProposalStatus ? (
           <Checkbox aria-label={t('event-management.proposals.list.check-item')} ref={checkboxRef}>
             {totalSelected === 0
               ? t('event-management.proposals.list.items', { count: total })

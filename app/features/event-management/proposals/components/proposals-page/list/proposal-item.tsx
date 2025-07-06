@@ -6,9 +6,9 @@ import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { Tag } from '~/design-system/tag.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { ReviewComments } from '~/features/event-management/proposals/components/proposals-page/list/review-comments.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/features/event-management/proposals/components/review-note.tsx';
-import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { formatDate } from '~/shared/datetimes/datetimes.ts';
 import type { ProposalData } from './types.ts';
 
@@ -31,8 +31,8 @@ export function ProposalItem({
   const locale = i18n.language;
   const [params] = useSearchParams();
 
-  const currentTeam = useCurrentTeam();
-  const { canChangeProposalStatus } = currentTeam.userPermissions;
+  const { team } = useCurrentEventTeam();
+  const { canChangeProposalStatus } = team.userPermissions;
 
   const { id, title, reviews } = proposal;
   const { you, summary } = reviews;

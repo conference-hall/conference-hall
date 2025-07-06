@@ -10,7 +10,7 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSlackSettingsSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
@@ -85,7 +85,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function EventIntegrationsSettingsRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { slackWebhookUrl } = useCurrentEvent();
+  const { event } = useCurrentEventTeam();
 
   const slackFormId = useId();
   const openPlannerFormId = useId();
@@ -104,7 +104,7 @@ export default function EventIntegrationsSettingsRoute({ loaderData, actionData:
               name="slackWebhookUrl"
               label={t('event-management.settings.integrations.slack.url.label')}
               placeholder={t('event-management.settings.integrations.slack.url.placeholder')}
-              defaultValue={slackWebhookUrl || ''}
+              defaultValue={event.slackWebhookUrl || ''}
               error={errors?.slackWebhookUrl}
             />
           </Form>

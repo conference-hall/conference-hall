@@ -10,7 +10,7 @@ import { ButtonFileUpload } from '~/design-system/forms/file-upload-button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
@@ -43,7 +43,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function EventGeneralSettingsRoute({ actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { name, logoUrl } = useCurrentEvent();
+  const { event } = useCurrentEventTeam();
   const submit = useSubmit();
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     if (e.currentTarget[0] && (e.currentTarget[0] as HTMLInputElement).value) {
@@ -59,7 +59,7 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
       </Card.Title>
 
       <Card.Content>
-        <Avatar picture={logoUrl} name={`${name} logo`} square size="4xl" />
+        <Avatar picture={event.logoUrl} name={`${event.name} logo`} square size="4xl" />
         <Callout title={t('event-management.settings.customize.logo.info.heading')}>
           <Trans
             i18nKey="event-management.settings.customize.logo.info"

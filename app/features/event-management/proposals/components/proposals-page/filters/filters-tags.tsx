@@ -1,14 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { FilterTag } from '~/design-system/filter-tag.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import type { ProposalsFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 
 type FiltersBadgesProps = { filters: ProposalsFilters };
 
 export function FiltersTags({ filters }: FiltersBadgesProps) {
   const { t } = useTranslation();
-  const { formats, categories, tags } = useCurrentEvent();
+  const { event } = useCurrentEventTeam();
+  const { formats, categories, tags } = event;
 
   const hasFilters = Boolean(
     filters.query || filters.reviews || filters.status || filters.formats || filters.categories || filters.tags,

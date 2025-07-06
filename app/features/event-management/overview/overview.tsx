@@ -2,8 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
-import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/overview.ts';
 import { CfpStatusCard } from './components/cfp-tab/cfp-status-card.tsx';
@@ -18,9 +17,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
 export default function OverviewRoute({ params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const currentTeam = useCurrentTeam();
-  const currentEvent = useCurrentEvent();
-  const { canEditEvent } = currentTeam.userPermissions;
+  const { team, event } = useCurrentEventTeam();
+  const { canEditEvent } = team.userPermissions;
 
   return (
     <Page>
@@ -30,24 +28,24 @@ export default function OverviewRoute({ params }: Route.ComponentProps) {
           <CfpStatusCard
             team={params.team}
             event={params.event}
-            cfpState={currentEvent.cfpState}
-            cfpStart={currentEvent.cfpStart}
-            cfpEnd={currentEvent.cfpEnd}
-            timezone={currentEvent.timezone}
+            cfpState={event.cfpState}
+            cfpStart={event.cfpStart}
+            cfpEnd={event.cfpEnd}
+            timezone={event.timezone}
             showActions={canEditEvent}
           />
 
           <VisibilityStatusCard
             team={params.team}
             event={params.event}
-            visibility={currentEvent.visibility}
+            visibility={event.visibility}
             showActions={canEditEvent}
           />
 
           <ReviewStatusCard
             team={params.team}
             event={params.event}
-            reviewEnabled={currentEvent.reviewEnabled}
+            reviewEnabled={event.reviewEnabled}
             showActions={canEditEvent}
           />
         </div>

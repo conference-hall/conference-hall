@@ -4,7 +4,7 @@ import { useFetcher } from 'react-router';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
@@ -62,16 +62,16 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function EventTracksSettingsRoute() {
   const { t } = useTranslation();
-  const currentEvent = useCurrentEvent();
+  const { event } = useCurrentEventTeam();
   const fetcher = useFetcher<typeof action>();
   const handleUpdateSettings = (name: string, checked: boolean) => {
     fetcher.submit(
       {
         intent: 'update-track-settings',
-        formatsRequired: currentEvent.formatsRequired,
-        formatsAllowMultiple: currentEvent.formatsAllowMultiple,
-        categoriesRequired: currentEvent.categoriesRequired,
-        categoriesAllowMultiple: currentEvent.categoriesAllowMultiple,
+        formatsRequired: event.formatsRequired,
+        formatsAllowMultiple: event.formatsAllowMultiple,
+        categoriesRequired: event.categoriesRequired,
+        categoriesAllowMultiple: event.categoriesAllowMultiple,
         [name]: String(checked),
       },
       { method: 'POST' },
@@ -86,20 +86,20 @@ export default function EventTracksSettingsRoute() {
           <Subtitle>{t('event-management.settings.tracks.formats.description')}</Subtitle>
         </div>
 
-        <TrackList type="formats" tracks={currentEvent.formats} />
+        <TrackList type="formats" tracks={event.formats} />
 
-        {currentEvent.formats.length > 0 && (
+        {event.formats.length > 0 && (
           <>
             <ToggleGroup
               label={t('event-management.settings.tracks.formats.required.label')}
               description={t('event-management.settings.tracks.formats.required.description')}
-              value={currentEvent.formatsRequired}
+              value={event.formatsRequired}
               onChange={(checked) => handleUpdateSettings('formatsRequired', checked)}
             />
             <ToggleGroup
               label={t('event-management.settings.tracks.formats.multiple.label')}
               description={t('event-management.settings.tracks.formats.multiple.description')}
-              value={currentEvent.formatsAllowMultiple}
+              value={event.formatsAllowMultiple}
               onChange={(checked) => handleUpdateSettings('formatsAllowMultiple', checked)}
             />
           </>
@@ -112,20 +112,20 @@ export default function EventTracksSettingsRoute() {
           <Subtitle>{t('event-management.settings.tracks.categories.description')}</Subtitle>
         </div>
 
-        <TrackList type="categories" tracks={currentEvent.categories} />
+        <TrackList type="categories" tracks={event.categories} />
 
-        {currentEvent.categories.length > 0 && (
+        {event.categories.length > 0 && (
           <>
             <ToggleGroup
               label={t('event-management.settings.tracks.categories.required.label')}
               description={t('event-management.settings.tracks.categories.required.description')}
-              value={currentEvent.categoriesRequired}
+              value={event.categoriesRequired}
               onChange={(checked) => handleUpdateSettings('categoriesRequired', checked)}
             />
             <ToggleGroup
               label={t('event-management.settings.tracks.categories.multiple.label')}
               description={t('event-management.settings.tracks.categories.multiple.description')}
-              value={currentEvent.categoriesAllowMultiple}
+              value={event.categoriesAllowMultiple}
               onChange={(checked) => handleUpdateSettings('categoriesAllowMultiple', checked)}
             />
           </>

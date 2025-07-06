@@ -5,11 +5,11 @@ import { href } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { EventType } from '~/shared/types/events.types.ts';
 import type { Route } from './+types/1-type-step.ts';
 import { EventTypeRadioGroup } from './components/event-type-radio-group.tsx';
+import { useCurrentTeam } from './team-context.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);

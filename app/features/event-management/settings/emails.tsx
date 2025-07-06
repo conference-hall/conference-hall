@@ -2,8 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H2, H3, Subtitle } from '~/design-system/typography.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
-import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { CUSTOM_EMAIL_TEMPLATES } from '~/shared/emails/email.types.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
@@ -26,10 +24,8 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return { customizations };
 };
 
-export default function EventEmailsSettingsRoute({ loaderData }: Route.ComponentProps) {
+export default function EventEmailsSettingsRoute({ params, loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const currentTeam = useCurrentTeam();
-  const currentEvent = useCurrentEvent();
   const { customizations } = loaderData;
 
   return (
@@ -58,7 +54,7 @@ export default function EventEmailsSettingsRoute({ loaderData }: Route.Component
                       <EmailCustomBadge customized={customized} />
                     </div>
                     <Link
-                      to={`/team/${currentTeam.slug}/${currentEvent.slug}/settings/emails/${template}?locale=${locale}`}
+                      to={`/team/${params.team}/${params.event}/settings/emails/${template}?locale=${locale}`}
                       weight="medium"
                       size="xs"
                     >

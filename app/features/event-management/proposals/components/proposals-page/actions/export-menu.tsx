@@ -6,12 +6,11 @@ import { Form, useFetchers, useParams, useSearchParams } from 'react-router';
 import { button } from '~/design-system/buttons.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
-import { useCurrentEvent } from '~/features/event-management/event-team-context.tsx';
-import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 
 export function ExportMenu() {
   const { t } = useTranslation();
-  const currentTeam = useCurrentTeam();
+  const { team, event } = useCurrentEventTeam();
 
   const params = useParams();
   const [searchParams] = useSearchParams();
@@ -21,10 +20,9 @@ export function ExportMenu() {
     (fetcher) => fetcher.key === 'exports' && ['submitting', 'loading'].includes(fetcher.state),
   );
 
-  const { integrations } = useCurrentEvent();
-  const isOpenPlannerEnabled = integrations.includes('OPEN_PLANNER');
+  const isOpenPlannerEnabled = event.integrations.includes('OPEN_PLANNER');
 
-  if (!currentTeam.userPermissions.canExportEventProposals) return null;
+  if (!team.userPermissions.canExportEventProposals) return null;
 
   return (
     <Menu>
