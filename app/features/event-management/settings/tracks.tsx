@@ -63,20 +63,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 export default function EventTracksSettingsRoute() {
   const { t } = useTranslation();
   const { event } = useCurrentEventTeam();
-  const fetcher = useFetcher<typeof action>();
-  const handleUpdateSettings = (name: string, checked: boolean) => {
-    fetcher.submit(
-      {
-        intent: 'update-track-settings',
-        formatsRequired: event.formatsRequired,
-        formatsAllowMultiple: event.formatsAllowMultiple,
-        categoriesRequired: event.categoriesRequired,
-        categoriesAllowMultiple: event.categoriesAllowMultiple,
-        [name]: String(checked),
-      },
-      { method: 'POST' },
-    );
-  };
+  const { optimisticSettings, handleUpdateSettings } = useOptimisticTrackSettings(event);
 
   return (
     <>
@@ -93,13 +80,13 @@ export default function EventTracksSettingsRoute() {
             <ToggleGroup
               label={t('event-management.settings.tracks.formats.required.label')}
               description={t('event-management.settings.tracks.formats.required.description')}
-              value={event.formatsRequired}
+              value={optimisticSettings.formatsRequired}
               onChange={(checked) => handleUpdateSettings('formatsRequired', checked)}
             />
             <ToggleGroup
               label={t('event-management.settings.tracks.formats.multiple.label')}
               description={t('event-management.settings.tracks.formats.multiple.description')}
-              value={event.formatsAllowMultiple}
+              value={optimisticSettings.formatsAllowMultiple}
               onChange={(checked) => handleUpdateSettings('formatsAllowMultiple', checked)}
             />
           </>
@@ -119,13 +106,13 @@ export default function EventTracksSettingsRoute() {
             <ToggleGroup
               label={t('event-management.settings.tracks.categories.required.label')}
               description={t('event-management.settings.tracks.categories.required.description')}
-              value={event.categoriesRequired}
+              value={optimisticSettings.categoriesRequired}
               onChange={(checked) => handleUpdateSettings('categoriesRequired', checked)}
             />
             <ToggleGroup
               label={t('event-management.settings.tracks.categories.multiple.label')}
               description={t('event-management.settings.tracks.categories.multiple.description')}
-              value={event.categoriesAllowMultiple}
+              value={optimisticSettings.categoriesAllowMultiple}
               onChange={(checked) => handleUpdateSettings('categoriesAllowMultiple', checked)}
             />
           </>
@@ -133,4 +120,48 @@ export default function EventTracksSettingsRoute() {
       </Card>
     </>
   );
+}
+
+function useOptimisticTrackSettings(event: {
+  formatsRequired: boolean;
+  formatsAllowMultiple: boolean;
+  categoriesRequired: boolean;
+  categoriesAllowMultiple: boolean;
+}) {
+  const fetcher = useFetcher<typeof action>({ key: 'update-track-settings' });
+
+  let optimisticSettings = {
+    formatsRequired: event.formatsRequired,
+    formatsAllowMultiple: event.formatsAllowMultiple,
+    categoriesRequired: event.categoriesRequired,
+    categoriesAllowMultiple: event.categoriesAllowMultiple,
+  };
+
+  if (fetcher.formData?.get('intent') === 'update-track-settings') {
+    const formData = fetcher.formData;
+    optimisticSettings = {
+      formatsRequired: formData.get('formatsRequired') === 'true',
+      formatsAllowMultiple: formData.get('formatsAllowMultiple') === 'true',
+      categoriesRequired: formData.get('categoriesRequired') === 'true',
+      categoriesAllowMultiple: formData.get('categoriesAllowMultiple') === 'true',
+    };
+  }
+
+  const handleUpdateSettings = (name: string, checked: boolean) => {
+    const currentSettings = optimisticSettings;
+
+    fetcher.submit(
+      {
+        intent: 'update-track-settings',
+        formatsRequired: currentSettings.formatsRequired,
+        formatsAllowMultiple: currentSettings.formatsAllowMultiple,
+        categoriesRequired: currentSettings.categoriesRequired,
+        categoriesAllowMultiple: currentSettings.categoriesAllowMultiple,
+        [name]: String(checked),
+      },
+      { method: 'POST' },
+    );
+  };
+
+  return { optimisticSettings, handleUpdateSettings };
 }

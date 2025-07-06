@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useParams, useSearchParams, useSubmit } from 'react-router';
+import { useFetcher, useParams } from 'react-router';
 import { H2 } from '~/design-system/typography.tsx';
 import type { ReviewFeeling, UserReview } from '~/shared/types/proposals.types.ts';
 import { ReviewSelector } from './review-selector.tsx';
@@ -8,25 +8,36 @@ type Props = { initialValues: UserReview };
 
 export function ReviewForm({ initialValues }: Props) {
   const { t } = useTranslation();
-  const [searchParams] = useSearchParams();
-  const filters = searchParams.toString();
-
-  const params = useParams();
-  const actionUrl = `/team/${params.team}/${params.event}/reviews/${params.proposal}`;
-
-  const submit = useSubmit();
-  const handleSubmit = (feeling: ReviewFeeling, note: number | null) => {
-    submit(
-      { intent: 'add-review', feeling, note: note === null ? '' : note },
-      { method: 'POST', action: filters ? `${actionUrl}?${filters}` : actionUrl },
-    );
-  };
+  const { optimisticReview, handleSubmit } = useOptimisticReview(initialValues);
 
   return (
     <div className="space-y-4 p-4 lg:p-6">
       <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
-
-      <ReviewSelector value={initialValues} onChange={handleSubmit} />
+      <ReviewSelector value={optimisticReview} onChange={handleSubmit} />
     </div>
   );
+}
+
+function useOptimisticReview(initialValues: UserReview) {
+  const params = useParams();
+  const fetcher = useFetcher({ key: `add-review:${params.proposal}` });
+
+  let optimisticReview = { ...initialValues };
+
+  if (fetcher.formData?.get('intent') === 'add-review') {
+    const formData = fetcher.formData;
+    const feeling = formData.get('feeling') as ReviewFeeling;
+    const noteValue = formData.get('note');
+    const note = noteValue === '' ? null : Number(noteValue);
+    optimisticReview = { feeling, note };
+  }
+
+  const handleSubmit = (feeling: ReviewFeeling, note: number | null) => {
+    fetcher.submit(
+      { intent: 'add-review', feeling, note: note === null ? '' : note },
+      { method: 'POST', action: `/team/${params.team}/${params.event}/reviews/${params.proposal}` },
+    );
+  };
+
+  return { optimisticReview, handleSubmit };
 }

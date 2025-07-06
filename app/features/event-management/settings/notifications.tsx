@@ -16,6 +16,7 @@ import { EventSettings } from '~/features/event-management/settings/services/eve
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
+import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Route } from './+types/notifications.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
@@ -51,24 +52,7 @@ export default function EventNotificationsSettingsRoute({ actionData: errors }: 
   const { t } = useTranslation();
   const formId = useId();
   const { event } = useCurrentEventTeam();
-  const fetcher = useFetcher<typeof action>();
-
-  const handleChangeNotification = (name: string, checked: boolean) => {
-    const form = new FormData();
-    form.set('intent', 'save-notifications');
-
-    if (checked) {
-      for (const notification of event.emailNotifications) {
-        form.append('emailNotifications', notification);
-      }
-      form.append('emailNotifications', name);
-    } else {
-      for (const notification of event.emailNotifications.filter((n) => n !== name)) {
-        form.append('emailNotifications', notification);
-      }
-    }
-    fetcher.submit(form, { method: 'POST' });
-  };
+  const { optimisticNotifications, handleChangeNotification } = useOptimisticNotifications(event.emailNotifications);
 
   return (
     <>
@@ -106,23 +90,53 @@ export default function EventNotificationsSettingsRoute({ actionData: errors }: 
           <ToggleGroup
             label={t('event-management.settings.notifications.settings.submitted.label')}
             description={t('event-management.settings.notifications.settings.submitted.description')}
-            value={event.emailNotifications?.includes('submitted')}
+            value={optimisticNotifications?.includes('submitted')}
             onChange={(checked) => handleChangeNotification('submitted', checked)}
           />
           <ToggleGroup
             label={t('event-management.settings.notifications.settings.confirmed.label')}
             description={t('event-management.settings.notifications.settings.confirmed.description')}
-            value={event.emailNotifications?.includes('confirmed')}
+            value={optimisticNotifications?.includes('confirmed')}
             onChange={(checked) => handleChangeNotification('confirmed', checked)}
           />
           <ToggleGroup
             label={t('event-management.settings.notifications.settings.declined.label')}
             description={t('event-management.settings.notifications.settings.declined.description')}
-            value={event.emailNotifications?.includes('declined')}
+            value={optimisticNotifications?.includes('declined')}
             onChange={(checked) => handleChangeNotification('declined', checked)}
           />
         </Card.Content>
       </Card>
     </>
   );
+}
+
+function useOptimisticNotifications(emailNotifications: EventEmailNotificationsKeys) {
+  const fetcher = useFetcher<typeof action>({ key: 'notifications' });
+
+  let optimisticNotifications = [...emailNotifications];
+
+  if (fetcher.formData?.get('intent') === 'save-notifications') {
+    optimisticNotifications = fetcher.formData.getAll('emailNotifications') as EventEmailNotificationsKeys;
+  }
+
+  const handleChangeNotification = (name: 'submitted' | 'confirmed' | 'declined', checked: boolean) => {
+    const form = new FormData();
+    form.set('intent', 'save-notifications');
+
+    const currentNotifications = optimisticNotifications;
+    let newNotifications: string[];
+    if (checked) {
+      newNotifications = currentNotifications.includes(name) ? currentNotifications : [...currentNotifications, name];
+    } else {
+      newNotifications = currentNotifications.filter((n) => n !== name);
+    }
+
+    for (const notification of newNotifications) {
+      form.append('emailNotifications', notification);
+    }
+    fetcher.submit(form, { method: 'POST' });
+  };
+
+  return { optimisticNotifications, handleChangeNotification };
 }

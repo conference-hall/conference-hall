@@ -59,7 +59,7 @@ export function TagsCard({
 }
 
 function useOptimisticUpdateTags(proposalTags: Array<TagType>, eventTags: Array<TagType>) {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher({ key: 'save-tags' });
 
   // optimistic update
   if (fetcher.formData?.get('intent') === 'save-tags') {

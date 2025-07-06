@@ -13,7 +13,7 @@ type ScheduleSettings = {
 
 export function useDisplaySettings(settings: ScheduleSettings) {
   const navigate = useNavigate();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher({ key: 'update-display-times' });
   const params = useParams();
   const [searchParams] = useSearchParams();
   const [displayedStart, displayedEnd] = params.day?.split('-').map(Number) ?? [];

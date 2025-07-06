@@ -28,7 +28,9 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 export default function EventReviewSettingsRoute() {
   const { t } = useTranslation();
   const { event } = useCurrentEventTeam();
-  const fetcher = useFetcher<typeof action>();
+  const reviewEnabledFetcher = useFetcher<typeof action>({ key: 'review-enabled' });
+  const displayProposalsReviewsFetcher = useFetcher<typeof action>({ key: 'display-proposals-reviews' });
+  const displayProposalsSpeakersFetcher = useFetcher<typeof action>({ key: 'display-proposals-speakers' });
 
   return (
     <>
@@ -40,7 +42,10 @@ export default function EventReviewSettingsRoute() {
           description={t('event-management.settings.reviews.enable.toggle.description')}
           value={event.reviewEnabled}
           onChange={(checked) =>
-            fetcher.submit({ _setting: 'reviewEnabled', reviewEnabled: String(checked) }, { method: 'POST' })
+            reviewEnabledFetcher.submit(
+              { _setting: 'reviewEnabled', reviewEnabled: String(checked) },
+              { method: 'POST' },
+            )
           }
         />
       </Card>
@@ -56,7 +61,7 @@ export default function EventReviewSettingsRoute() {
             description={t('event-management.settings.reviews.settings.toggle-reviews.description')}
             value={event.displayProposalsReviews}
             onChange={(checked) =>
-              fetcher.submit(
+              displayProposalsReviewsFetcher.submit(
                 { _setting: 'displayProposalsReviews', displayProposalsReviews: String(checked) },
                 { method: 'POST' },
               )
@@ -67,7 +72,7 @@ export default function EventReviewSettingsRoute() {
             description={t('event-management.settings.reviews.settings.toggle-speakers.description')}
             value={event.displayProposalsSpeakers}
             onChange={(checked) =>
-              fetcher.submit(
+              displayProposalsSpeakersFetcher.submit(
                 { _setting: 'displayProposalsSpeakers', displayProposalsSpeakers: String(checked) },
                 { method: 'POST' },
               )

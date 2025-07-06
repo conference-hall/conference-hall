@@ -19,15 +19,17 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
   const { t } = useTranslation();
   const { questions } = config;
 
-  const fetcher = useFetcher<typeof action>();
+  const toggleSurveyFetcher = useFetcher<typeof action>({ key: 'toggle-survey' });
+  const moveQuestionFetcher = useFetcher<typeof action>({ key: 'move-question' });
+  const removeQuestionFetcher = useFetcher<typeof action>({ key: 'remove-question' });
 
   const handleMoveQuestion = (id: string, direction: 'up' | 'down') => () => {
-    fetcher.submit({ intent: 'move-question', id, direction }, { method: 'POST' });
+    moveQuestionFetcher.submit({ intent: 'move-question', id, direction }, { method: 'POST' });
   };
 
   const handleRemoveQuestion = (id: string) => () => {
-    if (!confirm('Are you sure you want to delete this question?')) return;
-    fetcher.submit({ intent: 'remove-question', id }, { method: 'POST' });
+    if (!confirm(t('event-management.settings.survey.confirm-delete'))) return;
+    removeQuestionFetcher.submit({ intent: 'remove-question', id }, { method: 'POST' });
   };
 
   return (
@@ -41,7 +43,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
           label={t('event-management.settings.survey.toggle.label')}
           description={t('event-management.settings.survey.toggle.description')}
           value={config.enabled}
-          onChange={() => fetcher.submit({ intent: 'toggle-survey' }, { method: 'POST' })}
+          onChange={() => toggleSurveyFetcher.submit({ intent: 'toggle-survey' }, { method: 'POST' })}
         />
 
         <List>

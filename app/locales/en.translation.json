@@ -596,6 +596,7 @@
   "event-management.settings.survey.answers.new": "New answer",
   "event-management.settings.survey.answers.option": "Option {{index}}",
   "event-management.settings.survey.answers.remove": "Remove answer: {{label}}",
+  "event-management.settings.survey.confirm-delete": "Are you sure you want to delete the question?",
   "event-management.settings.survey.edit-question": "Edit question",
   "event-management.settings.survey.feedbacks.disabled": "Speaker survey disabled",
   "event-management.settings.survey.feedbacks.enabled": "Speaker survey enabled",
