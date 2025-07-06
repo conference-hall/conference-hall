@@ -10,8 +10,8 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { ScheduleCreateSchema } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
-import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { useCurrentEventTeam } from '../event-team-context.tsx';
 import type { Route } from './+types/new.ts';
 import { EventSchedule } from './services/schedule.server.ts';
 
@@ -19,14 +19,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
   if (schedule) return redirect(`/team/${params.team}/${params.event}/schedule/0`);
-
-  const event = await EventSettings.for(userId, params.team, params.event).get();
-  return {
-    name: `${event.name} schedule`,
-    start: event.conferenceStart,
-    end: event.conferenceEnd,
-    timezone: event.timezone,
-  };
+  return null;
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {
@@ -40,8 +33,9 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   return redirect(`/team/${params.team}/${params.event}/schedule`);
 };
 
-export default function ScheduleRoute({ loaderData: schedule, actionData: errors }: Route.ComponentProps) {
+export default function ScheduleRoute({ actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const { event } = useCurrentEventTeam();
   const formId = useId();
   return (
     <Page>
@@ -53,12 +47,12 @@ export default function ScheduleRoute({ loaderData: schedule, actionData: errors
 
         <Card.Content>
           <Form id={formId} method="POST" className="space-y-4 lg:space-y-6">
-            <Input name="name" label={t('common.name')} defaultValue={schedule.name} required error={errors?.name} />
-            <InputTimezone name="timezone" label={t('common.timezone')} defaultValue={schedule.timezone} />
+            <Input name="name" label={t('common.name')} defaultValue={event.name} required error={errors?.name} />
+            <InputTimezone name="timezone" label={t('common.timezone')} defaultValue={event.timezone} />
             <DateRangeInput
-              start={{ name: 'start', label: t('common.start-date'), value: schedule.start }}
-              end={{ name: 'end', label: t('common.end-date'), value: schedule.end }}
-              timezone={schedule.timezone}
+              start={{ name: 'start', label: t('common.start-date'), value: event.conferenceStart }}
+              end={{ name: 'end', label: t('common.end-date'), value: event.conferenceEnd }}
+              timezone={event.timezone}
               error={errors?.start}
             />
           </Form>

@@ -9,15 +9,16 @@ import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EventDetailsForm } from '~/features/event-management/creation/components/event-details-form.tsx';
 import { EventDetailsSettingsSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
-import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { EventFetcher } from '../services/event-fetcher.server.ts';
+import { EventSettings } from '../settings/services/event-settings.server.ts';
 import type { Route } from './+types/3-details-step.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 import { useCurrentTeam } from './team-context.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-  return EventSettings.for(userId, params.team, params.event).get();
+  return EventFetcher.for(userId, params.team, params.event).get();
 };
 
 export const action = async ({ request, params }: Route.ActionArgs) => {

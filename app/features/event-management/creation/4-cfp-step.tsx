@@ -11,13 +11,14 @@ import { EventCfpConferenceForm } from '~/features/event-management/creation/com
 import { CfpConferenceOpeningSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { EventFetcher } from '../services/event-fetcher.server.ts';
 import type { Route } from './+types/4-cfp-step.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 import { useCurrentTeam } from './team-context.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-  const event = await EventSettings.for(userId, params.team, params.event).get();
+  const event = await EventFetcher.for(userId, params.team, params.event).get();
   if (event.type === 'MEETUP') {
     return redirect(`/team/${params.team}/${params.event}`);
   }

@@ -9,6 +9,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { TalkSubmission } from '~/features/event-participation/cfp-submission/services/talk-submission.server.ts';
+import { ProfileFetcher } from '~/features/speaker/services/profile-fetcher.server.ts';
 import { FunnelSpeakerSchema } from '~/features/speaker/settings/services/speaker-profile.schema.server.ts';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { Speakers } from '~/features/speaker/talk-library/components/speakers.tsx';
@@ -20,7 +21,7 @@ export const handle = { step: 'speakers' };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-  const speaker = await SpeakerProfile.for(userId).get();
+  const speaker = await ProfileFetcher.for(userId).get();
   const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
 
   return {

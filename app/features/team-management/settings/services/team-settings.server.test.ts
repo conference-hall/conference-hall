@@ -3,7 +3,6 @@ import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { appUrl } from '~/shared/env.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { TeamSettings } from './team-settings.server.ts';
 
@@ -12,41 +11,6 @@ describe('TeamSettings', () => {
 
   beforeEach(async () => {
     user = await userFactory();
-  });
-
-  describe('get', () => {
-    it('returns team belonging to user', async () => {
-      await teamFactory({ members: [user], attributes: { name: 'My team 1', slug: 'my-team1' } });
-      const team = await teamFactory({ owners: [user], attributes: { name: 'My team 2', slug: 'my-team2' } });
-
-      const myTeam = await TeamSettings.for(user.id, team.slug).get();
-
-      expect(myTeam).toEqual({
-        id: team.id,
-        name: 'My team 2',
-        slug: 'my-team2',
-        invitationLink: `${appUrl()}/invite/team/${team.invitationCode}`,
-        userRole: 'OWNER',
-        userPermissions: expect.objectContaining({ canEditTeam: true }),
-      });
-    });
-
-    it('does not return the invitation link if the user is reviewer', async () => {
-      const team = await teamFactory({ reviewers: [user] });
-
-      const myTeam = await TeamSettings.for(user.id, team.slug).get();
-
-      expect(myTeam.invitationLink).toBe(undefined);
-    });
-
-    it('throws an error when user is not member of the team', async () => {
-      const team = await teamFactory({ attributes: { name: 'My team', slug: 'my-team' } });
-      await expect(TeamSettings.for(user.id, team.slug).get()).rejects.toThrowError(ForbiddenOperationError);
-    });
-
-    it('throws an error when team not found', async () => {
-      await expect(TeamSettings.for(user.id, 'XXX').get()).rejects.toThrowError(ForbiddenOperationError);
-    });
   });
 
   describe('delete', () => {

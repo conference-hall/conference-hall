@@ -4,34 +4,15 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { ProfileFetcher } from '../../services/profile-fetcher.server.ts';
 import { ProfileSchema } from './speaker-profile.schema.server.ts';
-import { ProfileNotFoundError, SpeakerProfile } from './speaker-profile.server.ts';
+import { SpeakerProfile } from './speaker-profile.server.ts';
 
 describe('SpeakerProfile', () => {
   let user: User;
 
   beforeEach(async () => {
     user = await userFactory();
-  });
-
-  describe('#get', () => {
-    it('returns the speaker profile', async () => {
-      const profile = await SpeakerProfile.for(user.id).get();
-      expect(profile).toEqual({
-        name: user.name,
-        email: user.email,
-        picture: user.picture,
-        bio: user.bio,
-        references: user.references,
-        company: user.company,
-        location: user.location,
-        socialLinks: user.socialLinks,
-      });
-    });
-
-    it('throws an error when profile not found', async () => {
-      await expect(SpeakerProfile.for('XXX').get()).rejects.toThrowError(ProfileNotFoundError);
-    });
   });
 
   describe('#save', () => {
@@ -49,7 +30,7 @@ describe('SpeakerProfile', () => {
         socialLinks: ['https://github.com/profile'],
       });
 
-      const updated = await profile.get();
+      const updated = await ProfileFetcher.for(user.id).get();
       expect(updated?.name).toEqual('John Doe');
       expect(updated?.email).toEqual('john.doe@email.com');
       expect(updated?.picture).toEqual('https://example.com/photo.jpg');

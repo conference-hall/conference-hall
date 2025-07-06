@@ -9,23 +9,6 @@ export class SpeakerProfile {
     return new SpeakerProfile(userId);
   }
 
-  // todo(folders): where to put this file?
-  async get() {
-    const user = await db.user.findUnique({ where: { id: this.userId } });
-    if (!user) throw new ProfileNotFoundError();
-
-    return {
-      name: user.name,
-      email: user.email,
-      picture: user.picture,
-      bio: user.bio,
-      references: user.references,
-      company: user.company,
-      location: user.location,
-      socialLinks: user.socialLinks as SocialLinks,
-    };
-  }
-
   async save(data: ProfileData) {
     const user = await db.user.update({ where: { id: this.userId }, data });
 
@@ -46,5 +29,3 @@ export class SpeakerProfile {
     return user;
   }
 }
-
-export class ProfileNotFoundError extends Error {}

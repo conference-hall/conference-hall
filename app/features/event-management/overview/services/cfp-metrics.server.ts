@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventFetcher } from '../../services/event-fetcher.server.ts';
 
 type TrackType = { id: string; name: string };
 
@@ -13,8 +13,8 @@ export class CfpMetrics extends UserEventAuthorization {
   async get() {
     await this.needsPermission('canAccessEvent');
 
-    const userEvent = EventSettings.for(this.userId, this.team, this.event);
-    const { id, formats, categories } = await userEvent.get();
+    const eventFetcher = EventFetcher.for(this.userId, this.team, this.event);
+    const { id, formats, categories } = await eventFetcher.get();
 
     const proposalsCount = await this.proposalsCount(id);
     if (proposalsCount === 0) {

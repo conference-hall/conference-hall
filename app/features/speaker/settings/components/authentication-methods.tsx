@@ -10,7 +10,7 @@ import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
 import { getClientAuth, PROVIDERS, type ProviderId } from '~/shared/auth/firebase.ts';
 import { EmailProviderSettings } from './email-provider-settings.tsx';
-import { LinkProvider, UnlinkProvider } from './social-providers-settings..tsx';
+import { LinkProvider, UnlinkProvider } from './social-providers-settings.tsx';
 
 type Props = { email: string; authLoaded: boolean };
 

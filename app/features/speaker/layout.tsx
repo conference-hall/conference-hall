@@ -10,14 +10,14 @@ import { Container } from '~/design-system/layouts/container.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { SpeakerProfileProvider } from '~/features/speaker/speaker-profile-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/layout.ts';
+import { ProfileFetcher } from './services/profile-fetcher.server.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-  return SpeakerProfile.for(userId).get();
+  return ProfileFetcher.for(userId).get();
 };
 
 export default function SpeakerRoute({ loaderData: profile }: Route.ComponentProps) {
