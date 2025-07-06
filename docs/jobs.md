@@ -15,7 +15,7 @@ Conference Hall uses **BullMQ** with Redis for background job processing. The sy
 ### Job Configuration Options
 
 ```ts
-import { job } from '~/libs/jobs/job.ts';
+import { job } from '~/shared/jobs/job.ts';
 
 interface MyJobPayload {
   userId: string;
@@ -73,7 +73,7 @@ test('processes job successfully', async () => {
 Jobs are automatically mocked in the test environment.
 
 ```ts
-import { sendEmail } from '~/emails/send-email.job.ts';
+import { sendEmail } from '~/shared/emails/send-email.job.ts';
 
 test('sends email job', async () => {
   await sendEmail.trigger({

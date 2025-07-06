@@ -5,7 +5,7 @@
 Feature flags are declared in the `flags.config.ts` file.
 
 ```ts
-import { defineFlagsConfig } from './app/libs/feature-flags/flags-client';
+import { defineFlagsConfig } from './app/shared/feature-flags/flags-client';
 
 export default defineFlagsConfig({
   seo: {
@@ -23,7 +23,7 @@ A flag can be a `boolean`, a `number` or a `string` value.
 To use a flag in the backend just do:
 
 ```js
-import { flags } from '~/libs/feature-flags/flags.server.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 
 const myFlag = await flags.get('my-flag-name');
 ```
@@ -31,7 +31,7 @@ const myFlag = await flags.get('my-flag-name');
 To use a flag in the frontend, use the hook `useFlag`, only flags defined with `frontend` tag are available:
 
 ```js
-import { useFlag } from '~/routes/components/contexts/flags-context.tsx';
+import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 
 const myFlag = useFlag('my-flag-name');
 ```
@@ -49,7 +49,7 @@ In unit/integration/e2e tests, the `defaultValue` are automatically set to all f
 **To change a flag in unit/integration tests:**
 
 ```js
-import { flags } from '~/libs/feature-flags/flags.server.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 
 test('my test when flags is off', async () => {
   await flags.set('my-flag-name', false);

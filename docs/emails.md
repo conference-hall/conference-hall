@@ -14,11 +14,11 @@ Conference Hall uses a job-based email system to handle transactional emails, su
 
 ### Core Components
 
-- **Job System**: `app/emails/send-email.job.ts` - Background job processor
-- **Renderer**: `app/emails/email.renderer.tsx` - Template compilation
-- **Providers**: `app/emails/providers/` - Email delivery services
-- **Templates**: `app/emails/templates/` - React email components
-- **Utilities**: `app/emails/utils/` - Helper functions
+- **Job System**: `app/shared/emails/send-email.job.ts` - Background job processor
+- **Renderer**: `app/shared/emails/email.renderer.tsx` - Template compilation
+- **Providers**: `app/shared/emails/providers/` - Email delivery services
+- **Templates**: `app/shared/emails/templates/` - React email components
+- **Utilities**: `app/shared/emails/utils/` - Helper functions
 
 ### Email Providers
 
@@ -86,7 +86,7 @@ ExampleEmail.PreviewProps = {
 Each template exports a convenience function for building the payload needed for the job used to send email:
 
 ```typescript
-// app/emails/templates/auth/email-verification.tsx
+// app/shared/emails/templates/auth/email-verification.tsx
 VerificationEmail.buildPayload = (email: string, locale: string, data: TemplateData): EmailPayload => {
   return {
     template: 'auth/email-verification',
@@ -102,8 +102,8 @@ VerificationEmail.buildPayload = (email: string, locale: string, data: TemplateD
 Then the email can be sent with the `sendEmail` job:
 
 ```typescript
-import { sendEmail } from '~/emails/send-email.job.ts';
-import VerificationEmail from '~/emails/templates/auth/email-verification.tsx';
+import { sendEmail } from '~/shared/emails/send-email.job.ts';
+import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
 
 const data = { emailVerificationUrl: 'https://...' };
 await sendEmail.trigger(VerificationEmail.buildPayload(email, locale, data));
