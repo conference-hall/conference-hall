@@ -29,6 +29,28 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return null;
 };
 
+export default function EventSettingsRoute({ params }: Route.ComponentProps) {
+  const { t } = useTranslation();
+  const isEmailCustomizationEnabled = useFlag('emailCustomization');
+  const menus = getMenuItems(params.team, params.event, t, isEmailCustomizationEnabled);
+
+  return (
+    <Page className="lg:grid lg:grid-cols-12">
+      <H2 srOnly>{t('event-management.settings.heading')}</H2>
+
+      <NavSideMenu
+        aria-label={t('event-management.settings.menu.heading')}
+        items={menus}
+        className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
+      />
+
+      <div className="space-y-6 lg:col-span-9">
+        <Outlet />
+      </div>
+    </Page>
+  );
+}
+
 const getMenuItems = (team: string, event: string, t: TFunction, isEmailCustomizationEnabled: boolean) => [
   {
     to: `/team/${team}/${event}/settings`,
@@ -77,25 +99,3 @@ const getMenuItems = (team: string, event: string, t: TFunction, isEmailCustomiz
     label: t('event-management.settings.menu.web-api'),
   },
 ];
-
-export default function OrganizationSettingsRoute({ params }: Route.ComponentProps) {
-  const { t } = useTranslation();
-  const isEmailCustomizationEnabled = useFlag('emailCustomization');
-  const menus = getMenuItems(params.team, params.event, t, isEmailCustomizationEnabled);
-
-  return (
-    <Page className="lg:grid lg:grid-cols-12">
-      <H2 srOnly>{t('event-management.settings.heading')}</H2>
-
-      <NavSideMenu
-        aria-label={t('event-management.settings.menu.heading')}
-        items={menus}
-        className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
-      />
-
-      <div className="space-y-6 lg:col-span-9">
-        <Outlet />
-      </div>
-    </Page>
-  );
-}
