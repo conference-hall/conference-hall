@@ -47,7 +47,13 @@ export default function ScheduleRoute({ actionData: errors }: Route.ComponentPro
 
         <Card.Content>
           <Form id={formId} method="POST" className="space-y-4 lg:space-y-6">
-            <Input name="name" label={t('common.name')} defaultValue={event.name} required error={errors?.name} />
+            <Input
+              name="name"
+              label={t('common.name')}
+              defaultValue={`${event.name} schedule`}
+              required
+              error={errors?.name}
+            />
             <InputTimezone name="timezone" label={t('common.timezone')} defaultValue={event.timezone} />
             <DateRangeInput
               start={{ name: 'start', label: t('common.start-date'), value: event.conferenceStart }}

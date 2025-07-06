@@ -1,6 +1,6 @@
 import { MailBox } from 'e2e/common/mailbox.page.ts';
 import { expect, resetMailbox, test } from '../../fixtures.ts';
-import { HomePage } from './home.page.ts';
+import { HomePage } from '../event-search/home.page.ts';
 import { ForgotPasswordPage, LoginPage, ResetPasswordPage } from './login.page.ts';
 import { SignupPage } from './signup.page.ts';
 

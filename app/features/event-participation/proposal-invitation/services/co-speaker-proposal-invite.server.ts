@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { EventSpeaker } from '~/.server/event-speaker.ts';
+import { EventSpeaker } from '~/features/event-participation/speaker-proposals/services/event-speaker.ts';
 
 import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/shared/errors.server.ts';
 

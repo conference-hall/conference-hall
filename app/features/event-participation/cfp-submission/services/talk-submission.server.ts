@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { EventSpeaker } from '~/.server/event-speaker.ts';
+import { EventSpeaker } from '~/features/event-participation/speaker-proposals/services/event-speaker.ts';
 import type { TalkSaveData } from '~/features/speaker/talk-library/services/talks-library.schema.server.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';

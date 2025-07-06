@@ -1,9 +1,9 @@
 import { MailBox } from 'e2e/common/mailbox.page.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { expect, test } from '../../fixtures.ts';
-import { HomePage } from '../global/home.page.ts';
-import { LoginPage } from '../global/login.page.ts';
-import { SignupPage } from '../global/signup.page.ts';
+import { LoginPage } from '../auth/login.page.ts';
+import { SignupPage } from '../auth/signup.page.ts';
+import { HomePage } from '../event-search/home.page.ts';
 import { SettingsAccountPage } from './settings-account.page.ts';
 
 test('links and unlinks providers, change password, verify email', async ({ page }) => {

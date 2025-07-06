@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { EventSpeaker } from '~/.server/event-speaker.ts';
+import { EventSpeaker } from '~/features/event-participation/speaker-proposals/services/event-speaker.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ProposalConfirmedEmail from '~/shared/emails/templates/organizers/proposal-confirmed.tsx';
 import ProposalDeclinedEmail from '~/shared/emails/templates/organizers/proposal-declined.tsx';
