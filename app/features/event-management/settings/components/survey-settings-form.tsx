@@ -28,7 +28,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
   };
 
   const handleRemoveQuestion = (id: string) => () => {
-    if (!confirm('Are you sure you want to delete this question?')) return;
+    if (!confirm(t('event-management.settings.survey.confirm-delete'))) return;
     removeQuestionFetcher.submit({ intent: 'remove-question', id }, { method: 'POST' });
   };
 
