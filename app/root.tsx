@@ -2,21 +2,21 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import { useChangeLanguage } from 'remix-i18next/react';
-import { UserInfo } from './.server/user-registration/user-info.ts';
 import type { Route } from './+types/root.ts';
-import { initializeFirebaseClient } from './libs/auth/firebase.ts';
-import { destroySession, getUserSession } from './libs/auth/session.ts';
-import { getBrowserEnv } from './libs/env/env.server.ts';
-import { flags } from './libs/feature-flags/flags.server.ts';
-import { i18n } from './libs/i18n/i18n.server.ts';
-import { useNonce } from './libs/nonce/use-nonce.ts';
-import type { Toast } from './libs/toasts/toast.server.ts';
-import { getToast } from './libs/toasts/toast.server.ts';
-import { Toaster } from './libs/toasts/toaster.tsx';
-import { FlagsProvider } from './routes/components/contexts/flags-context.tsx';
-import { UserProvider } from './routes/components/contexts/user-context.tsx';
-import { GeneralErrorBoundary } from './routes/components/error-boundary.tsx';
-import { GlobalLoading } from './routes/components/global-loading.tsx';
+import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
+import { GlobalLoading } from './app-platform/components/global-loading.tsx';
+import { useNonce } from './app-platform/components/use-nonce.ts';
+import { UserProvider } from './app-platform/components/user-context.tsx';
+import { initializeFirebaseClient } from './shared/auth/firebase.ts';
+import { destroySession, getUserSession } from './shared/auth/session.ts';
+import { getBrowserEnv } from './shared/env.server.ts';
+import { flags } from './shared/feature-flags/flags.server.ts';
+import { FlagsProvider } from './shared/feature-flags/flags-context.tsx';
+import { i18n } from './shared/i18n/i18n.server.ts';
+import type { Toast } from './shared/toasts/toast.server.ts';
+import { getToast } from './shared/toasts/toast.server.ts';
+import { Toaster } from './shared/toasts/toaster.tsx';
+import { UserAccount } from './shared/user/user-account.server.ts';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
 
@@ -49,7 +49,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   }
 
   const { userId } = (await getUserSession(request)) || {};
-  const user = await UserInfo.get(userId);
+  const user = await UserAccount.get(userId);
   if (userId && !user) await destroySession(request);
 
   const { toast, headers: toastHeaders } = await getToast(request);

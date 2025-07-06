@@ -1,6 +1,6 @@
 import { test as base } from '@playwright/test';
 import { disconnectDB, resetDB } from 'tests/db-helpers.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { MAILBOX_URL } from './common/mailbox.page.ts';
 import { getUserAuthPath, type TestUser } from './helpers.ts';
 

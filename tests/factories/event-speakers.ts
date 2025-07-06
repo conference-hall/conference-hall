@@ -1,6 +1,6 @@
 import { randEmail, randFullName } from '@ngneat/falso';
 import type { Event, Prisma, User } from '@prisma/client';
-import type { SocialLinks } from '~/.server/speaker-profile/speaker-profile.types.ts';
+import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {

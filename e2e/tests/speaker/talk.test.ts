@@ -4,7 +4,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
-import { SubmissionPage } from '../event-page/submission.page.ts';
+import { SubmissionPage } from '../event-participation/submission.page.ts';
 import { TalkPage } from './talk.page.ts';
 
 let user: User;

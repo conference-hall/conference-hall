@@ -1,5 +1,5 @@
 import { PageObject } from 'e2e/page-object.ts';
-import type { CustomTemplateName } from '~/emails/email.types.ts';
+import type { CustomTemplateName } from '~/shared/emails/email.types.ts';
 
 export class EmailTemplateSettingsPage extends PageObject {
   readonly backButton = this.page.getByRole('link', { name: 'Go back' });

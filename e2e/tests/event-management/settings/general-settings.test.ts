@@ -1,5 +1,5 @@
 import { expect, loginWith, test } from 'e2e/fixtures.ts';
-import { TeamHomePage } from 'e2e/tests/team/team-home.page.ts';
+import { TeamHomePage } from 'e2e/tests/team-management/team-home.page.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import Select from '~/design-system/forms/select.tsx';
-import { getTimezonesList, getUserTimezone } from '~/libs/datetimes/timezone.ts';
+import { getTimezonesList, getUserTimezone } from '~/shared/datetimes/timezone.ts';
 
 type Props = { name: string; label: string; defaultValue?: string; onChange?: (timezone: string) => void };
 
