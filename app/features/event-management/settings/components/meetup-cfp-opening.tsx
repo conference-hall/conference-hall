@@ -10,7 +10,7 @@ type Props = { cfpStart: Date | null; timezone: string };
 
 export function MeetupCfpOpening({ cfpStart, timezone }: Props) {
   const { t } = useTranslation();
-  const fetcher = useFetcher<typeof action>();
+  const fetcher = useFetcher<typeof action>({ key: 'save-cfp-meetup-opening' });
 
   const handleChange = (checked: boolean) => {
     fetcher.submit(
