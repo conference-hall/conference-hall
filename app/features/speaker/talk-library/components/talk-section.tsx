@@ -139,8 +139,8 @@ export function TalkSection({
 
         <div className="flex gap-2 flex-wrap">
           {talk.level && <Badge color="indigo">{t(`common.level.${talk.level}`)}</Badge>}
-          {talk.languages.map((language) => (
-            <Badge key={language}>{t(`common.languages.${language}.label`)}</Badge>
+          {talk.languages.map((lang) => (
+            <Badge key={lang}>{`${t(`common.languages.${lang}.flag`)} ${t(`common.languages.${lang}.label`)}`}</Badge>
           ))}
         </div>
       </dl>

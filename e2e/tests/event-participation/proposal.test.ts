@@ -83,11 +83,11 @@ test('edits a proposal', async ({ page }) => {
     await expect(talkEdit.radioInput('Intermediate')).toBeChecked();
     await expect(talkEdit.radioInput('Quickie')).toBeChecked();
     await expect(talkEdit.radioInput('Web')).toBeChecked();
-    await expect(talkEdit.languageSelect).toHaveText('English');
+    await expect(talkEdit.languageSelect.selected('English')).toBeVisible();
   });
 
   await test.step('edits the talk', async () => {
-    await talkEdit.fillForm('New title', 'New abstract', 'ADVANCED', 'fr', 'New references');
+    await talkEdit.fillForm('New title', 'New abstract', 'ADVANCED', 'French', 'New references');
     await talkEdit.radioInput('Cloud').click();
     await talkEdit.radioInput('Workshop').click();
     await talkEdit.save();

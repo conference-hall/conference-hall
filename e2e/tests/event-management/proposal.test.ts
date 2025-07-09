@@ -238,7 +238,7 @@ test('edit proposal', async ({ page }) => {
   await expect(talkEdit.radioInput('Advanced')).toBeChecked();
   await expect(talkEdit.radioInput('Format 1')).toBeChecked();
   await expect(talkEdit.radioInput('Category 1')).toBeChecked();
-  await expect(talkEdit.languageSelect).toHaveText('French');
+  await expect(talkEdit.languageSelect.selected('French')).toBeVisible();
 
   // edits the talk
   await talkEdit.waitFor();

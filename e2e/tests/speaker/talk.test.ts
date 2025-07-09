@@ -84,7 +84,7 @@ test('edits a talk', async ({ page }) => {
     await expect(talkEdit.titleInput).toHaveValue(talk.title);
     await expect(talkEdit.abstractInput).toHaveValue(talk.abstract);
     await expect(talkEdit.radioInput('Intermediate')).toBeChecked();
-    await expect(talkEdit.languageSelect).toHaveText('English');
+    await expect(talkEdit.languageSelect.selected('English')).toBeVisible();
   });
 
   await test.step('edits the talk', async () => {

@@ -83,7 +83,7 @@ export function TalkForm({
         placeholder={t('talk.languages.placeholder')}
         options={LANGUAGES.map((lang) => ({
           value: lang,
-          label: t(`common.languages.${lang}.label`),
+          label: `${t(`common.languages.${lang}.flag`)} ${t(`common.languages.${lang}.label`)}`,
         }))}
         defaultValues={initialValues?.languages ?? []}
       />
