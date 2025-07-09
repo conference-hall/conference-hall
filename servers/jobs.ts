@@ -1,11 +1,12 @@
 import closeWithGrace from 'close-with-grace';
 import { exportToOpenPlanner } from '~/features/event-management/proposals-export/services/jobs/export-to-open-planner.job.ts';
+import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { createJobWorkers } from '~/shared/jobs/worker.ts';
 import { testJob } from '../app/features/admin/debug/services/jobs/test.job.ts';
 import { logger } from '../app/shared/jobs/logger.ts';
 
-const jobs = [sendEmail, exportToOpenPlanner, testJob];
+const jobs = [sendEmail, exportToOpenPlanner, sendTalkToSlack, testJob];
 
 const workers = createJobWorkers(jobs);
 

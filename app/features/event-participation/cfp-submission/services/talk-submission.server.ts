@@ -1,4 +1,5 @@
 import { db } from 'prisma/db.server.ts';
+import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
 import { EventSpeaker } from '~/features/event-participation/speaker-proposals/services/event-speaker.ts';
 import type { TalkSaveData } from '~/features/speaker/talk-library/services/talks-library.schema.server.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
@@ -11,7 +12,6 @@ import {
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
 } from '~/shared/errors.server.ts';
-import { sendSubmittedTalkSlackMessage } from '~/shared/integrations/slack.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { TrackUpdateData } from './talk-submission.schema.server.ts';
@@ -116,7 +116,7 @@ export class TalkSubmission {
 
     // send slack message
     if (event.slackWebhookUrl) {
-      await sendSubmittedTalkSlackMessage(event.id, proposal.id);
+      await sendTalkToSlack.trigger({ eventId: event.id, proposalId: proposal.id });
     }
   }
 
