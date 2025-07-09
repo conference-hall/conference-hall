@@ -28,11 +28,17 @@ type SelectedOptionsProps = { selectedValues: string[]; options: Array<Option>; 
 
 function SelectedOptions({ selectedValues, options, onRemove }: SelectedOptionsProps) {
   const selected = selectedValues.map((current) => options.find(({ value }) => value === current));
-  return selected.map((option) => (
-    <Badge key={option?.value} onClose={() => onRemove(option?.value || '')} closeLabel={option?.label}>
-      {option?.label}
-    </Badge>
-  ));
+  return (
+    <ul className="flex flex-wrap items-center gap-1">
+      {selected.map((option) => (
+        <li key={option?.value} className="flex items-center" aria-label={option?.label}>
+          <Badge onClose={() => onRemove(option?.value || '')} closeLabel={option?.label}>
+            {option?.label}
+          </Badge>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 export default function MultiSelect({ name, label, placeholder, options, defaultValues, className }: Props) {

@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { AuthEmulator } from './common/auth-emulator.page.ts';
+import { MultiSelectComponent } from './common/multi-select.component.ts';
 import { UserMenuComponent } from './common/user-menu.component.ts';
 
 export class PageObject {
@@ -35,20 +36,15 @@ export class PageObject {
     return this.page.locator(`id=${subjectDescriptionId}`);
   }
 
-  async selectOptions(locator: Locator, values: string[]) {
-    await locator.scrollIntoViewIfNeeded();
-    await locator.click();
-    for (const value of values) {
-      await this.page.getByRole('option', { name: value }).click();
-    }
-    await locator.click();
-  }
-
   radioInput(name: string) {
     return this.page.getByRole('radio', { name });
   }
 
   checkboxInput(name: string) {
     return this.page.getByRole('checkbox', { name });
+  }
+
+  multiSelectInput(name: string) {
+    return new MultiSelectComponent(name, this.page);
   }
 }
