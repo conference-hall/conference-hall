@@ -8,7 +8,7 @@ export class MultiSelectComponent {
   constructor(label: string, page: Page) {
     this.page = page;
     this.multiSelectInput = this.page.getByLabel(label);
-    this.multiSelectWrapper = this.multiSelectInput.locator('..');
+    this.multiSelectWrapper = this.multiSelectInput.locator('../..');
   }
 
   async select(values: string[]) {
