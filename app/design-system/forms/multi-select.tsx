@@ -24,28 +24,12 @@ type Props = {
   className?: string;
 };
 
-type SelectedOptionsProps = { selectedValues: string[]; options: Array<Option>; onRemove: (value: string) => void };
-
-function SelectedOptions({ selectedValues, options, onRemove }: SelectedOptionsProps) {
-  const selected = selectedValues.map((current) => options.find(({ value }) => value === current));
-  return (
-    <ul className="flex flex-wrap items-center gap-1">
-      {selected.map((option) => (
-        <li key={option?.value} className="flex items-center" aria-label={option?.label}>
-          <Badge onClose={() => onRemove(option?.value || '')} closeLabel={option?.label}>
-            {option?.label}
-          </Badge>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 export default function MultiSelect({ name, label, placeholder, options, defaultValues, className }: Props) {
   const { t } = useTranslation();
   const [selected, setSelected] = useState<string[]>(defaultValues);
   const [searchTerm, setSearchTerm] = useState('');
 
+  const selectedOptions = selected.map((current) => options.find(({ value }) => value === current));
   const filteredOptions = options.filter((option) => option.label.toLowerCase().includes(searchTerm.toLowerCase()));
 
   const handleRemove = (value: string) => {
@@ -63,18 +47,23 @@ export default function MultiSelect({ name, label, placeholder, options, default
       <Combobox name={name} value={selected} onChange={handleSelect} multiple>
         <div className="relative mt-2">
           <div className="relative w-full cursor-default rounded-md border border-gray-300 bg-white min-h-0 py-1 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
-            <div className="flex items-center flex-wrap gap-1 pl-1.5 pr-7 py-[1px]">
-              {selected.length > 0 && (
-                <SelectedOptions selectedValues={selected} options={options} onRemove={handleRemove} />
-              )}
-
-              <ComboboxInput
-                className="border-0 flex-1 min-w-24 py-0 px-1 text-sm leading-6 text-gray-900 placeholder:text-gray-400 focus:ring-0 outline-none"
-                placeholder={selected.length === 0 ? placeholder : t('common.search.placeholder')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
+            <ul className="flex items-center flex-wrap gap-1 pl-1.5 pr-7 py-[1px]">
+              {selectedOptions.map((option) => (
+                <li key={option?.value} className="flex items-center" aria-label={option?.label}>
+                  <Badge onClose={() => handleRemove(option?.value || '')} closeLabel={option?.label}>
+                    {option?.label}
+                  </Badge>
+                </li>
+              ))}
+              <li>
+                <ComboboxInput
+                  className="border-0 flex-1 min-w-24 py-0 px-1 text-sm leading-6 text-gray-900 placeholder:text-gray-400 focus:ring-0 outline-none"
+                  placeholder={selected.length === 0 ? placeholder : t('common.search.placeholder')}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </li>
+            </ul>
 
             <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
