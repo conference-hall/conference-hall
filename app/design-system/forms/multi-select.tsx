@@ -70,16 +70,12 @@ export default function MultiSelect({ name, label, placeholder, options, default
             </ComboboxButton>
           </div>
 
-          <ComboboxOptions className="z-40 absolute w-full max-h-64 mt-1 rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-hidden overflow-auto">
+          <ComboboxOptions className="z-40 absolute w-full max-h-64 mt-1 text-sm rounded-xl bg-white shadow-lg ring-1 ring-black/5 py-2 focus:outline-hidden overflow-auto">
             {filteredOptions.map((option) => (
               <ComboboxOption
                 key={option.value}
                 value={option.value}
-                className={({ focus }) =>
-                  cx('relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900', {
-                    'bg-gray-100': focus,
-                  })
-                }
+                className="relative mx-2 px-2 py-1.5 rounded-lg cursor-default select-none text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
               >
                 {({ selected }) => (
                   <>
