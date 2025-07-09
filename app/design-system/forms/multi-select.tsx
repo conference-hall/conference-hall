@@ -44,7 +44,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
     <Field className={className}>
       <Label className="block text-sm font-medium leading-6 text-gray-900">{label}</Label>
 
-      <Combobox name={name} value={selected} onChange={handleSelect} multiple>
+      <Combobox name={name} value={selected} onChange={handleSelect} multiple immediate>
         <div className="relative mt-2">
           <div className="relative w-full cursor-default rounded-md border border-gray-300 bg-white min-h-0 py-1 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
             <ul className="flex items-center w-full flex-wrap gap-1 pl-1.5 pr-7 py-[1px]">
