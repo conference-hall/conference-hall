@@ -47,7 +47,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
       <Combobox name={name} value={selected} onChange={handleSelect} multiple>
         <div className="relative mt-2">
           <div className="relative w-full cursor-default rounded-md border border-gray-300 bg-white min-h-0 py-1 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
-            <ul className="flex items-center flex-wrap gap-1 pl-1.5 pr-7 py-[1px]">
+            <ul className="flex items-center w-full flex-wrap gap-1 pl-1.5 pr-7 py-[1px]">
               {selectedOptions.map((option) => (
                 <li key={option?.value} className="flex items-center" aria-label={option?.label}>
                   <Badge onClose={() => handleRemove(option?.value || '')} closeLabel={option?.label}>
@@ -55,9 +55,9 @@ export default function MultiSelect({ name, label, placeholder, options, default
                   </Badge>
                 </li>
               ))}
-              <li>
+              <li className="flex-1">
                 <ComboboxInput
-                  className="border-0 flex-1 min-w-24 py-0 px-1 text-sm leading-6 text-gray-900 placeholder:text-gray-400 focus:ring-0 outline-none"
+                  className="border-0 w-full min-w-24 py-0 px-1 text-sm leading-6 text-gray-900 placeholder:text-gray-400 focus:ring-0 outline-none"
                   placeholder={selected.length === 0 ? placeholder : t('common.search.placeholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
