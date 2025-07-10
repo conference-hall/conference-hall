@@ -1,7 +1,7 @@
 import flagsConfig from '../../../flags.config.ts';
+import { MemoryCacheLayer } from '../cache/memory-cache-layer.ts';
 import { FlagsClient } from './flags-client.ts';
-import { DbStorage } from './storages/db-storage.ts';
-import { MemoryStorage } from './storages/memory-storage.ts';
+import { FlagsStorage } from './flags-storage.ts';
 
 const isProduction = process.env.NODE_ENV === 'production' && !process.env.USE_EMULATORS;
 const isTest = process.env.NODE_ENV === 'test';
@@ -19,8 +19,8 @@ async function getClient() {
     console.info('🚩 Feature flags config loaded.');
   }
 
-  const storage = isTest ? new MemoryStorage() : new DbStorage();
-  const client = new FlagsClient(flagsConfig, storage);
+  const cache = isTest ? new MemoryCacheLayer() : undefined;
+  const client = new FlagsClient(flagsConfig, new FlagsStorage(cache));
   await client.load();
 
   if (!isProduction && !global.__flags) {

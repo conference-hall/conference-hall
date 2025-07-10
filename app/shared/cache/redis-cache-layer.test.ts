@@ -8,10 +8,12 @@ describe('RedisCacheLayer', () => {
     get: vi.fn(),
     set: vi.fn(),
     del: vi.fn(),
+    keys: vi.fn(),
   };
 
   beforeEach(() => {
-    cache = new RedisCacheLayer('test:', undefined, redisMock as unknown as Redis);
+    vi.clearAllMocks();
+    cache = new RedisCacheLayer({ prefix: 'test:', client: redisMock as unknown as Redis });
   });
 
   it('gets a value from cache', async () => {
@@ -48,16 +50,52 @@ describe('RedisCacheLayer', () => {
   it('sets a value in cache with custom TTL', async () => {
     const value = { foo: 'bar' };
     const ttl = 3600; // 1 hour
-    cache = new RedisCacheLayer('test:', ttl, redisMock as unknown as Redis);
+    cache = new RedisCacheLayer({ prefix: 'test:', ttl, client: redisMock as unknown as Redis });
 
     await cache.set('key', value);
 
     expect(redisMock.set).toHaveBeenCalledWith('test:key', JSON.stringify(value), 'EX', ttl);
   });
 
+  it('sets a value in cache with persistent option', async () => {
+    const value = { foo: 'bar' };
+    cache = new RedisCacheLayer({ prefix: 'test:', persistent: true, client: redisMock as unknown as Redis });
+
+    await cache.set('key', value);
+
+    expect(redisMock.set).toHaveBeenCalledWith('test:key', JSON.stringify(value));
+  });
+
   it('deletes a value from cache', async () => {
     await cache.del('key');
 
     expect(redisMock.del).toHaveBeenCalledWith('test:key');
+  });
+
+  it('gets keys matching a pattern', async () => {
+    redisMock.keys.mockResolvedValue(['test:user:1', 'test:user:2']);
+
+    const result = await cache.keys('user:*');
+
+    expect(redisMock.keys).toHaveBeenCalledWith('test:user:*');
+    expect(result).toEqual(['user:1', 'user:2']);
+  });
+
+  it('clears all values from cache', async () => {
+    redisMock.keys.mockResolvedValue(['test:key1', 'test:key2', 'test:key3']);
+
+    await cache.clear();
+
+    expect(redisMock.keys).toHaveBeenCalledWith('test:*');
+    expect(redisMock.del).toHaveBeenCalledWith(['test:key1', 'test:key2', 'test:key3']);
+  });
+
+  it('clears cache when no keys exist', async () => {
+    redisMock.keys.mockResolvedValue([]);
+
+    await cache.clear();
+
+    expect(redisMock.keys).toHaveBeenCalledWith('test:*');
+    expect(redisMock.del).not.toHaveBeenCalled();
   });
 });

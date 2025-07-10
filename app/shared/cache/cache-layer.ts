@@ -4,4 +4,8 @@ export interface CacheLayer {
   set(key: string, value: any): Promise<void>;
 
   del(key: string): Promise<void>;
+
+  keys(pattern: string): Promise<string[]>;
+
+  clear(): Promise<void>;
 }

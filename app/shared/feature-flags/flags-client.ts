@@ -1,4 +1,4 @@
-import type { FlagsStorage } from './storages/flags-storage.ts';
+import type { FlagsStorage } from './flags-storage.ts';
 import type {
   FlagKey,
   FlagsConfig,
@@ -32,8 +32,8 @@ export class FlagsClient<C extends FlagsConfig> {
 
     for (const [key, config] of Object.entries(this.config)) {
       const value = await this.storage.getValue(key);
-      if (value === undefined) {
-        await this.storage.setValue(key, config.defaultValue, config);
+      if (value === null || value === undefined) {
+        await this.storage.setValue(key, config.defaultValue);
       }
     }
   }
@@ -45,8 +45,7 @@ export class FlagsClient<C extends FlagsConfig> {
   }
 
   async set<K extends FlagKey<C>>(key: K, value: FlagValue<C, K>): Promise<void> {
-    const config = this.config[key];
-    await this.storage.setValue(String(key), value, config);
+    await this.storage.setValue(String(key), value);
   }
 
   async all(): Promise<FlagValues<C>> {
@@ -79,7 +78,7 @@ export class FlagsClient<C extends FlagsConfig> {
 
   async resetDefaults() {
     for (const [key, config] of Object.entries(this.config)) {
-      await this.storage.setValue(key, config.defaultValue, config);
+      await this.storage.setValue(key, config.defaultValue);
     }
   }
 }
