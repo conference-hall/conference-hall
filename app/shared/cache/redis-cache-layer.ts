@@ -4,15 +4,24 @@ import { getRedisClient } from './redis.server.ts';
 
 const ONE_WEEK_IN_SECONDS = 7 * 24 * 60 * 60;
 
+interface RedisCacheOptions {
+  prefix?: string;
+  ttl?: number;
+  persistent?: boolean;
+  client?: Redis;
+}
+
 export class RedisCacheLayer implements CacheLayer {
   private client: Redis;
   private prefix: string;
   private ttl: number;
+  private persistent: boolean;
 
-  constructor(prefix = '', ttl: number = ONE_WEEK_IN_SECONDS, client = getRedisClient()) {
-    this.client = client;
-    this.prefix = prefix;
-    this.ttl = ttl;
+  constructor(options: RedisCacheOptions = {}) {
+    this.client = options.client || getRedisClient();
+    this.prefix = options.prefix || '';
+    this.ttl = options.ttl || ONE_WEEK_IN_SECONDS;
+    this.persistent = options.persistent || false;
   }
 
   async get(key: string, fetchCallback?: () => Promise<any>): Promise<any> {
@@ -38,7 +47,11 @@ export class RedisCacheLayer implements CacheLayer {
   async set(key: string, value: any) {
     const prefixedKey = this.getPrefixedKey(key);
     try {
-      await this.client.set(prefixedKey, JSON.stringify(value), 'EX', this.ttl);
+      if (this.persistent) {
+        await this.client.set(prefixedKey, JSON.stringify(value));
+      } else {
+        await this.client.set(prefixedKey, JSON.stringify(value), 'EX', this.ttl);
+      }
     } catch (error) {
       console.error(`Failed to set key ${prefixedKey} in Redis:`, error);
     }
@@ -50,6 +63,28 @@ export class RedisCacheLayer implements CacheLayer {
       await this.client.del(prefixedKey);
     } catch (error) {
       console.error(`Failed to delete key ${prefixedKey} from Redis:`, error);
+    }
+  }
+
+  async keys(pattern: string): Promise<string[]> {
+    const prefixedPattern = this.getPrefixedKey(pattern);
+    try {
+      const keys = await this.client.keys(prefixedPattern);
+      return keys.map((key) => key.replace(this.prefix, ''));
+    } catch (error) {
+      console.error(`Failed to get keys with pattern ${prefixedPattern} from Redis:`, error);
+      return [];
+    }
+  }
+
+  async clear(): Promise<void> {
+    try {
+      const keys = await this.keys('*');
+      if (keys.length > 0) {
+        await this.client.del(keys.map((key) => this.getPrefixedKey(key)));
+      }
+    } catch (error) {
+      console.error('Failed to clear Redis cache:', error);
     }
   }
 

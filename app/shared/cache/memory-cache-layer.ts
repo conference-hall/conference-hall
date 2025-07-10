@@ -26,4 +26,13 @@ export class MemoryCacheLayer implements CacheLayer {
   async del(key: string): Promise<void> {
     this.cache.delete(key);
   }
+
+  async keys(pattern: string): Promise<string[]> {
+    const regex = new RegExp(pattern.replace('*', '.*'));
+    return Array.from(this.cache.keys()).filter((key) => regex.test(key));
+  }
+
+  async clear(): Promise<void> {
+    this.cache.clear();
+  }
 }
