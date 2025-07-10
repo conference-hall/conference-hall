@@ -1,9 +1,11 @@
 import { SitemapStream, streamToPromise } from 'sitemap';
+import { RedisCacheLayer } from '~/shared/cache/redis-cache-layer.ts';
 import { appUrl } from '~/shared/env.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { getEventsForSitemap } from './services/sitemap.server.ts';
 
-let sitemap: Buffer; // TODO: Cache to Redis with a TTL (weekly)
+const ONE_WEEK_IN_SECONDS = 7 * 24 * 60 * 60;
+const cache = new RedisCacheLayer({ prefix: 'seo:', ttl: ONE_WEEK_IN_SECONDS });
 
 export async function loader() {
   const isSeoEnabled = await flags.get('seo');
@@ -12,9 +14,10 @@ export async function loader() {
     return new Response(null, { headers: { 'Content-Type': 'application/xml' } });
   }
 
-  // if we have a cached entry send it
-  if (sitemap) {
-    return new Response(sitemap, { headers: { 'Content-Type': 'application/xml' } });
+  // Try to get cached sitemap
+  const cachedSitemap = await cache.get('sitemap');
+  if (cachedSitemap) {
+    return new Response(Buffer.from(cachedSitemap, 'utf-8'), { headers: { 'Content-Type': 'application/xml' } });
   }
 
   // Build the sitemap
@@ -30,14 +33,11 @@ export async function loader() {
     }
   }
 
-  // cache the sitemap
-  streamToPromise(stream).then((sm) => {
-    sitemap = sm;
-    return sitemap;
-  });
-
   stream.end();
 
-  // @ts-expect-error
-  return new Response(stream, { headers: { 'Content-Type': 'application/xml', Connection: 'keep-alive' } });
+  // Generate the sitemap and cache it
+  const sitemapBuffer = await streamToPromise(stream);
+  await cache.set('sitemap', sitemapBuffer.toString('utf-8'));
+
+  return new Response(sitemapBuffer, { headers: { 'Content-Type': 'application/xml' } });
 }
