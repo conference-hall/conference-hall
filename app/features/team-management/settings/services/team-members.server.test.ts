@@ -27,18 +27,23 @@ describe('TeamMembers', () => {
       const other = await userFactory();
       await teamFactory({ owners: [other] });
 
-      const members = await TeamMembers.for(owner.id, team.slug).list({}, 1);
-      expect(members.pagination).toEqual({ current: 1, total: 1 });
+      const data = await TeamMembers.for(owner.id, team.slug).list({}, 1);
+      expect(data.pagination).toEqual({ current: 1, total: 1 });
 
-      expect(members.results).toEqual([
+      expect(data.members).toEqual([
         { id: '2', name: 'Bruce Wayne', role: 'MEMBER', picture: 'https://img.com/b.png' },
         { id: '1', name: 'Clark Kent', role: 'OWNER', picture: 'https://img.com/a.png' },
         { id: '3', name: 'Peter Parker', role: 'REVIEWER', picture: 'https://img.com/c.png' },
       ]);
 
       const filtered = await TeamMembers.for(owner.id, team.slug).list({ query: 'kent' }, 1);
-      expect(filtered.results).toEqual([
+      expect(filtered.members).toEqual([
         { id: '1', name: 'Clark Kent', role: 'OWNER', picture: 'https://img.com/a.png' },
+      ]);
+
+      const roleFiltered = await TeamMembers.for(owner.id, team.slug).list({ role: 'MEMBER' }, 1);
+      expect(roleFiltered.members).toEqual([
+        { id: '2', name: 'Bruce Wayne', role: 'MEMBER', picture: 'https://img.com/b.png' },
       ]);
     });
 
@@ -59,8 +64,8 @@ describe('TeamMembers', () => {
 
       await TeamMembers.for(member.id, team.slug).leave();
 
-      const members = await TeamMembers.for(owner.id, team.slug).list({}, 1);
-      expect(members.results).toEqual([{ id: owner.id, name: owner.name, role: 'OWNER', picture: owner.picture }]);
+      const data = await TeamMembers.for(owner.id, team.slug).list({}, 1);
+      expect(data.members).toEqual([{ id: owner.id, name: owner.name, role: 'OWNER', picture: owner.picture }]);
     });
 
     it('throws an error when user a owner of the team', async () => {
@@ -87,8 +92,8 @@ describe('TeamMembers', () => {
 
       await TeamMembers.for(owner.id, team.slug).remove(member.id);
 
-      const members = await TeamMembers.for(owner.id, team.slug).list({}, 1);
-      expect(members.results).toEqual([{ id: owner.id, name: owner.name, role: 'OWNER', picture: owner.picture }]);
+      const data = await TeamMembers.for(owner.id, team.slug).list({}, 1);
+      expect(data.members).toEqual([{ id: owner.id, name: owner.name, role: 'OWNER', picture: owner.picture }]);
     });
 
     it('throws an error when user tries to remove itself', async () => {
@@ -115,10 +120,8 @@ describe('TeamMembers', () => {
 
       await TeamMembers.for(owner.id, team.slug).changeRole(member.id, 'REVIEWER');
 
-      const members = await TeamMembers.for(owner.id, team.slug).list({ query: member.name }, 1);
-      expect(members.results).toEqual([
-        { id: member.id, name: member.name, role: 'REVIEWER', picture: member.picture },
-      ]);
+      const data = await TeamMembers.for(owner.id, team.slug).list({ query: member.name }, 1);
+      expect(data.members).toEqual([{ id: member.id, name: member.name, role: 'REVIEWER', picture: member.picture }]);
     });
 
     it('throws an error when user updates its own role of the team', async () => {
