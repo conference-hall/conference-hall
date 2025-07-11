@@ -10,6 +10,7 @@ export class TeamSettingsPage extends PageObject {
   readonly slugInput: Locator = this.page.getByRole('textbox', { name: 'Team URL' });
   readonly members: Locator = this.page.getByRole('list', { name: 'Members list' }).locator('>li');
   readonly findMember: Locator = this.page.getByLabel('Find member');
+  readonly roleFilter: Locator = this.page.getByRole('combobox', { name: 'Role' });
   readonly leaveTeamButton: Locator = this.page.getByRole('button', { name: 'Leave team' });
   readonly deleteButton: Locator = this.page.getByRole('button', { name: 'Delete team' });
   readonly deleteDialog: Locator = this.page.getByRole('dialog', { name: 'Delete team' });
@@ -74,5 +75,9 @@ export class TeamSettingsPage extends PageObject {
 
   async clickOnConfirmRemove(name: string) {
     await this.page.getByRole('button', { name: `Remove ${name}`, exact: true }).click();
+  }
+
+  async selectRoleFilter(role: string) {
+    await this.roleFilter.selectOption({ label: role });
   }
 }

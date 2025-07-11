@@ -61,9 +61,19 @@ test.describe('as a team owner', () => {
 
     // Member list
     await expect(settingsPage.members).toHaveCount(2);
+    await expect(settingsPage.removeMemberButton(member.name)).toBeVisible();
+    await expect(settingsPage.removeMemberButton(owner.name)).not.toBeVisible();
+
     await settingsPage.fill(settingsPage.findMember, 'bru');
     await page.keyboard.press('Enter');
     await expect(settingsPage.members).toHaveCount(1);
+
+    // Filter by role
+    await settingsPage.selectRoleFilter('Member');
+    await settingsPage.fill(settingsPage.findMember, '');
+    await page.keyboard.press('Enter');
+    await expect(settingsPage.members).toHaveCount(1);
+    await expect(settingsPage.members.first()).toContainText(member.name);
 
     // Invite member
     const invite = await settingsPage.clickOnInviteMember();
@@ -77,11 +87,15 @@ test.describe('as a team owner', () => {
     await settingsPage.clickOnRole('Owner');
     await settingsPage.clickOnConfirmRole(member.name);
     await expect(settingsPage.toast).toHaveText('Member role changed.');
+
+    // Filter by role and search
+    await settingsPage.selectRoleFilter('All roles');
+    await settingsPage.fill(settingsPage.findMember, 'bru');
+    await page.keyboard.press('Enter');
+    await expect(settingsPage.members).toHaveCount(1);
     await expect(settingsPage.members).toContainText('Owner');
 
     // Remove member
-    await expect(settingsPage.removeMemberButton(owner.name)).not.toBeVisible();
-    await expect(settingsPage.removeMemberButton(member.name)).toBeVisible();
     await settingsPage.removeMemberButton(member.name).click();
     await settingsPage.clickOnConfirmRemove(member.name);
     await expect(settingsPage.toast).toHaveText('Member removed from team.');

@@ -1,4 +1,4 @@
-import { UserPlusIcon } from '@heroicons/react/20/solid';
+import { UserPlusIcon } from '@heroicons/react/16/solid';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
@@ -144,7 +144,7 @@ export function InviteMemberButton({ invitationLink }: InviteProps) {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} iconLeft={UserPlusIcon}>
+      <Button variant="secondary" onClick={() => setOpen(true)} iconLeft={UserPlusIcon}>
         {t('team.settings.members.invite-modal.button')}
       </Button>
       <InvitationModal
