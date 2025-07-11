@@ -1,4 +1,4 @@
-import closeWithGrace from 'close-with-grace';
+import { db } from 'prisma/db.server.ts';
 import { exportToOpenPlanner } from '~/features/event-management/proposals-export/services/jobs/export-to-open-planner.job.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
@@ -18,9 +18,32 @@ process.on('unhandledRejection', (reason, promise) => {
   logger.error(`Unhandled Rejection: ${reason}`, promise);
 });
 
-closeWithGrace(async () => {
-  for (const worker of workers) {
-    logger.info(`Shutting down the jobs worker for queue "${worker.queue}"`);
-    await worker.close();
+// Setup graceful shutdown
+let isShuttingDown = false;
+
+const gracefulShutdown = async (signal: string) => {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+
+  const timeout = setTimeout(() => {
+    logger.error('❌ Graceful shutdown timed out, forcing exit');
+    process.exit(1);
+  }, 10000);
+
+  try {
+    logger.info(`🔥 Shutting down jobs server (${signal})`);
+    for (const worker of workers) {
+      await worker.close();
+    }
+    await db.$disconnect();
+    clearTimeout(timeout);
+    process.exit(0);
+  } catch (error) {
+    logger.error(`❌ Error during graceful shutdown: ${error}`);
+    clearTimeout(timeout);
+    process.exit(1);
   }
-});
+};
+
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
