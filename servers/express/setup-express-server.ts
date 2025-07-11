@@ -1,6 +1,7 @@
 import compression from 'compression';
 import express from 'express';
-
+import { db } from 'prisma/db.server.ts';
+import { disconnectRedis } from '~/shared/cache/redis.server.ts';
 import { initEnvironment } from '~/shared/env.server.ts';
 import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
 import { applyLogging } from './middlewares/logging.ts';
@@ -48,7 +49,7 @@ export async function setupExpressServer(environmentConfig: EnvironmentConfig) {
   await environmentConfig(app);
 
   // Start the server
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
   });
 
@@ -59,4 +60,38 @@ export async function setupExpressServer(environmentConfig: EnvironmentConfig) {
       console.error('Unhandled Rejection', promise, reason);
     });
   }
+
+  // Setup graceful shutdown
+  let isShuttingDown = false;
+
+  const gracefulShutdown = async (signal: string) => {
+    if (isShuttingDown) return;
+    isShuttingDown = true;
+
+    const timeout = setTimeout(() => {
+      console.error('❌ Graceful shutdown timed out, forcing exit');
+      process.exit(1);
+    }, 10000);
+
+    try {
+      console.log(`🔥 Shutting down web server (${signal})`);
+      await new Promise<void>((resolve, reject) => {
+        server.close((err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+      await db.$disconnect();
+      await disconnectRedis();
+      clearTimeout(timeout);
+      process.exit(0);
+    } catch (error) {
+      console.error('❌ Error during graceful shutdown:', error);
+      clearTimeout(timeout);
+      process.exit(1);
+    }
+  };
+
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 }
