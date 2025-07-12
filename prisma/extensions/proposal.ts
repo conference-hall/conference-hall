@@ -1,6 +1,8 @@
 import { ConfirmationStatus, DeliberationStatus, Prisma, PublicationStatus } from '@prisma/client';
 import { SpeakerProposalStatus } from '../../app/shared/types/speaker.types.ts';
-import { appUrl } from '../../servers/environment.server.ts';
+import { getSharedServerEnv } from '../../servers/environment.server.ts';
+
+const env = getSharedServerEnv();
 
 export const proposalExtension = Prisma.defineExtension({
   result: {
@@ -8,7 +10,7 @@ export const proposalExtension = Prisma.defineExtension({
       invitationLink: {
         needs: { invitationCode: true },
         compute({ invitationCode }) {
-          return `${appUrl()}/invite/proposal/${invitationCode}`;
+          return `${env.APP_URL}/invite/proposal/${invitationCode}`;
         },
       },
       getStatusForSpeaker: {

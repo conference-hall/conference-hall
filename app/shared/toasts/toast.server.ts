@@ -1,6 +1,9 @@
 import { createCookieSessionStorage, data } from 'react-router';
+import { getWebServerEnv } from 'servers/environment.server.ts';
 import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
+
+const env = getWebServerEnv();
 
 const toastKey = 'toast';
 
@@ -22,7 +25,7 @@ const toastSessionStorage = createCookieSessionStorage({
     path: '/',
     httpOnly: true,
     secure: true,
-    secrets: [process.env.COOKIE_SIGNED_SECRET],
+    secrets: [env.COOKIE_SIGNED_SECRET],
     sameSite: 'lax',
   },
 });

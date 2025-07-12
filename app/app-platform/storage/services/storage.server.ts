@@ -1,8 +1,10 @@
 import stream from 'node:stream';
 import type { FileUpload, FileUploadHandler } from '@mjackson/form-data-parser';
-import { appUrl } from 'servers/environment.server.ts';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { v4 as uuid } from 'uuid';
 import { storage } from '~/shared/auth/firebase.server.ts';
+
+const env = getSharedServerEnv();
 
 type StorageUploaderOptions = { name: string; maxFileSize?: number };
 
@@ -55,5 +57,5 @@ async function uploadToStorage(file: FileUpload, filepath: string, maxFileSize =
 }
 
 function getStorageProxyUrl(filepath: string) {
-  return `${appUrl()}/storage/${filepath}`;
+  return `${env.APP_URL}/storage/${filepath}`;
 }

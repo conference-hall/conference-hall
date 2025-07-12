@@ -1,11 +1,12 @@
 import crypto from 'node:crypto';
-
 import type express from 'express';
 import helmet from 'helmet';
-import { appUrl } from 'servers/environment.server.ts';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const isProduction = process.env.NODE_ENV === 'production';
-const isDevelopment = process.env.NODE_ENV === 'development';
+const env = getSharedServerEnv();
+
+const isProduction = env.NODE_ENV === 'production';
+const isDevelopment = env.NODE_ENV === 'development';
 
 export function applySecurity(app: express.Application) {
   // Reduce the ability of attackers to determine the software that a server uses
@@ -38,8 +39,8 @@ export function applySecurity(app: express.Application) {
           'script-src': [
             "'strict-dynamic'",
             "'self'",
-            isProduction ? `${appUrl()}/__/auth/*` : '',
-            isProduction ? `${appUrl()}/cdn-cgi/*` : '',
+            isProduction ? `${env.APP_URL}/__/auth/*` : '',
+            isProduction ? `${env.APP_URL}/cdn-cgi/*` : '',
             // @ts-expect-error Helmet types don't seem to know about res.locals
             (_, res) => `'nonce-${res.locals.cspNonce}'`,
           ].filter(Boolean),

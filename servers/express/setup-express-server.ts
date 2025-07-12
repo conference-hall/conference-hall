@@ -1,7 +1,6 @@
 import compression from 'compression';
 import express from 'express';
 import { db } from 'prisma/db.server.ts';
-import { initEnvironment } from 'servers/environment.server.ts';
 import { disconnectRedis } from '~/shared/cache/redis.server.ts';
 import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
 import { applyLogging } from './middlewares/logging.ts';
@@ -10,8 +9,6 @@ import { applyRateLimits } from './middlewares/rate-limit.ts';
 import { applySecurity } from './middlewares/security.ts';
 import { applySeoHeader } from './middlewares/seo.ts';
 import { applyUrlCleaning } from './middlewares/url-cleaning.ts';
-
-initEnvironment();
 
 const HOST = process.env.HOST || 'localhost';
 const PORT = Number.parseInt(process.env.PORT || '3000');

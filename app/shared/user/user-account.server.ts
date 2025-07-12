@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next';
 import { db } from 'prisma/db.server.ts';
-import { appUrl } from 'servers/environment.server.ts';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { Notifications } from '~/features/notifications/services/notifications.server.ts';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
@@ -10,6 +10,8 @@ import VerificationEmail from '~/shared/emails/templates/auth/email-verification
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
 import { NotAuthorizedError } from '../errors.server.ts';
 import { sortBy } from '../utils/arrays-sort-by.ts';
+
+const env = getSharedServerEnv();
 
 type UserAccountRegisterInput = {
   uid: string;
@@ -100,7 +102,7 @@ export class UserAccount {
 
       if (!oobCode) return;
 
-      const passwordResetUrl = new URL(`${appUrl()}/auth/reset-password`);
+      const passwordResetUrl = new URL(`${env.APP_URL}/auth/reset-password`);
       passwordResetUrl.searchParams.set('oobCode', oobCode);
       passwordResetUrl.searchParams.set('email', email);
 
@@ -131,7 +133,7 @@ export class UserAccount {
 
       if (!oobCode) return false;
 
-      const emailVerificationUrl = new URL(`${appUrl()}/auth/verify-email`);
+      const emailVerificationUrl = new URL(`${env.APP_URL}/auth/verify-email`);
       emailVerificationUrl.searchParams.set('oobCode', oobCode);
       emailVerificationUrl.searchParams.set('email', email);
 
