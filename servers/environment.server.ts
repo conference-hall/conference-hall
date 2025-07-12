@@ -2,6 +2,7 @@ import { z } from 'zod/v4';
 
 const SharedServerSchema = z.object({
   TZ: z.string(),
+  CI: z.stringbool().optional().default(false),
   NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
   USE_EMULATORS: z.stringbool().optional().default(false),
   APP_URL: z.url(),
@@ -10,6 +11,8 @@ const SharedServerSchema = z.object({
 });
 
 const WebServerSchema = z.object({
+  HOST: z.string().optional().default('localhost'),
+  PORT: z.coerce.number().optional().default(3000),
   FIREBASE_PROJECT_ID: z.string(),
   FIREBASE_API_KEY: z.string(),
   FIREBASE_AUTH_DOMAIN: z.string(),
@@ -37,8 +40,8 @@ let webServerEnv: WebServerEnv;
 type JobServerEnv = z.infer<typeof JobServerSchema>;
 let jobServerEnv: JobServerEnv;
 
-// todo(env): lint/style/noProcessEnv: This should be the only place to use process.env directly
 function initEnv<T extends z.ZodType>(schema: T): z.infer<T> {
+  // biome-ignore lint/style/noProcessEnv: process.env should only be used here
   const envData = schema.safeParse(process.env);
 
   if (!envData.success) {

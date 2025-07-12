@@ -35,7 +35,8 @@
         "useSingleVarDeclarator": "error",
         "noUnusedTemplateLiteral": "error",
         "useNumberNamespace": "error",
-        "noInferrableTypes": "error"
+        "noInferrableTypes": "error",
+        "noProcessEnv": "error"
       },
       "suspicious": {
         "noExplicitAny": "off",

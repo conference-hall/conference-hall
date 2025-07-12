@@ -1,6 +1,7 @@
 import compression from 'compression';
 import express from 'express';
 import { db } from 'prisma/db.server.ts';
+import { getWebServerEnv } from 'servers/environment.server.ts';
 import { disconnectRedis } from '~/shared/cache/redis.server.ts';
 import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
 import { applyLogging } from './middlewares/logging.ts';
@@ -10,8 +11,7 @@ import { applySecurity } from './middlewares/security.ts';
 import { applySeoHeader } from './middlewares/seo.ts';
 import { applyUrlCleaning } from './middlewares/url-cleaning.ts';
 
-const HOST = process.env.HOST || 'localhost';
-const PORT = Number.parseInt(process.env.PORT || '3000');
+const env = getWebServerEnv();
 
 type EnvironmentConfig = (app: express.Application) => Promise<void>;
 
@@ -46,8 +46,8 @@ export async function setupExpressServer(environmentConfig: EnvironmentConfig) {
   await environmentConfig(app);
 
   // Start the server
-  const server = app.listen(PORT, () => {
-    console.log(`Server is running on http://${HOST}:${PORT}`);
+  const server = app.listen(env.PORT, () => {
+    console.log(`Server is running on http://${env.HOST}:${env.PORT}`);
   });
 
   // Avoid server crash due to unhandled promise rejections

@@ -4,8 +4,9 @@
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { getSharedServerEnv } from './servers/environment.server.ts';
 
-const isCI = Boolean(process.env.CI);
+const env = getSharedServerEnv();
 
 export default defineConfig({
   plugins: [tailwindcss(), tsconfigPaths()],
@@ -13,7 +14,7 @@ export default defineConfig({
   test: {
     globals: true,
     restoreMocks: true,
-    reporters: isCI ? ['default', 'junit'] : 'default',
+    reporters: env.CI ? ['default', 'junit'] : 'default',
     outputFile: './test-results/unit.xml',
     projects: [
       {
