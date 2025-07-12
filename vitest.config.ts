@@ -4,9 +4,9 @@
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { getSharedServerEnv } from './servers/environment.server.ts';
 
-const env = getSharedServerEnv();
+// biome-ignore lint/style/noProcessEnv: dotenv not loaded yet
+const CI = Boolean(process.env.CI);
 
 export default defineConfig({
   plugins: [tailwindcss(), tsconfigPaths()],
@@ -14,7 +14,7 @@ export default defineConfig({
   test: {
     globals: true,
     restoreMocks: true,
-    reporters: env.CI ? ['default', 'junit'] : 'default',
+    reporters: CI ? ['default', 'junit'] : 'default',
     outputFile: './test-results/unit.xml',
     projects: [
       {

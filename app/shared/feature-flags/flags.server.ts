@@ -6,8 +6,7 @@ import { FlagsStorage } from './flags-storage.ts';
 
 const env = getSharedServerEnv();
 
-const isProduction = env.NODE_ENV === 'production' && !env.USE_EMULATORS;
-const isTest = env.NODE_ENV === 'test';
+const isProduction = env.NODE_ENV === 'production';
 
 declare global {
   var __flags: any;
@@ -18,11 +17,11 @@ async function getClient() {
     return global.__flags as FlagsClient<typeof flagsConfig>;
   }
 
-  if (!isTest && isProduction) {
+  if (isProduction) {
     console.info('🚩 Feature flags config loaded.');
   }
 
-  const cache = isTest ? new MemoryCacheLayer() : undefined;
+  const cache = env.VITEST ? new MemoryCacheLayer() : undefined;
   const client = new FlagsClient(flagsConfig, new FlagsStorage(cache));
   await client.load();
 

@@ -19,7 +19,6 @@ type FirebaseConfig = {
   FIREBASE_AUTH_DOMAIN: string;
   FIREBASE_PROJECT_ID: string;
   FIREBASE_AUTH_EMULATOR_HOST?: string;
-  USE_EMULATORS: boolean;
 };
 
 export function initializeFirebaseClient(locale: string, config?: FirebaseConfig) {
@@ -35,7 +34,7 @@ export function initializeFirebaseClient(locale: string, config?: FirebaseConfig
   auth.languageCode = locale;
   setPersistence(auth, browserLocalPersistence);
 
-  if (config.USE_EMULATORS) {
+  if (config.FIREBASE_AUTH_EMULATOR_HOST) {
     connectAuthEmulator(auth, `http://${config.FIREBASE_AUTH_EMULATOR_HOST}`, { disableWarnings: true });
   }
 }

@@ -6,7 +6,6 @@ import { getSharedServerEnv } from 'servers/environment.server.ts';
 const env = getSharedServerEnv();
 
 const isProduction = env.NODE_ENV === 'production';
-const isDevelopment = env.NODE_ENV === 'development';
 
 export function applySecurity(app: express.Application) {
   // Reduce the ability of attackers to determine the software that a server uses
@@ -28,12 +27,12 @@ export function applySecurity(app: express.Application) {
         reportOnly: true,
         directives: {
           'connect-src': [
-            isDevelopment ? 'ws://127.0.0.1:*' : '',
-            isDevelopment ? 'http://127.0.0.1:*' : '',
+            !isProduction ? 'ws://127.0.0.1:*' : '',
+            !isProduction ? 'http://127.0.0.1:*' : '',
             isProduction ? '*.googleapis.com' : '',
             "'self'",
           ].filter(Boolean),
-          'frame-src': ["'self'", isDevelopment ? 'http://127.0.0.1:*' : ''].filter(Boolean),
+          'frame-src': ["'self'", !isProduction ? 'http://127.0.0.1:*' : ''].filter(Boolean),
           'font-src': ["'self'"],
           'img-src': ["'self'", 'data:', 'https:'],
           'script-src': [

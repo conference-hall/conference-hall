@@ -9,7 +9,7 @@ export async function disconnectDB() {
 }
 
 export async function resetDB() {
-  if (env.NODE_ENV === 'production' && !env.USE_EMULATORS) {
+  if (env.NODE_ENV === 'production') {
     return '🚨 Reset DB cannot be executed in production.';
   }
 

@@ -6,7 +6,7 @@ const env = getSharedServerEnv();
 const isProduction = env.NODE_ENV === 'production';
 
 export function applyLocalhostRedirect(app: express.Application) {
-  if (isProduction && !env.USE_EMULATORS) return;
+  if (isProduction) return;
 
   app.use((req, res, next) => {
     const host = req.headers.host;

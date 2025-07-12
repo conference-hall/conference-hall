@@ -95,7 +95,7 @@ jobs:
         run: npx playwright install --with-deps --only-shell chromium
 
       - name: Build the app
-        run: npx dotenvx run -f .env.e2e -- npm run build
+        run: npm run build
 
       - name: Run e2e tests
         run: npm run test:e2e

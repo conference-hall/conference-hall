@@ -3,8 +3,8 @@ import { z } from 'zod/v4';
 const SharedServerSchema = z.object({
   TZ: z.string(),
   CI: z.stringbool().optional().default(false),
+  VITEST: z.stringbool().optional().default(false),
   NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
-  USE_EMULATORS: z.stringbool().optional().default(false),
   APP_URL: z.url(),
   DATABASE_URL: z.url(),
   REDIS_URL: z.url(),
@@ -79,7 +79,6 @@ export function getBrowserEnv() {
   const webServerEnv = getWebServerEnv();
   return {
     NODE_ENV: sharedServerEnv.NODE_ENV,
-    USE_EMULATORS: sharedServerEnv.USE_EMULATORS,
     FIREBASE_API_KEY: webServerEnv.FIREBASE_API_KEY,
     FIREBASE_AUTH_DOMAIN: webServerEnv.FIREBASE_AUTH_DOMAIN,
     FIREBASE_PROJECT_ID: webServerEnv.FIREBASE_PROJECT_ID,

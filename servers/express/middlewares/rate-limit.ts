@@ -5,10 +5,8 @@ import { getSharedServerEnv } from 'servers/environment.server.ts';
 
 const env = getSharedServerEnv();
 
-const isProduction = env.NODE_ENV === 'production' && !env.USE_EMULATORS;
-
 // Disable rate limiting on dev and test environments
-const maxMultiple = isProduction ? 1 : 10_000;
+const maxMultiple = env.NODE_ENV === 'production' ? 1 : 10_000;
 
 const defaultRateLimit = {
   standardHeaders: true,

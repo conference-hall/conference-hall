@@ -1,16 +1,10 @@
-import path from 'node:path';
 import dotenv from '@dotenvx/dotenvx';
 import { defineConfig, devices } from '@playwright/test';
 import { getSharedServerEnv } from './servers/environment.server.ts';
 
 // biome-ignore lint/style/noProcessEnv: dotenv not loaded yet
 const CI = Boolean(process.env.CI);
-
-if (CI) {
-  dotenv.config({ path: path.resolve(import.meta.dirname, '.env.e2e') });
-} else {
-  dotenv.config({ path: path.resolve(import.meta.dirname, '.env.dev') });
-}
+dotenv.config({ path: CI ? '.env.test' : '.env.dev', quiet: true });
 
 const env = getSharedServerEnv();
 
