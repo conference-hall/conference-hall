@@ -2,12 +2,13 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import { useChangeLanguage } from 'remix-i18next/react';
-import { getBrowserEnv, getWebServerEnv } from '../servers/environment.server.ts';
+import { getWebServerEnv } from '../servers/environment.server.ts';
 import type { Route } from './+types/root.ts';
 import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
 import { useNonce } from './app-platform/components/use-nonce.ts';
 import { UserProvider } from './app-platform/components/user-context.tsx';
+import { getFirebaseClientConfig } from './shared/auth/firebase.server.ts';
 import { initializeFirebaseClient } from './shared/auth/firebase.ts';
 import { destroySession, getUserSession } from './shared/auth/session.ts';
 import { flags } from './shared/feature-flags/flags.server.ts';
@@ -60,9 +61,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const t = await i18n.getFixedT(locale);
   const title = t('app.title');
   const description = t('app.description');
+  const firebaseConfig = getFirebaseClientConfig();
 
   return data(
-    { title, description, user, locale, toast, env: getBrowserEnv(), flags: frontendFlags },
+    { title, description, user, locale, toast, firebaseConfig, flags: frontendFlags },
     { headers: toastHeaders || {} },
   );
 };
@@ -96,12 +98,12 @@ function Document({ locale, nonce, toast, children }: DocumentProps) {
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  const { locale, user, env, toast, flags } = loaderData;
+  const { locale, user, firebaseConfig, toast, flags } = loaderData;
   const nonce = useNonce();
 
   useChangeLanguage(locale);
 
-  initializeFirebaseClient(locale, env);
+  initializeFirebaseClient(locale, firebaseConfig);
 
   return (
     <FlagsProvider flags={flags}>

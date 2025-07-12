@@ -6,6 +6,7 @@ import { getAuth } from 'firebase-admin/auth';
 import type { Storage } from 'firebase-admin/storage';
 import { getStorage } from 'firebase-admin/storage';
 import { getWebServerEnv } from 'servers/environment.server.ts';
+import type { FirebaseConfig } from './firebase.ts';
 
 const env = getWebServerEnv();
 
@@ -34,4 +35,13 @@ if (getApps().length === 0) {
   storage = getStorage(app);
 }
 
-export { auth, storage };
+function getFirebaseClientConfig(): FirebaseConfig {
+  return {
+    FIREBASE_API_KEY: env.FIREBASE_API_KEY,
+    FIREBASE_AUTH_DOMAIN: env.FIREBASE_AUTH_DOMAIN,
+    FIREBASE_PROJECT_ID: env.FIREBASE_PROJECT_ID,
+    FIREBASE_AUTH_EMULATOR_HOST: env.FIREBASE_AUTH_EMULATOR_HOST,
+  };
+}
+
+export { auth, storage, getFirebaseClientConfig };

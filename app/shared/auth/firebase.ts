@@ -14,7 +14,7 @@ export const PROVIDERS: Array<ProviderInfo> = [
   { id: 'twitter.com', label: 'X.com', icon: XIcon },
 ];
 
-type FirebaseConfig = {
+export type FirebaseConfig = {
   FIREBASE_API_KEY: string;
   FIREBASE_AUTH_DOMAIN: string;
   FIREBASE_PROJECT_ID: string;

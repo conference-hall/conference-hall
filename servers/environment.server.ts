@@ -73,13 +73,3 @@ export function getJobServerEnv() {
   Object.freeze(jobServerEnv);
   return jobServerEnv;
 }
-
-export function getBrowserEnv() {
-  const webServerEnv = getWebServerEnv();
-  return {
-    FIREBASE_API_KEY: webServerEnv.FIREBASE_API_KEY,
-    FIREBASE_AUTH_DOMAIN: webServerEnv.FIREBASE_AUTH_DOMAIN,
-    FIREBASE_PROJECT_ID: webServerEnv.FIREBASE_PROJECT_ID,
-    FIREBASE_AUTH_EMULATOR_HOST: webServerEnv.FIREBASE_AUTH_EMULATOR_HOST,
-  };
-}
