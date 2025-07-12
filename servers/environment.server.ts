@@ -1,67 +1,93 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
-const schema = z.object({
+const SharedServerSchema = z.object({
   TZ: z.string(),
-  NODE_ENV: z.enum(['production', 'development', 'test']),
-  USE_EMULATORS: z.string().optional(),
-  APP_URL: z.string(),
-  DATABASE_URL: z.string(),
-  REDIS_URL: z.string(),
+  NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
+  USE_EMULATORS: z.stringbool().optional().default(false),
+  APP_URL: z.url(),
+  DATABASE_URL: z.url(),
+  REDIS_URL: z.url(),
+});
+
+const WebServerSchema = z.object({
   FIREBASE_PROJECT_ID: z.string(),
   FIREBASE_API_KEY: z.string(),
   FIREBASE_AUTH_DOMAIN: z.string(),
   FIREBASE_STORAGE: z.string(),
+  FIREBASE_SERVICE_ACCOUNT: z.string().optional(),
   FIREBASE_AUTH_EMULATOR_HOST: z.string().optional(),
   FIREBASE_STORAGE_EMULATOR_HOST: z.string().optional(),
-  FIREBASE_SERVICE_ACCOUNT: z.string().optional(),
   COOKIE_SIGNED_SECRET: z.string(),
-  MAINTENANCE_ENABLED: z.string().optional(),
+  MAINTENANCE_ENABLED: z.stringbool().optional().default(false),
 });
 
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv extends z.infer<typeof schema> {}
-  }
-}
+const JobServerSchema = z.object({
+  MAILGUN_DOMAIN: z.string().optional(),
+  MAILGUN_API_KEY: z.string().optional(),
+  MAILPIT_HOST: z.string().optional(),
+  MAILPIT_SMTP_PORT: z.coerce.number().optional(),
+});
 
-export function initEnvironment() {
-  const parsed = schema.safeParse(process.env);
+type SharedServerEnv = z.infer<typeof SharedServerSchema>;
+let sharedServerEnv: SharedServerEnv;
 
-  if (parsed.success === false) {
-    console.error('❌ Invalid environment variables:', parsed.error.flatten().fieldErrors);
+type WebServerEnv = z.infer<typeof WebServerSchema>;
+let webServerEnv: WebServerEnv;
 
+type JobServerEnv = z.infer<typeof JobServerSchema>;
+let jobServerEnv: JobServerEnv;
+
+// todo(env): lint/style/noProcessEnv: This should be the only place to use process.env directly
+function initEnv<T extends z.ZodType>(schema: T, logging = true): z.infer<T> {
+  const envData = schema.safeParse(process.env);
+
+  if (!envData.success) {
+    console.error('❌ Invalid environment variables:', z.prettifyError(envData.error));
     throw new Error('Invalid environment variables');
   }
 
-  global.ENV = getBrowserEnv();
+  if (process.env.NODE_ENV !== 'test' && logging) {
+    console.log('✅ Environment variables loaded successfully');
+  }
+  return envData.data;
 }
 
-/**
- * NOTE: Do *not* add any environment variables in here that you do not wish to
- * be included in the client.
- * @returns all public ENV variables
- */
+export function getSharedServerEnv() {
+  if (sharedServerEnv) return sharedServerEnv;
+  sharedServerEnv = initEnv(SharedServerSchema, false);
+  Object.freeze(sharedServerEnv);
+  return sharedServerEnv;
+}
+
+export function getWebServerEnv() {
+  if (webServerEnv) return webServerEnv;
+  webServerEnv = initEnv(WebServerSchema);
+  Object.freeze(webServerEnv);
+  return webServerEnv;
+}
+
+export function getJobServerEnv() {
+  if (jobServerEnv) return jobServerEnv;
+  jobServerEnv = initEnv(JobServerSchema);
+  Object.freeze(jobServerEnv);
+  return jobServerEnv;
+}
+
 export function getBrowserEnv() {
+  const sharedServerEnv = getSharedServerEnv();
+  const webServerEnv = getWebServerEnv();
   return {
-    NODE_ENV: process.env.NODE_ENV,
-    USE_EMULATORS: process.env.USE_EMULATORS === 'true',
-    FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-    FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
-    FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
-    FIREBASE_AUTH_EMULATOR_HOST: process.env.FIREBASE_AUTH_EMULATOR_HOST,
-    I18N_HASH: process.env.RAILWAY_GIT_COMMIT_SHA ?? null,
+    NODE_ENV: sharedServerEnv.NODE_ENV,
+    USE_EMULATORS: sharedServerEnv.USE_EMULATORS,
+    FIREBASE_API_KEY: webServerEnv.FIREBASE_API_KEY,
+    FIREBASE_AUTH_DOMAIN: webServerEnv.FIREBASE_AUTH_DOMAIN,
+    FIREBASE_PROJECT_ID: webServerEnv.FIREBASE_PROJECT_ID,
+    FIREBASE_AUTH_EMULATOR_HOST: webServerEnv.FIREBASE_AUTH_EMULATOR_HOST,
   };
 }
 
-export function appUrl() {
-  return process.env.APP_URL;
-}
-
-type ENV = ReturnType<typeof getBrowserEnv>;
-
 declare global {
-  var ENV: ENV;
   interface Window {
-    ENV: ENV;
+    env: ReturnType<typeof getBrowserEnv>;
   }
 }
