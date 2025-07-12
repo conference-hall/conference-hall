@@ -75,19 +75,11 @@ export function getJobServerEnv() {
 }
 
 export function getBrowserEnv() {
-  const sharedServerEnv = getSharedServerEnv();
   const webServerEnv = getWebServerEnv();
   return {
-    NODE_ENV: sharedServerEnv.NODE_ENV,
     FIREBASE_API_KEY: webServerEnv.FIREBASE_API_KEY,
     FIREBASE_AUTH_DOMAIN: webServerEnv.FIREBASE_AUTH_DOMAIN,
     FIREBASE_PROJECT_ID: webServerEnv.FIREBASE_PROJECT_ID,
     FIREBASE_AUTH_EMULATOR_HOST: webServerEnv.FIREBASE_AUTH_EMULATOR_HOST,
   };
-}
-
-declare global {
-  interface Window {
-    env: ReturnType<typeof getBrowserEnv>;
-  }
 }

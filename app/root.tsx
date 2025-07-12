@@ -70,12 +70,11 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 type DocumentProps = {
   locale: string;
   nonce: string;
-  env?: Record<string, unknown>;
   toast?: Toast | null;
   children: ReactNode;
 };
 
-function Document({ locale, nonce, env = {}, toast, children }: DocumentProps) {
+function Document({ locale, nonce, toast, children }: DocumentProps) {
   const { i18n } = useTranslation();
   return (
     <html lang={locale} dir={i18n.dir()}>
@@ -89,12 +88,6 @@ function Document({ locale, nonce, env = {}, toast, children }: DocumentProps) {
         <GlobalLoading />
         <Toaster toast={toast} />
         {children}
-        <script
-          nonce={nonce}
-          dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(env)}`,
-          }}
-        />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
@@ -113,7 +106,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
   return (
     <FlagsProvider flags={flags}>
       <UserProvider user={user}>
-        <Document locale={locale} toast={toast} env={env} nonce={nonce}>
+        <Document locale={locale} toast={toast} nonce={nonce}>
           <Outlet />
         </Document>
       </UserProvider>
