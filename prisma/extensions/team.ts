@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 
-import { appUrl } from '../../app/shared/env.server.ts';
+import { appUrl } from '../../servers/environment.server.ts';
 
 export const teamExtension = Prisma.defineExtension({
   result: {

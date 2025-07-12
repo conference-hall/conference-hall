@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 
 import type express from 'express';
 import helmet from 'helmet';
-import { appUrl } from '~/shared/env.server.ts';
+import { appUrl } from 'servers/environment.server.ts';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = process.env.NODE_ENV === 'development';

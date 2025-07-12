@@ -1,4 +1,4 @@
-import { appUrl } from '~/shared/env.server.ts';
+import { appUrl } from 'servers/environment.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 
 const ROBOT_TXT_PRODUCTION = `User-agent: *

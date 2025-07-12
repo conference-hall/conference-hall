@@ -1,6 +1,6 @@
+import { appUrl } from 'servers/environment.server.ts';
 import { SitemapStream, streamToPromise } from 'sitemap';
 import { RedisCacheLayer } from '~/shared/cache/redis-cache-layer.ts';
-import { appUrl } from '~/shared/env.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { getEventsForSitemap } from './services/sitemap.server.ts';
 
