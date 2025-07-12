@@ -9,7 +9,7 @@ import { TalkNotFoundError } from '~/shared/errors.server.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { SpeakerTalk } from './speaker-talk.server.ts';
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 describe('SpeakerTalk', () => {
   let speakerUser: User;
@@ -33,7 +33,7 @@ describe('SpeakerTalk', () => {
         references: talk.references,
         archived: talk.archived,
         createdAt: talk.createdAt,
-        invitationLink: `${env.APP_URL}/invite/talk/${talk.invitationCode}`,
+        invitationLink: `${APP_URL}/invite/talk/${talk.invitationCode}`,
         isOwner: true,
         speakers: [
           {

@@ -1,8 +1,6 @@
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const env = getSharedServerEnv();
-
-const isProduction = env.NODE_ENV === 'production';
+const { NODE_ENV } = getSharedServerEnv();
 
 export const logger = {
   info: (message: string, rest?: Record<string, any>) => log('info', message, rest),
@@ -10,7 +8,7 @@ export const logger = {
 };
 
 function log(level: 'info' | 'error', message: string, rest?: Record<string, any>) {
-  if (isProduction) {
+  if (NODE_ENV === 'production') {
     console[level](JSON.stringify({ message, ...rest }));
   } else {
     rest ? console[level](message, rest) : console[level](message);

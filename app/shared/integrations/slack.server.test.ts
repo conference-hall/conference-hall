@@ -1,7 +1,7 @@
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { Slack, type SlackMessage } from './slack.server.ts';
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
@@ -18,7 +18,7 @@ describe('Slack integration', () => {
       title: 'Title',
       text: 'Abstract',
       author_name: 'by Speaker 1 & Speaker 2',
-      title_link: `${env.APP_URL}/team/my-team/event-1/reviews/proposal-1`,
+      title_link: `${APP_URL}/team/my-team/event-1/reviews/proposal-1`,
       thumb_url: 'http://photo',
       color: '#ffab00',
       fields: [

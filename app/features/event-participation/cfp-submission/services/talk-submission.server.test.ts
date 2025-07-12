@@ -18,7 +18,7 @@ import {
 } from '~/shared/errors.server.ts';
 import { TalkSubmission } from './talk-submission.server.ts';
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 describe('TalkSubmission', () => {
   describe('#saveDraft', () => {
@@ -341,7 +341,7 @@ describe('TalkSubmission', () => {
         languages: proposal.languages,
         level: proposal.level,
         references: proposal.references,
-        invitationLink: `${env.APP_URL}/invite/proposal/${proposal.invitationCode}`,
+        invitationLink: `${APP_URL}/invite/proposal/${proposal.invitationCode}`,
         createdAt: proposal.createdAt,
         isOwner: true,
         speakers: [

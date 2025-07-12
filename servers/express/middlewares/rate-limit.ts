@@ -3,10 +3,10 @@ import rateLimit from 'express-rate-limit';
 import { href } from 'react-router';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const env = getSharedServerEnv();
+const { NODE_ENV } = getSharedServerEnv();
 
 // Disable rate limiting on dev and test environments
-const maxMultiple = env.NODE_ENV === 'production' ? 1 : 10_000;
+const maxMultiple = NODE_ENV === 'production' ? 1 : 10_000;
 
 const defaultRateLimit = {
   standardHeaders: true,

@@ -21,7 +21,7 @@ import { UserAccount } from './shared/user/user-account.server.ts';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
 
-const env = getWebServerEnv();
+const { MAINTENANCE_ENABLED } = getWebServerEnv();
 
 const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
 
@@ -45,7 +45,7 @@ export const links: Route.LinksFunction = () => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  if (env.MAINTENANCE_ENABLED) {
+  if (MAINTENANCE_ENABLED) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
 

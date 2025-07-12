@@ -3,7 +3,7 @@ import { getWebServerEnv } from 'servers/environment.server.ts';
 import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
 
-const env = getWebServerEnv();
+const { COOKIE_SIGNED_SECRET } = getWebServerEnv();
 
 const toastKey = 'toast';
 
@@ -25,7 +25,7 @@ const toastSessionStorage = createCookieSessionStorage({
     path: '/',
     httpOnly: true,
     secure: true,
-    secrets: [env.COOKIE_SIGNED_SECRET],
+    secrets: [COOKIE_SIGNED_SECRET],
     sameSite: 'lax',
   },
 });

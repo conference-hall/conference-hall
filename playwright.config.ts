@@ -6,7 +6,7 @@ import { getSharedServerEnv } from './servers/environment.server.ts';
 const CI = Boolean(process.env.CI);
 dotenv.config({ path: CI ? '.env.test' : '.env.dev', quiet: true });
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 export default defineConfig({
   testDir: './e2e',
@@ -27,13 +27,13 @@ export default defineConfig({
     { command: 'npm run jobs:start' },
     {
       command: CI ? 'npm run db:migrate:deploy && npm run start' : 'npm run dev',
-      url: env.APP_URL,
+      url: APP_URL,
       reuseExistingServer: !CI,
     },
   ],
 
   use: {
-    baseURL: env.APP_URL,
+    baseURL: APP_URL,
     locale: 'en-GB',
     timezoneId: 'Europe/Paris',
     trace: 'on-first-retry',

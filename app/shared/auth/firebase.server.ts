@@ -8,23 +8,30 @@ import { getStorage } from 'firebase-admin/storage';
 import { getWebServerEnv } from 'servers/environment.server.ts';
 import type { FirebaseConfig } from './firebase.ts';
 
-const env = getWebServerEnv();
+const {
+  FIREBASE_SERVICE_ACCOUNT,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_STORAGE,
+  FIREBASE_AUTH_EMULATOR_HOST,
+} = getWebServerEnv();
 
 let app: App;
 let auth: Auth;
 let storage: Storage;
 
 if (getApps().length === 0) {
-  if (env.FIREBASE_SERVICE_ACCOUNT) {
+  if (FIREBASE_SERVICE_ACCOUNT) {
     app = initializeApp({
-      projectId: env.FIREBASE_PROJECT_ID,
-      storageBucket: env.FIREBASE_STORAGE,
-      credential: admin.credential.cert(JSON.parse(env.FIREBASE_SERVICE_ACCOUNT)),
+      projectId: FIREBASE_PROJECT_ID,
+      storageBucket: FIREBASE_STORAGE,
+      credential: admin.credential.cert(JSON.parse(FIREBASE_SERVICE_ACCOUNT)),
     });
   } else {
     app = initializeApp({
-      projectId: env.FIREBASE_PROJECT_ID,
-      storageBucket: env.FIREBASE_STORAGE,
+      projectId: FIREBASE_PROJECT_ID,
+      storageBucket: FIREBASE_STORAGE,
     });
   }
   auth = getAuth(app);
@@ -37,10 +44,10 @@ if (getApps().length === 0) {
 
 function getFirebaseClientConfig(): FirebaseConfig {
   return {
-    FIREBASE_API_KEY: env.FIREBASE_API_KEY,
-    FIREBASE_AUTH_DOMAIN: env.FIREBASE_AUTH_DOMAIN,
-    FIREBASE_PROJECT_ID: env.FIREBASE_PROJECT_ID,
-    FIREBASE_AUTH_EMULATOR_HOST: env.FIREBASE_AUTH_EMULATOR_HOST,
+    FIREBASE_API_KEY: FIREBASE_API_KEY,
+    FIREBASE_AUTH_DOMAIN: FIREBASE_AUTH_DOMAIN,
+    FIREBASE_PROJECT_ID: FIREBASE_PROJECT_ID,
+    FIREBASE_AUTH_EMULATOR_HOST: FIREBASE_AUTH_EMULATOR_HOST,
   };
 }
 

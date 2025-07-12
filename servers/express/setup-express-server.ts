@@ -11,7 +11,7 @@ import { applySecurity } from './middlewares/security.ts';
 import { applySeoHeader } from './middlewares/seo.ts';
 import { applyUrlCleaning } from './middlewares/url-cleaning.ts';
 
-const env = getWebServerEnv();
+const { HOST, PORT } = getWebServerEnv();
 
 type EnvironmentConfig = (app: express.Application) => Promise<void>;
 
@@ -46,8 +46,8 @@ export async function setupExpressServer(environmentConfig: EnvironmentConfig) {
   await environmentConfig(app);
 
   // Start the server
-  const server = app.listen(env.PORT, () => {
-    console.log(`Server is running on http://${env.HOST}:${env.PORT}`);
+  const server = app.listen(PORT, () => {
+    console.log(`Server is running on http://${HOST}:${PORT}`);
   });
 
   // Avoid server crash due to unhandled promise rejections

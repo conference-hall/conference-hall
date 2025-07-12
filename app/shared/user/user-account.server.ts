@@ -11,7 +11,7 @@ import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.ts
 import { NotAuthorizedError } from '../errors.server.ts';
 import { sortBy } from '../utils/arrays-sort-by.ts';
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 type UserAccountRegisterInput = {
   uid: string;
@@ -102,7 +102,7 @@ export class UserAccount {
 
       if (!oobCode) return;
 
-      const passwordResetUrl = new URL(`${env.APP_URL}/auth/reset-password`);
+      const passwordResetUrl = new URL(`${APP_URL}/auth/reset-password`);
       passwordResetUrl.searchParams.set('oobCode', oobCode);
       passwordResetUrl.searchParams.set('email', email);
 
@@ -133,7 +133,7 @@ export class UserAccount {
 
       if (!oobCode) return false;
 
-      const emailVerificationUrl = new URL(`${env.APP_URL}/auth/verify-email`);
+      const emailVerificationUrl = new URL(`${APP_URL}/auth/verify-email`);
       emailVerificationUrl.searchParams.set('oobCode', oobCode);
       emailVerificationUrl.searchParams.set('email', email);
 

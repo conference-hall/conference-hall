@@ -6,7 +6,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 describe('Proposal#invitationLink', () => {
   it('returns the invitation link', async () => {
@@ -15,7 +15,7 @@ describe('Proposal#invitationLink', () => {
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk });
 
-    expect(proposal.invitationLink).toBe(`${env.APP_URL}/invite/proposal/${proposal.invitationCode}`);
+    expect(proposal.invitationLink).toBe(`${APP_URL}/invite/proposal/${proposal.invitationCode}`);
   });
 });
 

@@ -2,7 +2,7 @@ import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 describe('Talk', () => {
   describe('Talk#invitationLink', () => {
@@ -10,7 +10,7 @@ describe('Talk', () => {
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
 
-      expect(talk.invitationLink).toBe(`${env.APP_URL}/invite/talk/${talk.invitationCode}`);
+      expect(talk.invitationLink).toBe(`${APP_URL}/invite/talk/${talk.invitationCode}`);
     });
   });
 });

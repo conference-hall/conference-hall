@@ -11,7 +11,7 @@ import { CfpNotOpenError, ProposalNotFoundError } from '~/shared/errors.server.t
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { SpeakerProposal } from './speaker-proposal.server.ts';
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 describe('SpeakerProposal', () => {
   describe('#get', () => {
@@ -35,7 +35,7 @@ describe('SpeakerProposal', () => {
         level: proposal.level,
         createdAt: proposal.createdAt,
         languages: proposal.languages,
-        invitationLink: `${env.APP_URL}/invite/proposal/${proposal.invitationCode}`,
+        invitationLink: `${APP_URL}/invite/proposal/${proposal.invitationCode}`,
         status: SpeakerProposalStatus.Submitted,
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],

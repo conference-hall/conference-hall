@@ -6,14 +6,14 @@ import { getWebServerEnv } from 'servers/environment.server.ts';
 import { i18nResources } from './i18n.resources.ts';
 import { i18nConfig } from './i18n.ts';
 
-const env = getWebServerEnv();
+const { COOKIE_SIGNED_SECRET } = getWebServerEnv();
 
 const MAX_AGE_SEC = 60 * 60 * 24 * 365; // 1 year
 
 const localeCookie = createCookie('locale', {
   path: '/',
   secure: true,
-  secrets: [env.COOKIE_SIGNED_SECRET],
+  secrets: [COOKIE_SIGNED_SECRET],
   sameSite: 'lax',
 });
 

@@ -4,7 +4,7 @@ import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { v4 as uuid } from 'uuid';
 import { storage } from '~/shared/auth/firebase.server.ts';
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 type StorageUploaderOptions = { name: string; maxFileSize?: number };
 
@@ -57,5 +57,5 @@ async function uploadToStorage(file: FileUpload, filepath: string, maxFileSize =
 }
 
 function getStorageProxyUrl(filepath: string) {
-  return `${env.APP_URL}/storage/${filepath}`;
+  return `${APP_URL}/storage/${filepath}`;
 }

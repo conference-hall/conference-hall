@@ -3,12 +3,10 @@ import morgan from 'morgan';
 import pc from 'picocolors';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const env = getSharedServerEnv();
-
-const isProduction = env.NODE_ENV === 'production';
+const { NODE_ENV } = getSharedServerEnv();
 
 export function applyLogging(app: express.Application) {
-  if (isProduction) {
+  if (NODE_ENV === 'production') {
     app.use(
       morgan((tokens, req, res) => {
         const status = Number(tokens['status'](req, res)) || 0;

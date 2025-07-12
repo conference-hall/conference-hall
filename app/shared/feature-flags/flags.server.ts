@@ -4,9 +4,9 @@ import { MemoryCacheLayer } from '../cache/memory-cache-layer.ts';
 import { FlagsClient } from './flags-client.ts';
 import { FlagsStorage } from './flags-storage.ts';
 
-const env = getSharedServerEnv();
+const { NODE_ENV, VITEST } = getSharedServerEnv();
 
-const isProduction = env.NODE_ENV === 'production';
+const isProduction = NODE_ENV === 'production';
 
 declare global {
   var __flags: any;
@@ -21,7 +21,7 @@ async function getClient() {
     console.info('🚩 Feature flags config loaded.');
   }
 
-  const cache = env.VITEST ? new MemoryCacheLayer() : undefined;
+  const cache = VITEST ? new MemoryCacheLayer() : undefined;
   const client = new FlagsClient(flagsConfig, new FlagsStorage(cache));
   await client.load();
 

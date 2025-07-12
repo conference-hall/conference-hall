@@ -4,7 +4,7 @@ import { RedisCacheLayer } from '~/shared/cache/redis-cache-layer.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { getEventsForSitemap } from './services/sitemap.server.ts';
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 const ONE_WEEK_IN_SECONDS = 7 * 24 * 60 * 60;
 const cache = new RedisCacheLayer({ prefix: 'seo:', ttl: ONE_WEEK_IN_SECONDS });
@@ -23,7 +23,7 @@ export async function loader() {
   }
 
   // Build the sitemap
-  const stream = new SitemapStream({ hostname: env.APP_URL });
+  const stream = new SitemapStream({ hostname: APP_URL });
 
   // Add events to sitemap
   const events = await getEventsForSitemap();

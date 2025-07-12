@@ -5,7 +5,7 @@ import { proposalExtension } from './extensions/proposal.ts';
 import { talkExtension } from './extensions/talk.ts';
 import { teamExtension } from './extensions/team.ts';
 
-const env = getSharedServerEnv();
+const { NODE_ENV } = getSharedServerEnv();
 
 type DbClient = ReturnType<typeof getClient>;
 
@@ -20,7 +20,7 @@ declare global {
 // this is needed because in development we don't want to restart
 // the server with every change, but we want to make sure we don't
 // create a new connection to the DB with every change either.
-if (env.NODE_ENV === 'production') {
+if (NODE_ENV === 'production') {
   db = getClient();
 } else {
   if (!global.__db) {
@@ -42,7 +42,7 @@ function getClient() {
 }
 
 function buildClientWithLogger(): PrismaClient {
-  if (['development', 'test'].includes(env.NODE_ENV)) {
+  if (NODE_ENV !== 'production') {
     return new PrismaClient({ log: ['warn', 'error'] });
   }
 

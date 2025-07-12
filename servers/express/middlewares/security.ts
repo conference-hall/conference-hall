@@ -3,9 +3,9 @@ import type express from 'express';
 import helmet from 'helmet';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const env = getSharedServerEnv();
+const { NODE_ENV, APP_URL } = getSharedServerEnv();
 
-const isProduction = env.NODE_ENV === 'production';
+const isProduction = NODE_ENV === 'production';
 
 export function applySecurity(app: express.Application) {
   // Reduce the ability of attackers to determine the software that a server uses
@@ -38,8 +38,8 @@ export function applySecurity(app: express.Application) {
           'script-src': [
             "'strict-dynamic'",
             "'self'",
-            isProduction ? `${env.APP_URL}/__/auth/*` : '',
-            isProduction ? `${env.APP_URL}/cdn-cgi/*` : '',
+            isProduction ? `${APP_URL}/__/auth/*` : '',
+            isProduction ? `${APP_URL}/cdn-cgi/*` : '',
             // @ts-expect-error Helmet types don't seem to know about res.locals
             (_, res) => `'nonce-${res.locals.cspNonce}'`,
           ].filter(Boolean),

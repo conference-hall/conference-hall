@@ -4,15 +4,13 @@ import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { i18nResources } from './i18n.resources.ts';
 import { i18nConfig } from './i18n.ts';
 
-const env = getSharedServerEnv();
-
-const isProduction = env.NODE_ENV === 'production';
+const { NODE_ENV } = getSharedServerEnv();
 
 let instance: i18n;
 
 function getInstance() {
   // Build singleton instance on production but recreate it on dev
-  if (!instance || !isProduction) {
+  if (!instance || NODE_ENV !== 'production') {
     instance = i18next.createInstance();
     instance.init({ ...i18nConfig, resources: i18nResources });
   }

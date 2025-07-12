@@ -5,7 +5,7 @@ import { userFactory } from 'tests/factories/users.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { TeamFetcher } from './team-fetcher.server.ts';
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 describe('TeamFetcher', () => {
   let user: User;
@@ -25,7 +25,7 @@ describe('TeamFetcher', () => {
         id: team.id,
         name: 'My team 2',
         slug: 'my-team2',
-        invitationLink: `${env.APP_URL}/invite/team/${team.invitationCode}`,
+        invitationLink: `${APP_URL}/invite/team/${team.invitationCode}`,
         userRole: 'OWNER',
         userPermissions: expect.objectContaining({ canEditTeam: true }),
       });

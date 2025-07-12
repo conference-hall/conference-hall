@@ -4,7 +4,7 @@ import { Slack, type SlackMessage } from '~/shared/integrations/slack.server.ts'
 import { job } from '~/shared/jobs/job.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 
-const env = getSharedServerEnv();
+const { APP_URL } = getSharedServerEnv();
 
 type SendSubmissionToSlackPayload = {
   eventId: string;
@@ -37,7 +37,7 @@ export const sendTalkToSlack = job<SendSubmissionToSlackPayload>({
         .join(' & ')}`,
       title: proposal.title,
       text: proposal.abstract,
-      title_link: `${env.APP_URL}/team/${event.team.slug}/${event.slug}/reviews/${proposal.id}`,
+      title_link: `${APP_URL}/team/${event.team.slug}/${event.slug}/reviews/${proposal.id}`,
       thumb_url: proposal.speakers[0].picture,
       color: '#ffab00',
       fields: [],
