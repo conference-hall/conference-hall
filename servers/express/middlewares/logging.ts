@@ -1,9 +1,11 @@
 import type express from 'express';
 import morgan from 'morgan';
 import pc from 'picocolors';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const isProduction = process.env.NODE_ENV === 'production';
-const isCI = process.env.USE_EMULATORS === 'true';
+const env = getSharedServerEnv();
+
+const isProduction = env.NODE_ENV === 'production';
 
 export function applyLogging(app: express.Application) {
   if (!isProduction) {
@@ -20,7 +22,7 @@ export function applyLogging(app: express.Application) {
     return;
   }
 
-  if (isProduction && !isCI) {
+  if (isProduction && !env.USE_EMULATORS) {
     app.use(
       morgan((tokens, req, res) => {
         const status = Number(tokens['status'](req, res)) || 0;

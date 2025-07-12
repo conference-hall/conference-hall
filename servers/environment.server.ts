@@ -38,23 +38,21 @@ type JobServerEnv = z.infer<typeof JobServerSchema>;
 let jobServerEnv: JobServerEnv;
 
 // todo(env): lint/style/noProcessEnv: This should be the only place to use process.env directly
-function initEnv<T extends z.ZodType>(schema: T, logging = true): z.infer<T> {
+function initEnv<T extends z.ZodType>(schema: T): z.infer<T> {
   const envData = schema.safeParse(process.env);
 
   if (!envData.success) {
-    console.error('❌ Invalid environment variables:', z.prettifyError(envData.error));
+    console.error('❌ Invalid environment variables:');
+    console.error(z.prettifyError(envData.error));
     throw new Error('Invalid environment variables');
   }
 
-  if (process.env.NODE_ENV !== 'test' && logging) {
-    console.log('✅ Environment variables loaded successfully');
-  }
   return envData.data;
 }
 
 export function getSharedServerEnv() {
   if (sharedServerEnv) return sharedServerEnv;
-  sharedServerEnv = initEnv(SharedServerSchema, false);
+  sharedServerEnv = initEnv(SharedServerSchema);
   Object.freeze(sharedServerEnv);
   return sharedServerEnv;
 }

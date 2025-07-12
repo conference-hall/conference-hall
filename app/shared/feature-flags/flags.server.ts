@@ -1,10 +1,13 @@
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import flagsConfig from '../../../flags.config.ts';
 import { MemoryCacheLayer } from '../cache/memory-cache-layer.ts';
 import { FlagsClient } from './flags-client.ts';
 import { FlagsStorage } from './flags-storage.ts';
 
-const isProduction = process.env.NODE_ENV === 'production' && !process.env.USE_EMULATORS;
-const isTest = process.env.NODE_ENV === 'test';
+const env = getSharedServerEnv();
+
+const isProduction = env.NODE_ENV === 'production' && !env.USE_EMULATORS;
+const isTest = env.NODE_ENV === 'test';
 
 declare global {
   var __flags: any;

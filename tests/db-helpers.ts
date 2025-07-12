@@ -1,4 +1,7 @@
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { db } from '../prisma/db.server.ts';
+
+const env = getSharedServerEnv();
 
 export async function disconnectDB() {
   await db.$disconnect();
@@ -6,7 +9,7 @@ export async function disconnectDB() {
 }
 
 export async function resetDB() {
-  if (process.env.NODE_ENV === 'production' && !process.env.USE_EMULATORS) {
+  if (env.NODE_ENV === 'production' && !env.USE_EMULATORS) {
     return '🚨 Reset DB cannot be executed in production.';
   }
 

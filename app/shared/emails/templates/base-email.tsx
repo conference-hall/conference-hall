@@ -1,12 +1,13 @@
 import { Body, Container, Head, Html, Link, Section, Tailwind } from '@react-email/components';
 import { cx } from 'class-variance-authority';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
+
+const env = getSharedServerEnv();
 
 export type BaseEmailProps = {
   children: React.ReactNode;
   locale: string;
 };
-
-const APP_URL = process.env.APP_URL;
 
 export default function BaseEmail({ children, locale }: BaseEmailProps) {
   return (
@@ -20,7 +21,7 @@ export default function BaseEmail({ children, locale }: BaseEmailProps) {
           </Container>
 
           <Section className="text-center mx-auto">
-            <Link href={APP_URL} className="text-xs text-gray-400">
+            <Link href={env.APP_URL} className="text-xs text-gray-400">
               Powered by Conference Hall
             </Link>
           </Section>

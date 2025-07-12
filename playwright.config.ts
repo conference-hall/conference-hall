@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
+import { getSharedServerEnv } from './servers/environment.server.ts';
 
 const CI = Boolean(process.env.CI);
 
@@ -10,7 +11,7 @@ if (CI) {
   dotenv.config({ path: path.resolve(import.meta.dirname, '.env.dev'), quiet: true });
 }
 
-const APP_URL = process.env.APP_URL;
+const env = getSharedServerEnv();
 
 export default defineConfig({
   testDir: './e2e',
@@ -31,13 +32,13 @@ export default defineConfig({
     { command: 'npm run jobs:start' },
     {
       command: CI ? 'npm run db:migrate:deploy && npm run start' : 'npm run dev',
-      url: APP_URL,
+      url: env.APP_URL,
       reuseExistingServer: !CI,
     },
   ],
 
   use: {
-    baseURL: APP_URL,
+    baseURL: env.APP_URL,
     locale: 'en-GB',
     timezoneId: 'Europe/Paris',
     trace: 'on-first-retry',

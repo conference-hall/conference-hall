@@ -1,15 +1,16 @@
 import { href } from 'react-router';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const APP_URL = process.env.APP_URL;
+const env = getSharedServerEnv();
 
 export function buildSpeakerProfileUrl() {
-  return `${APP_URL}${href('/speaker/settings/profile')}`;
+  return `${env.APP_URL}${href('/speaker/settings/profile')}`;
 }
 
 export function buildSpeakerProposalUrl(event: string, proposal: string) {
-  return `${APP_URL}${href('/:event/proposals/:proposal', { event, proposal })}`;
+  return `${env.APP_URL}${href('/:event/proposals/:proposal', { event, proposal })}`;
 }
 
 export function buildReviewProposalUrl(team: string, event: string, proposal: string) {
-  return `${APP_URL}${href('/team/:team/:event/reviews/:proposal', { team, event, proposal })}`;
+  return `${env.APP_URL}${href('/team/:team/:event/reviews/:proposal', { team, event, proposal })}`;
 }

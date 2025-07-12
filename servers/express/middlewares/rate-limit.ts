@@ -1,8 +1,11 @@
 import type express from 'express';
 import rateLimit from 'express-rate-limit';
 import { href } from 'react-router';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const isProduction = process.env.NODE_ENV === 'production' && !process.env.USE_EMULATORS;
+const env = getSharedServerEnv();
+
+const isProduction = env.NODE_ENV === 'production' && !env.USE_EMULATORS;
 
 // Disable rate limiting on dev and test environments
 const maxMultiple = isProduction ? 1 : 10_000;

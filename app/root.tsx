@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import { useChangeLanguage } from 'remix-i18next/react';
-import { getBrowserEnv } from '../servers/environment.server.ts';
+import { getBrowserEnv, getWebServerEnv } from '../servers/environment.server.ts';
 import type { Route } from './+types/root.ts';
 import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
@@ -20,9 +20,9 @@ import { UserAccount } from './shared/user/user-account.server.ts';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
 
-const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
+const env = getWebServerEnv();
 
-const isMaintenanceMode = process.env.MAINTENANCE_ENABLED === 'true';
+const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
 
 export const meta = ({ data }: Route.MetaArgs) => {
   const metatags: MetaDescriptor[] = [{ title: data?.title }, { name: 'description', content: data?.description }];
@@ -44,7 +44,7 @@ export const links: Route.LinksFunction = () => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  if (isMaintenanceMode) {
+  if (env.MAINTENANCE_ENABLED) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
 

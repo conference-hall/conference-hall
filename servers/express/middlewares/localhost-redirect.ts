@@ -1,15 +1,17 @@
 import type express from 'express';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const isProduction = process.env.NODE_ENV === 'production';
-const isCI = process.env.USE_EMULATORS === 'true';
+const env = getSharedServerEnv();
+
+const isProduction = env.NODE_ENV === 'production';
 
 export function applyLocalhostRedirect(app: express.Application) {
-  app.use((req, res, next) => {
-    if (isProduction && !isCI) return next();
+  if (isProduction && !env.USE_EMULATORS) return;
 
+  app.use((req, res, next) => {
     const host = req.headers.host;
     if (host?.includes('localhost')) {
-      return res.redirect(`${process.env.APP_URL}${req.url}`);
+      return res.redirect(`${env.APP_URL}${req.url}`);
     }
     next();
   });
