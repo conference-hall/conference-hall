@@ -1,9 +1,11 @@
 import type { User } from '@prisma/client';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { appUrl } from '~/shared/env.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { TeamFetcher } from './team-fetcher.server.ts';
+
+const { APP_URL } = getSharedServerEnv();
 
 describe('TeamFetcher', () => {
   let user: User;
@@ -23,7 +25,7 @@ describe('TeamFetcher', () => {
         id: team.id,
         name: 'My team 2',
         slug: 'my-team2',
-        invitationLink: `${appUrl()}/invite/team/${team.invitationCode}`,
+        invitationLink: `${APP_URL}/invite/team/${team.invitationCode}`,
         userRole: 'OWNER',
         userPermissions: expect.objectContaining({ canEditTeam: true }),
       });

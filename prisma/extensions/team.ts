@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
+import { getSharedServerEnv } from '../../servers/environment.server.ts';
 
-import { appUrl } from '../../app/shared/env.server.ts';
+const { APP_URL } = getSharedServerEnv();
 
 export const teamExtension = Prisma.defineExtension({
   result: {
@@ -8,7 +9,7 @@ export const teamExtension = Prisma.defineExtension({
       invitationLink: {
         needs: { invitationCode: true },
         compute({ invitationCode }) {
-          return `${appUrl()}/invite/team/${invitationCode}`;
+          return `${APP_URL}/invite/team/${invitationCode}`;
         },
       },
     },

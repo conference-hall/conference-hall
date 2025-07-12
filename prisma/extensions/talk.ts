@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
+import { getSharedServerEnv } from '../../servers/environment.server.ts';
 
-import { appUrl } from '../../app/shared/env.server.ts';
+const { APP_URL } = getSharedServerEnv();
 
 export const talkExtension = Prisma.defineExtension({
   result: {
@@ -8,7 +9,7 @@ export const talkExtension = Prisma.defineExtension({
       invitationLink: {
         needs: { invitationCode: true },
         compute({ invitationCode }) {
-          return `${appUrl()}/invite/talk/${invitationCode}`;
+          return `${APP_URL}/invite/talk/${invitationCode}`;
         },
       },
     },

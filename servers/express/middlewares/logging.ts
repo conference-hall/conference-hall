@@ -1,26 +1,12 @@
 import type express from 'express';
 import morgan from 'morgan';
 import pc from 'picocolors';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const isProduction = process.env.NODE_ENV === 'production';
-const isCI = process.env.USE_EMULATORS === 'true';
+const { NODE_ENV } = getSharedServerEnv();
 
 export function applyLogging(app: express.Application) {
-  if (!isProduction) {
-    app.use(
-      morgan((tokens, req, res) => {
-        const statusNumber = Number(tokens['status'](req, res)) || 0;
-        const status = statusNumber < 400 ? pc.green(statusNumber) : pc.red(statusNumber);
-        const method = pc.blueBright(tokens['method'](req, res));
-        const url = pc.blueBright(tokens['url'](req, res));
-        const duration = pc.gray(`${tokens['response-time'](req, res)}ms`);
-        return `${status} - ${method} ${url} ${duration}`;
-      }),
-    );
-    return;
-  }
-
-  if (isProduction && !isCI) {
+  if (NODE_ENV === 'production') {
     app.use(
       morgan((tokens, req, res) => {
         const status = Number(tokens['status'](req, res)) || 0;
@@ -36,6 +22,17 @@ export function applyLogging(app: express.Application) {
           contentType: tokens.res(req, res, 'content-type'),
           status,
         });
+      }),
+    );
+  } else {
+    app.use(
+      morgan((tokens, req, res) => {
+        const statusNumber = Number(tokens['status'](req, res)) || 0;
+        const status = statusNumber < 400 ? pc.green(statusNumber) : pc.red(statusNumber);
+        const method = pc.blueBright(tokens['method'](req, res));
+        const url = pc.blueBright(tokens['url'](req, res));
+        const duration = pc.gray(`${tokens['response-time'](req, res)}ms`);
+        return `${status} - ${method} ${url} ${duration}`;
       }),
     );
   }

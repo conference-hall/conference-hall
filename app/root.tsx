@@ -2,14 +2,15 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import { useChangeLanguage } from 'remix-i18next/react';
+import { getWebServerEnv } from '../servers/environment.server.ts';
 import type { Route } from './+types/root.ts';
 import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
 import { useNonce } from './app-platform/components/use-nonce.ts';
 import { UserProvider } from './app-platform/components/user-context.tsx';
+import { getFirebaseClientConfig } from './shared/auth/firebase.server.ts';
 import { initializeFirebaseClient } from './shared/auth/firebase.ts';
 import { destroySession, getUserSession } from './shared/auth/session.ts';
-import { getBrowserEnv } from './shared/env.server.ts';
 import { flags } from './shared/feature-flags/flags.server.ts';
 import { FlagsProvider } from './shared/feature-flags/flags-context.tsx';
 import { i18n } from './shared/i18n/i18n.server.ts';
@@ -20,9 +21,9 @@ import { UserAccount } from './shared/user/user-account.server.ts';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
 
-const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
+const { MAINTENANCE_ENABLED } = getWebServerEnv();
 
-const isMaintenanceMode = process.env.MAINTENANCE_ENABLED === 'true';
+const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
 
 export const meta = ({ data }: Route.MetaArgs) => {
   const metatags: MetaDescriptor[] = [{ title: data?.title }, { name: 'description', content: data?.description }];
@@ -44,7 +45,7 @@ export const links: Route.LinksFunction = () => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  if (isMaintenanceMode) {
+  if (MAINTENANCE_ENABLED) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
 
@@ -60,9 +61,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const t = await i18n.getFixedT(locale);
   const title = t('app.title');
   const description = t('app.description');
+  const firebaseConfig = getFirebaseClientConfig();
 
   return data(
-    { title, description, user, locale, toast, env: getBrowserEnv(), flags: frontendFlags },
+    { title, description, user, locale, toast, firebaseConfig, flags: frontendFlags },
     { headers: toastHeaders || {} },
   );
 };
@@ -70,12 +72,11 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 type DocumentProps = {
   locale: string;
   nonce: string;
-  env?: Record<string, unknown>;
   toast?: Toast | null;
   children: ReactNode;
 };
 
-function Document({ locale, nonce, env = {}, toast, children }: DocumentProps) {
+function Document({ locale, nonce, toast, children }: DocumentProps) {
   const { i18n } = useTranslation();
   return (
     <html lang={locale} dir={i18n.dir()}>
@@ -89,12 +90,6 @@ function Document({ locale, nonce, env = {}, toast, children }: DocumentProps) {
         <GlobalLoading />
         <Toaster toast={toast} />
         {children}
-        <script
-          nonce={nonce}
-          dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(env)}`,
-          }}
-        />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
@@ -103,17 +98,17 @@ function Document({ locale, nonce, env = {}, toast, children }: DocumentProps) {
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  const { locale, user, env, toast, flags } = loaderData;
+  const { locale, user, firebaseConfig, toast, flags } = loaderData;
   const nonce = useNonce();
 
   useChangeLanguage(locale);
 
-  initializeFirebaseClient(locale, env);
+  initializeFirebaseClient(locale, firebaseConfig);
 
   return (
     <FlagsProvider flags={flags}>
       <UserProvider user={user}>
-        <Document locale={locale} toast={toast} env={env} nonce={nonce}>
+        <Document locale={locale} toast={toast} nonce={nonce}>
           <Outlet />
         </Document>
       </UserProvider>

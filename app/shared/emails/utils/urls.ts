@@ -1,6 +1,7 @@
 import { href } from 'react-router';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const APP_URL = process.env.APP_URL;
+const { APP_URL } = getSharedServerEnv();
 
 export function buildSpeakerProfileUrl() {
   return `${APP_URL}${href('/speaker/settings/profile')}`;

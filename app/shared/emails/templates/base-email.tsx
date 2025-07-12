@@ -1,12 +1,13 @@
 import { Body, Container, Head, Html, Link, Section, Tailwind } from '@react-email/components';
 import { cx } from 'class-variance-authority';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
+
+const { APP_URL } = getSharedServerEnv();
 
 export type BaseEmailProps = {
   children: React.ReactNode;
   locale: string;
 };
-
-const APP_URL = process.env.APP_URL;
 
 export default function BaseEmail({ children, locale }: BaseEmailProps) {
   return (

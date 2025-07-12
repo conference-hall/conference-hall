@@ -1,10 +1,12 @@
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import flagsConfig from '../../../flags.config.ts';
 import { MemoryCacheLayer } from '../cache/memory-cache-layer.ts';
 import { FlagsClient } from './flags-client.ts';
 import { FlagsStorage } from './flags-storage.ts';
 
-const isProduction = process.env.NODE_ENV === 'production' && !process.env.USE_EMULATORS;
-const isTest = process.env.NODE_ENV === 'test';
+const { NODE_ENV, VITEST } = getSharedServerEnv();
+
+const isProduction = NODE_ENV === 'production';
 
 declare global {
   var __flags: any;
@@ -15,11 +17,11 @@ async function getClient() {
     return global.__flags as FlagsClient<typeof flagsConfig>;
   }
 
-  if (!isTest && isProduction) {
+  if (isProduction) {
     console.info('🚩 Feature flags config loaded.');
   }
 
-  const cache = isTest ? new MemoryCacheLayer() : undefined;
+  const cache = VITEST ? new MemoryCacheLayer() : undefined;
   const client = new FlagsClient(flagsConfig, new FlagsStorage(cache));
   await client.load();
 

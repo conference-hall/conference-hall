@@ -1,8 +1,11 @@
 import { cacheHeader } from 'pretty-cache-header';
 import { data } from 'react-router';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { z } from 'zod';
 import { i18nResources } from '~/shared/i18n/i18n.resources.ts';
 import type { Route } from './+types/locales.ts';
+
+const { NODE_ENV } = getSharedServerEnv();
 
 export async function loader({ params }: Route.LoaderArgs) {
   const lng = z
@@ -24,7 +27,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   const headers = new Headers();
 
   // On production, we want to add cache headers to the response
-  if (process.env.NODE_ENV === 'production') {
+  if (NODE_ENV === 'production') {
     headers.set(
       'Cache-Control',
       cacheHeader({

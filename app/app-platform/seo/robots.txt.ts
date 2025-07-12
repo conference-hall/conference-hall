@@ -1,5 +1,7 @@
-import { appUrl } from '~/shared/env.server.ts';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
+
+const { APP_URL } = getSharedServerEnv();
 
 const ROBOT_TXT_PRODUCTION = `User-agent: *
 Allow: /
@@ -14,14 +16,14 @@ Disallow: /storage/
 Disallow: /admin/
 Disallow: /cdn-cgi/
 
-Sitemap: ${appUrl()}/sitemap.xml
+Sitemap: ${APP_URL}/sitemap.xml
 `;
 
 const ROBOT_TXT_DEV = `User-agent: *
 Disallow: /
 Noindex: /
 
-Sitemap: ${appUrl()}/sitemap.xml
+Sitemap: ${APP_URL}/sitemap.xml
 `;
 
 export const loader = async () => {

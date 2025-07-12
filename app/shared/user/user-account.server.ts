@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next';
 import { db } from 'prisma/db.server.ts';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { Notifications } from '~/features/notifications/services/notifications.server.ts';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
@@ -7,9 +8,10 @@ import { auth as firebaseAuth } from '~/shared/auth/firebase.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
-import { appUrl } from '~/shared/env.server.ts';
 import { NotAuthorizedError } from '../errors.server.ts';
 import { sortBy } from '../utils/arrays-sort-by.ts';
+
+const { APP_URL } = getSharedServerEnv();
 
 type UserAccountRegisterInput = {
   uid: string;
@@ -100,7 +102,7 @@ export class UserAccount {
 
       if (!oobCode) return;
 
-      const passwordResetUrl = new URL(`${appUrl()}/auth/reset-password`);
+      const passwordResetUrl = new URL(`${APP_URL}/auth/reset-password`);
       passwordResetUrl.searchParams.set('oobCode', oobCode);
       passwordResetUrl.searchParams.set('email', email);
 
@@ -131,7 +133,7 @@ export class UserAccount {
 
       if (!oobCode) return false;
 
-      const emailVerificationUrl = new URL(`${appUrl()}/auth/verify-email`);
+      const emailVerificationUrl = new URL(`${APP_URL}/auth/verify-email`);
       emailVerificationUrl.searchParams.set('oobCode', oobCode);
       emailVerificationUrl.searchParams.set('email', email);
 

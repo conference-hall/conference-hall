@@ -1,8 +1,8 @@
 import compression from 'compression';
 import express from 'express';
 import { db } from 'prisma/db.server.ts';
+import { getWebServerEnv } from 'servers/environment.server.ts';
 import { disconnectRedis } from '~/shared/cache/redis.server.ts';
-import { initEnvironment } from '~/shared/env.server.ts';
 import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
 import { applyLogging } from './middlewares/logging.ts';
 import { applyProxyFirebaseAuth } from './middlewares/proxy-firebase-auth.ts';
@@ -11,10 +11,7 @@ import { applySecurity } from './middlewares/security.ts';
 import { applySeoHeader } from './middlewares/seo.ts';
 import { applyUrlCleaning } from './middlewares/url-cleaning.ts';
 
-initEnvironment();
-
-const HOST = process.env.HOST || 'localhost';
-const PORT = Number.parseInt(process.env.PORT || '3000');
+const { HOST, PORT } = getWebServerEnv();
 
 type EnvironmentConfig = (app: express.Application) => Promise<void>;
 

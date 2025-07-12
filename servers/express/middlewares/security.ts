@@ -1,11 +1,11 @@
 import crypto from 'node:crypto';
-
 import type express from 'express';
 import helmet from 'helmet';
-import { appUrl } from '~/shared/env.server.ts';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 
-const isProduction = process.env.NODE_ENV === 'production';
-const isDevelopment = process.env.NODE_ENV === 'development';
+const { NODE_ENV, APP_URL } = getSharedServerEnv();
+
+const isProduction = NODE_ENV === 'production';
 
 export function applySecurity(app: express.Application) {
   // Reduce the ability of attackers to determine the software that a server uses
@@ -27,19 +27,19 @@ export function applySecurity(app: express.Application) {
         reportOnly: true,
         directives: {
           'connect-src': [
-            isDevelopment ? 'ws://127.0.0.1:*' : '',
-            isDevelopment ? 'http://127.0.0.1:*' : '',
+            !isProduction ? 'ws://127.0.0.1:*' : '',
+            !isProduction ? 'http://127.0.0.1:*' : '',
             isProduction ? '*.googleapis.com' : '',
             "'self'",
           ].filter(Boolean),
-          'frame-src': ["'self'", isDevelopment ? 'http://127.0.0.1:*' : ''].filter(Boolean),
+          'frame-src': ["'self'", !isProduction ? 'http://127.0.0.1:*' : ''].filter(Boolean),
           'font-src': ["'self'"],
           'img-src': ["'self'", 'data:', 'https:'],
           'script-src': [
             "'strict-dynamic'",
             "'self'",
-            isProduction ? `${appUrl()}/__/auth/*` : '',
-            isProduction ? `${appUrl()}/cdn-cgi/*` : '',
+            isProduction ? `${APP_URL}/__/auth/*` : '',
+            isProduction ? `${APP_URL}/cdn-cgi/*` : '',
             // @ts-expect-error Helmet types don't seem to know about res.locals
             (_, res) => `'nonce-${res.locals.cspNonce}'`,
           ].filter(Boolean),

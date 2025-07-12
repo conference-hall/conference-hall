@@ -1,6 +1,5 @@
 import { db } from 'prisma/db.server.ts';
 import { renderEmail } from '~/shared/emails/email.renderer.tsx';
-import { getEnv } from '~/shared/jobs/env.ts';
 import { job } from '~/shared/jobs/job.ts';
 import type { CustomTemplateName } from './email.types.ts';
 import { getEmailProvider } from './providers/provider.ts';
@@ -16,14 +15,12 @@ export type EmailPayload = {
   locale: string;
 };
 
-const env = getEnv();
-
 export const sendEmail = job<EmailPayload>({
   name: 'send-email',
   queue: 'default',
 
   run: async (payload: EmailPayload) => {
-    const emailProvider = getEmailProvider(env);
+    const emailProvider = getEmailProvider();
 
     if (!emailProvider) return Promise.reject('Email provider not found');
 

@@ -1,8 +1,11 @@
 import type { Session } from 'react-router';
 import { createCookieSessionStorage, redirect } from 'react-router';
+import { getWebServerEnv } from 'servers/environment.server.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
 import { i18n } from '../i18n/i18n.server.ts';
 import { auth as serverAuth } from './firebase.server.ts';
+
+const { COOKIE_SIGNED_SECRET } = getWebServerEnv();
 
 const MAX_AGE_SEC = 60 * 60 * 24 * 10; // 10 days
 const MAX_AGE_MS = MAX_AGE_SEC * 1000;
@@ -13,7 +16,7 @@ const sessionStorage = createCookieSessionStorage({
     path: '/',
     httpOnly: true,
     secure: true,
-    secrets: [process.env.COOKIE_SIGNED_SECRET],
+    secrets: [COOKIE_SIGNED_SECRET],
     sameSite: 'lax',
   },
 });

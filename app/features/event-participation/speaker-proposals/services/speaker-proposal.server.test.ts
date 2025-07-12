@@ -1,4 +1,5 @@
 import { db } from 'prisma/db.server.ts';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
@@ -9,6 +10,8 @@ import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { SpeakerProposal } from './speaker-proposal.server.ts';
+
+const { APP_URL } = getSharedServerEnv();
 
 describe('SpeakerProposal', () => {
   describe('#get', () => {
@@ -32,7 +35,7 @@ describe('SpeakerProposal', () => {
         level: proposal.level,
         createdAt: proposal.createdAt,
         languages: proposal.languages,
-        invitationLink: `${process.env.APP_URL}/invite/proposal/${proposal.invitationCode}`,
+        invitationLink: `${APP_URL}/invite/proposal/${proposal.invitationCode}`,
         status: SpeakerProposalStatus.Submitted,
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],

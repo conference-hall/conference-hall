@@ -1,10 +1,12 @@
 import type { Event, Talk, User } from '@prisma/client';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
+
+const { APP_URL } = getSharedServerEnv();
 
 describe('Proposal#invitationLink', () => {
   it('returns the invitation link', async () => {
@@ -13,7 +15,7 @@ describe('Proposal#invitationLink', () => {
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk });
 
-    expect(proposal.invitationLink).toBe(`${process.env.APP_URL}/invite/proposal/${proposal.invitationCode}`);
+    expect(proposal.invitationLink).toBe(`${APP_URL}/invite/proposal/${proposal.invitationCode}`);
   });
 });
 

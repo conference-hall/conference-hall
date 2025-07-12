@@ -1,3 +1,4 @@
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
@@ -8,6 +9,8 @@ import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
 import { Slack } from '~/shared/integrations/slack.server.ts';
 import { sendTalkToSlack } from './send-talk-to-slack.job.ts';
+
+const { APP_URL } = getSharedServerEnv();
 
 vi.mock('~/shared/integrations/slack.server.ts', () => {
   return { Slack: { sendMessage: vi.fn() } };
@@ -50,7 +53,7 @@ describe('Job: sendTalkToSlack', () => {
       author_name: `by ${speaker1.name} & ${speaker2.name}`,
       title: proposal.title,
       text: proposal.abstract,
-      title_link: `${process.env.APP_URL}/team/${team.slug}/${event.slug}/reviews/${proposal.id}`,
+      title_link: `${APP_URL}/team/${team.slug}/${event.slug}/reviews/${proposal.id}`,
       thumb_url: speaker1.picture,
       color: '#ffab00',
       fields: [
