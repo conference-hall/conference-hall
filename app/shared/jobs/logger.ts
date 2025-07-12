@@ -1,4 +1,8 @@
-const isProduction = process.env.NODE_ENV === 'production';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
+
+const env = getSharedServerEnv();
+
+const isProduction = env.NODE_ENV === 'production';
 
 export const logger = {
   info: (message: string, rest?: Record<string, any>) => log('info', message, rest),

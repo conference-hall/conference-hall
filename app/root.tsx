@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import { useChangeLanguage } from 'remix-i18next/react';
+import { getBrowserEnv, getWebServerEnv } from '../servers/environment.server.ts';
 import type { Route } from './+types/root.ts';
 import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
@@ -9,7 +10,6 @@ import { useNonce } from './app-platform/components/use-nonce.ts';
 import { UserProvider } from './app-platform/components/user-context.tsx';
 import { initializeFirebaseClient } from './shared/auth/firebase.ts';
 import { destroySession, getUserSession } from './shared/auth/session.ts';
-import { getBrowserEnv } from './shared/env.server.ts';
 import { flags } from './shared/feature-flags/flags.server.ts';
 import { FlagsProvider } from './shared/feature-flags/flags-context.tsx';
 import { i18n } from './shared/i18n/i18n.server.ts';
@@ -20,9 +20,9 @@ import { UserAccount } from './shared/user/user-account.server.ts';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
 
-const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
+const env = getWebServerEnv();
 
-const isMaintenanceMode = process.env.MAINTENANCE_ENABLED === 'true';
+const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
 
 export const meta = ({ data }: Route.MetaArgs) => {
   const metatags: MetaDescriptor[] = [{ title: data?.title }, { name: 'description', content: data?.description }];
@@ -44,7 +44,7 @@ export const links: Route.LinksFunction = () => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  if (isMaintenanceMode) {
+  if (env.MAINTENANCE_ENABLED) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
 

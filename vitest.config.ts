@@ -1,11 +1,15 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
 
+import dotenv from '@dotenvx/dotenvx';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { getSharedServerEnv } from './servers/environment.server.ts';
 
-const isCI = Boolean(process.env.CI);
+const env = dotenv.config({ path: '.env.test', quiet: true });
+
+const { CI } = getSharedServerEnv();
 
 export default defineConfig({
   plugins: [tailwindcss(), tsconfigPaths()],
@@ -13,7 +17,8 @@ export default defineConfig({
   test: {
     globals: true,
     restoreMocks: true,
-    reporters: isCI ? ['default', 'junit'] : 'default',
+    env: env.parsed,
+    reporters: CI ? ['default', 'junit'] : 'default',
     outputFile: './test-results/unit.xml',
     projects: [
       {

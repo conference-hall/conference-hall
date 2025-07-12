@@ -1,5 +1,6 @@
 import { TalkLevel } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
@@ -16,6 +17,8 @@ import {
   TalkNotFoundError,
 } from '~/shared/errors.server.ts';
 import { TalkSubmission } from './talk-submission.server.ts';
+
+const env = getSharedServerEnv();
 
 describe('TalkSubmission', () => {
   describe('#saveDraft', () => {
@@ -338,7 +341,7 @@ describe('TalkSubmission', () => {
         languages: proposal.languages,
         level: proposal.level,
         references: proposal.references,
-        invitationLink: `${process.env.APP_URL}/invite/proposal/${proposal.invitationCode}`,
+        invitationLink: `${env.APP_URL}/invite/proposal/${proposal.invitationCode}`,
         createdAt: proposal.createdAt,
         isOwner: true,
         speakers: [

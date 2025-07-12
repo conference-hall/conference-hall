@@ -1,7 +1,7 @@
 import express from 'express';
 import { setupExpressServer } from './express/setup-express-server.ts';
 
-const BUILD_PATH = './app.js';
+const APP_BUILD_PATH = './app.js';
 
 await setupExpressServer(async (app) => {
   console.log('🚀 Starting production server');
@@ -11,5 +11,5 @@ await setupExpressServer(async (app) => {
   app.use('/locales', express.static('build/client/locales', { immutable: true, maxAge: '1y' }));
   app.use(express.static('build/client', { maxAge: '1h' }));
 
-  app.use(await import(BUILD_PATH).then((mod) => mod.app));
+  app.use(await import(APP_BUILD_PATH).then((mod) => mod.app));
 });
