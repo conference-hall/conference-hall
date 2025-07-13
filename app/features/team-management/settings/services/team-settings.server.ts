@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { UserTeamAuthorization } from '~/shared/user/user-team-authorization.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
 
@@ -23,13 +23,15 @@ export class TeamSettings extends UserTeamAuthorization {
     return db.team.update({ where: { slug: this.team }, data });
   }
 
+  async isSlugValid(slug: string) {
+    const count = await db.team.count({ where: { AND: [{ slug }, { slug: { not: this.team } }] } });
+    return count === 0;
+  }
+
   async buildUpdateSchema() {
-    return TeamUpdateSchema.refine(
-      async ({ slug }) => {
-        const count = await db.team.count({ where: { AND: [{ slug }, { slug: { not: this.team } }] } });
-        return count === 0;
-      },
-      { message: 'This URL already exists.', path: ['slug'] },
-    );
+    return TeamUpdateSchema.refine(async ({ slug }) => this.isSlugValid(slug), {
+      path: ['slug'],
+      error: 'This URL already exists.',
+    });
   }
 }

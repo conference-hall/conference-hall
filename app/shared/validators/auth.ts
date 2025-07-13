@@ -1,14 +1,14 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 
-const _emailSchema = z.string().email({ message: 'Invalid email address.' }).trim().min(1);
+const _emailSchema = z.email({ error: 'Invalid email address.' }).trim().min(1);
 
 const _passwordSchema = z
   .string()
-  .min(8, { message: 'Minimum 8 characters.' })
-  .refine((password) => /[A-Z]/.test(password), { message: 'Missing uppercase letter.' })
-  .refine((password) => /[a-z]/.test(password), { message: 'Missing lowercase letter.' })
-  .refine((password) => /[0-9]/.test(password), { message: 'Missing number.' });
+  .min(8, { error: 'Minimum 8 characters.' })
+  .refine((password) => /[A-Z]/.test(password), { error: 'Missing uppercase letter.' })
+  .refine((password) => /[a-z]/.test(password), { error: 'Missing lowercase letter.' })
+  .refine((password) => /[0-9]/.test(password), { error: 'Missing number.' });
 
 export const EmailSchema = z.object({
   email: _emailSchema,
@@ -24,7 +24,7 @@ export function validatePassword(password: string) {
 
   const passwordResult = _passwordSchema.safeParse(password);
   if (!passwordResult.success) {
-    errors.password = [passwordResult.error.flatten().formErrors.join(' ')];
+    errors.password = [z.flattenError(passwordResult.error).formErrors.join(' ')];
   }
 
   return Object.keys(errors).length > 0 ? errors : null;
@@ -35,12 +35,12 @@ export function validateEmailAndPassword(email: string, password: string): Submi
 
   const emailResult = _emailSchema.safeParse(email);
   if (!emailResult.success) {
-    errors.email = [emailResult.error.flatten().formErrors.join(' ')];
+    errors.email = [z.flattenError(emailResult.error).formErrors.join(' ')];
   }
 
   const passwordResult = _passwordSchema.safeParse(password);
   if (!passwordResult.success) {
-    errors.password = [passwordResult.error.flatten().formErrors.join(' ')];
+    errors.password = [z.flattenError(passwordResult.error).formErrors.join(' ')];
   }
 
   return Object.keys(errors).length > 0 ? errors : null;

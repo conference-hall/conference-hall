@@ -1,5 +1,5 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export function isValidEmail(email: string): boolean {
-  return z.string().email().safeParse(email).success;
+  return z.email().safeParse(email).success;
 }

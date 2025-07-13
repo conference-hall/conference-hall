@@ -59,12 +59,8 @@ describe('SpeakerSurvey', () => {
       const survey = SpeakerSurvey.for(event.slug);
       const schema = await survey.buildSurveySchema();
 
-      const validData = {
-        accomodation: 'yes',
-        info: 'Some info',
-      };
-
-      expect(schema.parse(validData)).toEqual(validData);
+      const validData = { accomodation: 'yes', info: 'Some info' };
+      expect(schema.parse(validData)).toEqual({ accomodation: 'yes', info: 'Some info', transports: [] });
     });
 
     it('builds schema for checkbox question type', async () => {
@@ -80,10 +76,7 @@ describe('SpeakerSurvey', () => {
       const survey = SpeakerSurvey.for(event.slug);
       const schema = await survey.buildSurveySchema();
 
-      const validData = {
-        diet: ['vegan', 'vegetarian'],
-      };
-
+      const validData = { diet: ['vegan', 'vegetarian'] };
       expect(schema.parse(validData)).toEqual(validData);
     });
 
@@ -100,10 +93,7 @@ describe('SpeakerSurvey', () => {
       const survey = SpeakerSurvey.for(event.slug);
       const schema = await survey.buildSurveySchema();
 
-      const invalidData = {
-        name: '',
-      };
-
+      const invalidData = { name: '' };
       expect(() => schema.parse(invalidData)).toThrowError();
     });
 

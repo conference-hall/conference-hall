@@ -2,6 +2,7 @@ import type { User } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { z } from 'zod/v4';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { TeamCreateSchema, TeamCreation } from './team-creation.server.ts';
 
@@ -47,9 +48,9 @@ describe('TeamCreation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        const { fieldErrors } = result.error.flatten();
-        expect(fieldErrors.name).toEqual(['String must contain at least 3 character(s)']);
-        expect(fieldErrors.slug).toEqual(['String must contain at least 3 character(s)']);
+        const { fieldErrors } = z.flattenError(result.error!);
+        expect(fieldErrors.name).toEqual(['Too small: expected string to have >=3 characters']);
+        expect(fieldErrors.slug).toEqual(['Too small: expected string to have >=3 characters']);
       }
     });
 
@@ -58,7 +59,7 @@ describe('TeamCreation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        const { fieldErrors } = result.error.flatten();
+        const { fieldErrors } = z.flattenError(result.error!);
         expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
       }
     });
@@ -70,7 +71,7 @@ describe('TeamCreation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        const { fieldErrors } = result.error.flatten();
+        const { fieldErrors } = z.flattenError(result.error!);
         expect(fieldErrors.slug).toEqual(['This URL already exists.']);
       }
     });

@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';

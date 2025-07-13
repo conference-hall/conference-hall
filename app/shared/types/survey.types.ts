@@ -1,4 +1,4 @@
-import type z from 'zod';
+import type z from 'zod/v4';
 import type { SurveyQuestionSchema } from '~/features/event-management/settings/models/survey-config.ts';
 
 export type SurveyDetailedAnswer =

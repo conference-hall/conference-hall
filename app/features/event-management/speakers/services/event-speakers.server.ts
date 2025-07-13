@@ -1,7 +1,7 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { ReviewDetails } from '~/features/event-management/proposals/models/review-details.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';

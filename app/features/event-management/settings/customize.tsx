@@ -2,7 +2,7 @@ import { parseFormData } from '@mjackson/form-data-parser';
 import type { ChangeEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { uploadToStorageHandler } from '~/app-platform/storage/services/storage.server.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -18,7 +18,7 @@ import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/customize.ts';
 
 const MAX_FILE_SIZE = 300 * 1024; // 300kB
-const FILE_SCHEMA = z.object({ name: z.string().url() });
+const FILE_SCHEMA = z.object({ name: z.url() });
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);

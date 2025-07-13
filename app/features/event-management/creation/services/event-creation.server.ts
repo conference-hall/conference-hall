@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { UserTeamAuthorization } from '~/shared/user/user-team-authorization.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
 
@@ -31,5 +31,5 @@ export const EventCreateSchema = z.object({
   visibility: z.enum(['PUBLIC', 'PRIVATE']),
   type: z.enum(['CONFERENCE', 'MEETUP']),
   timezone: z.string(),
-  slug: SlugSchema.refine(EventCreation.isSlugValid, { message: 'This URL already exists.' }),
+  slug: SlugSchema.refine(EventCreation.isSlugValid, { error: 'This URL already exists.' }),
 });

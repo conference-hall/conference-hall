@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const ProposalUpdateSchema = z.object({
   title: z.string().trim().min(1),

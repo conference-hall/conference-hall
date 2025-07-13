@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';

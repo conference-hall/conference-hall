@@ -13,6 +13,7 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { z } from 'zod/v4';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { EventSettings } from './event-settings.server.ts';
 
@@ -190,7 +191,7 @@ describe('EventSettings', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        const { fieldErrors } = result.error.flatten();
+        const { fieldErrors } = z.flattenError(result.error);
         expect(fieldErrors.slug).toEqual(['This URL already exists.']);
       }
     });

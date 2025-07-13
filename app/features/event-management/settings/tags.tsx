@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { TagIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';

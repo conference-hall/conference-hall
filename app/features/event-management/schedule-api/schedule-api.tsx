@@ -1,5 +1,5 @@
-import { parseWithZod } from '@conform-to/zod';
-import { z } from 'zod';
+import { parseWithZod } from '@conform-to/zod/v4';
+import { z } from 'zod/v4';
 import { ForbiddenError } from '~/shared/errors.server.ts';
 import type { Route } from './+types/schedule-api.ts';
 import { EventScheduleApi } from './services/schedule-api.server.ts';

@@ -3,6 +3,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { z } from 'zod/v4';
 import { TalkSaveSchema } from './talks-library.schema.server.ts';
 import { TalksLibrary } from './talks-library.server.ts';
 
@@ -154,12 +155,10 @@ describe('TalksLibrary types', () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      const { fieldErrors } = result.error.flatten();
-      expect(fieldErrors.title).toEqual(['String must contain at least 1 character(s)']);
-      expect(fieldErrors.abstract).toEqual(['String must contain at least 1 character(s)']);
-      expect(fieldErrors.level).toEqual([
-        "Invalid enum value. Expected 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED', received 'BAD_VALUE'",
-      ]);
+      const { fieldErrors } = z.flattenError(result.error!);
+      expect(fieldErrors.title).toEqual(['Too small: expected string to have >=1 characters']);
+      expect(fieldErrors.abstract).toEqual(['Too small: expected string to have >=1 characters']);
+      expect(fieldErrors.level).toEqual(['Invalid option: expected one of "BEGINNER"|"INTERMEDIATE"|"ADVANCED"']);
     }
   });
 });

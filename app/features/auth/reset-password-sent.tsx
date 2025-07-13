@@ -1,7 +1,7 @@
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect, useNavigation, useSearchParams } from 'react-router';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -27,7 +27,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export const action = async ({ request }: Route.ActionArgs) => {
   const locale = await i18n.getLocale(request);
   const form = await request.formData();
-  const email = z.string().email().parse(form.get('email'));
+  const email = z.email().parse(form.get('email'));
   await UserAccount.sendResetPasswordEmail(email, locale);
   return { emailSent: true };
 };

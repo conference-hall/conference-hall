@@ -1,5 +1,5 @@
-import { parseWithZod } from '@conform-to/zod';
-import { z } from 'zod';
+import { parseWithZod } from '@conform-to/zod/v4';
+import { z } from 'zod/v4';
 
 type PaginationOptions = { page: number; total: number; pageSize?: number };
 

@@ -1,3 +1,4 @@
+import { z } from 'zod/v4';
 import { EmailSchema, validateEmailAndPassword, validatePassword } from './auth.ts';
 
 describe('validatePassword', () => {
@@ -63,8 +64,11 @@ describe('EmailSchema', () => {
 
     expect(result.success).toEqual(false);
     if (!result.success) {
-      const { fieldErrors } = result.error.flatten();
-      expect(fieldErrors.email).toEqual(['Invalid email address.', 'String must contain at least 1 character(s)']);
+      const { fieldErrors } = z.flattenError(result.error);
+      expect(fieldErrors.email).toEqual([
+        'Invalid email address.',
+        'Too small: expected string to have >=1 characters',
+      ]);
     }
   });
 });

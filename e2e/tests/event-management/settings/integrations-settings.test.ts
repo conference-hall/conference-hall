@@ -18,7 +18,7 @@ test('updates integrations settings', async ({ page }) => {
   await integrationsPage.fill(integrationsPage.slackWebhookInput, 'foo');
   await integrationsPage.saveSlackButton.click();
   const webhookError = await integrationsPage.getInputDescription(integrationsPage.slackWebhookInput);
-  await expect(webhookError).toHaveText('Invalid url');
+  await expect(webhookError).toHaveText('Invalid URL');
 
   // Save Slack configuration with valid URL
   await integrationsPage.fill(integrationsPage.slackWebhookInput, 'http://example.com');

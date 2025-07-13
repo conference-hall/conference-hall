@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import type { DeliberationStatus } from '~/shared/types/proposals.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
@@ -13,7 +13,7 @@ export const ProposalStatusSchema = z.object({
 export const ProposalStatusBulkSchema = z.object({
   deliberationStatus: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']),
   selection: z.array(z.string()),
-  allPagesSelected: z.enum(['true', 'false']).transform((v) => v === 'true'),
+  allPagesSelected: z.stringbool().default(false),
 });
 
 type ProposalStatus = z.infer<typeof ProposalStatusSchema>;
