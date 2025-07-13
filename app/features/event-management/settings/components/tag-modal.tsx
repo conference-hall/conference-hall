@@ -22,7 +22,7 @@ export function TagModal({ mode, initialValues, children }: TagModalProps) {
   return (
     <>
       {children({ onOpen: () => setOpen(true) })}
-      <TagModaContent
+      <TagModalContent
         key={String(open)}
         mode={mode}
         initialValues={initialValues}
@@ -40,7 +40,7 @@ type TagModalContentProps = {
   onClose: VoidFunction;
 };
 
-function TagModaContent({ mode, initialValues, open, onClose }: TagModalContentProps) {
+function TagModalContent({ mode, initialValues, open, onClose }: TagModalContentProps) {
   const { t } = useTranslation();
   const defaultColor = initialValues?.color || getRandomColor();
 
@@ -68,7 +68,7 @@ function TagModaContent({ mode, initialValues, open, onClose }: TagModalContentP
                   type="color"
                   name="color"
                   aria-label={t('event-management.settings.tags.pick-a-color')}
-                  defaultValue={defaultColor}
+                  defaultValue={color}
                   onChange={(event) => setColor(event.target.value)}
                   className="bg-white [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-md [&::-webkit-color-swatch-wrapper]:p-0 h-9 w-12 cursor-pointer"
                   required
