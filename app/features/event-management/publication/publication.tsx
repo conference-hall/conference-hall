@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { useTranslation } from 'react-i18next';
 import { Callout } from '~/design-system/callout.tsx';
 import DonutCard from '~/design-system/dashboard/donut-card.tsx';

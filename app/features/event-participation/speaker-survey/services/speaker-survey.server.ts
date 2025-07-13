@@ -1,6 +1,6 @@
 import type { Event } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { SurveyConfig } from '~/features/event-management/settings/models/survey-config.ts';
 import { EventNotFoundError, SurveyNotEnabledError } from '~/shared/errors.server.ts';
 import type { SurveyDetailedAnswer, SurveyQuestion } from '~/shared/types/survey.types.ts';
@@ -30,20 +30,21 @@ export class SpeakerSurvey {
   async buildSurveySchema() {
     const questions = await this.getQuestions();
 
-    const schema = questions.reduce<z.ZodRawShape>((schema, question) => {
+    return questions.reduce((schema, question) => {
       if (question.type === 'checkbox') {
-        schema[question.id] = question.required
-          ? z.array(z.string().trim()).nonempty()
-          : z.array(z.string().trim()).nullable().optional();
+        return schema.extend({
+          [question.id]: question.required
+            ? z.array(z.string().trim()).nonempty()
+            : z.array(z.string().trim()).nullable().optional().default([]),
+        });
       } else {
-        schema[question.id] = question.required
-          ? z.string().trim().max(500).min(1)
-          : z.string().trim().max(500).nullable().optional().default(null);
+        return schema.extend({
+          [question.id]: question.required
+            ? z.string().trim().max(500).min(1)
+            : z.string().trim().max(500).nullable().optional().default(null),
+        });
       }
-      return schema;
-    }, {});
-
-    return z.object(schema);
+    }, z.object({}));
   }
 
   async saveSpeakerAnswer(speakerId: string, answers: SurveyRawAnswers) {

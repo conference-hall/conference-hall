@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';

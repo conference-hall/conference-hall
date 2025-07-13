@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
 

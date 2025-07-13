@@ -620,7 +620,7 @@
   "event-management.settings.survey.save-question": "Enregistrer la question",
   "event-management.settings.survey.toggle.description": "Si cette option est activée, vos questions seront posées aux speakers lorsqu'ils soumettront une proposition.",
   "event-management.settings.survey.toggle.label": "Activation du questionnaire des speakers",
-  "event-management.settings.tags.confirm": "Êtes-vous sûr de vouloir supprimer le tag \"{{nom}}\" ?",
+  "event-management.settings.tags.confirm": "Êtes-vous sûr de vouloir supprimer le tag \"{{name}}\" ?",
   "event-management.settings.tags.create-tag": "Créer un tag",
   "event-management.settings.tags.feedbacks.deleted": "Tag supprimé.",
   "event-management.settings.tags.feedbacks.saved": "Tag sauvegardé.",

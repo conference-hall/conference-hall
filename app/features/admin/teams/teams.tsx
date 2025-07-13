@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { CalendarIcon, MagnifyingGlassIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';

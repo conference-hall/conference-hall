@@ -24,7 +24,7 @@ export class EventSettings extends UserEventAuthorization {
         const count = await db.event.count({ where: { AND: [{ slug }, { slug: { not: this.event } }] } });
         return count === 0;
       },
-      { message: 'This URL already exists.', path: ['slug'] },
+      { path: ['slug'], error: 'This URL already exists.' },
     );
   }
 }

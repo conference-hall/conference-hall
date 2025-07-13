@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import * as Firebase from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

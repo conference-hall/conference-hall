@@ -2,9 +2,8 @@ import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { teamFactory } from 'tests/factories/team.ts';
-
+import { z } from 'zod/v4';
 import { EventNotFoundError } from '~/shared/errors.server.ts';
-
 import { EventPage } from './event-page.server.ts';
 
 describe('EventPage', () => {
@@ -111,9 +110,9 @@ describe('EventPage', () => {
       const schema = await EventPage.of(event.slug).buildTracksSchema();
       const result = schema.safeParse({ formats: [], categories: [] });
 
-      const errors = result.error?.flatten();
-      expect(errors?.fieldErrors.formats).toEqual(['Array must contain at least 1 element(s)']);
-      expect(errors?.fieldErrors.categories).toEqual(['Array must contain at least 1 element(s)']);
+      const { fieldErrors } = z.flattenError(result.error!);
+      expect(fieldErrors.formats).toEqual(['Too small: expected array to have >=1 items']);
+      expect(fieldErrors.categories).toEqual(['Too small: expected array to have >=1 items']);
     });
   });
 

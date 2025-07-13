@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const TrackSaveSchema = z.object({
   id: z.string().trim().optional(),
@@ -9,20 +9,8 @@ export const TrackSaveSchema = z.object({
 export type TrackSaveData = z.infer<typeof TrackSaveSchema>;
 
 export const TracksSettingsSchema = z.object({
-  formatsRequired: z
-    .string()
-    .transform((value) => value === 'true')
-    .catch(false),
-  formatsAllowMultiple: z
-    .string()
-    .transform((value) => value === 'true')
-    .catch(false),
-  categoriesRequired: z
-    .string()
-    .transform((value) => value === 'true')
-    .catch(false),
-  categoriesAllowMultiple: z
-    .string()
-    .transform((value) => value === 'true')
-    .catch(false),
+  formatsRequired: z.stringbool(),
+  formatsAllowMultiple: z.stringbool(),
+  categoriesRequired: z.stringbool(),
+  categoriesAllowMultiple: z.stringbool(),
 });

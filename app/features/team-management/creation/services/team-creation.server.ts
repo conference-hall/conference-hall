@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
@@ -30,5 +30,5 @@ export class TeamCreation {
 
 export const TeamCreateSchema = z.object({
   name: z.string().trim().min(3).max(50),
-  slug: SlugSchema.refine(TeamCreation.isSlugValid, { message: 'This URL already exists.' }),
+  slug: SlugSchema.refine(TeamCreation.isSlugValid, { error: 'This URL already exists.' }),
 });

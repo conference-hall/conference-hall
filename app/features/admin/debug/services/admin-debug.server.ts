@@ -1,9 +1,9 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { testJob } from '~/features/admin/debug/services/jobs/test.job.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
 
-export const TestEmailSchema = z.object({ to: z.string().email() });
+export const TestEmailSchema = z.object({ to: z.email() });
 
 type TestEmail = z.infer<typeof TestEmailSchema>;
 

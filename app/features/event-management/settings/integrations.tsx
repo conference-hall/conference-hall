@@ -1,9 +1,9 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { useId } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -47,10 +47,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       if (resultConfig.status !== 'success') return resultConfig.error;
 
       const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
-      if (resultConfig.value.name === 'OPEN_AI') {
-        const { id, name, ...configuration } = resultConfig.value;
-        await eventIntegrations.save({ id, name, configuration });
-      } else if (resultConfig.value.name === 'OPEN_PLANNER') {
+      if (resultConfig.value.name === 'OPEN_PLANNER') {
         const { id, name, ...configuration } = resultConfig.value;
         await eventIntegrations.save({ id, name, configuration });
       }

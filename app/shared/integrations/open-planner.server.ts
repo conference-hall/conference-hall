@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 const BASE_URL = 'https://api.openplanner.fr';
 
@@ -46,10 +46,7 @@ async function postSessionsAndSpeakers(eventId: string, apiKey: string, payload:
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   }).catch((error) => {
-    console.log({
-      level: 'error',
-      message: `Open planner error: ${error.message}`,
-    });
+    console.log({ level: 'error', message: `Open planner error: ${error.message}` });
   });
 }
 

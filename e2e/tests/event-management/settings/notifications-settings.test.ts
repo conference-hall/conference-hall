@@ -23,7 +23,7 @@ test('updates notifications settings', async ({ page }) => {
   await notificationsPage.fill(notificationsPage.emailInput, 'blablabla');
   await notificationsPage.saveButton.click();
   const emailError = await notificationsPage.getInputDescription(notificationsPage.emailInput);
-  await expect(emailError).toHaveText('Invalid email');
+  await expect(emailError).toHaveText('Invalid email address');
 
   // Update notification email
   await notificationsPage.fill(notificationsPage.emailInput, 'test@email.com');

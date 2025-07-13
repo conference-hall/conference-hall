@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { CheckIcon } from '@heroicons/react/20/solid';
 import { ClockIcon } from '@heroicons/react/24/outline';
 import { useId } from 'react';

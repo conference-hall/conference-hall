@@ -1,3 +1,4 @@
+import { z } from 'zod/v4';
 import {
   CfpConferenceOpeningSchema,
   EventDetailsSettingsSchema,
@@ -27,10 +28,10 @@ describe('UserEvent types', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        const { fieldErrors } = result.error.flatten();
-        expect(fieldErrors.name).toEqual(['String must contain at least 3 character(s)']);
+        const { fieldErrors } = z.flattenError(result.error!);
+        expect(fieldErrors.name).toEqual(['Too small: expected string to have >=3 characters']);
         expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
-        expect(fieldErrors.visibility).toEqual(["Invalid enum value. Expected 'PUBLIC' | 'PRIVATE', received 'toto'"]);
+        expect(fieldErrors.visibility).toEqual(['Invalid option: expected one of "PUBLIC"|"PRIVATE"']);
       }
     });
   });
@@ -60,8 +61,8 @@ describe('UserEvent types', () => {
       const result = EventDetailsSettingsSchema.safeParse({});
 
       expect(result.success).toBe(false);
-      expect(result.error?.flatten().fieldErrors).toEqual({
-        timezone: ['Required'],
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
+        timezone: ['Invalid input: expected string, received undefined'],
       });
     });
 
@@ -73,7 +74,7 @@ describe('UserEvent types', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error?.flatten().fieldErrors).toEqual({
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
         conferenceStart: ['Conference start date must be after the conference end date.'],
       });
     });
@@ -99,8 +100,8 @@ describe('UserEvent types', () => {
       const result = CfpConferenceOpeningSchema.safeParse({});
 
       expect(result.success).toBe(false);
-      expect(result.error?.flatten().fieldErrors).toEqual({
-        timezone: ['Required'],
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
+        timezone: ['Invalid input: expected string, received undefined'],
       });
     });
 
@@ -112,7 +113,7 @@ describe('UserEvent types', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error?.flatten().fieldErrors).toEqual({
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
         cfpStart: ['Call for paper start date must be after the end date.'],
       });
     });

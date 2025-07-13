@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';

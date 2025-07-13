@@ -3,6 +3,7 @@ import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { z } from 'zod/v4';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { EventCreateSchema, EventCreation } from './event-creation.server.ts';
 
@@ -93,11 +94,11 @@ describe('EventCreation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        const { fieldErrors } = result.error.flatten();
-        expect(fieldErrors.name).toEqual(['String must contain at least 3 character(s)']);
+        const { fieldErrors } = z.flattenError(result.error!);
+        expect(fieldErrors.name).toEqual(['Too small: expected string to have >=3 characters']);
         expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
-        expect(fieldErrors.type).toEqual(["Invalid enum value. Expected 'CONFERENCE' | 'MEETUP', received 'toto'"]);
-        expect(fieldErrors.visibility).toEqual(["Invalid enum value. Expected 'PUBLIC' | 'PRIVATE', received 'toto'"]);
+        expect(fieldErrors.type).toEqual(['Invalid option: expected one of "CONFERENCE"|"MEETUP"']);
+        expect(fieldErrors.visibility).toEqual(['Invalid option: expected one of "PUBLIC"|"PRIVATE"']);
       }
     });
 
@@ -113,7 +114,7 @@ describe('EventCreation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        const { fieldErrors } = result.error.flatten();
+        const { fieldErrors } = z.flattenError(result.error!);
         expect(fieldErrors.slug).toEqual(['This URL already exists.']);
       }
     });

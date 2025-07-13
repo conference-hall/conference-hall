@@ -1,3 +1,4 @@
+import { z } from 'zod/v4';
 import { ScheduleCreateSchema, ScheduleDisplayTimesUpdateSchema } from './schedule.schema.server.ts';
 
 describe('EventSchedule types', () => {
@@ -23,11 +24,11 @@ describe('EventSchedule types', () => {
       const result = ScheduleCreateSchema.safeParse({});
 
       expect(result.success).toBe(false);
-      expect(result.error?.flatten().fieldErrors).toEqual({
-        name: ['Required'],
-        timezone: ['Required'],
-        start: ['Required'],
-        end: ['Required'],
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
+        name: ['Invalid input: expected string, received undefined'],
+        timezone: ['Invalid input: expected string, received undefined'],
+        start: ['Invalid input: expected string, received undefined'],
+        end: ['Invalid input: expected string, received undefined'],
       });
     });
 
@@ -40,8 +41,8 @@ describe('EventSchedule types', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error?.flatten().fieldErrors).toEqual({
-        name: ['String must contain at least 1 character(s)'],
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
+        name: ['Too small: expected string to have >=1 characters'],
       });
     });
 
@@ -54,7 +55,7 @@ describe('EventSchedule types', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error?.flatten().fieldErrors).toEqual({
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
         start: ['Schedule start date must be before the end date.'],
       });
     });
@@ -78,9 +79,9 @@ describe('EventSchedule types', () => {
       const result = ScheduleDisplayTimesUpdateSchema.safeParse({});
 
       expect(result.success).toBe(false);
-      expect(result.error?.flatten().fieldErrors).toEqual({
-        displayStartMinutes: ['Expected number, received nan'],
-        displayEndMinutes: ['Expected number, received nan'],
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
+        displayStartMinutes: ['Invalid input: expected number, received NaN'],
+        displayEndMinutes: ['Invalid input: expected number, received NaN'],
       });
     });
 
@@ -91,7 +92,7 @@ describe('EventSchedule types', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error?.flatten().fieldErrors).toEqual({
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
         displayStartMinutes: ['Displayed start in minutes must be before end in minutes.'],
       });
     });

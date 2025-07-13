@@ -1,5 +1,4 @@
-import { z } from 'zod';
-
+import { z } from 'zod/v4';
 import { parseToUtcEndOfDay, parseToUtcStartOfDay } from '~/shared/datetimes/timezone.ts';
 
 export const ScheduleCreateSchema = z
@@ -22,7 +21,7 @@ export const ScheduleCreateSchema = z
       if (start && end && start > end) return false;
       return true;
     },
-    { path: ['start'], message: 'Schedule start date must be before the end date.' },
+    { path: ['start'], error: 'Schedule start date must be before the end date.' },
   );
 
 export const ScheduleTracksSaveSchema = z.object({
@@ -42,7 +41,7 @@ export const ScheduleDisplayTimesUpdateSchema = z
   })
   .refine(({ displayStartMinutes, displayEndMinutes }) => displayStartMinutes <= displayEndMinutes, {
     path: ['displayStartMinutes'],
-    message: 'Displayed start in minutes must be before end in minutes.',
+    error: 'Displayed start in minutes must be before end in minutes.',
   });
 
 export const ScheduleSessionCreateSchema = z.object({

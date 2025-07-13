@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';

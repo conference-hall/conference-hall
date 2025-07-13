@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { parseToUtcEndOfDay, parseToUtcStartOfDay } from '~/shared/datetimes/timezone.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
 
@@ -17,8 +17,8 @@ export const EventDetailsSettingsSchema = z
     description: z.string().trim().min(1).nullable().default(null),
     conferenceStart: z.string().nullable().default(null),
     conferenceEnd: z.string().nullable().default(null),
-    websiteUrl: z.string().url().trim().nullable().default(null),
-    contactEmail: z.string().email().trim().nullable().default(null),
+    websiteUrl: z.url().trim().nullable().default(null),
+    contactEmail: z.email().trim().nullable().default(null),
   })
   .transform(({ conferenceStart, conferenceEnd, timezone, ...rest }) => ({
     ...rest,
@@ -33,11 +33,11 @@ export const EventDetailsSettingsSchema = z
       if (conferenceStart && conferenceEnd && conferenceStart > conferenceEnd) return false;
       return true;
     },
-    { path: ['conferenceStart'], message: 'Conference start date must be after the conference end date.' },
+    { path: ['conferenceStart'], error: 'Conference start date must be after the conference end date.' },
   );
 
 export const CfpPreferencesSchema = z.object({
-  codeOfConductUrl: z.string().url().trim().nullable().default(null),
+  codeOfConductUrl: z.url().trim().nullable().default(null),
   maxProposals: z.number().min(1).nullable().default(null),
 });
 
@@ -64,11 +64,11 @@ export const CfpConferenceOpeningSchema = z
       if (cfpStart && cfpEnd && cfpStart > cfpEnd) return false;
       return true;
     },
-    { path: ['cfpStart'], message: 'Call for paper start date must be after the end date.' },
+    { path: ['cfpStart'], error: 'Call for paper start date must be after the end date.' },
   );
 
 export const EventEmailNotificationsSettingsSchema = z.object({
-  emailOrganizer: z.string().email().nullable().default(null),
+  emailOrganizer: z.email().nullable().default(null),
 });
 
 export const EventNotificationsSettingsSchema = z.object({
@@ -76,5 +76,5 @@ export const EventNotificationsSettingsSchema = z.object({
 });
 
 export const EventSlackSettingsSchema = z.object({
-  slackWebhookUrl: z.string().url().nullable().default(null),
+  slackWebhookUrl: z.url().nullable().default(null),
 });

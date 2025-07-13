@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { useTranslation } from 'react-i18next';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
