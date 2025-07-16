@@ -7,7 +7,7 @@ import { getEmailI18n } from '~/shared/i18n/i18n.emails.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
-type TemplateData = {
+export type TemplateData = {
   event: { id: string; slug: string; name: string; logoUrl: string | null };
   proposal: {
     id: string;
@@ -29,7 +29,9 @@ export default function ProposalAcceptedEmail({ event, proposal, locale, customi
       {customization?.content ? (
         <EmailMarkdown>{customization.content.replaceAll('{{proposal}}', proposal.title)}</EmailMarkdown>
       ) : (
-        <Text>{t('speakers.proposal-accepted.body.text1', { event: event.name })}</Text>
+        <Text>
+          {t('speakers.proposal-accepted.body.text1', { event: event.name, interpolation: { escapeValue: false } })}
+        </Text>
       )}
 
       <Section className={styles.card}>
@@ -60,8 +62,8 @@ ProposalAcceptedEmail.buildPayload = (data: TemplateData, localeOverride?: strin
 
   return {
     template: 'speakers-proposal-accepted',
-    subject: t('speakers.proposal-accepted.subject', { event: data.event.name }),
-    from: t('common.email.from.event', { event: data.event.name }),
+    subject: t('speakers.proposal-accepted.subject', { event: data.event.name, interpolation: { escapeValue: false } }),
+    from: t('common.email.from.event', { event: data.event.name, interpolation: { escapeValue: false } }),
     to: data.proposal.speakers.map((speaker) => speaker.email),
     data,
     locale,

@@ -7,7 +7,7 @@ import { getEmailI18n } from '~/shared/i18n/i18n.emails.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
-type TemplateData = {
+export type TemplateData = {
   event: { id: string; name: string; logoUrl: string | null };
   proposal: { title: string; speakers: Array<{ email: string; locale: string }> };
 };
@@ -25,7 +25,13 @@ export default function ProposalSubmittedEmail({ event, proposal, locale, custom
         <EmailMarkdown>{customization.content.replaceAll('{{proposal}}', proposal.title)}</EmailMarkdown>
       ) : (
         <>
-          <Text>{t('speakers.proposal-submitted.body.text1', { proposal: proposal.title, event: event.name })}</Text>
+          <Text>
+            {t('speakers.proposal-submitted.body.text1', {
+              proposal: proposal.title,
+              event: event.name,
+              interpolation: { escapeValue: false },
+            })}
+          </Text>
 
           <Text>{t('speakers.proposal-submitted.body.text2')}</Text>
         </>
@@ -46,8 +52,11 @@ ProposalSubmittedEmail.buildPayload = (data: TemplateData, localeOverride?: stri
 
   return {
     template: 'speakers-proposal-submitted',
-    subject: t('speakers.proposal-submitted.subject', { event: data.event.name }),
-    from: t('common.email.from.event', { event: data.event.name }),
+    subject: t('speakers.proposal-submitted.subject', {
+      event: data.event.name,
+      interpolation: { escapeValue: false },
+    }),
+    from: t('common.email.from.event', { event: data.event.name, interpolation: { escapeValue: false } }),
     to: data.proposal.speakers.map((speaker) => speaker.email),
     data,
     locale,

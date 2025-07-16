@@ -13,17 +13,13 @@ vi.mock('servers/environment.server.ts', () => ({
 describe('Proposal Submitted', () => {
   describe('Special Characters Handling', () => {
     const event: TemplateData['event'] = {
-      slug: 'bdx-io',
+      id: 'bdx-io',
       name: 'BDX I/O',
       logoUrl: null,
-      emailOrganizer: 'test@bdxio.com',
-      emailNotifications: null,
-      team: { slug: 'BDX I/O' },
     };
     const proposal: TemplateData['proposal'] = {
-      id: '123',
       title: 'Random Proposal w/ special characters ✨',
-      speakers: [{ name: 'Gwenaëlle B.' }],
+      speakers: [{ email: 'test@test.com', locale: 'fr' }],
     };
 
     it('Payload does not escape special characters', async () => {
@@ -34,13 +30,13 @@ describe('Proposal Submitted', () => {
     });
 
     it('Plain text does not escape special characters', async () => {
-      const result = await render(<ProposalSubmittedEmail locale="fr" event={event} proposal={proposal} />, {
-        plainText: true,
-      });
+      const result = await render(
+        <ProposalSubmittedEmail locale="fr" event={event} proposal={proposal} customization={null} preview={false} />,
+        { plainText: true },
+      );
 
       expect(result).not.toContain('I&#x2F;O');
       expect(result).toContain('I/O');
-      expect(result).toContain('Gwenaëlle B.');
       expect(result).toContain('Random Proposal w/ special characters ✨');
     });
   });

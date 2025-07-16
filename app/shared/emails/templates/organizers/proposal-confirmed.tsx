@@ -6,7 +6,7 @@ import { getEmailI18n } from '~/shared/i18n/i18n.emails.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
-type TemplateData = {
+export type TemplateData = {
   event: {
     slug: string;
     name: string;
