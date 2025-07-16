@@ -51,8 +51,11 @@ ProposalConfirmedEmail.buildPayload = (data: TemplateData, locale = 'en'): Email
   const t = getEmailI18n(locale);
   return {
     template: 'organizers-proposal-confirmed',
-    subject: t('organizers.proposal-confirmed.subject', { event: data.event.name }),
-    from: t('common.email.from.event', { event: data.event.name }),
+    subject: t('organizers.proposal-confirmed.subject', {
+      event: data.event.name,
+      interpolation: { escapeValue: false },
+    }),
+    from: t('common.email.from.event', { event: data.event.name, interpolation: { escapeValue: false } }),
     to: [data.event.emailOrganizer],
     data,
     locale,
