@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 
 const _emailSchema = z.email({ error: 'Invalid email address.' }).trim().min(1);

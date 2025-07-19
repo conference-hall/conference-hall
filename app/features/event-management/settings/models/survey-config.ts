@@ -1,5 +1,5 @@
 import type { JsonValue } from '@prisma/client/runtime/library';
-import z from 'zod/v4';
+import z from 'zod';
 import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 
 export const SurveyQuestionSchema = z.object({

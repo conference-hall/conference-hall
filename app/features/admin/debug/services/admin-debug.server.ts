@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { testJob } from '~/features/admin/debug/services/jobs/test.job.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';

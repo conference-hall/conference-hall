@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import type { EmailSchema } from '~/shared/validators/auth.ts';
 
 const SocialLinksSchema = z.preprocess(

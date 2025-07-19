@@ -3,7 +3,7 @@ import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { useId } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';

@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { ScheduleCreateSchema, ScheduleDisplayTimesUpdateSchema } from './schedule.schema.server.ts';
 
 describe('EventSchedule types', () => {
