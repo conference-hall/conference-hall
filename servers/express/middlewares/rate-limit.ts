@@ -1,5 +1,5 @@
 import type express from 'express';
-import rateLimit from 'express-rate-limit';
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import { href } from 'react-router';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 
@@ -15,7 +15,8 @@ const defaultRateLimit = {
   keyGenerator: (req: express.Request) => {
     // Malicious users can spoof their IP address which means we should not default
     // to trusting req.ip. However, users cannot spoof Cloudflare cf-connecting-ip
-    return req.get('cf-connecting-ip') ?? `${req.ip}`;
+    const ip = req.get('cf-connecting-ip') ?? `${req.ip}`;
+    return ipKeyGenerator(ip);
   },
 };
 
