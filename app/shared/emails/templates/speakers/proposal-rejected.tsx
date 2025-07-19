@@ -21,7 +21,7 @@ export default function ProposalRejectedEmail({ event, proposal, locale, customi
       <Heading className={styles.h1}>{t('speakers.proposal-rejected.body.title')}</Heading>
 
       {customization?.content ? (
-        <EmailMarkdown>{customization.content.replaceAll('{{proposal}}', proposal.title)}</EmailMarkdown>
+        <EmailMarkdown variables={{ proposal: proposal.title }}>{customization.content}</EmailMarkdown>
       ) : (
         <>
           <Text>

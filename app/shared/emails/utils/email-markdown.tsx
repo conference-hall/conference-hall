@@ -1,4 +1,5 @@
 import { Markdown as ReactEmailMarkdown } from '@react-email/components';
+import xss from 'xss';
 
 const markdownCustomStyles = {
   h1: {
@@ -45,6 +46,40 @@ const markdownCustomStyles = {
   },
 };
 
-export function EmailMarkdown({ children }: { children: string }) {
-  return <ReactEmailMarkdown markdownCustomStyles={markdownCustomStyles}>{children}</ReactEmailMarkdown>;
+type Props = { children: string; variables?: Record<string, string> };
+
+export function EmailMarkdown({ children, variables = {} }: Props) {
+  const interpolatedMarkdown = interpolateTemplate(children, variables);
+
+  return (
+    <ReactEmailMarkdown
+      markdownCustomStyles={markdownCustomStyles}
+      markdownContainerStyles={{ whiteSpace: 'pre-wrap' }}
+    >
+      {interpolatedMarkdown}
+    </ReactEmailMarkdown>
+  );
+}
+
+function interpolateTemplate(template: string, variables: Record<string, string>): string {
+  return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+    const value = variables[key];
+    if (value === undefined) {
+      return match;
+    }
+
+    // Sanitize the value - this removes all HTML tags and dangerous content
+    const sanitized = xss(value, {
+      whiteList: {},
+      stripIgnoreTag: true,
+      stripIgnoreTagBody: ['script'],
+    });
+
+    // Additional URL sanitization for markdown links
+    if (sanitized.match(/^(javascript|data|vbscript):/i)) {
+      return '';
+    }
+
+    return sanitized;
+  });
 }

@@ -22,7 +22,7 @@ export default function ProposalSubmittedEmail({ event, proposal, locale, custom
       <Heading className={styles.h1}>{t('speakers.proposal-submitted.body.title')}</Heading>
 
       {customization?.content ? (
-        <EmailMarkdown>{customization.content.replaceAll('{{proposal}}', proposal.title)}</EmailMarkdown>
+        <EmailMarkdown variables={{ proposal: proposal.title }}>{customization.content}</EmailMarkdown>
       ) : (
         <>
           <Text>
