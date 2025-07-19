@@ -2,7 +2,7 @@ import { parseFormData } from '@mjackson/form-data-parser';
 import type { ChangeEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { uploadToStorageHandler } from '~/app-platform/storage/services/storage.server.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Callout } from '~/design-system/callout.tsx';

@@ -1,7 +1,7 @@
 import { createCookieSessionStorage, data } from 'react-router';
 import { getWebServerEnv } from 'servers/environment.server.ts';
 import { v4 as uuid } from 'uuid';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 
 const { COOKIE_SIGNED_SECRET } = getWebServerEnv();
 

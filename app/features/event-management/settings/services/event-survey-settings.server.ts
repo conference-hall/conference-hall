@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import z from 'zod/v4';
+import z from 'zod';
 import { SurveyInvalidError } from '~/shared/errors.server.ts';
 import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';

@@ -1,5 +1,5 @@
 import { parseWithZod } from '@conform-to/zod/v4';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 
 const ReviewsFiltersSchema = z.enum(['reviewed', 'not-reviewed', 'my-favorites']).optional();
 

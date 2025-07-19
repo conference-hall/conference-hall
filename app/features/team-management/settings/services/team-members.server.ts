@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import type { Prisma, TeamRole } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { UserTeamAuthorization } from '~/shared/user/user-team-authorization.server.ts';

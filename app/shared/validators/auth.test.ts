@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { EmailSchema, validateEmailAndPassword, validatePassword } from './auth.ts';
 
 describe('validatePassword', () => {

@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import { z } from 'zod';
 
 const BASE_URL = 'https://api.openplanner.fr';
 

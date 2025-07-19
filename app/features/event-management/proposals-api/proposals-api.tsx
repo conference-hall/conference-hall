@@ -1,5 +1,5 @@
 import { parseWithZod } from '@conform-to/zod/v4';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { ForbiddenError } from '~/shared/errors.server.ts';
 import type { Route } from './+types/proposals-api.ts';

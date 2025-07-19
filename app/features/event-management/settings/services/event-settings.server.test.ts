@@ -13,7 +13,7 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { EventSettings } from './event-settings.server.ts';
 

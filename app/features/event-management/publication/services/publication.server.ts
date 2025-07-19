@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import z from 'zod/v4';
+import z from 'zod';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ProposalAcceptedEmail from '~/shared/emails/templates/speakers/proposal-accepted.tsx';
 import ProposalRejectedEmail from '~/shared/emails/templates/speakers/proposal-rejected.tsx';

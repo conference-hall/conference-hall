@@ -4,7 +4,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { ProfileFetcher } from '../../services/profile-fetcher.server.ts';
 import { ProfileSchema } from './speaker-profile.schema.server.ts';
 import { SpeakerProfile } from './speaker-profile.server.ts';

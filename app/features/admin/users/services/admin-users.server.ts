@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { auth } from '~/shared/auth/firebase.server.ts';
 import { UserNotFoundError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
