@@ -6,7 +6,7 @@ import { getEmailI18n } from '~/shared/i18n/i18n.emails.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
-type TemplateData = {
+export type TemplateData = {
   event: {
     slug: string;
     name: string;
@@ -51,8 +51,11 @@ ProposalDeclinedEmail.buildPayload = (data: TemplateData, locale = 'en'): EmailP
   const t = getEmailI18n(locale);
   return {
     template: 'organizers-proposal-declined',
-    subject: t('organizers.proposal-declined.subject', { event: data.event.name }),
-    from: t('common.email.from.event', { event: data.event.name }),
+    subject: t('organizers.proposal-declined.subject', {
+      event: data.event.name,
+      interpolation: { escapeValue: false },
+    }),
+    from: t('common.email.from.event', { event: data.event.name, interpolation: { escapeValue: false } }),
     to: [data.event.emailOrganizer],
     data,
     locale,
