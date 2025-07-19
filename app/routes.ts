@@ -87,6 +87,7 @@ export default [
 
     // Event review pages
     route('reviews', './features/event-management/proposals/proposals.tsx'),
+    route('reviews/new', './features/event-management/proposals/new-proposal.tsx'),
     route('reviews/:proposal', './features/event-management/proposals/proposal.tsx'),
     route('reviews/autocomplete', './features/event-management/proposals/autocomplete.tsx'),
 
