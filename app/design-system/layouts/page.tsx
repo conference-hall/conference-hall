@@ -1,7 +1,8 @@
+import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
-
-import { H1, H2, Subtitle } from '../typography.tsx';
+import { ButtonLink } from '../buttons.tsx';
+import { H1, Subtitle } from '../typography.tsx';
 import { Container } from './container.tsx';
 
 type Props = { children: React.ReactNode; className?: string };
@@ -26,16 +27,20 @@ function NavHeader({ className, children }: NavHeaderProps) {
 
 Page.NavHeader = NavHeader;
 
-type HeadingProps = { title: string; subtitle?: string; children?: ReactNode; level?: '1' | '2' };
+type HeadingProps = { title: string; subtitle?: string; backTo?: string; children?: ReactNode };
 
-function Heading({ title, subtitle, level = '1', children }: HeadingProps) {
-  const HeadingTag = level === '1' ? H1 : H2;
-
+function Heading({ title, subtitle, children, backTo }: HeadingProps) {
   return (
     <div className="flex flex-col mb-8 gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+        {backTo ? (
+          <ButtonLink size="square-m" variant="secondary" to={backTo} className="mr-2">
+            <ArrowLeftIcon className="h-5 w-5" />
+          </ButtonLink>
+        ) : null}
+
         <div className="truncate min-w-0">
-          <HeadingTag truncate>{title}</HeadingTag>
+          <H1 truncate>{title}</H1>
           {subtitle && <Subtitle truncate>{subtitle}</Subtitle>}
         </div>
       </div>

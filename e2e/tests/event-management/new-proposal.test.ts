@@ -7,6 +7,7 @@ import { userFactory } from 'tests/factories/users.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { NewProposalPage } from './new-proposal.page.ts';
+import { ProposalPage } from './proposal.page.ts';
 import { ProposalsListPage } from './proposals-list.page.ts';
 
 let team: Team;
@@ -38,22 +39,25 @@ test('creates new proposal as organizer', async ({ page }) => {
   const newProposalPage = new NewProposalPage(page);
   await newProposalPage.waitFor();
 
-  await expect(newProposalPage.titleInput).toBeVisible();
-  await expect(newProposalPage.abstractTextarea).toBeVisible();
-  await expect(newProposalPage.submitButton).toBeVisible();
-  await expect(newProposalPage.cancelButton).toBeVisible();
+  await newProposalPage.talkForm.fillForm(
+    'E2E Test Proposal',
+    'This is a test proposal',
+    'intermediate',
+    'English',
+    'https://example.com/references',
+  );
 
-  await newProposalPage.fillProposalForm({
-    title: 'E2E Test Proposal',
-    abstract: 'This is a test proposal created during e2e testing.',
-    level: 'intermediate',
-    references: 'https://example.com/references',
-  });
+  await expect(newProposalPage.talkForm.titleInput).toHaveValue('E2E Test Proposal');
+  await expect(newProposalPage.talkForm.abstractInput).toHaveValue('This is a test proposal');
+  await expect(newProposalPage.talkForm.intermediateRadio).toBeChecked();
+  await expect(newProposalPage.talkForm.referencesInput).toHaveValue('https://example.com/references');
 
-  await expect(newProposalPage.titleInput).toHaveValue('E2E Test Proposal');
-  await expect(newProposalPage.abstractTextarea).toHaveValue('This is a test proposal created during e2e testing.');
-  await expect(newProposalPage.intermediateRadio).toBeChecked();
-  await expect(newProposalPage.referencesTextarea).toHaveValue('https://example.com/references');
+  await newProposalPage.submitButton.click();
+  await expect(newProposalPage.toast).toHaveText('Proposal created successfully.');
+
+  const proposalPage = new ProposalPage(page);
+  proposalPage.waitFor('E2E Test Proposal');
+  await expect(page.getByRole('heading', { name: 'E2E Test Proposal' })).toBeVisible();
 });
 
 test('cancels new proposal creation', async ({ page }) => {

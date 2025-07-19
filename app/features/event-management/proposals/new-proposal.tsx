@@ -2,8 +2,10 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
+import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
@@ -39,7 +41,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 export default function NewProposalRoute({ actionData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
   const isFeatureEnabled = useFlag('organizerProposalCreation');
-  const { event, team } = useCurrentEventTeam();
+  const { team } = useCurrentEventTeam();
 
   if (!isFeatureEnabled || !team.userPermissions?.canCreateEventProposal) {
     return null;
@@ -49,32 +51,55 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
     <Page>
       <Page.Heading
         title={t('event-management.proposals.new.title')}
-        subtitle="Create a new proposal for this event as an organizer."
+        subtitle={t('event-management.proposals.new.subtitle')}
+        backTo={href('/team/:team/:event/reviews', params)}
       />
 
-      <Card>
-        <Card.Content>
-          <TalkForm
-            id="new-proposal-form"
-            formats={event.formats}
-            formatsRequired={event.formatsRequired}
-            formatsAllowMultiple={event.formatsAllowMultiple}
-            categories={event.categories}
-            categoriesRequired={event.categoriesRequired}
-            categoriesAllowMultiple={event.categoriesAllowMultiple}
-            errors={actionData?.errors}
-          />
-        </Card.Content>
+      <div className="grid grid-cols-3 gap-6">
+        <Card className="col-span-2">
+          <Card.Content>
+            <TalkForm id="new-proposal-form" errors={actionData?.errors} />
+          </Card.Content>
 
-        <Card.Actions>
-          <ButtonLink variant="secondary" to={href('/team/:team/:event/reviews', params)}>
-            {t('common.cancel')}
-          </ButtonLink>
-          <Button type="submit" form="new-proposal-form">
-            {t('common.submit')}
-          </Button>
-        </Card.Actions>
-      </Card>
+          <Card.Actions>
+            <ButtonLink variant="secondary" to={href('/team/:team/:event/reviews', params)}>
+              {t('common.cancel')}
+            </ButtonLink>
+            <Button type="submit" form="new-proposal-form">
+              {t('common.submit')}
+            </Button>
+          </Card.Actions>
+        </Card>
+
+        <div className="space-y-4">
+          <Card as="section">
+            <div className="space-y-2 p-4 lg:p-6">
+              <H2 size="s">Speakers</H2>
+              <Text size="s">Aucun speaker</Text>
+            </div>
+
+            <Divider />
+
+            <div className="space-y-2 p-4 lg:p-6">
+              <H2 size="s">Formats</H2>
+              <Text size="s">Aucun format</Text>
+            </div>
+
+            <Divider />
+
+            <div className="space-y-2 p-4 lg:p-6">
+              <H2 size="s">Catégories</H2>
+              <Text size="s">Aucune catégorie</Text>
+            </div>
+            <Divider />
+
+            <div className="space-y-2 p-4 lg:p-6">
+              <H2 size="s">Tags</H2>
+              <Text size="s">Aucun tag</Text>
+            </div>
+          </Card>
+        </div>
+      </div>
     </Page>
   );
 }

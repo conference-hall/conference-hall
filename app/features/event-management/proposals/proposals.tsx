@@ -76,7 +76,7 @@ export default function ReviewsRoute({ loaderData, params }: Route.ComponentProp
               <SortMenu />
               <ExportMenu />
               {isFeatureEnabled && canCreateEventProposal && (
-                <ButtonLink variant="primary" iconLeft={PlusIcon} to={href('/team/:team/:event/reviews/new', params)}>
+                <ButtonLink iconLeft={PlusIcon} to={href('/team/:team/:event/reviews/new', params)}>
                   {t('event-management.proposals.new-proposal')}
                 </ButtonLink>
               )}
