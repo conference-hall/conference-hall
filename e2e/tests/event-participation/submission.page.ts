@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { CoSpeakerComponent } from 'e2e/common/co-speaker.component.ts';
-import { TalkEditFormComponent } from 'e2e/common/talk-edit-form.component.ts';
+import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
 import { PageObject } from 'e2e/page-object.ts';
 import { ProposalListPage } from './proposal-list.page.ts';
 
@@ -70,7 +70,7 @@ export class SubmissionPage extends PageObject {
   }
 
   async fillTalkForm(title: string, abstract: string, level: string, language: string, references: string) {
-    const talkForm = new TalkEditFormComponent(this.page);
+    const talkForm = new TalkFormComponent(this.page);
     return talkForm.fillForm(title, abstract, level, language, references);
   }
 

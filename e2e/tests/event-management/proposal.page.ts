@@ -1,5 +1,5 @@
 import { CoSpeakerComponent } from 'e2e/common/co-speaker.component.ts';
-import { TalkEditFormComponent } from 'e2e/common/talk-edit-form.component.ts';
+import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
 import { PageObject } from 'e2e/page-object.ts';
 
 export class ProposalPage extends PageObject {
@@ -32,7 +32,7 @@ export class ProposalPage extends PageObject {
 
   async clickOnEdit() {
     await this.page.getByRole('button', { name: 'Edit' }).click();
-    return new TalkEditFormComponent(this.page, true);
+    return new TalkFormComponent(this.page, true);
   }
 
   speaker(name: string) {
