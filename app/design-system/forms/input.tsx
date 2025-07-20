@@ -8,7 +8,7 @@ export type InputProps = {
   error?: SubmissionError;
   description?: string;
   icon?: React.ComponentType<{ className?: string }>;
-  size?: 'm' | 'l';
+  size?: 's' | 'm' | 'l';
   color?: 'light' | 'dark';
   children?: React.ReactNode;
 } & Omit<React.ComponentProps<'input'>, 'size'>;
@@ -87,6 +87,7 @@ const inputStyle = cva('block flex-1 border-0 bg-transparent focus:ring-0', {
       dark: 'font-semibold text-gray-300 placeholder:text-gray-400',
     },
     size: {
+      s: 'py-1 text-sm leading-6',
       m: 'py-1.5 text-sm leading-6',
       l: 'py-3 px-5 text-sm leading-6',
     },
