@@ -44,7 +44,7 @@ export function TagsCard({
           </div>
         </TagSelect>
       ) : (
-        <H2 size="s">{t('tags')}</H2>
+        <H2 size="s">{t('common.tags')}</H2>
       )}
 
       <div className="mt-4 flex flex-wrap gap-2">

@@ -8,6 +8,7 @@ export class ProposalsListPage extends PageObject {
   readonly noProposals: Locator;
   readonly searchInput: Locator;
   readonly exportButton: Locator;
+  readonly newProposalButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -16,6 +17,7 @@ export class ProposalsListPage extends PageObject {
     this.noProposals = page.getByText('No proposals found');
     this.searchInput = page.getByLabel('Search proposals');
     this.exportButton = page.getByRole('button', { name: 'Export' });
+    this.newProposalButton = page.getByRole('link', { name: 'Proposal', exact: true });
   }
 
   async goto(team: string, event: string) {
@@ -102,5 +104,9 @@ export class ProposalsListPage extends PageObject {
 
   async clickOnExport() {
     await this.exportButton.click();
+  }
+
+  async clickOnNewProposal() {
+    await this.newProposalButton.click();
   }
 }

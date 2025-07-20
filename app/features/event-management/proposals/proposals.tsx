@@ -1,9 +1,14 @@
 import { parseWithZod } from '@conform-to/zod/v4';
+import { PlusIcon } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
+import { href } from 'react-router';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { SearchInput } from '~/design-system/forms/search-input.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -47,10 +52,13 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   );
 };
 
-export default function ReviewsRoute({ loaderData }: Route.ComponentProps) {
+export default function ReviewsRoute({ loaderData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
   const { results, filters, pagination, statistics } = loaderData;
   const filtersHash = getObjectHash(filters);
+  const isFeatureEnabled = useFlag('organizerProposalCreation');
+  const { team } = useCurrentEventTeam();
+  const { canCreateEventProposal } = team.userPermissions;
 
   return (
     <Page>
@@ -67,6 +75,11 @@ export default function ReviewsRoute({ loaderData }: Route.ComponentProps) {
               <FiltersMenu />
               <SortMenu />
               <ExportMenu />
+              {isFeatureEnabled && canCreateEventProposal && (
+                <ButtonLink iconLeft={PlusIcon} to={href('/team/:team/:event/reviews/new', params)}>
+                  {t('event-management.proposals.new-proposal')}
+                </ButtonLink>
+              )}
             </div>
           </div>
           <FiltersTags filters={filters} />

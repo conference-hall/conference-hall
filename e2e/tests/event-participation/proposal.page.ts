@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { CoSpeakerComponent } from 'e2e/common/co-speaker.component.ts';
-import { TalkEditFormComponent } from 'e2e/common/talk-edit-form.component.ts';
+import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
 import { PageObject } from 'e2e/page-object.ts';
 import { ProposalListPage } from './proposal-list.page.ts';
 import { SubmissionPage } from './submission.page.ts';
@@ -46,7 +46,7 @@ export class ProposalPage extends PageObject {
 
   async clickOnEditTalk() {
     await this.page.getByRole('button', { name: 'Edit' }).click();
-    return new TalkEditFormComponent(this.page, true);
+    return new TalkFormComponent(this.page, true);
   }
 
   async clickOnContinueSubmission() {
