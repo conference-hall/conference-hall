@@ -1,4 +1,4 @@
-import { randCatchPhrase, randParagraph } from '@ngneat/falso';
+import { randCatchPhrase, randText } from '@ngneat/falso';
 import type { Event, Prisma } from '@prisma/client';
 
 import { db } from '../../prisma/db.server.ts';
@@ -13,7 +13,7 @@ export const eventFormatFactory = (options: FactoryOptions) => {
 
   const defaultAttributes: Prisma.EventFormatCreateInput = {
     name: randCatchPhrase(),
-    description: randParagraph(),
+    description: randText({ charCount: 100 }),
     event: { connect: { id: event.id } },
   };
 
