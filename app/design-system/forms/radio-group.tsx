@@ -13,9 +13,7 @@ type RadioGroupProps = {
 };
 
 export function RadioGroup({ label, description, inline, className, children, error }: RadioGroupProps) {
-  const layoutStyle = cx('space-y-4', {
-    'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
-  });
+  const layoutStyle = cx('space-y-2', { 'sm:flex sm:flex-wrap sm:items-center sm:space-y-0 sm:space-x-10': inline });
 
   return (
     <div className={className}>
@@ -54,7 +52,7 @@ export function Radio({ name, description, children, ...rest }: RadioProps) {
         </Label>
 
         {description && (
-          <Text id={`${id}-desccribe`} variant="secondary">
+          <Text id={`${id}-desccribe`} variant="secondary" className="pl-3">
             {description}
           </Text>
         )}
