@@ -13,9 +13,7 @@ type CheckboxGroupProps = {
 };
 
 export function CheckboxGroup({ label, description, inline, className, children, error }: CheckboxGroupProps) {
-  const layoutStyle = cx('space-y-4', {
-    'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
-  });
+  const layoutStyle = cx('space-y-2', { 'sm:flex sm:flex-wrap sm:items-center sm:space-y-0 sm:space-x-10': inline });
 
   return (
     <div className={className}>
@@ -31,14 +29,12 @@ export function CheckboxGroup({ label, description, inline, className, children,
 }
 
 export function CheckboxHeadingGroup({ label, description, inline, className, children }: CheckboxGroupProps) {
-  const layoutStyle = cx('space-y-4', {
-    'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
-  });
+  const layoutStyle = cx('space-y-2', { 'sm:flex sm:flex-wrap sm:items-center sm:space-y-0 sm:space-x-10': inline });
 
   return (
     <div className={className}>
       <Label>{label}</Label>
-      {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
+      {description && <p className="text-sm leading-5 text-gray-500">{description}</p>}
       <fieldset className="mt-4">
         <legend className="sr-only">{label}</legend>
         <div className={layoutStyle}>{children}</div>
@@ -75,7 +71,7 @@ export function Checkbox({ name, description, className, children, ref, ...rest 
           </Label>
 
           {description && (
-            <Text id={`${id}-describe`} variant="secondary">
+            <Text id={`${id}-describe`} variant="secondary" className="pl-3">
               {description}
             </Text>
           )}

@@ -40,7 +40,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
               label={question.label}
               description={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
-              inline
+              inline={(question.options?.length ?? 0) <= 3}
             >
               {question.options?.map((option) => (
                 <Checkbox
@@ -61,7 +61,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
               label={question.label}
               description={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
-              inline
+              inline={(question.options?.length ?? 0) <= 3}
             >
               {question.options?.map((option) => (
                 <Radio
