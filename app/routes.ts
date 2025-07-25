@@ -77,6 +77,9 @@ export default [
     route(':event/cfp', './features/event-management/creation/4-cfp-step.tsx'),
   ]),
 
+  // Command Palette Demo (development only)
+  route('command-palette-demo', './features/event-management/command-palette/command-palette-demo.tsx'),
+
   // Event management pages
   route('team/:team/:event', './features/event-management/layout.tsx', [
     route('overview', './features/event-management/overview/overview.tsx', [
