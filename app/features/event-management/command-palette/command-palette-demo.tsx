@@ -6,13 +6,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { stubProposals, stubSpeakers } from './command-palette-stub-data.ts';
 import { generateSuggestions } from './command-palette-utils.ts';
-import type {
-  CommandPaletteAction,
-  CommandPaletteItem,
-  CommandPaletteProposal,
-  CommandPaletteSearchConfig,
-  CommandPaletteSpeaker,
-} from './components/command-palette.tsx';
+import type { CommandPaletteItemData, CommandPaletteSearchConfig } from './components/command-palette.tsx';
 import { CommandPalette } from './components/command-palette.tsx';
 
 export default function CommandPaletteDemo() {
@@ -24,23 +18,20 @@ export default function CommandPaletteDemo() {
     maxResults: 3,
   };
 
-  const handleClick = (item: CommandPaletteItem, query: string) => {
+  const handleClick = (item: CommandPaletteItemData, query: string) => {
     switch (item.type) {
       case 'proposal': {
-        const proposal = item.data as CommandPaletteProposal;
-        alert(`Selected proposal: ${proposal.title}`);
+        alert(`Selected proposal: ${item.title}`);
         break;
       }
       case 'speaker': {
-        const speaker = item.data as CommandPaletteSpeaker;
-        alert(`Selected speaker: ${speaker.name}`);
+        alert(`Selected speaker: ${item.title}`);
         break;
       }
       case 'action': {
-        const action = item.data as CommandPaletteAction;
-        if (action.type === 'create-proposal') {
+        if (item.id === 'create-proposal') {
           alert(`Create proposal: "${query}"`);
-        } else if (action.type === 'create-speaker') {
+        } else if (item.id === 'create-speaker') {
           alert(`Create speaker: "${query}"`);
         }
         break;

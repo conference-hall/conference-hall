@@ -1,41 +1,21 @@
-import { Combobox, ComboboxOption, ComboboxOptions, Dialog, DialogPanel } from '@headlessui/react';
-import { ChevronRightIcon, CommandLineIcon, DocumentTextIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { Combobox, ComboboxOptions, Dialog, DialogPanel } from '@headlessui/react';
+import { CommandLineIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { cva } from 'class-variance-authority';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import { Avatar } from '~/design-system/avatar.tsx';
 import { Kbd } from '~/design-system/kbd.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { CommandPaletteInput } from './command-palette-input.tsx';
+import { CommandPaletteItem } from './command-palette-item.tsx';
 import { CommandPaletteSection } from './command-palette-section.tsx';
 
-export type CommandPaletteProposal = {
+export type CommandPaletteItemData = {
+  type: 'proposal' | 'speaker' | 'action';
   id: string;
   title: string;
-  speakers: string[];
   description?: string;
-};
-
-export type CommandPaletteSpeaker = {
-  id: string;
-  name: string;
-  email: string;
-  company?: string;
-  avatar?: string;
-};
-
-export type CommandPaletteAction = {
-  id: string;
-  type: 'create-proposal' | 'create-speaker';
-  label: string;
-  icon: React.ComponentType<any>;
-  description?: string;
-};
-
-export type CommandPaletteItem = {
-  type: 'proposal' | 'speaker' | 'action';
-  data: CommandPaletteProposal | CommandPaletteSpeaker | CommandPaletteAction;
-  priority?: number; // For custom ordering
+  icon?: React.ComponentType<any>;
+  picture?: string;
 };
 
 export type CommandPaletteSearchConfig = {
@@ -48,8 +28,8 @@ export type CommandPaletteSearchConfig = {
 type CommandPaletteProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSearch?: (query: string, config: CommandPaletteSearchConfig) => Promise<CommandPaletteItem[]>;
-  onClick?: (item: CommandPaletteItem, query: string) => void;
+  onSearch?: (query: string, config: CommandPaletteSearchConfig) => Promise<CommandPaletteItemData[]>;
+  onClick?: (item: CommandPaletteItemData, query: string) => void;
   searchConfig?: CommandPaletteSearchConfig;
   className?: string;
 };
@@ -62,92 +42,6 @@ const dialogVariants = cva(
     defaultVariants: { size: 'md' },
   },
 );
-
-const optionVariants = cva(
-  'group flex cursor-default select-none items-center rounded-lg px-3 py-2.5 transition-all duration-150 ease-out hover:bg-gray-50',
-  {
-    variants: {
-      variant: {
-        default: 'data-focus:bg-gray-100',
-        primary: 'data-focus:bg-indigo-600 data-focus:text-white',
-        success: 'data-focus:bg-green-600 data-focus:text-white',
-      },
-    },
-    defaultVariants: { variant: 'default' },
-  },
-);
-
-const ProposalItem = ({ item }: { item: CommandPaletteItem }) => {
-  const proposal = item.data as CommandPaletteProposal;
-
-  return (
-    <ComboboxOption key={proposal.id} value={item} className={optionVariants()}>
-      <div className="flex-none">
-        <div className="p-1.5 rounded-lg bg-gray-100 group-data-focus:bg-white group-data-focus:shadow-sm transition-all">
-          <DocumentTextIcon className="h-4 w-4 text-gray-500 group-data-focus:text-indigo-600" />
-        </div>
-      </div>
-      <div className="ml-3 flex-auto min-w-0">
-        <p className="text-sm font-semibold text-gray-900 truncate group-data-focus:text-gray-900">{proposal.title}</p>
-        <div className="flex items-center space-x-2 mt-1">
-          <p className="text-xs text-gray-500 truncate">{proposal.speakers.join(', ')}</p>
-        </div>
-      </div>
-      <ChevronRightIcon className="ml-3 h-4 w-4 text-gray-400 group-data-focus:text-gray-600 transition-transform group-data-focus:translate-x-1" />
-    </ComboboxOption>
-  );
-};
-
-const SpeakerItem = ({ item }: { item: CommandPaletteItem }) => {
-  const speaker = item.data as CommandPaletteSpeaker;
-
-  return (
-    <ComboboxOption key={speaker.id} value={item} className={optionVariants()}>
-      <div className="flex-none">
-        <Avatar
-          picture={speaker.avatar}
-          name={speaker.name}
-          size="s"
-          className="group-data-focus:ring-indigo-500 transition-all"
-        />
-      </div>
-      <div className="ml-3 flex-auto min-w-0">
-        <p className="text-sm font-semibold text-gray-900 truncate">{speaker.name}</p>
-        <p className="text-xs text-gray-500 truncate">
-          {speaker.email}
-          {speaker.company && (
-            <>
-              <span className="mx-1 text-gray-300">•</span>
-              <span className="font-medium">{speaker.company}</span>
-            </>
-          )}
-        </p>
-      </div>
-      <ChevronRightIcon className="ml-3 h-4 w-4 text-gray-400 group-data-focus:text-gray-600 transition-transform group-data-focus:translate-x-1" />
-    </ComboboxOption>
-  );
-};
-
-const ActionItem = ({ item }: { item: CommandPaletteItem }) => {
-  const action = item.data as CommandPaletteAction;
-  const IconComponent = action.icon;
-
-  return (
-    <ComboboxOption key={action.id} value={item} className={optionVariants({ variant: 'primary' })}>
-      <div className="flex-none">
-        <div className="p-1.5 rounded-lg bg-indigo-100 group-data-focus:bg-white group-data-focus:shadow-sm transition-all">
-          <IconComponent className="h-4 w-4 text-indigo-600 group-data-focus:text-indigo-600" />
-        </div>
-      </div>
-      <div className="ml-3 flex-auto min-w-0">
-        <p className="text-sm font-semibold text-gray-900 group-data-focus:text-white">{action.label}</p>
-        {action.description && (
-          <p className="text-xs text-gray-500 group-data-focus:text-indigo-100 truncate">{action.description}</p>
-        )}
-      </div>
-    </ComboboxOption>
-  );
-};
 
 const EmptyState = ({ hasQuery, isLoading }: { hasQuery: boolean; isLoading?: boolean }) => {
   if (isLoading) {
@@ -208,7 +102,7 @@ export function CommandPalette({
   className,
 }: CommandPaletteProps) {
   const [query, setQuery] = useState('');
-  const [suggestions, setSuggestions] = useState<CommandPaletteItem[]>([]);
+  const [suggestions, setSuggestions] = useState<CommandPaletteItemData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // Debounced search with configurable delay
@@ -230,15 +124,13 @@ export function CommandPalette({
 
   // Sort and group items with better organization
   const groupedItems = useMemo(() => {
-    const sorted = [...suggestions].sort((a, b) => (b.priority || 0) - (a.priority || 0));
-
     const groups = {
-      proposals: [] as CommandPaletteItem[],
-      speakers: [] as CommandPaletteItem[],
-      actions: [] as CommandPaletteItem[],
+      proposals: [] as CommandPaletteItemData[],
+      speakers: [] as CommandPaletteItemData[],
+      actions: [] as CommandPaletteItemData[],
     };
 
-    sorted.forEach((item) => {
+    suggestions.forEach((item) => {
       groups[`${item.type}s` as keyof typeof groups]?.push(item);
     });
 
@@ -246,7 +138,7 @@ export function CommandPalette({
   }, [suggestions]);
 
   const handleSelect = useCallback(
-    (item: CommandPaletteItem) => {
+    (item: CommandPaletteItemData) => {
       onClick?.(item, query);
       onClose();
     },
@@ -320,19 +212,19 @@ export function CommandPalette({
                 <>
                   <CommandPaletteSection title="Proposals" count={groupedItems.proposals.length}>
                     {groupedItems.proposals.map((item) => (
-                      <ProposalItem key={item.data.id} item={item} />
+                      <CommandPaletteItem key={item.id} item={item} />
                     ))}
                   </CommandPaletteSection>
 
                   <CommandPaletteSection title="Speakers" count={groupedItems.speakers.length}>
                     {groupedItems.speakers.map((item) => (
-                      <SpeakerItem key={item.data.id} item={item} />
+                      <CommandPaletteItem key={item.id} item={item} />
                     ))}
                   </CommandPaletteSection>
 
                   <CommandPaletteSection title="Actions" count={groupedItems.actions.length}>
                     {groupedItems.actions.map((item) => (
-                      <ActionItem key={item.data.id} item={item} />
+                      <CommandPaletteItem key={item.id} item={item} />
                     ))}
                   </CommandPaletteSection>
                 </>
