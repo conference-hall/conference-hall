@@ -4,7 +4,7 @@ import type {
   CommandPaletteProposal,
   CommandPaletteSearchConfig,
   CommandPaletteSpeaker,
-} from './command-palette.tsx';
+} from './components/command-palette.tsx';
 
 export type CommandPaletteSearchParams = {
   query: string;

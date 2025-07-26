@@ -1,12 +1,13 @@
-import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, Dialog, DialogPanel } from '@headlessui/react';
+import { Combobox, ComboboxOption, ComboboxOptions, Dialog, DialogPanel } from '@headlessui/react';
 import { ChevronRightIcon, CommandLineIcon, DocumentTextIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { cva } from 'class-variance-authority';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Avatar } from '~/design-system/avatar.tsx';
-import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Kbd } from '~/design-system/kbd.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import { CommandPaletteInput } from './command-palette-input.tsx';
+import { CommandPaletteSection } from './command-palette-section.tsx';
 
 export type CommandPaletteProposal = {
   id: string;
@@ -47,10 +48,7 @@ export type CommandPaletteSearchConfig = {
 type CommandPaletteProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSearch?: (
-    query: string,
-    config: CommandPaletteSearchConfig,
-  ) => Promise<CommandPaletteItem[]> | CommandPaletteItem[];
+  onSearch?: (query: string, config: CommandPaletteSearchConfig) => Promise<CommandPaletteItem[]>;
   onClick?: (item: CommandPaletteItem, query: string) => void;
   searchConfig?: CommandPaletteSearchConfig;
   className?: string;
@@ -60,16 +58,8 @@ type CommandPaletteProps = {
 const dialogVariants = cva(
   'mx-auto transform overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black/5 transition-all duration-200 ease-out',
   {
-    variants: {
-      size: {
-        sm: 'max-w-lg',
-        md: 'max-w-2xl',
-        lg: 'max-w-4xl',
-      },
-    },
-    defaultVariants: {
-      size: 'md',
-    },
+    variants: { size: { sm: 'max-w-lg', md: 'max-w-2xl', lg: 'max-w-4xl' } },
+    defaultVariants: { size: 'md' },
   },
 );
 
@@ -83,63 +73,9 @@ const optionVariants = cva(
         success: 'data-focus:bg-green-600 data-focus:text-white',
       },
     },
-    defaultVariants: {
-      variant: 'default',
-    },
+    defaultVariants: { variant: 'default' },
   },
 );
-
-const CommandPaletteHeader = ({
-  query,
-  onQueryChange,
-  placeholder,
-  isLoading,
-}: {
-  query: string;
-  onQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  isLoading?: boolean;
-}) => (
-  <div className="flex items-center px-5 py-1">
-    <div className="flex items-center space-x-2 flex-1">
-      <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 transition-all duration-200 group-focus-within:text-indigo-500" />
-      <ComboboxInput
-        autoFocus
-        className="flex-1 border-0 bg-transparent py-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-sm leading-6 font-medium"
-        placeholder={placeholder || 'Search proposals, speakers...'}
-        value={query}
-        onChange={onQueryChange}
-        autoComplete="off"
-      />
-    </div>
-    {isLoading ? (
-      <LoadingIcon className="h-4 w-4" />
-    ) : (
-      <Text size="xs" variant="secondary">
-        ⌘+K to toggle
-      </Text>
-    )}
-  </div>
-);
-
-const CommandPaletteSection = ({
-  title,
-  items,
-  renderItem,
-}: {
-  title: string;
-  items: CommandPaletteItem[];
-  renderItem: (item: CommandPaletteItem) => React.ReactNode;
-}) => {
-  if (items.length === 0) return null;
-
-  return (
-    <div className="p-3">
-      <h3 className="mb-3 px-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">{title}</h3>
-      <div className="space-y-1">{items.map(renderItem)}</div>
-    </div>
-  );
-};
 
 const ProposalItem = ({ item }: { item: CommandPaletteItem }) => {
   const proposal = item.data as CommandPaletteProposal;
@@ -367,7 +303,7 @@ export function CommandPalette({
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
         <DialogPanel className={dialogVariants({ className })}>
           <Combobox onChange={handleSelect}>
-            <CommandPaletteHeader
+            <CommandPaletteInput
               query={query}
               onQueryChange={handleInputChange}
               placeholder={searchConfig.placeholder}
@@ -382,21 +318,23 @@ export function CommandPalette({
                 <EmptyState hasQuery={Boolean(query)} isLoading={isLoading} />
               ) : (
                 <>
-                  <CommandPaletteSection
-                    title="Proposals"
-                    items={groupedItems.proposals}
-                    renderItem={(item) => <ProposalItem key={item.data.id} item={item} />}
-                  />
-                  <CommandPaletteSection
-                    title="Speakers"
-                    items={groupedItems.speakers}
-                    renderItem={(item) => <SpeakerItem key={item.data.id} item={item} />}
-                  />
-                  <CommandPaletteSection
-                    title="Actions"
-                    items={groupedItems.actions}
-                    renderItem={(item) => <ActionItem key={item.data.id} item={item} />}
-                  />
+                  <CommandPaletteSection title="Proposals" count={groupedItems.proposals.length}>
+                    {groupedItems.proposals.map((item) => (
+                      <ProposalItem key={item.data.id} item={item} />
+                    ))}
+                  </CommandPaletteSection>
+
+                  <CommandPaletteSection title="Speakers" count={groupedItems.speakers.length}>
+                    {groupedItems.speakers.map((item) => (
+                      <SpeakerItem key={item.data.id} item={item} />
+                    ))}
+                  </CommandPaletteSection>
+
+                  <CommandPaletteSection title="Actions" count={groupedItems.actions.length}>
+                    {groupedItems.actions.map((item) => (
+                      <ActionItem key={item.data.id} item={item} />
+                    ))}
+                  </CommandPaletteSection>
                 </>
               )}
             </ComboboxOptions>

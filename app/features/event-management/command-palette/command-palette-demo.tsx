@@ -4,16 +4,16 @@ import { Kbd } from '~/design-system/kbd.tsx';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
+import { stubProposals, stubSpeakers } from './command-palette-stub-data.ts';
+import { generateSuggestions } from './command-palette-utils.ts';
 import type {
   CommandPaletteAction,
   CommandPaletteItem,
   CommandPaletteProposal,
   CommandPaletteSearchConfig,
   CommandPaletteSpeaker,
-} from './command-palette.tsx';
-import { CommandPalette } from './command-palette.tsx';
-import { stubProposals, stubSpeakers } from './command-palette-stub-data.ts';
-import { generateSuggestions } from './command-palette-utils.ts';
+} from './components/command-palette.tsx';
+import { CommandPalette } from './components/command-palette.tsx';
 
 export default function CommandPaletteDemo() {
   const [isOpen, setIsOpen] = useState(false);

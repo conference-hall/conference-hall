@@ -1,4 +1,4 @@
-import type { CommandPaletteProposal, CommandPaletteSpeaker } from './command-palette.tsx';
+import type { CommandPaletteProposal, CommandPaletteSpeaker } from './components/command-palette.tsx';
 
 export const stubProposals: CommandPaletteProposal[] = [
   {
