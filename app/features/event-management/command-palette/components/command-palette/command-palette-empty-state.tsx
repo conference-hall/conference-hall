@@ -6,7 +6,7 @@ import { Text } from '~/design-system/typography.tsx';
 
 type Props = { title: string; subtitle: string; hasQuery: boolean; loading?: boolean };
 
-export const CommandPaletteEmptyState = ({ title, subtitle, hasQuery, loading }: Props) => {
+export function CommandPaletteEmptyState({ title, subtitle, hasQuery, loading }: Props) {
   const { t } = useTranslation();
 
   if (hasQuery && !loading) {
@@ -54,4 +54,4 @@ export const CommandPaletteEmptyState = ({ title, subtitle, hasQuery, loading }:
       </div>
     </div>
   );
-};
+}

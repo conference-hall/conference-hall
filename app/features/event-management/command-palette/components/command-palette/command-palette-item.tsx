@@ -4,7 +4,7 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
 import type { CommandPaletteItemData } from './command-palette.tsx';
 
-export const CommandPaletteItem = ({ item }: { item: CommandPaletteItemData }) => {
+export function CommandPaletteItem({ item }: { item: CommandPaletteItemData }) {
   return (
     <ComboboxOption
       key={item.id}
@@ -24,9 +24,9 @@ export const CommandPaletteItem = ({ item }: { item: CommandPaletteItemData }) =
       <ChevronRightIcon className="h-4 w-4 text-gray-400 group-data-focus:text-gray-600" />
     </ComboboxOption>
   );
-};
+}
 
-export const ItemIcon = ({ icon: IconComponent }: { icon: React.ComponentType<any> }) => {
+function ItemIcon({ icon: IconComponent }: { icon: React.ComponentType<any> }) {
   return (
     <div className="flex-none">
       <div className="p-1.5 rounded-lg bg-gray-100 group-data-focus:bg-white group-data-focus:shadow-sm">
@@ -34,4 +34,4 @@ export const ItemIcon = ({ icon: IconComponent }: { icon: React.ComponentType<an
       </div>
     </div>
   );
-};
+}

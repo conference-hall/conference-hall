@@ -1,12 +1,8 @@
 import { Text } from '~/design-system/typography.tsx';
 
-type Props = {
-  title: string;
-  count: number;
-  children: React.ReactNode;
-};
+type Props = { title: string; count: number; children: React.ReactNode };
 
-export const CommandPaletteSection = ({ title, count, children }: Props) => {
+export function CommandPaletteSection({ title, count, children }: Props) {
   if (count === 0) return null;
 
   return (
@@ -17,4 +13,4 @@ export const CommandPaletteSection = ({ title, count, children }: Props) => {
       <div className="space-y-1">{children}</div>
     </div>
   );
-};
+}

@@ -12,7 +12,7 @@ type Props = {
   withOpenKey?: boolean;
 };
 
-export const CommandPaletteInput = ({ value, onChange, loading, withOpenKey }: Props) => {
+export function CommandPaletteInput({ value, onChange, loading, withOpenKey }: Props) {
   const { t } = useTranslation();
 
   return (
@@ -36,4 +36,4 @@ export const CommandPaletteInput = ({ value, onChange, loading, withOpenKey }: P
       )}
     </div>
   );
-};
+}
