@@ -1,10 +1,8 @@
 import { Combobox, ComboboxOptions, Dialog, DialogPanel } from '@headlessui/react';
-import { CommandLineIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { cva } from 'class-variance-authority';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import { Kbd } from '~/design-system/kbd.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { CommandPaletteEmptyState } from './command-palette-empty-state.tsx';
 import { CommandPaletteInput } from './command-palette-input.tsx';
 import { CommandPaletteItem } from './command-palette-item.tsx';
 import { CommandPaletteSection } from './command-palette-section.tsx';
@@ -18,19 +16,14 @@ export type CommandPaletteItemData = {
   picture?: string;
 };
 
-export type CommandPaletteSearchConfig = {
-  enableProposalCreation?: boolean;
-  enableSpeakerCreation?: boolean;
-  maxResults?: number;
-  placeholder?: string;
-};
-
 type CommandPaletteProps = {
+  title: string;
+  subtitle: string;
+  placeholder?: string;
   isOpen: boolean;
   onClose: () => void;
-  onSearch?: (query: string, config: CommandPaletteSearchConfig) => Promise<CommandPaletteItemData[]>;
+  onSearch?: (query: string) => Promise<CommandPaletteItemData[]>;
   onClick?: (item: CommandPaletteItemData, query: string) => void;
-  searchConfig?: CommandPaletteSearchConfig;
   className?: string;
 };
 
@@ -43,62 +36,14 @@ const dialogVariants = cva(
   },
 );
 
-const EmptyState = ({ hasQuery, isLoading }: { hasQuery: boolean; isLoading?: boolean }) => {
-  if (isLoading) {
-    return null;
-  }
-
-  if (hasQuery) {
-    return (
-      <div className="px-8 py-16 text-center">
-        <div className="p-3 rounded-full bg-gray-100 w-fit mx-auto mb-6">
-          <MagnifyingGlassIcon className="h-6 w-6 text-gray-400" />
-        </div>
-        <p className="text-sm font-semibold text-gray-900 mb-2">No results found</p>
-        <p className="text-xs text-gray-500 mb-4">Try adjusting your search or create something new</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="px-8 py-16 text-center">
-      <div className="p-3 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 w-fit mx-auto mb-6">
-        <CommandLineIcon className="h-6 w-6 text-indigo-600" />
-      </div>
-      <p className="text-sm font-semibold text-gray-900 mb-2">Command Palette</p>
-      <Text size="xs" variant="secondary" className="mb-6">
-        Search for proposals, speakers, or create new content
-      </Text>
-      <div className="flex justify-center space-x-6">
-        <div className="flex items-center space-x-1">
-          <Kbd>↑↓</Kbd>
-          <Text as="span" size="xs" variant="secondary">
-            navigate
-          </Text>
-        </div>
-        <div className="flex items-center space-x-1">
-          <Kbd>↵</Kbd>
-          <Text as="span" size="xs" variant="secondary">
-            select
-          </Text>
-        </div>
-        <div className="flex items-center space-x-1">
-          <Kbd>esc</Kbd>
-          <Text as="span" size="xs" variant="secondary">
-            close
-          </Text>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export function CommandPalette({
+  title,
+  subtitle,
   isOpen,
   onClose,
   onSearch,
   onClick,
-  searchConfig = {},
+  placeholder,
   className,
 }: CommandPaletteProps) {
   const [query, setQuery] = useState('');
@@ -113,7 +58,7 @@ export function CommandPalette({
     }
 
     try {
-      const results = await onSearch(searchQuery, searchConfig);
+      const results = await onSearch(searchQuery);
       setSuggestions(results);
     } catch {
       setSuggestions([]);
@@ -198,7 +143,7 @@ export function CommandPalette({
             <CommandPaletteInput
               query={query}
               onQueryChange={handleInputChange}
-              placeholder={searchConfig.placeholder}
+              placeholder={placeholder}
               isLoading={isLoading}
             />
 
@@ -207,7 +152,12 @@ export function CommandPalette({
               className="max-h-[28rem] scroll-py-2 divide-y divide-gray-200 border-t border-t-gray-200 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300"
             >
               {!hasResults ? (
-                <EmptyState hasQuery={Boolean(query)} isLoading={isLoading} />
+                <CommandPaletteEmptyState
+                  title={title}
+                  subtitle={subtitle}
+                  hasQuery={Boolean(query)}
+                  isLoading={isLoading}
+                />
               ) : (
                 <>
                   <CommandPaletteSection title="Proposals" count={groupedItems.proposals.length}>

@@ -6,17 +6,11 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { stubProposals, stubSpeakers } from './command-palette-stub-data.ts';
 import { generateSuggestions } from './command-palette-utils.ts';
-import type { CommandPaletteItemData, CommandPaletteSearchConfig } from './components/command-palette.tsx';
+import type { CommandPaletteItemData } from './components/command-palette.tsx';
 import { CommandPalette } from './components/command-palette.tsx';
 
 export default function CommandPaletteDemo() {
   const [isOpen, setIsOpen] = useState(false);
-
-  const searchConfig: CommandPaletteSearchConfig = {
-    enableProposalCreation: true,
-    enableSpeakerCreation: true,
-    maxResults: 3,
-  };
 
   const handleClick = (item: CommandPaletteItemData, query: string) => {
     switch (item.type) {
@@ -39,17 +33,9 @@ export default function CommandPaletteDemo() {
     }
   };
 
-  const handleSearch = async (query: string, config: CommandPaletteSearchConfig) => {
-    // Simulate API delay
+  const handleSearch = async (query: string) => {
     await new Promise((resolve) => setTimeout(resolve, 500));
-
-    // Regular search for suggestions
-    return generateSuggestions({
-      query,
-      proposals: stubProposals,
-      speakers: stubSpeakers,
-      config,
-    });
+    return generateSuggestions({ query, proposals: stubProposals, speakers: stubSpeakers });
   };
 
   const openCommandPalette = () => setIsOpen(true);
@@ -80,7 +66,6 @@ export default function CommandPaletteDemo() {
           </div>
 
           <div className="max-w-2xl mx-auto space-y-8">
-            {/* Quick Access */}
             <div className="text-center space-y-4">
               <div className="flex gap-4 justify-center">
                 <Button variant="primary" onClick={openCommandPalette}>
@@ -97,13 +82,13 @@ export default function CommandPaletteDemo() {
         </div>
       </Container>
 
-      {/* Command Palette */}
       <CommandPalette
+        title="Command Palette"
+        subtitle="Search for proposals, speakers, or create new content"
         isOpen={isOpen}
         onClose={closeCommandPalette}
         onSearch={handleSearch}
         onClick={handleClick}
-        searchConfig={searchConfig}
       />
     </Page>
   );

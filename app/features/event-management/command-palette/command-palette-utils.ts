@@ -1,19 +1,17 @@
 import { DocumentTextIcon, UserIcon } from '@heroicons/react/24/outline';
 import type { CommandPaletteStub } from './command-palette-stub-data.ts';
-import type { CommandPaletteItemData, CommandPaletteSearchConfig } from './components/command-palette.tsx';
+import type { CommandPaletteItemData } from './components/command-palette.tsx';
 
 export type CommandPaletteSearchParams = {
   query: string;
   proposals: CommandPaletteStub[];
   speakers: CommandPaletteStub[];
-  config: CommandPaletteSearchConfig;
 };
 
 export function generateSuggestions({
   query,
   proposals,
   speakers,
-  config,
 }: CommandPaletteSearchParams): CommandPaletteItemData[] {
   const items: CommandPaletteItemData[] = [];
   const searchQuery = query.toLowerCase().trim();
@@ -23,7 +21,7 @@ export function generateSuggestions({
     return items;
   }
 
-  const { enableProposalCreation = true, enableSpeakerCreation = true, maxResults = 5 } = config;
+  const maxResults = 5;
 
   // Filter proposals
   const filteredProposals = proposals
@@ -51,7 +49,7 @@ export function generateSuggestions({
   });
 
   // Add creation actions if query is not empty
-  if (searchQuery && enableProposalCreation) {
+  if (searchQuery) {
     items.push({
       type: 'action',
       id: 'create-proposal',
@@ -60,7 +58,7 @@ export function generateSuggestions({
     });
   }
 
-  if (searchQuery && enableSpeakerCreation) {
+  if (searchQuery) {
     items.push({
       type: 'action',
       id: 'create-speaker',
