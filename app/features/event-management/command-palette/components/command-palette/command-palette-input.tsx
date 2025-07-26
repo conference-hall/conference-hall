@@ -5,13 +5,13 @@ import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 type Props = {
-  query: string;
-  onQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
-  isLoading?: boolean;
+  loading?: boolean;
 };
 
-export const CommandPaletteInput = ({ query, onQueryChange, placeholder, isLoading }: Props) => {
+export const CommandPaletteInput = ({ value, onChange, placeholder, loading }: Props) => {
   const { t } = useTranslation();
 
   return (
@@ -22,12 +22,12 @@ export const CommandPaletteInput = ({ query, onQueryChange, placeholder, isLoadi
           autoFocus
           className="flex-1 border-0 bg-transparent py-3 text-gray-900 placeholder:text-gray-500 focus:ring-0 text-sm leading-6 font-medium"
           placeholder={placeholder}
-          value={query}
-          onChange={onQueryChange}
+          value={value}
+          onChange={onChange}
           autoComplete="off"
         />
       </div>
-      {isLoading ? (
+      {loading ? (
         <LoadingIcon className="h-4 w-4 shrink-0" aria-label={t('common.loading')} />
       ) : (
         <Text size="xs" variant="secondary">

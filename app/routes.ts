@@ -77,9 +77,6 @@ export default [
     route(':event/cfp', './features/event-management/creation/4-cfp-step.tsx'),
   ]),
 
-  // Command Palette Demo (development only)
-  route('command-palette-demo', './features/event-management/command-palette/command-palette-demo.tsx'),
-
   // Event management pages
   route('team/:team/:event', './features/event-management/layout.tsx', [
     route('overview', './features/event-management/overview/overview.tsx', [
@@ -121,6 +118,9 @@ export default [
       route('integrations', './features/event-management/settings/integrations.tsx'),
       route('api', './features/event-management/settings/api.tsx'),
     ]),
+
+    // Event autocomplete
+    route('autocomplete', './features/event-management/command-palette/autocomplete.ts'),
   ]),
 
   // Event reviews export routes

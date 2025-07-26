@@ -1,4 +1,4 @@
-import type { CommandPaletteItemData } from './components/command-palette.tsx';
+import type { CommandPaletteItemData } from './components/command-palette/command-palette.tsx';
 
 export type CommandPaletteStub = Pick<CommandPaletteItemData, 'id' | 'title' | 'description'>;
 

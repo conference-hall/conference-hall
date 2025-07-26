@@ -1,6 +1,6 @@
 import { DocumentTextIcon, UserIcon } from '@heroicons/react/24/outline';
 import type { CommandPaletteStub } from './command-palette-stub-data.ts';
-import type { CommandPaletteItemData } from './components/command-palette.tsx';
+import type { CommandPaletteItemData } from './components/command-palette/command-palette.tsx';
 
 export type CommandPaletteSearchParams = {
   query: string;
@@ -33,7 +33,7 @@ export function generateSuggestions({
     .slice(0, maxResults);
 
   filteredProposals.forEach((proposal) => {
-    items.push({ ...proposal, type: 'proposal', icon: DocumentTextIcon });
+    items.push({ ...proposal, section: 'proposals', icon: DocumentTextIcon });
   });
 
   // Filter speakers
@@ -45,13 +45,13 @@ export function generateSuggestions({
     .slice(0, maxResults);
 
   filteredSpeakers.forEach((speaker) => {
-    items.push({ ...speaker, type: 'speaker' });
+    items.push({ ...speaker, section: 'speakers' });
   });
 
-  // Add creation actions if query is not empty
+  // Add creation commands if query is not empty
   if (searchQuery) {
     items.push({
-      type: 'action',
+      section: 'commands',
       id: 'create-proposal',
       title: `Create proposal "${query}"`,
       icon: DocumentTextIcon,
@@ -60,7 +60,7 @@ export function generateSuggestions({
 
   if (searchQuery) {
     items.push({
-      type: 'action',
+      section: 'commands',
       id: 'create-speaker',
       title: `Create speaker "${query}"`,
       icon: UserIcon,

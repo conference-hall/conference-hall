@@ -4,14 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { Kbd } from '~/design-system/kbd.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
-type Props = { title: string; subtitle: string; hasQuery: boolean; isLoading?: boolean };
+type Props = { title: string; subtitle: string; hasQuery: boolean; loading?: boolean };
 
-export const CommandPaletteEmptyState = ({ title, subtitle, hasQuery, isLoading }: Props) => {
+export const CommandPaletteEmptyState = ({ title, subtitle, hasQuery, loading }: Props) => {
   const { t } = useTranslation();
 
-  if (isLoading) {
-    return null;
-  }
+  if (loading) return null;
 
   if (hasQuery) {
     return (
