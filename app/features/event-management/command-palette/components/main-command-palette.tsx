@@ -1,5 +1,5 @@
-import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import { useEffect, useMemo, useState } from 'react';
+import { DocumentTextIcon, UserIcon } from '@heroicons/react/24/outline';
+import { useMemo, useState } from 'react';
 import { href, useFetcher, useNavigate } from 'react-router';
 import type { loader as AutocompleteLoader } from '../autocomplete.tsx';
 import { CommandPalette, type CommandPaletteItemData } from './command-palette/command-palette.tsx';
@@ -13,61 +13,38 @@ export function MainCommandPalette({ team, event }: Props) {
   const fetcher = useFetcher<typeof AutocompleteLoader>();
   const loading = ['loading', 'submitting'].includes(fetcher.state);
 
-  // todo(autocomplete): add more results for section
+  // todo(autocomplete): add "more results" for section
   const items = useMemo<CommandPaletteItemData[]>(() => {
-    if (!fetcher.data) return [];
-
-    return fetcher.data.proposals.map((proposal) => ({
-      section: 'proposals',
-      id: proposal.id,
-      title: proposal.title,
-      description: proposal.speakers.join(', '),
-      icon: DocumentTextIcon,
-    }));
+    return (
+      fetcher.data?.map((item) => ({
+        ...item,
+        icon: item.section === 'proposals' ? DocumentTextIcon : UserIcon,
+      })) ?? []
+    );
   }, [fetcher.data]);
 
   const onSearch = (query: string) => {
-    return fetcher.submit(
-      { query },
-      { method: 'GET', action: href('/team/:team/:event/autocomplete', { team, event }) },
-    );
+    const searchParams = new URLSearchParams();
+    searchParams.append('query', query);
+    searchParams.append('type', 'proposals');
+    searchParams.append('type', 'speakers');
+
+    const autocompleteRoute = href('/team/:team/:event/autocomplete', { team, event });
+    return fetcher.load(`${autocompleteRoute}?${searchParams.toString()}`);
   };
 
-  const handleClick = (item: CommandPaletteItemData, query: string) => {
+  const handleClick = (item: CommandPaletteItemData) => {
     switch (item.section) {
       case 'proposals': {
         navigate(href('/team/:team/:event/reviews/:proposal', { team, event, proposal: item.id }));
         break;
       }
       case 'speakers': {
-        alert(`Selected speaker: ${item.title}`);
-        break;
-      }
-      case 'commands': {
-        if (item.id === 'create-proposal') {
-          alert(`Create proposal: "${query}"`);
-        } else if (item.id === 'create-speaker') {
-          alert(`Create speaker: "${query}"`);
-        }
+        navigate(href('/team/:team/:event/speakers/:speaker', { team, event, speaker: item.id }));
         break;
       }
     }
   };
-
-  // todo(autocomplete): can be in the component ?
-  // Handle Cmd+K to open palette
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        if (!isOpen) {
-          setIsOpen(true);
-        }
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
 
   return (
     <CommandPalette
@@ -76,6 +53,8 @@ export function MainCommandPalette({ team, event }: Props) {
       items={items}
       loading={loading}
       open={isOpen}
+      withOpenKey
+      onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
       onSearch={onSearch}
       onClick={handleClick}

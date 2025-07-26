@@ -11,6 +11,7 @@ export class ProposalSearchBuilder {
   filters: ProposalsFilters;
   options: SearchOptions;
 
+  // todo(autocomplete): eventSlug can be replaced by eventId ?
   constructor(eventSlug: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
     this.eventSlug = eventSlug;
     this.userId = userId;

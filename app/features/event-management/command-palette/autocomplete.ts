@@ -6,7 +6,5 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
   const filters = parseUrlFilters(request.url);
 
-  const proposals = await Autocomplete.for(userId, params.team, params.event).searchProposals(filters);
-
-  return { proposals };
+  return Autocomplete.for(userId, params.team, params.event).search(filters);
 };

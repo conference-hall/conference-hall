@@ -10,7 +10,7 @@ export type CommandPaletteItemData = {
   section: string;
   id: string;
   title: string;
-  description?: string;
+  description?: string | null;
   icon?: React.ComponentType<any>;
   picture?: string;
 };
@@ -18,27 +18,28 @@ export type CommandPaletteItemData = {
 type CommandPaletteProps = {
   title: string;
   subtitle: string;
-  placeholder?: string;
   items: CommandPaletteItemData[];
   loading: boolean;
   open: boolean;
+  withOpenKey?: boolean;
+  onOpen: () => void;
   onClose: () => void;
   onSearch: (query: string) => Promise<void>;
   onClick: (item: CommandPaletteItemData, query: string) => void;
   className?: string;
 };
 
-// todo(autocomplete): command+k should disabled
 export function CommandPalette({
   title,
   subtitle,
   items,
   loading,
   open,
+  withOpenKey,
   onSearch,
+  onOpen,
   onClose,
   onClick,
-  placeholder,
 }: CommandPaletteProps) {
   const [query, setQuery] = useState('');
   const [typing, setTyping] = useState(false);
@@ -83,18 +84,17 @@ export function CommandPalette({
 
   // Global keyboard shortcut (Cmd/Ctrl+K only - HeadlessUI handles navigation)
   useEffect(() => {
+    if (!withOpenKey) return;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        if (open) {
-          onClose();
-        }
+        !open ? onOpen() : onClose();
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [open, onClose]);
+  }, [open, withOpenKey, onClose, onOpen]);
 
   return (
     <Dialog open={open} onClose={onClose} className="relative z-50">
@@ -106,8 +106,8 @@ export function CommandPalette({
             <CommandPaletteInput
               value={query}
               onChange={handleQueryChange}
-              placeholder={placeholder}
               loading={isLoading}
+              withOpenKey={withOpenKey}
             />
 
             <ComboboxOptions
