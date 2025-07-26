@@ -9,9 +9,7 @@ type Props = { title: string; subtitle: string; hasQuery: boolean; loading?: boo
 export const CommandPaletteEmptyState = ({ title, subtitle, hasQuery, loading }: Props) => {
   const { t } = useTranslation();
 
-  if (loading) return null;
-
-  if (hasQuery) {
+  if (hasQuery && !loading) {
     return (
       <div className="px-8 py-16 text-center">
         <div className="p-3 rounded-full bg-gray-100 w-fit mx-auto mb-6">
