@@ -7,11 +7,10 @@ import { CommandPalette, type CommandPaletteItemData } from './command-palette/c
 type Props = {
   team: string;
   event: string;
-  open: boolean;
-  setOpen: (open: boolean) => void;
+  onClose: VoidFunction;
 };
 
-export function EventCommandPalette({ team, event, open, setOpen }: Props) {
+export function EventCommandPalette({ team, event, onClose }: Props) {
   const navigate = useNavigate();
 
   const fetcher = useFetcher<typeof AutocompleteLoader>();
@@ -57,12 +56,10 @@ export function EventCommandPalette({ team, event, open, setOpen }: Props) {
       subtitle="Search for proposals, speakers, or create new content"
       items={items}
       loading={loading}
-      open={open}
-      withOpenKey
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
       onSearch={onSearch}
       onClick={handleClick}
+      onClose={onClose}
+      withOpenKey
     />
   );
 }

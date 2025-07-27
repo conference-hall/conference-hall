@@ -2,6 +2,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/16/solid';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import { usePlatformKbd } from '~/design-system/kbd.tsx';
+import { CommandPaletteDialog } from '~/features/event-management/command-palette/components/command-palette/command-palette-dialog.tsx';
 import { EventCommandPalette } from '~/features/event-management/command-palette/components/event-command-palette.tsx';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 
@@ -12,7 +13,10 @@ export function EventCommandPaletteButton() {
   const { meta } = usePlatformKbd();
   const enabled = useFlag('commandPaletteForEvent');
 
-  if (!enabled) return false;
+  if (!enabled || !team || !event) return false;
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <>
@@ -25,7 +29,9 @@ export function EventCommandPaletteButton() {
         <span className="mr-1.5 text-xs font-semibold text-gray-400">{`${meta}+K`}</span>
       </button>
 
-      <EventCommandPalette team={team!} event={event!} open={open} setOpen={setOpen} />
+      <CommandPaletteDialog open={open} onOpen={handleOpen} onClose={handleClose} withOpenKey>
+        <EventCommandPalette team={team} event={event} onClose={handleClose} />
+      </CommandPaletteDialog>
     </>
   );
 }
