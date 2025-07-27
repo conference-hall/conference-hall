@@ -1,4 +1,5 @@
 import { cx } from 'class-variance-authority';
+import { useHydrated } from './utils/use-hydrated.ts';
 
 type KbdProps = {
   children: string;
@@ -20,4 +21,23 @@ export function Kbd({ children, className }: KbdProps) {
       {children}
     </kbd>
   );
+}
+
+const PLATFORMS_KBD = {
+  MAC: { meta: '⌘', alt: '⌥' },
+  OTHERS: { meta: 'Ctrl', alt: 'Alt' },
+};
+
+export function usePlatformKbd() {
+  const hydrated = useHydrated();
+  if (!hydrated) return PLATFORMS_KBD.OTHERS;
+
+  // @ts-expect-error
+  const useAgentData = navigator.userAgentData;
+
+  const isMac = useAgentData
+    ? useAgentData.platform.toUpperCase().includes('MAC')
+    : navigator.platform.toUpperCase().includes('MAC');
+
+  return isMac ? PLATFORMS_KBD.MAC : PLATFORMS_KBD.OTHERS;
 }

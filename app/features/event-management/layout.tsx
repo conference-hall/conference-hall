@@ -18,7 +18,6 @@ import { CurrentEventTeamProvider, useCurrentEventTeam } from '~/features/event-
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { TeamFetcher } from '../team-management/services/team-fetcher.server.ts';
 import type { Route } from './+types/layout.ts';
-import { MainCommandPalette } from './command-palette/components/main-command-palette.tsx';
 import { useScheduleFullscreen } from './schedule/components/header/use-schedule-fullscreen.tsx';
 import { EventFetcher } from './services/event-fetcher.server.ts';
 
@@ -40,7 +39,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return { team, event };
 };
 
-export default function EventLayoutRoute({ params, loaderData }: Route.ComponentProps) {
+export default function EventLayoutRoute({ loaderData }: Route.ComponentProps) {
   const { isFullscreen } = useScheduleFullscreen();
   return (
     <CurrentEventTeamProvider value={loaderData}>
@@ -52,8 +51,6 @@ export default function EventLayoutRoute({ params, loaderData }: Route.Component
       ) : null}
 
       <Outlet />
-
-      <MainCommandPalette team={params.team} event={params.event} />
     </CurrentEventTeamProvider>
   );
 }

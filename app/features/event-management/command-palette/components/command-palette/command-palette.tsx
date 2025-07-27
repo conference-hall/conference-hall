@@ -29,6 +29,8 @@ type CommandPaletteProps = {
   className?: string;
 };
 
+// todo(autocomplete): add tests
+// todo(autocomplete): add translations
 export function CommandPalette({
   title,
   subtitle,
@@ -82,9 +84,9 @@ export function CommandPalette({
     [debouncedSearch],
   );
 
-  // Global keyboard shortcut (Cmd/Ctrl+K only - HeadlessUI handles navigation)
   useEffect(() => {
     if (!withOpenKey) return;
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();

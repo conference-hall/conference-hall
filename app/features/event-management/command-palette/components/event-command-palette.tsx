@@ -1,16 +1,21 @@
 import { DocumentTextIcon, UserIcon } from '@heroicons/react/24/outline';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { href, useFetcher, useNavigate } from 'react-router';
-import type { loader as AutocompleteLoader } from '../autocomplete.tsx';
+import type { loader as AutocompleteLoader } from '../autocomplete.ts';
 import { CommandPalette, type CommandPaletteItemData } from './command-palette/command-palette.tsx';
 
-type Props = { team: string; event: string };
+type Props = {
+  team: string;
+  event: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
 
-export function MainCommandPalette({ team, event }: Props) {
+export function EventCommandPalette({ team, event, open, setOpen }: Props) {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
 
   const fetcher = useFetcher<typeof AutocompleteLoader>();
+
   const loading = ['loading', 'submitting'].includes(fetcher.state);
 
   // todo(autocomplete): add "more results" for section
@@ -52,10 +57,10 @@ export function MainCommandPalette({ team, event }: Props) {
       subtitle="Search for proposals, speakers, or create new content"
       items={items}
       loading={loading}
-      open={isOpen}
+      open={open}
       withOpenKey
-      onOpen={() => setIsOpen(true)}
-      onClose={() => setIsOpen(false)}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
       onSearch={onSearch}
       onClick={handleClick}
     />

@@ -1,7 +1,5 @@
 import { useParams } from 'react-router';
-
 import { SlashBarIcon } from '~/design-system/icons/slash-bar-icon.tsx';
-
 import { EventsDropdown } from './dropdowns/events-dropdown.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
 
