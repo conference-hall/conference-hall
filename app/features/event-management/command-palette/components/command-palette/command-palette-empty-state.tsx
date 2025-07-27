@@ -1,15 +1,25 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { CommandLineIcon } from '@heroicons/react/24/outline';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Kbd } from '~/design-system/kbd.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
-type Props = { title: string; subtitle: string; hasQuery: boolean; loading?: boolean };
+type Props = { title: string; subtitle: string; hasQuery: boolean; loading: boolean };
 
 export function CommandPaletteEmptyState({ title, subtitle, hasQuery, loading }: Props) {
   const { t } = useTranslation();
+  const [wasNoResults, setWasNoResults] = useState(false);
 
-  if (hasQuery && !loading) {
+  useEffect(() => {
+    if (!wasNoResults && hasQuery && !loading) {
+      setWasNoResults(true);
+    } else if (!hasQuery) {
+      setWasNoResults(false);
+    }
+  }, [hasQuery, loading, wasNoResults]);
+
+  if (hasQuery && wasNoResults) {
     return (
       <div className="px-8 py-16 text-center">
         <div className="p-3 rounded-full bg-gray-100 w-fit mx-auto mb-6">
