@@ -1,16 +1,14 @@
 import { DocumentTextIcon, UserIcon } from '@heroicons/react/24/outline';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { href, useFetcher, useNavigate } from 'react-router';
 import type { loader as AutocompleteLoader } from '../autocomplete.ts';
 import { CommandPalette, type CommandPaletteItemData } from './command-palette/command-palette.tsx';
 
-type Props = {
-  team: string;
-  event: string;
-  onClose: VoidFunction;
-};
+type Props = { team: string; event: string; closeText: string; onClose: VoidFunction };
 
-export function EventCommandPalette({ team, event, onClose }: Props) {
+export function EventCommandPalette({ team, event, closeText, onClose }: Props) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const fetcher = useFetcher<typeof AutocompleteLoader>();
@@ -52,14 +50,14 @@ export function EventCommandPalette({ team, event, onClose }: Props) {
 
   return (
     <CommandPalette
-      title="Command Palette"
-      subtitle="Search for proposals, speakers, or create new content"
+      title={t('event-management.command-palette.event.title')}
+      description={t('event-management.command-palette.event.description')}
       items={items}
       loading={loading}
       onSearch={onSearch}
       onClick={handleClick}
       onClose={onClose}
-      withOpenKey
+      closeText={closeText}
     />
   );
 }

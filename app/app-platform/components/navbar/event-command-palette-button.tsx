@@ -30,7 +30,7 @@ export function EventCommandPaletteButton() {
       </button>
 
       <CommandPaletteDialog open={open} onOpen={handleOpen} onClose={handleClose} withOpenKey>
-        <EventCommandPalette team={team} event={event} onClose={handleClose} />
+        <EventCommandPalette team={team} event={event} closeText={`${meta}+K`} onClose={handleClose} />
       </CommandPaletteDialog>
     </>
   );

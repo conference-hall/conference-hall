@@ -2,19 +2,18 @@ import { ComboboxInput } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
-import { Kbd, usePlatformKbd } from '~/design-system/kbd.tsx';
+import { Kbd } from '~/design-system/kbd.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 type Props = {
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  closeText?: string;
   loading?: boolean;
-  withOpenKey?: boolean;
 };
 
-export function CommandPaletteInput({ value, onChange, loading, withOpenKey }: Props) {
+export function CommandPaletteInput({ value, onChange, loading, closeText }: Props) {
   const { t } = useTranslation();
-  const { meta } = usePlatformKbd();
 
   return (
     <div className="flex items-center px-5 py-1">
@@ -32,7 +31,7 @@ export function CommandPaletteInput({ value, onChange, loading, withOpenKey }: P
         <LoadingIcon className="h-4 w-4 shrink-0" aria-label={t('common.loading')} />
       ) : (
         <Text size="xs" variant="secondary">
-          {withOpenKey ? `${meta}+K` : <Kbd>esc</Kbd>} {t('common.close')}
+          {closeText ? closeText : <Kbd>esc</Kbd>} {t('common.close')}
         </Text>
       )}
     </div>

@@ -17,10 +17,10 @@ export type CommandPaletteItemData = {
 
 type CommandPaletteProps = {
   title: string;
-  subtitle: string;
+  description: string;
   items: CommandPaletteItemData[];
   loading: boolean;
-  withOpenKey?: boolean;
+  closeText?: string;
   onClose: VoidFunction;
   onSearch: (query: string) => Promise<void>;
   onClick: (item: CommandPaletteItemData, query: string) => void;
@@ -28,13 +28,12 @@ type CommandPaletteProps = {
 };
 
 // todo(autocomplete): add tests
-// todo(autocomplete): add translations
 export function CommandPalette({
   title,
-  subtitle,
+  description,
   items,
   loading,
-  withOpenKey,
+  closeText,
   onSearch,
   onClose,
   onClick,
@@ -82,7 +81,7 @@ export function CommandPalette({
 
   return (
     <Combobox onChange={handleSelect}>
-      <CommandPaletteInput value={query} onChange={handleQueryChange} loading={isLoading} withOpenKey={withOpenKey} />
+      <CommandPaletteInput value={query} onChange={handleQueryChange} loading={isLoading} closeText={closeText} />
 
       <ComboboxOptions
         className="max-h-[28rem] scroll-py-2 divide-y divide-gray-200 border-t border-t-gray-200 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300"
@@ -90,7 +89,12 @@ export function CommandPalette({
         static
       >
         {items.length === 0 ? (
-          <CommandPaletteEmptyState title={title} subtitle={subtitle} hasQuery={Boolean(query)} loading={isLoading} />
+          <CommandPaletteEmptyState
+            title={title}
+            description={description}
+            hasQuery={Boolean(query)}
+            loading={isLoading}
+          />
         ) : (
           Object.keys(itemsBySection).map((section) => {
             const itemsSection = itemsBySection[section];

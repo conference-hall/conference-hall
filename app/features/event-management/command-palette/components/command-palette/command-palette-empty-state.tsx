@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { Kbd } from '~/design-system/kbd.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
-type Props = { title: string; subtitle: string; hasQuery: boolean; loading: boolean };
+type Props = { title: string; description: string; hasQuery: boolean; loading: boolean };
 
-export function CommandPaletteEmptyState({ title, subtitle, hasQuery, loading }: Props) {
+export function CommandPaletteEmptyState({ title, description, hasQuery, loading }: Props) {
   const { t } = useTranslation();
   const [wasNoResults, setWasNoResults] = useState(false);
 
@@ -26,7 +26,7 @@ export function CommandPaletteEmptyState({ title, subtitle, hasQuery, loading }:
           <MagnifyingGlassIcon className="h-6 w-6 text-gray-400" />
         </div>
         <p className="text-sm font-semibold text-gray-900 mb-2">{t('common.no-results')}</p>
-        <p className="text-xs text-gray-500 mb-4">Try adjusting your search</p>
+        <p className="text-xs text-gray-500 mb-4">{t('event-management.command-palette.no-result.description')}</p>
       </div>
     );
   }
@@ -40,19 +40,19 @@ export function CommandPaletteEmptyState({ title, subtitle, hasQuery, loading }:
         {title}
       </Text>
       <Text size="xs" variant="secondary" className="mb-8">
-        {subtitle}
+        {description}
       </Text>
       <div className="flex justify-center space-x-6">
         <div className="flex items-center space-x-1">
           <Kbd>↑↓</Kbd>
           <Text as="span" size="xs" variant="secondary">
-            navigate
+            {t('common.navigate')}
           </Text>
         </div>
         <div className="flex items-center space-x-1">
           <Kbd>↵</Kbd>
           <Text as="span" size="xs" variant="secondary">
-            select
+            {t('common.select')}
           </Text>
         </div>
         <div className="flex items-center space-x-1">

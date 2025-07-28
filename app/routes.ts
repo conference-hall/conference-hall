@@ -119,7 +119,7 @@ export default [
       route('api', './features/event-management/settings/api.tsx'),
     ]),
 
-    // Event autocomplete
+    // Event autocomplete for command palette
     route('autocomplete', './features/event-management/command-palette/autocomplete.ts'),
   ]),
 
