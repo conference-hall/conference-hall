@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod/v4';
+import type { Event } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import z from 'zod';
 import { Pagination } from '~/shared/pagination/pagination.ts';
@@ -24,19 +25,19 @@ export class Autocomplete extends UserEventAuthorization {
     if (!query) return [];
 
     const [proposals, speakers] = await Promise.all([
-      type.includes('proposals') ? this.#searchProposals(event.slug, query) : [],
-      type.includes('speakers') ? this.#searchSpeakers(event.id, query) : [],
+      type.includes('proposals') ? this.#searchProposals(event, query) : [],
+      type.includes('speakers') ? this.#searchSpeakers(event, query) : [],
     ]);
 
     return [...proposals, ...speakers];
   }
 
-  async #searchProposals(eventSlug: string, query: string): Promise<AutocompleteResult[]> {
+  async #searchProposals(event: Event, query: string): Promise<AutocompleteResult[]> {
     const search = new ProposalSearchBuilder(
-      eventSlug,
+      event.slug,
       this.userId,
       { query },
-      { withSpeakers: true, withReviews: false },
+      { withSpeakers: event.displayProposalsSpeakers, withReviews: false },
     );
 
     const proposals = await search.proposalsByPage(pagination);
@@ -46,14 +47,16 @@ export class Autocomplete extends UserEventAuthorization {
         section: 'proposals',
         id: proposal.id,
         title: proposal.title,
-        description: proposal.speakers.map(({ name }) => name).join(', '),
+        description: proposal.speakers?.map(({ name }) => name).join(', ') || '',
       };
     });
   }
 
-  async #searchSpeakers(eventId: string, query: string): Promise<AutocompleteResult[]> {
+  async #searchSpeakers(event: Event, query: string): Promise<AutocompleteResult[]> {
+    if (!event.displayProposalsSpeakers) return [];
+
     const speakers = await db.eventSpeaker.findMany({
-      where: { eventId, name: { contains: query, mode: 'insensitive' } },
+      where: { eventId: event.id, name: { contains: query, mode: 'insensitive' } },
       skip: pagination.pageIndex * pagination.pageSize,
       take: pagination.pageSize,
     });
