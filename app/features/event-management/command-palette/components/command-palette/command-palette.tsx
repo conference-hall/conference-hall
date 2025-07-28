@@ -27,7 +27,6 @@ type CommandPaletteProps = {
   className?: string;
 };
 
-// todo(autocomplete): add tests
 export function CommandPalette({
   title,
   description,
