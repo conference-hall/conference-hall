@@ -4,6 +4,7 @@ import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { ProposalSearchBuilder } from '../../proposals/services/proposal-search-builder.server.ts';
 
 const AutocompleteFilterSchema = z.object({ query: z.string().optional(), type: z.array(z.string()) });
@@ -47,7 +48,10 @@ export class Autocomplete extends UserEventAuthorization {
         section: 'proposals',
         id: proposal.id,
         title: proposal.title,
-        description: proposal.speakers?.map(({ name }) => name).join(', ') || '',
+        description:
+          sortBy(proposal.speakers, 'name')
+            ?.map(({ name }) => name)
+            .join(', ') || '',
       };
     });
   }
