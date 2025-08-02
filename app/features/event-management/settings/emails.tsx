@@ -4,7 +4,6 @@ import { Link } from '~/design-system/links.tsx';
 import { H2, H3, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { CUSTOM_EMAIL_TEMPLATES } from '~/shared/emails/email.types.ts';
-import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import type { Route } from './+types/emails.ts';
 import { EmailCustomBadge } from './components/email-custom-badge.tsx';
@@ -12,15 +11,8 @@ import { EventEmailCustomizations } from './services/event-email-customizations.
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-
-  const emailCustomizationEnabled = await flags.get('emailCustomization');
-  if (!emailCustomizationEnabled) {
-    throw new Response('Not Found', { status: 404 });
-  }
-
   const emailCustomizations = EventEmailCustomizations.for(userId, params.team, params.event);
   const customizations = await emailCustomizations.list();
-
   return { customizations };
 };
 
