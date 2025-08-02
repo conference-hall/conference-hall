@@ -7,26 +7,32 @@ import { reviewFactory } from 'tests/factories/reviews.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { OverviewPage } from './overview.page.ts';
+import { ProposalPage } from './proposal.page.ts';
 
 let team: Team;
 let event: Event;
 let format: EventFormat;
 let category: EventCategory;
+let proposalTitle: string;
 
 test.beforeEach(async () => {
+  await flags.set('commandPaletteForEvent', true);
   const user = await userFactory({ traits: ['clark-kent'] });
   const reviewer = await userFactory({ traits: ['bruce-wayne'] });
   team = await teamFactory({ owners: [user], reviewers: [reviewer] });
   event = await eventFactory({ team, traits: ['conference-cfp-open'] });
   format = await eventFormatFactory({ event });
   category = await eventCategoryFactory({ event });
+  const talk1 = await talkFactory({ speakers: [user] });
+  proposalTitle = talk1.title;
   const proposal1 = await proposalFactory({
     event,
     formats: [format],
     categories: [category],
-    talk: await talkFactory({ speakers: [user] }),
+    talk: talk1,
   });
   const proposal2 = await proposalFactory({
     event,
@@ -60,6 +66,20 @@ test.describe('As a team owner', () => {
     await expect(overviewPage.dashboardCard('Proposals reviewed by you.').getByText('67%')).toBeVisible();
     await expect(overviewPage.dashboardCardLink('Proposals by formats', format.name)).toBeVisible();
     await expect(overviewPage.dashboardCardLink('Proposals by categories', category.name)).toBeVisible();
+  });
+
+  test('searches for proposal using command palette and navigates to proposal page', async ({ page }) => {
+    const overviewPage = new OverviewPage(page);
+    const proposalPage = new ProposalPage(page);
+
+    await overviewPage.goto(team.slug, event.slug);
+
+    await overviewPage.openCommandPalette();
+    await overviewPage.searchInCommandPalette(proposalTitle);
+    await overviewPage.clickCommandPaletteResult(proposalTitle);
+
+    await proposalPage.waitFor(proposalTitle);
+    await expect(page.getByRole('heading', { name: proposalTitle })).toBeVisible();
   });
 });
 
