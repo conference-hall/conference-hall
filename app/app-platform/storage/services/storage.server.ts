@@ -31,7 +31,7 @@ async function uploadToStorage(file: FileUpload, filepath: string, maxFileSize =
   const storedFile = storage.bucket().file(filepath);
 
   let size = 0;
-  const chunks: Uint8Array[] = [];
+  const chunks: Uint8Array<ArrayBuffer>[] = [];
   const passthroughStream = new stream.PassThrough();
   const reader = file.stream().getReader();
   while (size < maxFileSize) {
