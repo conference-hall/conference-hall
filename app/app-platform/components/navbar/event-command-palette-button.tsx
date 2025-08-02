@@ -8,7 +8,7 @@ import { EventCommandPalette } from '~/features/event-management/command-palette
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 
 export function EventCommandPaletteButton() {
-  // todo(autocomplete): should be given by the loader ?
+  // todo: should be given by the loader ?
   const { team, event } = useParams();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
