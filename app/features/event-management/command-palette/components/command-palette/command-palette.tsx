@@ -23,7 +23,7 @@ type CommandPaletteProps = {
   closeText?: string;
   onClose: VoidFunction;
   onSearch: (query: string) => Promise<void>;
-  onClick: (item: CommandPaletteItemData, query: string) => void;
+  onClick: (item: CommandPaletteItemData, query?: string) => void;
   className?: string;
 };
 

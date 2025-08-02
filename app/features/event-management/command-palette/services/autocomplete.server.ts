@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import type { Event } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-import z from 'zod';
+import { z } from 'zod';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import { ProposalSearchBuilder } from '../../proposals/services/proposal-search-builder.server.ts';

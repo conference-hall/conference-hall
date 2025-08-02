@@ -13,7 +13,7 @@ export function EventCommandPaletteButton() {
   const { meta } = usePlatformKbd();
   const enabled = useFlag('commandPaletteForEvent');
 
-  if (!enabled || !team || !event) return false;
+  if (!enabled || !team || !event) return null;
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

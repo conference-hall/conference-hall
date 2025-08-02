@@ -32,7 +32,7 @@ export function usePlatformKbd() {
   const hydrated = useHydrated();
   if (!hydrated) return PLATFORMS_KBD.OTHERS;
 
-  // @ts-expect-error
+  // @ts-expect-error userAgentData is experimental API not in types
   const useAgentData = navigator.userAgentData;
 
   const isMac = useAgentData
