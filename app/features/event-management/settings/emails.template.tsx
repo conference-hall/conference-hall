@@ -11,7 +11,6 @@ import {
   EventEmailCustomDeleteSchema,
   EventEmailCustomUpsertSchema,
 } from '~/shared/emails/email.types.ts';
-import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { isSupportedLanguage } from '~/shared/i18n/i18n.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -23,11 +22,6 @@ import { EventEmailCustomizations } from './services/event-email-customizations.
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-
-  const emailCustomizationEnabled = await flags.get('emailCustomization');
-  if (!emailCustomizationEnabled) {
-    throw new Response('Not Found', { status: 404 });
-  }
 
   const url = new URL(request.url);
   const locale = url.searchParams.get('locale') || 'en';
@@ -46,11 +40,6 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const t = await i18n.getFixedT(request);
   const { userId } = await requireUserSession(request);
-
-  const emailCustomizationEnabled = await flags.get('emailCustomization');
-  if (!emailCustomizationEnabled) {
-    throw new Response('Not Found', { status: 404 });
-  }
 
   const form = await request.formData();
   const intent = form.get('intent');

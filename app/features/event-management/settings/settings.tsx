@@ -18,7 +18,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type { Route } from './+types/settings.ts';
 
@@ -31,8 +30,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
 export default function EventSettingsRoute({ params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const isEmailCustomizationEnabled = useFlag('emailCustomization');
-  const menus = getMenuItems(params.team, params.event, t, isEmailCustomizationEnabled);
+  const menus = getMenuItems(params.team, params.event, t);
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
@@ -51,7 +49,7 @@ export default function EventSettingsRoute({ params }: Route.ComponentProps) {
   );
 }
 
-const getMenuItems = (team: string, event: string, t: TFunction, isEmailCustomizationEnabled: boolean) => [
+const getMenuItems = (team: string, event: string, t: TFunction) => [
   {
     to: `/team/${team}/${event}/settings`,
     icon: Cog6ToothIcon,
@@ -85,8 +83,6 @@ const getMenuItems = (team: string, event: string, t: TFunction, isEmailCustomiz
     to: `/team/${team}/${event}/settings/emails`,
     icon: EnvelopeIcon,
     label: t('event-management.settings.menu.emails'),
-    isNew: true,
-    hidden: !isEmailCustomizationEnabled,
   },
   {
     to: `/team/${team}/${event}/settings/integrations`,
