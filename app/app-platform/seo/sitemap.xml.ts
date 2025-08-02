@@ -38,7 +38,7 @@ export async function loader() {
   stream.end();
 
   // Generate the sitemap and cache it
-  const sitemapBuffer = await streamToPromise(stream);
+  const sitemapBuffer = (await streamToPromise(stream)) as Buffer<ArrayBuffer>;
   await cache.set('sitemap', sitemapBuffer.toString('utf-8'));
 
   return new Response(sitemapBuffer, { headers: { 'Content-Type': 'application/xml' } });
