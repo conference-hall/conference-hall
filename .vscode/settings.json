@@ -1,8 +1,10 @@
 {
   "editor.codeActionsOnSave": {
-    "source.addMissingImports": "always",
+    "source.fixAll.biome": "explicit",
+    "source.organizeImports": "never",
     "source.organizeImports.biome": "explicit",
-    "quickfix.biome": "explicit"
+    "source.removeUnusedImports": "explicit",
+    "source.addMissingImports": "explicit"
   },
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
