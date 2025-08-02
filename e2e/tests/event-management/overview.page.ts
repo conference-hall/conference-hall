@@ -6,6 +6,10 @@ export class OverviewPage extends PageObject {
   readonly callForPaperTab: Locator = this.page.getByRole('link', { name: 'Call for paper' });
   readonly reviewersTab: Locator = this.page.getByRole('link', { name: 'Reviewers' });
   readonly reviewersList: Locator = this.page.getByRole('list', { name: 'Reviewers' });
+  readonly commandPaletteButton: Locator = this.page.getByLabel('Search in the event');
+  readonly commandPaletteDialog: Locator = this.page.getByRole('dialog', { name: 'Search in the event' });
+  readonly commandPaletteInput: Locator = this.commandPaletteDialog.getByRole('combobox');
+  readonly commandPaletteResults: Locator = this.commandPaletteDialog.getByRole('listbox');
 
   async goto(team: string, event: string) {
     await this.page.goto(`/team/${team}/${event}`);
@@ -22,5 +26,19 @@ export class OverviewPage extends PageObject {
 
   dashboardCardLink(title: string, link: string) {
     return this.dashboardCard(title).getByRole('link', { name: link });
+  }
+
+  async openCommandPalette() {
+    await this.commandPaletteButton.click();
+    await this.commandPaletteInput.waitFor();
+  }
+
+  async searchInCommandPalette(query: string) {
+    await this.commandPaletteInput.fill(query);
+    await this.commandPaletteResults.waitFor();
+  }
+
+  async clickCommandPaletteResult(text: string) {
+    await this.commandPaletteResults.getByText(text).click();
   }
 }

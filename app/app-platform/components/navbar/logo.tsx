@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { href, Link } from 'react-router';
-
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Text } from '~/design-system/typography.tsx';
 

@@ -2,6 +2,7 @@ import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { BG_COLOR } from '~/design-system/colors.ts';
 import { useUser } from '../user-context.tsx';
+import { EventCommandPaletteButton } from './event-command-palette-button.tsx';
 import { LoginButton } from './login-button.tsx';
 import { Logo } from './logo.tsx';
 import { Navigation } from './navigation.tsx';
@@ -10,12 +11,9 @@ import { UserMenu } from './user-menu.tsx';
 
 export type NavbarLayout = 'default' | 'team' | 'auth';
 
-type Props = {
-  layout?: NavbarLayout;
-  variant?: 'primary' | 'secondary';
-  className?: string;
-};
+type Props = { layout?: NavbarLayout; variant?: 'primary' | 'secondary'; className?: string };
 
+// todo: rework navbar (split in different ones)
 export function Navbar({ layout = 'default', variant = 'primary', className }: Props) {
   const { t } = useTranslation();
   const user = useUser();
@@ -35,13 +33,12 @@ export function Navbar({ layout = 'default', variant = 'primary', className }: P
 
         <div className="hidden gap-4 lg:flex lg:shrink-0 lg:items-center lg:justify-end">
           {/* Navigation links */}
-          {layout !== 'auth' ? (
-            <Navigation
-              authenticated={Boolean(user)}
-              teams={user?.teams}
-              withTeams={user?.hasTeamAccess && layout !== 'team'}
-            />
+          {layout === 'default' ? (
+            <Navigation authenticated={Boolean(user)} teams={user?.teams} withTeams={user?.hasTeamAccess} />
           ) : null}
+
+          {/* Search in event */}
+          {layout === 'team' ? <EventCommandPaletteButton /> : null}
 
           {/* Avatar */}
           {user && (

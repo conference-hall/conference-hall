@@ -118,6 +118,9 @@ export default [
       route('integrations', './features/event-management/settings/integrations.tsx'),
       route('api', './features/event-management/settings/api.tsx'),
     ]),
+
+    // Event autocomplete for command palette
+    route('autocomplete', './features/event-management/command-palette/autocomplete.ts'),
   ]),
 
   // Event reviews export routes
