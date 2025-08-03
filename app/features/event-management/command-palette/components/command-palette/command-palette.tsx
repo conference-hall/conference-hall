@@ -9,7 +9,7 @@ import { CommandPaletteSection } from './command-palette-section.tsx';
 export type CommandPaletteItemData = {
   section: string;
   id: string;
-  title: string;
+  title: string | ((query: string) => string);
   description?: string | null;
   icon?: React.ComponentType<any>;
   picture?: string;
@@ -100,7 +100,7 @@ export function CommandPalette({
             return (
               <CommandPaletteSection key={section} title={section} count={itemsSection.length}>
                 {itemsSection.map((item) => (
-                  <CommandPaletteItem key={item.id} item={item} />
+                  <CommandPaletteItem key={item.id} item={item} query={query} />
                 ))}
               </CommandPaletteSection>
             );

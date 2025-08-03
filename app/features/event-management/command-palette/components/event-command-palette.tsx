@@ -1,4 +1,4 @@
-import { DocumentTextIcon, UserIcon } from '@heroicons/react/24/outline';
+import { DocumentTextIcon, EllipsisHorizontalIcon, UserIcon } from '@heroicons/react/24/outline';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, useFetcher, useNavigate } from 'react-router';
@@ -15,14 +15,34 @@ export function EventCommandPalette({ team, event, closeText, onClose }: Props) 
 
   const loading = ['loading', 'submitting'].includes(fetcher.state);
 
-  // todo(autocomplete): add "more results" for section
   const items = useMemo<CommandPaletteItemData[]>(() => {
-    return (
-      fetcher.data?.map((item) => ({
-        ...item,
-        icon: item.section === 'proposals' ? DocumentTextIcon : UserIcon,
-      })) ?? []
-    );
+    const proposals: CommandPaletteItemData[] =
+      fetcher.data
+        ?.filter((item) => item.section === 'proposals')
+        .map((item) => ({ ...item, icon: DocumentTextIcon })) ?? [];
+
+    if (proposals.length === 3) {
+      proposals.push({
+        section: 'proposals',
+        id: 'search-more-proposals',
+        title: (query: string) => `More proposals for "${query}"`,
+        icon: EllipsisHorizontalIcon,
+      });
+    }
+
+    const speakers: CommandPaletteItemData[] =
+      fetcher.data?.filter((item) => item.section === 'speakers').map((item) => ({ ...item, icon: UserIcon })) ?? [];
+
+    if (speakers.length === 3) {
+      speakers.push({
+        section: 'speakers',
+        id: 'search-more-speakers',
+        title: (query: string) => `More speakers for "${query}"`,
+        icon: EllipsisHorizontalIcon,
+      });
+    }
+
+    return [...proposals, ...speakers];
   }, [fetcher.data]);
 
   const onSearch = (query: string) => {
@@ -35,14 +55,25 @@ export function EventCommandPalette({ team, event, closeText, onClose }: Props) 
     return fetcher.load(`${autocompleteRoute}?${searchParams.toString()}`);
   };
 
-  const handleClick = (item: CommandPaletteItemData) => {
+  const handleClick = (item: CommandPaletteItemData, query?: string) => {
+    const searchParams = new URLSearchParams();
+    if (query) searchParams.append('query', query);
+
     switch (item.section) {
       case 'proposals': {
-        navigate(href('/team/:team/:event/reviews/:proposal', { team, event, proposal: item.id }));
+        if (item.id === 'search-more-proposals') {
+          navigate(`${href('/team/:team/:event/reviews', { team, event })}?${searchParams.toString()}`);
+        } else if (item.id !== 'search-more-proposals') {
+          navigate(href('/team/:team/:event/reviews/:proposal', { team, event, proposal: item.id }));
+        }
         break;
       }
       case 'speakers': {
-        navigate(href('/team/:team/:event/speakers/:speaker', { team, event, speaker: item.id }));
+        if (item.id === 'search-more-speakers') {
+          navigate(`${href('/team/:team/:event/speakers', { team, event })}?${searchParams.toString()}`);
+        } else if (item.id !== 'search-more-proposals') {
+          navigate(href('/team/:team/:event/speakers/:speaker', { team, event, speaker: item.id }));
+        }
         break;
       }
     }
