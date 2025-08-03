@@ -298,6 +298,8 @@
   "error.unexpected-error.description": "Oups ! Il y a un problème.",
   "error.unexpected-error.heading": "Erreur inattendue",
   "event-management.command-palette.event.description": "Recherche des propositions ou des speakers",
+  "event-management.command-palette.event.more-proposals": "Plus de propositions pour \"{{query}}\"",
+  "event-management.command-palette.event.more-speakers": "Plus de speakers pour \"{{query}}\"",
   "event-management.command-palette.event.title": "Rechercher dans l'évènement",
   "event-management.command-palette.no-result.description": "Essaye d'ajuster ta recherche",
   "event-management.fields.cfp-dates.description": "Précisez la période pendant laquelle le call for papers sera ouvert. Le CFP s'ouvrira et se fermera automatiquement en fonction de ces dates et heures.",
