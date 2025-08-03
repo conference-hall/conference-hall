@@ -71,6 +71,7 @@ export class Autocomplete extends UserEventAuthorization {
         id: speaker.id,
         title: speaker.name,
         description: speaker.company,
+        picture: speaker.picture,
       };
     });
   }

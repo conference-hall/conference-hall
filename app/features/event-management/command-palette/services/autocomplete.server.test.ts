@@ -129,13 +129,7 @@ describe('Autocomplete for event management', () => {
 
       describe('speaker search', () => {
         it('returns matching speakers when searching by name', async () => {
-          const eventSpeaker = await eventSpeakerFactory({
-            event,
-            attributes: {
-              name: 'John Doe',
-              company: 'Tech Corp',
-            },
-          });
+          const eventSpeaker = await eventSpeakerFactory({ event, attributes: { name: 'John Doe' } });
 
           const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
             query: 'John',
@@ -143,7 +137,13 @@ describe('Autocomplete for event management', () => {
           });
 
           expect(results).toEqual([
-            { section: 'speakers', id: eventSpeaker.id, title: 'John Doe', description: 'Tech Corp' },
+            {
+              section: 'speakers',
+              id: eventSpeaker.id,
+              title: eventSpeaker.name,
+              description: eventSpeaker.company,
+              picture: eventSpeaker.picture,
+            },
           ]);
         });
 
@@ -190,10 +190,7 @@ describe('Autocomplete for event management', () => {
         it('returns both proposals and speakers when both types are specified', async () => {
           const talk = await talkFactory({ speakers: [speaker] });
           const proposal = await proposalFactory({ event, talk, attributes: { title: 'React Testing' } });
-          const eventSpeaker = await eventSpeakerFactory({
-            event,
-            attributes: { name: 'React Expert', company: 'Tech Corp' },
-          });
+          const eventSpeaker = await eventSpeakerFactory({ event, attributes: { name: 'React Expert' } });
 
           const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
             query: 'React',
@@ -214,8 +211,9 @@ describe('Autocomplete for event management', () => {
           expect(speakerResult).toEqual({
             section: 'speakers',
             id: eventSpeaker.id,
-            title: 'React Expert',
-            description: 'Tech Corp',
+            title: eventSpeaker.name,
+            description: eventSpeaker.company,
+            picture: eventSpeaker.picture,
           });
         });
       });

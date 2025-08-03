@@ -11,7 +11,7 @@ export function CommandPaletteItem({ item }: { item: CommandPaletteItemData }) {
       value={item}
       className="group flex items-center gap-3 px-3 py-2.5 cursor-pointer select-none rounded-lg hover:bg-gray-50 data-focus:bg-gray-100"
     >
-      {item.icon ? <ItemIcon icon={item.icon} /> : <Avatar picture={item.picture} name={item.title} size="s" />}
+      {item.picture ? <Avatar picture={item.picture} name={item.title} size="s" /> : <ItemIcon icon={item.icon} />}
 
       <div className="flex-auto min-w-0">
         <Text size="s" weight="semibold" truncate>
@@ -26,11 +26,13 @@ export function CommandPaletteItem({ item }: { item: CommandPaletteItemData }) {
   );
 }
 
-function ItemIcon({ icon: IconComponent }: { icon: React.ComponentType<any> }) {
+function ItemIcon({ icon: IconComponent }: { icon?: React.ComponentType<any> }) {
+  if (!IconComponent) return null;
+
   return (
     <div className="flex-none">
       <div className="p-1.5 rounded-lg bg-gray-100 group-data-focus:bg-white group-data-focus:shadow-sm">
-        <IconComponent className="h-4 w-4 text-gray-500 group-data-focus:text-indigo-600" />
+        <IconComponent className="h-4 w-4 text-gray-500 group-data-focus:text-indigo-600" aria-hidden />
       </div>
     </div>
   );
