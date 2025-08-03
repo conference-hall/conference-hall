@@ -61,6 +61,7 @@ export class Autocomplete extends UserEventAuthorization {
 
     const speakers = await db.eventSpeaker.findMany({
       where: { eventId: event.id, name: { contains: query, mode: 'insensitive' } },
+      orderBy: { name: 'asc' },
       skip: pagination.pageIndex * pagination.pageSize,
       take: pagination.pageSize,
     });
