@@ -7,10 +7,10 @@ import { UserEventAuthorization } from '~/shared/user/user-event-authorization.s
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { ProposalSearchBuilder } from '../../proposals/services/proposal-search-builder.server.ts';
 
-const AutocompleteFilterSchema = z.object({ query: z.string().optional(), type: z.array(z.string()) });
+const AutocompleteFilterSchema = z.object({ query: z.string().optional(), kind: z.array(z.string()) });
 
 type AutocompleteFilters = z.infer<typeof AutocompleteFilterSchema>;
-type AutocompleteResult = { section: string; id: string; title: string; description: string | null };
+type AutocompleteResult = { kind: string; id: string; title: string; description: string | null };
 
 const pagination = new Pagination({ page: 1, pageSize: 3, total: 3 });
 
@@ -22,12 +22,12 @@ export class Autocomplete extends UserEventAuthorization {
   async search(filters: AutocompleteFilters) {
     const event = await this.needsPermission('canAccessEvent');
 
-    const { query, type } = filters;
+    const { query, kind } = filters;
     if (!query) return [];
 
     const [proposals, speakers] = await Promise.all([
-      type.includes('proposals') ? this.#searchProposals(event, query) : [],
-      type.includes('speakers') ? this.#searchSpeakers(event, query) : [],
+      kind.includes('proposals') ? this.#searchProposals(event, query) : [],
+      kind.includes('speakers') ? this.#searchSpeakers(event, query) : [],
     ]);
 
     return [...proposals, ...speakers];
@@ -45,7 +45,7 @@ export class Autocomplete extends UserEventAuthorization {
 
     return proposals.map((proposal) => {
       return {
-        section: 'proposals',
+        kind: 'proposals',
         id: proposal.id,
         title: proposal.title,
         description:
@@ -68,7 +68,7 @@ export class Autocomplete extends UserEventAuthorization {
 
     return speakers.map((speaker) => {
       return {
-        section: 'speakers',
+        kind: 'speakers',
         id: speaker.id,
         title: speaker.name,
         description: speaker.company,
@@ -81,6 +81,6 @@ export class Autocomplete extends UserEventAuthorization {
 export function parseUrlFilters(url: string) {
   const params = new URL(url).searchParams;
   const result = parseWithZod(params, { schema: AutocompleteFilterSchema });
-  if (result.status !== 'success') return { type: [] };
+  if (result.status !== 'success') return { kind: [] };
   return result.value;
 }

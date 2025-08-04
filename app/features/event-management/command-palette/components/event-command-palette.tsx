@@ -7,6 +7,9 @@ import { CommandPalette, type CommandPaletteItemData } from './command-palette/c
 
 type Props = { team: string; event: string; closeText: string; onClose: VoidFunction };
 
+const PROPOSALS_KIND = 'proposals';
+const SPEAKERS_KIND = 'speakers';
+
 export function EventCommandPalette({ team, event, closeText, onClose }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -18,38 +21,40 @@ export function EventCommandPalette({ team, event, closeText, onClose }: Props) 
   const items = useMemo<CommandPaletteItemData[]>(() => {
     const proposals: CommandPaletteItemData[] =
       fetcher.data
-        ?.filter((item) => item.section === 'proposals')
-        .map((item) => ({ ...item, icon: DocumentTextIcon })) ?? [];
+        ?.filter((item) => item.kind === PROPOSALS_KIND)
+        .map((item) => ({ ...item, section: t('common.proposals'), icon: DocumentTextIcon })) ?? [];
 
     if (proposals.length === 3) {
       proposals.push({
-        section: 'proposals',
+        section: t('common.proposals'),
         id: 'search-more-proposals',
-        title: (query: string) => `More proposals for "${query}"`,
+        title: (query: string) => t('event-management.command-palette.event.more.proposals', { query }),
         icon: EllipsisHorizontalIcon,
       });
     }
 
     const speakers: CommandPaletteItemData[] =
-      fetcher.data?.filter((item) => item.section === 'speakers').map((item) => ({ ...item, icon: UserIcon })) ?? [];
+      fetcher.data
+        ?.filter((item) => item.kind === SPEAKERS_KIND)
+        .map((item) => ({ ...item, section: t('common.speakers'), icon: UserIcon })) ?? [];
 
     if (speakers.length === 3) {
       speakers.push({
-        section: 'speakers',
+        section: t('common.speakers'),
         id: 'search-more-speakers',
-        title: (query: string) => `More speakers for "${query}"`,
+        title: (query: string) => t('event-management.command-palette.event.more.speakers', { query }),
         icon: EllipsisHorizontalIcon,
       });
     }
 
     return [...proposals, ...speakers];
-  }, [fetcher.data]);
+  }, [fetcher.data, t]);
 
   const onSearch = (query: string) => {
     const searchParams = new URLSearchParams();
     searchParams.append('query', query);
-    searchParams.append('type', 'proposals');
-    searchParams.append('type', 'speakers');
+    searchParams.append('kind', PROPOSALS_KIND);
+    searchParams.append('kind', SPEAKERS_KIND);
 
     const autocompleteRoute = href('/team/:team/:event/autocomplete', { team, event });
     return fetcher.load(`${autocompleteRoute}?${searchParams.toString()}`);
@@ -60,18 +65,18 @@ export function EventCommandPalette({ team, event, closeText, onClose }: Props) 
     if (query) searchParams.append('query', query);
 
     switch (item.section) {
-      case 'proposals': {
+      case t('common.proposals'): {
         if (item.id === 'search-more-proposals') {
           navigate(`${href('/team/:team/:event/reviews', { team, event })}?${searchParams.toString()}`);
-        } else if (item.id !== 'search-more-proposals') {
+        } else {
           navigate(href('/team/:team/:event/reviews/:proposal', { team, event, proposal: item.id }));
         }
         break;
       }
-      case 'speakers': {
+      case t('common.speakers'): {
         if (item.id === 'search-more-speakers') {
           navigate(`${href('/team/:team/:event/speakers', { team, event })}?${searchParams.toString()}`);
-        } else if (item.id !== 'search-more-proposals') {
+        } else {
           navigate(href('/team/:team/:event/speakers/:speaker', { team, event, speaker: item.id }));
         }
         break;
