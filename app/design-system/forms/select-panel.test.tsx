@@ -218,7 +218,7 @@ describe('SelectPanel component', () => {
   });
 
   it('does not create hidden inputs when no name is provided', async () => {
-    const screen = renderComponent({ defaultValue: ['option1', 'option2'] });
+    const screen = renderComponent({ name: undefined, defaultValue: ['option1', 'option2'] });
 
     const hiddenInputs = screen.container.querySelectorAll('input[type="hidden"]');
     expect(hiddenInputs).toHaveLength(0);

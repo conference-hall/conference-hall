@@ -41,20 +41,46 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
   };
 
   const handleChange = (selectedValues: string | string[]) => {
-    const allOptions = [...selectedSpeakers.map((s) => ({ value: s.id, label: s.name })), ...searchOptions];
-    const selected = allOptions.filter((option) => selectedValues.includes(option.value));
-    const speakers = selected.map((option) => ({ id: option.value, name: option.label }));
+    const selectedIds = Array.isArray(selectedValues) ? selectedValues : [selectedValues];
+
+    // Create a map of all available options (both selected and search results)
+    const allOptionsMap = new Map<string, { value: string; label: string }>();
+
+    // Add current selected speakers
+    selectedSpeakers.forEach((s) => {
+      allOptionsMap.set(s.id, { value: s.id, label: s.name });
+    });
+
+    // Add search results
+    searchOptions.forEach((option) => {
+      allOptionsMap.set(option.value, option);
+    });
+
+    // Filter to only selected IDs and convert to speakers
+    const speakers = selectedIds
+      .map((id) => allOptionsMap.get(id))
+      .filter((option): option is { value: string; label: string } => option !== undefined)
+      .map((option) => ({ id: option.value, name: option.label }));
+
     setSelectedSpeakers(speakers);
     onChange(speakers);
   };
 
-  // Combine selected speakers with search options, avoiding duplicates
+  // Combine all unique options, maintaining search results order
   const availableOptions = useMemo(() => {
-    const selectedOptions = selectedSpeakers.map((s) => ({ value: s.id, label: s.name }));
-    const filteredSearchOptions = searchOptions.filter(
-      (option) => !selectedSpeakers.find((speaker) => speaker.id === option.value),
-    );
-    return [...selectedOptions, ...filteredSearchOptions];
+    const searchOptionsMap = new Map(searchOptions.map((option) => [option.value, option]));
+
+    // Start with search results to maintain their order
+    const options = [...searchOptions];
+
+    // Add any selected speakers that aren't in search results
+    selectedSpeakers.forEach((speaker) => {
+      if (!searchOptionsMap.has(speaker.id)) {
+        options.push({ value: speaker.id, label: speaker.name });
+      }
+    });
+
+    return options;
   }, [searchOptions, selectedSpeakers]);
 
   return (

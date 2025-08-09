@@ -108,7 +108,7 @@ export function SelectPanel({
                     {label}
                   </Text>
 
-                  <ComboboxInput as={Fragment} onChange={handleQueryChange}>
+                  <ComboboxInput as={Fragment} onChange={handleQueryChange} displayValue={() => query}>
                     <Input
                       ref={inputRef}
                       type="text"
@@ -120,34 +120,41 @@ export function SelectPanel({
                   </ComboboxInput>
 
                   <ComboboxOptions className="max-h-48 pt-2 overflow-y-auto" static>
-                    {filteredOptions.map((option) => (
-                      <ComboboxOption key={option.value} value={option.value} className={menuItem()}>
-                        {({ selected }) => (
-                          <div className="flex items-center justify-between gap-2 truncate">
-                            {multiple ? (
-                              <input
-                                id={`checkbox-${option.value}`}
-                                type="checkbox"
-                                checked={selected}
-                                onChange={(e) => e.preventDefault()}
-                                className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-0 outline-none"
-                              />
-                            ) : selected ? (
-                              <CheckIcon className="h-4 w-4 shrink-0" />
-                            ) : null}
+                    {filteredOptions.map((option) => {
+                      // Manual selected state calculation for single-select mode
+                      const isSelected = multiple
+                        ? Array.isArray(selected) && selected.includes(option.value)
+                        : selected === option.value;
 
-                            {option.color ? (
-                              <div
-                                className="h-4 w-4 shrink-0 rounded-full"
-                                style={{ backgroundColor: option.color }}
-                              />
-                            ) : null}
+                      return (
+                        <ComboboxOption key={option.value} value={option.value} className={menuItem()}>
+                          {({ selected: headlessSelected }) => (
+                            <div className="flex items-center justify-between gap-2 truncate">
+                              {multiple ? (
+                                <input
+                                  id={`checkbox-${option.value}`}
+                                  type="checkbox"
+                                  checked={headlessSelected}
+                                  onChange={(e) => e.preventDefault()}
+                                  className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-0 outline-none"
+                                />
+                              ) : isSelected ? (
+                                <CheckIcon className="h-4 w-4 shrink-0" />
+                              ) : null}
 
-                            <Text truncate>{option.label}</Text>
-                          </div>
-                        )}
-                      </ComboboxOption>
-                    ))}
+                              {option.color ? (
+                                <div
+                                  className="h-4 w-4 shrink-0 rounded-full"
+                                  style={{ backgroundColor: option.color }}
+                                />
+                              ) : null}
+
+                              <Text truncate>{option.label}</Text>
+                            </div>
+                          )}
+                        </ComboboxOption>
+                      );
+                    })}
 
                     {filteredOptions.length === 0 ? (
                       <Text size="xs" variant="secondary" className="px-4 py-2">
