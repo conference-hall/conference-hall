@@ -73,6 +73,8 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
         backTo={href('/team/:team/:event/reviews', params)}
       />
 
+      <p>{JSON.stringify(actionData?.errors)}</p>
+
       <div className="grid grid-cols-3 gap-6">
         <Card className="col-span-2">
           <Card.Content>
@@ -96,6 +98,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
                 team={params.team}
                 event={params.event}
                 form="new-proposal-form"
+                name="speakers"
                 onChange={setSpeakers}
               />
               <div className="flex flex-wrap gap-2">
