@@ -17,9 +17,9 @@ import { menuItem, menuItems } from '../styles/menu.styles.ts';
 import { Label, Text } from '../typography.tsx';
 import { Input } from './input.tsx';
 
-export type SelectPanelOption = { value: string; label: string; color?: string };
+type SelectPanelOption = { value: string; label: string; color?: string };
 
-export type Props = {
+type Props = {
   name?: string;
   label: string;
   options: Array<SelectPanelOption>;
