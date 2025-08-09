@@ -12,6 +12,7 @@ import { cx } from 'class-variance-authority';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedCallback } from 'use-debounce';
+import { LoadingIcon } from '../icons/loading-icon.tsx';
 import { menuItem, menuItems } from '../styles/menu.styles.ts';
 import { Label, Text } from '../typography.tsx';
 import { Input } from './input.tsx';
@@ -42,17 +43,20 @@ export function SelectPanel({
   children,
   footer,
   form,
-  loading: _loading, // todo(proposal): manage loading state
   onSearch,
   onChange,
+  loading,
   className,
 }: Props) {
   const { t } = useTranslation();
 
   const [selected, setSelected] = useState<string | Array<string>>(defaultValue);
+  const [typing, setTyping] = useState(false);
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const isLoading = loading || typing;
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -61,9 +65,8 @@ export function SelectPanel({
   }, [isOpen]);
 
   const debouncedSearch = useDebouncedCallback(async (searchQuery: string) => {
-    if (onSearch) {
-      await onSearch(searchQuery);
-    }
+    await onSearch?.(searchQuery);
+    setTyping(false);
   }, 300);
 
   const displayedOptions = useMemo(() => {
@@ -74,7 +77,10 @@ export function SelectPanel({
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setQuery(value);
-    if (onSearch) debouncedSearch(value);
+    if (onSearch) {
+      setTyping(true);
+      debouncedSearch(value);
+    }
   };
 
   const handleSelectionChange = (selectedOptions: string | Array<string>) => {
@@ -84,6 +90,7 @@ export function SelectPanel({
 
   // Get selected values as array for hidden inputs
   const selectedValues = Array.isArray(selected) ? selected : selected ? [selected] : [];
+  const hasNoResults = displayedOptions.length === 0 && query && !isLoading;
 
   return (
     <Field className={cx('relative', className)}>
@@ -101,72 +108,88 @@ export function SelectPanel({
             <>
               <PopoverButton className="w-full cursor-pointer">{children}</PopoverButton>
 
-              <PopoverPanel className={cx('mt-1', menuItems('w-(--button-width)'))} anchor="bottom">
+              <PopoverPanel className={cx('mt-2', menuItems('w-(--button-width)'))} anchor="bottom">
                 <Combobox value={selected} onChange={handleSelectionChange} multiple={multiple} as="div">
                   <ComboboxInput as={Fragment} onChange={handleQueryChange} displayValue={() => query}>
                     <Input
                       ref={inputRef}
                       type="text"
                       size="s"
-                      className="w-full px-2 pb-2 text-sm"
+                      className="w-full px-2 text-sm"
                       placeholder={onSearch ? t('common.search.placeholder') : t('common.filter.placeholder')}
                       value={query}
-                    />
+                    >
+                      {isLoading ? (
+                        <div className="self-center mx-2">
+                          <LoadingIcon className="h-4 w-4 shrink-0" aria-hidden />
+                        </div>
+                      ) : null}
+                    </Input>
                   </ComboboxInput>
 
-                  <ComboboxOptions className="max-h-48 overflow-y-auto" static>
-                    {displayedOptions.map((option) => {
-                      // Manual selected state calculation for single-select mode
-                      const isSelected = multiple
-                        ? Array.isArray(selected) && selected.includes(option.value)
-                        : selected === option.value;
+                  {displayedOptions.length > 0 ? (
+                    <ComboboxOptions className="max-h-48 py-2 overflow-y-auto" static>
+                      {displayedOptions.map((option) => {
+                        // Manual selected state calculation for single-select mode
+                        const isSelected = multiple
+                          ? Array.isArray(selected) && selected.includes(option.value)
+                          : selected === option.value;
 
-                      return (
-                        <ComboboxOption key={option.value} value={option.value} className={menuItem()}>
-                          <div className="flex items-center justify-between gap-2 truncate">
-                            {multiple ? (
-                              <input
-                                id={`checkbox-${option.value}`}
-                                type="checkbox"
-                                checked={isSelected}
-                                onChange={(e) => e.preventDefault()}
-                                aria-hidden="true"
-                                tabIndex={-1}
-                                className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-0 outline-none"
-                              />
-                            ) : (
-                              <input
-                                id={`radio-${option.value}`}
-                                type="radio"
-                                checked={isSelected}
-                                onChange={(e) => e.preventDefault()}
-                                aria-hidden="true"
-                                tabIndex={-1}
-                                className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-0 outline-none"
-                              />
-                            )}
+                        return (
+                          <ComboboxOption key={option.value} value={option.value} className={menuItem()}>
+                            <div className="flex items-center justify-between gap-2 truncate">
+                              {multiple ? (
+                                <input
+                                  id={`checkbox-${option.value}`}
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={(e) => e.preventDefault()}
+                                  aria-hidden="true"
+                                  tabIndex={-1}
+                                  className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-0 outline-none"
+                                />
+                              ) : (
+                                <input
+                                  id={`radio-${option.value}`}
+                                  type="radio"
+                                  checked={isSelected}
+                                  onChange={(e) => e.preventDefault()}
+                                  aria-hidden="true"
+                                  tabIndex={-1}
+                                  className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-0 outline-none"
+                                />
+                              )}
 
-                            {option.color ? (
-                              <div
-                                className="h-4 w-4 shrink-0 rounded-full"
-                                style={{ backgroundColor: option.color }}
-                              />
-                            ) : null}
+                              {option.color ? (
+                                <div
+                                  className="h-4 w-4 shrink-0 rounded-full"
+                                  style={{ backgroundColor: option.color }}
+                                />
+                              ) : null}
 
-                            <Text truncate>{option.label}</Text>
-                          </div>
-                        </ComboboxOption>
-                      );
-                    })}
+                              <Text truncate>{option.label}</Text>
+                            </div>
+                          </ComboboxOption>
+                        );
+                      })}
+                    </ComboboxOptions>
+                  ) : null}
 
-                    {displayedOptions.length === 0 ? (
-                      <Text size="xs" variant="secondary" className="px-4 py-2">
-                        {t('common.no-results')}
-                      </Text>
-                    ) : null}
-                  </ComboboxOptions>
+                  {displayedOptions.length === 0 && query && !isLoading ? (
+                    <Text size="s" variant="secondary" className="px-4 py-3">
+                      {t('common.no-results')}
+                    </Text>
+                  ) : null}
 
-                  {footer ? <div className="pt-2 mt-2 border-t border-t-gray-200 flex">{footer}</div> : null}
+                  {footer ? (
+                    <div
+                      className={cx('flex pt-2', {
+                        'border-t border-t-gray-200': displayedOptions.length > 0 || hasNoResults,
+                      })}
+                    >
+                      {footer}
+                    </div>
+                  ) : null}
                 </Combobox>
               </PopoverPanel>
             </>

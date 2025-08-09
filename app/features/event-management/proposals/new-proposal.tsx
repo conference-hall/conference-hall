@@ -207,7 +207,7 @@ type SelectPanelFooterProps = { to: string; label: string };
 
 function SelectPanelFooter({ to, label }: SelectPanelFooterProps) {
   return (
-    <Link to={to} relative="path" className={cx('text-xs hover:bg-gray-100', menuItem())}>
+    <Link to={to} relative="path" className={cx('text-s hover:bg-gray-100', menuItem())}>
       <PencilSquareMicroIcon className="text-gray-400" />
       {label}
     </Link>

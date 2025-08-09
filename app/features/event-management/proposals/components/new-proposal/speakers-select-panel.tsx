@@ -1,7 +1,10 @@
+import { PlusIcon } from '@heroicons/react/16/solid';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
+import { cx } from 'class-variance-authority';
 import { useMemo, useState } from 'react';
 import { href, useFetcher } from 'react-router';
 import { SelectPanel } from '~/design-system/forms/select-panel.tsx';
+import { menuItem } from '~/design-system/styles/menu.styles.ts';
 import { H2 } from '~/design-system/typography.tsx';
 import type { loader as AutocompleteLoader } from '../../../command-palette/autocomplete.ts';
 
@@ -93,6 +96,7 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
       options={availableOptions}
       onChange={handleChange}
       onSearch={handleSearch}
+      footer={<CreateSpeakerButton />}
     >
       <div className="flex items-center justify-between group">
         <H2 size="s" className="group-hover:text-indigo-600">
@@ -101,5 +105,14 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
         <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" role="presentation" />
       </div>
     </SelectPanel>
+  );
+}
+
+function CreateSpeakerButton() {
+  return (
+    <button type="button" className={cx('text-s hover:bg-gray-100', menuItem())}>
+      <PlusIcon className="h-5 w-5 text-gray-400" />
+      Create speaker
+    </button>
   );
 }
