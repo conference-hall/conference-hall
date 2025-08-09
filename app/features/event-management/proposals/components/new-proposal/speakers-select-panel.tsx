@@ -1,11 +1,11 @@
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { href, useFetcher } from 'react-router';
+import { SelectPanel } from '~/design-system/forms/select-panel.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import type { loader as AutocompleteLoader } from '../../../command-palette/autocomplete.ts';
-import { SelectPanelNew, type SelectPanelNewOption } from './select-panel-new.tsx';
 
-type Speaker = SelectPanelNewOption;
+type Speaker = { id: string; name: string };
 
 type Props = {
   team: string;
@@ -18,14 +18,15 @@ type Props = {
 
 export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defaultValue = [], onChange }: Props) {
   const fetcher = useFetcher<typeof AutocompleteLoader>();
+  const [selectedSpeakers, setSelectedSpeakers] = useState<Speaker[]>(defaultValue);
 
   const loading = ['loading', 'submitting'].includes(fetcher.state);
 
   const searchOptions = useMemo(() => {
     return (
       fetcher.data?.map((item) => ({
-        id: item.id,
-        name: item.title,
+        value: item.id,
+        label: item.title,
       })) ?? []
     );
   }, [fetcher.data]);
@@ -39,15 +40,32 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
     await fetcher.load(`${autocompleteRoute}?${searchParams.toString()}`);
   };
 
+  const handleChange = (selectedValues: string | string[]) => {
+    const allOptions = [...selectedSpeakers.map((s) => ({ value: s.id, label: s.name })), ...searchOptions];
+    const selected = allOptions.filter((option) => selectedValues.includes(option.value));
+    const speakers = selected.map((option) => ({ id: option.value, name: option.label }));
+    setSelectedSpeakers(speakers);
+    onChange(speakers);
+  };
+
+  // Combine selected speakers with search options, avoiding duplicates
+  const availableOptions = useMemo(() => {
+    const selectedOptions = selectedSpeakers.map((s) => ({ value: s.id, label: s.name }));
+    const filteredSearchOptions = searchOptions.filter(
+      (option) => !selectedSpeakers.find((speaker) => speaker.id === option.value),
+    );
+    return [...selectedOptions, ...filteredSearchOptions];
+  }, [searchOptions, selectedSpeakers]);
+
   return (
-    <SelectPanelNew
+    <SelectPanel
       name={name}
-      label="Speakers"
       form={form}
-      defaultValue={defaultValue}
+      label="Speakers"
+      defaultValue={selectedSpeakers.map((s) => s.id)}
       loading={loading}
-      options={searchOptions}
-      onChange={onChange}
+      options={availableOptions}
+      onChange={handleChange}
       onSearch={handleSearch}
     >
       <div className="flex items-center justify-between group">
@@ -56,6 +74,6 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
         </H2>
         <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" role="presentation" />
       </div>
-    </SelectPanelNew>
+    </SelectPanel>
   );
 }

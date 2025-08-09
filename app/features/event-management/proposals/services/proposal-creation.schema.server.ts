@@ -10,6 +10,7 @@ export const TalkProposalCreationSchema = z.object({
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).optional(),
   formats: z.array(z.string()).optional(),
   categories: z.array(z.string()).optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 export type TalkProposalCreationData = z.infer<typeof TalkProposalCreationSchema>;

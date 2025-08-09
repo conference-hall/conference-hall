@@ -151,6 +151,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
                   setCategories(event.categories.filter((category) => categories.includes(category.id)))
                 }
                 footer={<SelectPanelFooter to="../../settings/tracks" label="Gérer les catégories" />}
+                multiple={false}
               >
                 <div className="flex items-center justify-between group">
                   <H2 size="s" className="group-hover:text-indigo-600">

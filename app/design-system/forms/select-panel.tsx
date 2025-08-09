@@ -1,16 +1,26 @@
-import { Field, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+  Field,
+  Popover,
+  PopoverButton,
+  PopoverPanel,
+} from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
-import { type ChangeEvent, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Input } from '~/design-system/forms/input.tsx';
-import { menuItem, menuItems } from '~/design-system/styles/menu.styles.ts';
-import { Label, Text } from '~/design-system/typography.tsx';
+import { useDebouncedCallback } from 'use-debounce';
+import { menuItem, menuItems } from '../styles/menu.styles.ts';
+import { Label, Text } from '../typography.tsx';
+import { Input } from './input.tsx';
 
 export type SelectPanelOption = { value: string; label: string; color?: string };
 
 export type Props = {
-  name: string;
+  name?: string;
   label: string;
   options: Array<SelectPanelOption>;
   defaultValue: string | Array<string>;
@@ -18,8 +28,8 @@ export type Props = {
   children: React.ReactNode;
   footer?: React.ReactNode;
   form?: string;
-  loading?: boolean; // todo(proposal): add search indicator
-  onSearch?: (query: string) => void;
+  loading?: boolean;
+  onSearch?: (query: string) => void | Promise<void>;
   onChange?: (values: string | Array<string>) => void;
   className?: string;
 };
@@ -33,88 +43,126 @@ export function SelectPanel({
   children,
   footer,
   form,
+  loading: _loading, // todo(proposal): manage loading state
   onSearch,
   onChange,
   className,
 }: Props) {
   const { t } = useTranslation();
+
   const [selected, setSelected] = useState<string | Array<string>>(defaultValue);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [query, setQuery] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current?.focus();
+    }
+  }, [isOpen]);
+
+  const debouncedSearch = useDebouncedCallback(async (searchQuery: string) => {
+    if (onSearch) {
+      await onSearch(searchQuery);
+    }
+  }, 300);
 
   const filteredOptions = useMemo(() => {
     if (onSearch) return options;
-    return options.filter((option) => option.label.toLowerCase().includes(searchTerm.toLowerCase()));
-  }, [options, searchTerm, onSearch]);
+    return options.filter((option) => option.label.toLowerCase().includes(query.toLowerCase()));
+  }, [options, query, onSearch]);
 
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = event.target.value;
-    setSearchTerm(searchTerm);
-    if (onSearch) onSearch(searchTerm);
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setQuery(value);
+    if (onSearch) debouncedSearch(value);
   };
 
-  const handleSelect = (selectedOptions: string | Array<string>) => {
+  const handleSelectionChange = (selectedOptions: string | Array<string>) => {
     setSelected(selectedOptions);
     if (onChange) onChange(selectedOptions);
   };
+
+  // Get selected values as array for hidden inputs
+  const selectedValues = Array.isArray(selected) ? selected : selected ? [selected] : [];
 
   return (
     <Field className={cx('relative', className)}>
       <Label className="sr-only">{label}</Label>
 
-      <Listbox name={name} value={selected} onChange={handleSelect} multiple={multiple} form={form} as="div">
-        <ListboxButton className="w-full cursor-pointer">{children}</ListboxButton>
+      {/* Hidden inputs for form submission */}
+      {name && selectedValues.map((value) => <input key={value} type="hidden" name={name} value={value} form={form} />)}
 
-        <ListboxOptions className={cx('mt-1', menuItems('w-(--button-width)'))} anchor="bottom">
-          <Text weight="medium" className="px-2 ml-1">
-            {label}
-          </Text>
+      <Popover>
+        {({ open }) => {
+          if (open !== isOpen) {
+            setIsOpen(open);
+          }
+          return (
+            <>
+              <PopoverButton className="w-full cursor-pointer">{children}</PopoverButton>
 
-          <Input
-            type="text"
-            size="s"
-            className="w-full p-2 border-b border-b-gray-200 text-sm"
-            placeholder={t('common.search.placeholder')}
-            value={searchTerm}
-            onChange={handleSearch}
-          />
+              <PopoverPanel className={cx('mt-1', menuItems('w-(--button-width)'))} anchor="bottom">
+                <Combobox value={selected} onChange={handleSelectionChange} multiple={multiple} as="div">
+                  <Text weight="medium" className="px-2 ml-1">
+                    {label}
+                  </Text>
 
-          <div className="max-h-48 pt-2 overflow-y-auto">
-            {filteredOptions.map((option) => (
-              <ListboxOption key={option.value} value={option.value} className={menuItem()}>
-                {({ selected }) => (
-                  <div className="flex items-center justify-between gap-2 truncate">
-                    {multiple ? (
-                      <input
-                        id={`checkbox-${option.value}`}
-                        type="checkbox"
-                        checked={selected}
-                        onChange={(e) => e.preventDefault()}
-                        className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-0 outline-none"
-                      />
-                    ) : selected ? (
-                      <CheckIcon className="h-4 w-4 shrink-0" />
+                  <ComboboxInput as={Fragment} onChange={handleQueryChange}>
+                    <Input
+                      ref={inputRef}
+                      type="text"
+                      size="s"
+                      className="w-full p-2 border-b border-b-gray-200 text-sm"
+                      placeholder={t('common.search.placeholder')}
+                      value={query}
+                    />
+                  </ComboboxInput>
+
+                  <ComboboxOptions className="max-h-48 pt-2 overflow-y-auto" static>
+                    {filteredOptions.map((option) => (
+                      <ComboboxOption key={option.value} value={option.value} className={menuItem()}>
+                        {({ selected }) => (
+                          <div className="flex items-center justify-between gap-2 truncate">
+                            {multiple ? (
+                              <input
+                                id={`checkbox-${option.value}`}
+                                type="checkbox"
+                                checked={selected}
+                                onChange={(e) => e.preventDefault()}
+                                className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-0 outline-none"
+                              />
+                            ) : selected ? (
+                              <CheckIcon className="h-4 w-4 shrink-0" />
+                            ) : null}
+
+                            {option.color ? (
+                              <div
+                                className="h-4 w-4 shrink-0 rounded-full"
+                                style={{ backgroundColor: option.color }}
+                              />
+                            ) : null}
+
+                            <Text truncate>{option.label}</Text>
+                          </div>
+                        )}
+                      </ComboboxOption>
+                    ))}
+
+                    {filteredOptions.length === 0 ? (
+                      <Text size="xs" variant="secondary" className="px-4 py-2">
+                        {t('common.no-results')}
+                      </Text>
                     ) : null}
+                  </ComboboxOptions>
 
-                    {option.color ? (
-                      <div className="h-4 w-4 shrink-0 rounded-full" style={{ backgroundColor: option.color }} />
-                    ) : null}
-
-                    <Text truncate>{option.label}</Text>
-                  </div>
-                )}
-              </ListboxOption>
-            ))}
-
-            {filteredOptions.length === 0 ? (
-              <Text size="xs" variant="secondary" className="px-4 py-2">
-                {t('common.no-results')}
-              </Text>
-            ) : null}
-          </div>
-
-          {footer ? <div className="pt-2 mt-2 border-t border-t-gray-200 flex">{footer}</div> : null}
-        </ListboxOptions>
-      </Listbox>
+                  {footer ? <div className="pt-2 mt-2 border-t border-t-gray-200 flex">{footer}</div> : null}
+                </Combobox>
+              </PopoverPanel>
+            </>
+          );
+        }}
+      </Popover>
     </Field>
   );
 }

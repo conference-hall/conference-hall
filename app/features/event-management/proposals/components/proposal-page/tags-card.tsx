@@ -2,6 +2,7 @@ import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Link, useFetcher } from 'react-router';
+import { SelectPanel } from '~/design-system/forms/select-panel.tsx';
 import { PencilSquareMicroIcon } from '~/design-system/icons/pencil-square-micro-icon.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { menuItem } from '~/design-system/styles/menu.styles.ts';
@@ -9,7 +10,6 @@ import { Tag } from '~/design-system/tag.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import type { Tag as TagType } from '~/shared/types/tags.types.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
-import { SelectPanel } from '../../../../../design-system/forms/select-panel.tsx';
 
 type TagsCardProps = {
   proposalId: string;
