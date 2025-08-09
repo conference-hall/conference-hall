@@ -10,7 +10,18 @@ import { ProposalSearchBuilder } from '../../proposals/services/proposal-search-
 const AutocompleteFilterSchema = z.object({ query: z.string().optional(), kind: z.array(z.string()) });
 
 type AutocompleteFilters = z.infer<typeof AutocompleteFilterSchema>;
-type AutocompleteResult = { kind: string; id: string; title: string; description: string | null };
+
+// todo(autocomplete): rename section to kind,
+// todo(autocomplete): rename title to label
+// todo(autocomplete): rename context to autocomplete or search context
+// todo(autocomplete): migrate other proposal autocomplete to use this one
+type AutocompleteResult = {
+  kind: string;
+  id: string;
+  title: string;
+  description: string | null;
+  picture?: string | null;
+};
 
 const pagination = new Pagination({ page: 1, pageSize: 3, total: 3 });
 

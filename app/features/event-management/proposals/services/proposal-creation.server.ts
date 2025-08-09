@@ -1,6 +1,4 @@
 import { db } from 'prisma/db.server.ts';
-import { EventSpeaker } from '~/features/event-participation/speaker-proposals/services/event-speaker.ts';
-import { UserNotFoundError } from '~/shared/errors.server.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type { TalkProposalCreationData } from './proposal-creation.schema.server.ts';
 
@@ -13,12 +11,6 @@ export class ProposalCreation extends UserEventAuthorization {
     const event = await this.needsPermission('canCreateEventProposal');
 
     return await db.$transaction(async (trx) => {
-      // todo(proposal): how to set/create the speakers
-      const user = await trx.user.findUnique({ where: { id: this.userId } });
-      if (!user) throw new UserNotFoundError();
-
-      const eventSpeaker = await EventSpeaker.for(event.id, trx).upsertForUser(user);
-
       const formatsConnect = data.formats?.length
         ? { connect: data.formats.map((formatId) => ({ id: formatId })) }
         : undefined;
@@ -35,7 +27,7 @@ export class ProposalCreation extends UserEventAuthorization {
           languages: data.languages,
           level: data.level,
           event: { connect: { id: event.id } },
-          speakers: { connect: [{ id: eventSpeaker.id }] },
+          speakers: { connect: data.speakers.map((id) => ({ id })) },
           formats: formatsConnect,
           categories: categoriesConnect,
           isDraft: false,

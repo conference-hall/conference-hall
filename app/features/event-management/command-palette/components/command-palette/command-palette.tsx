@@ -12,7 +12,7 @@ export type CommandPaletteItemData = {
   title: string | ((query: string) => string);
   description?: string | null;
   icon?: React.ComponentType<any>;
-  picture?: string;
+  picture?: string | null;
 };
 
 type CommandPaletteProps = {

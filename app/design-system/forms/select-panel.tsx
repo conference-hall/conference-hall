@@ -1,23 +1,25 @@
 import { Field, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
-import { useState } from 'react';
+import { type ChangeEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '~/design-system/forms/input.tsx';
 import { menuItem, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { Label, Text } from '~/design-system/typography.tsx';
 
-type Option = { value: string; label: string; color?: string };
+export type SelectPanelOption = { value: string; label: string; color?: string };
 
 export type Props = {
   name: string;
   label: string;
-  options: Array<Option>;
+  options: Array<SelectPanelOption>;
   defaultValue: string | Array<string>;
   multiple?: boolean;
   children: React.ReactNode;
   footer?: React.ReactNode;
   form?: string;
+  loading?: boolean; // todo(proposal): add search indicator
+  onSearch?: (query: string) => void;
   onChange?: (values: string | Array<string>) => void;
   className?: string;
 };
@@ -31,6 +33,7 @@ export function SelectPanel({
   children,
   footer,
   form,
+  onSearch,
   onChange,
   className,
 }: Props) {
@@ -38,7 +41,16 @@ export function SelectPanel({
   const [selected, setSelected] = useState<string | Array<string>>(defaultValue);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredOptions = options.filter((option) => option.label.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredOptions = useMemo(() => {
+    if (onSearch) return options;
+    return options.filter((option) => option.label.toLowerCase().includes(searchTerm.toLowerCase()));
+  }, [options, searchTerm, onSearch]);
+
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = event.target.value;
+    setSearchTerm(searchTerm);
+    if (onSearch) onSearch(searchTerm);
+  };
 
   const handleSelect = (selectedOptions: string | Array<string>) => {
     setSelected(selectedOptions);
@@ -57,9 +69,16 @@ export function SelectPanel({
             {label}
           </Text>
 
-          <AutoFocusSearchInput value={searchTerm} onChange={setSearchTerm} />
+          <Input
+            type="text"
+            size="s"
+            className="w-full p-2 border-b border-b-gray-200 text-sm"
+            placeholder={t('common.search.placeholder')}
+            value={searchTerm}
+            onChange={handleSearch}
+          />
 
-          <div className="max-h-48 py-2 overflow-y-auto">
+          <div className="max-h-48 pt-2 overflow-y-auto">
             {filteredOptions.map((option) => (
               <ListboxOption key={option.value} value={option.value} className={menuItem()}>
                 {({ selected }) => (
@@ -87,32 +106,15 @@ export function SelectPanel({
             ))}
 
             {filteredOptions.length === 0 ? (
-              <Text size="s" variant="secondary" className="px-4 py-2">
+              <Text size="xs" variant="secondary" className="px-4 py-2">
                 {t('common.no-results')}
               </Text>
             ) : null}
           </div>
 
-          {footer ? <div className="pt-2 border-t border-t-gray-200">{footer}</div> : null}
+          {footer ? <div className="pt-2 mt-2 border-t border-t-gray-200 flex">{footer}</div> : null}
         </ListboxOptions>
       </Listbox>
     </Field>
-  );
-}
-
-type SearchInputProps = { value: string; onChange: (term: string) => void };
-
-function AutoFocusSearchInput({ value, onChange }: SearchInputProps) {
-  const { t } = useTranslation();
-
-  return (
-    <Input
-      type="text"
-      size="s"
-      className="w-full p-2 border-b border-b-gray-200 text-sm"
-      placeholder={t('common.search.placeholder')}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
   );
 }

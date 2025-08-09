@@ -1,5 +1,4 @@
 import { parseWithZod } from '@conform-to/zod/v4';
-import { PlusIcon } from '@heroicons/react/16/solid';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
@@ -16,6 +15,7 @@ import { menuItem } from '~/design-system/styles/menu.styles.ts';
 import { Tag } from '~/design-system/tag.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
+import { SpeakerPill } from '~/features/speaker/talk-library/components/speakers.tsx';
 import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
@@ -23,6 +23,7 @@ import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Tag as TagType } from '~/shared/types/tags.types.ts';
 import type { Route } from './+types/new-proposal.ts';
+import { SpeakersSelectPanel } from './components/new-proposal/speakers-select-panel.tsx';
 import { TalkProposalCreationSchema } from './services/proposal-creation.schema.server.ts';
 import { ProposalCreation } from './services/proposal-creation.server.ts';
 
@@ -37,7 +38,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TalkProposalCreationSchema });
-  if (result.status !== 'success') return { errors: result.error };
+  if (result.status !== 'success') return { errors: result.error }; // todo(proposal): display errors
 
   try {
     const proposal = await ProposalCreation.for(userId, params.team, params.event).create(result.value);
@@ -48,11 +49,14 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   }
 };
 
+// todo(proposal): make it responsive
+// todo(proposal): fully translate
 export default function NewProposalRoute({ actionData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
   const isFeatureEnabled = useFlag('organizerProposalCreation');
   const { team, event } = useCurrentEventTeam();
 
+  const [speakers, setSpeakers] = useState<Array<{ id: string; name: string }>>([]);
   const [tags, setTags] = useState<Array<TagType>>([]);
   const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([]);
   const [formats, setFormats] = useState<Array<{ id: string; name: string }>>([]);
@@ -88,10 +92,19 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
         <div className="space-y-4">
           <Card as="section" className="py-2">
             <div className="space-y-2.5 p-4 lg:px-6">
-              <H2 size="s">Speakers</H2>
-              <Button variant="secondary" iconLeft={PlusIcon} size="s" className="w-full">
-                Add speaker
-              </Button>
+              <SpeakersSelectPanel
+                team={params.team}
+                event={params.event}
+                form="new-proposal-form"
+                onChange={setSpeakers}
+              />
+              <div className="flex flex-wrap gap-2">
+                {speakers.length === 0 ? <Text size="xs">No speakers</Text> : null}
+
+                {speakers.map((speaker) => (
+                  <SpeakerPill key={speaker.id} speaker={speaker} />
+                ))}
+              </div>
             </div>
 
             <Divider />
