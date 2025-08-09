@@ -8,7 +8,6 @@ import {
   PopoverButton,
   PopoverPanel,
 } from '@headlessui/react';
-import { CheckIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -67,7 +66,7 @@ export function SelectPanel({
     }
   }, 300);
 
-  const filteredOptions = useMemo(() => {
+  const displayedOptions = useMemo(() => {
     if (onSearch) return options;
     return options.filter((option) => option.label.toLowerCase().includes(query.toLowerCase()));
   }, [options, query, onSearch]);
@@ -104,23 +103,19 @@ export function SelectPanel({
 
               <PopoverPanel className={cx('mt-1', menuItems('w-(--button-width)'))} anchor="bottom">
                 <Combobox value={selected} onChange={handleSelectionChange} multiple={multiple} as="div">
-                  <Text weight="medium" className="px-2 ml-1">
-                    {label}
-                  </Text>
-
                   <ComboboxInput as={Fragment} onChange={handleQueryChange} displayValue={() => query}>
                     <Input
                       ref={inputRef}
                       type="text"
                       size="s"
-                      className="w-full p-2 border-b border-b-gray-200 text-sm"
-                      placeholder={t('common.search.placeholder')}
+                      className="w-full px-2 pb-2 text-sm"
+                      placeholder={onSearch ? t('common.search.placeholder') : t('common.filter.placeholder')}
                       value={query}
                     />
                   </ComboboxInput>
 
-                  <ComboboxOptions className="max-h-48 pt-2 overflow-y-auto" static>
-                    {filteredOptions.map((option) => {
+                  <ComboboxOptions className="max-h-48 overflow-y-auto" static>
+                    {displayedOptions.map((option) => {
                       // Manual selected state calculation for single-select mode
                       const isSelected = multiple
                         ? Array.isArray(selected) && selected.includes(option.value)
@@ -128,35 +123,43 @@ export function SelectPanel({
 
                       return (
                         <ComboboxOption key={option.value} value={option.value} className={menuItem()}>
-                          {({ selected: headlessSelected }) => (
-                            <div className="flex items-center justify-between gap-2 truncate">
-                              {multiple ? (
-                                <input
-                                  id={`checkbox-${option.value}`}
-                                  type="checkbox"
-                                  checked={headlessSelected}
-                                  onChange={(e) => e.preventDefault()}
-                                  className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-0 outline-none"
-                                />
-                              ) : isSelected ? (
-                                <CheckIcon className="h-4 w-4 shrink-0" />
-                              ) : null}
+                          <div className="flex items-center justify-between gap-2 truncate">
+                            {multiple ? (
+                              <input
+                                id={`checkbox-${option.value}`}
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={(e) => e.preventDefault()}
+                                aria-hidden="true"
+                                tabIndex={-1}
+                                className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-0 outline-none"
+                              />
+                            ) : (
+                              <input
+                                id={`radio-${option.value}`}
+                                type="radio"
+                                checked={isSelected}
+                                onChange={(e) => e.preventDefault()}
+                                aria-hidden="true"
+                                tabIndex={-1}
+                                className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-0 outline-none"
+                              />
+                            )}
 
-                              {option.color ? (
-                                <div
-                                  className="h-4 w-4 shrink-0 rounded-full"
-                                  style={{ backgroundColor: option.color }}
-                                />
-                              ) : null}
+                            {option.color ? (
+                              <div
+                                className="h-4 w-4 shrink-0 rounded-full"
+                                style={{ backgroundColor: option.color }}
+                              />
+                            ) : null}
 
-                              <Text truncate>{option.label}</Text>
-                            </div>
-                          )}
+                            <Text truncate>{option.label}</Text>
+                          </div>
                         </ComboboxOption>
                       );
                     })}
 
-                    {filteredOptions.length === 0 ? (
+                    {displayedOptions.length === 0 ? (
                       <Text size="xs" variant="secondary" className="px-4 py-2">
                         {t('common.no-results')}
                       </Text>

@@ -68,7 +68,7 @@ describe('SelectPanel component', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
-    const searchInput = screen.getByPlaceholder('Search...');
+    const searchInput = screen.getByPlaceholder('Filtrer...');
     await userEvent.type(searchInput, 'another');
 
     await expect.element(screen.getByRole('option', { name: /Another Option/ })).toBeInTheDocument();

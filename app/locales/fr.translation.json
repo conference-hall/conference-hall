@@ -116,6 +116,7 @@
   "common.event.visibility.label.PRIVATE": "Privé",
   "common.event.visibility.label.PUBLIC": "Public",
   "common.events": "Evénements",
+  "common.filter.placeholder": "Filtrer...",
   "common.filters": "Filtres",
   "common.finish": "Terminer",
   "common.formats": "Formats",
