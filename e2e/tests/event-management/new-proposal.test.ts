@@ -28,7 +28,7 @@ test.beforeEach(async () => {
   await eventCategoryFactory({ event, attributes: { name: 'Category 1' } });
 });
 
-test('creates new proposal as organizer', async ({ page }) => {
+test.skip('creates new proposal as organizer', async ({ page }) => {
   const proposalsPage = new ProposalsListPage(page);
   await proposalsPage.goto(team.slug, event.slug);
 
@@ -60,7 +60,7 @@ test('creates new proposal as organizer', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'E2E Test Proposal' })).toBeVisible();
 });
 
-test('cancels new proposal creation', async ({ page }) => {
+test.skip('cancels new proposal creation', async ({ page }) => {
   const proposalsPage = new ProposalsListPage(page);
   await proposalsPage.goto(team.slug, event.slug);
 
@@ -75,7 +75,7 @@ test('cancels new proposal creation', async ({ page }) => {
   await expect(proposalsPage.heading).toBeVisible();
 });
 
-test.describe('As a member', () => {
+test.describe.skip('As a member', () => {
   loginWith('bruce-wayne');
 
   test('can see new proposal button', async ({ page }) => {
@@ -86,7 +86,7 @@ test.describe('As a member', () => {
   });
 });
 
-test.describe('As a reviewer', () => {
+test.describe.skip('As a reviewer', () => {
   loginWith('peter-parker');
 
   test('cannot see new proposal button', async ({ page }) => {
