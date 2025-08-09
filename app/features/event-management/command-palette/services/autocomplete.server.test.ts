@@ -28,16 +28,16 @@ describe('Autocomplete for event management', () => {
       it('returns empty array when no query provided', async () => {
         const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
           query: '',
-          type: ['proposals', 'speakers'],
+          kind: ['proposals', 'speakers'],
         });
 
         expect(results).toEqual([]);
       });
 
-      it('returns empty array when no types specified', async () => {
+      it('returns empty array when no kinds specified', async () => {
         const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
           query: 'test',
-          type: [],
+          kind: [],
         });
 
         expect(results).toEqual([]);
@@ -50,11 +50,11 @@ describe('Autocomplete for event management', () => {
 
           const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
             query: 'React',
-            type: ['proposals'],
+            kind: ['proposals'],
           });
 
           expect(results).toEqual([
-            { section: 'proposals', id: proposal.id, title: 'React Best Practices', description: 'Peter Parker' },
+            { kind: 'proposals', id: proposal.id, title: 'React Best Practices', description: 'Peter Parker' },
           ]);
         });
 
@@ -66,11 +66,11 @@ describe('Autocomplete for event management', () => {
 
           const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
             query: 'React',
-            type: ['proposals'],
+            kind: ['proposals'],
           });
 
           expect(results).toHaveLength(3);
-          expect(results.every((r) => r.section === 'proposals')).toBe(true);
+          expect(results.every((r) => r.kind === 'proposals')).toBe(true);
         });
 
         it('includes multiple speakers in description when displayProposalsSpeakers is true', async () => {
@@ -80,11 +80,11 @@ describe('Autocomplete for event management', () => {
 
           const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
             query: 'Advanced',
-            type: ['proposals'],
+            kind: ['proposals'],
           });
 
           expect(results[0]).toEqual({
-            section: 'proposals',
+            kind: 'proposals',
             id: proposal.id,
             title: 'Advanced React',
             description: 'Peter Parker, Tony Stark',
@@ -103,27 +103,27 @@ describe('Autocomplete for event management', () => {
 
           const results = await Autocomplete.for(owner.id, team.slug, eventWithoutSpeakers.slug).search({
             query: 'Advanced',
-            type: ['proposals'],
+            kind: ['proposals'],
           });
 
           expect(results[0]).toEqual({
-            section: 'proposals',
+            kind: 'proposals',
             id: proposal.id,
             title: 'Advanced React',
             description: '',
           });
         });
 
-        it('does not return proposals when type is not included', async () => {
+        it('does not return proposals when kind is not included', async () => {
           const talk = await talkFactory({ speakers: [speaker] });
           await proposalFactory({ event, talk, attributes: { title: 'React Best Practices' } });
 
           const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
             query: 'React',
-            type: ['speakers'],
+            kind: ['speakers'],
           });
 
-          expect(results.filter((r) => r.section === 'proposals')).toHaveLength(0);
+          expect(results.filter((r) => r.kind === 'proposals')).toHaveLength(0);
         });
       });
 
@@ -133,12 +133,12 @@ describe('Autocomplete for event management', () => {
 
           const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
             query: 'John',
-            type: ['speakers'],
+            kind: ['speakers'],
           });
 
           expect(results).toEqual([
             {
-              section: 'speakers',
+              kind: 'speakers',
               id: eventSpeaker.id,
               title: eventSpeaker.name,
               description: eventSpeaker.company,
@@ -155,22 +155,22 @@ describe('Autocomplete for event management', () => {
 
           const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
             query: 'John',
-            type: ['speakers'],
+            kind: ['speakers'],
           });
 
           expect(results).toHaveLength(3);
-          expect(results.every((r) => r.section === 'speakers')).toBe(true);
+          expect(results.every((r) => r.kind === 'speakers')).toBe(true);
         });
 
-        it('does not return speakers when type is not included', async () => {
+        it('does not return speakers when kind is not included', async () => {
           await eventSpeakerFactory({ event, attributes: { name: 'John Doe' } });
 
           const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
             query: 'John',
-            type: ['proposals'],
+            kind: ['proposals'],
           });
 
-          expect(results.filter((r) => r.section === 'speakers')).toHaveLength(0);
+          expect(results.filter((r) => r.kind === 'speakers')).toHaveLength(0);
         });
 
         it('does not return speakers when displayProposalsSpeakers is false', async () => {
@@ -179,37 +179,37 @@ describe('Autocomplete for event management', () => {
 
           const results = await Autocomplete.for(owner.id, team.slug, eventWithoutSpeakers.slug).search({
             query: 'John',
-            type: ['speakers'],
+            kind: ['speakers'],
           });
 
-          expect(results.filter((r) => r.section === 'speakers')).toHaveLength(0);
+          expect(results.filter((r) => r.kind === 'speakers')).toHaveLength(0);
         });
       });
 
       describe('combined search', () => {
-        it('returns both proposals and speakers when both types are specified', async () => {
+        it('returns both proposals and speakers when both kinds are specified', async () => {
           const talk = await talkFactory({ speakers: [speaker] });
           const proposal = await proposalFactory({ event, talk, attributes: { title: 'React Testing' } });
           const eventSpeaker = await eventSpeakerFactory({ event, attributes: { name: 'React Expert' } });
 
           const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
             query: 'React',
-            type: ['proposals', 'speakers'],
+            kind: ['proposals', 'speakers'],
           });
 
           expect(results).toHaveLength(2);
 
-          const proposalResult = results.find((r) => r.section === 'proposals');
+          const proposalResult = results.find((r) => r.kind === 'proposals');
           expect(proposalResult).toEqual({
-            section: 'proposals',
+            kind: 'proposals',
             id: proposal.id,
             title: 'React Testing',
             description: 'Peter Parker',
           });
 
-          const speakerResult = results.find((r) => r.section === 'speakers');
+          const speakerResult = results.find((r) => r.kind === 'speakers');
           expect(speakerResult).toEqual({
-            section: 'speakers',
+            kind: 'speakers',
             id: eventSpeaker.id,
             title: eventSpeaker.name,
             description: eventSpeaker.company,
@@ -226,7 +226,7 @@ describe('Autocomplete for event management', () => {
         await expect(
           Autocomplete.for(outsider.id, team.slug, event.slug).search({
             query: 'test',
-            type: ['proposals'],
+            kind: ['proposals'],
           }),
         ).rejects.toThrow(ForbiddenOperationError);
       });
@@ -237,7 +237,7 @@ describe('Autocomplete for event management', () => {
         await expect(
           Autocomplete.for(owner.id, team.slug, 'non-existent').search({
             query: 'test',
-            type: ['proposals'],
+            kind: ['proposals'],
           }),
         ).rejects.toThrow();
       });
@@ -248,7 +248,7 @@ describe('Autocomplete for event management', () => {
         await expect(
           Autocomplete.for(owner.id, 'non-existent', event.slug).search({
             query: 'test',
-            type: ['proposals'],
+            kind: ['proposals'],
           }),
         ).rejects.toThrow();
       });
@@ -257,52 +257,52 @@ describe('Autocomplete for event management', () => {
 });
 
 describe('parseUrlFilters', () => {
-  it('parses valid URL with query and type parameters', () => {
-    const url = 'https://example.com/search?query=test&type=proposals&type=speakers';
+  it('parses valid URL with query and kind parameters', () => {
+    const url = 'https://example.com/search?query=test&kind=proposals&kind=speakers';
     const result = parseUrlFilters(url);
 
-    expect(result).toEqual({ query: 'test', type: ['proposals', 'speakers'] });
+    expect(result).toEqual({ query: 'test', kind: ['proposals', 'speakers'] });
   });
 
   it('parses URL with only query parameter', () => {
     const url = 'https://example.com/search?query=react';
     const result = parseUrlFilters(url);
 
-    expect(result).toEqual({ query: 'react', type: [] });
+    expect(result).toEqual({ query: 'react', kind: [] });
   });
 
-  it('parses URL with only type parameter', () => {
-    const url = 'https://example.com/search?type=speakers';
+  it('parses URL with only kind parameter', () => {
+    const url = 'https://example.com/search?kind=speakers';
     const result = parseUrlFilters(url);
 
-    expect(result).toEqual({ type: ['speakers'] });
+    expect(result).toEqual({ kind: ['speakers'] });
   });
 
   it('returns default values for URL without search parameters', () => {
     const url = 'https://example.com/search';
     const result = parseUrlFilters(url);
 
-    expect(result).toEqual({ type: [] });
+    expect(result).toEqual({ kind: [] });
   });
 
-  it('handles multiple type parameters', () => {
-    const url = 'https://example.com/search?type=proposals&type=speakers&type=events';
+  it('handles multiple kind parameters', () => {
+    const url = 'https://example.com/search?kind=proposals&kind=speakers&kind=events';
     const result = parseUrlFilters(url);
 
-    expect(result).toEqual({ type: ['proposals', 'speakers', 'events'] });
+    expect(result).toEqual({ kind: ['proposals', 'speakers', 'events'] });
   });
 
   it('handles URL encoded parameters', () => {
-    const url = 'https://example.com/search?query=react%20testing&type=proposals';
+    const url = 'https://example.com/search?query=react%20testing&kind=proposals';
     const result = parseUrlFilters(url);
 
-    expect(result).toEqual({ query: 'react testing', type: ['proposals'] });
+    expect(result).toEqual({ query: 'react testing', kind: ['proposals'] });
   });
 
   it('handles empty query parameter', () => {
-    const url = 'https://example.com/search?query=&type=proposals';
+    const url = 'https://example.com/search?query=&kind=proposals';
     const result = parseUrlFilters(url);
 
-    expect(result).toEqual({ query: undefined, type: ['proposals'] });
+    expect(result).toEqual({ query: undefined, kind: ['proposals'] });
   });
 });
