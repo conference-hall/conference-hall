@@ -27,7 +27,7 @@ export class ProposalCreation extends UserEventAuthorization {
           languages: data.languages,
           level: data.level,
           event: { connect: { id: event.id } },
-          speakers: { connect: data.speakers.map((id) => ({ id })) },
+          speakers: { connect: data.speakers.map((id) => ({ id })) }, // todo(proposal): check the speakers belongs to event before saving
           formats: formatsConnect,
           categories: categoriesConnect,
           isDraft: false,
