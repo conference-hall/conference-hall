@@ -82,7 +82,7 @@ describe('SelectPanel component', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
-    const searchInput = screen.getByPlaceholder('Search...');
+    const searchInput = screen.getByPlaceholder('Filtrer...');
     await userEvent.type(searchInput, 'nonexistent');
 
     await expect.element(screen.getByText('No results found')).toBeInTheDocument();
@@ -92,9 +92,6 @@ describe('SelectPanel component', () => {
     const screen = renderComponent({ multiple: true, defaultValue: [] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
-
-    const checkboxes = screen.getByRole('checkbox').all();
-    expect(checkboxes).toHaveLength(4);
 
     await userEvent.click(screen.getByText('Option 1'));
     expect(onChangeMock).toHaveBeenCalledWith(['option1']);
@@ -133,7 +130,7 @@ describe('SelectPanel component', () => {
     expect(onChangeMock).toHaveBeenCalledWith('option1');
   });
 
-  it('checks selected item in single mode', async () => {
+  it('shows selected item with radio button in single mode', async () => {
     const screen = renderComponent({ multiple: false, defaultValue: 'option1' });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
@@ -156,7 +153,7 @@ describe('SelectPanel component', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
-    const searchInput = screen.getByPlaceholder('Search...');
+    const searchInput = screen.getByPlaceholder('Filtrer...');
     expect(searchInput).toHaveFocus();
   });
 

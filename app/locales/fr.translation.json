@@ -388,7 +388,7 @@
   "event-management.proposal-page.comment.submit": "Commenter",
   "event-management.proposal-page.feedbacks.saved": "Proposition sauvegardée.",
   "event-management.proposal-page.next": "Proposition suivante",
-  "event-management.proposal-page.no-tags": "Il n'y a pas de tags.",
+  "event-management.proposal-page.no-tags": "Aucun tag",
   "event-management.proposal-page.other-proposals": "Autres propositions des speakers ({{count}})",
   "event-management.proposal-page.previous": "Proposition précédente",
   "event-management.proposal-page.proposal-status.change": "Modifier le statut de la proposition",

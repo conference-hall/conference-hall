@@ -46,20 +46,14 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
   const handleChange = (selectedValues: string | string[]) => {
     const selectedIds = Array.isArray(selectedValues) ? selectedValues : [selectedValues];
 
-    // Create a map of all available options (both selected and search results)
     const allOptionsMap = new Map<string, { value: string; label: string }>();
-
-    // Add current selected speakers
     selectedSpeakers.forEach((s) => {
       allOptionsMap.set(s.id, { value: s.id, label: s.name });
     });
-
-    // Add search results
     searchOptions.forEach((option) => {
       allOptionsMap.set(option.value, option);
     });
 
-    // Filter to only selected IDs and convert to speakers
     const speakers = selectedIds
       .map((id) => allOptionsMap.get(id))
       .filter((option): option is { value: string; label: string } => option !== undefined)
@@ -69,14 +63,9 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
     onChange(speakers);
   };
 
-  // Combine all unique options, maintaining search results order
   const availableOptions = useMemo(() => {
     const searchOptionsMap = new Map(searchOptions.map((option) => [option.value, option]));
-
-    // Start with search results to maintain their order
     const options = [...searchOptions];
-
-    // Add any selected speakers that aren't in search results
     selectedSpeakers.forEach((speaker) => {
       if (!searchOptionsMap.has(speaker.id)) {
         options.push({ value: speaker.id, label: speaker.name });
@@ -111,7 +100,7 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
 function CreateSpeakerButton() {
   return (
     <button type="button" className={cx('text-s hover:bg-gray-100', menuItem())}>
-      <PlusIcon className="h-5 w-5 text-gray-400" />
+      <PlusIcon className="h-5 w-5 text-gray-400" aria-hidden />
       Create speaker
     </button>
   );
