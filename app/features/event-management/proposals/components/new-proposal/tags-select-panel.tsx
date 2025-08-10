@@ -14,19 +14,45 @@ type Props = {
   event: string;
   form?: string;
   defaultValue?: Array<SelectPanelOption>;
+  value?: Array<SelectPanelOption>;
   options: Array<SelectPanelOption>;
   onChange?: (options: Array<SelectPanelOption>) => void;
   className?: string;
+  readonly?: boolean;
+  canManageTags?: boolean;
 };
 
-export function TagsSelectPanel({ team, event, form, defaultValue = [], options, onChange, className }: Props) {
+export function TagsSelectPanel({
+  team,
+  event,
+  form,
+  defaultValue = [],
+  value,
+  options,
+  onChange,
+  className,
+  readonly = false,
+  canManageTags = true,
+}: Props) {
   const { t } = useTranslation();
-  const [selectedTags, setSelectedTags] = useState<Array<SelectPanelOption>>(defaultValue);
+
+  // Use controlled value if provided, otherwise use internal state
+  const [tags, setTags] = useState<Array<SelectPanelOption>>(defaultValue);
+  const selectedTags = value ?? tags;
 
   const handleChange = (selectedOptions: Array<SelectPanelOption>) => {
-    setSelectedTags(selectedOptions);
+    if (!value) setTags(selectedOptions);
     onChange?.(selectedOptions);
   };
+
+  if (readonly) {
+    return (
+      <div className={className}>
+        <H2 size="s">{t('common.tags')}</H2>
+        <TagsList tags={selectedTags} />
+      </div>
+    );
+  }
 
   return (
     <div className={className}>
@@ -37,7 +63,7 @@ export function TagsSelectPanel({ team, event, form, defaultValue = [], options,
         defaultValue={selectedTags.map((tag) => tag.value)}
         options={options}
         onChange={handleChange}
-        footer={<Action team={team} event={event} />}
+        footer={canManageTags ? <Action team={team} event={event} /> : null}
       >
         <div className="flex items-center justify-between group">
           <H2 size="s" className="group-hover:text-indigo-600">
@@ -47,13 +73,19 @@ export function TagsSelectPanel({ team, event, form, defaultValue = [], options,
         </div>
       </SelectPanel>
 
-      <div className="flex flex-wrap gap-2">
-        {selectedTags.length === 0 ? <Text size="xs">{t('common.no-tags')}</Text> : null}
+      <TagsList tags={selectedTags} />
+    </div>
+  );
+}
 
-        {selectedTags.map((tag) => (
-          <Tag key={tag.value} tag={{ id: tag.value, name: tag.label, color: tag.color || '' }} />
-        ))}
-      </div>
+function TagsList({ tags }: { tags: Array<SelectPanelOption> }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-wrap gap-2">
+      {tags.length === 0 ? <Text size="xs">{t('common.no-tags')}</Text> : null}
+      {tags.map((tag) => (
+        <Tag key={tag.value} tag={{ id: tag.value, name: tag.label, color: tag.color || '' }} />
+      ))}
     </div>
   );
 }
