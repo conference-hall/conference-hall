@@ -44,21 +44,12 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
     await fetcher.load(`${autocompleteRoute}?${searchParams.toString()}`);
   };
 
-  const handleChange = (selectedValues: string | string[]) => {
-    const selectedIds = Array.isArray(selectedValues) ? selectedValues : [selectedValues];
-
-    const allOptionsMap = new Map<string, SelectPanelOption>();
-    selectedSpeakers.forEach((s) => {
-      allOptionsMap.set(s.id, { value: s.id, label: s.name, picture: s.picture });
-    });
-    searchOptions.forEach((option) => {
-      allOptionsMap.set(option.value, option);
-    });
-
-    const speakers = selectedIds
-      .map((id) => allOptionsMap.get(id))
-      .filter((option): option is SelectPanelOption => option !== undefined)
-      .map((option) => ({ id: option.value, name: option.label, picture: option.picture }));
+  const handleChange = (selectedOptions: SelectPanelOption[]) => {
+    const speakers = selectedOptions.map((option) => ({
+      id: option.value,
+      name: option.label,
+      picture: option.picture,
+    }));
 
     setSelectedSpeakers(speakers);
     onChange(speakers);
@@ -81,7 +72,7 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
       name={name}
       form={form}
       label="Speakers"
-      defaultValue={selectedSpeakers.map((s) => s.id)}
+      defaultValue={selectedSpeakers.map((speaker) => speaker.id)}
       loading={loading}
       options={availableOptions}
       onChange={handleChange}

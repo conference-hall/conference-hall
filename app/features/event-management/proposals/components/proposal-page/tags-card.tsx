@@ -36,7 +36,9 @@ export function TagsCard({
           key={proposalId}
           name="tags"
           label={t('common.tags-list.label')}
-          onChange={(values) => update(eventTags.filter((tag) => values.includes(tag.id)))}
+          onChange={(selectedTags) => {
+            update(selectedTags.map((option) => eventTags.find((tag) => tag.id === option.value)!).filter(Boolean));
+          }}
           defaultValue={tags.map((tag) => tag.id)}
           options={eventTags.map((tag) => ({ value: tag.id, label: tag.name, color: tag.color }))}
           footer={canEditEventTags ? <SelectTagFooter /> : null}

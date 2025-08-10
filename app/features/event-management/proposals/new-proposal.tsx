@@ -119,7 +119,9 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
                 label="Formats"
                 defaultValue={formats.map((format) => format.id)}
                 options={event.formats.map((format) => ({ value: format.id, label: format.name }))}
-                onChange={(formats) => setFormats(event.formats.filter((format) => formats.includes(format.id)))}
+                onChange={(selectedFormats) => {
+                  setFormats(selectedFormats.map((option) => ({ id: option.value, name: option.label })));
+                }}
                 footer={<SelectPanelFooter to="../../settings/tracks" label="Gérer les formats" />}
               >
                 <div className="flex items-center justify-between group">
@@ -147,9 +149,9 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
                 label="Categories"
                 defaultValue={categories.map((category) => category.id)}
                 options={event.categories.map((category) => ({ value: category.id, label: category.name }))}
-                onChange={(categories) =>
-                  setCategories(event.categories.filter((category) => categories.includes(category.id)))
-                }
+                onChange={(selectedCategories) => {
+                  setCategories(selectedCategories.map((option) => ({ id: option.value, name: option.label })));
+                }}
                 footer={<SelectPanelFooter to="../../settings/tracks" label="Gérer les catégories" />}
                 multiple={false}
               >
@@ -178,7 +180,11 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
                 label={t('common.tags-list.label')}
                 defaultValue={tags.map((tag) => tag.id)}
                 options={event.tags.map((tag) => ({ value: tag.id, label: tag.name, color: tag.color }))}
-                onChange={(tags) => setTags(event.tags.filter((tag) => tags.includes(tag.id)))}
+                onChange={(selectedTags) => {
+                  setTags(
+                    selectedTags.map((option) => event.tags.find((tag) => tag.id === option.value)!).filter(Boolean),
+                  );
+                }}
                 footer={<SelectPanelFooter to="../../settings/tags" label={t('common.tags-list.manage')} />}
               >
                 <div className="flex items-center justify-between group">

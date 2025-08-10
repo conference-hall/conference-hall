@@ -91,14 +91,14 @@ describe('SelectPanel component', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
     await userEvent.click(screen.getByText('Option 1'));
-    expect(onChangeMock).toHaveBeenCalledWith(['option1']);
+    expect(onChangeMock).toHaveBeenCalledWith([options[0]]);
 
     await userEvent.click(screen.getByText('Option 2'));
-    expect(onChangeMock).toHaveBeenCalledWith(['option1', 'option2']);
+    expect(onChangeMock).toHaveBeenCalledWith([options[0], options[1]]);
   });
 
   it('shows selected options as checked in multiple mode', async () => {
-    const screen = renderComponent({ multiple: true, defaultValue: ['option1', 'option3'] });
+    const screen = renderComponent({ multiple: true, defaultValue: [options[0].value, options[2].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -110,25 +110,25 @@ describe('SelectPanel component', () => {
   });
 
   it('handles unselecting options in multiple mode', async () => {
-    const screen = renderComponent({ multiple: true, defaultValue: ['option1', 'option2'] });
+    const screen = renderComponent({ multiple: true, defaultValue: [options[0].value, options[1].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
     await userEvent.click(screen.getByText('Option 1'));
 
-    expect(onChangeMock).toHaveBeenCalledWith(['option2']);
+    expect(onChangeMock).toHaveBeenCalledWith([options[1]]);
   });
 
   it('calls onChange when selecting option in single mode', async () => {
-    const screen = renderComponent({ multiple: false, defaultValue: '' });
+    const screen = renderComponent({ multiple: false, defaultValue: [options[0].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
     await userEvent.click(screen.getByText('Option 1'));
 
-    expect(onChangeMock).toHaveBeenCalledWith('option1');
+    expect(onChangeMock).toHaveBeenCalledWith([options[0]]);
   });
 
   it('shows selected item with radio button in single mode', async () => {
-    const screen = renderComponent({ multiple: false, defaultValue: 'option1' });
+    const screen = renderComponent({ multiple: false, defaultValue: [options[0].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -200,7 +200,7 @@ describe('SelectPanel component', () => {
   });
 
   it('creates hidden form inputs when name is provided', async () => {
-    const screen = renderComponent({ name: 'test-field', defaultValue: ['option1', 'option2'] });
+    const screen = renderComponent({ name: 'test-field', defaultValue: [options[0].value, options[1].value] });
 
     const hiddenInputs = screen.container.querySelectorAll('input[type="hidden"]');
     expect(hiddenInputs).toHaveLength(2);
@@ -264,8 +264,8 @@ describe('SelectPanel component', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
     await userEvent.click(screen.getByText('Test 1'));
 
-    // Verify onChange is called with the selected values
-    expect(onChangeMockWithData).toHaveBeenCalledWith(['test1']);
+    // Verify onChange is called with the selected option objects (including data)
+    expect(onChangeMockWithData).toHaveBeenCalledWith([optionsWithData[0]]);
 
     // The data attribute should be available in the options array passed to the component
     // This is a structural test to ensure the type system accepts the data attribute

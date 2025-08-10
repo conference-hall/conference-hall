@@ -28,10 +28,10 @@ export type SelectPanelOption = {
 
 type SelectPanelContentProps = {
   options: Array<SelectPanelOption>;
-  selected: string | Array<string>;
+  selected: Array<SelectPanelOption>;
   multiple: boolean;
   loading?: boolean;
-  onSelectionChange: (values: string | Array<string>) => void;
+  onSelectionChange: (values: Array<SelectPanelOption>) => void;
   onSearch?: (query: string) => void | Promise<void>;
   footer?: React.ReactNode;
   displayPicture?: boolean;
@@ -79,10 +79,26 @@ function SelectPanelContent({
     }
   };
 
+  // Helper function to check if an option is selected
+  const isOptionSelected = (option: SelectPanelOption) => {
+    return selected.some((s) => s.value === option.value);
+  };
+
+  // For HeadlessUI Combobox: use array for multiple, single option for single mode
+  const comboboxValue = multiple ? selected : selected[0] || null;
+
+  const handleComboboxChange = (value: SelectPanelOption | SelectPanelOption[]) => {
+    if (multiple) {
+      onSelectionChange(value as SelectPanelOption[]);
+    } else {
+      onSelectionChange(value ? [value as SelectPanelOption] : []);
+    }
+  };
+
   const hasNoResults = displayedOptions.length === 0 && query && !isLoading;
 
   return (
-    <Combobox value={selected} onChange={onSelectionChange} multiple={multiple} as="div">
+    <Combobox value={comboboxValue} onChange={handleComboboxChange} multiple={multiple} by="value" as="div">
       <ComboboxInput as={Fragment} onChange={handleQueryChange} displayValue={() => query}>
         <Input
           ref={inputRef}
@@ -103,12 +119,10 @@ function SelectPanelContent({
       {displayedOptions.length > 0 ? (
         <ComboboxOptions className="max-h-48 py-2 overflow-y-auto" static>
           {displayedOptions.map((option) => {
-            const isSelected = multiple
-              ? Array.isArray(selected) && selected.includes(option.value)
-              : selected === option.value;
+            const isSelected = isOptionSelected(option);
 
             return (
-              <ComboboxOption key={option.value} value={option.value} className={menuItem()}>
+              <ComboboxOption key={option.value} value={option} className={menuItem()}>
                 <div className="flex items-center justify-between gap-2 truncate">
                   {multiple ? (
                     <input
@@ -171,14 +185,14 @@ export type SelectPanelProps = {
   name?: string;
   label: string;
   options: Array<SelectPanelOption>;
-  defaultValue: string | Array<string>;
+  defaultValue: Array<string>;
   multiple?: boolean;
   children: React.ReactNode;
   footer?: React.ReactNode;
   form?: string;
   loading?: boolean;
   onSearch?: (query: string) => void | Promise<void>;
-  onChange?: (values: string | Array<string>) => void;
+  onChange?: (values: Array<SelectPanelOption>) => void;
   className?: string;
   displayPicture?: boolean;
 };
@@ -198,15 +212,25 @@ export function SelectPanel({
   className,
   displayPicture,
 }: SelectPanelProps) {
-  const [selected, setSelected] = useState<string | Array<string>>(defaultValue);
+  // Convert string values to option objects using the provided options
+  const getSelectedFromValues = useMemo(() => {
+    return (values: Array<string>): Array<SelectPanelOption> => {
+      if (values.length === 0) return [];
+      return values
+        .map((value) => options.find((option) => option.value === value))
+        .filter((opt): opt is SelectPanelOption => opt !== undefined);
+    };
+  }, [options]);
 
-  const handleSelectionChange = (selectedOptions: string | Array<string>) => {
+  const [selected, setSelected] = useState<Array<SelectPanelOption>>(getSelectedFromValues(defaultValue));
+
+  const handleSelectionChange = (selectedOptions: Array<SelectPanelOption>) => {
     setSelected(selectedOptions);
     if (onChange) onChange(selectedOptions);
   };
 
   // Get selected values as array for hidden inputs
-  const selectedValues = Array.isArray(selected) ? selected : selected ? [selected] : [];
+  const selectedValues = selected.map((option) => option.value);
 
   return (
     <Field className={cx('relative', className)}>
