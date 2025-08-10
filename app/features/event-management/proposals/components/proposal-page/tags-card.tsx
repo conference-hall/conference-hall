@@ -55,7 +55,7 @@ export function TagsCard({
       )}
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {tags.length === 0 ? <Text size="xs">{t('event-management.proposal-page.no-tags')}</Text> : null}
+        {tags.length === 0 ? <Text size="xs">{t('common.no-tags')}</Text> : null}
 
         {tags.map((tag) => (
           <Tag key={tag.id} tag={tag} />
