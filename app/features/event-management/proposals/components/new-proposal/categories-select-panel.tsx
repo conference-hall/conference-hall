@@ -49,7 +49,7 @@ export function CategoriesSelectPanel({ team, event, form, defaultValue = [], op
       </SelectPanel>
 
       <div className="flex flex-wrap gap-2">
-        {selectedCategories.length === 0 ? <Text size="xs">No categories</Text> : null}
+        {selectedCategories.length === 0 ? <Text size="xs">{t('common.no-categories')}</Text> : null}
 
         {selectedCategories.map((category) => (
           <Badge key={category.value}>{category.label}</Badge>
@@ -60,11 +60,12 @@ export function CategoriesSelectPanel({ team, event, form, defaultValue = [], op
 }
 
 function Action({ team, event }: { team: string; event: string }) {
+  const { t } = useTranslation();
   const to = href('/team/:team/:event/settings/tracks', { team, event });
   return (
     <Link to={to} className={cx('text-s hover:bg-gray-100', menuItem())}>
       <PencilSquareMicroIcon className="text-gray-400" />
-      Gérer les catégories
+      {t('common.categories-select-panel.manage')}
     </Link>
   );
 }

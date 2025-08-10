@@ -48,7 +48,7 @@ export function FormatsSelectPanel({ team, event, form, defaultValue = [], optio
       </SelectPanel>
 
       <div className="flex flex-wrap gap-2">
-        {selectedFormats.length === 0 ? <Text size="xs">No formats</Text> : null}
+        {selectedFormats.length === 0 ? <Text size="xs">{t('common.no-formats')}</Text> : null}
 
         {selectedFormats.map((format) => (
           <Badge key={format.value}>{format.label}</Badge>
@@ -59,11 +59,12 @@ export function FormatsSelectPanel({ team, event, form, defaultValue = [], optio
 }
 
 function Action({ team, event }: { team: string; event: string }) {
+  const { t } = useTranslation();
   const to = href('/team/:team/:event/settings/tracks', { team, event });
   return (
     <Link to={to} className={cx('text-s hover:bg-gray-100', menuItem())}>
       <PencilSquareMicroIcon className="text-gray-400" />
-      Gérer les formats
+      {t('common.formats-select-panel.manage')}
     </Link>
   );
 }

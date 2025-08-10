@@ -79,13 +79,13 @@ export function SpeakersSelectPanel({ team, event, form, defaultValues = [], onC
       >
         <div className="flex items-center justify-between group">
           <H2 size="s" className="group-hover:text-indigo-600">
-            Speakers
+            {t('common.speakers')}
           </H2>
           <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" aria-hidden />
         </div>
       </SelectPanel>
       <div className="flex flex-col gap-2">
-        {selectedSpeakers.length === 0 ? <Text size="xs">No speakers</Text> : null}
+        {selectedSpeakers.length === 0 ? <Text size="xs">{t('common.no-speakers')}</Text> : null}
         {selectedSpeakers.map((speaker) => (
           <div key={speaker.value} className="flex items-center gap-2 truncate">
             <Avatar picture={speaker.picture} name={speaker.label} size="xs" />
@@ -107,10 +107,11 @@ export function SpeakersSelectPanel({ team, event, form, defaultValues = [], onC
 }
 
 function Action() {
+  const { t } = useTranslation();
   return (
     <button type="button" className={cx('text-s hover:bg-gray-100', menuItem())}>
       <PlusIcon className="h-5 w-5 text-gray-400" aria-hidden />
-      Create speaker
+      {t('common.speakers-select-panel.manage')}
     </button>
   );
 }

@@ -48,7 +48,7 @@ export function TagsSelectPanel({ team, event, form, defaultValue = [], options,
       </SelectPanel>
 
       <div className="flex flex-wrap gap-2">
-        {selectedTags.length === 0 ? <Text size="xs">{t('event-management.proposal-page.no-tags')}</Text> : null}
+        {selectedTags.length === 0 ? <Text size="xs">{t('common.no-tags')}</Text> : null}
 
         {selectedTags.map((tag) => (
           <Tag key={tag.value} tag={{ id: tag.value, name: tag.label, color: tag.color || '' }} />
@@ -64,7 +64,7 @@ function Action({ team, event }: { team: string; event: string }) {
   return (
     <Link to={to} className={cx('text-s hover:bg-gray-100', menuItem())}>
       <PencilSquareMicroIcon className="text-gray-400" />
-      {t('common.tags-list.manage')}
+      {t('common.tags-select-panel.manage')}
     </Link>
   );
 }
