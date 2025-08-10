@@ -2,26 +2,27 @@ import { PlusIcon } from '@heroicons/react/16/solid';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { href, useFetcher } from 'react-router';
+import { Avatar } from '~/design-system/avatar.tsx';
 import { SelectPanel, type SelectPanelOption } from '~/design-system/forms/select-panel.tsx';
 import { menuItem } from '~/design-system/styles/menu.styles.ts';
-import { H2 } from '~/design-system/typography.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
 import type { loader as AutocompleteLoader } from '../../../command-palette/autocomplete.ts';
-
-type Speaker = { id: string; name: string; picture?: string | null };
 
 type Props = {
   team: string;
   event: string;
   form: string;
-  name?: string;
-  defaultValue?: Speaker[];
-  onChange: (speakers: Speaker[]) => void;
+  defaultValues?: Array<SelectPanelOption>;
+  onChange?: (speakers: Array<SelectPanelOption>) => void;
+  className?: string;
 };
 
-export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defaultValue = [], onChange }: Props) {
+export function SpeakersSelectPanel({ team, event, form, defaultValues = [], onChange, className }: Props) {
+  const { t } = useTranslation();
   const fetcher = useFetcher<typeof AutocompleteLoader>();
-  const [selectedSpeakers, setSelectedSpeakers] = useState<Speaker[]>(defaultValue);
+  const [selectedSpeakers, setSelectedSpeakers] = useState<Array<SelectPanelOption>>(defaultValues);
 
   const loading = ['loading', 'submitting'].includes(fetcher.state);
 
@@ -31,6 +32,7 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
         value: item.id,
         label: item.title,
         picture: item.picture,
+        data: { description: item.description },
       })) ?? []
     );
   }, [fetcher.data]);
@@ -45,22 +47,16 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
   };
 
   const handleChange = (selectedOptions: SelectPanelOption[]) => {
-    const speakers = selectedOptions.map((option) => ({
-      id: option.value,
-      name: option.label,
-      picture: option.picture,
-    }));
-
-    setSelectedSpeakers(speakers);
-    onChange(speakers);
+    setSelectedSpeakers(selectedOptions);
+    onChange?.(selectedOptions);
   };
 
   const availableOptions = useMemo(() => {
     const searchOptionsMap = new Map(searchOptions.map((option) => [option.value, option]));
-    const options = [...searchOptions];
+    const options: Array<SelectPanelOption> = [...searchOptions];
     selectedSpeakers.forEach((speaker) => {
-      if (!searchOptionsMap.has(speaker.id)) {
-        options.push({ value: speaker.id, label: speaker.name, picture: speaker.picture });
+      if (!searchOptionsMap.has(speaker.value)) {
+        options.push(speaker);
       }
     });
 
@@ -68,29 +64,49 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
   }, [searchOptions, selectedSpeakers]);
 
   return (
-    <SelectPanel
-      name={name}
-      form={form}
-      label="Speakers"
-      defaultValue={selectedSpeakers.map((speaker) => speaker.id)}
-      loading={loading}
-      options={availableOptions}
-      onChange={handleChange}
-      onSearch={handleSearch}
-      footer={<CreateSpeakerButton />}
-      displayPicture
-    >
-      <div className="flex items-center justify-between group">
-        <H2 size="s" className="group-hover:text-indigo-600">
-          Speakers
-        </H2>
-        <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" role="presentation" />
+    <div className={className}>
+      <SelectPanel
+        name="speakers"
+        form={form}
+        label={t('common.speakers')}
+        defaultValue={selectedSpeakers.map((speaker) => speaker.value)}
+        loading={loading}
+        options={availableOptions}
+        onChange={handleChange}
+        onSearch={handleSearch}
+        footer={<Action />}
+        displayPicture
+      >
+        <div className="flex items-center justify-between group">
+          <H2 size="s" className="group-hover:text-indigo-600">
+            Speakers
+          </H2>
+          <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" aria-hidden />
+        </div>
+      </SelectPanel>
+      <div className="flex flex-col gap-2">
+        {selectedSpeakers.length === 0 ? <Text size="xs">No speakers</Text> : null}
+        {selectedSpeakers.map((speaker) => (
+          <div key={speaker.value} className="flex items-center gap-2 truncate">
+            <Avatar picture={speaker.picture} name={speaker.label} size="xs" />
+            <div className="flex items-baseline gap-2 truncate">
+              <Text weight="semibold" truncate>
+                {speaker.label}
+              </Text>
+              {speaker.data?.description ? (
+                <Text variant="secondary" size="xs" truncate>
+                  {speaker.data?.description}
+                </Text>
+              ) : null}
+            </div>
+          </div>
+        ))}
       </div>
-    </SelectPanel>
+    </div>
   );
 }
 
-function CreateSpeakerButton() {
+function Action() {
   return (
     <button type="button" className={cx('text-s hover:bg-gray-100', menuItem())}>
       <PlusIcon className="h-5 w-5 text-gray-400" aria-hidden />
