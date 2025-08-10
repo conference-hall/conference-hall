@@ -11,7 +11,7 @@ export function ReviewForm({ initialValues }: Props) {
   const { optimisticReview, handleSubmit } = useOptimisticReview(initialValues);
 
   return (
-    <div className="space-y-4 p-4 lg:p-6">
+    <div className="space-y-2 p-4 lg:px-6 lg:py-4">
       <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
       <ReviewSelector value={optimisticReview} onChange={handleSubmit} />
     </div>

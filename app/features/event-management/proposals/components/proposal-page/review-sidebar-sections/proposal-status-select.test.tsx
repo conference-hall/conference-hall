@@ -44,7 +44,6 @@ describe('ProposalStatusSelect component', () => {
     it('renders with pending status', async () => {
       const screen = renderComponent();
 
-      await expect.element(screen.getByRole('heading', { name: 'Proposal status' })).toBeInTheDocument();
       await expect.element(screen.getByLabelText('Change proposal status')).toBeInTheDocument();
       await expect.element(screen.getByText('Not deliberated')).toBeInTheDocument();
     });

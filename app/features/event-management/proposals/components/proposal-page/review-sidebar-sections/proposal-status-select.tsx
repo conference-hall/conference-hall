@@ -9,7 +9,6 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import Select from '~/design-system/forms/select.tsx';
-import { H2 } from '~/design-system/typography.tsx';
 import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '~/shared/types/proposals.types.ts';
 
 type ProposalStatus = { deliberationStatus: DeliberationStatus; confirmationStatus: ConfirmationStatus };
@@ -103,11 +102,7 @@ export function ProposalStatusSelect({ deliberationStatus, publicationStatus, co
   };
 
   return (
-    <div className="space-y-4 p-4 lg:p-6">
-      <div className="flex items-center justify-between">
-        <H2 size="s">{t('common.proposal-status')}</H2>
-      </div>
-
+    <>
       <Select
         name="status"
         label={t('event-management.proposal-page.proposal-status.change')}
@@ -118,7 +113,7 @@ export function ProposalStatusSelect({ deliberationStatus, publicationStatus, co
       />
 
       {canPublish ? <PublicationModal /> : null}
-    </div>
+    </>
   );
 }
 
