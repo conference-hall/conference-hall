@@ -296,4 +296,24 @@ describe('SelectPanel component', () => {
     expect(complexOptions[0].data).toEqual({ nested: { key: 'value' }, array: [1, 2, 3] });
     expect(complexOptions[3].data).toEqual({ isActive: true, isVisible: false });
   });
+
+  it('uses custom placeholder when provided', async () => {
+    const customPlaceholder = 'Type to search options...';
+    const screen = renderComponent({ placeholder: customPlaceholder });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+
+    const searchInput = screen.getByPlaceholder(customPlaceholder);
+    expect(searchInput).toBeInTheDocument();
+  });
+
+  it('uses default placeholder when custom placeholder is not provided', async () => {
+    const screen = renderComponent();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+
+    // Default placeholder should be the filter placeholder
+    const searchInput = screen.getByPlaceholder('Filter...');
+    expect(searchInput).toBeInTheDocument();
+  });
 });

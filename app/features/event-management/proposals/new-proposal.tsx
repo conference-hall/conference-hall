@@ -97,13 +97,12 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               <SpeakersSelectPanel
                 team={params.team}
                 event={params.event}
-                form="new-proposal-form"
                 name="speakers"
+                form="new-proposal-form"
                 onChange={setSpeakers}
               />
               <div className="flex flex-col gap-2">
                 {speakers.length === 0 ? <Text size="xs">No speakers</Text> : null}
-
                 {speakers.map((speaker) => (
                   <AvatarName key={speaker.id} picture={speaker.picture} name={speaker.name} size="xs" />
                 ))}
@@ -116,7 +115,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               <SelectPanel
                 name="formats"
                 form="new-proposal-form"
-                label="Formats"
+                label={t('common.formats')}
                 defaultValue={formats.map((format) => format.id)}
                 options={event.formats.map((format) => ({ value: format.id, label: format.name }))}
                 onChange={(selectedFormats) => {
@@ -126,14 +125,13 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               >
                 <div className="flex items-center justify-between group">
                   <H2 size="s" className="group-hover:text-indigo-600">
-                    Formats
+                    {t('common.formats')}
                   </H2>
-                  <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" role="presentation" />
+                  <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" aria-hidden />
                 </div>
               </SelectPanel>
               <div className="flex flex-wrap gap-2">
                 {formats.length === 0 ? <Text size="xs">No formats</Text> : null}
-
                 {formats.map((format) => (
                   <Badge key={format.id}>{format.name}</Badge>
                 ))}
@@ -146,7 +144,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               <SelectPanel
                 name="categories"
                 form="new-proposal-form"
-                label="Categories"
+                label={t('common.categories')}
                 defaultValue={categories.map((category) => category.id)}
                 options={event.categories.map((category) => ({ value: category.id, label: category.name }))}
                 onChange={(selectedCategories) => {
@@ -157,14 +155,13 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               >
                 <div className="flex items-center justify-between group">
                   <H2 size="s" className="group-hover:text-indigo-600">
-                    Categories
+                    {t('common.categories')}
                   </H2>
-                  <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" role="presentation" />
+                  <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" aria-hidden />
                 </div>
               </SelectPanel>
               <div className="flex flex-wrap gap-2">
                 {categories.length === 0 ? <Text size="xs">No categories</Text> : null}
-
                 {categories.map((category) => (
                   <Badge key={category.id}>{category.name}</Badge>
                 ))}
@@ -191,12 +188,11 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
                   <H2 size="s" className="group-hover:text-indigo-600">
                     {t('common.tags')}
                   </H2>
-                  <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" role="presentation" />
+                  <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" aria-hidden />
                 </div>
               </SelectPanel>
               <div className="flex flex-wrap gap-2">
                 {tags.length === 0 ? <Text size="xs">{t('event-management.proposal-page.no-tags')}</Text> : null}
-
                 {tags.map((tag) => (
                   <Tag key={tag.id} tag={tag} />
                 ))}

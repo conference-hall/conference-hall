@@ -35,6 +35,7 @@ type SelectPanelContentProps = {
   onSearch?: (query: string) => void | Promise<void>;
   footer?: React.ReactNode;
   displayPicture?: boolean;
+  placeholder?: string;
 };
 
 function SelectPanelContent({
@@ -46,6 +47,7 @@ function SelectPanelContent({
   onSearch,
   footer,
   displayPicture,
+  placeholder,
 }: SelectPanelContentProps) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
@@ -105,7 +107,7 @@ function SelectPanelContent({
           type="text"
           size="s"
           className="w-full px-2 text-sm"
-          placeholder={onSearch ? t('common.search.placeholder') : t('common.filter.placeholder')}
+          placeholder={placeholder || (onSearch ? t('common.search.placeholder') : t('common.filter.placeholder'))}
           value={query}
         >
           {isLoading ? (
@@ -185,7 +187,7 @@ export type SelectPanelProps = {
   name?: string;
   label: string;
   options: Array<SelectPanelOption>;
-  defaultValue: Array<string>;
+  defaultValue?: Array<string>;
   multiple?: boolean;
   children: React.ReactNode;
   footer?: React.ReactNode;
@@ -195,6 +197,7 @@ export type SelectPanelProps = {
   onChange?: (values: Array<SelectPanelOption>) => void;
   className?: string;
   displayPicture?: boolean;
+  placeholder?: string;
 };
 
 export function SelectPanel({
@@ -211,11 +214,12 @@ export function SelectPanel({
   loading,
   className,
   displayPicture,
+  placeholder,
 }: SelectPanelProps) {
   // Convert string values to option objects using the provided options
   const getSelectedFromValues = useMemo(() => {
-    return (values: Array<string>): Array<SelectPanelOption> => {
-      if (values.length === 0) return [];
+    return (values?: Array<string>): Array<SelectPanelOption> => {
+      if (!values || values.length === 0) return [];
       return values
         .map((value) => options.find((option) => option.value === value))
         .filter((opt): opt is SelectPanelOption => opt !== undefined);
@@ -251,6 +255,7 @@ export function SelectPanel({
             onSearch={onSearch}
             footer={footer}
             displayPicture={displayPicture}
+            placeholder={placeholder}
           />
         </PopoverPanel>
       </Popover>
