@@ -93,7 +93,7 @@ export function AvatarName({ name, subtitle, variant = 'primary', truncate, ...r
   return (
     <div className="flex items-center">
       <Avatar name={name} {...rest} aria-hidden />
-      <div className={cx('ml-3 text-left', { truncate })}>
+      <div className={cx('ml-2 text-left', { truncate })}>
         <Text variant={variant === 'primary' ? 'primary' : 'light'} weight="medium" truncate={truncate}>
           {name || 'Unknown'}
         </Text>

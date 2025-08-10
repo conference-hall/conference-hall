@@ -19,6 +19,8 @@ export class ProposalCreation extends UserEventAuthorization {
         ? { connect: data.categories.map((categoryId) => ({ id: categoryId })) }
         : undefined;
 
+      const tagsConnect = data.tags?.length ? { connect: data.tags.map((tagId) => ({ id: tagId })) } : undefined;
+
       const proposal = await trx.proposal.create({
         data: {
           title: data.title,
@@ -30,6 +32,7 @@ export class ProposalCreation extends UserEventAuthorization {
           speakers: { connect: data.speakers.map((id) => ({ id })) }, // todo(proposal): check the speakers belongs to event before saving
           formats: formatsConnect,
           categories: categoriesConnect,
+          tags: tagsConnect,
           isDraft: false,
         },
       });

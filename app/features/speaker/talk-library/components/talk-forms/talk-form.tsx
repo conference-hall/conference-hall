@@ -96,7 +96,7 @@ export function TalkForm({
           initialValues={initialValues?.formats?.map(({ id }) => id)}
         />
       )}
-      {errors?.formats && <Callout title={t('talk.errors.formats.required')} variant="error" />}
+      {hasFormats && errors?.formats && <Callout title={t('talk.errors.formats.required')} variant="error" />}
 
       {hasCategories && (
         <CategoriesForm
@@ -106,7 +106,7 @@ export function TalkForm({
           initialValues={initialValues?.categories?.map(({ id }) => id)}
         />
       )}
-      {errors?.categories && <Callout title={t('talk.errors.categories.required')} variant="error" />}
+      {hasCategories && errors?.categories && <Callout title={t('talk.errors.categories.required')} variant="error" />}
 
       <MarkdownTextArea
         name="references"

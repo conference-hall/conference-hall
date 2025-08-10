@@ -2,6 +2,7 @@ import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Link, useFetcher } from 'react-router';
+import { SelectPanel } from '~/design-system/forms/select-panel.tsx';
 import { PencilSquareMicroIcon } from '~/design-system/icons/pencil-square-micro-icon.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { menuItem } from '~/design-system/styles/menu.styles.ts';
@@ -9,7 +10,6 @@ import { Tag } from '~/design-system/tag.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import type { Tag as TagType } from '~/shared/types/tags.types.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
-import { SelectPanel } from '../../../../../design-system/forms/select-panel.tsx';
 
 type TagsCardProps = {
   proposalId: string;
@@ -36,7 +36,9 @@ export function TagsCard({
           key={proposalId}
           name="tags"
           label={t('common.tags-list.label')}
-          onChange={(values) => update(eventTags.filter((tag) => values.includes(tag.id)))}
+          onChange={(selectedTags) => {
+            update(selectedTags.map((option) => eventTags.find((tag) => tag.id === option.value)!).filter(Boolean));
+          }}
           defaultValue={tags.map((tag) => tag.id)}
           options={eventTags.map((tag) => ({ value: tag.id, label: tag.name, color: tag.color }))}
           footer={canEditEventTags ? <SelectTagFooter /> : null}
@@ -53,7 +55,7 @@ export function TagsCard({
       )}
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {tags.length === 0 ? <Text size="xs">{t('event-management.proposal-page.no-tags')}</Text> : null}
+        {tags.length === 0 ? <Text size="xs">{t('common.no-tags')}</Text> : null}
 
         {tags.map((tag) => (
           <Tag key={tag.id} tag={tag} />
