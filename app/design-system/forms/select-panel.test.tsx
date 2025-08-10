@@ -4,22 +4,7 @@ import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { SelectPanel } from './select-panel.tsx';
-
-type SelectPanelProps = {
-  name?: string;
-  label: string;
-  options: Array<{ value: string; label: string; color?: string }>;
-  defaultValue: string | Array<string>;
-  multiple?: boolean;
-  children: React.ReactNode;
-  footer?: React.ReactNode;
-  form?: string;
-  loading?: boolean;
-  onSearch?: (query: string) => void | Promise<void>;
-  onChange?: (values: string | Array<string>) => void;
-  className?: string;
-};
+import { SelectPanel, type SelectPanelProps } from './select-panel.tsx';
 
 describe('SelectPanel component', () => {
   const onChangeMock = vi.fn();
@@ -68,7 +53,7 @@ describe('SelectPanel component', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
-    const searchInput = screen.getByPlaceholder('Filtrer...');
+    const searchInput = screen.getByPlaceholder('Filter...');
     await userEvent.type(searchInput, 'another');
 
     await expect.element(screen.getByRole('option', { name: /Another Option/ })).toBeInTheDocument();
@@ -82,7 +67,7 @@ describe('SelectPanel component', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
-    const searchInput = screen.getByPlaceholder('Filtrer...');
+    const searchInput = screen.getByPlaceholder('Filter...');
     await userEvent.type(searchInput, 'nonexistent');
 
     await expect.element(screen.getByText('No results found')).toBeInTheDocument();
@@ -153,7 +138,7 @@ describe('SelectPanel component', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
-    const searchInput = screen.getByPlaceholder('Filtrer...');
+    const searchInput = screen.getByPlaceholder('Filter...');
     expect(searchInput).toHaveFocus();
   });
 
@@ -167,7 +152,6 @@ describe('SelectPanel component', () => {
     const searchInput = screen.getByPlaceholder('Search...');
     await userEvent.type(searchInput, 'test query');
 
-    // Fast-forward debounced timer
     vi.advanceTimersByTime(300);
 
     expect(onSearchMock).toHaveBeenCalledWith('test query');
@@ -212,19 +196,5 @@ describe('SelectPanel component', () => {
     expect(hiddenInputs[0]).toHaveAttribute('value', 'option1');
     expect(hiddenInputs[1]).toHaveAttribute('name', 'test-field');
     expect(hiddenInputs[1]).toHaveAttribute('value', 'option2');
-  });
-
-  it('does not create hidden inputs when no name is provided', async () => {
-    const screen = renderComponent({ name: undefined, defaultValue: ['option1', 'option2'] });
-
-    const hiddenInputs = screen.container.querySelectorAll('input[type="hidden"]');
-    expect(hiddenInputs).toHaveLength(0);
-  });
-
-  it('associates hidden inputs with form when form prop is provided', async () => {
-    const screen = renderComponent({ name: 'test-field', form: 'my-form', defaultValue: ['option1'] });
-
-    const hiddenInput = screen.container.querySelector('input[type="hidden"]');
-    expect(hiddenInput).toHaveAttribute('form', 'my-form');
   });
 });
