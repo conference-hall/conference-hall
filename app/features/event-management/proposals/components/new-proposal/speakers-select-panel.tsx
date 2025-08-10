@@ -3,12 +3,12 @@ import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useMemo, useState } from 'react';
 import { href, useFetcher } from 'react-router';
-import { SelectPanel } from '~/design-system/forms/select-panel.tsx';
+import { SelectPanel, type SelectPanelOption } from '~/design-system/forms/select-panel.tsx';
 import { menuItem } from '~/design-system/styles/menu.styles.ts';
 import { H2 } from '~/design-system/typography.tsx';
 import type { loader as AutocompleteLoader } from '../../../command-palette/autocomplete.ts';
 
-type Speaker = { id: string; name: string };
+type Speaker = { id: string; name: string; picture?: string | null };
 
 type Props = {
   team: string;
@@ -30,6 +30,7 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
       fetcher.data?.map((item) => ({
         value: item.id,
         label: item.title,
+        picture: item.picture,
       })) ?? []
     );
   }, [fetcher.data]);
@@ -46,9 +47,9 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
   const handleChange = (selectedValues: string | string[]) => {
     const selectedIds = Array.isArray(selectedValues) ? selectedValues : [selectedValues];
 
-    const allOptionsMap = new Map<string, { value: string; label: string }>();
+    const allOptionsMap = new Map<string, SelectPanelOption>();
     selectedSpeakers.forEach((s) => {
-      allOptionsMap.set(s.id, { value: s.id, label: s.name });
+      allOptionsMap.set(s.id, { value: s.id, label: s.name, picture: s.picture });
     });
     searchOptions.forEach((option) => {
       allOptionsMap.set(option.value, option);
@@ -56,8 +57,8 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
 
     const speakers = selectedIds
       .map((id) => allOptionsMap.get(id))
-      .filter((option): option is { value: string; label: string } => option !== undefined)
-      .map((option) => ({ id: option.value, name: option.label }));
+      .filter((option): option is SelectPanelOption => option !== undefined)
+      .map((option) => ({ id: option.value, name: option.label, picture: option.picture }));
 
     setSelectedSpeakers(speakers);
     onChange(speakers);
@@ -68,7 +69,7 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
     const options = [...searchOptions];
     selectedSpeakers.forEach((speaker) => {
       if (!searchOptionsMap.has(speaker.id)) {
-        options.push({ value: speaker.id, label: speaker.name });
+        options.push({ value: speaker.id, label: speaker.name, picture: speaker.picture });
       }
     });
 
@@ -86,6 +87,7 @@ export function SpeakersSelectPanel({ team, event, form, name = 'speakers', defa
       onChange={handleChange}
       onSearch={handleSearch}
       footer={<CreateSpeakerButton />}
+      displayPicture
     >
       <div className="flex items-center justify-between group">
         <H2 size="s" className="group-hover:text-indigo-600">

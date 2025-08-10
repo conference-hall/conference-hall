@@ -12,12 +12,19 @@ import { cx } from 'class-variance-authority';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedCallback } from 'use-debounce';
+import { Avatar } from '../avatar.tsx';
 import { LoadingIcon } from '../icons/loading-icon.tsx';
 import { menuItem, menuItems } from '../styles/menu.styles.ts';
 import { Label, Text } from '../typography.tsx';
 import { Input } from './input.tsx';
 
-type SelectPanelOption = { value: string; label: string; color?: string };
+export type SelectPanelOption = {
+  value: string;
+  label: string;
+  color?: string;
+  picture?: string | null;
+  data?: Record<string, any>;
+};
 
 type SelectPanelContentProps = {
   options: Array<SelectPanelOption>;
@@ -27,6 +34,7 @@ type SelectPanelContentProps = {
   onSelectionChange: (values: string | Array<string>) => void;
   onSearch?: (query: string) => void | Promise<void>;
   footer?: React.ReactNode;
+  displayPicture?: boolean;
 };
 
 function SelectPanelContent({
@@ -37,6 +45,7 @@ function SelectPanelContent({
   onSelectionChange,
   onSearch,
   footer,
+  displayPicture,
 }: SelectPanelContentProps) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
@@ -123,6 +132,10 @@ function SelectPanelContent({
                     />
                   )}
 
+                  {displayPicture ? (
+                    <Avatar picture={option.picture} name={option.label} size="xs" aria-hidden />
+                  ) : null}
+
                   {option.color ? (
                     <div className="h-4 w-4 shrink-0 rounded-full" style={{ backgroundColor: option.color }} />
                   ) : null}
@@ -167,6 +180,7 @@ export type SelectPanelProps = {
   onSearch?: (query: string) => void | Promise<void>;
   onChange?: (values: string | Array<string>) => void;
   className?: string;
+  displayPicture?: boolean;
 };
 
 export function SelectPanel({
@@ -182,6 +196,7 @@ export function SelectPanel({
   onChange,
   loading,
   className,
+  displayPicture,
 }: SelectPanelProps) {
   const [selected, setSelected] = useState<string | Array<string>>(defaultValue);
 
@@ -211,6 +226,7 @@ export function SelectPanel({
             onSelectionChange={handleSelectionChange}
             onSearch={onSearch}
             footer={footer}
+            displayPicture={displayPicture}
           />
         </PopoverPanel>
       </Popover>

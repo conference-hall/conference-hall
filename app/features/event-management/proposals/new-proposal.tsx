@@ -4,6 +4,7 @@ import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, Link, redirect } from 'react-router';
+import { AvatarName } from '~/design-system/avatar.tsx';
 import { Badge } from '~/design-system/badges.tsx';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Divider } from '~/design-system/divider.tsx';
@@ -15,7 +16,6 @@ import { menuItem } from '~/design-system/styles/menu.styles.ts';
 import { Tag } from '~/design-system/tag.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { SpeakerPill } from '~/features/speaker/talk-library/components/speakers.tsx';
 import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
@@ -56,7 +56,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
   const isFeatureEnabled = useFlag('organizerProposalCreation');
   const { team, event } = useCurrentEventTeam();
 
-  const [speakers, setSpeakers] = useState<Array<{ id: string; name: string }>>([]);
+  const [speakers, setSpeakers] = useState<Array<{ id: string; name: string; picture?: string | null }>>([]);
   const [tags, setTags] = useState<Array<TagType>>([]);
   const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([]);
   const [formats, setFormats] = useState<Array<{ id: string; name: string }>>([]);
@@ -93,7 +93,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
 
         <div className="space-y-4">
           <Card as="section" className="py-2">
-            <div className="space-y-2.5 p-4 lg:px-6">
+            <div className="space-y-3 p-4 lg:px-6">
               <SpeakersSelectPanel
                 team={params.team}
                 event={params.event}
@@ -101,11 +101,11 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
                 name="speakers"
                 onChange={setSpeakers}
               />
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col gap-2">
                 {speakers.length === 0 ? <Text size="xs">No speakers</Text> : null}
 
                 {speakers.map((speaker) => (
-                  <SpeakerPill key={speaker.id} speaker={speaker} />
+                  <AvatarName key={speaker.id} picture={speaker.picture} name={speaker.name} size="xs" />
                 ))}
               </div>
             </div>

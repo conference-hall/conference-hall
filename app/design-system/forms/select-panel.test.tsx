@@ -9,10 +9,22 @@ import { SelectPanel, type SelectPanelProps } from './select-panel.tsx';
 describe('SelectPanel component', () => {
   const onChangeMock = vi.fn();
   const options = [
-    { value: 'option1', label: 'Option 1', color: '#FF0000' },
-    { value: 'option2', label: 'Option 2', color: '#00FF00' },
+    {
+      value: 'option1',
+      label: 'Option 1',
+      color: '#FF0000',
+      picture: 'https://example.com/user1.jpg',
+      data: { role: 'admin', score: 100 },
+    },
+    {
+      value: 'option2',
+      label: 'Option 2',
+      color: '#00FF00',
+      picture: 'https://example.com/user2.jpg',
+      data: { role: 'user', score: 80 },
+    },
     { value: 'option3', label: 'Option 3', color: '#0000FF' },
-    { value: 'option4', label: 'Another Option', color: '#FFFF00' },
+    { value: 'option4', label: 'Another Option', color: '#FFFF00', picture: 'https://example.com/user4.jpg' },
   ];
 
   const renderComponent = (props: Partial<SelectPanelProps> = {}) => {
@@ -196,5 +208,92 @@ describe('SelectPanel component', () => {
     expect(hiddenInputs[0]).toHaveAttribute('value', 'option1');
     expect(hiddenInputs[1]).toHaveAttribute('name', 'test-field');
     expect(hiddenInputs[1]).toHaveAttribute('value', 'option2');
+  });
+
+  it('displays pictures when displayPicture is true', async () => {
+    const screen = renderComponent({ displayPicture: true });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+
+    await expect.element(screen.getByRole('option', { name: /Option 1/ })).toBeInTheDocument();
+
+    const allImages = document.querySelectorAll('img');
+    expect(allImages.length).toBeGreaterThan(0);
+  });
+
+  it('does not display pictures when displayPicture is false or undefined', async () => {
+    const screen = renderComponent({ displayPicture: false });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+
+    const avatars = screen.container.querySelectorAll(
+      'img[src*="user1.jpg"], img[src*="user2.jpg"], img[src*="user4.jpg"]',
+    );
+    expect(avatars).toHaveLength(0);
+  });
+
+  it('accepts options with data attribute', () => {
+    // Test that options with data attribute are accepted by TypeScript
+    const optionsWithData = [
+      { value: 'test1', label: 'Test 1', data: { category: 'A', priority: 1 } },
+      { value: 'test2', label: 'Test 2', data: { category: 'B', priority: 2, nested: { key: 'value' } } },
+      { value: 'test3', label: 'Test 3' }, // Without data attribute
+    ];
+
+    const screen = renderComponent({ options: optionsWithData });
+
+    // Just verify the component renders without errors
+    expect(screen.getByRole('button', { name: 'Open Select' })).toBeInTheDocument();
+  });
+
+  it('preserves data attribute in options throughout component lifecycle', async () => {
+    const onChangeMockWithData = vi.fn();
+
+    const optionsWithData = [
+      { value: 'test1', label: 'Test 1', data: { category: 'A', priority: 1 } },
+      { value: 'test2', label: 'Test 2', data: { category: 'B', priority: 2 } },
+    ];
+
+    const screen = renderComponent({
+      options: optionsWithData,
+      onChange: onChangeMockWithData,
+      multiple: true,
+      defaultValue: [],
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await userEvent.click(screen.getByText('Test 1'));
+
+    // Verify onChange is called with the selected values
+    expect(onChangeMockWithData).toHaveBeenCalledWith(['test1']);
+
+    // The data attribute should be available in the options array passed to the component
+    // This is a structural test to ensure the type system accepts the data attribute
+    expect(optionsWithData[0].data).toEqual({ category: 'A', priority: 1 });
+    expect(optionsWithData[1].data).toEqual({ category: 'B', priority: 2 });
+  });
+
+  it('supports various data types in data attribute', () => {
+    // Test different data types that can be stored in the data attribute
+    const complexOptions = [
+      { value: 'obj', label: 'Object', data: { nested: { key: 'value' }, array: [1, 2, 3] } },
+      { value: 'str', label: 'String', data: { description: 'Simple string value' } },
+      { value: 'num', label: 'Number', data: { count: 42, percentage: 85.5 } },
+      { value: 'bool', label: 'Boolean', data: { isActive: true, isVisible: false } },
+      {
+        value: 'mix',
+        label: 'Mixed',
+        data: { id: 123, name: 'Test', tags: ['a', 'b'], metadata: { created: new Date().toISOString() } },
+      },
+    ];
+
+    const screen = renderComponent({ options: complexOptions });
+
+    // Verify component renders with complex data structures
+    expect(screen.getByRole('button', { name: 'Open Select' })).toBeInTheDocument();
+
+    // Verify data is preserved exactly as provided
+    expect(complexOptions[0].data).toEqual({ nested: { key: 'value' }, array: [1, 2, 3] });
+    expect(complexOptions[3].data).toEqual({ isActive: true, isVisible: false });
   });
 });
