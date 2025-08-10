@@ -60,8 +60,6 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
         backTo={href('/team/:team/:event/reviews', params)}
       />
 
-      <p>{JSON.stringify(actionData?.errors)}</p>
-
       <div className="grid grid-cols-3 gap-6">
         <Card className="col-span-2">
           <Card.Content>
@@ -84,6 +82,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               team={params.team}
               event={params.event}
               form="new-proposal-form"
+              error={actionData?.errors?.speakers}
               className="space-y-2.5 p-4 lg:px-6"
             />
 
@@ -93,6 +92,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               team={params.team}
               event={params.event}
               form="new-proposal-form"
+              error={actionData?.errors?.formats}
               options={event.formats.map((f) => ({ value: f.id, label: f.name }))}
               className="space-y-2.5 p-4 lg:px-6"
             />
@@ -103,6 +103,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               team={params.team}
               event={params.event}
               form="new-proposal-form"
+              error={actionData?.errors?.categories}
               options={event.categories.map((c) => ({ value: c.id, label: c.name }))}
               className="space-y-2.5 p-4 lg:px-6"
             />

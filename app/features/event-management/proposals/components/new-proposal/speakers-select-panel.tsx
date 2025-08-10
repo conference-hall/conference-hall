@@ -8,6 +8,7 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { SelectPanel, type SelectPanelOption } from '~/design-system/forms/select-panel.tsx';
 import { menuItem } from '~/design-system/styles/menu.styles.ts';
 import { H2, Text } from '~/design-system/typography.tsx';
+import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import type { loader as AutocompleteLoader } from '../../../command-palette/autocomplete.ts';
 
 type Props = {
@@ -15,11 +16,12 @@ type Props = {
   event: string;
   form: string;
   defaultValues?: Array<SelectPanelOption>;
+  error?: SubmissionError;
   onChange?: (speakers: Array<SelectPanelOption>) => void;
   className?: string;
 };
 
-export function SpeakersSelectPanel({ team, event, form, defaultValues = [], onChange, className }: Props) {
+export function SpeakersSelectPanel({ team, event, form, defaultValues = [], error, onChange, className }: Props) {
   const { t } = useTranslation();
   const fetcher = useFetcher<typeof AutocompleteLoader>();
   const [selectedSpeakers, setSelectedSpeakers] = useState<Array<SelectPanelOption>>(defaultValues);
@@ -86,7 +88,14 @@ export function SpeakersSelectPanel({ team, event, form, defaultValues = [], onC
       </SelectPanel>
 
       <div className="flex flex-col gap-2">
-        {selectedSpeakers.length === 0 ? <Text size="xs">{t('common.no-speakers')}</Text> : null}
+        {selectedSpeakers.length === 0 && !error ? <Text size="xs">{t('common.no-speakers')}</Text> : null}
+
+        {selectedSpeakers.length === 0 && error ? (
+          <Text size="s" variant="error">
+            {error[0]}
+          </Text>
+        ) : null}
+
         {selectedSpeakers.map((speaker) => (
           <div key={speaker.value} className="flex items-center gap-2 truncate">
             <Avatar picture={speaker.picture} name={speaker.label} size="xs" />

@@ -8,12 +8,14 @@ import { SelectPanel, type SelectPanelOption } from '~/design-system/forms/selec
 import { PencilSquareMicroIcon } from '~/design-system/icons/pencil-square-micro-icon.tsx';
 import { menuItem } from '~/design-system/styles/menu.styles.ts';
 import { H2, Text } from '~/design-system/typography.tsx';
+import type { SubmissionError } from '~/shared/types/errors.types.ts';
 
 type Props = {
   team: string;
   event: string;
   form?: string;
   defaultValue?: Array<SelectPanelOption>;
+  error?: SubmissionError;
   options: Array<SelectPanelOption>;
   onChange?: (options: Array<SelectPanelOption>) => void;
   multiple?: boolean;
@@ -25,6 +27,7 @@ export function FormatsSelectPanel({
   event,
   form,
   defaultValue = [],
+  error,
   options,
   onChange,
   multiple = true,
@@ -59,7 +62,13 @@ export function FormatsSelectPanel({
       </SelectPanel>
 
       <div className="flex flex-wrap gap-2">
-        {selectedFormats.length === 0 ? <Text size="xs">{t('common.no-formats')}</Text> : null}
+        {selectedFormats.length === 0 && !error ? <Text size="xs">{t('common.no-formats')}</Text> : null}
+
+        {selectedFormats.length === 0 && error ? (
+          <Text size="s" variant="error">
+            {error[0]}
+          </Text>
+        ) : null}
 
         {selectedFormats.map((format) => (
           <Badge key={format.value}>{format.label}</Badge>

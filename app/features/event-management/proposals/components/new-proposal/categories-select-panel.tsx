@@ -8,12 +8,14 @@ import { SelectPanel, type SelectPanelOption } from '~/design-system/forms/selec
 import { PencilSquareMicroIcon } from '~/design-system/icons/pencil-square-micro-icon.tsx';
 import { menuItem } from '~/design-system/styles/menu.styles.ts';
 import { H2, Text } from '~/design-system/typography.tsx';
+import type { SubmissionError } from '~/shared/types/errors.types.ts';
 
 type Props = {
   team: string;
   event: string;
   form?: string;
   defaultValue?: Array<SelectPanelOption>;
+  error?: SubmissionError;
   options: Array<SelectPanelOption>;
   onChange?: (options: Array<SelectPanelOption>) => void;
   multiple?: boolean;
@@ -25,6 +27,7 @@ export function CategoriesSelectPanel({
   event,
   form,
   defaultValue = [],
+  error,
   options,
   onChange,
   multiple = true,
@@ -59,7 +62,13 @@ export function CategoriesSelectPanel({
       </SelectPanel>
 
       <div className="flex flex-wrap gap-2">
-        {selectedCategories.length === 0 ? <Text size="xs">{t('common.no-categories')}</Text> : null}
+        {selectedCategories.length === 0 && !error ? <Text size="xs">{t('common.no-categories')}</Text> : null}
+
+        {selectedCategories.length === 0 && error ? (
+          <Text size="s" variant="error">
+            {error[0]}
+          </Text>
+        ) : null}
 
         {selectedCategories.map((category) => (
           <Badge key={category.value}>{category.label}</Badge>
