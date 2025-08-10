@@ -16,10 +16,20 @@ type Props = {
   defaultValue?: Array<SelectPanelOption>;
   options: Array<SelectPanelOption>;
   onChange?: (options: Array<SelectPanelOption>) => void;
+  multiple?: boolean;
   className?: string;
 };
 
-export function CategoriesSelectPanel({ team, event, form, defaultValue = [], options, onChange, className }: Props) {
+export function CategoriesSelectPanel({
+  team,
+  event,
+  form,
+  defaultValue = [],
+  options,
+  onChange,
+  multiple = true,
+  className,
+}: Props) {
   const { t } = useTranslation();
   const [selectedCategories, setSelectedCategories] = useState<Array<SelectPanelOption>>(defaultValue);
 
@@ -37,7 +47,7 @@ export function CategoriesSelectPanel({ team, event, form, defaultValue = [], op
         defaultValue={selectedCategories.map((category) => category.value)}
         options={options}
         onChange={handleChange}
-        multiple={false}
+        multiple={multiple}
         footer={<Action team={team} event={event} />}
       >
         <div className="flex items-center justify-between group">

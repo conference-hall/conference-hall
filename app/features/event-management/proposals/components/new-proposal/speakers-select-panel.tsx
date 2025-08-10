@@ -84,6 +84,7 @@ export function SpeakersSelectPanel({ team, event, form, defaultValues = [], onC
           <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" aria-hidden />
         </div>
       </SelectPanel>
+
       <div className="flex flex-col gap-2">
         {selectedSpeakers.length === 0 ? <Text size="xs">{t('common.no-speakers')}</Text> : null}
         {selectedSpeakers.map((speaker) => (

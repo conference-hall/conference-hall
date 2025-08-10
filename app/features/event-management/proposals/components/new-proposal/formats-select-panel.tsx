@@ -16,10 +16,20 @@ type Props = {
   defaultValue?: Array<SelectPanelOption>;
   options: Array<SelectPanelOption>;
   onChange?: (options: Array<SelectPanelOption>) => void;
+  multiple?: boolean;
   className?: string;
 };
 
-export function FormatsSelectPanel({ team, event, form, defaultValue = [], options, onChange, className }: Props) {
+export function FormatsSelectPanel({
+  team,
+  event,
+  form,
+  defaultValue = [],
+  options,
+  onChange,
+  multiple = true,
+  className,
+}: Props) {
   const { t } = useTranslation();
   const [selectedFormats, setSelectedFormats] = useState<Array<SelectPanelOption>>(defaultValue);
 
@@ -37,6 +47,7 @@ export function FormatsSelectPanel({ team, event, form, defaultValue = [], optio
         defaultValue={selectedFormats.map((format) => format.value)}
         options={options}
         onChange={handleChange}
+        multiple={multiple}
         footer={<Action team={team} event={event} />}
       >
         <div className="flex items-center justify-between group">
