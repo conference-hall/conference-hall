@@ -42,7 +42,6 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 // todo(proposal): make it responsive
-// todo(proposal): fully translate
 export default function NewProposalRoute({ actionData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
   const isFeatureEnabled = useFlag('organizerProposalCreation');

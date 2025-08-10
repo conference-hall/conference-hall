@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 // todo(proposal): reuse existing schemas ?
+// todo(proposal): manage mandatory or optional tracks
 export const TalkProposalCreationSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100),
   abstract: z.string().min(1, 'Abstract is required').max(5000),
