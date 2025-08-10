@@ -82,7 +82,7 @@ function Action({ team, event }: { team: string; event: string }) {
   const { t } = useTranslation();
   const to = href('/team/:team/:event/settings/tracks', { team, event });
   return (
-    <Link to={to} className={cx('text-s hover:bg-gray-100', menuItem())}>
+    <Link to={to} className={cx('hover:bg-gray-100', menuItem())}>
       <PencilSquareMicroIcon className="text-gray-400" />
       {t('common.categories-select-panel.manage')}
     </Link>

@@ -119,7 +119,7 @@ export function SpeakersSelectPanel({ team, event, form, defaultValues = [], err
 function Action() {
   const { t } = useTranslation();
   return (
-    <button type="button" className={cx('text-s hover:bg-gray-100', menuItem())}>
+    <button type="button" className={cx('hover:bg-gray-100', menuItem())}>
       <PlusIcon className="h-5 w-5 text-gray-400" aria-hidden />
       {t('common.speakers-select-panel.manage')}
     </button>
