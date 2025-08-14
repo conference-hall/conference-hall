@@ -120,7 +120,7 @@ export class ProposalReview extends UserEventAuthorization {
     const { total, reviewed } = await search.statistics();
     const proposalIds = await search.proposalsIds();
 
-    const curIndex = proposalIds.findIndex((id) => id === this.proposalId);
+    const curIndex = proposalIds.indexOf(this.proposalId);
     const previousId = curIndex - 1 >= 0 ? proposalIds.at(curIndex - 1) : undefined;
     const nextId = curIndex + 1 < total ? proposalIds.at(curIndex + 1) : undefined;
 
