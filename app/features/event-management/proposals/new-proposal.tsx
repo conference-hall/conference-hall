@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod/v4';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
@@ -46,6 +47,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
   const { t } = useTranslation();
   const isFeatureEnabled = useFlag('organizerProposalCreation');
   const { team, event } = useCurrentEventTeam();
+  const formId = useId();
 
   if (!isFeatureEnabled || !team.userPermissions?.canCreateEventProposal) {
     return null;
@@ -62,14 +64,14 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
       <div className="grid grid-cols-3 gap-6">
         <Card className="col-span-2">
           <Card.Content>
-            <TalkForm id="new-proposal-form" errors={actionData?.errors} />
+            <TalkForm id={formId} errors={actionData?.errors} />
           </Card.Content>
 
           <Card.Actions>
             <ButtonLink variant="secondary" to={href('/team/:team/:event/reviews', params)}>
               {t('common.cancel')}
             </ButtonLink>
-            <Button type="submit" form="new-proposal-form">
+            <Button type="submit" form={formId}>
               {t('common.submit')}
             </Button>
           </Card.Actions>
@@ -80,7 +82,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
             <SpeakersSelectPanel
               team={params.team}
               event={params.event}
-              form="new-proposal-form"
+              form={formId}
               error={actionData?.errors?.speakers}
               className="space-y-2.5 p-4 lg:px-6"
             />
@@ -90,7 +92,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
             <FormatsSelectPanel
               team={params.team}
               event={params.event}
-              form="new-proposal-form"
+              form={formId}
               error={actionData?.errors?.formats}
               options={event.formats.map((f) => ({ value: f.id, label: f.name }))}
               className="space-y-2.5 p-4 lg:px-6"
@@ -101,7 +103,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
             <CategoriesSelectPanel
               team={params.team}
               event={params.event}
-              form="new-proposal-form"
+              form={formId}
               error={actionData?.errors?.categories}
               options={event.categories.map((c) => ({ value: c.id, label: c.name }))}
               className="space-y-2.5 p-4 lg:px-6"
@@ -112,7 +114,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
             <TagsSelectPanel
               team={params.team}
               event={params.event}
-              form="new-proposal-form"
+              form={formId}
               options={event.tags.map((c) => ({ value: c.id, label: c.name, color: c.color }))}
               className="space-y-2.5 p-4 lg:px-6"
             />

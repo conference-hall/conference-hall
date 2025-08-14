@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: config for tailwindcss */
 @config '../../tailwind.config.ts';
 
 /*
