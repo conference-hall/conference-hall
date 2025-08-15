@@ -17,8 +17,8 @@ import { CategoriesSelectPanel } from './components/new-proposal/categories-sele
 import { FormatsSelectPanel } from './components/new-proposal/formats-select-panel.tsx';
 import { SpeakersSelectPanel } from './components/new-proposal/speakers-select-panel.tsx';
 import { TagsSelectPanel } from './components/new-proposal/tags-select-panel.tsx';
-import { TalkProposalCreationSchema } from './services/proposal-creation.schema.server.ts';
-import { ProposalCreation } from './services/proposal-creation.server.ts';
+import { TalkProposalCreationSchema } from './services/proposal-management.schema.server.ts';
+import { ProposalManagement } from './services/proposal-management.server.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);
@@ -34,7 +34,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   if (result.status !== 'success') return { errors: result.error }; // todo(proposal): display errors
 
   try {
-    const proposal = await ProposalCreation.for(userId, params.team, params.event).create(result.value);
+    const proposal = await ProposalManagement.for(userId, params.team, params.event).create(result.value);
     const headers = await toastHeaders('success', t('event-management.proposals.new.feedbacks.created'));
     return redirect(href('/team/:team/:event/reviews/:proposal', { ...params, proposal: proposal.id }), { headers });
   } catch (_error) {

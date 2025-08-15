@@ -24,12 +24,9 @@ import { SpeakersSection } from './components/proposal-page/sidebar/speakers-sec
 import { TagsSection } from './components/proposal-page/sidebar/tags-section.tsx';
 import { ActivityFeed } from './services/activity-feed.server.ts';
 import { Comments } from './services/comments.server.ts';
-import {
-  CommentReactionSchema,
-  ProposalSaveTagsSchema,
-  ProposalUpdateSchema,
-  ReviewUpdateDataSchema,
-} from './services/proposal-review.schema.server.ts';
+import { ProposalSaveTagsSchema, ProposalUpdateSchema } from './services/proposal-management.schema.server.ts';
+import { ProposalManagement } from './services/proposal-management.server.ts';
+import { CommentReactionSchema, ReviewUpdateDataSchema } from './services/proposal-review.schema.server.ts';
 import type { ProposalReviewData } from './services/proposal-review.server.ts';
 import { ProposalReview } from './services/proposal-review.server.ts';
 import { ProposalStatusSchema, ProposalStatusUpdater } from './services/proposal-status-updater.server.ts';
@@ -105,7 +102,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       const result = parseWithZod(form, { schema: ProposalUpdateSchema });
       if (result.status !== 'success') return result.error;
 
-      const proposal = ProposalReview.for(userId, params.team, params.event, params.proposal);
+      const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
       await proposal.update(result.value);
       return toast('success', t('event-management.proposal-page.feedbacks.saved'));
     }
@@ -113,7 +110,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       const result = parseWithZod(form, { schema: ProposalSaveTagsSchema });
       if (result.status !== 'success') return toast('error', t('error.global'));
 
-      const proposal = ProposalReview.for(userId, params.team, params.event, params.proposal);
+      const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
       await proposal.saveTags(result.value);
       break;
     }
