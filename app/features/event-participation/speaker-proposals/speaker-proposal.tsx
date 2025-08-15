@@ -78,6 +78,7 @@ export default function ProposalRoute({ loaderData: proposal, actionData: errors
           canEditSpeakers={canEdit}
           canEditTalk={canEdit}
           canArchive={false}
+          showSpeakers
           showFormats
           showCategories
           showBackButton

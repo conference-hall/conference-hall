@@ -67,6 +67,7 @@ export default function SpeakerTalkRoute({ loaderData: talk, actionData: errors 
           canEditTalk
           canSubmitTalk={!talk.archived}
           showBackButton
+          showSpeakers
         />
 
         {talk.submissions.length > 0 ? <TalkSubmissionsSection submissions={talk.submissions} /> : null}

@@ -47,6 +47,7 @@ type Props = {
   canArchive: boolean;
   canSubmitTalk?: boolean;
   showBackButton?: boolean;
+  showSpeakers?: boolean;
   showFormats?: boolean;
   showCategories?: boolean;
   referencesOpen?: boolean;
@@ -63,6 +64,7 @@ export function TalkSection({
   canArchive,
   canSubmitTalk = false,
   showBackButton = false,
+  showSpeakers = false,
   showFormats = false,
   showCategories = false,
   referencesOpen = false,
@@ -89,13 +91,16 @@ export function TalkSection({
       </div>
 
       <div className="p-4 flex gap-4">
-        <Speakers
-          speakers={talk.speakers}
-          invitationLink={talk.invitationLink}
-          canEdit={canEditSpeakers && !talk.archived}
-          className="grow"
-        />
-        <Text size="xs" variant="secondary" className="text-nowrap hidden sm:block">
+        {showSpeakers ? (
+          <Speakers
+            speakers={talk.speakers}
+            invitationLink={talk.invitationLink}
+            canEdit={canEditSpeakers && !talk.archived}
+            className="grow"
+          />
+        ) : null}
+
+        <Text size="xs" variant="secondary" className="text-nowrap pl-1.5 hidden sm:block">
           <ClientOnly>
             {() =>
               t('common.created-on', {
@@ -107,7 +112,7 @@ export function TalkSection({
         </Text>
       </div>
 
-      <dl className="p-6 pt-4 flex flex-col gap-8">
+      <dl className="p-6 pt-2 flex flex-col gap-8">
         <div>
           <dt className="sr-only">{t('talk.abstract')}</dt>
           <Markdown as="dd" className="text-gray-700">

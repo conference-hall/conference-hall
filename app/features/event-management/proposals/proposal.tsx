@@ -125,6 +125,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
   const { team, event } = useCurrentEventTeam();
   const { canEditEvent, canEditEventProposals, canChangeProposalStatus } = team.userPermissions;
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
+
+  const hasSpeakers = proposal.speakers.length > 0;
   const hasFormats = proposal.formats && proposal.formats.length > 0;
   const hasCategories = proposal.categories && proposal.categories.length > 0;
 
@@ -141,8 +143,9 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
             canEditTalk={canEditEventProposals}
             canEditSpeakers={false}
             canArchive={false}
-            showFormats={hasFormats}
-            showCategories={hasCategories}
+            showSpeakers={false}
+            showFormats={false}
+            showCategories={false}
           >
             <Suspense fallback={null}>
               <Await resolve={otherProposalsPromise}>
@@ -164,43 +167,49 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           />
 
           <Card as="section">
-            <SpeakersSection
-              team={params.team}
-              event={params.event}
-              proposalId={params.proposal}
-              proposalSpeakers={proposal.speakers}
-              canEditEventProposals={canEditEventProposals}
-              error={errors?.speakers}
-              className="space-y-3 p-4 lg:px-6"
-            />
+            {hasSpeakers ? (
+              <SpeakersSection
+                team={params.team}
+                event={params.event}
+                proposalId={params.proposal}
+                proposalSpeakers={proposal.speakers}
+                canEditEventProposals={canEditEventProposals}
+                error={errors?.speakers}
+                className="space-y-3 p-4 lg:px-6"
+              />
+            ) : null}
 
             <Divider />
 
-            <FormatsSection
-              team={params.team}
-              event={params.event}
-              proposalId={params.proposal}
-              proposalFormats={proposal.formats}
-              eventFormats={event.formats}
-              canEditEventProposals={canEditEventProposals}
-              canEditEvent={canEditEvent}
-              error={errors?.formats}
-              className="space-y-3 p-4 lg:px-6"
-            />
+            {hasFormats ? (
+              <FormatsSection
+                team={params.team}
+                event={params.event}
+                proposalId={params.proposal}
+                proposalFormats={proposal.formats}
+                eventFormats={event.formats}
+                canEditEventProposals={canEditEventProposals}
+                canEditEvent={canEditEvent}
+                error={errors?.formats}
+                className="space-y-3 p-4 lg:px-6"
+              />
+            ) : null}
 
             <Divider />
 
-            <CategoriesSection
-              team={params.team}
-              event={params.event}
-              proposalId={params.proposal}
-              proposalCategories={proposal.categories}
-              eventCategories={event.categories}
-              canEditEventProposals={canEditEventProposals}
-              canEditEvent={canEditEvent}
-              error={errors?.categories}
-              className="space-y-3 p-4 lg:px-6"
-            />
+            {hasCategories ? (
+              <CategoriesSection
+                team={params.team}
+                event={params.event}
+                proposalId={params.proposal}
+                proposalCategories={proposal.categories}
+                eventCategories={event.categories}
+                canEditEventProposals={canEditEventProposals}
+                canEditEvent={canEditEvent}
+                error={errors?.categories}
+                className="space-y-3 p-4 lg:px-6"
+              />
+            ) : null}
 
             <Divider />
 

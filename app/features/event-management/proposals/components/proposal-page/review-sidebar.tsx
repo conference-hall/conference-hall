@@ -17,21 +17,23 @@ export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate }: Props)
     <Card as="section" className="divide-y divide-gray-200">
       {reviewEnabled ? <ReviewForm key={proposal.id} initialValues={proposal.reviews.you} /> : null}
 
-      <div className="space-y-4 p-4 lg:px-6 lg:py-4">
-        {!reviewEnabled ? (
-          <div className="flex items-center justify-between gap-4">
-            <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
-            <GlobalReviewNote feeling={you.feeling} note={you.note} />
-          </div>
-        ) : null}
+      {!reviewEnabled || summary ? (
+        <div className="space-y-4 p-4 lg:px-6 lg:py-4">
+          {!reviewEnabled ? (
+            <div className="flex items-center justify-between gap-4">
+              <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
+              <GlobalReviewNote feeling={you.feeling} note={you.note} />
+            </div>
+          ) : null}
 
-        {summary && (
-          <div className="flex items-center justify-between gap-4">
-            <H2 size="s">{t('event-management.proposal-page.reviews.global')}</H2>
-            <GlobalReviewNote feeling="NEUTRAL" note={summary?.average} />
-          </div>
-        )}
-      </div>
+          {summary && (
+            <div className="flex items-center justify-between gap-4">
+              <H2 size="s">{t('event-management.proposal-page.reviews.global')}</H2>
+              <GlobalReviewNote feeling="NEUTRAL" note={summary?.average} />
+            </div>
+          )}
+        </div>
+      ) : null}
 
       {canDeliberate && (
         <div className="space-y-2 p-4 lg:px-6 lg:py-4">

@@ -47,6 +47,7 @@ export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.Co
         canEditTalk={false}
         canEditSpeakers={false}
         canArchive={false}
+        showSpeakers
         showFormats
         showCategories
       />
