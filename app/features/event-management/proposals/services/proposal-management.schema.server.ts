@@ -33,3 +33,9 @@ export const ProposalSaveTagsSchema = z.object({
 });
 
 export type ProposalSaveTagsData = z.infer<typeof ProposalSaveTagsSchema>;
+
+export const ProposalSaveSpeakersSchema = z.object({
+  speakers: z.array(z.string()).min(1),
+});
+
+export type ProposalSaveSpeakersData = z.infer<typeof ProposalSaveSpeakersSchema>;

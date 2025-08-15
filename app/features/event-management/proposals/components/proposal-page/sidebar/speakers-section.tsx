@@ -7,7 +7,12 @@ type SpeakersSectionProps = {
   team: string;
   event: string;
   proposalId: string;
-  proposalSpeakers: Array<{ userId: string | null; name: string; picture?: string | null; company?: string | null }>;
+  proposalSpeakers: Array<{
+    id: string;
+    name: string;
+    picture?: string | null;
+    company?: string | null;
+  }>;
   canEditEventProposals: boolean;
   error?: SubmissionError;
   className?: string;
@@ -28,7 +33,7 @@ export function SpeakersSection({
   let displayed = proposalSpeakers;
   if (fetcher.formData?.get('intent') === 'save-speakers') {
     const pending = fetcher.formData?.getAll('speakers') as string[];
-    displayed = proposalSpeakers.filter((speaker) => pending.includes(speaker.userId || ''));
+    displayed = proposalSpeakers.filter((speaker) => pending.includes(speaker.id));
   }
   displayed = sortBy(displayed, 'name');
 
@@ -49,7 +54,7 @@ export function SpeakersSection({
       team={team}
       event={event}
       value={displayed.map((item) => ({
-        value: item.userId || '',
+        value: item.id,
         label: item.name,
         picture: item.picture,
         data: { description: item.company },

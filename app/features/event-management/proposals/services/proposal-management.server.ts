@@ -1,6 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type {
+  ProposalSaveSpeakersData,
   ProposalSaveTagsData,
   ProposalUpdateData,
   TalkProposalCreationData,
@@ -71,11 +72,35 @@ export class ProposalManagement extends UserEventAuthorization {
   async saveTags(data: ProposalSaveTagsData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for saveTags operation');
 
-    await this.needsPermission('canEditEventProposals');
+    const event = await this.needsPermission('canEditEventProposals');
 
     return db.proposal.update({
-      where: { id: this.proposalId },
+      where: { id: this.proposalId, eventId: event.id },
       data: { tags: { set: [], connect: data.tags?.map((id) => ({ id })) } },
+    });
+  }
+
+  async saveSpeakers(data: ProposalSaveSpeakersData) {
+    if (!this.proposalId) throw new Error('Proposal ID is required for saveSpeakers operation');
+
+    const event = await this.needsPermission('canEditEventProposals');
+
+    // Verify that all EventSpeaker IDs belong to the event
+    const eventSpeakers = await db.eventSpeaker.findMany({
+      where: { eventId: event.id, id: { in: data.speakers } },
+      select: { id: true },
+    });
+
+    const validSpeakerIds = eventSpeakers.map((s) => s.id);
+    const invalidSpeakers = data.speakers.filter((id) => !validSpeakerIds.includes(id));
+
+    if (invalidSpeakers.length > 0) {
+      throw new Error(`Speakers with IDs ${invalidSpeakers.join(', ')} do not belong to this event`);
+    }
+
+    return db.proposal.update({
+      where: { id: this.proposalId, eventId: event.id },
+      data: { speakers: { set: [], connect: data.speakers.map((id) => ({ id })) } },
     });
   }
 }

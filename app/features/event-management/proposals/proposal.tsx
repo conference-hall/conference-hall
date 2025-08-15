@@ -24,7 +24,11 @@ import { SpeakersSection } from './components/proposal-page/sidebar/speakers-sec
 import { TagsSection } from './components/proposal-page/sidebar/tags-section.tsx';
 import { ActivityFeed } from './services/activity-feed.server.ts';
 import { Comments } from './services/comments.server.ts';
-import { ProposalSaveTagsSchema, ProposalUpdateSchema } from './services/proposal-management.schema.server.ts';
+import {
+  ProposalSaveSpeakersSchema,
+  ProposalSaveTagsSchema,
+  ProposalUpdateSchema,
+} from './services/proposal-management.schema.server.ts';
 import { ProposalManagement } from './services/proposal-management.server.ts';
 import { CommentReactionSchema, ReviewUpdateDataSchema } from './services/proposal-review.schema.server.ts';
 import type { ProposalReviewData } from './services/proposal-review.server.ts';
@@ -112,6 +116,14 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
       const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
       await proposal.saveTags(result.value);
+      break;
+    }
+    case 'save-speakers': {
+      const result = parseWithZod(form, { schema: ProposalSaveSpeakersSchema });
+      if (result.status !== 'success') return toast('error', t('error.global'));
+
+      const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
+      await proposal.saveSpeakers(result.value);
       break;
     }
   }

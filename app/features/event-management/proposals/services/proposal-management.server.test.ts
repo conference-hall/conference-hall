@@ -161,7 +161,8 @@ describe('ProposalManagement', () => {
         where: { id: proposal.id },
         include: { tags: true },
       });
-      expect(updatedProposal?.tags).toEqual([{ id: tag.id, name: tag.name, color: tag.color }]);
+      expect(updatedProposal?.tags).toHaveLength(1);
+      expect(updatedProposal?.tags[0]).toMatchObject({ id: tag.id, name: tag.name, color: tag.color });
     });
 
     it('removes tags from the proposal', async () => {
@@ -198,7 +199,8 @@ describe('ProposalManagement', () => {
         where: { id: proposal.id },
         include: { tags: true },
       });
-      expect(updatedProposal?.tags).toEqual([{ id: newTag.id, name: newTag.name, color: newTag.color }]);
+      expect(updatedProposal?.tags).toHaveLength(1);
+      expect(updatedProposal?.tags[0]).toMatchObject({ id: newTag.id, name: newTag.name, color: newTag.color });
     });
 
     it('throws an error if user has not a owner or member role in the team', async () => {
@@ -220,6 +222,121 @@ describe('ProposalManagement', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const proposalManagement = ProposalManagement.for(user.id, team.slug, event.slug, proposal.id);
       await expect(proposalManagement.saveTags({ tags: [] })).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
+  describe('saveSpeakers', () => {
+    it('adds new speakers to the proposal', async () => {
+      const owner = await userFactory();
+      const speaker1 = await userFactory();
+      const speaker2 = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const eventSpeaker1 = await eventSpeakerFactory({ event, user: speaker1 });
+      const eventSpeaker2 = await eventSpeakerFactory({ event, user: speaker2 });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }) });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalManagement.saveSpeakers({ speakers: [eventSpeaker1.id, eventSpeaker2.id] });
+
+      const updatedProposal = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { speakers: true },
+      });
+      expect(updatedProposal?.speakers).toHaveLength(2);
+      expect(updatedProposal?.speakers.map((s) => s.id)).toEqual(
+        expect.arrayContaining([eventSpeaker1.id, eventSpeaker2.id]),
+      );
+    });
+
+    it('removes speakers from the proposal', async () => {
+      const owner = await userFactory();
+      const speaker1 = await userFactory();
+      const speaker2 = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const eventSpeaker1 = await eventSpeakerFactory({ event, user: speaker1 });
+      await eventSpeakerFactory({ event, user: speaker2 });
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker1, speaker2] }),
+      });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalManagement.saveSpeakers({ speakers: [eventSpeaker1.id] });
+
+      const updatedProposal = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { speakers: true },
+      });
+      expect(updatedProposal?.speakers).toHaveLength(1);
+      expect(updatedProposal?.speakers[0].id).toBe(eventSpeaker1.id);
+    });
+
+    it('changes speakers of the proposal', async () => {
+      const owner = await userFactory();
+      const speaker1 = await userFactory();
+      const speaker2 = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      await eventSpeakerFactory({ event, user: speaker1 });
+      const eventSpeaker2 = await eventSpeakerFactory({ event, user: speaker2 });
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker1] }),
+      });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalManagement.saveSpeakers({ speakers: [eventSpeaker2.id] });
+
+      const updatedProposal = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { speakers: true },
+      });
+      expect(updatedProposal?.speakers).toHaveLength(1);
+      expect(updatedProposal?.speakers[0].id).toBe(eventSpeaker2.id);
+    });
+
+    it('throws an error when speaker does not belong to the event', async () => {
+      const owner = await userFactory();
+      const speaker1 = await userFactory();
+      const speaker2 = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const otherEvent = await eventFactory({ team });
+      await eventSpeakerFactory({ event, user: speaker1 });
+      const eventSpeaker2 = await eventSpeakerFactory({ event: otherEvent, user: speaker2 });
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker1] }),
+      });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+
+      await expect(proposalManagement.saveSpeakers({ speakers: [eventSpeaker2.id] })).rejects.toThrow(
+        `Speakers with IDs ${eventSpeaker2.id} do not belong to this event`,
+      );
+    });
+
+    it('throws an error if user has not a owner or member role in the team', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposalManagement = ProposalManagement.for(speaker.id, team.slug, event.slug, proposal.id);
+      await expect(proposalManagement.saveSpeakers({ speakers: [] })).rejects.toThrowError(ForbiddenOperationError);
+    });
+
+    it('throws an error if user does not belong to event team', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const user = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposalManagement = ProposalManagement.for(user.id, team.slug, event.slug, proposal.id);
+      await expect(proposalManagement.saveSpeakers({ speakers: [] })).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

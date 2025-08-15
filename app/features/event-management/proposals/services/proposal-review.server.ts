@@ -68,6 +68,7 @@ export class ProposalReview extends UserEventAuthorization {
       },
       speakers:
         proposal.speakers?.map((speaker) => ({
+          id: speaker.id,
           userId: speaker.userId,
           name: speaker.name,
           picture: speaker.picture,
