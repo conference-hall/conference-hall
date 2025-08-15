@@ -19,6 +19,7 @@ import { ProposalActivityFeed as Feed } from './components/proposal-page/proposa
 import { ReviewHeader } from './components/proposal-page/review-header.tsx';
 import { ReviewSidebar } from './components/proposal-page/review-sidebar.tsx';
 import { CategoriesSection } from './components/proposal-page/sidebar/categories-section.tsx';
+import { FormatsSection } from './components/proposal-page/sidebar/formats-section.tsx';
 import { TagsSection } from './components/proposal-page/sidebar/tags-section.tsx';
 import { ActivityFeed } from './services/activity-feed.server.ts';
 import { Comments } from './services/comments.server.ts';
@@ -162,6 +163,20 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           />
 
           <Card as="section" className="py-2">
+            <FormatsSection
+              team={params.team}
+              event={params.event}
+              proposalId={params.proposal}
+              proposalFormats={proposal.formats}
+              eventFormats={event.formats}
+              canEditEventProposals={canEditEventProposals}
+              canEditEvent={canEditEvent}
+              error={errors?.formats}
+              className="space-y-2.5 p-4 lg:px-6"
+            />
+
+            <Divider />
+
             <CategoriesSection
               team={params.team}
               event={params.event}

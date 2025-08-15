@@ -15,11 +15,14 @@ type Props = {
   event: string;
   form?: string;
   defaultValue?: Array<SelectPanelOption>;
-  error?: SubmissionError;
+  value?: Array<SelectPanelOption>;
   options: Array<SelectPanelOption>;
   onChange?: (options: Array<SelectPanelOption>) => void;
-  multiple?: boolean;
   className?: string;
+  readonly?: boolean;
+  showAction?: boolean;
+  multiple?: boolean;
+  error?: SubmissionError;
 };
 
 export function FormatsSelectPanel({
@@ -27,19 +30,34 @@ export function FormatsSelectPanel({
   event,
   form,
   defaultValue = [],
-  error,
+  value,
   options,
   onChange,
-  multiple = true,
   className,
+  readonly = false,
+  showAction = true,
+  multiple = true,
+  error,
 }: Props) {
   const { t } = useTranslation();
-  const [selectedFormats, setSelectedFormats] = useState<Array<SelectPanelOption>>(defaultValue);
+
+  // Use controlled value if provided, otherwise use internal state
+  const [formats, setFormats] = useState<Array<SelectPanelOption>>(defaultValue);
+  const selectedFormats = value ?? formats;
 
   const handleChange = (selectedOptions: Array<{ value: string; label: string }>) => {
-    setSelectedFormats(selectedOptions);
+    if (!value) setFormats(selectedOptions);
     onChange?.(selectedOptions);
   };
+
+  if (readonly) {
+    return (
+      <div className={className}>
+        <H2 size="s">{t('common.formats')}</H2>
+        <FormatsList formats={selectedFormats} />
+      </div>
+    );
+  }
 
   return (
     <div className={className}>
@@ -51,7 +69,7 @@ export function FormatsSelectPanel({
         options={options}
         onChange={handleChange}
         multiple={multiple}
-        footer={<Action team={team} event={event} />}
+        footer={showAction ? <Action team={team} event={event} /> : null}
       >
         <div className="flex items-center justify-between group">
           <H2 size="s" className="group-hover:text-indigo-600">
@@ -61,19 +79,26 @@ export function FormatsSelectPanel({
         </div>
       </SelectPanel>
 
-      <div className="flex flex-wrap gap-2">
-        {selectedFormats.length === 0 && !error ? <Text size="xs">{t('common.no-formats')}</Text> : null}
+      <FormatsList formats={selectedFormats} error={error} />
+    </div>
+  );
+}
 
-        {selectedFormats.length === 0 && error ? (
-          <Text size="s" variant="error">
-            {error[0]}
-          </Text>
-        ) : null}
+function FormatsList({ formats, error }: { formats: Array<SelectPanelOption>; error?: SubmissionError }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-wrap gap-2">
+      {formats.length === 0 && !error ? <Text size="xs">{t('common.no-formats')}</Text> : null}
 
-        {selectedFormats.map((format) => (
-          <Badge key={format.value}>{format.label}</Badge>
-        ))}
-      </div>
+      {formats.length === 0 && error ? (
+        <Text size="s" variant="error">
+          {error[0]}
+        </Text>
+      ) : null}
+
+      {formats.map((format) => (
+        <Badge key={format.value}>{format.label}</Badge>
+      ))}
     </div>
   );
 }
