@@ -20,6 +20,7 @@ import { ReviewHeader } from './components/proposal-page/review-header.tsx';
 import { ReviewSidebar } from './components/proposal-page/review-sidebar.tsx';
 import { CategoriesSection } from './components/proposal-page/sidebar/categories-section.tsx';
 import { FormatsSection } from './components/proposal-page/sidebar/formats-section.tsx';
+import { SpeakersSection } from './components/proposal-page/sidebar/speakers-section.tsx';
 import { TagsSection } from './components/proposal-page/sidebar/tags-section.tsx';
 import { ActivityFeed } from './services/activity-feed.server.ts';
 import { Comments } from './services/comments.server.ts';
@@ -162,7 +163,19 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
             canDeliberate={canChangeProposalStatus}
           />
 
-          <Card as="section" className="py-2">
+          <Card as="section">
+            <SpeakersSection
+              team={params.team}
+              event={params.event}
+              proposalId={params.proposal}
+              proposalSpeakers={proposal.speakers}
+              canEditEventProposals={canEditEventProposals}
+              error={errors?.speakers}
+              className="space-y-3 p-4 lg:px-6"
+            />
+
+            <Divider />
+
             <FormatsSection
               team={params.team}
               event={params.event}
@@ -172,7 +185,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
               canEditEventProposals={canEditEventProposals}
               canEditEvent={canEditEvent}
               error={errors?.formats}
-              className="space-y-2.5 p-4 lg:px-6"
+              className="space-y-3 p-4 lg:px-6"
             />
 
             <Divider />
@@ -186,7 +199,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
               canEditEventProposals={canEditEventProposals}
               canEditEvent={canEditEvent}
               error={errors?.categories}
-              className="space-y-2.5 p-4 lg:px-6"
+              className="space-y-3 p-4 lg:px-6"
             />
 
             <Divider />
@@ -199,7 +212,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
               eventTags={event.tags}
               canEditEventProposals={canEditEventProposals}
               canEditEvent={canEditEvent}
-              className="space-y-2.5 p-4 lg:px-6"
+              className="space-y-3 p-4 lg:px-6"
             />
           </Card>
         </div>

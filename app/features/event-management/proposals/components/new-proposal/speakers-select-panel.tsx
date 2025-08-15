@@ -14,17 +14,32 @@ import type { loader as AutocompleteLoader } from '../../../command-palette/auto
 type Props = {
   team: string;
   event: string;
-  form: string;
+  form?: string;
   defaultValues?: Array<SelectPanelOption>;
+  value?: Array<SelectPanelOption>;
   error?: SubmissionError;
   onChange?: (speakers: Array<SelectPanelOption>) => void;
   className?: string;
+  readonly?: boolean;
+  showAction?: boolean;
 };
 
-export function SpeakersSelectPanel({ team, event, form, defaultValues = [], error, onChange, className }: Props) {
+export function SpeakersSelectPanel({
+  team,
+  event,
+  form,
+  defaultValues = [],
+  value,
+  error,
+  onChange,
+  className,
+  readonly = false,
+  showAction = true,
+}: Props) {
   const { t } = useTranslation();
   const fetcher = useFetcher<typeof AutocompleteLoader>();
-  const [selectedSpeakers, setSelectedSpeakers] = useState<Array<SelectPanelOption>>(defaultValues);
+  const [speakers, setSpeakers] = useState<Array<SelectPanelOption>>(defaultValues);
+  const selectedSpeakers = value ?? speakers;
 
   const loading = ['loading', 'submitting'].includes(fetcher.state);
 
@@ -49,7 +64,7 @@ export function SpeakersSelectPanel({ team, event, form, defaultValues = [], err
   };
 
   const handleChange = (selectedOptions: SelectPanelOption[]) => {
-    setSelectedSpeakers(selectedOptions);
+    if (!value) setSpeakers(selectedOptions);
     onChange?.(selectedOptions);
   };
 
@@ -65,6 +80,15 @@ export function SpeakersSelectPanel({ team, event, form, defaultValues = [], err
     return options;
   }, [searchOptions, selectedSpeakers]);
 
+  if (readonly) {
+    return (
+      <div className={className}>
+        <H2 size="s">{t('common.speakers')}</H2>
+        <SpeakersList speakers={selectedSpeakers} />
+      </div>
+    );
+  }
+
   return (
     <div className={className}>
       <SelectPanel
@@ -76,7 +100,7 @@ export function SpeakersSelectPanel({ team, event, form, defaultValues = [], err
         options={availableOptions}
         onChange={handleChange}
         onSearch={handleSearch}
-        footer={<Action />}
+        footer={showAction ? <Action /> : null}
         displayPicture
       >
         <div className="flex items-center justify-between group">
@@ -87,31 +111,38 @@ export function SpeakersSelectPanel({ team, event, form, defaultValues = [], err
         </div>
       </SelectPanel>
 
-      <div className="flex flex-col gap-2">
-        {selectedSpeakers.length === 0 && !error ? <Text size="xs">{t('common.no-speakers')}</Text> : null}
+      <SpeakersList speakers={selectedSpeakers} error={error} />
+    </div>
+  );
+}
 
-        {selectedSpeakers.length === 0 && error ? (
-          <Text size="s" variant="error">
-            {error[0]}
-          </Text>
-        ) : null}
+function SpeakersList({ speakers, error }: { speakers: Array<SelectPanelOption>; error?: SubmissionError }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-2">
+      {speakers.length === 0 && !error ? <Text size="xs">{t('common.no-speakers')}</Text> : null}
 
-        {selectedSpeakers.map((speaker) => (
-          <div key={speaker.value} className="flex items-center gap-2 truncate">
-            <Avatar picture={speaker.picture} name={speaker.label} size="xs" />
-            <div className="flex items-baseline gap-2 truncate">
-              <Text weight="semibold" truncate>
-                {speaker.label}
+      {speakers.length === 0 && error ? (
+        <Text size="s" variant="error">
+          {error[0]}
+        </Text>
+      ) : null}
+
+      {speakers.map((speaker) => (
+        <div key={speaker.value} className="flex items-center gap-2 truncate">
+          <Avatar picture={speaker.picture} name={speaker.label} size="xs" />
+          <div className="flex items-baseline gap-2 truncate">
+            <Text weight="semibold" truncate>
+              {speaker.label}
+            </Text>
+            {speaker.data?.description ? (
+              <Text variant="secondary" size="xs" truncate>
+                {speaker.data?.description}
               </Text>
-              {speaker.data?.description ? (
-                <Text variant="secondary" size="xs" truncate>
-                  {speaker.data?.description}
-                </Text>
-              ) : null}
-            </div>
+            ) : null}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }
