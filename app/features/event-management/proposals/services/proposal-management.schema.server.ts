@@ -39,3 +39,15 @@ export const ProposalSaveSpeakersSchema = z.object({
 });
 
 export type ProposalSaveSpeakersData = z.infer<typeof ProposalSaveSpeakersSchema>;
+
+export const ProposalSaveFormatsSchema = z.object({
+  formats: z.array(z.string()),
+});
+
+export type ProposalSaveFormatsData = z.infer<typeof ProposalSaveFormatsSchema>;
+
+export const ProposalSaveCategoriesSchema = z.object({
+  categories: z.array(z.string()),
+});
+
+export type ProposalSaveCategoriesData = z.infer<typeof ProposalSaveCategoriesSchema>;

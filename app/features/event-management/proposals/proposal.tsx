@@ -25,6 +25,8 @@ import { TagsSection } from './components/proposal-page/sidebar/tags-section.tsx
 import { ActivityFeed } from './services/activity-feed.server.ts';
 import { Comments } from './services/comments.server.ts';
 import {
+  ProposalSaveCategoriesSchema,
+  ProposalSaveFormatsSchema,
   ProposalSaveSpeakersSchema,
   ProposalSaveTagsSchema,
   ProposalUpdateSchema,
@@ -124,6 +126,22 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
       const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
       await proposal.saveSpeakers(result.value);
+      break;
+    }
+    case 'save-formats': {
+      const result = parseWithZod(form, { schema: ProposalSaveFormatsSchema });
+      if (result.status !== 'success') return toast('error', t('error.global'));
+
+      const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
+      await proposal.saveFormats(result.value);
+      break;
+    }
+    case 'save-categories': {
+      const result = parseWithZod(form, { schema: ProposalSaveCategoriesSchema });
+      if (result.status !== 'success') return toast('error', t('error.global'));
+
+      const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
+      await proposal.saveCategories(result.value);
       break;
     }
   }

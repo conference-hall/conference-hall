@@ -1,6 +1,8 @@
 import { db } from 'prisma/db.server.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type {
+  ProposalSaveCategoriesData,
+  ProposalSaveFormatsData,
   ProposalSaveSpeakersData,
   ProposalSaveTagsData,
   ProposalUpdateData,
@@ -101,6 +103,54 @@ export class ProposalManagement extends UserEventAuthorization {
     return db.proposal.update({
       where: { id: this.proposalId, eventId: event.id },
       data: { speakers: { set: [], connect: data.speakers.map((id) => ({ id })) } },
+    });
+  }
+
+  async saveFormats(data: ProposalSaveFormatsData) {
+    if (!this.proposalId) throw new Error('Proposal ID is required for saveFormats operation');
+
+    const event = await this.needsPermission('canEditEventProposals');
+
+    // Verify that all format IDs belong to the event
+    const eventFormats = await db.eventFormat.findMany({
+      where: { eventId: event.id, id: { in: data.formats } },
+      select: { id: true },
+    });
+
+    const validFormatIds = eventFormats.map((f) => f.id);
+    const invalidFormats = data.formats.filter((id) => !validFormatIds.includes(id));
+
+    if (invalidFormats.length > 0) {
+      throw new Error(`Formats with IDs ${invalidFormats.join(', ')} do not belong to this event`);
+    }
+
+    return db.proposal.update({
+      where: { id: this.proposalId, eventId: event.id },
+      data: { formats: { set: [], connect: data.formats.map((id) => ({ id })) } },
+    });
+  }
+
+  async saveCategories(data: ProposalSaveCategoriesData) {
+    if (!this.proposalId) throw new Error('Proposal ID is required for saveCategories operation');
+
+    const event = await this.needsPermission('canEditEventProposals');
+
+    // Verify that all category IDs belong to the event
+    const eventCategories = await db.eventCategory.findMany({
+      where: { eventId: event.id, id: { in: data.categories } },
+      select: { id: true },
+    });
+
+    const validCategoryIds = eventCategories.map((c) => c.id);
+    const invalidCategories = data.categories.filter((id) => !validCategoryIds.includes(id));
+
+    if (invalidCategories.length > 0) {
+      throw new Error(`Categories with IDs ${invalidCategories.join(', ')} do not belong to this event`);
+    }
+
+    return db.proposal.update({
+      where: { id: this.proposalId, eventId: event.id },
+      data: { categories: { set: [], connect: data.categories.map((id) => ({ id })) } },
     });
   }
 }

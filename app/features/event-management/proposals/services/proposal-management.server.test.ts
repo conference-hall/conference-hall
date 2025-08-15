@@ -339,4 +339,274 @@ describe('ProposalManagement', () => {
       await expect(proposalManagement.saveSpeakers({ speakers: [] })).rejects.toThrowError(ForbiddenOperationError);
     });
   });
+
+  describe('saveFormats', () => {
+    it('adds new formats to the proposal', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const format1 = await eventFormatFactory({ event });
+      const format2 = await eventFormatFactory({ event });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalManagement.saveFormats({ formats: [format1.id, format2.id] });
+
+      const updatedProposal = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { formats: true },
+      });
+      expect(updatedProposal?.formats).toHaveLength(2);
+      expect(updatedProposal?.formats.map((f) => f.id)).toEqual(expect.arrayContaining([format1.id, format2.id]));
+    });
+
+    it('removes formats from the proposal', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const format1 = await eventFormatFactory({ event });
+      const format2 = await eventFormatFactory({ event });
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        formats: [format1, format2],
+      });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalManagement.saveFormats({ formats: [format1.id] });
+
+      const updatedProposal = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { formats: true },
+      });
+      expect(updatedProposal?.formats).toHaveLength(1);
+      expect(updatedProposal?.formats[0].id).toBe(format1.id);
+    });
+
+    it('changes formats of the proposal', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const format1 = await eventFormatFactory({ event });
+      const format2 = await eventFormatFactory({ event });
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        formats: [format1],
+      });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalManagement.saveFormats({ formats: [format2.id] });
+
+      const updatedProposal = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { formats: true },
+      });
+      expect(updatedProposal?.formats).toHaveLength(1);
+      expect(updatedProposal?.formats[0].id).toBe(format2.id);
+    });
+
+    it('clears all formats from the proposal', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const format = await eventFormatFactory({ event });
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        formats: [format],
+      });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalManagement.saveFormats({ formats: [] });
+
+      const updatedProposal = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { formats: true },
+      });
+      expect(updatedProposal?.formats).toEqual([]);
+    });
+
+    it('throws an error when format does not belong to the event', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const otherEvent = await eventFactory({ team });
+      const format1 = await eventFormatFactory({ event });
+      const format2 = await eventFormatFactory({ event: otherEvent });
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        formats: [format1],
+      });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+
+      await expect(proposalManagement.saveFormats({ formats: [format2.id] })).rejects.toThrow(
+        `Formats with IDs ${format2.id} do not belong to this event`,
+      );
+    });
+
+    it('throws an error if user has not a owner or member role in the team', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposalManagement = ProposalManagement.for(speaker.id, team.slug, event.slug, proposal.id);
+      await expect(proposalManagement.saveFormats({ formats: [] })).rejects.toThrowError(ForbiddenOperationError);
+    });
+
+    it('throws an error if user does not belong to event team', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const user = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposalManagement = ProposalManagement.for(user.id, team.slug, event.slug, proposal.id);
+      await expect(proposalManagement.saveFormats({ formats: [] })).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
+  describe('saveCategories', () => {
+    it('adds new categories to the proposal', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const category1 = await eventCategoryFactory({ event });
+      const category2 = await eventCategoryFactory({ event });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalManagement.saveCategories({ categories: [category1.id, category2.id] });
+
+      const updatedProposal = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { categories: true },
+      });
+      expect(updatedProposal?.categories).toHaveLength(2);
+      expect(updatedProposal?.categories.map((c) => c.id)).toEqual(
+        expect.arrayContaining([category1.id, category2.id]),
+      );
+    });
+
+    it('removes categories from the proposal', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const category1 = await eventCategoryFactory({ event });
+      const category2 = await eventCategoryFactory({ event });
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        categories: [category1, category2],
+      });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalManagement.saveCategories({ categories: [category1.id] });
+
+      const updatedProposal = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { categories: true },
+      });
+      expect(updatedProposal?.categories).toHaveLength(1);
+      expect(updatedProposal?.categories[0].id).toBe(category1.id);
+    });
+
+    it('changes categories of the proposal', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const category1 = await eventCategoryFactory({ event });
+      const category2 = await eventCategoryFactory({ event });
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        categories: [category1],
+      });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalManagement.saveCategories({ categories: [category2.id] });
+
+      const updatedProposal = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { categories: true },
+      });
+      expect(updatedProposal?.categories).toHaveLength(1);
+      expect(updatedProposal?.categories[0].id).toBe(category2.id);
+    });
+
+    it('clears all categories from the proposal', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const category = await eventCategoryFactory({ event });
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        categories: [category],
+      });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalManagement.saveCategories({ categories: [] });
+
+      const updatedProposal = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { categories: true },
+      });
+      expect(updatedProposal?.categories).toEqual([]);
+    });
+
+    it('throws an error when category does not belong to the event', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const otherEvent = await eventFactory({ team });
+      const category1 = await eventCategoryFactory({ event });
+      const category2 = await eventCategoryFactory({ event: otherEvent });
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        categories: [category1],
+      });
+
+      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+
+      await expect(proposalManagement.saveCategories({ categories: [category2.id] })).rejects.toThrow(
+        `Categories with IDs ${category2.id} do not belong to this event`,
+      );
+    });
+
+    it('throws an error if user has not a owner or member role in the team', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposalManagement = ProposalManagement.for(speaker.id, team.slug, event.slug, proposal.id);
+      await expect(proposalManagement.saveCategories({ categories: [] })).rejects.toThrowError(ForbiddenOperationError);
+    });
+
+    it('throws an error if user does not belong to event team', async () => {
+      const owner = await userFactory();
+      const speaker = await userFactory();
+      const user = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+      const event = await eventFactory({ team });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposalManagement = ProposalManagement.for(user.id, team.slug, event.slug, proposal.id);
+      await expect(proposalManagement.saveCategories({ categories: [] })).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
 });
