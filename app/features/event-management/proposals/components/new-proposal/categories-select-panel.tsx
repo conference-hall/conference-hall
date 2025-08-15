@@ -15,11 +15,14 @@ type Props = {
   event: string;
   form?: string;
   defaultValue?: Array<SelectPanelOption>;
-  error?: SubmissionError;
+  value?: Array<SelectPanelOption>;
   options: Array<SelectPanelOption>;
   onChange?: (options: Array<SelectPanelOption>) => void;
-  multiple?: boolean;
   className?: string;
+  readonly?: boolean;
+  showAction?: boolean;
+  multiple?: boolean;
+  error?: SubmissionError;
 };
 
 export function CategoriesSelectPanel({
@@ -27,19 +30,34 @@ export function CategoriesSelectPanel({
   event,
   form,
   defaultValue = [],
-  error,
+  value,
   options,
   onChange,
-  multiple = true,
   className,
+  readonly = false,
+  showAction = true,
+  multiple = true,
+  error,
 }: Props) {
   const { t } = useTranslation();
-  const [selectedCategories, setSelectedCategories] = useState<Array<SelectPanelOption>>(defaultValue);
+
+  // Use controlled value if provided, otherwise use internal state
+  const [categories, setCategories] = useState<Array<SelectPanelOption>>(defaultValue);
+  const selectedCategories = value ?? categories;
 
   const handleChange = (selectedOptions: Array<{ value: string; label: string }>) => {
-    setSelectedCategories(selectedOptions);
+    if (!value) setCategories(selectedOptions);
     onChange?.(selectedOptions);
   };
+
+  if (readonly) {
+    return (
+      <div className={className}>
+        <H2 size="s">{t('common.categories')}</H2>
+        <CategoriesList categories={selectedCategories} />
+      </div>
+    );
+  }
 
   return (
     <div className={className}>
@@ -51,7 +69,7 @@ export function CategoriesSelectPanel({
         options={options}
         onChange={handleChange}
         multiple={multiple}
-        footer={<Action team={team} event={event} />}
+        footer={showAction ? <Action team={team} event={event} /> : null}
       >
         <div className="flex items-center justify-between group">
           <H2 size="s" className="group-hover:text-indigo-600">
@@ -61,19 +79,26 @@ export function CategoriesSelectPanel({
         </div>
       </SelectPanel>
 
-      <div className="flex flex-wrap gap-2">
-        {selectedCategories.length === 0 && !error ? <Text size="xs">{t('common.no-categories')}</Text> : null}
+      <CategoriesList categories={selectedCategories} error={error} />
+    </div>
+  );
+}
 
-        {selectedCategories.length === 0 && error ? (
-          <Text size="s" variant="error">
-            {error[0]}
-          </Text>
-        ) : null}
+function CategoriesList({ categories, error }: { categories: Array<SelectPanelOption>; error?: SubmissionError }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-wrap gap-2">
+      {categories.length === 0 && !error ? <Text size="xs">{t('common.no-categories')}</Text> : null}
 
-        {selectedCategories.map((category) => (
-          <Badge key={category.value}>{category.label}</Badge>
-        ))}
-      </div>
+      {categories.length === 0 && error ? (
+        <Text size="s" variant="error">
+          {error[0]}
+        </Text>
+      ) : null}
+
+      {categories.map((category) => (
+        <Badge key={category.value}>{category.label}</Badge>
+      ))}
     </div>
   );
 }

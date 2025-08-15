@@ -19,7 +19,7 @@ type Props = {
   onChange?: (options: Array<SelectPanelOption>) => void;
   className?: string;
   readonly?: boolean;
-  canManageTags?: boolean;
+  showAction?: boolean;
 };
 
 export function TagsSelectPanel({
@@ -32,7 +32,7 @@ export function TagsSelectPanel({
   onChange,
   className,
   readonly = false,
-  canManageTags = true,
+  showAction = true,
 }: Props) {
   const { t } = useTranslation();
 
@@ -63,7 +63,7 @@ export function TagsSelectPanel({
         defaultValue={selectedTags.map((tag) => tag.value)}
         options={options}
         onChange={handleChange}
-        footer={canManageTags ? <Action team={team} event={event} /> : null}
+        footer={showAction ? <Action team={team} event={event} /> : null}
       >
         <div className="flex items-center justify-between group">
           <H2 size="s" className="group-hover:text-indigo-600">

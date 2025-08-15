@@ -2,6 +2,8 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { Suspense } from 'react';
 import { Await } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
+import { Divider } from '~/design-system/divider.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
@@ -16,7 +18,8 @@ import { LoadingActivities } from './components/proposal-page/proposal-activity/
 import { ProposalActivityFeed as Feed } from './components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
 import { ReviewHeader } from './components/proposal-page/review-header.tsx';
 import { ReviewSidebar } from './components/proposal-page/review-sidebar.tsx';
-import { TagsCard } from './components/proposal-page/tags-card.tsx';
+import { CategoriesSection } from './components/proposal-page/sidebar/categories-section.tsx';
+import { TagsSection } from './components/proposal-page/sidebar/tags-section.tsx';
 import { ActivityFeed } from './services/activity-feed.server.ts';
 import { Comments } from './services/comments.server.ts';
 import {
@@ -116,7 +119,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   return null;
 };
 
-export default function ProposalReviewLayoutRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
+export default function ProposalReviewLayoutRoute({ params, loaderData, actionData: errors }: Route.ComponentProps) {
   const { team, event } = useCurrentEventTeam();
   const { canEditEvent, canEditEventProposals, canChangeProposalStatus } = team.userPermissions;
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
@@ -158,13 +161,32 @@ export default function ProposalReviewLayoutRoute({ loaderData, actionData: erro
             canDeliberate={canChangeProposalStatus}
           />
 
-          <TagsCard
-            proposalId={proposal.id}
-            eventTags={event.tags}
-            proposalTags={proposal.tags}
-            canEditProposalTags={canEditEventProposals}
-            canEditEventTags={canEditEvent}
-          />
+          <Card as="section" className="py-2">
+            <CategoriesSection
+              team={params.team}
+              event={params.event}
+              proposalId={params.proposal}
+              proposalCategories={proposal.categories}
+              eventCategories={event.categories}
+              canEditEventProposals={canEditEventProposals}
+              canEditEvent={canEditEvent}
+              error={errors?.categories}
+              className="space-y-2.5 p-4 lg:px-6"
+            />
+
+            <Divider />
+
+            <TagsSection
+              team={params.team}
+              event={params.event}
+              proposalId={params.proposal}
+              proposalTags={proposal.tags}
+              eventTags={event.tags}
+              canEditEventProposals={canEditEventProposals}
+              canEditEvent={canEditEvent}
+              className="space-y-2.5 p-4 lg:px-6"
+            />
+          </Card>
         </div>
       </div>
     </Page>
