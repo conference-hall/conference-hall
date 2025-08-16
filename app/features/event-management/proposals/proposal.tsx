@@ -7,6 +7,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
+import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
@@ -166,17 +167,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <div className="space-y-4 lg:col-span-8">
-          <TalkSection
-            talk={proposal}
-            errors={errors}
-            event={event}
-            canEditTalk={canEditEventProposals}
-            canEditSpeakers={false}
-            canArchive={false}
-            showSpeakers={false}
-            showFormats={false}
-            showCategories={false}
-          >
+          <TalkSection talk={proposal} actions={<TalkEditButton initialValues={proposal} errors={errors} />}>
             <Suspense fallback={null}>
               <Await resolve={otherProposalsPromise}>
                 {(proposals) => <OtherProposalsDisclosure proposals={proposals} />}

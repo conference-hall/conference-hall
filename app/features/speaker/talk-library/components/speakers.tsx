@@ -196,9 +196,11 @@ export function SpeakerLinks({ speaker, className }: SpeakerLinksProps) {
         </ExternalLink>
       ) : null}
 
-      <ExternalLink iconLeft={EnvelopeIcon} href={`mailto:${speaker.email}`} variant="secondary">
-        {speaker.email}
-      </ExternalLink>
+      {speaker.email ? (
+        <ExternalLink iconLeft={EnvelopeIcon} href={`mailto:${speaker.email}`} variant="secondary">
+          {speaker.email}
+        </ExternalLink>
+      ) : null}
 
       {speaker.socialLinks?.map((socialLink) => (
         <SocialLink key={socialLink} url={socialLink} />

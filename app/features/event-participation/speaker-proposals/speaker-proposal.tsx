@@ -8,6 +8,7 @@ import {
   ProposalParticipationSchema,
 } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.schema.server.ts';
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
+import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -73,11 +74,8 @@ export default function ProposalRoute({ loaderData: proposal, actionData: errors
 
         <TalkSection
           talk={proposal}
-          event={currentEvent}
-          errors={errors}
           canEditSpeakers={canEdit}
-          canEditTalk={canEdit}
-          canArchive={false}
+          actions={canEdit ? <TalkEditButton initialValues={proposal} event={currentEvent} errors={errors} /> : null}
           showSpeakers
           showFormats
           showCategories
