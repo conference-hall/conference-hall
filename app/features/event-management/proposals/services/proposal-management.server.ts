@@ -58,17 +58,9 @@ export class ProposalManagement extends UserEventAuthorization {
   async update(data: ProposalUpdateData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for update operation');
 
-    await this.needsPermission('canEditEventProposals');
+    const event = await this.needsPermission('canEditEventProposals');
 
-    const { formats, categories, ...talk } = data;
-    return db.proposal.update({
-      where: { id: this.proposalId },
-      data: {
-        ...talk,
-        formats: { set: [], connect: formats?.map((id) => ({ id })) },
-        categories: { set: [], connect: categories?.map((id) => ({ id })) },
-      },
-    });
+    return db.proposal.update({ where: { id: this.proposalId, eventId: event.id }, data });
   }
 
   async saveTags(data: ProposalSaveTagsData) {
@@ -87,7 +79,6 @@ export class ProposalManagement extends UserEventAuthorization {
 
     const event = await this.needsPermission('canEditEventProposals');
 
-    // Verify that all EventSpeaker IDs belong to the event
     const eventSpeakers = await db.eventSpeaker.findMany({
       where: { eventId: event.id, id: { in: data.speakers } },
       select: { id: true },
@@ -111,7 +102,6 @@ export class ProposalManagement extends UserEventAuthorization {
 
     const event = await this.needsPermission('canEditEventProposals');
 
-    // Verify that all format IDs belong to the event
     const eventFormats = await db.eventFormat.findMany({
       where: { eventId: event.id, id: { in: data.formats } },
       select: { id: true },
@@ -135,7 +125,6 @@ export class ProposalManagement extends UserEventAuthorization {
 
     const event = await this.needsPermission('canEditEventProposals');
 
-    // Verify that all category IDs belong to the event
     const eventCategories = await db.eventCategory.findMany({
       where: { eventId: event.id, id: { in: data.categories } },
       select: { id: true },

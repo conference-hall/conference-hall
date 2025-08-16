@@ -1,6 +1,7 @@
 import type { Event, EventCategory, EventFormat, EventProposalTag, Team, User } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
+import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
@@ -36,6 +37,8 @@ describe('ProposalReview', () => {
 
   describe('#get', () => {
     it('returns proposal review data', async () => {
+      const eventSpeaker = await eventSpeakerFactory({ event, user: speaker });
+
       const proposal = await proposalFactory({
         event,
         formats: [format],
@@ -63,6 +66,7 @@ describe('ProposalReview', () => {
         tags: [{ id: tag.id, name: tag.name, color: tag.color }],
         speakers: [
           {
+            id: eventSpeaker.id,
             userId: speaker.id,
             name: speaker.name,
             bio: speaker.bio,

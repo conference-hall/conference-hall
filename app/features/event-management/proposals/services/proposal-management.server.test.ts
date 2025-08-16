@@ -83,8 +83,6 @@ describe('ProposalManagement', () => {
       const speaker = await userFactory();
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
-      const format = await eventFormatFactory({ event });
-      const category = await eventCategoryFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
       const updated = await ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id).update({
@@ -93,20 +91,12 @@ describe('ProposalManagement', () => {
         level: 'ADVANCED',
         references: 'Updated',
         languages: [],
-        formats: [format.id],
-        categories: [category.id],
       });
 
       expect(updated.title).toBe('Updated');
       expect(updated.abstract).toBe('Updated');
       expect(updated.level).toBe('ADVANCED');
       expect(updated.references).toBe('Updated');
-
-      const formatCount = await db.eventFormat.count({ where: { proposals: { some: { id: proposal.id } } } });
-      expect(formatCount).toBe(1);
-
-      const categoryCount = await db.eventCategory.count({ where: { proposals: { some: { id: proposal.id } } } });
-      expect(categoryCount).toBe(1);
     });
 
     it('throws an error if user has not a owner or member role in the team', async () => {

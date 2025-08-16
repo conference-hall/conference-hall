@@ -46,11 +46,14 @@ export const meta = (args: Route.MetaArgs) => {
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
   const filters = parseUrlFilters(request.url);
+
   const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
   const activityFeed = ActivityFeed.for(userId, params.team, params.event, params.proposal);
 
   const activityPromise = activityFeed.activity();
   const proposal = await proposalReview.get();
+
+  // todo(proposal): use eveent speaker ids instead user ids
   const otherProposalsPromise = proposalReview.getOtherProposals(
     proposal.speakers.map((s) => s.userId).filter((s) => s !== null),
   );
