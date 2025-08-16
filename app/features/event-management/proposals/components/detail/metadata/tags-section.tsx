@@ -1,7 +1,7 @@
 import { useFetcher } from 'react-router';
 import type { Tag as TagType } from '~/shared/types/tags.types.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
-import { TagsSelectPanel } from '../../new-proposal/tags-select-panel.tsx';
+import { TagsPanel } from '../../form-panels/tags-panel.tsx';
 
 type TagsSectionProps = {
   team: string;
@@ -44,7 +44,7 @@ export function TagsSection({
   };
 
   return (
-    <TagsSelectPanel
+    <TagsPanel
       key={proposalId}
       team={team}
       event={event}

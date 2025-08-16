@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { GlobalReviewNote } from '~/features/event-management/proposals/components/review-note.tsx';
+import { GlobalReviewNote } from '../shared/review-note.tsx';
 
 type OtherProposalsDisclosureProps = {
   proposals: Array<{

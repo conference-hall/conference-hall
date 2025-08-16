@@ -24,7 +24,7 @@ type Props = {
   showAction?: boolean;
 };
 
-export function SpeakersSelectPanel({
+export function SpeakersPanel({
   team,
   event,
   form,

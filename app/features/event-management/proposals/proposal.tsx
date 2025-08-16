@@ -13,15 +13,15 @@ import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
 import type { Route } from './+types/proposal.ts';
-import { OtherProposalsDisclosure } from './components/proposal-page/other-proposals-disclosure.tsx';
-import { LoadingActivities } from './components/proposal-page/proposal-activity/loading-activities.tsx';
-import { ProposalActivityFeed as Feed } from './components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
-import { ReviewHeader } from './components/proposal-page/review-header.tsx';
-import { ReviewSidebar } from './components/proposal-page/review-sidebar.tsx';
-import { CategoriesSection } from './components/proposal-page/sidebar/categories-section.tsx';
-import { FormatsSection } from './components/proposal-page/sidebar/formats-section.tsx';
-import { SpeakersSection } from './components/proposal-page/sidebar/speakers-section.tsx';
-import { TagsSection } from './components/proposal-page/sidebar/tags-section.tsx';
+import { LoadingActivities } from './components/detail/activity/loading-activities.tsx';
+import { ProposalActivityFeed as Feed } from './components/detail/activity/proposal-activity-feed.tsx';
+import { CategoriesSection } from './components/detail/metadata/categories-section.tsx';
+import { FormatsSection } from './components/detail/metadata/formats-section.tsx';
+import { SpeakersSection } from './components/detail/metadata/speakers-section.tsx';
+import { TagsSection } from './components/detail/metadata/tags-section.tsx';
+import { NavigationHeader } from './components/detail/navigation-header.tsx';
+import { OtherProposalsDisclosure } from './components/detail/other-proposals-disclosure.tsx';
+import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
 import { ActivityFeed } from './services/activity-feed.server.ts';
 import { Comments } from './services/comments.server.ts';
 import {
@@ -162,7 +162,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
 
   return (
     <Page>
-      <ReviewHeader {...pagination} />
+      <NavigationHeader {...pagination} />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <div className="space-y-4 lg:col-span-8">

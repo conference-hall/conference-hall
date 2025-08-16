@@ -25,7 +25,7 @@ type Props = {
   error?: SubmissionError;
 };
 
-export function FormatsSelectPanel({
+export function CategoriesPanel({
   team,
   event,
   form,
@@ -42,19 +42,19 @@ export function FormatsSelectPanel({
   const { t } = useTranslation();
 
   // Use controlled value if provided, otherwise use internal state
-  const [formats, setFormats] = useState<Array<SelectPanelOption>>(defaultValue);
-  const selectedFormats = value ?? formats;
+  const [categories, setCategories] = useState<Array<SelectPanelOption>>(defaultValue);
+  const selectedCategories = value ?? categories;
 
   const handleChange = (selectedOptions: Array<{ value: string; label: string }>) => {
-    if (!value) setFormats(selectedOptions);
+    if (!value) setCategories(selectedOptions);
     onChange?.(selectedOptions);
   };
 
   if (readonly) {
     return (
       <div className={className}>
-        <H2 size="s">{t('common.formats')}</H2>
-        <FormatsList formats={selectedFormats} />
+        <H2 size="s">{t('common.categories')}</H2>
+        <CategoriesList categories={selectedCategories} />
       </div>
     );
   }
@@ -62,10 +62,10 @@ export function FormatsSelectPanel({
   return (
     <div className={className}>
       <SelectPanel
-        name="formats"
+        name="categories"
         form={form}
-        label={t('common.formats')}
-        defaultValue={selectedFormats.map((format) => format.value)}
+        label={t('common.categories')}
+        defaultValue={selectedCategories.map((category) => category.value)}
         options={options}
         onChange={handleChange}
         multiple={multiple}
@@ -73,22 +73,22 @@ export function FormatsSelectPanel({
       >
         <div className="flex items-center justify-between group">
           <H2 size="s" className="group-hover:text-indigo-600">
-            {t('common.formats')}
+            {t('common.categories')}
           </H2>
           <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" aria-hidden />
         </div>
       </SelectPanel>
 
-      <FormatsList formats={selectedFormats} error={error} />
+      <CategoriesList categories={selectedCategories} error={error} />
     </div>
   );
 }
 
-function FormatsList({ formats, error }: { formats: Array<SelectPanelOption>; error?: SubmissionError }) {
+function CategoriesList({ categories, error }: { categories: Array<SelectPanelOption>; error?: SubmissionError }) {
   const { t } = useTranslation();
   return (
     <div className="flex flex-wrap gap-2">
-      {formats.length === 0 && !error ? <Text size="xs">{t('common.no-formats')}</Text> : null}
+      {categories.length === 0 && !error ? <Text size="xs">{t('common.no-categories')}</Text> : null}
 
       {error ? (
         <Text size="s" variant="error">
@@ -96,8 +96,8 @@ function FormatsList({ formats, error }: { formats: Array<SelectPanelOption>; er
         </Text>
       ) : null}
 
-      {formats.map((format) => (
-        <Badge key={format.value}>{format.label}</Badge>
+      {categories.map((category) => (
+        <Badge key={category.value}>{category.label}</Badge>
       ))}
     </div>
   );
@@ -109,7 +109,7 @@ function Action({ team, event }: { team: string; event: string }) {
   return (
     <Link to={to} className={cx('hover:bg-gray-100', menuItem())}>
       <PencilSquareMicroIcon className="text-gray-400" />
-      {t('common.formats-select-panel.manage')}
+      {t('common.categories-select-panel.manage')}
     </Link>
   );
 }

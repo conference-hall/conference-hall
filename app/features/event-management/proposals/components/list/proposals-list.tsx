@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { useListSelection } from '~/design-system/list/use-list-selection.tsx';
-import { ListHeader } from './list/header.tsx';
-import { ProposalItem } from './list/proposal-item.tsx';
-import { SelectAllBanner } from './list/select-all-banner.tsx';
-import type { ProposalData } from './list/types.ts';
+import type { ProposalData } from '../shared/types.ts';
+import { ListHeader } from './header/header.tsx';
+import { SelectAllBanner } from './header/select-all-banner.tsx';
+import { ProposalItem } from './items/proposal-item.tsx';
 
 type Props = {
   proposals: Array<ProposalData>;

@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import type { ProposalData } from '../../proposal.tsx';
-import { GlobalReviewNote } from '../review-note.tsx';
-import { ProposalStatusSelect } from './review-sidebar-sections/proposal-status-select.tsx';
-import { ReviewForm } from './review-sidebar-sections/review-form.tsx';
+import type { ProposalData } from '../../../proposal.tsx';
+import { GlobalReviewNote } from '../../shared/review-note.tsx';
+import { ProposalStatusSelect } from './proposal-status-select.tsx';
+import { ReviewForm } from './review-form.tsx';
 
 type Props = { proposal: ProposalData; reviewEnabled: boolean; canDeliberate: boolean };
 

@@ -7,10 +7,10 @@ import { Tag } from '~/design-system/tag.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { ReviewComments } from '~/features/event-management/proposals/components/proposals-page/list/review-comments.tsx';
-import { GlobalReviewNote, UserReviewNote } from '~/features/event-management/proposals/components/review-note.tsx';
 import { formatDate } from '~/shared/datetimes/datetimes.ts';
-import type { ProposalData } from './types.ts';
+import { GlobalReviewNote, UserReviewNote } from '../../shared/review-note.tsx';
+import type { ProposalData } from '../../shared/types.ts';
+import { ReviewComments } from './review-comments.tsx';
 
 type ProposalItemProps = {
   proposal: ProposalData;

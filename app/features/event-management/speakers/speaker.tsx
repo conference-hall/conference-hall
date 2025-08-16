@@ -13,7 +13,7 @@ import {
   SpeakerTitle,
 } from '~/features/speaker/talk-library/components/speakers.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { ProposalItem } from '../proposals/components/proposals-page/list/proposal-item.tsx';
+import { ProposalItem } from '../proposals/components/list/items/proposal-item.tsx';
 import type { Route } from './+types/speaker.ts';
 import { EventSpeakers } from './services/event-speakers.server.ts';
 

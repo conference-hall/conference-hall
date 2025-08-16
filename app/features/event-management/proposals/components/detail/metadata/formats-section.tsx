@@ -1,6 +1,6 @@
 import { useFetcher } from 'react-router';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
-import { FormatsSelectPanel } from '../../new-proposal/formats-select-panel.tsx';
+import { FormatsPanel } from '../../form-panels/formats-panel.tsx';
 
 type FormatsSectionProps = {
   team: string;
@@ -45,7 +45,7 @@ export function FormatsSection({
   };
 
   return (
-    <FormatsSelectPanel
+    <FormatsPanel
       key={proposalId}
       team={team}
       event={event}

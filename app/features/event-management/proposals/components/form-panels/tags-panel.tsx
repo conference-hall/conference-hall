@@ -22,7 +22,7 @@ type Props = {
   showAction?: boolean;
 };
 
-export function TagsSelectPanel({
+export function TagsPanel({
   team,
   event,
   form,

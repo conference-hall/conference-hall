@@ -3,8 +3,8 @@ import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { DeliberationButton } from '../actions/deliberation-button.tsx';
-import { ReviewsProgress } from './reviews-progress.tsx';
+import { ReviewsProgress } from '../../shared/reviews-progress.tsx';
+import { DeliberationButton } from './deliberation-button.tsx';
 
 type Props = {
   checkboxRef: React.RefObject<HTMLInputElement | null>;

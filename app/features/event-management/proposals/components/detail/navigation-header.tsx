@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { ReviewsProgress } from '../proposals-page/list/reviews-progress.tsx';
+import { ReviewsProgress } from '../shared/reviews-progress.tsx';
 
 type Props = { current: number; total: number; reviewed: number; nextId?: string; previousId?: string };
 
-export function ReviewHeader({ current, total, reviewed, nextId, previousId }: Props) {
+export function NavigationHeader({ current, total, reviewed, nextId, previousId }: Props) {
   const { t } = useTranslation();
   const params = useParams();
   const [searchParams] = useSearchParams();

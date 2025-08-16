@@ -13,10 +13,10 @@ import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/new-proposal.ts';
-import { CategoriesSelectPanel } from './components/new-proposal/categories-select-panel.tsx';
-import { FormatsSelectPanel } from './components/new-proposal/formats-select-panel.tsx';
-import { SpeakersSelectPanel } from './components/new-proposal/speakers-select-panel.tsx';
-import { TagsSelectPanel } from './components/new-proposal/tags-select-panel.tsx';
+import { CategoriesPanel } from './components/form-panels/categories-panel.tsx';
+import { FormatsPanel } from './components/form-panels/formats-panel.tsx';
+import { SpeakersPanel } from './components/form-panels/speakers-panel.tsx';
+import { TagsPanel } from './components/form-panels/tags-panel.tsx';
 import { TalkProposalCreationSchema } from './services/proposal-management.schema.server.ts';
 import { ProposalManagement } from './services/proposal-management.server.ts';
 
@@ -79,7 +79,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
 
         <div>
           <Card as="section" className="py-2">
-            <SpeakersSelectPanel
+            <SpeakersPanel
               team={params.team}
               event={params.event}
               form={formId}
@@ -89,7 +89,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
 
             <Divider />
 
-            <FormatsSelectPanel
+            <FormatsPanel
               team={params.team}
               event={params.event}
               form={formId}
@@ -100,7 +100,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
 
             <Divider />
 
-            <CategoriesSelectPanel
+            <CategoriesPanel
               team={params.team}
               event={params.event}
               form={formId}
@@ -111,7 +111,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
 
             <Divider />
 
-            <TagsSelectPanel
+            <TagsPanel
               team={params.team}
               event={params.event}
               form={formId}
