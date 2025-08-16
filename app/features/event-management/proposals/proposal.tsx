@@ -217,6 +217,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                 proposalId={params.proposal}
                 proposalFormats={proposal.formats}
                 eventFormats={event.formats}
+                multiple={event.formatsAllowMultiple}
                 canEditEventProposals={canEditEventProposals}
                 canEditEvent={canEditEvent}
                 className="space-y-3 p-4 lg:px-6"
@@ -232,6 +233,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                 proposalId={params.proposal}
                 proposalCategories={proposal.categories}
                 eventCategories={event.categories}
+                multiple={event.categoriesAllowMultiple}
                 canEditEventProposals={canEditEventProposals}
                 canEditEvent={canEditEvent}
                 className="space-y-3 p-4 lg:px-6"
