@@ -253,7 +253,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
               eventTags={event.tags}
               canEditEventProposals={canEditEventProposals}
               canEditEvent={canEditEvent}
-              className="space-y-3 p-4 lg:px-6"
+              className="space-y-3 p-4 pb-6 lg:px-6"
             />
           </Card>
         </div>

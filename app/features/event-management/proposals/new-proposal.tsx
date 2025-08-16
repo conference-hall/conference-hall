@@ -53,6 +53,9 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
     return null;
   }
 
+  const hasFormats = event.formats && event.formats.length > 0;
+  const hasCategories = event.categories && event.categories.length > 0;
+
   return (
     <Page>
       <Page.Heading
@@ -78,45 +81,53 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
         </Card>
 
         <div>
-          <Card as="section" className="py-2">
+          <Card as="section">
             <SpeakersPanel
               team={params.team}
               event={params.event}
               form={formId}
               error={actionData?.errors?.speakers}
-              className="space-y-2.5 p-4 lg:px-6"
+              className="space-y-3 p-4 lg:px-6"
             />
 
             <Divider />
 
-            <FormatsPanel
-              team={params.team}
-              event={params.event}
-              form={formId}
-              error={actionData?.errors?.formats}
-              options={event.formats.map((f) => ({ value: f.id, label: f.name }))}
-              className="space-y-2.5 p-4 lg:px-6"
-            />
+            {hasFormats ? (
+              <>
+                <FormatsPanel
+                  team={params.team}
+                  event={params.event}
+                  form={formId}
+                  error={actionData?.errors?.formats}
+                  options={event.formats.map((f) => ({ value: f.id, label: f.name }))}
+                  multiple={event.formatsAllowMultiple}
+                  className="space-y-3 p-4 lg:px-6"
+                />
+                <Divider />
+              </>
+            ) : null}
 
-            <Divider />
-
-            <CategoriesPanel
-              team={params.team}
-              event={params.event}
-              form={formId}
-              error={actionData?.errors?.categories}
-              options={event.categories.map((c) => ({ value: c.id, label: c.name }))}
-              className="space-y-2.5 p-4 lg:px-6"
-            />
-
-            <Divider />
+            {hasCategories ? (
+              <>
+                <CategoriesPanel
+                  team={params.team}
+                  event={params.event}
+                  form={formId}
+                  error={actionData?.errors?.categories}
+                  options={event.categories.map((c) => ({ value: c.id, label: c.name }))}
+                  multiple={event.categoriesAllowMultiple}
+                  className="space-y-3 p-4 lg:px-6"
+                />
+                <Divider />
+              </>
+            ) : null}
 
             <TagsPanel
               team={params.team}
               event={params.event}
               form={formId}
               options={event.tags.map((c) => ({ value: c.id, label: c.name, color: c.color }))}
-              className="space-y-2.5 p-4 lg:px-6"
+              className="space-y-3 p-4 pb-6 lg:px-6"
             />
           </Card>
         </div>
