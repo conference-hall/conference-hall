@@ -7,14 +7,12 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import {
-  SpeakerLinks,
-  SpeakerSurveyAnswers,
-  SpeakerTitle,
-} from '~/features/speaker/talk-library/components/speakers.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { ProposalItem } from '../proposals/components/list/items/proposal-item.tsx';
 import type { Route } from './+types/speaker.ts';
+import { SpeakerLinks } from './components/speaker-details/speaker-links.tsx';
+import { SpeakerSurveyAnswers } from './components/speaker-details/speaker-survey-answers.tsx';
+import { SpeakerTitle } from './components/speaker-details/speaker-title.tsx';
 import { EventSpeakers } from './services/event-speakers.server.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
@@ -44,7 +42,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
               <Markdown>{speaker.bio}</Markdown>
             </div>
 
-            <SpeakerLinks speaker={speaker} />
+            <SpeakerLinks email={speaker.email} location={speaker.location} socialLinks={speaker.socialLinks} />
           </div>
         </Card.Content>
 

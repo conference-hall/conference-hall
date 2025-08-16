@@ -1,4 +1,5 @@
 import { useFetcher } from 'react-router';
+import type { SpeakerData } from '~/shared/types/speaker.types.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { SpeakersPanel } from '../../form-panels/speakers-panel.tsx';
 
@@ -6,12 +7,7 @@ type SpeakersSectionProps = {
   team: string;
   event: string;
   proposalId: string;
-  proposalSpeakers: Array<{
-    id: string;
-    name: string;
-    picture?: string | null;
-    company?: string | null;
-  }>;
+  proposalSpeakers: Array<SpeakerData>;
   canEditEventProposals: boolean;
   className?: string;
 };
@@ -56,6 +52,7 @@ export function SpeakersSection({
         picture: item.picture,
         data: { description: item.company },
       }))}
+      speakersDetails={proposalSpeakers}
       onChange={(selected) => {
         update(selected);
       }}

@@ -1,5 +1,4 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
-import { EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,15 +7,16 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { InvitationModal } from '~/design-system/dialogs/invitation-modal.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
-import { ExternalLink } from '~/design-system/links.tsx';
-import { Markdown } from '~/design-system/markdown.tsx';
-import { SocialLink } from '~/design-system/social-link.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import { SpeakerInfo } from '~/features/event-management/speakers/components/speaker-details/speaker-info.tsx';
+import { SpeakerLinks } from '~/features/event-management/speakers/components/speaker-details/speaker-links.tsx';
+import { SpeakerSurveyAnswers } from '~/features/event-management/speakers/components/speaker-details/speaker-survey-answers.tsx';
+import { SpeakerTitle } from '~/features/event-management/speakers/components/speaker-details/speaker-title.tsx';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
 
 export type SpeakerProps = {
   userId: string | null;
-  name: string | null;
+  name: string;
   email?: string;
   picture?: string | null;
   company?: string | null;
@@ -53,6 +53,19 @@ export function Speakers({ speakers, invitationLink, canEdit, className }: CoSpe
   );
 }
 
+type SpeakerPillProps = { speaker: Pick<SpeakerProps, 'name' | 'picture'>; className?: string };
+
+export function SpeakerPill({ speaker, className }: SpeakerPillProps) {
+  return (
+    <span className={cx('flex items-center gap-2  p-1 pr-3 rounded-full border border-gray-200', className)}>
+      <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
+      <Text weight="medium" size="xs" variant="secondary" truncate>
+        {speaker.name}
+      </Text>
+    </span>
+  );
+}
+
 type SpeakerPillButtonProps = { speaker: SpeakerProps; canEdit?: boolean };
 
 function SpeakerPillButton({ speaker, canEdit }: SpeakerPillButtonProps) {
@@ -76,19 +89,6 @@ function SpeakerPillButton({ speaker, canEdit }: SpeakerPillButtonProps) {
         onClose={() => setOpen(false)}
       />
     </>
-  );
-}
-
-type SpeakerPillProps = { speaker: Pick<SpeakerProps, 'name' | 'picture'>; className?: string };
-
-export function SpeakerPill({ speaker, className }: SpeakerPillProps) {
-  return (
-    <span className={cx('flex items-center gap-2  p-1 pr-3 rounded-full border border-gray-200', className)}>
-      <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
-      <Text weight="medium" size="xs" variant="secondary" truncate>
-        {speaker.name}
-      </Text>
-    </span>
   );
 }
 
@@ -150,102 +150,14 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
       <SlideOver.Content className="space-y-6">
         <h2 className="sr-only">{t('speaker.panel.heading')}</h2>
 
-        <SpeakerLinks speaker={speaker} />
+        <SpeakerLinks email={speaker.email} location={speaker.location} socialLinks={speaker.socialLinks} />
 
         {canEdit && speaker.userId && <RemoveCoSpeakerButton speakerId={speaker.userId} speakerName={speaker.name} />}
 
-        <SpeakerDetails speaker={speaker} />
+        <SpeakerInfo bio={speaker.bio} references={speaker.references} />
 
         <SpeakerSurveyAnswers survey={speaker.survey} />
       </SlideOver.Content>
     </SlideOver>
   );
-}
-
-type SpeakerTitleProps = { name: string | null; picture?: string | null; company?: string | null };
-
-export function SpeakerTitle({ name, picture, company }: SpeakerTitleProps) {
-  return (
-    <div className="flex items-center gap-4">
-      <Avatar picture={picture} name={name} size="l" />
-
-      <div className="overflow-hidden">
-        <Text weight="semibold" size="base" truncate>
-          {name}
-        </Text>
-        <Text variant="secondary" weight="normal" truncate>
-          {company}
-        </Text>
-      </div>
-    </div>
-  );
-}
-
-type SpeakerLinksProps = { speaker: Pick<SpeakerProps, 'location' | 'email' | 'socialLinks'>; className?: string };
-
-export function SpeakerLinks({ speaker, className }: SpeakerLinksProps) {
-  return (
-    <div className={cx('flex flex-col gap-2', className)}>
-      {speaker.location ? (
-        <ExternalLink
-          iconLeft={MapPinIcon}
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(speaker.location)}`}
-          variant="secondary"
-        >
-          {speaker.location}
-        </ExternalLink>
-      ) : null}
-
-      {speaker.email ? (
-        <ExternalLink iconLeft={EnvelopeIcon} href={`mailto:${speaker.email}`} variant="secondary">
-          {speaker.email}
-        </ExternalLink>
-      ) : null}
-
-      {speaker.socialLinks?.map((socialLink) => (
-        <SocialLink key={socialLink} url={socialLink} />
-      ))}
-    </div>
-  );
-}
-
-type SpeakerDetailsProps = { speaker: SpeakerProps; className?: string };
-
-function SpeakerDetails({ speaker, className }: SpeakerDetailsProps) {
-  const { t } = useTranslation();
-
-  const details = [
-    { key: 'bio', label: t('speaker.profile.biography'), value: speaker.bio },
-    { key: 'references', label: t('speaker.profile.references'), value: speaker.references },
-  ].filter((detail) => Boolean(detail.value));
-
-  return details.map((detail) => (
-    <div key={detail.label} className={className}>
-      <div className="text-sm font-medium leading-6 text-gray-900">{detail.label}</div>
-      <div className="mt-1 text-sm leading-6 text-gray-700 break-words">
-        {(detail.key === 'bio' || detail.key === 'references') && detail.value ? (
-          <Markdown>{detail.value as string}</Markdown>
-        ) : (
-          detail.value
-        )}
-      </div>
-    </div>
-  ));
-}
-
-type SpeakerSurveyAnswer = { survey?: Array<SurveyDetailedAnswer>; className?: string };
-
-export function SpeakerSurveyAnswers({ survey, className }: SpeakerSurveyAnswer) {
-  if (!survey || survey.length === 0) {
-    return null;
-  }
-
-  return survey?.map((question) => (
-    <div key={question.id} className={className}>
-      <div className="text-sm font-medium leading-6 text-gray-900">{question.label}</div>
-      <div className="text-sm leading-6 text-gray-700 break-words">
-        {question.type === 'text' ? question.answer : question.answers?.map((a) => a.label).join(', ')}
-      </div>
-    </div>
-  ));
 }

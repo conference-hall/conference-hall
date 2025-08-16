@@ -4,19 +4,21 @@ import { cx } from 'class-variance-authority';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, useFetcher } from 'react-router';
-import { Avatar } from '~/design-system/avatar.tsx';
 import { SelectPanel, type SelectPanelOption } from '~/design-system/forms/select-panel.tsx';
 import { menuItem } from '~/design-system/styles/menu.styles.ts';
 import { H2, Text } from '~/design-system/typography.tsx';
+import { SpeakerDrawer } from '~/features/event-management/speakers/components/speaker-details/speaker-drawer.tsx';
+import { SpeakerRow } from '~/features/event-management/speakers/components/speaker-details/speaker-row.tsx';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
+import type { SpeakerData } from '~/shared/types/speaker.types.ts';
 import type { loader as AutocompleteLoader } from '../../../command-palette/autocomplete.ts';
 
 type Props = {
   team: string;
   event: string;
   form?: string;
-  defaultValues?: Array<SelectPanelOption>;
   value?: Array<SelectPanelOption>;
+  speakersDetails?: Array<SpeakerData>;
   error?: SubmissionError;
   onChange?: (speakers: Array<SelectPanelOption>) => void;
   className?: string;
@@ -28,8 +30,8 @@ export function SpeakersPanel({
   team,
   event,
   form,
-  defaultValues = [],
   value,
+  speakersDetails = [],
   error,
   onChange,
   className,
@@ -38,7 +40,7 @@ export function SpeakersPanel({
 }: Props) {
   const { t } = useTranslation();
   const fetcher = useFetcher<typeof AutocompleteLoader>();
-  const [speakers, setSpeakers] = useState<Array<SelectPanelOption>>(defaultValues);
+  const [speakers, setSpeakers] = useState<Array<SelectPanelOption>>([]);
   const selectedSpeakers = value ?? speakers;
 
   const loading = ['loading', 'submitting'].includes(fetcher.state);
@@ -84,7 +86,7 @@ export function SpeakersPanel({
     return (
       <div className={className}>
         <H2 size="s">{t('common.speakers')}</H2>
-        <SpeakersList speakers={selectedSpeakers} />
+        <SpeakersList speakers={selectedSpeakers} speakersDetails={speakersDetails} />
       </div>
     );
   }
@@ -111,12 +113,18 @@ export function SpeakersPanel({
         </div>
       </SelectPanel>
 
-      <SpeakersList speakers={selectedSpeakers} error={error} />
+      <SpeakersList speakers={selectedSpeakers} speakersDetails={speakersDetails} error={error} />
     </div>
   );
 }
 
-function SpeakersList({ speakers, error }: { speakers: Array<SelectPanelOption>; error?: SubmissionError }) {
+type SpeakersListProps = {
+  speakers: Array<SelectPanelOption>;
+  speakersDetails?: Array<SpeakerData>;
+  error?: SubmissionError;
+};
+
+function SpeakersList({ speakers, speakersDetails, error }: SpeakersListProps) {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-2">
@@ -128,21 +136,26 @@ function SpeakersList({ speakers, error }: { speakers: Array<SelectPanelOption>;
         </Text>
       ) : null}
 
-      {speakers.map((speaker) => (
-        <div key={speaker.value} className="flex items-center gap-2 truncate">
-          <Avatar picture={speaker.picture} name={speaker.label} size="xs" />
-          <div className="flex items-baseline gap-2 truncate">
-            <Text weight="semibold" truncate>
-              {speaker.label}
-            </Text>
-            {speaker.data?.description ? (
-              <Text variant="secondary" size="xs" truncate>
-                {speaker.data?.description}
-              </Text>
-            ) : null}
-          </div>
-        </div>
-      ))}
+      {speakers.map((speaker) => {
+        const speakerDetails = speakersDetails?.find((s) => speaker.value === s.id);
+
+        if (speakerDetails) {
+          return (
+            <SpeakerDrawer key={speaker.value} speaker={speakerDetails}>
+              <SpeakerRow name={speaker.label} picture={speaker.picture} description={speaker.data?.description} />
+            </SpeakerDrawer>
+          );
+        }
+
+        return (
+          <SpeakerRow
+            key={speaker.value}
+            name={speaker.label}
+            picture={speaker.picture}
+            description={speaker.data?.description}
+          />
+        );
+      })}
     </div>
   );
 }
