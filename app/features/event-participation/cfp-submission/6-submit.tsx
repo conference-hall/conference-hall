@@ -41,15 +41,8 @@ export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.Co
 
   return (
     <Page className="space-y-4">
-      <TalkSection
-        talk={proposal}
-        event={currentEvent}
-        canEditTalk={false}
-        canEditSpeakers={false}
-        canArchive={false}
-        showFormats
-        showCategories
-      />
+      <TalkSection talk={proposal} showSpeakers showFormats showCategories />
+
       <Card>
         <Card.Content>
           <Form method="POST" id={formId} className="flex flex-col sm:flex-row items-center justify-between gap-4">

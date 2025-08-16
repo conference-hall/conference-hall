@@ -5,7 +5,10 @@ import { ProgressBar } from '~/design-system/charts/progress-bar.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Tooltip } from '~/design-system/tooltip.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { GlobalReviewNote, UserReviewNote } from '~/features/event-management/proposals/components/review-note.tsx';
+import {
+  GlobalReviewNote,
+  UserReviewNote,
+} from '~/features/event-management/proposals/components/shared/review-note.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/overview.reviewers.ts';
 import { ReviewersMetrics } from './services/reviewers-metrics.server.ts';

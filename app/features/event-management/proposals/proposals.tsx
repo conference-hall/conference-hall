@@ -14,11 +14,11 @@ import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { getObjectHash } from '~/shared/utils/object-hash.ts';
 import type { Route } from './+types/proposals.ts';
-import { ExportMenu } from './components/proposals-page/actions/export-menu.tsx';
-import { FiltersMenu } from './components/proposals-page/filters/filters-menu.tsx';
-import { FiltersTags } from './components/proposals-page/filters/filters-tags.tsx';
-import { SortMenu } from './components/proposals-page/filters/sort-menu.tsx';
-import { ProposalsList } from './components/proposals-page/proposals-list.tsx';
+import { ProposalsList } from './components/list/proposals-list.tsx';
+import { ExportMenu } from './components/list/toolbar/export-menu.tsx';
+import { FiltersMenu } from './components/list/toolbar/filters-menu.tsx';
+import { FiltersTags } from './components/list/toolbar/filters-tags.tsx';
+import { SortMenu } from './components/list/toolbar/sort-menu.tsx';
 import { CfpReviewsSearch } from './services/cfp-reviews-search.server.ts';
 import { ProposalStatusBulkSchema, ProposalStatusUpdater } from './services/proposal-status-updater.server.ts';
 

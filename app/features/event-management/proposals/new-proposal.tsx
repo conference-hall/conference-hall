@@ -13,12 +13,12 @@ import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/new-proposal.ts';
-import { CategoriesSelectPanel } from './components/new-proposal/categories-select-panel.tsx';
-import { FormatsSelectPanel } from './components/new-proposal/formats-select-panel.tsx';
-import { SpeakersSelectPanel } from './components/new-proposal/speakers-select-panel.tsx';
-import { TagsSelectPanel } from './components/new-proposal/tags-select-panel.tsx';
-import { TalkProposalCreationSchema } from './services/proposal-creation.schema.server.ts';
-import { ProposalCreation } from './services/proposal-creation.server.ts';
+import { CategoriesPanel } from './components/form-panels/categories-panel.tsx';
+import { FormatsPanel } from './components/form-panels/formats-panel.tsx';
+import { SpeakersPanel } from './components/form-panels/speakers-panel.tsx';
+import { TagsPanel } from './components/form-panels/tags-panel.tsx';
+import { ProposalCreationSchema } from './services/proposal-management.schema.server.ts';
+import { ProposalManagement } from './services/proposal-management.server.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireUserSession(request);
@@ -30,11 +30,11 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
   const form = await request.formData();
-  const result = parseWithZod(form, { schema: TalkProposalCreationSchema });
-  if (result.status !== 'success') return { errors: result.error }; // todo(proposal): display errors
+  const result = parseWithZod(form, { schema: ProposalCreationSchema });
+  if (result.status !== 'success') return { errors: result.error };
 
   try {
-    const proposal = await ProposalCreation.for(userId, params.team, params.event).create(result.value);
+    const proposal = await ProposalManagement.for(userId, params.team, params.event).create(result.value);
     const headers = await toastHeaders('success', t('event-management.proposals.new.feedbacks.created'));
     return redirect(href('/team/:team/:event/reviews/:proposal', { ...params, proposal: proposal.id }), { headers });
   } catch (_error) {
@@ -52,6 +52,9 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
   if (!isFeatureEnabled || !team.userPermissions?.canCreateEventProposal) {
     return null;
   }
+
+  const hasFormats = event.formats && event.formats.length > 0;
+  const hasCategories = event.categories && event.categories.length > 0;
 
   return (
     <Page>
@@ -78,45 +81,53 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
         </Card>
 
         <div>
-          <Card as="section" className="py-2">
-            <SpeakersSelectPanel
+          <Card as="section">
+            <SpeakersPanel
               team={params.team}
               event={params.event}
               form={formId}
               error={actionData?.errors?.speakers}
-              className="space-y-2.5 p-4 lg:px-6"
+              className="space-y-3 p-4 lg:px-6"
             />
 
             <Divider />
 
-            <FormatsSelectPanel
-              team={params.team}
-              event={params.event}
-              form={formId}
-              error={actionData?.errors?.formats}
-              options={event.formats.map((f) => ({ value: f.id, label: f.name }))}
-              className="space-y-2.5 p-4 lg:px-6"
-            />
+            {hasFormats ? (
+              <>
+                <FormatsPanel
+                  team={params.team}
+                  event={params.event}
+                  form={formId}
+                  error={actionData?.errors?.formats}
+                  options={event.formats.map((f) => ({ value: f.id, label: f.name }))}
+                  multiple={event.formatsAllowMultiple}
+                  className="space-y-3 p-4 lg:px-6"
+                />
+                <Divider />
+              </>
+            ) : null}
 
-            <Divider />
+            {hasCategories ? (
+              <>
+                <CategoriesPanel
+                  team={params.team}
+                  event={params.event}
+                  form={formId}
+                  error={actionData?.errors?.categories}
+                  options={event.categories.map((c) => ({ value: c.id, label: c.name }))}
+                  multiple={event.categoriesAllowMultiple}
+                  className="space-y-3 p-4 lg:px-6"
+                />
+                <Divider />
+              </>
+            ) : null}
 
-            <CategoriesSelectPanel
-              team={params.team}
-              event={params.event}
-              form={formId}
-              error={actionData?.errors?.categories}
-              options={event.categories.map((c) => ({ value: c.id, label: c.name }))}
-              className="space-y-2.5 p-4 lg:px-6"
-            />
-
-            <Divider />
-
-            <TagsSelectPanel
+            <TagsPanel
               team={params.team}
               event={params.event}
               form={formId}
               options={event.tags.map((c) => ({ value: c.id, label: c.name, color: c.color }))}
-              className="space-y-2.5 p-4 lg:px-6"
+              className="space-y-3 p-4 pb-6 lg:px-6"
             />
           </Card>
         </div>

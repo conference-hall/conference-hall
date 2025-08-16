@@ -6,13 +6,14 @@ import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { SpeakerLinks } from '~/features/speaker/talk-library/components/speakers.tsx';
+import { SpeakerLinks } from '~/features/event-management/speakers/components/speaker-details/speaker-links.tsx';
+import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 
 type Props = {
   email: string;
   bio: string | null;
   location: string | null;
-  socialLinks: Array<string>;
+  socialLinks: SocialLinks;
 };
 
 export function SpeakerDetailsSection({ email, bio, location, socialLinks }: Props) {
@@ -30,7 +31,7 @@ export function SpeakerDetailsSection({ email, bio, location, socialLinks }: Pro
         </div>
 
         <div className="px-6 py-4">
-          <SpeakerLinks speaker={{ location, email, socialLinks }} />
+          <SpeakerLinks email={email} location={location} socialLinks={socialLinks} />
         </div>
 
         <div className="px-6 py-4 flex items-center gap-3">

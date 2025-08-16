@@ -10,13 +10,9 @@ import { Markdown } from '~/design-system/markdown.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDatetime } from '~/shared/datetimes/datetimes.ts';
-import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { SpeakerProps } from './speakers.tsx';
 import { Speakers } from './speakers.tsx';
-import { TalkArchiveButton } from './talk-forms/talk-archive-button.tsx';
-import { TalkEditButton } from './talk-forms/talk-form-drawer.tsx';
-import { TalkSubmitButton } from './talk-forms/talk-submit-button.tsx';
 
 type Props = {
   talk: {
@@ -33,36 +29,23 @@ type Props = {
     categories?: Array<{ id: string; name: string }>;
     createdAt: Date;
   };
-  event?: {
-    formats?: Array<{ id: string; name: string; description: string | null }>;
-    formatsRequired?: boolean;
-    formatsAllowMultiple?: boolean;
-    categories?: Array<{ id: string; name: string; description: string | null }>;
-    categoriesRequired?: boolean;
-    categoriesAllowMultiple?: boolean;
-  };
-  errors?: SubmissionErrors;
-  canEditTalk: boolean;
-  canEditSpeakers: boolean;
-  canArchive: boolean;
-  canSubmitTalk?: boolean;
+  actions?: ReactNode;
+  children?: ReactNode;
+  canEditSpeakers?: boolean;
   showBackButton?: boolean;
+  showSpeakers?: boolean;
   showFormats?: boolean;
   showCategories?: boolean;
   referencesOpen?: boolean;
-  children?: ReactNode;
 };
 
 export function TalkSection({
   talk,
-  event,
-  errors,
   children,
-  canEditTalk,
-  canEditSpeakers,
-  canArchive,
-  canSubmitTalk = false,
+  actions,
+  canEditSpeakers = false,
   showBackButton = false,
+  showSpeakers = false,
   showFormats = false,
   showCategories = false,
   referencesOpen = false,
@@ -79,23 +62,21 @@ export function TalkSection({
           ) : null}
           <H1 size="base">{talk.title}</H1>
         </div>
-        <div className="flex flex-row sm:justify-between items-center gap-3">
-          {canArchive && <TalkArchiveButton archived={Boolean(talk.archived)} />}
 
-          {canEditTalk && !talk.archived && <TalkEditButton initialValues={talk} event={event} errors={errors} />}
-
-          {canSubmitTalk && <TalkSubmitButton talkId={talk.id} />}
-        </div>
+        {actions ? <div className="flex flex-row sm:justify-between items-center gap-3">{actions}</div> : null}
       </div>
 
       <div className="p-4 flex gap-4">
-        <Speakers
-          speakers={talk.speakers}
-          invitationLink={talk.invitationLink}
-          canEdit={canEditSpeakers && !talk.archived}
-          className="grow"
-        />
-        <Text size="xs" variant="secondary" className="text-nowrap hidden sm:block">
+        {showSpeakers ? (
+          <Speakers
+            speakers={talk.speakers}
+            invitationLink={talk.invitationLink}
+            canEdit={canEditSpeakers && !talk.archived}
+            className="grow"
+          />
+        ) : null}
+
+        <Text size="xs" variant="secondary" className="text-nowrap pl-1.5 hidden sm:block">
           <ClientOnly>
             {() =>
               t('common.created-on', {
@@ -107,7 +88,7 @@ export function TalkSection({
         </Text>
       </div>
 
-      <dl className="p-6 pt-4 flex flex-col gap-8">
+      <dl className="p-6 pt-2 flex flex-col gap-8">
         <div>
           <dt className="sr-only">{t('talk.abstract')}</dt>
           <Markdown as="dd" className="text-gray-700">
