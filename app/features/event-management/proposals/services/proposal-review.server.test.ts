@@ -134,6 +134,7 @@ describe('ProposalReview', () => {
 
   describe('#getOtherProposals', () => {
     it('returns other speakers proposals', async () => {
+      const eventSpeaker = await eventSpeakerFactory({ event, user: speaker });
       const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), traits: ['draft'] });
@@ -146,15 +147,16 @@ describe('ProposalReview', () => {
       });
 
       const proposalReview = ProposalReview.for(owner.id, team.slug, event.slug, proposal1.id);
-      const otherProposals = await proposalReview.getOtherProposals([speaker.id]);
+      const otherProposals = await proposalReview.getOtherProposals([eventSpeaker.id]);
 
       expect(otherProposals).toEqual([
         { id: proposal2.id, title: proposal2.title, review: review.note, speakers: [speaker.name] },
       ]);
     });
 
-    it('returns other speakers proposals without reviews when disabled for event', async () => {
+    it('returns other speakers proposals without reviews when their are disabled for event', async () => {
       const event2 = await eventFactory({ team, attributes: { displayProposalsReviews: false } });
+      const eventSpeaker = await eventSpeakerFactory({ event: event2, user: speaker });
       const proposal1 = await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
       const proposal2 = await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
       await reviewFactory({
@@ -164,7 +166,7 @@ describe('ProposalReview', () => {
       });
 
       const proposalReview = ProposalReview.for(owner.id, team.slug, event2.slug, proposal1.id);
-      const otherProposals = await proposalReview.getOtherProposals([speaker.id]);
+      const otherProposals = await proposalReview.getOtherProposals([eventSpeaker.id]);
 
       expect(otherProposals).toEqual([
         { id: proposal2.id, title: proposal2.title, review: null, speakers: [speaker.name] },
@@ -172,12 +174,13 @@ describe('ProposalReview', () => {
     });
 
     it('returns empty array when speakers display disabled', async () => {
+      const eventSpeaker = await eventSpeakerFactory({ event, user: speaker });
       const event2 = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
       const proposal1 = await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
       await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
 
       const proposalReview = ProposalReview.for(owner.id, team.slug, event2.slug, proposal1.id);
-      const otherProposals = await proposalReview.getOtherProposals([speaker.id]);
+      const otherProposals = await proposalReview.getOtherProposals([eventSpeaker.id]);
 
       expect(otherProposals).toEqual([]);
     });

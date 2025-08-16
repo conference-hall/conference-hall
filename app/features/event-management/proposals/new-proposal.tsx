@@ -17,7 +17,7 @@ import { CategoriesPanel } from './components/form-panels/categories-panel.tsx';
 import { FormatsPanel } from './components/form-panels/formats-panel.tsx';
 import { SpeakersPanel } from './components/form-panels/speakers-panel.tsx';
 import { TagsPanel } from './components/form-panels/tags-panel.tsx';
-import { TalkProposalCreationSchema } from './services/proposal-management.schema.server.ts';
+import { ProposalCreationSchema } from './services/proposal-management.schema.server.ts';
 import { ProposalManagement } from './services/proposal-management.server.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
@@ -30,8 +30,8 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
   const form = await request.formData();
-  const result = parseWithZod(form, { schema: TalkProposalCreationSchema });
-  if (result.status !== 'success') return { errors: result.error }; // todo(proposal): display errors
+  const result = parseWithZod(form, { schema: ProposalCreationSchema });
+  if (result.status !== 'success') return { errors: result.error };
 
   try {
     const proposal = await ProposalManagement.for(userId, params.team, params.event).create(result.value);

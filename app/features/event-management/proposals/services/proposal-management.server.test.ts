@@ -9,7 +9,7 @@ import { talkFactory } from '~/../tests/factories/talks.ts';
 import { teamFactory } from '~/../tests/factories/team.ts';
 import { userFactory } from '~/../tests/factories/users.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-import type { TalkProposalCreationData } from './proposal-management.schema.server.ts';
+import type { ProposalCreationData } from './proposal-management.schema.server.ts';
 import { ProposalManagement } from './proposal-management.server.ts';
 
 describe('ProposalManagement', () => {
@@ -21,7 +21,7 @@ describe('ProposalManagement', () => {
       const event = await eventFactory({ team, attributes: { name: 'Test Event' } });
       const eventSpeaker = await eventSpeakerFactory({ event, user: speaker });
 
-      const proposalData: TalkProposalCreationData = {
+      const proposalData: ProposalCreationData = {
         title: 'Test Talk',
         abstract: 'This is a test talk abstract',
         speakers: [eventSpeaker.id],
@@ -54,7 +54,7 @@ describe('ProposalManagement', () => {
       const format = await eventFormatFactory({ event });
       const category = await eventCategoryFactory({ event });
 
-      const proposalData: TalkProposalCreationData = {
+      const proposalData: ProposalCreationData = {
         title: 'Test Talk with Format',
         abstract: 'This is a test talk abstract',
         speakers: [eventSpeaker.id],

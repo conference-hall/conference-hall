@@ -96,7 +96,7 @@ export class ProposalReview extends UserEventAuthorization {
       include: { reviews: true, speakers: true },
       where: {
         id: { not: this.proposalId },
-        speakers: { some: { userId: { in: speakerIds } } },
+        speakers: { some: { id: { in: speakerIds } } },
         eventId: event.id,
         isDraft: false,
       },

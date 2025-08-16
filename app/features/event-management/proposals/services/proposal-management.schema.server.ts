@@ -1,8 +1,6 @@
 import { z } from 'zod';
 
-// todo(proposal): reuse existing schemas ?
-// todo(proposal): manage mandatory or optional tracks
-export const TalkProposalCreationSchema = z.object({
+export const ProposalCreationSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100),
   abstract: z.string().min(1, 'Abstract is required').max(5000),
   references: z.string().optional(),
@@ -14,11 +12,11 @@ export const TalkProposalCreationSchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
-export type TalkProposalCreationData = z.infer<typeof TalkProposalCreationSchema>;
+export type ProposalCreationData = z.infer<typeof ProposalCreationSchema>;
 
 export const ProposalUpdateSchema = z.object({
-  title: z.string().trim().min(1),
-  abstract: z.string().trim().min(1),
+  title: z.string().min(1, 'Title is required').max(100),
+  abstract: z.string().min(1, 'Abstract is required').max(5000),
   references: z.string().nullable().default(null),
   languages: z.array(z.string()).optional(),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable().default(null),

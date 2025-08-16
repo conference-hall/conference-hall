@@ -1,12 +1,12 @@
 import { db } from 'prisma/db.server.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type {
+  ProposalCreationData,
   ProposalSaveCategoriesData,
   ProposalSaveFormatsData,
   ProposalSaveSpeakersData,
   ProposalSaveTagsData,
   ProposalUpdateData,
-  TalkProposalCreationData,
 } from './proposal-management.schema.server.ts';
 
 export class ProposalManagement extends UserEventAuthorization {
@@ -21,7 +21,7 @@ export class ProposalManagement extends UserEventAuthorization {
     return new ProposalManagement(userId, teamSlug, eventSlug, proposalId);
   }
 
-  async create(data: TalkProposalCreationData) {
+  async create(data: ProposalCreationData) {
     const event = await this.needsPermission('canCreateEventProposal');
 
     return await db.$transaction(async (trx) => {
