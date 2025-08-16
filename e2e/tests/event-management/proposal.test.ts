@@ -11,6 +11,7 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { ProposalPage } from './proposal.page.ts';
 
 loginWith('clark-kent');
@@ -22,9 +23,12 @@ let proposal: Proposal;
 let proposal2: Proposal;
 
 test.beforeEach(async () => {
+  await flags.set('organizerProposalCreation', true);
+
   const user = await userFactory({ traits: ['clark-kent'] });
   const reviewer = await userFactory({ traits: ['bruce-wayne'] });
   team = await teamFactory({ owners: [user], reviewers: [reviewer] });
+
   event = await eventFactory({ team, traits: ['conference-cfp-open', 'withSurveyConfig'] });
   const format1 = await eventFormatFactory({ event, attributes: { name: 'Format 1' } });
   const format2 = await eventFormatFactory({ event, attributes: { name: 'Format 2' } });
@@ -32,6 +36,7 @@ test.beforeEach(async () => {
   const category2 = await eventCategoryFactory({ event, attributes: { name: 'Category 2' } });
   const tag1 = await eventProposalTagFactory({ event, attributes: { name: 'Tag 1' } });
   await eventProposalTagFactory({ event, attributes: { name: 'Tag 2' } });
+
   const speaker1 = await userFactory({
     attributes: {
       name: 'Marie Jane',
@@ -44,6 +49,7 @@ test.beforeEach(async () => {
     },
   });
   const speaker2 = await userFactory({ attributes: { name: 'Robin' } });
+
   proposal = await proposalFactory({
     event,
     formats: [format1],
@@ -67,11 +73,13 @@ test.beforeEach(async () => {
     categories: [category2],
     talk: await talkFactory({ attributes: { title: 'Talk 2' }, speakers: [speaker2] }),
   });
+
   await surveyFactory({
     event,
     user: speaker1,
     attributes: { answers: { accomodation: 'yes', transports: ['taxi', 'train'], info: 'Love you' } },
   });
+
   await reviewFactory({ proposal, user: reviewer, attributes: { note: 3, feeling: 'NEUTRAL' } });
   await commentFactory({
     proposal,
@@ -79,6 +87,7 @@ test.beforeEach(async () => {
     attributes: { channel: 'ORGANIZER', comment: 'Hello world' },
     traits: ['withReaction'],
   });
+
   event2 = await eventFactory({
     team,
     attributes: {
@@ -146,17 +155,18 @@ test('displays proposal data and review the proposal', async ({ page }) => {
   await expect(proposalPage.activityFeed).toHaveCount(3);
 
   // Check speaker profile
-  await proposalPage.speaker('Marie Jane').click();
-  await expect(page.getByRole('heading', { name: 'Marie Jane' })).toBeVisible();
-  await expect(page.getByText('MJ Corp')).toBeVisible();
-  await expect(page.getByText('marie@example.com')).toBeVisible();
-  await expect(page.getByText('MJ Bio')).toBeVisible();
-  await expect(page.getByText('MJ References')).toBeVisible();
-  await expect(page.getByText('Nantes')).toBeVisible();
-  await expect(page.getByText('Yes')).toBeVisible();
-  await expect(page.getByText('Taxi, Train')).toBeVisible();
-  await expect(page.getByText('Love you')).toBeVisible();
-  await page.getByRole('button', { name: 'Close' }).click();
+  const speakerDrawer = await proposalPage.clickOnSpeaker('Marie Jane');
+
+  await expect(speakerDrawer.getByRole('heading', { name: 'Marie Jane' })).toBeVisible();
+  await expect(speakerDrawer.getByText('MJ Corp')).toBeVisible();
+  await expect(speakerDrawer.getByText('marie@example.com')).toBeVisible();
+  await expect(speakerDrawer.getByText('MJ Bio')).toBeVisible();
+  await expect(speakerDrawer.getByText('MJ References')).toBeVisible();
+  await expect(speakerDrawer.getByText('Nantes')).toBeVisible();
+  await expect(speakerDrawer.getByText('Yes')).toBeVisible();
+  await expect(speakerDrawer.getByText('Taxi, Train')).toBeVisible();
+  await expect(speakerDrawer.getByText('Love you')).toBeVisible();
+  await speakerDrawer.getByRole('button', { name: 'Close' }).click();
 });
 
 test('navigates between proposals', async ({ page }) => {
@@ -220,9 +230,75 @@ test('manage tags', async ({ page }) => {
   await page.getByRole('option', { name: 'Tag 2' }).click();
   await proposalPage.tagsButton.click();
 
-  // Check default tags
+  // Check updated tags
   await expect(page.getByText('Tag 1')).not.toBeVisible();
   await expect(page.getByText('Tag 2')).toBeVisible();
+});
+
+test('manage speakers', async ({ page }) => {
+  const proposalPage = new ProposalPage(page);
+  await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+
+  // Check default speakers
+  await expect(page.getByText('Marie Jane')).toBeVisible();
+  await expect(page.getByText('Robin')).toBeVisible();
+
+  // Remove a speaker and add it back
+  await proposalPage.speakersButton.click();
+  await page.getByRole('option', { name: 'Marie Jane' }).click();
+  await proposalPage.speakersButton.click();
+
+  // Check speaker removed
+  await expect(page.getByText('Marie Jane')).not.toBeVisible();
+  await expect(page.getByText('Robin')).toBeVisible();
+
+  // Add speaker back
+  await proposalPage.speakersButton.click();
+  await page.getByPlaceholder('Search...').fill('Marie');
+  await page.getByRole('option', { name: 'Marie Jane' }).click();
+  await proposalPage.speakersButton.click();
+
+  // Check speaker added back
+  await expect(page.getByText('Marie Jane')).toBeVisible();
+  await expect(page.getByText('Robin')).toBeVisible();
+});
+
+test('manage formats', async ({ page }) => {
+  const proposalPage = new ProposalPage(page);
+  await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+
+  // Check default format
+  await expect(page.getByText('Format 1')).toBeVisible();
+  await expect(page.getByText('Format 2')).not.toBeVisible();
+
+  // Change format
+  await proposalPage.formatsButton.click();
+  await page.getByRole('option', { name: 'Format 1' }).click();
+  await page.getByRole('option', { name: 'Format 2' }).click();
+  await proposalPage.formatsButton.click();
+
+  // Check format changed
+  await expect(page.getByText('Format 1')).not.toBeVisible();
+  await expect(page.getByText('Format 2')).toBeVisible();
+});
+
+test('manage categories', async ({ page }) => {
+  const proposalPage = new ProposalPage(page);
+  await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+
+  // Check default category
+  await expect(page.getByText('Category 1')).toBeVisible();
+  await expect(page.getByText('Category 2')).not.toBeVisible();
+
+  // Change category
+  await proposalPage.categoriesButton.click();
+  await page.getByRole('option', { name: 'Category 1' }).click();
+  await page.getByRole('option', { name: 'Category 2' }).click();
+  await proposalPage.categoriesButton.click();
+
+  // Check category changed
+  await expect(page.getByText('Category 1')).not.toBeVisible();
+  await expect(page.getByText('Category 2')).toBeVisible();
 });
 
 test('edit proposal', async ({ page }) => {
@@ -235,16 +311,11 @@ test('edit proposal', async ({ page }) => {
   // check original talk values'
   await expect(talkEdit.titleInput).toHaveValue(proposal.title);
   await expect(talkEdit.abstractInput).toHaveValue(proposal.abstract);
-  await expect(talkEdit.radioInput('Advanced')).toBeChecked();
-  await expect(talkEdit.radioInput('Format 1')).toBeChecked();
-  await expect(talkEdit.radioInput('Category 1')).toBeChecked();
   await expect(talkEdit.languageSelect.selected('French')).toBeVisible();
 
   // edits the talk
   await talkEdit.waitFor();
   await talkEdit.fillForm('New title', 'New abstract', 'BEGINNER', 'English', 'New references');
-  await talkEdit.radioInput('Format 2').click();
-  await talkEdit.radioInput('Category 2').click();
   await talkEdit.save();
   await expect(talkEdit.toast).toHaveText('Proposal saved.');
 
@@ -254,8 +325,6 @@ test('edit proposal', async ({ page }) => {
   await expect(page.getByRole('main').getByText('Beginner')).toBeVisible();
   await expect(page.getByRole('main').getByText('French')).toBeVisible();
   await expect(page.getByRole('main').getByText('English')).toBeVisible();
-  await expect(page.getByRole('main').getByText('Format 2')).toBeVisible();
-  await expect(page.getByRole('main').getByText('Category 2')).toBeVisible();
 
   await proposalPage.referencesToggle.click();
   await expect(page.getByText('New references')).toBeVisible();
@@ -265,7 +334,7 @@ test('hides reviews, speakers following event settings', async ({ page }) => {
   const proposalPage = new ProposalPage(page);
   await proposalPage.goto(team.slug, event2.slug, proposal2.id, proposal2.title);
 
-  await expect(page.getByRole('heading', { name: 'Your review' })).not.toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Global review' })).not.toBeVisible();
   await expect(page.getByText('Marie Jane')).not.toBeVisible();
   await expect(page.getByText('Robin')).not.toBeVisible();
 });

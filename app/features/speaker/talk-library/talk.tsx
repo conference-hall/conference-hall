@@ -7,6 +7,9 @@ import { requireUserSession } from '~/shared/auth/session.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/talk.ts';
+import { TalkArchiveButton } from './components/talk-forms/talk-archive-button.tsx';
+import { TalkEditButton } from './components/talk-forms/talk-form-drawer.tsx';
+import { TalkSubmitButton } from './components/talk-forms/talk-submit-button.tsx';
 import { TalkSection } from './components/talk-section.tsx';
 import { TalkSubmissionsSection } from './components/talk-submissions-section.tsx';
 import { TalkSaveSchema } from './services/talks-library.schema.server.ts';
@@ -61,12 +64,16 @@ export default function SpeakerTalkRoute({ loaderData: talk, actionData: errors 
       <div className="space-y-6">
         <TalkSection
           talk={talk}
-          errors={errors}
+          actions={
+            <div className="flex flex-row sm:justify-between items-center gap-3">
+              <TalkArchiveButton archived={Boolean(talk.archived)} />
+              {!talk.archived && <TalkEditButton initialValues={talk} errors={errors} />}
+              {!talk.archived && <TalkSubmitButton talkId={talk.id} />}
+            </div>
+          }
           canEditSpeakers
-          canArchive
-          canEditTalk
-          canSubmitTalk={!talk.archived}
           showBackButton
+          showSpeakers
         />
 
         {talk.submissions.length > 0 ? <TalkSubmissionsSection submissions={talk.submissions} /> : null}

@@ -14,7 +14,7 @@ export default defineConfig({
   workers: 1,
   fullyParallel: false,
   forbidOnly: CI,
-  retries: CI ? 2 : 1,
+  retries: CI ? 1 : 0,
   reporter: 'list',
   timeout: 20000,
 

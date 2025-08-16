@@ -7,7 +7,7 @@ import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { ReviewDetails } from '../models/review-details.ts';
-import type { ProposalSaveTagsData, ProposalUpdateData, ReviewUpdateData } from './proposal-review.schema.server.ts';
+import type { ReviewUpdateData } from './proposal-review.schema.server.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
@@ -68,6 +68,7 @@ export class ProposalReview extends UserEventAuthorization {
       },
       speakers:
         proposal.speakers?.map((speaker) => ({
+          id: speaker.id,
           userId: speaker.userId,
           name: speaker.name,
           picture: speaker.picture,
@@ -95,7 +96,7 @@ export class ProposalReview extends UserEventAuthorization {
       include: { reviews: true, speakers: true },
       where: {
         id: { not: this.proposalId },
-        speakers: { some: { userId: { in: speakerIds } } },
+        speakers: { some: { id: { in: speakerIds } } },
         eventId: event.id,
         isDraft: false,
       },
@@ -144,28 +145,5 @@ export class ProposalReview extends UserEventAuthorization {
     const reviewsDetails = new ReviewDetails(reviews);
     const average = reviewsDetails.summary().average ?? null;
     await db.proposal.update({ where: { id: this.proposalId }, data: { avgRateForSort: average } });
-  }
-
-  async update(data: ProposalUpdateData) {
-    await this.needsPermission('canEditEventProposals');
-
-    const { formats, categories, ...talk } = data;
-    return db.proposal.update({
-      where: { id: this.proposalId },
-      data: {
-        ...talk,
-        formats: { set: [], connect: formats?.map((id) => ({ id })) },
-        categories: { set: [], connect: categories?.map((id) => ({ id })) },
-      },
-    });
-  }
-
-  async saveTags(data: ProposalSaveTagsData) {
-    await this.needsPermission('canEditEventProposals');
-
-    return db.proposal.update({
-      where: { id: this.proposalId },
-      data: { tags: { set: [], connect: data.tags?.map((id) => ({ id })) } },
-    });
   }
 }
