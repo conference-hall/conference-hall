@@ -157,8 +157,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
 
   const hasSpeakers = proposal.speakers.length > 0;
-  const hasFormats = proposal.formats && proposal.formats.length > 0;
-  const hasCategories = proposal.categories && proposal.categories.length > 0;
+  const hasFormats = event.formats && event.formats.length > 0;
+  const hasCategories = event.categories && event.categories.length > 0;
 
   return (
     <Page>
@@ -198,49 +198,52 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
 
           <Card as="section">
             {hasSpeakers ? (
-              <SpeakersSection
-                team={params.team}
-                event={params.event}
-                proposalId={params.proposal}
-                proposalSpeakers={proposal.speakers}
-                canEditEventProposals={canEditEventProposals}
-                className="space-y-3 p-4 lg:px-6"
-              />
+              <>
+                <SpeakersSection
+                  team={params.team}
+                  event={params.event}
+                  proposalId={params.proposal}
+                  proposalSpeakers={proposal.speakers}
+                  canEditEventProposals={canEditEventProposals}
+                  className="space-y-3 p-4 lg:px-6"
+                />
+                <Divider />
+              </>
             ) : null}
-
-            <Divider />
 
             {hasFormats ? (
-              <FormatsSection
-                team={params.team}
-                event={params.event}
-                proposalId={params.proposal}
-                proposalFormats={proposal.formats}
-                eventFormats={event.formats}
-                multiple={event.formatsAllowMultiple}
-                canEditEventProposals={canEditEventProposals}
-                canEditEvent={canEditEvent}
-                className="space-y-3 p-4 lg:px-6"
-              />
+              <>
+                <FormatsSection
+                  team={params.team}
+                  event={params.event}
+                  proposalId={params.proposal}
+                  proposalFormats={proposal.formats}
+                  eventFormats={event.formats}
+                  multiple={event.formatsAllowMultiple}
+                  canEditEventProposals={canEditEventProposals}
+                  canEditEvent={canEditEvent}
+                  className="space-y-3 p-4 lg:px-6"
+                />
+                <Divider />
+              </>
             ) : null}
-
-            <Divider />
 
             {hasCategories ? (
-              <CategoriesSection
-                team={params.team}
-                event={params.event}
-                proposalId={params.proposal}
-                proposalCategories={proposal.categories}
-                eventCategories={event.categories}
-                multiple={event.categoriesAllowMultiple}
-                canEditEventProposals={canEditEventProposals}
-                canEditEvent={canEditEvent}
-                className="space-y-3 p-4 lg:px-6"
-              />
+              <>
+                <CategoriesSection
+                  team={params.team}
+                  event={params.event}
+                  proposalId={params.proposal}
+                  proposalCategories={proposal.categories}
+                  eventCategories={event.categories}
+                  multiple={event.categoriesAllowMultiple}
+                  canEditEventProposals={canEditEventProposals}
+                  canEditEvent={canEditEvent}
+                  className="space-y-3 p-4 lg:px-6"
+                />
+                <Divider />
+              </>
             ) : null}
-
-            <Divider />
 
             <TagsSection
               team={params.team}

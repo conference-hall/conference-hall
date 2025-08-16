@@ -119,7 +119,7 @@ function SelectPanelContent({
       </ComboboxInput>
 
       {displayedOptions.length > 0 ? (
-        <ComboboxOptions className="max-h-48 py-2 overflow-y-auto" static>
+        <ComboboxOptions className={cx('max-h-48 py-2 overflow-y-auto', { 'pb-0': !footer })} static>
           {displayedOptions.map((option) => {
             const isSelected = isOptionSelected(option);
 
