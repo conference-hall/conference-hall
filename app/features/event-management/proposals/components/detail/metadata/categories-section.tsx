@@ -35,11 +35,11 @@ export function CategoriesSection({
   }
   displayed = sortBy(displayed, 'name');
 
-  const update = (tags: Array<{ id: string; name: string }>) => {
+  const update = (ids: Array<string>) => {
     const formData = new FormData();
     formData.set('intent', 'save-categories');
-    for (const tag of tags) {
-      formData.append('categories', tag.id);
+    for (const id of ids) {
+      formData.append('categories', id);
     }
     fetcher.submit(formData, { method: 'POST', preventScrollReset: true });
   };
@@ -51,9 +51,7 @@ export function CategoriesSection({
       event={event}
       value={displayed.map((item) => ({ value: item.id, label: item.name }))}
       options={eventCategories.map((item) => ({ value: item.id, label: item.name }))}
-      onChange={(selected) => {
-        update(selected.map((option) => eventCategories.find((item) => item.id === option.value)!).filter(Boolean));
-      }}
+      onChange={(selected) => update(selected.map((option) => option.value))}
       multiple={multiple}
       readonly={!canEditEventProposals}
       showAction={canEditEvent}

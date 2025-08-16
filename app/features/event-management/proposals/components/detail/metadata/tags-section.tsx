@@ -34,11 +34,11 @@ export function TagsSection({
   }
   displayedTags = sortBy(displayedTags, 'name');
 
-  const update = (tags: Array<TagType>) => {
+  const update = (ids: Array<string>) => {
     const formData = new FormData();
     formData.set('intent', 'save-tags');
-    for (const tag of tags) {
-      formData.append('tags', tag.id);
+    for (const id of ids) {
+      formData.append('tags', id);
     }
     fetcher.submit(formData, { method: 'POST', preventScrollReset: true });
   };
@@ -50,9 +50,7 @@ export function TagsSection({
       event={event}
       value={displayedTags.map((tag) => ({ value: tag.id, label: tag.name, color: tag.color }))}
       options={eventTags.map((tag) => ({ value: tag.id, label: tag.name, color: tag.color }))}
-      onChange={(selected) => {
-        update(selected.map((option) => eventTags.find((tag) => tag.id === option.value)!).filter(Boolean));
-      }}
+      onChange={(selected) => update(selected.map((option) => option.value))}
       readonly={!canEditEventProposals}
       showAction={canEditEvent}
       className={className}

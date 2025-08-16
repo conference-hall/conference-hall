@@ -35,11 +35,11 @@ export function FormatsSection({
   }
   displayed = sortBy(displayed, 'name');
 
-  const update = (formats: Array<{ id: string; name: string }>) => {
+  const update = (ids: Array<string>) => {
     const formData = new FormData();
     formData.set('intent', 'save-formats');
-    for (const format of formats) {
-      formData.append('formats', format.id);
+    for (const id of ids) {
+      formData.append('formats', id);
     }
     fetcher.submit(formData, { method: 'POST', preventScrollReset: true });
   };
@@ -51,9 +51,7 @@ export function FormatsSection({
       event={event}
       value={displayed.map((item) => ({ value: item.id, label: item.name }))}
       options={eventFormats.map((item) => ({ value: item.id, label: item.name }))}
-      onChange={(selected) => {
-        update(selected.map((option) => eventFormats.find((item) => item.id === option.value)!).filter(Boolean));
-      }}
+      onChange={(selected) => update(selected.map((option) => option.value))}
       multiple={multiple}
       readonly={!canEditEventProposals}
       showAction={canEditEvent}
