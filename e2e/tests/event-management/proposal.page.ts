@@ -18,7 +18,10 @@ export class ProposalPage extends PageObject {
   readonly waitingConfirmation = this.page.getByText('Waiting for speaker confirmation');
   readonly resultPublished = this.page.getByText('Result published to speakers');
 
-  readonly tagsButton = this.page.getByRole('button', { name: 'Tags' });
+  readonly tagsButton = this.page.getByRole('button', { name: 'Tags', exact: true });
+  readonly speakersButton = this.page.getByRole('button', { name: 'Speakers', exact: true });
+  readonly formatsButton = this.page.getByRole('button', { name: 'Formats', exact: true });
+  readonly categoriesButton = this.page.getByRole('button', { name: 'Categories', exact: true });
 
   async goto(team: string, event: string, id: string, title: string) {
     await this.page.goto(`/team/${team}/${event}/reviews/${id}`);

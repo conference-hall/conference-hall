@@ -221,9 +221,75 @@ test('manage tags', async ({ page }) => {
   await page.getByRole('option', { name: 'Tag 2' }).click();
   await proposalPage.tagsButton.click();
 
-  // Check default tags
+  // Check updated tags
   await expect(page.getByText('Tag 1')).not.toBeVisible();
   await expect(page.getByText('Tag 2')).toBeVisible();
+});
+
+test('manage speakers', async ({ page }) => {
+  const proposalPage = new ProposalPage(page);
+  await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+
+  // Check default speakers
+  await expect(page.getByText('Marie Jane')).toBeVisible();
+  await expect(page.getByText('Robin')).toBeVisible();
+
+  // Remove a speaker and add it back
+  await proposalPage.speakersButton.click();
+  await page.getByRole('option', { name: 'Marie Jane' }).click();
+  await proposalPage.speakersButton.click();
+
+  // Check speaker removed
+  await expect(page.getByText('Marie Jane')).not.toBeVisible();
+  await expect(page.getByText('Robin')).toBeVisible();
+
+  // Add speaker back
+  await proposalPage.speakersButton.click();
+  await page.getByPlaceholder('Search...').fill('Marie');
+  await page.getByRole('option', { name: 'Marie Jane' }).click();
+  await proposalPage.speakersButton.click();
+
+  // Check speaker added back
+  await expect(page.getByText('Marie Jane')).toBeVisible();
+  await expect(page.getByText('Robin')).toBeVisible();
+});
+
+test('manage formats', async ({ page }) => {
+  const proposalPage = new ProposalPage(page);
+  await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+
+  // Check default format
+  await expect(page.getByText('Format 1')).toBeVisible();
+  await expect(page.getByText('Format 2')).not.toBeVisible();
+
+  // Change format
+  await proposalPage.formatsButton.click();
+  await page.getByRole('option', { name: 'Format 1' }).click();
+  await page.getByRole('option', { name: 'Format 2' }).click();
+  await proposalPage.formatsButton.click();
+
+  // Check format changed
+  await expect(page.getByText('Format 1')).not.toBeVisible();
+  await expect(page.getByText('Format 2')).toBeVisible();
+});
+
+test('manage categories', async ({ page }) => {
+  const proposalPage = new ProposalPage(page);
+  await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+
+  // Check default category
+  await expect(page.getByText('Category 1')).toBeVisible();
+  await expect(page.getByText('Category 2')).not.toBeVisible();
+
+  // Change category
+  await proposalPage.categoriesButton.click();
+  await page.getByRole('option', { name: 'Category 1' }).click();
+  await page.getByRole('option', { name: 'Category 2' }).click();
+  await proposalPage.categoriesButton.click();
+
+  // Check category changed
+  await expect(page.getByText('Category 1')).not.toBeVisible();
+  await expect(page.getByText('Category 2')).toBeVisible();
 });
 
 test('edit proposal', async ({ page }) => {
