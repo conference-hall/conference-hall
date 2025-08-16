@@ -125,7 +125,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     }
     case 'save-speakers': {
       const result = parseWithZod(form, { schema: ProposalSaveSpeakersSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', result?.error?.speakers?.[0] || t('error.global'));
 
       const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
       await proposal.saveSpeakers(result.value);
@@ -204,7 +204,6 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                 proposalId={params.proposal}
                 proposalSpeakers={proposal.speakers}
                 canEditEventProposals={canEditEventProposals}
-                error={errors?.speakers}
                 className="space-y-3 p-4 lg:px-6"
               />
             ) : null}
@@ -220,7 +219,6 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                 eventFormats={event.formats}
                 canEditEventProposals={canEditEventProposals}
                 canEditEvent={canEditEvent}
-                error={errors?.formats}
                 className="space-y-3 p-4 lg:px-6"
               />
             ) : null}
@@ -236,7 +234,6 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                 eventCategories={event.categories}
                 canEditEventProposals={canEditEventProposals}
                 canEditEvent={canEditEvent}
-                error={errors?.categories}
                 className="space-y-3 p-4 lg:px-6"
               />
             ) : null}

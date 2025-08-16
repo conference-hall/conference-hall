@@ -27,7 +27,7 @@ export const ProposalUpdateSchema = z.object({
 export type ProposalUpdateData = z.infer<typeof ProposalUpdateSchema>;
 
 export const ProposalSaveSpeakersSchema = z.object({
-  speakers: z.array(z.string()).min(1),
+  speakers: z.array(z.string()).min(1, 'At least one speaker is required'),
 });
 
 export type ProposalSaveSpeakersData = z.infer<typeof ProposalSaveSpeakersSchema>;

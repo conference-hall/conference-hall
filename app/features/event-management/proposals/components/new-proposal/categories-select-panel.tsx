@@ -90,7 +90,7 @@ function CategoriesList({ categories, error }: { categories: Array<SelectPanelOp
     <div className="flex flex-wrap gap-2">
       {categories.length === 0 && !error ? <Text size="xs">{t('common.no-categories')}</Text> : null}
 
-      {categories.length === 0 && error ? (
+      {error ? (
         <Text size="s" variant="error">
           {error[0]}
         </Text>

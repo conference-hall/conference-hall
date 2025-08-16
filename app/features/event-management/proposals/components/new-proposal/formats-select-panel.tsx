@@ -90,7 +90,7 @@ function FormatsList({ formats, error }: { formats: Array<SelectPanelOption>; er
     <div className="flex flex-wrap gap-2">
       {formats.length === 0 && !error ? <Text size="xs">{t('common.no-formats')}</Text> : null}
 
-      {formats.length === 0 && error ? (
+      {error ? (
         <Text size="s" variant="error">
           {error[0]}
         </Text>

@@ -1,5 +1,4 @@
 import { useFetcher } from 'react-router';
-import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { CategoriesSelectPanel } from '../../new-proposal/categories-select-panel.tsx';
 
@@ -11,7 +10,6 @@ type CategoriesSectionProps = {
   eventCategories: Array<{ id: string; name: string }>;
   canEditEventProposals: boolean;
   canEditEvent: boolean;
-  error?: SubmissionError;
   className?: string;
 };
 
@@ -23,10 +21,9 @@ export function CategoriesSection({
   eventCategories,
   canEditEventProposals,
   canEditEvent,
-  error,
   className,
 }: CategoriesSectionProps) {
-  const fetcher = useFetcher({ key: 'save-categories' });
+  const fetcher = useFetcher({ key: `save-categories:${proposalId}` });
 
   // optimistic update
   let displayed = proposalCategories;
@@ -57,7 +54,6 @@ export function CategoriesSection({
       }}
       readonly={!canEditEventProposals}
       showAction={canEditEvent}
-      error={error}
       className={className}
     />
   );

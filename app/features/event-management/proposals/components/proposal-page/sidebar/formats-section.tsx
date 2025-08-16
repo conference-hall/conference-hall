@@ -1,5 +1,4 @@
 import { useFetcher } from 'react-router';
-import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { FormatsSelectPanel } from '../../new-proposal/formats-select-panel.tsx';
 
@@ -11,7 +10,6 @@ type FormatsSectionProps = {
   eventFormats: Array<{ id: string; name: string }>;
   canEditEventProposals: boolean;
   canEditEvent: boolean;
-  error?: SubmissionError;
   className?: string;
 };
 
@@ -23,10 +21,9 @@ export function FormatsSection({
   eventFormats,
   canEditEventProposals,
   canEditEvent,
-  error,
   className,
 }: FormatsSectionProps) {
-  const fetcher = useFetcher({ key: 'save-formats' });
+  const fetcher = useFetcher({ key: `save-formats:${proposalId}` });
 
   // optimistic update
   let displayed = proposalFormats;
@@ -57,7 +54,6 @@ export function FormatsSection({
       }}
       readonly={!canEditEventProposals}
       showAction={canEditEvent}
-      error={error}
       className={className}
     />
   );

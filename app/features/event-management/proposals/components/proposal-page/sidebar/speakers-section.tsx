@@ -1,5 +1,4 @@
 import { useFetcher } from 'react-router';
-import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { SpeakersSelectPanel } from '../../new-proposal/speakers-select-panel.tsx';
 
@@ -14,7 +13,6 @@ type SpeakersSectionProps = {
     company?: string | null;
   }>;
   canEditEventProposals: boolean;
-  error?: SubmissionError;
   className?: string;
 };
 
@@ -24,10 +22,9 @@ export function SpeakersSection({
   proposalId,
   proposalSpeakers,
   canEditEventProposals,
-  error,
   className,
 }: SpeakersSectionProps) {
-  const fetcher = useFetcher({ key: 'save-speakers' });
+  const fetcher = useFetcher({ key: `save-speakers:${proposalId}` });
 
   // optimistic update
   let displayed = proposalSpeakers;
@@ -64,7 +61,6 @@ export function SpeakersSection({
       }}
       readonly={!canEditEventProposals}
       showAction={false}
-      error={error}
       className={className}
     />
   );

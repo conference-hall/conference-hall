@@ -24,7 +24,7 @@ export function TagsSection({
   canEditEvent,
   className,
 }: TagsSectionProps) {
-  const fetcher = useFetcher({ key: 'save-tags' });
+  const fetcher = useFetcher({ key: `save-tags:${proposalId}` });
 
   // optimistic update
   let displayedTags = proposalTags;

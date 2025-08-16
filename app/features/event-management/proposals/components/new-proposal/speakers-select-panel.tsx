@@ -122,7 +122,7 @@ function SpeakersList({ speakers, error }: { speakers: Array<SelectPanelOption>;
     <div className="flex flex-col gap-2">
       {speakers.length === 0 && !error ? <Text size="xs">{t('common.no-speakers')}</Text> : null}
 
-      {speakers.length === 0 && error ? (
+      {error ? (
         <Text size="s" variant="error">
           {error[0]}
         </Text>
