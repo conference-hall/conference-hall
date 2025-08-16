@@ -177,7 +177,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           </Suspense>
         </div>
 
-        <div className="lg:col-span-4 space-y-4">
+        <div className="lg:col-span-4 flex flex-col-reverse lg:flex-col gap-4">
           <ReviewSidebar
             proposal={proposal}
             reviewEnabled={event.reviewEnabled}
