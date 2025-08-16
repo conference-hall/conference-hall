@@ -1,5 +1,5 @@
-import { Markdown } from '@react-email/components';
 import { useTranslation } from 'react-i18next';
+import { Markdown } from '~/design-system/markdown.tsx';
 
 type Props = {
   bio?: string | null;

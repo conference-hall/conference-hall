@@ -71,7 +71,7 @@ export function CategoriesPanel({
         multiple={multiple}
         footer={showAction ? <Action team={team} event={event} /> : null}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between group">
           <H2 size="s" className="group-hover:text-indigo-600">
             {t('common.categories')}
           </H2>

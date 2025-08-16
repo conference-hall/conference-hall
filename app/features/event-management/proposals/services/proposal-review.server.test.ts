@@ -154,7 +154,7 @@ describe('ProposalReview', () => {
       ]);
     });
 
-    it('returns other speakers proposals without reviews when their are disabled for event', async () => {
+    it('returns other speakers proposals without reviews when they are disabled for event', async () => {
       const event2 = await eventFactory({ team, attributes: { displayProposalsReviews: false } });
       const eventSpeaker = await eventSpeakerFactory({ event: event2, user: speaker });
       const proposal1 = await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
