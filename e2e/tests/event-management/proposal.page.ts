@@ -1,4 +1,3 @@
-import { CoSpeakerComponent } from 'e2e/common/co-speaker.component.ts';
 import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
 import { PageObject } from 'e2e/page-object.ts';
 
@@ -41,6 +40,6 @@ export class ProposalPage extends PageObject {
 
   async clickOnSpeaker(name: string) {
     await this.speaker(name).click();
-    return new CoSpeakerComponent(this.page);
+    return this.page.getByRole('dialog', { name });
   }
 }
