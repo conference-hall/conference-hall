@@ -10,6 +10,7 @@ import { parseUrlFilters } from '~/features/event-management/proposals/services/
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
@@ -154,6 +155,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
   const { canEditEvent, canEditEventProposals, canChangeProposalStatus } = team.userPermissions;
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
 
+  const proposalCreationEnabled = useFlag('organizerProposalCreation');
+
   const hasSpeakers = proposal.speakers.length > 0;
   const hasFormats = event.formats && event.formats.length > 0;
   const hasCategories = event.categories && event.categories.length > 0;
@@ -192,7 +195,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   event={params.event}
                   proposalId={params.proposal}
                   proposalSpeakers={proposal.speakers}
-                  canEditEventProposals={canEditEventProposals}
+                  canEditEventProposals={canEditEventProposals && proposalCreationEnabled}
                   className="space-y-3 p-4 lg:px-6"
                 />
                 <Divider />

@@ -11,6 +11,7 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { ProposalPage } from './proposal.page.ts';
 
 loginWith('clark-kent');
@@ -22,9 +23,12 @@ let proposal: Proposal;
 let proposal2: Proposal;
 
 test.beforeEach(async () => {
+  await flags.set('organizerProposalCreation', true);
+
   const user = await userFactory({ traits: ['clark-kent'] });
   const reviewer = await userFactory({ traits: ['bruce-wayne'] });
   team = await teamFactory({ owners: [user], reviewers: [reviewer] });
+
   event = await eventFactory({ team, traits: ['conference-cfp-open', 'withSurveyConfig'] });
   const format1 = await eventFormatFactory({ event, attributes: { name: 'Format 1' } });
   const format2 = await eventFormatFactory({ event, attributes: { name: 'Format 2' } });
@@ -32,6 +36,7 @@ test.beforeEach(async () => {
   const category2 = await eventCategoryFactory({ event, attributes: { name: 'Category 2' } });
   const tag1 = await eventProposalTagFactory({ event, attributes: { name: 'Tag 1' } });
   await eventProposalTagFactory({ event, attributes: { name: 'Tag 2' } });
+
   const speaker1 = await userFactory({
     attributes: {
       name: 'Marie Jane',
@@ -44,6 +49,7 @@ test.beforeEach(async () => {
     },
   });
   const speaker2 = await userFactory({ attributes: { name: 'Robin' } });
+
   proposal = await proposalFactory({
     event,
     formats: [format1],
@@ -67,11 +73,13 @@ test.beforeEach(async () => {
     categories: [category2],
     talk: await talkFactory({ attributes: { title: 'Talk 2' }, speakers: [speaker2] }),
   });
+
   await surveyFactory({
     event,
     user: speaker1,
     attributes: { answers: { accomodation: 'yes', transports: ['taxi', 'train'], info: 'Love you' } },
   });
+
   await reviewFactory({ proposal, user: reviewer, attributes: { note: 3, feeling: 'NEUTRAL' } });
   await commentFactory({
     proposal,
@@ -79,6 +87,7 @@ test.beforeEach(async () => {
     attributes: { channel: 'ORGANIZER', comment: 'Hello world' },
     traits: ['withReaction'],
   });
+
   event2 = await eventFactory({
     team,
     attributes: {

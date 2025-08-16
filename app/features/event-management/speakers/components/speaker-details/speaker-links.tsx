@@ -1,4 +1,4 @@
-import { EnvelopeIcon, MapPinIcon } from '@heroicons/react/20/solid';
+import { EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { SocialLink } from '~/design-system/social-link.tsx';

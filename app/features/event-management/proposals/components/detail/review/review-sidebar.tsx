@@ -1,3 +1,4 @@
+import { MinusIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
@@ -29,7 +30,11 @@ export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate }: Props)
           {summary && (
             <div className="flex items-center justify-between gap-4">
               <H2 size="s">{t('event-management.proposal-page.reviews.global')}</H2>
-              <GlobalReviewNote feeling="NEUTRAL" note={summary?.average} />
+              {summary?.average !== null ? (
+                <GlobalReviewNote feeling="NEUTRAL" note={summary?.average} />
+              ) : (
+                <MinusIcon className="h-4 w-4" aria-hidden />
+              )}
             </div>
           )}
         </div>
