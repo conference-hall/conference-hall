@@ -244,7 +244,9 @@ export function SelectPanel({
       {name && selectedValues.map((value) => <input key={value} type="hidden" name={name} value={value} form={form} />)}
 
       <Popover>
-        <PopoverButton className="w-full cursor-pointer">{children}</PopoverButton>
+        <PopoverButton className="w-full cursor-pointer rounded-sm focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600">
+          {children}
+        </PopoverButton>
         <PopoverPanel className={cx('mt-2', menuItems('w-(--button-width)'))} anchor="bottom">
           <SelectPanelContent
             options={options}

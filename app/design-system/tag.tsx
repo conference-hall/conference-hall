@@ -5,7 +5,7 @@ import type { Tag as TagType } from '~/shared/types/tags.types.ts';
 type TagProps = { tag: TagType; isSearchLink?: boolean };
 
 const styles =
-  'inline-flex items-center text-nowrap px-2 py-0.5 text-xs font-semibold rounded-full text-white max-w-full';
+  'inline-flex items-center text-nowrap px-2 py-0.5 text-xs font-semibold rounded-full text-white max-w-full focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600';
 
 export function Tag({ tag, isSearchLink = true }: TagProps) {
   if (isSearchLink) {

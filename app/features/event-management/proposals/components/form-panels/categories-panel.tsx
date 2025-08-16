@@ -71,7 +71,7 @@ export function CategoriesPanel({
         multiple={multiple}
         footer={showAction ? <Action team={team} event={event} /> : null}
       >
-        <div className="flex items-center justify-between group">
+        <div className="flex items-center justify-between">
           <H2 size="s" className="group-hover:text-indigo-600">
             {t('common.categories')}
           </H2>
@@ -107,7 +107,7 @@ function Action({ team, event }: { team: string; event: string }) {
   const { t } = useTranslation();
   const to = href('/team/:team/:event/settings/tracks', { team, event });
   return (
-    <Link to={to} className={cx('hover:bg-gray-100', menuItem())}>
+    <Link to={to} className={cx('hover:bg-gray-100 focus:outline-indigo-600', menuItem())}>
       <PencilSquareMicroIcon className="text-gray-400" />
       {t('common.categories-select-panel.manage')}
     </Link>
