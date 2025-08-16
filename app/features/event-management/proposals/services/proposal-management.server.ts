@@ -35,6 +35,15 @@ export class ProposalManagement extends UserEventAuthorization {
 
       const tagsConnect = data.tags?.length ? { connect: data.tags.map((tagId) => ({ id: tagId })) } : undefined;
 
+      const eventSpeakers = await db.eventSpeaker.findMany({
+        where: { eventId: event.id, id: { in: data.speakers } },
+        select: { id: true },
+      });
+
+      if (eventSpeakers.length === 0) {
+        throw new Error(`Speakers with IDs ${data.speakers.join(', ')} do not belong to this event`);
+      }
+
       const proposal = await trx.proposal.create({
         data: {
           title: data.title,
@@ -43,7 +52,7 @@ export class ProposalManagement extends UserEventAuthorization {
           languages: data.languages,
           level: data.level,
           event: { connect: { id: event.id } },
-          speakers: { connect: data.speakers.map((id) => ({ id })) }, // todo(proposal): check the speakers belongs to event before saving
+          speakers: { connect: eventSpeakers },
           formats: formatsConnect,
           categories: categoriesConnect,
           tags: tagsConnect,
