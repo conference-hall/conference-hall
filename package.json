@@ -28,9 +28,6 @@
     "tsc": "react-router typegen && tsc -b",
     "knip": "knip"
   },
-  "overrides": {
-    "react-is": "^19.1.1"
-  },
   "dependencies": {
     "@conform-to/zod": "^1.8.2",
     "@dnd-kit/abstract": "^0.1.21",
