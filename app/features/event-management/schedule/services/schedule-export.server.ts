@@ -1,5 +1,5 @@
-import type { EventType } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import type { EventType } from 'prisma/generated/enums.ts';
 import { getDatesRange } from '~/shared/datetimes/datetimes.ts';
 import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';

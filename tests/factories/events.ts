@@ -8,8 +8,9 @@ import {
   randUrl,
   randUuid,
 } from '@ngneat/falso';
-import type { Prisma, Team, User } from '@prisma/client';
-import { EventType, EventVisibility } from '@prisma/client';
+import type { Team, User } from 'prisma/generated/client.ts';
+import { EventType, EventVisibility } from 'prisma/generated/enums.ts';
+import type { EventCreateInput } from 'prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 import { teamFactory } from './team.ts';
@@ -114,7 +115,7 @@ const TRAITS = {
 type Trait = keyof typeof TRAITS;
 
 type FactoryOptions = {
-  attributes?: Partial<Prisma.EventCreateInput>;
+  attributes?: Partial<EventCreateInput>;
   traits?: Trait[];
   team?: Team;
   creator?: User;
@@ -129,7 +130,7 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
 
   const creator = options.creator ? options.creator : await userFactory();
 
-  const defaultAttributes: Prisma.EventCreateInput = {
+  const defaultAttributes: EventCreateInput = {
     name: randSportsTeam(),
     slug: `slug-${randUuid()}`,
     description: randParagraph(),

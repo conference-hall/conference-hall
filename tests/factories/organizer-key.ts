@@ -1,9 +1,8 @@
-import type { Prisma } from '@prisma/client';
-
+import type { OrganizerKeyAccessCreateInput } from 'prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {
-  attributes?: Partial<Prisma.OrganizerKeyAccessCreateInput>;
+  attributes?: Partial<OrganizerKeyAccessCreateInput>;
 };
 
 export const organizerKeyFactory = (options: FactoryOptions = {}) => {

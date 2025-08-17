@@ -1,18 +1,19 @@
 import { randEmail, randFullName } from '@ngneat/falso';
-import type { Event, Prisma, User } from '@prisma/client';
+import type { Event, User } from 'prisma/generated/client.ts';
+import type { EventSpeakerCreateInput } from 'prisma/generated/models.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {
   event: Event;
   user?: User;
-  attributes?: Partial<Prisma.EventSpeakerCreateInput>;
+  attributes?: Partial<EventSpeakerCreateInput>;
 };
 
 export const eventSpeakerFactory = async (options: FactoryOptions) => {
   const { attributes = {}, event, user } = options;
 
-  let defaultAttributes: Prisma.EventSpeakerCreateInput = {
+  let defaultAttributes: EventSpeakerCreateInput = {
     name: randFullName(),
     email: randEmail(),
     event: { connect: { id: event.id } },

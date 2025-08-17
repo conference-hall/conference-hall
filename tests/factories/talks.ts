@@ -1,7 +1,7 @@
 import { randLine, randPost } from '@ngneat/falso';
-import type { Prisma, User } from '@prisma/client';
-import { TalkLevel } from '@prisma/client';
-
+import type { User } from 'prisma/generated/client.ts';
+import { TalkLevel } from 'prisma/generated/enums.ts';
+import type { TalkCreateInput } from 'prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 
@@ -15,14 +15,14 @@ type Trait = keyof typeof TRAITS;
 
 type FactoryOptions = {
   speakers: User[];
-  attributes?: Partial<Prisma.TalkCreateInput>;
+  attributes?: Partial<TalkCreateInput>;
   traits?: Trait[];
 };
 
 export const talkFactory = (options: FactoryOptions) => {
   const { attributes = {}, traits = [], speakers } = options;
 
-  const defaultAttributes: Prisma.TalkCreateInput = {
+  const defaultAttributes: TalkCreateInput = {
     title: randPost().title,
     abstract: randLine({ lineCount: 5 }),
     references: randLine({ lineCount: 2 }),

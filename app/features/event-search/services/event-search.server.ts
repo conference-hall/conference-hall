@@ -1,5 +1,6 @@
-import { EventType, type Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import { EventType } from 'prisma/generated/enums.ts';
+import type { EventWhereInput } from 'prisma/generated/models.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import type { SearchFilters } from './event-search.schema.server.ts';
 
@@ -18,7 +19,7 @@ export class EventsSearch {
   async search() {
     const { query, type } = this.filters;
 
-    const eventsWhereInput: Prisma.EventWhereInput = {
+    const eventsWhereInput: EventWhereInput = {
       visibility: 'PUBLIC',
       archived: false,
       name: { contains: query, mode: 'insensitive' },
@@ -55,7 +56,7 @@ export class EventsSearch {
     };
   }
 
-  private byEventType(type?: string): Prisma.EventWhereInput {
+  private byEventType(type?: string): EventWhereInput {
     const OPEN_MEETUP = { type: EventType.MEETUP, cfpStart: { not: null } };
     const OPEN_CONFERENCE = { type: EventType.CONFERENCE, cfpEnd: { gte: new Date() } };
 

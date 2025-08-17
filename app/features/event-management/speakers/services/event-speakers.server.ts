@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod/v4';
-import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import type { EventSpeakerWhereInput } from 'prisma/generated/models.ts';
 import { z } from 'zod';
 import { ReviewDetails } from '~/features/event-management/proposals/models/review-details.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
@@ -27,7 +27,7 @@ export class EventSpeakers extends UserEventAuthorization {
 
     const { query, proposalStatus, sort = 'name-asc' } = filters;
 
-    const whereClause: Prisma.EventSpeakerWhereInput = {
+    const whereClause: EventSpeakerWhereInput = {
       eventId: event.id,
       name: query ? { contains: query, mode: 'insensitive' } : undefined,
       proposals: proposalStatus

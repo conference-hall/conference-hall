@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client';
 import type { Decimal } from '@prisma/client/runtime/library';
 import { db } from 'prisma/db.server.ts';
+import { Prisma } from 'prisma/generated/client.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 
 type ReviewsMetricsInfo = {

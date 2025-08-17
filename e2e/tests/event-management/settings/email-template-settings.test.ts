@@ -1,5 +1,5 @@
-import type { Event, Team, User } from '@prisma/client';
 import { expect, loginWith, test } from 'e2e/fixtures.ts';
+import type { Event, Team, User } from 'prisma/generated/client.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';

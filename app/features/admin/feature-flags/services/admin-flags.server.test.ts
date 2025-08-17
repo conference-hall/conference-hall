@@ -1,4 +1,4 @@
-import type { User } from '@prisma/client';
+import type { User } from 'prisma/generated/client.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { NotAuthorizedError, NotFoundError } from '~/shared/errors.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';

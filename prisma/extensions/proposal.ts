@@ -1,4 +1,5 @@
-import { ConfirmationStatus, DeliberationStatus, Prisma, PublicationStatus } from '@prisma/client';
+import { Prisma } from 'prisma/generated/client.ts';
+import { ConfirmationStatus, DeliberationStatus, PublicationStatus } from 'prisma/generated/enums.ts';
 import { SpeakerProposalStatus } from '../../app/shared/types/speaker.types.ts';
 import { getSharedServerEnv } from '../../servers/environment.server.ts';
 

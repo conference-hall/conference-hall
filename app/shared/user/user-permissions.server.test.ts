@@ -1,4 +1,4 @@
-import { TeamRole } from '@prisma/client';
+import { TeamRole } from 'prisma/generated/enums.ts';
 
 import { UserPermissions } from './user-permissions.server.ts';
 

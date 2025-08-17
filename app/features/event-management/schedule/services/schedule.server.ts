@@ -1,5 +1,5 @@
-import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import type { ScheduleCreateInput } from 'prisma/generated/models.ts';
 import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/shared/errors.server.ts';
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
@@ -52,7 +52,7 @@ export class EventSchedule extends UserEventAuthorization {
     });
   }
 
-  async update(data: Partial<Prisma.ScheduleCreateInput>) {
+  async update(data: Partial<ScheduleCreateInput>) {
     const event = await this.needsPermission('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 

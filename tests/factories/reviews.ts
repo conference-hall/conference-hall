@@ -1,18 +1,19 @@
-import { type Prisma, type Proposal, ReviewFeeling, type User } from '@prisma/client';
-
+import type { Proposal, User } from 'prisma/generated/client.ts';
+import { ReviewFeeling } from 'prisma/generated/enums.ts';
+import type { ReviewCreateInput } from 'prisma/generated/models.ts';
 import { ReviewDetails } from '../../app/features/event-management/proposals/models/review-details.ts';
 import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {
   user: User;
   proposal: Proposal;
-  attributes?: Partial<Prisma.ReviewCreateInput>;
+  attributes?: Partial<ReviewCreateInput>;
 };
 
 export const reviewFactory = async (options: FactoryOptions) => {
   const { attributes = {}, user, proposal } = options;
 
-  const defaultAttributes: Prisma.ReviewCreateInput = {
+  const defaultAttributes: ReviewCreateInput = {
     user: { connect: { id: user.id } },
     proposal: { connect: { id: proposal.id } },
     note: 3,

@@ -1,5 +1,5 @@
-import type { Event, EventCategory, EventFormat, EventProposalTag, Team, User } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import type { Event, EventCategory, EventFormat, EventProposalTag, Team, User } from 'prisma/generated/client.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';

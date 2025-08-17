@@ -1,4 +1,4 @@
-import type { Event } from '@prisma/client';
+import type { Event } from 'prisma/generated/client.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { surveyFactory } from 'tests/factories/surveys.ts';
 import { userFactory } from 'tests/factories/users.ts';

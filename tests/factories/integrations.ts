@@ -1,17 +1,17 @@
 import { randUuid } from '@ngneat/falso';
-import type { Event, Prisma } from '@prisma/client';
-
+import type { Event } from 'prisma/generated/client.ts';
+import type { EventIntegrationConfigCreateInput } from 'prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {
   event: Event;
-  attributes?: Partial<Prisma.EventIntegrationConfigCreateInput>;
+  attributes?: Partial<EventIntegrationConfigCreateInput>;
 };
 
 export const eventIntegrationFactory = (options: FactoryOptions) => {
   const { attributes = {}, event } = options;
 
-  const defaultAttributes: Prisma.EventIntegrationConfigCreateInput = {
+  const defaultAttributes: EventIntegrationConfigCreateInput = {
     name: 'OPEN_PLANNER',
     configuration: { eventId: randUuid(), apiKey: randUuid() },
     event: { connect: { id: event.id } },

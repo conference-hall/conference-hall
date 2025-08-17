@@ -1,5 +1,6 @@
 import { randParagraph, randText } from '@ngneat/falso';
-import type { Event, Prisma } from '@prisma/client';
+import type { Event } from 'prisma/generated/client.ts';
+import type { EventEmailCustomizationCreateInput } from 'prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 import { eventFactory } from './events.ts';
 import { applyTraits } from './helpers/traits.ts';
@@ -18,7 +19,7 @@ const TRAITS = {
 type Trait = keyof typeof TRAITS;
 
 type FactoryOptions = {
-  attributes?: Partial<Prisma.EventEmailCustomizationCreateInput>;
+  attributes?: Partial<EventEmailCustomizationCreateInput>;
   traits?: Trait[];
   event?: Event;
 };
@@ -30,7 +31,7 @@ export const eventEmailCustomizationFactory = async (options: FactoryOptions = {
     options.event = await eventFactory();
   }
 
-  const defaultAttributes: Prisma.EventEmailCustomizationCreateInput = {
+  const defaultAttributes: EventEmailCustomizationCreateInput = {
     template: 'speakers-proposal-submitted',
     locale: 'en',
     subject: randText(),

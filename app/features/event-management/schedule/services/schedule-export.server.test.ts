@@ -1,4 +1,4 @@
-import type { Event, Schedule, ScheduleTrack, Team, User } from '@prisma/client';
+import type { Event, Schedule, ScheduleTrack, Team, User } from 'prisma/generated/client.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { scheduleFactory } from 'tests/factories/schedule.ts';

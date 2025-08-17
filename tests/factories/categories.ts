@@ -1,17 +1,17 @@
 import { randCatchPhrase, randText } from '@ngneat/falso';
-import type { Event, Prisma } from '@prisma/client';
-
+import type { Event } from 'prisma/generated/client.ts';
+import type { EventCategoryCreateInput } from 'prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {
   event: Event;
-  attributes?: Partial<Prisma.EventCategoryCreateInput>;
+  attributes?: Partial<EventCategoryCreateInput>;
 };
 
 export const eventCategoryFactory = (options: FactoryOptions) => {
   const { attributes = {}, event } = options;
 
-  const defaultAttributes: Prisma.EventCategoryCreateInput = {
+  const defaultAttributes: EventCategoryCreateInput = {
     name: randCatchPhrase(),
     description: randText({ charCount: 100 }),
     event: { connect: { id: event.id } },

@@ -1,4 +1,4 @@
-import type { Schedule } from '@prisma/client';
+import type { Schedule } from 'prisma/generated/client.ts';
 
 import { db } from '../../prisma/db.server.ts';
 

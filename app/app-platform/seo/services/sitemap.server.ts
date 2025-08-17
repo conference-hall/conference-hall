@@ -1,5 +1,5 @@
-import { EventType, EventVisibility } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import { EventType, EventVisibility } from 'prisma/generated/enums.ts';
 
 export async function getEventsForSitemap() {
   const OPEN_MEETUP = { type: EventType.MEETUP, cfpStart: { not: null } };

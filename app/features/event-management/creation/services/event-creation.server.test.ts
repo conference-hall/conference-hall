@@ -1,5 +1,5 @@
-import type { Team, User } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import type { Team, User } from 'prisma/generated/client.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';

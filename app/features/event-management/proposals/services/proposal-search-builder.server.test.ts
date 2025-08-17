@@ -7,7 +7,7 @@ import type {
   Proposal,
   Team,
   User,
-} from '@prisma/client';
+} from 'prisma/generated/client.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';

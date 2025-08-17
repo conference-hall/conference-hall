@@ -1,5 +1,5 @@
-import type { Event } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import type { Event } from 'prisma/generated/client.ts';
 import { z } from 'zod';
 import { SurveyConfig } from '~/features/event-management/settings/models/survey-config.ts';
 import { EventNotFoundError, SurveyNotEnabledError } from '~/shared/errors.server.ts';
