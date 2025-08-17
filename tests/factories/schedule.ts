@@ -1,11 +1,11 @@
 import { randText } from '@ngneat/falso';
-import type { Event, Prisma } from '@prisma/client';
-
+import type { Event } from 'prisma/generated/client.ts';
+import type { ScheduleCreateInput } from 'prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 import { eventFactory } from './events.ts';
 
 type FactoryOptions = {
-  attributes?: Partial<Prisma.ScheduleCreateInput>;
+  attributes?: Partial<ScheduleCreateInput>;
   event?: Event;
 };
 
@@ -16,7 +16,7 @@ export const scheduleFactory = async (options: FactoryOptions = {}) => {
     options.event = await eventFactory({ traits: ['conference'] });
   }
 
-  const defaultAttributes: Prisma.ScheduleCreateInput = {
+  const defaultAttributes: ScheduleCreateInput = {
     name: randText(),
     event: { connect: { id: options.event?.id } },
     timezone: 'Europe/Paris',

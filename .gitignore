@@ -18,6 +18,9 @@ node_modules
 # typescript
 *.tsbuildinfo
 
+# prisma
+/prisma/generated
+
 # vite
 vite.config.ts.timestamp*.mjs
 

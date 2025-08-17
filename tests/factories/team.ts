@@ -1,7 +1,7 @@
 import { randSportsTeam, randUuid } from '@ngneat/falso';
-import type { Prisma, User } from '@prisma/client';
-import { TeamRole } from '@prisma/client';
-
+import type { User } from 'prisma/generated/client.ts';
+import { TeamRole } from 'prisma/generated/enums.ts';
+import type { TeamCreateInput } from 'prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 
@@ -12,7 +12,7 @@ const TRAITS = {};
 type Trait = keyof typeof TRAITS;
 
 type FactoryOptions = {
-  attributes?: Partial<Prisma.TeamCreateInput>;
+  attributes?: Partial<TeamCreateInput>;
   traits?: Trait[];
   owners?: Array<User>;
   members?: Array<User>;
@@ -30,7 +30,7 @@ function createTeamMembers({ owners = [], members = [], reviewers = [] }: Factor
 export const teamFactory = async (options: FactoryOptions = {}) => {
   const { attributes = {}, traits = [] } = options;
 
-  const defaultAttributes: Prisma.TeamCreateInput = {
+  const defaultAttributes: TeamCreateInput = {
     name: randSportsTeam(),
     slug: `slug-${randUuid()}`,
   };

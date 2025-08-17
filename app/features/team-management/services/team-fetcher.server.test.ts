@@ -1,4 +1,4 @@
-import type { User } from '@prisma/client';
+import type { User } from 'prisma/generated/client.ts';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';

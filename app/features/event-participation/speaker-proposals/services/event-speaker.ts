@@ -1,5 +1,5 @@
-import type { User } from '@prisma/client';
 import { type DbTransaction, db } from 'prisma/db.server.ts';
+import type { User } from 'prisma/generated/client.ts';
 import { UserNotFoundError } from '~/shared/errors.server.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 

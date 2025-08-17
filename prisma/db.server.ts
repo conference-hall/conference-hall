@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { eventExtension } from './extensions/event.ts';
 import { proposalExtension } from './extensions/proposal.ts';
 import { talkExtension } from './extensions/talk.ts';
 import { teamExtension } from './extensions/team.ts';
+import { PrismaClient } from './generated/client.js';
 
 const { NODE_ENV } = getSharedServerEnv();
 

@@ -1,5 +1,5 @@
-import type { Event, Proposal, Team } from '@prisma/client';
 import { expect, loginWith, test } from 'e2e/fixtures.ts';
+import type { Event, Proposal, Team } from 'prisma/generated/client.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';

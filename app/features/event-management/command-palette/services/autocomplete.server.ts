@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod/v4';
-import type { Event } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import type { Event } from 'prisma/generated/client.ts';
 import { z } from 'zod';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';

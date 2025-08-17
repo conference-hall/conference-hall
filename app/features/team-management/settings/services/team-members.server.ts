@@ -1,6 +1,7 @@
 import { parseWithZod } from '@conform-to/zod/v4';
-import type { Prisma, TeamRole } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import type { TeamRole } from 'prisma/generated/enums.ts';
+import type { TeamMemberWhereInput } from 'prisma/generated/models.ts';
 import { z } from 'zod';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
@@ -19,7 +20,7 @@ export class TeamMembers extends UserTeamAuthorization {
   async list(filters: z.infer<typeof MembersFiltersSchema>, page: number) {
     await this.needsPermission('canAccessTeam');
 
-    const whereClause: Prisma.TeamMemberWhereInput = {
+    const whereClause: TeamMemberWhereInput = {
       team: { slug: this.team },
       ...(filters?.query && { member: { name: { contains: filters.query, mode: 'insensitive' } } }),
       ...(filters?.role && { role: filters.role }),

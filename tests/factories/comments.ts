@@ -1,11 +1,12 @@
-import { CommentChannel, type Prisma, type Proposal, type User } from '@prisma/client';
-
+import type { Proposal, User } from 'prisma/generated/client.ts';
+import { CommentChannel } from 'prisma/generated/enums.ts';
+import type { CommentCreateInput } from 'prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {
   user: User;
   proposal: Proposal;
-  attributes?: Partial<Prisma.CommentCreateInput>;
+  attributes?: Partial<CommentCreateInput>;
   traits?: Array<Trait>;
 };
 
@@ -14,7 +15,7 @@ type Trait = 'withReaction';
 export const commentFactory = async (options: FactoryOptions) => {
   const { attributes = {}, traits = [], user, proposal } = options;
 
-  const defaultAttributes: Prisma.CommentCreateInput = {
+  const defaultAttributes: CommentCreateInput = {
     user: { connect: { id: user.id } },
     proposal: { connect: { id: proposal.id } },
     comment: 'My comment',

@@ -1,5 +1,5 @@
-import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import type { TeamOrderByWithRelationInput, TeamWhereInput } from 'prisma/generated/models.ts';
 import { z } from 'zod';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
@@ -23,9 +23,7 @@ export class AdminTeams {
   async listTeams(filters: TeamsSearchFilters, page: number, pageSize?: number) {
     const { query } = filters;
 
-    const where: Prisma.TeamWhereInput | undefined = query
-      ? { name: { contains: query, mode: 'insensitive' } }
-      : undefined;
+    const where: TeamWhereInput | undefined = query ? { name: { contains: query, mode: 'insensitive' } } : undefined;
 
     const total = await db.team.count({ where });
 
@@ -63,7 +61,7 @@ export class AdminTeams {
   private buildOrderBy(
     sort: TeamsSearchFilters['sort'],
     order: TeamsSearchFilters['order'] = 'asc',
-  ): Prisma.TeamOrderByWithRelationInput {
+  ): TeamOrderByWithRelationInput {
     switch (sort) {
       case 'name':
         return { name: order };

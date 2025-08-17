@@ -1,5 +1,5 @@
-import { TalkLevel } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import { TalkLevel } from 'prisma/generated/enums.ts';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';

@@ -1,6 +1,5 @@
 import { randAvatar, randCity, randCompanyName, randEmail, randFullName, randParagraph, randUrl } from '@ngneat/falso';
-import type { Prisma } from '@prisma/client';
-
+import type { UserCreateInput } from 'prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 import { organizerKeyFactory } from './organizer-key.ts';
@@ -35,7 +34,7 @@ const TRAITS = {
 type Trait = keyof typeof TRAITS;
 
 type FactoryOptions = {
-  attributes?: Partial<Prisma.UserCreateInput>;
+  attributes?: Partial<UserCreateInput>;
   traits?: Trait[];
   isOrganizer?: boolean;
 };
@@ -43,7 +42,7 @@ type FactoryOptions = {
 export const userFactory = async (options: FactoryOptions = {}) => {
   const { attributes = {}, traits = [], isOrganizer } = options;
 
-  const defaultAttributes: Prisma.UserCreateInput = {
+  const defaultAttributes: UserCreateInput = {
     name: randFullName(),
     email: randEmail(),
     picture: randAvatar(),

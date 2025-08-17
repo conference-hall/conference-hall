@@ -1,6 +1,7 @@
 import { randParagraph, randPost } from '@ngneat/falso';
-import type { Event, EventCategory, EventFormat, EventProposalTag, Prisma, Talk, User } from '@prisma/client';
-import { ConfirmationStatus, DeliberationStatus, PublicationStatus, TalkLevel } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, EventProposalTag, Talk, User } from 'prisma/generated/client.ts';
+import { ConfirmationStatus, DeliberationStatus, PublicationStatus, TalkLevel } from 'prisma/generated/enums.ts';
+import type { ProposalCreateInput } from 'prisma/generated/models.ts';
 import { EventSpeaker } from '~/features/event-participation/speaker-proposals/services/event-speaker.ts';
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
@@ -41,7 +42,7 @@ type FactoryOptions = {
   formats?: EventFormat[];
   categories?: EventCategory[];
   tags?: EventProposalTag[];
-  attributes?: Partial<Prisma.ProposalCreateInput>;
+  attributes?: Partial<ProposalCreateInput>;
   traits?: Trait[];
 };
 
@@ -50,7 +51,7 @@ export const proposalFactory = async (options: FactoryOptions) => {
 
   const speakers = await EventSpeaker.for(event.id).upsertForUsers(talk.speakers);
 
-  const defaultAttributes: Prisma.ProposalCreateInput = {
+  const defaultAttributes: ProposalCreateInput = {
     title: talk?.title || randPost().title,
     abstract: talk?.abstract || randParagraph(),
     references: talk?.references || randParagraph(),
