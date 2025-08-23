@@ -1,9 +1,10 @@
 import {
   rand,
+  randAnimal,
   randEmail,
   randFullAddress,
+  randNumber,
   randParagraph,
-  randSportsTeam,
   randText,
   randUrl,
   randUuid,
@@ -130,13 +131,15 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
 
   const creator = options.creator ? options.creator : await userFactory();
 
+  const name = attributes.name || randAnimal();
+
   const defaultAttributes: EventCreateInput = {
-    name: randSportsTeam(),
+    name,
     slug: `slug-${randUuid()}`,
     description: randParagraph(),
     timezone: 'Europe/Paris',
     location: randFullAddress(),
-    logoUrl: `https://picsum.photos/seed/${randUuid()}/128`,
+    logoUrl: randPlaceholderImage(),
     websiteUrl: randUrl(),
     contactEmail: randEmail(),
     codeOfConductUrl: randUrl(),
@@ -154,3 +157,8 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
 
   return db.event.create({ data });
 };
+
+function randPlaceholderImage() {
+  const seed = randNumber({ min: 300, max: 700 });
+  return `/placeholder-images/static/${seed}/128/128`;
+}
