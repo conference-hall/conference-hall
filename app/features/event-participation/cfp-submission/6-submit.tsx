@@ -2,7 +2,7 @@ import { useId, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
-import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
+import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';

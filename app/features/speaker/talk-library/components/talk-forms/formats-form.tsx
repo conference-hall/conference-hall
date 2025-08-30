@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Checkbox, CheckboxHeadingGroup } from '~/design-system/forms/checkboxes.tsx';
-import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
+import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
+import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
+import { Radio } from '~/design-system/forms/input-radio.tsx';
 
 type FormProps = {
   formats: Array<{ id: string; name: string; description?: string | null }>;
@@ -20,9 +21,9 @@ export function FormatsForm({ formatsAllowMultiple, ...formProps }: Props) {
 function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
   const { t } = useTranslation();
   return (
-    <CheckboxHeadingGroup
-      label={t('event.submission.tracks.select-formats')}
-      description={required ? t('common.required') : t('common.optional')}
+    <FieldsetGroup
+      legend={t('event.submission.tracks.select-formats')}
+      hint={required ? t('common.required') : t('common.optional')}
     >
       {formats.map((format) => (
         <Checkbox
@@ -35,16 +36,16 @@ function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
           {format.name}
         </Checkbox>
       ))}
-    </CheckboxHeadingGroup>
+    </FieldsetGroup>
   );
 }
 
 function FormatsRadioForm({ formats, required, initialValues }: FormProps) {
   const { t } = useTranslation();
   return (
-    <RadioGroup
-      label={t('event.submission.tracks.select-formats')}
-      description={required ? t('common.required') : t('common.optional')}
+    <FieldsetGroup
+      legend={t('event.submission.tracks.select-formats')}
+      hint={required ? t('common.required') : t('common.optional')}
     >
       {formats.map((format) => (
         <Radio
@@ -57,6 +58,6 @@ function FormatsRadioForm({ formats, required, initialValues }: FormProps) {
           {format.name}
         </Radio>
       ))}
-    </RadioGroup>
+    </FieldsetGroup>
   );
 }

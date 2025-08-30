@@ -5,7 +5,8 @@ import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { InvitationModal } from '~/design-system/dialogs/invitation-modal.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
-import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
+import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
+import { Radio } from '~/design-system/forms/input-radio.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { TEAM_ROLES } from '~/shared/constants.ts';
 
@@ -106,7 +107,7 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
       <Modal.Content>
         <Form id={formId} method="POST" onSubmit={onClose}>
           <input type="hidden" name="memberId" value={memberId} />
-          <RadioGroup>
+          <FieldsetGroup>
             {TEAM_ROLES.map((role) => (
               <Radio
                 key={role}
@@ -119,7 +120,7 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
                 {t(`common.member.role.label.${role}`)}
               </Radio>
             ))}
-          </RadioGroup>
+          </FieldsetGroup>
         </Form>
       </Modal.Content>
       <Modal.Actions>

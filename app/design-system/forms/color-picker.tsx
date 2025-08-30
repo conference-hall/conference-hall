@@ -1,4 +1,4 @@
-import { Radio, RadioGroup } from '@headlessui/react';
+import { Fieldset, Legend, Radio, RadioGroup } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 
 type Props = {
@@ -12,12 +12,12 @@ type Props = {
 
 export default function ColorPicker({ label, value, onChange, srOnly, options, className }: Props) {
   return (
-    <fieldset className={className}>
-      <legend
+    <Fieldset className={className}>
+      <Legend
         className={cx('block text-sm font-semibold leading-6 text-gray-900', { 'sr-only': srOnly, 'mb-6': !srOnly })}
       >
         {label}
-      </legend>
+      </Legend>
       <RadioGroup value={value} onChange={onChange} className="flex items-center gap-3">
         {options.map((option) => (
           <Radio
@@ -33,6 +33,6 @@ export default function ColorPicker({ label, value, onChange, srOnly, options, c
           </Radio>
         ))}
       </RadioGroup>
-    </fieldset>
+    </Fieldset>
   );
 }

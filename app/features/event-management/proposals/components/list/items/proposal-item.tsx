@@ -2,7 +2,7 @@ import type { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
 import { BadgeDot } from '~/design-system/badges.tsx';
-import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
+import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { Tag } from '~/design-system/tag.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';

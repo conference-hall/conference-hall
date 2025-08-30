@@ -34,13 +34,13 @@ export class SpeakerSurvey {
       if (question.type === 'checkbox') {
         return schema.extend({
           [question.id]: question.required
-            ? z.array(z.string().trim()).nonempty()
+            ? z.array(z.string().trim()).nonempty({ error: 'Required' })
             : z.array(z.string().trim()).nullable().optional().default([]),
         });
       } else {
         return schema.extend({
           [question.id]: question.required
-            ? z.string().trim().max(500).min(1)
+            ? z.string().trim().max(500).min(1, { error: 'Required' })
             : z.string().trim().max(500).nullable().optional().default(null),
         });
       }

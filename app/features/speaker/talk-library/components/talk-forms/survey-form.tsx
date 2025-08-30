@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Checkbox, CheckboxGroup } from '~/design-system/forms/checkboxes.tsx';
-import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
+import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
+import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
+import { Radio } from '~/design-system/forms/input-radio.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
@@ -25,7 +26,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
               key={question.id}
               name={question.id}
               label={question.label}
-              description={question.required ? t('common.required') : t('common.optional')}
+              hint={question.required ? t('common.required') : t('common.optional')}
               defaultValue={initialValues[question.id] as string}
               error={errors?.[question.id]}
               required={question.required}
@@ -35,10 +36,10 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
         } else if (question.type === 'checkbox') {
           const value = (initialValues[question.id] as string[]) || [];
           return (
-            <CheckboxGroup
+            <FieldsetGroup
               key={question.id}
-              label={question.label}
-              description={question.required ? t('common.required') : t('common.optional')}
+              legend={question.label}
+              hint={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
               inline={(question.options?.length ?? 0) <= 3}
             >
@@ -52,14 +53,14 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
                   {option.label}
                 </Checkbox>
               ))}
-            </CheckboxGroup>
+            </FieldsetGroup>
           );
         } else if (question.type === 'radio') {
           return (
-            <RadioGroup
+            <FieldsetGroup
               key={question.id}
-              label={question.label}
-              description={question.required ? t('common.required') : t('common.optional')}
+              legend={question.label}
+              hint={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
               inline={(question.options?.length ?? 0) <= 3}
             >
@@ -74,7 +75,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
                   {option.label}
                 </Radio>
               ))}
-            </RadioGroup>
+            </FieldsetGroup>
           );
         }
         return null;
