@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Checkbox, CheckboxGroup } from '~/design-system/forms/input-checkbox.tsx';
-import { Radio, RadioGroup } from '~/design-system/forms/input-radio.tsx';
+import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
+import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
+import { Radio } from '~/design-system/forms/input-radio.tsx';
 
 type FormProps = {
   categories: Array<{ id: string; name: string; description?: string | null }>;
@@ -20,7 +21,7 @@ export function CategoriesForm({ categoriesAllowMultiple, ...formProps }: Props)
 function CategoriesCheckboxForm({ categories, required, initialValues }: FormProps) {
   const { t } = useTranslation();
   return (
-    <CheckboxGroup
+    <FieldsetGroup
       label={t('event.submission.tracks.select-categories')}
       description={required ? t('common.required') : t('common.optional')}
     >
@@ -35,14 +36,14 @@ function CategoriesCheckboxForm({ categories, required, initialValues }: FormPro
           {category.name}
         </Checkbox>
       ))}
-    </CheckboxGroup>
+    </FieldsetGroup>
   );
 }
 
 function CategoriesRadioForm({ categories, required, initialValues }: FormProps) {
   const { t } = useTranslation();
   return (
-    <RadioGroup
+    <FieldsetGroup
       label={t('event.submission.tracks.select-categories')}
       description={required ? t('common.required') : t('common.optional')}
     >
@@ -57,6 +58,6 @@ function CategoriesRadioForm({ categories, required, initialValues }: FormProps)
           {category.name}
         </Radio>
       ))}
-    </RadioGroup>
+    </FieldsetGroup>
   );
 }

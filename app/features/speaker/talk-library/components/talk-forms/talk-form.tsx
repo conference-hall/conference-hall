@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Callout } from '~/design-system/callout.tsx';
+import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
-import { Radio, RadioGroup } from '~/design-system/forms/input-radio.tsx';
+import { Radio } from '~/design-system/forms/input-radio.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import MultiSelect from '~/design-system/forms/multi-select.tsx';
 import { LANGUAGES, TALK_LEVELS } from '~/shared/constants.ts';
@@ -69,13 +70,13 @@ export function TalkForm({
         error={errors?.abstract}
       />
 
-      <RadioGroup label={t('talk.level')} inline>
+      <FieldsetGroup label={t('talk.level')} inline>
         {TALK_LEVELS.map((level) => (
           <Radio name="level" key={level} value={level} defaultChecked={initialValues?.level === level}>
             {t(`common.level.${level}`)}
           </Radio>
         ))}
-      </RadioGroup>
+      </FieldsetGroup>
 
       <MultiSelect
         name="languages"

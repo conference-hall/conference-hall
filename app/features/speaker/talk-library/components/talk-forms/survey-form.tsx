@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Checkbox, CheckboxGroup } from '~/design-system/forms/input-checkbox.tsx';
-import { Radio, RadioGroup } from '~/design-system/forms/input-radio.tsx';
+import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
+import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
+import { Radio } from '~/design-system/forms/input-radio.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
@@ -35,7 +36,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
         } else if (question.type === 'checkbox') {
           const value = (initialValues[question.id] as string[]) || [];
           return (
-            <CheckboxGroup
+            <FieldsetGroup
               key={question.id}
               label={question.label}
               description={question.required ? t('common.required') : t('common.optional')}
@@ -52,11 +53,11 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
                   {option.label}
                 </Checkbox>
               ))}
-            </CheckboxGroup>
+            </FieldsetGroup>
           );
         } else if (question.type === 'radio') {
           return (
-            <RadioGroup
+            <FieldsetGroup
               key={question.id}
               label={question.label}
               description={question.required ? t('common.required') : t('common.optional')}
@@ -74,7 +75,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
                   {option.label}
                 </Radio>
               ))}
-            </RadioGroup>
+            </FieldsetGroup>
           );
         }
         return null;
