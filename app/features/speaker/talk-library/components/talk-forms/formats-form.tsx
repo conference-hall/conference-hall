@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Checkbox, CheckboxHeadingGroup } from '~/design-system/forms/checkboxes.tsx';
+import { Checkbox, CheckboxGroup } from '~/design-system/forms/checkboxes.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 
 type FormProps = {
@@ -20,7 +20,7 @@ export function FormatsForm({ formatsAllowMultiple, ...formProps }: Props) {
 function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
   const { t } = useTranslation();
   return (
-    <CheckboxHeadingGroup
+    <CheckboxGroup
       label={t('event.submission.tracks.select-formats')}
       description={required ? t('common.required') : t('common.optional')}
     >
@@ -35,7 +35,7 @@ function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
           {format.name}
         </Checkbox>
       ))}
-    </CheckboxHeadingGroup>
+    </CheckboxGroup>
   );
 }
 
