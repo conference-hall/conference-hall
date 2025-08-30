@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
+import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';

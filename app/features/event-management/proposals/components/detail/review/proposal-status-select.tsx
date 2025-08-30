@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
-import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
+import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '~/shared/types/proposals.types.ts';
 

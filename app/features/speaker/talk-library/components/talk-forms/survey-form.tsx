@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Checkbox, CheckboxGroup } from '~/design-system/forms/checkboxes.tsx';
+import { Checkbox, CheckboxGroup } from '~/design-system/forms/input-checkbox.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
