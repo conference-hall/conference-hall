@@ -5,7 +5,6 @@ import { useParams } from 'react-router';
 import { usePlatformKbd } from '~/design-system/kbd.tsx';
 import { CommandPaletteDialog } from '~/features/event-management/command-palette/components/command-palette/command-palette-dialog.tsx';
 import { EventCommandPalette } from '~/features/event-management/command-palette/components/event-command-palette.tsx';
-import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 
 export function EventCommandPaletteButton() {
   // todo: should be given by the loader ?
@@ -13,9 +12,8 @@ export function EventCommandPaletteButton() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const { meta } = usePlatformKbd();
-  const enabled = useFlag('commandPaletteForEvent');
 
-  if (!enabled || !team || !event) return null;
+  if (!team || !event) return null;
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

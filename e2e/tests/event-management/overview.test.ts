@@ -7,7 +7,6 @@ import { reviewFactory } from 'tests/factories/reviews.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { OverviewPage } from './overview.page.ts';
 import { ProposalPage } from './proposal.page.ts';
@@ -19,7 +18,6 @@ let category: EventCategory;
 let proposalTitle: string;
 
 test.beforeEach(async () => {
-  await flags.set('commandPaletteForEvent', true);
   const user = await userFactory({ traits: ['clark-kent'] });
   const reviewer = await userFactory({ traits: ['bruce-wayne'] });
   team = await teamFactory({ owners: [user], reviewers: [reviewer] });
