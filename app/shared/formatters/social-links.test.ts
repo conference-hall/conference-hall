@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { extractSocialProfile } from './social-links.ts';
 
 describe('extractSocialProfile', () => {

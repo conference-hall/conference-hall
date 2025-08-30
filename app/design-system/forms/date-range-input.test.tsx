@@ -1,5 +1,4 @@
 import { userEvent } from '@vitest/browser/context';
-import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { DateRangeInput } from './date-range-input.tsx';
 

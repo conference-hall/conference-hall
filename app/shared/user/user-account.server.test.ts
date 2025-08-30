@@ -16,6 +16,9 @@ import { UserAccount } from './user-account.server.ts';
 vi.mock('~/shared/auth/firebase.server.ts', () => ({
   auth: { updateUser: vi.fn(), generatePasswordResetLink: vi.fn(), generateEmailVerificationLink: vi.fn() },
 }));
+const updateUserMock = auth.updateUser as Mock;
+const generatePasswordResetLinkMock = auth.generatePasswordResetLink as Mock;
+const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
 
 describe('UserAccount', () => {
   describe('get', () => {
@@ -147,8 +150,6 @@ describe('UserAccount', () => {
   describe('linkEmailProvider', () => {
     it('links email provider and sends the verification email', async () => {
       const t = vi.fn() as unknown as TFunction;
-      const updateUserMock = auth.updateUser as Mock;
-      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
       generateEmailVerificationLinkMock.mockResolvedValue('https://firebase.app/verification-link?oobCode=my-code');
 
       await UserAccount.linkEmailProvider('uid123', 'foo@example.com', 'password', 'en', t);
@@ -174,10 +175,8 @@ describe('UserAccount', () => {
 
     it('returns an error when email already exists', async () => {
       const t = vi.fn(() => 'Email or password is incorrect.') as unknown as TFunction;
-      const updateUserMock = auth.updateUser as Mock;
       const { code, message } = AuthClientErrorCode.EMAIL_ALREADY_EXISTS;
       updateUserMock.mockRejectedValue(new FirebaseError(`auth/${code}`, message));
-      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
 
       const error = await UserAccount.linkEmailProvider('uid123', 'foo@example.com', 'password', 'en', t);
 
@@ -190,7 +189,6 @@ describe('UserAccount', () => {
 
   describe('sendResetPasswordEmail', () => {
     it('sends a reset password email', async () => {
-      const generatePasswordResetLinkMock = auth.generatePasswordResetLink as Mock;
       generatePasswordResetLinkMock.mockResolvedValue('https://firebase.app/auth?mode=resetPassword&oobCode=my-code');
 
       await UserAccount.sendResetPasswordEmail('foo@example.com', 'en');
@@ -207,7 +205,6 @@ describe('UserAccount', () => {
     });
 
     it('does nothing if no oobCode returned by firebase', async () => {
-      const generatePasswordResetLinkMock = auth.generatePasswordResetLink as Mock;
       generatePasswordResetLinkMock.mockResolvedValue('https://firebase.app/auth?mode=resetPassword');
 
       await UserAccount.sendResetPasswordEmail('foo@example.com', 'en');
@@ -217,7 +214,6 @@ describe('UserAccount', () => {
     });
 
     it('does nothing if firebase fails to generate the email link (eg. if account does not exist)', async () => {
-      const generatePasswordResetLinkMock = auth.generatePasswordResetLink as Mock;
       generatePasswordResetLinkMock.mockRejectedValue('User account does not exist');
 
       await UserAccount.sendResetPasswordEmail('foo@example.com', 'en');
@@ -229,7 +225,6 @@ describe('UserAccount', () => {
 
   describe('checkEmailVerification', () => {
     it('returns true and sends the verification email', async () => {
-      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
       generateEmailVerificationLinkMock.mockResolvedValue('https://firebase.app/verification-link?oobCode=my-code');
 
       const needVerification = await UserAccount.checkEmailVerification('foo@example.com', false, 'password', 'en');
@@ -249,8 +244,6 @@ describe('UserAccount', () => {
     });
 
     it('returns false when no email', async () => {
-      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
-
       const needVerification = await UserAccount.checkEmailVerification(undefined, false, 'password', 'en');
 
       expect(needVerification).toEqual(false);
@@ -259,8 +252,6 @@ describe('UserAccount', () => {
     });
 
     it('returns false when no email is verified', async () => {
-      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
-
       const needVerification = await UserAccount.checkEmailVerification('foo@example.com', true, 'password', 'en');
 
       expect(needVerification).toEqual(false);
@@ -269,8 +260,6 @@ describe('UserAccount', () => {
     });
 
     it('returns false when auth provider is not password', async () => {
-      const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
-
       const needVerification = await UserAccount.checkEmailVerification('foo@example.com', false, 'google.com', 'en');
 
       expect(needVerification).toEqual(false);

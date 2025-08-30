@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { COLORS, generateGradientColor, getContrastColor, getRandomColor } from './colors.ts';
 
 describe('getRandomColor', () => {
