@@ -13,10 +13,4 @@ export default defineFlagsConfig({
     defaultValue: false,
     tags: ['frontend'] as const,
   },
-  commandPaletteForEvent: {
-    description: 'Enables command palette for event management.',
-    type: 'boolean',
-    defaultValue: false,
-    tags: ['frontend'] as const,
-  },
 });
