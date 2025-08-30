@@ -1,5 +1,3 @@
-import { vi } from 'vitest';
-
 // Mock @react-email/components render function
 vi.mock('@react-email/components', () => ({
   render: vi.fn(),

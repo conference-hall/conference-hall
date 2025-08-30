@@ -1,6 +1,5 @@
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 import {
   CallForPaperDateLabel,

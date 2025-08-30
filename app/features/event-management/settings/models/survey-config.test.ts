@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 import { SurveyConfig } from './survey-config.ts';
 

@@ -14,9 +14,9 @@ import { exportToOpenPlanner } from './export-to-open-planner.job.ts';
 vi.mock('~/shared/integrations/open-planner.server.ts', () => {
   return { OpenPlanner: { postSessionsAndSpeakers: vi.fn() } };
 });
+const postSessionsAndSpeakersMock = OpenPlanner.postSessionsAndSpeakers as Mock;
 
 describe('Job: exportToOpenPlanner', () => {
-  const postSessionsAndSpeakersMock = OpenPlanner.postSessionsAndSpeakers as Mock;
   let owner: User;
   let speakerUser: User;
   let team: Team;

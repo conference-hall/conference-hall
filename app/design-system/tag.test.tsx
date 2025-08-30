@@ -1,6 +1,5 @@
 import type { JSX } from 'react';
 import { createRoutesStub } from 'react-router';
-import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { getContrastColor } from '~/shared/colors/colors.ts';
 import { Tag } from './tag.tsx';
