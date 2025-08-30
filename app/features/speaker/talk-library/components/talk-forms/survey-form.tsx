@@ -26,7 +26,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
               key={question.id}
               name={question.id}
               label={question.label}
-              description={question.required ? t('common.required') : t('common.optional')}
+              hint={question.required ? t('common.required') : t('common.optional')}
               defaultValue={initialValues[question.id] as string}
               error={errors?.[question.id]}
               required={question.required}
@@ -39,7 +39,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
             <FieldsetGroup
               key={question.id}
               label={question.label}
-              description={question.required ? t('common.required') : t('common.optional')}
+              hint={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
               inline={(question.options?.length ?? 0) <= 3}
             >
@@ -60,7 +60,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
             <FieldsetGroup
               key={question.id}
               label={question.label}
-              description={question.required ? t('common.required') : t('common.optional')}
+              hint={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
               inline={(question.options?.length ?? 0) <= 3}
             >

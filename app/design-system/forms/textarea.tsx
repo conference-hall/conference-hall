@@ -1,10 +1,11 @@
 import { cx } from 'class-variance-authority';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
-import { Label } from '../typography.tsx';
+import { Label, Text } from '../typography.tsx';
 
 type Props = {
   name: string;
   label?: string;
+  hint?: string;
   description?: string;
   error?: SubmissionError;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
@@ -13,7 +14,7 @@ const baseStyles = 'focus:ring-indigo-500 focus:border-indigo-500 border-gray-30
 const errorStyles =
   'border-red-300 text-red-900 placeholder-red-300 focus:outline-hidden focus:ring-red-500 focus:border-red-500';
 
-export function TextArea({ name, label, description, className, error, ...rest }: Props) {
+export function TextArea({ name, label, hint, description, className, error, ...rest }: Props) {
   const styles = cx('block w-full text-gray-900 text-sm rounded-md', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
@@ -22,9 +23,15 @@ export function TextArea({ name, label, description, className, error, ...rest }
   return (
     <div className={className}>
       {label && (
-        <Label htmlFor={name} mb={1}>
-          {label}
-        </Label>
+        <div className="flex items-center mb-1">
+          <Label htmlFor={name}>{label}</Label>
+
+          {hint && (
+            <Text as="span" size="s" weight="normal" variant="secondary" className="ml-1">
+              – {hint}
+            </Text>
+          )}
+        </div>
       )}
       <textarea
         id={name}

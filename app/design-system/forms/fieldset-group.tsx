@@ -5,14 +5,14 @@ import { Text } from '../typography.tsx';
 
 type FieldsetGroupProps = {
   label?: string;
-  description?: string;
+  hint?: string;
   inline?: boolean;
   className?: string;
   children: ReactNode;
   error?: SubmissionError;
 };
 
-export function FieldsetGroup({ label, description, inline, className, children, error }: FieldsetGroupProps) {
+export function FieldsetGroup({ label, hint, inline, className, children, error }: FieldsetGroupProps) {
   const layoutStyle = cx('space-y-2 mt-3', {
     'sm:flex sm:flex-wrap sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
@@ -23,9 +23,9 @@ export function FieldsetGroup({ label, description, inline, className, children,
         <Text as="legend" size="s" weight="medium" aria-invalid={Boolean(error)}>
           {label}
 
-          {description && (
+          {hint && (
             <Text as="span" size="s" weight="normal" variant="secondary" className="ml-1">
-              – {description}
+              – {hint}
             </Text>
           )}
         </Text>

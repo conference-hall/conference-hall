@@ -23,7 +23,7 @@ function CategoriesCheckboxForm({ categories, required, initialValues }: FormPro
   return (
     <FieldsetGroup
       label={t('event.submission.tracks.select-categories')}
-      description={required ? t('common.required') : t('common.optional')}
+      hint={required ? t('common.required') : t('common.optional')}
     >
       {categories.map((category) => (
         <Checkbox
@@ -45,7 +45,7 @@ function CategoriesRadioForm({ categories, required, initialValues }: FormProps)
   return (
     <FieldsetGroup
       label={t('event.submission.tracks.select-categories')}
-      description={required ? t('common.required') : t('common.optional')}
+      hint={required ? t('common.required') : t('common.optional')}
     >
       {categories.map((category) => (
         <Radio

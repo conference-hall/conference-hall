@@ -23,7 +23,7 @@ function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
   return (
     <FieldsetGroup
       label={t('event.submission.tracks.select-formats')}
-      description={required ? t('common.required') : t('common.optional')}
+      hint={required ? t('common.required') : t('common.optional')}
     >
       {formats.map((format) => (
         <Checkbox
@@ -45,7 +45,7 @@ function FormatsRadioForm({ formats, required, initialValues }: FormProps) {
   return (
     <FieldsetGroup
       label={t('event.submission.tracks.select-formats')}
-      description={required ? t('common.required') : t('common.optional')}
+      hint={required ? t('common.required') : t('common.optional')}
     >
       {formats.map((format) => (
         <Radio
