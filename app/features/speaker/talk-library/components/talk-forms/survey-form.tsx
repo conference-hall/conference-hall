@@ -38,7 +38,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
           return (
             <FieldsetGroup
               key={question.id}
-              label={question.label}
+              legend={question.label}
               hint={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
               inline={(question.options?.length ?? 0) <= 3}
@@ -59,7 +59,7 @@ export function SurveyForm({ id, questions, initialValues, errors }: Props) {
           return (
             <FieldsetGroup
               key={question.id}
-              label={question.label}
+              legend={question.label}
               hint={question.required ? t('common.required') : t('common.optional')}
               error={errors?.[question.id]}
               inline={(question.options?.length ?? 0) <= 3}

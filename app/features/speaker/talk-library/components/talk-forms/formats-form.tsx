@@ -22,7 +22,7 @@ function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
   const { t } = useTranslation();
   return (
     <FieldsetGroup
-      label={t('event.submission.tracks.select-formats')}
+      legend={t('event.submission.tracks.select-formats')}
       hint={required ? t('common.required') : t('common.optional')}
     >
       {formats.map((format) => (
@@ -44,7 +44,7 @@ function FormatsRadioForm({ formats, required, initialValues }: FormProps) {
   const { t } = useTranslation();
   return (
     <FieldsetGroup
-      label={t('event.submission.tracks.select-formats')}
+      legend={t('event.submission.tracks.select-formats')}
       hint={required ? t('common.required') : t('common.optional')}
     >
       {formats.map((format) => (

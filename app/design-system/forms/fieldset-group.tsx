@@ -4,7 +4,7 @@ import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { Text } from '../typography.tsx';
 
 type FieldsetGroupProps = {
-  label?: string;
+  legend?: string;
   hint?: string;
   inline?: boolean;
   className?: string;
@@ -12,16 +12,16 @@ type FieldsetGroupProps = {
   error?: SubmissionError;
 };
 
-export function FieldsetGroup({ label, hint, inline, className, children, error }: FieldsetGroupProps) {
+export function FieldsetGroup({ legend, hint, inline, className, children, error }: FieldsetGroupProps) {
   const layoutStyle = cx('space-y-2 mt-3', {
     'sm:flex sm:flex-wrap sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
 
   return (
     <fieldset className={className}>
-      {label && (
+      {legend && (
         <Text as="legend" size="s" weight="medium" aria-invalid={Boolean(error)}>
-          {label}
+          {legend}
 
           {hint && (
             <Text as="span" size="s" weight="normal" variant="secondary" className="ml-1">

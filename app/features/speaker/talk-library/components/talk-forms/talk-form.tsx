@@ -70,7 +70,7 @@ export function TalkForm({
         error={errors?.abstract}
       />
 
-      <FieldsetGroup label={t('talk.level')} inline>
+      <FieldsetGroup legend={t('talk.level')} inline>
         {TALK_LEVELS.map((level) => (
           <Radio name="level" key={level} value={level} defaultChecked={initialValues?.level === level}>
             {t(`common.level.${level}`)}

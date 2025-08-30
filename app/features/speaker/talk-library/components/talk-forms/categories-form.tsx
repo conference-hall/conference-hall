@@ -22,7 +22,7 @@ function CategoriesCheckboxForm({ categories, required, initialValues }: FormPro
   const { t } = useTranslation();
   return (
     <FieldsetGroup
-      label={t('event.submission.tracks.select-categories')}
+      legend={t('event.submission.tracks.select-categories')}
       hint={required ? t('common.required') : t('common.optional')}
     >
       {categories.map((category) => (
@@ -44,7 +44,7 @@ function CategoriesRadioForm({ categories, required, initialValues }: FormProps)
   const { t } = useTranslation();
   return (
     <FieldsetGroup
-      label={t('event.submission.tracks.select-categories')}
+      legend={t('event.submission.tracks.select-categories')}
       hint={required ? t('common.required') : t('common.optional')}
     >
       {categories.map((category) => (
