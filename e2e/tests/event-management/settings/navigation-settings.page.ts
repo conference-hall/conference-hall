@@ -13,7 +13,7 @@ import { WebApiSettingsPage } from './web-api-settings.page.ts';
 
 type NavigationSettings =
   | 'General'
-  | 'Call for paper'
+  | 'Call for papers'
   | 'Tracks'
   | 'Proposal tags'
   | 'Customize'
@@ -45,7 +45,7 @@ export class NavigationSettingsPage extends PageObject {
     switch (name) {
       case 'General':
         return new GeneralSettingsPage(this.page);
-      case 'Call for paper':
+      case 'Call for papers':
         return new CfpSettingsPage(this.page);
       case 'Tracks':
         return new TracksSettingsPage(this.page);

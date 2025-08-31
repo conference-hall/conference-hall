@@ -18,7 +18,7 @@ describe('DashboardTabs component', () => {
       </I18nextProvider>,
     );
 
-    const callForPaperLink = screen.getByRole('link', { name: 'Call for paper' });
+    const callForPaperLink = screen.getByRole('link', { name: 'Call for papers' });
     await expect.element(callForPaperLink).toHaveAttribute('href', '/team/t1/e1/overview');
     await expect.element(callForPaperLink).toHaveAttribute('aria-current', 'page');
 

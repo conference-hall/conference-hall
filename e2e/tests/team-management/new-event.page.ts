@@ -28,7 +28,7 @@ export class NewEventPage extends PageObject {
   }
 
   cfpForm(name: string) {
-    return this.page.getByRole('heading', { name: `${name} call for paper.` });
+    return this.page.getByRole('heading', { name: `${name} call for papers.` });
   }
 
   async clickOnConference() {

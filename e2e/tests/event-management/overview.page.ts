@@ -3,7 +3,7 @@ import { PageObject } from 'e2e/page-object.ts';
 
 export class OverviewPage extends PageObject {
   readonly heading: Locator = this.page.getByRole('heading', { name: 'Event overview' });
-  readonly callForPaperTab: Locator = this.page.getByRole('link', { name: 'Call for paper' });
+  readonly callForPaperTab: Locator = this.page.getByRole('link', { name: 'Call for papers' });
   readonly reviewersTab: Locator = this.page.getByRole('link', { name: 'Reviewers' });
   readonly reviewersList: Locator = this.page.getByRole('list', { name: 'Reviewers' });
   readonly commandPaletteButton: Locator = this.page.getByLabel('Search in the event');

@@ -17,7 +17,7 @@ test('can access to the settings', async ({ page }) => {
   const generalPage = await settingsPage.clickOnSetting('General');
   await generalPage.waitFor();
 
-  const cfpPage = await settingsPage.clickOnSetting('Call for paper');
+  const cfpPage = await settingsPage.clickOnSetting('Call for papers');
   await cfpPage.waitFor();
 
   const tracksPage = await settingsPage.clickOnSetting('Tracks');

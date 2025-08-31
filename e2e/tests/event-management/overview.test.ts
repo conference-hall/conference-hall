@@ -49,7 +49,7 @@ test.describe('As a team owner', () => {
     const overviewPage = new OverviewPage(page);
     await overviewPage.goto(team.slug, event.slug);
 
-    await expect(overviewPage.dashboardCardLink('Call for paper open', 'Change')).toBeVisible();
+    await expect(overviewPage.dashboardCardLink('Call for papers open', 'Change')).toBeVisible();
     await expect(overviewPage.dashboardCardLink('The event is public', 'Change')).toBeVisible();
     await expect(overviewPage.dashboardCardLink('Reviews are enabled', 'Change')).toBeVisible();
 
@@ -88,7 +88,7 @@ test.describe('As a team reviewer', () => {
     const overviewPage = new OverviewPage(page);
     await overviewPage.goto(team.slug, event.slug);
 
-    await expect(overviewPage.dashboardCardLink('Call for paper open', 'Change')).not.toBeVisible();
+    await expect(overviewPage.dashboardCardLink('Call for papers open', 'Change')).not.toBeVisible();
     await expect(overviewPage.dashboardCardLink('The event is public', 'Change')).not.toBeVisible();
     await expect(overviewPage.dashboardCardLink('Reviews are enabled', 'Change')).not.toBeVisible();
 

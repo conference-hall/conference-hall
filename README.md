@@ -25,7 +25,7 @@ https://conference-hall.io
 - 👥 Use teams to share an event between organizers
 - 💡 Custom formats and categories for the talks
 - 📥 Custom survey for speakers
-- 📊 Dashboard and metrics on call for paper and reviews
+- 📊 Dashboard and metrics on call for papers and reviews
 - ⭐️ Review proposals
 - 💬 Discussion between organizers about a proposal
 - ✅ Mark proposals as accepted, declined...

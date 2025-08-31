@@ -18,14 +18,14 @@ test('updates conference CFP settings', async ({ page }) => {
   await cfpPage.fill(cfpPage.startInput, '2022-01-01');
   await cfpPage.fill(cfpPage.endInput, '2022-02-02');
   await cfpPage.saveOpeningsButton.click();
-  await expect(cfpPage.toast).toHaveText('Call for paper updated.');
+  await expect(cfpPage.toast).toHaveText('Call for papers updated.');
 
   // Update CFP preferences
   await cfpPage.goto(team.slug, event.slug);
   await cfpPage.fill(cfpPage.maxProposalsInput, '3');
   await cfpPage.fill(cfpPage.codeOfConductUrlInput, 'https://example.com');
   await cfpPage.savePreferencesButton.click();
-  await expect(cfpPage.toast).toHaveText('Call for paper updated.');
+  await expect(cfpPage.toast).toHaveText('Call for papers updated.');
 
   // Check if the values are saved
   await cfpPage.goto(team.slug, event.slug);
@@ -45,7 +45,7 @@ test('updates meetup CFP settings', async ({ page }) => {
 
   // Update CFP settings
   await cfpPage.cfpActivationSwitch.click();
-  await expect(cfpPage.toast).toHaveText('Call for paper updated.');
+  await expect(cfpPage.toast).toHaveText('Call for papers updated.');
 
   // Check if the values are saved
   await cfpPage.goto(team.slug, event.slug);

@@ -64,7 +64,7 @@ export const CfpConferenceOpeningSchema = z
       if (cfpStart && cfpEnd && cfpStart > cfpEnd) return false;
       return true;
     },
-    { path: ['cfpStart'], error: 'Call for paper start date must be after the end date.' },
+    { path: ['cfpStart'], error: 'Call for papers start date must be after the end date.' },
   );
 
 export const EventEmailNotificationsSettingsSchema = z.object({
