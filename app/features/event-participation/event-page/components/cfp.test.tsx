@@ -58,7 +58,7 @@ describe('CallForPaperStatusLabel component', () => {
     const screen = renderComponent('OPENED', null, null);
 
     // Should display the disabled message regardless of state
-    await expect.element(screen.getByText('Call for paper is disabled')).toBeInTheDocument();
+    await expect.element(screen.getByText('Call for papers is disabled')).toBeInTheDocument();
   });
 
   it('displays opened status when state is OPENED', async () => {
@@ -67,7 +67,7 @@ describe('CallForPaperStatusLabel component', () => {
 
     const screen = renderComponent('OPENED', startDate, endDate);
 
-    await expect.element(screen.getByText('Call for paper open')).toBeInTheDocument();
+    await expect.element(screen.getByText('Call for papers open')).toBeInTheDocument();
   });
 
   it('displays closed status when state is CLOSED', async () => {
@@ -85,7 +85,7 @@ describe('CallForPaperStatusLabel component', () => {
 
     const screen = renderComponent('FINISHED', startDate, endDate);
 
-    await expect.element(screen.getByText('Call for paper closed')).toBeInTheDocument();
+    await expect.element(screen.getByText('Call for papers closed')).toBeInTheDocument();
   });
 
   it('displays opened status when only start date is provided', async () => {
@@ -93,7 +93,7 @@ describe('CallForPaperStatusLabel component', () => {
 
     const screen = renderComponent('OPENED', startDate, null);
 
-    await expect.element(screen.getByText('Call for paper open')).toBeInTheDocument();
+    await expect.element(screen.getByText('Call for papers open')).toBeInTheDocument();
   });
 
   it('displays opened status when only end date is provided', async () => {
@@ -101,7 +101,7 @@ describe('CallForPaperStatusLabel component', () => {
 
     const screen = renderComponent('OPENED', null, endDate);
 
-    await expect.element(screen.getByText('Call for paper open')).toBeInTheDocument();
+    await expect.element(screen.getByText('Call for papers open')).toBeInTheDocument();
   });
 });
 
@@ -130,7 +130,7 @@ describe('CallForPaperElapsedTimeLabel component', () => {
 
     const screen = renderElapsedTimeComponent('CLOSED', startDate, endDate);
 
-    expect(screen.container.textContent).toMatch(/The call for paper will open/);
+    expect(screen.container.textContent).toMatch(/The call for papers will open/);
   });
 
   it('displays opened elapsed time for OPENED state', async () => {
@@ -140,7 +140,7 @@ describe('CallForPaperElapsedTimeLabel component', () => {
 
     const screen = renderElapsedTimeComponent('OPENED', startDate, endDate);
 
-    expect(screen.container.textContent).toBe('Call for paper open');
+    expect(screen.container.textContent).toBe('Call for papers open');
   });
   it('displays finished message for FINISHED state', async () => {
     const startDate = new Date('2023-01-01');
@@ -148,7 +148,7 @@ describe('CallForPaperElapsedTimeLabel component', () => {
 
     const screen = renderElapsedTimeComponent('FINISHED', startDate, endDate);
 
-    expect(screen.container.textContent).toBe('Call for paper closed');
+    expect(screen.container.textContent).toBe('Call for papers closed');
   });
 
   it('displays time information for OPENED state with upcoming deadline', async () => {
@@ -157,7 +157,7 @@ describe('CallForPaperElapsedTimeLabel component', () => {
 
     const screen = renderElapsedTimeComponent('OPENED', startDate, endDate);
 
-    expect(screen.container.textContent).toBe('Call for paper open');
+    expect(screen.container.textContent).toBe('Call for papers open');
   });
 
   it('displays time information for CLOSED state with future start date', async () => {
@@ -166,7 +166,7 @@ describe('CallForPaperElapsedTimeLabel component', () => {
 
     const screen = renderElapsedTimeComponent('CLOSED', startDate, endDate);
 
-    expect(screen.container.textContent).toMatch(/The call for paper will open/);
+    expect(screen.container.textContent).toMatch(/The call for papers will open/);
     expect(screen.container.textContent).toMatch(/next month/);
   });
 
@@ -176,7 +176,7 @@ describe('CallForPaperElapsedTimeLabel component', () => {
 
     const screen = renderElapsedTimeComponent('FINISHED', startDate, endDate);
 
-    expect(screen.container.textContent).toBe('Call for paper closed');
+    expect(screen.container.textContent).toBe('Call for papers closed');
   });
 });
 

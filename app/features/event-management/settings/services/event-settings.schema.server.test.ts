@@ -114,7 +114,7 @@ describe('UserEvent types', () => {
 
       expect(result.success).toBe(false);
       expect(z.flattenError(result.error!).fieldErrors).toEqual({
-        cfpStart: ['Call for paper start date must be after the end date.'],
+        cfpStart: ['Call for papers start date must be after the end date.'],
       });
     });
   });
