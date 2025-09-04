@@ -26,7 +26,7 @@ export function job<Payload>(config: JobConfig<Payload>): Job<Payload> {
 
         queues.set(
           queue,
-          new Queue<Payload>(queue, {
+          new Queue(queue, {
             connection,
             defaultJobOptions: {
               attempts: 5,
