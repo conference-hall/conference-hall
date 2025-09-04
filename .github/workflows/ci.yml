@@ -51,14 +51,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Setup Playwright
+        uses: ./.github/actions/setup-playwright
+
       - name: Start database and firebase emulators
         run: docker compose up -d --build
 
       - name: Wait for database start...
         run: ./docker/wait-for-db.sh
-
-      - name: Install Playwright browser
-        run: npx playwright install --with-deps --only-shell chromium
 
       - name: Execute tests
         run: npm test
@@ -90,14 +90,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Setup Playwright
+        uses: ./.github/actions/setup-playwright
+
       - name: Start database and firebase emulators
         run: docker compose up -d --build
 
       - name: Wait for database start...
         run: ./docker/wait-for-db.sh
-
-      - name: Install Playwright browser
-        run: npx playwright install --with-deps --only-shell chromium
 
       - name: Build the app
         run: npm run build
