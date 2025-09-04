@@ -10,7 +10,7 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import { ForbiddenOperationError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { EventSpeakers } from './event-speakers.server.ts';
 
 describe('EventSpeakers', () => {
@@ -566,6 +566,226 @@ describe('EventSpeakers', () => {
         await expect(
           EventSpeakers.for(owner.id, 'non-existent', event.slug).getById(eventSpeaker1.id),
         ).rejects.toThrow();
+      });
+    });
+  });
+
+  describe('#create', () => {
+    describe('when user has create speaker permission', () => {
+      it('creates an event speaker', async () => {
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: 'https://example.com/photo.jpg',
+          bio: 'lorem ipsum',
+          references: 'impedit quidem quisquam',
+          company: 'company',
+          location: 'location',
+          socialLinks: ['https://github.com/profile'],
+        };
+
+        const createdSpeaker = await eventSpeakers.create(speakerData);
+
+        expect(createdSpeaker).toEqual({
+          id: expect.any(String),
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: 'https://example.com/photo.jpg',
+          bio: 'lorem ipsum',
+          references: 'impedit quidem quisquam',
+          company: 'company',
+          location: 'location',
+          socialLinks: ['https://github.com/profile'],
+        });
+
+        const dbSpeaker = await db.eventSpeaker.findFirst({
+          where: { id: createdSpeaker.id },
+        });
+
+        expect(dbSpeaker).toEqual(
+          expect.objectContaining({
+            eventId: event.id,
+            userId: null,
+            name: 'John Doe',
+            email: 'john.doe@example.com',
+            picture: 'https://example.com/photo.jpg',
+            bio: 'lorem ipsum',
+            references: 'impedit quidem quisquam',
+            company: 'company',
+            location: 'location',
+            socialLinks: ['https://github.com/profile'],
+          }),
+        );
+      });
+
+      it('creates speaker with minimal required fields', async () => {
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        const createdSpeaker = await eventSpeakers.create(speakerData);
+
+        expect(createdSpeaker).toEqual({
+          id: expect.any(String),
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        });
+      });
+
+      it('throws SpeakerEmailAlreadyExistsError when email already exists for the event', async () => {
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+
+        // Create first speaker
+        const firstSpeakerData = {
+          name: 'First Speaker',
+          email: 'duplicate@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await eventSpeakers.create(firstSpeakerData);
+
+        // Try to create second speaker with same email
+        const secondSpeakerData = {
+          name: 'Second Speaker',
+          email: 'duplicate@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await expect(eventSpeakers.create(secondSpeakerData)).rejects.toThrow(SpeakerEmailAlreadyExistsError);
+      });
+
+      it('allows same email in different events', async () => {
+        // Create another event for the same team
+        const otherEvent = await eventFactory({ team });
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'same@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        // Create speaker in first event
+        const firstEventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const firstSpeaker = await firstEventSpeakers.create(speakerData);
+
+        // Create speaker with same email in second event (should succeed)
+        const secondEventSpeakers = EventSpeakers.for(owner.id, team.slug, otherEvent.slug);
+        const secondSpeaker = await secondEventSpeakers.create(speakerData);
+
+        expect(firstSpeaker.email).toEqual(secondSpeaker.email);
+        expect(firstSpeaker.id).not.toEqual(secondSpeaker.id);
+      });
+    });
+
+    describe('when user does not have create speaker permission', () => {
+      it('throws ForbiddenOperationError for reviewer', async () => {
+        const reviewer = await userFactory();
+        const reviewerTeam = await teamFactory({ reviewers: [reviewer] });
+        const reviewerEvent = await eventFactory({ team: reviewerTeam });
+
+        const eventSpeakers = EventSpeakers.for(reviewer.id, reviewerTeam.slug, reviewerEvent.slug);
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await expect(eventSpeakers.create(speakerData)).rejects.toThrow(ForbiddenOperationError);
+      });
+
+      it('throws ForbiddenOperationError for non-member', async () => {
+        const outsider = await userFactory();
+
+        const eventSpeakers = EventSpeakers.for(outsider.id, team.slug, event.slug);
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await expect(eventSpeakers.create(speakerData)).rejects.toThrow(ForbiddenOperationError);
+      });
+    });
+
+    describe('when event does not exist', () => {
+      it('throws error for non-existent event', async () => {
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, 'non-existent');
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await expect(eventSpeakers.create(speakerData)).rejects.toThrow();
+      });
+    });
+
+    describe('when team does not exist', () => {
+      it('throws error for non-existent team', async () => {
+        const eventSpeakers = EventSpeakers.for(owner.id, 'non-existent', event.slug);
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await expect(eventSpeakers.create(speakerData)).rejects.toThrow();
       });
     });
   });

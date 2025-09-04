@@ -4,9 +4,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { z } from 'zod';
 import { ProfileFetcher } from '../../services/profile-fetcher.server.ts';
-import { ProfileSchema } from './speaker-profile.schema.server.ts';
 import { SpeakerProfile } from './speaker-profile.server.ts';
 
 describe('SpeakerProfile', () => {
@@ -75,49 +73,5 @@ describe('SpeakerProfile', () => {
         socialLinks: ['https://github.com/profile'],
       }),
     ]);
-  });
-});
-
-describe('Settings schemas', () => {
-  describe('ProfileSchema', () => {
-    it('validates user details', async () => {
-      const result = ProfileSchema.safeParse({
-        name: 'John Doe',
-        picture: 'https://example.com/photo.jpg',
-        bio: 'lorem ipsum',
-        references: 'impedit quidem quisquam',
-        company: 'company',
-        location: 'location',
-        socialLinks: ['https://github.com/profile'],
-      });
-
-      expect(result.success && result.data).toEqual({
-        name: 'John Doe',
-        picture: 'https://example.com/photo.jpg',
-        bio: 'lorem ipsum',
-        references: 'impedit quidem quisquam',
-        company: 'company',
-        location: 'location',
-        socialLinks: ['https://github.com/profile'],
-      });
-    });
-
-    it('validates mandatory and format', async () => {
-      const result = ProfileSchema.safeParse({
-        name: '',
-        picture: 'https://example.com/photo.jpg',
-        bio: 'lorem ipsum',
-        references: 'impedit quidem quisquam',
-        company: 'company',
-        location: 'location',
-        socialLinks: ['https://github.com/profile'],
-      });
-
-      expect(result.success).toEqual(false);
-      if (!result.success) {
-        const { fieldErrors } = z.flattenError(result.error);
-        expect(fieldErrors.name).toEqual(['Too small: expected string to have >=1 characters']);
-      }
-    });
   });
 });

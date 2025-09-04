@@ -6,6 +6,7 @@ export class SpeakersListPage extends PageObject {
   readonly speakers: Locator;
   readonly noSpeakers: Locator;
   readonly searchInput: Locator;
+  readonly newSpeakerButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -13,6 +14,7 @@ export class SpeakersListPage extends PageObject {
     this.speakers = page.getByRole('list', { name: 'Speakers' }).locator('>li');
     this.noSpeakers = page.getByText('No speakers yet');
     this.searchInput = page.getByLabel('Search speakers');
+    this.newSpeakerButton = page.getByRole('link', { name: 'Speaker', exact: true });
   }
 
   async goto(team: string, event: string) {
@@ -75,5 +77,9 @@ export class SpeakersListPage extends PageObject {
 
   async clickOnSpeaker(name: string) {
     await this.speaker(name).click();
+  }
+
+  async clickNewSpeaker() {
+    await this.newSpeakerButton.click();
   }
 }
