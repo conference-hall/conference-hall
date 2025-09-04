@@ -117,3 +117,9 @@ export class TalkAlreadySubmittedError extends BadRequestError {
     super('Talk already submitted');
   }
 }
+
+export class SpeakerEmailAlreadyExistsError extends BadRequestError {
+  constructor() {
+    super('Speaker email already exists');
+  }
+}

@@ -704,6 +704,7 @@
   "event-management.speakers.new.subtitle": "Add a speaker manually to this event.",
   "event-management.speakers.new.feedbacks.created": "Speaker created successfully.",
   "event-management.speakers.new.submit": "Create speaker",
+  "event-management.speakers.new.errors.email-already-exists": "A speaker with this email address already exists for this event.",
   "event.nav.proposals": "Your proposals",
   "event.nav.submit-proposal": "Submit a proposal",
   "event.nav.survey": "Survey",

@@ -7,6 +7,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -32,8 +33,11 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     const speaker = await EventSpeakers.for(userId, params.team, params.event).create(result.value);
     const headers = await toastHeaders('success', t('event-management.speakers.new.feedbacks.created'));
     return redirect(href('/team/:team/:event/speakers/:speaker', { ...params, speaker: speaker.id }), { headers });
-  } catch (_error) {
-    return { errors: { form: t('error.global') } };
+  } catch (error) {
+    if (error instanceof SpeakerEmailAlreadyExistsError) {
+      return { errors: { email: [t('event-management.speakers.new.errors.email-already-exists')] } };
+    }
+    throw error;
   }
 };
 
@@ -57,7 +61,7 @@ export default function NewSpeakerRoute({ actionData, params }: Route.ComponentP
 
       <Card>
         <Card.Content>
-          <SpeakerForm id={formId} errors={actionData?.errors} className="space-y-6" />
+          <SpeakerForm formId={formId} errors={actionData?.errors} />
         </Card.Content>
 
         <Card.Actions>

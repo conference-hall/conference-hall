@@ -4,6 +4,7 @@ import type { EventSpeakerWhereInput } from 'prisma/generated/models.ts';
 import { z } from 'zod';
 import { ReviewDetails } from '~/features/event-management/proposals/models/review-details.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
+import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import type { SocialLinks, SpeakerCreationData } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
@@ -147,6 +148,14 @@ export class EventSpeakers extends UserEventAuthorization {
 
   async create(data: SpeakerCreationData) {
     const event = await this.needsPermission('canCreateEventSpeaker');
+
+    const existingSpeaker = await db.eventSpeaker.findFirst({
+      where: { eventId: event.id, email: data.email },
+    });
+
+    if (existingSpeaker) {
+      throw new SpeakerEmailAlreadyExistsError();
+    }
 
     const speaker = await db.eventSpeaker.create({
       data: {
