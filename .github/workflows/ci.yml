@@ -54,7 +54,7 @@ jobs:
         uses: ./.github/actions/setup-playwright
 
       - name: Start database and firebase emulators
-        run: docker compose up -d --build
+        run: docker compose -f compose.yml -f ./docker/compose-ci.yml up -d
 
       - name: Wait for database start...
         run: ./docker/wait-for-db.sh
@@ -92,7 +92,7 @@ jobs:
         uses: ./.github/actions/setup-playwright
 
       - name: Start database and firebase emulators
-        run: docker compose up -d --build
+        run: docker compose -f compose.yml -f ./docker/compose-ci.yml up -d
 
       - name: Wait for database start...
         run: ./docker/wait-for-db.sh
