@@ -154,6 +154,7 @@ describe('#EventProposalsApi', () => {
 
       expect(speakerWithSurvey?.survey).toEqual([
         {
+          id: 'question1',
           question: 'What is your experience level?',
           answer: 'Expert',
         },
@@ -221,9 +222,13 @@ describe('#EventProposalsApi', () => {
       const speaker2InProposal = proposal1?.speakers.find((s) => s.name === speaker2.name);
       const speaker3InProposal = proposal2?.speakers.find((s) => s.name === speaker3.name);
 
-      expect(speaker1InProposal?.survey).toEqual([{ question: 'Experience level?', answer: 'Expert' }]);
+      expect(speaker1InProposal?.survey).toEqual([
+        { id: 'question1', question: 'Experience level?', answer: 'Expert' },
+      ]);
       expect(speaker2InProposal?.survey).toEqual([]);
-      expect(speaker3InProposal?.survey).toEqual([{ question: 'Experience level?', answer: 'Beginner' }]);
+      expect(speaker3InProposal?.survey).toEqual([
+        { id: 'question1', question: 'Experience level?', answer: 'Beginner' },
+      ]);
     });
 
     it('does not include survey data when survey is disabled for event', async () => {
@@ -316,9 +321,9 @@ describe('#EventProposalsApi', () => {
       const result = await eventApi.proposals({});
 
       expect(result.proposals[0].speakers[0].survey).toEqual([
-        { question: 'What is your name?', answer: 'John Doe' },
-        { question: 'What is your experience level?', answer: 'Expert' },
-        { question: 'What are your interests?', answer: ['Frontend', 'DevOps'] },
+        { id: 'name', question: 'What is your name?', answer: 'John Doe' },
+        { id: 'experience', question: 'What is your experience level?', answer: 'Expert' },
+        { id: 'interests', question: 'What are your interests?', answer: ['Frontend', 'DevOps'] },
       ]);
     });
   });

@@ -84,11 +84,11 @@ export class EventProposalsApi {
 
     return survey.map((question) => {
       if (question.type === 'text') {
-        return { question: question.label, answer: question.answer };
+        return { id: question.id, question: question.label, answer: question.answer };
       } else if (question.type === 'radio') {
-        return { question: question.label, answer: question.answers.at(0)?.label };
+        return { id: question.id, question: question.label, answer: question.answers.at(0)?.label };
       } else {
-        return { question: question.label, answer: question.answers.map((answer) => answer.label) };
+        return { id: question.id, question: question.label, answer: question.answers.map((answer) => answer.label) };
       }
     });
   }
