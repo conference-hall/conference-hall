@@ -43,7 +43,7 @@ export const ProfileSchema = z.object({
 });
 
 export const SpeakerCreationSchema = ProfileSchema.extend({
-  email: z.string().email().trim().min(1),
+  email: z.email().trim().min(1),
 });
 
 export const FunnelSpeakerSchema = z.object({

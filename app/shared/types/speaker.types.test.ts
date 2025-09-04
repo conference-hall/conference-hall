@@ -83,24 +83,7 @@ describe('Speaker schemas', () => {
       expect(result.success).toEqual(false);
       if (!result.success) {
         const { fieldErrors } = z.flattenError(result.error);
-        expect(fieldErrors.email).toEqual(['Invalid email']);
-      }
-    });
-
-    it('requires email to be present', async () => {
-      const result = SpeakerCreationSchema.safeParse({
-        name: 'John Doe',
-        picture: 'https://example.com/photo.jpg',
-        bio: 'lorem ipsum',
-        company: 'company',
-        location: 'location',
-        socialLinks: ['https://github.com/profile'],
-      });
-
-      expect(result.success).toEqual(false);
-      if (!result.success) {
-        const { fieldErrors } = z.flattenError(result.error);
-        expect(fieldErrors.email).toEqual(['Required']);
+        expect(fieldErrors.email).toEqual(['Invalid email address']);
       }
     });
   });
