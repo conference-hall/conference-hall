@@ -1,0 +1,16 @@
+# Firebase emulator image used in CI for faster builds
+services:
+  firebase-emulators:
+    container_name: ch_firebase_emulators_ci
+    image: us-docker.pkg.dev/firebase-cli/us/firebase
+    platform: linux/amd64
+    working_dir: /app
+    command: ['--project=conference-hall', 'emulators:start', '--only', 'auth,storage', '--import', 'fixtures']
+    volumes:
+      - ./docker/firebase/firebase.json:/app/firebase.json:ro
+      - ./docker/firebase/storage.rules:/app/storage.rules:ro
+      - ./docker/firebase/fixtures:/app/fixtures:ro
+    ports:
+      - '9099:9099'
+      - '9199:9199'
+      - '4000:4000'

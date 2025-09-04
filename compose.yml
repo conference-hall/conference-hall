@@ -9,23 +9,25 @@ services:
     environment:
       POSTGRES_MULTIPLE_DATABASES: '"conference-hall","conference-hall-test"'
       POSTGRES_HOST_AUTH_METHOD: trust
+
   redis:
     container_name: ch_redis
     image: redis:7-alpine
+    command: redis-server --save 20 1 --loglevel warning
     ports:
       - '6379:6379'
-    command: redis-server --save 20 1 --loglevel warning
+
   firebase-emulators:
     container_name: ch_firebase_emulators
     build:
       context: ./docker/firebase
+    volumes:
+      - ./docker/firebase/fixtures:/app/fixtures:ro
     ports:
       - '9099:9099'
       - '9199:9199'
       - '4000:4000'
-    volumes:
-      - ./docker/firebase:/app
-      - ./docker/firebase/.cache:/app/.cache/firebase/emulators/
+
   mailpit:
     container_name: ch_mailpit
     image: axllent/mailpit:latest
