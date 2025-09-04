@@ -1,6 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import type { SocialLinks } from '~/shared/types/speaker.types.ts';
-import type { ProfileData } from './speaker-profile.schema.server.ts';
+import type { ProfileData, SocialLinks } from '~/shared/types/speaker.types.ts';
 
 export class SpeakerProfile {
   constructor(private userId: string) {}

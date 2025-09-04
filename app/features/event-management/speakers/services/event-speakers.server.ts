@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { ReviewDetails } from '~/features/event-management/proposals/models/review-details.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import type { SocialLinks } from '~/shared/types/speaker.types.ts';
+import type { SocialLinks, SpeakerCreationData } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 
@@ -142,6 +142,37 @@ export class EventSpeakers extends UserEventAuthorization {
           };
         })
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
+    };
+  }
+
+  async create(data: SpeakerCreationData) {
+    const event = await this.needsPermission('canCreateEventSpeaker');
+
+    const speaker = await db.eventSpeaker.create({
+      data: {
+        eventId: event.id,
+        userId: null,
+        name: data.name,
+        email: data.email,
+        picture: data.picture,
+        bio: data.bio,
+        company: data.company,
+        location: data.location,
+        references: data.references,
+        socialLinks: data.socialLinks,
+      },
+    });
+
+    return {
+      id: speaker.id,
+      name: speaker.name,
+      email: speaker.email,
+      picture: speaker.picture,
+      bio: speaker.bio,
+      company: speaker.company,
+      location: speaker.location,
+      references: speaker.references,
+      socialLinks: speaker.socialLinks as SocialLinks,
     };
   }
 }

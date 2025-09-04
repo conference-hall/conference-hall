@@ -10,13 +10,13 @@ import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { getSocialIcon } from '~/design-system/social-link.tsx';
 import { H1, H2, Label, Subtitle } from '~/design-system/typography.tsx';
-import { ProfileSchema } from '~/features/speaker/settings/services/speaker-profile.schema.server.ts';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { extractSocialProfile } from '~/shared/formatters/social-links.ts';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
+import { ProfileSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/settings.profile.ts';
 
 const MAX_SOCIAL_LINKS = 4;

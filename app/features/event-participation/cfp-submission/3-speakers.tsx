@@ -10,10 +10,10 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { TalkSubmission } from '~/features/event-participation/cfp-submission/services/talk-submission.server.ts';
 import { ProfileFetcher } from '~/features/speaker/services/profile-fetcher.server.ts';
-import { FunnelSpeakerSchema } from '~/features/speaker/settings/services/speaker-profile.schema.server.ts';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { Speakers } from '~/features/speaker/talk-library/components/speakers.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { FunnelSpeakerSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/3-speakers.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 

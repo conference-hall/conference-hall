@@ -569,4 +569,165 @@ describe('EventSpeakers', () => {
       });
     });
   });
+
+  describe('#create', () => {
+    describe('when user has create speaker permission', () => {
+      it('creates an event speaker with userId null', async () => {
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: 'https://example.com/photo.jpg',
+          bio: 'lorem ipsum',
+          references: 'impedit quidem quisquam',
+          company: 'company',
+          location: 'location',
+          socialLinks: ['https://github.com/profile'],
+        };
+
+        const createdSpeaker = await eventSpeakers.create(speakerData);
+
+        expect(createdSpeaker).toEqual({
+          id: expect.any(String),
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: 'https://example.com/photo.jpg',
+          bio: 'lorem ipsum',
+          references: 'impedit quidem quisquam',
+          company: 'company',
+          location: 'location',
+          socialLinks: ['https://github.com/profile'],
+        });
+
+        const dbSpeaker = await db.eventSpeaker.findFirst({
+          where: { id: createdSpeaker.id },
+        });
+
+        expect(dbSpeaker).toEqual(
+          expect.objectContaining({
+            eventId: event.id,
+            userId: null,
+            name: 'John Doe',
+            email: 'john.doe@example.com',
+            picture: 'https://example.com/photo.jpg',
+            bio: 'lorem ipsum',
+            references: 'impedit quidem quisquam',
+            company: 'company',
+            location: 'location',
+            socialLinks: ['https://github.com/profile'],
+          }),
+        );
+      });
+
+      it('creates speaker with minimal required fields', async () => {
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        const createdSpeaker = await eventSpeakers.create(speakerData);
+
+        expect(createdSpeaker).toEqual({
+          id: expect.any(String),
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        });
+      });
+    });
+
+    describe('when user does not have create speaker permission', () => {
+      it('throws ForbiddenOperationError for reviewer', async () => {
+        const reviewer = await userFactory();
+        const reviewerTeam = await teamFactory({ reviewers: [reviewer] });
+        const reviewerEvent = await eventFactory({ team: reviewerTeam });
+
+        const eventSpeakers = EventSpeakers.for(reviewer.id, reviewerTeam.slug, reviewerEvent.slug);
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await expect(eventSpeakers.create(speakerData)).rejects.toThrow(ForbiddenOperationError);
+      });
+
+      it('throws ForbiddenOperationError for non-member', async () => {
+        const outsider = await userFactory();
+
+        const eventSpeakers = EventSpeakers.for(outsider.id, team.slug, event.slug);
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await expect(eventSpeakers.create(speakerData)).rejects.toThrow(ForbiddenOperationError);
+      });
+    });
+
+    describe('when event does not exist', () => {
+      it('throws error for non-existent event', async () => {
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, 'non-existent');
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await expect(eventSpeakers.create(speakerData)).rejects.toThrow();
+      });
+    });
+
+    describe('when team does not exist', () => {
+      it('throws error for non-existent team', async () => {
+        const eventSpeakers = EventSpeakers.for(owner.id, 'non-existent', event.slug);
+
+        const speakerData = {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await expect(eventSpeakers.create(speakerData)).rejects.toThrow();
+      });
+    });
+  });
 });

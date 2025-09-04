@@ -11,6 +11,7 @@ export type UserPermissions = {
   canEditEvent: boolean;
   canDeleteEvent: boolean;
   canCreateEventProposal: boolean;
+  canCreateEventSpeaker: boolean;
   canEditEventProposals: boolean;
   canExportEventProposals: boolean;
   canChangeProposalStatus: boolean;
@@ -31,6 +32,7 @@ const TEAM_OWNER_PERMISSIONS: UserPermissions = {
   canEditEvent: true,
   canDeleteEvent: true,
   canCreateEventProposal: true,
+  canCreateEventSpeaker: true,
   canEditEventProposals: true,
   canExportEventProposals: true,
   canChangeProposalStatus: true,
@@ -49,6 +51,7 @@ const TEAM_MEMBER_PERMISSIONS: UserPermissions = {
   canEditEvent: true,
   canDeleteEvent: false,
   canCreateEventProposal: true,
+  canCreateEventSpeaker: true,
   canEditEventProposals: true,
   canExportEventProposals: false,
   canChangeProposalStatus: true,
@@ -67,6 +70,7 @@ const TEAM_REVIEWER_PERMISSIONS: UserPermissions = {
   canEditEvent: false,
   canDeleteEvent: false,
   canCreateEventProposal: false,
+  canCreateEventSpeaker: false,
   canEditEventProposals: false,
   canExportEventProposals: false,
   canChangeProposalStatus: false,
