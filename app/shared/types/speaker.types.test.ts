@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ProfileSchema, SpeakerCreationSchema } from './speaker.types.ts';
+import { EventSpeakerSaveSchema, ProfileSchema } from './speaker.types.ts';
 
 describe('Speaker schemas', () => {
   describe('ProfileSchema', () => {
@@ -44,9 +44,9 @@ describe('Speaker schemas', () => {
     });
   });
 
-  describe('SpeakerCreationSchema', () => {
+  describe('EventSpeakerSaveSchema', () => {
     it('validates speaker creation with mandatory email', async () => {
-      const result = SpeakerCreationSchema.safeParse({
+      const result = EventSpeakerSaveSchema.safeParse({
         name: 'John Doe',
         email: 'john.doe@example.com',
         picture: 'https://example.com/photo.jpg',
@@ -70,7 +70,7 @@ describe('Speaker schemas', () => {
     });
 
     it('requires valid email format', async () => {
-      const result = SpeakerCreationSchema.safeParse({
+      const result = EventSpeakerSaveSchema.safeParse({
         name: 'John Doe',
         email: 'invalid-email',
         picture: 'https://example.com/photo.jpg',

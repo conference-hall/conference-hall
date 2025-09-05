@@ -6,7 +6,7 @@ import { ReviewDetails } from '~/features/event-management/proposals/models/revi
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import type { SocialLinks, SpeakerCreationData } from '~/shared/types/speaker.types.ts';
+import type { EventSpeakerSaveData, SocialLinks } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 
@@ -146,7 +146,7 @@ export class EventSpeakers extends UserEventAuthorization {
     };
   }
 
-  async create(data: SpeakerCreationData) {
+  async create(data: EventSpeakerSaveData) {
     const event = await this.needsPermission('canCreateEventSpeaker');
 
     const existingSpeaker = await db.eventSpeaker.findFirst({
@@ -183,6 +183,30 @@ export class EventSpeakers extends UserEventAuthorization {
       references: speaker.references,
       socialLinks: speaker.socialLinks as SocialLinks,
     };
+  }
+
+  async update(speakerId: string, data: EventSpeakerSaveData) {
+    const event = await this.needsPermission('canEditEventSpeaker');
+
+    const speaker = await db.eventSpeaker.findFirst({
+      where: { id: speakerId, eventId: event.id },
+    });
+
+    if (!speaker) {
+      throw new Error('Speaker not found');
+    }
+
+    if (data.email !== speaker.email) {
+      const existingSpeaker = await db.eventSpeaker.findFirst({
+        where: { eventId: event.id, email: data.email, id: { not: speakerId } },
+      });
+
+      if (existingSpeaker) {
+        throw new SpeakerEmailAlreadyExistsError();
+      }
+    }
+
+    return db.eventSpeaker.update({ where: { id: speakerId, eventId: event.id }, data });
   }
 }
 

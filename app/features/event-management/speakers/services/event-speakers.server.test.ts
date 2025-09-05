@@ -11,6 +11,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { ForbiddenOperationError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
+import type { EventSpeakerSaveData } from '~/shared/types/speaker.types.ts';
 import { EventSpeakers } from './event-speakers.server.ts';
 
 describe('EventSpeakers', () => {
@@ -786,6 +787,214 @@ describe('EventSpeakers', () => {
         };
 
         await expect(eventSpeakers.create(speakerData)).rejects.toThrow();
+      });
+    });
+  });
+
+  describe('#update', () => {
+    describe('when user has edit speaker permission', () => {
+      it('updates a speaker with provided data', async () => {
+        const updateData: EventSpeakerSaveData = {
+          name: 'Updated Name',
+          email: eventSpeaker1.email,
+          picture: null,
+          bio: 'Updated bio',
+          references: null,
+          company: 'Updated Company',
+          location: 'Updated Location',
+          socialLinks: [],
+        };
+
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const updatedSpeaker = await eventSpeakers.update(eventSpeaker1.id, updateData);
+
+        expect(updatedSpeaker.name).toBe('Updated Name');
+        expect(updatedSpeaker.bio).toBe('Updated bio');
+        expect(updatedSpeaker.company).toBe('Updated Company');
+        expect(updatedSpeaker.location).toBe('Updated Location');
+        expect(updatedSpeaker.email).toBe(eventSpeaker1.email);
+      });
+
+      it('updates only provided fields', async () => {
+        const originalName = eventSpeaker1.name;
+
+        const updateData: EventSpeakerSaveData = {
+          name: eventSpeaker1.name,
+          email: eventSpeaker1.email,
+          picture: null,
+          bio: 'New bio only',
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const updatedSpeaker = await eventSpeakers.update(eventSpeaker1.id, updateData);
+
+        expect(updatedSpeaker.name).toBe(originalName);
+        expect(updatedSpeaker.bio).toBe('New bio only');
+      });
+
+      it('throws an error if speaker not found', async () => {
+        const updateData: EventSpeakerSaveData = {
+          name: 'Updated Name',
+          email: 'test@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        await expect(eventSpeakers.update('non-existent-speaker-id', updateData)).rejects.toThrowError(
+          'Speaker not found',
+        );
+      });
+
+      it('throws an error if speaker belongs to different event', async () => {
+        const otherEvent = await eventFactory({ team });
+        const otherEventSpeaker = await eventSpeakerFactory({ event: otherEvent });
+
+        const updateData: EventSpeakerSaveData = {
+          name: 'Updated Name',
+          email: 'test@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        await expect(eventSpeakers.update(otherEventSpeaker.id, updateData)).rejects.toThrowError('Speaker not found');
+      });
+    });
+
+    describe('when user does not have edit speaker permission', () => {
+      it('throws ForbiddenOperationError for reviewer', async () => {
+        const reviewer = await userFactory();
+        const reviewerTeam = await teamFactory({ reviewers: [reviewer] });
+        const reviewerEvent = await eventFactory({ team: reviewerTeam });
+        const reviewerEventSpeaker = await eventSpeakerFactory({ event: reviewerEvent });
+
+        const eventSpeakers = EventSpeakers.for(reviewer.id, reviewerTeam.slug, reviewerEvent.slug);
+        const updateData: EventSpeakerSaveData = {
+          name: 'Updated Name',
+          email: 'test@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await expect(eventSpeakers.update(reviewerEventSpeaker.id, updateData)).rejects.toThrow(
+          ForbiddenOperationError,
+        );
+      });
+
+      it('throws ForbiddenOperationError for non-member', async () => {
+        const outsider = await userFactory();
+
+        const eventSpeakers = EventSpeakers.for(outsider.id, team.slug, event.slug);
+        const updateData: EventSpeakerSaveData = {
+          name: 'Updated Name',
+          email: 'test@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        await expect(eventSpeakers.update(eventSpeaker1.id, updateData)).rejects.toThrow(ForbiddenOperationError);
+      });
+    });
+
+    describe('email validation', () => {
+      it('allows updating email to a new unique email', async () => {
+        const updateData: EventSpeakerSaveData = {
+          name: eventSpeaker1.name,
+          email: 'newemail@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const updatedSpeaker = await eventSpeakers.update(eventSpeaker1.id, updateData);
+
+        expect(updatedSpeaker.email).toBe('newemail@example.com');
+      });
+
+      it('allows keeping the same email unchanged', async () => {
+        const originalEmail = eventSpeaker1.email;
+        const updateData: EventSpeakerSaveData = {
+          email: originalEmail,
+          name: 'Updated Name',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const updatedSpeaker = await eventSpeakers.update(eventSpeaker1.id, updateData);
+
+        expect(updatedSpeaker.email).toBe(originalEmail);
+        expect(updatedSpeaker.name).toBe('Updated Name');
+      });
+
+      it('throws SpeakerEmailAlreadyExistsError when updating to existing email', async () => {
+        const existingEmail = eventSpeaker2.email;
+        const updateData: EventSpeakerSaveData = {
+          name: eventSpeaker2.name,
+          email: existingEmail,
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+
+        await expect(eventSpeakers.update(eventSpeaker1.id, updateData)).rejects.toThrow(
+          SpeakerEmailAlreadyExistsError,
+        );
+      });
+
+      it('allows updating to same email in different event', async () => {
+        const otherEvent = await eventFactory({ team });
+        await eventSpeakerFactory({ event: otherEvent, attributes: { email: 'shared@example.com' } });
+
+        const updateData: EventSpeakerSaveData = {
+          name: eventSpeaker1.name,
+          email: 'shared@example.com',
+          picture: null,
+          bio: null,
+          references: null,
+          company: null,
+          location: null,
+          socialLinks: [],
+        };
+
+        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const updatedSpeaker = await eventSpeakers.update(eventSpeaker1.id, updateData);
+
+        expect(updatedSpeaker.email).toBe('shared@example.com');
       });
     });
   });
