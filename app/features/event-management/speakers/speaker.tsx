@@ -1,13 +1,17 @@
-import { InboxIcon } from '@heroicons/react/24/outline';
+import { InboxIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { data } from 'react-router';
+import { href } from 'react-router';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { NotFoundError } from '~/shared/errors.server.ts';
+import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { ProposalItem } from '../proposals/components/list/items/proposal-item.tsx';
 import type { Route } from './+types/speaker.ts';
 import { SpeakerLinks } from './components/speaker-details/speaker-links.tsx';
@@ -20,31 +24,45 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
   const speaker = await eventSpeakers.getById(params.speaker);
 
-  if (!speaker) {
-    throw data(null, { status: 404 });
-  }
+  if (!speaker) throw new NotFoundError('Speaker not found');
 
   return { speaker };
 };
 
 export default function SpeakerRoute({ loaderData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const isFeatureEnabled = useFlag('organizerProposalCreation');
+  const { team } = useCurrentEventTeam();
   const { speaker } = loaderData;
 
   return (
     <Page className="space-y-6">
+      <Page.Heading
+        component={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
+        backTo={href('/team/:team/:event/speakers', params)}
+      >
+        {isFeatureEnabled && team.userPermissions?.canEditEventSpeaker && (
+          <ButtonLink
+            variant="secondary"
+            iconLeft={PencilSquareIcon}
+            to={href('/team/:team/:event/speakers/:speaker/edit', params)}
+          >
+            {t('common.edit')}
+          </ButtonLink>
+        )}
+      </Page.Heading>
+
       <Card>
-        <Card.Content className="">
-          <SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />
+        <SpeakerLinks
+          email={speaker.email}
+          location={speaker.location}
+          socialLinks={speaker.socialLinks}
+          className="p-6"
+        />
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-16">
-            <div className="sm:col-span-2 space-y-4">
-              <Markdown>{speaker.bio}</Markdown>
-            </div>
-
-            <SpeakerLinks email={speaker.email} location={speaker.location} socialLinks={speaker.socialLinks} />
-          </div>
-        </Card.Content>
+        <Card.Disclosure title={t('speaker.profile.biography')} defaultOpen>
+          <Markdown>{speaker.bio || t('common.not-specified')}</Markdown>
+        </Card.Disclosure>
 
         {speaker.references ? (
           <Card.Disclosure title={t('speaker.profile.references')}>

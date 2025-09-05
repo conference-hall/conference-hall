@@ -115,11 +115,11 @@ type CardDisclosureProps = {
 function CardDisclosure({ title, as, children, defaultOpen, className }: CardDisclosureProps) {
   return (
     <Disclosure defaultOpen={defaultOpen}>
-      <DisclosureButton className="px-6 py-4 group flex items-center gap-2 text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:underline border-t border-t-gray-200">
+      <DisclosureButton className="px-6 py-4 group flex items-center justify-between gap-2 text-sm font-medium leading-6 w-full text-gray-900 cursor-pointer hover:bg-gray-50 border-t border-t-gray-200">
         <span>{title}</span>
-        <ChevronDownIcon className="h-4 w-4 group-data-open:rotate-180" />
+        <ChevronDownIcon className="h-5 w-5 group-data-open:rotate-180" />
       </DisclosureButton>
-      <DisclosurePanel as={as} className={cx(className, 'px-6 pb-4')}>
+      <DisclosurePanel as={as} className={cx(className, 'px-6 pb-4 pt-2')}>
         {children}
       </DisclosurePanel>
     </Disclosure>

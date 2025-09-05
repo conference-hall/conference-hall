@@ -67,7 +67,7 @@ export class ProposalManagement extends UserEventAuthorization {
   async update(data: ProposalUpdateData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for update operation');
 
-    const event = await this.needsPermission('canEditEventProposals');
+    const event = await this.needsPermission('canEditEventProposal');
 
     return db.proposal.update({ where: { id: this.proposalId, eventId: event.id }, data });
   }
@@ -75,7 +75,7 @@ export class ProposalManagement extends UserEventAuthorization {
   async saveTags(data: ProposalSaveTagsData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for saveTags operation');
 
-    const event = await this.needsPermission('canEditEventProposals');
+    const event = await this.needsPermission('canEditEventProposal');
 
     return db.proposal.update({
       where: { id: this.proposalId, eventId: event.id },
@@ -86,7 +86,7 @@ export class ProposalManagement extends UserEventAuthorization {
   async saveSpeakers(data: ProposalSaveSpeakersData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for saveSpeakers operation');
 
-    const event = await this.needsPermission('canEditEventProposals');
+    const event = await this.needsPermission('canEditEventProposal');
 
     const eventSpeakers = await db.eventSpeaker.findMany({
       where: { eventId: event.id, id: { in: data.speakers } },
@@ -109,7 +109,7 @@ export class ProposalManagement extends UserEventAuthorization {
   async saveFormats(data: ProposalSaveFormatsData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for saveFormats operation');
 
-    const event = await this.needsPermission('canEditEventProposals');
+    const event = await this.needsPermission('canEditEventProposal');
 
     const eventFormats = await db.eventFormat.findMany({
       where: { eventId: event.id, id: { in: data.formats } },
@@ -132,7 +132,7 @@ export class ProposalManagement extends UserEventAuthorization {
   async saveCategories(data: ProposalSaveCategoriesData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for saveCategories operation');
 
-    const event = await this.needsPermission('canEditEventProposals');
+    const event = await this.needsPermission('canEditEventProposal');
 
     const eventCategories = await db.eventCategory.findMany({
       where: { eventId: event.id, id: { in: data.categories } },

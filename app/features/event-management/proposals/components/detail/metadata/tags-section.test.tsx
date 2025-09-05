@@ -35,7 +35,7 @@ describe('TagsSection component', () => {
       { id: '3', name: 'Beginner', color: '#F59E0B' },
       { id: '4', name: 'Advanced', color: '#EF4444' },
     ],
-    canEditEventProposals: true,
+    canEditEventProposal: true,
     canEditEvent: true,
   };
 
@@ -91,8 +91,8 @@ describe('TagsSection component', () => {
     await expect.element(screen.getByText('Backend')).toBeInTheDocument();
   });
 
-  it('renders in readonly mode when canEditEventProposals is false', async () => {
-    const screen = renderComponent({ canEditEventProposals: false });
+  it('renders in readonly mode when canEditEventProposal is false', async () => {
+    const screen = renderComponent({ canEditEventProposal: false });
 
     await expect.element(screen.getByText('Tags')).toBeInTheDocument();
     await expect.element(screen.getByText('Frontend')).toBeInTheDocument();

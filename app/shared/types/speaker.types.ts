@@ -42,7 +42,7 @@ export const ProfileSchema = z.object({
   socialLinks: SocialLinksSchema,
 });
 
-export const SpeakerCreationSchema = ProfileSchema.extend({
+export const EventSpeakerSaveSchema = ProfileSchema.extend({
   email: z.email().trim().min(1),
 });
 
@@ -59,4 +59,4 @@ export type ProfileData =
   | z.infer<typeof ProfileSchema>
   | z.infer<typeof FunnelSpeakerSchema>;
 
-export type SpeakerCreationData = z.infer<typeof SpeakerCreationSchema>;
+export type EventSpeakerSaveData = z.infer<typeof EventSpeakerSaveSchema>;

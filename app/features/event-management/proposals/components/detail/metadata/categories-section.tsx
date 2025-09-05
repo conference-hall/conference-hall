@@ -9,7 +9,7 @@ type CategoriesSectionProps = {
   proposalCategories: Array<{ id: string; name: string }>;
   eventCategories: Array<{ id: string; name: string }>;
   multiple: boolean;
-  canEditEventProposals: boolean;
+  canEditEventProposal: boolean;
   canEditEvent: boolean;
   className?: string;
 };
@@ -21,7 +21,7 @@ export function CategoriesSection({
   proposalCategories,
   eventCategories,
   multiple,
-  canEditEventProposals,
+  canEditEventProposal,
   canEditEvent,
   className,
 }: CategoriesSectionProps) {
@@ -53,7 +53,7 @@ export function CategoriesSection({
       options={eventCategories.map((item) => ({ value: item.id, label: item.name }))}
       onChange={(selected) => update(selected.map((option) => option.value))}
       multiple={multiple}
-      readonly={!canEditEventProposals}
+      readonly={!canEditEventProposal}
       showAction={canEditEvent}
       className={className}
     />

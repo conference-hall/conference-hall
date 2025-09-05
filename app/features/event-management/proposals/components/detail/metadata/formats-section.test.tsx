@@ -35,7 +35,7 @@ describe('FormatsSection component', () => {
       { id: '3', name: 'Long Talk (45min)' },
     ],
     multiple: true,
-    canEditEventProposals: true,
+    canEditEventProposal: true,
     canEditEvent: true,
   };
 
@@ -81,8 +81,8 @@ describe('FormatsSection component', () => {
     expect(submittedFormData.getAll('formats')).toContain('3');
   });
 
-  it('renders in readonly mode when canEditEventProposals is false', async () => {
-    const screen = renderComponent({ canEditEventProposals: false });
+  it('renders in readonly mode when canEditEventProposal is false', async () => {
+    const screen = renderComponent({ canEditEventProposal: false });
 
     await expect.element(screen.getByText('Formats')).toBeInTheDocument();
     await expect.element(screen.getByText('Lightning Talk (5min)')).toBeInTheDocument();

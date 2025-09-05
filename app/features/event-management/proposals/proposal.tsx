@@ -152,7 +152,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function ProposalReviewLayoutRoute({ params, loaderData, actionData: errors }: Route.ComponentProps) {
   const { team, event } = useCurrentEventTeam();
-  const { canEditEvent, canEditEventProposals, canChangeProposalStatus } = team.userPermissions;
+  const { canEditEvent, canEditEventProposal, canChangeProposalStatus } = team.userPermissions;
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
 
   const proposalCreationEnabled = useFlag('organizerProposalCreation');
@@ -195,7 +195,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   event={params.event}
                   proposalId={params.proposal}
                   proposalSpeakers={proposal.speakers}
-                  canEditEventProposals={canEditEventProposals && proposalCreationEnabled}
+                  canEditEventProposal={canEditEventProposal && proposalCreationEnabled}
                   className="space-y-3 p-4 lg:px-6"
                 />
                 <Divider />
@@ -211,7 +211,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   proposalFormats={proposal.formats}
                   eventFormats={event.formats}
                   multiple={event.formatsAllowMultiple}
-                  canEditEventProposals={canEditEventProposals}
+                  canEditEventProposal={canEditEventProposal}
                   canEditEvent={canEditEvent}
                   className="space-y-3 p-4 lg:px-6"
                 />
@@ -228,7 +228,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   proposalCategories={proposal.categories}
                   eventCategories={event.categories}
                   multiple={event.categoriesAllowMultiple}
-                  canEditEventProposals={canEditEventProposals}
+                  canEditEventProposal={canEditEventProposal}
                   canEditEvent={canEditEvent}
                   className="space-y-3 p-4 lg:px-6"
                 />
@@ -242,7 +242,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
               proposalId={params.proposal}
               proposalTags={proposal.tags}
               eventTags={event.tags}
-              canEditEventProposals={canEditEventProposals}
+              canEditEventProposal={canEditEventProposal}
               canEditEvent={canEditEvent}
               className="space-y-3 p-4 pb-6 lg:px-6"
             />

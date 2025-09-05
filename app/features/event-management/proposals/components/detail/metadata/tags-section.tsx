@@ -9,7 +9,7 @@ type TagsSectionProps = {
   proposalId: string;
   proposalTags: Array<TagType>;
   eventTags: Array<TagType>;
-  canEditEventProposals: boolean;
+  canEditEventProposal: boolean;
   canEditEvent: boolean;
   className?: string;
 };
@@ -20,7 +20,7 @@ export function TagsSection({
   proposalId,
   proposalTags,
   eventTags,
-  canEditEventProposals,
+  canEditEventProposal,
   canEditEvent,
   className,
 }: TagsSectionProps) {
@@ -51,7 +51,7 @@ export function TagsSection({
       value={displayedTags.map((tag) => ({ value: tag.id, label: tag.name, color: tag.color }))}
       options={eventTags.map((tag) => ({ value: tag.id, label: tag.name, color: tag.color }))}
       onChange={(selected) => update(selected.map((option) => option.value))}
-      readonly={!canEditEventProposals}
+      readonly={!canEditEventProposal}
       showAction={canEditEvent}
       className={className}
     />

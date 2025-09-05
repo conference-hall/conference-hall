@@ -12,7 +12,7 @@ type Props = {
 
 export function SpeakerLinks({ email, location, socialLinks, className }: Props) {
   return (
-    <div className={cx('flex flex-col gap-2', className)}>
+    <div className={cx('flex flex-col items-start gap-2', className)}>
       {location ? (
         <ExternalLink
           iconLeft={MapPinIcon}

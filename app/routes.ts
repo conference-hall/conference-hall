@@ -95,6 +95,7 @@ export default [
     route('speakers', './features/event-management/speakers/speakers.tsx'),
     route('speakers/new', './features/event-management/speakers/new-speaker.tsx'),
     route('speakers/:speaker', './features/event-management/speakers/speaker.tsx'),
+    route('speakers/:speaker/edit', './features/event-management/speakers/edit-speaker.tsx'),
 
     // Event publication pages
     route('publication', './features/event-management/publication/publication.tsx'),
