@@ -199,9 +199,7 @@ export class EventSpeakers extends UserEventAuthorization {
         where: { eventId: event.id, email: data.email, id: { not: speakerId } },
       });
 
-      if (existingSpeaker) {
-        throw new SpeakerEmailAlreadyExistsError();
-      }
+      if (existingSpeaker) throw new SpeakerEmailAlreadyExistsError();
     }
 
     return db.eventSpeaker.update({ where: { id: speakerId, eventId: event.id }, data });

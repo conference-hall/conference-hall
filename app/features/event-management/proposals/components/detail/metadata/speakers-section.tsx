@@ -8,7 +8,7 @@ type SpeakersSectionProps = {
   event: string;
   proposalId: string;
   proposalSpeakers: Array<SpeakerData>;
-  canEditEventProposal: boolean;
+  canEditEventProposal: boolean; // todo(proposal): rename to canChangeSpeakers (do same for FormatsSection...)
   className?: string;
 };
 
