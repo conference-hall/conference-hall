@@ -10,7 +10,7 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { ForbiddenOperationError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
+import { ForbiddenOperationError, NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import type { EventSpeakerSaveData } from '~/shared/types/speaker.types.ts';
 import { EventSpeakers } from './event-speakers.server.ts';
 
@@ -849,9 +849,7 @@ describe('EventSpeakers', () => {
         };
 
         const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
-        await expect(eventSpeakers.update('non-existent-speaker-id', updateData)).rejects.toThrowError(
-          'Speaker not found',
-        );
+        await expect(eventSpeakers.update('non-existent-speaker-id', updateData)).rejects.toThrowError(NotFoundError);
       });
 
       it('throws an error if speaker belongs to different event', async () => {
@@ -870,7 +868,7 @@ describe('EventSpeakers', () => {
         };
 
         const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
-        await expect(eventSpeakers.update(otherEventSpeaker.id, updateData)).rejects.toThrowError('Speaker not found');
+        await expect(eventSpeakers.update(otherEventSpeaker.id, updateData)).rejects.toThrowError(NotFoundError);
       });
     });
 

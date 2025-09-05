@@ -1,6 +1,6 @@
 import { InboxIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { data, href } from 'react-router';
+import { href } from 'react-router';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
@@ -10,6 +10,7 @@ import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { NotFoundError } from '~/shared/errors.server.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { ProposalItem } from '../proposals/components/list/items/proposal-item.tsx';
 import type { Route } from './+types/speaker.ts';
@@ -23,9 +24,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
   const speaker = await eventSpeakers.getById(params.speaker);
 
-  if (!speaker) {
-    throw data(null, { status: 404 });
-  }
+  if (!speaker) throw new NotFoundError('Speaker not found');
 
   return { speaker };
 };

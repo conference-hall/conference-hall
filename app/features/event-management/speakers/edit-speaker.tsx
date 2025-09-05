@@ -1,13 +1,13 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
-import { data, href, redirect } from 'react-router';
+import { href, redirect } from 'react-router';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
+import { NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -22,9 +22,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
   const speaker = await eventSpeakers.getById(params.speaker);
 
-  if (!speaker) {
-    throw data(null, { status: 404 });
-  }
+  if (!speaker) throw new NotFoundError('Speaker not found');
 
   return { speaker };
 };
