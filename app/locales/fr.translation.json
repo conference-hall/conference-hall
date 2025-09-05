@@ -706,6 +706,7 @@
   "event-management.speakers.new.feedbacks.created": "Speaker créé avec succès.",
   "event-management.speakers.edit.feedbacks.updated": "Speaker modifié avec succès.",
   "event-management.speakers.edit.submit": "Enregistrer le speaker",
+  "event-management.speakers.edit.title": "Modifier le speaker {{name}}",
   "event-management.speakers.new.submit": "Créer le speaker",
   "event-management.speakers.new.errors.email-already-exists": "Un speaker avec cette adresse email existe déjà pour cet événement.",
   "event.nav.proposals": "Vos propositions",

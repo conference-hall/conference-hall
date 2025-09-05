@@ -5,7 +5,7 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
-import { NewSpeakerPage } from './new-speaker.page.ts';
+import { NewSpeakerPage } from './speaker-form.page.ts';
 
 let team: Team;
 let event: Event;
