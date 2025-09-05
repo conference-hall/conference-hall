@@ -35,7 +35,7 @@ describe('CategoriesSection component', () => {
       { id: '3', name: 'Mobile Development' },
     ],
     multiple: true,
-    canEditEventProposals: true,
+    canEditEventProposal: true,
     canEditEvent: true,
   };
 
@@ -81,8 +81,8 @@ describe('CategoriesSection component', () => {
     expect(submittedFormData.getAll('categories')).toContain('3');
   });
 
-  it('renders in readonly mode when canEditEventProposals is false', async () => {
-    const screen = renderComponent({ canEditEventProposals: false });
+  it('renders in readonly mode when canEditEventProposal is false', async () => {
+    const screen = renderComponent({ canEditEventProposal: false });
 
     await expect.element(screen.getByText('Categories')).toBeInTheDocument();
     await expect.element(screen.getByText('Web Development')).toBeInTheDocument();

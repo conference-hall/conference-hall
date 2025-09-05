@@ -70,7 +70,7 @@ describe('SpeakersSection component', () => {
         references: '',
       },
     ],
-    canEditEventProposals: true,
+    canEditEventProposal: true,
   };
 
   beforeEach(() => {
@@ -116,8 +116,8 @@ describe('SpeakersSection component', () => {
     expect(submittedFormData.getAll('speakers')).toContain('speaker3');
   });
 
-  it('renders in readonly mode when canEditEventProposals is false', async () => {
-    const screen = renderComponent({ canEditEventProposals: false });
+  it('renders in readonly mode when canEditEventProposal is false', async () => {
+    const screen = renderComponent({ canEditEventProposal: false });
 
     await expect.element(screen.getByText('Speakers')).toBeInTheDocument();
     await expect.element(screen.getByText('John Doe')).toBeInTheDocument();

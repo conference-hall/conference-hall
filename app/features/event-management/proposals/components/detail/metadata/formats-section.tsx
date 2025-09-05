@@ -9,7 +9,7 @@ type FormatsSectionProps = {
   proposalFormats: Array<{ id: string; name: string }>;
   eventFormats: Array<{ id: string; name: string }>;
   multiple: boolean;
-  canEditEventProposals: boolean;
+  canEditEventProposal: boolean;
   canEditEvent: boolean;
   className?: string;
 };
@@ -21,7 +21,7 @@ export function FormatsSection({
   proposalFormats,
   eventFormats,
   multiple,
-  canEditEventProposals,
+  canEditEventProposal,
   canEditEvent,
   className,
 }: FormatsSectionProps) {
@@ -53,7 +53,7 @@ export function FormatsSection({
       options={eventFormats.map((item) => ({ value: item.id, label: item.name }))}
       onChange={(selected) => update(selected.map((option) => option.value))}
       multiple={multiple}
-      readonly={!canEditEventProposals}
+      readonly={!canEditEventProposal}
       showAction={canEditEvent}
       className={className}
     />
