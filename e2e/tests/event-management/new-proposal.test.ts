@@ -1,7 +1,9 @@
 import type { Event, Team } from 'prisma/generated/client.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
+import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
@@ -26,19 +28,20 @@ test.beforeEach(async () => {
   event = await eventFactory({ team, traits: ['conference-cfp-open'] });
   await eventFormatFactory({ event, attributes: { name: 'Format 1' } });
   await eventCategoryFactory({ event, attributes: { name: 'Category 1' } });
+  await eventProposalTagFactory({ event, attributes: { name: 'Tag 1' } });
+  await eventSpeakerFactory({ event, attributes: { name: 'John Existing Speaker' } });
 });
 
-test.skip('creates new proposal as organizer', async ({ page }) => {
+test('creates new proposal as organizer', async ({ page }) => {
   const proposalsPage = new ProposalsListPage(page);
   await proposalsPage.goto(team.slug, event.slug);
-
-  await expect(proposalsPage.newProposalButton).toBeVisible();
 
   await proposalsPage.clickOnNewProposal();
 
   const newProposalPage = new NewProposalPage(page);
   await newProposalPage.waitFor();
 
+  // Fill talk form
   await newProposalPage.talkForm.fillForm(
     'E2E Test Proposal',
     'This is a test proposal',
@@ -47,20 +50,61 @@ test.skip('creates new proposal as organizer', async ({ page }) => {
     'https://example.com/references',
   );
 
+  // Verify talk form values
   await expect(newProposalPage.talkForm.titleInput).toHaveValue('E2E Test Proposal');
   await expect(newProposalPage.talkForm.abstractInput).toHaveValue('This is a test proposal');
   await expect(newProposalPage.talkForm.intermediateRadio).toBeChecked();
   await expect(newProposalPage.talkForm.referencesInput).toHaveValue('https://example.com/references');
 
-  await newProposalPage.submitButton.click();
+  // Create a speaker for the proposal
+  await newProposalPage.speakerPanel.togglePanel();
+  const createSpeakerModal = await newProposalPage.speakerPanel.clickCreateSpeaker();
+  await createSpeakerModal.emailInput.fill('new.speaker@example.com');
+  await createSpeakerModal.nameInput.fill('Jane New Speaker');
+  await createSpeakerModal.companyInput.fill('New Speaker Company');
+  await createSpeakerModal.bioInput.fill('This is a bio for the new speaker');
+  await createSpeakerModal.createSpeaker();
+
+  // Search and select a speaker
+  await newProposalPage.speakerPanel.togglePanel();
+  await newProposalPage.speakerPanel.searchSpeaker('John');
+  await newProposalPage.speakerPanel.selectSpeakerByName('John Existing Speaker');
+  await newProposalPage.speakerPanel.togglePanel();
+
+  // Select format
+  await newProposalPage.formatsButton.click();
+  await page.getByRole('option', { name: 'Format 1' }).click();
+  await newProposalPage.formatsButton.click();
+
+  // Select category
+  await newProposalPage.categoriesButton.click();
+  await page.getByRole('option', { name: 'Category 1' }).click();
+  await newProposalPage.categoriesButton.click();
+
+  // Select tag
+  await newProposalPage.tagsButton.click();
+  await page.getByRole('option', { name: 'Tag 1' }).click();
+  await newProposalPage.tagsButton.click();
+
+  // Submit proposal
+  await newProposalPage.submitProposal();
   await expect(newProposalPage.toast).toHaveText('Proposal created successfully.');
 
+  // Check created proposal
   const proposalPage = new ProposalPage(page);
-  proposalPage.waitFor('E2E Test Proposal');
   await expect(page.getByRole('heading', { name: 'E2E Test Proposal' })).toBeVisible();
+  await expect(page.getByText('This is a test proposal')).toBeVisible();
+  await expect(page.getByText('Intermediate')).toBeVisible();
+  await expect(page.getByText('Format 1')).toBeVisible();
+  await expect(page.getByText('Category 1')).toBeVisible();
+  await expect(page.getByText('Tag 1')).toBeVisible();
+  await expect(page.getByText('Jane New Speaker')).toBeVisible();
+  await expect(page.getByText('John Existing Speaker')).toBeVisible();
+  await proposalPage.referencesToggle.click();
+  await expect(page.getByText('https://example.com/references')).toBeVisible();
 });
 
-test.skip('cancels new proposal creation', async ({ page }) => {
+test('cancels new proposal creation', async ({ page }) => {
   const proposalsPage = new ProposalsListPage(page);
   await proposalsPage.goto(team.slug, event.slug);
 
@@ -75,7 +119,7 @@ test.skip('cancels new proposal creation', async ({ page }) => {
   await expect(proposalsPage.heading).toBeVisible();
 });
 
-test.describe.skip('As a member', () => {
+test.describe('As a member', () => {
   loginWith('bruce-wayne');
 
   test('can see new proposal button', async ({ page }) => {
@@ -86,7 +130,7 @@ test.describe.skip('As a member', () => {
   });
 });
 
-test.describe.skip('As a reviewer', () => {
+test.describe('As a reviewer', () => {
   loginWith('peter-parker');
 
   test('cannot see new proposal button', async ({ page }) => {

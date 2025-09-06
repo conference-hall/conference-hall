@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
@@ -30,16 +30,18 @@ export function SpeakerModal({ team, event, onSpeakerCreated, children }: Speake
     fetcher.submit(formData, { method: 'POST', action: `/team/${team}/${event}/reviews/new` });
   };
 
-  if (fetcher.data?.speaker && !errors && isModalOpen) {
-    const speaker = fetcher.data.speaker;
-    onSpeakerCreated?.({
-      value: speaker.id,
-      label: speaker.name,
-      picture: speaker.picture,
-      data: { description: speaker.company },
-    });
-    setModalOpen(false);
-  }
+  useEffect(() => {
+    if (fetcher.data?.speaker && !errors && isModalOpen) {
+      const speaker = fetcher.data.speaker;
+      onSpeakerCreated?.({
+        value: speaker.id,
+        label: speaker.name,
+        picture: speaker.picture,
+        data: { description: speaker.company },
+      });
+      setModalOpen(false);
+    }
+  }, [fetcher.data?.speaker, errors, isModalOpen, onSpeakerCreated]);
 
   const onClose = () => setModalOpen(false);
   const onOpen = () => setModalOpen(true);
