@@ -60,7 +60,7 @@ export function TagsPanel({
         name="tags"
         form={form}
         label={t('common.tags-list.label')}
-        defaultValue={selectedTags.map((tag) => tag.value)}
+        values={selectedTags.map((tag) => tag.value)}
         options={options}
         onChange={handleChange}
         footer={showAction ? <Action team={team} event={event} /> : null}

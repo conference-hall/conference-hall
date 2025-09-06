@@ -36,7 +36,7 @@ describe('SelectPanel component', () => {
               name="test-select"
               label="Test Select"
               options={options}
-              defaultValue={[]}
+              values={[]}
               onChange={onChangeMock}
               {...props}
             >
@@ -85,7 +85,7 @@ describe('SelectPanel component', () => {
   });
 
   it('calls onChange when selecting options in multiple mode', async () => {
-    const screen = renderComponent({ multiple: true, defaultValue: [] });
+    const screen = renderComponent({ multiple: true, values: [] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -97,7 +97,7 @@ describe('SelectPanel component', () => {
   });
 
   it('shows selected options as checked in multiple mode', async () => {
-    const screen = renderComponent({ multiple: true, defaultValue: [options[0].value, options[2].value] });
+    const screen = renderComponent({ multiple: true, values: [options[0].value, options[2].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -109,7 +109,7 @@ describe('SelectPanel component', () => {
   });
 
   it('handles unselecting options in multiple mode', async () => {
-    const screen = renderComponent({ multiple: true, defaultValue: [options[0].value, options[1].value] });
+    const screen = renderComponent({ multiple: true, values: [options[0].value, options[1].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
     await userEvent.click(screen.getByText('Option 1'));
@@ -118,7 +118,7 @@ describe('SelectPanel component', () => {
   });
 
   it('calls onChange when selecting option in single mode', async () => {
-    const screen = renderComponent({ multiple: false, defaultValue: [options[0].value] });
+    const screen = renderComponent({ multiple: false, values: [options[0].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
     await userEvent.click(screen.getByText('Option 1'));
@@ -127,7 +127,7 @@ describe('SelectPanel component', () => {
   });
 
   it('shows selected item with radio button in single mode', async () => {
-    const screen = renderComponent({ multiple: false, defaultValue: [options[0].value] });
+    const screen = renderComponent({ multiple: false, values: [options[0].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -199,7 +199,7 @@ describe('SelectPanel component', () => {
   });
 
   it('creates hidden form inputs when name is provided', async () => {
-    const screen = renderComponent({ name: 'test-field', defaultValue: [options[0].value, options[1].value] });
+    const screen = renderComponent({ name: 'test-field', values: [options[0].value, options[1].value] });
 
     const hiddenInputs = screen.container.querySelectorAll('input[type="hidden"]');
     expect(hiddenInputs).toHaveLength(2);
@@ -257,7 +257,7 @@ describe('SelectPanel component', () => {
       options: optionsWithData,
       onChange: onChangeMockWithData,
       multiple: true,
-      defaultValue: [],
+      values: [],
     });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));

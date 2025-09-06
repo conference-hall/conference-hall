@@ -105,7 +105,7 @@ export function SpeakersPanel({
         name="speakers"
         form={form}
         label={t('common.speakers')}
-        defaultValue={selectedSpeakers.map((speaker) => speaker.value)}
+        values={selectedSpeakers.map((speaker) => speaker.value)}
         loading={loading}
         options={availableOptions}
         onChange={handleChange}

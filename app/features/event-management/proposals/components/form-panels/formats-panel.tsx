@@ -65,7 +65,7 @@ export function FormatsPanel({
         name="formats"
         form={form}
         label={t('common.formats')}
-        defaultValue={selectedFormats.map((format) => format.value)}
+        values={selectedFormats.map((format) => format.value)}
         options={options}
         onChange={handleChange}
         multiple={multiple}

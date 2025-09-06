@@ -187,7 +187,7 @@ export type SelectPanelProps = {
   name?: string;
   label: string;
   options: Array<SelectPanelOption>;
-  defaultValue?: Array<string>;
+  values?: Array<string>;
   multiple?: boolean;
   children: React.ReactNode;
   footer?: React.ReactNode | ((closePanel: () => void) => React.ReactNode);
@@ -204,7 +204,7 @@ export function SelectPanel({
   name,
   label,
   options,
-  defaultValue,
+  values,
   multiple = true,
   children,
   footer,
@@ -226,13 +226,13 @@ export function SelectPanel({
     };
   }, [options]);
 
-  const [selected, setSelected] = useState<Array<SelectPanelOption>>(getSelectedFromValues(defaultValue));
+  const [selected, setSelected] = useState<Array<SelectPanelOption>>(getSelectedFromValues(values));
 
   // Update selected state when defaultValue changes
   useEffect(() => {
-    const newSelected = getSelectedFromValues(defaultValue);
+    const newSelected = getSelectedFromValues(values);
     setSelected(newSelected);
-  }, [defaultValue, getSelectedFromValues]);
+  }, [values, getSelectedFromValues]);
 
   const handleSelectionChange = (selectedOptions: Array<SelectPanelOption>) => {
     setSelected(selectedOptions);
