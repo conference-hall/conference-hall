@@ -107,6 +107,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               event={params.event}
               form={formId}
               error={actionData?.errors?.speakers}
+              showAction={team.userPermissions?.canCreateEventSpeaker}
               className="space-y-3 p-4 lg:px-6"
             />
 

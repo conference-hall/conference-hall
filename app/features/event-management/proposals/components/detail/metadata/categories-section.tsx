@@ -9,8 +9,8 @@ type CategoriesSectionProps = {
   proposalCategories: Array<{ id: string; name: string }>;
   eventCategories: Array<{ id: string; name: string }>;
   multiple: boolean;
-  canEditEventProposal: boolean;
-  canEditEvent: boolean;
+  canChangeCategory: boolean;
+  canCreateCategory: boolean;
   className?: string;
 };
 
@@ -21,8 +21,8 @@ export function CategoriesSection({
   proposalCategories,
   eventCategories,
   multiple,
-  canEditEventProposal,
-  canEditEvent,
+  canChangeCategory,
+  canCreateCategory,
   className,
 }: CategoriesSectionProps) {
   const fetcher = useFetcher({ key: `save-categories:${proposalId}` });
@@ -53,8 +53,8 @@ export function CategoriesSection({
       options={eventCategories.map((item) => ({ value: item.id, label: item.name }))}
       onChange={(selected) => update(selected.map((option) => option.value))}
       multiple={multiple}
-      readonly={!canEditEventProposal}
-      showAction={canEditEvent}
+      readonly={!canChangeCategory}
+      showAction={canCreateCategory}
       className={className}
     />
   );
