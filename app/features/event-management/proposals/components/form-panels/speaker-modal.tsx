@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
@@ -19,13 +19,16 @@ export function SpeakerModal({ team, event, onSpeakerCreated, children }: Speake
   const [isModalOpen, setModalOpen] = useState(false);
 
   const fetcher = useFetcher();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const formId = useId();
   const isLoading = fetcher.state === 'submitting';
   const errors = fetcher.data?.errors;
 
   const handleSubmit = () => {
-    const formData = new FormData(document.getElementById(formId) as HTMLFormElement);
+    if (!formRef.current) return;
+
+    const formData = new FormData(formRef.current);
     formData.append('intent', 'create-speaker');
     fetcher.submit(formData, { method: 'POST', action: `/team/${team}/${event}/reviews/new` });
   };
@@ -57,7 +60,7 @@ export function SpeakerModal({ team, event, onSpeakerCreated, children }: Speake
         onClose={onClose}
       >
         <Modal.Content>
-          <Form id={formId} className="space-y-4 lg:space-y-6">
+          <Form ref={formRef} id={formId} className="space-y-4 lg:space-y-6">
             <Input name="email" type="email" label={t('common.email')} error={errors?.email} required />
 
             <Input name="name" label={t('common.full-name')} error={errors?.name} required />

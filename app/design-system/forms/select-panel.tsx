@@ -26,6 +26,8 @@ export type SelectPanelOption = {
   data?: Record<string, any>;
 };
 
+type SelectPanelFooter = React.ReactNode | ((closePanel: () => void) => React.ReactNode);
+
 type SelectPanelContentProps = {
   options: Array<SelectPanelOption>;
   selected: Array<SelectPanelOption>;
@@ -33,7 +35,7 @@ type SelectPanelContentProps = {
   loading?: boolean;
   onSelectionChange: (values: Array<SelectPanelOption>) => void;
   onSearch?: (query: string) => void | Promise<void>;
-  footer?: React.ReactNode | ((closePanel: () => void) => React.ReactNode);
+  footer?: SelectPanelFooter;
   displayPicture?: boolean;
   placeholder?: string;
 };
@@ -190,7 +192,7 @@ export type SelectPanelProps = {
   values?: Array<string>;
   multiple?: boolean;
   children: React.ReactNode;
-  footer?: React.ReactNode | ((closePanel: () => void) => React.ReactNode);
+  footer?: SelectPanelFooter;
   form?: string;
   loading?: boolean;
   onSearch?: (query: string) => void | Promise<void>;
