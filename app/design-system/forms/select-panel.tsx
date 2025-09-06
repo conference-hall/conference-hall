@@ -33,7 +33,7 @@ type SelectPanelContentProps = {
   loading?: boolean;
   onSelectionChange: (values: Array<SelectPanelOption>) => void;
   onSearch?: (query: string) => void | Promise<void>;
-  footer?: React.ReactNode;
+  footer?: React.ReactNode | ((closePanel: () => void) => React.ReactNode);
   displayPicture?: boolean;
   placeholder?: string;
 };
@@ -176,7 +176,7 @@ function SelectPanelContent({
             'border-t border-t-gray-200': displayedOptions.length > 0 || hasNoResults,
           })}
         >
-          {footer}
+          {footer as React.ReactNode}
         </div>
       ) : null}
     </Combobox>
@@ -190,7 +190,7 @@ export type SelectPanelProps = {
   defaultValue?: Array<string>;
   multiple?: boolean;
   children: React.ReactNode;
-  footer?: React.ReactNode;
+  footer?: React.ReactNode | ((closePanel: () => void) => React.ReactNode);
   form?: string;
   loading?: boolean;
   onSearch?: (query: string) => void | Promise<void>;
@@ -228,6 +228,12 @@ export function SelectPanel({
 
   const [selected, setSelected] = useState<Array<SelectPanelOption>>(getSelectedFromValues(defaultValue));
 
+  // Update selected state when defaultValue changes
+  useEffect(() => {
+    const newSelected = getSelectedFromValues(defaultValue);
+    setSelected(newSelected);
+  }, [defaultValue, getSelectedFromValues]);
+
   const handleSelectionChange = (selectedOptions: Array<SelectPanelOption>) => {
     setSelected(selectedOptions);
     if (onChange) onChange(selectedOptions);
@@ -244,22 +250,26 @@ export function SelectPanel({
       {name && selectedValues.map((value) => <input key={value} type="hidden" name={name} value={value} form={form} />)}
 
       <Popover>
-        <PopoverButton className="w-full cursor-pointer rounded-sm focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600">
-          {children}
-        </PopoverButton>
-        <PopoverPanel className={cx('mt-2', menuItems('w-(--button-width)'))} anchor="bottom">
-          <SelectPanelContent
-            options={options}
-            selected={selected}
-            multiple={multiple}
-            loading={loading}
-            onSelectionChange={handleSelectionChange}
-            onSearch={onSearch}
-            footer={footer}
-            displayPicture={displayPicture}
-            placeholder={placeholder}
-          />
-        </PopoverPanel>
+        {({ close }) => (
+          <>
+            <PopoverButton className="w-full cursor-pointer rounded-sm focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600">
+              {children}
+            </PopoverButton>
+            <PopoverPanel className={cx('mt-2', menuItems('w-(--button-width)'))} anchor="bottom">
+              <SelectPanelContent
+                options={options}
+                selected={selected}
+                multiple={multiple}
+                loading={loading}
+                onSelectionChange={handleSelectionChange}
+                onSearch={onSearch}
+                footer={typeof footer === 'function' ? footer(close) : footer}
+                displayPicture={displayPicture}
+                placeholder={placeholder}
+              />
+            </PopoverPanel>
+          </>
+        )}
       </Popover>
     </Field>
   );
