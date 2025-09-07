@@ -12,6 +12,7 @@ import { SpeakerRow } from '~/features/event-management/speakers/components/spea
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import type { SpeakerData } from '~/shared/types/speaker.types.ts';
 import type { loader as AutocompleteLoader } from '../../../command-palette/autocomplete.ts';
+import { SpeakerModal } from './speaker-modal.tsx';
 
 type Props = {
   team: string;
@@ -70,6 +71,13 @@ export function SpeakersPanel({
     onChange?.(selectedOptions);
   };
 
+  const handleSpeakerCreated = (speaker: SelectPanelOption, closePanel?: () => void) => {
+    const updatedSpeakers = [...selectedSpeakers, speaker];
+    if (!value) setSpeakers(updatedSpeakers);
+    onChange?.(updatedSpeakers);
+    closePanel?.();
+  };
+
   const availableOptions = useMemo(() => {
     const searchOptionsMap = new Map(searchOptions.map((option) => [option.value, option]));
     const options: Array<SelectPanelOption> = [...searchOptions];
@@ -97,12 +105,33 @@ export function SpeakersPanel({
         name="speakers"
         form={form}
         label={t('common.speakers')}
-        defaultValue={selectedSpeakers.map((speaker) => speaker.value)}
+        values={selectedSpeakers.map((speaker) => speaker.value)}
         loading={loading}
         options={availableOptions}
         onChange={handleChange}
         onSearch={handleSearch}
-        footer={showAction ? <Action /> : null}
+        footer={
+          showAction
+            ? (closePanel: () => void) => (
+                <SpeakerModal
+                  team={team}
+                  event={event}
+                  onSpeakerCreated={(speaker) => handleSpeakerCreated(speaker, closePanel)}
+                >
+                  {({ onOpen }) => (
+                    <button
+                      type="button"
+                      className={cx('hover:bg-gray-100 focus:outline-indigo-600', menuItem())}
+                      onClick={onOpen}
+                    >
+                      <PlusIcon className="h-5 w-5 text-gray-400" aria-hidden />
+                      {t('common.speakers-select-panel.manage')}
+                    </button>
+                  )}
+                </SpeakerModal>
+              )
+            : null
+        }
         displayPicture
       >
         <div className="flex items-center justify-between group">
@@ -157,15 +186,5 @@ function SpeakersList({ speakers, speakersDetails, error }: SpeakersListProps) {
         );
       })}
     </div>
-  );
-}
-
-function Action() {
-  const { t } = useTranslation();
-  return (
-    <button type="button" className={cx('hover:bg-gray-100 focus:outline-indigo-600', menuItem())}>
-      <PlusIcon className="h-5 w-5 text-gray-400" aria-hidden />
-      {t('common.speakers-select-panel.manage')}
-    </button>
   );
 }

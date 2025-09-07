@@ -35,8 +35,8 @@ describe('CategoriesSection component', () => {
       { id: '3', name: 'Mobile Development' },
     ],
     multiple: true,
-    canEditEventProposal: true,
-    canEditEvent: true,
+    canChangeCategory: true,
+    canCreateCategory: true,
   };
 
   beforeEach(() => {
@@ -81,8 +81,8 @@ describe('CategoriesSection component', () => {
     expect(submittedFormData.getAll('categories')).toContain('3');
   });
 
-  it('renders in readonly mode when canEditEventProposal is false', async () => {
-    const screen = renderComponent({ canEditEventProposal: false });
+  it('renders in readonly mode when canChangeCategory is false', async () => {
+    const screen = renderComponent({ canChangeCategory: false });
 
     await expect.element(screen.getByText('Categories')).toBeInTheDocument();
     await expect.element(screen.getByText('Web Development')).toBeInTheDocument();
@@ -90,16 +90,16 @@ describe('CategoriesSection component', () => {
     await expect.element(screen.getByRole('button', { name: /Categories/ })).not.toBeInTheDocument();
   });
 
-  it('hides action button when canEditEvent is false', async () => {
-    const screen = renderComponent({ canEditEvent: false });
+  it('hides action button when canCreateCategory is false', async () => {
+    const screen = renderComponent({ canCreateCategory: false });
 
     await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
 
     await expect.element(screen.getByText('Manage categories')).not.toBeInTheDocument();
   });
 
-  it('shows action button when canEditEvent is true', async () => {
-    const screen = renderComponent({ canEditEvent: true });
+  it('shows action button when canCreateCategory is true', async () => {
+    const screen = renderComponent({ canCreateCategory: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
 

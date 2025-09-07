@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { EventSpeaker } from '~/features/event-participation/speaker-proposals/services/event-speaker.ts';
+import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 
 import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/shared/errors.server.ts';
 
@@ -43,7 +43,10 @@ export class CoSpeakerProposalInvite {
 
     try {
       await db.$transaction(async (trx) => {
-        const updated = await EventSpeaker.for(proposal.event.id, trx).addSpeakerToProposal(proposal.id, userId);
+        const updated = await EventSpeakerForProposal.for(proposal.event.id, trx).addSpeakerToProposal(
+          proposal.id,
+          userId,
+        );
 
         if (updated.talkId) {
           await trx.talk.update({

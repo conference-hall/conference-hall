@@ -8,7 +8,8 @@ type SpeakersSectionProps = {
   event: string;
   proposalId: string;
   proposalSpeakers: Array<SpeakerData>;
-  canEditEventProposal: boolean; // todo(proposal): rename to canChangeSpeakers (do same for FormatsSection...)
+  canChangeSpeakers: boolean;
+  canCreateSpeakers: boolean;
   className?: string;
 };
 
@@ -17,7 +18,8 @@ export function SpeakersSection({
   event,
   proposalId,
   proposalSpeakers,
-  canEditEventProposal,
+  canChangeSpeakers,
+  canCreateSpeakers,
   className,
 }: SpeakersSectionProps) {
   const fetcher = useFetcher({ key: `save-speakers:${proposalId}` });
@@ -56,8 +58,8 @@ export function SpeakersSection({
       onChange={(selected) => {
         update(selected);
       }}
-      readonly={!canEditEventProposal}
-      showAction={false}
+      readonly={!canChangeSpeakers}
+      showAction={canCreateSpeakers}
       className={className}
     />
   );

@@ -435,6 +435,8 @@
   "event-management.proposals.list": "Liste des propositions",
   "event-management.proposals.new-proposal": "Proposition",
   "event-management.proposals.new.feedbacks.created": "Proposition créée avec succès.",
+  "event-management.proposals.new.speaker-modal.create": "Créer un speaker",
+  "event-management.proposals.new.speaker-modal.creating": "Création...",
   "event-management.proposals.new.subtitle": "Créer une nouvelle proposition pour l'évènement.",
   "event-management.proposals.new.title": "Nouvelle proposition",
   "event-management.proposals.review-progress": "{{progress}}% des propositions évaluées",

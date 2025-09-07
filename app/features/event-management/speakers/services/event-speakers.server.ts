@@ -150,7 +150,7 @@ export class EventSpeakers extends UserEventAuthorization {
     const event = await this.needsPermission('canCreateEventSpeaker');
 
     const existingSpeaker = await db.eventSpeaker.findFirst({
-      where: { eventId: event.id, email: data.email },
+      where: { eventId: event.id, email: { equals: data.email, mode: 'insensitive' } },
     });
 
     if (existingSpeaker) {
@@ -196,7 +196,7 @@ export class EventSpeakers extends UserEventAuthorization {
 
     if (data.email !== speaker.email) {
       const existingSpeaker = await db.eventSpeaker.findFirst({
-        where: { eventId: event.id, email: data.email, id: { not: speakerId } },
+        where: { eventId: event.id, email: { equals: data.email, mode: 'insensitive' }, id: { not: speakerId } },
       });
 
       if (existingSpeaker) throw new SpeakerEmailAlreadyExistsError();

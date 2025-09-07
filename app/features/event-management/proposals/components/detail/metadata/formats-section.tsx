@@ -9,8 +9,8 @@ type FormatsSectionProps = {
   proposalFormats: Array<{ id: string; name: string }>;
   eventFormats: Array<{ id: string; name: string }>;
   multiple: boolean;
-  canEditEventProposal: boolean;
-  canEditEvent: boolean;
+  canChangeFormats: boolean;
+  canCreateFormats: boolean;
   className?: string;
 };
 
@@ -21,8 +21,8 @@ export function FormatsSection({
   proposalFormats,
   eventFormats,
   multiple,
-  canEditEventProposal,
-  canEditEvent,
+  canChangeFormats,
+  canCreateFormats,
   className,
 }: FormatsSectionProps) {
   const fetcher = useFetcher({ key: `save-formats:${proposalId}` });
@@ -53,8 +53,8 @@ export function FormatsSection({
       options={eventFormats.map((item) => ({ value: item.id, label: item.name }))}
       onChange={(selected) => update(selected.map((option) => option.value))}
       multiple={multiple}
-      readonly={!canEditEventProposal}
-      showAction={canEditEvent}
+      readonly={!canChangeFormats}
+      showAction={canCreateFormats}
       className={className}
     />
   );

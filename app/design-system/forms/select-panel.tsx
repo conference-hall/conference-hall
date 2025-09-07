@@ -26,6 +26,8 @@ export type SelectPanelOption = {
   data?: Record<string, any>;
 };
 
+type SelectPanelFooter = React.ReactNode | ((closePanel: () => void) => React.ReactNode);
+
 type SelectPanelContentProps = {
   options: Array<SelectPanelOption>;
   selected: Array<SelectPanelOption>;
@@ -33,7 +35,7 @@ type SelectPanelContentProps = {
   loading?: boolean;
   onSelectionChange: (values: Array<SelectPanelOption>) => void;
   onSearch?: (query: string) => void | Promise<void>;
-  footer?: React.ReactNode;
+  footer?: SelectPanelFooter;
   displayPicture?: boolean;
   placeholder?: string;
 };
@@ -176,7 +178,7 @@ function SelectPanelContent({
             'border-t border-t-gray-200': displayedOptions.length > 0 || hasNoResults,
           })}
         >
-          {footer}
+          {footer as React.ReactNode}
         </div>
       ) : null}
     </Combobox>
@@ -187,10 +189,10 @@ export type SelectPanelProps = {
   name?: string;
   label: string;
   options: Array<SelectPanelOption>;
-  defaultValue?: Array<string>;
+  values?: Array<string>;
   multiple?: boolean;
   children: React.ReactNode;
-  footer?: React.ReactNode;
+  footer?: SelectPanelFooter;
   form?: string;
   loading?: boolean;
   onSearch?: (query: string) => void | Promise<void>;
@@ -204,7 +206,7 @@ export function SelectPanel({
   name,
   label,
   options,
-  defaultValue,
+  values,
   multiple = true,
   children,
   footer,
@@ -226,15 +228,25 @@ export function SelectPanel({
     };
   }, [options]);
 
-  const [selected, setSelected] = useState<Array<SelectPanelOption>>(getSelectedFromValues(defaultValue));
+  const [selected, setSelected] = useState<Array<SelectPanelOption>>(getSelectedFromValues(values));
+
+  // Update selected state when values changes
+  useEffect(() => {
+    const newSelected = getSelectedFromValues(values);
+    setSelected(newSelected);
+  }, [values, getSelectedFromValues]);
 
   const handleSelectionChange = (selectedOptions: Array<SelectPanelOption>) => {
-    setSelected(selectedOptions);
+    if (values === undefined) {
+      // Only update internal state if not controlled
+      setSelected(selectedOptions);
+    }
     if (onChange) onChange(selectedOptions);
   };
 
-  // Get selected values as array for hidden inputs
-  const selectedValues = selected.map((option) => option.value);
+  // Use controlled values if provided, otherwise internal state
+  const currentSelected = values !== undefined ? getSelectedFromValues(values) : selected;
+  const selectedValues = currentSelected.map((option) => option.value);
 
   return (
     <Field className={cx('relative', className)}>
@@ -244,22 +256,26 @@ export function SelectPanel({
       {name && selectedValues.map((value) => <input key={value} type="hidden" name={name} value={value} form={form} />)}
 
       <Popover>
-        <PopoverButton className="w-full cursor-pointer rounded-sm focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600">
-          {children}
-        </PopoverButton>
-        <PopoverPanel className={cx('mt-2', menuItems('w-(--button-width)'))} anchor="bottom">
-          <SelectPanelContent
-            options={options}
-            selected={selected}
-            multiple={multiple}
-            loading={loading}
-            onSelectionChange={handleSelectionChange}
-            onSearch={onSearch}
-            footer={footer}
-            displayPicture={displayPicture}
-            placeholder={placeholder}
-          />
-        </PopoverPanel>
+        {({ close }) => (
+          <>
+            <PopoverButton className="w-full cursor-pointer rounded-sm focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600">
+              {children}
+            </PopoverButton>
+            <PopoverPanel className={cx('mt-2', menuItems('w-(--button-width)'))} anchor="bottom">
+              <SelectPanelContent
+                options={options}
+                selected={currentSelected}
+                multiple={multiple}
+                loading={loading}
+                onSelectionChange={handleSelectionChange}
+                onSearch={onSearch}
+                footer={typeof footer === 'function' ? footer(close) : footer}
+                displayPicture={displayPicture}
+                placeholder={placeholder}
+              />
+            </PopoverPanel>
+          </>
+        )}
       </Popover>
     </Field>
   );

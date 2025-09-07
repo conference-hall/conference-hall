@@ -65,7 +65,7 @@ export function CategoriesPanel({
         name="categories"
         form={form}
         label={t('common.categories')}
-        defaultValue={selectedCategories.map((category) => category.value)}
+        values={selectedCategories.map((category) => category.value)}
         options={options}
         onChange={handleChange}
         multiple={multiple}

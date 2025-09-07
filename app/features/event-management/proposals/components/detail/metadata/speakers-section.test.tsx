@@ -70,7 +70,8 @@ describe('SpeakersSection component', () => {
         references: '',
       },
     ],
-    canEditEventProposal: true,
+    canChangeSpeakers: true,
+    canCreateSpeakers: true,
   };
 
   beforeEach(() => {
@@ -116,8 +117,8 @@ describe('SpeakersSection component', () => {
     expect(submittedFormData.getAll('speakers')).toContain('speaker3');
   });
 
-  it('renders in readonly mode when canEditEventProposal is false', async () => {
-    const screen = renderComponent({ canEditEventProposal: false });
+  it('renders in readonly mode when canChangeSpeakers is false', async () => {
+    const screen = renderComponent({ canChangeSpeakers: false });
 
     await expect.element(screen.getByText('Speakers')).toBeInTheDocument();
     await expect.element(screen.getByText('John Doe')).toBeInTheDocument();
@@ -126,7 +127,7 @@ describe('SpeakersSection component', () => {
   });
 
   it('does not show action button (manage speakers)', async () => {
-    const screen = renderComponent();
+    const screen = renderComponent({ canCreateSpeakers: false });
 
     await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
 

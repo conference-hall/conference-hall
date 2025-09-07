@@ -9,8 +9,8 @@ type TagsSectionProps = {
   proposalId: string;
   proposalTags: Array<TagType>;
   eventTags: Array<TagType>;
-  canEditEventProposal: boolean;
-  canEditEvent: boolean;
+  canChangeTags: boolean;
+  canCreateTags: boolean;
   className?: string;
 };
 
@@ -20,8 +20,8 @@ export function TagsSection({
   proposalId,
   proposalTags,
   eventTags,
-  canEditEventProposal,
-  canEditEvent,
+  canChangeTags,
+  canCreateTags,
   className,
 }: TagsSectionProps) {
   const fetcher = useFetcher({ key: `save-tags:${proposalId}` });
@@ -51,8 +51,8 @@ export function TagsSection({
       value={displayedTags.map((tag) => ({ value: tag.id, label: tag.name, color: tag.color }))}
       options={eventTags.map((tag) => ({ value: tag.id, label: tag.name, color: tag.color }))}
       onChange={(selected) => update(selected.map((option) => option.value))}
-      readonly={!canEditEventProposal}
-      showAction={canEditEvent}
+      readonly={!canChangeTags}
+      showAction={canCreateTags}
       className={className}
     />
   );

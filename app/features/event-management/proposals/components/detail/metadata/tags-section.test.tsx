@@ -35,8 +35,8 @@ describe('TagsSection component', () => {
       { id: '3', name: 'Beginner', color: '#F59E0B' },
       { id: '4', name: 'Advanced', color: '#EF4444' },
     ],
-    canEditEventProposal: true,
-    canEditEvent: true,
+    canChangeTags: true,
+    canCreateTags: true,
   };
 
   beforeEach(() => {
@@ -91,8 +91,8 @@ describe('TagsSection component', () => {
     await expect.element(screen.getByText('Backend')).toBeInTheDocument();
   });
 
-  it('renders in readonly mode when canEditEventProposal is false', async () => {
-    const screen = renderComponent({ canEditEventProposal: false });
+  it('renders in readonly mode when canChangeTags is false', async () => {
+    const screen = renderComponent({ canChangeTags: false });
 
     await expect.element(screen.getByText('Tags')).toBeInTheDocument();
     await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
@@ -101,16 +101,16 @@ describe('TagsSection component', () => {
     await expect.element(screen.getByRole('button', { name: /Tags/ })).not.toBeInTheDocument();
   });
 
-  it('hides action button when canEditEvent is false', async () => {
-    const screen = renderComponent({ canEditEvent: false });
+  it('hides action button when canCreateTags is false', async () => {
+    const screen = renderComponent({ canCreateTags: false });
 
     await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
 
     await expect.element(screen.getByText('Manage tags')).not.toBeInTheDocument();
   });
 
-  it('shows action button when canEditEvent is true', async () => {
-    const screen = renderComponent({ canEditEvent: true });
+  it('shows action button when canCreateTags is true', async () => {
+    const screen = renderComponent({ canCreateTags: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
 

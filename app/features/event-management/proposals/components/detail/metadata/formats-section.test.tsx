@@ -35,8 +35,8 @@ describe('FormatsSection component', () => {
       { id: '3', name: 'Long Talk (45min)' },
     ],
     multiple: true,
-    canEditEventProposal: true,
-    canEditEvent: true,
+    canChangeFormats: true,
+    canCreateFormats: true,
   };
 
   beforeEach(() => {
@@ -81,8 +81,8 @@ describe('FormatsSection component', () => {
     expect(submittedFormData.getAll('formats')).toContain('3');
   });
 
-  it('renders in readonly mode when canEditEventProposal is false', async () => {
-    const screen = renderComponent({ canEditEventProposal: false });
+  it('renders in readonly mode when canChangeFormats is false', async () => {
+    const screen = renderComponent({ canChangeFormats: false });
 
     await expect.element(screen.getByText('Formats')).toBeInTheDocument();
     await expect.element(screen.getByText('Lightning Talk (5min)')).toBeInTheDocument();
@@ -90,16 +90,16 @@ describe('FormatsSection component', () => {
     await expect.element(screen.getByRole('button', { name: /Formats/ })).not.toBeInTheDocument();
   });
 
-  it('hides action button when canEditEvent is false', async () => {
-    const screen = renderComponent({ canEditEvent: false });
+  it('hides action button when canCreateFormats is false', async () => {
+    const screen = renderComponent({ canCreateFormats: false });
 
     await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
 
     await expect.element(screen.getByText('Manage formats')).not.toBeInTheDocument();
   });
 
-  it('shows action button when canEditEvent is true', async () => {
-    const screen = renderComponent({ canEditEvent: true });
+  it('shows action button when canCreateFormats is true', async () => {
+    const screen = renderComponent({ canCreateFormats: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
 

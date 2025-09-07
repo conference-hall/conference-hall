@@ -5,15 +5,15 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { UserNotFoundError } from '~/shared/errors.server.ts';
-import { EventSpeaker } from './event-speaker.ts';
+import { EventSpeakerForProposal } from './event-speaker-for-proposal.ts';
 
-describe('EventSpeaker', () => {
+describe('EventSpeakerForProposal', () => {
   describe('#upsertForUser', () => {
     it('creates a new speaker if not exists', async () => {
       const event = await eventFactory();
       const user = await userFactory();
 
-      const speaker = await EventSpeaker.for(event.id).upsertForUser(user);
+      const speaker = await EventSpeakerForProposal.for(event.id).upsertForUser(user);
 
       expect(speaker).toMatchObject({
         userId: user.id,
@@ -36,7 +36,7 @@ describe('EventSpeaker', () => {
       await eventSpeakerFactory({ event, user });
 
       const updatedUser = { ...user, name: 'Updated Name', locale: 'fr' };
-      const speaker = await EventSpeaker.for(event.id).upsertForUser(updatedUser);
+      const speaker = await EventSpeakerForProposal.for(event.id).upsertForUser(updatedUser);
 
       expect(speaker.name).toBe('Updated Name');
       expect(speaker.locale).toBe('fr');
@@ -48,7 +48,7 @@ describe('EventSpeaker', () => {
       const event = await eventFactory();
       const users = await Promise.all([userFactory(), userFactory()]);
 
-      const speakers = await EventSpeaker.for(event.id).upsertForUsers(users);
+      const speakers = await EventSpeakerForProposal.for(event.id).upsertForUsers(users);
 
       expect(speakers.length).toBe(2);
       expect(speakers[0].userId).toBe(users[0].id);
@@ -64,7 +64,7 @@ describe('EventSpeaker', () => {
       const proposal = await proposalFactory({ event, talk });
       const newSpeaker = await userFactory();
 
-      await EventSpeaker.for(event.id).addSpeakerToProposal(proposal.id, newSpeaker.id);
+      await EventSpeakerForProposal.for(event.id).addSpeakerToProposal(proposal.id, newSpeaker.id);
 
       const updatedProposal = await db.proposal.findUnique({
         where: { id: proposal.id },
@@ -79,7 +79,7 @@ describe('EventSpeaker', () => {
       const talk = await talkFactory({ speakers: [user] });
       const proposal = await proposalFactory({ event, talk });
 
-      const eventSpeaker = EventSpeaker.for(event.id);
+      const eventSpeaker = EventSpeakerForProposal.for(event.id);
       await expect(eventSpeaker.addSpeakerToProposal(proposal.id, 'non-existent-user-id')).rejects.toThrowError(
         UserNotFoundError,
       );
@@ -94,7 +94,7 @@ describe('EventSpeaker', () => {
       const talk = await talkFactory({ speakers: [user1, user2] });
       const proposal = await proposalFactory({ event, talk });
 
-      await EventSpeaker.for(event.id).removeSpeakerFromProposal(proposal.id, user2.id);
+      await EventSpeakerForProposal.for(event.id).removeSpeakerFromProposal(proposal.id, user2.id);
 
       const updatedProposal = await db.proposal.findUnique({
         where: { id: proposal.id },

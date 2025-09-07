@@ -7,11 +7,14 @@ import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
+import { EventSpeakers } from '~/features/event-management/speakers/services/event-speakers.server.ts';
 import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { i18n } from '~/shared/i18n/i18n.server.ts';
-import { toastHeaders } from '~/shared/toasts/toast.server.ts';
+import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
+import { EventSpeakerSaveSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/new-proposal.ts';
 import { CategoriesPanel } from './components/form-panels/categories-panel.tsx';
 import { FormatsPanel } from './components/form-panels/formats-panel.tsx';
@@ -30,15 +33,32 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
   const form = await request.formData();
-  const result = parseWithZod(form, { schema: ProposalCreationSchema });
-  if (result.status !== 'success') return { errors: result.error };
+  const intent = form.get('intent') as string;
 
-  try {
-    const proposal = await ProposalManagement.for(userId, params.team, params.event).create(result.value);
-    const headers = await toastHeaders('success', t('event-management.proposals.new.feedbacks.created'));
-    return redirect(href('/team/:team/:event/reviews/:proposal', { ...params, proposal: proposal.id }), { headers });
-  } catch (_error) {
-    return { errors: { form: t('error.global') } };
+  if (intent === 'create-proposal') {
+    const result = parseWithZod(form, { schema: ProposalCreationSchema });
+    if (result.status !== 'success') return { errors: result.error };
+
+    try {
+      const proposal = await ProposalManagement.for(userId, params.team, params.event).create(result.value);
+      const headers = await toastHeaders('success', t('event-management.proposals.new.feedbacks.created'));
+      return redirect(href('/team/:team/:event/reviews/:proposal', { ...params, proposal: proposal.id }), { headers });
+    } catch (_error) {
+      return toast('error', t('error.global'));
+    }
+  } else if (intent === 'create-speaker') {
+    const result = parseWithZod(form, { schema: EventSpeakerSaveSchema });
+    if (result.status !== 'success') return { errors: result.error };
+
+    try {
+      const speaker = await EventSpeakers.for(userId, params.team, params.event).create(result.value);
+      return { speaker };
+    } catch (error) {
+      if (error instanceof SpeakerEmailAlreadyExistsError) {
+        return { errors: { email: [t('event-management.speakers.new.errors.email-already-exists')] } };
+      }
+      return toast('error', t('error.global'));
+    }
   }
 };
 
@@ -74,7 +94,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
             <ButtonLink variant="secondary" to={href('/team/:team/:event/reviews', params)}>
               {t('common.cancel')}
             </ButtonLink>
-            <Button type="submit" form={formId}>
+            <Button type="submit" form={formId} name="intent" value="create-proposal">
               {t('common.submit')}
             </Button>
           </Card.Actions>
@@ -87,6 +107,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               event={params.event}
               form={formId}
               error={actionData?.errors?.speakers}
+              showAction={team.userPermissions?.canCreateEventSpeaker}
               className="space-y-3 p-4 lg:px-6"
             />
 
