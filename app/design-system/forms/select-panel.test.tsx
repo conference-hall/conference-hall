@@ -93,7 +93,7 @@ describe('SelectPanel component', () => {
     expect(onChangeMock).toHaveBeenCalledWith([options[0]]);
 
     await userEvent.click(screen.getByText('Option 2'));
-    expect(onChangeMock).toHaveBeenCalledWith([options[0], options[1]]);
+    expect(onChangeMock).toHaveBeenCalledWith([options[1]]);
   });
 
   it('shows selected options as checked in multiple mode', async () => {

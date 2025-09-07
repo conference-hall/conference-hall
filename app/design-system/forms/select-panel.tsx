@@ -237,12 +237,16 @@ export function SelectPanel({
   }, [values, getSelectedFromValues]);
 
   const handleSelectionChange = (selectedOptions: Array<SelectPanelOption>) => {
-    setSelected(selectedOptions);
+    if (values === undefined) {
+      // Only update internal state if not controlled
+      setSelected(selectedOptions);
+    }
     if (onChange) onChange(selectedOptions);
   };
 
-  // Get selected values as array for hidden inputs
-  const selectedValues = selected.map((option) => option.value);
+  // Use controlled values if provided, otherwise internal state
+  const currentSelected = values !== undefined ? getSelectedFromValues(values) : selected;
+  const selectedValues = currentSelected.map((option) => option.value);
 
   return (
     <Field className={cx('relative', className)}>
@@ -260,7 +264,7 @@ export function SelectPanel({
             <PopoverPanel className={cx('mt-2', menuItems('w-(--button-width)'))} anchor="bottom">
               <SelectPanelContent
                 options={options}
-                selected={selected}
+                selected={currentSelected}
                 multiple={multiple}
                 loading={loading}
                 onSelectionChange={handleSelectionChange}
