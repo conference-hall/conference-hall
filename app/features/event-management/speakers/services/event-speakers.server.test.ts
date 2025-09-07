@@ -668,18 +668,32 @@ describe('EventSpeakers', () => {
         await eventSpeakers.create(firstSpeakerData);
 
         // Try to create second speaker with same email
-        const secondSpeakerData = {
-          name: 'Second Speaker',
-          email: 'duplicate@example.com',
-          picture: null,
-          bio: null,
-          references: null,
-          company: null,
-          location: null,
-          socialLinks: [],
-        };
+        await expect(
+          eventSpeakers.create({
+            name: 'Second Speaker',
+            email: 'duplicate@example.com',
+            picture: null,
+            bio: null,
+            references: null,
+            company: null,
+            location: null,
+            socialLinks: [],
+          }),
+        ).rejects.toThrow(SpeakerEmailAlreadyExistsError);
 
-        await expect(eventSpeakers.create(secondSpeakerData)).rejects.toThrow(SpeakerEmailAlreadyExistsError);
+        // Try to create second speaker with same email with different cases
+        await expect(
+          eventSpeakers.create({
+            name: 'Second Speaker',
+            email: 'DUPLICATE@example.com',
+            picture: null,
+            bio: null,
+            references: null,
+            company: null,
+            location: null,
+            socialLinks: [],
+          }),
+        ).rejects.toThrow(SpeakerEmailAlreadyExistsError);
       });
 
       it('allows same email in different events', async () => {
@@ -969,9 +983,15 @@ describe('EventSpeakers', () => {
 
         const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
 
+        // throw error when email already exists
         await expect(eventSpeakers.update(eventSpeaker1.id, updateData)).rejects.toThrow(
           SpeakerEmailAlreadyExistsError,
         );
+
+        // throw error when email already exists with different case
+        await expect(
+          eventSpeakers.update(eventSpeaker1.id, { ...updateData, email: eventSpeaker2.email.toUpperCase() }),
+        ).rejects.toThrow(SpeakerEmailAlreadyExistsError);
       });
 
       it('allows updating to same email in different event', async () => {
