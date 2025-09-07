@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
-import { EventSpeaker } from '~/features/event-participation/speaker-proposals/services/event-speaker.ts';
+import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import type { TalkSaveData } from '~/features/speaker/talk-library/services/talks-library.schema.server.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
@@ -35,7 +35,7 @@ export class TalkSubmission {
     const talk = talkId === 'new' ? await library.add(data) : await library.talk(talkId).update(data);
 
     await db.$transaction(async (trx) => {
-      const speakers = await EventSpeaker.for(event.id, trx).upsertForUsers(talk.speakers);
+      const speakers = await EventSpeakerForProposal.for(event.id, trx).upsertForUsers(talk.speakers);
 
       await trx.proposal.upsert({
         where: { talkId_eventId: { talkId: talk.id, eventId: event.id } },
@@ -158,6 +158,6 @@ export class TalkSubmission {
     });
     if (!proposal) throw new ProposalNotFoundError();
 
-    await EventSpeaker.for(proposal.eventId).removeSpeakerFromProposal(proposal.id, userId);
+    await EventSpeakerForProposal.for(proposal.eventId).removeSpeakerFromProposal(proposal.id, userId);
   }
 }

@@ -3,14 +3,14 @@ import type { User } from 'prisma/generated/client.ts';
 import { UserNotFoundError } from '~/shared/errors.server.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 
-export class EventSpeaker {
+export class EventSpeakerForProposal {
   constructor(
     private eventId: string,
     private trx: DbTransaction,
   ) {}
 
   static for(eventId: string, trx: DbTransaction = db) {
-    return new EventSpeaker(eventId, trx);
+    return new EventSpeakerForProposal(eventId, trx);
   }
 
   async upsertForUser(user: User) {

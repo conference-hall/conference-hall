@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { EventSpeaker } from '~/features/event-participation/speaker-proposals/services/event-speaker.ts';
+import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ProposalConfirmedEmail from '~/shared/emails/templates/organizers/proposal-confirmed.tsx';
 import ProposalDeclinedEmail from '~/shared/emails/templates/organizers/proposal-declined.tsx';
@@ -89,7 +89,7 @@ export class SpeakerProposal {
     });
     if (!proposal) throw new ProposalNotFoundError();
 
-    await EventSpeaker.for(proposal.eventId).removeSpeakerFromProposal(this.proposalId, coSpeakerUserId);
+    await EventSpeakerForProposal.for(proposal.eventId).removeSpeakerFromProposal(this.proposalId, coSpeakerUserId);
   }
 
   async delete() {
