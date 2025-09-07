@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form, useFetcher } from 'react-router';
+import { Form, href, useFetcher } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -30,7 +30,7 @@ export function SpeakerModal({ team, event, onSpeakerCreated, children }: Speake
 
     const formData = new FormData(formRef.current);
     formData.append('intent', 'create-speaker');
-    fetcher.submit(formData, { method: 'POST', action: `/team/${team}/${event}/reviews/new` });
+    fetcher.submit(formData, { method: 'POST', action: href('/team/:team/:event/reviews/new', { team, event }) });
   };
 
   useEffect(() => {

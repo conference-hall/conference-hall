@@ -230,7 +230,7 @@ export function SelectPanel({
 
   const [selected, setSelected] = useState<Array<SelectPanelOption>>(getSelectedFromValues(values));
 
-  // Update selected state when defaultValue changes
+  // Update selected state when values changes
   useEffect(() => {
     const newSelected = getSelectedFromValues(values);
     setSelected(newSelected);
