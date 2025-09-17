@@ -49,7 +49,10 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       return toast('success', t('event.proposal.feedbacks.cospeaker-removed'));
     }
     case 'edit-talk': {
-      const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
+      const event = await EventPage.of(params.event).get();
+      const formatsRequired = event.formats.length > 0 && event.formatsRequired;
+      const categoriesRequired = event.categories.length > 0 && event.categoriesRequired;
+
       const result = parseWithZod(form, { schema: getProposalUpdateSchema(formatsRequired, categoriesRequired) });
       if (result.status !== 'success') return result.error;
 
