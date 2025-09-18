@@ -11,9 +11,9 @@ export function Logo({ label, variant = 'primary' }: Props) {
     <Link
       to={href('/')}
       title={t('common.go-to-home')}
-      className="flex items-center gap-4 truncate rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      className="flex items-center gap-4 truncate rounded-sm shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
     >
-      <ConferenceHallLogo width="24px" height="24px" aria-hidden className="fill-indigo-400" />
+      <ConferenceHallLogo width="24px" height="24px" aria-hidden className="fill-indigo-400 shrink-0" />
       {label ? (
         <Text as="span" weight="semibold" variant={variant === 'primary' ? 'light' : undefined} size="base">
           {label}
