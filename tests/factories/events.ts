@@ -1,14 +1,5 @@
-import {
-  rand,
-  randAnimal,
-  randEmail,
-  randFullAddress,
-  randNumber,
-  randParagraph,
-  randText,
-  randUrl,
-  randUuid,
-} from '@ngneat/falso';
+import { rand, randAnimal, randEmail, randFullAddress, randParagraph, randText, randUrl } from '@ngneat/falso';
+import { slugifyWithCounter } from '@sindresorhus/slugify';
 import type { Team, User } from 'prisma/generated/client.ts';
 import { EventType, EventVisibility } from 'prisma/generated/enums.ts';
 import type { EventCreateInput } from 'prisma/generated/models.ts';
@@ -16,6 +7,8 @@ import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 import { teamFactory } from './team.ts';
 import { userFactory } from './users.ts';
+
+const slugify = slugifyWithCounter();
 
 const TRAITS = {
   conference: {
@@ -132,14 +125,15 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
   const creator = options.creator ? options.creator : await userFactory();
 
   const name = attributes.name || randAnimal();
+  const slug = slugify(name);
 
   const defaultAttributes: EventCreateInput = {
     name,
-    slug: `slug-${randUuid()}`,
+    slug,
     description: randParagraph(),
     timezone: 'Europe/Paris',
     location: randFullAddress(),
-    logoUrl: randPlaceholderImage(),
+    logoUrl: `/placeholder-images/seed/${slug}/128/128`,
     websiteUrl: randUrl(),
     contactEmail: randEmail(),
     codeOfConductUrl: randUrl(),
@@ -157,8 +151,3 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
 
   return db.event.create({ data });
 };
-
-function randPlaceholderImage() {
-  const seed = randNumber({ min: 300, max: 700 });
-  return `/placeholder-images/static/${seed}/128/128`;
-}

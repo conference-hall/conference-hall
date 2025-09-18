@@ -27,6 +27,8 @@ type CommandPaletteProps = {
   className?: string;
 };
 
+type ComboboxValue = CommandPaletteItemData | null;
+
 export function CommandPalette({
   title,
   description,
@@ -37,6 +39,7 @@ export function CommandPalette({
   onClose,
   onClick,
 }: CommandPaletteProps) {
+  const [value] = useState<ComboboxValue>(null);
   const [query, setQuery] = useState('');
   const [typing, setTyping] = useState(false);
   const isLoading = loading || typing;
@@ -59,7 +62,7 @@ export function CommandPalette({
   }, [items]);
 
   const handleSelect = useCallback(
-    (item: CommandPaletteItemData) => {
+    (item: CommandPaletteItemData | null) => {
       if (item) {
         onClick(item, query);
         onClose();
@@ -79,7 +82,7 @@ export function CommandPalette({
   );
 
   return (
-    <Combobox onChange={handleSelect}>
+    <Combobox value={value} onChange={handleSelect}>
       <CommandPaletteInput value={query} onChange={handleQueryChange} loading={isLoading} closeText={closeText} />
 
       <ComboboxOptions

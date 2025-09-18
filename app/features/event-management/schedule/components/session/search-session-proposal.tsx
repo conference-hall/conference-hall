@@ -1,7 +1,7 @@
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { DocumentPlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import type { ChangeEvent } from 'react';
+import { type ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFetcher, useParams } from 'react-router';
 import { useDebouncedCallback } from 'use-debounce';
@@ -13,9 +13,12 @@ type SearchSessionProposalProps = {
   onClose: VoidFunction;
 };
 
+type ComboboxValue = { intent: string | null; proposal: ScheduleProposalData | null } | null;
+
 export function SearchSessionProposal({ onChange, onClose }: SearchSessionProposalProps) {
   const { t } = useTranslation();
   const { team, event } = useParams();
+  const [value] = useState<ComboboxValue>(null);
 
   const fetcher = useFetcher<typeof AutocompleteLoader>();
   const search = (filters: { query: string }) => {
@@ -29,7 +32,7 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
     300,
   );
 
-  const handleChange = (value: { intent: string; proposal: ScheduleProposalData | null }) => {
+  const handleChange = (value: ComboboxValue | null) => {
     if (!value) return;
     if (value.intent === 'raw-session') {
       onChange(null);
@@ -41,7 +44,7 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
   };
 
   return (
-    <Combobox as="div" onChange={handleChange} className="absolute inset-0 bg-white z-10">
+    <Combobox as="div" value={value} onChange={handleChange} className="absolute inset-0 bg-white z-10">
       {/* Search */}
       <div className="relative border-b border-gray-100">
         <MagnifyingGlassIcon

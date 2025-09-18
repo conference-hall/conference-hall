@@ -46,7 +46,7 @@ export default function Select({
   const currentValue = value ?? _value;
 
   return (
-    <Listbox name={name} value={currentValue} onChange={handleChange}>
+    <Listbox name={name} value={currentValue || ''} onChange={handleChange}>
       {({ open }) => {
         const { name, icon: Icon, iconClassname } = options.find((o) => o.id === currentValue) || {};
 

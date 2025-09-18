@@ -91,7 +91,7 @@ function SelectPanelContent({
   // For HeadlessUI Combobox: use array for multiple, single option for single mode
   const comboboxValue = multiple ? selected : selected[0] || null;
 
-  const handleComboboxChange = (value: SelectPanelOption | SelectPanelOption[]) => {
+  const handleComboboxChange = (value: SelectPanelOption | SelectPanelOption[] | null) => {
     if (multiple) {
       onSelectionChange(value as SelectPanelOption[]);
     } else {

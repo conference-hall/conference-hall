@@ -18,7 +18,7 @@ export default function ColorPicker({ label, value, onChange, srOnly, options, c
       >
         {label}
       </Legend>
-      <RadioGroup value={value} onChange={onChange} className="flex items-center gap-3">
+      <RadioGroup value={value || options[0]?.value} onChange={onChange} className="flex items-center gap-3">
         {options.map((option) => (
           <Radio
             key={option.name}
