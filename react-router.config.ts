@@ -5,5 +5,6 @@ export default {
   serverBuildFile: '[name].js',
   future: {
     unstable_optimizeDeps: true,
+    v8_middleware: true,
   },
 } satisfies Config;

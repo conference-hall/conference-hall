@@ -3,10 +3,11 @@ import { createReadableStreamFromReadable } from '@react-router/node';
 import { isbot } from 'isbot';
 import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'react-dom/server';
 import { I18nextProvider } from 'react-i18next';
-import type { ActionFunctionArgs, AppLoadContext, EntryContext, LoaderFunctionArgs } from 'react-router';
+import type { ActionFunctionArgs, EntryContext, LoaderFunctionArgs, RouterContextProvider } from 'react-router';
 import { ServerRouter } from 'react-router';
-import { NonceContext } from './app-platform/components/use-nonce.ts';
 import { initializeI18n } from './shared/i18n/i18n.server.ts';
+import { nonceContext } from './shared/nonce/nonce.server.ts';
+import { NonceContext } from './shared/nonce/use-nonce.ts';
 
 export const streamTimeout = 5_000;
 
@@ -14,10 +15,10 @@ export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  routerContext: EntryContext,
-  loadContext: AppLoadContext,
+  context: EntryContext,
+  appContext: RouterContextProvider,
 ) {
-  const i18n = await initializeI18n(request, routerContext);
+  const i18n = await initializeI18n(request, context);
 
   return new Promise((resolve, reject) => {
     let shellRendered = false;
@@ -25,17 +26,17 @@ export default async function handleRequest(
 
     // Ensure requests from bots and SPA Mode renders wait for all content to load before responding
     const readyOption: keyof RenderToPipeableStreamOptions =
-      (userAgent && isbot(userAgent)) || routerContext.isSpaMode ? 'onAllReady' : 'onShellReady';
+      (userAgent && isbot(userAgent)) || context.isSpaMode ? 'onAllReady' : 'onShellReady';
 
     // Abort the rendering stream after the `streamTimeout` so it has time to flush down the rejected boundaries
     let timeoutId: ReturnType<typeof setTimeout> | undefined = setTimeout(() => abort(), streamTimeout + 1000);
 
-    const nonce = String(loadContext.cspNonce) ?? undefined;
+    const { nonce } = appContext.get(nonceContext);
 
     const { pipe, abort } = renderToPipeableStream(
       <I18nextProvider i18n={i18n}>
         <NonceContext.Provider value={nonce}>
-          <ServerRouter context={routerContext} url={request.url} nonce={nonce} />
+          <ServerRouter context={context} url={request.url} nonce={nonce} />
         </NonceContext.Provider>
       </I18nextProvider>,
       {
