@@ -6,7 +6,7 @@ import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { eventSocialCard } from '~/app-platform/seo/utils/social-cards.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { ButtonLink } from '~/design-system/buttons.tsx';
-import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
+import { BG_COLOR } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
@@ -40,7 +40,7 @@ export default function EventRoute({ loaderData: event }: Route.ComponentProps) 
     <>
       <Navbar />
 
-      <header className={BG_GRADIENT_COLOR}>
+      <header className={BG_COLOR}>
         <Container className="h-24 flex flex-row items-center relative">
           <Avatar
             picture={event.logoUrl}

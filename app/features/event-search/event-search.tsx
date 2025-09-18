@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { href, useSearchParams } from 'react-router';
 import { Footer } from '~/app-platform/components/footer.tsx';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
-import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
+import { BG_COLOR } from '~/design-system/colors.ts';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
@@ -37,7 +37,7 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
     <>
       <Navbar />
 
-      <div className={cx(BG_GRADIENT_COLOR, 'shadow-sm p-4 pt-0 lg:pb-16 lg:pt-10')}>
+      <div className={cx(BG_COLOR, 'shadow-sm p-4 pt-0 lg:pb-16 lg:pt-10')}>
         <div className="hidden lg:mb-8 lg:block">
           <H1 size="2xl" weight="bold" variant="light" align="center">
             {t('home.title')}

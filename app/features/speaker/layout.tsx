@@ -5,7 +5,7 @@ import { href, Outlet } from 'react-router';
 import { Footer } from '~/app-platform/components/footer.tsx';
 import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
-import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
+import { BG_COLOR } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
@@ -27,7 +27,7 @@ export default function SpeakerRoute({ loaderData: profile }: Route.ComponentPro
     <>
       <Navbar />
 
-      <header className={cx(BG_GRADIENT_COLOR, 'hidden sm:block')}>
+      <header className={cx(BG_COLOR, 'hidden sm:block')}>
         <Container className="h-24 flex flex-row items-center relative">
           <Avatar
             picture={profile.picture}
