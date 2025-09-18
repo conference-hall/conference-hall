@@ -39,6 +39,7 @@
     "@headlessui/react": "^2.2.8",
     "@heroicons/react": "^2.2.0",
     "@mjackson/form-data-parser": "^0.9.1",
+    "@prisma/adapter-pg": "^6.16.2",
     "@prisma/client": "^6.16.2",
     "@react-email/components": "^0.5.3",
     "@react-router/express": "~7.9.1",
