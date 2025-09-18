@@ -7,7 +7,7 @@ export function applyPlaceholderImages(app: express.Application) {
   if (NODE_ENV === 'production') return;
 
   app.use('/placeholder-images', async (req, res) => {
-    const targetUrl = `https://picsum.dev${req.path}`;
+    const targetUrl = `https://picsum.photos${req.path}`;
 
     const response = await fetch(targetUrl);
     if (!response.ok) {
