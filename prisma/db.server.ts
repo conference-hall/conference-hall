@@ -1,3 +1,4 @@
+import { PrismaPg } from '@prisma/adapter-pg';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { eventExtension } from './extensions/event.ts';
 import { proposalExtension } from './extensions/proposal.ts';
@@ -5,7 +6,7 @@ import { talkExtension } from './extensions/talk.ts';
 import { teamExtension } from './extensions/team.ts';
 import { PrismaClient } from './generated/client.js';
 
-const { NODE_ENV } = getSharedServerEnv();
+const { NODE_ENV, DATABASE_URL } = getSharedServerEnv();
 
 type DbClient = ReturnType<typeof getClient>;
 
@@ -16,6 +17,8 @@ let db: DbClient;
 declare global {
   var __db: DbClient | undefined;
 }
+
+const adapter = new PrismaPg({ connectionString: DATABASE_URL });
 
 // this is needed because in development we don't want to restart
 // the server with every change, but we want to make sure we don't
@@ -43,10 +46,11 @@ function getClient() {
 
 function buildClientWithLogger(): PrismaClient {
   if (NODE_ENV !== 'production') {
-    return new PrismaClient({ log: ['warn', 'error'] });
+    return new PrismaClient({ adapter, log: ['warn', 'error'] });
   }
 
   const client = new PrismaClient({
+    adapter,
     log: [
       { emit: 'event', level: 'warn' },
       { emit: 'event', level: 'error' },
