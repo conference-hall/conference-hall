@@ -65,6 +65,7 @@ function MobileNavbar() {
 
 function MobileNavigation() {
   const { t } = useTranslation();
+  const user = useUser();
 
   const { backPath, title } = useBackNavigation([
     { path: '/speaker', back: '/', title: t('speaker.nav.activity') },
@@ -79,9 +80,15 @@ function MobileNavigation() {
   return (
     <div className="flex items-center gap-4">
       <BackButton to={backPath} className="text-white" />
-      <Text weight="semibold" size="base" variant="light">
-        {title}
-      </Text>
+
+      <div>
+        <Text size="xs" variant="secondary-light">
+          {user?.name}
+        </Text>
+        <Text weight="semibold" size="base" variant="light">
+          {title}
+        </Text>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { useMatch, useParams } from 'react-router';
+import { useMatch, useParams, useRouteLoaderData } from 'react-router';
+import { Avatar } from '~/design-system/avatar.tsx';
 import { BG_COLOR } from '~/design-system/colors.ts';
 import { SlashBarIcon } from '~/design-system/icons/slash-bar-icon.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -77,8 +78,11 @@ function MobileNavigation() {
   const { t } = useTranslation();
   const user = useUser();
 
-  const isTeamRoute = useMatch({ path: '/team/:team', end: true });
   const isEventRoute = useMatch({ path: '/team/:team/:event/overview', end: true });
+  const eventManagement = useRouteLoaderData('event-management');
+
+  const isTeamRoute = useMatch({ path: '/team/:team', end: true });
+  const currentTeam = useRouteLoaderData('team-management');
 
   // todo(mobile): set title in routes.tsx ?
   const { backPath, title } = useBackNavigation([
@@ -112,9 +116,24 @@ function MobileNavigation() {
     <div className="flex items-center gap-4">
       <BackButton to={backPath} className="text-white" />
 
-      <Text weight="semibold" size="base" variant="light">
-        {title}
-      </Text>
+      {eventManagement?.event ? (
+        <Avatar
+          size="xs"
+          picture={eventManagement?.event?.logoUrl}
+          name={eventManagement?.event?.name}
+          square
+          aria-hidden
+        />
+      ) : null}
+
+      <div>
+        <Text size="xs" variant="secondary-light">
+          {eventManagement?.event?.name || currentTeam?.name}
+        </Text>
+        <Text weight="semibold" size="base" variant="light">
+          {title}
+        </Text>
+      </div>
     </div>
   );
 }

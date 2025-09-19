@@ -1,6 +1,7 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { useRouteLoaderData } from 'react-router';
+import { Avatar } from '~/design-system/avatar.tsx';
 import { BG_COLOR } from '~/design-system/colors.ts';
 import { Text } from '~/design-system/typography.tsx';
 import { useUser } from '../user-context.tsx';
@@ -81,9 +82,20 @@ function MobileNavigation() {
   return (
     <div className="flex items-center gap-4">
       <BackButton to={backPath} className="text-white" />
-      <Text weight="semibold" size="base" variant="light">
-        {title ?? eventPage.name}
-      </Text>
+
+      <Avatar size="xs" picture={eventPage.logoUrl} name={eventPage.name} square aria-hidden />
+
+      <div>
+        {title ? (
+          <Text size="xs" variant="secondary-light">
+            {eventPage.name}
+          </Text>
+        ) : null}
+
+        <Text weight="semibold" size="base" variant="light">
+          {title ?? eventPage.name}
+        </Text>
+      </div>
     </div>
   );
 }
