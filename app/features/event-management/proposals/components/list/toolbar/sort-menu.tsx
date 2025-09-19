@@ -27,7 +27,7 @@ export function SortMenu() {
 
   return (
     <Menu>
-      <MenuButton className={button({ variant: 'secondary' })}>
+      <MenuButton className={button({ variant: 'secondary', block: true })}>
         <ArrowsUpDownIcon className="size-4 text-gray-500" />
         <span>{t('common.sort')}</span>
       </MenuButton>

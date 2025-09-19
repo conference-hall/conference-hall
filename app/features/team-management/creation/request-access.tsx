@@ -39,7 +39,7 @@ export default function RequestAccessRoute({ actionData: errors }: Route.Compone
   const { t } = useTranslation();
 
   return (
-    <FullscreenPage navbar="default">
+    <FullscreenPage>
       <FullscreenPage.Title title={t('team.request.heading')} subtitle={t('team.request.description')} />
 
       <Card className="p-8 md:p-12">

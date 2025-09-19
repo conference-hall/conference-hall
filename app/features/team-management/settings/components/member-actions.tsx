@@ -145,7 +145,7 @@ export function InviteMemberButton({ invitationLink }: InviteProps) {
 
   return (
     <>
-      <Button variant="secondary" onClick={() => setOpen(true)} iconLeft={UserPlusIcon}>
+      <Button variant="secondary" onClick={() => setOpen(true)} iconLeft={UserPlusIcon} block>
         {t('team.settings.members.invite-modal.button')}
       </Button>
       <InvitationModal

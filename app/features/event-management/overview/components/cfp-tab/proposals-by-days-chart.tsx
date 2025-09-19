@@ -25,7 +25,7 @@ export function ProposalsByDayChart({ data, className }: ProposalsByDayChartProp
 
   return (
     <Card className={className}>
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center justify-between">
         <H2>{t('event-management.overview.submissions-by-day.heading')}</H2>
         <ChartSelector selected={type} onSelect={setType} />
       </div>

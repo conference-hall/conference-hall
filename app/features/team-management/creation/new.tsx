@@ -29,7 +29,7 @@ export default function NewTeamRoute({ actionData: errors }: Route.ComponentProp
   const { t } = useTranslation();
   const formId = useId();
   return (
-    <FullscreenPage navbar="default">
+    <FullscreenPage>
       <FullscreenPage.Title title={t('team.new.heading')} subtitle={t('team.new.description')} />
 
       <Card>

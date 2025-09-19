@@ -71,7 +71,7 @@ Modal.Content = Content;
 // MODAL Actions
 
 function Actions({ children }: { children: ReactNode }) {
-  return <div className="pt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">{children}</div>;
+  return <div className="pt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">{children}</div>;
 }
 
 Modal.Actions = Actions;

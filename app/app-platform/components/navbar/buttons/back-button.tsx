@@ -2,12 +2,12 @@ import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { generatePath, Link, matchPath, useLocation, useParams } from 'react-router';
 
-type Props = { to: string; className?: string };
+type Props = { to: string; icon?: React.ComponentType<{ className?: string }>; className?: string };
 
-export function MobileBackButton({ to, className }: Props) {
+export function BackButton({ to, icon: Icon, className }: Props) {
   return (
     <Link to={to} className={cx('shrink-0', className)}>
-      <ArrowLeftIcon className="h-6 w-6 shrink-0" />
+      {Icon ? <Icon className="h-6 w-6 shrink-0" /> : <ArrowLeftIcon className="h-6 w-6 shrink-0" />}
     </Link>
   );
 }

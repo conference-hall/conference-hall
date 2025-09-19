@@ -17,7 +17,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
 export default function EventCreationLayout({ loaderData: team }: Route.ComponentProps) {
   return (
-    <FullscreenPage navbar="default" compact>
+    <FullscreenPage compact>
       <CurrentTeamProvider team={team}>
         <Outlet />
       </CurrentTeamProvider>

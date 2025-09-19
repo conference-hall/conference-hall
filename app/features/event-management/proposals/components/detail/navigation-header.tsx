@@ -20,7 +20,7 @@ export function NavigationHeader({ current, total, reviewed, nextId, previousId 
 
   return (
     <header className="flex justify-between items-center gap-4 pb-4 lg:-mt-4">
-      <nav className="flex items-center gap-2 lg:gap-4">
+      <nav className="flex items-center justify-between sm:justify-start grow gap-2 lg:gap-4">
         <IconLink
           to={{ pathname: previousPath, search }}
           icon={ChevronLeftIcon}

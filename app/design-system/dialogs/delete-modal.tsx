@@ -68,6 +68,7 @@ function DeleteModal({ title, description, confirmationText, intent, open, onClo
             value={intent}
             disabled={confirmation !== confirmationText}
             iconLeft={TrashIcon}
+            block
           >
             {title}
           </Button>

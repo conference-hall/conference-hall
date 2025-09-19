@@ -71,10 +71,12 @@ export default function ReviewsRoute({ loaderData, params }: Route.ComponentProp
               placeholder={t('event-management.proposals.search')}
               ariaLabel={t('event-management.proposals.search')}
             />
-            <div className="flex gap-2">
-              <FiltersMenu />
-              <SortMenu />
-              <ExportMenu />
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex justify-between gap-2">
+                <FiltersMenu />
+                <SortMenu />
+                <ExportMenu />
+              </div>
               {isFeatureEnabled && canCreateEventProposal && (
                 <ButtonLink iconLeft={PlusIcon} to={href('/team/:team/:event/reviews/new', params)}>
                   {t('event-management.proposals.new-proposal')}

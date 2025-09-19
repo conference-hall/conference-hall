@@ -5,9 +5,9 @@ import { BG_COLOR } from '~/design-system/colors.ts';
 import { SlashBarIcon } from '~/design-system/icons/slash-bar-icon.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useUser } from '../user-context.tsx';
+import { BackButton, useBackNavigation } from './buttons/back-button.tsx';
 import { EventCommandPaletteButton } from './buttons/event-command-palette-button.tsx';
 import { LogoButton } from './buttons/logo-button.tsx';
-import { MobileBackButton, useBackNavigation } from './buttons/mobile-back-button.tsx';
 import { UserMenuButton } from './buttons/user-menu-button.tsx';
 import { EventsDropdown } from './dropdowns/events-dropdown.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
@@ -110,7 +110,7 @@ function MobileNavigation() {
 
   return (
     <div className="flex items-center gap-4">
-      <MobileBackButton to={backPath} className="text-white" />
+      <BackButton to={backPath} className="text-white" />
 
       <Text weight="semibold" size="base" variant="light">
         {title}

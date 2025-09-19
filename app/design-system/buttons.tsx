@@ -26,7 +26,7 @@ export const button = cva(
       },
       disabled: { true: 'opacity-50 disabled:cursor-not-allowed' },
       loading: { true: 'cursor-not-allowed' },
-      block: { true: 'sm:w-full' },
+      block: { true: 'w-full' },
     },
     defaultVariants: { variant: 'primary', size: 'm' },
   },

@@ -10,7 +10,7 @@ export function DashboardTabs({ team, event }: Props) {
 
   return (
     <div className="border-b border-gray-200">
-      <nav aria-label="Tabs" className="flex space-x-8 px-6 -mb-px">
+      <nav aria-label="Tabs" className="flex space-x-8 px-6 overflow-x-auto -mb-px">
         <DashboardTab to={href('/team/:team/:event/overview', { team, event })}>
           {t('common.call-for-paper')}
         </DashboardTab>
@@ -35,7 +35,7 @@ function DashboardTab({ to, isNew, children }: DashboardTabProps) {
       end
       discover="render"
       className={({ isActive }) =>
-        cx('border-b-2 px-1 p-4 text-sm flex gap-2', {
+        cx('border-b-2 px-1 p-4 text-sm flex gap-2 whitespace-nowrap', {
           'border-indigo-500 text-indigo-600 font-semibold': isActive,
           'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-900 font-medium': !isActive,
         })

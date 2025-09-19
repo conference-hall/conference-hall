@@ -4,9 +4,9 @@ import { useRouteLoaderData } from 'react-router';
 import { BG_COLOR } from '~/design-system/colors.ts';
 import { Text } from '~/design-system/typography.tsx';
 import { useUser } from '../user-context.tsx';
+import { BackButton, useBackNavigation } from './buttons/back-button.tsx';
 import { LoginButton } from './buttons/login-button.tsx';
 import { LogoButton } from './buttons/logo-button.tsx';
-import { MobileBackButton, useBackNavigation } from './buttons/mobile-back-button.tsx';
 import { UserMenuButton } from './buttons/user-menu-button.tsx';
 
 export function NavbarEvent() {
@@ -80,7 +80,7 @@ function MobileNavigation() {
 
   return (
     <div className="flex items-center gap-4">
-      <MobileBackButton to={backPath} className="text-white" />
+      <BackButton to={backPath} className="text-white" />
       <Text weight="semibold" size="base" variant="light">
         {title ?? eventPage.name}
       </Text>

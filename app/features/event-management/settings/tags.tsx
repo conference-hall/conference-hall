@@ -67,7 +67,7 @@ export default function ProposalTagsRoute({ loaderData }: Route.ComponentProps) 
       </Card.Title>
 
       <Card.Content>
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
           <Form method="GET" className="w-full">
             <Input
               type="search"

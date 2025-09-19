@@ -15,7 +15,7 @@ export function FiltersMenu() {
     <>
       {/* Desktop */}
       <Popover className="hidden sm:block">
-        <PopoverButton className={button({ variant: 'secondary' })}>
+        <PopoverButton className={button({ variant: 'secondary', block: true })}>
           <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
           <span>{t('common.filters')}</span>
         </PopoverButton>
@@ -28,8 +28,8 @@ export function FiltersMenu() {
       </Popover>
 
       {/* Mobile */}
-      <Popover className="sm:hidden">
-        <PopoverButton className={button({ variant: 'secondary' })}>
+      <Popover className="sm:hidden w-full">
+        <PopoverButton className={button({ variant: 'secondary', block: true })}>
           <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
           <span>{t('common.filters')}</span>
         </PopoverButton>

@@ -30,7 +30,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 export default function InvitationRoute({ loaderData: talk }: Route.ComponentProps) {
   const { t } = useTranslation();
   return (
-    <FullscreenPage navbar="default">
+    <FullscreenPage>
       <FullscreenPage.Title title={t('talk.invitation.heading')} subtitle={t('talk.invitation.for-talk')} />
 
       <Card>
