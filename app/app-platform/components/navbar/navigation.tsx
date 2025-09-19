@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
+import { LoginButton } from './buttons/login-button.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
-import { LoginButton } from './login-button.tsx';
 
 type Props = {
   authenticated: boolean;

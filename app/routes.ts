@@ -14,7 +14,7 @@ export default [
   route('auth/verify-email', './features/auth/email-verification-link.tsx'),
 
   // Event pages
-  route(':event', './features/event-participation/layout.tsx', [
+  route(':event', './features/event-participation/layout.tsx', { id: 'event-page' }, [
     index('./features/event-participation/event-page/event-page.tsx'),
     route('proposals', './features/event-participation/speaker-proposals/speaker-proposals.tsx'),
     route('proposals/:proposal', './features/event-participation/speaker-proposals/speaker-proposal.tsx'),

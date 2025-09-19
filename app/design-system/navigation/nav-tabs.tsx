@@ -32,7 +32,7 @@ const ICON = {
 
 const PADDING_Y = {
   0: 'py-0',
-  4: 'py-2 sm:py-4',
+  4: 'p-2 lg:py-4',
 };
 
 export function NavTabs({ children, py = 0, variant = 'light', scrollable = false, className }: Props) {

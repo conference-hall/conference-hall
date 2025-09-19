@@ -40,6 +40,7 @@ export default function EventSubmissionRoute({ params }: Route.ComponentProps) {
           to={href('/:event', { event: slug })}
           icon={XMarkIcon}
           variant="secondary"
+          className="hidden sm:block"
         />
       </Page.NavHeader>
 

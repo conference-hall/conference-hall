@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '../event-page-context.tsx';
 import { CfpSection } from './components/cfp-section.tsx';
@@ -14,14 +13,13 @@ export default function EventRoute() {
 
   return (
     <Page className="space-y-4 lg:space-y-8">
-      <Card as="section" p={8} className="space-y-4 lg:space-y-8">
-        <CfpSection
-          cfpState={currentEvent.cfpState}
-          cfpStart={currentEvent.cfpStart}
-          cfpEnd={currentEvent.cfpEnd}
-          timezone={currentEvent.timezone}
-        />
-      </Card>
+      <CfpSection
+        slug={currentEvent.slug}
+        cfpState={currentEvent.cfpState}
+        cfpStart={currentEvent.cfpStart}
+        cfpEnd={currentEvent.cfpEnd}
+        timezone={currentEvent.timezone}
+      />
 
       <DetailsSection
         description={currentEvent.description}

@@ -44,13 +44,13 @@ function Heading({ title, subtitle, component, children, backTo }: HeadingProps)
       <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         {backTo ? <IconLink icon={ArrowLeftIcon} label={t('common.go-back')} variant="secondary" to={backTo} /> : null}
 
-        <div className="truncate min-w-0">
+        <div className="min-w-0">
           {component ? (
             component
           ) : (
             <>
-              <H1 truncate>{title}</H1>
-              {subtitle && <Subtitle truncate>{subtitle}</Subtitle>}
+              <H1>{title}</H1>
+              {subtitle && <Subtitle>{subtitle}</Subtitle>}
             </>
           )}
         </div>

@@ -16,8 +16,8 @@ import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
-import { LegalLinks } from '../footer.tsx';
-import { SponsorLink } from '../sponsor-link.tsx';
+import { LegalLinks } from '../../footer.tsx';
+import { SponsorLink } from '../../sponsor-link.tsx';
 
 type MenuProps = {
   email: string | null;
@@ -28,7 +28,7 @@ type MenuProps = {
   notificationsCount: number;
 };
 
-export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificationsCount }: MenuProps) {
+export function UserMenuButton({ email, name, picture, hasTeamAccess, teams, notificationsCount }: MenuProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);

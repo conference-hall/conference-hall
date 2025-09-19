@@ -13,7 +13,7 @@ function StepsMobile({ steps, currentStep }: Props) {
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
-    <nav aria-label={t('event.submission.steps.nav.label')} className="flex items-center xl:hidden sm:pl-40">
+    <nav aria-label={t('event.submission.steps.nav.label')} className="flex items-center xl:hidden">
       <p className="text-sm font-bold">
         {t('event.submission.steps.nav.progress', { current: currentStepIdx + 1, total: steps.length })}
       </p>
@@ -49,7 +49,7 @@ function StepsDesktop({ steps, currentStep }: Props) {
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
-    <nav aria-label={t('event.submission.steps.nav.label')} className="hidden xl:block sm:pl-40">
+    <nav aria-label={t('event.submission.steps.nav.label')} className="hidden xl:block">
       <ol className="divide-y divide-gray-300 rounded-full border  border-gray-300 md:flex md:divide-y-0">
         {steps.map((step, stepIdx) => (
           <li
