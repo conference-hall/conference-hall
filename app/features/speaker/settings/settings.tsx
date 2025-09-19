@@ -33,7 +33,7 @@ export default function SettingsRoute() {
       <NavSideMenu
         aria-label={t('settings.menu')}
         items={menuItems(t)}
-        className="hidden sm:block w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
+        className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
       />
 
       <div className="lg:col-span-9">

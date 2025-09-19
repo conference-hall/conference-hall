@@ -23,7 +23,7 @@ export function EmptyState({ label, children, icon: Icon, noBorder, className }:
             {label}
           </Text>
         )}
-        {children && <div className="mt-4">{children}</div>}
+        {children && <div className="mt-8 w-full">{children}</div>}
       </div>
     </Card>
   );

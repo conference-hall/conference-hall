@@ -4,13 +4,13 @@ import { href, Outlet } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { Footer } from '../components/footer.tsx';
-import { Navbar } from '../components/navbar/navbar.tsx';
+import { NavbarEvent } from '../components/navbar/navbar-event.tsx';
 
 export default function DocsRoute() {
   const { t } = useTranslation();
   return (
     <>
-      <Navbar />
+      <NavbarEvent />
 
       <Page.NavHeader>
         <NavTabs py={4} scrollable>

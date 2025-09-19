@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
-import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
+import { NavbarEvent } from '~/app-platform/components/navbar/navbar-event.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
@@ -18,7 +18,7 @@ export default function AdminLayoutRoute() {
 
   return (
     <>
-      <Navbar />
+      <NavbarEvent />
 
       <Page.NavHeader className="flex flex-col pb-2 sm:pb-0 sm:flex-row sm:items-center sm:space-between">
         <NavTabs py={4} scrollable className="grow">

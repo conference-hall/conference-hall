@@ -7,9 +7,9 @@ export function Footer() {
   const { t } = useTranslation();
   const year = new Date().getFullYear();
   return (
-    <footer className="py-8 text-sm text-gray-500">
+    <footer className="py-8 text-sm text-gray-500 hidden lg:block">
       <Container className="flex gap-4 justify-center items-center">
-        <span className="hidden sm:inline">{t('footer.copyright', { year })}</span>
+        <span>{t('footer.copyright', { year })}</span>
         <LegalLinks />
       </Container>
     </footer>

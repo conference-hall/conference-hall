@@ -910,7 +910,6 @@
   "talk.library.count": "{{count}} talks",
   "talk.library.heading": "Bibliothèque des talks",
   "talk.library.list.empty": "Aucun talk n'a été trouvé.",
-  "talk.library.list.no-archived": "Aucun talk n'a été archivé.",
   "talk.library.list": "Liste des talks",
   "talk.library.new": "Nouveau talk",
   "talk.new.heading": "Créer un nouveau talk",

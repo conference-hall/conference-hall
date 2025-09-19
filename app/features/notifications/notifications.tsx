@@ -2,7 +2,7 @@ import { BellSlashIcon } from '@heroicons/react/24/outline';
 import { Trans, useTranslation } from 'react-i18next';
 import { href } from 'react-router';
 import { Footer } from '~/app-platform/components/footer.tsx';
-import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
+import { NavbarSpeaker } from '~/app-platform/components/navbar/navbar-speaker.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { CardLink } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
@@ -27,7 +27,7 @@ export default function OrganizerRoute({ loaderData: notifications }: Route.Comp
 
   return (
     <>
-      <Navbar />
+      <NavbarSpeaker />
 
       <Page>
         <Page.Heading title={t('notifications.heading')} subtitle={t('notifications.description')} />

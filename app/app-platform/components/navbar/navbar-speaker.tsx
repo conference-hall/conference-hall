@@ -1,6 +1,5 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { useRouteLoaderData } from 'react-router';
 import { BG_COLOR } from '~/design-system/colors.ts';
 import { Text } from '~/design-system/typography.tsx';
 import { useUser } from '../user-context.tsx';
@@ -9,7 +8,7 @@ import { LogoButton } from './buttons/logo-button.tsx';
 import { MobileBackButton, useBackNavigation } from './buttons/mobile-back-button.tsx';
 import { UserMenuButton } from './buttons/user-menu-button.tsx';
 
-export function NavbarEvent() {
+export function NavbarSpeaker() {
   return (
     <>
       <DesktopNavbar />
@@ -66,23 +65,22 @@ function MobileNavbar() {
 
 function MobileNavigation() {
   const { t } = useTranslation();
-  const eventPage = useRouteLoaderData('event-page');
 
   const { backPath, title } = useBackNavigation([
-    { path: '/:event/survey', back: '/:event', title: t('event.nav.survey') },
-    { path: '/:event/proposals', back: '/:event', title: t('event.nav.proposals') },
-    { path: '/:event/submission/*', back: '/:event', title: t('event.nav.submit-proposal') },
-    { path: '/:event/proposals/*', back: '/:event/proposals', title: 'Proposal' }, // todo(mobile): set a label
+    { path: '/speaker', back: '/', title: t('speaker.nav.activity') },
+    { path: '/speaker/talks', back: '/', title: t('speaker.nav.talks') },
+    { path: '/speaker/talks/new', back: '/speaker/talks', title: t('talk.library.new') },
+    { path: '/speaker/talks/*', back: '/speaker/talks', title: 'Talk' }, // todo(mobile): set a label
+    { path: '/speaker/settings/*', back: '/', title: t('speaker.nav.settings') },
+    { path: '/notifications', back: '/', title: t('navbar.user-menu.notifications') },
     { path: '/*', back: '/' },
   ]);
-
-  if (!eventPage) return <LogoButton />;
 
   return (
     <div className="flex items-center gap-4">
       <MobileBackButton to={backPath} className="text-white" />
       <Text weight="semibold" size="base" variant="light">
-        {title ?? eventPage.name}
+        {title}
       </Text>
     </div>
   );
