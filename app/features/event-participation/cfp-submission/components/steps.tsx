@@ -13,7 +13,7 @@ function StepsMobile({ steps, currentStep }: Props) {
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
-    <nav aria-label={t('event.submission.steps.nav.label')} className="flex items-center xl:hidden">
+    <nav aria-label={t('event.submission.steps.nav.label')} className="flex items-center px-4 lg:px-0 xl:hidden">
       <p className="text-sm font-bold">
         {t('event.submission.steps.nav.progress', { current: currentStepIdx + 1, total: steps.length })}
       </p>

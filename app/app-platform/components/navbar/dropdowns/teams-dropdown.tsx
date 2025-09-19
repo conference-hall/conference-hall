@@ -2,24 +2,27 @@ import { Menu, MenuButton, MenuItem, MenuItems, MenuSeparator } from '@headlessu
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { href, Link } from 'react-router';
+import { href, Link, useParams } from 'react-router';
 import { menuItem, menuItemIcon, menuItems, menuSeparator } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 
 const menuStyle = cx(
   'flex items-center gap-1',
-  'text-sm font-semibold whitespace-nowrap cursor-pointer',
-  'text-gray-300 hover:bg-gray-900 hover:text-white focus-visible:outline-white',
+  'text-base font-semibold whitespace-nowrap cursor-pointer',
+  'text-white hover:bg-gray-900 hover:text-white focus-visible:outline-white',
   'px-3 py-2 rounded-md focus-visible:outline-2',
 );
 
 type Props = {
-  currentTeam?: { slug: string; name: string };
   teams: Array<{ slug: string; name: string }>;
 };
 
-export function TeamsDropdown({ teams = [], currentTeam }: Props) {
+export function TeamsDropdown({ teams = [] }: Props) {
   const { t } = useTranslation();
+  const { team } = useParams();
+
+  const currentTeam = teams.find(({ slug }) => slug === team);
+
   return (
     <Menu>
       <MenuButton className={menuStyle}>

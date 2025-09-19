@@ -38,7 +38,7 @@ export default function TeamEventsRoute({ loaderData: events }: Route.ComponentP
           ]}
         />
         {currentTeam.userPermissions.canCreateEvent ? (
-          <ButtonLink to={href('/team/:team/new', { team: currentTeam.slug })} variant="secondary" iconLeft={PlusIcon}>
+          <ButtonLink to={href('/team/:team/new', { team: currentTeam.slug })} iconLeft={PlusIcon}>
             {t('team.events-list.new-event-button')}
           </ButtonLink>
         ) : null}
