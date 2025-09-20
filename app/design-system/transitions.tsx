@@ -41,21 +41,6 @@ export function SelectTransition({ show, children }: TransitionProps) {
   );
 }
 
-export function SlideOverTransition({ children }: TransitionProps) {
-  return (
-    <TransitionChild
-      enter="transform transition ease-in-out duration-300"
-      enterFrom="translate-x-full"
-      enterTo="translate-x-0"
-      leave="transform transition ease-in-out duration-300"
-      leaveFrom="translate-x-0"
-      leaveTo="translate-x-full"
-    >
-      {children}
-    </TransitionChild>
-  );
-}
-
 export function Background() {
   return <div className="fixed inset-0 z-10 bg-slate-800/20" />;
 }

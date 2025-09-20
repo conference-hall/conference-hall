@@ -705,7 +705,7 @@
   "event-management.speakers.stats.confirmed": "Confirmée",
   "event-management.speakers.stats.declined": "Déclinée",
   "event-management.speakers.new-speaker": "Speaker",
-  "event-management.speakers.new.title": "Créer un nouveau speaker",
+  "event-management.speakers.new.title": "Nouveau speaker",
   "event-management.speakers.new.subtitle": "Ajouter manuellement un speaker à cet événement.",
   "event-management.speakers.new.feedbacks.created": "Speaker créé avec succès.",
   "event-management.speakers.edit.feedbacks.updated": "Speaker modifié avec succès.",

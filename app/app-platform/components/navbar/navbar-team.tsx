@@ -84,19 +84,30 @@ function MobileNavigation() {
   const isTeamRoute = useMatch({ path: '/team/:team', end: true });
   const currentTeam = useRouteLoaderData('team-management');
 
-  // todo(mobile): set title in routes.tsx ?
   const { backPath, title } = useBackNavigation([
     // team management routes
     { path: '/team/:team/settings/*', back: '/team/:team', title: t('common.settings') },
     // event management routes
-    { path: '/team/:team/:event/reviews', back: '/team/:team/:event', title: 'Proposals' }, // todo(mobile): set a label
-    { path: '/team/:team/:event/reviews/new', back: '/team/:team/:event/reviews', title: 'New proposal' }, // todo(mobile): set a label
-    { path: '/team/:team/:event/reviews/*', back: '/team/:team/:event/reviews', title: 'Review' }, // todo(mobile): set a label
-    { path: '/team/:team/:event/speakers', back: '/team/:team/:event', title: 'Speakers' }, // todo(mobile): set a label
-    { path: '/team/:team/:event/speakers/new', back: '/team/:team/:event/speakers', title: 'New speaker' }, // todo(mobile): set a label
-    { path: '/team/:team/:event/speakers/*', back: '/team/:team/:event/speakers', title: 'Speaker' }, // todo(mobile): set a label
-    { path: '/team/:team/:event/publication', back: '/team/:team/:event', title: 'Publication' }, // todo(mobile): set a label
-    { path: '/team/:team/:event/settings/*', back: '/team/:team/:event', title: t('common.settings') }, // todo(mobile): set a label
+    { path: '/team/:team/:event/reviews', back: '/team/:team/:event', title: t('event-management.nav.proposals') },
+    {
+      path: '/team/:team/:event/reviews/new',
+      back: '/team/:team/:event/reviews',
+      title: t('event-management.proposals.new.title'),
+    },
+    { path: '/team/:team/:event/reviews/*', back: '/team/:team/:event/reviews', title: t('common.review') },
+    { path: '/team/:team/:event/speakers', back: '/team/:team/:event', title: t('event-management.nav.speakers') },
+    {
+      path: '/team/:team/:event/speakers/new',
+      back: '/team/:team/:event/speakers',
+      title: t('event-management.speakers.new.title'),
+    },
+    { path: '/team/:team/:event/speakers/*', back: '/team/:team/:event/speakers', title: t('common.speaker') },
+    {
+      path: '/team/:team/:event/publication',
+      back: '/team/:team/:event',
+      title: t('event-management.nav.publication'),
+    },
+    { path: '/team/:team/:event/settings/*', back: '/team/:team/:event', title: t('common.settings') },
   ]);
 
   if (isTeamRoute && user) {
