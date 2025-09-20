@@ -102,7 +102,7 @@ function MobileNavigation() {
 
   return (
     <div className="flex items-center gap-4">
-      <BackButton to={backPath} className="text-white" />
+      <BackButton to={backPath} label={title || t('common.go-back')} className="text-white" />
 
       {eventManagement?.event ? (
         <Avatar

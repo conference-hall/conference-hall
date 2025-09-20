@@ -76,7 +76,7 @@ function MobileNavigation() {
 
   return (
     <div className="flex items-center gap-4">
-      <BackButton to={backPath} className="text-white" />
+      <BackButton to={backPath} className="text-white" label={title || t('common.go-back')} />
 
       <Avatar size="xs" picture={eventPage.logoUrl} name={eventPage.name} square aria-hidden />
 
