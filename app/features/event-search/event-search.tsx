@@ -8,11 +8,10 @@ import { BG_COLOR } from '~/design-system/colors.ts';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
-import { Pagination } from '~/design-system/list/pagination.tsx';
+import { Pagination, PaginationMobile } from '~/design-system/list/pagination.tsx';
 import { H1, H2 } from '~/design-system/typography.tsx';
 import { parseUrlFilters } from '~/features/event-search/services/event-search.schema.server.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
-import { SponsorLink } from '../../app-platform/components/sponsor-link.tsx';
 import { useUser } from '../../app-platform/components/user-context.tsx';
 import type { Route } from './+types/event-search.ts';
 import { EventCardLink } from './components/event-card.tsx';
@@ -57,7 +56,7 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
       </div>
 
       <Page>
-        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mb-4 flex flex-col gap-4 lg:mb-8 lg:flex-row lg:items-center lg:justify-between">
           <H2 size="xl">{t('home.incoming-call-for-papers')}</H2>
           <SearchEventsFilters />
         </div>
@@ -85,9 +84,10 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
               ))}
             </ul>
 
-            <Pagination {...pagination} />
-
-            <SponsorLink />
+            <div className="flex justify-between w-full">
+              <Pagination {...pagination} />
+              <PaginationMobile {...pagination} />
+            </div>
           </div>
         )}
       </Page>

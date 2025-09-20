@@ -323,20 +323,14 @@ async function seed() {
 
   await proposalFactory({ talk: talk3, event, categories: [], formats: [], traits: ['rejected'] });
 
-  await Promise.all(
-    Array.from({ length: 26 }).map(async () => {
-      const talk = await talkFactory({ speakers: [user3] });
-      return proposalFactory({ event: meetup, talk });
-    }),
-  );
+  for (const _value of Array.from({ length: 26 })) {
+    const talk = await talkFactory({ speakers: [user3] });
+    await proposalFactory({ event: meetup, talk });
+  }
 
-  await Promise.all(
-    Array.from({ length: 26 }).map(async () => {
-      await eventFactory({
-        traits: ['meetup-cfp-open'],
-      });
-    }),
-  );
+  for (const _value of Array.from({ length: 26 })) {
+    await eventFactory({ traits: ['meetup-cfp-open'] });
+  }
 
   await organizerKeyFactory({ attributes: { id: '123456' } });
 }

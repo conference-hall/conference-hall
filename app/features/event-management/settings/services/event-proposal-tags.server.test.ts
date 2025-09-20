@@ -36,7 +36,7 @@ describe('EventProposalTags', () => {
       expect(tags.length).toBe(2);
       expect(tags[0].name).toBe(tag2.name);
       expect(tags[1].name).toBe(tag1.name);
-      expect(pagination).toEqual({ current: 1, total: 1 });
+      expect(pagination).toEqual({ current: 1, pages: 1 });
     });
 
     it('filters event tags', async () => {
@@ -51,7 +51,7 @@ describe('EventProposalTags', () => {
       expect(count).toBe(1);
       expect(tags.length).toBe(1);
       expect(tags[0].name).toBe(tag1.name);
-      expect(pagination).toEqual({ current: 1, total: 1 });
+      expect(pagination).toEqual({ current: 1, pages: 1 });
     });
 
     it('paginates event tags', async () => {
@@ -66,7 +66,7 @@ describe('EventProposalTags', () => {
       expect(count).toBe(2);
       expect(tags.length).toBe(1);
       expect(tags[0].name).toBe(tag1.name);
-      expect(pagination).toEqual({ current: 2, total: 2 });
+      expect(pagination).toEqual({ current: 2, pages: 2 });
     });
 
     it('throws an error if user is not owner', async () => {

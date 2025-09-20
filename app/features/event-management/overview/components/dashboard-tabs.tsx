@@ -1,7 +1,6 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, NavLink } from 'react-router';
-import { Badge } from '~/design-system/badges.tsx';
 
 type Props = { team: string; event: string };
 
@@ -17,7 +16,7 @@ export function DashboardTabs({ team, event }: Props) {
         <DashboardTab to={href('/team/:team/:event/overview/reviewers', { team, event })}>
           {t('common.reviewers')}
         </DashboardTab>
-        <DashboardTab to={href('/team/:team/:event/overview/reviews', { team, event })} isNew>
+        <DashboardTab to={href('/team/:team/:event/overview/reviews', { team, event })}>
           {t('common.reviews')}
         </DashboardTab>
       </nav>
@@ -25,10 +24,9 @@ export function DashboardTabs({ team, event }: Props) {
   );
 }
 
-type DashboardTabProps = { to: string; isNew?: boolean; children: React.ReactNode };
+type DashboardTabProps = { to: string; children: React.ReactNode };
 
-function DashboardTab({ to, isNew, children }: DashboardTabProps) {
-  const { t } = useTranslation();
+function DashboardTab({ to, children }: DashboardTabProps) {
   return (
     <NavLink
       to={to}
@@ -42,11 +40,6 @@ function DashboardTab({ to, isNew, children }: DashboardTabProps) {
       }
     >
       <span>{children}</span>
-      {isNew ? (
-        <Badge color="blue" pill compact>
-          {t('common.new')}
-        </Badge>
-      ) : null}
     </NavLink>
   );
 }

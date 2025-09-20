@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { KeyIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { Form, redirect } from 'react-router';
+import { Form, href, replace } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button, button } from '~/design-system/buttons.tsx';
@@ -32,7 +32,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   } catch (_error) {
     return { key: [t('error.invalid-access-key')] };
   }
-  return redirect('/team/new');
+  return replace(href('/team/new'));
 };
 
 export default function RequestAccessRoute({ actionData: errors }: Route.ComponentProps) {
@@ -57,7 +57,7 @@ export default function RequestAccessRoute({ actionData: errors }: Route.Compone
           </Button>
         </Form>
 
-        <DividerWithLabel label="or" className="py-8" />
+        <DividerWithLabel label={t('common.or')} className="py-8" />
 
         <a href="https://forms.gle/AnArRCSHibmG59zw7" target="_blank" className={button()} rel="noreferrer">
           <KeyIcon className="h-4 w-4" aria-hidden="true" />

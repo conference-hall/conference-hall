@@ -71,7 +71,7 @@ function MobileNavigation() {
     { path: '/speaker', back: '/', title: t('speaker.nav.activity') },
     { path: '/speaker/talks', back: '/', title: t('speaker.nav.talks') },
     { path: '/speaker/talks/new', back: '/speaker/talks', title: t('talk.library.new') },
-    { path: '/speaker/talks/*', back: '/speaker/talks', title: 'Talk' }, // todo(mobile): set a label
+    { path: '/speaker/talks/*', back: '/speaker/talks', title: t('common.talk') },
     { path: '/speaker/settings/*', back: '/', title: t('speaker.nav.settings') },
     { path: '/notifications', back: '/', title: t('navbar.user-menu.notifications') },
     { path: '/*', back: '/' },

@@ -73,7 +73,7 @@ function MobileNavigation() {
     { path: '/:event/survey', back: '/:event', title: t('event.nav.survey') },
     { path: '/:event/proposals', back: '/:event', title: t('event.nav.proposals') },
     { path: '/:event/submission/*', back: '/:event', title: t('event.nav.submit-proposal') },
-    { path: '/:event/proposals/*', back: '/:event/proposals', title: 'Proposal' }, // todo(mobile): set a label
+    { path: '/:event/proposals/*', back: '/:event/proposals', title: t('common.proposal') },
     { path: '/*', back: '/' },
   ]);
 

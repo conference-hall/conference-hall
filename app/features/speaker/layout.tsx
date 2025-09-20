@@ -50,7 +50,7 @@ export default function SpeakerRoute({ loaderData: profile }: Route.ComponentPro
         </Container>
       </header>
 
-      <Page.NavHeader className="hidden lg:flex flex-col sm:pb-0 sm:flex-row sm:items-center sm:space-between">
+      <Page.NavHeader className="flex flex-col sm:pb-0 sm:flex-row sm:items-center sm:space-between">
         <NavTabs py={4} scrollable className="grow sm:ml-40">
           <NavTab to={href('/speaker')} icon={FireIcon} end>
             {t('speaker.nav.activity')}
