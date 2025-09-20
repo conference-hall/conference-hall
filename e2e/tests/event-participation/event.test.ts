@@ -69,7 +69,7 @@ test('displays event page', async ({ page }) => {
 
   await test.step('with legacy URL', async () => {
     await eventPage.gotoLegacyUrl(eventOpen.migrationId, eventOpen.name);
-    await expect(page.getByText('Devfest Nantes')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Devfest Nantes' })).toBeVisible();
   });
 
   await test.step('with not found event', async () => {
