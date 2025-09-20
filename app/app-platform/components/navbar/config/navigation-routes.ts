@@ -1,12 +1,7 @@
 import type { TFunction } from 'i18next';
 
-export type NavigationRoute = {
-  path: string;
-  back: string;
-  title?: string;
-};
-
-export type NavigationConfig = Array<NavigationRoute>;
+type NavigationRoute = { path: string; back: string; title?: string };
+type NavigationConfig = Array<NavigationRoute>;
 
 export function getTeamManagementRoutes(t: TFunction): NavigationConfig {
   return [
