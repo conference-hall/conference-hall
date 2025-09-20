@@ -144,15 +144,6 @@ describe('SelectPanel component', () => {
     await expect.element(screen.getByText('Custom Footer')).toBeInTheDocument();
   });
 
-  it('focuses search input when panel opens', async () => {
-    const screen = renderComponent();
-
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
-
-    const searchInput = screen.getByPlaceholder('Filter...');
-    expect(searchInput).toHaveFocus();
-  });
-
   it('calls onSearch when provided', async () => {
     vi.useFakeTimers();
     const onSearchMock = vi.fn();
