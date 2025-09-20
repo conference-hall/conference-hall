@@ -64,11 +64,7 @@ export default function EventRoute({ loaderData: event }: Route.ComponentProps) 
       </header>
 
       {!isSubmissionRoute && isAuthenticated ? (
-        <Page.NavHeader
-          className={cx('flex pb-0 flex-row items-center space-between', {
-            'hidden lg:flex ': !isEventRoute,
-          })}
-        >
+        <Page.NavHeader className={cx('flex pb-0 flex-row items-center', { 'hidden lg:flex ': !isEventRoute })}>
           <NavTabs py={4} scrollable className="grow">
             <NavTab to={href('/:event', { event: event.slug })} end className="hidden lg:flex">
               {t(`common.event.type.label.${event.type}`)}

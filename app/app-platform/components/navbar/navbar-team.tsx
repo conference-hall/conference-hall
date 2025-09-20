@@ -10,6 +10,7 @@ import { BackButton, useBackNavigation } from './buttons/back-button.tsx';
 import { EventCommandPaletteButton } from './buttons/event-command-palette-button.tsx';
 import { LogoButton } from './buttons/logo-button.tsx';
 import { UserMenuButton } from './buttons/user-menu-button.tsx';
+import { getTeamManagementRoutes } from './config/navigation-routes.ts';
 import { EventsDropdown } from './dropdowns/events-dropdown.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
 
@@ -84,31 +85,7 @@ function MobileNavigation() {
   const isTeamRoute = useMatch({ path: '/team/:team', end: true });
   const currentTeam = useRouteLoaderData('team-management');
 
-  const { backPath, title } = useBackNavigation([
-    // team management routes
-    { path: '/team/:team/settings/*', back: '/team/:team', title: t('common.settings') },
-    // event management routes
-    { path: '/team/:team/:event/reviews', back: '/team/:team/:event', title: t('event-management.nav.proposals') },
-    {
-      path: '/team/:team/:event/reviews/new',
-      back: '/team/:team/:event/reviews',
-      title: t('event-management.proposals.new.title'),
-    },
-    { path: '/team/:team/:event/reviews/*', back: '/team/:team/:event/reviews', title: t('common.review') },
-    { path: '/team/:team/:event/speakers', back: '/team/:team/:event', title: t('event-management.nav.speakers') },
-    {
-      path: '/team/:team/:event/speakers/new',
-      back: '/team/:team/:event/speakers',
-      title: t('event-management.speakers.new.title'),
-    },
-    { path: '/team/:team/:event/speakers/*', back: '/team/:team/:event/speakers', title: t('common.speaker') },
-    {
-      path: '/team/:team/:event/publication',
-      back: '/team/:team/:event',
-      title: t('event-management.nav.publication'),
-    },
-    { path: '/team/:team/:event/settings/*', back: '/team/:team/:event', title: t('common.settings') },
-  ]);
+  const { backPath, title } = useBackNavigation(getTeamManagementRoutes(t));
 
   if (isTeamRoute && user) {
     return (

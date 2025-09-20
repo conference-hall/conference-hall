@@ -7,6 +7,7 @@ import { BackButton, useBackNavigation } from './buttons/back-button.tsx';
 import { LoginButton } from './buttons/login-button.tsx';
 import { LogoButton } from './buttons/logo-button.tsx';
 import { UserMenuButton } from './buttons/user-menu-button.tsx';
+import { getSpeakerRoutes } from './config/navigation-routes.ts';
 
 export function NavbarSpeaker() {
   return (
@@ -67,15 +68,7 @@ function MobileNavigation() {
   const { t } = useTranslation();
   const user = useUser();
 
-  const { backPath, title } = useBackNavigation([
-    { path: '/speaker', back: '/', title: t('speaker.nav.activity') },
-    { path: '/speaker/talks', back: '/', title: t('speaker.nav.talks') },
-    { path: '/speaker/talks/new', back: '/speaker/talks', title: t('talk.library.new') },
-    { path: '/speaker/talks/*', back: '/speaker/talks', title: t('common.talk') },
-    { path: '/speaker/settings/*', back: '/', title: t('speaker.nav.settings') },
-    { path: '/notifications', back: '/', title: t('navbar.user-menu.notifications') },
-    { path: '/*', back: '/' },
-  ]);
+  const { backPath, title } = useBackNavigation(getSpeakerRoutes(t));
 
   return (
     <div className="flex items-center gap-4">

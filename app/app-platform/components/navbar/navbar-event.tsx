@@ -9,6 +9,7 @@ import { BackButton, useBackNavigation } from './buttons/back-button.tsx';
 import { LoginButton } from './buttons/login-button.tsx';
 import { LogoButton } from './buttons/logo-button.tsx';
 import { UserMenuButton } from './buttons/user-menu-button.tsx';
+import { getEventParticipationRoutes } from './config/navigation-routes.ts';
 
 export function NavbarEvent() {
   return (
@@ -69,13 +70,7 @@ function MobileNavigation() {
   const { t } = useTranslation();
   const eventPage = useRouteLoaderData('event-page');
 
-  const { backPath, title } = useBackNavigation([
-    { path: '/:event/survey', back: '/:event', title: t('event.nav.survey') },
-    { path: '/:event/proposals', back: '/:event', title: t('event.nav.proposals') },
-    { path: '/:event/submission/*', back: '/:event', title: t('event.nav.submit-proposal') },
-    { path: '/:event/proposals/*', back: '/:event/proposals', title: t('common.proposal') },
-    { path: '/*', back: '/' },
-  ]);
+  const { backPath, title } = useBackNavigation(getEventParticipationRoutes(t));
 
   if (!eventPage) return <LogoButton />;
 
