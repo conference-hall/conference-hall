@@ -3,9 +3,9 @@ import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
 import { Footer } from '~/app-platform/components/footer.tsx';
-import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
+import { NavbarSpeaker } from '~/app-platform/components/navbar/navbar-speaker.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
-import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
+import { BG_COLOR } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
@@ -25,9 +25,9 @@ export default function SpeakerRoute({ loaderData: profile }: Route.ComponentPro
 
   return (
     <>
-      <Navbar />
+      <NavbarSpeaker />
 
-      <header className={cx(BG_GRADIENT_COLOR, 'hidden sm:block')}>
+      <header className={cx(BG_COLOR, 'hidden lg:block')}>
         <Container className="h-24 flex flex-row items-center relative">
           <Avatar
             picture={profile.picture}
@@ -50,7 +50,7 @@ export default function SpeakerRoute({ loaderData: profile }: Route.ComponentPro
         </Container>
       </header>
 
-      <Page.NavHeader className="flex flex-col pb-2 sm:pb-0 sm:flex-row sm:items-center sm:space-between">
+      <Page.NavHeader className="flex flex-col sm:pb-0 sm:flex-row sm:items-center sm:space-between">
         <NavTabs py={4} scrollable className="grow sm:ml-40">
           <NavTab to={href('/speaker')} icon={FireIcon} end>
             {t('speaker.nav.activity')}

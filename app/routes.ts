@@ -14,7 +14,7 @@ export default [
   route('auth/verify-email', './features/auth/email-verification-link.tsx'),
 
   // Event pages
-  route(':event', './features/event-participation/layout.tsx', [
+  route(':event', './features/event-participation/layout.tsx', { id: 'event-page' }, [
     index('./features/event-participation/event-page/event-page.tsx'),
     route('proposals', './features/event-participation/speaker-proposals/speaker-proposals.tsx'),
     route('proposals/:proposal', './features/event-participation/speaker-proposals/speaker-proposal.tsx'),
@@ -60,7 +60,7 @@ export default [
   route('team/request', './features/team-management/creation/request-access.tsx'),
 
   // Team management pages
-  route('team/:team', './features/team-management/layout.tsx', [
+  route('team/:team', './features/team-management/layout.tsx', { id: 'team-management' }, [
     index('./features/team-management/event-list/event-list.tsx'),
 
     route('settings', './features/team-management/settings/settings.tsx', [
@@ -78,7 +78,7 @@ export default [
   ]),
 
   // Event management pages
-  route('team/:team/:event', './features/event-management/layout.tsx', [
+  route('team/:team/:event', './features/event-management/layout.tsx', { id: 'event-management' }, [
     route('overview', './features/event-management/overview/overview.tsx', [
       index('./features/event-management/overview/overview.cfp.tsx'),
       route('reviewers', './features/event-management/overview/overview.reviewers.tsx'),

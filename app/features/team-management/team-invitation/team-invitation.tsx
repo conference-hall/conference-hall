@@ -28,7 +28,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 export default function InvitationRoute({ loaderData: team }: Route.ComponentProps) {
   const { t } = useTranslation();
   return (
-    <FullscreenPage navbar="default" className="text-center">
+    <FullscreenPage className="text-center">
       <Card className="p-8 md:p-16 space-y-16">
         <div className="space-y-6">
           <H1 size="3xl" weight="bold">

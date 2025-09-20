@@ -55,7 +55,7 @@ export default function TeamMembersRoute({ loaderData }: Route.ComponentProps) {
 
   return (
     <Card as="section">
-      <Card.Title className="flex items-center justify-between">
+      <Card.Title className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
         <div>
           <H3 size="base">
             {t('team.settings.members.heading')} ({statistics.total})
@@ -67,6 +67,7 @@ export default function TeamMembersRoute({ loaderData }: Route.ComponentProps) {
 
       <Card.Content>
         <MemberFilters />
+
         <Form method="POST" preventScrollReset>
           <List>
             <List.Header>

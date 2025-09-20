@@ -9,7 +9,7 @@ import {
   PopoverPanel,
 } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedCallback } from 'use-debounce';
 import { Avatar } from '../avatar.tsx';
@@ -54,15 +54,8 @@ function SelectPanelContent({
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [typing, setTyping] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const isLoading = loading || typing;
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
 
   const debouncedSearch = useDebouncedCallback(async (searchQuery: string) => {
     await onSearch?.(searchQuery);
@@ -102,10 +95,9 @@ function SelectPanelContent({
   const hasNoResults = displayedOptions.length === 0 && query && !isLoading;
 
   return (
-    <Combobox value={comboboxValue} onChange={handleComboboxChange} multiple={multiple} by="value" as="div">
+    <Combobox value={comboboxValue} onChange={handleComboboxChange} multiple={multiple} by="value" as="div" immediate>
       <ComboboxInput as={Fragment} onChange={handleQueryChange} displayValue={() => query}>
         <Input
-          ref={inputRef}
           type="text"
           size="s"
           className="w-full px-2 text-sm"

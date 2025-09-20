@@ -35,11 +35,13 @@ export default function EventSubmissionRoute({ params }: Route.ComponentProps) {
     <SubmissionContextProvider eventSlug={slug} talkId={params.talk} hasTracks={hasTracks} hasSurvey={hasSurvey}>
       <Page.NavHeader className="flex w-full items-center justify-between gap-4 py-4">
         <Steps />
+
         <IconLink
           label={t('common.cancel')}
           to={href('/:event', { event: slug })}
           icon={XMarkIcon}
           variant="secondary"
+          className="hidden lg:block"
         />
       </Page.NavHeader>
 

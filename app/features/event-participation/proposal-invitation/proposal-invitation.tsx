@@ -32,7 +32,7 @@ export default function InvitationRoute({ loaderData: proposal }: Route.Componen
   const { t } = useTranslation();
 
   return (
-    <FullscreenPage navbar="default">
+    <FullscreenPage>
       <FullscreenPage.Title
         title={t('talk.invitation.heading')}
         subtitle={t('talk.invitation.for-event', { event: proposal.event.name })}

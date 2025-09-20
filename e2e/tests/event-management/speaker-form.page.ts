@@ -63,7 +63,7 @@ class SpeakerFormPage extends PageObject {
 }
 
 export class NewSpeakerPage extends SpeakerFormPage {
-  readonly heading: Locator = this.page.getByRole('heading', { name: 'Create a new speaker' });
+  readonly heading: Locator = this.page.getByRole('heading', { name: 'New speaker' });
   readonly submitButton: Locator = this.page.getByRole('button', { name: 'Create speaker' });
 
   async goto(team: string, event: string) {

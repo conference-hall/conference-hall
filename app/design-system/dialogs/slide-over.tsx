@@ -1,6 +1,6 @@
-import { Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react';
+import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
-import { Background, SlideOverTransition } from '../transitions.tsx';
+import { Background } from '../transitions.tsx';
 import { CloseButton } from './close-button.tsx';
 
 type Props = {
@@ -14,44 +14,40 @@ type Props = {
 
 export function SlideOver({ open, title, size = 'm', withBorder = true, onClose, children }: Props) {
   return (
-    <Transition show={open}>
-      <Dialog className="relative z-40" onClose={onClose}>
-        <Background />
+    <Dialog className="relative z-40" open={open} onClose={onClose}>
+      <Background />
 
-        <div className="fixed inset-0 overflow-hidden z-40">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
-              <SlideOverTransition>
-                <DialogPanel
-                  className={cx('pointer-events-auto w-screen', {
-                    'max-w-sm': size === 's',
-                    'max-w-lg': size === 'm',
-                    'max-w-2xl': size === 'l',
-                    'max-w-4xl': size === 'xl',
-                  })}
-                >
-                  <div
-                    className={cx('flex h-full flex-col bg-white shadow-xl sm:rounded-l-xl', {
-                      'divide-y divide-gray-200': withBorder,
-                    })}
-                  >
-                    <div className="flex shrink-0 items-start justify-between z-50">
-                      {title ? (
-                        <DialogTitle className="text-base font-semibold leading-6 text-gray-900 px-4 py-4">
-                          {title}
-                        </DialogTitle>
-                      ) : null}
-                      <CloseButton onClose={onClose} className="self-end" />
-                    </div>
-                    {children}
-                  </div>
-                </DialogPanel>
-              </SlideOverTransition>
-            </div>
+      <div className="fixed inset-0 overflow-hidden z-40">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
+            <DialogPanel
+              className={cx('pointer-events-auto w-screen', {
+                'max-w-sm': size === 's',
+                'max-w-lg': size === 'm',
+                'max-w-2xl': size === 'l',
+                'max-w-4xl': size === 'xl',
+              })}
+            >
+              <div
+                className={cx('flex h-full flex-col bg-white shadow-xl sm:rounded-l-xl', {
+                  'divide-y divide-gray-200': withBorder,
+                })}
+              >
+                <div className="flex shrink-0 items-start justify-between z-50">
+                  {title ? (
+                    <DialogTitle className="text-base font-semibold leading-6 text-gray-900 px-4 py-4">
+                      {title}
+                    </DialogTitle>
+                  ) : null}
+                  <CloseButton onClose={onClose} className="self-end" />
+                </div>
+                {children}
+              </div>
+            </DialogPanel>
           </div>
         </div>
-      </Dialog>
-    </Transition>
+      </div>
+    </Dialog>
   );
 }
 

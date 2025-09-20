@@ -8,7 +8,6 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { List } from '~/design-system/list/list.tsx';
-import { Pagination } from '~/design-system/list/pagination.tsx';
 import { Tag } from '~/design-system/tag.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { TagModal } from '~/features/event-management/settings/components/tag-modal.tsx';
@@ -67,7 +66,7 @@ export default function ProposalTagsRoute({ loaderData }: Route.ComponentProps) 
       </Card.Title>
 
       <Card.Content>
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
           <Form method="GET" className="w-full">
             <Input
               type="search"
@@ -128,11 +127,9 @@ export default function ProposalTagsRoute({ loaderData }: Route.ComponentProps) 
               <EmptyState icon={TagIcon} label={t('event-management.settings.tags.list.empty')} noBorder />
             ) : null}
           </List.Content>
-        </List>
 
-        <div>
-          <Pagination {...pagination} />
-        </div>
+          <List.PaginationFooter current={pagination.current} pages={pagination.pages} total={count} />
+        </List>
       </Card.Content>
     </Card>
   );

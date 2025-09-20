@@ -1,7 +1,7 @@
 import { Cog6ToothIcon, StarIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
-import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
+import { NavbarTeam } from '~/app-platform/components/navbar/navbar-team.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Badge } from '~/design-system/badges.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -25,7 +25,7 @@ export default function TeamLayout({ loaderData: team }: Route.ComponentProps) {
 
   return (
     <CurrentTeamProvider team={team}>
-      <Navbar layout="team" />
+      <NavbarTeam />
 
       <Page.NavHeader className="flex items-center justify-between">
         <NavTabs py={4} scrollable>
@@ -36,7 +36,9 @@ export default function TeamLayout({ loaderData: team }: Route.ComponentProps) {
             {t('common.settings')}
           </NavTab>
         </NavTabs>
-        <Badge color="blue">{t(`common.member.role.label.${team.userRole}`)}</Badge>
+        <div className="hidden md:inline-flex">
+          <Badge color="blue">{t(`common.member.role.label.${team.userRole}`)}</Badge>
+        </div>
       </Page.NavHeader>
 
       <Outlet />

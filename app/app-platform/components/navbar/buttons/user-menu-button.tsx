@@ -1,3 +1,4 @@
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import {
   ArrowRightStartOnRectangleIcon,
   BellIcon,
@@ -16,8 +17,8 @@ import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
-import { LegalLinks } from '../footer.tsx';
-import { SponsorLink } from '../sponsor-link.tsx';
+import { LegalLinks } from '../../footer.tsx';
+import { SponsorLink } from '../../sponsor-link.tsx';
 
 type MenuProps = {
   email: string | null;
@@ -28,7 +29,7 @@ type MenuProps = {
   notificationsCount: number;
 };
 
-export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificationsCount }: MenuProps) {
+export function UserMenuButton({ email, name, picture, hasTeamAccess, teams, notificationsCount }: MenuProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -159,13 +160,18 @@ function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
     <button
       type="button"
       onClick={onClick}
-      className="relative flex shrink-0 rounded-full text-sm focus:outline-hidden focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 cursor-pointer"
+      className="rounded-full text-sm focus:outline-2 focus:outline-white focus:outline-offset-1 cursor-pointer hover:bg-gray-900 hover:text-white p-0.5"
     >
-      <Avatar picture={picture} name={name} size="s" />
-      <span className="sr-only">{t('navbar.user-menu.open')}</span>
-      {notificationsCount > 0 && (
-        <span className="absolute bottom-0 right-0 block size-2 rounded-full bg-red-400 ring-2 ring-gray-800" />
-      )}
+      <div className="flex items-center gap-1">
+        <div className="relative">
+          <Avatar picture={picture} name={name} size="s" />
+          {notificationsCount > 0 && (
+            <span className="absolute bottom-0 right-0 block size-2 rounded-full bg-red-400 ring-2 ring-gray-800" />
+          )}
+        </div>
+        <ChevronDownIcon className="h-5 w-5 shrink-0 text-gray-400 mr-0.5 hidden lg:block" />
+        <span className="sr-only">{t('navbar.user-menu.open')}</span>
+      </div>
     </button>
   );
 }

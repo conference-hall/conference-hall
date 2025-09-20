@@ -47,8 +47,8 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
         />
 
         <List>
-          <List.Header className="flex justify-between">
-            <div className="flex items-baseline gap-2">
+          <List.Header className="flex flex-col gap-2 items-start sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-baseline gap-2 grow">
               <Text weight="medium">
                 {t('event-management.settings.survey.questions', { count: questions.length })}
               </Text>

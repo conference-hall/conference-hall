@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { KeyIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { Form, redirect } from 'react-router';
+import { Form, href, replace } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button, button } from '~/design-system/buttons.tsx';
@@ -32,14 +32,14 @@ export const action = async ({ request }: Route.ActionArgs) => {
   } catch (_error) {
     return { key: [t('error.invalid-access-key')] };
   }
-  return redirect('/team/new');
+  return replace(href('/team/new'));
 };
 
 export default function RequestAccessRoute({ actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
 
   return (
-    <FullscreenPage navbar="default">
+    <FullscreenPage>
       <FullscreenPage.Title title={t('team.request.heading')} subtitle={t('team.request.description')} />
 
       <Card className="p-8 md:p-12">
@@ -57,7 +57,7 @@ export default function RequestAccessRoute({ actionData: errors }: Route.Compone
           </Button>
         </Form>
 
-        <DividerWithLabel label="or" className="py-8" />
+        <DividerWithLabel label={t('common.or')} className="py-8" />
 
         <a href="https://forms.gle/AnArRCSHibmG59zw7" target="_blank" className={button()} rel="noreferrer">
           <KeyIcon className="h-4 w-4" aria-hidden="true" />

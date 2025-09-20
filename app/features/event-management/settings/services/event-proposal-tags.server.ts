@@ -30,7 +30,7 @@ export class EventProposalTags extends UserEventAuthorization {
     return {
       count,
       tags: tags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),
-      pagination: { current: pagination.page, total: pagination.pageCount },
+      pagination: { current: pagination.page, pages: pagination.pageCount },
     };
   }
 

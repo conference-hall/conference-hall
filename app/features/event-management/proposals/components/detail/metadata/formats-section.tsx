@@ -46,7 +46,7 @@ export function FormatsSection({
 
   return (
     <FormatsPanel
-      key={proposalId}
+      // key={proposalId}
       team={team}
       event={event}
       value={displayed.map((item) => ({ value: item.id, label: item.name }))}

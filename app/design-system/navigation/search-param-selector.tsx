@@ -25,7 +25,12 @@ export function SearchParamSelector({ param, defaultValue, className, selectors 
   );
 
   return (
-    <div className={cx('flex gap-1  w-fit rounded-lg bg-slate-100 p-1 ring-1 ring-inset ring-gray-200', className)}>
+    <div
+      className={cx(
+        'hidden lg:flex gap-1  w-fit rounded-lg bg-slate-100 p-1 ring-1 ring-inset ring-gray-200',
+        className,
+      )}
+    >
       {selectors.map((selector) => (
         <Link
           key={selector.value}

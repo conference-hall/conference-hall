@@ -26,7 +26,7 @@ export function ExportMenu() {
 
   return (
     <Menu>
-      <MenuButton className={button({ variant: 'secondary', loading })} disabled={loading}>
+      <MenuButton className={button({ variant: 'secondary', loading, block: true })} disabled={loading}>
         <ArrowDownTrayIcon className="size-4 text-gray-500" aria-hidden="true" />
         <span>
           {loading ? t('event-management.proposals.export.loading') : t('event-management.proposals.export.label')}

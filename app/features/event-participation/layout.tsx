@@ -1,12 +1,12 @@
+import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet, useMatch } from 'react-router';
 import { Footer } from '~/app-platform/components/footer.tsx';
-import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
+import { NavbarEvent } from '~/app-platform/components/navbar/navbar-event.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { eventSocialCard } from '~/app-platform/seo/utils/social-cards.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
-import { ButtonLink } from '~/design-system/buttons.tsx';
-import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
+import { BG_COLOR } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
@@ -33,24 +33,16 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
 export default function EventRoute({ loaderData: event }: Route.ComponentProps) {
   const { t } = useTranslation();
   const user = useUser();
+  const isEventRoute = useMatch({ path: '/:event', end: true });
   const isSubmissionRoute = useMatch('/:event/submission/*');
   const isAuthenticated = Boolean(user);
 
   return (
     <>
-      <Navbar />
+      <NavbarEvent />
 
-      <header className={BG_GRADIENT_COLOR}>
-        <Container className="h-24 flex flex-row items-center relative">
-          <Avatar
-            picture={event.logoUrl}
-            name={event.name}
-            size="4xl"
-            square
-            ring
-            ringColor="white"
-            className="hidden sm:flex absolute -bottom-12"
-          />
+      <header className={cx(BG_COLOR, 'hidden lg:block')}>
+        <Container className="flex flex-row gap-6 pt-2 pb-6 items-center relative">
           <Avatar
             picture={event.logoUrl}
             name={event.name}
@@ -58,9 +50,9 @@ export default function EventRoute({ loaderData: event }: Route.ComponentProps) 
             square
             ring
             ringColor="white"
-            className="sm:hidden"
+            className="hidden sm:flex"
           />
-          <div className="ml-2 sm:ml-40 p-2 overflow-hidden">
+          <div>
             <H1 size="2xl" variant="light" truncate>
               {event.name}
             </H1>
@@ -71,10 +63,10 @@ export default function EventRoute({ loaderData: event }: Route.ComponentProps) 
         </Container>
       </header>
 
-      {!isSubmissionRoute ? (
-        <Page.NavHeader className="flex flex-col pb-2 sm:pb-0 sm:flex-row sm:items-center sm:space-between">
-          <NavTabs py={4} scrollable className="grow sm:ml-40">
-            <NavTab to={href('/:event', { event: event.slug })} end>
+      {!isSubmissionRoute && isAuthenticated ? (
+        <Page.NavHeader className={cx('flex pb-0 flex-row items-center', { 'hidden lg:flex ': !isEventRoute })}>
+          <NavTabs py={4} scrollable className="grow">
+            <NavTab to={href('/:event', { event: event.slug })} end className="hidden lg:flex">
               {t(`common.event.type.label.${event.type}`)}
             </NavTab>
 
@@ -86,12 +78,6 @@ export default function EventRoute({ loaderData: event }: Route.ComponentProps) 
               <NavTab to={href('/:event/survey', { event: event.slug })}>{t('event.nav.survey')}</NavTab>
             ) : null}
           </NavTabs>
-
-          {event.cfpState === 'OPENED' && (
-            <ButtonLink to={href('/:event/submission', { event: event.slug })}>
-              {t('event.nav.submit-proposal')}
-            </ButtonLink>
-          )}
         </Page.NavHeader>
       ) : null}
 

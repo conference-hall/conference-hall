@@ -56,7 +56,7 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
   const { canEditTeam, canLeaveTeam, canDeleteTeam } = currentTeam.userPermissions;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 lg:space-y-8">
       {canEditTeam ? (
         <Card as="section">
           <Form method="POST" preventScrollReset>

@@ -9,7 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet, redirect, useMatch, useSearchParams } from 'react-router';
-import { Navbar } from '~/app-platform/components/navbar/navbar.tsx';
+import { NavbarTeam } from '~/app-platform/components/navbar/navbar-team.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
@@ -45,7 +45,7 @@ export default function EventLayoutRoute({ loaderData }: Route.ComponentProps) {
     <CurrentEventTeamProvider value={loaderData}>
       {!isFullscreen ? (
         <>
-          <Navbar layout="team" />
+          <NavbarTeam />
           <EventTabs />
         </>
       ) : null}

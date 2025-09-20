@@ -55,7 +55,7 @@ export default function SpeakersRoute({ loaderData }: Route.ComponentProps) {
                 return (
                   <List.RowLink key={speaker.id} to={{ pathname: speaker.id, search }} className="p-4">
                     <div className="flex items-start justify-between w-full">
-                      <div className="flex items-center space-x-4 flex-1 min-w-0">
+                      <div className="flex items-center space-x-4 flex-1 min-w-0 shrink-0">
                         <Avatar picture={speaker.picture} name={speaker.name} size="m" />
                         <div className="flex-1 min-w-0">
                           <Text size="s" weight="medium" truncate>
@@ -69,7 +69,7 @@ export default function SpeakersRoute({ loaderData }: Route.ComponentProps) {
                         </div>
                       </div>
 
-                      <div className="flex flex-col items-end space-y-1 ml-4">
+                      <div className="hidden md:flex flex-col items-end space-y-1 ml-4">
                         <div className="flex items-center space-x-6 text-sm">
                           <div className="text-center">
                             <div className="font-semibold text-gray-900">{totalProposals}</div>
