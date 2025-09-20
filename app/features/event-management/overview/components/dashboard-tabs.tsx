@@ -32,6 +32,7 @@ function DashboardTab({ to, children }: DashboardTabProps) {
       to={to}
       end
       discover="render"
+      preventScrollReset
       className={({ isActive }) =>
         cx('border-b-2 px-1 p-4 text-sm flex gap-2 whitespace-nowrap', {
           'border-indigo-500 text-indigo-600 font-semibold': isActive,
