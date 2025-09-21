@@ -1,9 +1,11 @@
 // Source from: https://github.com/sergiodxa/remix-utils
 // License: MIT
 
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
-let hydrating = true;
+function subscribe() {
+  return () => {};
+}
 
 /**
  * Return a boolean indicating if the JS has been hydrated already.
@@ -23,12 +25,9 @@ let hydrating = true;
  * ```
  */
 export function useHydrated() {
-  const [hydrated, setHydrated] = useState(() => !hydrating);
-
-  useEffect(function hydrate() {
-    hydrating = false;
-    setHydrated(true);
-  }, []);
-
-  return hydrated;
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
 }

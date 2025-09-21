@@ -2,7 +2,6 @@
 // License: MIT
 
 import type { ReactNode } from 'react';
-
 import { useHydrated } from './use-hydrated.ts';
 
 type Props = {

@@ -33,7 +33,7 @@ export function applySecurity(app: express.Application) {
             "'self'",
           ].filter(Boolean),
           'frame-src': ["'self'", !isProduction ? 'http://127.0.0.1:*' : ''].filter(Boolean),
-          'font-src': ["'self'"],
+          'font-src': ["'self'", 'data:'],
           'img-src': ["'self'", 'data:', 'https:'],
           'script-src': [
             "'strict-dynamic'",
