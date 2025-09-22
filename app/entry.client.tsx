@@ -5,24 +5,27 @@ import { HydratedRouter } from 'react-router/dom';
 import { initializeI18n } from './shared/i18n/i18n.browser.ts';
 
 async function hydrate() {
-  const i18n = await initializeI18n();
+  try {
+    const i18n = await initializeI18n();
 
-  startTransition(() => {
-    hydrateRoot(
-      document,
-      <I18nextProvider i18n={i18n}>
-        <StrictMode>
-          <HydratedRouter />
-        </StrictMode>
-      </I18nextProvider>,
-    );
-  });
+    startTransition(() => {
+      hydrateRoot(
+        document,
+        <I18nextProvider i18n={i18n}>
+          <StrictMode>
+            <HydratedRouter />
+          </StrictMode>
+        </I18nextProvider>,
+      );
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 if (window.requestIdleCallback) {
   window.requestIdleCallback(hydrate);
 } else {
-  // Safari doesn't support requestIdleCallback
-  // https://caniuse.com/requestidlecallback
+  // Safari doesn't support requestIdleCallback: https://caniuse.com/requestidlecallback
   window.setTimeout(hydrate, 1);
 }
