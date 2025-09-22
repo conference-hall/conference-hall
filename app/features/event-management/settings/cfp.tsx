@@ -7,7 +7,7 @@ import {
 } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/cfp.ts';
 import { CommonCfpSetting } from './components/common-cfp-setting.tsx';
@@ -22,7 +22,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const event = EventSettings.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');

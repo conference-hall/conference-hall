@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/survey.ts';
 import { SurveySettingsForm } from './components/survey-settings-form.tsx';
@@ -20,7 +20,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const surveySettings = EventSurveySettings.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');

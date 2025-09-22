@@ -8,7 +8,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/talks.new.ts';
 import { TalkForm } from './components/talk-forms/talk-form.tsx';
@@ -22,7 +22,7 @@ export const meta = (args: Route.MetaArgs) => {
 export const action = async ({ request, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TalkSaveSchema });
   if (result.status !== 'success') return result.error;

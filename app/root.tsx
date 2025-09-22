@@ -12,7 +12,7 @@ import { initializeFirebaseClient } from './shared/auth/firebase.ts';
 import { destroySession, getUserSession } from './shared/auth/session.ts';
 import { flags } from './shared/feature-flags/flags.server.ts';
 import { FlagsProvider } from './shared/feature-flags/flags-context.tsx';
-import { getInstance, getLocale, i18nextMiddleware, setLocaleCookie } from './shared/i18n/i18n.middleware.ts';
+import { getI18n, getLocale, i18nextMiddleware, setLocaleCookie } from './shared/i18n/i18n.middleware.ts';
 import { useNonce } from './shared/nonce/use-nonce.ts';
 import type { Toast } from './shared/toasts/toast.server.ts';
 import { getToast } from './shared/toasts/toast.server.ts';
@@ -60,7 +60,7 @@ export const loader = async ({ request, context }: Route.LoaderArgs) => {
 
   const frontendFlags = await flags.withTag('frontend');
   const locale = getLocale(context);
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const title = i18n.t('app.title');
   const description = i18n.t('app.description');
   const firebaseConfig = getFirebaseClientConfig();

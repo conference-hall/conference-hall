@@ -12,7 +12,7 @@ import { Tag } from '~/design-system/tag.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { TagModal } from '~/features/event-management/settings/components/tag-modal.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/tags.ts';
@@ -33,7 +33,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent');
   const tags = EventProposalTags.for(userId, params.team, params.event);

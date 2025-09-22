@@ -15,7 +15,7 @@ const localeCookie = createCookie('locale', {
   sameSite: 'lax',
 });
 
-export const [i18nextMiddleware, getLocale, getInstance] = createI18nextMiddleware({
+export const [i18nextMiddleware, getLocale, getI18n] = createI18nextMiddleware({
   detection: {
     supportedLanguages: i18nConfig.supportedLngs,
     fallbackLanguage: i18nConfig.fallbackLng,

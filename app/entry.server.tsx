@@ -5,7 +5,7 @@ import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'reac
 import { I18nextProvider } from 'react-i18next';
 import type { ActionFunctionArgs, EntryContext, LoaderFunctionArgs, RouterContextProvider } from 'react-router';
 import { ServerRouter } from 'react-router';
-import { getInstance } from './shared/i18n/i18n.middleware.ts';
+import { getI18n } from './shared/i18n/i18n.middleware.ts';
 import { nonceContext } from './shared/nonce/nonce.server.ts';
 import { Nonce } from './shared/nonce/use-nonce.ts';
 
@@ -32,7 +32,7 @@ export default async function handleRequest(
     const { nonce } = routerContext.get(nonceContext);
 
     const { pipe, abort } = renderToPipeableStream(
-      <I18nextProvider i18n={getInstance(routerContext)}>
+      <I18nextProvider i18n={getI18n(routerContext)}>
         <Nonce.Provider value={nonce}>
           <ServerRouter context={entryContext} url={request.url} nonce={nonce} />
         </Nonce.Provider>

@@ -11,7 +11,7 @@ import {
   EventEmailCustomDeleteSchema,
   EventEmailCustomUpsertSchema,
 } from '~/shared/emails/email.types.ts';
-import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { isSupportedLanguage } from '~/shared/i18n/i18n.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/emails.template.ts';
@@ -40,7 +40,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent');
 

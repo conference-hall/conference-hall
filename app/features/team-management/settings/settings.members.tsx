@@ -10,7 +10,7 @@ import { List } from '~/design-system/list/list.tsx';
 import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/settings.members.ts';
@@ -28,7 +28,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent')!;
   const memberId = String(form.get('memberId'))!;

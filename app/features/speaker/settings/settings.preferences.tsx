@@ -7,7 +7,7 @@ import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { getInstance, getLocale, setLocaleCookie } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n, getLocale, setLocaleCookie } from '~/shared/i18n/i18n.middleware.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
@@ -31,7 +31,7 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   const locale = form.get('locale') as string;
   await UserAccount.changeLocale(userId, locale);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const t = i18n.getFixedT(locale);
   return data(null, {
     headers: combineHeaders(

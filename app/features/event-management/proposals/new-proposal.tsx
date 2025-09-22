@@ -12,7 +12,7 @@ import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
-import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { EventSpeakerSaveSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/new-proposal.ts';
@@ -31,7 +31,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 

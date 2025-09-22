@@ -11,7 +11,7 @@ import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
-import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
 import type { Route } from './+types/proposal.ts';
@@ -64,7 +64,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 

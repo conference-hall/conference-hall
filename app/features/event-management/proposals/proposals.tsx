@@ -9,7 +9,7 @@ import { useCurrentEventTeam } from '~/features/event-management/event-team-cont
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
-import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { getObjectHash } from '~/shared/utils/object-hash.ts';
@@ -32,7 +32,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ProposalStatusBulkSchema });
   if (result.status !== 'success') return toast('error', i18n.t('error.global'));

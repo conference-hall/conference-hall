@@ -10,7 +10,7 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import type { Route } from './+types/request-access.ts';
 
 export const meta = (args: Route.MetaArgs) => {
@@ -25,7 +25,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export const action = async ({ request, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const form = await request.formData();
   try {
     await TeamBetaAccess.for(userId).validateAccessKey(String(form.get('key')));

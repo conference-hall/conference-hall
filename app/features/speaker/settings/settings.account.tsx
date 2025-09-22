@@ -9,7 +9,7 @@ import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-pro
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
 import { requireUserSession, sendEmailVerification } from '~/shared/auth/session.ts';
-import { getInstance, getLocale } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n, getLocale } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { UnlinkProviderSchema } from '~/shared/types/speaker.types.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
@@ -30,7 +30,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export const action = async ({ request, context }: Route.ActionArgs) => {
   const { userId, uid } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const locale = getLocale(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;

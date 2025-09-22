@@ -10,7 +10,7 @@ import {
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { TalkSection } from '../../speaker/talk-library/components/talk-section.tsx';
@@ -27,7 +27,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
-  const i18n = getInstance(context);
+  const i18n = getI18n(context);
   const proposal = SpeakerProposal.for(userId, params.proposal);
   const form = await request.formData();
   const intent = form.get('intent');
