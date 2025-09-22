@@ -46,7 +46,7 @@ function CumulativeByDayChart({ data }: { data: ChartData }) {
       <AreaChart data={data} margin={{ bottom: 10, top: 10 }} aria-hidden="true">
         <YAxis
           type="number"
-          width={56}
+          width={40}
           axisLine={false}
           tickLine={false}
           fontSize="12"
@@ -98,7 +98,7 @@ function CountByDayChart({ data }: { data: ChartData }) {
       <BarChart data={data} margin={{ bottom: 10, top: 10 }} aria-hidden="true">
         <YAxis
           type="number"
-          width={56}
+          width={40}
           axisLine={false}
           tickLine={false}
           fontSize="12"
