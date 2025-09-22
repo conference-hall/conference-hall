@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/survey.ts';
 import { SurveySettingsForm } from './components/survey-settings-form.tsx';
@@ -17,9 +17,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return surveySettings.getConfig();
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getI18n(context);
   const surveySettings = EventSurveySettings.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');
@@ -30,31 +31,32 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       return toast(
         'success',
         enabled
-          ? t('event-management.settings.survey.feedbacks.enabled')
-          : t('event-management.settings.survey.feedbacks.disabled'),
+          ? i18n.t('event-management.settings.survey.feedbacks.enabled')
+          : i18n.t('event-management.settings.survey.feedbacks.disabled'),
       );
     }
     case 'remove-question': {
       const result = parseWithZod(form, { schema: SurveyRemoveQuestionSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await surveySettings.removeQuestion(result.value.id);
-      return toast('success', t('event-management.settings.survey.feedbacks.question-removed'));
+      return toast('success', i18n.t('event-management.settings.survey.feedbacks.question-removed'));
     }
     case 'add-question': {
       const result = parseWithZod(form, { schema: SurveyQuestionSchema });
-      if (result.status !== 'success') return toast('error', result.error?.options?.join(', ') || t('error.global'));
+      if (result.status !== 'success')
+        return toast('error', result.error?.options?.join(', ') || i18n.t('error.global'));
       await surveySettings.addQuestion(result.value);
-      return toast('success', t('event-management.settings.survey.feedbacks.question-added'));
+      return toast('success', i18n.t('event-management.settings.survey.feedbacks.question-added'));
     }
     case 'update-question': {
       const result = parseWithZod(form, { schema: SurveyQuestionSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await surveySettings.updateQuestion(result.value);
-      return toast('success', t('event-management.settings.survey.feedbacks.question-updated'));
+      return toast('success', i18n.t('event-management.settings.survey.feedbacks.question-updated'));
     }
     case 'move-question': {
       const result = parseWithZod(form, { schema: SurveyMoveQuestionSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await surveySettings.moveQuestion(result.value);
       return null;
     }

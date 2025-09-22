@@ -40,11 +40,7 @@ export async function getToast(request: Request) {
   const toast = result.success ? result.data : null;
   return {
     toast,
-    headers: toast
-      ? new Headers({
-          'set-cookie': await toastSessionStorage.destroySession(session),
-        })
-      : null,
+    toastHeaders: toast ? { 'set-cookie': await toastSessionStorage.destroySession(session) } : null,
   };
 }
 

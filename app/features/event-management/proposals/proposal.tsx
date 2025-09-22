@@ -11,7 +11,7 @@ import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
 import type { Route } from './+types/proposal.ts';
@@ -61,16 +61,17 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return { proposal, pagination, activityPromise, otherProposalsPromise };
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
   switch (intent) {
     case 'add-review': {
       const result = parseWithZod(form, { schema: ReviewUpdateDataSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await review.addReview(result.value);
       break;
@@ -90,13 +91,13 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     case 'react-to-comment': {
       const discussions = Comments.for(userId, params.team, params.event, params.proposal);
       const result = parseWithZod(form, { schema: CommentReactionSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await discussions.reactToComment(result.value);
       break;
     }
     case 'change-proposal-status': {
       const result = parseWithZod(form, { schema: ProposalStatusSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       const deliberate = ProposalStatusUpdater.for(userId, params.team, params.event);
       await deliberate.update([params.proposal], result.value);
       break;
@@ -112,11 +113,11 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
       const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
       await proposal.update(result.value);
-      return toast('success', t('event-management.proposal-page.feedbacks.saved'));
+      return toast('success', i18n.t('event-management.proposal-page.feedbacks.saved'));
     }
     case 'save-tags': {
       const result = parseWithZod(form, { schema: ProposalSaveTagsSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
 
       const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
       await proposal.saveTags(result.value);
@@ -124,7 +125,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     }
     case 'save-speakers': {
       const result = parseWithZod(form, { schema: ProposalSaveSpeakersSchema });
-      if (result.status !== 'success') return toast('error', result?.error?.speakers?.[0] || t('error.global'));
+      if (result.status !== 'success') return toast('error', result?.error?.speakers?.[0] || i18n.t('error.global'));
 
       const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
       await proposal.saveSpeakers(result.value);
@@ -132,7 +133,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     }
     case 'save-formats': {
       const result = parseWithZod(form, { schema: ProposalSaveFormatsSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
 
       const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
       await proposal.saveFormats(result.value);
@@ -140,7 +141,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     }
     case 'save-categories': {
       const result = parseWithZod(form, { schema: ProposalSaveCategoriesSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
 
       const proposal = ProposalManagement.for(userId, params.team, params.event, params.proposal);
       await proposal.saveCategories(result.value);

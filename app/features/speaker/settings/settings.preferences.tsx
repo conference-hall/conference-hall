@@ -7,7 +7,7 @@ import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n, setLocaleCookie } from '~/shared/i18n/i18n.server.ts';
+import { getI18n, getLocale, setLocaleCookie } from '~/shared/i18n/i18n.middleware.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
@@ -18,21 +18,21 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Preferences | Conference Hall' }]);
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
+export const loader = async ({ request, context }: Route.LoaderArgs) => {
   await requireUserSession(request);
-  const locale = await i18n.getLocale(request);
+  const locale = getLocale(context);
   return { locale };
 };
 
-export const action = async ({ request }: Route.ActionArgs) => {
+export const action = async ({ request, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
   const form = await request.formData();
   const locale = form.get('locale') as string;
-
   await UserAccount.changeLocale(userId, locale);
 
-  const t = await i18n.getFixedT(locale);
+  const i18n = getI18n(context);
+  const t = i18n.getFixedT(locale);
   return data(null, {
     headers: combineHeaders(
       await setLocaleCookie(locale),

@@ -9,7 +9,7 @@ import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-pro
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
 import { requireUserSession, sendEmailVerification } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getI18n, getLocale } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { UnlinkProviderSchema } from '~/shared/types/speaker.types.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
@@ -27,42 +27,43 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export const action = async ({ request }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
-  const locale = await i18n.getLocale(request);
+export const action = async ({ request, context }: Route.ActionArgs) => {
   const { userId, uid } = await requireUserSession(request);
+
+  const i18n = getI18n(context);
+  const locale = getLocale(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
   switch (intent) {
     case 'change-contact-email': {
       const result = parseWithZod(form, { schema: EmailSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
 
       await SpeakerProfile.for(userId).save(result.value);
-      return toast('success', t('settings.account.feedbacks.contact-changed'));
+      return toast('success', i18n.t('settings.account.feedbacks.contact-changed'));
     }
     case 'link-email-provider': {
       const result = parseWithZod(form, { schema: EmailPasswordSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
 
-      const error = await UserAccount.linkEmailProvider(uid, result.value.email, result.value.password, locale, t);
+      const error = await UserAccount.linkEmailProvider(uid, result.value.email, result.value.password, locale, i18n.t);
       if (error) return toast('error', error);
 
-      const headers = await toastHeaders('success', t('settings.account.feedbacks.authentication-method-linked'));
+      const headers = await toastHeaders('success', i18n.t('settings.account.feedbacks.authentication-method-linked'));
       return redirect(href('/auth/email-verification'), { headers });
     }
     case 'unlink-provider': {
       const result = parseWithZod(form, { schema: UnlinkProviderSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       if (result.value.newEmail) {
         await SpeakerProfile.for(userId).save({ email: result.value.newEmail });
       }
-      return toast('success', t('settings.account.feedbacks.authentication-method-unlinked'));
+      return toast('success', i18n.t('settings.account.feedbacks.authentication-method-unlinked'));
     }
     case 'verify-email': {
-      await sendEmailVerification(request);
-      return toast('success', t('settings.account.feedbacks.verification-email-sent'));
+      await sendEmailVerification(request, context);
+      return toast('success', i18n.t('settings.account.feedbacks.verification-email-sent'));
     }
     default:
       return null;

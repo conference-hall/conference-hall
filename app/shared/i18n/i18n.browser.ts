@@ -8,8 +8,8 @@ import { i18nConfig } from './i18n.ts';
 export async function initializeI18n() {
   await i18next
     .use(initReactI18next)
-    .use(LanguageDetector)
     .use(Fetch)
+    .use(LanguageDetector)
     .init({
       ...i18nConfig,
       ns: getInitialNamespaces(), // Detects the namespaces your routes rendered while SSR use

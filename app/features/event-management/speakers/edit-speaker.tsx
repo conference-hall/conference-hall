@@ -9,7 +9,7 @@ import { useCurrentEventTeam } from '~/features/event-management/event-team-cont
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { EventSpeakerSaveSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/edit-speaker.ts';
@@ -27,10 +27,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return { speaker };
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
+  const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: EventSpeakerSaveSchema });
   if (result.status !== 'success') return { errors: result.error || null };
@@ -38,11 +38,11 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   try {
     const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
     await eventSpeakers.update(params.speaker, result.value);
-    const headers = await toastHeaders('success', t('event-management.speakers.edit.feedbacks.updated'));
+    const headers = await toastHeaders('success', i18n.t('event-management.speakers.edit.feedbacks.updated'));
     return redirect(href('/team/:team/:event/speakers/:speaker', params), { headers });
   } catch (error) {
     if (error instanceof SpeakerEmailAlreadyExistsError) {
-      return { errors: { email: [t('event-management.speakers.new.errors.email-already-exists')] } };
+      return { errors: { email: [i18n.t('event-management.speakers.new.errors.email-already-exists')] } };
     }
     throw error;
   }

@@ -10,7 +10,7 @@ import { TalkSubmission } from '~/features/event-participation/cfp-submission/se
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/6-submit.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
@@ -22,13 +22,13 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return TalkSubmission.for(userId, params.event).get(params.talk);
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
+  const i18n = getI18n(context);
   await TalkSubmission.for(userId, params.event).submit(params.talk);
 
-  const headers = await toastHeaders('success', t('event.submission.submit.feedback.submitted'));
+  const headers = await toastHeaders('success', i18n.t('event.submission.submit.feedback.submitted'));
   return redirect(href('/:event/proposals', { event: params.event }), { headers });
 };
 

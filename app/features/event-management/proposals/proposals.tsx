@@ -9,7 +9,7 @@ import { useCurrentEventTeam } from '~/features/event-management/event-team-cont
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { getObjectHash } from '~/shared/utils/object-hash.ts';
@@ -29,12 +29,13 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return CfpReviewsSearch.for(userId, params.team, params.event).search(filters, page);
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ProposalStatusBulkSchema });
-  if (result.status !== 'success') return toast('error', t('error.global'));
+  if (result.status !== 'success') return toast('error', i18n.t('error.global'));
 
   const { selection, deliberationStatus, allPagesSelected } = result.value;
   const deliberate = ProposalStatusUpdater.for(userId, params.team, params.event);
@@ -48,7 +49,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   return toast(
     'success',
-    t('event-management.proposals.feedbacks.status-changed', { count, status: deliberationStatus.toLowerCase() }),
+    i18n.t('event-management.proposals.feedbacks.status-changed', { count, status: deliberationStatus.toLowerCase() }),
   );
 };
 

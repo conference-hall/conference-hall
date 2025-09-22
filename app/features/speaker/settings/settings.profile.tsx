@@ -14,7 +14,7 @@ import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-pro
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { extractSocialProfile } from '~/shared/formatters/social-links.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { ProfileSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/settings.profile.ts';
@@ -30,16 +30,16 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export const action = async ({ request }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
+  const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ProfileSchema });
   if (result.status !== 'success') return result.error;
 
   await SpeakerProfile.for(userId).save(result.value);
-  return toast('success', t('settings.profile.feebacks.updated'));
+  return toast('success', i18n.t('settings.profile.feebacks.updated'));
 };
 
 export default function ProfileRoute({ actionData: errors }: Route.ComponentProps) {

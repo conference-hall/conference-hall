@@ -5,9 +5,9 @@ import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'reac
 import { I18nextProvider } from 'react-i18next';
 import type { ActionFunctionArgs, EntryContext, LoaderFunctionArgs, RouterContextProvider } from 'react-router';
 import { ServerRouter } from 'react-router';
-import { initializeI18n } from './shared/i18n/i18n.server.ts';
+import { getI18n } from './shared/i18n/i18n.middleware.ts';
 import { nonceContext } from './shared/nonce/nonce.server.ts';
-import { NonceContext } from './shared/nonce/use-nonce.ts';
+import { Nonce } from './shared/nonce/use-nonce.ts';
 
 export const streamTimeout = 5_000;
 
@@ -15,29 +15,27 @@ export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  context: EntryContext,
-  appContext: RouterContextProvider,
+  entryContext: EntryContext,
+  routerContext: RouterContextProvider,
 ) {
-  const i18n = await initializeI18n(request, context);
-
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const userAgent = request.headers.get('user-agent');
 
     // Ensure requests from bots and SPA Mode renders wait for all content to load before responding
     const readyOption: keyof RenderToPipeableStreamOptions =
-      (userAgent && isbot(userAgent)) || context.isSpaMode ? 'onAllReady' : 'onShellReady';
+      (userAgent && isbot(userAgent)) || entryContext.isSpaMode ? 'onAllReady' : 'onShellReady';
 
     // Abort the rendering stream after the `streamTimeout` so it has time to flush down the rejected boundaries
     let timeoutId: ReturnType<typeof setTimeout> | undefined = setTimeout(() => abort(), streamTimeout + 1000);
 
-    const { nonce } = appContext.get(nonceContext);
+    const { nonce } = routerContext.get(nonceContext);
 
     const { pipe, abort } = renderToPipeableStream(
-      <I18nextProvider i18n={i18n}>
-        <NonceContext.Provider value={nonce}>
-          <ServerRouter context={context} url={request.url} nonce={nonce} />
-        </NonceContext.Provider>
+      <I18nextProvider i18n={getI18n(routerContext)}>
+        <Nonce.Provider value={nonce}>
+          <ServerRouter context={entryContext} url={request.url} nonce={nonce} />
+        </Nonce.Provider>
       </I18nextProvider>,
       {
         [readyOption]() {

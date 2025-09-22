@@ -6,7 +6,7 @@ import { H2 } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/review.ts';
 
@@ -15,14 +15,15 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getI18n(context);
   const event = EventSettings.for(userId, params.team, params.event);
   const form = await request.formData();
   const settingName = form.get('_setting') as string;
   await event.update({ [settingName]: form.get(settingName) === 'true' });
-  return toast('success', t('event-management.settings.reviews.enable.feedbacks.saved'));
+  return toast('success', i18n.t('event-management.settings.reviews.enable.feedbacks.saved'));
 };
 
 export default function EventReviewSettingsRoute() {

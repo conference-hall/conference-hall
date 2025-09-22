@@ -11,7 +11,7 @@ import {
   EventEmailCustomDeleteSchema,
   EventEmailCustomUpsertSchema,
 } from '~/shared/emails/email.types.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { isSupportedLanguage } from '~/shared/i18n/i18n.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/emails.template.ts';
@@ -37,10 +37,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return { ...customizationPreview, locale };
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
+  const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -49,17 +49,17 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   switch (intent) {
     case 'save': {
       const data = parseWithZod(form, { schema: EventEmailCustomUpsertSchema });
-      if (data.status !== 'success') return toast('error', t('error.global'));
+      if (data.status !== 'success') return toast('error', i18n.t('error.global'));
 
       await emailCustomizations.save(data.value);
-      return toast('success', t('event-management.settings.emails.feedback.saved'));
+      return toast('success', i18n.t('event-management.settings.emails.feedback.saved'));
     }
     case 'reset': {
       const data = parseWithZod(form, { schema: EventEmailCustomDeleteSchema });
-      if (data.status !== 'success') return toast('error', t('error.global'));
+      if (data.status !== 'success') return toast('error', i18n.t('error.global'));
 
       await emailCustomizations.reset(data.value);
-      return toast('success', t('event-management.settings.emails.feedback.reset'));
+      return toast('success', i18n.t('event-management.settings.emails.feedback.reset'));
     }
   }
   return null;
