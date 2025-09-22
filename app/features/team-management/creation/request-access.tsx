@@ -10,7 +10,7 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import type { Route } from './+types/request-access.ts';
 
 export const meta = (args: Route.MetaArgs) => {
@@ -22,15 +22,15 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export const action = async ({ request }: Route.ActionArgs) => {
+export const action = async ({ request, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
-  const t = await i18n.getFixedT(request);
-  const form = await request.formData();
 
+  const i18n = getInstance(context);
+  const form = await request.formData();
   try {
     await TeamBetaAccess.for(userId).validateAccessKey(String(form.get('key')));
   } catch (_error) {
-    return { key: [t('error.invalid-access-key')] };
+    return { key: [i18n.t('error.invalid-access-key')] };
   }
   return replace(href('/team/new'));
 };

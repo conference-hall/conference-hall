@@ -5,7 +5,7 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { SurveyForm } from '../../speaker/talk-library/components/talk-forms/survey-form.tsx';
 import type { Route } from './+types/speaker-survey.ts';
@@ -20,9 +20,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return { questions, answers };
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getInstance(context);
   const survey = SpeakerSurvey.for(params.event);
   const schema = await survey.buildSurveySchema();
   const form = await request.formData();
@@ -31,7 +32,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   if (result.status !== 'success') return result.error;
   await survey.saveSpeakerAnswer(userId, result.value);
 
-  return toast('success', t('event.survey.feedback.saved'));
+  return toast('success', i18n.t('event.survey.feedback.saved'));
 };
 
 export default function EventSurveyRoute({ loaderData, actionData: errors }: Route.ComponentProps) {

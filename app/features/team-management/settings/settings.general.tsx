@@ -8,7 +8,7 @@ import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { TeamForm } from '~/features/team-management/creation/components/team-form.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/settings.general.ts';
 import { TeamMembers } from './services/team-members.server.ts';
@@ -19,9 +19,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
-  const t = await i18n.getFixedT(request);
+
+  const i18n = getInstance(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
@@ -33,17 +34,17 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       if (result.status !== 'success') return result.error;
 
       const team = await userTeam.updateSettings(result.value);
-      const headers = await toastHeaders('success', t('team.settings.feedbacks.saved'));
+      const headers = await toastHeaders('success', i18n.t('team.settings.feedbacks.saved'));
       return redirect(href('/team/:team/settings', { team: team.slug }), { headers });
     }
     case 'leave-team': {
       await TeamMembers.for(userId, params.team).leave();
-      const headers = await toastHeaders('success', t('team.settings.feedbacks.team-left'));
+      const headers = await toastHeaders('success', i18n.t('team.settings.feedbacks.team-left'));
       return redirect(href('/speaker'), { headers });
     }
     case 'delete-team': {
       await TeamSettings.for(userId, params.team).delete();
-      const headers = await toastHeaders('success', t('team.settings.feedbacks.deleted'));
+      const headers = await toastHeaders('success', i18n.t('team.settings.feedbacks.deleted'));
       return redirect(href('/speaker'), { headers });
     }
   }

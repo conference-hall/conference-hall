@@ -9,7 +9,7 @@ import { useCurrentEventTeam } from '~/features/event-management/event-team-cont
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { EventSpeakerSaveSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/new-speaker.ts';
@@ -21,21 +21,21 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
+  const i18n = getInstance(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: EventSpeakerSaveSchema });
   if (result.status !== 'success') return { errors: result.error || null };
 
   try {
     const speaker = await EventSpeakers.for(userId, params.team, params.event).create(result.value);
-    const headers = await toastHeaders('success', t('event-management.speakers.new.feedbacks.created'));
+    const headers = await toastHeaders('success', i18n.t('event-management.speakers.new.feedbacks.created'));
     return redirect(href('/team/:team/:event/speakers/:speaker', { ...params, speaker: speaker.id }), { headers });
   } catch (error) {
     if (error instanceof SpeakerEmailAlreadyExistsError) {
-      return { errors: { email: [t('event-management.speakers.new.errors.email-already-exists')] } };
+      return { errors: { email: [i18n.t('event-management.speakers.new.errors.email-already-exists')] } };
     }
     throw error;
   }

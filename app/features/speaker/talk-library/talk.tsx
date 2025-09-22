@@ -4,7 +4,7 @@ import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/talk.ts';
 import { TalkArchiveButton } from './components/talk-forms/talk-archive-button.tsx';
@@ -24,9 +24,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return TalksLibrary.of(userId).talk(params.talk).get();
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getInstance(context);
   const talk = TalksLibrary.of(userId).talk(params.talk);
   const form = await request.formData();
   const intent = form.get('intent');
@@ -34,21 +35,21 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   switch (intent) {
     case 'archive-talk': {
       await talk.archive();
-      return toast('success', t('talk.feedbacks.archived'));
+      return toast('success', i18n.t('talk.feedbacks.archived'));
     }
     case 'restore-talk': {
       await talk.restore();
-      return toast('success', t('talk.feedbacks.restored'));
+      return toast('success', i18n.t('talk.feedbacks.restored'));
     }
     case 'remove-speaker': {
       await talk.removeCoSpeaker(form.get('_speakerId')?.toString() as string);
-      return toast('success', t('talk.feedbacks.co-speaker-removed'));
+      return toast('success', i18n.t('talk.feedbacks.co-speaker-removed'));
     }
     case 'edit-talk': {
       const result = parseWithZod(form, { schema: TalkSaveSchema });
       if (result.status !== 'success') return result.error;
       await talk.update(result.value);
-      return toast('success', t('talk.feedbacks.updated'));
+      return toast('success', i18n.t('talk.feedbacks.updated'));
     }
     default:
       return null;

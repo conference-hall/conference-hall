@@ -7,14 +7,15 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, H2 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/debug.ts';
 import { AdminDebug, TestEmailSchema } from './services/admin-debug.server.ts';
 
-export const action = async ({ request }: Route.ActionArgs) => {
+export const action = async ({ request, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
-  const t = await i18n.getFixedT(request);
+
+  const i18n = getInstance(context);
   const debug = await AdminDebug.for(userId);
   const form = await request.formData();
   const intent = form.get('intent') as string;
@@ -32,7 +33,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
       const result = parseWithZod(form, { schema: TestEmailSchema });
       if (result.status !== 'success') return result.error;
       await debug.sendTestEmail(result.value);
-      return toast('success', t('admin.debug.email.feedbacks.sent'));
+      return toast('success', i18n.t('admin.debug.email.feedbacks.sent'));
     }
   }
   return null;

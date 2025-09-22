@@ -7,7 +7,7 @@ import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/tracks.ts';
 import { TrackList } from './components/track-list.tsx';
@@ -19,9 +19,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getInstance(context);
   const tracks = EventTracksSettings.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');
@@ -54,7 +55,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       if (result.status !== 'success') return result.error;
       const event = EventSettings.for(userId, params.team, params.event);
       await event.update(result.value);
-      return toast('success', t('event-management.settings.tracks.feedbacks.updated'));
+      return toast('success', i18n.t('event-management.settings.tracks.feedbacks.updated'));
     }
   }
   return null;

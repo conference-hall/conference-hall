@@ -8,7 +8,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/talks.new.ts';
 import { TalkForm } from './components/talk-forms/talk-form.tsx';
@@ -19,16 +19,17 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'New talk | Conference Hall' }]);
 };
 
-export const action = async ({ request }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getInstance(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TalkSaveSchema });
   if (result.status !== 'success') return result.error;
 
   const talk = await TalksLibrary.of(userId).add(result.value);
 
-  const headers = await toastHeaders('success', t('talk.feedbacks.created'));
+  const headers = await toastHeaders('success', i18n.t('talk.feedbacks.created'));
   return redirect(href('/speaker/talks/:talk', { talk: talk.id }), { headers });
 };
 

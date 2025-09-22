@@ -1,7 +1,5 @@
-import { createInstance } from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import { createCookie, type EntryContext } from 'react-router';
-import { RemixI18Next } from 'remix-i18next/server';
+import { createCookie } from 'react-router';
+import { createI18nextMiddleware } from 'remix-i18next/middleware';
 import { getWebServerEnv } from 'servers/environment.server.ts';
 import { i18nResources } from './i18n.resources.ts';
 import { i18nConfig } from './i18n.ts';
@@ -17,7 +15,7 @@ const localeCookie = createCookie('locale', {
   sameSite: 'lax',
 });
 
-export const i18n = new RemixI18Next({
+export const [i18nextMiddleware, getLocale, getInstance] = createI18nextMiddleware({
   detection: {
     supportedLanguages: i18nConfig.supportedLngs,
     fallbackLanguage: i18nConfig.fallbackLng,
@@ -26,19 +24,6 @@ export const i18n = new RemixI18Next({
   },
   i18next: { ...i18nConfig, resources: i18nResources },
 });
-
-export async function initializeI18n(request: Request, context: EntryContext) {
-  const instance = createInstance();
-
-  // The detected locale
-  const lng = await i18n.getLocale(request);
-
-  // The namespaces the routes about to render wants to use
-  const ns = i18n.getRouteNamespaces(context);
-
-  await instance.use(initReactI18next).init({ ...i18nConfig, lng, ns, resources: i18nResources });
-  return instance;
-}
 
 export async function setLocaleCookie(locale: string) {
   return { 'set-cookie': await localeCookie.serialize(locale, { maxAge: MAX_AGE_SEC }) };

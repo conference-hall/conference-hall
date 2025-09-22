@@ -13,7 +13,7 @@ import { useCurrentEventTeam } from '~/features/event-management/event-team-cont
 import { EventDetailsSettingsSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/general.ts';
 
@@ -22,9 +22,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getInstance(context);
   const event = EventSettings.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');
@@ -35,14 +36,14 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       const result = await parseWithZod(form, { schema, async: true });
       if (result.status !== 'success') return result.error;
       const updated = await event.update(result.value);
-      const headers = await toastHeaders('success', t('event-management.settings.feedbacks.general-saved'));
+      const headers = await toastHeaders('success', i18n.t('event-management.settings.feedbacks.general-saved'));
       return redirect(`/team/${params.team}/${updated.slug}/settings`, { headers });
     }
     case 'details': {
       const result = parseWithZod(form, { schema: EventDetailsSettingsSchema });
       if (result.status !== 'success') return result.error;
       await event.update(result.value);
-      return toast('success', t('event-management.settings.feedbacks.details-saved'));
+      return toast('success', i18n.t('event-management.settings.feedbacks.details-saved'));
     }
     case 'archive-event': {
       const archived = Boolean(form.get('archived'));
@@ -50,13 +51,13 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       return toast(
         'success',
         archived
-          ? t('event-management.settings.feedbacks.archived')
-          : t('event-management.settings.feedbacks.restored'),
+          ? i18n.t('event-management.settings.feedbacks.archived')
+          : i18n.t('event-management.settings.feedbacks.restored'),
       );
     }
     case 'delete-event': {
       await event.delete();
-      const headers = await toastHeaders('success', t('event-management.settings.feedbacks.deleted'));
+      const headers = await toastHeaders('success', i18n.t('event-management.settings.feedbacks.deleted'));
       return redirect(`/team/${params.team}`, { headers });
     }
   }

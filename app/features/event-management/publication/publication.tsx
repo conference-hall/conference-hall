@@ -10,7 +10,7 @@ import { Link } from '~/design-system/links.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { BadRequestError } from '~/shared/errors.server.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/publication.ts';
 import { PublicationButton } from './components/publication-confirm-modal.tsx';
@@ -21,20 +21,21 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return Publication.for(userId, params.team, params.event).statistics();
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getInstance(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: PublishResultFormSchema });
-  if (result.status !== 'success') throw new BadRequestError(t('error.invalid-form-data'));
+  if (result.status !== 'success') throw new BadRequestError(i18n.t('error.invalid-form-data'));
 
   const { type, sendEmails } = result.value;
   await Publication.for(userId, params.team, params.event).publishAll(type, sendEmails);
   return toast(
     'success',
     type === 'ACCEPTED'
-      ? t('event-management.publication.feedbacks.accepted-proposals-published')
-      : t('event-management.publication.feedbacks.rejected-proposals-published'),
+      ? i18n.t('event-management.publication.feedbacks.accepted-proposals-published')
+      : i18n.t('event-management.publication.feedbacks.rejected-proposals-published'),
   );
 };
 

@@ -13,7 +13,7 @@ import {
   SchedulSessionIdSchema,
 } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/schedule.ts';
 import { ScheduleHeader } from './components/header/schedule-header.tsx';
@@ -35,9 +35,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return schedule;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getInstance(context);
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');
@@ -45,31 +46,31 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   switch (intent) {
     case 'add-session': {
       const result = parseWithZod(form, { schema: ScheduleSessionCreateSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await eventSchedule.addSession(result.value);
       break;
     }
     case 'update-session': {
       const result = parseWithZod(form, { schema: ScheduleSessionUpdateSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await eventSchedule.updateSession(result.value);
       break;
     }
     case 'delete-session': {
       const result = SchedulSessionIdSchema.safeParse(form.get('id'));
-      if (!result.success) return toast('error', t('error.global'));
+      if (!result.success) return toast('error', i18n.t('error.global'));
       await eventSchedule.deleteSession(result.data);
       break;
     }
     case 'update-display-times': {
       const result = parseWithZod(form, { schema: ScheduleDisplayTimesUpdateSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await eventSchedule.update(result.value);
       break;
     }
     case 'save-tracks': {
       const result = parseWithZod(form, { schema: ScheduleTracksSaveSchema });
-      if (result.status !== 'success') return toast('error', t('error.global'));
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await eventSchedule.saveTracks(result.value.tracks);
       break;
     }

@@ -25,8 +25,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export const action = async ({ request }: Route.ActionArgs) => {
-  return createSession(request);
+export const action = async ({ request, context }: Route.ActionArgs) => {
+  return createSession(request, context);
 };
 
 export default function Signin() {

@@ -8,7 +8,7 @@ import { createContext, useContext } from 'react';
  *
  * On the client this should just return an empty string.
  */
-export const NonceContext = createContext('');
+export const Nonce = createContext('');
 
 /**
  * Get a "nonce", which is a random string generated for each HTTP request.
@@ -26,5 +26,5 @@ export const NonceContext = createContext('');
  * </div>
  */
 export function useNonce() {
-  return useContext(NonceContext);
+  return useContext(Nonce);
 }

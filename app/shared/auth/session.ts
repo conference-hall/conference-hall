@@ -1,8 +1,8 @@
-import type { Session } from 'react-router';
+import type { RouterContextProvider, Session } from 'react-router';
 import { createCookieSessionStorage, redirect } from 'react-router';
 import { getWebServerEnv } from 'servers/environment.server.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
-import { i18n } from '../i18n/i18n.server.ts';
+import { getLocale } from '../i18n/i18n.middleware.ts';
 import { auth as serverAuth } from './firebase.server.ts';
 
 const { COOKIE_SIGNED_SECRET } = getWebServerEnv();
@@ -29,7 +29,7 @@ async function commitSession(session: Session) {
   return sessionStorage.commitSession(session, { maxAge: MAX_AGE_SEC });
 }
 
-export async function createSession(request: Request) {
+export async function createSession(request: Request, context: Readonly<RouterContextProvider>) {
   const form = await request.formData();
   const token = form.get('token') as string;
   const redirectTo = form.get('redirectTo')?.toString() || '/';
@@ -39,7 +39,7 @@ export async function createSession(request: Request) {
   const idToken = await serverAuth.verifyIdToken(token, true);
   const { uid, name, email, email_verified, picture, firebase } = idToken;
 
-  const locale = await i18n.getLocale(request);
+  const locale = getLocale(context);
   const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
   const userId = await UserAccount.register({ uid, name, email, picture, locale });
 
@@ -101,7 +101,7 @@ export async function getUserSession(request: Request) {
   }
 }
 
-export async function sendEmailVerification(request: Request) {
+export async function sendEmailVerification(request: Request, context: Readonly<RouterContextProvider>) {
   const session = await getSession(request);
   const jwt = session.get('jwt');
   const uid = session.get('uid');
@@ -116,6 +116,6 @@ export async function sendEmailVerification(request: Request) {
   const provider = firebaseUser.providerData.find((p) => p.providerId === 'password');
   if (!provider) return null;
 
-  const locale = await i18n.getLocale(request);
+  const locale = getLocale(context);
   await UserAccount.checkEmailVerification(provider.email, false, 'password', locale);
 }

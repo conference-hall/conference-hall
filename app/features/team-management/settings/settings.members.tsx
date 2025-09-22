@@ -10,7 +10,7 @@ import { List } from '~/design-system/list/list.tsx';
 import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/settings.members.ts';
@@ -25,9 +25,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return TeamMembers.for(userId, params.team).list(filters, page);
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
-  const t = await i18n.getFixedT(request);
+
+  const i18n = getInstance(context);
   const form = await request.formData();
   const intent = form.get('intent')!;
   const memberId = String(form.get('memberId'))!;
@@ -36,11 +37,11 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   switch (intent) {
     case 'change-role': {
       await members.changeRole(memberId, form.get('memberRole') as TeamRole);
-      return toast('success', t('team.settings.members.feedbacks.role-changed'));
+      return toast('success', i18n.t('team.settings.members.feedbacks.role-changed'));
     }
     case 'remove-member': {
       await members.remove(memberId);
-      return toast('success', t('team.settings.members.feedbacks.removed'));
+      return toast('success', i18n.t('team.settings.members.feedbacks.removed'));
     }
   }
   return null;

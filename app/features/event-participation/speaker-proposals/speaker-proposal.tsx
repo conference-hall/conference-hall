@@ -10,7 +10,7 @@ import {
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { TalkSection } from '../../speaker/talk-library/components/talk-section.tsx';
@@ -24,9 +24,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return proposal;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getInstance(context);
   const proposal = SpeakerProposal.for(userId, params.proposal);
   const form = await request.formData();
   const intent = form.get('intent');
@@ -34,19 +35,19 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   switch (intent) {
     case 'proposal-delete': {
       await proposal.delete();
-      const headers = await toastHeaders('success', t('event.proposal.feedbacks.submissions-removed'));
+      const headers = await toastHeaders('success', i18n.t('event.proposal.feedbacks.submissions-removed'));
       return redirect(href('/:event/proposals', { event: params.event }), { headers });
     }
     case 'proposal-confirmation': {
       const result = parseWithZod(form, { schema: ProposalParticipationSchema });
       if (result.status !== 'success') return null;
       await proposal.confirm(result.value.participation);
-      return toast('success', t('event.proposal.feedbacks.confirmed'));
+      return toast('success', i18n.t('event.proposal.feedbacks.confirmed'));
     }
     case 'remove-speaker': {
       const speakerId = form.get('_speakerId')?.toString() as string;
       await proposal.removeCoSpeaker(speakerId);
-      return toast('success', t('event.proposal.feedbacks.cospeaker-removed'));
+      return toast('success', i18n.t('event.proposal.feedbacks.cospeaker-removed'));
     }
     case 'edit-talk': {
       const event = await EventPage.of(params.event).get();
@@ -57,7 +58,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       if (result.status !== 'success') return result.error;
 
       await proposal.update(result.value);
-      return toast('success', t('event.proposal.feedbacks.saved'));
+      return toast('success', i18n.t('event.proposal.feedbacks.saved'));
     }
     default:
       return null;

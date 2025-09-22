@@ -12,12 +12,13 @@ import { initializeFirebaseClient } from './shared/auth/firebase.ts';
 import { destroySession, getUserSession } from './shared/auth/session.ts';
 import { flags } from './shared/feature-flags/flags.server.ts';
 import { FlagsProvider } from './shared/feature-flags/flags-context.tsx';
-import { i18n } from './shared/i18n/i18n.server.ts';
+import { getInstance, getLocale, i18nextMiddleware, setLocaleCookie } from './shared/i18n/i18n.middleware.ts';
 import { useNonce } from './shared/nonce/use-nonce.ts';
 import type { Toast } from './shared/toasts/toast.server.ts';
 import { getToast } from './shared/toasts/toast.server.ts';
 import { Toaster } from './shared/toasts/toaster.tsx';
 import { UserAccount } from './shared/user/user-account.server.ts';
+import { combineHeaders } from './shared/utils/headers.ts';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
 
@@ -44,7 +45,9 @@ export const links: Route.LinksFunction = () => {
   ];
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
+export const middleware = [i18nextMiddleware];
+
+export const loader = async ({ request, context }: Route.LoaderArgs) => {
   if (MAINTENANCE_ENABLED) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
@@ -53,33 +56,28 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const user = await UserAccount.get(userId);
   if (userId && !user) await destroySession(request);
 
-  const { toast, headers: toastHeaders } = await getToast(request);
+  const { toast, toastHeaders } = await getToast(request);
 
   const frontendFlags = await flags.withTag('frontend');
-
-  const locale = await i18n.getLocale(request);
-  const t = await i18n.getFixedT(locale);
-  const title = t('app.title');
-  const description = t('app.description');
+  const locale = getLocale(context);
+  const i18n = getInstance(context);
+  const title = i18n.t('app.title');
+  const description = i18n.t('app.description');
   const firebaseConfig = getFirebaseClientConfig();
 
   return data(
     { title, description, user, locale, toast, firebaseConfig, flags: frontendFlags },
-    { headers: toastHeaders || {} },
+    { headers: combineHeaders(toastHeaders, await setLocaleCookie(locale)) },
   );
 };
 
-type DocumentProps = {
-  locale: string;
-  nonce: string;
-  toast?: Toast | null;
-  children: ReactNode;
-};
+type DocumentProps = { nonce: string; toast?: Toast | null; children: ReactNode };
 
-function Document({ locale, nonce, toast, children }: DocumentProps) {
+function Document({ nonce, toast, children }: DocumentProps) {
   const { i18n } = useTranslation();
+
   return (
-    <html lang={locale} dir={i18n.dir()}>
+    <html lang={i18n.language} dir={i18n.dir(i18n.language)}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -108,7 +106,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
   return (
     <FlagsProvider flags={flags}>
       <UserProvider user={user}>
-        <Document locale={locale} toast={toast} nonce={nonce}>
+        <Document toast={toast} nonce={nonce}>
           <Outlet />
         </Document>
       </UserProvider>
@@ -120,7 +118,7 @@ export function ErrorBoundary() {
   const nonce = useNonce();
 
   return (
-    <Document locale="en" nonce={nonce}>
+    <Document nonce={nonce}>
       <GeneralErrorBoundary />
     </Document>
   );

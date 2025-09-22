@@ -12,7 +12,7 @@ import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { EventSpeakerSaveSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/new-proposal.ts';
@@ -28,10 +28,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return null;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
 
+  const i18n = getInstance(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
@@ -41,10 +41,10 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
     try {
       const proposal = await ProposalManagement.for(userId, params.team, params.event).create(result.value);
-      const headers = await toastHeaders('success', t('event-management.proposals.new.feedbacks.created'));
+      const headers = await toastHeaders('success', i18n.t('event-management.proposals.new.feedbacks.created'));
       return redirect(href('/team/:team/:event/reviews/:proposal', { ...params, proposal: proposal.id }), { headers });
     } catch (_error) {
-      return toast('error', t('error.global'));
+      return toast('error', i18n.t('error.global'));
     }
   } else if (intent === 'create-speaker') {
     const result = parseWithZod(form, { schema: EventSpeakerSaveSchema });
@@ -55,9 +55,9 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       return { speaker };
     } catch (error) {
       if (error instanceof SpeakerEmailAlreadyExistsError) {
-        return { errors: { email: [t('event-management.speakers.new.errors.email-already-exists')] } };
+        return { errors: { email: [i18n.t('event-management.speakers.new.errors.email-already-exists')] } };
       }
-      return toast('error', t('error.global'));
+      return toast('error', i18n.t('error.global'));
     }
   }
 };

@@ -14,7 +14,7 @@ import { useCurrentEventTeam } from '~/features/event-management/event-team-cont
 import { EventSlackSettingsSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { i18n } from '~/shared/i18n/i18n.server.ts';
+import { getInstance } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/integrations.ts';
 import { OpenPlannerConfigSchema, UpdateIntegrationConfigSchema } from './services/event-integrations.schema.server.ts';
@@ -27,9 +27,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return integrations;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const t = await i18n.getFixedT(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
+
+  const i18n = getInstance(context);
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -51,11 +52,11 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
         const { id, name, ...configuration } = resultConfig.value;
         await eventIntegrations.save({ id, name, configuration });
       }
-      return toast('success', t('event-management.settings.integrations.feedbacks.saved'));
+      return toast('success', i18n.t('event-management.settings.integrations.feedbacks.saved'));
     }
     case 'check-open-planner-integration': {
       const resultId = parseWithZod(form, { schema: z.object({ id: z.string().optional() }) });
-      if (resultId.status !== 'success') return toast('error', t('error.global'));
+      if (resultId.status !== 'success') return toast('error', i18n.t('error.global'));
 
       const resultConfig = parseWithZod(form, { schema: OpenPlannerConfigSchema });
       if (resultConfig.status !== 'success') return resultConfig.error;
@@ -65,15 +66,15 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       const result = await eventIntegrations.checkConfiguration(data);
 
       if (!result?.success) return toast('error', `OpenPlanner issue: ${result?.error}`);
-      return toast('success', t('event-management.settings.integrations.feedbacks.openplanner-working'));
+      return toast('success', i18n.t('event-management.settings.integrations.feedbacks.openplanner-working'));
     }
     case 'disable-integration': {
       const resultId = parseWithZod(form, { schema: z.object({ id: z.string() }) });
-      if (resultId.status !== 'success') return toast('error', t('error.global'));
+      if (resultId.status !== 'success') return toast('error', i18n.t('error.global'));
 
       const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
       await eventIntegrations.delete(resultId.value.id);
-      return toast('success', t('event-management.settings.integrations.feedbacks.disabled'));
+      return toast('success', i18n.t('event-management.settings.integrations.feedbacks.disabled'));
     }
   }
 
