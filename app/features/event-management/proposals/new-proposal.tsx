@@ -35,34 +35,38 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
-  if (intent === 'create-proposal') {
-    const result = parseWithZod(form, { schema: ProposalCreationSchema });
-    if (result.status !== 'success') return { errors: result.error };
+  switch (intent) {
+    case 'create-proposal': {
+      const result = parseWithZod(form, { schema: ProposalCreationSchema });
+      if (result.status !== 'success') return { errors: result.error };
 
-    try {
-      const proposal = await ProposalManagement.for(userId, params.team, params.event).create(result.value);
-      const headers = await toastHeaders('success', i18n.t('event-management.proposals.new.feedbacks.created'));
-      return redirect(href('/team/:team/:event/reviews/:proposal', { ...params, proposal: proposal.id }), { headers });
-    } catch (_error) {
-      return toast('error', i18n.t('error.global'));
-    }
-  } else if (intent === 'create-speaker') {
-    const result = parseWithZod(form, { schema: EventSpeakerSaveSchema });
-    if (result.status !== 'success') return { errors: result.error };
-
-    try {
-      const speaker = await EventSpeakers.for(userId, params.team, params.event).create(result.value);
-      return { speaker };
-    } catch (error) {
-      if (error instanceof SpeakerEmailAlreadyExistsError) {
-        return { errors: { email: [i18n.t('event-management.speakers.new.errors.email-already-exists')] } };
+      try {
+        const proposal = await ProposalManagement.for(userId, params.team, params.event).create(result.value);
+        const headers = await toastHeaders('success', i18n.t('event-management.proposals.new.feedbacks.created'));
+        return redirect(href('/team/:team/:event/reviews/:proposal', { ...params, proposal: proposal.id }), {
+          headers,
+        });
+      } catch (_error) {
+        return toast('error', i18n.t('error.global'));
       }
-      return toast('error', i18n.t('error.global'));
+    }
+    case 'create-speaker': {
+      const result = parseWithZod(form, { schema: EventSpeakerSaveSchema });
+      if (result.status !== 'success') return { errors: result.error };
+
+      try {
+        const speaker = await EventSpeakers.for(userId, params.team, params.event).create(result.value);
+        return { speaker };
+      } catch (error) {
+        if (error instanceof SpeakerEmailAlreadyExistsError) {
+          return { errors: { email: [i18n.t('event-management.speakers.new.errors.email-already-exists')] } };
+        }
+        return toast('error', i18n.t('error.global'));
+      }
     }
   }
 };
 
-// todo(proposal): make it responsive
 export default function NewProposalRoute({ actionData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
   const isFeatureEnabled = useFlag('organizerProposalCreation');
@@ -84,8 +88,8 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
         backTo={href('/team/:team/:event/reviews', params)}
       />
 
-      <div className="grid grid-cols-3 gap-6">
-        <Card className="col-span-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <Card className="md:col-span-2">
           <Card.Content>
             <TalkForm id={formId} errors={actionData?.errors} />
           </Card.Content>
@@ -100,7 +104,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
           </Card.Actions>
         </Card>
 
-        <div>
+        <div className="row-start-1 md:row-auto">
           <Card as="section">
             <SpeakersPanel
               team={params.team}
@@ -111,10 +115,9 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               className="space-y-3 p-4 lg:px-6"
             />
 
-            <Divider />
-
             {hasFormats ? (
               <>
+                <Divider />
                 <FormatsPanel
                   team={params.team}
                   event={params.event}
@@ -124,12 +127,12 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
                   multiple={event.formatsAllowMultiple}
                   className="space-y-3 p-4 lg:px-6"
                 />
-                <Divider />
               </>
             ) : null}
 
             {hasCategories ? (
               <>
+                <Divider />
                 <CategoriesPanel
                   team={params.team}
                   event={params.event}
@@ -139,16 +142,16 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
                   multiple={event.categoriesAllowMultiple}
                   className="space-y-3 p-4 lg:px-6"
                 />
-                <Divider />
               </>
             ) : null}
 
+            <Divider className="hidden md:block" />
             <TagsPanel
               team={params.team}
               event={params.event}
               form={formId}
               options={event.tags.map((c) => ({ value: c.id, label: c.name, color: c.color }))}
-              className="space-y-3 p-4 pb-6 lg:px-6"
+              className="hidden md:block space-y-3 p-4 pb-6 lg:px-6"
             />
           </Card>
         </div>
