@@ -27,7 +27,8 @@
     "lint": "biome check",
     "lint:ci": "biome ci",
     "tsc": "react-router typegen && tsc -b",
-    "knip": "knip"
+    "knip": "knip",
+    "upgrade": "npx --yes taze -I --maturity-period=7"
   },
   "dependencies": {
     "@conform-to/zod": "^1.10.1",
