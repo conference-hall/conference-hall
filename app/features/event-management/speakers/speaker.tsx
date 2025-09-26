@@ -59,7 +59,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
           className="p-6"
         />
 
-        <Card.Disclosure title={t('speaker.profile.biography')} defaultOpen>
+        <Card.Disclosure title={t('speaker.profile.biography')}>
           <Markdown>{speaker.bio || t('common.not-specified')}</Markdown>
         </Card.Disclosure>
 
