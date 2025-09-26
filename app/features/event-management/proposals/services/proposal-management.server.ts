@@ -21,6 +21,10 @@ export class ProposalManagement extends UserEventAuthorization {
     return new ProposalManagement(userId, teamSlug, eventSlug, proposalId);
   }
 
+  async canCreate() {
+    return this.needsPermission('canCreateEventProposal');
+  }
+
   async create(data: ProposalCreationData) {
     const event = await this.needsPermission('canCreateEventProposal');
 

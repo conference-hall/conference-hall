@@ -23,8 +23,10 @@ import { TagsPanel } from './components/form-panels/tags-panel.tsx';
 import { ProposalCreationSchema } from './services/proposal-management.schema.server.ts';
 import { ProposalManagement } from './services/proposal-management.server.ts';
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { userId } = await requireUserSession(request);
+  const proposalManagement = ProposalManagement.for(userId, params.team, params.event);
+  await proposalManagement.canCreate();
   return null;
 };
 
