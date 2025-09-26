@@ -16,8 +16,10 @@ import type { Route } from './+types/new-speaker.ts';
 import { SpeakerForm } from './components/speaker-form.tsx';
 import { EventSpeakers } from './services/event-speakers.server.ts';
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { userId } = await requireUserSession(request);
+  const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
+  await eventSpeakers.canCreate();
   return null;
 };
 
