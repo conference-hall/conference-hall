@@ -244,23 +244,33 @@ test('manage speakers', async ({ page }) => {
   await expect(page.getByText('Robin')).toBeVisible();
 
   // Remove a speaker and add it back
-  await proposalPage.speakersButton.click();
+  await proposalPage.speakerPanel.togglePanel();
   await page.getByRole('option', { name: 'Marie Jane' }).click();
-  await proposalPage.speakersButton.click();
+  await proposalPage.speakerPanel.togglePanel();
 
   // Check speaker removed
   await expect(page.getByText('Marie Jane')).not.toBeVisible();
   await expect(page.getByText('Robin')).toBeVisible();
 
   // Add speaker back
-  await proposalPage.speakersButton.click();
+  await proposalPage.speakerPanel.togglePanel();
   await page.getByPlaceholder('Search...').fill('Marie');
   await page.getByRole('option', { name: 'Marie Jane' }).click();
-  await proposalPage.speakersButton.click();
+  await proposalPage.speakerPanel.togglePanel();
 
   // Check speaker added back
   await expect(page.getByText('Marie Jane')).toBeVisible();
   await expect(page.getByText('Robin')).toBeVisible();
+
+  // Create a speaker
+  await proposalPage.speakerPanel.togglePanel();
+  const createSpeakerModal = await proposalPage.speakerPanel.clickCreateSpeaker();
+  await createSpeakerModal.emailInput.fill('new.speaker@example.com');
+  await createSpeakerModal.nameInput.fill('Jane New Speaker');
+  await createSpeakerModal.companyInput.fill('New Speaker Company');
+  await createSpeakerModal.bioInput.fill('This is a bio for the new speaker');
+  await createSpeakerModal.createSpeaker();
+  await expect(page.getByText('Jane New Speaker')).toBeVisible();
 });
 
 test('manage formats', async ({ page }) => {
