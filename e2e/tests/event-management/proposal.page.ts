@@ -1,3 +1,4 @@
+import { SpeakerPanelComponent } from 'e2e/common/speaker-panel.component.ts';
 import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
 import { PageObject } from 'e2e/page-object.ts';
 
@@ -18,6 +19,7 @@ export class ProposalPage extends PageObject {
   readonly waitingConfirmation = this.page.getByText('Waiting for speaker confirmation');
   readonly resultPublished = this.page.getByText('Result published to speakers');
 
+  readonly speakerPanel = new SpeakerPanelComponent(this.page);
   readonly tagsButton = this.page.getByRole('button', { name: 'Tags', exact: true });
   readonly speakersButton = this.page.getByRole('button', { name: 'Speakers', exact: true });
   readonly formatsButton = this.page.getByRole('button', { name: 'Formats', exact: true });

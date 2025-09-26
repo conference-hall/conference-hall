@@ -146,6 +146,10 @@ export class EventSpeakers extends UserEventAuthorization {
     };
   }
 
+  async canCreate() {
+    return this.needsPermission('canCreateEventSpeaker');
+  }
+
   async create(data: EventSpeakerSaveData) {
     const event = await this.needsPermission('canCreateEventSpeaker');
 
@@ -183,6 +187,10 @@ export class EventSpeakers extends UserEventAuthorization {
       references: speaker.references,
       socialLinks: speaker.socialLinks as SocialLinks,
     };
+  }
+
+  async canUpdate() {
+    return this.needsPermission('canEditEventSpeaker');
   }
 
   async update(speakerId: string, data: EventSpeakerSaveData) {

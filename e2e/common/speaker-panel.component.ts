@@ -25,7 +25,7 @@ class SpeakerModalComponent extends PageObject {
 }
 
 export class SpeakerPanelComponent extends PageObject {
-  readonly panelButton = this.page.getByRole('button', { name: 'Speakers' });
+  readonly panelButton = this.page.getByRole('button', { name: 'Speakers', exact: true });
   readonly searchInput = this.page.getByRole('combobox', { name: 'Search...' });
   readonly createSpeakerButton = this.page.getByRole('button', { name: 'Create speaker' });
 
