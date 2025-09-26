@@ -75,7 +75,6 @@ export default function EditSpeakerRoute({ loaderData, actionData, params }: Rou
       <h1 className="sr-only">{t('event-management.speakers.edit.title', { name: speaker.name })}</h1>
       <Page.Heading
         component={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
-        backTo={href('/team/:team/:event/speakers/:speaker', params)}
       />
 
       <Card>

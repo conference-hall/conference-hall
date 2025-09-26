@@ -56,7 +56,6 @@ export default function NewSpeakerRoute({ actionData, params }: Route.ComponentP
       <Page.Heading
         title={t('event-management.speakers.new.title')}
         subtitle={t('event-management.speakers.new.subtitle')}
-        backTo={href('/team/:team/:event/speakers', params)}
       />
 
       <Card>

@@ -85,7 +85,6 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
       <Page.Heading
         title={t('event-management.proposals.new.title')}
         subtitle={t('event-management.proposals.new.subtitle')}
-        backTo={href('/team/:team/:event/reviews', params)}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">

@@ -39,7 +39,6 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
     <Page className="space-y-4 lg:space-y-6">
       <Page.Heading
         component={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
-        backTo={href('/team/:team/:event/speakers', params)}
       >
         {isFeatureEnabled && team.userPermissions?.canEditEventSpeaker && (
           <ButtonLink

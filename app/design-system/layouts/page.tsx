@@ -1,8 +1,5 @@
-import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { IconLink } from '../icon-buttons.tsx';
 import { H1, Subtitle } from '../typography.tsx';
 import { Container } from './container.tsx';
 
@@ -32,18 +29,13 @@ type HeadingProps = {
   title?: string;
   subtitle?: string;
   component?: ReactNode;
-  backTo?: string;
   children?: ReactNode;
 };
 
-function Heading({ title, subtitle, component, children, backTo }: HeadingProps) {
-  const { t } = useTranslation();
-
+function Heading({ title, subtitle, component, children }: HeadingProps) {
   return (
     <div className="flex flex-col mb-6 sm:mb-8 gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-        {backTo ? <IconLink icon={ArrowLeftIcon} label={t('common.go-back')} variant="secondary" to={backTo} /> : null}
-
         <div className="min-w-0">
           {component ? (
             component
