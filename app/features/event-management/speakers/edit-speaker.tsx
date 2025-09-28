@@ -20,8 +20,9 @@ import { EventSpeakers } from './services/event-speakers.server.ts';
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
   const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
-  const speaker = await eventSpeakers.getById(params.speaker);
+  await eventSpeakers.canUpdate();
 
+  const speaker = await eventSpeakers.getById(params.speaker);
   if (!speaker) throw new NotFoundError('Speaker not found');
 
   return { speaker };
@@ -75,7 +76,6 @@ export default function EditSpeakerRoute({ loaderData, actionData, params }: Rou
       <h1 className="sr-only">{t('event-management.speakers.edit.title', { name: speaker.name })}</h1>
       <Page.Heading
         component={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
-        backTo={href('/team/:team/:event/speakers/:speaker', params)}
       />
 
       <Card>

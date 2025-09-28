@@ -39,7 +39,6 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
     <Page className="space-y-4 lg:space-y-6">
       <Page.Heading
         component={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
-        backTo={href('/team/:team/:event/speakers', params)}
       >
         {isFeatureEnabled && team.userPermissions?.canEditEventSpeaker && (
           <ButtonLink
@@ -60,7 +59,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
           className="p-6"
         />
 
-        <Card.Disclosure title={t('speaker.profile.biography')} defaultOpen>
+        <Card.Disclosure title={t('speaker.profile.biography')}>
           <Markdown>{speaker.bio || t('common.not-specified')}</Markdown>
         </Card.Disclosure>
 
