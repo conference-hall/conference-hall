@@ -49,6 +49,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
       // If speaker not found, ignore and continue without preselection
     }
   }
+  return null;
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
@@ -95,7 +96,7 @@ export default function NewProposalRoute({ actionData, params, loaderData }: Rou
   const isFeatureEnabled = useFlag('organizerProposalCreation');
   const { team, event } = useCurrentEventTeam();
   const formId = useId();
-  const { preselectedSpeaker } = loaderData || {};
+  const preselectedSpeaker = loaderData?.preselectedSpeaker;
 
   if (!isFeatureEnabled || !team.userPermissions?.canCreateEventProposal) {
     return null;

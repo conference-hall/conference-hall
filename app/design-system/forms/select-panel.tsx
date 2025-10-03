@@ -147,7 +147,7 @@ function SelectPanelContent({
                       aria-hidden="true"
                       tabIndex={-1}
                       disabled={isSelected && selected.length === 1 && !allowEmpty}
-                      className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 disable:text-gray-400 focus:ring-0 outline-none"
+                      className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 disabled:bg-gray-300 focus:ring-0 outline-none"
                     />
                   )}
 
