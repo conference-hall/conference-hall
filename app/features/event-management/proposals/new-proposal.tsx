@@ -135,7 +135,9 @@ export default function NewProposalRoute({ actionData, params, loaderData }: Rou
               event={params.event}
               form={formId}
               error={actionData?.errors?.speakers}
-              showAction={team.userPermissions?.canCreateEventSpeaker}
+              canChangeSpeakers
+              canCreateSpeaker={team.userPermissions?.canCreateEventSpeaker}
+              canEditSpeaker={team.userPermissions?.canEditEventSpeaker}
               value={preselectedSpeaker ? [preselectedSpeaker] : undefined}
               className="space-y-3 p-4 lg:px-6"
             />

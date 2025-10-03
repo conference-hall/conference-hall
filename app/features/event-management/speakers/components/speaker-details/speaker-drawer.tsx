@@ -1,5 +1,8 @@
+import { EyeIcon, PencilSquareIcon } from '@heroicons/react/16/solid';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { href, useParams } from 'react-router';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import type { SpeakerData } from '~/shared/types/speaker.types.ts';
 import { SpeakerInfo } from './speaker-info.tsx';
@@ -9,10 +12,11 @@ import { SpeakerTitle } from './speaker-title.tsx';
 
 type Props = {
   speaker: SpeakerData;
+  canEditSpeaker: boolean;
   children: ReactNode;
 };
 
-export function SpeakerDrawer({ speaker, children }: Props) {
+export function SpeakerDrawer({ speaker, canEditSpeaker, children }: Props) {
   const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
@@ -29,7 +33,7 @@ export function SpeakerDrawer({ speaker, children }: Props) {
       </button>
 
       <SlideOver
-        title={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
+        title={<DrawerHeading speaker={speaker} canEditSpeaker={canEditSpeaker} />}
         open={open}
         withBorder={false}
         onClose={() => setOpen(false)}
@@ -46,5 +50,42 @@ export function SpeakerDrawer({ speaker, children }: Props) {
         </SlideOver.Content>
       </SlideOver>
     </>
+  );
+}
+
+type SpeakerDataProps = { speaker: SpeakerData; canEditSpeaker: boolean };
+
+function DrawerHeading({ speaker, canEditSpeaker }: SpeakerDataProps) {
+  const { t } = useTranslation();
+  const { team, event } = useParams();
+
+  return (
+    <div className="flex items-start justify-between gap-4 mr-10">
+      <SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />
+
+      {team && event ? (
+        <div className="flex items-center gap-2">
+          <ButtonLink
+            to={href('/team/:team/:event/speakers/:speaker', { team, event, speaker: speaker.id })}
+            size="s"
+            variant="secondary"
+            iconLeft={EyeIcon}
+          >
+            Details
+          </ButtonLink>
+
+          {canEditSpeaker ? (
+            <ButtonLink
+              to={href('/team/:team/:event/speakers/:speaker/edit', { team, event, speaker: speaker.id })}
+              size="s"
+              variant="secondary"
+              iconLeft={PencilSquareIcon}
+            >
+              {t('common.edit')}
+            </ButtonLink>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
   );
 }

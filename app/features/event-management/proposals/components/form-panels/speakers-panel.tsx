@@ -23,8 +23,9 @@ type Props = {
   error?: SubmissionError;
   onChange?: (speakers: Array<SelectPanelOption>) => void;
   className?: string;
-  readonly?: boolean;
-  showAction?: boolean;
+  canChangeSpeakers?: boolean;
+  canCreateSpeaker?: boolean;
+  canEditSpeaker?: boolean;
   allowEmpty?: boolean;
 };
 
@@ -37,8 +38,9 @@ export function SpeakersPanel({
   error,
   onChange,
   className,
-  readonly = false,
-  showAction = true,
+  canChangeSpeakers = false,
+  canCreateSpeaker = false,
+  canEditSpeaker = false,
   allowEmpty = true,
 }: Props) {
   const { t } = useTranslation();
@@ -91,11 +93,11 @@ export function SpeakersPanel({
     return options;
   }, [searchOptions, speakers]);
 
-  if (readonly) {
+  if (!canChangeSpeakers) {
     return (
       <div className={className}>
         <H2 size="s">{t('common.speakers')}</H2>
-        <SpeakersList speakers={speakers} speakersDetails={speakersDetails} />
+        <SpeakersList speakers={speakers} speakersDetails={speakersDetails} canEditSpeaker={canEditSpeaker} />
       </div>
     );
   }
@@ -112,7 +114,7 @@ export function SpeakersPanel({
         onChange={handleChange}
         onSearch={handleSearch}
         footer={
-          showAction
+          canCreateSpeaker
             ? (closePanel: () => void) => (
                 <SpeakerModal
                   team={team}
@@ -144,7 +146,12 @@ export function SpeakersPanel({
         </div>
       </SelectPanel>
 
-      <SpeakersList speakers={speakers} speakersDetails={speakersDetails} error={error} />
+      <SpeakersList
+        speakers={speakers}
+        speakersDetails={speakersDetails}
+        canEditSpeaker={canEditSpeaker}
+        error={error}
+      />
     </div>
   );
 }
@@ -152,10 +159,11 @@ export function SpeakersPanel({
 type SpeakersListProps = {
   speakers: Array<SelectPanelOption>;
   speakersDetails?: Array<SpeakerData>;
+  canEditSpeaker: boolean;
   error?: SubmissionError;
 };
 
-function SpeakersList({ speakers, speakersDetails, error }: SpeakersListProps) {
+function SpeakersList({ speakers, speakersDetails, canEditSpeaker, error }: SpeakersListProps) {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-2">
@@ -172,7 +180,7 @@ function SpeakersList({ speakers, speakersDetails, error }: SpeakersListProps) {
 
         if (speakerDetails) {
           return (
-            <SpeakerDrawer key={speaker.value} speaker={speakerDetails}>
+            <SpeakerDrawer key={speaker.value} speaker={speakerDetails} canEditSpeaker={canEditSpeaker}>
               <SpeakerRow name={speaker.label} picture={speaker.picture} description={speaker.data?.description} />
             </SpeakerDrawer>
           );
