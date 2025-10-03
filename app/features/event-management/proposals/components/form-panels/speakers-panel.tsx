@@ -25,6 +25,7 @@ type Props = {
   className?: string;
   readonly?: boolean;
   showAction?: boolean;
+  allowEmpty?: boolean;
 };
 
 export function SpeakersPanel({
@@ -38,11 +39,11 @@ export function SpeakersPanel({
   className,
   readonly = false,
   showAction = true,
+  allowEmpty = true,
 }: Props) {
   const { t } = useTranslation();
   const fetcher = useFetcher<typeof AutocompleteLoader>();
-  const [speakers, setSpeakers] = useState<Array<SelectPanelOption>>([]);
-  const selectedSpeakers = value ?? speakers;
+  const [speakers, setSpeakers] = useState<Array<SelectPanelOption>>(value ?? []);
 
   const loading = ['loading', 'submitting'].includes(fetcher.state);
 
@@ -67,13 +68,13 @@ export function SpeakersPanel({
   };
 
   const handleChange = (selectedOptions: SelectPanelOption[]) => {
-    if (!value) setSpeakers(selectedOptions);
+    setSpeakers(selectedOptions);
     onChange?.(selectedOptions);
   };
 
   const handleSpeakerCreated = (speaker: SelectPanelOption, closePanel?: () => void) => {
-    const updatedSpeakers = [...selectedSpeakers, speaker];
-    if (!value) setSpeakers(updatedSpeakers);
+    const updatedSpeakers = [...speakers, speaker];
+    setSpeakers(updatedSpeakers);
     onChange?.(updatedSpeakers);
     closePanel?.();
   };
@@ -81,20 +82,20 @@ export function SpeakersPanel({
   const availableOptions = useMemo(() => {
     const searchOptionsMap = new Map(searchOptions.map((option) => [option.value, option]));
     const options: Array<SelectPanelOption> = [...searchOptions];
-    selectedSpeakers.forEach((speaker) => {
+    speakers.forEach((speaker) => {
       if (!searchOptionsMap.has(speaker.value)) {
         options.push(speaker);
       }
     });
 
     return options;
-  }, [searchOptions, selectedSpeakers]);
+  }, [searchOptions, speakers]);
 
   if (readonly) {
     return (
       <div className={className}>
         <H2 size="s">{t('common.speakers')}</H2>
-        <SpeakersList speakers={selectedSpeakers} speakersDetails={speakersDetails} />
+        <SpeakersList speakers={speakers} speakersDetails={speakersDetails} />
       </div>
     );
   }
@@ -105,7 +106,7 @@ export function SpeakersPanel({
         name="speakers"
         form={form}
         label={t('common.speakers')}
-        values={selectedSpeakers.map((speaker) => speaker.value)}
+        values={speakers.map((speaker) => speaker.value)}
         loading={loading}
         options={availableOptions}
         onChange={handleChange}
@@ -133,6 +134,7 @@ export function SpeakersPanel({
             : null
         }
         displayPicture
+        allowEmpty={allowEmpty}
       >
         <div className="flex items-center justify-between group">
           <H2 size="s" className="group-hover:text-indigo-600">
@@ -142,7 +144,7 @@ export function SpeakersPanel({
         </div>
       </SelectPanel>
 
-      <SpeakersList speakers={selectedSpeakers} speakersDetails={speakersDetails} error={error} />
+      <SpeakersList speakers={speakers} speakersDetails={speakersDetails} error={error} />
     </div>
   );
 }

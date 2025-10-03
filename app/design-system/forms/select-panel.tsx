@@ -38,6 +38,7 @@ type SelectPanelContentProps = {
   footer?: SelectPanelFooter;
   displayPicture?: boolean;
   placeholder?: string;
+  allowEmpty?: boolean;
 };
 
 function SelectPanelContent({
@@ -50,6 +51,7 @@ function SelectPanelContent({
   footer,
   displayPicture,
   placeholder,
+  allowEmpty,
 }: SelectPanelContentProps) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
@@ -118,7 +120,12 @@ function SelectPanelContent({
             const isSelected = isOptionSelected(option);
 
             return (
-              <ComboboxOption key={option.value} value={option} className={menuItem()}>
+              <ComboboxOption
+                key={option.value}
+                value={option}
+                className={menuItem()}
+                disabled={isSelected && selected.length === 1 && !allowEmpty}
+              >
                 <div className="flex items-center justify-between gap-2 truncate">
                   {multiple ? (
                     <input
@@ -128,7 +135,8 @@ function SelectPanelContent({
                       onChange={(e) => e.preventDefault()}
                       aria-hidden="true"
                       tabIndex={-1}
-                      className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-0 outline-none"
+                      disabled={isSelected && selected.length === 1 && !allowEmpty}
+                      className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600  disabled:bg-gray-300 focus:ring-0 outline-none"
                     />
                   ) : (
                     <input
@@ -138,7 +146,8 @@ function SelectPanelContent({
                       onChange={(e) => e.preventDefault()}
                       aria-hidden="true"
                       tabIndex={-1}
-                      className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-0 outline-none"
+                      disabled={isSelected && selected.length === 1 && !allowEmpty}
+                      className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 disable:text-gray-400 focus:ring-0 outline-none"
                     />
                   )}
 
@@ -192,6 +201,7 @@ export type SelectPanelProps = {
   className?: string;
   displayPicture?: boolean;
   placeholder?: string;
+  allowEmpty?: boolean;
 };
 
 export function SelectPanel({
@@ -209,6 +219,7 @@ export function SelectPanel({
   className,
   displayPicture,
   placeholder,
+  allowEmpty = true,
 }: SelectPanelProps) {
   // Convert string values to option objects using the provided options
   const getSelectedFromValues = useMemo(() => {
@@ -264,6 +275,7 @@ export function SelectPanel({
                 footer={typeof footer === 'function' ? footer(close) : footer}
                 displayPicture={displayPicture}
                 placeholder={placeholder}
+                allowEmpty={allowEmpty}
               />
             </PopoverPanel>
           </>

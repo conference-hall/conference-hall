@@ -27,7 +27,28 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
   const proposalManagement = ProposalManagement.for(userId, params.team, params.event);
   await proposalManagement.canCreate();
-  return null;
+
+  const url = new URL(request.url);
+  const speakerId = url.searchParams.get('speaker');
+
+  if (speakerId) {
+    try {
+      const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
+      const speaker = await eventSpeakers.getById(speakerId);
+      if (speaker) {
+        return {
+          preselectedSpeaker: {
+            value: speaker.id,
+            label: speaker.name,
+            picture: speaker.picture,
+            data: { description: speaker.company },
+          },
+        };
+      }
+    } catch {
+      // If speaker not found, ignore and continue without preselection
+    }
+  }
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
@@ -69,11 +90,12 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
   }
 };
 
-export default function NewProposalRoute({ actionData, params }: Route.ComponentProps) {
+export default function NewProposalRoute({ actionData, params, loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
   const isFeatureEnabled = useFlag('organizerProposalCreation');
   const { team, event } = useCurrentEventTeam();
   const formId = useId();
+  const { preselectedSpeaker } = loaderData || {};
 
   if (!isFeatureEnabled || !team.userPermissions?.canCreateEventProposal) {
     return null;
@@ -113,6 +135,7 @@ export default function NewProposalRoute({ actionData, params }: Route.Component
               form={formId}
               error={actionData?.errors?.speakers}
               showAction={team.userPermissions?.canCreateEventSpeaker}
+              value={preselectedSpeaker ? [preselectedSpeaker] : undefined}
               className="space-y-3 p-4 lg:px-6"
             />
 

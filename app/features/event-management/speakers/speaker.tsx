@@ -1,3 +1,4 @@
+import { PlusIcon } from '@heroicons/react/16/solid';
 import { InboxIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
@@ -81,6 +82,15 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
           <Text>
             {t('common.proposals')} ({speaker.proposals.length})
           </Text>
+          {isFeatureEnabled && team.userPermissions?.canCreateEventProposal && (
+            <ButtonLink
+              variant="secondary"
+              iconLeft={PlusIcon}
+              to={`${href('/team/:team/:event/reviews/new', params)}?speaker=${speaker.id}`}
+            >
+              {t('event-management.proposals.new-proposal')}
+            </ButtonLink>
+          )}
         </List.Header>
         <List.Content aria-label={t('event-management.proposals.list')}>
           {speaker.proposals.map((proposal) => (
