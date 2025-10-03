@@ -349,6 +349,26 @@ test('hides reviews, speakers following event settings', async ({ page }) => {
   await expect(page.getByText('Robin')).not.toBeVisible();
 });
 
+test('opens speaker details and edit pages from drawer', async ({ page }) => {
+  const proposalPage = new ProposalPage(page);
+
+  await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+  const speakerDrawer = await proposalPage.clickOnSpeaker('Marie Jane');
+
+  const detailsButton = speakerDrawer.getByRole('link', { name: 'Details' });
+  await expect(detailsButton).toBeVisible();
+  await detailsButton.click();
+  await expect(page.getByRole('heading', { name: 'Marie Jane' })).toBeVisible();
+
+  await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+  const speakerDrawer2 = await proposalPage.clickOnSpeaker('Marie Jane');
+
+  const editButton = speakerDrawer2.getByRole('link', { name: 'Edit' });
+  await expect(editButton).toBeVisible();
+  await editButton.click();
+  await expect(page.getByRole('heading', { name: 'Edit speaker Marie Jane' })).toBeVisible();
+});
+
 test.describe('As a reviewer', () => {
   loginWith('bruce-wayne');
 

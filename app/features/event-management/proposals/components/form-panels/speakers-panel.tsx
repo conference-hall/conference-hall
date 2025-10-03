@@ -97,7 +97,13 @@ export function SpeakersPanel({
     return (
       <div className={className}>
         <H2 size="s">{t('common.speakers')}</H2>
-        <SpeakersList speakers={speakers} speakersDetails={speakersDetails} canEditSpeaker={canEditSpeaker} />
+        <SpeakersList
+          team={team}
+          event={event}
+          speakers={speakers}
+          speakersDetails={speakersDetails}
+          canEditSpeaker={canEditSpeaker}
+        />
       </div>
     );
   }
@@ -147,6 +153,8 @@ export function SpeakersPanel({
       </SelectPanel>
 
       <SpeakersList
+        team={team}
+        event={event}
         speakers={speakers}
         speakersDetails={speakersDetails}
         canEditSpeaker={canEditSpeaker}
@@ -157,13 +165,15 @@ export function SpeakersPanel({
 }
 
 type SpeakersListProps = {
+  team: string;
+  event: string;
   speakers: Array<SelectPanelOption>;
   speakersDetails?: Array<SpeakerData>;
   canEditSpeaker: boolean;
   error?: SubmissionError;
 };
 
-function SpeakersList({ speakers, speakersDetails, canEditSpeaker, error }: SpeakersListProps) {
+function SpeakersList({ team, event, speakers, speakersDetails, canEditSpeaker, error }: SpeakersListProps) {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-2">
@@ -180,7 +190,13 @@ function SpeakersList({ speakers, speakersDetails, canEditSpeaker, error }: Spea
 
         if (speakerDetails) {
           return (
-            <SpeakerDrawer key={speaker.value} speaker={speakerDetails} canEditSpeaker={canEditSpeaker}>
+            <SpeakerDrawer
+              key={speaker.value}
+              team={team}
+              event={event}
+              speaker={speakerDetails}
+              canEditSpeaker={canEditSpeaker}
+            >
               <SpeakerRow name={speaker.label} picture={speaker.picture} description={speaker.data?.description} />
             </SpeakerDrawer>
           );
