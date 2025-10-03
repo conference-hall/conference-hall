@@ -1,6 +1,7 @@
 import { SpeakerPanelComponent } from 'e2e/common/speaker-panel.component.ts';
 import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
 import { PageObject } from 'e2e/page-object.ts';
+import { expect } from '../../fixtures.ts';
 
 export class NewProposalPage extends PageObject {
   readonly heading = this.page.getByRole('heading', { name: 'New proposal' });
@@ -12,8 +13,11 @@ export class NewProposalPage extends PageObject {
   readonly categoriesButton = this.page.getByRole('button', { name: 'Categories', exact: true });
   readonly tagsButton = this.page.getByRole('button', { name: 'Tags', exact: true });
 
-  async goto(team: string, event: string) {
-    await this.page.goto(`/team/${team}/${event}/reviews/new`);
+  async goto(team: string, event: string, speakerId?: string) {
+    const url = speakerId
+      ? `/team/${team}/${event}/reviews/new?speaker=${speakerId}`
+      : `/team/${team}/${event}/reviews/new`;
+    await this.page.goto(url);
     await this.waitFor();
   }
 
@@ -60,5 +64,10 @@ export class NewProposalPage extends PageObject {
   async verifyCategorySelected(categoryName: string) {
     const categoryCheckbox = this.page.getByRole('checkbox', { name: categoryName });
     return categoryCheckbox.isChecked();
+  }
+
+  async verifyPreselectedSpeaker(speakerName: string) {
+    // Check that the speaker appears in the speakers panel
+    await expect(this.page.getByText(speakerName)).toBeVisible();
   }
 }

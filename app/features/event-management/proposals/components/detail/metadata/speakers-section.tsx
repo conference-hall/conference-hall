@@ -60,6 +60,7 @@ export function SpeakersSection({
       }}
       readonly={!canChangeSpeakers}
       showAction={canCreateSpeakers}
+      allowEmpty={false}
       className={className}
     />
   );

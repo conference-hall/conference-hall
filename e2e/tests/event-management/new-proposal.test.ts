@@ -140,3 +140,56 @@ test.describe('As a reviewer', () => {
     await expect(proposalsPage.newProposalButton).not.toBeVisible();
   });
 });
+
+test('creates proposal with preselected speaker', async ({ page }) => {
+  const existingSpeaker = await eventSpeakerFactory({
+    event,
+    attributes: { name: 'Preselected Speaker', email: 'preselected@example.com' },
+  });
+
+  const newProposalPage = new NewProposalPage(page);
+  await newProposalPage.goto(team.slug, event.slug, existingSpeaker.id);
+
+  await newProposalPage.verifyPreselectedSpeaker('Preselected Speaker');
+
+  await newProposalPage.talkForm.fillForm(
+    'Proposal with Preselected Speaker',
+    'This proposal should have the speaker preselected',
+    'beginner',
+    'English',
+    'https://example.com/speaker-refs',
+  );
+
+  await newProposalPage.submitProposal();
+  await expect(newProposalPage.toast).toHaveText('Proposal created successfully.');
+
+  await expect(page.getByRole('heading', { name: 'Proposal with Preselected Speaker' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'View Preselected Speaker' })).toBeVisible();
+});
+
+test('handles invalid speaker id gracefully', async ({ page }) => {
+  const newProposalPage = new NewProposalPage(page);
+  await newProposalPage.goto(team.slug, event.slug, 'invalid-speaker-id');
+
+  await newProposalPage.waitFor();
+  await expect(newProposalPage.heading).toBeVisible();
+
+  await newProposalPage.talkForm.fillForm(
+    'Proposal without Speaker',
+    'This proposal should work even with invalid speaker ID',
+    'beginner',
+    'English',
+    'https://example.com/refs',
+  );
+
+  await newProposalPage.speakerPanel.togglePanel();
+  const createSpeakerModal = await newProposalPage.speakerPanel.clickCreateSpeaker();
+  await createSpeakerModal.emailInput.fill('manual.speaker@example.com');
+  await createSpeakerModal.nameInput.fill('Manual Speaker');
+  await createSpeakerModal.companyInput.fill('Manual Company');
+  await createSpeakerModal.bioInput.fill('Manual bio');
+  await createSpeakerModal.createSpeaker();
+
+  await newProposalPage.submitProposal();
+  await expect(newProposalPage.toast).toHaveText('Proposal created successfully.');
+});
