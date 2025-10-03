@@ -74,7 +74,7 @@ describe('SpeakersPanel component', () => {
 
   it('calls onChange when selecting speakers', async () => {
     const onChangeMock = vi.fn();
-    const screen = renderComponent({ onChange: onChangeMock });
+    const screen = renderComponent({ onChange: onChangeMock, canChangeSpeakers: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
     await userEvent.click(screen.getByText('John Doe'));
@@ -91,21 +91,21 @@ describe('SpeakersPanel component', () => {
 
   it('displays error messages when provided', async () => {
     const error = ['At least one speaker is required'];
-    const screen = renderComponent({ error });
+    const screen = renderComponent({ error, canChangeSpeakers: true });
 
     await expect.element(screen.getByText('At least one speaker is required')).toBeInTheDocument();
   });
 
-  it('renders manage speakers action when showAction is true', async () => {
-    const screen = renderComponent({ showAction: true });
+  it('renders manage speakers action when canCreateSpeaker is true', async () => {
+    const screen = renderComponent({ canCreateSpeaker: true, canChangeSpeakers: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
 
     await expect.element(screen.getByText('Create speaker')).toBeInTheDocument();
   });
 
-  it('does not render manage action when showAction is false', async () => {
-    const screen = renderComponent({ showAction: false });
+  it('does not render manage action when canCreateSpeaker is false', async () => {
+    const screen = renderComponent({ canCreateSpeaker: false, canChangeSpeakers: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
 
@@ -115,7 +115,7 @@ describe('SpeakersPanel component', () => {
   it('renders in readonly mode without select functionality', async () => {
     const selectedSpeakers = [{ value: 'speaker1', label: 'John Doe', picture: 'https://example.com/john.jpg' }];
     const screen = renderComponent({
-      readonly: true,
+      canChangeSpeakers: false,
       value: selectedSpeakers,
     });
 
@@ -152,7 +152,7 @@ describe('SpeakersPanel component', () => {
 
   it('includes form name when provided', async () => {
     const selectedSpeakers = [{ value: 'speaker1', label: 'John Doe', picture: 'https://example.com/john.jpg' }];
-    const screen = renderComponent({ form: 'proposal-form', value: selectedSpeakers });
+    const screen = renderComponent({ form: 'proposal-form', value: selectedSpeakers, canChangeSpeakers: true });
 
     const hiddenInput = screen.container.querySelector('input[name="speakers"][type="hidden"]');
     expect(hiddenInput).toBeInTheDocument();
@@ -161,7 +161,7 @@ describe('SpeakersPanel component', () => {
 
   it('triggers search when typing in search input', async () => {
     vi.useFakeTimers();
-    const screen = renderComponent();
+    const screen = renderComponent({ canChangeSpeakers: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
 
@@ -181,7 +181,7 @@ describe('SpeakersPanel component', () => {
   it('displays loading state when fetcher is loading', async () => {
     mockFetcher.state = 'loading';
 
-    const screen = renderComponent();
+    const screen = renderComponent({ canChangeSpeakers: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
 
@@ -194,7 +194,7 @@ describe('SpeakersPanel component', () => {
 
   it('handles multiple speaker selection', async () => {
     const onChangeMock = vi.fn();
-    const screen = renderComponent({ onChange: onChangeMock });
+    const screen = renderComponent({ onChange: onChangeMock, canChangeSpeakers: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
 

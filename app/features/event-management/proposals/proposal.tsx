@@ -153,7 +153,8 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 
 export default function ProposalReviewLayoutRoute({ params, loaderData, actionData: errors }: Route.ComponentProps) {
   const { team, event } = useCurrentEventTeam();
-  const { canEditEvent, canEditEventProposal, canCreateEventSpeaker, canChangeProposalStatus } = team.userPermissions;
+  const { canEditEvent, canEditEventProposal, canCreateEventSpeaker, canEditEventSpeaker, canChangeProposalStatus } =
+    team.userPermissions;
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
 
   const proposalCreationEnabled = useFlag('organizerProposalCreation');
@@ -197,7 +198,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   proposalId={params.proposal}
                   proposalSpeakers={proposal.speakers}
                   canChangeSpeakers={canEditEventProposal && proposalCreationEnabled}
-                  canCreateSpeakers={canCreateEventSpeaker && proposalCreationEnabled}
+                  canCreateSpeaker={canCreateEventSpeaker && proposalCreationEnabled}
+                  canEditSpeaker={canEditEventSpeaker}
                   className="space-y-3 p-4 lg:px-6"
                 />
                 <Divider />

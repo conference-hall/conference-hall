@@ -71,7 +71,8 @@ describe('SpeakersSection component', () => {
       },
     ],
     canChangeSpeakers: true,
-    canCreateSpeakers: true,
+    canCreateSpeaker: true,
+    canEditSpeaker: true,
   };
 
   beforeEach(() => {
@@ -127,7 +128,7 @@ describe('SpeakersSection component', () => {
   });
 
   it('does not show action button (manage speakers)', async () => {
-    const screen = renderComponent({ canCreateSpeakers: false });
+    const screen = renderComponent({ canCreateSpeaker: false });
 
     await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
 

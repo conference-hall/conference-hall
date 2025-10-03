@@ -33,7 +33,7 @@ export function SlideOver({ open, title, size = 'm', withBorder = true, onClose,
                   'divide-y divide-gray-200': withBorder,
                 })}
               >
-                <div className="flex shrink-0 items-start justify-between z-50">
+                <div className="z-50">
                   {title ? (
                     <DialogTitle className="text-base font-semibold leading-6 text-gray-900 px-4 py-4">
                       {title}

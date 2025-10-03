@@ -1,5 +1,8 @@
+import { EyeIcon, PencilSquareIcon } from '@heroicons/react/16/solid';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { href } from 'react-router';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import type { SpeakerData } from '~/shared/types/speaker.types.ts';
 import { SpeakerInfo } from './speaker-info.tsx';
@@ -8,11 +11,14 @@ import { SpeakerSurveyAnswers } from './speaker-survey-answers.tsx';
 import { SpeakerTitle } from './speaker-title.tsx';
 
 type Props = {
+  team: string;
+  event: string;
   speaker: SpeakerData;
+  canEditSpeaker: boolean;
   children: ReactNode;
 };
 
-export function SpeakerDrawer({ speaker, children }: Props) {
+export function SpeakerDrawer({ team, event, speaker, canEditSpeaker, children }: Props) {
   const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
@@ -29,7 +35,7 @@ export function SpeakerDrawer({ speaker, children }: Props) {
       </button>
 
       <SlideOver
-        title={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
+        title={<DrawerHeading team={team} event={event} speaker={speaker} canEditSpeaker={canEditSpeaker} />}
         open={open}
         withBorder={false}
         onClose={() => setOpen(false)}
@@ -46,5 +52,39 @@ export function SpeakerDrawer({ speaker, children }: Props) {
         </SlideOver.Content>
       </SlideOver>
     </>
+  );
+}
+
+type SpeakerDataProps = { team: string; event: string; speaker: SpeakerData; canEditSpeaker: boolean };
+
+function DrawerHeading({ team, event, speaker, canEditSpeaker }: SpeakerDataProps) {
+  const { t } = useTranslation();
+
+  return (
+    <div className="flex items-start justify-between gap-4 mr-10">
+      <SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />
+
+      <div className="flex items-center gap-2">
+        <ButtonLink
+          to={href('/team/:team/:event/speakers/:speaker', { team, event, speaker: speaker.id })}
+          size="s"
+          variant="secondary"
+          iconLeft={EyeIcon}
+        >
+          {t('common.details')}
+        </ButtonLink>
+
+        {canEditSpeaker ? (
+          <ButtonLink
+            to={href('/team/:team/:event/speakers/:speaker/edit', { team, event, speaker: speaker.id })}
+            size="s"
+            variant="secondary"
+            iconLeft={PencilSquareIcon}
+          >
+            {t('common.edit')}
+          </ButtonLink>
+        ) : null}
+      </div>
+    </div>
   );
 }
