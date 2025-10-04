@@ -33,13 +33,13 @@ describe('Tag component', () => {
     const screen = renderComponent(<Tag tag={tag} />, ['/team/team-1/event-1?query=foo']);
 
     const linkElement = screen.getByRole('link');
-    await expect.element(linkElement).toHaveAttribute('href', '/team/team-1/event-1/reviews?query=foo&tags=123');
+    await expect.element(linkElement).toHaveAttribute('href', '/team/team-1/event-1/proposals?query=foo&tags=123');
   });
 
   it('preserves existing search params in the URL', async () => {
     const screen = renderComponent(<Tag tag={tag} />, ['/team/team-1/event-1?search=test']);
 
     const linkElement = screen.getByRole('link');
-    await expect.element(linkElement).toHaveAttribute('href', '/team/team-1/event-1/reviews?search=test&tags=123');
+    await expect.element(linkElement).toHaveAttribute('href', '/team/team-1/event-1/proposals?search=test&tags=123');
   });
 });

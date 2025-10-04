@@ -18,7 +18,7 @@ describe('Slack integration', () => {
       title: 'Title',
       text: 'Abstract',
       author_name: 'by Speaker 1 & Speaker 2',
-      title_link: `${APP_URL}/team/my-team/event-1/reviews/proposal-1`,
+      title_link: `${APP_URL}/team/my-team/event-1/proposals/proposal-1`,
       thumb_url: 'http://photo',
       color: '#ffab00',
       fields: [

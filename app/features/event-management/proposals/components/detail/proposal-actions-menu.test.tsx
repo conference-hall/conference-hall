@@ -21,7 +21,7 @@ describe('ProposalActionsMenu component', () => {
   const renderComponent = (props = {}) => {
     const RouteStub = createRoutesStub([
       {
-        path: '/team/:team/:event/reviews/:proposal',
+        path: '/team/:team/:event/proposals/:proposal',
         Component: () => (
           <I18nextProvider i18n={i18nTest}>
             <ProposalActionsMenu {...defaultProps} {...props} />
@@ -29,7 +29,7 @@ describe('ProposalActionsMenu component', () => {
         ),
       },
     ]);
-    return render(<RouteStub initialEntries={['/team/my-team/my-event/reviews/proposal-123']} />);
+    return render(<RouteStub initialEntries={['/team/my-team/my-event/proposals/proposal-123']} />);
   };
 
   it('opens menu and shows actions', async () => {

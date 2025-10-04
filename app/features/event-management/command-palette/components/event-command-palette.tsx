@@ -67,9 +67,9 @@ export function EventCommandPalette({ team, event, closeText, onClose }: Props) 
     switch (item.section) {
       case t('common.proposals'): {
         if (item.id === 'search-more-proposals') {
-          navigate(`${href('/team/:team/:event/reviews', { team, event })}?${searchParams.toString()}`);
+          navigate(`${href('/team/:team/:event/proposals', { team, event })}?${searchParams.toString()}`);
         } else {
-          navigate(href('/team/:team/:event/reviews/:proposal', { team, event, proposal: item.id }));
+          navigate(href('/team/:team/:event/proposals/:proposal', { team, event, proposal: item.id }));
         }
         break;
       }

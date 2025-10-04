@@ -8,13 +8,13 @@ export function getTeamManagementRoutes(t: TFunction): NavigationConfig {
     // team management routes
     { path: '/team/:team/settings/*', back: '/team/:team', title: t('common.settings') },
     // event management routes
-    { path: '/team/:team/:event/reviews', back: '/team/:team/:event', title: t('event-management.nav.proposals') },
+    { path: '/team/:team/:event/proposals', back: '/team/:team/:event', title: t('event-management.nav.proposals') },
     {
-      path: '/team/:team/:event/reviews/new',
-      back: '/team/:team/:event/reviews',
+      path: '/team/:team/:event/proposals/new',
+      back: '/team/:team/:event/proposals',
       title: t('event-management.proposals.new.title'),
     },
-    { path: '/team/:team/:event/reviews/*', back: '/team/:team/:event/reviews', title: t('common.review') },
+    { path: '/team/:team/:event/proposals/*', back: '/team/:team/:event/proposals', title: t('common.review') },
     { path: '/team/:team/:event/speakers', back: '/team/:team/:event', title: t('event-management.nav.speakers') },
     {
       path: '/team/:team/:event/speakers/new',
