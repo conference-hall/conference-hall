@@ -15,7 +15,7 @@ export function ShareProposalModal({ open, onClose }: ShareProposalModalProps) {
   if (!hydrated) return null;
 
   const { origin } = window.location;
-  const organizerLink = new URL(href('/team/:team/:event/reviews/:proposal', params), origin).toString();
+  const organizerLink = new URL(href('/team/:team/:event/proposals/:proposal', params), origin).toString();
   const speakerLink = new URL(href('/:event/proposals/:proposal', params), origin).toString();
 
   return (

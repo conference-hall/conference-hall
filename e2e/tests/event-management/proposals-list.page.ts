@@ -21,7 +21,7 @@ export class ProposalsListPage extends PageObject {
   }
 
   async goto(team: string, event: string) {
-    await this.page.goto(`/team/${team}/${event}/reviews`);
+    await this.page.goto(`/team/${team}/${event}/proposals`);
     await this.waitFor();
   }
 

@@ -15,8 +15,8 @@ export class NewProposalPage extends PageObject {
 
   async goto(team: string, event: string, speakerId?: string) {
     const url = speakerId
-      ? `/team/${team}/${event}/reviews/new?speaker=${speakerId}`
-      : `/team/${team}/${event}/reviews/new`;
+      ? `/team/${team}/${event}/proposals/new?speaker=${speakerId}`
+      : `/team/${team}/${event}/proposals/new`;
     await this.page.goto(url);
     await this.waitFor();
   }

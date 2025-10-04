@@ -22,7 +22,7 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
 
   const fetcher = useFetcher<typeof AutocompleteLoader>();
   const search = (filters: { query: string }) => {
-    fetcher.submit(filters, { action: `/team/${team}/${event}/reviews/autocomplete`, method: 'GET' });
+    fetcher.submit(filters, { action: `/team/${team}/${event}/proposals/autocomplete`, method: 'GET' });
   };
 
   const results = fetcher.data ?? [];

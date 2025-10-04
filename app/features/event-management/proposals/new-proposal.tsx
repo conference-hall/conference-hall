@@ -67,7 +67,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       try {
         const proposal = await ProposalManagement.for(userId, params.team, params.event).create(result.value);
         const headers = await toastHeaders('success', i18n.t('event-management.proposals.new.feedbacks.created'));
-        return redirect(href('/team/:team/:event/reviews/:proposal', { ...params, proposal: proposal.id }), {
+        return redirect(href('/team/:team/:event/proposals/:proposal', { ...params, proposal: proposal.id }), {
           headers,
         });
       } catch (_error) {
@@ -119,7 +119,7 @@ export default function NewProposalRoute({ actionData, params, loaderData }: Rou
           </Card.Content>
 
           <Card.Actions>
-            <ButtonLink variant="secondary" to={href('/team/:team/:event/reviews', params)}>
+            <ButtonLink variant="secondary" to={href('/team/:team/:event/proposals', params)}>
               {t('common.cancel')}
             </ButtonLink>
             <Button type="submit" form={formId} name="intent" value="create-proposal">

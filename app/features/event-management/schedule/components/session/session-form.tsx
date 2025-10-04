@@ -95,7 +95,7 @@ export function SessionForm({
               <IconLink
                 icon={ArrowTopRightOnSquareIcon}
                 label={t('event-management.schedule.edit-session.proposal.see')}
-                to={`/team/${team}/${event}/reviews/${proposal?.id}`}
+                to={`/team/${team}/${event}/proposals/${proposal?.id}`}
                 variant="secondary"
                 target="_blank"
               />

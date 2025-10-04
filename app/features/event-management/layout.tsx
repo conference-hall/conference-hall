@@ -63,7 +63,7 @@ function EventTabs() {
   const [searchParams] = useSearchParams();
   const search = searchParams.toString();
 
-  const isProposalsRoute = Boolean(useMatch('/team/:team/:event/reviews/*'));
+  const isProposalsRoute = Boolean(useMatch('/team/:team/:event/proposals/*'));
   const isSpeakersRoute = Boolean(useMatch('/team/:team/:event/speakers/*'));
 
   return (
@@ -78,7 +78,7 @@ function EventTabs() {
 
         <NavTab
           to={{
-            pathname: href('/team/:team/:event/reviews', { team: team.slug, event: event.slug }),
+            pathname: href('/team/:team/:event/proposals', { team: team.slug, event: event.slug }),
             search: isProposalsRoute ? search : undefined,
           }}
           icon={QueueListIcon}

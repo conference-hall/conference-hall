@@ -86,7 +86,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
             <ButtonLink
               variant="secondary"
               iconLeft={PlusIcon}
-              to={`${href('/team/:team/:event/reviews/new', params)}?speaker=${speaker.id}`}
+              to={`${href('/team/:team/:event/proposals/new', params)}?speaker=${speaker.id}`}
             >
               {t('event-management.proposals.new-proposal')}
             </ButtonLink>
@@ -97,7 +97,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
             <List.Row key={proposal.id} className="hover:bg-gray-50 px-4">
               <ProposalItem
                 proposal={proposal}
-                linkTo={`/team/${params.team}/${params.event}/reviews/${proposal.id}?speakers=${speaker.id}`}
+                linkTo={`/team/${params.team}/${params.event}/proposals/${proposal.id}?speakers=${speaker.id}`}
               />
             </List.Row>
           ))}
