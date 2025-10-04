@@ -35,7 +35,8 @@ export class ProposalPage extends PageObject {
   }
 
   async clickOnEdit() {
-    await this.page.getByRole('button', { name: 'Edit' }).click();
+    await this.page.getByRole('button', { name: 'Proposal action menu' }).click();
+    await this.page.getByRole('menuitem', { name: 'Edit', exact: true }).click();
     return new TalkFormComponent(this.page, true);
   }
 
