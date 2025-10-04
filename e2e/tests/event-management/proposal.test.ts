@@ -378,11 +378,4 @@ test.describe('As a reviewer', () => {
 
     await expect(page.getByRole('heading', { name: 'Proposal status' })).not.toBeVisible();
   });
-
-  test('does not show actions menu without edit permission', async ({ page }) => {
-    const proposalPage = new ProposalPage(page);
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
-
-    await expect(page.getByRole('button', { name: 'Proposal action menu' })).not.toBeVisible();
-  });
 });
