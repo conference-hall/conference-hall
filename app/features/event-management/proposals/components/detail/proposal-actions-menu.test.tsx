@@ -21,7 +21,7 @@ describe('ProposalActionsMenu component', () => {
   const renderComponent = (props = {}) => {
     const RouteStub = createRoutesStub([
       {
-        path: '/',
+        path: '/team/:team/:event/reviews/:proposal',
         Component: () => (
           <I18nextProvider i18n={i18nTest}>
             <ProposalActionsMenu {...defaultProps} {...props} />
@@ -29,20 +29,15 @@ describe('ProposalActionsMenu component', () => {
         ),
       },
     ]);
-    return render(<RouteStub />);
+    return render(<RouteStub initialEntries={['/team/my-team/my-event/reviews/proposal-123']} />);
   };
 
-  it('renders actions menu button', async () => {
-    const screen = renderComponent();
-
-    await expect.element(screen.getByRole('button', { name: 'Proposal action menu' })).toBeInTheDocument();
-  });
-
-  it('opens menu and shows Edit option', async () => {
+  it('opens menu and shows actions', async () => {
     const screen = renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
     await expect.element(screen.getByRole('menuitem', { name: /Edit/ })).toBeInTheDocument();
+    await expect.element(screen.getByRole('menuitem', { name: /Share link/ })).toBeInTheDocument();
   });
 
   it('opens TalkEditDrawer when clicking Edit', async () => {
@@ -54,9 +49,20 @@ describe('ProposalActionsMenu component', () => {
     await expect.element(screen.getByRole('dialog', { name: 'Test Proposal' })).toBeInTheDocument();
   });
 
-  it('does not render menu when canEditEventProposal is false', async () => {
+  it('opens ShareProposalModal when clicking Share link', async () => {
+    const screen = renderComponent();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
+    await userEvent.click(screen.getByRole('menuitem', { name: /Share link/ }));
+
+    await expect.element(screen.getByRole('dialog', { name: 'Share proposal' })).toBeInTheDocument();
+  });
+
+  it('hides Edit action when canEditEventProposal is false', async () => {
     const screen = renderComponent({ canEditEventProposal: false });
 
-    await expect.element(screen.getByRole('button', { name: 'Proposal action menu' })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
+    await expect.element(screen.getByRole('menuitem', { name: /Edit/ })).not.toBeInTheDocument();
+    await expect.element(screen.getByRole('menuitem', { name: /Share link/ })).toBeInTheDocument();
   });
 });
