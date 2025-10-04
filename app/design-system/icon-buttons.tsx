@@ -4,7 +4,7 @@ import type React from 'react';
 import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
 
-const iconButton = cva(
+export const iconButton = cva(
   ['flex items-center rounded-full shrink-0 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 cursor-pointer'],
   {
     variants: {

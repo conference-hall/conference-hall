@@ -7,7 +7,6 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
-import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
@@ -23,6 +22,7 @@ import { SpeakersSection } from './components/detail/metadata/speakers-section.t
 import { TagsSection } from './components/detail/metadata/tags-section.tsx';
 import { NavigationHeader } from './components/detail/navigation-header.tsx';
 import { OtherProposalsDisclosure } from './components/detail/other-proposals-disclosure.tsx';
+import { ProposalActionsMenu } from './components/detail/proposal-actions-menu.tsx';
 import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
 import { ActivityFeed } from './services/activity-feed.server.ts';
 import { Comments } from './services/comments.server.ts';
@@ -169,7 +169,12 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <div className="space-y-4 lg:col-span-8">
-          <TalkSection talk={proposal} actions={<TalkEditButton initialValues={proposal} errors={errors} />}>
+          <TalkSection
+            talk={proposal}
+            actions={
+              <ProposalActionsMenu proposal={proposal} errors={errors} canEditEventProposal={canEditEventProposal} />
+            }
+          >
             <Suspense fallback={null}>
               <Await resolve={otherProposalsPromise}>
                 {(proposals) => <OtherProposalsDisclosure proposals={proposals} />}

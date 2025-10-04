@@ -389,6 +389,7 @@
   "event-management.overview.visibility.success.heading": "L'événement est public",
   "event-management.overview.visibility.warning.description": "L'événement n'est accessible que par son lien.",
   "event-management.overview.visibility.warning.heading": "L'événement est privé",
+  "event-management.proposal-page.actions-menu": "Menu d'actions de la proposition",
   "event-management.proposal-page.activity-feed.commented": "<0>{{name}}</0> a commenté",
   "event-management.proposal-page.activity-feed.no-opinion": "<0>{{name}}</0> n'a pas d'avis sur cette proposition.",
   "event-management.proposal-page.activity-feed.reviewed_one": "<0>{{name}}</0> a évalué la proposition avec <1>1 étoile.</1>",

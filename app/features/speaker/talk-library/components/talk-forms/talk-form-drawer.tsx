@@ -48,7 +48,7 @@ type TalkEditDrawerProps = TalkEditProps & {
   onClose: VoidFunction;
 };
 
-function TalkEditDrawer({ initialValues, event, errors, open, onClose }: TalkEditDrawerProps) {
+export function TalkEditDrawer({ initialValues, event, errors, open, onClose }: TalkEditDrawerProps) {
   const { t } = useTranslation();
   const formId = useId();
 
