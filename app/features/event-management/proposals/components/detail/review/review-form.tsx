@@ -35,7 +35,7 @@ function useOptimisticReview(initialValues: UserReview) {
   const handleSubmit = (feeling: ReviewFeeling, note: number | null) => {
     fetcher.submit(
       { intent: 'add-review', feeling, note: note === null ? '' : note },
-      { method: 'POST', action: `/team/${params.team}/${params.event}/reviews/${params.proposal}` },
+      { method: 'POST', action: `/team/${params.team}/${params.event}/proposals/${params.proposal}` },
     );
   };
 

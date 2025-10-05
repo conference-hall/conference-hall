@@ -56,6 +56,7 @@ export function ExportMenu() {
           <MenuItem
             as="a"
             href={`/team/${params.team}/${params.event}/export/cards?${searchParams.toString()}`}
+            target="_blank"
             className={menuItem()}
           >
             <Squares2X2Icon className={menuItemIcon()} aria-hidden="true" />

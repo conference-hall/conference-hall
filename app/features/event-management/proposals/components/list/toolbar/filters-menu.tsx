@@ -114,8 +114,8 @@ function FiltersContent({ close }: FiltersContentProps) {
               <Select
                 name="formats"
                 label={t('common.formats')}
-                defaultValue={params.get('formats')}
-                options={[{ id: null, name: t('event-management.proposals.filters.formats.placeholder') }, ...formats]}
+                defaultValue={params.get('formats') || ''}
+                options={[{ id: '', name: t('event-management.proposals.filters.formats.placeholder') }, ...formats]}
                 srOnly
               />
             )}
@@ -123,8 +123,8 @@ function FiltersContent({ close }: FiltersContentProps) {
               <Select
                 name="categories"
                 label={t('common.categories')}
-                defaultValue={params.get('categories')}
-                options={[{ id: null, name: t('event-management.proposals.filters.categories') }, ...categories]}
+                defaultValue={params.get('categories') || ''}
+                options={[{ id: '', name: t('event-management.proposals.filters.categories') }, ...categories]}
                 srOnly
               />
             )}
@@ -140,8 +140,8 @@ function FiltersContent({ close }: FiltersContentProps) {
           <Select
             name="tags"
             label={t('common.tags')}
-            defaultValue={params.get('tags')}
-            options={[{ id: null, name: t('event-management.proposals.filters.tags') }, ...tags]}
+            defaultValue={params.get('tags') || ''}
+            options={[{ id: '', name: t('event-management.proposals.filters.tags') }, ...tags]}
             srOnly
           />
         </div>

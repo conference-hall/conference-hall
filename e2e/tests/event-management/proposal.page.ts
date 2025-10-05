@@ -26,7 +26,7 @@ export class ProposalPage extends PageObject {
   readonly categoriesButton = this.page.getByRole('button', { name: 'Categories', exact: true });
 
   async goto(team: string, event: string, id: string, title: string) {
-    await this.page.goto(`/team/${team}/${event}/reviews/${id}`);
+    await this.page.goto(`/team/${team}/${event}/proposals/${id}`);
     await this.waitFor(title);
   }
 

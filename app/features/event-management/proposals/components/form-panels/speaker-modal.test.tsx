@@ -11,7 +11,7 @@ describe('SpeakerModal component', () => {
   const renderComponent = () => {
     const RouteStub = createRoutesStub([
       {
-        path: '/team/:team/:event/reviews/new',
+        path: '/team/:team/:event/proposals/new',
         action: vi.fn().mockResolvedValue({
           speaker: { id: '1', name: 'John Doe', email: 'john@example.com', picture: null, company: 'Test Company' },
         }),

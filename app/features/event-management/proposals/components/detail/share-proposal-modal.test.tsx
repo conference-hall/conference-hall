@@ -13,7 +13,7 @@ describe('ShareProposalModal component', () => {
   const renderComponent = (props = defaultProps) => {
     const RouteStub = createRoutesStub([
       {
-        path: '/team/:team/:event/reviews/:proposal',
+        path: '/team/:team/:event/proposals/:proposal',
         Component: () => (
           <I18nextProvider i18n={i18nTest}>
             <ShareProposalModal {...props} />
@@ -21,7 +21,7 @@ describe('ShareProposalModal component', () => {
         ),
       },
     ]);
-    return render(<RouteStub initialEntries={['/team/my-team/my-event/reviews/proposal-123']} />);
+    return render(<RouteStub initialEntries={['/team/my-team/my-event/proposals/proposal-123']} />);
   };
 
   it('displays the modal with title', async () => {
@@ -40,7 +40,7 @@ describe('ShareProposalModal component', () => {
     const organizerInput = screen.getByRole('textbox', { name: 'Organizer link' });
     await expect
       .element(organizerInput)
-      .toHaveValue(expect.stringContaining('/team/my-team/my-event/reviews/proposal-123'));
+      .toHaveValue(expect.stringContaining('/team/my-team/my-event/proposals/proposal-123'));
   });
 
   it('displays speaker link', async () => {

@@ -64,7 +64,9 @@ test.describe('Speaker Page', () => {
     await expect(page.getByText('React Hooks Talk')).toBeVisible();
 
     await speakerPage.clickProposal('React Hooks Talk');
-    await expect(page).toHaveURL(`/team/${team.slug}/${event.slug}/reviews/${proposal.id}?speakers=${eventSpeaker.id}`);
+    await expect(page).toHaveURL(
+      `/team/${team.slug}/${event.slug}/proposals/${proposal.id}?speakers=${eventSpeaker.id}`,
+    );
   });
 
   test('shows 404 for non-existent speaker', async ({ page }) => {
@@ -78,7 +80,7 @@ test.describe('Speaker Page', () => {
 
     await speakerPage.clickNewProposal();
 
-    await expect(page).toHaveURL(`/team/${team.slug}/${event.slug}/reviews/new?speaker=${eventSpeaker.id}`);
+    await expect(page).toHaveURL(`/team/${team.slug}/${event.slug}/proposals/new?speaker=${eventSpeaker.id}`);
 
     const newProposalPage = new NewProposalPage(page);
     await newProposalPage.waitFor();

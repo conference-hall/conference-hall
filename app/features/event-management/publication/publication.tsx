@@ -58,7 +58,7 @@ export default function PublicationRoute({ loaderData: statistics }: Route.Compo
               value={statistics.accepted.published + statistics.rejected.published}
               max={statistics.deliberation.accepted + statistics.deliberation.rejected}
             >
-              <Link to="../reviews" relative="path" size="s" weight="medium">
+              <Link to="../proposals" relative="path" size="s" weight="medium">
                 {t('common.see-all-proposals')} &rarr;
               </Link>
             </ProgressCard>
@@ -97,21 +97,21 @@ export default function PublicationRoute({ loaderData: statistics }: Route.Compo
                 amount: statistics.deliberation.accepted,
                 colorChart: 'green',
                 colorLegend: 'bg-green-500',
-                to: '../reviews?status=accepted',
+                to: '../proposals?status=accepted',
               },
               {
                 name: t('common.proposals.status.rejected'),
                 amount: statistics.deliberation.rejected,
                 colorChart: 'red',
                 colorLegend: 'bg-red-500',
-                to: '../reviews?status=rejected',
+                to: '../proposals?status=rejected',
               },
               {
                 name: t('common.proposals.status.pending'),
                 amount: statistics.deliberation.pending,
                 colorChart: 'blue',
                 colorLegend: 'bg-blue-500',
-                to: '../reviews?status=pending',
+                to: '../proposals?status=pending',
               },
             ]}
           >
@@ -131,21 +131,21 @@ export default function PublicationRoute({ loaderData: statistics }: Route.Compo
                 amount: statistics.confirmations.confirmed,
                 colorChart: 'green',
                 colorLegend: 'bg-green-500',
-                to: '../reviews?status=confirmed',
+                to: '../proposals?status=confirmed',
               },
               {
                 name: t('common.proposals.status.declined'),
                 amount: statistics.confirmations.declined,
                 colorChart: 'red',
                 colorLegend: 'bg-red-500',
-                to: '../reviews?status=declined',
+                to: '../proposals?status=declined',
               },
               {
                 name: t('common.proposals.status.not-answered'),
                 amount: statistics.confirmations.pending,
                 colorChart: 'blue',
                 colorLegend: 'bg-blue-500',
-                to: '../reviews?status=not-answered',
+                to: '../proposals?status=not-answered',
               },
             ]}
           >

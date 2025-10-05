@@ -85,11 +85,11 @@ export default [
       route('reviews', './features/event-management/overview/overview.reviews.tsx'),
     ]),
 
-    // Event review pages
-    route('reviews', './features/event-management/proposals/proposals.tsx'),
-    route('reviews/new', './features/event-management/proposals/new-proposal.tsx'),
-    route('reviews/:proposal', './features/event-management/proposals/proposal.tsx'),
-    route('reviews/autocomplete', './features/event-management/proposals/autocomplete.tsx'),
+    // Event proposal pages
+    route('proposals', './features/event-management/proposals/proposals.tsx'),
+    route('proposals/new', './features/event-management/proposals/new-proposal.tsx'),
+    route('proposals/:proposal', './features/event-management/proposals/proposal.tsx'),
+    route('proposals/autocomplete', './features/event-management/proposals/autocomplete.tsx'),
 
     // Event speakers page
     route('speakers', './features/event-management/speakers/speakers.tsx'),

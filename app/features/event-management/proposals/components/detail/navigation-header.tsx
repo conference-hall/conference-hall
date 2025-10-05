@@ -15,8 +15,8 @@ export function NavigationHeader({ current, total, reviewed, nextId, previousId 
   const search = searchParams.toString();
 
   const previousPath =
-    previousId !== undefined ? `/team/${params.team}/${params.event}/reviews/${previousId}` : undefined;
-  const nextPath = nextId !== undefined ? `/team/${params.team}/${params.event}/reviews/${nextId}` : undefined;
+    previousId !== undefined ? `/team/${params.team}/${params.event}/proposals/${previousId}` : undefined;
+  const nextPath = nextId !== undefined ? `/team/${params.team}/${params.event}/proposals/${nextId}` : undefined;
 
   return (
     <header className="flex justify-between items-center gap-4 pb-4 lg:-mt-4">

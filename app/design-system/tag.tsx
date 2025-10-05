@@ -27,7 +27,7 @@ function TagLink({ tag }: TagProps) {
 
   return (
     <Link
-      to={{ pathname: `/team/${params.team}/${params.event}/reviews`, search: newSearchParams.toString() }}
+      to={{ pathname: `/team/${params.team}/${params.event}/proposals`, search: newSearchParams.toString() }}
       style={{ backgroundColor: tag.color, color: getContrastColor(tag.color) }}
       className={styles}
     >

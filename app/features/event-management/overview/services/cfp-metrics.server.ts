@@ -70,7 +70,7 @@ export class CfpMetrics extends UserEventAuthorization {
         id: item.id,
         name: format?.name || 'unknown',
         value: Number(item.value),
-        to: `reviews?formats=${item.id}`,
+        to: `../proposals?formats=${item.id}`,
       };
     });
   }
@@ -95,7 +95,7 @@ export class CfpMetrics extends UserEventAuthorization {
         id: item.id,
         name: category?.name || 'unknown',
         value: Number(item.value),
-        to: `reviews?categories=${item.id}`,
+        to: `../proposals?categories=${item.id}`,
       };
     });
   }

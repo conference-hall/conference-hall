@@ -30,7 +30,7 @@ export function SpeakerModal({ team, event, onSpeakerCreated, children }: Speake
 
     const formData = new FormData(formRef.current);
     formData.append('intent', 'create-speaker');
-    fetcher.submit(formData, { method: 'POST', action: href('/team/:team/:event/reviews/new', { team, event }) });
+    fetcher.submit(formData, { method: 'POST', action: href('/team/:team/:event/proposals/new', { team, event }) });
   };
 
   useEffect(() => {

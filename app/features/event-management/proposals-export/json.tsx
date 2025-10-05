@@ -9,8 +9,6 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const exports = CfpReviewsExports.for(userId, params.team, params.event);
   const results = await exports.forJson(filters);
   return Response.json(results, {
-    headers: {
-      'Content-Disposition': `attachment; filename="${params.event}-reviews.json"`,
-    },
+    headers: { 'Content-Disposition': `attachment; filename="${params.event}-proposals.json"` },
   });
 };
