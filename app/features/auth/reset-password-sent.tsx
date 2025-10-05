@@ -10,7 +10,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { getUserSession } from '~/shared/auth/session.ts';
-import { getLocale } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n, getLocale } from '~/shared/i18n/i18n.middleware.ts';
+import { dataWithToast } from '~/shared/toasts/toast.server.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
 import type { Route } from './+types/reset-password-sent.ts';
 
@@ -25,10 +26,15 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
+  const i18n = getI18n(context);
   const locale = getLocale(context);
   const form = await request.formData();
-  const email = z.email().parse(form.get('email'));
-  await UserAccount.sendResetPasswordEmail(email, locale);
+  try {
+    const email = z.email().parse(form.get('email'));
+    await UserAccount.sendResetPasswordEmail(email, locale);
+  } catch {
+    return dataWithToast({ emailSent: false }, 'error', i18n.t('error.global'));
+  }
   return { emailSent: true };
 };
 
