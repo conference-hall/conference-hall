@@ -195,11 +195,11 @@ describe('Autocomplete for event management', () => {
           expect(results.filter((r) => r.kind === 'speakers')).toHaveLength(0);
         });
 
-        it('does not return speakers when displayProposalsSpeakers is false', async () => {
-          const eventWithoutSpeakers = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
-          await eventSpeakerFactory({ event: eventWithoutSpeakers, attributes: { name: 'John Doe' } });
+        it('does not return speakers when displayProposalsSpeakers is false even when speakers exist', async () => {
+          const eventWithHiddenSpeakers = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
+          await eventSpeakerFactory({ event: eventWithHiddenSpeakers, attributes: { name: 'John Doe' } });
 
-          const results = await Autocomplete.for(owner.id, team.slug, eventWithoutSpeakers.slug).search({
+          const results = await Autocomplete.for(owner.id, team.slug, eventWithHiddenSpeakers.slug).search({
             query: 'John',
             kind: ['speakers'],
           });

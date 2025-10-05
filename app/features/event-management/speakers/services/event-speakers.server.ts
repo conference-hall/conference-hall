@@ -26,11 +26,22 @@ export class EventSpeakers extends UserEventAuthorization {
   async search(filters: SpeakerSearchFilters, page = 1) {
     const event = await this.needsPermission('canAccessEvent');
 
+    if (!event.displayProposalsSpeakers) {
+      return {
+        speakers: [],
+        filters,
+        pagination: { current: 1, total: 0 },
+        statistics: { total: 0 },
+      };
+    }
+
     const { query, proposalStatus, sort = 'name-asc' } = filters;
 
     const whereClause: EventSpeakerWhereInput = {
       eventId: event.id,
-      name: query ? { contains: query, mode: 'insensitive' } : undefined,
+      OR: query
+        ? [{ name: { contains: query, mode: 'insensitive' } }, { email: { equals: query, mode: 'insensitive' } }]
+        : undefined,
       proposals: proposalStatus
         ? proposalStatus === 'accepted'
           ? {
