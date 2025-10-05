@@ -36,12 +36,13 @@ export class Autocomplete extends UserEventAuthorization {
     const { query, kind } = filters;
     if (!query) return [];
 
-    const [proposals, speakers] = await Promise.all([
+    const [proposals, speakers, speakersForProposal] = await Promise.all([
       kind.includes('proposals') ? this.#searchProposals(event, query) : [],
-      kind.includes('speakers') ? this.#searchSpeakers(event, query) : [],
+      kind.includes('speakers') ? this.#searchSpeakers(event, query, false) : [],
+      kind.includes('speakers-for-proposal') ? this.#searchSpeakers(event, query, true) : [],
     ]);
 
-    return [...proposals, ...speakers];
+    return [...proposals, ...speakers, ...speakersForProposal];
   }
 
   async #searchProposals(event: Event, query: string): Promise<AutocompleteResult[]> {
@@ -67,11 +68,14 @@ export class Autocomplete extends UserEventAuthorization {
     });
   }
 
-  async #searchSpeakers(event: Event, query: string): Promise<AutocompleteResult[]> {
-    if (!event.displayProposalsSpeakers) return [];
+  async #searchSpeakers(event: Event, query: string, skipPermission: boolean): Promise<AutocompleteResult[]> {
+    if (!skipPermission && !event.displayProposalsSpeakers) return [];
 
     const speakers = await db.eventSpeaker.findMany({
-      where: { eventId: event.id, name: { contains: query, mode: 'insensitive' } },
+      where: {
+        eventId: event.id,
+        OR: [{ name: { contains: query, mode: 'insensitive' } }, { email: { equals: query, mode: 'insensitive' } }],
+      },
       orderBy: { name: 'asc' },
       skip: pagination.pageIndex * pagination.pageSize,
       take: pagination.pageSize,
