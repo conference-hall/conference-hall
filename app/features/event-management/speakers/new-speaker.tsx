@@ -8,7 +8,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
-import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { EventSpeakerSaveSchema } from '~/shared/types/speaker.types.ts';
@@ -45,11 +44,10 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 
 export default function NewSpeakerRoute({ actionData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const isFeatureEnabled = useFlag('organizerProposalCreation');
   const { team } = useCurrentEventTeam();
   const formId = useId();
 
-  if (!isFeatureEnabled || !team.userPermissions?.canCreateEventSpeaker) {
+  if (!team.userPermissions?.canCreateEventSpeaker) {
     return null;
   }
 

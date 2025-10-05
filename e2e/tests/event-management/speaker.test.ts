@@ -5,7 +5,6 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { NewProposalPage } from './new-proposal.page.ts';
 import { SpeakerPage } from './speaker.page.ts';
@@ -18,8 +17,6 @@ let eventSpeaker: EventSpeaker;
 loginWith('clark-kent');
 
 test.beforeEach(async () => {
-  await flags.set('organizerProposalCreation', true);
-
   const owner = await userFactory({ traits: ['clark-kent'] });
   speaker = await userFactory({
     attributes: {
@@ -119,7 +116,6 @@ test.describe('New Proposal Button Permissions', () => {
     loginWith('peter-parker');
 
     test.beforeEach(async () => {
-      await flags.set('organizerProposalCreation', true);
       const reviewer = await userFactory({ traits: ['peter-parker'] });
       team = await teamFactory({ reviewers: [reviewer] });
       event = await eventFactory({ team, traits: ['conference-cfp-open'] });

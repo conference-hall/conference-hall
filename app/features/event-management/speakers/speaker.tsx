@@ -12,7 +12,6 @@ import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { NotFoundError } from '~/shared/errors.server.ts';
-import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { ProposalItem } from '../proposals/components/list/items/proposal-item.tsx';
 import type { Route } from './+types/speaker.ts';
 import { SpeakerLinks } from './components/speaker-details/speaker-links.tsx';
@@ -32,7 +31,6 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
 export default function SpeakerRoute({ loaderData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const isFeatureEnabled = useFlag('organizerProposalCreation');
   const { team } = useCurrentEventTeam();
   const { speaker } = loaderData;
 
@@ -41,7 +39,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
       <Page.Heading
         component={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
       >
-        {isFeatureEnabled && team.userPermissions?.canEditEventSpeaker && (
+        {team.userPermissions?.canEditEventSpeaker && (
           <ButtonLink
             variant="secondary"
             iconLeft={PencilSquareIcon}
@@ -82,7 +80,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
           <Text>
             {t('common.proposals')} ({speaker.proposals.length})
           </Text>
-          {isFeatureEnabled && team.userPermissions?.canCreateEventProposal && (
+          {team.userPermissions?.canCreateEventProposal && (
             <ButtonLink
               variant="secondary"
               iconLeft={PlusIcon}

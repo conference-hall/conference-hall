@@ -11,7 +11,6 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { ProposalPage } from './proposal.page.ts';
 
 loginWith('clark-kent');
@@ -23,8 +22,6 @@ let proposal: Proposal;
 let proposal2: Proposal;
 
 test.beforeEach(async () => {
-  await flags.set('organizerProposalCreation', true);
-
   const user = await userFactory({ traits: ['clark-kent'] });
   const reviewer = await userFactory({ traits: ['bruce-wayne'] });
   team = await teamFactory({ owners: [user], reviewers: [reviewer] });
