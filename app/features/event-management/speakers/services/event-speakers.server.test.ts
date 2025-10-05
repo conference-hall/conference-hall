@@ -117,6 +117,21 @@ describe('EventSpeakers', () => {
         expect(result.speakers[0].name).toBe('Bob Wilson');
       });
 
+      it('filters speakers by exact email match (case insensitive)', async () => {
+        const speakerWithEmail = await eventSpeakerFactory({
+          event,
+          attributes: { name: 'Jane Doe', email: 'jane.doe@example.com' },
+        });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+          query: 'JANE.DOE@EXAMPLE.COM',
+        });
+
+        expect(result.speakers).toHaveLength(1);
+        expect(result.speakers[0].id).toBe(speakerWithEmail.id);
+        expect(result.speakers[0].name).toBe('Jane Doe');
+      });
+
       it('returns empty results for non-matching query', async () => {
         const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
           query: 'nonexistent',
@@ -315,6 +330,17 @@ describe('EventSpeakers', () => {
             confirmationStatus: 'CONFIRMED',
           },
         ]);
+      });
+
+      it('returns empty array when displayProposalsSpeakers is false even when speakers exist', async () => {
+        const eventWithHiddenSpeakers = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
+        await eventSpeakerFactory({ event: eventWithHiddenSpeakers, attributes: { name: 'John Doe' } });
+
+        const result = await EventSpeakers.for(owner.id, team.slug, eventWithHiddenSpeakers.slug).search({});
+
+        expect(result.speakers).toEqual([]);
+        expect(result.pagination).toEqual({ current: 1, total: 0 });
+        expect(result.statistics).toEqual({ total: 0 });
       });
     });
 

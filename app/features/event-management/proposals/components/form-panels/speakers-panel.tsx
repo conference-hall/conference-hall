@@ -63,7 +63,7 @@ export function SpeakersPanel({
   const handleSearch = async (query: string) => {
     const searchParams = new URLSearchParams();
     searchParams.append('query', query);
-    searchParams.append('kind', 'speakers');
+    searchParams.append('kind', 'speakers-for-proposal');
 
     const autocompleteRoute = href('/team/:team/:event/autocomplete', { team, event });
     await fetcher.load(`${autocompleteRoute}?${searchParams.toString()}`);

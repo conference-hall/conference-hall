@@ -43,7 +43,7 @@ describe('Autocomplete for event management', () => {
         expect(results).toEqual([]);
       });
 
-      describe('proposal search', () => {
+      describe('proposal search (kind = "proposals")', () => {
         it('returns matching proposals when searching by title', async () => {
           const talk = await talkFactory({ speakers: [speaker] });
           const proposal = await proposalFactory({ event, talk, attributes: { title: 'React Best Practices' } });
@@ -127,12 +127,34 @@ describe('Autocomplete for event management', () => {
         });
       });
 
-      describe('speaker search', () => {
+      describe('speaker search (kind = "speakers")', () => {
         it('returns matching speakers when searching by name', async () => {
           const eventSpeaker = await eventSpeakerFactory({ event, attributes: { name: 'John Doe' } });
 
           const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
             query: 'John',
+            kind: ['speakers'],
+          });
+
+          expect(results).toEqual([
+            {
+              kind: 'speakers',
+              id: eventSpeaker.id,
+              title: eventSpeaker.name,
+              description: eventSpeaker.company,
+              picture: eventSpeaker.picture,
+            },
+          ]);
+        });
+
+        it('returns matching speakers when searching by exact email (case insensitive)', async () => {
+          const eventSpeaker = await eventSpeakerFactory({
+            event,
+            attributes: { name: 'John Doe', email: 'john.doe@example.com' },
+          });
+
+          const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+            query: 'JOHN.DOE@EXAMPLE.COM',
             kind: ['speakers'],
           });
 
@@ -173,16 +195,41 @@ describe('Autocomplete for event management', () => {
           expect(results.filter((r) => r.kind === 'speakers')).toHaveLength(0);
         });
 
-        it('does not return speakers when displayProposalsSpeakers is false', async () => {
-          const eventWithoutSpeakers = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
-          await eventSpeakerFactory({ event: eventWithoutSpeakers, attributes: { name: 'John Doe' } });
+        it('does not return speakers when displayProposalsSpeakers is false even when speakers exist', async () => {
+          const eventWithHiddenSpeakers = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
+          await eventSpeakerFactory({ event: eventWithHiddenSpeakers, attributes: { name: 'John Doe' } });
 
-          const results = await Autocomplete.for(owner.id, team.slug, eventWithoutSpeakers.slug).search({
+          const results = await Autocomplete.for(owner.id, team.slug, eventWithHiddenSpeakers.slug).search({
             query: 'John',
             kind: ['speakers'],
           });
 
           expect(results.filter((r) => r.kind === 'speakers')).toHaveLength(0);
+        });
+      });
+
+      describe('speaker search for proposal creation (kind = "speakers-for-proposal")', () => {
+        it('returns speakers even when displayProposalsSpeakers is false', async () => {
+          const eventWithoutSpeakers = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
+          const eventSpeaker = await eventSpeakerFactory({
+            event: eventWithoutSpeakers,
+            attributes: { name: 'John Doe' },
+          });
+
+          const results = await Autocomplete.for(owner.id, team.slug, eventWithoutSpeakers.slug).search({
+            query: 'John',
+            kind: ['speakers-for-proposal'],
+          });
+
+          expect(results).toEqual([
+            {
+              kind: 'speakers',
+              id: eventSpeaker.id,
+              title: eventSpeaker.name,
+              description: eventSpeaker.company,
+              picture: eventSpeaker.picture,
+            },
+          ]);
         });
       });
 
