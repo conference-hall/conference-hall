@@ -37,36 +37,28 @@ export class EventSpeakers extends UserEventAuthorization {
 
     const { query, proposalStatus, sort = 'name-asc' } = filters;
 
-    const whereClause: EventSpeakerWhereInput = {
-      eventId: event.id,
-      OR: query
-        ? [{ name: { contains: query, mode: 'insensitive' } }, { email: { equals: query, mode: 'insensitive' } }]
-        : undefined,
-      proposals: proposalStatus
-        ? proposalStatus === 'accepted'
-          ? {
-              some: {
-                deliberationStatus: 'ACCEPTED',
-                isDraft: false,
-              },
-            }
-          : proposalStatus === 'confirmed'
-            ? {
-                some: {
-                  confirmationStatus: 'CONFIRMED',
-                  isDraft: false,
-                },
-              }
-            : proposalStatus === 'declined'
-              ? {
-                  some: {
-                    confirmationStatus: 'DECLINED',
-                    isDraft: false,
-                  },
-                }
-              : undefined
-        : undefined,
-    };
+    const whereClause: EventSpeakerWhereInput = { eventId: event.id };
+
+    if (query) {
+      whereClause.OR = [
+        { name: { contains: query, mode: 'insensitive' } },
+        { email: { equals: query, mode: 'insensitive' } },
+      ];
+    }
+
+    if (proposalStatus === 'accepted') {
+      whereClause.proposals = {
+        some: { deliberationStatus: 'ACCEPTED', isDraft: false },
+      };
+    } else if (proposalStatus === 'confirmed') {
+      whereClause.proposals = {
+        some: { confirmationStatus: 'CONFIRMED', isDraft: false },
+      };
+    } else if (proposalStatus === 'declined') {
+      whereClause.proposals = {
+        some: { confirmationStatus: 'DECLINED', isDraft: false },
+      };
+    }
 
     const total = await db.eventSpeaker.count({ where: whereClause });
 
