@@ -68,6 +68,7 @@ function BarListInner<T>({
                 {item.to ? (
                   <Link
                     to={item.to}
+                    relative="path"
                     className={cx(
                       // base
                       'truncate whitespace-nowrap rounded-sm text-sm',

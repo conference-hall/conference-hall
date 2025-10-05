@@ -72,14 +72,14 @@ describe('CfpMetrics', () => {
       expect(metrics.reviewsCount).toBe(2);
       expect(metrics.byFormats).toEqual(
         expect.arrayContaining([
-          { id: format.id, name: format.name, value: 2, to: `reviews?formats=${format.id}` },
-          { id: format2.id, name: format2.name, value: 1, to: `reviews?formats=${format2.id}` },
+          { id: format.id, name: format.name, value: 2, to: `../proposals?formats=${format.id}` },
+          { id: format2.id, name: format2.name, value: 1, to: `../proposals?formats=${format2.id}` },
         ]),
       );
       expect(metrics.byCategories).toEqual(
         expect.arrayContaining([
-          { id: category.id, name: category.name, value: 1, to: `reviews?categories=${category.id}` },
-          { id: category2.id, name: category2.name, value: 1, to: `reviews?categories=${category2.id}` },
+          { id: category.id, name: category.name, value: 1, to: `../proposals?categories=${category.id}` },
+          { id: category2.id, name: category2.name, value: 1, to: `../proposals?categories=${category2.id}` },
         ]),
       );
       expect(metrics.byDays).toEqual(
