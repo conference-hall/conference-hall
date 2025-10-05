@@ -9,7 +9,6 @@ import { useCurrentEventTeam } from '~/features/event-management/event-team-cont
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
@@ -157,8 +156,6 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
     team.userPermissions;
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
 
-  const proposalCreationEnabled = useFlag('organizerProposalCreation');
-
   const hasSpeakers = proposal.speakers.length > 0;
   const hasFormats = event.formats && event.formats.length > 0;
   const hasCategories = event.categories && event.categories.length > 0;
@@ -202,8 +199,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   event={params.event}
                   proposalId={params.proposal}
                   proposalSpeakers={proposal.speakers}
-                  canChangeSpeakers={canEditEventProposal && proposalCreationEnabled}
-                  canCreateSpeaker={canCreateEventSpeaker && proposalCreationEnabled}
+                  canChangeSpeakers={canEditEventProposal}
+                  canCreateSpeaker={canCreateEventSpeaker}
                   canEditSpeaker={canEditEventSpeaker}
                   className="space-y-3 p-4 lg:px-6"
                 />

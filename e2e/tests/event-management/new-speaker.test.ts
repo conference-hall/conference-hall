@@ -3,7 +3,6 @@ import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { NewSpeakerPage } from './speaker-form.page.ts';
 
@@ -13,8 +12,6 @@ let event: Event;
 loginWith('clark-kent');
 
 test.beforeEach(async () => {
-  await flags.set('organizerProposalCreation', true);
-
   const user = await userFactory({ traits: ['clark-kent'] });
   team = await teamFactory({ owners: [user] });
   event = await eventFactory({ team, traits: ['conference-cfp-open'] });

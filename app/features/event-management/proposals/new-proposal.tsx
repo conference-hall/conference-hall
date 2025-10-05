@@ -11,7 +11,6 @@ import { EventSpeakers } from '~/features/event-management/speakers/services/eve
 import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
-import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { EventSpeakerSaveSchema } from '~/shared/types/speaker.types.ts';
@@ -93,12 +92,11 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 
 export default function NewProposalRoute({ actionData, params, loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const isFeatureEnabled = useFlag('organizerProposalCreation');
   const { team, event } = useCurrentEventTeam();
   const formId = useId();
   const preselectedSpeaker = loaderData?.preselectedSpeaker;
 
-  if (!isFeatureEnabled || !team.userPermissions?.canCreateEventProposal) {
+  if (!team.userPermissions?.canCreateEventProposal) {
     return null;
   }
 

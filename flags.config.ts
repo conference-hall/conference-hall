@@ -7,10 +7,4 @@ export default defineFlagsConfig({
     defaultValue: false,
     tags: ['frontend'] as const,
   },
-  organizerProposalCreation: {
-    description: 'Enables organizers to create proposals directly from the proposals list page.',
-    type: 'boolean',
-    defaultValue: false,
-    tags: ['frontend'] as const,
-  },
 });

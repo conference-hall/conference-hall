@@ -3,13 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { SearchInput } from '~/design-system/forms/search-input.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { FiltersMenu } from './filters-menu.tsx';
 import { SortMenu } from './sort-menu.tsx';
 
 export function Filters() {
   const { t } = useTranslation();
-  const isFeatureEnabled = useFlag('organizerProposalCreation');
   const { team } = useCurrentEventTeam();
 
   const { canCreateEventSpeaker } = team.userPermissions;
@@ -25,7 +23,7 @@ export function Filters() {
 
         <SortMenu />
 
-        {isFeatureEnabled && canCreateEventSpeaker && (
+        {canCreateEventSpeaker && (
           <ButtonLink iconLeft={PlusIcon} to="new" block>
             {t('event-management.speakers.new-speaker')}
           </ButtonLink>
