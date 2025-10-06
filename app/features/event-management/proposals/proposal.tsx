@@ -6,7 +6,7 @@ import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { Link } from '~/design-system/links.tsx';
+import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
@@ -16,6 +16,7 @@ import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
 import type { Route } from './+types/proposal.ts';
+import { ConversationDrawer } from './components/communication/conversation-drawer.tsx';
 import { LoadingActivities } from './components/detail/activity/loading-activities.tsx';
 import { ProposalActivityFeed } from './components/detail/activity/proposal-activity-feed.tsx';
 import { CategoriesSection } from './components/detail/metadata/categories-section.tsx';
@@ -210,13 +211,16 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   className="space-y-3 p-4 lg:px-6"
                 />
 
-                {isSpeakerCommunicationEnabled ? (
-                  <div className="px-4 pb-4 lg:px-6 w-full">
-                    <Link to="" variant="secondary" size="xs" weight="semibold" iconLeft={ChatBubbleLeftRightIcon}>
-                      Start a conversation
-                    </Link>
-                  </div>
-                ) : null}
+                <ConversationDrawer
+                  enabled={isSpeakerCommunicationEnabled}
+                  messages={[]}
+                  className="flex gap-2 cursor-pointer px-4 pb-4 lg:px-6 hover:underline"
+                >
+                  <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
+                  <Text size="xs" weight="semibold">
+                    Start a conversation
+                  </Text>
+                </ConversationDrawer>
                 <Divider />
               </>
             ) : null}

@@ -9,10 +9,10 @@ type Props = {
 
 export function SpeakerRow({ name, picture, description }: Props) {
   return (
-    <div className="flex items-center gap-2 truncate group-hover:bg-gray-100 group-hover:rounded-full">
+    <div className="flex items-center gap-2 truncate">
       <Avatar picture={picture} name={name} size="xs" />
       <div className="flex items-baseline gap-2 truncate">
-        <Text weight="semibold" truncate>
+        <Text weight="semibold" truncate className="group-hover:underline">
           {name}
         </Text>
 

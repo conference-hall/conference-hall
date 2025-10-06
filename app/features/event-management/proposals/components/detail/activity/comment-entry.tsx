@@ -8,6 +8,7 @@ import type { FeedItem } from '~/features/event-management/proposals/services/ac
 import { formatDistance } from '~/shared/datetimes/datetimes.ts';
 import { CommentReactions } from './comment-reactions.tsx';
 
+// todo(conversation): FeedItem type should be shared (not on server)
 export function CommentEntry({ item }: { item: FeedItem }) {
   const { t, i18n } = useTranslation();
   const user = useUser();
