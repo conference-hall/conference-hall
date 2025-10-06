@@ -1,14 +1,17 @@
 import { parseWithZod } from '@conform-to/zod/v4';
+import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { Suspense } from 'react';
 import { Await } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { Link } from '~/design-system/links.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
@@ -160,6 +163,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
   const hasFormats = event.formats && event.formats.length > 0;
   const hasCategories = event.categories && event.categories.length > 0;
 
+  const isSpeakerCommunicationEnabled = useFlag('speakersCommunication');
+
   return (
     <Page>
       <NavigationHeader {...pagination} />
@@ -204,6 +209,14 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   canEditSpeaker={canEditEventSpeaker}
                   className="space-y-3 p-4 lg:px-6"
                 />
+
+                {isSpeakerCommunicationEnabled ? (
+                  <div className="px-4 pb-4 lg:px-6 w-full">
+                    <Link to="" variant="secondary" size="xs" weight="semibold" iconLeft={ChatBubbleLeftRightIcon}>
+                      Start a conversation
+                    </Link>
+                  </div>
+                ) : null}
                 <Divider />
               </>
             ) : null}
