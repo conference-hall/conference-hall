@@ -28,6 +28,7 @@ import { OtherProposalsDisclosure } from './components/detail/other-proposals-di
 import { ProposalActionsMenu } from './components/detail/proposal-actions-menu.tsx';
 import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
 import { ActivityFeed } from './services/activity-feed.server.ts';
+import { CommentCreateSchema, CommentReactionSchema } from './services/comments.schema.server.ts';
 import { Comments } from './services/comments.server.ts';
 import {
   ProposalSaveCategoriesSchema,
@@ -37,7 +38,7 @@ import {
   ProposalUpdateSchema,
 } from './services/proposal-management.schema.server.ts';
 import { ProposalManagement } from './services/proposal-management.server.ts';
-import { CommentReactionSchema, ReviewUpdateDataSchema } from './services/proposal-review.schema.server.ts';
+import { ReviewUpdateDataSchema } from './services/proposal-review.schema.server.ts';
 import type { ProposalReviewData } from './services/proposal-review.server.ts';
 import { ProposalReview } from './services/proposal-review.server.ts';
 import { ProposalStatusSchema, ProposalStatusUpdater } from './services/proposal-status-updater.server.ts';
@@ -54,14 +55,16 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
   const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
   const activityFeed = ActivityFeed.for(userId, params.team, params.event, params.proposal);
+  const discussions = Comments.for(userId, params.team, params.event, params.proposal);
 
   const activityPromise = activityFeed.activity();
+  const speakersConversationPromise = discussions.listSpeakerComments();
   const proposal = await proposalReview.get();
 
   const otherProposalsPromise = proposalReview.getOtherProposals(proposal.speakers.map((s) => s.id));
   const pagination = await proposalReview.getPreviousAndNextReviews(filters);
 
-  return { proposal, pagination, activityPromise, otherProposalsPromise };
+  return { proposal, pagination, activityPromise, otherProposalsPromise, speakersConversationPromise };
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
@@ -81,8 +84,9 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
     }
     case 'add-comment': {
       const discussions = Comments.for(userId, params.team, params.event, params.proposal);
-      const comment = form.get('comment');
-      if (comment) await discussions.add(comment.toString());
+      const result = parseWithZod(form, { schema: CommentCreateSchema });
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      await discussions.add(result.value);
       break;
     }
     case 'delete-comment': {
@@ -158,7 +162,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
   const { team, event } = useCurrentEventTeam();
   const { canEditEvent, canEditEventProposal, canCreateEventSpeaker, canEditEventSpeaker, canChangeProposalStatus } =
     team.userPermissions;
-  const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
+  const { proposal, pagination, activityPromise, otherProposalsPromise, speakersConversationPromise } = loaderData;
 
   const hasSpeakers = proposal.speakers.length > 0;
   const hasFormats = event.formats && event.formats.length > 0;
@@ -211,16 +215,25 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   className="space-y-3 p-4 lg:px-6"
                 />
 
-                <ConversationDrawer
-                  enabled={isSpeakerCommunicationEnabled}
-                  messages={[]}
-                  className="flex gap-2 cursor-pointer px-4 pb-4 lg:px-6 hover:underline"
-                >
-                  <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
-                  <Text size="xs" weight="semibold">
-                    Start a conversation
-                  </Text>
-                </ConversationDrawer>
+                <Suspense fallback={null}>
+                  <Await resolve={speakersConversationPromise}>
+                    {(speakersConversation) => (
+                      <ConversationDrawer
+                        enabled={isSpeakerCommunicationEnabled}
+                        messages={speakersConversation}
+                        className="flex gap-2 cursor-pointer px-4 pb-4 lg:px-6 hover:underline"
+                      >
+                        <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
+                        <Text size="xs" weight="semibold">
+                          {speakersConversation.length === 0
+                            ? 'Start a conversation'
+                            : `Conversation - ${speakersConversation.length} messages`}
+                        </Text>
+                      </ConversationDrawer>
+                    )}
+                  </Await>
+                </Suspense>
+
                 <Divider />
               </>
             ) : null}

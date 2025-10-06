@@ -13,7 +13,6 @@ import { MessageInputForm } from './message-input-form.tsx';
 type Message = {
   id: string;
   timestamp: Date;
-  type: 'comment';
   user: string;
   userId: string;
   picture: string | null;
@@ -28,32 +27,9 @@ type Props = {
   className?: string;
 };
 
-const msg: Array<Message> = [
-  {
-    id: '1',
-    type: 'comment',
-    timestamp: new Date(),
-    user: 'Peter Parker',
-    userId: '1',
-    picture: null,
-    comment: 'Hello world',
-    reactions: [],
-  },
-  {
-    id: '2',
-    type: 'comment',
-    timestamp: new Date(),
-    user: 'John Doe',
-    userId: '2',
-    picture: null,
-    comment:
-      'Not my area of expertise, but the proposal seems well-structured. The speakers appear qualified and the topic is relevant for backend developers. Would defer to infrastructure track reviewers for final assessment.',
-    reactions: [],
-  },
-];
-
 // todo(conversation): to move in design system ?
 // todo(conversation): remove enabled from the component
+// todo(conversation): optimistic rendenring ?
 export function ConversationDrawer({ enabled, messages, children, className }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -68,16 +44,16 @@ export function ConversationDrawer({ enabled, messages, children, className }: P
       <SlideOver open={open} onClose={() => setOpen(false)} withBorder={false} size="l">
         <h2 className="sr-only">Conversation</h2>
 
-        {msg.length === 0 ? (
+        {messages.length === 0 ? (
           <SlideOver.Content className="flex flex-col gap-6 items-center justify-center text-gray-400">
             <ChatBubbleLeftRightIcon className="h-16 w-16" aria-hidden />
             <Subtitle>
-              Start a new conversation with <strong>Peter Parker</strong>
+              Start a conversation with <strong>Peter Parker</strong>
             </Subtitle>
           </SlideOver.Content>
         ) : (
           <SlideOver.Content className="flex flex-col justify-end">
-            {msg.map((message) => (
+            {messages.map((message) => (
               <MessageBlock key={message.id} message={message} />
             ))}
           </SlideOver.Content>
@@ -86,7 +62,8 @@ export function ConversationDrawer({ enabled, messages, children, className }: P
         <SlideOver.Actions>
           <MessageInputForm
             name="message"
-            intent="send-message-to-speaker"
+            intent="add-comment"
+            channel="SPEAKER"
             inputLabel="Envoyer un message"
             buttonLabel="Envoyer"
             placeholder="Envoyer un message à Peter Parker"

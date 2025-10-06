@@ -1,7 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
-import type { CommentReactionData } from './proposal-review.schema.server.ts';
+import type { CommentCreateData, CommentReactionData } from './comments.schema.server.ts';
 
 export class Comments extends UserEventAuthorization {
   private proposalId: string;
@@ -15,11 +15,11 @@ export class Comments extends UserEventAuthorization {
     return new Comments(userId, team, event, proposalId);
   }
 
-  async add(comment: string) {
+  async add(comment: CommentCreateData) {
     await this.needsPermission('canAccessEvent');
 
     await db.comment.create({
-      data: { userId: this.userId, proposalId: this.proposalId, comment, channel: 'ORGANIZER' },
+      data: { userId: this.userId, proposalId: this.proposalId, comment: comment.message, channel: comment.channel },
     });
   }
 
@@ -45,6 +45,34 @@ export class Comments extends UserEventAuthorization {
 
     // create
     return db.commentReaction.create({ data: { userId: this.userId, commentId, code } });
+  }
+
+  async listSpeakerComments() {
+    await this.needsPermission('canAccessEvent');
+
+    // todo(conversation): rework/rename comment model in database
+    const comments = await db.comment.findMany({
+      where: { channel: 'SPEAKER', proposalId: this.proposalId },
+      include: { user: true },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    // Get comments reactions
+    // todo(conversation): get comments from the query instead
+    const commentIds = comments.map((result) => result.id);
+    const reactions = await Comments.listReactions(commentIds, this.userId);
+
+    return comments.map((comment) => {
+      return {
+        id: comment.id,
+        timestamp: comment.updatedAt,
+        userId: comment.user.id,
+        user: comment.user.name ?? '?',
+        picture: comment.user.picture ?? null,
+        comment: comment.comment,
+        reactions: reactions[comment.id] || [],
+      };
+    });
   }
 
   static async listReactions(commentIds: Array<string>, currentUserId: string) {

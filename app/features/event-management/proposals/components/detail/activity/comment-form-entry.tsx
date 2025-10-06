@@ -11,8 +11,9 @@ export function CommentFormEntry() {
   return (
     <ActivityFeed.Entry marker={<Avatar picture={user?.picture} name={user?.name} />}>
       <MessageInputForm
-        name="comment"
+        name="message"
         intent="add-comment"
+        channel="ORGANIZER"
         inputLabel={t('event-management.proposal-page.comment.label')}
         buttonLabel={t('event-management.proposal-page.comment.submit')}
         placeholder={t('event-management.proposal-page.comment.placeholder')}

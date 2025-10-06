@@ -2,17 +2,27 @@ import { useRef } from 'react';
 import { Form, useNavigation } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Label } from '~/design-system/typography.tsx';
+import type { MessageChannel } from '~/shared/types/proposals.types.ts';
 
 type Props = {
   name: string;
   intent: string;
+  channel: MessageChannel;
   inputLabel: string;
   buttonLabel: string;
   placeholder: string;
   autoFocus?: boolean;
 };
 
-export function MessageInputForm({ name, intent, inputLabel, buttonLabel, placeholder, autoFocus = false }: Props) {
+export function MessageInputForm({
+  name,
+  intent,
+  inputLabel,
+  buttonLabel,
+  placeholder,
+  channel,
+  autoFocus = false,
+}: Props) {
   const navigation = useNavigation();
   const isAdding = navigation.state === 'submitting';
   const formRef = useRef<HTMLFormElement>(null);
@@ -24,6 +34,7 @@ export function MessageInputForm({ name, intent, inputLabel, buttonLabel, placeh
       </Label>
 
       <input type="hidden" name="intent" value={intent} />
+      <input type="hidden" name="channel" value={channel} />
 
       <div className="overflow-hidden bg-white rounded-lg pb-12 shadow-xs ring-1 ring-inset ring-gray-200 focus-within:ring-2 focus-within:ring-indigo-600">
         <textarea
