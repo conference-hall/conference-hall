@@ -29,7 +29,7 @@ describe('ProposalConversationForOrganizers', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
       const conversationService = ProposalConversationForOrganizers.for(owner.id, team.slug, event.slug, proposal.id);
-      await conversationService.addMessage('Hello speaker');
+      await conversationService.addMessage({ message: 'Hello speaker' });
 
       const conversation = await db.conversation.findFirst({
         where: { eventId: event.id, contextType: 'PROPOSAL', contextIds: { has: proposal.id } },
@@ -53,8 +53,8 @@ describe('ProposalConversationForOrganizers', () => {
       const conversation = await conversationFactory({ event, proposalId: proposal.id });
 
       const conversationService = ProposalConversationForOrganizers.for(owner.id, team.slug, event.slug, proposal.id);
-      await conversationService.addMessage('First message');
-      await conversationService.addMessage('Second message');
+      await conversationService.addMessage({ message: 'First message' });
+      await conversationService.addMessage({ message: 'Second message' });
 
       const conversations = await db.conversation.findMany({
         where: { eventId: event.id, contextType: 'PROPOSAL', contextIds: { has: proposal.id } },
@@ -69,8 +69,8 @@ describe('ProposalConversationForOrganizers', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
       const conversationService = ProposalConversationForOrganizers.for(owner.id, team.slug, event.slug, proposal.id);
-      await conversationService.addMessage('First message');
-      await conversationService.addMessage('Second message');
+      await conversationService.addMessage({ message: 'First message' });
+      await conversationService.addMessage({ message: 'Second message' });
 
       const conversation = await db.conversation.findFirst({
         where: { eventId: event.id, contextType: 'PROPOSAL', contextIds: { has: proposal.id } },
@@ -87,7 +87,7 @@ describe('ProposalConversationForOrganizers', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const conversation = ProposalConversationForOrganizers.for(user.id, team.slug, event.slug, proposal.id);
 
-      await expect(conversation.addMessage('Hello')).rejects.toThrowError(ForbiddenOperationError);
+      await expect(conversation.addMessage({ message: 'Hello' })).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 

@@ -29,6 +29,7 @@ const renderComponent = (props = {}) => {
   return render(<RouteStub />);
 };
 
+// todo(conversation): move tests into message-input-form.tsx
 describe('CommentFormEntry', () => {
   it('renders with user avatar and textarea', async () => {
     const screen = renderComponent();

@@ -1,9 +1,9 @@
 import { db } from 'prisma/db.server.ts';
-import type { Message } from '~/shared/types/conversation.types.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type { CommentCreateData, CommentReactionData } from './comments.schema.server.ts';
 
+// todo(conversation): delete Channel attribute from comments table
 export class Comments extends UserEventAuthorization {
   private proposalId: string;
 
@@ -20,7 +20,7 @@ export class Comments extends UserEventAuthorization {
     await this.needsPermission('canAccessEvent');
 
     await db.comment.create({
-      data: { userId: this.userId, proposalId: this.proposalId, comment: comment.message, channel: comment.channel },
+      data: { userId: this.userId, proposalId: this.proposalId, comment: comment.message, channel: 'ORGANIZER' },
     });
   }
 
@@ -48,38 +48,6 @@ export class Comments extends UserEventAuthorization {
     return db.commentReaction.create({ data: { userId: this.userId, commentId, code } });
   }
 
-  // todo(conversation): add tests
-  async listSpeakerComments(): Promise<Array<Message>> {
-    await this.needsPermission('canAccessEvent');
-
-    // todo(conversation): rework/rename comment model in database
-    const comments = await db.comment.findMany({
-      where: { channel: 'SPEAKER', proposalId: this.proposalId },
-      include: { user: true },
-      orderBy: { createdAt: 'asc' },
-    });
-
-    // Get comments reactions
-    // todo(conversation): get comments from the query instead
-    const commentIds = comments.map((result) => result.id);
-    const reactions = await Comments.listReactions(commentIds, this.userId);
-
-    return comments.map((comment) => {
-      return {
-        id: comment.id,
-        sender: {
-          userId: comment.user.id,
-          name: comment.user.name ?? '?',
-          picture: comment.user.picture ?? null,
-          role: 'SPEAKER', // todo(conversation): get info from db (stored in table)
-        },
-        sentAt: comment.updatedAt,
-        content: comment.comment,
-        reactions: reactions[comment.id] || [],
-      };
-    });
-  }
-
   static async listReactions(commentIds: Array<string>, currentUserId: string) {
     if (commentIds.length === 0) return {};
 
@@ -88,6 +56,7 @@ export class Comments extends UserEventAuthorization {
       include: { reactedBy: true },
     });
 
+    // todo(conversation): resuse algo with conversations
     return commentIds.reduce<Record<string, Array<EmojiReaction>>>((byComments, commentId) => {
       const commentReactions = reactions.filter((reaction) => reaction.commentId === commentId);
 

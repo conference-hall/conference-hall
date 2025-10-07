@@ -30,10 +30,7 @@ describe('Comments', () => {
     it('adds comment to a proposal', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      await Comments.for(owner.id, team.slug, event.slug, proposal.id).add({
-        message: 'My message',
-        channel: 'ORGANIZER',
-      });
+      await Comments.for(owner.id, team.slug, event.slug, proposal.id).add({ message: 'My message' });
 
       const messages = await db.comment.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
       expect(messages.length).toBe(1);
@@ -47,12 +44,7 @@ describe('Comments', () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const discussion = Comments.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(
-        discussion.add({
-          message: 'My message',
-          channel: 'ORGANIZER',
-        }),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(discussion.add({ message: 'My message' })).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 

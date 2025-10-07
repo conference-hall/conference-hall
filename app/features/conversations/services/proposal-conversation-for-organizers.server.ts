@@ -1,7 +1,9 @@
 import { db } from 'prisma/db.server.ts';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import type { ConversationMessageCreateData } from './conversation.schema.server.ts';
 
+// todo(conversation): extract common code of conversations (orga vs. speaker sides)
 export class ProposalConversationForOrganizers extends UserEventAuthorization {
   private proposalId: string;
 
@@ -14,7 +16,7 @@ export class ProposalConversationForOrganizers extends UserEventAuthorization {
     return new ProposalConversationForOrganizers(userId, team, event, proposalId);
   }
 
-  async addMessage(content: string) {
+  async addMessage({ message }: ConversationMessageCreateData) {
     const event = await this.needsPermission('canAccessEvent');
 
     await db.$transaction(async (tx) => {
@@ -38,7 +40,7 @@ export class ProposalConversationForOrganizers extends UserEventAuthorization {
 
       // Create message
       await tx.conversationMessage.create({
-        data: { conversationId: conversation.id, senderId: this.userId, content, type: 'TEXT' },
+        data: { conversationId: conversation.id, senderId: this.userId, content: message, type: 'TEXT' },
       });
     });
   }

@@ -12,7 +12,6 @@ type Props = {
   className?: string;
 };
 
-// todo(conversation): to move in dedicated feature folder ?
 // todo(conversation): optimistic rendering
 export function ConversationDrawer({ messages, children, className }: Props) {
   const [open, setOpen] = useState(false);
@@ -45,8 +44,7 @@ export function ConversationDrawer({ messages, children, className }: Props) {
         <SlideOver.Actions>
           <MessageInputForm
             name="message"
-            intent="add-comment"
-            channel="SPEAKER"
+            intent="add-message"
             inputLabel="Envoyer un message"
             buttonLabel="Envoyer"
             placeholder="Envoyer un message à Peter Parker"
