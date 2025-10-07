@@ -11,33 +11,36 @@ datasource db {
 }
 
 model User {
-  id                 String              @id @default(cuid())
-  uid                String?
-  name               String
-  email              String
-  bio                String?
-  picture            String?
-  company            String?
-  references         String?
-  location           String?
-  socialLinks        Json                @default("[]")
-  termsAccepted      Boolean             @default(false)
-  locale             String              @default("en")
-  admin              Boolean             @default(false)
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  migrationId        String?
-  organizerKey       String?
-  organizerKeyAccess OrganizerKeyAccess? @relation(fields: [organizerKey], references: [id])
-  talks              Talk[]              @relation("speakers_talks")
-  teams              TeamMember[]
-  reviews            Review[]
-  surveys            Survey[]
-  createdTalks       Talk[]
-  createdEvents      Event[]
-  comments           Comment[]
-  commentReactions   CommentReaction[]
-  eventsSpeaker      EventSpeaker[]
+  id                       String                    @id @default(cuid())
+  uid                      String?
+  name                     String
+  email                    String
+  bio                      String?
+  picture                  String?
+  company                  String?
+  references               String?
+  location                 String?
+  socialLinks              Json                      @default("[]")
+  termsAccepted            Boolean                   @default(false)
+  locale                   String                    @default("en")
+  admin                    Boolean                   @default(false)
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  migrationId              String?
+  organizerKey             String?
+  organizerKeyAccess       OrganizerKeyAccess?       @relation(fields: [organizerKey], references: [id])
+  talks                    Talk[]                    @relation("speakers_talks")
+  teams                    TeamMember[]
+  reviews                  Review[]
+  surveys                  Survey[]
+  createdTalks             Talk[]
+  createdEvents            Event[]
+  comments                 Comment[]
+  commentReactions         CommentReaction[]
+  eventsSpeaker            EventSpeaker[]
+  conversationMessages     ConversationMessage[]
+  conversationParticipants ConversationParticipant[]
+  conversationReactions    ConversationReaction[]
 
   @@index([uid])
   @@map("users")
@@ -128,6 +131,7 @@ model Event {
   integrations             EventIntegrationConfig[]
   speakers                 EventSpeaker[]
   emailCustomizations      EventEmailCustomization[]
+  conversations            Conversation[]
 
   @@map("events")
 }
@@ -432,4 +436,74 @@ model EventEmailCustomization {
 
   @@unique([eventId, template, locale])
   @@map("event_email_customizations")
+}
+
+model Conversation {
+  id           String                    @id @default(cuid())
+  eventId      String
+  event        Event                     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  contextType  ConversationContextType
+  contextIds   String[]
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  messages     ConversationMessage[]
+  participants ConversationParticipant[]
+
+  @@index([eventId])
+  @@map("conversations")
+}
+
+enum ConversationContextType {
+  EVENT
+  PROPOSAL
+}
+
+model ConversationMessage {
+  id             String                  @id @default(cuid())
+  conversationId String
+  conversation   Conversation            @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String?
+  sender         User?                   @relation(fields: [senderId], references: [id])
+  content        String
+  type           ConversationMessageType @default(TEXT)
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+  reactions      ConversationReaction[]
+
+  @@map("conversation_messages")
+}
+
+enum ConversationMessageType {
+  TEXT
+  SYSTEM
+}
+
+model ConversationParticipant {
+  id             String                      @id @default(cuid())
+  conversationId String
+  conversation   Conversation                @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User                        @relation(fields: [userId], references: [id])
+  role           ConversationParticipantRole
+  joinedAt       DateTime                    @default(now())
+
+  @@unique([conversationId, userId])
+  @@map("conversation_participants")
+}
+
+enum ConversationParticipantRole {
+  SPEAKER
+  ORGANIZER
+}
+
+model ConversationReaction {
+  id        String              @id @default(cuid())
+  code      String
+  messageId String
+  message   ConversationMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  userId    String
+  reactedBy User                @relation(fields: [userId], references: [id])
+
+  @@unique([messageId, userId, code])
+  @@map("conversation_reactions")
 }
