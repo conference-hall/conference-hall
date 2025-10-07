@@ -1,4 +1,5 @@
 import { db } from 'prisma/db.server.ts';
+import type { Message } from '~/shared/types/conversation.types.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type { CommentCreateData, CommentReactionData } from './comments.schema.server.ts';
@@ -47,7 +48,8 @@ export class Comments extends UserEventAuthorization {
     return db.commentReaction.create({ data: { userId: this.userId, commentId, code } });
   }
 
-  async listSpeakerComments() {
+  // todo(conversation): add tests
+  async listSpeakerComments(): Promise<Array<Message>> {
     await this.needsPermission('canAccessEvent');
 
     // todo(conversation): rework/rename comment model in database
@@ -65,11 +67,14 @@ export class Comments extends UserEventAuthorization {
     return comments.map((comment) => {
       return {
         id: comment.id,
-        timestamp: comment.updatedAt,
-        userId: comment.user.id,
-        user: comment.user.name ?? '?',
-        picture: comment.user.picture ?? null,
-        comment: comment.comment,
+        sender: {
+          userId: comment.user.id,
+          name: comment.user.name ?? '?',
+          picture: comment.user.picture ?? null,
+          role: 'SPEAKER', // todo(conversation): get info from db (stored in table)
+        },
+        sentAt: comment.updatedAt,
+        content: comment.comment,
         reactions: reactions[comment.id] || [],
       };
     });

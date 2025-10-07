@@ -16,7 +16,7 @@ import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
 import type { Route } from './+types/proposal.ts';
-import { ConversationDrawer } from './components/communication/conversation-drawer.tsx';
+import { ConversationDrawer } from './components/conversation/conversation-drawer.tsx';
 import { LoadingActivities } from './components/detail/activity/loading-activities.tsx';
 import { ProposalActivityFeed } from './components/detail/activity/proposal-activity-feed.tsx';
 import { CategoriesSection } from './components/detail/metadata/categories-section.tsx';
@@ -215,24 +215,25 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   className="space-y-3 p-4 lg:px-6"
                 />
 
-                <Suspense fallback={null}>
-                  <Await resolve={speakersConversationPromise}>
-                    {(speakersConversation) => (
-                      <ConversationDrawer
-                        enabled={isSpeakerCommunicationEnabled}
-                        messages={speakersConversation}
-                        className="flex gap-2 cursor-pointer px-4 pb-4 lg:px-6 hover:underline"
-                      >
-                        <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
-                        <Text size="xs" weight="semibold">
-                          {speakersConversation.length === 0
-                            ? 'Start a conversation'
-                            : `Conversation - ${speakersConversation.length} messages`}
-                        </Text>
-                      </ConversationDrawer>
-                    )}
-                  </Await>
-                </Suspense>
+                {isSpeakerCommunicationEnabled ? (
+                  <Suspense fallback={null}>
+                    <Await resolve={speakersConversationPromise}>
+                      {(speakersConversation) => (
+                        <ConversationDrawer
+                          messages={speakersConversation}
+                          className="flex gap-2 cursor-pointer px-4 pb-4 lg:px-6 hover:underline"
+                        >
+                          <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
+                          <Text size="xs" weight="semibold">
+                            {speakersConversation.length === 0
+                              ? 'Start a conversation'
+                              : `Conversation - ${speakersConversation.length} messages`}
+                          </Text>
+                        </ConversationDrawer>
+                      )}
+                    </Await>
+                  </Suspense>
+                ) : null}
 
                 <Divider />
               </>
