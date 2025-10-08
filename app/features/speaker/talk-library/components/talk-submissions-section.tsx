@@ -12,6 +12,7 @@ import type { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 type Props = {
   submissions: Array<{
     slug: string;
+    proposalId: string;
     name: string;
     logoUrl: string | null;
     proposalStatus: SpeakerProposalStatus;
@@ -31,7 +32,7 @@ export function TalkSubmissionsSection({ submissions }: Props) {
         {submissions.map((submission) => (
           <li key={submission.slug}>
             <Link
-              to={href('/:event/proposals', { event: submission.slug })}
+              to={href('/:event/proposals/:proposal', { event: submission.slug, proposal: submission.proposalId })}
               aria-label={t('common.go-to', { name: submission.name })}
               className="flex items-center gap-4 justify-between hover:bg-gray-100 px-4 py-3"
             >
