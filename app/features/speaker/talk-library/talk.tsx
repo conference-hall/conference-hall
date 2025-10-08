@@ -73,7 +73,6 @@ export default function SpeakerTalkRoute({ loaderData: talk, actionData: errors 
             </div>
           }
           canEditSpeakers
-          showBackButton
           showSpeakers
         />
 

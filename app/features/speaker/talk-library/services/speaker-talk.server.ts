@@ -52,6 +52,7 @@ export class SpeakerTalk {
           slug: proposal.event.slug,
           name: proposal.event.name,
           logoUrl: proposal.event.logoUrl,
+          proposalId: proposal.id,
           proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
           createdAt: proposal.createdAt,
         }))

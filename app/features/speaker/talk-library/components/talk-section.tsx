@@ -1,10 +1,7 @@
-import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import { cx } from 'class-variance-authority';
 import type { TalkLevel } from 'prisma/generated/enums.ts';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '~/design-system/badges.tsx';
-import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
@@ -32,7 +29,6 @@ type Props = {
   actions?: ReactNode;
   children?: ReactNode;
   canEditSpeakers?: boolean;
-  showBackButton?: boolean;
   showSpeakers?: boolean;
   showFormats?: boolean;
   showCategories?: boolean;
@@ -44,7 +40,6 @@ export function TalkSection({
   children,
   actions,
   canEditSpeakers = false,
-  showBackButton = false,
   showSpeakers = false,
   showFormats = false,
   showCategories = false,
@@ -56,12 +51,7 @@ export function TalkSection({
   return (
     <Card as="section">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pl-6 pr-3 py-3 border-b border-b-gray-200">
-        <div className={cx('flex items-center gap-2 min-w-0', { '-ml-2': showBackButton })}>
-          {showBackButton ? (
-            <IconLink icon={ChevronLeftIcon} label={t('common.go-back')} to=".." variant="secondary" relative="path" />
-          ) : null}
-          <H1 size="base">{talk.title}</H1>
-        </div>
+        <H1 size="base">{talk.title}</H1>
 
         {actions ? <div className="flex flex-row sm:justify-between items-center gap-3">{actions}</div> : null}
       </div>

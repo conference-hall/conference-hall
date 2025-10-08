@@ -93,6 +93,7 @@ describe('SpeakerTalk', () => {
         {
           name: proposal2.event.name,
           slug: proposal2.event.slug,
+          proposalId: proposal2.id,
           logoUrl: proposal2.event.logoUrl,
           proposalStatus: SpeakerProposalStatus.DeliberationPending,
           createdAt: proposal2.createdAt,
@@ -100,6 +101,7 @@ describe('SpeakerTalk', () => {
         {
           name: proposal1.event.name,
           slug: proposal1.event.slug,
+          proposalId: proposal1.id,
           logoUrl: proposal1.event.logoUrl,
           proposalStatus: SpeakerProposalStatus.DeliberationPending,
           createdAt: proposal1.createdAt,

@@ -83,7 +83,6 @@ export default function ProposalRoute({ loaderData: proposal, actionData: errors
           showSpeakers
           showFormats
           showCategories
-          showBackButton
         />
       </div>
     </Page>
