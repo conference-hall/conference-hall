@@ -3,7 +3,7 @@ import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
-import { NewCommentForm } from './new-comment-form.tsx';
+import { CommentFormEntry } from './comment-form-entry.tsx';
 
 vi.mock('~/app-platform/components/user-context.tsx', () => ({
   useUser: () => ({
@@ -20,7 +20,7 @@ const renderComponent = (props = {}) => {
       path: '/',
       Component: () => (
         <I18nextProvider i18n={i18nTest}>
-          <NewCommentForm {...props} />
+          <CommentFormEntry {...props} />
         </I18nextProvider>
       ),
       action: vi.fn(),
@@ -29,7 +29,7 @@ const renderComponent = (props = {}) => {
   return render(<RouteStub />);
 };
 
-describe('NewCommentForm', () => {
+describe('CommentFormEntry', () => {
   it('renders with user avatar and textarea', async () => {
     const screen = renderComponent();
 

@@ -14,7 +14,7 @@ import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
 import type { Route } from './+types/proposal.ts';
 import { LoadingActivities } from './components/detail/activity/loading-activities.tsx';
-import { ProposalActivityFeed as Feed } from './components/detail/activity/proposal-activity-feed.tsx';
+import { ProposalActivityFeed } from './components/detail/activity/proposal-activity-feed.tsx';
 import { CategoriesSection } from './components/detail/metadata/categories-section.tsx';
 import { FormatsSection } from './components/detail/metadata/formats-section.tsx';
 import { SpeakersSection } from './components/detail/metadata/speakers-section.tsx';
@@ -180,7 +180,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           </TalkSection>
 
           <Suspense fallback={<LoadingActivities />}>
-            <Await resolve={activityPromise}>{(activity) => <Feed activity={activity} />}</Await>
+            <Await resolve={activityPromise}>{(activity) => <ProposalActivityFeed activity={activity} />}</Await>
           </Suspense>
         </div>
 
