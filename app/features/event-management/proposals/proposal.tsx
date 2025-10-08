@@ -165,7 +165,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
       <NavigationHeader {...pagination} />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <div className="space-y-4 lg:col-span-8">
+        <div className="lg:col-span-8">
           <TalkSection
             talk={proposal}
             actions={

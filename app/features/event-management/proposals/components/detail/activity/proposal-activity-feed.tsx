@@ -11,7 +11,9 @@ export function ProposalActivityFeed({ activity }: Props) {
   const { t } = useTranslation();
 
   return (
-    <ActivityFeed label={t('event-management.proposal-page.activity-feed')} className="pl-4 pt-4 lg:pb-8 lg:pr-32">
+    <ActivityFeed label={t('event-management.proposal-page.activity-feed')} className="pl-4 lg:pb-8 lg:pr-32">
+      <ActivityFeed.Entry className="h-6" withLine aria-hidden />
+
       {activity.map((item) => {
         if (item.type === 'comment') {
           return <CommentEntry key={item.id} item={item} />;

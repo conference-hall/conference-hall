@@ -28,7 +28,7 @@ export function ReviewEntry({ item }: { item: FeedItem }) {
   return (
     <ActivityFeed.Entry
       marker={<ReviewIcon feeling={item.feeling} />}
-      className="flex items-center justify-between"
+      className="flex items-center justify-between p-1"
       withLine
     >
       <p className="text-xs text-gray-500">
@@ -40,7 +40,7 @@ export function ReviewEntry({ item }: { item: FeedItem }) {
       </p>
       <ClientOnly>
         {() => (
-          <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
+          <time dateTime={item.timestamp.toISOString()} className="flex-none text-xs text-gray-500">
             {formatDistance(item.timestamp, i18n.language)}
           </time>
         )}
