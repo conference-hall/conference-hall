@@ -2,12 +2,11 @@ import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useNavigation } from 'react-router';
 import { useUser } from '~/app-platform/components/user-context.tsx';
+import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 
-type Props = { className?: string };
-
-export function NewCommentForm({ className }: Props) {
+export function CommentFormEntry() {
   const { t } = useTranslation();
   const user = useUser();
 
@@ -16,9 +15,7 @@ export function NewCommentForm({ className }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
 
   return (
-    <div className={className}>
-      <Avatar picture={user?.picture} name={user?.name} size="xs" />
-
+    <ActivityFeed.Entry marker={<Avatar picture={user?.picture} name={user?.name} />}>
       <Form ref={formRef} method="POST" className="relative flex-auto" key={isAdding ? 'submitting' : 'idle'}>
         <input type="hidden" name="intent" value="add-comment" />
 
@@ -45,6 +42,6 @@ export function NewCommentForm({ className }: Props) {
           </Button>
         </div>
       </Form>
-    </div>
+    </ActivityFeed.Entry>
   );
 }

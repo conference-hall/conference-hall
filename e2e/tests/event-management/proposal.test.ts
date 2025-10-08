@@ -125,10 +125,10 @@ test('displays proposal data and review the proposal', async ({ page }) => {
   await expect(page.getByLabel('Review: 4 (Score)')).toBeVisible();
 
   // Check activity feed
-  await expect(proposalPage.activityFeed).toHaveCount(3);
-  const first = await proposalPage.activityFeed.nth(0);
-  const second = await proposalPage.activityFeed.nth(1);
-  const third = await proposalPage.activityFeed.nth(2);
+  await expect(proposalPage.activityFeed).toHaveCount(5);
+  const first = await proposalPage.activityFeed.nth(1);
+  const second = await proposalPage.activityFeed.nth(2);
+  const third = await proposalPage.activityFeed.nth(3);
   await expect(first).toContainText('Bruce Wayne reviewed the proposal with 3 stars.');
   await expect(second).toContainText('Bruce Wayne commented');
   await expect(second).toContainText('Hello world');
@@ -142,14 +142,14 @@ test('displays proposal data and review the proposal', async ({ page }) => {
   // Add a comment
   await proposalPage.fill(proposalPage.commentInput, 'This is a new comment');
   await proposalPage.commentButton.click();
-  await expect(proposalPage.activityFeed).toHaveCount(4);
-  const fourth = await proposalPage.activityFeed.nth(3);
+  await expect(proposalPage.activityFeed).toHaveCount(6);
+  const fourth = await proposalPage.activityFeed.nth(4);
   await expect(fourth).toContainText('Clark Kent commented');
   await expect(fourth).toContainText('This is a new comment');
 
   // Delete a comment
   await fourth.getByRole('button', { name: 'delete' }).click();
-  await expect(proposalPage.activityFeed).toHaveCount(3);
+  await expect(proposalPage.activityFeed).toHaveCount(5);
 
   // Check speaker profile
   const speakerDrawer = await proposalPage.clickOnSpeaker('Marie Jane');

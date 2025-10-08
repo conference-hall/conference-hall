@@ -1,9 +1,11 @@
 import { HeartIcon, MinusIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { Trans, useTranslation } from 'react-i18next';
+import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import type { FeedItem } from '~/features/event-management/proposals/services/activity-feed.server.ts';
 import { formatDistance } from '~/shared/datetimes/datetimes.ts';
+import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
 
 const ReviewTypes = {
   NO_OPINION: {
@@ -16,7 +18,7 @@ const ReviewTypes = {
   NEGATIVE: { Icon: XMarkIcon, color: 'bg-gray-700', i18nKey: 'event-management.proposal-page.activity-feed.reviewed' },
 } as const;
 
-export function ReviewItem({ item }: { item: FeedItem }) {
+export function ReviewEntry({ item }: { item: FeedItem }) {
   const { i18n } = useTranslation();
 
   if (item.type !== 'review') return null;
@@ -24,13 +26,12 @@ export function ReviewItem({ item }: { item: FeedItem }) {
   const review = ReviewTypes[item.feeling];
 
   return (
-    <>
-      <div
-        className={cx('relative flex h-6 w-6 flex-none items-center justify-center rounded-full z-10', review.color)}
-      >
-        <review.Icon className="h-4 w-4 text-white" aria-hidden="true" />
-      </div>
-      <p className="flex-auto py-0.5 text-xs leading-5 text-gray-500">
+    <ActivityFeed.Entry
+      marker={<ReviewIcon feeling={item.feeling} />}
+      className="flex flex-col sm:flex-row justify-between p-1"
+      withLine
+    >
+      <p className="text-xs text-gray-500">
         <Trans
           i18nKey={review.i18nKey}
           values={{ name: item.user, count: item.note }}
@@ -39,11 +40,21 @@ export function ReviewItem({ item }: { item: FeedItem }) {
       </p>
       <ClientOnly>
         {() => (
-          <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
+          <time dateTime={item.timestamp.toISOString()} className="flex-none text-xs text-gray-500">
             {formatDistance(item.timestamp, i18n.language)}
           </time>
         )}
       </ClientOnly>
-    </>
+    </ActivityFeed.Entry>
+  );
+}
+
+function ReviewIcon({ feeling }: { feeling: ReviewFeeling }) {
+  const review = ReviewTypes[feeling];
+
+  return (
+    <div className={cx('relative flex h-6 w-6 flex-none items-center justify-center rounded-full z-10', review.color)}>
+      <review.Icon className="h-4 w-4 text-white" aria-hidden="true" />
+    </div>
   );
 }

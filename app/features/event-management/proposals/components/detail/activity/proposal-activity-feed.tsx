@@ -1,37 +1,30 @@
-import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
+import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import type { Feed } from '~/features/event-management/proposals/services/activity-feed.server.ts';
-import { CommentItem } from './comment-item.tsx';
-import { NewCommentForm } from './new-comment-form.tsx';
-import { ReviewItem } from './review-item.tsx';
+import { CommentEntry } from './comment-entry.tsx';
+import { CommentFormEntry } from './comment-form-entry.tsx';
+import { ReviewEntry } from './review-entry.tsx';
 
 type Props = { activity: Feed };
 
 export function ProposalActivityFeed({ activity }: Props) {
   const { t } = useTranslation();
-  return (
-    <div className="pl-4 pt-4 space-y-6 lg:pb-8 lg:pr-32 ">
-      {activity.length > 0 && (
-        <ul aria-label={t('event-management.proposal-page.activity-feed')} className="space-y-4">
-          {activity.map((item, index) => (
-            <li key={item.id} className="relative flex gap-x-4">
-              <FeedLine index={index} total={activity.length} />
-              <CommentItem item={item} />
-              <ReviewItem item={item} />
-            </li>
-          ))}
-        </ul>
-      )}
 
-      <NewCommentForm className="flex gap-x-3" />
-    </div>
-  );
-}
-
-function FeedLine({ index, total }: { index: number; total: number }) {
   return (
-    <div className={cx(index === total - 1 ? 'h-12' : '-bottom-8', 'absolute left-0 -top-8 flex w-6 justify-center')}>
-      <div className="w-px bg-gray-300" />
-    </div>
+    <ActivityFeed label={t('event-management.proposal-page.activity-feed')} className="px-4">
+      <ActivityFeed.Entry className="h-6" withLine aria-hidden />
+
+      {activity.map((item) => {
+        if (item.type === 'comment') {
+          return <CommentEntry key={item.id} item={item} />;
+        } else if (item.type === 'review') {
+          return <ReviewEntry key={item.id} item={item} />;
+        } else {
+          return null;
+        }
+      })}
+
+      <CommentFormEntry />
+    </ActivityFeed>
   );
 }

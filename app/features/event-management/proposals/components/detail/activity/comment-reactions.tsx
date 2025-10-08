@@ -40,7 +40,7 @@ export function CommentReactions({ commentId, reactions }: CommentReactions) {
       emojis={EMOJIS}
       reactions={optimisticReactions}
       onChangeEmoji={onChangeEmoji}
-      className="justify-end mt-1"
+      className="justify-end"
     />
   );
 }
