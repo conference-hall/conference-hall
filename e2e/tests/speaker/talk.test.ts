@@ -66,10 +66,10 @@ test('displays and manages a talk', async ({ page }) => {
 
   await test.step('displays the submitted proposals', async () => {
     await expect(talkPage.submissions).toHaveCount(2); // TODO: the footer list should not be an <li>
-    const proposalListPage = await talkPage.clickOnSubmission('Devfest Nantes');
+    const proposalPage = await talkPage.clickOnSubmission('Devfest Nantes');
 
-    await expect(proposalListPage.proposals).toHaveCount(1);
-    await expect(proposalListPage.proposal(talk.title)).toBeVisible();
+    await proposalPage.waitFor();
+    await expect(page.getByRole('heading', { name: talk.title })).toBeVisible();
   });
 });
 
