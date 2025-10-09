@@ -30,19 +30,20 @@ export function MessageInputForm({ name, intent, inputLabel, buttonLabel, placeh
           id={name}
           name={name}
           rows={2}
-          className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-sm leading-6"
-          placeholder={placeholder}
-          aria-label={inputLabel}
+          required
           defaultValue=""
+          aria-label={inputLabel}
+          placeholder={placeholder}
           autoComplete="off"
+          // biome-ignore lint/a11y/noAutofocus: need autoFocus on message when opening
+          autoFocus={autoFocus}
+          className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-sm leading-6"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
               formRef.current?.requestSubmit();
             }
           }}
-          // biome-ignore lint/a11y/noAutofocus: need autoFocus on message when opening
-          autoFocus={autoFocus}
         />
       </div>
 
