@@ -1,14 +1,21 @@
 import { parseWithZod } from '@conform-to/zod/v4';
+import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Await } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { Text } from '~/design-system/typography.tsx';
+import { ConversationDrawer } from '~/features/conversations/components/conversation-drawer.tsx';
+import { ConversationMessageCreateSchema } from '~/features/conversations/services/conversation.schema.server.ts';
+import { ProposalConversationForOrganizers } from '~/features/conversations/services/proposal-conversation-for-organizers.server.ts';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
@@ -24,6 +31,7 @@ import { OtherProposalsDisclosure } from './components/detail/other-proposals-di
 import { ProposalActionsMenu } from './components/detail/proposal-actions-menu.tsx';
 import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
 import { ActivityFeed } from './services/activity-feed.server.ts';
+import { CommentCreateSchema, CommentReactionSchema } from './services/comments.schema.server.ts';
 import { Comments } from './services/comments.server.ts';
 import {
   ProposalSaveCategoriesSchema,
@@ -33,7 +41,7 @@ import {
   ProposalUpdateSchema,
 } from './services/proposal-management.schema.server.ts';
 import { ProposalManagement } from './services/proposal-management.server.ts';
-import { CommentReactionSchema, ReviewUpdateDataSchema } from './services/proposal-review.schema.server.ts';
+import { ReviewUpdateDataSchema } from './services/proposal-review.schema.server.ts';
 import type { ProposalReviewData } from './services/proposal-review.server.ts';
 import { ProposalReview } from './services/proposal-review.server.ts';
 import { ProposalStatusSchema, ProposalStatusUpdater } from './services/proposal-status-updater.server.ts';
@@ -50,14 +58,21 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
   const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
   const activityFeed = ActivityFeed.for(userId, params.team, params.event, params.proposal);
+  const speakerProposalConversation = ProposalConversationForOrganizers.for(
+    userId,
+    params.team,
+    params.event,
+    params.proposal,
+  );
 
   const activityPromise = activityFeed.activity();
+  const speakersConversationPromise = speakerProposalConversation.getConversation();
   const proposal = await proposalReview.get();
 
   const otherProposalsPromise = proposalReview.getOtherProposals(proposal.speakers.map((s) => s.id));
   const pagination = await proposalReview.getPreviousAndNextReviews(filters);
 
-  return { proposal, pagination, activityPromise, otherProposalsPromise };
+  return { proposal, pagination, activityPromise, otherProposalsPromise, speakersConversationPromise };
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
@@ -77,8 +92,9 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
     }
     case 'add-comment': {
       const discussions = Comments.for(userId, params.team, params.event, params.proposal);
-      const comment = form.get('comment');
-      if (comment) await discussions.add(comment.toString());
+      const result = parseWithZod(form, { schema: CommentCreateSchema });
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      await discussions.add(result.value);
       break;
     }
     case 'delete-comment': {
@@ -92,6 +108,13 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       const result = parseWithZod(form, { schema: CommentReactionSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await discussions.reactToComment(result.value);
+      break;
+    }
+    case 'add-message': {
+      const conversation = ProposalConversationForOrganizers.for(userId, params.team, params.event, params.proposal);
+      const result = parseWithZod(form, { schema: ConversationMessageCreateSchema });
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      await conversation.addMessage(result.value);
       break;
     }
     case 'change-proposal-status': {
@@ -151,14 +174,17 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 };
 
 export default function ProposalReviewLayoutRoute({ params, loaderData, actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const { team, event } = useCurrentEventTeam();
   const { canEditEvent, canEditEventProposal, canCreateEventSpeaker, canEditEventSpeaker, canChangeProposalStatus } =
     team.userPermissions;
-  const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
+  const { proposal, pagination, activityPromise, otherProposalsPromise, speakersConversationPromise } = loaderData;
 
   const hasSpeakers = proposal.speakers.length > 0;
   const hasFormats = event.formats && event.formats.length > 0;
   const hasCategories = event.categories && event.categories.length > 0;
+
+  const isSpeakerCommunicationEnabled = useFlag('speakersCommunication');
 
   return (
     <Page>
@@ -204,6 +230,30 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   canEditSpeaker={canEditEventSpeaker}
                   className="space-y-3 p-4 lg:px-6"
                 />
+
+                {isSpeakerCommunicationEnabled ? (
+                  <Suspense fallback={null}>
+                    <Await resolve={speakersConversationPromise}>
+                      {(speakersConversation) => (
+                        <ConversationDrawer
+                          messages={speakersConversation}
+                          recipients={proposal.speakers.map((s) => s.name)}
+                          className="flex gap-2 cursor-pointer px-4 pb-4 lg:px-6 hover:underline"
+                        >
+                          <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
+                          <Text size="xs" weight="semibold">
+                            {speakersConversation.length === 0
+                              ? t('event-management.proposal-page.conversation.start')
+                              : t('event-management.proposal-page.conversation.started', {
+                                  count: speakersConversation.length,
+                                })}
+                          </Text>
+                        </ConversationDrawer>
+                      )}
+                    </Await>
+                  </Suspense>
+                ) : null}
+
                 <Divider />
               </>
             ) : null}

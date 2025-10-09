@@ -7,4 +7,10 @@ export default defineFlagsConfig({
     defaultValue: false,
     tags: ['frontend'] as const,
   },
+  speakersCommunication: {
+    description: 'Enables communication between speakers and organizers.',
+    type: 'boolean',
+    defaultValue: false,
+    tags: ['frontend'] as const,
+  },
 });

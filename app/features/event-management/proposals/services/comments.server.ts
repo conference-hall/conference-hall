@@ -1,8 +1,9 @@
 import { db } from 'prisma/db.server.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
-import type { CommentReactionData } from './proposal-review.schema.server.ts';
+import type { CommentCreateData, CommentReactionData } from './comments.schema.server.ts';
 
+// todo(conversation): delete Channel attribute from comments table
 export class Comments extends UserEventAuthorization {
   private proposalId: string;
 
@@ -15,11 +16,11 @@ export class Comments extends UserEventAuthorization {
     return new Comments(userId, team, event, proposalId);
   }
 
-  async add(comment: string) {
+  async add(comment: CommentCreateData) {
     await this.needsPermission('canAccessEvent');
 
     await db.comment.create({
-      data: { userId: this.userId, proposalId: this.proposalId, comment, channel: 'ORGANIZER' },
+      data: { userId: this.userId, proposalId: this.proposalId, comment: comment.message, channel: 'ORGANIZER' },
     });
   }
 
@@ -55,6 +56,7 @@ export class Comments extends UserEventAuthorization {
       include: { reactedBy: true },
     });
 
+    // todo(conversation): resuse algo with conversations
     return commentIds.reduce<Record<string, Array<EmojiReaction>>>((byComments, commentId) => {
       const commentReactions = reactions.filter((reaction) => reaction.commentId === commentId);
 
