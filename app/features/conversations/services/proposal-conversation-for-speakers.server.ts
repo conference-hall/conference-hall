@@ -1,40 +1,45 @@
 import { db } from 'prisma/db.server.ts';
+import { ProposalNotFoundError } from '~/shared/errors.server.ts';
 import type { Message } from '~/shared/types/conversation.types.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type { ConversationMessageCreateData } from './conversation.schema.server.ts';
 
 // todo(conversation): extract common code of conversations (orga vs. speaker sides)
-export class ProposalConversationForOrganizers extends UserEventAuthorization {
+export class ProposalConversationForSpeakers {
+  private userId: string;
   private proposalId: string;
 
-  constructor(userId: string, team: string, event: string, proposalId: string) {
-    super(userId, team, event);
+  constructor(userId: string, proposalId: string) {
+    this.userId = userId;
     this.proposalId = proposalId;
   }
 
-  static for(userId: string, team: string, event: string, proposalId: string) {
-    return new ProposalConversationForOrganizers(userId, team, event, proposalId);
+  static for(userId: string, proposalId: string) {
+    return new ProposalConversationForSpeakers(userId, proposalId);
   }
 
   async addMessage({ message }: ConversationMessageCreateData) {
-    const event = await this.needsPermission('canAccessEvent');
+    const proposal = await db.proposal.findFirst({
+      where: { id: this.proposalId, speakers: { some: { userId: this.userId } } },
+      include: { event: true },
+    });
+    if (!proposal) throw new ProposalNotFoundError();
 
     await db.$transaction(async (tx) => {
       // Create conversation if it doesn't exist
       let conversation = await tx.conversation.findFirst({
-        where: { eventId: event.id, contextType: 'PROPOSAL', contextIds: { has: this.proposalId } },
+        where: { eventId: proposal.eventId, contextType: 'PROPOSAL', contextIds: { has: this.proposalId } },
       });
 
       if (!conversation) {
         conversation = await tx.conversation.create({
-          data: { eventId: event.id, contextType: 'PROPOSAL', contextIds: [this.proposalId] },
+          data: { eventId: proposal.eventId, contextType: 'PROPOSAL', contextIds: [this.proposalId] },
         });
       }
 
-      // Add organizer as participant if not exists
+      // Add speaker as participant if not exists
       await tx.conversationParticipant.upsert({
         where: { conversationId_userId: { conversationId: conversation.id, userId: this.userId } },
-        create: { conversationId: conversation.id, userId: this.userId, role: 'ORGANIZER' },
+        create: { conversationId: conversation.id, userId: this.userId, role: 'SPEAKER' },
         update: {},
       });
 
@@ -46,17 +51,15 @@ export class ProposalConversationForOrganizers extends UserEventAuthorization {
   }
 
   async getConversation() {
-    const event = await this.needsPermission('canAccessEvent');
-
-    // Get proposal with speakers
-    const proposal = await db.proposal.findUnique({ where: { id: this.proposalId } });
-    if (!proposal) {
-      throw new Error('Proposal not found');
-    }
+    const proposal = await db.proposal.findFirst({
+      where: { id: this.proposalId, speakers: { some: { userId: this.userId } } },
+      include: { event: true },
+    });
+    if (!proposal) throw new ProposalNotFoundError();
 
     // Get conversation
     const conversation = await db.conversation.findFirst({
-      where: { eventId: event.id, contextType: 'PROPOSAL', contextIds: { has: this.proposalId } },
+      where: { eventId: proposal.eventId, contextType: 'PROPOSAL', contextIds: { has: this.proposalId } },
       include: {
         participants: true,
         messages: {
