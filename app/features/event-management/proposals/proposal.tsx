@@ -1,6 +1,7 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Await } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Divider } from '~/design-system/divider.tsx';
@@ -173,6 +174,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 };
 
 export default function ProposalReviewLayoutRoute({ params, loaderData, actionData: errors }: Route.ComponentProps) {
+  const { t } = useTranslation();
   const { team, event } = useCurrentEventTeam();
   const { canEditEvent, canEditEventProposal, canCreateEventSpeaker, canEditEventSpeaker, canChangeProposalStatus } =
     team.userPermissions;
@@ -235,13 +237,16 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                       {(speakersConversation) => (
                         <ConversationDrawer
                           messages={speakersConversation}
+                          recipients={proposal.speakers.map((s) => s.name)}
                           className="flex gap-2 cursor-pointer px-4 pb-4 lg:px-6 hover:underline"
                         >
                           <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
                           <Text size="xs" weight="semibold">
                             {speakersConversation.length === 0
-                              ? 'Start a conversation'
-                              : `Conversation - ${speakersConversation.length} messages`}
+                              ? t('event-management.proposal-page.conversation.start')
+                              : t('event-management.proposal-page.conversation.started', {
+                                  count: speakersConversation.length,
+                                })}
                           </Text>
                         </ConversationDrawer>
                       )}

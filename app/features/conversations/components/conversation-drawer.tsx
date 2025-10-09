@@ -1,5 +1,6 @@
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { type ReactNode, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
@@ -8,13 +9,20 @@ import { MessageInputForm } from './message-input-form.tsx';
 
 type Props = {
   messages: Array<Message>;
+  recipients?: Array<string>;
   children: ReactNode;
   className?: string;
 };
 
 // todo(conversation): optimistic rendering
-export function ConversationDrawer({ messages, children, className }: Props) {
+export function ConversationDrawer({ messages, recipients = [], children, className }: Props) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+
+  const sendMessageLabel =
+    recipients.length > 0
+      ? t('common.conversation.send.label-with-recipients', { names: recipients })
+      : t('common.conversation.send.label');
 
   return (
     <>
@@ -24,13 +32,21 @@ export function ConversationDrawer({ messages, children, className }: Props) {
 
       <SlideOver open={open} onClose={() => setOpen(false)} withBorder={false} size="l">
         {/* todo(conversation): set title as sr-only in SlideOver */}
-        <h2 className="sr-only">Conversation</h2>
+        <h2 className="sr-only">{t('common.conversation.title')}</h2>
 
         {messages.length === 0 ? (
           <SlideOver.Content className="flex flex-col gap-6 items-center justify-center text-gray-400">
             <ChatBubbleLeftRightIcon className="h-16 w-16" aria-hidden />
             <Subtitle>
-              Start a conversation with <strong>Peter Parker</strong>
+              {recipients.length > 0 ? (
+                <Trans
+                  i18nKey="common.conversation.empty-state-with-recipients"
+                  values={{ names: recipients }}
+                  components={[<strong key="0" />]}
+                />
+              ) : (
+                t('common.conversation.empty-state')
+              )}
             </Subtitle>
           </SlideOver.Content>
         ) : (
@@ -45,9 +61,9 @@ export function ConversationDrawer({ messages, children, className }: Props) {
           <MessageInputForm
             name="message"
             intent="add-message"
-            inputLabel="Envoyer un message"
-            buttonLabel="Envoyer"
-            placeholder="Envoyer un message à Peter Parker"
+            buttonLabel={t('common.send')}
+            inputLabel={sendMessageLabel}
+            placeholder={sendMessageLabel}
             autoFocus
           />
         </SlideOver.Actions>
