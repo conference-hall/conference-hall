@@ -8,8 +8,6 @@ export type ConfirmationStatus = 'PENDING' | 'CONFIRMED' | 'DECLINED' | null;
 
 export type ReviewFeeling = 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL' | 'NO_OPINION';
 
-export type MessageChannel = 'ORGANIZER' | 'SPEAKER';
-
 export type GlobalReview = { negatives: number; positives: number; average: number | null };
 
 export type UserReview = { feeling: ReviewFeeling | null; note: number | null; comment?: string | null };
