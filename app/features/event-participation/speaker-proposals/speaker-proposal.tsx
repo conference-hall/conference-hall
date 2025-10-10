@@ -1,12 +1,13 @@
 import { parseWithZod } from '@conform-to/zod/v4';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { useUser } from '~/app-platform/components/user-context.tsx';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { ClientOnly } from '~/design-system/utils/client-only.tsx';
+import { MessageBlock } from '~/features/conversations/components/message-block.tsx';
 import { MessageInputForm } from '~/features/conversations/components/message-input-form.tsx';
+import { ConversationMessageCreateSchema } from '~/features/conversations/services/conversation.schema.server.ts';
 import { ProposalConversationForSpeakers } from '~/features/conversations/services/proposal-conversation-for-speakers.server.ts';
 import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
 import {
@@ -16,7 +17,7 @@ import {
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
-import { formatDistance } from '~/shared/datetimes/datetimes.ts';
+import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Message } from '~/shared/types/conversation.types.ts';
@@ -69,6 +70,13 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       await proposal.update(result.value);
       return toast('success', i18n.t('event.proposal.feedbacks.saved'));
     }
+    case 'add-message': {
+      const conversation = ProposalConversationForSpeakers.for(userId, params.proposal);
+      const result = parseWithZod(form, { schema: ConversationMessageCreateSchema });
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      await conversation.addMessage(result.value);
+      break;
+    }
     default:
       return null;
   }
@@ -79,6 +87,7 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
   const { proposal, conversation } = loaderData;
   const currentEvent = useCurrentEvent();
   const canEdit = proposal.status === SpeakerProposalStatus.Submitted;
+  const isSpeakerCommunicationEnabled = useFlag('speakersCommunication');
 
   return (
     <Page>
@@ -96,7 +105,7 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
         />
       </div>
 
-      <ProposalConversationFeed messages={conversation} />
+      {isSpeakerCommunicationEnabled ? <ProposalConversationFeed messages={conversation} /> : null}
     </Page>
   );
 }
@@ -104,11 +113,11 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
 type ProposalConversationFeedProps = { messages: Array<Message> };
 
 export function ProposalConversationFeed({ messages }: ProposalConversationFeedProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const user = useUser();
 
   return (
-    <ActivityFeed label={t('event-management.proposal-page.activity-feed')} className="px-4">
+    <ActivityFeed label={t('event-management.proposal-page.activity-feed')} className="pl-4">
       <ActivityFeed.Entry className="h-6" withLine aria-hidden />
 
       {messages.map((message) => (
@@ -117,26 +126,7 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
           marker={<Avatar picture={message.sender.picture} name={message.sender.name} />}
           withLine
         >
-          <div className="w-full rounded-md p-3 ring-1 ring-inset ring-gray-200 bg-white min-w-0 space-y-2">
-            <div className="flex justify-between gap-x-4">
-              <div className="text-xs text-gray-500">
-                <Trans
-                  i18nKey="event-management.proposal-page.activity-feed.commented"
-                  values={{ name: message.sender.name }}
-                  components={[<span key="1" className="font-medium text-gray-900" />]}
-                />
-              </div>
-              <ClientOnly>
-                {() => (
-                  <time dateTime={message.sentAt.toISOString()} className="flex-none text-xs text-gray-500">
-                    {formatDistance(message.sentAt, i18n.language)}
-                  </time>
-                )}
-              </ClientOnly>
-            </div>
-
-            <p className="text-sm leading-6 text-gray-700 whitespace-pre-line break-words">{message.content}</p>
-          </div>
+          <MessageBlock message={message} />
         </ActivityFeed.Entry>
       ))}
 
@@ -146,7 +136,7 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
           intent="add-message"
           inputLabel={t('common.conversation.send.label')}
           buttonLabel={t('common.send')}
-          placeholder="Send a message to DevFest Nantes organizers"
+          placeholder="Send a message to DevFest Nantes organizers" // todo(conversation): i18n
         />
       </ActivityFeed.Entry>
     </ActivityFeed>

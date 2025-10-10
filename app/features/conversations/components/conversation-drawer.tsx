@@ -1,6 +1,7 @@
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { type ReactNode, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { Avatar } from '~/design-system/avatar.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
@@ -50,9 +51,12 @@ export function ConversationDrawer({ messages, recipients = [], children, classN
             </Subtitle>
           </SlideOver.Content>
         ) : (
-          <SlideOver.Content className="flex flex-col justify-end">
+          <SlideOver.Content className="flex flex-col gap-6 justify-end">
             {messages.map((message) => (
-              <MessageBlock key={message.id} message={message} />
+              <div key={message.id} className="flex gap-4">
+                <Avatar picture={message.sender.picture} name={message.sender.name} size="s" className="mt-1" />
+                <MessageBlock message={message} />
+              </div>
             ))}
           </SlideOver.Content>
         )}

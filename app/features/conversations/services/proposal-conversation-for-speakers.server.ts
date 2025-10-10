@@ -79,7 +79,7 @@ export class ProposalConversationForSpeakers {
             userId: message.sender?.id || '',
             name: message.sender?.name || 'System',
             picture: message.sender?.picture || null,
-            role: participant?.role || 'ORGANIZER',
+            role: participant?.role || 'ORGANIZER', // todo(conversation): role should be on the message, not the participants?
           },
           content: message.content,
           reactions: [], // Not implemented in this version
