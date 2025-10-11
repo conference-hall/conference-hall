@@ -10,6 +10,7 @@ export function CommentEntry({ item }: { item: FeedItem }) {
   return (
     <ActivityFeed.Entry marker={<Avatar picture={item.picture} name={item.user} />} withLine>
       <MessageBlock
+        intentSuffix="comment"
         message={{
           id: item.id,
           content: item.comment,

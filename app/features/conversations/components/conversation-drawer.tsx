@@ -55,7 +55,7 @@ export function ConversationDrawer({ messages, recipients = [], children, classN
             {messages.map((message) => (
               <div key={message.id} className="flex gap-4">
                 <Avatar picture={message.sender.picture} name={message.sender.name} size="s" className="mt-1" />
-                <MessageBlock message={message} />
+                <MessageBlock intentSuffix="message" message={message} />
               </div>
             ))}
           </SlideOver.Content>
@@ -63,8 +63,7 @@ export function ConversationDrawer({ messages, recipients = [], children, classN
 
         <SlideOver.Actions>
           <MessageInputForm
-            name="message"
-            intent="add-message"
+            intent="save-message"
             buttonLabel={t('common.send')}
             inputLabel={sendMessageLabel}
             placeholder={sendMessageLabel}

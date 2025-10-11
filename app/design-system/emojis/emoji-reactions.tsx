@@ -2,7 +2,6 @@ import { cva, cx } from 'class-variance-authority';
 import { Tooltip } from '~/design-system/tooltip.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import type { Emoji, EmojiReaction } from '~/shared/types/emojis.types.ts';
-import { EmojiPicker } from './emoji-picker.tsx';
 
 type EmojiReactionsProps = {
   emojis: Array<Emoji>;
@@ -11,7 +10,7 @@ type EmojiReactionsProps = {
   className?: string;
 };
 
-const emojiReactionStyles = cva('flex items-center gap-2 rounded-full shrink-0 h-6 px-2 cursor-pointer', {
+const emojiReactionStyles = cva('flex items-center gap-2 rounded-full shrink-0 h-5 px-1.5 cursor-pointer', {
   variants: {
     reacted: {
       true: 'bg-blue-50 ring-1 ring-blue-600',
@@ -52,14 +51,6 @@ export function EmojiReactions({ emojis, reactions, onChangeEmoji, className }: 
           </li>
         );
       })}
-
-      <li>
-        <EmojiPicker
-          emojis={emojis}
-          disabledEmojis={reactions.map((reaction) => reaction.code)}
-          onSelectEmoji={onChangeEmoji}
-        />
-      </li>
     </ul>
   );
 }

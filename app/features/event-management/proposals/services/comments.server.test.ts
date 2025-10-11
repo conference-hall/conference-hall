@@ -30,7 +30,7 @@ describe('Comments', () => {
     it('adds comment to a proposal', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      await Comments.for(owner.id, team.slug, event.slug, proposal.id).add({ message: 'My message' });
+      await Comments.for(owner.id, team.slug, event.slug, proposal.id).save({ message: 'My message' });
 
       const messages = await db.comment.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
       expect(messages.length).toBe(1);
@@ -44,7 +44,7 @@ describe('Comments', () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const discussion = Comments.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(discussion.add({ message: 'My message' })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(discussion.save({ message: 'My message' })).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -84,7 +84,7 @@ describe('Comments', () => {
       const message = await commentFactory({ user: owner, proposal });
 
       await Comments.for(owner.id, team.slug, event.slug, proposal.id).reactToComment({
-        commentId: message.id,
+        id: message.id,
         code: 'tada',
       });
 
@@ -97,7 +97,7 @@ describe('Comments', () => {
       const message = await commentFactory({ user: owner, proposal, traits: ['withReaction'] });
 
       await Comments.for(owner.id, team.slug, event.slug, proposal.id).reactToComment({
-        commentId: message.id,
+        id: message.id,
         code: 'tada',
       });
 

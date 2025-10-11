@@ -31,7 +31,7 @@ import { OtherProposalsDisclosure } from './components/detail/other-proposals-di
 import { ProposalActionsMenu } from './components/detail/proposal-actions-menu.tsx';
 import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
 import { ActivityFeed } from './services/activity-feed.server.ts';
-import { CommentCreateSchema, CommentReactionSchema } from './services/comments.schema.server.ts';
+import { CommentReactionSchema, CommentSaveSchema } from './services/comments.schema.server.ts';
 import { Comments } from './services/comments.server.ts';
 import {
   ProposalSaveCategoriesSchema,
@@ -90,27 +90,27 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       await review.addReview(result.value);
       break;
     }
-    case 'add-comment': {
+    case 'save-comment': {
       const discussions = Comments.for(userId, params.team, params.event, params.proposal);
-      const result = parseWithZod(form, { schema: CommentCreateSchema });
+      const result = parseWithZod(form, { schema: CommentSaveSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await discussions.add(result.value);
+      await discussions.save(result.value);
       break;
     }
     case 'delete-comment': {
       const discussions = Comments.for(userId, params.team, params.event, params.proposal);
-      const commentId = form.get('commentId');
+      const commentId = form.get('id');
       if (commentId) await discussions.remove(commentId.toString());
       break;
     }
-    case 'react-to-comment': {
+    case 'react-comment': {
       const discussions = Comments.for(userId, params.team, params.event, params.proposal);
       const result = parseWithZod(form, { schema: CommentReactionSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await discussions.reactToComment(result.value);
       break;
     }
-    case 'add-message': {
+    case 'save-message': {
       const conversation = ProposalConversationForOrganizers.for(userId, params.team, params.event, params.proposal);
       const result = parseWithZod(form, { schema: ConversationMessageCreateSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));

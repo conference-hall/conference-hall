@@ -1,36 +1,46 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { EmojiAddIcon } from '~/design-system/icons/emoji-add-icon.tsx';
 import type { Emoji } from '~/shared/types/emojis.types.ts';
 
 type EmojiPickerProps = {
   emojis: Array<Emoji>;
   disabledEmojis?: Array<string>;
   label?: string;
-  icon?: React.ComponentType<{ className?: string }>;
+  className?: string;
+  icon: React.ComponentType<{ className?: string }>;
   onSelectEmoji: (emoji: Emoji) => void;
 };
 
-export function EmojiPicker({ emojis, disabledEmojis = [], label, icon: Icon, onSelectEmoji }: EmojiPickerProps) {
+// todo(conversation): toggle emojis instead of having disabled one
+export function EmojiPicker({
+  emojis,
+  disabledEmojis = [],
+  label,
+  icon: Icon,
+  className,
+  onSelectEmoji,
+}: EmojiPickerProps) {
   const { t } = useTranslation();
+
+  const buttonStyle =
+    className ||
+    'flex items-center justify-center rounded-full shrink-0 h-6 w-6 bg-gray-100 fill-gray-600 cursor-pointer hover:bg-white hover:ring-1 hover:ring-gray-600';
 
   return (
     <Popover className="relative">
       <PopoverButton
-        className="flex items-center justify-center rounded-full shrink-0 h-6 w-6 bg-gray-100 fill-gray-600 cursor-pointer hover:bg-white hover:ring-1 hover:ring-gray-600"
+        className={buttonStyle}
         aria-label={label || t('common.emoji.select')}
         title={label || t('common.emoji.select')}
       >
-        {Icon ? (
-          <Icon className="h-4 w-4" aria-hidden="true" />
-        ) : (
-          <EmojiAddIcon className="h-4 w-4" aria-hidden="true" />
-        )}
+        <Icon className="h-4 w-4" aria-hidden="true" />
       </PopoverButton>
 
       <PopoverPanel
-        anchor="top"
+        // todo(conversation): add anchor as props (for usage in session)
+        anchor="bottom end"
+        // todo(conversation): change style (border, shadow...) to match with the Menu one (or use Menu here?)
         className="grid grid-cols-5 gap-2 p-2 bg-white border border-gray-200 rounded-2xl shadow-sm [--anchor-gap:8px] z-50"
       >
         {({ close }) => (

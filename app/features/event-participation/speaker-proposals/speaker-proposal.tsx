@@ -70,7 +70,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       await proposal.update(result.value);
       return toast('success', i18n.t('event.proposal.feedbacks.saved'));
     }
-    case 'add-message': {
+    case 'save-message': {
       const conversation = ProposalConversationForSpeakers.for(userId, params.proposal);
       const result = parseWithZod(form, { schema: ConversationMessageCreateSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
@@ -126,16 +126,15 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
           marker={<Avatar picture={message.sender.picture} name={message.sender.name} />}
           withLine
         >
-          <MessageBlock message={message} />
+          <MessageBlock intentSuffix="message" message={message} />
         </ActivityFeed.Entry>
       ))}
 
       <ActivityFeed.Entry marker={<Avatar picture={user?.picture} name={user?.name} />}>
         <MessageInputForm
-          name="message"
-          intent="add-message"
-          inputLabel={t('common.conversation.send.label')}
+          intent="save-message"
           buttonLabel={t('common.send')}
+          inputLabel={t('common.conversation.send.label')}
           placeholder="Send a message to DevFest Nantes organizers" // todo(conversation): i18n
         />
       </ActivityFeed.Entry>
