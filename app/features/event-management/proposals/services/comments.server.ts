@@ -30,22 +30,22 @@ export class Comments extends UserEventAuthorization {
     await db.comment.deleteMany({ where: { id: commentId, userId: this.userId, proposalId: this.proposalId } });
   }
 
-  async reactToComment({ commentId, code }: CommentReactionData) {
+  async reactToComment({ id, code }: CommentReactionData) {
     await this.needsPermission('canAccessEvent');
 
     const existingReaction = await db.commentReaction.findUnique({
-      where: { userId_commentId_code: { userId: this.userId, commentId, code } },
+      where: { userId_commentId_code: { userId: this.userId, commentId: id, code } },
     });
 
     // delete
     if (existingReaction) {
       return db.commentReaction.delete({
-        where: { userId_commentId_code: { userId: this.userId, commentId, code } },
+        where: { userId_commentId_code: { userId: this.userId, commentId: id, code } },
       });
     }
 
     // create
-    return db.commentReaction.create({ data: { userId: this.userId, commentId, code } });
+    return db.commentReaction.create({ data: { userId: this.userId, commentId: id, code } });
   }
 
   static async listReactions(commentIds: Array<string>, currentUserId: string) {
@@ -62,7 +62,7 @@ export class Comments extends UserEventAuthorization {
 
       byComments[commentId] = commentReactions.reduce<Array<EmojiReaction>>((byCode, reaction) => {
         const reacted = reaction.userId === currentUserId;
-        const reactedBy = reacted ? 'You' : reaction.reactedBy.name;
+        const reactedBy = reacted ? 'You' : reaction.reactedBy.name; // todo(conversation): not translated "You" cause issue with optimistic rendetring
 
         const existing = byCode.find((r) => r.code === reaction.code);
         if (!existing) {

@@ -55,7 +55,7 @@ export function ConversationDrawer({ messages, recipients = [], children, classN
             {messages.map((message) => (
               <div key={message.id} className="flex gap-4">
                 <Avatar picture={message.sender.picture} name={message.sender.name} size="s" className="mt-1" />
-                <MessageBlock message={message} />
+                <MessageBlock reactIntent="react-to-message" message={message} />
               </div>
             ))}
           </SlideOver.Content>

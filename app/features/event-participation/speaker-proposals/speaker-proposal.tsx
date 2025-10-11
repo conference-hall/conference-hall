@@ -126,7 +126,7 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
           marker={<Avatar picture={message.sender.picture} name={message.sender.name} />}
           withLine
         >
-          <MessageBlock message={message} />
+          <MessageBlock reactIntent="react-to-message" message={message} />
         </ActivityFeed.Entry>
       ))}
 

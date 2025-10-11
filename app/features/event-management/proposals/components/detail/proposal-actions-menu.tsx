@@ -1,5 +1,5 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { EllipsisVerticalIcon, PencilSquareIcon, ShareIcon } from '@heroicons/react/16/solid';
+import { EllipsisHorizontalIcon, PencilSquareIcon, ShareIcon } from '@heroicons/react/16/solid';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { iconButton } from '~/design-system/icon-buttons.tsx';
@@ -40,7 +40,7 @@ export function ProposalActionsMenu({ proposal, errors, canEditEventProposal }: 
           aria-label={t('event-management.proposal-page.actions-menu')}
           className={iconButton({ variant: 'secondary' })}
         >
-          <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
+          <EllipsisHorizontalIcon className="h-5 w-5" aria-hidden="true" />
         </MenuButton>
 
         <MenuTransition>

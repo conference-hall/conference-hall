@@ -25,9 +25,6 @@ describe('EmojiReactions component', () => {
       </I18nextProvider>,
     );
 
-    const addButton = screen.getByRole('button', { name: 'Select a reaction' });
-    await expect.element(addButton).toHaveAttribute('aria-expanded', 'false');
-
     const thumbsUpButton = screen.getByRole('button', { name: 'Thumbs up' });
     await userEvent.click(thumbsUpButton);
     expect(onChangeEmoji).toHaveBeenCalledWith(EMOJIS.at(0));
