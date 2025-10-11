@@ -84,7 +84,7 @@ describe('Comments', () => {
       const message = await commentFactory({ user: owner, proposal });
 
       await Comments.for(owner.id, team.slug, event.slug, proposal.id).reactToComment({
-        commentId: message.id,
+        id: message.id,
         code: 'tada',
       });
 
@@ -97,7 +97,7 @@ describe('Comments', () => {
       const message = await commentFactory({ user: owner, proposal, traits: ['withReaction'] });
 
       await Comments.for(owner.id, team.slug, event.slug, proposal.id).reactToComment({
-        commentId: message.id,
+        id: message.id,
         code: 'tada',
       });
 

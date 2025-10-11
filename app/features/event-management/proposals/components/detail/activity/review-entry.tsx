@@ -28,7 +28,7 @@ export function ReviewEntry({ item }: { item: FeedItem }) {
   return (
     <ActivityFeed.Entry
       marker={<ReviewIcon feeling={item.feeling} />}
-      className="flex flex-col sm:flex-row justify-between p-1"
+      className="flex flex-col sm:flex-row gap-1 p-1"
       withLine
     >
       <p className="text-xs text-gray-500">

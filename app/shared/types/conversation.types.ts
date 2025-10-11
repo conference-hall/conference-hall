@@ -6,7 +6,7 @@ export type Message = {
     userId: string;
     name: string;
     picture: string | null;
-    role: 'SPEAKER' | 'ORGANIZER';
+    role?: 'SPEAKER' | 'ORGANIZER';
   };
   content: string;
   reactions: Array<EmojiReaction>;

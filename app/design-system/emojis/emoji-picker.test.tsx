@@ -1,3 +1,4 @@
+import { FaceSmileIcon } from '@heroicons/react/24/outline';
 import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
@@ -16,7 +17,7 @@ describe('EmojiPicker component', () => {
 
     const screen = render(
       <I18nextProvider i18n={i18nTest}>
-        <EmojiPicker emojis={EMOJIS} onSelectEmoji={onSelectEmoji} />
+        <EmojiPicker emojis={EMOJIS} icon={FaceSmileIcon} onSelectEmoji={onSelectEmoji} />
       </I18nextProvider>,
     );
 
@@ -38,7 +39,7 @@ describe('EmojiPicker component', () => {
 
     const screen = render(
       <I18nextProvider i18n={i18nTest}>
-        <EmojiPicker emojis={EMOJIS} disabledEmojis={['+1']} onSelectEmoji={onSelectEmoji} />
+        <EmojiPicker emojis={EMOJIS} icon={FaceSmileIcon} disabledEmojis={['+1']} onSelectEmoji={onSelectEmoji} />
       </I18nextProvider>,
     );
 

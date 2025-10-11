@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { useFetchers, useSubmit } from 'react-router';
-import { EmojiReactions } from '~/design-system/emojis/emoji-reactions.tsx';
 import type { Emoji, EmojiReaction } from '~/shared/types/emojis.types.ts';
 
-const EMOJIS: Array<Emoji> = [
+// todo(conversation): put somewhere else the list
+export const EMOJIS: Array<Emoji> = [
   { code: '+1', skin: '👍', name: 'Thumbs up' },
   { code: '-1', skin: '👎', name: 'Thumbs down' },
   { code: 'heart', skin: '❤️', name: 'Heart' },
@@ -16,39 +16,25 @@ const EMOJIS: Array<Emoji> = [
   { code: 'thinking_face', skin: '🤔', name: 'Thinking' },
 ];
 
-type CommentReactions = { commentId: string; reactions: Array<EmojiReaction> };
-
-export function CommentReactions({ commentId, reactions }: CommentReactions) {
-  const optimisticReactions = useOptimisticReactions(commentId, reactions);
-
+export function useOptimisticReactions(id: string, intent: string, initialReactions: Array<EmojiReaction>) {
   const submit = useSubmit();
+  const { t } = useTranslation();
+  const you = t('common.you');
 
+  // Form submission
   const onChangeEmoji = ({ code }: Emoji) => {
     submit(
-      { intent: 'react-to-comment', commentId, code },
+      { intent, id, code },
       {
         method: 'POST',
-        fetcherKey: `react-to-comment:${commentId}:${code}`,
-        navigate: false,
+        fetcherKey: `${intent}:${id}:${code}`,
         preventScrollReset: true,
+        navigate: false,
       },
     );
   };
 
-  return (
-    <EmojiReactions
-      emojis={EMOJIS}
-      reactions={optimisticReactions}
-      onChangeEmoji={onChangeEmoji}
-      className="justify-end"
-    />
-  );
-}
-
-function useOptimisticReactions(commentId: string, initialReactions: Array<EmojiReaction>) {
-  const { t } = useTranslation();
-  const you = t('common.you');
-
+  // Optimistic list
   type PendingReactions = ReturnType<typeof useFetchers>[number] & {
     formData: FormData;
   };
@@ -61,8 +47,8 @@ function useOptimisticReactions(commentId: string, initialReactions: Array<Emoji
     .filter((fetcher): fetcher is PendingReactions => {
       if (!fetcher.formData) return false;
       const formIntent = fetcher.formData.get('intent');
-      const formCommentId = fetcher.formData.get('commentId');
-      return formIntent === 'react-to-comment' && formCommentId === commentId;
+      const formId = fetcher.formData.get('id');
+      return formIntent === intent && formId === id;
     })
     .map((fetcher) => ({
       code: String(fetcher.formData?.get('code')),
@@ -70,6 +56,8 @@ function useOptimisticReactions(commentId: string, initialReactions: Array<Emoji
 
   for (const reaction of pendingReactions) {
     const current = reactionsByCode.get(reaction.code);
+
+    console.log(current);
 
     // add reaction
     if (!current) {
@@ -97,5 +85,5 @@ function useOptimisticReactions(commentId: string, initialReactions: Array<Emoji
     }
   }
 
-  return Array.from(reactionsByCode.values());
+  return { optimisticReactions: Array.from(reactionsByCode.values()), onChangeEmoji };
 }
