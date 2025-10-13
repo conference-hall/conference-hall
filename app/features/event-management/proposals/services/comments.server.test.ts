@@ -11,6 +11,7 @@ import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 
 import { Comments } from './comments.server.ts';
 
+// todo(conversation): update tests
 describe('Comments', () => {
   let owner: User;
   let member: User;

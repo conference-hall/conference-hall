@@ -22,7 +22,7 @@ export class Comments extends UserEventAuthorization {
     if (comment.id) {
       await db.comment.update({
         data: { comment: comment.message },
-        where: { id: comment.id, userId: this.userId, proposalId: this.proposalId },
+        where: { id: comment.id, userId: this.userId },
       });
     } else {
       await db.comment.create({

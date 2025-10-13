@@ -7,7 +7,11 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { MessageBlock } from '~/features/conversations/components/message-block.tsx';
 import { MessageInputForm } from '~/features/conversations/components/message-input-form.tsx';
-import { ConversationMessageCreateSchema } from '~/features/conversations/services/conversation.schema.server.ts';
+import {
+  ConversationMessageDeleteSchema,
+  ConversationMessageReactSchema,
+  ConversationMessageSaveSchema,
+} from '~/features/conversations/services/conversation.schema.server.ts';
 import { ProposalConversationForSpeakers } from '~/features/conversations/services/proposal-conversation-for-speakers.server.ts';
 import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
 import {
@@ -72,9 +76,23 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
     }
     case 'save-message': {
       const conversation = ProposalConversationForSpeakers.for(userId, params.proposal);
-      const result = parseWithZod(form, { schema: ConversationMessageCreateSchema });
+      const result = parseWithZod(form, { schema: ConversationMessageSaveSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await conversation.addMessage(result.value);
+      await conversation.saveMessage(result.value);
+      break;
+    }
+    case 'react-message': {
+      const conversation = ProposalConversationForSpeakers.for(userId, params.proposal);
+      const result = parseWithZod(form, { schema: ConversationMessageReactSchema });
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      await conversation.reactMessage(result.value);
+      break;
+    }
+    case 'delete-message': {
+      const conversation = ProposalConversationForSpeakers.for(userId, params.proposal);
+      const result = parseWithZod(form, { schema: ConversationMessageDeleteSchema });
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      await conversation.deleteMessage(result.value);
       break;
     }
     default:

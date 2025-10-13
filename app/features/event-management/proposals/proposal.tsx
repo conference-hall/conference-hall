@@ -9,7 +9,11 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ConversationDrawer } from '~/features/conversations/components/conversation-drawer.tsx';
-import { ConversationMessageCreateSchema } from '~/features/conversations/services/conversation.schema.server.ts';
+import {
+  ConversationMessageDeleteSchema,
+  ConversationMessageReactSchema,
+  ConversationMessageSaveSchema,
+} from '~/features/conversations/services/conversation.schema.server.ts';
 import { ProposalConversationForOrganizers } from '~/features/conversations/services/proposal-conversation-for-organizers.server.ts';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
@@ -112,9 +116,23 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
     }
     case 'save-message': {
       const conversation = ProposalConversationForOrganizers.for(userId, params.team, params.event, params.proposal);
-      const result = parseWithZod(form, { schema: ConversationMessageCreateSchema });
+      const result = parseWithZod(form, { schema: ConversationMessageSaveSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await conversation.addMessage(result.value);
+      await conversation.saveMessage(result.value);
+      break;
+    }
+    case 'react-message': {
+      const conversation = ProposalConversationForOrganizers.for(userId, params.team, params.event, params.proposal);
+      const result = parseWithZod(form, { schema: ConversationMessageReactSchema });
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      await conversation.reactMessage(result.value);
+      break;
+    }
+    case 'delete-message': {
+      const conversation = ProposalConversationForOrganizers.for(userId, params.team, params.event, params.proposal);
+      const result = parseWithZod(form, { schema: ConversationMessageDeleteSchema });
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      await conversation.deleteMessage(result.value);
       break;
     }
     case 'change-proposal-status': {

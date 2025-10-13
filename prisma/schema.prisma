@@ -453,6 +453,7 @@ model Conversation {
   @@map("conversations")
 }
 
+// todo(conversation): EVENT_CONVERSATION, PROPOSAL_CONVERSATION, PROPOSAL_REVIEW_COMMENTS
 enum ConversationContextType {
   EVENT
   PROPOSAL
@@ -496,6 +497,7 @@ enum ConversationParticipantRole {
   ORGANIZER
 }
 
+// todo(conversation): add reaction date
 model ConversationReaction {
   id        String              @id @default(cuid())
   code      String

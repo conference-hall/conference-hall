@@ -68,7 +68,7 @@ export function MessageBlock({ message, intentSuffix, className }: Props) {
       {isEditing ? (
         <MessageInputForm
           message={message}
-          intent="save-comment"
+          intent={`save-${intentSuffix}`}
           inputLabel={t('event-management.proposal-page.comment.label')}
           placeholder={t('event-management.proposal-page.comment.placeholder')}
           onClose={() => setEditing(false)}
