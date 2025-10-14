@@ -11,8 +11,8 @@ const EMOJIS: Array<Emoji> = [
 ];
 
 const REACTIONS: Array<EmojiReaction> = [
-  { code: '+1', reacted: true, reactedBy: ['You'] },
-  { code: '-1', reacted: false, reactedBy: ['Other'] },
+  { code: '+1', reacted: true, reactedBy: [{ userId: 'user1', name: 'You' }] },
+  { code: '-1', reacted: false, reactedBy: [{ userId: 'user2', name: 'Other' }] },
 ];
 
 describe('EmojiReactions component', () => {

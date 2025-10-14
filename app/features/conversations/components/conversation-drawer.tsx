@@ -36,7 +36,7 @@ export function ConversationDrawer({ messages, recipients = [], children, classN
         <h2 className="sr-only">{t('common.conversation.title')}</h2>
 
         {messages.length === 0 ? (
-          <SlideOver.Content className="flex flex-col gap-6 items-center justify-center text-gray-400">
+          <SlideOver.Content className="gap-6 items-center justify-center text-gray-400">
             <ChatBubbleLeftRightIcon className="h-16 w-16" aria-hidden />
             <Subtitle>
               {recipients.length > 0 ? (
@@ -51,7 +51,7 @@ export function ConversationDrawer({ messages, recipients = [], children, classN
             </Subtitle>
           </SlideOver.Content>
         ) : (
-          <SlideOver.Content className="flex flex-col gap-6 justify-end">
+          <SlideOver.Content className="flex flex-col-reverse gap-6">
             {messages.map((message) => (
               <div key={message.id} className="flex gap-4">
                 <Avatar picture={message.sender.picture} name={message.sender.name} size="s" className="mt-1" />

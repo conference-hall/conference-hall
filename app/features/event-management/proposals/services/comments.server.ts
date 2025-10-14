@@ -69,14 +69,18 @@ export class Comments extends UserEventAuthorization {
 
       byComments[commentId] = commentReactions.reduce<Array<EmojiReaction>>((byCode, reaction) => {
         const reacted = reaction.userId === currentUserId;
-        const reactedBy = reacted ? 'You' : reaction.reactedBy.name; // todo(conversation): not translated "You" cause issue with optimistic rendetring
+        const reactedByName = reaction.reactedBy.name;
 
         const existing = byCode.find((r) => r.code === reaction.code);
         if (!existing) {
-          byCode.push({ code: reaction.code, reacted, reactedBy: [reactedBy] });
+          byCode.push({
+            code: reaction.code,
+            reacted,
+            reactedBy: [{ userId: reaction.userId, name: reactedByName }],
+          });
         } else {
           existing.reacted = existing.reacted || reacted;
-          existing.reactedBy.push(reactedBy);
+          existing.reactedBy.push({ userId: reaction.userId, name: reactedByName });
         }
         return byCode;
       }, []);

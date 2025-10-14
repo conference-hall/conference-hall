@@ -58,8 +58,8 @@ interface ContentProps extends Omit<React.ComponentProps<'div'>, 'title'> {
 
 function Content({ children, className, ref }: ContentProps) {
   return (
-    <div ref={ref} className="flex min-h-0 flex-1 flex-col overflow-y-auto py-4">
-      <div className={cx('relative flex-1 px-4', className)}>{children}</div>
+    <div ref={ref} className={cx('flex-1 overflow-y-auto h-full p-4', className)}>
+      {children}
     </div>
   );
 }

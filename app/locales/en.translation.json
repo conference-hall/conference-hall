@@ -114,6 +114,7 @@
   "common.email.placeholder": "example@site.com",
   "common.email": "Email address",
   "common.emoji.select": "Select a reaction",
+  "common.emoji.reacted-by": "<0>{{names, list}}</0> reacted with {{emoji}}",
   "common.end-date": "End date",
   "common.event.type.description.CONFERENCE": "With conference, the call for papers is open to proposals for a specific period.",
   "common.event.type.description.MEETUP": "With meetup, you can manually open or close the call for papers.",

@@ -2,6 +2,7 @@ import { FaceSmileIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useUser } from '~/app-platform/components/user-context.tsx';
 import { Badge } from '~/design-system/badges.tsx';
 import { EmojiPicker } from '~/design-system/emojis/emoji-picker.tsx';
 import { EmojiReactions } from '~/design-system/emojis/emoji-reactions.tsx';
@@ -22,6 +23,7 @@ type Props = {
 
 export function MessageBlock({ message, intentSuffix, className }: Props) {
   const { t, i18n } = useTranslation();
+  const currentUser = useUser();
 
   const [isEditing, setEditing] = useState(false);
   const { reactions, onChangeReaction } = useOptimisticReactions(message, intentSuffix);
@@ -34,17 +36,17 @@ export function MessageBlock({ message, intentSuffix, className }: Props) {
       )}
     >
       <div className="absolute right-0 top-0 p-2 flex gap-x-1 text-gray-500">
-        <EmojiPicker
-          icon={FaceSmileIcon}
-          emojis={MESSAGE_EMOJIS}
-          onSelectEmoji={onChangeReaction}
-          className="h-6 w-6 flex items-center justify-center hover:bg-gray-100 cursor-pointer rounded"
-        />
-
         <MessageActionsMenu
           message={message}
           intentSuffix={intentSuffix}
           onEdit={() => setEditing(!isEditing)}
+          className="h-6 w-6 flex items-center justify-center hover:bg-gray-100 cursor-pointer rounded"
+        />
+
+        <EmojiPicker
+          icon={FaceSmileIcon}
+          emojis={MESSAGE_EMOJIS}
+          onSelectEmoji={onChangeReaction}
           className="h-6 w-6 flex items-center justify-center hover:bg-gray-100 cursor-pointer rounded"
         />
       </div>
@@ -79,8 +81,12 @@ export function MessageBlock({ message, intentSuffix, className }: Props) {
       )}
 
       {reactions.length > 0 ? (
-        // todo(conversation): order is not consistent
-        <EmojiReactions emojis={MESSAGE_EMOJIS} reactions={reactions} onChangeEmoji={onChangeReaction} />
+        <EmojiReactions
+          emojis={MESSAGE_EMOJIS}
+          reactions={reactions}
+          currentUserId={currentUser?.id}
+          onChangeEmoji={onChangeReaction}
+        />
       ) : null}
     </div>
   );

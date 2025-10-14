@@ -1,5 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 import type { ConversationContextType } from 'prisma/generated/enums.ts';
+import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import type {
   ConversationMessageDeleteData,
   ConversationMessageReactData,
@@ -95,7 +96,7 @@ export class ConversationService {
         messages: {
           // todo(conversation): check N+1 ???
           include: { sender: true, reactions: { include: { reactedBy: true } } },
-          orderBy: { createdAt: 'asc' },
+          orderBy: { createdAt: 'desc' },
         },
       },
     });
@@ -112,15 +113,44 @@ export class ConversationService {
             role: participant?.role,
           },
           content: message.content,
-          // todo(conversation): should group by code and order by min creation date
-          reactions: message.reactions.map((reaction) => ({
-            code: reaction.code,
-            reacted: reaction.userId === userId,
-            reactedBy: [reaction.reactedBy.name],
-          })),
+          reactions: this.mapReactions(message.reactions, userId),
           sentAt: message.createdAt,
         };
       }) || []
     );
+  }
+
+  private mapReactions(
+    reactions: Array<{ code: string; userId: string; reactedAt: Date; reactedBy: { name: string } }>,
+    currentUserId: string,
+  ): Array<EmojiReaction> {
+    return Object.values(
+      reactions.reduce(
+        (acc, reaction) => {
+          if (!acc[reaction.code]) {
+            acc[reaction.code] = {
+              code: reaction.code,
+              reacted: false,
+              reactedBy: [],
+              minDate: reaction.reactedAt,
+            };
+          }
+          if (reaction.userId === currentUserId) {
+            acc[reaction.code].reacted = true;
+          }
+          acc[reaction.code].reactedBy.push({
+            userId: reaction.userId,
+            name: reaction.reactedBy.name,
+          });
+          if (reaction.reactedAt < acc[reaction.code].minDate) {
+            acc[reaction.code].minDate = reaction.reactedAt;
+          }
+          return acc;
+        },
+        {} as Record<string, EmojiReaction & { minDate: Date }>,
+      ),
+    )
+      .sort((a, b) => a.minDate.getTime() - b.minDate.getTime())
+      .map(({ code, reacted, reactedBy }) => ({ code, reacted, reactedBy }));
   }
 }

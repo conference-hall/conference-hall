@@ -2,6 +2,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { EllipsisHorizontalIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
+import { useUser } from '~/app-platform/components/user-context.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
@@ -15,6 +16,11 @@ type Props = {
 
 export function MessageActionsMenu({ message, intentSuffix, onEdit, className }: Props) {
   const { t } = useTranslation();
+  const currentUser = useUser();
+
+  if (message.sender.userId !== currentUser?.id) {
+    return null;
+  }
 
   return (
     <Menu>

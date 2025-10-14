@@ -1,13 +1,11 @@
-import { useTranslation } from 'react-i18next';
 import { useFetchers, useSubmit } from 'react-router';
+import { useUser } from '~/app-platform/components/user-context.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import type { Emoji } from '~/shared/types/emojis.types.ts';
 
 export function useOptimisticReactions(message: Message, intentSuffix: string) {
+  const currentUser = useUser();
   const submit = useSubmit();
-  const { t } = useTranslation();
-  const you = t('common.you');
-
   const intent = `react-${intentSuffix}`;
 
   // Form submission
@@ -46,23 +44,26 @@ export function useOptimisticReactions(message: Message, intentSuffix: string) {
   for (const reaction of pendingReactions) {
     const current = reactionsByCode.get(reaction.code);
 
+    if (!currentUser) continue;
+    const reactedBy = { userId: currentUser.id, name: currentUser.name };
+
     // add reaction
     if (!current) {
-      reactionsByCode.set(reaction.code, { code: reaction.code, reacted: true, reactedBy: [you] });
+      reactionsByCode.set(reaction.code, { code: reaction.code, reacted: true, reactedBy: [reactedBy] });
       continue;
     }
 
     // increment reaction
     if (!current.reacted) {
       current.reacted = true;
-      current.reactedBy.push(you);
+      current.reactedBy.push(reactedBy);
       continue;
     }
 
     // decrement reaction
     if (current.reacted && current.reactedBy.length > 1) {
       current.reacted = false;
-      current.reactedBy = current.reactedBy.filter((user) => user !== you);
+      current.reactedBy = current.reactedBy.filter((user) => user.userId !== currentUser.id);
       continue;
     }
 

@@ -90,7 +90,9 @@ describe('Comments', () => {
       });
 
       const reactions = await Comments.listReactions([message.id], owner.id);
-      expect(reactions[message.id]).toEqual([{ code: 'tada', reacted: true, reactedBy: ['You'] }]);
+      expect(reactions[message.id]).toEqual([
+        { code: 'tada', reacted: true, reactedBy: [{ userId: owner.id, name: 'You' }] },
+      ]);
     });
 
     it('removes a reaction to a comment', async () => {
@@ -115,8 +117,8 @@ describe('Comments', () => {
 
       const reactions = await Comments.listReactions([message1.id, message2.id], owner.id);
       expect(reactions).toEqual({
-        [message1.id]: [{ code: 'tada', reacted: true, reactedBy: ['You'] }],
-        [message2.id]: [{ code: 'tada', reacted: false, reactedBy: [member.name] }],
+        [message1.id]: [{ code: 'tada', reacted: true, reactedBy: [{ userId: owner.id, name: 'You' }] }],
+        [message2.id]: [{ code: 'tada', reacted: false, reactedBy: [{ userId: member.id, name: member.name }] }],
       });
     });
 
