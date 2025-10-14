@@ -1,14 +1,19 @@
-import type { Event, Proposal } from 'prisma/generated/client.ts';
+import type { Event, Proposal, User } from 'prisma/generated/client.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
+import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
+import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
+import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { ProposalPage } from './proposal.page.ts';
 
 let event: Event;
+let organizer: User;
 let proposal1: Proposal;
 let proposal2: Proposal;
 let proposal3: Proposal;
@@ -16,8 +21,10 @@ let proposal3: Proposal;
 test.beforeEach(async () => {
   const speaker1 = await userFactory({ traits: ['clark-kent'] });
   const speaker2 = await userFactory({ traits: ['bruce-wayne'] });
+  organizer = await userFactory({ attributes: { name: 'Organizer Name' } });
 
-  event = await eventFactory({ traits: ['conference', 'conference-cfp-open'] });
+  const team = await teamFactory({ owners: [organizer] });
+  event = await eventFactory({ team, traits: ['conference', 'conference-cfp-open'] });
   const format = await eventFormatFactory({ event, attributes: { name: 'Quickie' } });
   await eventFormatFactory({ event, attributes: { name: 'Workshop' } });
   const category = await eventCategoryFactory({ event, attributes: { name: 'Web' } });
@@ -149,4 +156,32 @@ test('declines a participation', async ({ page }) => {
   await proposalPage.clickOnDecline();
   await expect(proposalPage.toast).toHaveText('Your response has been sent to organizers.');
   await expect(page.getByText(`You have declined this proposal for ${event.name}.`)).toBeVisible();
+});
+
+test('manages conversation with organizers', async ({ page }) => {
+  await flags.set('speakersCommunication', true);
+
+  const proposalPage = new ProposalPage(page);
+  const conversation = await conversationFactory({ event, proposalId: proposal1.id });
+  await conversationMessageFactory({
+    conversation,
+    sender: organizer,
+    role: 'ORGANIZER',
+    attributes: { content: 'Hello from organizer' },
+  });
+
+  await proposalPage.goto(event.slug, proposal1.id);
+  await expect(proposalPage.conversationFeed).toBeVisible();
+
+  await proposalPage.sendMessage('Response from speaker');
+  await expect(page.getByText('Hello from organizer')).toBeVisible();
+  await expect(page.getByText('Response from speaker')).toBeVisible();
+
+  const messages = await proposalPage.getConversationMessages();
+
+  await messages[1].editMessage('New Response from speaker');
+  await expect(page.getByText('New Response from speaker')).toBeVisible();
+
+  await messages[1].clickDelete();
+  await expect(page.getByText('New Response from speaker')).not.toBeVisible();
 });

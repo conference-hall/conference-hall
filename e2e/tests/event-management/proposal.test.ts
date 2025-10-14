@@ -1,7 +1,9 @@
 import { expect, loginWith, test } from 'e2e/fixtures.ts';
-import type { Event, Proposal, Team } from 'prisma/generated/client.ts';
+import type { Event, Proposal, Team, User } from 'prisma/generated/client.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
+import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
+import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
@@ -11,6 +13,7 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { ProposalPage } from './proposal.page.ts';
 
 loginWith('clark-kent');
@@ -18,6 +21,7 @@ loginWith('clark-kent');
 let team: Team;
 let event: Event;
 let event2: Event;
+let speaker1: User;
 let proposal: Proposal;
 let proposal2: Proposal;
 
@@ -34,7 +38,7 @@ test.beforeEach(async () => {
   const tag1 = await eventProposalTagFactory({ event, attributes: { name: 'Tag 1' } });
   await eventProposalTagFactory({ event, attributes: { name: 'Tag 2' } });
 
-  const speaker1 = await userFactory({
+  speaker1 = await userFactory({
     attributes: {
       name: 'Marie Jane',
       email: 'marie@example.com',
@@ -366,6 +370,36 @@ test('opens speaker details and edit pages from drawer', async ({ page }) => {
   await expect(editButton).toBeVisible();
   await editButton.click();
   await expect(page.getByRole('heading', { name: 'Edit speaker Marie Jane' })).toBeVisible();
+});
+
+test('manages speaker conversation in drawer', async ({ page }) => {
+  await flags.set('speakersCommunication', true);
+
+  const proposalPage = new ProposalPage(page);
+  const conversation = await conversationFactory({ event, proposalId: proposal.id });
+  await conversationMessageFactory({
+    conversation,
+    sender: speaker1,
+    role: 'SPEAKER',
+    attributes: { content: 'Hello from speaker' },
+  });
+
+  await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+
+  const drawer = await proposalPage.openConversationDrawer();
+
+  await proposalPage.sendMessageInDrawer(drawer, 'Response from organizer');
+  await expect(drawer.getByText('Hello from speaker')).toBeVisible();
+  await expect(drawer.getByText('Response from organizer')).toBeVisible();
+
+  const messages = await proposalPage.getConversationMessages(drawer);
+  await expect(messages.length).toBe(2);
+
+  await messages[0].editMessage('New Response from organizer');
+  await expect(drawer.getByText('New Response from organizer')).toBeVisible();
+
+  await messages[0].clickDelete();
+  await expect(drawer.getByText('New Response from organizer')).not.toBeVisible();
 });
 
 test.describe('As a reviewer', () => {
