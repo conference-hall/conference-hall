@@ -31,9 +31,9 @@ export function EmojiReactions({ emojis, reactions, currentUserId, onChangeEmoji
         const emoji = emojis.find((emoji) => emoji.code === reaction.code);
         if (!emoji) return null;
 
-        const reactNames = reaction.reactedBy.map((users) => {
-          if (users.userId === currentUserId) return t('common.you');
-          return users.name;
+        const reactNames = reaction.reactedBy.map((user) => {
+          if (user.userId === currentUserId) return t('common.you');
+          return user.name;
         });
 
         const tooltip = (

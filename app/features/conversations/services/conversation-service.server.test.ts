@@ -272,8 +272,8 @@ describe('ConversationService', () => {
       const messages = await service.getConversation(event.id);
 
       expect(messages.length).toBe(2);
-      expect(messages[0].content).toBe('Second message');
-      expect(messages[1].content).toBe('First message');
+      expect(messages[0].content).toBe('First message');
+      expect(messages[1].content).toBe('Second message');
     });
 
     it('marks reactions as reacted for current user', async () => {

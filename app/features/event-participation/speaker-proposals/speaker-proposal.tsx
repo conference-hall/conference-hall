@@ -142,7 +142,7 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
     <ActivityFeed label={t('event.proposal.activity-feed')} className="pl-4">
       <ActivityFeed.Entry className="h-6" withLine aria-hidden />
 
-      {optimisticMessages.reverse().map((message) => (
+      {optimisticMessages.map((message) => (
         <ActivityFeed.Entry
           key={message.id}
           marker={<Avatar picture={message.sender.picture} name={message.sender.name} />}

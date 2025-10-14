@@ -1,4 +1,5 @@
 import { db } from 'prisma/db.server.ts';
+import type { ConversationReaction, User } from 'prisma/generated/client.ts';
 import type { ConversationContextType } from 'prisma/generated/enums.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import type {
@@ -93,26 +94,30 @@ export class ConversationService {
       include: {
         participants: true,
         messages: {
-          // todo(conversation): check N+1 ???
-          include: { sender: true, reactions: { include: { reactedBy: true } } },
-          orderBy: { createdAt: 'desc' },
+          include: { reactions: true },
+          orderBy: { createdAt: 'asc' },
         },
       },
     });
 
+    if (!conversation) return [];
+
+    const users = await db.user.findMany({ where: { id: { in: conversation.participants.map((p) => p.userId) } } });
+
     return (
       conversation?.messages.map((message) => {
         const participant = conversation.participants.find((p) => p.userId === message.senderId);
+        const sender = users.find((user) => user.id === participant?.userId);
         return {
           id: message.id,
           sender: {
-            userId: message.sender?.id || '',
-            name: message.sender?.name || 'System',
-            picture: message.sender?.picture || null,
+            userId: sender?.id || '',
+            name: sender?.name || 'System',
+            picture: sender?.picture || null,
             role: participant?.role,
           },
           content: message.content,
-          reactions: this.mapReactions(message.reactions, userId),
+          reactions: this.mapReactions(message.reactions, users, userId),
           sentAt: message.createdAt,
         };
       }) || []
@@ -120,7 +125,8 @@ export class ConversationService {
   }
 
   private mapReactions(
-    reactions: Array<{ code: string; userId: string; reactedAt: Date; reactedBy: { name: string } }>,
+    reactions: Array<ConversationReaction>,
+    users: Array<User>,
     currentUserId: string,
   ): Array<EmojiReaction> {
     return Object.values(
@@ -137,9 +143,10 @@ export class ConversationService {
           if (reaction.userId === currentUserId) {
             acc[reaction.code].reacted = true;
           }
+          const reactedBy = users.find((user) => user.id === reaction.userId);
           acc[reaction.code].reactedBy.push({
             userId: reaction.userId,
-            name: reaction.reactedBy.name,
+            name: reactedBy?.name || 'Unknown',
           });
           if (reaction.reactedAt < acc[reaction.code].minDate) {
             acc[reaction.code].minDate = reaction.reactedAt;

@@ -59,7 +59,7 @@ export function SpeakerModal({ team, event, onSpeakerCreated, children }: Speake
         open={isModalOpen}
         onClose={onClose}
       >
-        <Modal.Content>
+        <Modal.Content className="z-50">
           <Form ref={formRef} id={formId} className="space-y-4 lg:space-y-6">
             <Input name="email" type="email" label={t('common.email')} error={errors?.email} required />
 

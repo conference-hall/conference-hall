@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority';
 export const menuSection = () => 'flex flex-col';
 
 export const menuItems = (width = 'w-56') =>
-  `flex flex-col z-50 ${width} rounded-xl bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden py-2`;
+  `flex flex-col z-40 ${width} rounded-xl bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden py-2`;
 
 export const menuItem = cva(
   ['flex items-center rounded-lg gap-2 mx-2 px-2 py-1.5 text-sm font-medium grow cursor-pointer'],
