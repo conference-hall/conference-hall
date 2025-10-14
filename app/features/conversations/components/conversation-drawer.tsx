@@ -31,8 +31,8 @@ export function ConversationDrawer({ messages, recipients = [], children, classN
         {children}
       </button>
 
-      <SlideOver open={open} onClose={() => setOpen(false)} withBorder={false} size="l">
-        {/* todo(conversation): set title as sr-only in SlideOver */}
+      {/* todo(conversation): title with persons avatars in it (ex: speakers) */}
+      <SlideOver title={recipients.join(', ')} open={open} onClose={() => setOpen(false)} withBorder={false} size="l">
         <h2 className="sr-only">{t('common.conversation.title')}</h2>
 
         {messages.length === 0 ? (

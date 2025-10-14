@@ -112,7 +112,7 @@ export class ConversationService {
             role: participant?.role,
           },
           content: message.content,
-          // todo(conversation): should group by code
+          // todo(conversation): should group by code and order by min creation date
           reactions: message.reactions.map((reaction) => ({
             code: reaction.code,
             reacted: reaction.userId === userId,

@@ -5,22 +5,14 @@ import type { Emoji } from '~/shared/types/emojis.types.ts';
 
 type EmojiPickerProps = {
   emojis: Array<Emoji>;
-  disabledEmojis?: Array<string>;
   label?: string;
+  anchor?: 'top' | 'bottom';
   className?: string;
   icon: React.ComponentType<{ className?: string }>;
   onSelectEmoji: (emoji: Emoji) => void;
 };
 
-// todo(conversation): toggle emojis instead of having disabled one
-export function EmojiPicker({
-  emojis,
-  disabledEmojis = [],
-  label,
-  icon: Icon,
-  className,
-  onSelectEmoji,
-}: EmojiPickerProps) {
+export function EmojiPicker({ emojis, label, icon: Icon, anchor, className, onSelectEmoji }: EmojiPickerProps) {
   const { t } = useTranslation();
 
   const buttonStyle =
@@ -38,36 +30,28 @@ export function EmojiPicker({
       </PopoverButton>
 
       <PopoverPanel
-        // todo(conversation): add anchor as props (for usage in session)
-        anchor="bottom end"
-        // todo(conversation): change style (border, shadow...) to match with the Menu one (or use Menu here?)
-        className="grid grid-cols-5 gap-2 p-2 bg-white border border-gray-200 rounded-2xl shadow-sm [--anchor-gap:8px] z-50"
+        anchor={anchor || 'bottom end'}
+        className="grid grid-cols-5 gap-2 p-2 rounded-xl bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden [--anchor-gap:8px] z-50"
       >
         {({ close }) => (
           <>
-            {emojis.map((emoji) => {
-              const disabled = disabledEmojis.includes(emoji.code);
-
-              return (
-                <button
-                  key={emoji.code}
-                  type="button"
-                  className={cx(
-                    'flex items-center justify-center rounded-lg shrink-0 h-8 w-8 cursor-pointer font-serif text-lg hover:bg-gray-100',
-                    { 'grayscale cursor-not-allowed': disabled },
-                  )}
-                  aria-label={emoji.name}
-                  title={emoji.name}
-                  disabled={disabled}
-                  onClick={() => {
-                    onSelectEmoji(emoji);
-                    close();
-                  }}
-                >
-                  {emoji.skin}
-                </button>
-              );
-            })}
+            {emojis.map((emoji) => (
+              <button
+                key={emoji.code}
+                type="button"
+                className={cx(
+                  'flex items-center justify-center rounded-lg shrink-0 h-8 w-8 cursor-pointer font-serif text-lg hover:bg-gray-100',
+                )}
+                aria-label={emoji.name}
+                title={emoji.name}
+                onClick={() => {
+                  onSelectEmoji(emoji);
+                  close();
+                }}
+              >
+                {emoji.skin}
+              </button>
+            ))}
           </>
         )}
       </PopoverPanel>

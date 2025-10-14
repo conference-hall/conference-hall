@@ -33,23 +33,4 @@ describe('EmojiPicker component', () => {
     await expect.element(button).toHaveAttribute('aria-expanded', 'false');
     expect(onSelectEmoji).toHaveBeenCalledWith(EMOJIS.at(0));
   });
-
-  it('can disable some emojis', async () => {
-    const onSelectEmoji = vi.fn();
-
-    const screen = render(
-      <I18nextProvider i18n={i18nTest}>
-        <EmojiPicker emojis={EMOJIS} icon={FaceSmileIcon} disabledEmojis={['+1']} onSelectEmoji={onSelectEmoji} />
-      </I18nextProvider>,
-    );
-
-    const button = screen.getByRole('button', { name: 'Select a reaction' });
-    await userEvent.click(button);
-
-    const thumbsUpButton = screen.getByRole('button', { name: 'Thumbs up' });
-    await expect.element(thumbsUpButton).toHaveAttribute('disabled');
-
-    const thumbsDownButton = screen.getByRole('button', { name: 'Thumbs down' });
-    await expect.element(thumbsDownButton).not.toHaveAttribute('disabled');
-  });
 });

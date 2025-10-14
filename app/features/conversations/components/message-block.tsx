@@ -10,8 +10,9 @@ import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDistance } from '~/shared/datetimes/datetimes.ts';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { MessageActionsMenu } from './message-actions-menu.tsx';
+import { MESSAGE_EMOJIS } from './message-emojis.tsx';
 import { MessageInputForm } from './message-input-form.tsx';
-import { EMOJIS, useOptimisticReactions } from './use-optimistic-reactions.ts';
+import { useOptimisticReactions } from './use-optimistic-reactions.ts';
 
 type Props = {
   message: Message;
@@ -35,8 +36,7 @@ export function MessageBlock({ message, intentSuffix, className }: Props) {
       <div className="absolute right-0 top-0 p-2 flex gap-x-1 text-gray-500">
         <EmojiPicker
           icon={FaceSmileIcon}
-          emojis={EMOJIS}
-          disabledEmojis={reactions.map((reaction) => reaction.code)}
+          emojis={MESSAGE_EMOJIS}
           onSelectEmoji={onChangeReaction}
           className="h-6 w-6 flex items-center justify-center hover:bg-gray-100 cursor-pointer rounded"
         />
@@ -80,7 +80,7 @@ export function MessageBlock({ message, intentSuffix, className }: Props) {
 
       {reactions.length > 0 ? (
         // todo(conversation): order is not consistent
-        <EmojiReactions emojis={EMOJIS} reactions={reactions} onChangeEmoji={onChangeReaction} />
+        <EmojiReactions emojis={MESSAGE_EMOJIS} reactions={reactions} onChangeEmoji={onChangeReaction} />
       ) : null}
     </div>
   );

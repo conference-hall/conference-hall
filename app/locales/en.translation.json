@@ -88,6 +88,7 @@
   "common.confirm": "Confirm",
   "common.confirmation-delete-input": "To confirm, type \"{{confirmationText}}\" in the box bellow",
   "common.confirmation": "Are you sure?",
+  "common.confirmation.delete": "Are you sure you want to delete this?",
   "common.continue-with": "Continue with",
   "common.continue": "Continue",
   "common.conversation.title": "Conversation",

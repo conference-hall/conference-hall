@@ -3,20 +3,6 @@ import { useFetchers, useSubmit } from 'react-router';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import type { Emoji } from '~/shared/types/emojis.types.ts';
 
-// todo(conversation): put somewhere else the list
-export const EMOJIS: Array<Emoji> = [
-  { code: '+1', skin: '👍', name: 'Thumbs up' },
-  { code: '-1', skin: '👎', name: 'Thumbs down' },
-  { code: 'heart', skin: '❤️', name: 'Heart' },
-  { code: 'smile', skin: '😄', name: 'Laughing' },
-  { code: 'cry', skin: '😢', name: 'Sadness' },
-  { code: 'tada', skin: '🎉', name: 'Celebration' },
-  { code: 'rocket', skin: '🚀', name: 'Excitement' },
-  { code: 'fire', skin: '🔥', name: 'Trending' },
-  { code: 'clap', skin: '👏', name: 'Applause' },
-  { code: 'thinking_face', skin: '🤔', name: 'Thinking' },
-];
-
 export function useOptimisticReactions(message: Message, intentSuffix: string) {
   const submit = useSubmit();
   const { t } = useTranslation();

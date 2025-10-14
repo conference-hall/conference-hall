@@ -23,16 +23,21 @@ export function MessageActionsMenu({ message, intentSuffix, onEdit, className }:
       </MenuButton>
 
       <MenuTransition>
-        <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()}>
+        <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()} modal={false}>
           <MenuItem as="button" onClick={onEdit} className={menuItem()}>
             <PencilSquareIcon className={menuItemIcon()} aria-hidden="true" />
             {t('common.edit')}
           </MenuItem>
 
-          {/* todo(conversation): add a confirmation alert */}
           {/* todo(conversation): how to do optimistic rendering */}
-          {/* todo(conversation): how to have generic intents */}
-          <MenuItem as={Form} method="POST" className={menuItem({ variant: 'important' })}>
+          <MenuItem
+            as={Form}
+            method="POST"
+            className={menuItem({ variant: 'important' })}
+            onSubmit={(event) => {
+              if (!confirm(t('common.confirmation.delete'))) return event.preventDefault();
+            }}
+          >
             <input type="hidden" name="id" value={message.id} />
             <button
               type="submit"
