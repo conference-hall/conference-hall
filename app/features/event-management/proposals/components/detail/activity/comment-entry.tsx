@@ -3,7 +3,7 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { MessageBlock } from '~/features/conversations/components/message-block.tsx';
 import type { FeedItem } from '~/features/event-management/proposals/services/activity-feed.server.ts';
 
-// todo(conversation): FeedItem type should be shared (not on server)
+// todo(comments): FeedItem type should be shared (not on server)
 export function CommentEntry({ item }: { item: FeedItem }) {
   if (item.type !== 'comment') return null;
 

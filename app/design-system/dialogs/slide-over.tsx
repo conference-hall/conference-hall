@@ -51,16 +51,19 @@ export function SlideOver({ open, title, size = 'm', withBorder = true, onClose,
   );
 }
 
-interface ContentProps extends Omit<React.ComponentProps<'div'>, 'title'> {
+interface ContentProps<T extends React.ElementType = 'div'> {
+  as?: T;
   children: React.ReactNode;
   className?: string;
+  ref?: React.Ref<React.ComponentRef<T>>;
 }
 
-function Content({ children, className, ref }: ContentProps) {
+function Content<T extends React.ElementType = 'div'>({ as, children, className, ref }: ContentProps<T>) {
+  const Component = (as || 'div') as React.ElementType;
   return (
-    <div ref={ref} className={cx('flex-1 overflow-y-auto h-full p-4', className)}>
+    <Component ref={ref} className={cx('flex-1 overflow-y-auto h-full p-4', className)}>
       {children}
-    </div>
+    </Component>
   );
 }
 

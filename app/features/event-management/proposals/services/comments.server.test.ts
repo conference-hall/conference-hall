@@ -11,7 +11,6 @@ import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 
 import { Comments } from './comments.server.ts';
 
-// todo(conversation): update tests
 describe('Comments', () => {
   let owner: User;
   let member: User;
@@ -91,7 +90,7 @@ describe('Comments', () => {
 
       const reactions = await Comments.listReactions([message.id], owner.id);
       expect(reactions[message.id]).toEqual([
-        { code: 'tada', reacted: true, reactedBy: [{ userId: owner.id, name: 'You' }] },
+        { code: 'tada', reacted: true, reactedBy: [{ userId: owner.id, name: 'Clark Kent' }] },
       ]);
     });
 
@@ -117,7 +116,7 @@ describe('Comments', () => {
 
       const reactions = await Comments.listReactions([message1.id, message2.id], owner.id);
       expect(reactions).toEqual({
-        [message1.id]: [{ code: 'tada', reacted: true, reactedBy: [{ userId: owner.id, name: 'You' }] }],
+        [message1.id]: [{ code: 'tada', reacted: true, reactedBy: [{ userId: owner.id, name: 'Clark Kent' }] }],
         [message2.id]: [{ code: 'tada', reacted: false, reactedBy: [{ userId: member.id, name: member.name }] }],
       });
     });

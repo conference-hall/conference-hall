@@ -7,6 +7,7 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { MessageBlock } from '~/features/conversations/components/message-block.tsx';
 import { MessageInputForm } from '~/features/conversations/components/message-input-form.tsx';
+import { useOptimisticMessages } from '~/features/conversations/components/use-optimistic-messages.ts';
 import {
   ConversationMessageDeleteSchema,
   ConversationMessageReactSchema,
@@ -134,26 +135,29 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
   const { t } = useTranslation();
   const user = useUser();
 
+  const intentSuffix = 'message';
+  const optimisticMessages = useOptimisticMessages(messages, intentSuffix, 'SPEAKER');
+
   return (
-    <ActivityFeed label={t('event-management.proposal-page.activity-feed')} className="pl-4">
+    <ActivityFeed label={t('event.proposal.activity-feed')} className="pl-4">
       <ActivityFeed.Entry className="h-6" withLine aria-hidden />
 
-      {messages.map((message) => (
+      {optimisticMessages.reverse().map((message) => (
         <ActivityFeed.Entry
           key={message.id}
           marker={<Avatar picture={message.sender.picture} name={message.sender.name} />}
           withLine
         >
-          <MessageBlock intentSuffix="message" message={message} />
+          <MessageBlock intentSuffix={intentSuffix} message={message} />
         </ActivityFeed.Entry>
       ))}
 
       <ActivityFeed.Entry marker={<Avatar picture={user?.picture} name={user?.name} />}>
         <MessageInputForm
-          intent="save-message"
+          intent={`save-${intentSuffix}`}
           buttonLabel={t('common.send')}
           inputLabel={t('common.conversation.send.label')}
-          placeholder="Send a message to DevFest Nantes organizers" // todo(conversation): i18n
+          placeholder={t('event.proposal.conversation.placeholder', { event: '' })}
         />
       </ActivityFeed.Entry>
     </ActivityFeed>

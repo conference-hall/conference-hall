@@ -3,7 +3,6 @@ import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type { CommentReactionData, CommentSaveData } from './comments.schema.server.ts';
 
-// todo(conversation): delete Channel attribute from comments table
 export class Comments extends UserEventAuthorization {
   private proposalId: string;
 
@@ -63,7 +62,6 @@ export class Comments extends UserEventAuthorization {
       include: { reactedBy: true },
     });
 
-    // todo(conversation): resuse algo with conversations
     return commentIds.reduce<Record<string, Array<EmojiReaction>>>((byComments, commentId) => {
       const commentReactions = reactions.filter((reaction) => reaction.commentId === commentId);
 

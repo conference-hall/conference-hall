@@ -740,6 +740,8 @@
   "event.page.contacts": "Contacts",
   "event.page.online": "The event is online",
   "event.page.website": "Website",
+  "event.proposal.activity-feed": "Proposal activity",
+  "event.proposal.conversation.placeholder": "Send a message to {{event}}",
   "event.proposal.delete.button": "Remove proposal",
   "event.proposal.delete.modal.description": "The talk will still be in your profile, so you will be able to submit it again later.",
   "event.proposal.delete.modal.title": "Are you sure you want to remove your submission?",

@@ -7,6 +7,7 @@ import { Subtitle } from '~/design-system/typography.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { MessageBlock } from './message-block.tsx';
 import { MessageInputForm } from './message-input-form.tsx';
+import { useOptimisticMessages } from './use-optimistic-messages.ts';
 
 type Props = {
   messages: Array<Message>;
@@ -15,10 +16,13 @@ type Props = {
   className?: string;
 };
 
-// todo(conversation): optimistic rendering
+// todo(conversation): add tests
 export function ConversationDrawer({ messages, recipients = [], children, className }: Props) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+
+  const intentSuffix = 'message';
+  const optimisticMessages = useOptimisticMessages(messages, intentSuffix, 'ORGANIZER');
 
   const sendMessageLabel =
     recipients.length > 0
@@ -35,8 +39,8 @@ export function ConversationDrawer({ messages, recipients = [], children, classN
       <SlideOver title={recipients.join(', ')} open={open} onClose={() => setOpen(false)} withBorder={false} size="l">
         <h2 className="sr-only">{t('common.conversation.title')}</h2>
 
-        {messages.length === 0 ? (
-          <SlideOver.Content className="gap-6 items-center justify-center text-gray-400">
+        {optimisticMessages.length === 0 ? (
+          <SlideOver.Content className="flex flex-col items-center justify-center gap-6 text-gray-400">
             <ChatBubbleLeftRightIcon className="h-16 w-16" aria-hidden />
             <Subtitle>
               {recipients.length > 0 ? (
@@ -51,19 +55,19 @@ export function ConversationDrawer({ messages, recipients = [], children, classN
             </Subtitle>
           </SlideOver.Content>
         ) : (
-          <SlideOver.Content className="flex flex-col-reverse gap-6">
-            {messages.map((message) => (
-              <div key={message.id} className="flex gap-4">
+          <SlideOver.Content as="ul" className="flex flex-col-reverse gap-6">
+            {optimisticMessages.map((message) => (
+              <li key={message.id} className="flex gap-4">
                 <Avatar picture={message.sender.picture} name={message.sender.name} size="s" className="mt-1" />
-                <MessageBlock intentSuffix="message" message={message} />
-              </div>
+                <MessageBlock intentSuffix={intentSuffix} message={message} />
+              </li>
             ))}
           </SlideOver.Content>
         )}
 
         <SlideOver.Actions>
           <MessageInputForm
-            intent="save-message"
+            intent={`save-${intentSuffix}`}
             buttonLabel={t('common.send')}
             inputLabel={sendMessageLabel}
             placeholder={sendMessageLabel}

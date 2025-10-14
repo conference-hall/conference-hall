@@ -1,13 +1,16 @@
 import { useTranslation } from 'react-i18next';
+import { useUser } from '~/app-platform/components/user-context.tsx';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
+import { MessageInputForm } from '~/features/conversations/components/message-input-form.tsx';
 import type { Feed } from '~/features/event-management/proposals/services/activity-feed.server.ts';
 import { CommentEntry } from './comment-entry.tsx';
-import { CommentFormEntry } from './comment-form-entry.tsx';
 import { ReviewEntry } from './review-entry.tsx';
 
 type Props = { activity: Feed };
 
 export function ProposalActivityFeed({ activity }: Props) {
+  const user = useUser();
   const { t } = useTranslation();
 
   return (
@@ -24,7 +27,14 @@ export function ProposalActivityFeed({ activity }: Props) {
         }
       })}
 
-      <CommentFormEntry />
+      <ActivityFeed.Entry marker={<Avatar picture={user?.picture} name={user?.name} />}>
+        <MessageInputForm
+          intent="save-comment"
+          inputLabel={t('event-management.proposal-page.comment.label')}
+          buttonLabel={t('event-management.proposal-page.comment.submit')}
+          placeholder={t('event-management.proposal-page.comment.placeholder')}
+        />
+      </ActivityFeed.Entry>
     </ActivityFeed>
   );
 }

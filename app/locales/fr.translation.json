@@ -738,6 +738,8 @@
   "event.page.contacts": "Contacts",
   "event.page.online": "L'événement est en ligne",
   "event.page.website": "Site web",
+  "event.proposal.activity-feed": "Activité de la proposition",
+  "event.proposal.conversation.placeholder": "Envoyer un message au {{event}}",
   "event.proposal.delete.button": "Supprimer la proposition",
   "event.proposal.delete.modal.description": "Le talk restera dans votre profil, vous pourrez donc le soumettre à nouveau plus tard.",
   "event.proposal.delete.modal.title": "Êtes-vous sûr de vouloir supprimer votre soumission ?",

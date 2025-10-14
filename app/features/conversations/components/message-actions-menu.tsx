@@ -14,9 +14,11 @@ type Props = {
   className?: string;
 };
 
+// todo(conversation): add tests
 export function MessageActionsMenu({ message, intentSuffix, onEdit, className }: Props) {
   const { t } = useTranslation();
   const currentUser = useUser();
+  const intent = `delete-${intentSuffix}`;
 
   if (message.sender.userId !== currentUser?.id) {
     return null;
@@ -35,11 +37,13 @@ export function MessageActionsMenu({ message, intentSuffix, onEdit, className }:
             {t('common.edit')}
           </MenuItem>
 
-          {/* todo(conversation): how to do optimistic rendering */}
           <MenuItem
             as={Form}
             method="POST"
             className={menuItem({ variant: 'important' })}
+            navigate={false}
+            preventScrollReset={true}
+            fetcherKey={`${intent}:${message.id}`}
             onSubmit={(event) => {
               if (!confirm(t('common.confirmation.delete'))) return event.preventDefault();
             }}
@@ -48,7 +52,7 @@ export function MessageActionsMenu({ message, intentSuffix, onEdit, className }:
             <button
               type="submit"
               name="intent"
-              value={`delete-${intentSuffix}`}
+              value={intent}
               className="flex items-center gap-2 w-full cursor-pointer"
             >
               <TrashIcon className={menuItemIcon({ variant: 'important' })} aria-hidden="true" />

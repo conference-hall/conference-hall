@@ -21,6 +21,7 @@ type Props = {
   className?: string;
 };
 
+// todo(conversation): add tests
 export function MessageBlock({ message, intentSuffix, className }: Props) {
   const { t, i18n } = useTranslation();
   const currentUser = useUser();

@@ -48,7 +48,7 @@ describe('ActivityFeed', () => {
           note: null,
           user: owner.name,
           picture: owner.picture,
-          reactions: [{ code: 'tada', reacted: true, reactedBy: [{ userId: owner.id, name: 'You' }] }],
+          reactions: [{ code: 'tada', reacted: true, reactedBy: [{ userId: owner.id, name: 'Clark Kent' }] }],
         },
         {
           id: review1.id,
