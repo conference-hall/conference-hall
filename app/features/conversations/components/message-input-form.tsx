@@ -7,8 +7,8 @@ import type { Message } from '~/shared/types/conversation.types.ts';
 
 type Props = {
   intent: string;
-  placeholder: string;
   inputLabel: string;
+  placeholder?: string;
   buttonLabel?: string;
   message?: Message;
   autoFocus?: boolean;

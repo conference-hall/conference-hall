@@ -129,10 +129,10 @@ test('displays proposal data and review the proposal', async ({ page }) => {
   const first = await proposalPage.activityFeed.nth(1);
   const second = await proposalPage.activityFeed.nth(2);
   const third = await proposalPage.activityFeed.nth(3);
-  await expect(first).toContainText('Bruce Wayne reviewed the proposal with 3 stars.');
-  await expect(second).toContainText('Bruce Wayne commented');
+  await expect(first).toContainText('Bruce Wayne reviewed the proposal with 3 stars');
+  await expect(second).toContainText('Bruce Wayne');
   await expect(second).toContainText('Hello world');
-  await expect(third).toContainText('Clark Kent reviewed the proposal with 5 stars.');
+  await expect(third).toContainText('Clark Kent reviewed the proposal with 5 stars');
 
   // Add a reaction on comment
   await second.getByRole('button', { name: 'Select a reaction' }).click();
@@ -144,11 +144,13 @@ test('displays proposal data and review the proposal', async ({ page }) => {
   await proposalPage.commentButton.click();
   await expect(proposalPage.activityFeed).toHaveCount(6);
   const fourth = await proposalPage.activityFeed.nth(4);
-  await expect(fourth).toContainText('Clark Kent commented');
+  await expect(fourth).toContainText('Clark Kent');
   await expect(fourth).toContainText('This is a new comment');
 
   // Delete a comment
-  await fourth.getByRole('button', { name: 'delete' }).click();
+  page.on('dialog', (dialog) => dialog.accept());
+  await fourth.getByLabel('Proposal action menu').click();
+  await page.getByRole('button', { name: 'Delete' }).click();
   await expect(proposalPage.activityFeed).toHaveCount(5);
 
   // Check speaker profile

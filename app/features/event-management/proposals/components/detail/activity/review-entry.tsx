@@ -1,10 +1,9 @@
 import { HeartIcon, MinusIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
-import { ClientOnly } from '~/design-system/utils/client-only.tsx';
+import { TimeDistance } from '~/design-system/utils/time-distance.tsx';
 import type { FeedItem } from '~/features/event-management/proposals/services/activity-feed.server.ts';
-import { formatDistance } from '~/shared/datetimes/datetimes.ts';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
 
 const ReviewTypes = {
@@ -19,8 +18,6 @@ const ReviewTypes = {
 } as const;
 
 export function ReviewEntry({ item }: { item: FeedItem }) {
-  const { i18n } = useTranslation();
-
   if (item.type !== 'review') return null;
 
   const review = ReviewTypes[item.feeling];
@@ -38,13 +35,7 @@ export function ReviewEntry({ item }: { item: FeedItem }) {
           components={[<span key="1" className="font-medium text-gray-900" />, <strong key="2" />]}
         />
       </p>
-      <ClientOnly>
-        {() => (
-          <time dateTime={item.timestamp.toISOString()} className="flex-none text-xs text-gray-500">
-            {formatDistance(item.timestamp, i18n.language)}
-          </time>
-        )}
-      </ClientOnly>
+      <TimeDistance date={item.timestamp} className="flex-none text-xs text-gray-500" />
     </ActivityFeed.Entry>
   );
 }

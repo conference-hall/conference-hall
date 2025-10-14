@@ -7,8 +7,7 @@ import { Badge } from '~/design-system/badges.tsx';
 import { EmojiPicker } from '~/design-system/emojis/emoji-picker.tsx';
 import { EmojiReactions } from '~/design-system/emojis/emoji-reactions.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { ClientOnly } from '~/design-system/utils/client-only.tsx';
-import { formatDistance } from '~/shared/datetimes/datetimes.ts';
+import { TimeDistance } from '~/design-system/utils/time-distance.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { MessageActionsMenu } from './message-actions-menu.tsx';
 import { MESSAGE_EMOJIS } from './message-emojis.tsx';
@@ -22,7 +21,7 @@ type Props = {
 };
 
 export function MessageBlock({ message, intentSuffix, className }: Props) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const currentUser = useUser();
 
   const [isEditing, setEditing] = useState(false);
@@ -55,15 +54,12 @@ export function MessageBlock({ message, intentSuffix, className }: Props) {
         <Text size="xs" weight="semibold">
           {message.sender.name}
         </Text>
-
-        <ClientOnly>
-          {() => (
-            <time dateTime={message.sentAt.toISOString()} className="text-xs text-gray-500 mr-1">
-              a envoyé, {formatDistance(message.sentAt, i18n.language)}
-            </time>
-          )}
-        </ClientOnly>
-
+        <Text size="xs" variant="secondary">
+          {t('common.conversation.message.sent')}
+        </Text>
+        <Text size="xs" variant="secondary">
+          <TimeDistance date={message.sentAt} />
+        </Text>
         {message.sender.role ? <Badge compact>{message.sender.role}</Badge> : null}
       </div>
 
@@ -71,8 +67,7 @@ export function MessageBlock({ message, intentSuffix, className }: Props) {
         <MessageInputForm
           message={message}
           intent={`save-${intentSuffix}`}
-          inputLabel={t('event-management.proposal-page.comment.label')}
-          placeholder={t('event-management.proposal-page.comment.placeholder')}
+          inputLabel={t('common.conversation.edit.label')}
           onClose={() => setEditing(false)}
           autoFocus
         />
