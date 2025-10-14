@@ -6,7 +6,6 @@ type PendingFetcher = ReturnType<typeof useFetchers>[number] & {
   formData: FormData;
 };
 
-// todo(conversation): add tests
 export function useOptimisticMessages(messages: Array<Message>, intentSuffix: string, role: 'SPEAKER' | 'ORGANIZER') {
   const currentUser = useUser();
   const saveIntent = `save-${intentSuffix}`;

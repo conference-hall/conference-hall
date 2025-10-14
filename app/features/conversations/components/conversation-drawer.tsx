@@ -16,7 +16,6 @@ type Props = {
   className?: string;
 };
 
-// todo(conversation): add tests
 export function ConversationDrawer({ messages, recipients = [], children, className }: Props) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);

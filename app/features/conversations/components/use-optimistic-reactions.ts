@@ -3,7 +3,6 @@ import { useUser } from '~/app-platform/components/user-context.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import type { Emoji } from '~/shared/types/emojis.types.ts';
 
-// todo(conversation): add tests
 export function useOptimisticReactions(message: Message, intentSuffix: string) {
   const currentUser = useUser();
   const submit = useSubmit();

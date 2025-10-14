@@ -8,7 +8,6 @@ import type {
 } from './conversation.schema.server.ts';
 import { ConversationService } from './conversation-service.server.ts';
 
-// todo(conversation): add tests
 export class ProposalConversationForOrganizers {
   private conversation: ConversationService;
   private authorizations: UserEventAuthorization;

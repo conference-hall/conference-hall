@@ -14,7 +14,6 @@ type Props = {
   className?: string;
 };
 
-// todo(conversation): add tests
 export function MessageActionsMenu({ message, intentSuffix, onEdit, className }: Props) {
   const { t } = useTranslation();
   const currentUser = useUser();

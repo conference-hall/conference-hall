@@ -14,7 +14,6 @@ type ConversationServiceContext = {
   contextIds?: Array<string>;
 };
 
-// todo(conversation): add tests
 export class ConversationService {
   private context: ConversationServiceContext;
 

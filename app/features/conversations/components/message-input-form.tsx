@@ -15,7 +15,6 @@ type Props = {
   onClose?: VoidFunction;
 };
 
-// todo(conversation): add tests
 export function MessageInputForm({
   intent,
   placeholder,
