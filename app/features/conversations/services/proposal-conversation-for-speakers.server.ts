@@ -19,7 +19,7 @@ export class ProposalConversationForSpeakers {
     this.conversation = new ConversationService({
       userId,
       role: 'SPEAKER',
-      contextType: 'PROPOSAL',
+      contextType: 'PROPOSAL_CONVERSATION',
       contextIds: [proposalId],
     });
   }

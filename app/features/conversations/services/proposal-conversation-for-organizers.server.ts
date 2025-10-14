@@ -20,7 +20,7 @@ export class ProposalConversationForOrganizers {
     this.conversation = new ConversationService({
       userId,
       role: 'ORGANIZER',
-      contextType: 'PROPOSAL',
+      contextType: 'PROPOSAL_CONVERSATION',
       contextIds: [proposalId],
     });
   }
