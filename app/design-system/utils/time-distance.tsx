@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { formatDistance } from '~/shared/datetimes/datetimes.ts';
+import { formatDatetime, formatDistance } from '~/shared/datetimes/datetimes.ts';
+import { Tooltip } from '../tooltip.tsx';
 import { ClientOnly } from './client-only.tsx';
 
 type Props = { date: Date; className?: string };
@@ -9,9 +10,11 @@ export function TimeDistance({ date, className }: Props) {
   return (
     <ClientOnly>
       {() => (
-        <time dateTime={date.toISOString()} className={className}>
-          {formatDistance(date, i18n.language)}
-        </time>
+        <Tooltip text={formatDatetime(date, { format: 'medium', locale: i18n.language })}>
+          <time dateTime={date.toISOString()} className={className}>
+            {formatDistance(date, i18n.language)}
+          </time>
+        </Tooltip>
       )}
     </ClientOnly>
   );

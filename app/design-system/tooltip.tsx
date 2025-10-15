@@ -23,7 +23,7 @@ export function Tooltip({ text, placement = 'top', as: Tag = 'div', children }: 
   const hideTooltip = () => setIsVisible(false);
 
   return (
-    <Tag ref={refs.setReference} onMouseEnter={showTooltip} onMouseLeave={hideTooltip} className="inline-block">
+    <Tag ref={refs.setReference} onMouseEnter={showTooltip} onMouseLeave={hideTooltip} className="inline">
       {children}
       {isVisible && (
         <div

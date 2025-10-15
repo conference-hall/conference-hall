@@ -35,7 +35,7 @@ export function ReviewEntry({ item }: { item: FeedItem }) {
           components={[<span key="1" className="font-medium text-gray-900" />, <strong key="2" />]}
         />
       </p>
-      <TimeDistance date={item.timestamp} className="flex-none text-xs text-gray-500" />
+      <TimeDistance date={item.timestamp} className="block text-xs text-gray-500" />
     </ActivityFeed.Entry>
   );
 }

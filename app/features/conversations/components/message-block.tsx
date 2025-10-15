@@ -6,7 +6,7 @@ import { useUser } from '~/app-platform/components/user-context.tsx';
 import { Badge } from '~/design-system/badges.tsx';
 import { EmojiPicker } from '~/design-system/emojis/emoji-picker.tsx';
 import { EmojiReactions } from '~/design-system/emojis/emoji-reactions.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { Text, typography } from '~/design-system/typography.tsx';
 import { TimeDistance } from '~/design-system/utils/time-distance.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { MessageActionsMenu } from './message-actions-menu.tsx';
@@ -29,6 +29,7 @@ export function MessageBlock({ message, intentSuffix, className }: Props) {
 
   return (
     <div
+      id={message.id}
       className={cx(
         'relative group w-full rounded-md p-4 space-y-1.5 ring-1 ring-inset ring-gray-200 bg-white',
         className,
@@ -57,9 +58,9 @@ export function MessageBlock({ message, intentSuffix, className }: Props) {
         <Text size="xs" variant="secondary">
           {t('common.conversation.message.sent')}
         </Text>
-        <Text size="xs" variant="secondary">
+        <a href={`#${message.id}`} className={cx(typography({ size: 'xs', variant: 'secondary' }), 'hover:underline')}>
           <TimeDistance date={message.sentAt} />
-        </Text>
+        </a>
         {message.sender.role ? <Badge compact>{message.sender.role}</Badge> : null}
       </div>
 
