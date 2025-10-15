@@ -22,7 +22,7 @@ export class ConversationService {
     this.context = context;
   }
 
-  async saveMessage(eventId: string, { id, message }: ConversationMessageSaveData) {
+  async saveMessage(eventId: string, { id, message }: ConversationMessageSaveData, canManageConversations?: boolean) {
     const { userId, role, contextType, contextIds } = this.context;
 
     await db.$transaction(async (tx) => {
@@ -48,7 +48,10 @@ export class ConversationService {
 
       if (id) {
         // Update message
-        await tx.conversationMessage.update({ data: { content: message }, where: { id, senderId: userId } });
+        await tx.conversationMessage.updateMany({
+          data: { content: message },
+          where: { id, senderId: canManageConversations ? undefined : userId },
+        });
       } else {
         // Create message
         await tx.conversationMessage.create({
@@ -76,9 +79,9 @@ export class ConversationService {
     return db.conversationReaction.create({ data: { userId, messageId: id, code } });
   }
 
-  async deleteMessage({ id }: ConversationMessageDeleteData) {
+  async deleteMessage({ id }: ConversationMessageDeleteData, canManageConversations?: boolean) {
     const { userId } = this.context;
-    await db.conversationMessage.delete({ where: { id, senderId: userId } });
+    await db.conversationMessage.deleteMany({ where: { id, senderId: canManageConversations ? undefined : userId } });
   }
 
   async getConversation(eventId: string) {

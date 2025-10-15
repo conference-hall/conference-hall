@@ -118,6 +118,54 @@ describe('ConversationService', () => {
       const messages = await db.conversationMessage.findMany({ where: { conversationId: conversation.id } });
       expect(messages.length).toBe(2);
     });
+
+    it('allows user with canManageConversations to update any message', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const message = await conversationMessageFactory({
+        conversation,
+        sender: speaker,
+        role: ConversationParticipantRole.SPEAKER,
+        attributes: { content: 'Original message' },
+      });
+
+      const service = new ConversationService({
+        userId: organizer.id,
+        role: 'ORGANIZER',
+        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        contextIds: [proposal.id],
+      });
+
+      await service.saveMessage(event.id, { id: message.id, message: 'Updated by organizer' }, true);
+
+      const updatedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+      expect(updatedMessage?.content).toBe('Updated by organizer');
+    });
+
+    it('prevents user without canManageConversations from updating other user messages', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const message = await conversationMessageFactory({
+        conversation,
+        sender: organizer,
+        role: ConversationParticipantRole.ORGANIZER,
+        attributes: { content: 'Original message' },
+      });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        contextIds: [proposal.id],
+      });
+
+      await service.saveMessage(event.id, { id: message.id, message: 'Attempted update' }, false);
+
+      const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
+      expect(result?.content).toBe('Original message');
+    });
   });
 
   describe('#reactMessage', () => {
@@ -195,6 +243,52 @@ describe('ConversationService', () => {
 
       const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
       expect(deletedMessage).toBeNull();
+    });
+
+    it('allows user with canManageConversations to delete any message', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const message = await conversationMessageFactory({
+        conversation,
+        sender: speaker,
+        role: ConversationParticipantRole.SPEAKER,
+      });
+
+      const service = new ConversationService({
+        userId: organizer.id,
+        role: 'ORGANIZER',
+        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        contextIds: [proposal.id],
+      });
+
+      await service.deleteMessage({ id: message.id }, true);
+
+      const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+      expect(deletedMessage).toBeNull();
+    });
+
+    it('prevents user without canManageConversations from deleting other user messages', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const message = await conversationMessageFactory({
+        conversation,
+        sender: organizer,
+        role: ConversationParticipantRole.ORGANIZER,
+      });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        contextIds: [proposal.id],
+      });
+
+      await service.deleteMessage({ id: message.id }, false);
+
+      const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
+      expect(result).toBeDefined();
     });
   });
 

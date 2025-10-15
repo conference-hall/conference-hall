@@ -91,6 +91,7 @@
   "common.confirmation.delete": "Are you sure you want to delete this?",
   "common.continue-with": "Continue with",
   "common.continue": "Continue",
+  "common.conversation.actions-menu": "Message action menu",
   "common.conversation.edit.label": "Edit message",
   "common.conversation.empty-state_one": "Start a conversation with speaker",
   "common.conversation.empty-state": "Start a conversation with speakers",

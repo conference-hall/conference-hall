@@ -7,9 +7,9 @@ import type { Feed } from '~/features/event-management/proposals/services/activi
 import { CommentEntry } from './comment-entry.tsx';
 import { ReviewEntry } from './review-entry.tsx';
 
-type Props = { activity: Feed };
+type Props = { activity: Feed; canManageConversations: boolean };
 
-export function ProposalActivityFeed({ activity }: Props) {
+export function ProposalActivityFeed({ activity, canManageConversations }: Props) {
   const user = useUser();
   const { t } = useTranslation();
 
@@ -19,7 +19,7 @@ export function ProposalActivityFeed({ activity }: Props) {
 
       {activity.map((item) => {
         if (item.type === 'comment') {
-          return <CommentEntry key={item.id} item={item} />;
+          return <CommentEntry key={item.id} item={item} canManageConversations={canManageConversations} />;
         } else if (item.type === 'review') {
           return <ReviewEntry key={item.id} item={item} />;
         } else {

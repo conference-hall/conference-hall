@@ -43,7 +43,7 @@ describe('ConversationDrawer component', () => {
         Component: () => (
           <UserProvider user={user}>
             <I18nextProvider i18n={i18nTest}>
-              <ConversationDrawer messages={[]} {...props}>
+              <ConversationDrawer messages={[]} canManageConversations={false} {...props}>
                 <span>Open Conversation</span>
               </ConversationDrawer>
             </I18nextProvider>
@@ -78,5 +78,53 @@ describe('ConversationDrawer component', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
 
     await expect.element(screen.getByText(/Start a conversation with/)).toBeInTheDocument();
+  });
+
+  it('hides action menu for other users messages when canManageConversations is false', async () => {
+    const otherUserMessage: Message = {
+      id: 'msg-1',
+      sender: { userId: 'user-2', name: 'Jane Doe', picture: null, role: 'ORGANIZER' },
+      content: 'Message from another user',
+      reactions: [],
+      sentAt: new Date('2023-01-01T10:00:00Z'),
+    };
+    const screen = renderComponent({ messages: [otherUserMessage], canManageConversations: false });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
+
+    await expect.element(screen.getByText('Message from another user')).toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).not.toBeInTheDocument();
+  });
+
+  it('shows action menu for other users messages when canManageConversations is true', async () => {
+    const otherUserMessage: Message = {
+      id: 'msg-1',
+      sender: { userId: 'user-2', name: 'Jane Doe', picture: null, role: 'ORGANIZER' },
+      content: 'Message from another user',
+      reactions: [],
+      sentAt: new Date('2023-01-01T10:00:00Z'),
+    };
+    const screen = renderComponent({ messages: [otherUserMessage], canManageConversations: true });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
+
+    await expect.element(screen.getByText('Message from another user')).toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
+  });
+
+  it('shows action menu for own messages regardless of canManageConversations', async () => {
+    const ownMessage: Message = {
+      id: 'msg-1',
+      sender: { userId: 'user-1', name: 'John Doe', picture: null, role: 'SPEAKER' },
+      content: 'My own message',
+      reactions: [],
+      sentAt: new Date('2023-01-01T10:00:00Z'),
+    };
+    const screen = renderComponent({ messages: [ownMessage], canManageConversations: false });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
+
+    await expect.element(screen.getByText('My own message')).toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
   });
 });

@@ -34,7 +34,13 @@ describe('MessageActionsMenu component', () => {
         Component: () => (
           <UserProvider user={user}>
             <I18nextProvider i18n={i18nTest}>
-              <MessageActionsMenu message={message} intentSuffix="message" onEdit={vi.fn()} {...props} />
+              <MessageActionsMenu
+                message={message}
+                intentSuffix="message"
+                canManageConversations={false}
+                onEdit={vi.fn()}
+                {...props}
+              />
             </I18nextProvider>
           </UserProvider>
         ),
@@ -46,7 +52,7 @@ describe('MessageActionsMenu component', () => {
   it('opens menu with edit and delete options', async () => {
     const screen = renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Message action menu' }));
 
     await expect.element(screen.getByRole('menuitem', { name: 'Edit' })).toBeInTheDocument();
     await expect.element(screen.getByRole('menuitem', { name: 'Delete' })).toBeInTheDocument();
@@ -56,9 +62,35 @@ describe('MessageActionsMenu component', () => {
     const onEdit = vi.fn();
     const screen = renderComponent({ onEdit });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Message action menu' }));
     await userEvent.click(screen.getByRole('menuitem', { name: 'Edit' }));
 
     expect(onEdit).toHaveBeenCalledOnce();
+  });
+
+  it('hides menu when user is not the message sender and canManageConversations is false', async () => {
+    const otherUserMessage: Message = {
+      ...message,
+      sender: { userId: 'user-2', name: 'Jane Doe', picture: null },
+    };
+    const screen = renderComponent({ message: otherUserMessage, canManageConversations: false });
+
+    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).not.toBeInTheDocument();
+  });
+
+  it('shows menu when user is not the message sender but canManageConversations is true', async () => {
+    const otherUserMessage: Message = {
+      ...message,
+      sender: { userId: 'user-2', name: 'Jane Doe', picture: null },
+    };
+    const screen = renderComponent({ message: otherUserMessage, canManageConversations: true });
+
+    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
+  });
+
+  it('shows menu when user is the message sender regardless of canManageConversations', async () => {
+    const screen = renderComponent({ canManageConversations: false });
+
+    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
   });
 });

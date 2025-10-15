@@ -13,10 +13,11 @@ type Props = {
   messages: Array<Message>;
   recipients?: Array<{ picture?: string | null; name?: string | null }>;
   children: ReactNode;
+  canManageConversations: boolean;
   className?: string;
 };
 
-export function ConversationDrawer({ messages, recipients = [], children, className }: Props) {
+export function ConversationDrawer({ messages, recipients = [], children, canManageConversations, className }: Props) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
@@ -58,7 +59,11 @@ export function ConversationDrawer({ messages, recipients = [], children, classN
             {optimisticMessages.reverse().map((message) => (
               <li key={message.id} className="flex gap-4">
                 <Avatar picture={message.sender.picture} name={message.sender.name} size="s" className="mt-1" />
-                <MessageBlock intentSuffix={intentSuffix} message={message} />
+                <MessageBlock
+                  intentSuffix={intentSuffix}
+                  message={message}
+                  canManageConversations={canManageConversations}
+                />
               </li>
             ))}
           </SlideOver.Content>

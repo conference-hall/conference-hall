@@ -194,9 +194,15 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 export default function ProposalReviewLayoutRoute({ params, loaderData, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
   const { team, event } = useCurrentEventTeam();
-  const { canEditEvent, canEditEventProposal, canCreateEventSpeaker, canEditEventSpeaker, canChangeProposalStatus } =
-    team.userPermissions;
   const { proposal, pagination, activityPromise, otherProposalsPromise, speakersConversationPromise } = loaderData;
+  const {
+    canEditEvent,
+    canEditEventProposal,
+    canCreateEventSpeaker,
+    canEditEventSpeaker,
+    canChangeProposalStatus,
+    canManageConversations,
+  } = team.userPermissions;
 
   const hasSpeakers = proposal.speakers.length > 0;
   const hasFormats = event.formats && event.formats.length > 0;
@@ -224,7 +230,11 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           </TalkSection>
 
           <Suspense fallback={<ActivityFeed.Loading className="pl-4" />}>
-            <Await resolve={activityPromise}>{(activity) => <ProposalActivityFeed activity={activity} />}</Await>
+            <Await resolve={activityPromise}>
+              {(activity) => (
+                <ProposalActivityFeed activity={activity} canManageConversations={canManageConversations} />
+              )}
+            </Await>
           </Suspense>
         </div>
 
@@ -256,6 +266,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                         <ConversationDrawer
                           messages={speakersConversation}
                           recipients={proposal.speakers}
+                          canManageConversations={canManageConversations}
                           className="flex gap-2 cursor-pointer px-4 pb-4 lg:px-6 hover:underline"
                         >
                           <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />

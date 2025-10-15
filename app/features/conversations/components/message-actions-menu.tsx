@@ -11,21 +11,22 @@ type Props = {
   message: Message;
   intentSuffix: string;
   onEdit: VoidFunction;
+  canManageConversations: boolean;
   className?: string;
 };
 
-export function MessageActionsMenu({ message, intentSuffix, onEdit, className }: Props) {
+export function MessageActionsMenu({ message, intentSuffix, onEdit, canManageConversations, className }: Props) {
   const { t } = useTranslation();
   const currentUser = useUser();
   const intent = `delete-${intentSuffix}`;
 
-  if (message.sender.userId !== currentUser?.id) {
+  if (message.sender.userId !== currentUser?.id && !canManageConversations) {
     return null;
   }
 
   return (
     <Menu>
-      <MenuButton aria-label={t('event-management.proposal-page.actions-menu')} className={className}>
+      <MenuButton aria-label={t('common.conversation.actions-menu')} className={className}>
         <EllipsisHorizontalIcon className="h-4 w-4" aria-hidden="true" />
       </MenuButton>
 

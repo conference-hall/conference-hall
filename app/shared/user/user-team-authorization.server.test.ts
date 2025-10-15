@@ -3,7 +3,7 @@ import { userFactory } from 'tests/factories/users.ts';
 import { ForbiddenOperationError } from '../errors.server.ts';
 import { UserTeamAuthorization } from './user-team-authorization.server.ts';
 
-describe('UserEventAuthorization', () => {
+describe('UserTeamAuthorization', () => {
   describe('#needsPermission', () => {
     it('returns the member info if allowed the given permission', async () => {
       const user = await userFactory();
@@ -41,6 +41,38 @@ describe('UserEventAuthorization', () => {
 
       const authorization = new UserTeamAuthorization(user.id, 'XXX');
       await expect(authorization.needsPermission('canEditTeam')).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
+  describe('#getPermissions', () => {
+    it('returns permissions for team owner', async () => {
+      const user = await userFactory();
+      const team = await teamFactory({ owners: [user] });
+
+      const authorization = new UserTeamAuthorization(user.id, team.slug);
+      const permissions = await authorization.getPermissions();
+
+      expect(permissions.canEditTeam).toBe(true);
+      expect(permissions.canManageConversations).toBe(true);
+    });
+
+    it('returns permissions for team member', async () => {
+      const user = await userFactory();
+      const team = await teamFactory({ members: [user] });
+
+      const authorization = new UserTeamAuthorization(user.id, team.slug);
+      const permissions = await authorization.getPermissions();
+
+      expect(permissions.canEditTeam).toBe(false);
+      expect(permissions.canAccessEvent).toBe(true);
+    });
+
+    it('throws an error if user does not belong to team', async () => {
+      const user = await userFactory();
+      const team = await teamFactory();
+
+      const authorization = new UserTeamAuthorization(user.id, team.slug);
+      await expect(authorization.getPermissions()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

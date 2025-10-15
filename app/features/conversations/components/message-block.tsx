@@ -17,10 +17,11 @@ import { useOptimisticReactions } from './use-optimistic-reactions.ts';
 type Props = {
   message: Message;
   intentSuffix: string;
+  canManageConversations?: boolean;
   className?: string;
 };
 
-export function MessageBlock({ message, intentSuffix, className }: Props) {
+export function MessageBlock({ message, intentSuffix, canManageConversations = false, className }: Props) {
   const { t } = useTranslation();
   const currentUser = useUser();
 
@@ -40,6 +41,7 @@ export function MessageBlock({ message, intentSuffix, className }: Props) {
           message={message}
           intentSuffix={intentSuffix}
           onEdit={() => setEditing(!isEditing)}
+          canManageConversations={canManageConversations}
           className="h-6 w-6 flex items-center justify-center hover:bg-gray-100 cursor-pointer rounded"
         />
 

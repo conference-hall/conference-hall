@@ -46,6 +46,45 @@ describe('ProposalConversationForOrganizers', () => {
       expect(conversation?.messages[0].content).toBe('Hello speaker!');
     });
 
+    it('allows owner to update any message', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const message = await conversationMessageFactory({
+        conversation,
+        sender: member,
+        role: ConversationParticipantRole.ORGANIZER,
+        attributes: { content: 'Original message' },
+      });
+
+      await ProposalConversationForOrganizers.for(owner.id, team.slug, event.slug, proposal.id).saveMessage({
+        id: message.id,
+        message: 'Updated by owner',
+      });
+
+      const updatedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+      expect(updatedMessage?.content).toBe('Updated by owner');
+    });
+
+    it('prevents member from updating other member messages', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const message = await conversationMessageFactory({
+        conversation,
+        sender: owner,
+        role: ConversationParticipantRole.ORGANIZER,
+        attributes: { content: 'Original message' },
+      });
+
+      const service = ProposalConversationForOrganizers.for(member.id, team.slug, event.slug, proposal.id);
+
+      await service.saveMessage({ id: message.id, message: 'Attempted update' });
+
+      const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
+      expect(result?.content).toBe('Original message');
+    });
+
     it('throws error when user does not belong to team', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
@@ -115,6 +154,41 @@ describe('ProposalConversationForOrganizers', () => {
 
       const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
       expect(deletedMessage).toBeNull();
+    });
+
+    it('allows owner to delete any message', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const message = await conversationMessageFactory({
+        conversation,
+        sender: member,
+        role: ConversationParticipantRole.ORGANIZER,
+      });
+
+      await ProposalConversationForOrganizers.for(owner.id, team.slug, event.slug, proposal.id).deleteMessage({
+        id: message.id,
+      });
+
+      const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+      expect(deletedMessage).toBeNull();
+    });
+
+    it('prevents member from deleting other member messages', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const message = await conversationMessageFactory({
+        conversation,
+        sender: owner,
+        role: ConversationParticipantRole.ORGANIZER,
+      });
+
+      const service = ProposalConversationForOrganizers.for(member.id, team.slug, event.slug, proposal.id);
+      await service.deleteMessage({ id: message.id });
+
+      const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
+      expect(result).toBeDefined();
     });
 
     it('throws error when user does not belong to team', async () => {

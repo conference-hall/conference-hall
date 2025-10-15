@@ -4,7 +4,7 @@ import { MessageBlock } from '~/features/conversations/components/message-block.
 import type { FeedItem } from '~/features/event-management/proposals/services/activity-feed.server.ts';
 
 // todo(comments): FeedItem type should be shared (not on server)
-export function CommentEntry({ item }: { item: FeedItem }) {
+export function CommentEntry({ item, canManageConversations }: { item: FeedItem; canManageConversations: boolean }) {
   if (item.type !== 'comment') return null;
 
   return (
@@ -18,6 +18,7 @@ export function CommentEntry({ item }: { item: FeedItem }) {
           reactions: item.reactions,
           sentAt: item.timestamp,
         }}
+        canManageConversations={canManageConversations}
       />
     </ActivityFeed.Entry>
   );

@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { ProposalNotFoundError } from '~/shared/errors.server.ts';
+import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type {
   ConversationMessageDeleteData,
@@ -29,8 +29,10 @@ export class ProposalConversationForOrganizers {
   }
 
   async saveMessage(data: ConversationMessageSaveData) {
+    // todo(conversion): improve double query on authorizations
     const event = await this.authorizations.needsPermission('canAccessEvent');
-    return this.conversation.saveMessage(event.id, data);
+    const permissions = await this.authorizations.getPermissions();
+    return this.conversation.saveMessage(event.id, data, permissions?.canManageConversations);
   }
 
   async reactMessage(data: ConversationMessageReactData) {
@@ -39,8 +41,10 @@ export class ProposalConversationForOrganizers {
   }
 
   async deleteMessage(data: ConversationMessageDeleteData) {
-    await this.authorizations.needsPermission('canAccessEvent');
-    return this.conversation.deleteMessage(data);
+    // todo(conversion): improve double query on authorizations
+    const permissions = await this.authorizations.getPermissions();
+    if (!permissions.canAccessEvent) throw new ForbiddenOperationError();
+    return this.conversation.deleteMessage(data, permissions?.canManageConversations);
   }
 
   async getConversation() {

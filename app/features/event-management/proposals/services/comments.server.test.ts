@@ -40,6 +40,32 @@ describe('Comments', () => {
       expect(message.channel).toBe('ORGANIZER');
     });
 
+    it('allows owner to update any comment', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const comment = await commentFactory({ user: member, proposal, attributes: { comment: 'Original comment' } });
+
+      await Comments.for(owner.id, team.slug, event.slug, proposal.id).save({
+        id: comment.id,
+        message: 'Updated by owner',
+      });
+
+      const updatedComment = await db.comment.findUnique({ where: { id: comment.id } });
+      expect(updatedComment?.comment).toBe('Updated by owner');
+    });
+
+    it('prevents member from updating other member comments', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const comment = await commentFactory({ user: owner, proposal, attributes: { comment: 'Original comment' } });
+
+      await Comments.for(member.id, team.slug, event.slug, proposal.id).save({
+        id: comment.id,
+        message: 'Attempted update',
+      });
+
+      const result = await db.comment.findUnique({ where: { id: comment.id } });
+      expect(result?.comment).toBe('Original comment');
+    });
+
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
@@ -59,14 +85,24 @@ describe('Comments', () => {
       expect(messages.length).toBe(0);
     });
 
-    it('removes a comment from a proposal only if it belongs to the user', async () => {
+    it('allows owner to remove any comment', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const message = await commentFactory({ user: member, proposal });
 
       await Comments.for(owner.id, team.slug, event.slug, proposal.id).remove(message.id);
 
       const messages = await db.comment.findMany({ where: { userId: member.id, proposalId: proposal.id } });
-      expect(messages.length).toBe(1);
+      expect(messages.length).toBe(0);
+    });
+
+    it('prevents member from removing other member comments', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const message = await commentFactory({ user: owner, proposal });
+
+      await Comments.for(member.id, team.slug, event.slug, proposal.id).remove(message.id);
+
+      const result = await db.comment.findUnique({ where: { id: message.id } });
+      expect(result).toBeDefined();
     });
 
     it('throws an error if user does not belong to event team', async () => {

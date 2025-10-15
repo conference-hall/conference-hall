@@ -1,4 +1,5 @@
 import { db } from 'prisma/db.server.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
 import type { CommentReactionData, CommentSaveData } from './comments.schema.server.ts';
@@ -16,12 +17,13 @@ export class Comments extends UserEventAuthorization {
   }
 
   async save(comment: CommentSaveData) {
-    await this.needsPermission('canAccessEvent');
+    const permissions = await this.getPermissions();
+    if (!permissions.canAccessEvent) throw new ForbiddenOperationError();
 
     if (comment.id) {
-      await db.comment.update({
+      await db.comment.updateMany({
         data: { comment: comment.message },
-        where: { id: comment.id, userId: this.userId },
+        where: { id: comment.id, userId: permissions.canManageConversations ? undefined : this.userId },
       });
     } else {
       await db.comment.create({
@@ -31,9 +33,16 @@ export class Comments extends UserEventAuthorization {
   }
 
   async remove(id: string) {
-    await this.needsPermission('canAccessEvent');
+    const permissions = await this.getPermissions();
+    if (!permissions.canAccessEvent) throw new ForbiddenOperationError();
 
-    await db.comment.deleteMany({ where: { id, userId: this.userId, proposalId: this.proposalId } });
+    await db.comment.deleteMany({
+      where: {
+        id,
+        userId: permissions.canManageConversations ? undefined : this.userId,
+        proposalId: this.proposalId,
+      },
+    });
   }
 
   async reactToComment({ id, code }: CommentReactionData) {
