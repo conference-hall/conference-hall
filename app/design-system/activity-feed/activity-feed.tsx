@@ -43,3 +43,24 @@ function Line({ className }: { className?: string }) {
     </div>
   );
 }
+
+function Loading({ className }: { className?: string }) {
+  return (
+    <ActivityFeed label="Loading activities" className={className}>
+      <Entry className="h-6" withLine aria-hidden />
+      <Entry
+        marker={<div className="h-8 w-8 bg-gray-200 shrink-0 rounded-full animate-pulse" />}
+        className="animate-pulse"
+        aria-hidden
+      >
+        <div className="w-full space-y-2 shrink-0 rounded-lg bg-white border border-gray-200 p-4">
+          <div className="h-2.5 w-2/3 rounded-full bg-gray-200" />
+          <div className="h-2.5 w-1/3 rounded-full bg-gray-200" />
+          <div className="h-2.5 w-1/3 rounded-full bg-gray-200" />
+        </div>
+      </Entry>
+    </ActivityFeed>
+  );
+}
+
+ActivityFeed.Loading = Loading;

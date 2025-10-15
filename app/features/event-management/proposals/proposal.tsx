@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Await } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
+import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -24,7 +25,6 @@ import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
 import type { Route } from './+types/proposal.ts';
-import { LoadingActivities } from './components/detail/activity/loading-activities.tsx';
 import { ProposalActivityFeed } from './components/detail/activity/proposal-activity-feed.tsx';
 import { CategoriesSection } from './components/detail/metadata/categories-section.tsx';
 import { FormatsSection } from './components/detail/metadata/formats-section.tsx';
@@ -34,7 +34,7 @@ import { NavigationHeader } from './components/detail/navigation-header.tsx';
 import { OtherProposalsDisclosure } from './components/detail/other-proposals-disclosure.tsx';
 import { ProposalActionsMenu } from './components/detail/proposal-actions-menu.tsx';
 import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
-import { ActivityFeed } from './services/activity-feed.server.ts';
+import { ActivityFeed as ActivityFeedService } from './services/activity-feed.server.ts';
 import { CommentReactionSchema, CommentSaveSchema } from './services/comments.schema.server.ts';
 import { Comments } from './services/comments.server.ts';
 import {
@@ -61,7 +61,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const filters = parseUrlFilters(request.url);
 
   const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
-  const activityFeed = ActivityFeed.for(userId, params.team, params.event, params.proposal);
+  const activityFeed = ActivityFeedService.for(userId, params.team, params.event, params.proposal);
   const speakerProposalConversation = ProposalConversationForOrganizers.for(
     userId,
     params.team,
@@ -223,7 +223,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
             </Suspense>
           </TalkSection>
 
-          <Suspense fallback={<LoadingActivities />}>
+          <Suspense fallback={<ActivityFeed.Loading className="pl-4" />}>
             <Await resolve={activityPromise}>{(activity) => <ProposalActivityFeed activity={activity} />}</Await>
           </Suspense>
         </div>

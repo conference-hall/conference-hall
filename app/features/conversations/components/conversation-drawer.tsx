@@ -30,7 +30,7 @@ export function ConversationDrawer({ messages, recipients = [], children, classN
       : t('common.conversation.send.label');
 
   const DrawerHeader = (
-    <header className="space-y-2">
+    <header className="space-y-4">
       <H2>{t('common.conversation.title', { count: recipients.length })}</H2>
       <div className="flex items-center gap-2">
         <AvatarGroup avatars={recipients} size="xs" />
