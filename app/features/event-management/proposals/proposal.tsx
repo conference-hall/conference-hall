@@ -255,7 +255,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                       {(speakersConversation) => (
                         <ConversationDrawer
                           messages={speakersConversation}
-                          recipients={proposal.speakers.map((s) => s.name)}
+                          recipients={proposal.speakers}
                           className="flex gap-2 cursor-pointer px-4 pb-4 lg:px-6 hover:underline"
                         >
                           <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />

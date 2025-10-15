@@ -15,7 +15,6 @@ type EmojiPickerProps = {
 export function EmojiPicker({ emojis, label, icon: Icon, anchor, className, onSelectEmoji }: EmojiPickerProps) {
   const { t } = useTranslation();
 
-  // todo(conversation): z-index issue in conversation drawer
   const buttonStyle =
     className ||
     'flex items-center justify-center rounded-full shrink-0 h-6 w-6 bg-gray-100 fill-gray-600 cursor-pointer hover:bg-white hover:ring-1 hover:ring-gray-600';
