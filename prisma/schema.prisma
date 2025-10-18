@@ -454,8 +454,9 @@ model Conversation {
 }
 
 enum ConversationContextType {
-  EVENT
-  PROPOSAL
+  EVENT_CONVERSATION
+  PROPOSAL_CONVERSATION
+  PROPOSAL_REVIEW_COMMENTS
 }
 
 model ConversationMessage {
@@ -503,6 +504,7 @@ model ConversationReaction {
   message   ConversationMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
   userId    String
   reactedBy User                @relation(fields: [userId], references: [id])
+  reactedAt DateTime            @default(now())
 
   @@unique([messageId, userId, code])
   @@map("conversation_reactions")

@@ -14,7 +14,7 @@ type Props = {
 
 export function SlideOver({ open, title, size = 'm', withBorder = true, onClose, children }: Props) {
   return (
-    <Dialog className="relative z-40" open={open} onClose={onClose}>
+    <Dialog className="z-40" open={open} onClose={onClose}>
       <Background />
 
       <div className="fixed inset-0 overflow-hidden z-40">
@@ -51,25 +51,28 @@ export function SlideOver({ open, title, size = 'm', withBorder = true, onClose,
   );
 }
 
-interface ContentProps extends Omit<React.ComponentProps<'div'>, 'title'> {
+interface ContentProps<T extends React.ElementType = 'div'> {
+  as?: T;
   children: React.ReactNode;
   className?: string;
+  ref?: React.Ref<React.ComponentRef<T>>;
 }
 
-function Content({ children, className, ref }: ContentProps) {
+function Content<T extends React.ElementType = 'div'>({ as, children, className, ref }: ContentProps<T>) {
+  const Component = (as || 'div') as React.ElementType;
   return (
-    <div ref={ref} className="flex min-h-0 flex-1 flex-col overflow-y-auto py-4">
-      <div className={cx('relative flex-1 px-4', className)}>{children}</div>
-    </div>
+    <Component ref={ref} className={cx('flex-1 overflow-y-auto h-full p-4', className)}>
+      {children}
+    </Component>
   );
 }
 
 SlideOver.Content = Content;
 
-type ActionsProps = { children: React.ReactNode };
+type ActionsProps = { children: React.ReactNode; className?: string };
 
-function Actions({ children }: ActionsProps) {
-  return <div className="flex shrink-0 justify-end gap-4 px-4 py-4">{children}</div>;
+function Actions({ children, className }: ActionsProps) {
+  return <div className={cx('flex shrink-0 justify-end gap-4 p-4', className)}>{children}</div>;
 }
 
 SlideOver.Actions = Actions;

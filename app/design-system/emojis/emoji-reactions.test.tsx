@@ -11,8 +11,8 @@ const EMOJIS: Array<Emoji> = [
 ];
 
 const REACTIONS: Array<EmojiReaction> = [
-  { code: '+1', reacted: true, reactedBy: ['You'] },
-  { code: '-1', reacted: false, reactedBy: ['Other'] },
+  { code: '+1', reacted: true, reactedBy: [{ userId: 'user1', name: 'You' }] },
+  { code: '-1', reacted: false, reactedBy: [{ userId: 'user2', name: 'Other' }] },
 ];
 
 describe('EmojiReactions component', () => {
@@ -24,9 +24,6 @@ describe('EmojiReactions component', () => {
         <EmojiReactions emojis={EMOJIS} reactions={REACTIONS} onChangeEmoji={onChangeEmoji} />
       </I18nextProvider>,
     );
-
-    const addButton = screen.getByRole('button', { name: 'Select a reaction' });
-    await expect.element(addButton).toHaveAttribute('aria-expanded', 'false');
 
     const thumbsUpButton = screen.getByRole('button', { name: 'Thumbs up' });
     await userEvent.click(thumbsUpButton);

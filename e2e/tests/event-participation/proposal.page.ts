@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { CoSpeakerComponent } from 'e2e/common/co-speaker.component.ts';
+import { MessageBlockComponent } from 'e2e/common/message-block.component.ts';
 import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
 import { PageObject } from 'e2e/page-object.ts';
 import { ProposalListPage } from './proposal-list.page.ts';
@@ -10,6 +11,7 @@ export class ProposalPage extends PageObject {
   readonly speakers: Locator;
   readonly removeConfirmationDialog: Locator;
   readonly inviteCoSpeaker: Locator;
+  readonly conversationFeed: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -19,6 +21,7 @@ export class ProposalPage extends PageObject {
       name: 'Are you sure you want to remove your submission?',
     });
     this.inviteCoSpeaker = page.getByRole('heading', { name: 'Invite a co-speaker' });
+    this.conversationFeed = page.getByRole('list', { name: 'Proposal activity' });
   }
 
   async goto(slug: string, proposalId: string) {
@@ -74,5 +77,16 @@ export class ProposalPage extends PageObject {
 
   async clickOnReferences() {
     await this.page.getByRole('button', { name: 'References' }).click();
+  }
+
+  async getConversationMessages() {
+    const messages = await this.conversationFeed.getByRole('listitem').all();
+    return messages.map((message) => new MessageBlockComponent(message, this.page));
+  }
+
+  async sendMessage(content: string) {
+    const input = this.conversationFeed.getByRole('textbox');
+    await input.fill(content);
+    await this.conversationFeed.getByRole('button', { name: 'Send' }).click();
   }
 }

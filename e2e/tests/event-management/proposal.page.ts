@@ -1,3 +1,5 @@
+import type { Locator } from '@playwright/test';
+import { MessageBlockComponent } from 'e2e/common/message-block.component.ts';
 import { SpeakerPanelComponent } from 'e2e/common/speaker-panel.component.ts';
 import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
 import { PageObject } from 'e2e/page-object.ts';
@@ -25,6 +27,8 @@ export class ProposalPage extends PageObject {
   readonly formatsButton = this.page.getByRole('button', { name: 'Formats', exact: true });
   readonly categoriesButton = this.page.getByRole('button', { name: 'Categories', exact: true });
 
+  readonly conversationDrawerButton = this.page.getByRole('button').filter({ hasText: /message|Conversation/ });
+
   async goto(team: string, event: string, id: string, title: string) {
     await this.page.goto(`/team/${team}/${event}/proposals/${id}`);
     await this.waitFor(title);
@@ -47,5 +51,23 @@ export class ProposalPage extends PageObject {
   async clickOnSpeaker(name: string) {
     await this.speaker(name).click();
     return this.page.getByRole('dialog', { name });
+  }
+
+  async openConversationDrawer() {
+    await this.conversationDrawerButton.click();
+    const drawer = this.page.getByRole('dialog');
+    await drawer.getByRole('button', { name: 'Send' }).waitFor();
+    return drawer;
+  }
+
+  async getConversationMessages(drawer: Locator) {
+    const messages = await drawer.locator('ul > li').all();
+    return messages.map((message) => new MessageBlockComponent(message, this.page));
+  }
+
+  async sendMessageInDrawer(drawer: Locator, content: string) {
+    const input = drawer.getByRole('textbox');
+    await input.fill(content);
+    await drawer.getByRole('button', { name: 'Send' }).click();
   }
 }

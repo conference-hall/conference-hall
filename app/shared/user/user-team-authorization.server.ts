@@ -26,4 +26,10 @@ export class UserTeamAuthorization {
       permissions: UserPermissions.getPermissions(member.role),
     };
   }
+
+  async getPermissions() {
+    const member = await db.teamMember.findFirst({ where: { memberId: this.userId, team: { slug: this.team } } });
+    if (!member) throw new ForbiddenOperationError();
+    return UserPermissions.getPermissions(member.role);
+  }
 }

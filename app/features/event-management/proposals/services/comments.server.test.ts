@@ -30,7 +30,7 @@ describe('Comments', () => {
     it('adds comment to a proposal', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      await Comments.for(owner.id, team.slug, event.slug, proposal.id).add({ message: 'My message' });
+      await Comments.for(owner.id, team.slug, event.slug, proposal.id).save({ message: 'My message' });
 
       const messages = await db.comment.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
       expect(messages.length).toBe(1);
@@ -40,11 +40,37 @@ describe('Comments', () => {
       expect(message.channel).toBe('ORGANIZER');
     });
 
+    it('allows owner to update any comment', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const comment = await commentFactory({ user: member, proposal, attributes: { comment: 'Original comment' } });
+
+      await Comments.for(owner.id, team.slug, event.slug, proposal.id).save({
+        id: comment.id,
+        message: 'Updated by owner',
+      });
+
+      const updatedComment = await db.comment.findUnique({ where: { id: comment.id } });
+      expect(updatedComment?.comment).toBe('Updated by owner');
+    });
+
+    it('prevents member from updating other member comments', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const comment = await commentFactory({ user: owner, proposal, attributes: { comment: 'Original comment' } });
+
+      await Comments.for(member.id, team.slug, event.slug, proposal.id).save({
+        id: comment.id,
+        message: 'Attempted update',
+      });
+
+      const result = await db.comment.findUnique({ where: { id: comment.id } });
+      expect(result?.comment).toBe('Original comment');
+    });
+
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const discussion = Comments.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(discussion.add({ message: 'My message' })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(discussion.save({ message: 'My message' })).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -59,14 +85,24 @@ describe('Comments', () => {
       expect(messages.length).toBe(0);
     });
 
-    it('removes a comment from a proposal only if it belongs to the user', async () => {
+    it('allows owner to remove any comment', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const message = await commentFactory({ user: member, proposal });
 
       await Comments.for(owner.id, team.slug, event.slug, proposal.id).remove(message.id);
 
       const messages = await db.comment.findMany({ where: { userId: member.id, proposalId: proposal.id } });
-      expect(messages.length).toBe(1);
+      expect(messages.length).toBe(0);
+    });
+
+    it('prevents member from removing other member comments', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const message = await commentFactory({ user: owner, proposal });
+
+      await Comments.for(member.id, team.slug, event.slug, proposal.id).remove(message.id);
+
+      const result = await db.comment.findUnique({ where: { id: message.id } });
+      expect(result).toBeDefined();
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -84,12 +120,14 @@ describe('Comments', () => {
       const message = await commentFactory({ user: owner, proposal });
 
       await Comments.for(owner.id, team.slug, event.slug, proposal.id).reactToComment({
-        commentId: message.id,
+        id: message.id,
         code: 'tada',
       });
 
       const reactions = await Comments.listReactions([message.id], owner.id);
-      expect(reactions[message.id]).toEqual([{ code: 'tada', reacted: true, reactedBy: ['You'] }]);
+      expect(reactions[message.id]).toEqual([
+        { code: 'tada', reacted: true, reactedBy: [{ userId: owner.id, name: 'Clark Kent' }] },
+      ]);
     });
 
     it('removes a reaction to a comment', async () => {
@@ -97,7 +135,7 @@ describe('Comments', () => {
       const message = await commentFactory({ user: owner, proposal, traits: ['withReaction'] });
 
       await Comments.for(owner.id, team.slug, event.slug, proposal.id).reactToComment({
-        commentId: message.id,
+        id: message.id,
         code: 'tada',
       });
 
@@ -114,8 +152,8 @@ describe('Comments', () => {
 
       const reactions = await Comments.listReactions([message1.id, message2.id], owner.id);
       expect(reactions).toEqual({
-        [message1.id]: [{ code: 'tada', reacted: true, reactedBy: ['You'] }],
-        [message2.id]: [{ code: 'tada', reacted: false, reactedBy: [member.name] }],
+        [message1.id]: [{ code: 'tada', reacted: true, reactedBy: [{ userId: owner.id, name: 'Clark Kent' }] }],
+        [message2.id]: [{ code: 'tada', reacted: false, reactedBy: [{ userId: member.id, name: member.name }] }],
       });
     });
 

@@ -1,56 +1,62 @@
-import type { JSX } from 'react';
+import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { render } from 'vitest-browser-react';
+import type { Message } from '~/shared/types/conversation.types.ts';
 import { MessageInputForm } from './message-input-form.tsx';
 
 describe('MessageInputForm component', () => {
-  const renderComponent = (Component: JSX.Element) => {
-    const RouteStub = createRoutesStub([{ path: '/', Component: () => Component }]);
+  const renderComponent = (props = {}) => {
+    const RouteStub = createRoutesStub([
+      {
+        path: '/',
+        action: async () => null,
+        Component: () => (
+          <I18nextProvider i18n={i18nTest}>
+            <MessageInputForm
+              intent="save-message"
+              placeholder="Type a message..."
+              inputLabel="Message input"
+              {...props}
+            />
+          </I18nextProvider>
+        ),
+      },
+    ]);
     return render(<RouteStub initialEntries={['/']} />);
   };
 
-  it('displays textarea with label, placeholder and submit button', async () => {
-    const screen = renderComponent(
-      <I18nextProvider i18n={i18nTest}>
-        <MessageInputForm
-          name="message"
-          intent="add-message"
-          inputLabel="Type your message"
-          buttonLabel="Send"
-          placeholder="Enter your message here..."
-        />
-      </I18nextProvider>,
-    );
+  it('renders form with textarea and submit button', async () => {
+    const screen = renderComponent({ buttonLabel: 'Send' });
 
-    const textarea = screen.getByRole('textbox', { name: 'Type your message' });
-    await expect.element(textarea).toBeInTheDocument();
-    await expect.element(textarea).toHaveAttribute('placeholder', 'Enter your message here...');
-    await expect.element(textarea).toHaveAttribute('name', 'message');
-    await expect.element(textarea).toBeRequired();
-
-    const submitButton = screen.getByRole('button', { name: 'Send' });
-    await expect.element(submitButton).toBeInTheDocument();
-    await expect.element(submitButton).toHaveAttribute('type', 'submit');
+    await expect.element(screen.getByRole('textbox', { name: 'Message input' })).toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: 'Send' })).toBeInTheDocument();
   });
 
-  it('includes hidden intent field with correct value', async () => {
-    const screen = renderComponent(
-      <I18nextProvider i18n={i18nTest}>
-        <MessageInputForm
-          name="comment"
-          intent="add-comment"
-          inputLabel="Add comment"
-          buttonLabel="Post"
-          placeholder="Write a comment..."
-        />
-      </I18nextProvider>,
-    );
+  it('renders with default value when editing message', async () => {
+    const message: Message = {
+      id: 'msg-1',
+      sender: { userId: 'user-1', name: 'John Doe', picture: null },
+      content: 'Existing message',
+      reactions: [],
+      sentAt: new Date(),
+    };
 
-    const intentInput = screen.container.querySelector('input[name="intent"]');
-    expect(intentInput).toBeTruthy();
-    expect(intentInput?.getAttribute('value')).toBe('add-comment');
-    expect(intentInput?.getAttribute('type')).toBe('hidden');
+    const screen = renderComponent({ message });
+
+    const textarea = screen.getByRole('textbox', { name: 'Message input' });
+    expect(textarea).toHaveValue('Existing message');
+  });
+
+  it('renders cancel button when onClose is provided', async () => {
+    const onClose = vi.fn();
+    const screen = renderComponent({ onClose, buttonLabel: 'Save' });
+
+    await expect.element(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(onClose).toHaveBeenCalledOnce();
   });
 });

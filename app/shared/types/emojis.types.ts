@@ -7,5 +7,5 @@ export type Emoji = {
 export type EmojiReaction = {
   code: string;
   reacted: boolean;
-  reactedBy: Array<string>;
+  reactedBy: Array<{ userId: string; name: string }>;
 };

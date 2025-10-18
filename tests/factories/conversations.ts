@@ -14,7 +14,9 @@ export const conversationFactory = async (options: FactoryOptions) => {
 
   const defaultAttributes: ConversationCreateInput = {
     event: { connect: { id: event.id } },
-    contextType: proposalId ? ConversationContextType.PROPOSAL : ConversationContextType.EVENT,
+    contextType: proposalId
+      ? ConversationContextType.PROPOSAL_CONVERSATION
+      : ConversationContextType.PROPOSAL_REVIEW_COMMENTS,
     contextIds: proposalId ? [proposalId] : [],
   };
 

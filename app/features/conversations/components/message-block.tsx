@@ -1,39 +1,91 @@
+import { FaceSmileIcon } from '@heroicons/react/24/outline';
+import { cx } from 'class-variance-authority';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Avatar } from '~/design-system/avatar.tsx';
+import { useUser } from '~/app-platform/components/user-context.tsx';
 import { Badge } from '~/design-system/badges.tsx';
-import { Text } from '~/design-system/typography.tsx';
-import { ClientOnly } from '~/design-system/utils/client-only.tsx';
-import { formatDistance } from '~/shared/datetimes/datetimes.ts';
+import { EmojiPicker } from '~/design-system/emojis/emoji-picker.tsx';
+import { EmojiReactions } from '~/design-system/emojis/emoji-reactions.tsx';
+import { Text, typography } from '~/design-system/typography.tsx';
+import { TimeDistance } from '~/design-system/utils/time-distance.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
+import { MessageActionsMenu } from './message-actions-menu.tsx';
+import { MESSAGE_EMOJIS } from './message-emojis.tsx';
+import { MessageInputForm } from './message-input-form.tsx';
+import { useOptimisticReactions } from './use-optimistic-reactions.ts';
 
-type Props = { message: Message };
+type Props = {
+  message: Message;
+  intentSuffix: string;
+  canManageConversations?: boolean;
+  className?: string;
+};
 
-export function MessageBlock({ message }: Props) {
-  const { i18n } = useTranslation();
+export function MessageBlock({ message, intentSuffix, canManageConversations = false, className }: Props) {
+  const { t } = useTranslation();
+  const currentUser = useUser();
+
+  const [isEditing, setEditing] = useState(false);
+  const { reactions, onChangeReaction } = useOptimisticReactions(message, intentSuffix);
 
   return (
-    <div className="flex gap-4 p-3 w-full rounded-lg hover:bg-gray-50">
-      <Avatar picture={message.sender.picture} name={message.sender.name} size="s" square className="mt-1" />
+    <div
+      id={message.id}
+      className={cx(
+        'relative group w-full rounded-md p-4 space-y-1.5 ring-1 ring-inset ring-gray-200 bg-white',
+        className,
+      )}
+    >
+      <div className="absolute right-0 top-0 p-2 flex gap-x-1 text-gray-500">
+        <MessageActionsMenu
+          message={message}
+          intentSuffix={intentSuffix}
+          onEdit={() => setEditing(!isEditing)}
+          canManageConversations={canManageConversations}
+          className="h-6 w-6 flex items-center justify-center hover:bg-gray-100 cursor-pointer rounded"
+        />
 
-      <div className="w-full">
-        <div className="flex items-baseline gap-x-2">
-          <Text weight="semibold">{message.sender.name}</Text>
-
-          <ClientOnly>
-            {() => (
-              <time dateTime={message.sentAt.toISOString()} className="text-xs text-gray-500">
-                {formatDistance(message.sentAt, i18n.language)}
-              </time>
-            )}
-          </ClientOnly>
-
-          <Badge compact color={message.sender.role === 'SPEAKER' ? 'indigo' : 'gray'}>
-            {message.sender.role}
-          </Badge>
-        </div>
-
-        <Text className="whitespace-pre-line break-words">{message.content}</Text>
+        <EmojiPicker
+          icon={FaceSmileIcon}
+          emojis={MESSAGE_EMOJIS}
+          onSelectEmoji={onChangeReaction}
+          className="h-6 w-6 flex items-center justify-center hover:bg-gray-100 cursor-pointer rounded"
+        />
       </div>
+
+      <div className="flex items-baseline gap-x-1">
+        <Text size="xs" weight="semibold">
+          {message.sender.name}
+        </Text>
+        <Text size="xs" variant="secondary">
+          {t('common.conversation.message.sent')}
+        </Text>
+        <a href={`#${message.id}`} className={cx(typography({ size: 'xs', variant: 'secondary' }), 'hover:underline')}>
+          <TimeDistance date={message.sentAt} />
+        </a>
+        {message.sender.role ? <Badge compact>{message.sender.role}</Badge> : null}
+      </div>
+
+      {isEditing ? (
+        <MessageInputForm
+          message={message}
+          intent={`save-${intentSuffix}`}
+          inputLabel={t('common.conversation.edit.label')}
+          onClose={() => setEditing(false)}
+          autoFocus
+        />
+      ) : (
+        <Text className="whitespace-pre-line break-words">{message.content}</Text>
+      )}
+
+      {reactions.length > 0 ? (
+        <EmojiReactions
+          emojis={MESSAGE_EMOJIS}
+          reactions={reactions}
+          currentUserId={currentUser?.id}
+          onChangeEmoji={onChangeReaction}
+        />
+      ) : null}
     </div>
   );
 }

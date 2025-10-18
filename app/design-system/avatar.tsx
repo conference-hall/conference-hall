@@ -1,5 +1,6 @@
 import { cx } from 'class-variance-authority';
 import { generateGradientColor } from '~/shared/colors/colors.ts';
+import { Tooltip } from './tooltip.tsx';
 import { Text } from './typography.tsx';
 
 const sizes = {
@@ -116,7 +117,7 @@ type AvatarImageProps = {
 function AvatarImage({ picture, name, 'aria-hidden': ariaHidden, size, className }: AvatarImageProps) {
   return (
     <img
-      className={className}
+      className={cx('outline -outline-offset-1 outline-black/5', className)}
       src={picture}
       height={sizes[size]}
       width={sizes[size]}
@@ -146,6 +147,24 @@ function AvatarColor({
       style={{ height: sizes[size], width: sizes[size], background: gradient }}
     >
       {initial}
+    </div>
+  );
+}
+
+type AvatarGroupProps = {
+  avatars: Array<{ picture?: string | null; name?: string | null }>;
+  size?: keyof typeof sizes;
+  className?: string;
+};
+
+export function AvatarGroup({ avatars, size, className }: AvatarGroupProps) {
+  return (
+    <div className={cx('flex -space-x-1 shrink-0 overflow-hidden', className)}>
+      {avatars.map((avatar, index) => (
+        <Tooltip key={index} text={avatar.name}>
+          <Avatar name={avatar.name} picture={avatar.picture} size={size} className="ring-2 ring-white" />
+        </Tooltip>
+      ))}
     </div>
   );
 }

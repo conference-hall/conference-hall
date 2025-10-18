@@ -1,93 +1,57 @@
 import { db } from 'prisma/db.server.ts';
-import type { Message } from '~/shared/types/conversation.types.ts';
+import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
-import type { ConversationMessageCreateData } from './conversation.schema.server.ts';
+import type {
+  ConversationMessageDeleteData,
+  ConversationMessageReactData,
+  ConversationMessageSaveData,
+} from './conversation.schema.server.ts';
+import { ConversationService } from './conversation-service.server.ts';
 
-// todo(conversation): extract common code of conversations (orga vs. speaker sides)
-export class ProposalConversationForOrganizers extends UserEventAuthorization {
+export class ProposalConversationForOrganizers {
+  private conversation: ConversationService;
+  private authorizations: UserEventAuthorization;
   private proposalId: string;
 
   constructor(userId: string, team: string, event: string, proposalId: string) {
-    super(userId, team, event);
     this.proposalId = proposalId;
+    this.authorizations = new UserEventAuthorization(userId, team, event);
+    this.conversation = new ConversationService({
+      userId,
+      role: 'ORGANIZER',
+      contextType: 'PROPOSAL_CONVERSATION',
+      contextIds: [proposalId],
+    });
   }
 
   static for(userId: string, team: string, event: string, proposalId: string) {
     return new ProposalConversationForOrganizers(userId, team, event, proposalId);
   }
 
-  async addMessage({ message }: ConversationMessageCreateData) {
-    const event = await this.needsPermission('canAccessEvent');
+  async saveMessage(data: ConversationMessageSaveData) {
+    // todo(conversion): improve double query on authorizations
+    const event = await this.authorizations.needsPermission('canAccessEvent');
+    const permissions = await this.authorizations.getPermissions();
+    return this.conversation.saveMessage(event.id, data, permissions?.canManageConversations);
+  }
 
-    await db.$transaction(async (tx) => {
-      // Create conversation if it doesn't exist
-      let conversation = await tx.conversation.findFirst({
-        where: { eventId: event.id, contextType: 'PROPOSAL', contextIds: { has: this.proposalId } },
-      });
+  async reactMessage(data: ConversationMessageReactData) {
+    await this.authorizations.needsPermission('canAccessEvent');
+    return this.conversation.reactMessage(data);
+  }
 
-      if (!conversation) {
-        conversation = await tx.conversation.create({
-          data: { eventId: event.id, contextType: 'PROPOSAL', contextIds: [this.proposalId] },
-        });
-      }
-
-      // Add organizer as participant if not exists
-      await tx.conversationParticipant.upsert({
-        where: { conversationId_userId: { conversationId: conversation.id, userId: this.userId } },
-        create: { conversationId: conversation.id, userId: this.userId, role: 'ORGANIZER' },
-        update: {},
-      });
-
-      // Create message
-      await tx.conversationMessage.create({
-        data: { conversationId: conversation.id, senderId: this.userId, content: message, type: 'TEXT' },
-      });
-    });
+  async deleteMessage(data: ConversationMessageDeleteData) {
+    // todo(conversion): improve double query on authorizations
+    const permissions = await this.authorizations.getPermissions();
+    if (!permissions.canAccessEvent) throw new ForbiddenOperationError();
+    return this.conversation.deleteMessage(data, permissions?.canManageConversations);
   }
 
   async getConversation() {
-    const event = await this.needsPermission('canAccessEvent');
+    const event = await this.authorizations.needsPermission('canAccessEvent');
+    const proposal = await db.proposal.findUnique({ where: { id: this.proposalId, eventId: event.id } });
+    if (!proposal) throw new ProposalNotFoundError();
 
-    // Get proposal with speakers
-    const proposal = await db.proposal.findUnique({ where: { id: this.proposalId } });
-    if (!proposal) {
-      throw new Error('Proposal not found');
-    }
-
-    // Get conversation
-    const conversation = await db.conversation.findFirst({
-      where: {
-        eventId: event.id,
-        contextType: 'PROPOSAL',
-        contextIds: { has: this.proposalId },
-      },
-      include: {
-        participants: true,
-        messages: {
-          include: { sender: true },
-          orderBy: { createdAt: 'asc' },
-        },
-      },
-    });
-
-    // Map messages
-    const messages: Array<Message> =
-      conversation?.messages.map((message) => {
-        const participant = conversation.participants.find((p) => p.userId === message.senderId);
-        return {
-          id: message.id,
-          sender: {
-            userId: message.sender?.id || '',
-            name: message.sender?.name || 'System',
-            picture: message.sender?.picture || null,
-            role: participant?.role || 'ORGANIZER',
-          },
-          content: message.content,
-          reactions: [], // Not implemented in this version
-          sentAt: message.createdAt,
-        };
-      }) || [];
-
-    return messages;
+    return this.conversation.getConversation(event.id);
   }
 }

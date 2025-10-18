@@ -54,7 +54,7 @@ export class ActivityFeed extends UserEventAuthorization {
           )
           UNION ALL
           (
-            SELECT id, 'comment' AS type, comments."updatedAt" AS timestamp, comments."userId", NULL as "feeling", NULL as "note", comments."comment" AS comment
+            SELECT id, 'comment' AS type, comments."createdAt" AS timestamp, comments."userId", NULL as "feeling", NULL as "note", comments."comment" AS comment
             FROM comments
             WHERE comments."proposalId" = ${this.proposalId} AND comments."channel" = 'ORGANIZER'
           )
@@ -64,7 +64,7 @@ export class ActivityFeed extends UserEventAuthorization {
     } else {
       results = await db.$queryRaw<Array<CommentFeed>>(
         Prisma.sql`
-          SELECT id, 'comment' AS type, comments."updatedAt" AS timestamp, comments."userId", NULL as "feeling", NULL as "note", comments."comment" AS comment
+          SELECT id, 'comment' AS type, comments."createdAt" AS timestamp, comments."userId", NULL as "feeling", NULL as "note", comments."comment" AS comment
           FROM comments
           WHERE comments."proposalId" = ${this.proposalId} AND comments."channel" = 'ORGANIZER'
           ORDER BY timestamp ASC

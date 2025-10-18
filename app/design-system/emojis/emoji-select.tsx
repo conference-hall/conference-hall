@@ -38,7 +38,13 @@ export function EmojiSelect({ emojis, selectedEmojis, onChangeEmojis }: EmojiRea
         );
       })}
 
-      <EmojiPicker label={t('common.choose-an-emoji')} emojis={emojis} icon={PlusIcon} onSelectEmoji={handleSelect} />
+      <EmojiPicker
+        label={t('common.choose-an-emoji')}
+        emojis={emojis}
+        icon={PlusIcon}
+        onSelectEmoji={handleSelect}
+        anchor="top"
+      />
     </div>
   );
 }
