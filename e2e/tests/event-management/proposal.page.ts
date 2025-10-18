@@ -27,7 +27,7 @@ export class ProposalPage extends PageObject {
   readonly formatsButton = this.page.getByRole('button', { name: 'Formats', exact: true });
   readonly categoriesButton = this.page.getByRole('button', { name: 'Categories', exact: true });
 
-  readonly conversationDrawerButton = this.page.getByRole('button').filter({ hasText: /message|conversation/i });
+  readonly conversationDrawerButton = this.page.getByRole('button').filter({ hasText: /message|Conversation/ });
 
   async goto(team: string, event: string, id: string, title: string) {
     await this.page.goto(`/team/${team}/${event}/proposals/${id}`);
