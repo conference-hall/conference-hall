@@ -38,7 +38,7 @@ ActivityFeed.Entry = Entry;
 
 function Line({ className }: { className?: string }) {
   return (
-    <div className={cx('relative my-0.5 flex h-full w-full justify-center self-center overflow-hidden', className)}>
+    <div className={cx('relative flex h-full w-full justify-center self-center overflow-hidden', className)}>
       <div className="absolute top-0 bottom-0 w-0.5 bg-gray-200" />
     </div>
   );

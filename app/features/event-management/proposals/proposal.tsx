@@ -69,14 +69,12 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
     params.proposal,
   );
 
-  const activityPromise = activityFeed.activity();
-  const speakersConversationPromise = speakerProposalConversation.getConversation();
+  const activityPromise = Promise.all([activityFeed.activity(), speakerProposalConversation.getConversation()]);
   const proposal = await proposalReview.get();
-
   const otherProposalsPromise = proposalReview.getOtherProposals(proposal.speakers.map((s) => s.id));
   const pagination = await proposalReview.getPreviousAndNextReviews(filters);
 
-  return { proposal, pagination, activityPromise, otherProposalsPromise, speakersConversationPromise };
+  return { proposal, pagination, activityPromise, otherProposalsPromise };
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
@@ -194,7 +192,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 export default function ProposalReviewLayoutRoute({ params, loaderData, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
   const { team, event } = useCurrentEventTeam();
-  const { proposal, pagination, activityPromise, otherProposalsPromise, speakersConversationPromise } = loaderData;
+  const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
   const {
     canEditEvent,
     canEditEventProposal,
@@ -231,8 +229,13 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
 
           <Suspense fallback={<ActivityFeed.Loading className="pl-4" />}>
             <Await resolve={activityPromise}>
-              {(activity) => (
-                <ProposalActivityFeed activity={activity} canManageConversations={canManageConversations} />
+              {([activity, speakersConversation]) => (
+                <ProposalActivityFeed
+                  activity={activity}
+                  speakersConversation={speakersConversation}
+                  speakers={proposal.speakers}
+                  canManageConversations={canManageConversations}
+                />
               )}
             </Await>
           </Suspense>
@@ -261,8 +264,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
 
                 {isSpeakerCommunicationEnabled ? (
                   <Suspense fallback={null}>
-                    <Await resolve={speakersConversationPromise}>
-                      {(speakersConversation) => (
+                    <Await resolve={activityPromise}>
+                      {([_, speakersConversation]) => (
                         <ConversationDrawer
                           messages={speakersConversation}
                           recipients={proposal.speakers}
