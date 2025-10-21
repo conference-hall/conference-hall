@@ -3,7 +3,7 @@ import { db } from 'prisma/db.server.ts';
 import type { Event } from 'prisma/generated/client.ts';
 import { z } from 'zod';
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { ProposalSearchBuilder } from '../../proposals/services/proposal-search-builder.server.ts';
 
@@ -11,9 +11,7 @@ const AutocompleteFilterSchema = z.object({ query: z.string().optional(), kind: 
 
 type AutocompleteFilters = z.infer<typeof AutocompleteFilterSchema>;
 
-// todo(autocomplete): rename section to kind,
 // todo(autocomplete): rename title to label
-// todo(autocomplete): rename context to autocomplete or search context
 // todo(autocomplete): migrate other proposal autocomplete to use this one
 type AutocompleteResult = {
   kind: string;
@@ -25,13 +23,13 @@ type AutocompleteResult = {
 
 const pagination = new Pagination({ page: 1, pageSize: 3, total: 3 });
 
-export class Autocomplete extends UserEventAuthorization {
+export class Autocomplete extends EventAuthorization {
   static for(userId: string, team: string, event: string) {
     return new Autocomplete(userId, team, event);
   }
 
   async search(filters: AutocompleteFilters) {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
 
     const { query, kind } = filters;
     if (!query) return [];

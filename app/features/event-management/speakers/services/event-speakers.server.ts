@@ -8,7 +8,7 @@ import { NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.s
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import type { EventSpeakerSaveData, SocialLinks } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 
 const SpeakerSearchFiltersSchema = z.object({
   query: z.string().trim().optional(),
@@ -18,13 +18,13 @@ const SpeakerSearchFiltersSchema = z.object({
 
 type SpeakerSearchFilters = z.infer<typeof SpeakerSearchFiltersSchema>;
 
-export class EventSpeakers extends UserEventAuthorization {
+export class EventSpeakers extends EventAuthorization {
   static for(userId: string, team: string, event: string) {
     return new EventSpeakers(userId, team, event);
   }
 
   async search(filters: SpeakerSearchFilters, page = 1) {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
 
     if (!event.displayProposalsSpeakers) {
       return {
@@ -94,7 +94,7 @@ export class EventSpeakers extends UserEventAuthorization {
   }
 
   async getById(speakerId: string) {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
 
     const speaker = await db.eventSpeaker.findFirst({
       where: { id: speakerId, eventId: event.id },
@@ -150,11 +150,11 @@ export class EventSpeakers extends UserEventAuthorization {
   }
 
   async canCreate() {
-    return this.needsPermission('canCreateEventSpeaker');
+    return this.checkAuthorizedEvent('canCreateEventSpeaker');
   }
 
   async create(data: EventSpeakerSaveData) {
-    const event = await this.needsPermission('canCreateEventSpeaker');
+    const { event } = await this.checkAuthorizedEvent('canCreateEventSpeaker');
 
     const existingSpeaker = await db.eventSpeaker.findFirst({
       where: { eventId: event.id, email: { equals: data.email, mode: 'insensitive' } },
@@ -193,11 +193,11 @@ export class EventSpeakers extends UserEventAuthorization {
   }
 
   async canUpdate() {
-    return this.needsPermission('canEditEventSpeaker');
+    return this.checkAuthorizedEvent('canEditEventSpeaker');
   }
 
   async update(speakerId: string, data: EventSpeakerSaveData) {
-    const event = await this.needsPermission('canEditEventSpeaker');
+    const { event } = await this.checkAuthorizedEvent('canEditEventSpeaker');
 
     const speaker = await db.eventSpeaker.findFirst({
       where: { id: speakerId, eventId: event.id },

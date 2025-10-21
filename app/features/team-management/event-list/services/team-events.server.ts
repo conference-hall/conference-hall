@@ -1,13 +1,13 @@
 import { db } from 'prisma/db.server.ts';
-import { UserTeamAuthorization } from '~/shared/user/user-team-authorization.server.ts';
+import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
 
-export class TeamEvents extends UserTeamAuthorization {
+export class TeamEvents extends TeamAuthorization {
   static for(userId: string, team: string) {
     return new TeamEvents(userId, team);
   }
 
   async list(archived: boolean) {
-    await this.needsPermission('canAccessEvent');
+    await this.checkMemberPermissions('canAccessEvent');
 
     const events = await db.event.findMany({
       where: { team: { slug: this.team }, archived },

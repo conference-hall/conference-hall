@@ -1,20 +1,20 @@
 import { db } from 'prisma/db.server.ts';
 import type { EventCreateInput } from 'prisma/generated/models.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { EventGeneralSettingsSchema } from './event-settings.schema.server.ts';
 
-export class EventSettings extends UserEventAuthorization {
+export class EventSettings extends EventAuthorization {
   static for(userId: string, teamSlug: string, eventSlug: string) {
     return new EventSettings(userId, teamSlug, eventSlug);
   }
 
   async update(data: Partial<EventCreateInput>) {
-    const event = await this.needsPermission('canEditEvent');
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
     return db.event.update({ where: { id: event.id }, data: { ...data } });
   }
 
   async delete() {
-    const event = await this.needsPermission('canDeleteEvent');
+    const { event } = await this.checkAuthorizedEvent('canDeleteEvent');
     return db.event.delete({ where: { id: event.id } });
   }
 

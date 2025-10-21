@@ -3,16 +3,15 @@ import type { EventType } from 'prisma/generated/enums.ts';
 import { getDatesRange } from '~/shared/datetimes/datetimes.ts';
 import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 
-export class EventScheduleExport extends UserEventAuthorization {
+export class EventScheduleExport extends EventAuthorization {
   static for(userId: string, team: string, event: string) {
     return new EventScheduleExport(userId, team, event);
   }
 
   async forJsonExport() {
-    const event = await this.needsPermission('canEditEventSchedule');
-
+    const { event } = await this.checkAuthorizedEvent('canEditEventSchedule');
     return EventScheduleExport.toJson(event.id, event.type);
   }
 

@@ -1,15 +1,15 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
-import { UserTeamAuthorization } from '~/shared/user/user-team-authorization.server.ts';
+import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
 
-export class EventCreation extends UserTeamAuthorization {
+export class EventCreation extends TeamAuthorization {
   static for(userId: string, team: string) {
     return new EventCreation(userId, team);
   }
 
   async create(data: z.infer<typeof EventCreateSchema>) {
-    await this.needsPermission('canCreateEvent');
+    await this.checkMemberPermissions('canCreateEvent');
 
     return db.event.create({
       data: {

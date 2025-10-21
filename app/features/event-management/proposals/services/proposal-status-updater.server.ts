@@ -1,7 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 import type { DeliberationStatus } from '~/shared/types/proposals.types.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
@@ -18,13 +18,13 @@ export const ProposalStatusBulkSchema = z.object({
 
 type ProposalStatus = z.infer<typeof ProposalStatusSchema>;
 
-export class ProposalStatusUpdater extends UserEventAuthorization {
+export class ProposalStatusUpdater extends EventAuthorization {
   static for(userId: string, team: string, event: string) {
     return new ProposalStatusUpdater(userId, team, event);
   }
 
   async update(proposalIds: string[], { confirmationStatus, deliberationStatus }: ProposalStatus) {
-    await this.needsPermission('canChangeProposalStatus');
+    await this.checkAuthorizedEvent('canChangeProposalStatus');
 
     if (confirmationStatus) {
       const result = await db.proposal.updateMany({
@@ -46,7 +46,7 @@ export class ProposalStatusUpdater extends UserEventAuthorization {
   }
 
   async updateAll(filters: ProposalsFilters, deliberationStatus: DeliberationStatus) {
-    const event = await this.needsPermission('canChangeProposalStatus');
+    const { event } = await this.checkAuthorizedEvent('canChangeProposalStatus');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters);
     const proposalIds = await search.proposalsIds();

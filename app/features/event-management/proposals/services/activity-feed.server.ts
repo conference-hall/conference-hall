@@ -2,7 +2,7 @@ import { db } from 'prisma/db.server.ts';
 import { Prisma } from 'prisma/generated/client.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { Comments } from './comments.server.ts';
 
 type ReviewFeed = {
@@ -27,7 +27,7 @@ export type Feed = Awaited<ReturnType<ActivityFeed['activity']>>;
 
 export type FeedItem = Feed[number];
 
-export class ActivityFeed extends UserEventAuthorization {
+export class ActivityFeed extends EventAuthorization {
   private proposalId: string;
 
   constructor(userId: string, team: string, event: string, proposalId: string) {
@@ -40,7 +40,7 @@ export class ActivityFeed extends UserEventAuthorization {
   }
 
   async activity() {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
 
     let results: Array<ReviewFeed | CommentFeed> = [];
 

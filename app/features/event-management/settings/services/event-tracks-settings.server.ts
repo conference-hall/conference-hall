@@ -1,14 +1,14 @@
 import { db } from 'prisma/db.server.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import type { TrackSaveData } from './event-tracks-settings.schema.server.ts';
 
-export class EventTracksSettings extends UserEventAuthorization {
+export class EventTracksSettings extends EventAuthorization {
   static for(userId: string, teamSlug: string, eventSlug: string) {
     return new EventTracksSettings(userId, teamSlug, eventSlug);
   }
 
   async saveFormat(data: TrackSaveData) {
-    const event = await this.needsPermission('canEditEvent');
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
 
     if (data.id) {
       return db.eventFormat.update({
@@ -22,12 +22,12 @@ export class EventTracksSettings extends UserEventAuthorization {
   }
 
   async deleteFormat(formatId: string) {
-    await this.needsPermission('canEditEvent');
+    await this.checkAuthorizedEvent('canEditEvent');
     return db.eventFormat.delete({ where: { id: formatId } });
   }
 
   async saveCategory(data: TrackSaveData) {
-    const event = await this.needsPermission('canEditEvent');
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
 
     if (data.id) {
       return db.eventCategory.update({
@@ -41,7 +41,7 @@ export class EventTracksSettings extends UserEventAuthorization {
   }
 
   async deleteCategory(categoryId: string) {
-    await this.needsPermission('canEditEvent');
+    await this.checkAuthorizedEvent('canEditEvent');
     return db.eventCategory.delete({ where: { id: categoryId } });
   }
 }

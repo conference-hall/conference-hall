@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
-import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { ProposalNotFoundError } from '~/shared/errors.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import type {
   ConversationMessageDeleteData,
   ConversationMessageReactData,
@@ -10,12 +10,12 @@ import { ConversationService } from './conversation-service.server.ts';
 
 export class ProposalConversationForOrganizers {
   private conversation: ConversationService;
-  private authorizations: UserEventAuthorization;
+  private authorizations: EventAuthorization;
   private proposalId: string;
 
   constructor(userId: string, team: string, event: string, proposalId: string) {
     this.proposalId = proposalId;
-    this.authorizations = new UserEventAuthorization(userId, team, event);
+    this.authorizations = new EventAuthorization(userId, team, event);
     this.conversation = new ConversationService({
       userId,
       role: 'ORGANIZER',
@@ -29,26 +29,23 @@ export class ProposalConversationForOrganizers {
   }
 
   async saveMessage(data: ConversationMessageSaveData) {
-    // todo(conversion): improve double query on authorizations
-    const event = await this.authorizations.needsPermission('canAccessEvent');
-    const permissions = await this.authorizations.getPermissions();
+    const { event, permissions } = await this.authorizations.checkAuthorizedEvent('canAccessEvent');
     return this.conversation.saveMessage(event.id, data, permissions?.canManageConversations);
   }
 
   async reactMessage(data: ConversationMessageReactData) {
-    await this.authorizations.needsPermission('canAccessEvent');
+    await this.authorizations.checkAuthorizedEvent('canAccessEvent');
     return this.conversation.reactMessage(data);
   }
 
   async deleteMessage(data: ConversationMessageDeleteData) {
-    // todo(conversion): improve double query on authorizations
-    const permissions = await this.authorizations.getPermissions();
-    if (!permissions.canAccessEvent) throw new ForbiddenOperationError();
+    const { permissions } = await this.authorizations.checkAuthorizedEvent('canAccessEvent');
     return this.conversation.deleteMessage(data, permissions?.canManageConversations);
   }
 
   async getConversation() {
-    const event = await this.authorizations.needsPermission('canAccessEvent');
+    const { event } = await this.authorizations.checkAuthorizedEvent('canAccessEvent');
+
     const proposal = await db.proposal.findUnique({ where: { id: this.proposalId, eventId: event.id } });
     if (!proposal) throw new ProposalNotFoundError();
 

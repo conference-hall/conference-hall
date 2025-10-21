@@ -2,7 +2,7 @@ import { db } from 'prisma/db.server.ts';
 import type { ScheduleCreateInput } from 'prisma/generated/models.ts';
 import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/shared/errors.server.ts';
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import type {
   ScheduleCreateData,
   ScheduleSessionCreateData,
@@ -10,13 +10,13 @@ import type {
   ScheduleTracksSaveData,
 } from './schedule.schema.server.ts';
 
-export class EventSchedule extends UserEventAuthorization {
+export class EventSchedule extends EventAuthorization {
   static for(userId: string, team: string, event: string) {
     return new EventSchedule(userId, team, event);
   }
 
   async get() {
-    const event = await this.needsPermission('canEditEventSchedule');
+    const { event } = await this.checkAuthorizedEvent('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id }, include: { tracks: true } });
@@ -35,7 +35,7 @@ export class EventSchedule extends UserEventAuthorization {
   }
 
   async create(data: ScheduleCreateData) {
-    const event = await this.needsPermission('canEditEventSchedule');
+    const { event } = await this.checkAuthorizedEvent('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     await db.schedule.create({
@@ -53,7 +53,7 @@ export class EventSchedule extends UserEventAuthorization {
   }
 
   async update(data: Partial<ScheduleCreateInput>) {
-    const event = await this.needsPermission('canEditEventSchedule');
+    const { event } = await this.checkAuthorizedEvent('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
@@ -63,7 +63,7 @@ export class EventSchedule extends UserEventAuthorization {
   }
 
   async delete() {
-    const event = await this.needsPermission('canEditEventSchedule');
+    const { event } = await this.checkAuthorizedEvent('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
@@ -73,7 +73,7 @@ export class EventSchedule extends UserEventAuthorization {
   }
 
   async addSession(data: ScheduleSessionCreateData) {
-    const event = await this.needsPermission('canEditEventSchedule');
+    const { event } = await this.checkAuthorizedEvent('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
@@ -91,7 +91,7 @@ export class EventSchedule extends UserEventAuthorization {
   }
 
   async updateSession(data: ScheduleSessionUpdateData) {
-    const event = await this.needsPermission('canEditEventSchedule');
+    const { event } = await this.checkAuthorizedEvent('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
@@ -119,7 +119,7 @@ export class EventSchedule extends UserEventAuthorization {
   }
 
   async deleteSession(sessionId: string) {
-    const event = await this.needsPermission('canEditEventSchedule');
+    const { event } = await this.checkAuthorizedEvent('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
@@ -130,7 +130,7 @@ export class EventSchedule extends UserEventAuthorization {
   }
 
   async saveTracks(tracks: ScheduleTracksSaveData['tracks']) {
-    const event = await this.needsPermission('canEditEventSchedule');
+    const { event } = await this.checkAuthorizedEvent('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id }, include: { tracks: true } });
@@ -154,7 +154,7 @@ export class EventSchedule extends UserEventAuthorization {
   }
 
   async getScheduleSessions() {
-    const event = await this.needsPermission('canEditEventSchedule');
+    const { event } = await this.checkAuthorizedEvent('canEditEventSchedule');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const schedule = await db.schedule.findFirst({
