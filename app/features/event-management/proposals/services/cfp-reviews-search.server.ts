@@ -1,17 +1,17 @@
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { ReviewDetails } from '../models/review-details.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
-export class CfpReviewsSearch extends UserEventAuthorization {
+export class CfpReviewsSearch extends EventAuthorization {
   static for(userId: string, team: string, event: string) {
     return new CfpReviewsSearch(userId, team, event);
   }
 
   async search(filters: ProposalsFilters, page = 1) {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
@@ -55,7 +55,7 @@ export class CfpReviewsSearch extends UserEventAuthorization {
   }
 
   async autocomplete(filters: ProposalsFilters) {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: true,

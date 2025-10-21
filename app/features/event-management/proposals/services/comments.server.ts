@@ -1,10 +1,10 @@
 import { db } from 'prisma/db.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import type { CommentReactionData, CommentSaveData } from './comments.schema.server.ts';
 
-export class Comments extends UserEventAuthorization {
+export class Comments extends EventAuthorization {
   private proposalId: string;
 
   constructor(userId: string, team: string, event: string, proposalId: string) {
@@ -17,7 +17,7 @@ export class Comments extends UserEventAuthorization {
   }
 
   async save(comment: CommentSaveData) {
-    const permissions = await this.getPermissions();
+    const { permissions } = await this.checkAuthorizedEvent();
     if (!permissions.canAccessEvent) throw new ForbiddenOperationError();
 
     if (comment.id) {
@@ -33,7 +33,7 @@ export class Comments extends UserEventAuthorization {
   }
 
   async remove(id: string) {
-    const permissions = await this.getPermissions();
+    const { permissions } = await this.checkAuthorizedEvent();
     if (!permissions.canAccessEvent) throw new ForbiddenOperationError();
 
     await db.comment.deleteMany({
@@ -46,7 +46,7 @@ export class Comments extends UserEventAuthorization {
   }
 
   async reactToComment({ id, code }: CommentReactionData) {
-    await this.needsPermission('canAccessEvent');
+    await this.checkAuthorizedEvent('canAccessEvent');
 
     const existingReaction = await db.commentReaction.findUnique({
       where: { userId_commentId_code: { userId: this.userId, commentId: id, code } },

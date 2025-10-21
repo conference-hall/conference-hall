@@ -27,15 +27,12 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const { userId } = await requireUserSession(request);
-
   const i18n = getI18n(context);
-  const event = await EventSettings.for(userId, params.team, params.event);
-  await event.needsPermission('canEditEvent');
-
   const formData = await parseFormData(request, uploadToStorageHandler({ name: 'logo', maxFileSize: MAX_FILE_SIZE }));
   const result = FILE_SCHEMA.safeParse(formData.get('logo'));
   if (result.success) {
-    await event.update({ logoUrl: result.data.name });
+    const settings = await EventSettings.for(userId, params.team, params.event);
+    await settings.update({ logoUrl: result.data.name });
     return toast('success', i18n.t('event-management.settings.customize.feedbacks.logo-updated'));
   } else {
     return { status: 'error', message: i18n.t('event-management.settings.customize.errors.upload') };

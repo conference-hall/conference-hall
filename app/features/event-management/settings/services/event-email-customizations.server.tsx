@@ -8,20 +8,20 @@ import type {
 } from '~/shared/emails/email.types.ts';
 import { getCustomTemplate } from '~/shared/emails/templates/templates.ts';
 import { NotFoundError } from '~/shared/errors.server.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 
-export class EventEmailCustomizations extends UserEventAuthorization {
+export class EventEmailCustomizations extends EventAuthorization {
   static for(userId: string, teamSlug: string, eventSlug: string) {
     return new EventEmailCustomizations(userId, teamSlug, eventSlug);
   }
 
   async list() {
-    const event = await this.needsPermission('canEditEvent');
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
     return db.eventEmailCustomization.findMany({ where: { eventId: event.id } });
   }
 
   async getForPreview(template: CustomTemplateName, locale = 'en') {
-    const event = await this.needsPermission('canEditEvent');
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
     const customization = await db.eventEmailCustomization.findUnique({
       where: { eventId_template_locale: { eventId: event.id, template, locale } },
     });
@@ -52,7 +52,7 @@ export class EventEmailCustomizations extends UserEventAuthorization {
   }
 
   async save(data: EventEmailCustomUpsert) {
-    const event = await this.needsPermission('canEditEvent');
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
     const { template, locale, subject, content } = data;
 
     const safeData = {
@@ -72,7 +72,7 @@ export class EventEmailCustomizations extends UserEventAuthorization {
   }
 
   async reset(data: EventEmailCustomDelete) {
-    const event = await this.needsPermission('canEditEvent');
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
     const { template, locale } = data;
 
     try {

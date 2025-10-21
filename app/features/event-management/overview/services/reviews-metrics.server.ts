@@ -1,7 +1,7 @@
 import type { Decimal } from '@prisma/client/runtime/library';
 import { db } from 'prisma/db.server.ts';
 import { Prisma } from 'prisma/generated/client.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 
 type ReviewsMetricsInfo = {
   totalProposals: number;
@@ -21,13 +21,13 @@ type ProposalAverageNote = {
   count: number;
 };
 
-export class ReviewsMetrics extends UserEventAuthorization {
+export class ReviewsMetrics extends EventAuthorization {
   static for(userId: string, team: string, event: string) {
     return new ReviewsMetrics(userId, team, event);
   }
 
   async get() {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
 
     const totalProposals = await this.proposalsCount(event.id);
     if (totalProposals === 0) {

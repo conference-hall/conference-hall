@@ -1,10 +1,10 @@
 import { db } from 'prisma/db.server.ts';
 import { EventNotFoundError } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 
-export class EventFetcher extends UserEventAuthorization {
+export class EventFetcher extends EventAuthorization {
   static for(userId: string, teamSlug: string, eventSlug: string) {
     return new EventFetcher(userId, teamSlug, eventSlug);
   }

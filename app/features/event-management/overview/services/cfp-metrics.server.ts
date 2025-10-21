@@ -1,17 +1,17 @@
 import { db } from 'prisma/db.server.ts';
 import { Prisma } from 'prisma/generated/client.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { EventFetcher } from '../../services/event-fetcher.server.ts';
 
 type TrackType = { id: string; name: string };
 
-export class CfpMetrics extends UserEventAuthorization {
+export class CfpMetrics extends EventAuthorization {
   static for(userId: string, team: string, event: string) {
     return new CfpMetrics(userId, team, event);
   }
 
   async get() {
-    await this.needsPermission('canAccessEvent');
+    await this.checkAuthorizedEvent('canAccessEvent');
 
     const eventFetcher = EventFetcher.for(this.userId, this.team, this.event);
     const { id, formats, categories } = await eventFetcher.get();

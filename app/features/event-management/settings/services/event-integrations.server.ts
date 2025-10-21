@@ -1,16 +1,16 @@
 import { db } from 'prisma/db.server.ts';
 import type { EventIntegrationName } from 'prisma/generated/enums.ts';
 import { OpenPlanner } from '~/shared/integrations/open-planner.server.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { type IntegrationConfigData, IntegrationConfigSchema } from './event-integrations.schema.server.ts';
 
-export class EventIntegrations extends UserEventAuthorization {
+export class EventIntegrations extends EventAuthorization {
   static for(userId: string, teamSlug: string, eventSlug: string) {
     return new EventIntegrations(userId, teamSlug, eventSlug);
   }
 
   async getConfiguration(name: EventIntegrationName) {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
     const integration = await db.eventIntegrationConfig.findFirst({ where: { eventId: event.id, name } });
 
     if (!integration) return null;
@@ -23,7 +23,7 @@ export class EventIntegrations extends UserEventAuthorization {
   }
 
   async getConfigurations() {
-    const event = await this.needsPermission('canEditEvent');
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
     const integrations = await db.eventIntegrationConfig.findMany({ where: { eventId: event.id } });
 
     return integrations.map((integration) => ({
@@ -34,7 +34,7 @@ export class EventIntegrations extends UserEventAuthorization {
   }
 
   async save(data: IntegrationConfigData) {
-    const event = await this.needsPermission('canEditEvent');
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
 
     if (!data.id) {
       await db.eventIntegrationConfig.create({ data: { ...data, eventId: event.id } });
@@ -51,7 +51,7 @@ export class EventIntegrations extends UserEventAuthorization {
   }
 
   async delete(id: string) {
-    const event = await this.needsPermission('canEditEvent');
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
     await db.eventIntegrationConfig.delete({ where: { id, eventId: event.id } });
   }
 }

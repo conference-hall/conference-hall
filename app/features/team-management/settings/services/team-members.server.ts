@@ -5,20 +5,20 @@ import type { TeamMemberWhereInput } from 'prisma/generated/models.ts';
 import { z } from 'zod';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import { UserTeamAuthorization } from '~/shared/user/user-team-authorization.server.ts';
+import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
 
 export const MembersFiltersSchema = z.object({
   query: z.string().trim().optional(),
   role: z.enum(['OWNER', 'MEMBER', 'REVIEWER']).optional(),
 });
 
-export class TeamMembers extends UserTeamAuthorization {
+export class TeamMembers extends TeamAuthorization {
   static for(userId: string, team: string) {
     return new TeamMembers(userId, team);
   }
 
   async list(filters: z.infer<typeof MembersFiltersSchema>, page: number) {
-    await this.needsPermission('canAccessTeam');
+    await this.checkMemberPermissions('canAccessTeam');
 
     const whereClause: TeamMemberWhereInput = {
       team: { slug: this.team },
@@ -51,18 +51,20 @@ export class TeamMembers extends UserTeamAuthorization {
   }
 
   async leave() {
-    const { memberId, teamId } = await this.needsPermission('canLeaveTeam');
+    const {
+      member: { memberId, teamId },
+    } = await this.checkMemberPermissions('canLeaveTeam');
     return db.teamMember.delete({ where: { memberId_teamId: { memberId, teamId } } });
   }
 
   async remove(memberId: string) {
-    await this.needsPermission('canManageTeamMembers');
+    await this.checkMemberPermissions('canManageTeamMembers');
     if (memberId === this.userId) throw new ForbiddenOperationError();
     return db.teamMember.deleteMany({ where: { team: { slug: this.team }, memberId } });
   }
 
   async changeRole(memberId: string, role: TeamRole) {
-    await this.needsPermission('canManageTeamMembers');
+    await this.checkMemberPermissions('canManageTeamMembers');
     if (memberId === this.userId) throw new ForbiddenOperationError();
     return await db.teamMember.updateMany({ data: { role }, where: { team: { slug: this.team }, memberId } });
   }

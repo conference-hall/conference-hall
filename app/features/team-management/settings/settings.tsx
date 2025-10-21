@@ -4,14 +4,15 @@ import { href, Outlet } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { TeamSettings } from '~/features/team-management/settings/services/team-settings.server.ts';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
 import type { Route } from './+types/settings.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = await requireUserSession(request);
-  await TeamSettings.for(userId, params.team).needsPermission('canAccessTeam');
+  const authorization = new TeamAuthorization(userId, params.team);
+  await authorization.checkMemberPermissions('canAccessTeam');
   return null;
 };
 

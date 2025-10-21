@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
-import { UserTeamAuthorization } from '~/shared/user/user-team-authorization.server.ts';
+import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
 
 const TeamUpdateSchema = z.object({
@@ -8,18 +8,18 @@ const TeamUpdateSchema = z.object({
   slug: SlugSchema,
 });
 
-export class TeamSettings extends UserTeamAuthorization {
+export class TeamSettings extends TeamAuthorization {
   static for(userId: string, team: string) {
     return new TeamSettings(userId, team);
   }
 
   async delete() {
-    const { teamId } = await this.needsPermission('canEditTeam');
-    return db.team.delete({ where: { id: teamId } });
+    const { member } = await this.checkMemberPermissions('canEditTeam');
+    return db.team.delete({ where: { id: member.teamId } });
   }
 
   async updateSettings(data: z.infer<typeof TeamUpdateSchema>) {
-    await this.needsPermission('canEditTeam');
+    await this.checkMemberPermissions('canEditTeam');
     return db.team.update({ where: { slug: this.team }, data });
   }
 

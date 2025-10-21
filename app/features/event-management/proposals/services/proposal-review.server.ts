@@ -4,7 +4,7 @@ import { ProposalNotFoundError, ReviewDisabledError } from '~/shared/errors.serv
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { ReviewDetails } from '../models/review-details.ts';
 import type { ReviewUpdateData } from './proposal-review.schema.server.ts';
@@ -13,7 +13,7 @@ import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
 export type ProposalReviewData = Awaited<ReturnType<typeof ProposalReview.prototype.get>>;
 
-export class ProposalReview extends UserEventAuthorization {
+export class ProposalReview extends EventAuthorization {
   private proposalId: string;
 
   constructor(userId: string, team: string, event: string, proposalId: string) {
@@ -26,7 +26,7 @@ export class ProposalReview extends UserEventAuthorization {
   }
 
   async get() {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
 
     const proposal = await db.proposal.findFirst({
       include: {
@@ -88,7 +88,7 @@ export class ProposalReview extends UserEventAuthorization {
   }
 
   async getOtherProposals(speakerIds: Array<string>) {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
 
     if (!event.displayProposalsSpeakers) return [];
 
@@ -114,7 +114,7 @@ export class ProposalReview extends UserEventAuthorization {
   }
 
   async getPreviousAndNextReviews(filters: ProposalsFilters) {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters);
 
@@ -129,7 +129,7 @@ export class ProposalReview extends UserEventAuthorization {
   }
 
   async addReview(data: ReviewUpdateData) {
-    const event = await this.needsPermission('canAccessEvent');
+    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
     if (!event.reviewEnabled) throw new ReviewDisabledError();
 
     await db.review.upsert({

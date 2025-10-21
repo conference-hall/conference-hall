@@ -4,20 +4,20 @@ import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ProposalAcceptedEmail from '~/shared/emails/templates/speakers/proposal-accepted.tsx';
 import ProposalRejectedEmail from '~/shared/emails/templates/speakers/proposal-rejected.tsx';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 
 export const PublishResultFormSchema = z.object({
   type: z.enum(['ACCEPTED', 'REJECTED']),
   sendEmails: z.boolean().default(false),
 });
 
-export class Publication extends UserEventAuthorization {
+export class Publication extends EventAuthorization {
   static for(userId: string, team: string, event: string) {
     return new Publication(userId, team, event);
   }
 
   async publishAll(status: 'ACCEPTED' | 'REJECTED', withEmails: boolean) {
-    const event = await this.needsPermission('canPublishEventResults');
+    const { event } = await this.checkAuthorizedEvent('canPublishEventResults');
 
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
@@ -46,7 +46,7 @@ export class Publication extends UserEventAuthorization {
   }
 
   async publish(proposalId: string, withEmails: boolean) {
-    const event = await this.needsPermission('canPublishEventResults');
+    const { event } = await this.checkAuthorizedEvent('canPublishEventResults');
 
     const proposal = await db.proposal.findUnique({
       where: {
@@ -77,7 +77,7 @@ export class Publication extends UserEventAuthorization {
   }
 
   async statistics() {
-    const event = await this.needsPermission('canPublishEventResults');
+    const { event } = await this.checkAuthorizedEvent('canPublishEventResults');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const results = await db.proposal.groupBy({

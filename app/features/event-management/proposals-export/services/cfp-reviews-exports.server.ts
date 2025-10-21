@@ -3,16 +3,16 @@ import type { ProposalsFilters } from '~/features/event-management/proposals/ser
 import { ProposalSearchBuilder } from '~/features/event-management/proposals/services/proposal-search-builder.server.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
-import { UserEventAuthorization } from '~/shared/user/user-event-authorization.server.ts';
+import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { exportToOpenPlanner } from './jobs/export-to-open-planner.job.ts';
 
-export class CfpReviewsExports extends UserEventAuthorization {
+export class CfpReviewsExports extends EventAuthorization {
   static for(userId: string, team: string, event: string) {
     return new CfpReviewsExports(userId, team, event);
   }
 
   async forJson(filters: ProposalsFilters) {
-    const event = await this.needsPermission('canExportEventProposals');
+    const { event } = await this.checkAuthorizedEvent('canExportEventProposals');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: true,
@@ -62,7 +62,7 @@ export class CfpReviewsExports extends UserEventAuthorization {
   }
 
   async forCards(filters: ProposalsFilters) {
-    const event = await this.needsPermission('canExportEventProposals');
+    const { event } = await this.checkAuthorizedEvent('canExportEventProposals');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: true,
@@ -88,7 +88,7 @@ export class CfpReviewsExports extends UserEventAuthorization {
   }
 
   async forOpenPlanner(filters: ProposalsFilters) {
-    await this.needsPermission('canExportEventProposals');
+    await this.checkAuthorizedEvent('canExportEventProposals');
 
     await exportToOpenPlanner.trigger({ userId: this.userId, teamSlug: this.team, eventSlug: this.event, filters });
   }
