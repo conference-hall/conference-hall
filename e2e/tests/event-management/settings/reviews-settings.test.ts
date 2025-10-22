@@ -2,11 +2,14 @@ import { expect, loginWith, test } from 'e2e/fixtures.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { ReviewsSettingsPage } from './reviews-settings.page.ts';
 
 loginWith('clark-kent');
 
 test('updates reviews settings', async ({ page }) => {
+  await flags.set('speakersCommunication', true);
+
   const user = await userFactory({ traits: ['clark-kent'] });
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
@@ -39,4 +42,11 @@ test('updates reviews settings', async ({ page }) => {
 
   await reviewsPage.goto(team.slug, event.slug);
   await expect(reviewsPage.displaySpeakersSwitch).not.toBeChecked();
+
+  // Disable speaker conversations
+  await reviewsPage.speakerConversationsSwitch.click();
+  await expect(reviewsPage.toast).toHaveText('Review setting saved.');
+
+  await reviewsPage.goto(team.slug, event.slug);
+  await expect(reviewsPage.speakerConversationsSwitch).not.toBeChecked();
 });

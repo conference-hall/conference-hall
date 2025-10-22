@@ -6,6 +6,7 @@ import { H2 } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';
+import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/review.ts';
@@ -29,6 +30,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 export default function EventReviewSettingsRoute() {
   const { t } = useTranslation();
   const { event } = useCurrentEventTeam();
+  const isSpeakerCommunicationEnabled = useFlag('speakersCommunication');
 
   const reviewEnabledFetcher = useFetcher<typeof action>({ key: 'review-enabled' });
   const displayProposalsReviewsFetcher = useFetcher<typeof action>({ key: 'display-proposals-reviews' });
@@ -81,17 +83,19 @@ export default function EventReviewSettingsRoute() {
               )
             }
           />
-          <ToggleGroup
-            label={t('event-management.settings.reviews.settings.toggle-speakers-conversation.label')}
-            description={t('event-management.settings.reviews.settings.toggle-speakers-conversation.description')}
-            value={event.speakersConversationEnabled}
-            onChange={(checked) =>
-              speakersConversationEnabledFetcher.submit(
-                { _setting: 'speakersConversationEnabled', speakersConversationEnabled: String(checked) },
-                { method: 'POST' },
-              )
-            }
-          />
+          {isSpeakerCommunicationEnabled ? (
+            <ToggleGroup
+              label={t('event-management.settings.reviews.settings.toggle-speakers-conversation.label')}
+              description={t('event-management.settings.reviews.settings.toggle-speakers-conversation.description')}
+              value={event.speakersConversationEnabled}
+              onChange={(checked) =>
+                speakersConversationEnabledFetcher.submit(
+                  { _setting: 'speakersConversationEnabled', speakersConversationEnabled: String(checked) },
+                  { method: 'POST' },
+                )
+              }
+            />
+          ) : null}
         </Card.Content>
       </Card>
     </>
