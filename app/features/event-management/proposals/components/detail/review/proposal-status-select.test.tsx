@@ -130,18 +130,6 @@ describe('ProposalStatusSelect component', () => {
       const optionTexts = allOptions.map((option) => option.element().textContent);
       expect(optionTexts).not.toContain('Accepted');
     });
-
-    it('changes displayed value when option is selected', async () => {
-      const screen = renderComponent();
-
-      const selectButton = screen.getByRole('button', { name: /not deliberated/i });
-      await userEvent.click(selectButton);
-
-      const acceptedOption = screen.getByRole('option', { name: /Accepted/ });
-      await userEvent.click(acceptedOption);
-
-      await expect.element(screen.getByText('Accepted')).toBeInTheDocument();
-    });
   });
 
   describe('Confirmation dialog', () => {

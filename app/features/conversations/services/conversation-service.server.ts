@@ -90,9 +90,9 @@ export class ConversationService {
     // Get conversation
     const conversation = await db.conversation.findFirst({
       where: {
-        eventId,
         contextType,
         contextIds: contextIds ? { hasSome: contextIds } : undefined,
+        event: { id: eventId, speakersConversationEnabled: true },
       },
       include: {
         participants: true,

@@ -61,6 +61,7 @@ export class EventPage {
       })),
       categoriesRequired: event.categoriesRequired,
       categoriesAllowMultiple: event.categoriesAllowMultiple,
+      speakersConversationEnabled: event.speakersConversationEnabled,
     };
   }
 

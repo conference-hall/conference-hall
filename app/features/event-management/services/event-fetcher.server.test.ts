@@ -41,6 +41,7 @@ describe('EventFetcher', () => {
         reviewEnabled: event.reviewEnabled,
         displayProposalsReviews: event.displayProposalsReviews,
         displayProposalsSpeakers: event.displayProposalsSpeakers,
+        speakersConversationEnabled: true,
         formatsRequired: event.formatsRequired,
         formatsAllowMultiple: event.formatsAllowMultiple,
         categoriesRequired: event.categoriesRequired,

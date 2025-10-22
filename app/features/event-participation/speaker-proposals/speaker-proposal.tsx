@@ -106,7 +106,7 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
   const { proposal, conversation } = loaderData;
   const currentEvent = useCurrentEvent();
   const canEdit = proposal.status === SpeakerProposalStatus.Submitted;
-  const isSpeakerCommunicationEnabled = useFlag('speakersCommunication');
+  const speakerConversationEnabled = useFlag('speakersCommunication') && currentEvent.speakersConversationEnabled;
 
   return (
     <Page>
@@ -124,7 +124,7 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
         />
       </div>
 
-      {isSpeakerCommunicationEnabled ? <ProposalConversationFeed messages={conversation} /> : null}
+      {speakerConversationEnabled ? <ProposalConversationFeed messages={conversation} /> : null}
     </Page>
   );
 }

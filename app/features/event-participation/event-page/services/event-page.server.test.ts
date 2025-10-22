@@ -51,6 +51,7 @@ describe('EventPage', () => {
         ],
         categoriesRequired: false,
         categoriesAllowMultiple: false,
+        speakersConversationEnabled: true,
       });
     });
 
