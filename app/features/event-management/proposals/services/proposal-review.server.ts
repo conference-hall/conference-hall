@@ -79,6 +79,7 @@ export class ProposalReview extends EventAuthorization {
           location: speaker.location,
           socialLinks: speaker.socialLinks as SocialLinks,
           survey: speaker.userId ? answers[speaker.userId] : [],
+          isConferenceHallUser: Boolean(speaker.userId),
         })) || [],
       tags: sortBy(
         proposal.tags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),

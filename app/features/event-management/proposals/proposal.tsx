@@ -206,7 +206,9 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
   const hasFormats = event.formats && event.formats.length > 0;
   const hasCategories = event.categories && event.categories.length > 0;
 
-  const isSpeakerCommunicationEnabled = useFlag('speakersCommunication');
+  const speakersWithAccount = proposal.speakers.filter((speaker) => speaker.isConferenceHallUser);
+  const speakersConversationEnabled =
+    useFlag('speakersCommunication') && event.speakersConversationEnabled && speakersWithAccount.length > 0;
 
   return (
     <Page>
@@ -251,40 +253,42 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           <Card as="section">
             {hasSpeakers ? (
               <>
-                <SpeakersSection
-                  team={params.team}
-                  event={params.event}
-                  proposalId={params.proposal}
-                  proposalSpeakers={proposal.speakers}
-                  canChangeSpeakers={canEditEventProposal}
-                  canCreateSpeaker={canCreateEventSpeaker}
-                  canEditSpeaker={canEditEventSpeaker}
-                  className="space-y-3 p-4 lg:px-6"
-                />
+                <div className="py-4 space-y-4">
+                  <SpeakersSection
+                    team={params.team}
+                    event={params.event}
+                    proposalId={params.proposal}
+                    proposalSpeakers={proposal.speakers}
+                    canChangeSpeakers={canEditEventProposal}
+                    canCreateSpeaker={canCreateEventSpeaker}
+                    canEditSpeaker={canEditEventSpeaker}
+                    className="space-y-3 px-4 lg:px-6"
+                  />
 
-                {isSpeakerCommunicationEnabled && event.speakersConversationEnabled ? (
-                  <Suspense fallback={null}>
-                    <Await resolve={activityPromise}>
-                      {([_, speakersConversation]) => (
-                        <ConversationDrawer
-                          messages={speakersConversation}
-                          recipients={proposal.speakers}
-                          canManageConversations={canManageConversations}
-                          className="flex gap-2 cursor-pointer px-4 pb-4 lg:px-6 hover:underline"
-                        >
-                          <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
-                          <Text size="xs" weight="semibold">
-                            {speakersConversation.length === 0
-                              ? t('event-management.proposal-page.conversation.start')
-                              : t('event-management.proposal-page.conversation.started', {
-                                  count: speakersConversation.length,
-                                })}
-                          </Text>
-                        </ConversationDrawer>
-                      )}
-                    </Await>
-                  </Suspense>
-                ) : null}
+                  {speakersConversationEnabled ? (
+                    <Suspense fallback={null}>
+                      <Await resolve={activityPromise}>
+                        {([_, speakersConversation]) => (
+                          <ConversationDrawer
+                            messages={speakersConversation}
+                            recipients={speakersWithAccount}
+                            canManageConversations={canManageConversations}
+                            className="flex gap-2 cursor-pointer px-4 lg:px-6 hover:underline"
+                          >
+                            <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
+                            <Text size="xs" weight="semibold">
+                              {speakersConversation.length === 0
+                                ? t('event-management.proposal-page.conversation.start')
+                                : t('event-management.proposal-page.conversation.started', {
+                                    count: speakersConversation.length,
+                                  })}
+                            </Text>
+                          </ConversationDrawer>
+                        )}
+                      </Await>
+                    </Suspense>
+                  ) : null}
+                </div>
 
                 <Divider />
               </>

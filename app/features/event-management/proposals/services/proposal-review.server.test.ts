@@ -76,6 +76,7 @@ describe('ProposalReview', () => {
             company: speaker.company,
             references: speaker.references,
             socialLinks: speaker.socialLinks,
+            isConferenceHallUser: true,
             survey: [
               { id: 'info', label: 'Do you have specific information to share?', type: 'text', answer: 'Hello world' },
             ],
