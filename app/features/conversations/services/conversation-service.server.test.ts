@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import type { Event, User } from 'prisma/generated/client.ts';
+import type { Event, Team, User } from 'prisma/generated/client.ts';
 import { ConversationContextType, ConversationParticipantRole } from 'prisma/generated/enums.ts';
 import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
 import { conversationFactory } from 'tests/factories/conversations.ts';
@@ -14,6 +14,7 @@ import { ConversationService } from './conversation-service.server.ts';
 describe('ConversationService', () => {
   let speaker: User;
   let organizer: User;
+  let team: Team;
   let event: Event;
 
   beforeEach(async () => {
@@ -22,7 +23,8 @@ describe('ConversationService', () => {
 
     speaker = await userFactory({ traits: ['clark-kent'] });
     organizer = await userFactory({ traits: ['bruce-wayne'] });
-    event = await eventFactory({ team: await teamFactory({ owners: [organizer] }) });
+    team = await teamFactory({ owners: [organizer] });
+    event = await eventFactory({ team });
   });
 
   afterEach(() => {
@@ -305,6 +307,29 @@ describe('ConversationService', () => {
       });
 
       const messages = await service.getConversation(event.id);
+      expect(messages).toEqual([]);
+    });
+
+    it('returns empty array when conversation disabled on event', async () => {
+      const eventWithoutConversation = await eventFactory({ team, attributes: { speakersConversationEnabled: false } });
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event: eventWithoutConversation, talk });
+      const conversation = await conversationFactory({ event: eventWithoutConversation, proposalId: proposal.id });
+      await conversationMessageFactory({
+        conversation,
+        sender: speaker,
+        role: ConversationParticipantRole.SPEAKER,
+        traits: ['withReaction'],
+      });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        contextIds: [proposal.id],
+      });
+
+      const messages = await service.getConversation(eventWithoutConversation.id);
       expect(messages).toEqual([]);
     });
 

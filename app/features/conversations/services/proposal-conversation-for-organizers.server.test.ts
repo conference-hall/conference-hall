@@ -231,28 +231,6 @@ describe('ProposalConversationForOrganizers', () => {
       expect(messages[0].content).toBe('Message from organizer');
     });
 
-    it('returns empty array when speakers conversation disabled on event', async () => {
-      const event2 = await eventFactory({ team, attributes: { speakersConversationEnabled: false } });
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event: event2, talk });
-      const conversation = await conversationFactory({ event: event2, proposalId: proposal.id });
-      await conversationMessageFactory({
-        conversation,
-        sender: owner,
-        role: ConversationParticipantRole.ORGANIZER,
-        attributes: { content: 'Message from organizer' },
-      });
-
-      const messages = await ProposalConversationForOrganizers.for(
-        owner.id,
-        team.slug,
-        event2.slug,
-        proposal.id,
-      ).getConversation();
-
-      expect(messages).toEqual([]);
-    });
-
     it('throws error when proposal does not belong to event', async () => {
       const otherEvent = await eventFactory({ team });
       const talk = await talkFactory({ speakers: [speaker] });
