@@ -29,9 +29,11 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 export default function EventReviewSettingsRoute() {
   const { t } = useTranslation();
   const { event } = useCurrentEventTeam();
+
   const reviewEnabledFetcher = useFetcher<typeof action>({ key: 'review-enabled' });
   const displayProposalsReviewsFetcher = useFetcher<typeof action>({ key: 'display-proposals-reviews' });
   const displayProposalsSpeakersFetcher = useFetcher<typeof action>({ key: 'display-proposals-speakers' });
+  const speakersConversationEnabledFetcher = useFetcher<typeof action>({ key: 'speakers-conversation-enabled' });
 
   return (
     <>
@@ -75,6 +77,17 @@ export default function EventReviewSettingsRoute() {
             onChange={(checked) =>
               displayProposalsSpeakersFetcher.submit(
                 { _setting: 'displayProposalsSpeakers', displayProposalsSpeakers: String(checked) },
+                { method: 'POST' },
+              )
+            }
+          />
+          <ToggleGroup
+            label={t('event-management.settings.reviews.settings.toggle-speakers-conversation.label')}
+            description={t('event-management.settings.reviews.settings.toggle-speakers-conversation.description')}
+            value={event.speakersConversationEnabled}
+            onChange={(checked) =>
+              speakersConversationEnabledFetcher.submit(
+                { _setting: 'speakersConversationEnabled', speakersConversationEnabled: String(checked) },
                 { method: 'POST' },
               )
             }

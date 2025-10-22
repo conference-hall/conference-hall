@@ -2,9 +2,9 @@ import { PageObject } from 'e2e/page-object.ts';
 
 export class ReviewsSettingsPage extends PageObject {
   readonly heading = this.page.getByRole('heading', { name: 'Reviews' });
-  readonly enableReviewSwitch = this.page.getByRole('switch', { name: 'Proposals review activation' });
-  readonly displayReviewsSwitch = this.page.getByRole('switch', { name: 'Display reviews of all team members' });
-  readonly displaySpeakersSwitch = this.page.getByRole('switch', { name: 'Display speaker information' });
+  readonly enableReviewSwitch = this.page.getByRole('switch', { name: 'Enable proposal reviews' });
+  readonly displayReviewsSwitch = this.page.getByRole('switch', { name: 'Show all team reviews' });
+  readonly displaySpeakersSwitch = this.page.getByRole('switch', { name: 'Show speaker details' });
 
   async goto(team: string, event: string) {
     await this.page.goto(`/team/${team}/${event}/settings/review`);

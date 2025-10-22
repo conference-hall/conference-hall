@@ -45,6 +45,7 @@ export class ProposalConversationForOrganizers {
 
   async getConversation() {
     const { event } = await this.authorizations.checkAuthorizedEvent('canAccessEvent');
+    if (!event.speakersConversationEnabled) return [];
 
     const proposal = await db.proposal.findUnique({ where: { id: this.proposalId, eventId: event.id } });
     if (!proposal) throw new ProposalNotFoundError();

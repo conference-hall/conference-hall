@@ -82,56 +82,57 @@ enum TalkLevel {
 }
 
 model Event {
-  id                       String                    @id @default(cuid())
-  slug                     String                    @unique
-  name                     String
-  description              String?
-  type                     EventType                 @default(CONFERENCE)
-  visibility               EventVisibility           @default(PRIVATE)
-  teamId                   String
-  team                     Team                      @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  location                 String?
-  onlineEvent              Boolean                   @default(false)
-  timezone                 String
-  lat                      Float?
-  lng                      Float?
-  contactEmail             String?
-  websiteUrl               String?
-  codeOfConductUrl         String?
-  logoUrl                  String?
-  conferenceStart          DateTime?
-  conferenceEnd            DateTime?
-  cfpStart                 DateTime?
-  cfpEnd                   DateTime?
-  formats                  EventFormat[]
-  formatsRequired          Boolean                   @default(false)
-  formatsAllowMultiple     Boolean                   @default(false)
-  categories               EventCategory[]
-  categoriesRequired       Boolean                   @default(false)
-  categoriesAllowMultiple  Boolean                   @default(false)
-  maxProposals             Int?
-  creatorId                String
-  creator                  User                      @relation(fields: [creatorId], references: [id])
-  archived                 Boolean                   @default(false)
-  reviewEnabled            Boolean                   @default(true)
-  displayProposalsReviews  Boolean                   @default(true)
-  displayProposalsSpeakers Boolean                   @default(true)
-  surveyConfig             Json                      @default("{}")
-  emailOrganizer           String?
-  emailNotifications       Json                      @default("[]")
-  slackWebhookUrl          String?
-  apiKey                   String?
-  createdAt                DateTime                  @default(now())
-  updatedAt                DateTime                  @updatedAt
-  migrationId              String?
-  proposals                Proposal[]
-  surveys                  Survey[]
-  schedules                Schedule[]
-  proposalTags             EventProposalTag[]
-  integrations             EventIntegrationConfig[]
-  speakers                 EventSpeaker[]
-  emailCustomizations      EventEmailCustomization[]
-  conversations            Conversation[]
+  id                          String                    @id @default(cuid())
+  slug                        String                    @unique
+  name                        String
+  description                 String?
+  type                        EventType                 @default(CONFERENCE)
+  visibility                  EventVisibility           @default(PRIVATE)
+  teamId                      String
+  team                        Team                      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  location                    String?
+  onlineEvent                 Boolean                   @default(false)
+  timezone                    String
+  lat                         Float?
+  lng                         Float?
+  contactEmail                String?
+  websiteUrl                  String?
+  codeOfConductUrl            String?
+  logoUrl                     String?
+  conferenceStart             DateTime?
+  conferenceEnd               DateTime?
+  cfpStart                    DateTime?
+  cfpEnd                      DateTime?
+  formats                     EventFormat[]
+  formatsRequired             Boolean                   @default(false)
+  formatsAllowMultiple        Boolean                   @default(false)
+  categories                  EventCategory[]
+  categoriesRequired          Boolean                   @default(false)
+  categoriesAllowMultiple     Boolean                   @default(false)
+  maxProposals                Int?
+  creatorId                   String
+  creator                     User                      @relation(fields: [creatorId], references: [id])
+  archived                    Boolean                   @default(false)
+  reviewEnabled               Boolean                   @default(true)
+  displayProposalsReviews     Boolean                   @default(true)
+  displayProposalsSpeakers    Boolean                   @default(true)
+  speakersConversationEnabled Boolean                   @default(true)
+  surveyConfig                Json                      @default("{}")
+  emailOrganizer              String?
+  emailNotifications          Json                      @default("[]")
+  slackWebhookUrl             String?
+  apiKey                      String?
+  createdAt                   DateTime                  @default(now())
+  updatedAt                   DateTime                  @updatedAt
+  migrationId                 String?
+  proposals                   Proposal[]
+  surveys                     Survey[]
+  schedules                   Schedule[]
+  proposalTags                EventProposalTag[]
+  integrations                EventIntegrationConfig[]
+  speakers                    EventSpeaker[]
+  emailCustomizations         EventEmailCustomization[]
+  conversations               Conversation[]
 
   @@map("events")
 }

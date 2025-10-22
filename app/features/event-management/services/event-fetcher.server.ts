@@ -36,6 +36,7 @@ export class EventFetcher extends EventAuthorization {
       reviewEnabled: event.reviewEnabled,
       displayProposalsReviews: event.displayProposalsReviews,
       displayProposalsSpeakers: event.displayProposalsSpeakers,
+      speakersConversationEnabled: event.speakersConversationEnabled,
       formatsRequired: event.formatsRequired,
       formatsAllowMultiple: event.formatsAllowMultiple,
       categoriesRequired: event.categoriesRequired,

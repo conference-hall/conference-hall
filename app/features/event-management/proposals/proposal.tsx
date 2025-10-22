@@ -262,7 +262,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   className="space-y-3 p-4 lg:px-6"
                 />
 
-                {isSpeakerCommunicationEnabled ? (
+                {isSpeakerCommunicationEnabled && event.speakersConversationEnabled ? (
                   <Suspense fallback={null}>
                     <Await resolve={activityPromise}>
                       {([_, speakersConversation]) => (
