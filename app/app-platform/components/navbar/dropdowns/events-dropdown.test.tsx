@@ -1,8 +1,8 @@
-import { userEvent } from '@vitest/browser/context';
 import type { JSX } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { EventsDropdown } from './events-dropdown.tsx';
 
@@ -37,14 +37,14 @@ describe('EventsDropdown component', () => {
   };
 
   it('displays current event name in dropdown button', async () => {
-    const screen = renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
+    const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
 
     const dropdownButton = screen.getByRole('button');
     await expect.element(dropdownButton).toHaveTextContent('Event 1');
   });
 
   it('opens dropdown menu and generates correct navigation links for events', async () => {
-    const screen = renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
+    const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
 
     const dropdownButton = screen.getByRole('button');
     await userEvent.click(dropdownButton);
@@ -58,7 +58,7 @@ describe('EventsDropdown component', () => {
 
   describe('Event filtering', () => {
     it('filters out archived events by default', async () => {
-      const screen = renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
+      const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
 
       const dropdownButton = screen.getByRole('button');
       await userEvent.click(dropdownButton);
@@ -77,7 +77,7 @@ describe('EventsDropdown component', () => {
     });
 
     it('shows archived event if it is the current event', async () => {
-      const screen = renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-3']);
+      const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-3']);
 
       const dropdownButton = screen.getByRole('button');
       await expect.element(dropdownButton).toHaveTextContent('Event 3');
@@ -89,7 +89,7 @@ describe('EventsDropdown component', () => {
     });
 
     it('only shows events from current team', async () => {
-      const screen = renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
+      const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
 
       const dropdownButton = screen.getByRole('button');
       await userEvent.click(dropdownButton);
@@ -112,7 +112,7 @@ describe('EventsDropdown component', () => {
     it('handles team with no events', async () => {
       const teamsWithNoEvents = [{ slug: 'empty-team', name: 'Empty Team', events: [] }];
 
-      const screen = renderComponent(<EventsDropdown teams={teamsWithNoEvents} />, ['/team/empty-team/event-1']);
+      const screen = await renderComponent(<EventsDropdown teams={teamsWithNoEvents} />, ['/team/empty-team/event-1']);
 
       try {
         screen.getByRole('button');

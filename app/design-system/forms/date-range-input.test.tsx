@@ -1,4 +1,4 @@
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { DateRangeInput } from './date-range-input.tsx';
 
@@ -19,7 +19,7 @@ describe('DateRangeInput', () => {
   };
 
   it('renders start and end date inputs', async () => {
-    const screen = render(<DateRangeInput {...defaultProps} />);
+    const screen = await render(<DateRangeInput {...defaultProps} />);
 
     await expect.element(screen.getByLabelText('Start Date')).toBeInTheDocument();
     await expect.element(screen.getByLabelText('End Date')).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe('DateRangeInput', () => {
     const startDate = new Date('2023-01-15');
     const endDate = new Date('2023-01-20');
 
-    const screen = render(
+    const screen = await render(
       <DateRangeInput
         start={{ name: 'start-date', label: 'Start Date', value: startDate }}
         end={{ name: 'end-date', label: 'End Date', value: endDate }}
@@ -48,7 +48,7 @@ describe('DateRangeInput', () => {
     const startDate = new Date('2023-01-15');
     const endDate = new Date('2023-01-20');
 
-    const screen = render(
+    const screen = await render(
       <DateRangeInput
         start={{ name: 'start-date', label: 'Start Date', value: startDate }}
         end={{ name: 'end-date', label: 'End Date', value: endDate }}
@@ -66,7 +66,7 @@ describe('DateRangeInput', () => {
   it('shows error message when provided', async () => {
     const errorMessage = ['Invalid date range'];
 
-    const screen = render(<DateRangeInput {...defaultProps} error={errorMessage} />);
+    const screen = await render(<DateRangeInput {...defaultProps} error={errorMessage} />);
 
     await expect.element(screen.getByText('Invalid date range')).toBeInTheDocument();
   });
@@ -74,7 +74,7 @@ describe('DateRangeInput', () => {
   it('calls onChange when provided', async () => {
     const mockOnChange = vi.fn();
 
-    const screen = render(<DateRangeInput {...defaultProps} onChange={mockOnChange} />);
+    const screen = await render(<DateRangeInput {...defaultProps} onChange={mockOnChange} />);
 
     const startInput = screen.getByLabelText('Start Date');
     const endInput = screen.getByLabelText('End Date');
@@ -93,7 +93,7 @@ describe('DateRangeInput', () => {
     const minDate = new Date('2023-01-05');
     const maxDate = new Date('2023-01-25');
 
-    const screen = render(<DateRangeInput {...defaultProps} min={minDate} max={maxDate} />);
+    const screen = await render(<DateRangeInput {...defaultProps} min={minDate} max={maxDate} />);
 
     const startInput = screen.getByLabelText('Start Date');
     const endInput = screen.getByLabelText('End Date');

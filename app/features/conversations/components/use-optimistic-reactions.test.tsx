@@ -26,33 +26,35 @@ describe('useOptimisticReactions hook', () => {
 
   const mockSubmit = vi.fn();
 
-  const message: Message = {
-    id: 'msg-1',
-    sender: { userId: 'user-1', name: 'John Doe', picture: null, role: 'SPEAKER' },
-    content: 'Test message',
-    reactions: [
-      {
-        code: 'tada',
-        reacted: true,
-        reactedBy: [{ userId: 'user-1', name: 'John Doe' }],
-      },
-      {
-        code: 'heart',
-        reacted: false,
-        reactedBy: [{ userId: 'user-2', name: 'Jane Doe' }],
-      },
-    ],
-    sentAt: new Date('2023-01-01T10:00:00Z'),
-  };
+  let message: Message;
 
   beforeEach(() => {
+    message = {
+      id: 'msg-1',
+      sender: { userId: 'user-1', name: 'John Doe', picture: null, role: 'SPEAKER' },
+      content: 'Test message',
+      reactions: [
+        {
+          code: 'tada',
+          reacted: true,
+          reactedBy: [{ userId: 'user-1', name: 'John Doe' }],
+        },
+        {
+          code: 'heart',
+          reacted: false,
+          reactedBy: [{ userId: 'user-2', name: 'Jane Doe' }],
+        },
+      ],
+      sentAt: new Date('2023-01-01T10:00:00Z'),
+    };
+
     vi.mocked(useUser).mockReturnValue(mockUser);
     vi.mocked(useSubmit).mockReturnValue(mockSubmit);
     vi.mocked(useFetchers).mockReturnValue([]);
   });
 
-  it('returns original reactions when no pending operations', () => {
-    const { result } = renderHook(() => useOptimisticReactions(message, 'message'));
+  it('returns original reactions when no pending operations', async () => {
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
 
     expect(result.current.reactions.length).toBe(2);
     expect(result.current.reactions[0].code).toBe('tada');
@@ -61,7 +63,7 @@ describe('useOptimisticReactions hook', () => {
     expect(result.current.reactions[1].reacted).toBe(false);
   });
 
-  it('adds new reaction optimistically', () => {
+  it('adds new reaction optimistically', async () => {
     const formData = new FormData();
     formData.append('intent', 'react-message');
     formData.append('id', 'msg-1');
@@ -69,7 +71,7 @@ describe('useOptimisticReactions hook', () => {
 
     vi.mocked(useFetchers).mockReturnValue([{ formData, state: 'submitting' } as never]);
 
-    const { result } = renderHook(() => useOptimisticReactions(message, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
 
     expect(result.current.reactions.length).toBe(3);
     expect(result.current.reactions[2].code).toBe('thumbsup');
@@ -78,7 +80,7 @@ describe('useOptimisticReactions hook', () => {
     expect(result.current.reactions[2].reactedBy[0].userId).toBe('user-1');
   });
 
-  it('increments existing reaction when current user reacts', () => {
+  it('increments existing reaction when current user reacts', async () => {
     const formData = new FormData();
     formData.append('intent', 'react-message');
     formData.append('id', 'msg-1');
@@ -86,7 +88,7 @@ describe('useOptimisticReactions hook', () => {
 
     vi.mocked(useFetchers).mockReturnValue([{ formData, state: 'submitting' } as never]);
 
-    const { result } = renderHook(() => useOptimisticReactions(message, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
 
     expect(result.current.reactions.length).toBe(2);
     const heartReaction = result.current.reactions.find((r) => r.code === 'heart');
@@ -94,7 +96,7 @@ describe('useOptimisticReactions hook', () => {
     expect(heartReaction?.reactedBy.length).toBe(2);
   });
 
-  it('decrements reaction when current user unreacts from multi-user reaction', () => {
+  it('decrements reaction when current user unreacts from multi-user reaction', async () => {
     const messageWithMultipleReactions: Message = {
       ...message,
       reactions: [
@@ -116,7 +118,7 @@ describe('useOptimisticReactions hook', () => {
 
     vi.mocked(useFetchers).mockReturnValue([{ formData, state: 'submitting' } as never]);
 
-    const { result } = renderHook(() => useOptimisticReactions(messageWithMultipleReactions, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(messageWithMultipleReactions, 'message'));
 
     expect(result.current.reactions.length).toBe(1);
     expect(result.current.reactions[0].code).toBe('tada');
@@ -125,7 +127,7 @@ describe('useOptimisticReactions hook', () => {
     expect(result.current.reactions[0].reactedBy[0].userId).toBe('user-2');
   });
 
-  it('removes reaction when current user is the only one who reacted', () => {
+  it('removes reaction when current user is the only one who reacted', async () => {
     const formData = new FormData();
     formData.append('intent', 'react-message');
     formData.append('id', 'msg-1');
@@ -133,13 +135,13 @@ describe('useOptimisticReactions hook', () => {
 
     vi.mocked(useFetchers).mockReturnValue([{ formData, state: 'submitting' } as never]);
 
-    const { result } = renderHook(() => useOptimisticReactions(message, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
 
     expect(result.current.reactions.length).toBe(1);
     expect(result.current.reactions[0].code).toBe('heart');
   });
 
-  it('handles multiple pending reactions', () => {
+  it('handles multiple pending reactions', async () => {
     const formData1 = new FormData();
     formData1.append('intent', 'react-message');
     formData1.append('id', 'msg-1');
@@ -155,14 +157,14 @@ describe('useOptimisticReactions hook', () => {
       { formData: formData2, state: 'submitting' } as never,
     ]);
 
-    const { result } = renderHook(() => useOptimisticReactions(message, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
 
     expect(result.current.reactions.length).toBe(4);
     expect(result.current.reactions.map((r) => r.code)).toContain('thumbsup');
     expect(result.current.reactions.map((r) => r.code)).toContain('fire');
   });
 
-  it('ignores fetchers for different messages', () => {
+  it('ignores fetchers for different messages', async () => {
     const formData = new FormData();
     formData.append('intent', 'react-message');
     formData.append('id', 'msg-2');
@@ -170,14 +172,14 @@ describe('useOptimisticReactions hook', () => {
 
     vi.mocked(useFetchers).mockReturnValue([{ formData, state: 'submitting' } as never]);
 
-    const { result } = renderHook(() => useOptimisticReactions(message, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
 
     expect(result.current.reactions.length).toBe(2);
     expect(result.current.reactions[0].code).toBe('tada');
     expect(result.current.reactions[1].code).toBe('heart');
   });
 
-  it('ignores fetchers with different intent suffix', () => {
+  it('ignores fetchers with different intent suffix', async () => {
     const formData = new FormData();
     formData.append('intent', 'react-other');
     formData.append('id', 'msg-1');
@@ -185,13 +187,13 @@ describe('useOptimisticReactions hook', () => {
 
     vi.mocked(useFetchers).mockReturnValue([{ formData, state: 'submitting' } as never]);
 
-    const { result } = renderHook(() => useOptimisticReactions(message, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
 
     expect(result.current.reactions.length).toBe(2);
   });
 
-  it('returns onChangeReaction callback that calls submit', () => {
-    const { result } = renderHook(() => useOptimisticReactions(message, 'message'));
+  it('returns onChangeReaction callback that calls submit', async () => {
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
 
     result.current.onChangeReaction({ code: 'thumbsup', skin: '', name: 'thumbsup' });
 

@@ -2,6 +2,11 @@ import { disconnectRedis } from '~/shared/cache/redis.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { disconnectDB, resetDB } from './db-helpers.ts';
 
+beforeAll(() => {
+  vi.resetModules();
+  vi.restoreAllMocks();
+});
+
 afterEach(async () => {
   await resetDB();
   await flags.resetDefaults();

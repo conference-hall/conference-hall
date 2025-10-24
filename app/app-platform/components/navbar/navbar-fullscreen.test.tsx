@@ -21,7 +21,7 @@ describe('NavbarFullscreen component', () => {
   };
 
   it('renders logo and close button', async () => {
-    const screen = renderComponent(<NavbarFullscreen />);
+    const screen = await renderComponent(<NavbarFullscreen />);
 
     const logo = screen.getByRole('link', { name: 'Go to Home' });
     await expect.element(logo).toBeInTheDocument();
@@ -33,7 +33,7 @@ describe('NavbarFullscreen component', () => {
   });
 
   it('provides correct back navigation for team new route', async () => {
-    const screen = renderComponent(<NavbarFullscreen />, ['/team/team-1/new/event']);
+    const screen = await renderComponent(<NavbarFullscreen />, ['/team/team-1/new/event']);
 
     const closeButton = screen.getByRole('link', { name: 'Close' });
     await expect.element(closeButton).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe('NavbarFullscreen component', () => {
   });
 
   it('provides fallback navigation for unknown routes', async () => {
-    const screen = renderComponent(<NavbarFullscreen />, ['/some-other-route']);
+    const screen = await renderComponent(<NavbarFullscreen />, ['/some-other-route']);
 
     const closeButton = screen.getByRole('link', { name: 'Close' });
     await expect.element(closeButton).toBeInTheDocument();
@@ -49,7 +49,7 @@ describe('NavbarFullscreen component', () => {
   });
 
   it('handles route parameters correctly', async () => {
-    const screen = renderComponent(<NavbarFullscreen />, ['/team/my-awesome-team/new/conference']);
+    const screen = await renderComponent(<NavbarFullscreen />, ['/team/my-awesome-team/new/conference']);
 
     const closeButton = screen.getByRole('link', { name: 'Close' });
     await expect.element(closeButton).toBeInTheDocument();
@@ -57,7 +57,7 @@ describe('NavbarFullscreen component', () => {
   });
 
   it('works with deeply nested routes', async () => {
-    const screen = renderComponent(<NavbarFullscreen />, ['/team/team-1/new/event/step-2/details']);
+    const screen = await renderComponent(<NavbarFullscreen />, ['/team/team-1/new/event/step-2/details']);
 
     const closeButton = screen.getByRole('link', { name: 'Close' });
     await expect.element(closeButton).toBeInTheDocument();

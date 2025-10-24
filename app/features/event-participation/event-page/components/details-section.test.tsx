@@ -26,28 +26,28 @@ describe('DetailsSection', () => {
     timezone: 'Europe/Paris',
   };
 
-  test('renders conference type correctly', () => {
-    const screen = render(
+  test('renders conference type correctly', async () => {
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} />
       </I18nextProvider>,
     );
 
-    expect(screen.getByText('Conference')).toBeInTheDocument();
+    await expect.element(screen.getByText('Conference')).toBeInTheDocument();
   });
 
-  test('renders meetup type correctly', () => {
-    const screen = render(
+  test('renders meetup type correctly', async () => {
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} type="MEETUP" />
       </I18nextProvider>,
     );
 
-    expect(screen.getByText('Meetup')).toBeInTheDocument();
+    await expect.element(screen.getByText('Meetup')).toBeInTheDocument();
   });
 
   test('renders description markdown', async () => {
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} description="**Bold text**" />
       </I18nextProvider>,
@@ -59,7 +59,7 @@ describe('DetailsSection', () => {
   });
 
   test('renders location when provided', async () => {
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} location="Paris, France" />
       </I18nextProvider>,
@@ -70,7 +70,7 @@ describe('DetailsSection', () => {
   });
 
   test('renders online event info when onlineEvent is true', async () => {
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} onlineEvent={true} />
       </I18nextProvider>,
@@ -84,7 +84,7 @@ describe('DetailsSection', () => {
     const conferenceStart = new Date('2023-03-15T09:00:00');
     const conferenceEnd = new Date('2023-03-15T18:00:00');
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} conferenceStart={conferenceStart} conferenceEnd={conferenceEnd} />
       </I18nextProvider>,
@@ -98,7 +98,7 @@ describe('DetailsSection', () => {
     const conferenceStart = new Date('2023-03-15T09:00:00');
     const conferenceEnd = new Date('2023-03-17T18:00:00');
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} conferenceStart={conferenceStart} conferenceEnd={conferenceEnd} />
       </I18nextProvider>,
@@ -108,7 +108,7 @@ describe('DetailsSection', () => {
   });
 
   test('renders website link when provided', async () => {
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} websiteUrl="https://example.com" />
       </I18nextProvider>,
@@ -119,7 +119,7 @@ describe('DetailsSection', () => {
   });
 
   test('renders contact email link when provided', async () => {
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} contactEmail="contact@example.com" />
       </I18nextProvider>,
@@ -130,7 +130,7 @@ describe('DetailsSection', () => {
   });
 
   test('renders code of conduct link when provided', async () => {
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} codeOfConductUrl="https://example.com/coc" />
       </I18nextProvider>,
@@ -141,7 +141,7 @@ describe('DetailsSection', () => {
   });
 
   test('renders all links when provided', async () => {
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection
           {...defaultProps}

@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { CategoriesPanel } from './categories-panel.tsx';
 
@@ -36,21 +36,21 @@ describe('CategoriesPanel component', () => {
       { value: 'ai', label: 'Artificial Intelligence' },
     ];
 
-    const screen = renderComponent({ defaultValue: selectedCategories });
+    const screen = await renderComponent({ defaultValue: selectedCategories });
 
     await expect.element(screen.getByText('Web Development')).toBeInTheDocument();
     await expect.element(screen.getByText('Artificial Intelligence')).toBeInTheDocument();
   });
 
   it('shows no categories message when none selected', async () => {
-    const screen = renderComponent({ defaultValue: [] });
+    const screen = await renderComponent({ defaultValue: [] });
 
     await expect.element(screen.getByText('No categories')).toBeInTheDocument();
   });
 
   it('calls onChange when selecting categories', async () => {
     const onChangeMock = vi.fn();
-    const screen = renderComponent({ onChange: onChangeMock });
+    const screen = await renderComponent({ onChange: onChangeMock });
 
     await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
     await userEvent.click(screen.getByText('Web Development'));
@@ -62,7 +62,7 @@ describe('CategoriesPanel component', () => {
     const onChangeMock = vi.fn();
     const selectedCategories = [{ value: 'web', label: 'Web Development' }];
 
-    const screen = renderComponent({
+    const screen = await renderComponent({
       value: selectedCategories,
       onChange: onChangeMock,
     });
@@ -80,13 +80,13 @@ describe('CategoriesPanel component', () => {
 
   it('displays error messages when provided', async () => {
     const error = ['At least one category is required'];
-    const screen = renderComponent({ error });
+    const screen = await renderComponent({ error });
 
     await expect.element(screen.getByText('At least one category is required')).toBeInTheDocument();
   });
 
   it('renders manage categories action when showAction is true', async () => {
-    const screen = renderComponent({ showAction: true });
+    const screen = await renderComponent({ showAction: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
 
@@ -94,7 +94,7 @@ describe('CategoriesPanel component', () => {
   });
 
   it('does not render manage action when showAction is false', async () => {
-    const screen = renderComponent({ showAction: false });
+    const screen = await renderComponent({ showAction: false });
 
     await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
 
@@ -103,7 +103,7 @@ describe('CategoriesPanel component', () => {
 
   it('renders in readonly mode without select functionality', async () => {
     const selectedCategories = [{ value: 'web', label: 'Web Development' }];
-    const screen = renderComponent({
+    const screen = await renderComponent({
       readonly: true,
       defaultValue: selectedCategories,
     });
@@ -116,7 +116,7 @@ describe('CategoriesPanel component', () => {
 
   it('supports single selection mode', async () => {
     const onChangeMock = vi.fn();
-    const screen = renderComponent({
+    const screen = await renderComponent({
       multiple: false,
       onChange: onChangeMock,
     });
@@ -132,7 +132,7 @@ describe('CategoriesPanel component', () => {
   });
 
   it('includes form name when provided', async () => {
-    const screen = renderComponent({
+    const screen = await renderComponent({
       form: 'proposal-form',
       defaultValue: [{ value: 'web', label: 'Web Development' }],
     });

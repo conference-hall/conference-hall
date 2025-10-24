@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '~/shared/types/proposals.types.ts';
 import { ProposalStatusSelect } from './proposal-status-select.tsx';
@@ -35,32 +35,28 @@ describe('ProposalStatusSelect component', () => {
     return render(<RouteStub />);
   };
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('Basic rendering', () => {
     it('renders with pending status', async () => {
-      const screen = renderComponent();
+      const screen = await renderComponent();
 
       await expect.element(screen.getByLabelText('Change proposal status')).toBeInTheDocument();
       await expect.element(screen.getByText('Not deliberated')).toBeInTheDocument();
     });
 
     it('renders with accepted status', async () => {
-      const screen = renderComponent({ ...defaultProps, deliberationStatus: 'ACCEPTED' });
+      const screen = await renderComponent({ ...defaultProps, deliberationStatus: 'ACCEPTED' });
 
       await expect.element(screen.getByText('Accepted')).toBeInTheDocument();
     });
 
     it('renders with rejected status', async () => {
-      const screen = renderComponent({ ...defaultProps, deliberationStatus: 'REJECTED' });
+      const screen = await renderComponent({ ...defaultProps, deliberationStatus: 'REJECTED' });
 
       await expect.element(screen.getByText('Rejected')).toBeInTheDocument();
     });
 
     it('renders with confirmation pending status', async () => {
-      const screen = renderComponent({
+      const screen = await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'PENDING',
@@ -70,7 +66,7 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('renders with confirmed status', async () => {
-      const screen = renderComponent({
+      const screen = await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'CONFIRMED',
@@ -80,7 +76,7 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('renders with declined status', async () => {
-      const screen = renderComponent({
+      const screen = await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'DECLINED',
@@ -92,7 +88,7 @@ describe('ProposalStatusSelect component', () => {
 
   describe('Status selection', () => {
     it('shows all appropriate options when no confirmation status', async () => {
-      const screen = renderComponent();
+      const screen = await renderComponent();
 
       const selectButton = screen.getByRole('button', { name: /not deliberated/i });
       await userEvent.click(selectButton);
@@ -110,7 +106,7 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('shows confirmation options when confirmation status exists', async () => {
-      const screen = renderComponent({
+      const screen = await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'PENDING',
@@ -136,7 +132,7 @@ describe('ProposalStatusSelect component', () => {
     it('shows confirmation dialog when changing published proposal status', async () => {
       confirmMock.mockReturnValue(true);
 
-      const screen = renderComponent({
+      const screen = await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'PUBLISHED',
@@ -154,7 +150,7 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('does not show confirmation for non-published proposals', async () => {
-      const screen = renderComponent({
+      const screen = await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'NOT_PUBLISHED',
@@ -172,7 +168,7 @@ describe('ProposalStatusSelect component', () => {
 
   describe('Publication modal', () => {
     it('shows publication button when proposal can be published', async () => {
-      const screen = renderComponent({
+      const screen = await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'NOT_PUBLISHED',
@@ -182,7 +178,7 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('does not show publication button when proposal is already published', async () => {
-      const screen = renderComponent({
+      const screen = await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'PUBLISHED',
@@ -197,7 +193,7 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('does not show publication button when deliberation is pending', async () => {
-      const screen = renderComponent({
+      const screen = await renderComponent({
         ...defaultProps,
         deliberationStatus: 'PENDING',
         publicationStatus: 'NOT_PUBLISHED',
@@ -212,7 +208,7 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('opens publication modal when button is clicked', async () => {
-      const screen = renderComponent({
+      const screen = await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'NOT_PUBLISHED',
@@ -229,7 +225,7 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('has submit button with correct intent value', async () => {
-      const screen = renderComponent({
+      const screen = await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'NOT_PUBLISHED',

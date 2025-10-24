@@ -43,8 +43,6 @@ describe('Job: exportToOpenPlanner', () => {
       categories: [category],
       talk: await talkFactory({ speakers: [speakerUser] }),
     });
-
-    postSessionsAndSpeakersMock.mockReset();
   });
 
   it('exports sessions and speakers to OpenPlanner', async () => {

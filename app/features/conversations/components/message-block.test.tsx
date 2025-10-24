@@ -52,7 +52,7 @@ describe('MessageBlock component', () => {
   };
 
   it('renders message content and sender', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await expect.element(screen.getByText('John Doe')).toBeInTheDocument();
     await expect.element(screen.getByText('Test message content')).toBeInTheDocument();
@@ -71,7 +71,7 @@ describe('MessageBlock component', () => {
       ],
     };
 
-    const screen = renderComponent({ message: messageWithReactions });
+    const screen = await renderComponent({ message: messageWithReactions });
 
     await expect.element(screen.getByText('🎉')).toBeInTheDocument();
   });

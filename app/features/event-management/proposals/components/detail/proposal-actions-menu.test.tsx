@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { ProposalActionsMenu } from './proposal-actions-menu.tsx';
 
@@ -33,7 +33,7 @@ describe('ProposalActionsMenu component', () => {
   };
 
   it('opens menu and shows actions', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
     await expect.element(screen.getByRole('menuitem', { name: /Edit/ })).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe('ProposalActionsMenu component', () => {
   });
 
   it('opens TalkEditDrawer when clicking Edit', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
     await userEvent.click(screen.getByRole('menuitem', { name: /Edit/ }));
@@ -50,7 +50,7 @@ describe('ProposalActionsMenu component', () => {
   });
 
   it('opens ShareProposalModal when clicking Share link', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
     await userEvent.click(screen.getByRole('menuitem', { name: /Share link/ }));
@@ -59,7 +59,7 @@ describe('ProposalActionsMenu component', () => {
   });
 
   it('hides Edit action when canEditEventProposal is false', async () => {
-    const screen = renderComponent({ canEditEventProposal: false });
+    const screen = await renderComponent({ canEditEventProposal: false });
 
     await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
     await expect.element(screen.getByRole('menuitem', { name: /Edit/ })).not.toBeInTheDocument();

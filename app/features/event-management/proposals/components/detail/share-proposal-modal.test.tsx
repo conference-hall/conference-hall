@@ -25,14 +25,14 @@ describe('ShareProposalModal component', () => {
   };
 
   it('displays the modal with title', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     const dialog = screen.getByRole('dialog', { name: 'Share proposal' });
     await expect.element(dialog).toBeInTheDocument();
   });
 
   it('displays organizer link', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     const dialog = screen.getByRole('dialog');
     await expect.element(dialog.getByText('Organizer link')).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('ShareProposalModal component', () => {
   });
 
   it('displays speaker link', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     const dialog = screen.getByRole('dialog');
     await expect.element(dialog.getByText('Speaker link')).toBeInTheDocument();

@@ -1,7 +1,7 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { CommandPalette, type CommandPaletteItemData } from './command-palette.tsx';
 
@@ -44,7 +44,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -70,7 +70,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -105,7 +105,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -133,7 +133,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -164,7 +164,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -187,7 +187,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -214,7 +214,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -246,7 +246,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -270,7 +270,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -303,7 +303,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"

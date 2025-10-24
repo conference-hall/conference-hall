@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { FormatsPanel } from './formats-panel.tsx';
 
@@ -36,21 +36,21 @@ describe('FormatsPanel component', () => {
       { value: 'short', label: 'Short Talk (20min)' },
     ];
 
-    const screen = renderComponent({ defaultValue: selectedFormats });
+    const screen = await renderComponent({ defaultValue: selectedFormats });
 
     await expect.element(screen.getByText('Lightning Talk (5min)')).toBeInTheDocument();
     await expect.element(screen.getByText('Short Talk (20min)')).toBeInTheDocument();
   });
 
   it('shows no formats message when none selected', async () => {
-    const screen = renderComponent({ defaultValue: [] });
+    const screen = await renderComponent({ defaultValue: [] });
 
     await expect.element(screen.getByText('No formats')).toBeInTheDocument();
   });
 
   it('calls onChange when selecting formats', async () => {
     const onChangeMock = vi.fn();
-    const screen = renderComponent({ onChange: onChangeMock });
+    const screen = await renderComponent({ onChange: onChangeMock });
 
     await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
     await userEvent.click(screen.getByText('Lightning Talk (5min)'));
@@ -62,7 +62,7 @@ describe('FormatsPanel component', () => {
     const onChangeMock = vi.fn();
     const selectedFormats = [{ value: 'lightning', label: 'Lightning Talk (5min)' }];
 
-    const screen = renderComponent({
+    const screen = await renderComponent({
       value: selectedFormats,
       onChange: onChangeMock,
     });
@@ -80,13 +80,13 @@ describe('FormatsPanel component', () => {
 
   it('displays error messages when provided', async () => {
     const error = ['Please select at least one format'];
-    const screen = renderComponent({ error });
+    const screen = await renderComponent({ error });
 
     await expect.element(screen.getByText('Please select at least one format')).toBeInTheDocument();
   });
 
   it('renders manage formats action when showAction is true', async () => {
-    const screen = renderComponent({ showAction: true });
+    const screen = await renderComponent({ showAction: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
 
@@ -94,7 +94,7 @@ describe('FormatsPanel component', () => {
   });
 
   it('does not render manage action when showAction is false', async () => {
-    const screen = renderComponent({ showAction: false });
+    const screen = await renderComponent({ showAction: false });
 
     await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
 
@@ -103,7 +103,7 @@ describe('FormatsPanel component', () => {
 
   it('renders in readonly mode without select functionality', async () => {
     const selectedFormats = [{ value: 'lightning', label: 'Lightning Talk (5min)' }];
-    const screen = renderComponent({
+    const screen = await renderComponent({
       readonly: true,
       defaultValue: selectedFormats,
     });
@@ -116,7 +116,7 @@ describe('FormatsPanel component', () => {
 
   it('supports single selection mode', async () => {
     const onChangeMock = vi.fn();
-    const screen = renderComponent({
+    const screen = await renderComponent({
       multiple: false,
       onChange: onChangeMock,
     });
@@ -132,7 +132,7 @@ describe('FormatsPanel component', () => {
   });
 
   it('includes form name when provided', async () => {
-    const screen = renderComponent({
+    const screen = await renderComponent({
       form: 'proposal-form',
       defaultValue: [{ value: 'lightning', label: 'Lightning Talk (5min)' }],
     });

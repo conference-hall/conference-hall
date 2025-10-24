@@ -18,7 +18,7 @@ describe('BackButton component', () => {
   };
 
   it('renders back button with default arrow icon', async () => {
-    const screen = renderComponent(<BackButton to="/home" label="home" />);
+    const screen = await renderComponent(<BackButton to="/home" label="home" />);
 
     const backButton = screen.getByRole('link');
     await expect.element(backButton).toBeInTheDocument();
@@ -26,7 +26,7 @@ describe('BackButton component', () => {
   });
 
   it('renders back button with custom icon', async () => {
-    const screen = renderComponent(<BackButton to="/dashboard" label="dashboard" icon={HomeIcon} />);
+    const screen = await renderComponent(<BackButton to="/dashboard" label="dashboard" icon={HomeIcon} />);
 
     const backButton = screen.getByRole('link');
     await expect.element(backButton).toBeInTheDocument();
@@ -63,7 +63,7 @@ describe('useBackNavigation hook', () => {
     it('returns fallback when no route matches', async () => {
       const routes = [{ path: '/team/:team', back: '/', title: 'Team' }];
 
-      const screen = renderHook(routes, '/unknown/route');
+      const screen = await renderHook(routes, '/unknown/route');
 
       await expect.element(screen.getByTestId('back-path')).toHaveTextContent('/');
       await expect.element(screen.getByTestId('title')).toHaveTextContent('No title');
@@ -75,7 +75,7 @@ describe('useBackNavigation hook', () => {
         { path: '/*', back: '/' },
       ];
 
-      const screen = renderHook(routes, '/speaker/talks/my-awesome-talk');
+      const screen = await renderHook(routes, '/speaker/talks/my-awesome-talk');
 
       await expect.element(screen.getByTestId('back-path')).toHaveTextContent('/speaker/talks');
       await expect.element(screen.getByTestId('title')).toHaveTextContent('Talk Detail');
@@ -86,7 +86,7 @@ describe('useBackNavigation hook', () => {
     it('returns title when provided', async () => {
       const routes = [{ path: '/settings/*', back: '/', title: 'Settings Page' }];
 
-      const screen = renderHook(routes, '/settings/profile');
+      const screen = await renderHook(routes, '/settings/profile');
 
       await expect.element(screen.getByTestId('title')).toHaveTextContent('Settings Page');
     });
@@ -94,7 +94,7 @@ describe('useBackNavigation hook', () => {
     it('returns undefined when title not provided', async () => {
       const routes = [{ path: '/home', back: '/' }];
 
-      const screen = renderHook(routes, '/home');
+      const screen = await renderHook(routes, '/home');
 
       await expect.element(screen.getByTestId('title')).toHaveTextContent('No title');
     });
@@ -102,7 +102,7 @@ describe('useBackNavigation hook', () => {
 
   describe('Edge cases', () => {
     it('handles empty routes array', async () => {
-      const screen = renderHook([], '/any/path');
+      const screen = await renderHook([], '/any/path');
 
       await expect.element(screen.getByTestId('back-path')).toHaveTextContent('/');
       await expect.element(screen.getByTestId('title')).toHaveTextContent('No title');
@@ -114,7 +114,7 @@ describe('useBackNavigation hook', () => {
         { path: '/valid/:param', back: '/valid', title: 'Valid' },
       ];
 
-      const screen = renderHook(routes, '/valid/test');
+      const screen = await renderHook(routes, '/valid/test');
 
       await expect.element(screen.getByTestId('back-path')).toHaveTextContent('/valid');
       await expect.element(screen.getByTestId('title')).toHaveTextContent('Valid');

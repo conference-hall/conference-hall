@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { UserProvider } from '../user-context.tsx';
 import { NavbarTeam } from './navbar-team.tsx';
@@ -43,7 +43,7 @@ describe('NavbarTeam component', () => {
   };
 
   it('renders logo and user menu when user is authenticated', async () => {
-    const screen = renderComponent(mockUser);
+    const screen = await renderComponent(mockUser);
 
     const logo = screen.getByRole('link', { name: 'Go to Home' });
     await expect.element(logo).toBeInTheDocument();
@@ -53,21 +53,21 @@ describe('NavbarTeam component', () => {
   });
 
   it('displays teams dropdown when user has teams', async () => {
-    const screen = renderComponent(mockUser);
+    const screen = await renderComponent(mockUser);
 
     const teamsDropdown = screen.getByRole('button', { name: /Team 1/ });
     await expect.element(teamsDropdown).toBeInTheDocument();
   });
 
   it('displays events dropdown when in event context', async () => {
-    const screen = renderComponent(mockUser, ['/team/team-1/event-1']);
+    const screen = await renderComponent(mockUser, ['/team/team-1/event-1']);
 
     const eventsDropdown = screen.getByRole('button', { name: /Event 1/ });
     await expect.element(eventsDropdown).toBeInTheDocument();
   });
 
   it('opens user menu when clicked', async () => {
-    const screen = renderComponent(mockUser);
+    const screen = await renderComponent(mockUser);
 
     const userMenuButton = screen.getByRole('button', { name: 'Open user menu' });
     await userEvent.click(userMenuButton);

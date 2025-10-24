@@ -18,10 +18,6 @@ vi.mock('~/shared/integrations/slack.server.ts', () => {
 const sendMessageMock = Slack.sendMessage as Mock;
 
 describe('Job: sendTalkToSlack', () => {
-  beforeEach(async () => {
-    sendMessageMock.mockReset();
-  });
-
   it('sends a Slack message for submitted talk', async () => {
     const team = await teamFactory({ attributes: { slug: 'my-team' } });
     const event = await eventFactory({

@@ -45,8 +45,8 @@ describe('useOptimisticMessages hook', () => {
     vi.mocked(useFetchers).mockReturnValue([]);
   });
 
-  it('returns original messages when no pending operations', () => {
-    const { result } = renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
+  it('returns original messages when no pending operations', async () => {
+    const { result } = await renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
 
     expect(result.current.length).toBe(2);
     expect(result.current[0].id).toBe('msg-1');
@@ -55,14 +55,14 @@ describe('useOptimisticMessages hook', () => {
     expect(result.current[1].content).toBe('Second message');
   });
 
-  it('adds optimistic message when saving new message', () => {
+  it('adds optimistic message when saving new message', async () => {
     const formData = new FormData();
     formData.append('intent', 'save-message');
     formData.append('message', 'New optimistic message');
 
     vi.mocked(useFetchers).mockReturnValue([{ formData, state: 'submitting' } as never]);
 
-    const { result } = renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
+    const { result } = await renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
 
     expect(result.current.length).toBe(3);
     expect(result.current[2].id).toBe('new');
@@ -71,7 +71,7 @@ describe('useOptimisticMessages hook', () => {
     expect(result.current[2].sender.name).toBe('John Doe');
   });
 
-  it('updates message optimistically when editing existing message', () => {
+  it('updates message optimistically when editing existing message', async () => {
     const formData = new FormData();
     formData.append('intent', 'save-message');
     formData.append('id', 'msg-1');
@@ -79,7 +79,7 @@ describe('useOptimisticMessages hook', () => {
 
     vi.mocked(useFetchers).mockReturnValue([{ formData, state: 'submitting' } as never]);
 
-    const { result } = renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
+    const { result } = await renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
 
     expect(result.current.length).toBe(2);
     expect(result.current[0].id).toBe('msg-1');
@@ -87,21 +87,21 @@ describe('useOptimisticMessages hook', () => {
     expect(result.current[1].content).toBe('Second message');
   });
 
-  it('removes message optimistically when deleting', () => {
+  it('removes message optimistically when deleting', async () => {
     const formData = new FormData();
     formData.append('intent', 'delete-message');
     formData.append('id', 'msg-1');
 
     vi.mocked(useFetchers).mockReturnValue([{ formData, state: 'submitting' } as never]);
 
-    const { result } = renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
+    const { result } = await renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
 
     expect(result.current.length).toBe(1);
     expect(result.current[0].id).toBe('msg-2');
     expect(result.current[0].content).toBe('Second message');
   });
 
-  it('handles multiple pending operations', () => {
+  it('handles multiple pending operations', async () => {
     const formData1 = new FormData();
     formData1.append('intent', 'save-message');
     formData1.append('message', 'New message 1');
@@ -115,7 +115,7 @@ describe('useOptimisticMessages hook', () => {
       { formData: formData2, state: 'submitting' } as never,
     ]);
 
-    const { result } = renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
+    const { result } = await renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
 
     expect(result.current.length).toBe(2);
     expect(result.current[0].id).toBe('msg-2');
@@ -123,14 +123,14 @@ describe('useOptimisticMessages hook', () => {
     expect(result.current[1].content).toBe('New message 1');
   });
 
-  it('ignores fetchers with different intent suffix', () => {
+  it('ignores fetchers with different intent suffix', async () => {
     const formData = new FormData();
     formData.append('intent', 'save-other');
     formData.append('message', 'Should be ignored');
 
     vi.mocked(useFetchers).mockReturnValue([{ formData, state: 'submitting' } as never]);
 
-    const { result } = renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
+    const { result } = await renderHook(() => useOptimisticMessages(createMessages(), 'message', 'SPEAKER'));
 
     expect(result.current.length).toBe(2);
     expect(result.current[0].content).toBe('First message');

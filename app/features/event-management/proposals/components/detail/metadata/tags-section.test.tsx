@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { TagsSection } from './tags-section.tsx';
 
@@ -40,7 +40,6 @@ describe('TagsSection component', () => {
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
     mockFetcher.formData = null;
     mockFetcher.state = 'idle';
   });
@@ -60,14 +59,14 @@ describe('TagsSection component', () => {
   };
 
   it('displays current proposal tags with colors', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
     await expect.element(screen.getByText('Backend')).toBeInTheDocument();
   });
 
   it('submits form data when tags are changed', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
     await userEvent.click(screen.getByText('Beginner'));
@@ -84,7 +83,7 @@ describe('TagsSection component', () => {
   it('shows submitting state when fetcher is submitting', async () => {
     mockFetcher.state = 'submitting';
 
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     // Should still display current tags during submission
     await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
@@ -92,7 +91,7 @@ describe('TagsSection component', () => {
   });
 
   it('renders in readonly mode when canChangeTags is false', async () => {
-    const screen = renderComponent({ canChangeTags: false });
+    const screen = await renderComponent({ canChangeTags: false });
 
     await expect.element(screen.getByText('Tags')).toBeInTheDocument();
     await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
@@ -102,7 +101,7 @@ describe('TagsSection component', () => {
   });
 
   it('hides action button when canCreateTags is false', async () => {
-    const screen = renderComponent({ canCreateTags: false });
+    const screen = await renderComponent({ canCreateTags: false });
 
     await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
 
@@ -110,7 +109,7 @@ describe('TagsSection component', () => {
   });
 
   it('shows action button when canCreateTags is true', async () => {
-    const screen = renderComponent({ canCreateTags: true });
+    const screen = await renderComponent({ canCreateTags: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
 
@@ -118,7 +117,7 @@ describe('TagsSection component', () => {
   });
 
   it('supports multiple tag selection by default', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
     await userEvent.click(screen.getByText('Beginner'));
@@ -130,7 +129,7 @@ describe('TagsSection component', () => {
   });
 
   it('preserves tag colors in the display', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     // Tags should render with their color information preserved
     await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
@@ -138,7 +137,7 @@ describe('TagsSection component', () => {
   });
 
   it('applies custom className', async () => {
-    const screen = renderComponent({ className: 'custom-tags' });
+    const screen = await renderComponent({ className: 'custom-tags' });
 
     const section = screen.container.querySelector('.custom-tags');
     expect(section).toBeInTheDocument();
@@ -151,7 +150,7 @@ describe('TagsSection component', () => {
       { id: '3', name: 'Beta', color: '#F59E0B' },
     ];
 
-    const screen = renderComponent({ proposalTags: unsortedTags });
+    const screen = await renderComponent({ proposalTags: unsortedTags });
 
     // Check that all tags are displayed (sorting is handled by the component)
     await expect.element(screen.getByText('Alpha')).toBeInTheDocument();
@@ -171,7 +170,7 @@ describe('TagsSection component', () => {
       { id: '3', name: 'Another No Color', color: '' },
     ];
 
-    const screen = renderComponent({
+    const screen = await renderComponent({
       proposalTags: tagsWithoutColors,
       eventTags: eventTagsWithoutColors,
     });

@@ -17,10 +17,6 @@ describe('MailgunProvider', () => {
     mailgunProvider = new MailgunProvider('api_key', 'example.com');
   });
 
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('should send emails', async () => {
     const email = {
       from: 'from@example.com',
