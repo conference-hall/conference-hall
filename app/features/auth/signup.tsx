@@ -9,6 +9,7 @@ import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { getUserSession } from '~/shared/auth/session.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import type { Route } from './+types/signup.ts';
 import { AuthProvidersSignin } from './components/auth-providers-signin.tsx';
 import { EmailPasswordSignup } from './components/email-password-signup.tsx';
@@ -20,8 +21,11 @@ export const meta = (args: Route.MetaArgs) => {
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await getUserSession(request);
   if (userId) return redirect('/');
-  const { CAPTCHA_SITE_KEY } = getWebServerEnv();
-  return { captchaSiteKey: CAPTCHA_SITE_KEY };
+
+  const isCaptchaEnabled = await flags.get('captcha');
+  const captchaSiteKey = isCaptchaEnabled ? getWebServerEnv().CAPTCHA_SITE_KEY : null;
+
+  return { captchaSiteKey };
 };
 
 export default function Signup({ loaderData }: Route.ComponentProps) {

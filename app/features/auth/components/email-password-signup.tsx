@@ -12,7 +12,7 @@ import { getClientAuth } from '~/shared/auth/firebase.ts';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { validateEmailAndPassword } from '~/shared/validators/auth.ts';
 
-type EmailPasswordSignupProps = { redirectTo: string; defaultEmail: string | null; captchaSiteKey: string };
+type EmailPasswordSignupProps = { redirectTo: string; defaultEmail: string | null; captchaSiteKey: string | null };
 
 export function EmailPasswordSignup({ redirectTo, defaultEmail, captchaSiteKey }: EmailPasswordSignupProps) {
   const { t } = useTranslation();
@@ -36,7 +36,7 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail, captchaSiteKey }
       const fieldErrors = validateEmailAndPassword(email, password);
       if (fieldErrors) return setFieldErrors(fieldErrors);
 
-      if (!captchaToken) {
+      if (captchaSiteKey && !captchaToken) {
         setError(t('common.captcha-required'));
         return;
       }
@@ -74,7 +74,13 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail, captchaSiteKey }
       />
       <PasswordInput value={password} onChange={setPassword} error={fieldErrors?.password} isNewPassword />
 
-      <Turnstile siteKey={captchaSiteKey} onSuccess={setCaptchaToken} options={{ theme: 'light', size: 'flexible' }} />
+      {captchaSiteKey && (
+        <Turnstile
+          siteKey={captchaSiteKey}
+          onSuccess={setCaptchaToken}
+          options={{ theme: 'light', size: 'flexible' }}
+        />
+      )}
 
       <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
         {t('auth.common.sign-up')}
