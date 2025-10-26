@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { redirect, useSearchParams } from 'react-router';
-import { getWebServerEnv } from 'servers/environment.server.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -8,8 +7,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
+import { getCaptchaSiteKey } from '~/shared/auth/captcha.server.ts';
 import { getUserSession } from '~/shared/auth/session.ts';
-import { flags } from '~/shared/feature-flags/flags.server.ts';
 import type { Route } from './+types/signup.ts';
 import { AuthProvidersSignin } from './components/auth-providers-signin.tsx';
 import { EmailPasswordSignup } from './components/email-password-signup.tsx';
@@ -22,9 +21,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await getUserSession(request);
   if (userId) return redirect('/');
 
-  const isCaptchaEnabled = await flags.get('captcha');
-  const captchaSiteKey = isCaptchaEnabled ? getWebServerEnv().CAPTCHA_SITE_KEY : null;
-
+  const captchaSiteKey = await getCaptchaSiteKey();
   return { captchaSiteKey };
 };
 

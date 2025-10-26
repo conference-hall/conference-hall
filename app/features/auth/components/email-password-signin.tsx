@@ -34,6 +34,7 @@ export function EmailPasswordSignin({ redirectTo, defaultEmail, captchaSiteKey }
 
       if (captchaSiteKey && !captchaToken) {
         setError(t('common.captcha-required'));
+        setSubmitting(false);
         return;
       }
 
@@ -65,6 +66,8 @@ export function EmailPasswordSignin({ redirectTo, defaultEmail, captchaSiteKey }
         <Turnstile
           siteKey={captchaSiteKey}
           onSuccess={setCaptchaToken}
+          onError={() => setCaptchaToken('')}
+          onExpire={() => setCaptchaToken('')}
           options={{ theme: 'light', size: 'flexible' }}
         />
       )}

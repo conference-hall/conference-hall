@@ -78,6 +78,8 @@ export function EmailPasswordSignup({ redirectTo, defaultEmail, captchaSiteKey }
         <Turnstile
           siteKey={captchaSiteKey}
           onSuccess={setCaptchaToken}
+          onError={() => setCaptchaToken('')}
+          onExpire={() => setCaptchaToken('')}
           options={{ theme: 'light', size: 'flexible' }}
         />
       )}
