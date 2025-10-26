@@ -9,6 +9,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
+import { getCaptchaSiteKey } from '~/shared/auth/captcha.server.ts';
 import { createSession, getUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/signin.ts';
 import { AuthProvidersResult } from './components/auth-providers-result.tsx';
@@ -22,15 +23,18 @@ export const meta = (args: Route.MetaArgs) => {
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await getUserSession(request);
   if (userId) return redirect('/');
-  return null;
+
+  const captchaSiteKey = await getCaptchaSiteKey();
+  return { captchaSiteKey };
 };
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
   return createSession(request, context);
 };
 
-export default function Signin() {
+export default function Signin({ loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const { captchaSiteKey } = loaderData;
   const [providerError, setProviderError] = useState<string>('');
   const [searchParams] = useSearchParams();
   const defaultEmail = searchParams.get('email');
@@ -51,7 +55,7 @@ export default function Signin() {
       </header>
 
       <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
-        <EmailPasswordSignin redirectTo={redirectTo} defaultEmail={defaultEmail} />
+        <EmailPasswordSignin redirectTo={redirectTo} defaultEmail={defaultEmail} captchaSiteKey={captchaSiteKey} />
 
         <DividerWithLabel label={t('common.or')} />
 

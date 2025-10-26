@@ -69,6 +69,7 @@
   "common.by": "by {{names, list}}",
   "common.call-for-paper": "Call for papers",
   "common.cancel": "Cancel",
+  "common.captcha-required": "Please complete the verification challenge.",
   "common.categories-select-panel.manage": "Manage categories",
   "common.categories": "Categories",
   "common.cfp.date-label.CLOSED": "Open on {{date}}",

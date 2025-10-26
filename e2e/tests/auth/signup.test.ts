@@ -1,4 +1,5 @@
 import { MailBox } from 'e2e/common/mailbox.page.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { expect, resetMailbox, test } from '../../fixtures.ts';
 import { HomePage } from '../event-search/home.page.ts';
 import { ForgotPasswordPage, LoginPage, ResetPasswordPage } from './login.page.ts';
@@ -73,4 +74,14 @@ test('Signup flow with email and password', async ({ page }) => {
   await homePage.userMenu.waitForDialogOpen(uniqueEmail);
   await homePage.userMenu.signOutButton.click();
   await expect(homePage.loginLink).toBeVisible();
+
+  // signin with captcha enabled
+  await flags.set('captcha', true);
+  await loginPage.loginLink.click();
+  await loginPage.waitFor();
+  await loginPage.emailInput.fill(uniqueEmail);
+  await loginPage.passwordInput.fill('123Password');
+  await loginPage.waitForCaptcha();
+  await loginPage.signinButton.click();
+  await homePage.waitFor();
 });

@@ -1,8 +1,10 @@
 import type { RouterContextProvider, Session } from 'react-router';
 import { createCookieSessionStorage, redirect } from 'react-router';
 import { getWebServerEnv } from 'servers/environment.server.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
 import { getLocale } from '../i18n/i18n.middleware.ts';
+import { validateCaptchaToken } from './captcha.server.ts';
 import { auth as serverAuth } from './firebase.server.ts';
 
 const { COOKIE_SIGNED_SECRET } = getWebServerEnv();
@@ -32,12 +34,22 @@ async function commitSession(session: Session) {
 export async function createSession(request: Request, context: Readonly<RouterContextProvider>) {
   const form = await request.formData();
   const token = form.get('token') as string;
+  const captchaToken = form.get('captchaToken') as string;
   const redirectTo = form.get('redirectTo')?.toString() || '/';
 
   if (!token) return destroySession(request);
 
   const idToken = await serverAuth.verifyIdToken(token, true);
   const { uid, name, email, email_verified, picture, firebase } = idToken;
+
+  // Validate captcha token only if feature is enabled and using password authentication
+  const isCaptchaEnabled = await flags.get('captcha');
+  if (isCaptchaEnabled && firebase.sign_in_provider === 'password') {
+    const isCaptchaValid = await validateCaptchaToken(captchaToken);
+    if (!isCaptchaValid) {
+      throw new Response('Captcha validation failed', { status: 403 });
+    }
+  }
 
   const locale = getLocale(context);
   const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });

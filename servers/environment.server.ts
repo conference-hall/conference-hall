@@ -22,6 +22,8 @@ const WebServerSchema = z.object({
   FIREBASE_STORAGE_EMULATOR_HOST: z.string().optional(),
   COOKIE_SIGNED_SECRET: z.string(),
   MAINTENANCE_ENABLED: z.stringbool().optional().default(false),
+  CAPTCHA_SITE_KEY: z.string().optional(),
+  CAPTCHA_SECRET_KEY: z.string().optional(),
 });
 
 const JobServerSchema = z.object({

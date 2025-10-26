@@ -32,14 +32,25 @@ export function applySecurity(app: express.Application) {
             isProduction ? '*.googleapis.com' : '',
             "'self'",
           ].filter(Boolean),
-          'frame-src': ["'self'", !isProduction ? 'http://127.0.0.1:*' : ''].filter(Boolean),
+          'frame-src': [
+            "'self'",
+            'https://challenges.cloudflare.com',
+            !isProduction ? 'http://127.0.0.1:*' : '',
+          ].filter(Boolean),
           'font-src': ["'self'", 'data:'],
           'img-src': ["'self'", 'data:', 'https:'],
           'script-src': [
             "'strict-dynamic'",
+            "'unsafe-eval'",
+            "'self'",
+            // @ts-expect-error Helmet types don't seem to know about res.locals
+            (_, res) => `'nonce-${res.locals.cspNonce}'`,
+          ].filter(Boolean),
+          'script-src-elem': [
             "'self'",
             isProduction ? `${APP_URL}/__/auth/*` : '',
             isProduction ? `${APP_URL}/cdn-cgi/*` : '',
+            'https://challenges.cloudflare.com',
             // @ts-expect-error Helmet types don't seem to know about res.locals
             (_, res) => `'nonce-${res.locals.cspNonce}'`,
           ].filter(Boolean),
