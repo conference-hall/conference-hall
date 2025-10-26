@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { redirect, useSearchParams } from 'react-router';
+import { getWebServerEnv } from 'servers/environment.server.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -19,14 +20,16 @@ export const meta = (args: Route.MetaArgs) => {
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await getUserSession(request);
   if (userId) return redirect('/');
-  return null;
+  const { CAPTCHA_SITE_KEY } = getWebServerEnv();
+  return { captchaSiteKey: CAPTCHA_SITE_KEY };
 };
 
-export default function Signup() {
+export default function Signup({ loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const defaultEmail = searchParams.get('email');
   const redirectTo = searchParams.get('redirectTo') || '/';
+  const { captchaSiteKey } = loaderData;
 
   return (
     <Page>
@@ -38,7 +41,7 @@ export default function Signup() {
       </header>
 
       <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
-        <EmailPasswordSignup redirectTo={redirectTo} defaultEmail={defaultEmail} />
+        <EmailPasswordSignup redirectTo={redirectTo} defaultEmail={defaultEmail} captchaSiteKey={captchaSiteKey} />
 
         <DividerWithLabel label={t('common.or')} />
 

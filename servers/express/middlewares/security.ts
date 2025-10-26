@@ -32,7 +32,11 @@ export function applySecurity(app: express.Application) {
             isProduction ? '*.googleapis.com' : '',
             "'self'",
           ].filter(Boolean),
-          'frame-src': ["'self'", !isProduction ? 'http://127.0.0.1:*' : ''].filter(Boolean),
+          'frame-src': [
+            "'self'",
+            'https://challenges.cloudflare.com',
+            !isProduction ? 'http://127.0.0.1:*' : '',
+          ].filter(Boolean),
           'font-src': ["'self'", 'data:'],
           'img-src': ["'self'", 'data:', 'https:'],
           'script-src': [
