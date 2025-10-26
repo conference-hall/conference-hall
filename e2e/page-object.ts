@@ -47,4 +47,14 @@ export class PageObject {
   multiSelectInput(name: string) {
     return new MultiSelectComponent(name, this.page);
   }
+
+  async waitForCaptcha() {
+    await this.page.waitForFunction(
+      () => {
+        const response = document.querySelector<HTMLInputElement>('input[name="cf-turnstile-response"]');
+        return response?.value?.length && response?.value?.length > 0;
+      },
+      { timeout: 30000 },
+    );
+  }
 }
