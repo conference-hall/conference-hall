@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { FormatsSection } from './formats-section.tsx';
 
@@ -40,7 +40,6 @@ describe('FormatsSection component', () => {
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
     mockFetcher.formData = null;
     mockFetcher.state = 'idle';
   });
@@ -60,14 +59,14 @@ describe('FormatsSection component', () => {
   };
 
   it('displays current proposal formats', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await expect.element(screen.getByText('Lightning Talk (5min)')).toBeInTheDocument();
     await expect.element(screen.getByText('Short Talk (20min)')).toBeInTheDocument();
   });
 
   it('submits form data when formats are changed', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
     await userEvent.click(screen.getByText('Long Talk (45min)'));
@@ -82,7 +81,7 @@ describe('FormatsSection component', () => {
   });
 
   it('renders in readonly mode when canChangeFormats is false', async () => {
-    const screen = renderComponent({ canChangeFormats: false });
+    const screen = await renderComponent({ canChangeFormats: false });
 
     await expect.element(screen.getByText('Formats')).toBeInTheDocument();
     await expect.element(screen.getByText('Lightning Talk (5min)')).toBeInTheDocument();
@@ -91,7 +90,7 @@ describe('FormatsSection component', () => {
   });
 
   it('hides action button when canCreateFormats is false', async () => {
-    const screen = renderComponent({ canCreateFormats: false });
+    const screen = await renderComponent({ canCreateFormats: false });
 
     await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
 
@@ -99,7 +98,7 @@ describe('FormatsSection component', () => {
   });
 
   it('shows action button when canCreateFormats is true', async () => {
-    const screen = renderComponent({ canCreateFormats: true });
+    const screen = await renderComponent({ canCreateFormats: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
 

@@ -33,7 +33,7 @@ const renderComponent = (props = {}) => {
 
 describe('TalkForm', () => {
   it('renders all form fields', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await expect.element(screen.getByLabelText(/title/i)).toBeInTheDocument();
     await expect.element(screen.getByLabelText(/abstract/i)).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe('TalkForm', () => {
   });
 
   it('renders formats section when formats provided', async () => {
-    const screen = renderComponent({ formats: formats, formatsRequired: true });
+    const screen = await renderComponent({ formats: formats, formatsRequired: true });
 
     await expect.element(screen.getByRole('group', { name: /format/i })).toBeInTheDocument();
     await expect.element(screen.getByText('Lightning Talk')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('TalkForm', () => {
   });
 
   it('renders categories section when categories provided', async () => {
-    const screen = renderComponent({ categories: categories, categoriesRequired: true });
+    const screen = await renderComponent({ categories: categories, categoriesRequired: true });
 
     await expect.element(screen.getByRole('group', { name: /categories/i })).toBeInTheDocument();
     await expect.element(screen.getByLabelText('Frontend')).toBeInTheDocument();
@@ -72,7 +72,7 @@ describe('TalkForm', () => {
       categories: [{ id: 'cat-1' }],
     };
 
-    const screen = renderComponent({ initialValues, formats: formats, categories: categories });
+    const screen = await renderComponent({ initialValues, formats: formats, categories: categories });
 
     const titleInput = screen.getByLabelText(/title/i);
     const abstractTextarea = screen.getByLabelText(/abstract/i);
@@ -92,7 +92,7 @@ describe('TalkForm', () => {
       categories: 'Category selection is required',
     };
 
-    const screen = renderComponent({
+    const screen = await renderComponent({
       errors,
       formats: formats,
       categories: categories,
@@ -108,7 +108,7 @@ describe('TalkForm', () => {
 
   it('calls onSubmit when form is submitted', async () => {
     const onSubmit = vi.fn();
-    const screen = renderComponent({ onSubmit });
+    const screen = await renderComponent({ onSubmit });
 
     const form = screen.container.querySelector('form');
     const submitEvent = new Event('submit', { bubbles: true, cancelable: true });

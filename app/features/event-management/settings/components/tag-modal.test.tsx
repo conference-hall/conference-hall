@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import type { Tag } from '~/shared/types/tags.types.ts';
 import { TagModal } from './tag-modal.tsx';
@@ -28,7 +28,7 @@ describe('TagModal component', () => {
   };
 
   it('renders the modal in create mode', async () => {
-    const screen = renderComponent('create');
+    const screen = await renderComponent('create');
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
 
@@ -37,7 +37,7 @@ describe('TagModal component', () => {
   });
 
   it('renders the modal in edit mode', async () => {
-    const screen = renderComponent('edit', { id: '1', name: 'Existing Tag', color: '#ff0000' });
+    const screen = await renderComponent('edit', { id: '1', name: 'Existing Tag', color: '#ff0000' });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
 
@@ -51,7 +51,7 @@ describe('TagModal component', () => {
   });
 
   it('disables the submit button when name is empty', async () => {
-    const screen = renderComponent('create');
+    const screen = await renderComponent('create');
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
     const submitButton = screen.getByRole('button', { name: 'Create tag' });

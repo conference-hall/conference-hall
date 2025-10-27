@@ -1,8 +1,8 @@
-import { userEvent } from '@vitest/browser/context';
 import { type JSX, useState } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { PasswordInput } from './password-input.tsx';
 
@@ -25,7 +25,7 @@ describe('PasswordInput component', () => {
 
   describe('For a current password field', () => {
     it('renders password with forgot password link', async () => {
-      const screen = renderComponent(
+      const screen = await renderComponent(
         <PasswordInputWrapper value="password123" forgotPasswordPath="/forgot-password" />,
       );
 
@@ -44,7 +44,7 @@ describe('PasswordInput component', () => {
 
   describe('For a new password field', () => {
     it('renders password with strength meter', async () => {
-      const screen = renderComponent(<PasswordInputWrapper value="" isNewPassword />);
+      const screen = await renderComponent(<PasswordInputWrapper value="" isNewPassword />);
 
       const forgotPasswordLink = screen.getByRole('link', { name: 'Forgot password?' });
       await expect.element(forgotPasswordLink).not.toBeInTheDocument();
@@ -68,7 +68,7 @@ describe('PasswordInput component', () => {
 
   describe('Toggle password visibility', () => {
     it('renders password with forgot password link', async () => {
-      const screen = renderComponent(<PasswordInputWrapper value="password123" />);
+      const screen = await renderComponent(<PasswordInputWrapper value="password123" />);
 
       const passwordInput = screen.getByLabelText('Password');
       const toggleVisibilityButton = screen.getByRole('button', { name: 'Toggle password visibility' });

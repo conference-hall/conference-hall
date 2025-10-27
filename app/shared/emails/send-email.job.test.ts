@@ -23,7 +23,6 @@ const mockEmailProvider = {
 
 describe('Send Email Job', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     mockGetEmailProvider.mockReturnValue(mockEmailProvider);
   });
 

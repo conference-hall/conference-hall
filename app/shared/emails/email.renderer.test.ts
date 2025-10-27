@@ -9,15 +9,7 @@ import { getEmailTemplate } from './templates/templates.ts';
 
 const mockRender = vi.mocked(render);
 
-// Mock console.error to test error handling
-const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
 describe('Email Renderer', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    consoleErrorSpy.mockClear();
-  });
-
   describe('getEmailTemplateComponent', () => {
     it('loads and caches existing email template successfully', async () => {
       const result = await getEmailTemplate('base-email');

@@ -12,7 +12,6 @@ describe('RedisCacheLayer', () => {
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
     cache = new RedisCacheLayer({ prefix: 'test:', client: redisMock as unknown as Redis });
   });
 

@@ -15,7 +15,7 @@ describe('SubmissionContext', () => {
   }
 
   it('returns steps for a complete event', async () => {
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey>
           <TestSubmissionContextComponent />
@@ -41,7 +41,7 @@ describe('SubmissionContext', () => {
   });
 
   it('returns steps for an event without tracks and survey', async () => {
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks={false} hasSurvey={false}>
           <TestSubmissionContextComponent />
@@ -62,7 +62,7 @@ describe('SubmissionContext', () => {
   });
 
   it('returns steps for an event with tracks but without survey', async () => {
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey={false}>
           <TestSubmissionContextComponent />
@@ -85,7 +85,7 @@ describe('SubmissionContext', () => {
   });
 
   it('returns steps for an event without tracks but with survey', async () => {
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks={false} hasSurvey>
           <TestSubmissionContextComponent />
@@ -135,7 +135,7 @@ describe('useSubmissionNavigation', () => {
       },
     ]);
 
-    const screen = render(<RouteStub initialEntries={[path]} />);
+    const screen = await render(<RouteStub initialEntries={[path]} />);
 
     await expect.element(screen.getByText('Previous: none')).toBeInTheDocument();
     await expect.element(screen.getByText('Next: /event-1/submission/new')).toBeInTheDocument();
@@ -157,7 +157,7 @@ describe('useSubmissionNavigation', () => {
       },
     ]);
 
-    const screen = render(<RouteStub initialEntries={[path]} />);
+    const screen = await render(<RouteStub initialEntries={[path]} />);
 
     await expect.element(screen.getByText('Previous: /event-1/submission/talk-1')).toBeInTheDocument();
     await expect.element(screen.getByText('Next: /event-1/submission/talk-1/tracks')).toBeInTheDocument();
@@ -179,7 +179,7 @@ describe('useSubmissionNavigation', () => {
       },
     ]);
 
-    const screen = render(<RouteStub initialEntries={[path]} />);
+    const screen = await render(<RouteStub initialEntries={[path]} />);
 
     await expect.element(screen.getByText('Previous: /event-1/submission/talk-1/survey')).toBeInTheDocument();
     await expect.element(screen.getByText('Next: none')).toBeInTheDocument();

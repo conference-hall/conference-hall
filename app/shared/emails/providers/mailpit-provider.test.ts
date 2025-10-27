@@ -12,10 +12,6 @@ describe('MailpitProvider', () => {
     mailpitProvider = new MailpitProvider('api_key', 123);
   });
 
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('should send emails', async () => {
     const email = {
       from: 'from@example.com',

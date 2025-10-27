@@ -1,7 +1,7 @@
 import { FaceSmileIcon } from '@heroicons/react/24/outline';
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import type { Emoji } from '~/shared/types/emojis.types.ts';
 import { EmojiPicker } from './emoji-picker.tsx';
@@ -15,7 +15,7 @@ describe('EmojiPicker component', () => {
   it('displays emoji picker and select an emoji', async () => {
     const onSelectEmoji = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <EmojiPicker emojis={EMOJIS} icon={FaceSmileIcon} variant="secondary" onSelectEmoji={onSelectEmoji} />
       </I18nextProvider>,

@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { SpeakerModal } from './speaker-modal.tsx';
 
@@ -40,12 +40,12 @@ describe('SpeakerModal component', () => {
   });
 
   it('renders the modal trigger button', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
     await expect.element(screen.getByRole('button', { name: 'Open Modal' })).toBeInTheDocument();
   });
 
   it('opens and displays the modal when trigger is clicked', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
 
@@ -57,7 +57,7 @@ describe('SpeakerModal component', () => {
   });
 
   it('has required validation for email and name fields', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
 
@@ -69,7 +69,7 @@ describe('SpeakerModal component', () => {
   });
 
   it('shows email type validation for email field', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
 

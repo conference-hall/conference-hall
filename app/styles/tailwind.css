@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
-/* biome-ignore lint/suspicious/noUnknownAtRules: config for tailwindcss */
-@config '../../tailwind.config.ts';
+@config "../../tailwind.config.ts";
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,

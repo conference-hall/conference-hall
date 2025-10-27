@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { MessageInputForm } from './message-input-form.tsx';
@@ -28,7 +28,7 @@ describe('MessageInputForm component', () => {
   };
 
   it('renders form with textarea and submit button', async () => {
-    const screen = renderComponent({ buttonLabel: 'Send' });
+    const screen = await renderComponent({ buttonLabel: 'Send' });
 
     await expect.element(screen.getByRole('textbox', { name: 'Message input' })).toBeInTheDocument();
     await expect.element(screen.getByRole('button', { name: 'Send' })).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe('MessageInputForm component', () => {
       sentAt: new Date(),
     };
 
-    const screen = renderComponent({ message });
+    const screen = await renderComponent({ message });
 
     const textarea = screen.getByRole('textbox', { name: 'Message input' });
     expect(textarea).toHaveValue('Existing message');
@@ -51,7 +51,7 @@ describe('MessageInputForm component', () => {
 
   it('renders cancel button when onClose is provided', async () => {
     const onClose = vi.fn();
-    const screen = renderComponent({ onClose, buttonLabel: 'Save' });
+    const screen = await renderComponent({ onClose, buttonLabel: 'Save' });
 
     await expect.element(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
     await expect.element(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();

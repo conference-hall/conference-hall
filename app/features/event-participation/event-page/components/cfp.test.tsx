@@ -55,7 +55,7 @@ describe('CallForPaperStatusLabel component', () => {
   };
 
   it('displays disabled status when start and end dates are null', async () => {
-    const screen = renderComponent('OPENED', null, null);
+    const screen = await renderComponent('OPENED', null, null);
 
     // Should display the disabled message regardless of state
     await expect.element(screen.getByText('Call for papers is disabled')).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('CallForPaperStatusLabel component', () => {
     const startDate = new Date('2023-01-01');
     const endDate = new Date('2023-12-31');
 
-    const screen = renderComponent('OPENED', startDate, endDate);
+    const screen = await renderComponent('OPENED', startDate, endDate);
 
     await expect.element(screen.getByText('Call for papers open')).toBeInTheDocument();
   });
@@ -74,7 +74,7 @@ describe('CallForPaperStatusLabel component', () => {
     const startDate = new Date('2023-01-01');
     const endDate = new Date('2023-12-31');
 
-    const screen = renderComponent('CLOSED', startDate, endDate);
+    const screen = await renderComponent('CLOSED', startDate, endDate);
 
     await expect.element(screen.getByText('Opening soon')).toBeInTheDocument();
   });
@@ -83,7 +83,7 @@ describe('CallForPaperStatusLabel component', () => {
     const startDate = new Date('2023-01-01');
     const endDate = new Date('2023-12-31');
 
-    const screen = renderComponent('FINISHED', startDate, endDate);
+    const screen = await renderComponent('FINISHED', startDate, endDate);
 
     await expect.element(screen.getByText('Call for papers closed')).toBeInTheDocument();
   });
@@ -91,7 +91,7 @@ describe('CallForPaperStatusLabel component', () => {
   it('displays opened status when only start date is provided', async () => {
     const startDate = new Date('2023-01-01');
 
-    const screen = renderComponent('OPENED', startDate, null);
+    const screen = await renderComponent('OPENED', startDate, null);
 
     await expect.element(screen.getByText('Call for papers open')).toBeInTheDocument();
   });
@@ -99,14 +99,14 @@ describe('CallForPaperStatusLabel component', () => {
   it('displays opened status when only end date is provided', async () => {
     const endDate = new Date('2023-12-31');
 
-    const screen = renderComponent('OPENED', null, endDate);
+    const screen = await renderComponent('OPENED', null, endDate);
 
     await expect.element(screen.getByText('Call for papers open')).toBeInTheDocument();
   });
 });
 
 describe('CallForPaperElapsedTimeLabel component', () => {
-  const renderElapsedTimeComponent = (state: 'OPENED' | 'CLOSED' | 'FINISHED', start: Date, end: Date) => {
+  const renderComponent = (state: 'OPENED' | 'CLOSED' | 'FINISHED', start: Date, end: Date) => {
     return render(
       <I18nextProvider i18n={i18nTest}>
         <CallForPaperElapsedTimeLabel state={state} start={start} end={end} />
@@ -128,7 +128,7 @@ describe('CallForPaperElapsedTimeLabel component', () => {
     startDate.setFullYear(startDate.getFullYear() - 2);
     const endDate = new Date('2023-12-31');
 
-    const screen = renderElapsedTimeComponent('CLOSED', startDate, endDate);
+    const screen = await renderComponent('CLOSED', startDate, endDate);
 
     expect(screen.container.textContent).toMatch(/The call for papers will open/);
   });
@@ -138,7 +138,7 @@ describe('CallForPaperElapsedTimeLabel component', () => {
     const endDate = new Date();
     endDate.setFullYear(endDate.getFullYear() + 2);
 
-    const screen = renderElapsedTimeComponent('OPENED', startDate, endDate);
+    const screen = await renderComponent('OPENED', startDate, endDate);
 
     expect(screen.container.textContent).toBe('Call for papers open');
   });
@@ -146,7 +146,7 @@ describe('CallForPaperElapsedTimeLabel component', () => {
     const startDate = new Date('2023-01-01');
     const endDate = new Date('2023-12-31');
 
-    const screen = renderElapsedTimeComponent('FINISHED', startDate, endDate);
+    const screen = await renderComponent('FINISHED', startDate, endDate);
 
     expect(screen.container.textContent).toBe('Call for papers closed');
   });
@@ -155,7 +155,7 @@ describe('CallForPaperElapsedTimeLabel component', () => {
     const startDate = new Date('2022-12-01'); // started 1 month ago
     const endDate = new Date('2023-02-01'); // ends in 1 month
 
-    const screen = renderElapsedTimeComponent('OPENED', startDate, endDate);
+    const screen = await renderComponent('OPENED', startDate, endDate);
 
     expect(screen.container.textContent).toBe('Call for papers open');
   });
@@ -164,7 +164,7 @@ describe('CallForPaperElapsedTimeLabel component', () => {
     const startDate = new Date('2023-02-01'); // starts in 1 month
     const endDate = new Date('2023-03-01'); // ends in 2 months
 
-    const screen = renderElapsedTimeComponent('CLOSED', startDate, endDate);
+    const screen = await renderComponent('CLOSED', startDate, endDate);
 
     expect(screen.container.textContent).toMatch(/The call for papers will open/);
     expect(screen.container.textContent).toMatch(/next month/);
@@ -174,14 +174,14 @@ describe('CallForPaperElapsedTimeLabel component', () => {
     const startDate = new Date('2022-11-01'); // started 2 months ago
     const endDate = new Date('2022-12-01'); // ended 1 month ago
 
-    const screen = renderElapsedTimeComponent('FINISHED', startDate, endDate);
+    const screen = await renderComponent('FINISHED', startDate, endDate);
 
     expect(screen.container.textContent).toBe('Call for papers closed');
   });
 });
 
 describe('CallForPaperDateLabel component', () => {
-  const renderDateLabelComponent = (
+  const renderComponent = (
     state: 'OPENED' | 'CLOSED' | 'FINISHED',
     start: Date | null,
     end: Date | null,
@@ -198,7 +198,7 @@ describe('CallForPaperDateLabel component', () => {
   it('returns null when start date is null', async () => {
     const endDate = new Date('2023-12-31');
 
-    const screen = renderDateLabelComponent('OPENED', null, endDate);
+    const screen = await renderComponent('OPENED', null, endDate);
 
     await expect.element(screen.container).toBeEmptyDOMElement();
   });
@@ -206,7 +206,7 @@ describe('CallForPaperDateLabel component', () => {
   it('returns null when end date is null', async () => {
     const startDate = new Date('2023-01-01');
 
-    const screen = renderDateLabelComponent('OPENED', startDate, null);
+    const screen = await renderComponent('OPENED', startDate, null);
 
     await expect.element(screen.container).toBeEmptyDOMElement();
   });
@@ -215,7 +215,7 @@ describe('CallForPaperDateLabel component', () => {
     const startDate = new Date('2023-01-01');
     const endDate = new Date('2023-12-31');
 
-    const screen = renderDateLabelComponent('CLOSED', startDate, endDate);
+    const screen = await renderComponent('CLOSED', startDate, endDate);
 
     expect(screen.container.textContent).toContain('Open on');
   });
@@ -224,7 +224,7 @@ describe('CallForPaperDateLabel component', () => {
     const startDate = new Date('2023-01-01');
     const endDate = new Date('2023-12-31');
 
-    const screen = renderDateLabelComponent('OPENED', startDate, endDate);
+    const screen = await renderComponent('OPENED', startDate, endDate);
 
     expect(screen.container.textContent).toContain('Until');
   });
@@ -233,7 +233,7 @@ describe('CallForPaperDateLabel component', () => {
     const startDate = new Date('2023-01-01');
     const endDate = new Date('2023-12-31');
 
-    const screen = renderDateLabelComponent('FINISHED', startDate, endDate);
+    const screen = await renderComponent('FINISHED', startDate, endDate);
 
     expect(screen.container.textContent).toContain('Since');
   });
@@ -241,8 +241,8 @@ describe('CallForPaperDateLabel component', () => {
     const startDate = new Date('2023-01-01');
     const endDate = new Date('2023-12-31');
 
-    const longFormatScreen = renderDateLabelComponent('OPENED', startDate, endDate, 'Europe/Paris', 'long');
-    const shortFormatScreen = renderDateLabelComponent('OPENED', startDate, endDate, 'Europe/Paris', 'short');
+    const longFormatScreen = await renderComponent('OPENED', startDate, endDate, 'Europe/Paris', 'long');
+    const shortFormatScreen = await renderComponent('OPENED', startDate, endDate, 'Europe/Paris', 'short');
 
     const longText = longFormatScreen.container.textContent || '';
     expect(longText).toContain('Until');
@@ -259,7 +259,7 @@ describe('CallForPaperDateLabel component', () => {
     const startDate = new Date('2023-02-01');
     const endDate = new Date('2023-03-01');
 
-    const screen = renderDateLabelComponent('CLOSED', startDate, endDate);
+    const screen = await renderComponent('CLOSED', startDate, endDate);
 
     const text = screen.container.textContent || '';
     expect(text).toContain('Open on');
@@ -270,7 +270,7 @@ describe('CallForPaperDateLabel component', () => {
     const startDate = new Date('2023-01-01');
     const endDate = new Date('2023-12-31');
 
-    const screen = renderDateLabelComponent('OPENED', startDate, endDate);
+    const screen = await renderComponent('OPENED', startDate, endDate);
 
     const text = screen.container.textContent || '';
     expect(text).toContain('Until');
@@ -281,7 +281,7 @@ describe('CallForPaperDateLabel component', () => {
     const startDate = new Date('2023-01-01');
     const endDate = new Date('2023-12-31');
 
-    const screen = renderDateLabelComponent('FINISHED', startDate, endDate);
+    const screen = await renderComponent('FINISHED', startDate, endDate);
 
     const text = screen.container.textContent || '';
     expect(text).toContain('Since');
@@ -292,7 +292,7 @@ describe('CallForPaperDateLabel component', () => {
     const startDate = new Date('2023-01-01');
     const endDate = new Date('2023-12-31');
 
-    const screen = renderDateLabelComponent('OPENED', startDate, endDate, 'Europe/Paris', 'short');
+    const screen = await renderComponent('OPENED', startDate, endDate, 'Europe/Paris', 'short');
 
     expect(screen.container.textContent).toBeTruthy();
     const text = screen.container.textContent || '';
@@ -303,14 +303,14 @@ describe('CallForPaperDateLabel component', () => {
     const endDate = new Date('2023-12-31');
     const customTimezone = 'America/New_York';
 
-    const screen = renderDateLabelComponent('OPENED', startDate, endDate, customTimezone);
+    const screen = await renderComponent('OPENED', startDate, endDate, customTimezone);
     const text = screen.container.textContent || '';
 
     expect(text).toMatch(/^Until /);
     expect(text).toContain('EST');
 
     // Compare with Europe/Paris timezone
-    const parisScreen = renderDateLabelComponent('OPENED', startDate, endDate, 'Europe/Paris');
+    const parisScreen = await renderComponent('OPENED', startDate, endDate, 'Europe/Paris');
     const parisText = parisScreen.container.textContent || '';
 
     expect(parisText).toMatch(/GMT|CET/);

@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { UserProvider } from '~/app-platform/components/user-context.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
@@ -55,7 +55,7 @@ describe('ConversationDrawer component', () => {
   };
 
   it('opens drawer when clicking trigger button', async () => {
-    const screen = renderComponent({ messages });
+    const screen = await renderComponent({ messages });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
 
@@ -65,7 +65,7 @@ describe('ConversationDrawer component', () => {
   });
 
   it('displays empty state when no messages', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
 
@@ -73,7 +73,7 @@ describe('ConversationDrawer component', () => {
   });
 
   it('displays recipients in empty state when provided', async () => {
-    const screen = renderComponent({ recipients: ['Alice', 'Bob'] });
+    const screen = await renderComponent({ recipients: ['Alice', 'Bob'] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
 
@@ -88,7 +88,7 @@ describe('ConversationDrawer component', () => {
       reactions: [],
       sentAt: new Date('2023-01-01T10:00:00Z'),
     };
-    const screen = renderComponent({ messages: [otherUserMessage], canManageConversations: false });
+    const screen = await renderComponent({ messages: [otherUserMessage], canManageConversations: false });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
 
@@ -104,7 +104,7 @@ describe('ConversationDrawer component', () => {
       reactions: [],
       sentAt: new Date('2023-01-01T10:00:00Z'),
     };
-    const screen = renderComponent({ messages: [otherUserMessage], canManageConversations: true });
+    const screen = await renderComponent({ messages: [otherUserMessage], canManageConversations: true });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
 
@@ -120,7 +120,7 @@ describe('ConversationDrawer component', () => {
       reactions: [],
       sentAt: new Date('2023-01-01T10:00:00Z'),
     };
-    const screen = renderComponent({ messages: [ownMessage], canManageConversations: false });
+    const screen = await renderComponent({ messages: [ownMessage], canManageConversations: false });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
 

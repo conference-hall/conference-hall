@@ -12,7 +12,7 @@ describe('DashboardTabs component', () => {
   };
 
   it('displays the dashboard tabs and links', async () => {
-    const screen = renderComponent(
+    const screen = await renderComponent(
       <I18nextProvider i18n={i18nTest}>
         <DashboardTabs team="t1" event="e1" />
       </I18nextProvider>,

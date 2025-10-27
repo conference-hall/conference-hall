@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { CategoriesSection } from './categories-section.tsx';
 
@@ -40,7 +40,6 @@ describe('CategoriesSection component', () => {
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
     mockFetcher.formData = null;
     mockFetcher.state = 'idle';
   });
@@ -60,14 +59,14 @@ describe('CategoriesSection component', () => {
   };
 
   it('displays current proposal categories', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await expect.element(screen.getByText('Web Development')).toBeInTheDocument();
     await expect.element(screen.getByText('AI/ML')).toBeInTheDocument();
   });
 
   it('submits form data when categories are changed', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
     await userEvent.click(screen.getByText('Mobile Development'));
@@ -82,7 +81,7 @@ describe('CategoriesSection component', () => {
   });
 
   it('renders in readonly mode when canChangeCategory is false', async () => {
-    const screen = renderComponent({ canChangeCategory: false });
+    const screen = await renderComponent({ canChangeCategory: false });
 
     await expect.element(screen.getByText('Categories')).toBeInTheDocument();
     await expect.element(screen.getByText('Web Development')).toBeInTheDocument();
@@ -91,7 +90,7 @@ describe('CategoriesSection component', () => {
   });
 
   it('hides action button when canCreateCategory is false', async () => {
-    const screen = renderComponent({ canCreateCategory: false });
+    const screen = await renderComponent({ canCreateCategory: false });
 
     await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
 
@@ -99,7 +98,7 @@ describe('CategoriesSection component', () => {
   });
 
   it('shows action button when canCreateCategory is true', async () => {
-    const screen = renderComponent({ canCreateCategory: true });
+    const screen = await renderComponent({ canCreateCategory: true });
 
     await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
 

@@ -1,6 +1,6 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import type { Emoji, EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { EmojiReactions } from './emoji-reactions.tsx';
@@ -19,7 +19,7 @@ describe('EmojiReactions component', () => {
   it('displays emoji reactions', async () => {
     const onChangeEmoji = vi.fn();
 
-    const screen = render(
+    const screen = await render(
       <I18nextProvider i18n={i18nTest}>
         <EmojiReactions emojis={EMOJIS} reactions={REACTIONS} onChangeEmoji={onChangeEmoji} />
       </I18nextProvider>,

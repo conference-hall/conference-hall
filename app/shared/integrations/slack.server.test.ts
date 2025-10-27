@@ -7,10 +7,6 @@ const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
 
 describe('Slack integration', () => {
-  beforeEach(async () => {
-    fetchMock.mockReset();
-  });
-
   it('#sendMessage', async () => {
     const payload: SlackMessage = {
       fallback: 'New Talk submitted to Event',

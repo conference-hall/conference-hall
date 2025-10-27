@@ -4,10 +4,6 @@ const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
 
 describe('OpenPlanner integration', () => {
-  beforeEach(async () => {
-    fetchMock.mockReset();
-  });
-
   describe('#postSessionsAndSpeakers', () => {
     it('successfully posts sessions and speakers', async () => {
       const eventId = '123';

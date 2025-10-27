@@ -1,7 +1,7 @@
-import { userEvent } from '@vitest/browser/context';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { SelectPanel, type SelectPanelProps } from './select-panel.tsx';
 
@@ -50,7 +50,7 @@ describe('SelectPanel component', () => {
   };
 
   it('renders the component and opens the dropdown on button click', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -60,7 +60,7 @@ describe('SelectPanel component', () => {
   });
 
   it('filters options case-insensitively', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -74,7 +74,7 @@ describe('SelectPanel component', () => {
   });
 
   it('shows "No results" message when no options match filter', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -85,7 +85,7 @@ describe('SelectPanel component', () => {
   });
 
   it('calls onChange when selecting options in multiple mode', async () => {
-    const screen = renderComponent({ multiple: true, values: [] });
+    const screen = await renderComponent({ multiple: true, values: [] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -97,7 +97,7 @@ describe('SelectPanel component', () => {
   });
 
   it('shows selected options as checked in multiple mode', async () => {
-    const screen = renderComponent({ multiple: true, values: [options[0].value, options[2].value] });
+    const screen = await renderComponent({ multiple: true, values: [options[0].value, options[2].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -109,7 +109,7 @@ describe('SelectPanel component', () => {
   });
 
   it('handles unselecting options in multiple mode', async () => {
-    const screen = renderComponent({ multiple: true, values: [options[0].value, options[1].value] });
+    const screen = await renderComponent({ multiple: true, values: [options[0].value, options[1].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
     await userEvent.click(screen.getByText('Option 1'));
@@ -118,7 +118,7 @@ describe('SelectPanel component', () => {
   });
 
   it('calls onChange when selecting option in single mode', async () => {
-    const screen = renderComponent({ multiple: false, values: [options[0].value] });
+    const screen = await renderComponent({ multiple: false, values: [options[0].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
     await userEvent.click(screen.getByText('Option 1'));
@@ -127,7 +127,7 @@ describe('SelectPanel component', () => {
   });
 
   it('shows selected item with radio button in single mode', async () => {
-    const screen = renderComponent({ multiple: false, values: [options[0].value] });
+    const screen = await renderComponent({ multiple: false, values: [options[0].value] });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -137,7 +137,7 @@ describe('SelectPanel component', () => {
 
   it('renders footer when provided', async () => {
     const footer = <div>Custom Footer</div>;
-    const screen = renderComponent({ footer });
+    const screen = await renderComponent({ footer });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -147,7 +147,7 @@ describe('SelectPanel component', () => {
   it('calls onSearch when provided', async () => {
     vi.useFakeTimers();
     const onSearchMock = vi.fn();
-    const screen = renderComponent({ onSearch: onSearchMock });
+    const screen = await renderComponent({ onSearch: onSearchMock });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -163,7 +163,7 @@ describe('SelectPanel component', () => {
   it('debounces onSearch calls', async () => {
     vi.useFakeTimers();
     const onSearchMock = vi.fn();
-    const screen = renderComponent({ onSearch: onSearchMock });
+    const screen = await renderComponent({ onSearch: onSearchMock });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -190,7 +190,7 @@ describe('SelectPanel component', () => {
   });
 
   it('creates hidden form inputs when name is provided', async () => {
-    const screen = renderComponent({ name: 'test-field', values: [options[0].value, options[1].value] });
+    const screen = await renderComponent({ name: 'test-field', values: [options[0].value, options[1].value] });
 
     const hiddenInputs = screen.container.querySelectorAll('input[type="hidden"]');
     expect(hiddenInputs).toHaveLength(2);
@@ -201,7 +201,7 @@ describe('SelectPanel component', () => {
   });
 
   it('displays pictures when displayPicture is true', async () => {
-    const screen = renderComponent({ displayPicture: true });
+    const screen = await renderComponent({ displayPicture: true });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -212,7 +212,7 @@ describe('SelectPanel component', () => {
   });
 
   it('does not display pictures when displayPicture is false or undefined', async () => {
-    const screen = renderComponent({ displayPicture: false });
+    const screen = await renderComponent({ displayPicture: false });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -222,7 +222,7 @@ describe('SelectPanel component', () => {
     expect(avatars).toHaveLength(0);
   });
 
-  it('accepts options with data attribute', () => {
+  it('accepts options with data attribute', async () => {
     // Test that options with data attribute are accepted by TypeScript
     const optionsWithData = [
       { value: 'test1', label: 'Test 1', data: { category: 'A', priority: 1 } },
@@ -230,7 +230,7 @@ describe('SelectPanel component', () => {
       { value: 'test3', label: 'Test 3' }, // Without data attribute
     ];
 
-    const screen = renderComponent({ options: optionsWithData });
+    const screen = await renderComponent({ options: optionsWithData });
 
     // Just verify the component renders without errors
     expect(screen.getByRole('button', { name: 'Open Select' })).toBeInTheDocument();
@@ -244,7 +244,7 @@ describe('SelectPanel component', () => {
       { value: 'test2', label: 'Test 2', data: { category: 'B', priority: 2 } },
     ];
 
-    const screen = renderComponent({
+    const screen = await renderComponent({
       options: optionsWithData,
       onChange: onChangeMockWithData,
       multiple: true,
@@ -263,7 +263,7 @@ describe('SelectPanel component', () => {
     expect(optionsWithData[1].data).toEqual({ category: 'B', priority: 2 });
   });
 
-  it('supports various data types in data attribute', () => {
+  it('supports various data types in data attribute', async () => {
     // Test different data types that can be stored in the data attribute
     const complexOptions = [
       { value: 'obj', label: 'Object', data: { nested: { key: 'value' }, array: [1, 2, 3] } },
@@ -277,7 +277,7 @@ describe('SelectPanel component', () => {
       },
     ];
 
-    const screen = renderComponent({ options: complexOptions });
+    const screen = await renderComponent({ options: complexOptions });
 
     // Verify component renders with complex data structures
     expect(screen.getByRole('button', { name: 'Open Select' })).toBeInTheDocument();
@@ -289,7 +289,7 @@ describe('SelectPanel component', () => {
 
   it('uses custom placeholder when provided', async () => {
     const customPlaceholder = 'Type to search options...';
-    const screen = renderComponent({ placeholder: customPlaceholder });
+    const screen = await renderComponent({ placeholder: customPlaceholder });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
@@ -298,7 +298,7 @@ describe('SelectPanel component', () => {
   });
 
   it('uses default placeholder when custom placeholder is not provided', async () => {
-    const screen = renderComponent();
+    const screen = await renderComponent();
 
     await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
 
