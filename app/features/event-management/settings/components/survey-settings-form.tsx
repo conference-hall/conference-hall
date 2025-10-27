@@ -1,7 +1,8 @@
-import { ArrowDownIcon, ArrowUpIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { ArrowDownIcon, ArrowUpIcon, PlusIcon } from '@heroicons/react/16/solid';
 import { Trans, useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
 import { Badge } from '~/design-system/badges.tsx';
+import { ButtonIcon } from '~/design-system/button-icon.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -95,22 +96,22 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button
-                    variant="secondary"
-                    size="square-s"
-                    disabled={index === 0}
+                  <ButtonIcon
+                    label="Move up"
+                    icon={ArrowUpIcon}
                     onClick={handleMoveQuestion(question.id, 'up')}
-                  >
-                    <ArrowUpIcon className="size-4" arial-label="Move up" />
-                  </Button>
-                  <Button
+                    disabled={index === 0}
                     variant="secondary"
-                    size="square-s"
-                    disabled={index === questions.length - 1}
+                    size="sm"
+                  />
+                  <ButtonIcon
+                    label="Move down"
+                    icon={ArrowDownIcon}
                     onClick={handleMoveQuestion(question.id, 'down')}
-                  >
-                    <ArrowDownIcon className="size-4" arial-label="Move down" />
-                  </Button>
+                    disabled={index === questions.length - 1}
+                    variant="secondary"
+                    size="sm"
+                  />
                   <SurveyQuestionModal initialValues={question}>
                     {({ onOpen }) => (
                       <Button onClick={onOpen} variant="secondary" size="s">

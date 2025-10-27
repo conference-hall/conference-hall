@@ -42,15 +42,9 @@ export function MessageBlock({ message, intentSuffix, canManageConversations = f
           intentSuffix={intentSuffix}
           onEdit={() => setEditing(!isEditing)}
           canManageConversations={canManageConversations}
-          className="h-6 w-6 flex items-center justify-center hover:bg-gray-100 cursor-pointer rounded"
         />
 
-        <EmojiPicker
-          icon={FaceSmileIcon}
-          emojis={MESSAGE_EMOJIS}
-          onSelectEmoji={onChangeReaction}
-          className="h-6 w-6 flex items-center justify-center hover:bg-gray-100 cursor-pointer rounded"
-        />
+        <EmojiPicker icon={FaceSmileIcon} variant="tertiary" emojis={MESSAGE_EMOJIS} onSelectEmoji={onChangeReaction} />
       </div>
 
       <div className="flex items-baseline gap-x-1">

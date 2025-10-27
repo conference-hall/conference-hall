@@ -17,7 +17,7 @@ describe('EmojiPicker component', () => {
 
     const screen = render(
       <I18nextProvider i18n={i18nTest}>
-        <EmojiPicker emojis={EMOJIS} icon={FaceSmileIcon} onSelectEmoji={onSelectEmoji} />
+        <EmojiPicker emojis={EMOJIS} icon={FaceSmileIcon} variant="secondary" onSelectEmoji={onSelectEmoji} />
       </I18nextProvider>,
     );
 

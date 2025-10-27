@@ -39,9 +39,10 @@ export function EmojiSelect({ emojis, selectedEmojis, onChangeEmojis }: EmojiRea
       })}
 
       <EmojiPicker
-        label={t('common.choose-an-emoji')}
         emojis={emojis}
         icon={PlusIcon}
+        variant="secondary"
+        label={t('common.choose-an-emoji')}
         onSelectEmoji={handleSelect}
         anchor="top"
       />
