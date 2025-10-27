@@ -3,8 +3,7 @@ import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { useId, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -30,7 +29,7 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
 
   return (
     <>
-      <Button variant="secondary" size="s" iconLeft={Icon} iconClassName={color} onClick={() => setOpen(true)}>
+      <Button variant="secondary" size="sm" iconLeft={Icon} iconClassName={color} onClick={() => setOpen(true)}>
         {t(i18nKey)}
       </Button>
 

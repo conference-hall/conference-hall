@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, href, replace } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
-import { Button, button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -59,10 +59,9 @@ export default function RequestAccessRoute({ actionData: errors }: Route.Compone
 
         <DividerWithLabel label={t('common.or')} className="py-8" />
 
-        <a href="https://forms.gle/AnArRCSHibmG59zw7" target="_blank" className={button()} rel="noreferrer">
-          <KeyIcon className="h-4 w-4" aria-hidden="true" />
+        <Button href="https://forms.gle/AnArRCSHibmG59zw7" iconLeft={KeyIcon} target="_blank" rel="noreferrer">
           {t('team.request.request-link')}
-        </a>
+        </Button>
       </Card>
     </FullscreenPage>
   );

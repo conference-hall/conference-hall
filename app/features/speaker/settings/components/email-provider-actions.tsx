@@ -3,7 +3,7 @@ import { CheckBadgeIcon } from '@heroicons/react/24/outline';
 import { type FormEvent, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { PasswordInput } from '~/design-system/forms/password-input.tsx';
@@ -30,7 +30,7 @@ export function NewEmailProviderModal() {
 
   return (
     <>
-      <Button type="button" variant="secondary" size="s" onClick={() => setOpen(true)}>
+      <Button type="button" variant="secondary" size="sm" onClick={() => setOpen(true)}>
         {t('settings.account.authentication-methods.link-button')}
       </Button>
 
@@ -81,13 +81,13 @@ export function VerifyEmailButton() {
 
   if (sent) {
     return (
-      <Button type="button" variant="secondary" size="s" iconLeft={CheckIcon} disabled>
+      <Button type="button" variant="secondary" size="sm" iconLeft={CheckIcon} disabled>
         {t('settings.account.authentication-methods.email-sent')}
       </Button>
     );
   }
   return (
-    <Button type="button" variant="secondary" size="s" iconLeft={CheckBadgeIcon} onClick={sendVerificationEmail}>
+    <Button type="button" variant="secondary" size="sm" iconLeft={CheckBadgeIcon} onClick={sendVerificationEmail}>
       {t('settings.account.authentication-methods.send-verification-button')}
     </Button>
   );

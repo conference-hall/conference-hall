@@ -3,7 +3,7 @@ import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/2
 import { useId } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { DeleteModalButton } from '~/design-system/dialogs/delete-modal.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';

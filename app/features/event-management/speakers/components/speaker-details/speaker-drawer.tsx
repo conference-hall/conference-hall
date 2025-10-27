@@ -2,7 +2,7 @@ import { EyeIcon, PencilSquareIcon } from '@heroicons/react/16/solid';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import type { SpeakerData } from '~/shared/types/speaker.types.ts';
 import { SpeakerInfo } from './speaker-info.tsx';
@@ -65,24 +65,24 @@ function DrawerHeading({ team, event, speaker, canEditSpeaker }: SpeakerDataProp
       <SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />
 
       <div className="flex items-center gap-2">
-        <ButtonLink
+        <Button
           to={href('/team/:team/:event/speakers/:speaker', { team, event, speaker: speaker.id })}
-          size="s"
+          size="sm"
           variant="secondary"
           iconLeft={EyeIcon}
         >
           {t('common.details')}
-        </ButtonLink>
+        </Button>
 
         {canEditSpeaker ? (
-          <ButtonLink
+          <Button
             to={href('/team/:team/:event/speakers/:speaker/edit', { team, event, speaker: speaker.id })}
-            size="s"
+            size="sm"
             variant="secondary"
             iconLeft={PencilSquareIcon}
           >
             {t('common.edit')}
-          </ButtonLink>
+          </Button>
         ) : null}
       </div>
     </div>

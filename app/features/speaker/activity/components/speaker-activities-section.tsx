@@ -4,8 +4,7 @@ import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, Link as RouterLink } from 'react-router';
 import { Avatar } from '~/design-system/avatar.tsx';
-import { ButtonLink } from '~/design-system/buttons.tsx';
-import { IconLink } from '~/design-system/icon-buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Link } from '~/design-system/links.tsx';
@@ -61,9 +60,9 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                   <Subtitle size="xs">{t('common.by', { names: [event.teamName] })}</Subtitle>
                 </div>
               </div>
-              <IconLink
-                label={t('speaker.activity.open-event', { eventName: event.name })}
+              <Button
                 to={href('/:event', { event: event.slug })}
+                label={t('speaker.activity.open-event', { eventName: event.name })}
                 icon={ArrowTopRightOnSquareIcon}
                 variant="secondary"
                 target="_blank"
@@ -111,9 +110,9 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
       </ul>
 
       {hasNextPage && (
-        <ButtonLink to={{ pathname: '/speaker', search: `page=${nextPage}` }} variant="secondary" preventScrollReset>
+        <Button to={{ pathname: '/speaker', search: `page=${nextPage}` }} variant="secondary" preventScrollReset>
           {t('common.more')}
-        </ButtonLink>
+        </Button>
       )}
     </section>
   );

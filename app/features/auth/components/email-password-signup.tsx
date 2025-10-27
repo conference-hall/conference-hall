@@ -3,7 +3,7 @@ import * as Firebase from 'firebase/auth';
 import { type FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useNavigation, useSubmit } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { PasswordInput } from '~/design-system/forms/password-input.tsx';

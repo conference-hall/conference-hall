@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Avatar } from '~/design-system/avatar.tsx';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { InvitationModal } from '~/design-system/dialogs/invitation-modal.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Text } from '~/design-system/typography.tsx';

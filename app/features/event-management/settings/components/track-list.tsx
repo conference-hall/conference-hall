@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
 import { EditTrackButton, NewTrackButton } from './save-track-form.tsx';
@@ -34,7 +34,7 @@ export function TrackList({ type, tracks }: TrackListProps) {
               <EditTrackButton type={type} initialValues={track} />
               <Form method="POST">
                 <input type="hidden" name="trackId" value={track.id} />
-                <Button type="submit" name="intent" value={`delete-${type}`} variant="important" size="s">
+                <Button type="submit" name="intent" value={`delete-${type}`} variant="important" size="sm">
                   {t('common.delete')}
                 </Button>
               </Form>

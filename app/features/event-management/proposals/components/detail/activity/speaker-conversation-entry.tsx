@@ -3,7 +3,7 @@ import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { AvatarGroup } from '~/design-system/avatar.tsx';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ConversationDrawer } from '~/features/conversations/components/conversation-drawer.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
@@ -40,7 +40,7 @@ export function SpeakerConversationEntry({ messages, speakers, canManageConversa
 
         <div className="flex items-center gap-4">
           <ConversationDrawer messages={messages} recipients={speakers} canManageConversations={canManageConversations}>
-            <Button variant="secondary" size="s" iconRight={ArrowRightIcon}>
+            <Button variant="secondary" size="sm" iconRight={ArrowRightIcon}>
               {t('event-management.proposal-page.activity-feed.conversation.button')}
             </Button>
           </ConversationDrawer>

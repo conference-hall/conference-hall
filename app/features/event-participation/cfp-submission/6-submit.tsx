@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
-import { Button, ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -58,9 +58,9 @@ export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.Co
             )}
 
             <div className="flex flex-row justify-end items-center gap-4">
-              <ButtonLink to={previousPath} variant="secondary">
+              <Button to={previousPath} variant="secondary">
                 {t('common.go-back')}
-              </ButtonLink>
+              </Button>
               <Button type="submit" form={formId} disabled={!acceptedCod}>
                 {t('event.submission.submit.finish')}
               </Button>

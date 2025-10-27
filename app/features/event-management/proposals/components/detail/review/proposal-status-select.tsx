@@ -5,7 +5,7 @@ import type { TFunction } from 'i18next';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import Select from '~/design-system/forms/select.tsx';

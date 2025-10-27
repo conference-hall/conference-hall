@@ -2,7 +2,7 @@ import { PlusIcon } from '@heroicons/react/16/solid';
 import { InboxIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -40,13 +40,13 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
         component={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
       >
         {team.userPermissions?.canEditEventSpeaker && (
-          <ButtonLink
+          <Button
             variant="secondary"
             iconLeft={PencilSquareIcon}
             to={href('/team/:team/:event/speakers/:speaker/edit', params)}
           >
             {t('common.edit')}
-          </ButtonLink>
+          </Button>
         )}
       </Page.Heading>
 
@@ -81,13 +81,13 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
             {t('common.proposals')} ({speaker.proposals.length})
           </Text>
           {team.userPermissions?.canCreateEventProposal && (
-            <ButtonLink
+            <Button
               variant="secondary"
               iconLeft={PlusIcon}
               to={`${href('/team/:team/:event/proposals/new', params)}?speaker=${speaker.id}`}
             >
               {t('event-management.proposals.new-proposal')}
-            </ButtonLink>
+            </Button>
           )}
         </List.Header>
         <List.Content aria-label={t('event-management.proposals.list')}>

@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { PlusIcon } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { SearchInput } from '~/design-system/forms/search-input.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
@@ -77,9 +77,9 @@ export default function ReviewsRoute({ loaderData, params }: Route.ComponentProp
                 <ExportMenu />
               </div>
               {canCreateEventProposal && (
-                <ButtonLink iconLeft={PlusIcon} to={href('/team/:team/:event/proposals/new', params)}>
+                <Button iconLeft={PlusIcon} to={href('/team/:team/:event/proposals/new', params)}>
                   {t('event-management.proposals.new-proposal')}
-                </ButtonLink>
+                </Button>
               )}
             </div>
           </div>

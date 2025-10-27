@@ -1,6 +1,6 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -51,9 +51,9 @@ export default function EventSubmitRoute({ loaderData }: Route.ComponentProps) {
             <Subtitle>{t('event.submission.selection.description')}</Subtitle>
           </div>
           {hasTalksToSubmit && (
-            <ButtonLink to="new" variant="primary" iconLeft={PlusIcon}>
+            <Button to="new" variant="primary" iconLeft={PlusIcon}>
               {t('event.submission.selection.new-proposal')}
-            </ButtonLink>
+            </Button>
           )}
         </Card.Title>
 

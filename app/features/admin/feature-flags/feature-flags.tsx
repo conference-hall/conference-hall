@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
 import { Badge } from '~/design-system/badges.tsx';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Toggle } from '~/design-system/forms/toggles.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';

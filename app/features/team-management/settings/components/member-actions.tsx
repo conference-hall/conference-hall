@@ -2,7 +2,7 @@ import { UserPlusIcon } from '@heroicons/react/16/solid';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { InvitationModal } from '~/design-system/dialogs/invitation-modal.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
@@ -20,7 +20,7 @@ export function RemoveButton({ memberId, memberName }: RemoveButtonProps) {
       <Button
         aria-label={t('team.settings.members.remove-modal.button.label', { memberName })}
         variant="important"
-        size="s"
+        size="sm"
         onClick={() => setModalOpen(true)}
       >
         {t('common.remove')}
@@ -73,10 +73,10 @@ export function ChangeRoleButton({ memberId, memberName, memberRole }: ChangeRol
   return (
     <>
       <Button
+        onClick={() => setModalOpen(true)}
         aria-label={t('team.settings.members.change-role-modal.button.label', { memberName })}
         variant="secondary"
-        size="s"
-        onClick={() => setModalOpen(true)}
+        size="sm"
       >
         {t('team.settings.members.change-role-modal.button')}
       </Button>

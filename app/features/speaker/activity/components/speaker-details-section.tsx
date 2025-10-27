@@ -1,7 +1,7 @@
 import { LockClosedIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
@@ -39,9 +39,9 @@ export function SpeakerDetailsSection({ email, bio, location, socialLinks }: Pro
         </div>
 
         <div className="p-4">
-          <ButtonLink to={href('/speaker/settings/profile')} variant="secondary" iconLeft={PencilSquareIcon} block>
+          <Button to={href('/speaker/settings/profile')} variant="secondary" iconLeft={PencilSquareIcon} block>
             {t('speaker.activity.edit-profile')}
-          </ButtonLink>
+          </Button>
         </div>
       </Card>
     </div>

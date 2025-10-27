@@ -3,7 +3,7 @@ import { CalendarDaysIcon, CodeBracketIcon, Squares2X2Icon, TableCellsIcon } fro
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetchers, useParams, useSearchParams } from 'react-router';
-import { button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
@@ -26,11 +26,8 @@ export function ExportMenu() {
 
   return (
     <Menu>
-      <MenuButton className={button({ variant: 'secondary', loading, block: true })} disabled={loading}>
-        <ArrowDownTrayIcon className="size-4 text-gray-500" aria-hidden="true" />
-        <span>
-          {loading ? t('event-management.proposals.export.loading') : t('event-management.proposals.export.label')}
-        </span>
+      <MenuButton as={Button} variant="secondary" block iconLeft={ArrowDownTrayIcon} disabled={loading}>
+        {loading ? t('event-management.proposals.export.loading') : t('event-management.proposals.export.label')}
       </MenuButton>
 
       <MenuTransition>

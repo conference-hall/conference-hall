@@ -1,8 +1,8 @@
-import { ArrowDownIcon, ArrowUpIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { ArrowDownIcon, ArrowUpIcon, PlusIcon } from '@heroicons/react/16/solid';
 import { Trans, useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
 import { Badge } from '~/design-system/badges.tsx';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -61,7 +61,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                 <Button
                   onClick={onOpen}
                   variant="primary"
-                  size="s"
+                  size="sm"
                   iconLeft={PlusIcon}
                   disabled={questions.length >= MAX_QUESTIONS}
                 >
@@ -96,29 +96,29 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
 
                 <div className="flex gap-2">
                   <Button
-                    variant="secondary"
-                    size="square-s"
-                    disabled={index === 0}
+                    label="Move up"
+                    icon={ArrowUpIcon}
                     onClick={handleMoveQuestion(question.id, 'up')}
-                  >
-                    <ArrowUpIcon className="size-4" arial-label="Move up" />
-                  </Button>
-                  <Button
+                    disabled={index === 0}
                     variant="secondary"
-                    size="square-s"
-                    disabled={index === questions.length - 1}
+                    size="sm"
+                  />
+                  <Button
+                    label="Move down"
+                    icon={ArrowDownIcon}
                     onClick={handleMoveQuestion(question.id, 'down')}
-                  >
-                    <ArrowDownIcon className="size-4" arial-label="Move down" />
-                  </Button>
+                    disabled={index === questions.length - 1}
+                    variant="secondary"
+                    size="sm"
+                  />
                   <SurveyQuestionModal initialValues={question}>
                     {({ onOpen }) => (
-                      <Button onClick={onOpen} variant="secondary" size="s">
+                      <Button onClick={onOpen} variant="secondary" size="sm">
                         {t('common.edit')}
                       </Button>
                     )}
                   </SurveyQuestionModal>
-                  <Button variant="important" size="s" onClick={handleRemoveQuestion(question.id)}>
+                  <Button variant="important" size="sm" onClick={handleRemoveQuestion(question.id)}>
                     {t('common.delete')}
                   </Button>
                 </div>

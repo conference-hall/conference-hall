@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSubmit } from 'react-router';
-import { button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { menuItem, menuItemIcon, menuItems, menuSection, menuSeparator } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
@@ -34,8 +34,7 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
 
   return (
     <Menu>
-      <MenuButton className={button({ variant: 'secondary' })}>
-        <Cog6ToothIcon className="size-4 text-gray-400" aria-hidden="true" />
+      <MenuButton as={Button} variant="secondary" iconLeft={Cog6ToothIcon}>
         {t('common.options')}
       </MenuButton>
 

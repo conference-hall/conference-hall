@@ -3,6 +3,7 @@ import { EllipsisHorizontalIcon, PencilSquareIcon, TrashIcon } from '@heroicons/
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { useUser } from '~/app-platform/components/user-context.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
@@ -12,10 +13,9 @@ type Props = {
   intentSuffix: string;
   onEdit: VoidFunction;
   canManageConversations: boolean;
-  className?: string;
 };
 
-export function MessageActionsMenu({ message, intentSuffix, onEdit, canManageConversations, className }: Props) {
+export function MessageActionsMenu({ message, intentSuffix, onEdit, canManageConversations }: Props) {
   const { t } = useTranslation();
   const currentUser = useUser();
   const intent = `delete-${intentSuffix}`;
@@ -26,9 +26,13 @@ export function MessageActionsMenu({ message, intentSuffix, onEdit, canManageCon
 
   return (
     <Menu>
-      <MenuButton aria-label={t('common.conversation.actions-menu')} className={className}>
-        <EllipsisHorizontalIcon className="h-4 w-4" aria-hidden="true" />
-      </MenuButton>
+      <MenuButton
+        as={Button}
+        label={t('common.conversation.actions-menu')}
+        icon={EllipsisHorizontalIcon}
+        variant="tertiary"
+        size="xs"
+      />
 
       <MenuTransition>
         <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()} modal={false}>

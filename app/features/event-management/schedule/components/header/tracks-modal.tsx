@@ -4,7 +4,7 @@ import slugify from '@sindresorhus/slugify';
 import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -58,14 +58,12 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
               />
               <Button
                 type="button"
-                aria-label={t('event-management.schedule.tracks.remove-label', { name: track.name })}
+                icon={TrashIcon}
+                label={t('event-management.schedule.tracks.remove-label', { name: track.name })}
                 variant="important"
-                size="square-m"
                 onClick={() => handleRemove(index)}
                 disabled={tracks.length === 1}
-              >
-                <TrashIcon className="size-5" aria-hidden="true" />
-              </Button>
+              />
             </div>
           ))}
         </Form>
@@ -83,14 +81,12 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
           />
           <Button
             type="button"
+            icon={PlusIcon}
+            label={t('event-management.schedule.tracks.add')}
             variant="secondary"
-            aria-label={t('event-management.schedule.tracks.add')}
             disabled={!newTrackLabel}
-            size="square-m"
             onClick={handleAdd}
-          >
-            <PlusIcon className="size-5" aria-hidden="true" />
-          </Button>
+          />
         </div>
       </Modal.Content>
 

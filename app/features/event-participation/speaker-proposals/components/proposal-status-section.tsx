@@ -1,7 +1,7 @@
 import { ArrowRightIcon, CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button, ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
@@ -51,9 +51,9 @@ function Draft({ proposal, event }: Props) {
         {event.isCfpOpen ? (
           <>
             <ProposalDeleteButton />
-            <ButtonLink to={`../submission/${proposal.talkId}`} iconRight={ArrowRightIcon}>
+            <Button to={`../submission/${proposal.talkId}`} iconRight={ArrowRightIcon}>
               {t('speaker.proposal-status.draft.continue')}
-            </ButtonLink>
+            </Button>
           </>
         ) : (
           <ProposalDeleteButton />

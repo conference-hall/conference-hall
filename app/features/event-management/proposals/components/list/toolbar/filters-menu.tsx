@@ -13,7 +13,7 @@ import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Form, useLocation, useSearchParams } from 'react-router';
-import { Button, ButtonLink, button } from '~/design-system/buttons.tsx';
+import { Button, buttonStyles } from '~/design-system/button.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
@@ -27,9 +27,8 @@ export function FiltersMenu() {
     <>
       {/* Desktop */}
       <Popover className="hidden sm:block w-full">
-        <PopoverButton className={button({ variant: 'secondary', block: true })}>
-          <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
-          <span>{t('common.filters')}</span>
+        <PopoverButton as={Button} variant="secondary" block iconLeft={AdjustmentsHorizontalIcon}>
+          {t('common.filters')}
         </PopoverButton>
         <PopoverPanel
           anchor={{ to: 'bottom end', gap: '8px' }}
@@ -41,9 +40,8 @@ export function FiltersMenu() {
 
       {/* Mobile */}
       <Popover className="sm:hidden w-full">
-        <PopoverButton className={button({ variant: 'secondary', block: true })}>
-          <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
-          <span>{t('common.filters')}</span>
+        <PopoverButton as={Button} variant="secondary" block iconLeft={AdjustmentsHorizontalIcon}>
+          {t('common.filters')}
         </PopoverButton>
         <PopoverBackdrop className="fixed inset-0 z-10 bg-slate-800/20" />
         <PopoverPanel
@@ -147,9 +145,9 @@ function FiltersContent({ close }: FiltersContentProps) {
         </div>
       )}
       <div className="mt-2 px-4 py-3 sm:rounded-b-md border-t border-t-gray-200 flex justify-between">
-        <ButtonLink to={location.pathname} variant="secondary" onClick={close}>
+        <Button to={location.pathname} variant="secondary" onClick={close}>
           {t('common.reset')}
-        </ButtonLink>
+        </Button>
         <Button type="submit">{t('common.apply-now')}</Button>
       </div>
     </Form>
@@ -175,7 +173,7 @@ function FiltersRadio({ label, name, defaultValue, options, className }: Filters
               key={option.name}
               value={option.value}
               className={({ checked }) =>
-                cx('cursor-pointer', button({ variant: 'secondary', size: 's' }), {
+                cx('cursor-pointer', buttonStyles({ variant: 'secondary', size: 'sm' }), {
                   'bg-indigo-100! ring-indigo-200 text-indigo-700 hover:bg-indigo-100': checked,
                 })
               }

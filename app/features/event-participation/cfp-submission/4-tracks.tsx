@@ -3,7 +3,7 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
-import { Button, ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -79,9 +79,9 @@ export default function SubmissionTracksRoute({ loaderData: proposal, actionData
         </Card.Content>
 
         <Card.Actions>
-          <ButtonLink to={previousPath} variant="secondary">
+          <Button to={previousPath} variant="secondary">
             {t('common.go-back')}
-          </ButtonLink>
+          </Button>
           <Button type="submit" form={formId} name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
             {t('common.continue')}
           </Button>

@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { InputTimezone } from '~/design-system/forms/input-timezone.tsx';

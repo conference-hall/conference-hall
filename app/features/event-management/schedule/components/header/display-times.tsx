@@ -1,7 +1,7 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { ClockIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { formatTime } from '~/shared/datetimes/datetimes.ts';
@@ -20,9 +20,8 @@ export function DisplayTimes({ displayedTimes, onChangeDisplayTime }: Props) {
 
   return (
     <Popover className="hidden sm:block">
-      <PopoverButton className={button({ variant: 'secondary' })}>
-        <ClockIcon className="h-4 w-4 text-gray-500" />
-        <span> {`${timeStart} to ${timeEnd}`}</span>
+      <PopoverButton as={Button} variant="secondary" iconLeft={ClockIcon}>
+        {`${timeStart} to ${timeEnd}`}
       </PopoverButton>
 
       <PopoverPanel

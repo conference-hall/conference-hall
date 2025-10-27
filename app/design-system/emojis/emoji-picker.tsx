@@ -2,32 +2,31 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import type { Emoji } from '~/shared/types/emojis.types.ts';
+import { Button } from '../button.tsx';
 
 type EmojiPickerProps = {
   emojis: Array<Emoji>;
   label?: string;
   anchor?: 'top' | 'bottom';
   className?: string;
+  variant: 'primary' | 'secondary' | 'tertiary';
   icon: React.ComponentType<{ className?: string }>;
   onSelectEmoji: (emoji: Emoji) => void;
 };
 
-export function EmojiPicker({ emojis, label, icon: Icon, anchor, className, onSelectEmoji }: EmojiPickerProps) {
+export function EmojiPicker({ emojis, label, icon: Icon, variant, anchor, onSelectEmoji }: EmojiPickerProps) {
   const { t } = useTranslation();
-
-  const buttonStyle =
-    className ||
-    'flex items-center justify-center rounded-full shrink-0 h-6 w-6 bg-gray-100 fill-gray-600 cursor-pointer hover:bg-white hover:ring-1 hover:ring-gray-600';
 
   return (
     <Popover className="relative">
       <PopoverButton
-        className={buttonStyle}
-        aria-label={label || t('common.emoji.select')}
+        as={Button}
+        label={label || t('common.emoji.select')}
         title={label || t('common.emoji.select')}
-      >
-        <Icon className="h-4 w-4" aria-hidden="true" />
-      </PopoverButton>
+        variant={variant}
+        size="xs"
+        icon={Icon}
+      />
 
       <PopoverPanel
         anchor={anchor || 'bottom end'}

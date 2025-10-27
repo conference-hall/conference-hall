@@ -1,9 +1,8 @@
+import { ArrowTopRightOnSquareIcon, MagnifyingGlassIcon } from '@heroicons/react/16/solid';
 import {
-  ArrowTopRightOnSquareIcon,
   ClockIcon,
   FaceSmileIcon,
   LanguageIcon,
-  MagnifyingGlassIcon,
   MapPinIcon,
   PaintBrushIcon,
   TrashIcon,
@@ -12,14 +11,13 @@ import type { FormEvent } from 'react';
 import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { EmojiSelect } from '~/design-system/emojis/emoji-select.tsx';
 import ColorPicker from '~/design-system/forms/color-picker.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
-import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { LANGUAGES } from '~/shared/constants.ts';
 import { getMinutesFromStartOfDay, setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
@@ -92,14 +90,14 @@ export function SessionForm({
               <Subtitle truncate>{proposal?.speakers.map((s) => s.name).join(', ')}</Subtitle>
             </div>
             <div className="flex gap-2 shrink-0">
-              <IconLink
+              <Button
                 icon={ArrowTopRightOnSquareIcon}
                 label={t('event-management.schedule.edit-session.proposal.see')}
                 to={`/team/${team}/${event}/proposals/${proposal?.id}`}
                 variant="secondary"
                 target="_blank"
               />
-              <IconButton
+              <Button
                 icon={MagnifyingGlassIcon}
                 label={t('event-management.schedule.edit-session.proposal.search')}
                 type="button"
@@ -119,7 +117,7 @@ export function SessionForm({
               aria-label={t('event-management.schedule.edit-session.name')}
               className="grow"
             />
-            <IconButton
+            <Button
               icon={MagnifyingGlassIcon}
               label={t('event-management.schedule.edit-session.proposal.search')}
               type="button"

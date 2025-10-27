@@ -2,7 +2,7 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Form } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';

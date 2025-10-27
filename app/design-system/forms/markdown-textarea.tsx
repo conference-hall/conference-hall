@@ -3,7 +3,7 @@ import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
-import { Button } from '../buttons.tsx';
+import { Button } from '../button.tsx';
 import { Modal } from '../dialogs/modals.tsx';
 import { Markdown } from '../markdown.tsx';
 import { Label } from '../typography.tsx';
@@ -69,7 +69,7 @@ export function MarkdownTextArea({
           <p className="text-xs text-gray-500">{t('common.markdown-supported')}</p>
           {preview ? (
             <div className="shrink-0">
-              <Button type="button" variant="secondary" size="s" onClick={handleOpenPreview}>
+              <Button type="button" variant="secondary" size="sm" onClick={handleOpenPreview}>
                 {t('common.preview')}
               </Button>
               <MardownPreviewModal

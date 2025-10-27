@@ -1,11 +1,11 @@
-import { PlusIcon } from '@heroicons/react/20/solid';
+import { PlusIcon } from '@heroicons/react/16/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import slugify from '@sindresorhus/slugify';
 import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { v4 as uuid } from 'uuid';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
@@ -143,13 +143,11 @@ function OptionsFieldList({ options, setOptions }: OptionsFieldListProps) {
           />
           <Button
             type="button"
-            aria-label={t('event-management.settings.survey.answers.remove', { label: option.label })}
-            variant="important"
-            size="square-m"
+            icon={TrashIcon}
+            label={t('event-management.settings.survey.answers.remove', { label: option.label })}
             onClick={() => handleRemoveOption(index)}
-          >
-            <TrashIcon className="size-5" aria-hidden="true" />
-          </Button>
+            variant="important"
+          />
         </div>
       ))}
 
@@ -186,14 +184,12 @@ function NewOptionInput({ setOptions }: NewOptionInputProps) {
       />
       <Button
         type="button"
-        variant="secondary"
-        aria-label={t('event-management.settings.survey.answers.add-answer')}
-        disabled={!label}
-        size="square-m"
+        icon={PlusIcon}
+        label={t('event-management.settings.survey.answers.add-answer')}
         onClick={handleAddOption}
-      >
-        <PlusIcon className="size-5" aria-hidden="true" />
-      </Button>
+        variant="secondary"
+        disabled={!label}
+      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
@@ -47,7 +47,7 @@ export function CfpSection({ slug, cfpState, cfpStart, cfpEnd, timezone }: Props
       </div>
 
       {cfpState === 'OPENED' && (
-        <ButtonLink to={href('/:event/submission', { event: slug })}>{t('event.nav.submit-proposal')}</ButtonLink>
+        <Button to={href('/:event/submission', { event: slug })}>{t('event.nav.submit-proposal')}</Button>
       )}
     </section>
   );

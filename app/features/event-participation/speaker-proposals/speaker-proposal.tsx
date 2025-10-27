@@ -117,7 +117,7 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
         <TalkSection
           talk={proposal}
           canEditSpeakers={canEdit}
-          actions={canEdit ? <TalkEditButton initialValues={proposal} event={currentEvent} errors={errors} /> : null}
+          action={canEdit ? <TalkEditButton initialValues={proposal} event={currentEvent} errors={errors} /> : null}
           showSpeakers
           showFormats
           showCategories

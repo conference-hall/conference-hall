@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
-import type { ButtonStylesProps } from '../buttons.tsx';
-import { button } from '../buttons.tsx';
+import type { ButtonStylesProps } from '../button.tsx';
+import { buttonStyles } from '../button.tsx';
 import { Label } from '../typography.tsx';
 import type { InputProps } from './input.tsx';
 import { Input } from './input.tsx';
@@ -17,11 +17,9 @@ export function ButtonFileUpload({
   disabled,
   loading,
   className,
-  iconLeft: IconLeft,
-  iconRight: IconRight,
   ...rest
 }: ButtonFileUploadProps) {
-  const styles = button({ variant, size, block, disabled, loading, className });
+  const styles = buttonStyles({ variant, size, block, disabled, loading, className });
   return (
     <>
       <Label htmlFor={name} role="button" tabIndex={0} className={cx(styles, 'cursor-pointer')}>

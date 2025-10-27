@@ -4,7 +4,7 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
-import { Button, ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { EventType } from '~/shared/types/events.types.ts';
@@ -52,9 +52,9 @@ export default function NewEventRoute({ params, actionData: errors }: Route.Comp
         </Card.Content>
 
         <Card.Actions>
-          <ButtonLink to=".." variant="secondary">
+          <Button to=".." variant="secondary">
             {t('common.go-back')}
-          </ButtonLink>
+          </Button>
           <Button type="submit" form={formId} iconRight={ArrowRightIcon}>
             {t('common.continue')}
           </Button>

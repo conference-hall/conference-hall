@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useSearchParams } from 'react-router';
-import { ButtonLink } from '../buttons.tsx';
+import { Button } from '../button.tsx';
 
 const pageStyle = cva('relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20', {
   variants: {
@@ -94,20 +94,20 @@ export function PaginationMobile({ current, total }: Props) {
 
   return (
     <div className="flex flex-1 justify-between sm:hidden">
-      <ButtonLink
+      <Button
         variant="secondary"
         to={{ pathname: location.pathname, search: getPageSearchParams(previous, searchParams) }}
         preventScrollReset
       >
         {t('pagination.previous')}
-      </ButtonLink>
-      <ButtonLink
+      </Button>
+      <Button
         variant="secondary"
         to={{ pathname: location.pathname, search: getPageSearchParams(next, searchParams) }}
         preventScrollReset
       >
         {t('pagination.next')}
-      </ButtonLink>
+      </Button>
     </div>
   );
 }

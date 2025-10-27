@@ -1,9 +1,9 @@
-import { LockClosedIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/16/solid';
+import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
 import { NestedErrorBoundary } from '~/app-platform/components/errors/error-boundary.tsx';
-import { ButtonLink } from '~/design-system/buttons.tsx';
-import { IconLink } from '~/design-system/icon-buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
@@ -26,7 +26,7 @@ export default function EventSubmissionRoute({ params }: Route.ComponentProps) {
   if (!isCfpOpen) {
     return (
       <EmptyState label={t('event.submission.cfp-not-open')} icon={LockClosedIcon}>
-        <ButtonLink to={href('/:event', { event: slug })}>{t('common.go-back')}</ButtonLink>
+        <Button to={href('/:event', { event: slug })}>{t('common.go-back')}</Button>
       </EmptyState>
     );
   }
@@ -36,12 +36,12 @@ export default function EventSubmissionRoute({ params }: Route.ComponentProps) {
       <Page.NavHeader className="flex w-full items-center justify-between gap-4 py-4">
         <Steps />
 
-        <IconLink
-          label={t('common.cancel')}
+        <Button
           to={href('/:event', { event: slug })}
+          label={t('common.cancel')}
           icon={XMarkIcon}
-          variant="secondary"
-          className="hidden lg:block"
+          variant="tertiary"
+          className="hidden lg:flex"
         />
       </Page.NavHeader>
 

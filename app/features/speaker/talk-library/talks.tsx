@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { href, useSearchParams } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { BadgeDot } from '~/design-system/badges.tsx';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -38,9 +38,9 @@ export default function SpeakerTalksRoute({ loaderData: talks }: Route.Component
 
       {talks.length === 0 && filter !== 'archived' ? (
         <EmptyState icon={InboxIcon} label={t('talk.library.list.empty')}>
-          <ButtonLink to={href('/speaker/talks/new')} iconLeft={PlusIcon}>
+          <Button to={href('/speaker/talks/new')} iconLeft={PlusIcon}>
             {t('talk.library.new')}
-          </ButtonLink>
+          </Button>
         </EmptyState>
       ) : (
         <List>
@@ -57,9 +57,9 @@ export default function SpeakerTalksRoute({ loaderData: talks }: Route.Component
                   { value: 'all', label: t('common.all') },
                 ]}
               />
-              <ButtonLink to={href('/speaker/talks/new')} iconLeft={PlusIcon}>
+              <Button to={href('/speaker/talks/new')} iconLeft={PlusIcon}>
                 {t('talk.library.new')}
-              </ButtonLink>
+              </Button>
             </div>
           </List.Header>
 

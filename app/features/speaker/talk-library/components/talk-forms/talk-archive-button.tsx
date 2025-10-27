@@ -2,7 +2,7 @@ import { ArchiveBoxIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 
 type Props = { archived: boolean };
 

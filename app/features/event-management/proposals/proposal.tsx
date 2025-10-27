@@ -218,7 +218,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
         <div className="lg:col-span-8">
           <TalkSection
             talk={proposal}
-            actions={
+            action={
               <ProposalActionsMenu proposal={proposal} errors={errors} canEditEventProposal={canEditEventProposal} />
             }
           >
