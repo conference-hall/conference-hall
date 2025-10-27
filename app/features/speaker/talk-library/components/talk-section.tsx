@@ -1,3 +1,4 @@
+import { cx } from 'class-variance-authority';
 import type { TalkLevel } from 'prisma/generated/enums.ts';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +28,7 @@ type Props = {
     createdAt: Date;
   };
   actions?: ReactNode;
+  action?: ReactNode;
   children?: ReactNode;
   canEditSpeakers?: boolean;
   showSpeakers?: boolean;
@@ -38,6 +40,7 @@ type Props = {
 export function TalkSection({
   talk,
   children,
+  action,
   actions,
   canEditSpeakers = false,
   showSpeakers = false,
@@ -50,13 +53,22 @@ export function TalkSection({
 
   return (
     <Card as="section">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pl-6 pr-3 py-3 border-b border-b-gray-200">
+      <div
+        className={cx('gap-4 p-3 pl-6 border-b border-b-gray-200', {
+          'flex flex-col sm:flex-row justify-between sm:items-center': Boolean(actions),
+          'flex justify-between items-center': Boolean(action),
+        })}
+      >
         <H1 size="base">{talk.title}</H1>
 
-        {actions ? <div className="flex flex-row sm:justify-between items-center gap-3">{actions}</div> : null}
+        {action ? (
+          action
+        ) : actions ? (
+          <div className="flex flex-row sm:justify-between items-center gap-3">{actions}</div>
+        ) : null}
       </div>
 
-      <div className="p-4 flex gap-4">
+      <div className="py-4 px-6 flex gap-4">
         {showSpeakers ? (
           <Speakers
             speakers={talk.speakers}
