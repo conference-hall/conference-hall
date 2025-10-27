@@ -83,7 +83,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.6",
+    "@biomejs/biome": "^2.3.1",
     "@dotenvx/dotenvx": "^1.51.0",
     "@mdx-js/rollup": "^3.1.1",
     "@ngneat/falso": "^8.0.2",
@@ -101,7 +101,7 @@
     "@types/react-dom": "^19.2.2",
     "@vitest/browser-playwright": "^4.0.4",
     "concurrently": "^9.2.1",
-    "knip": "^5.66.2",
+    "knip": "^5.66.3",
     "lefthook": "^2.0.1",
     "prisma": "^6.18.0",
     "tailwindcss": "^4.1.16",
