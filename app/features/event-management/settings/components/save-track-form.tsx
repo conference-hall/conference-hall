@@ -2,7 +2,7 @@ import { PlusIcon } from '@heroicons/react/20/solid';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
@@ -16,7 +16,7 @@ export function NewTrackButton({ type }: NewTrackButtonProps) {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <Button iconLeft={PlusIcon} onClick={() => setModalOpen(true)} size="s" variant="secondary">
+      <Button iconLeft={PlusIcon} onClick={() => setModalOpen(true)} size="sm" variant="secondary">
         {type === 'formats'
           ? t('event-management.settings.tracks.formats.new')
           : t('event-management.settings.tracks.categories.new')}
@@ -33,7 +33,7 @@ export function EditTrackButton({ type, initialValues }: EditTrackButtonProps) {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setModalOpen(true)} size="s" variant="secondary">
+      <Button onClick={() => setModalOpen(true)} size="sm" variant="secondary">
         {t('common.edit')}
       </Button>
       <SaveTrackFormModal

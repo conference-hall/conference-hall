@@ -2,8 +2,7 @@ import { ArrowDownIcon, ArrowUpIcon, PlusIcon } from '@heroicons/react/16/solid'
 import { Trans, useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
 import { Badge } from '~/design-system/badges.tsx';
-import { ButtonIcon } from '~/design-system/button-icon.tsx';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -62,7 +61,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                 <Button
                   onClick={onOpen}
                   variant="primary"
-                  size="s"
+                  size="sm"
                   iconLeft={PlusIcon}
                   disabled={questions.length >= MAX_QUESTIONS}
                 >
@@ -96,7 +95,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                 </div>
 
                 <div className="flex gap-2">
-                  <ButtonIcon
+                  <Button
                     label="Move up"
                     icon={ArrowUpIcon}
                     onClick={handleMoveQuestion(question.id, 'up')}
@@ -104,7 +103,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                     variant="secondary"
                     size="sm"
                   />
-                  <ButtonIcon
+                  <Button
                     label="Move down"
                     icon={ArrowDownIcon}
                     onClick={handleMoveQuestion(question.id, 'down')}
@@ -114,12 +113,12 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                   />
                   <SurveyQuestionModal initialValues={question}>
                     {({ onOpen }) => (
-                      <Button onClick={onOpen} variant="secondary" size="s">
+                      <Button onClick={onOpen} variant="secondary" size="sm">
                         {t('common.edit')}
                       </Button>
                     )}
                   </SurveyQuestionModal>
-                  <Button variant="important" size="s" onClick={handleRemoveQuestion(question.id)}>
+                  <Button variant="important" size="sm" onClick={handleRemoveQuestion(question.id)}>
                     {t('common.delete')}
                   </Button>
                 </div>

@@ -1,7 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router';
-import { ButtonIcon } from '~/design-system/button-icon.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ReviewsProgress } from '../shared/reviews-progress.tsx';
 
@@ -21,7 +21,7 @@ export function NavigationHeader({ current, total, reviewed, nextId, previousId 
   return (
     <header className="flex justify-between items-center gap-4 pb-4 lg:-mt-4">
       <nav className="flex items-center justify-between sm:justify-start grow gap-2 lg:gap-4">
-        <ButtonIcon
+        <Button
           to={{ pathname: previousPath, search }}
           icon={ChevronLeftIcon}
           label={t('event-management.proposal-page.previous')}
@@ -30,7 +30,7 @@ export function NavigationHeader({ current, total, reviewed, nextId, previousId 
           disabled={!previousPath}
         />
         <Text weight="medium">{`${current}/${total}`}</Text>
-        <ButtonIcon
+        <Button
           to={{ pathname: nextPath, search }}
           icon={ChevronRightIcon}
           label={t('event-management.proposal-page.next')}

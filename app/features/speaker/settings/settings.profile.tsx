@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';

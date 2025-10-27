@@ -1,6 +1,6 @@
 import { PlusIcon } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { SearchInput } from '~/design-system/forms/search-input.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { FiltersMenu } from './filters-menu.tsx';
@@ -24,9 +24,9 @@ export function Filters() {
         <SortMenu />
 
         {canCreateEventSpeaker && (
-          <ButtonLink iconLeft={PlusIcon} to="new" block>
+          <Button iconLeft={PlusIcon} to="new" block>
             {t('event-management.speakers.new-speaker')}
-          </ButtonLink>
+          </Button>
         )}
       </div>
     </div>

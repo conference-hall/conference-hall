@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
-import { Button, ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -117,9 +117,9 @@ export default function NewProposalRoute({ actionData, params, loaderData }: Rou
           </Card.Content>
 
           <Card.Actions>
-            <ButtonLink variant="secondary" to={href('/team/:team/:event/proposals', params)}>
+            <Button variant="secondary" to={href('/team/:team/:event/proposals', params)}>
               {t('common.cancel')}
-            </ButtonLink>
+            </Button>
             <Button type="submit" form={formId} name="intent" value="create-proposal">
               {t('common.submit')}
             </Button>

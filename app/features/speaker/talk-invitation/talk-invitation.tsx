@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';

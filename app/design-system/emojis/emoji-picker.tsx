@@ -2,7 +2,7 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import type { Emoji } from '~/shared/types/emojis.types.ts';
-import { ButtonIcon } from '../button-icon.tsx';
+import { Button } from '../button.tsx';
 
 type EmojiPickerProps = {
   emojis: Array<Emoji>;
@@ -20,7 +20,7 @@ export function EmojiPicker({ emojis, label, icon: Icon, variant, anchor, onSele
   return (
     <Popover className="relative">
       <PopoverButton
-        as={ButtonIcon}
+        as={Button}
         label={label || t('common.emoji.select')}
         title={label || t('common.emoji.select')}
         variant={variant}

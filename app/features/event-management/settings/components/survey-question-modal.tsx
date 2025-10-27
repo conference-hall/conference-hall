@@ -5,8 +5,7 @@ import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { v4 as uuid } from 'uuid';
-import { ButtonIcon } from '~/design-system/button-icon.tsx';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
@@ -142,7 +141,7 @@ function OptionsFieldList({ options, setOptions }: OptionsFieldListProps) {
             required
             onChange={(event) => handleUpdateOption(index, event.target.value)}
           />
-          <ButtonIcon
+          <Button
             type="button"
             icon={TrashIcon}
             label={t('event-management.settings.survey.answers.remove', { label: option.label })}
@@ -183,7 +182,7 @@ function NewOptionInput({ setOptions }: NewOptionInputProps) {
         className="w-full"
         autoFocus
       />
-      <ButtonIcon
+      <Button
         type="button"
         icon={PlusIcon}
         label={t('event-management.settings.survey.answers.add-answer')}

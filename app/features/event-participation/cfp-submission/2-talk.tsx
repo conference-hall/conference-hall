@@ -3,7 +3,7 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
-import { Button, ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
@@ -57,9 +57,9 @@ export default function SubmissionTalkRoute({ loaderData: talk, actionData: erro
         </Card.Content>
 
         <Card.Actions>
-          <ButtonLink to={previousPath} variant="secondary">
+          <Button to={previousPath} variant="secondary">
             {t('common.go-back')}
-          </ButtonLink>
+          </Button>
           <Button type="submit" form={formId} iconRight={ArrowRightIcon}>
             {t('common.continue')}
           </Button>

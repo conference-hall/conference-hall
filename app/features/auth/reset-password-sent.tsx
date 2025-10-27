@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, redirect, useNavigation, useSearchParams } from 'react-router';
 import { z } from 'zod';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';

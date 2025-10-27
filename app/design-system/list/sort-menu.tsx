@@ -3,8 +3,8 @@ import { ArrowDownIcon, ArrowsUpDownIcon, ArrowUpIcon } from '@heroicons/react/1
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useSearchParams } from 'react-router';
-import { button } from '~/design-system/buttons.tsx';
 import { MenuTransition } from '~/design-system/transitions.tsx';
+import { Button } from '../button.tsx';
 import { menuItem, menuItemIcon, menuItems } from '../styles/menu.styles.ts';
 
 type SortMenuProps = {
@@ -21,9 +21,8 @@ export function SortMenu({ options, defaultSort, defaultOrder }: SortMenuProps) 
 
   return (
     <Menu>
-      <MenuButton className={button({ variant: 'secondary' })}>
-        <ArrowsUpDownIcon className="size-4 text-gray-500" />
-        <span>{t('common.sort')}</span>
+      <MenuButton as={Button} variant="secondary" iconLeft={ArrowsUpDownIcon}>
+        {t('common.sort')}
       </MenuButton>
 
       <MenuTransition>

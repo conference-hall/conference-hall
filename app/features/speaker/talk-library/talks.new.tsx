@@ -3,7 +3,7 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';

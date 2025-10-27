@@ -5,7 +5,7 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
-import { Button, ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EventDetailsForm } from '~/features/event-management/creation/components/event-details-form.tsx';
 import { EventDetailsSettingsSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
@@ -67,13 +67,13 @@ export default function NewEventDetailsRoute({ loaderData: event, actionData: er
         </Card.Content>
 
         <Card.Actions>
-          <ButtonLink
+          <Button
             to={href('/team/:team/:event', { team: currentTeam.slug, event: event.slug })}
             iconLeft={ClockIcon}
             variant="secondary"
           >
             {t('common.do-it-later')}
-          </ButtonLink>
+          </Button>
           {isConference ? (
             <Button type="submit" form={formId} iconRight={ArrowRightIcon}>
               {t('common.continue')}

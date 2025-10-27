@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { ArrowLeftIcon } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { ButtonIcon } from '~/design-system/button-icon.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
@@ -75,7 +75,7 @@ export default function EmailCustomizationRoute({ params, loaderData }: Route.Co
     <Card as="section">
       <Card.Title className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <ButtonIcon
+          <Button
             label={t('common.go-back')}
             icon={ArrowLeftIcon}
             to={href('/team/:team/:event/settings/emails', { team: params.team, event: params.event })}

@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';

@@ -2,7 +2,7 @@ import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -27,18 +27,14 @@ export default function EventSpeakerProposalsRoute({ loaderData: proposals }: Ro
     <Page>
       <Page.Heading title={t('event.proposals.heading')}>
         {event.cfpState === 'OPENED' && proposals.length > 0 ? (
-          <ButtonLink to={href('/:event/submission', { event: event.slug })}>
-            {t('event.nav.submit-proposal')}
-          </ButtonLink>
+          <Button to={href('/:event/submission', { event: event.slug })}>{t('event.nav.submit-proposal')}</Button>
         ) : null}
       </Page.Heading>
 
       {proposals.length === 0 ? (
         <EmptyState icon={InboxIcon} label={t('event.proposals.list.empty')}>
           {event.cfpState === 'OPENED' ? (
-            <ButtonLink to={href('/:event/submission', { event: event.slug })}>
-              {t('event.nav.submit-proposal')}
-            </ButtonLink>
+            <Button to={href('/:event/submission', { event: event.slug })}>{t('event.nav.submit-proposal')}</Button>
           ) : null}
         </EmptyState>
       ) : (

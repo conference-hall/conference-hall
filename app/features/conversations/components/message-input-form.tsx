@@ -1,7 +1,7 @@
 import { useId, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Label } from '~/design-system/typography.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 
@@ -65,12 +65,12 @@ export function MessageInputForm({
 
       <div className="absolute inset-x-0 bottom-0 flex justify-end gap-x-2 pb-2 pl-3 pr-2">
         {onClose ? (
-          <Button type="button" variant="secondary" onClick={onClose} size="s">
+          <Button type="button" variant="secondary" onClick={onClose} size="sm">
             {t('common.cancel')}
           </Button>
         ) : null}
 
-        <Button type="submit" variant={onClose ? 'primary' : 'secondary'} size={onClose ? 's' : 'm'}>
+        <Button type="submit" variant={onClose ? 'primary' : 'secondary'} size={onClose ? 'sm' : 'base'}>
           {buttonLabel || t('common.save')}
         </Button>
       </div>

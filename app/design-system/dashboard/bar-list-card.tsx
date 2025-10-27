@@ -1,7 +1,7 @@
 import { cx } from 'class-variance-authority';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import type { BarListProps } from '../charts/bar-list.tsx';

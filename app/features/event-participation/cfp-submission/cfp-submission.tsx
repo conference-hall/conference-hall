@@ -3,8 +3,7 @@ import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
 import { NestedErrorBoundary } from '~/app-platform/components/errors/error-boundary.tsx';
-import { ButtonIcon } from '~/design-system/button-icon.tsx';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
@@ -27,7 +26,7 @@ export default function EventSubmissionRoute({ params }: Route.ComponentProps) {
   if (!isCfpOpen) {
     return (
       <EmptyState label={t('event.submission.cfp-not-open')} icon={LockClosedIcon}>
-        <ButtonLink to={href('/:event', { event: slug })}>{t('common.go-back')}</ButtonLink>
+        <Button to={href('/:event', { event: slug })}>{t('common.go-back')}</Button>
       </EmptyState>
     );
   }
@@ -37,12 +36,12 @@ export default function EventSubmissionRoute({ params }: Route.ComponentProps) {
       <Page.NavHeader className="flex w-full items-center justify-between gap-4 py-4">
         <Steps />
 
-        <ButtonIcon
+        <Button
           to={href('/:event', { event: slug })}
           label={t('common.cancel')}
           icon={XMarkIcon}
           variant="tertiary"
-          // className="hidden lg:flex"
+          className="hidden lg:flex"
         />
       </Page.NavHeader>
 

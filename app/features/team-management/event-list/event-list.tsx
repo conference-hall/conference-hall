@@ -2,7 +2,7 @@ import { PlusIcon } from '@heroicons/react/20/solid';
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, useSearchParams } from 'react-router';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
@@ -38,9 +38,9 @@ export default function TeamEventsRoute({ loaderData: events }: Route.ComponentP
           ]}
         />
         {currentTeam.userPermissions.canCreateEvent ? (
-          <ButtonLink to={href('/team/:team/new', { team: currentTeam.slug })} iconLeft={PlusIcon}>
+          <Button to={href('/team/:team/new', { team: currentTeam.slug })} iconLeft={PlusIcon}>
             {t('team.events-list.new-event-button')}
-          </ButtonLink>
+          </Button>
         ) : null}
       </Page.Heading>
 

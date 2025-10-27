@@ -2,7 +2,7 @@ import { TrashIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';

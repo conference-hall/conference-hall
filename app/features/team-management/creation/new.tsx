@@ -3,7 +3,7 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { TeamCreateSchema, TeamCreation } from '~/features/team-management/creation/services/team-creation.server.ts';
 import { requireUserSession } from '~/shared/auth/session.ts';

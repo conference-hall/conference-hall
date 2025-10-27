@@ -1,7 +1,7 @@
 import { CheckIcon } from '@heroicons/react/16/solid';
 import * as Firebase from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { getClientAuth, type ProviderId } from '~/shared/auth/firebase.ts';
 
 type LinkProviderProps = { providerId: ProviderId };
@@ -25,7 +25,7 @@ export function LinkProvider({ providerId }: LinkProviderProps) {
   };
 
   return (
-    <Button type="button" variant="secondary" onClick={linkProvider} size="s">
+    <Button type="button" variant="secondary" onClick={linkProvider} size="sm">
       {t('settings.account.authentication-methods.link-button')}
     </Button>
   );
@@ -57,7 +57,7 @@ export function UnlinkProvider({ providerId, disabled, onUnlink }: UnlinkProvide
       onClick={unlinkProvider}
       iconLeft={disabled ? CheckIcon : undefined}
       disabled={disabled}
-      size="s"
+      size="sm"
     >
       {disabled
         ? t('settings.account.authentication-methods.account-linked')

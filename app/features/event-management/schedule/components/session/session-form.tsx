@@ -11,8 +11,7 @@ import type { FormEvent } from 'react';
 import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
-import { ButtonIcon } from '~/design-system/button-icon.tsx';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { EmojiSelect } from '~/design-system/emojis/emoji-select.tsx';
 import ColorPicker from '~/design-system/forms/color-picker.tsx';
@@ -91,14 +90,14 @@ export function SessionForm({
               <Subtitle truncate>{proposal?.speakers.map((s) => s.name).join(', ')}</Subtitle>
             </div>
             <div className="flex gap-2 shrink-0">
-              <ButtonIcon
+              <Button
                 icon={ArrowTopRightOnSquareIcon}
                 label={t('event-management.schedule.edit-session.proposal.see')}
                 to={`/team/${team}/${event}/proposals/${proposal?.id}`}
                 variant="secondary"
                 target="_blank"
               />
-              <ButtonIcon
+              <Button
                 icon={MagnifyingGlassIcon}
                 label={t('event-management.schedule.edit-session.proposal.search')}
                 type="button"
@@ -118,7 +117,7 @@ export function SessionForm({
               aria-label={t('event-management.schedule.edit-session.name')}
               className="grow"
             />
-            <ButtonIcon
+            <Button
               icon={MagnifyingGlassIcon}
               label={t('event-management.schedule.edit-session.proposal.search')}
               type="button"

@@ -3,7 +3,7 @@ import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { TagIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
@@ -100,7 +100,7 @@ export default function ProposalTagsRoute({ loaderData }: Route.ComponentProps) 
                 <div className="flex gap-2">
                   <TagModal mode="edit" initialValues={tag}>
                     {({ onOpen }) => (
-                      <Button variant="secondary" size="s" onClick={onOpen}>
+                      <Button variant="secondary" size="sm" onClick={onOpen}>
                         {t('common.edit')}
                       </Button>
                     )}
@@ -116,7 +116,7 @@ export default function ProposalTagsRoute({ loaderData }: Route.ComponentProps) 
                     }}
                   >
                     <input type="hidden" name="id" value={tag.id} />
-                    <Button type="submit" name="intent" value="delete-tag" variant="important" size="s">
+                    <Button type="submit" name="intent" value="delete-tag" variant="important" size="sm">
                       {t('common.delete')}
                     </Button>
                   </Form>

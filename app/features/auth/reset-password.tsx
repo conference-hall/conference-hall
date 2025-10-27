@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, redirect, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { PasswordInput } from '~/design-system/forms/password-input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';

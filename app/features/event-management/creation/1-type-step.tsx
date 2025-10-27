@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireUserSession } from '~/shared/auth/session.ts';
 import type { EventType } from '~/shared/types/events.types.ts';
@@ -34,17 +34,17 @@ export default function NewEventTypeRoute() {
         </Card.Content>
 
         <Card.Actions>
-          <ButtonLink to={href('/team/:team', { team: currentTeam.slug })} type="button" variant="secondary">
+          <Button to={href('/team/:team', { team: currentTeam.slug })} type="button" variant="secondary">
             {t('common.cancel')}
-          </ButtonLink>
-          <ButtonLink
+          </Button>
+          <Button
             to={href('/team/:team/new/type/:type', { team: currentTeam.slug, type })}
             type="button"
             replace
             iconRight={ArrowRightIcon}
           >
             {t('common.continue')}
-          </ButtonLink>
+          </Button>
         </Card.Actions>
       </Card>
     </>

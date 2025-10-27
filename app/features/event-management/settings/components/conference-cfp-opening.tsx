@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { EventCfpConferenceForm } from '~/features/event-management/creation/components/event-cfp-conference-form.tsx';

@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, href, useFetcher } from 'react-router';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import type { SelectPanelOption } from '~/design-system/forms/select-panel.tsx';

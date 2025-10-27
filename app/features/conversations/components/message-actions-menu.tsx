@@ -3,7 +3,7 @@ import { EllipsisHorizontalIcon, PencilSquareIcon, TrashIcon } from '@heroicons/
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { useUser } from '~/app-platform/components/user-context.tsx';
-import { ButtonIcon } from '~/design-system/button-icon.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
@@ -27,7 +27,7 @@ export function MessageActionsMenu({ message, intentSuffix, onEdit, canManageCon
   return (
     <Menu>
       <MenuButton
-        as={ButtonIcon}
+        as={Button}
         label={t('common.conversation.actions-menu')}
         icon={EllipsisHorizontalIcon}
         variant="tertiary"

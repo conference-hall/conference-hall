@@ -3,7 +3,7 @@ import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import {
   ScheduleDisplayTimesUpdateSchema,
@@ -93,9 +93,9 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
     return (
       <main className="px-8 my-8 mx-auto max-w-7xl">
         <EmptyState icon={CalendarDaysIcon} label={t('event-management.schedule.empty')}>
-          <ButtonLink to=".." relative="path">
+          <Button to=".." relative="path">
             {t('event-management.schedule.go-to')}
-          </ButtonLink>
+          </Button>
         </EmptyState>
       </main>
     );

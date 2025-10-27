@@ -1,6 +1,6 @@
 import { FireIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 
 type MaxProposalsReachedProps = { maxProposals: number };
@@ -9,9 +9,9 @@ export function MaxProposalsReached({ maxProposals }: MaxProposalsReachedProps) 
   const { t } = useTranslation();
   return (
     <EmptyState icon={FireIcon} label={t('event.submission.selection.max-reached', { maxProposals })}>
-      <ButtonLink to="../proposals" relative="path" variant="secondary">
+      <Button to="../proposals" relative="path" variant="secondary">
         {t('event.submission.selection.max-reached.button')}
-      </ButtonLink>
+      </Button>
     </EmptyState>
   );
 }
