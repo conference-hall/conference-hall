@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: used to manage disable state of links */
+/** biome-ignore-all lint/a11y/useValidAnchor: used to manage disable state of links */
 import type { VariantProps } from 'class-variance-authority';
 import { cva, cx } from 'class-variance-authority';
 import type React from 'react';
@@ -8,7 +10,10 @@ import { LoadingIcon } from './icons/loading-icon.tsx';
 export type ButtonStylesProps = VariantProps<typeof buttonStyles>;
 
 export const buttonStyles = cva(
-  ['items-center justify-center', 'focus:outline-hidden focus:ring-2 focus:ring-indigo-500'],
+  [
+    'items-center justify-center',
+    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+  ],
   {
     variants: {
       mode: { icon: 'flex shrink-0', text: 'inline-flex whitespace-nowrap relative' },
@@ -127,6 +132,7 @@ export function Button(props: ButtonProps) {
         className={buttonClassName}
         aria-disabled={isDisabled ? 'true' : undefined}
         tabIndex={isDisabled ? -1 : 0}
+        onClick={isDisabled ? (e) => e.preventDefault() : undefined}
         {...linkProps}
       >
         {content}
@@ -141,6 +147,7 @@ export function Button(props: ButtonProps) {
         className={buttonClassName}
         aria-disabled={isDisabled ? 'true' : undefined}
         tabIndex={isDisabled ? -1 : 0}
+        onClick={isDisabled ? (e) => e.preventDefault() : undefined}
         {...anchorProps}
       >
         {content}
@@ -152,7 +159,7 @@ export function Button(props: ButtonProps) {
   return (
     <button
       className={buttonClassName}
-      disabled={isDisabled ?? undefined}
+      disabled={isDisabled}
       aria-disabled={isDisabled ? 'true' : undefined}
       {...buttonProps}
     >

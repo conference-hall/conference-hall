@@ -12,8 +12,8 @@ export class ProposalPage extends PageObject {
   readonly commentInput = this.page.getByRole('textbox', { name: 'Add your comment' });
   readonly commentButton = this.page.getByRole('button', { name: 'Comment' });
 
-  readonly nextProposal = this.page.getByLabel('Next proposal');
-  readonly previousProposal = this.page.getByLabel('Previous proposal');
+  readonly nextProposal = this.page.getByRole('link', { name: 'Next proposal' });
+  readonly previousProposal = this.page.getByRole('link', { name: 'Previous proposal' });
 
   readonly deliberationStatus = this.page.getByLabel('Change proposal status');
   readonly publicationStatus = this.page.getByRole('heading', { name: 'Publication' });

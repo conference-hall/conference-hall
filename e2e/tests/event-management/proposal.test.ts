@@ -154,7 +154,7 @@ test.describe('As a owner', () => {
 
     // Delete a comment
     page.on('dialog', (dialog) => dialog.accept());
-    await fourth.getByLabel('Message action menu').click();
+    await fourth.getByRole('button', { name: 'Message action menu' }).click();
     await page.getByRole('button', { name: 'Delete' }).click();
     await expect(proposalPage.activityFeed).toHaveCount(5);
 
