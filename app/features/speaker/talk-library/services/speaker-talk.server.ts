@@ -21,7 +21,10 @@ export class SpeakerTalk {
       },
       include: {
         speakers: true,
-        proposals: { include: { event: true } },
+        proposals: {
+          where: { speakers: { some: { userId: this.userId } } },
+          include: { event: true },
+        },
       },
     });
     if (!talk) throw new TalkNotFoundError();
