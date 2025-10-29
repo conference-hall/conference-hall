@@ -81,14 +81,16 @@ describe('SpeakerTalk', () => {
       ]);
     });
 
-    it('returns proposals when talk submitted ordered by creation date', async () => {
+    it("returns talk's proposals submitted by the speaker", async () => {
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal1 = await proposalFactory({ talk, event: await eventFactory() });
       const proposal2 = await proposalFactory({ talk, event: await eventFactory() });
+      await proposalFactory({ talk, speakers: [], event: await eventFactory() });
 
       const result = await SpeakerTalk.for(speaker.id, talk.id).get();
 
+      expect(result.submissions.length).toBe(2);
       expect(result.submissions).toEqual([
         {
           name: proposal2.event.name,
