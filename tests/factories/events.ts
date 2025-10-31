@@ -3,6 +3,8 @@ import { slugifyWithCounter } from '@sindresorhus/slugify';
 import type { Team, User } from 'prisma/generated/client.ts';
 import { EventType, EventVisibility } from 'prisma/generated/enums.ts';
 import type { EventCreateInput } from 'prisma/generated/models.ts';
+import { generateImagePlaceholder } from 'tests/img-placeholder.ts';
+import { getContrastColor, getRandomColor } from '~/shared/colors/colors.ts';
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 import { teamFactory } from './team.ts';
@@ -126,6 +128,8 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
 
   const name = attributes.name || randAnimal();
   const slug = slugify(name);
+  const backgroundColor = getRandomColor();
+  const textColor = getContrastColor(backgroundColor);
 
   const defaultAttributes: EventCreateInput = {
     name,
@@ -133,7 +137,7 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
     description: randParagraph(),
     timezone: 'Europe/Paris',
     location: randFullAddress(),
-    logoUrl: `/placeholder-images/seed/${slug}/128/128`,
+    logoUrl: generateImagePlaceholder({ height: 128, width: 128, backgroundColor, textColor }),
     websiteUrl: randUrl(),
     contactEmail: randEmail(),
     codeOfConductUrl: randUrl(),
