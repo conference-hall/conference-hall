@@ -1,4 +1,3 @@
-import { applyPlaceholderImages } from './express/middlewares/placeholder-images.ts';
 import { setupExpressServer } from './express/setup-express-server.ts';
 
 const APP_PATH = './servers/express/app.ts';
@@ -11,9 +10,6 @@ await setupExpressServer(async (app) => {
       server: { middlewareMode: true },
     }),
   );
-
-  // Placeholder images for dev
-  applyPlaceholderImages(app);
 
   app.use(viteDevServer.middlewares);
 
