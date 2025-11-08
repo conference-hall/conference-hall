@@ -772,7 +772,7 @@
   "event.submission.cfp-not-open": "Le call for papers n'est pas encore ouvert.",
   "event.submission.proposal.heading": "Votre proposition",
   "event.submission.selection.description": "Sélectionnez un talk dans votre bibliothèque ou créez-en un nouveau.",
-  "event.submission.selection.drafts": "Vos brouillongs de propositions",
+  "event.submission.selection.drafts": "Vos brouillons de propositions",
   "event.submission.selection.heading": "Soumettre une proposition",
   "event.submission.selection.max-limit": "Vous pouvez soumettre un maximum de {{maxProposals}} propositions par speaker.",
   "event.submission.selection.max-reached.button": "Vérifier les propositions soumises",
