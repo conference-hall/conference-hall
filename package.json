@@ -43,8 +43,8 @@
     "@prisma/adapter-pg": "^6.19.0",
     "@prisma/client": "^6.19.0",
     "@react-email/components": "^1.0.0",
-    "@react-router/express": "~7.9.4",
-    "@react-router/node": "~7.9.4",
+    "@react-router/express": "~7.9.5",
+    "@react-router/node": "~7.9.5",
     "@sindresorhus/slugify": "^3.0.0",
     "bullmq": "^5.63.0",
     "class-variance-authority": "^0.7.1",
@@ -72,7 +72,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-i18next": "^16.2.4",
-    "react-router": "~7.9.4",
+    "react-router": "~7.9.5",
     "recharts": "^3.3.0",
     "remix-i18next": "^7.4.2",
     "sitemap": "^9.0.0",
@@ -88,7 +88,7 @@
     "@mdx-js/rollup": "^3.1.1",
     "@ngneat/falso": "^8.0.2",
     "@playwright/test": "^1.56.1",
-    "@react-router/dev": "~7.9.4",
+    "@react-router/dev": "~7.9.5",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.17",
@@ -99,7 +99,7 @@
     "@types/nodemailer": "^7.0.3",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "@vitest/browser-playwright": "^4.0.4",
+    "@vitest/browser-playwright": "4.0.4",
     "concurrently": "^9.2.1",
     "knip": "^5.68.0",
     "lefthook": "^2.0.2",
@@ -109,8 +109,8 @@
     "typescript": "^5.9.3",
     "vite": "^7.2.2",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^4.0.4",
-    "vitest-browser-react": "^2.0.2"
+    "vitest": "4.0.4",
+    "vitest-browser-react": "2.0.2"
   },
   "engines": {
     "node": "22.x"
