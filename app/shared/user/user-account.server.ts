@@ -8,7 +8,9 @@ import { auth as firebaseAuth } from '~/shared/auth/firebase.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
+import { validateCaptchaToken } from '../auth/captcha.server.ts';
 import { NotAuthorizedError } from '../errors.server.ts';
+import { flags } from '../feature-flags/flags.server.ts';
 import { sortBy } from '../utils/arrays-sort-by.ts';
 
 const { APP_URL } = getSharedServerEnv();
@@ -94,8 +96,17 @@ export class UserAccount {
     }
   }
 
-  static async sendResetPasswordEmail(email: string, locale: string) {
+  static async sendResetPasswordEmail(email: string, locale: string, captchaToken?: string) {
     try {
+      // Validate captcha token only if feature is enabled
+      const isCaptchaEnabled = await flags.get('captcha');
+      if (isCaptchaEnabled) {
+        const isCaptchaValid = await validateCaptchaToken(captchaToken);
+        if (!isCaptchaValid) {
+          throw new Response('Captcha validation failed', { status: 403 });
+        }
+      }
+
       const firebaseResetLink = await firebaseAuth.generatePasswordResetLink(email);
       const firebaseResetUrl = new URL(firebaseResetLink);
       const oobCode = firebaseResetUrl.searchParams.get('oobCode');

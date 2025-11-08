@@ -9,7 +9,7 @@ export default [
   route('auth/logout', './features/auth/signout.tsx'),
   route('auth/signup', './features/auth/signup.tsx'),
   route('auth/reset-password', './features/auth/reset-password.tsx'),
-  route('auth/forgot-password', './features/auth/reset-password-sent.tsx'),
+  route('auth/forgot-password', './features/auth/forgot-password.tsx'),
   route('auth/email-verification', './features/auth/email-verification-sent.tsx'),
   route('auth/verify-email', './features/auth/email-verification-link.tsx'),
 
