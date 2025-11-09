@@ -6,7 +6,7 @@ type BaseEventEmailProps = BaseEmailProps & { logoUrl?: string | null };
 export default function BaseEventEmail({ logoUrl, children, locale }: BaseEventEmailProps) {
   return (
     <BaseEmail locale={locale}>
-      {logoUrl?.startsWith('https://') ? (
+      {logoUrl?.startsWith('https://') || logoUrl?.startsWith('data:image/') ? (
         <Img className={styles.logo} height={70} width={70} src={logoUrl} alt="" />
       ) : null}
 

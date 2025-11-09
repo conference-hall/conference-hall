@@ -7,6 +7,7 @@ import type {
   ConversationMessageReactData,
   ConversationMessageSaveData,
 } from './conversation.schema.server.ts';
+import { NOTIFICATION_DELAY, notifyConversationMessage } from './jobs/notify-conversation-message.job.ts';
 
 type ConversationServiceContext = {
   userId: string;
@@ -57,6 +58,16 @@ export class ConversationService {
         await tx.conversationMessage.create({
           data: { conversationId: conversation.id, senderId: userId, content: message, type: 'TEXT' },
         });
+
+        // Trigger email notification job with debounce per conversation
+        // This ensures that only one notification is sent even if multiple messages are created in succession
+        await notifyConversationMessage.trigger(
+          { conversationId: conversation.id },
+          {
+            deduplication: { id: conversation.id, ttl: NOTIFICATION_DELAY, extend: true, replace: true },
+            delay: NOTIFICATION_DELAY,
+          },
+        );
       }
     });
   }
