@@ -16,7 +16,7 @@ export default function BaseEmail({ children, locale }: BaseEmailProps) {
 
       <Tailwind>
         <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded-[8px] mt-[20px] mb-[12px] mx-auto px-[20px] py-[10px]">
+          <Container className="border border-solid border-[#eaeaea] rounded-lg mt-5 mb-3 mx-auto px-5 py-2.5">
             {children}
           </Container>
 
@@ -33,12 +33,9 @@ export default function BaseEmail({ children, locale }: BaseEmailProps) {
 
 export const styles = {
   h1: 'text-xl',
-  logo: 'mx-auto mt-[20px] mb-[32px] rounded-lg',
-  card: 'bg-slate-50 border border-solid border-slate-200 rounded-[8px] px-[20px] my-[20px]',
-  button: cx(
-    'box-border rounded-[8px] bg-slate-800 px-[24px] py-[12px] w-full',
-    'text-center font-semibold text-sm text-white',
-  ),
+  logo: 'mx-auto mt-5 mb-3 rounded-lg',
+  card: 'bg-slate-50 border border-solid border-slate-200 rounded-lg px-5 my-5',
+  button: cx('box-border rounded-lg bg-slate-800 px-5 py-2.5 w-full', 'text-center font-semibold text-sm text-white'),
 };
 
 BaseEmail.PreviewProps = {

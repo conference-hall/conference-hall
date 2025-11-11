@@ -159,7 +159,7 @@ type AvatarGroupProps = {
 
 export function AvatarGroup({ avatars, size, className }: AvatarGroupProps) {
   return (
-    <div className={cx('flex -space-x-1 shrink-0 overflow-hidden', className)}>
+    <div className={cx('flex flex-nowrap -space-x-1 shrink-0 overflow-hidden', className)}>
       {avatars.map((avatar, index) => (
         <Tooltip key={index} text={avatar.name}>
           <Avatar name={avatar.name} picture={avatar.picture} size={size} className="ring-2 ring-white" />

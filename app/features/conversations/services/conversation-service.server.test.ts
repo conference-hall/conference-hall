@@ -10,6 +10,7 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
 import { ConversationService } from './conversation-service.server.ts';
+import { notifyConversationMessage } from './jobs/notify-conversation-message.job.ts';
 
 describe('ConversationService', () => {
   let speaker: User;
@@ -167,6 +168,59 @@ describe('ConversationService', () => {
 
       const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
       expect(result?.content).toBe('Original message');
+    });
+
+    it('triggers notification job when creating a new message', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        contextIds: [proposal.id],
+      });
+
+      await service.saveMessage(event.id, { message: 'New message' });
+
+      const conversation = await db.conversation.findFirst({
+        where: { eventId: event.id, contextType: ConversationContextType.PROPOSAL_CONVERSATION },
+      });
+
+      expect(notifyConversationMessage.trigger).toHaveBeenCalledWith(
+        { conversationId: conversation?.id },
+        expect.objectContaining({
+          delay: expect.any(Number),
+          deduplication: expect.objectContaining({
+            id: conversation?.id,
+            ttl: expect.any(Number),
+            extend: true,
+            replace: true,
+          }),
+        }),
+      );
+    });
+
+    it('does not trigger notification job when updating an existing message', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const message = await conversationMessageFactory({
+        conversation,
+        sender: speaker,
+        role: ConversationParticipantRole.SPEAKER,
+      });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        contextIds: [proposal.id],
+      });
+
+      await service.saveMessage(event.id, { id: message.id, message: 'Updated message' });
+
+      expect(notifyConversationMessage.trigger).not.toHaveBeenCalled();
     });
   });
 

@@ -35,7 +35,7 @@ export default function ProposalSubmittedEmail({ event, proposal, locale }: Emai
         </Text>
       </Section>
 
-      <Section className="text-center my-[32px]">
+      <Section className="text-center my-8">
         <Button href={buildReviewProposalUrl(event.team.slug, event.slug, proposal.id)} className={styles.button}>
           {t('organizers.proposal-submitted.body.cta')}
         </Button>

@@ -48,7 +48,7 @@ export default function ExampleEmail({ locale, ...props }: EmailProps) {
       <Section className={styles.card}>
         <Text><strong>Highlighted content</strong></Text>
       </Section>
-      <Section className="text-center my-[32px]">
+      <Section className="text-center my-8">
         <Button href={actionUrl} className={styles.button}>
           Action Button
         </Button>

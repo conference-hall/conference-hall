@@ -28,7 +28,7 @@ export function SpeakerConversationEntry({ messages, speakers, canManageConversa
     >
       <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between p-3 rounded-md ring-1 ring-inset ring-blue-100 bg-indigo-50/50">
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-1 truncate">
-          <AvatarGroup avatars={speakers} size="xs" className="hidden sm:block pr-2" />
+          <AvatarGroup avatars={speakers} size="xs" className="hidden sm:flex pr-2" />
           <Text size="s" weight="semibold">
             {t('event-management.proposal-page.activity-feed.conversation.title')}
             <span className="hidden sm:inline"> ⋅ </span>

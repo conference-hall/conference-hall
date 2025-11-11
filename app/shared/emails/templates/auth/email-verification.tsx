@@ -19,7 +19,7 @@ export default function VerificationEmail({ emailVerificationUrl, locale }: Emai
       <Text>{t('auth.email-verification.body.greeting')}</Text>
       <Text>{t('auth.email-verification.body.text1')}</Text>
 
-      <Section className="text-center my-[32px]">
+      <Section className="text-center my-8">
         <Button href={emailVerificationUrl} className={styles.button}>
           {t('auth.email-verification.body.cta')}
         </Button>
