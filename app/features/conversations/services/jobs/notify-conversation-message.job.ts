@@ -3,6 +3,7 @@ import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ConversationMessageEmail from '~/shared/emails/templates/speakers/conversation-message.tsx';
 import { job } from '~/shared/jobs/job.ts';
+import type { MessageRole } from '~/shared/types/conversation.types.ts';
 
 type NotifyConversationMessagePayload = {
   conversationId: string;
@@ -12,6 +13,9 @@ const { NODE_ENV } = getSharedServerEnv();
 
 // Notification delay - 5 min in production
 export const NOTIFICATION_DELAY = NODE_ENV === 'production' ? 5 * 60 * 1000 : 2 * 1000;
+
+// Extra buffer to account for job scheduling delays
+const TIME_WINDOW_BUFFER_MS = 5 * 1000;
 
 export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
   name: 'notify-conversation-message',
@@ -24,7 +28,7 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
         event: { include: { team: true } },
         participants: { include: { user: true } },
         messages: {
-          where: { createdAt: { gte: new Date(Date.now() - (NOTIFICATION_DELAY + 5 * 1000)) } },
+          where: { createdAt: { gte: new Date(Date.now() - (NOTIFICATION_DELAY + TIME_WINDOW_BUFFER_MS)) } },
           orderBy: { createdAt: 'desc' },
           include: { sender: true },
         },
@@ -60,7 +64,7 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
     }
 
     // Collect all unique recipients (participants + proposal speakers - sender)
-    const recipientsMap = new Map<string, { email: string; locale: string; role: 'SPEAKER' | 'ORGANIZER' | null }>();
+    const recipientsMap = new Map<string, { email: string; locale: string; role: MessageRole | null }>();
 
     // Add participants
     for (const participant of conversation.participants) {
