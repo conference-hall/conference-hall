@@ -169,7 +169,7 @@ export class UserAccount {
     }
   }
 
-  static async deleteAccount(userId: string, locale: string) {
+  static async deleteAccount(userId: string, locale: string, sendConfirmationEmail = true) {
     const user = await db.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotAuthorizedError();
 
@@ -221,9 +221,11 @@ export class UserAccount {
         if (uid) await firebaseAuth.deleteUser(uid);
       });
 
-      // Send confirmation email after successful deletion
-      const deletionDate = deletedAt.toISOString().split('T')[0];
-      await sendEmail.trigger(AccountDeletedEmail.buildPayload(email, locale, { deletionDate }));
+      // Send confirmation email after successful deletion (if requested)
+      if (sendConfirmationEmail) {
+        const deletionDate = deletedAt.toISOString().split('T')[0];
+        await sendEmail.trigger(AccountDeletedEmail.buildPayload(email, locale, { deletionDate }));
+      }
     } catch (error) {
       console.error('deleteAccount', error);
       throw error;

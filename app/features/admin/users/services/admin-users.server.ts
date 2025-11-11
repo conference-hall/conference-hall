@@ -61,6 +61,10 @@ export class AdminUsers {
       include: { team: true },
     });
 
+    const talksCount = await db.talk.count({
+      where: { speakers: { some: { id: userId } } },
+    });
+
     return {
       uid: user.uid,
       name: user.name,
@@ -70,6 +74,8 @@ export class AdminUsers {
       lastSignInAt: authUser?.lastSignInAt ?? null,
       updatedAt: user.updatedAt,
       createdAt: user.createdAt,
+      deletedAt: user.deletedAt,
+      talksCount,
       authenticationMethods: authUser?.authenticationMethods || [],
       teams: memberships.map((member) => ({
         slug: member.team.slug,
@@ -78,6 +84,14 @@ export class AdminUsers {
         createdAt: member.createdAt,
       })),
     };
+  }
+
+  async deleteUser(targetUserId: string) {
+    const user = await db.user.findUnique({ where: { id: targetUserId } });
+
+    if (!user) throw new UserNotFoundError();
+
+    await UserAccount.deleteAccount(targetUserId, user.locale, false);
   }
 
   async #getAuthUser(uid: string | null) {
