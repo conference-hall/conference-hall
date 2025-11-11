@@ -7,7 +7,7 @@ import { auth } from '~/shared/auth/firebase.server.ts';
 import { NotAuthorizedError, UserNotFoundError } from '~/shared/errors.server.ts';
 import { AdminUsers } from './admin-users.server.ts';
 
-vi.mock('~/shared/auth/firebase.server.ts', () => ({ auth: { getUser: vi.fn() } }));
+vi.mock('~/shared/auth/firebase.server.ts', () => ({ auth: { getUser: vi.fn(), deleteUser: vi.fn() } }));
 
 describe('AdminUsers', () => {
   let admin: User;
@@ -108,6 +108,8 @@ describe('AdminUsers', () => {
         lastSignInAt: new Date('2024-02-02'),
         updatedAt: user1.updatedAt,
         createdAt: user1.createdAt,
+        deletedAt: null,
+        talksCount: 0,
         authenticationMethods: [{ provider: 'password', email: user1.email }],
         teams: [
           {
@@ -137,6 +139,8 @@ describe('AdminUsers', () => {
         lastSignInAt: null,
         updatedAt: user1.updatedAt,
         createdAt: user1.createdAt,
+        deletedAt: null,
+        talksCount: 0,
         authenticationMethods: [],
         teams: [
           {
@@ -153,6 +157,29 @@ describe('AdminUsers', () => {
       const adminUsers = await AdminUsers.for(admin.id);
 
       await expect(adminUsers.getUserInfo('xxx')).rejects.toThrowError(UserNotFoundError);
+    });
+  });
+
+  describe('#deleteUser', () => {
+    it('deletes user account', async () => {
+      const deleteUserMock = auth.deleteUser as Mock;
+      deleteUserMock.mockResolvedValue(undefined);
+
+      const adminUsers = await AdminUsers.for(admin.id);
+      await adminUsers.deleteUser(user1.id);
+
+      const deletedUser = await db.user.findUnique({ where: { id: user1.id } });
+      expect(deletedUser?.deletedAt).toBeDefined();
+    });
+
+    it('throws an error when target user is not found', async () => {
+      const adminUsers = await AdminUsers.for(admin.id);
+
+      await expect(adminUsers.deleteUser('xxx')).rejects.toThrowError(UserNotFoundError);
+    });
+
+    it('throws an error when user is not admin', async () => {
+      await expect(AdminUsers.for(user1.id)).rejects.toThrowError(NotAuthorizedError);
     });
   });
 });
