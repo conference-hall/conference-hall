@@ -73,15 +73,15 @@ export default function ConversationMessageEmail({
       </Text>
 
       {messagesCount === 1 && message.preview && (
-        <Section className="bg-gray-50 border-l-4 border-gray-300 p-4 my-4">
-          <Text className="text-gray-700 italic m-0">
+        <Section className={styles.card}>
+          <Text className="text-gray-700 italic">
             {message.preview}
             {message.content.length > message.preview.length && '...'}
           </Text>
         </Section>
       )}
 
-      <Section className="text-center my-[32px]">
+      <Section className="text-center my-8">
         <Button href={conversationUrl} className={styles.button}>
           {t('speakers.conversation-message.body.cta')}
         </Button>
