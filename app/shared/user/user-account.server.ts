@@ -196,7 +196,7 @@ export class UserAccount {
           },
         });
 
-        // Delete TeamMember records (orphan teams where user was sole owner)
+        // Delete TeamMember records
         await tx.teamMember.deleteMany({ where: { memberId: userId } });
 
         // Delete Survey records

@@ -6,7 +6,7 @@ import { SignupPage } from '../auth/signup.page.ts';
 import { HomePage } from '../event-search/home.page.ts';
 import { SettingsAccountPage } from './settings-account.page.ts';
 
-test('links and unlinks providers, change password, verify email', async ({ page }) => {
+test('links and unlinks providers, change password, verify email, delete account', async ({ page }) => {
   await userFactory({ traits: ['clark-kent'] });
 
   const mailbox = new MailBox(page);
@@ -126,12 +126,13 @@ test('links and unlinks providers, change password, verify email', async ({ page
   await deleteButton.click();
 
   // fill confirmation text in modal
-  const confirmationInput = page.getByLabel(/delete my account/i);
-  await expect(confirmationInput).toBeVisible();
+  const deleteAccountModal = page.getByRole('dialog');
+  await expect(deleteAccountModal.getByRole('heading', { name: 'Delete my account' })).toBeVisible();
+  const confirmationInput = deleteAccountModal.getByRole('textbox');
   await confirmationInput.fill('delete my account');
 
   // submit deletion
-  const confirmDeleteButton = page.getByRole('button', { name: 'Delete my account' }).last();
+  const confirmDeleteButton = deleteAccountModal.getByRole('button', { name: 'Delete my account' }).last();
   await confirmDeleteButton.click();
 
   // verify redirect to home and success toast
