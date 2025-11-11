@@ -88,35 +88,37 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
     if (recipientsMap.size === 0) return;
 
     // Send email to each recipient with their locale
-    for (const recipient of recipientsMap.values()) {
-      const payload = ConversationMessageEmail.buildPayload(
-        {
-          recipient: {
-            email: recipient.email,
-            role: recipient.role,
+    await Promise.all(
+      Array.from(recipientsMap.values()).map(async (recipient) => {
+        const payload = ConversationMessageEmail.buildPayload(
+          {
+            recipient: {
+              email: recipient.email,
+              role: recipient.role,
+            },
+            event: {
+              id: conversation.event.id,
+              slug: conversation.event.slug,
+              name: conversation.event.name,
+              logoUrl: conversation.event.logoUrl,
+              teamSlug: conversation.event.team.slug,
+            },
+            proposal: proposalId ? { id: proposalId } : undefined,
+            sender: {
+              name: lastMessage.sender?.name || 'System',
+              role: conversation.participants.find((p) => p.userId === senderId)?.role || null,
+            },
+            message: {
+              content: lastMessage.content,
+              preview: lastMessage.content.substring(0, 150),
+            },
+            messagesCount: conversation.messages.length,
           },
-          event: {
-            id: conversation.event.id,
-            slug: conversation.event.slug,
-            name: conversation.event.name,
-            logoUrl: conversation.event.logoUrl,
-            teamSlug: conversation.event.team.slug,
-          },
-          proposal: proposalId ? { id: proposalId } : undefined,
-          sender: {
-            name: lastMessage.sender?.name || 'System',
-            role: conversation.participants.find((p) => p.userId === senderId)?.role || null,
-          },
-          message: {
-            content: lastMessage.content,
-            preview: lastMessage.content.substring(0, 150),
-          },
-          messagesCount: conversation.messages.length,
-        },
-        recipient.locale,
-      );
+          recipient.locale,
+        );
 
-      await sendEmail.trigger(payload);
-    }
+        await sendEmail.trigger(payload);
+      }),
+    );
   },
 });
