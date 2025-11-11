@@ -71,12 +71,12 @@ export async function createSession(request: Request, context: Readonly<RouterCo
   return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
 }
 
-export async function destroySession(request: Request, redirectTo?: string) {
+export async function destroySession(request: Request, redirectTo?: string, headers: Record<string, string> = {}) {
   const session = await getSession(request);
   const url = new URL(request.url);
 
   throw redirect(redirectTo ?? url.pathname, {
-    headers: { 'Set-Cookie': await sessionStorage.destroySession(session) },
+    headers: { ...headers, 'Set-Cookie': await sessionStorage.destroySession(session) },
   });
 }
 

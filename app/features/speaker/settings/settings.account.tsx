@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
-import { H1 } from '~/design-system/typography.tsx';
+import { DeleteModalButton } from '~/design-system/dialogs/delete-modal.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H1, H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
-import { requireUserSession, sendEmailVerification } from '~/shared/auth/session.ts';
+import { destroySession, requireUserSession, sendEmailVerification } from '~/shared/auth/session.ts';
 import { getI18n, getLocale } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { UnlinkProviderSchema } from '~/shared/types/speaker.types.ts';
@@ -65,6 +67,12 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
       await sendEmailVerification(request, context);
       return toast('success', i18n.t('settings.account.feedbacks.verification-email-sent'));
     }
+    case 'delete-account': {
+      await UserAccount.deleteAccount(userId, locale);
+      const headers = await toastHeaders('success', i18n.t('settings.account.feedbacks.account-deleted'));
+      await destroySession(request, '/', headers);
+      return null;
+    }
     default:
       return null;
   }
@@ -90,6 +98,27 @@ export default function AccountRoute() {
       <ChangeContactEmailForm email={email} authLoaded={authLoaded} />
 
       <AuthenticationMethods email={email} authLoaded={authLoaded} />
+
+      <Card as="section" className="border-red-300">
+        <Card.Title>
+          <H2>{t('settings.account.danger.heading')}</H2>
+        </Card.Title>
+
+        <ul className="divide-y border-t mt-8">
+          <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
+            <div className="space-y-1 grow">
+              <Text weight="semibold">{t('settings.account.danger.delete-account.heading')}</Text>
+              <Subtitle>{t('settings.account.danger.delete-account.description')}</Subtitle>
+            </div>
+            <DeleteModalButton
+              intent="delete-account"
+              title={t('settings.account.danger.delete-account.button')}
+              description={t('settings.account.danger.delete-account.modal.description')}
+              confirmationText={t('settings.account.danger.delete-account.confirmation-text')}
+            />
+          </li>
+        </ul>
+      </Card>
     </div>
   );
 }
