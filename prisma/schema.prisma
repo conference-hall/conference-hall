@@ -26,6 +26,7 @@ model User {
   admin                    Boolean                   @default(false)
   createdAt                DateTime                  @default(now())
   updatedAt                DateTime                  @updatedAt
+  deletedAt                DateTime?
   migrationId              String?
   organizerKey             String?
   organizerKeyAccess       OrganizerKeyAccess?       @relation(fields: [organizerKey], references: [id])

@@ -1,4 +1,5 @@
 import type { CustomTemplateName } from '../email.types.ts';
+import AuthAccountDeleted from './auth/account-deleted.tsx';
 import AuthEmailVerification from './auth/email-verification.tsx';
 import AuthResetPassword from './auth/reset-password.tsx';
 import BaseEmail from './base-email.tsx';
@@ -14,6 +15,7 @@ import SpeakersProposalSubmitted from './speakers/proposal-submitted.tsx';
 const EMAIL_TEMPLATES = {
   'base-email': BaseEmail,
   'base-event-email': BaseEventEmail,
+  'auth-account-deleted': AuthAccountDeleted,
   'auth-email-verification': AuthEmailVerification,
   'auth-reset-password': AuthResetPassword,
   'organizers-proposal-confirmed': OrganizersProposalConfirmed,

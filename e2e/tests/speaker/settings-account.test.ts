@@ -6,7 +6,7 @@ import { SignupPage } from '../auth/signup.page.ts';
 import { HomePage } from '../event-search/home.page.ts';
 import { SettingsAccountPage } from './settings-account.page.ts';
 
-test('links and unlinks providers, change password, verify email', async ({ page }) => {
+test('links and unlinks providers, change password, verify email, delete account', async ({ page }) => {
   await userFactory({ traits: ['clark-kent'] });
 
   const mailbox = new MailBox(page);
@@ -119,4 +119,34 @@ test('links and unlinks providers, change password, verify email', async ({ page
   await expect(accountPage.unlinkButton('Google')).toBeVisible();
   await expect(accountPage.unlinkButton('Github')).toBeVisible();
   await expect(accountPage.linkButton('X.com')).toBeVisible();
+
+  // find and click delete button
+  const deleteButton = page.getByRole('button', { name: 'Delete my account' });
+  await expect(deleteButton).toBeVisible();
+  await deleteButton.click();
+
+  // fill confirmation text in modal
+  const deleteAccountModal = page.getByRole('dialog');
+  await expect(deleteAccountModal.getByRole('heading', { name: 'Delete my account' })).toBeVisible();
+  const confirmationInput = deleteAccountModal.getByRole('textbox');
+  await confirmationInput.fill('delete my account');
+
+  // submit deletion
+  const confirmDeleteButton = deleteAccountModal.getByRole('button', { name: 'Delete my account' }).last();
+  await confirmDeleteButton.click();
+
+  // verify redirect to home and success toast
+  await homePage.waitFor();
+  await expect(page.getByText('Your account has been successfully deleted.')).toBeVisible();
+
+  // verify email confirmation
+  await mailbox.goto();
+  await mailbox.waitForEmail('Your Conference Hall account has been deleted');
+
+  // verify user cannot log back in
+  await loginPage.goto();
+  await loginPage.emailInput.fill(uniqueEmail);
+  await loginPage.passwordInput.fill('Password123');
+  await loginPage.signinButton.click();
+  await expect(page.getByText(/Email or password is incorrect/i)).toBeVisible();
 });

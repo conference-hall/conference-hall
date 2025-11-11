@@ -6,6 +6,7 @@ import { TeamBetaAccess } from '~/features/team-management/creation/services/tea
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
 import { auth as firebaseAuth } from '~/shared/auth/firebase.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
+import AccountDeletedEmail from '~/shared/emails/templates/auth/account-deleted.tsx';
 import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
 import { validateCaptchaToken } from '../auth/captcha.server.ts';
@@ -165,6 +166,67 @@ export class UserAccount {
     const user = await db.user.findUnique({ where: { id: userId, admin: true } });
     if (!user) {
       throw new NotAuthorizedError();
+    }
+  }
+
+  static async deleteAccount(userId: string, locale: string) {
+    const user = await db.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotAuthorizedError();
+
+    const { uid, email } = user;
+    const deletedAt = new Date();
+
+    try {
+      await db.$transaction(async (tx) => {
+        // Anonymize User table
+        await tx.user.update({
+          where: { id: userId },
+          data: {
+            uid: null,
+            name: 'Deleted user',
+            email: 'deleted-user-account',
+            bio: null,
+            picture: null,
+            company: null,
+            references: null,
+            location: null,
+            socialLinks: [],
+            deletedAt,
+            talks: { set: [] },
+          },
+        });
+
+        // Delete TeamMember records
+        await tx.teamMember.deleteMany({ where: { memberId: userId } });
+
+        // Delete Survey records
+        await tx.survey.deleteMany({ where: { userId } });
+
+        // Anonymize EventSpeaker records
+        await tx.eventSpeaker.updateMany({
+          where: { userId },
+          data: {
+            userId: null,
+            email: 'deleted-user-account',
+            bio: null,
+            picture: null,
+            company: null,
+            references: null,
+            location: null,
+            socialLinks: [],
+          },
+        });
+
+        // After successful transaction, delete user from Firebase Auth
+        if (uid) await firebaseAuth.deleteUser(uid);
+      });
+
+      // Send confirmation email after successful deletion
+      const deletionDate = deletedAt.toISOString().split('T')[0];
+      await sendEmail.trigger(AccountDeletedEmail.buildPayload(email, locale, { deletionDate }));
+    } catch (error) {
+      console.error('deleteAccount', error);
+      throw error;
     }
   }
 }

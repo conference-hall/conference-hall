@@ -14,11 +14,17 @@ import { NotAuthorizedError } from '../errors.server.ts';
 import { UserAccount } from './user-account.server.ts';
 
 vi.mock('~/shared/auth/firebase.server.ts', () => ({
-  auth: { updateUser: vi.fn(), generatePasswordResetLink: vi.fn(), generateEmailVerificationLink: vi.fn() },
+  auth: {
+    updateUser: vi.fn(),
+    generatePasswordResetLink: vi.fn(),
+    generateEmailVerificationLink: vi.fn(),
+    deleteUser: vi.fn(),
+  },
 }));
 const updateUserMock = auth.updateUser as Mock;
 const generatePasswordResetLinkMock = auth.generatePasswordResetLink as Mock;
 const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as Mock;
+const deleteUserMock = auth.deleteUser as Mock;
 
 describe('UserAccount', () => {
   describe('get', () => {
@@ -281,6 +287,120 @@ describe('UserAccount', () => {
     it('throws an error when user is not admin', async () => {
       const user = await userFactory();
       await expect(UserAccount.needsAdminRole(user.id)).rejects.toThrowError(NotAuthorizedError);
+    });
+  });
+
+  describe('deleteAccount', () => {
+    it('anonymizes user data and deletes from Firebase', async () => {
+      const user = await userFactory({
+        traits: ['clark-kent'],
+        attributes: {
+          name: 'John Doe',
+          email: 'john@example.com',
+          bio: 'My bio',
+          picture: 'https://example.com/picture.jpg',
+          company: 'Acme Inc',
+          references: 'https://example.com',
+          location: 'Paris',
+          socialLinks: [{ type: 'twitter', url: 'https://twitter.com/johndoe' }],
+        },
+      });
+      await teamFactory({ members: [user] });
+      await talkFactory({ speakers: [user] });
+
+      await UserAccount.deleteAccount(user.id, 'en');
+
+      const deletedUser = await db.user.findUnique({ where: { id: user.id } });
+      expect(deletedUser?.uid).toBeNull();
+      expect(deletedUser?.name).toEqual('Deleted user');
+      expect(deletedUser?.email).toEqual('deleted-user-account');
+      expect(deletedUser?.bio).toBeNull();
+      expect(deletedUser?.picture).toBeNull();
+      expect(deletedUser?.company).toBeNull();
+      expect(deletedUser?.references).toBeNull();
+      expect(deletedUser?.location).toBeNull();
+      expect(deletedUser?.socialLinks).toEqual([]);
+      expect(deletedUser?.deletedAt).not.toBeNull();
+
+      const teamMembers = await db.teamMember.findMany({ where: { memberId: user.id } });
+      expect(teamMembers).toHaveLength(0);
+
+      const userTalks = await db.user.findUnique({ where: { id: user.id }, include: { talks: true } });
+      expect(userTalks?.talks).toHaveLength(0);
+
+      expect(deleteUserMock).toHaveBeenCalledWith(user.uid);
+      expect(sendEmail.trigger).toHaveBeenCalledWith(
+        expect.objectContaining({
+          template: 'auth-account-deleted',
+          to: ['john@example.com'],
+          locale: 'en',
+        }),
+      );
+    });
+
+    it('deletes surveys and anonymizes event speakers', async () => {
+      const user = await userFactory({ traits: ['clark-kent'] });
+      const event = await eventFactory();
+      const talk = await talkFactory({ speakers: [user] });
+      const _proposal = await proposalFactory({ event, talk });
+
+      await db.survey.create({
+        data: {
+          userId: user.id,
+          eventId: event.id,
+          answers: { question1: 'answer1' },
+        },
+      });
+
+      if (!user.uid) throw new Error('User uid not found');
+
+      await UserAccount.deleteAccount(user.id, 'en');
+
+      const surveys = await db.survey.findMany({ where: { userId: user.id } });
+      expect(surveys).toHaveLength(0);
+
+      const eventSpeakers = await db.eventSpeaker.findMany({ where: { eventId: event.id } });
+      expect(eventSpeakers).toHaveLength(1);
+      expect(eventSpeakers[0].userId).toBeNull();
+      expect(eventSpeakers[0].name).toEqual(user.name);
+      expect(eventSpeakers[0].email).toEqual('deleted-user-account');
+      expect(eventSpeakers[0].bio).toBeNull();
+      expect(eventSpeakers[0].picture).toBeNull();
+      expect(eventSpeakers[0].company).toBeNull();
+      expect(eventSpeakers[0].references).toBeNull();
+      expect(eventSpeakers[0].location).toBeNull();
+      expect(eventSpeakers[0].socialLinks).toEqual([]);
+    });
+
+    it('preserves created talks and events', async () => {
+      const user = await userFactory({ traits: ['clark-kent'] });
+      const team = await teamFactory({ owners: [user] });
+      const event = await eventFactory({ team, creator: user });
+      const talk = await talkFactory({ speakers: [user] });
+
+      if (!user.uid) throw new Error('User uid not found');
+
+      await UserAccount.deleteAccount(user.id, 'en');
+
+      const createdEvent = await db.event.findUnique({ where: { id: event.id } });
+      expect(createdEvent).not.toBeNull();
+      expect(createdEvent?.creatorId).toEqual(user.id);
+
+      const createdTalk = await db.talk.findUnique({ where: { id: talk.id } });
+      expect(createdTalk).not.toBeNull();
+      expect(createdTalk?.creatorId).toEqual(user.id);
+    });
+
+    it('rethrows error when deletion fails', async () => {
+      const user = await userFactory({ traits: ['clark-kent'] });
+      if (!user.uid) throw new Error('User uid not found');
+
+      deleteUserMock.mockRejectedValue(new Error('Firebase deletion failed'));
+
+      await expect(UserAccount.deleteAccount(user.id, 'en')).rejects.toThrow('Firebase deletion failed');
+
+      const userStillExists = await db.user.findUnique({ where: { id: user.id } });
+      expect(userStillExists?.deletedAt).toBeNull();
     });
   });
 });
