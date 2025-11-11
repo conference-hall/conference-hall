@@ -121,7 +121,7 @@ test('links and unlinks providers, change password, verify email', async ({ page
   await expect(accountPage.linkButton('X.com')).toBeVisible();
 
   // find and click delete button
-  const deleteButton = page.getByRole('button', { name: 'Delete account' });
+  const deleteButton = page.getByRole('button', { name: 'Delete my account' });
   await expect(deleteButton).toBeVisible();
   await deleteButton.click();
 
@@ -131,7 +131,7 @@ test('links and unlinks providers, change password, verify email', async ({ page
   await confirmationInput.fill('delete my account');
 
   // submit deletion
-  const confirmDeleteButton = page.getByRole('button', { name: 'Delete account' }).last();
+  const confirmDeleteButton = page.getByRole('button', { name: 'Delete my account' }).last();
   await confirmDeleteButton.click();
 
   // verify redirect to home and success toast

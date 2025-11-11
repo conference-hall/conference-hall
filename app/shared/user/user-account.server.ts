@@ -184,7 +184,7 @@ export class UserAccount {
           data: {
             uid: null,
             name: 'Deleted user',
-            email: 'Deleted user',
+            email: 'deleted-user-account',
             bio: null,
             picture: null,
             company: null,
@@ -207,8 +207,7 @@ export class UserAccount {
           where: { userId },
           data: {
             userId: null,
-            name: 'Deleted user',
-            email: 'Deleted user',
+            email: 'deleted-user-account',
             bio: null,
             picture: null,
             company: null,

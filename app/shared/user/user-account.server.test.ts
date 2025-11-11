@@ -313,7 +313,7 @@ describe('UserAccount', () => {
       const deletedUser = await db.user.findUnique({ where: { id: user.id } });
       expect(deletedUser?.uid).toBeNull();
       expect(deletedUser?.name).toEqual('Deleted user');
-      expect(deletedUser?.email).toEqual('Deleted user');
+      expect(deletedUser?.email).toEqual('deleted-user-account');
       expect(deletedUser?.bio).toBeNull();
       expect(deletedUser?.picture).toBeNull();
       expect(deletedUser?.company).toBeNull();
@@ -362,8 +362,8 @@ describe('UserAccount', () => {
       const eventSpeakers = await db.eventSpeaker.findMany({ where: { eventId: event.id } });
       expect(eventSpeakers).toHaveLength(1);
       expect(eventSpeakers[0].userId).toBeNull();
-      expect(eventSpeakers[0].name).toEqual('Deleted user');
-      expect(eventSpeakers[0].email).toEqual('Deleted user');
+      expect(eventSpeakers[0].name).toEqual(user.name);
+      expect(eventSpeakers[0].email).toEqual('deleted-user-account');
       expect(eventSpeakers[0].bio).toBeNull();
       expect(eventSpeakers[0].picture).toBeNull();
       expect(eventSpeakers[0].company).toBeNull();
