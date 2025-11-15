@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { ReviewDetails } from '~/features/event-management/proposals/models/review-details.ts';
 import type { ProposalsFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from '~/features/event-management/proposals/services/proposal-search-builder.server.ts';

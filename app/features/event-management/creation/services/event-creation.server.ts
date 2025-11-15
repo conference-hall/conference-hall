@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { z } from 'zod';
 import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';

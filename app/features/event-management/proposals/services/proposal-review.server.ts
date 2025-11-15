@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import { ProposalNotFoundError, ReviewDisabledError } from '~/shared/errors.server.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';

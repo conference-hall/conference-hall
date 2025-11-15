@@ -1,13 +1,11 @@
-import type { Decimal } from '@prisma/client/runtime/library';
-import { db } from 'prisma/db.server.ts';
-import { Prisma } from 'prisma/generated/client.ts';
+import { db, Prisma } from '@conference-hall/database';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 
 type ReviewsMetricsInfo = {
   totalProposals: number;
   totalReviews: number;
   reviewedProposals: number;
-  averageNote: Decimal;
+  averageNote: Prisma.Decimal;
   positiveReviews: number;
 };
 
@@ -17,7 +15,7 @@ type ProposalReviewCount = {
 };
 
 type ProposalAverageNote = {
-  averageNote: Decimal;
+  averageNote: Prisma.Decimal;
   count: number;
 };
 

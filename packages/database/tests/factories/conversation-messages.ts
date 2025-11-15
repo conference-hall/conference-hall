@@ -1,0 +1,43 @@
+import { randParagraph } from '@ngneat/falso';
+import type { Conversation, Prisma, User } from '../../index.ts';
+import { ConversationMessageType, ConversationParticipantRole, db } from '../../index.ts';
+
+type Trait = 'withReaction';
+
+type FactoryOptions = {
+  conversation: Conversation;
+  sender?: User;
+  role?: ConversationParticipantRole;
+  attributes?: Partial<Prisma.ConversationMessageCreateInput>;
+  traits?: Array<Trait>;
+};
+
+export const conversationMessageFactory = async (options: FactoryOptions) => {
+  const { conversation, sender, role = ConversationParticipantRole.ORGANIZER, attributes = {}, traits = [] } = options;
+
+  if (sender) {
+    await db.conversationParticipant.upsert({
+      where: { conversationId_userId: { conversationId: conversation.id, userId: sender.id } },
+      create: { conversationId: conversation.id, userId: sender.id, role },
+      update: {},
+    });
+  }
+
+  const defaultAttributes: Prisma.ConversationMessageCreateInput = {
+    conversation: { connect: { id: conversation.id } },
+    sender: sender ? { connect: { id: sender.id } } : undefined,
+    content: randParagraph(),
+    type: ConversationMessageType.TEXT,
+  };
+
+  const data = { ...defaultAttributes, ...attributes };
+  const message = await db.conversationMessage.create({ data });
+
+  if (traits.includes('withReaction') && sender) {
+    await db.conversationReaction.create({
+      data: { code: 'tada', messageId: message.id, userId: sender.id },
+    });
+  }
+
+  return message;
+};

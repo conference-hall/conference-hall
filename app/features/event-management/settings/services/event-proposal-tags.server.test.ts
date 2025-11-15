@@ -1,8 +1,8 @@
-import type { Event, EventProposalTag, Team, User } from 'prisma/generated/client.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import type { Event, EventProposalTag, Team, User } from '@conference-hall/database';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { eventProposalTagFactory } from '@conference-hall/database/tests/factories/proposal-tags.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { EventProposalTags } from './event-proposal-tags.server.ts';
 

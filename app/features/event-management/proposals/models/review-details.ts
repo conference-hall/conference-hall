@@ -1,4 +1,4 @@
-import type { Review, User } from 'prisma/generated/client.ts';
+import type { Review, User } from '@conference-hall/database';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 
 type ReviewData = Review & { user?: Partial<User> };

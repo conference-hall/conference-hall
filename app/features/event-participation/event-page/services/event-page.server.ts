@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { z } from 'zod';
 import { SurveyConfig } from '~/features/event-management/settings/models/survey-config.ts';
 import { EventNotFoundError } from '~/shared/errors.server.ts';

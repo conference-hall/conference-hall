@@ -7,18 +7,18 @@ import type {
   Proposal,
   Team,
   User,
-} from 'prisma/generated/client.ts';
-import { eventCategoryFactory } from 'tests/factories/categories.ts';
-import { commentFactory } from 'tests/factories/comments.ts';
-import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { eventFormatFactory } from 'tests/factories/formats.ts';
-import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
-import { reviewFactory } from 'tests/factories/reviews.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+} from '@conference-hall/database';
+import { eventCategoryFactory } from '@conference-hall/database/tests/factories/categories.ts';
+import { commentFactory } from '@conference-hall/database/tests/factories/comments.ts';
+import { eventSpeakerFactory } from '@conference-hall/database/tests/factories/event-speakers.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { eventFormatFactory } from '@conference-hall/database/tests/factories/formats.ts';
+import { eventProposalTagFactory } from '@conference-hall/database/tests/factories/proposal-tags.ts';
+import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
+import { reviewFactory } from '@conference-hall/database/tests/factories/reviews.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';

@@ -1,7 +1,7 @@
-import { db } from 'prisma/db.server.ts';
-import type { User } from 'prisma/generated/client.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import type { User } from '@conference-hall/database';
+import { db } from '@conference-hall/database';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { z } from 'zod';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { TeamCreateSchema, TeamCreation } from './team-creation.server.ts';

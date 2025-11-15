@@ -1,12 +1,12 @@
-import { eventCategoryFactory } from 'tests/factories/categories.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { eventFormatFactory } from 'tests/factories/formats.ts';
-import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
-import { reviewFactory } from 'tests/factories/reviews.ts';
-import { surveyFactory } from 'tests/factories/surveys.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { eventCategoryFactory } from '@conference-hall/database/tests/factories/categories.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { eventFormatFactory } from '@conference-hall/database/tests/factories/formats.ts';
+import { eventProposalTagFactory } from '@conference-hall/database/tests/factories/proposal-tags.ts';
+import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
+import { reviewFactory } from '@conference-hall/database/tests/factories/reviews.ts';
+import { surveyFactory } from '@conference-hall/database/tests/factories/surveys.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { ApiKeyInvalidError, EventNotFoundError } from '~/shared/errors.server.ts';
 import { EventProposalsApi } from './proposals-api.server.ts';
 

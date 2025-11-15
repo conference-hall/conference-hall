@@ -1,4 +1,4 @@
-import { ReviewFeeling } from 'prisma/generated/enums.ts';
+import { ReviewFeeling } from '@conference-hall/database';
 import { ReviewDetails } from './review-details.ts';
 
 describe('#ReviewsDetails', () => {

@@ -1,5 +1,5 @@
-import type { User } from 'prisma/generated/client.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import type { User } from '@conference-hall/database';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { NotAuthorizedError, NotFoundError } from '~/shared/errors.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { AdminFlags } from './admin-flags.server.ts';

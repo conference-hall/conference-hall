@@ -1,5 +1,4 @@
-import { db } from 'prisma/db.server.ts';
-import { Prisma } from 'prisma/generated/client.ts';
+import { db, Prisma } from '@conference-hall/database';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';

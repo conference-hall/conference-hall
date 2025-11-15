@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { Slack, type SlackMessage } from '~/shared/integrations/slack.server.ts';
 import { job } from '~/shared/jobs/job.ts';

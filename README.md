@@ -47,13 +47,14 @@ React / React router v7 / Typescript / Tailwind / HeadlessUI / Conform / Zod / P
 
 - Docker
 - Node 22+
+- pnpm 10+
 
 ### Getting started
 
 Install dependencies:
 
 ```sh
-npm install
+pnpm install
 ```
 
 Start Docker image for Postgres DB, Firebase emulators and Mailpit:
@@ -65,13 +66,13 @@ docker compose up
 If you start **Conference Hall** for the first time, you need to setup the database with the following command :
 
 ```shell
-npm run db:reset
+pnpm db:reset
 ```
 
 Start the development server:
 
 ```sh
-npm run dev
+pnpm dev
 ```
 
 ### Useful commands
@@ -79,7 +80,7 @@ npm run dev
 #### Reset and seed local DB
 
 ```sh
-npm run db:reset
+pnpm db:reset
 ```
 
 #### Execute tests
@@ -95,25 +96,25 @@ npx playwright install --with-deps chromium
 Execute unit and integration tests:
 
 ```sh
-npm run test
+pnpm test
 ```
 
 Execute end-to-end tests:
 
 ```sh
-npm run test:e2e
+pnpm -F @conference-hall/e2e test
 ```
 
 #### Execute linting
 
 ```sh
-npm run lint
+pnpm lint
 ```
 
 #### Execute typecript check
 
 ```sh
-npm run tsc
+pnpm tsc
 ```
 
 #### Export emulators data

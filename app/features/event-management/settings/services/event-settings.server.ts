@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
-import type { EventCreateInput } from 'prisma/generated/models.ts';
+import type { Prisma } from '@conference-hall/database';
+import { db } from '@conference-hall/database';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { EventGeneralSettingsSchema } from './event-settings.schema.server.ts';
 
@@ -8,7 +8,7 @@ export class EventSettings extends EventAuthorization {
     return new EventSettings(userId, teamSlug, eventSlug);
   }
 
-  async update(data: Partial<EventCreateInput>) {
+  async update(data: Partial<Prisma.EventCreateInput>) {
     const { event } = await this.checkAuthorizedEvent('canEditEvent');
     return db.event.update({ where: { id: event.id }, data: { ...data } });
   }

@@ -1,0 +1,92 @@
+import { randParagraph, randPost } from '@ngneat/falso';
+import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
+import type {
+  Event,
+  EventCategory,
+  EventFormat,
+  EventProposalTag,
+  EventSpeaker,
+  Prisma,
+  Talk,
+  User,
+} from '../../index.ts';
+import { ConfirmationStatus, DeliberationStatus, db, PublicationStatus, TalkLevel } from '../../index.ts';
+import { applyTraits } from './helpers/traits.ts';
+
+export type ProposalFactory = Awaited<ReturnType<typeof proposalFactory>>;
+
+const TRAITS = {
+  draft: { isDraft: true },
+  accepted: { deliberationStatus: DeliberationStatus.ACCEPTED },
+  rejected: { deliberationStatus: DeliberationStatus.REJECTED },
+  declined: {
+    deliberationStatus: DeliberationStatus.ACCEPTED,
+    publicationStatus: PublicationStatus.PUBLISHED,
+    confirmationStatus: ConfirmationStatus.DECLINED,
+  },
+  confirmed: {
+    deliberationStatus: DeliberationStatus.ACCEPTED,
+    publicationStatus: PublicationStatus.PUBLISHED,
+    confirmationStatus: ConfirmationStatus.CONFIRMED,
+  },
+  'accepted-published': {
+    deliberationStatus: DeliberationStatus.ACCEPTED,
+    publicationStatus: PublicationStatus.PUBLISHED,
+    confirmationStatus: ConfirmationStatus.PENDING,
+  },
+  'rejected-published': {
+    deliberationStatus: DeliberationStatus.REJECTED,
+    publicationStatus: PublicationStatus.PUBLISHED,
+    confirmationStatus: ConfirmationStatus.PENDING,
+  },
+};
+
+type Trait = keyof typeof TRAITS;
+
+type FactoryOptions = {
+  event: Event;
+  talk: Talk & { speakers: User[] };
+  speakers?: EventSpeaker[];
+  formats?: EventFormat[];
+  categories?: EventCategory[];
+  tags?: EventProposalTag[];
+  attributes?: Partial<Prisma.ProposalCreateInput>;
+  traits?: Trait[];
+};
+
+export const proposalFactory = async (options: FactoryOptions) => {
+  const { attributes = {}, traits = [], talk, event, speakers, formats, categories, tags } = options;
+
+  const proposalSpeakers = speakers || (await EventSpeakerForProposal.for(event.id).upsertForUsers(talk.speakers));
+
+  const defaultAttributes: Prisma.ProposalCreateInput = {
+    title: talk?.title || randPost().title,
+    abstract: talk?.abstract || randParagraph(),
+    references: talk?.references || randParagraph(),
+    languages: talk?.languages || ['en'],
+    level: talk?.level || TalkLevel.INTERMEDIATE,
+    talk: { connect: { id: talk.id } },
+    speakers: { connect: proposalSpeakers.map(({ id }) => ({ id })) },
+    event: { connect: { id: event.id } },
+    isDraft: false,
+    createdAt: new Date(),
+  };
+
+  if (formats) {
+    defaultAttributes.formats = { connect: formats.map(({ id }) => ({ id })) };
+  }
+  if (categories) {
+    defaultAttributes.categories = { connect: categories.map(({ id }) => ({ id })) };
+  }
+  if (tags) {
+    defaultAttributes.tags = { connect: tags.map(({ id }) => ({ id })) };
+  }
+
+  const data = {
+    ...defaultAttributes,
+    ...applyTraits(TRAITS, traits),
+    ...attributes,
+  };
+
+  return db.proposal.create({ data, include: { event: true, speakers: true } });
+};

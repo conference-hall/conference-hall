@@ -1,5 +1,5 @@
+import { db } from '@conference-hall/database';
 import { render } from '@react-email/components';
-import { db } from 'prisma/db.server.ts';
 import xss from 'xss';
 import type {
   CustomTemplateName,

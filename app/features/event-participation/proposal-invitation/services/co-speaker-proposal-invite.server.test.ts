@@ -1,8 +1,8 @@
-import { db } from 'prisma/db.server.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { db } from '@conference-hall/database';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { InvitationNotFoundError } from '~/shared/errors.server.ts';
 import { CoSpeakerProposalInvite } from './co-speaker-proposal-invite.server.ts';
 

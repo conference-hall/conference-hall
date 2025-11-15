@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
-import type { UserWhereInput } from 'prisma/generated/models.ts';
+import type { Prisma } from '@conference-hall/database';
+import { db } from '@conference-hall/database';
 import { z } from 'zod';
 import { auth } from '~/shared/auth/firebase.server.ts';
 import { UserNotFoundError } from '~/shared/errors.server.ts';
@@ -21,7 +21,7 @@ export class AdminUsers {
   async listUsers(filters: UsersSearchFilters, page: number, pageSize?: number) {
     const { query } = filters;
 
-    const where: UserWhereInput | undefined = query
+    const where: Prisma.UserWhereInput | undefined = query
       ? { OR: [{ email: query }, { name: { contains: query, mode: 'insensitive' } }] }
       : undefined;
 

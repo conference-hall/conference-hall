@@ -1,7 +1,7 @@
-import { eventCategoryFactory } from 'tests/factories/categories.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { eventFormatFactory } from 'tests/factories/formats.ts';
-import { teamFactory } from 'tests/factories/team.ts';
+import { eventCategoryFactory } from '@conference-hall/database/tests/factories/categories.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { eventFormatFactory } from '@conference-hall/database/tests/factories/formats.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
 import { z } from 'zod';
 import { EventNotFoundError } from '~/shared/errors.server.ts';
 import { EventPage } from './event-page.server.ts';

@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { ForbiddenOperationError } from '../errors.server.ts';
 import { type Permission, UserPermissions } from './user-permissions.server.ts';
 

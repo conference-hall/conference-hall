@@ -1,6 +1,6 @@
-import { eventFactory } from 'tests/factories/events.ts';
-import { surveyFactory } from 'tests/factories/surveys.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { surveyFactory } from '@conference-hall/database/tests/factories/surveys.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { EventNotFoundError, SurveyNotEnabledError } from '~/shared/errors.server.ts';
 import { SpeakerSurvey } from './speaker-survey.server.ts';
 

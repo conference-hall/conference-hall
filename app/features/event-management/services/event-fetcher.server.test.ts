@@ -1,6 +1,6 @@
-import { eventFactory } from 'tests/factories/events.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { EventNotFoundError } from '~/shared/errors.server.ts';
 import { EventFetcher } from './event-fetcher.server.ts';
 

@@ -1,11 +1,11 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
+import { eventCategoryFactory } from '@conference-hall/database/tests/factories/categories.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { eventFormatFactory } from '@conference-hall/database/tests/factories/formats.ts';
+import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
-import { eventCategoryFactory } from 'tests/factories/categories.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { eventFormatFactory } from 'tests/factories/formats.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { userFactory } from 'tests/factories/users.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';

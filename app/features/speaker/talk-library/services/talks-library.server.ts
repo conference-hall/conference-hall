@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { SpeakerTalk } from './speaker-talk.server.ts';
 import type { TalkSaveData, TalksListFilter } from './talks-library.schema.server.ts';
 

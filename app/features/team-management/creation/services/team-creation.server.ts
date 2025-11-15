@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { z } from 'zod';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';

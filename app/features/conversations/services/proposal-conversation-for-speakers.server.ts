@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { ProposalNotFoundError } from '~/shared/errors.server.ts';
 import type {
   ConversationMessageDeleteData,

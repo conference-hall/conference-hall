@@ -1,5 +1,4 @@
-import { db } from 'prisma/db.server.ts';
-import { Prisma } from 'prisma/generated/client.ts';
+import { db, Prisma } from '@conference-hall/database';
 
 const EVENTS_BY_PAGE = 8;
 

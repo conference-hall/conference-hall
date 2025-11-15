@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { job } from '~/shared/jobs/job.ts';
 import { logger } from '~/shared/jobs/logger.ts';
 

@@ -1,11 +1,11 @@
+import { eventCategoryFactory } from '@conference-hall/database/tests/factories/categories.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { eventFormatFactory } from '@conference-hall/database/tests/factories/formats.ts';
+import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
-import { eventCategoryFactory } from 'tests/factories/categories.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { eventFormatFactory } from 'tests/factories/formats.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
 import { Slack } from '~/shared/integrations/slack.server.ts';
 import { sendTalkToSlack } from './send-talk-to-slack.job.ts';

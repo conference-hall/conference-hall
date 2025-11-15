@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { EventNotFoundError } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';

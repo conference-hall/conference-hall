@@ -1,0 +1,18 @@
+packages:
+  - 'packages/*'
+
+catalogs:
+  prisma:
+    prisma: '^6.19.0'
+    '@prisma/adapter-pg': '^6.19.0'
+    '@prisma/client': '^6.19.0'
+
+onlyBuiltDependencies:
+  - '@firebase/util'
+  - '@prisma/client'
+  - '@prisma/engines'
+  - esbuild
+  - lefthook
+  - msgpackr-extract
+  - prisma
+  - protobufjs
