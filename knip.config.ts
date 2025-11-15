@@ -10,6 +10,9 @@ const config: KnipConfig = {
         entry: ['tests/*.setup.ts'],
       },
     },
+    'packages/database': {
+      ignoreDependencies: ['@prisma/client'],
+    },
   },
 };
 
