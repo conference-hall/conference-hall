@@ -28,7 +28,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'server',
-          include: ['./**/*.test.ts', '!./**/*.test.tsx', '!./e2e/**/*'],
+          include: ['./**/*.test.ts', '!./**/*.test.tsx', '!./packages/e2e/**/*'],
           setupFiles: ['./tests/setup.server.ts'],
           environment: 'node',
         },
@@ -37,7 +37,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'browser',
-          include: ['./**/*.test.tsx', '!./**/*.test.ts', '!./e2e/**/*'],
+          include: ['./**/*.test.tsx', '!./**/*.test.ts', '!./packages/e2e/**/*'],
           setupFiles: ['./tests/setup.browser.tsx'],
           css: true,
           includeTaskLocation: true,
