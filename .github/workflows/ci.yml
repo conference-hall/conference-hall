@@ -116,7 +116,7 @@ jobs:
         run: pnpm build
 
       - name: Run e2e tests
-        run: pnpm -F @conference-hall/e2e test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: pnpm -F @conference-hall/e2e test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
       - name: Stop database and firebase emulators
         if: always()

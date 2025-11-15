@@ -24,7 +24,8 @@
     "lint": "biome check",
     "lint:ci": "biome ci",
     "tsc": "react-router typegen && tsc -b",
-    "knip": "knip"
+    "knip": "knip",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@conform-to/zod": "^1.13.3",
