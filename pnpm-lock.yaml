@@ -174,9 +174,6 @@ importers:
       '@ngneat/falso':
         specifier: ^8.0.2
         version: 8.0.2
-      '@playwright/test':
-        specifier: ^1.56.1
-        version: 1.56.1
       '@react-router/dev':
         specifier: ~7.9.5
         version: 7.9.5(@types/node@22.19.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.9.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(tsx@4.20.6)(typescript@5.9.3)(vite@7.2.2(@types/node@22.19.0)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6))
@@ -249,6 +246,15 @@ importers:
       vitest-browser-react:
         specifier: ^2.0.2
         version: 2.0.2(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(vitest@4.0.4)
+
+  packages/e2e:
+    devDependencies:
+      '@playwright/test':
+        specifier: ^1.56.1
+        version: 1.56.1
+      '@types/node':
+        specifier: ^22.19.0
+        version: 22.19.0
 
 packages:
 
@@ -5924,7 +5930,7 @@ snapshots:
   '@grpc/grpc-js@1.9.15':
     dependencies:
       '@grpc/proto-loader': 0.7.15
-      '@types/node': 24.10.0
+      '@types/node': 22.19.0
 
   '@grpc/proto-loader@0.7.15':
     dependencies:
@@ -6997,7 +7003,7 @@ snapshots:
   '@types/compression@1.8.1':
     dependencies:
       '@types/express': 5.0.5
-      '@types/node': 24.10.0
+      '@types/node': 22.19.0
 
   '@types/connect@3.4.38':
     dependencies:
@@ -7041,7 +7047,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.7':
     dependencies:
-      '@types/node': 24.10.0
+      '@types/node': 22.19.0
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -7074,12 +7080,12 @@ snapshots:
 
   '@types/http-proxy@1.17.17':
     dependencies:
-      '@types/node': 24.10.0
+      '@types/node': 22.19.0
 
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 24.10.0
+      '@types/node': 22.19.0
 
   '@types/long@4.0.2':
     optional: true
@@ -7094,7 +7100,7 @@ snapshots:
 
   '@types/morgan@1.9.10':
     dependencies:
-      '@types/node': 24.10.0
+      '@types/node': 22.19.0
 
   '@types/ms@2.1.0': {}
 
@@ -7109,7 +7115,7 @@ snapshots:
   '@types/nodemailer@7.0.3':
     dependencies:
       '@aws-sdk/client-sesv2': 3.927.0
-      '@types/node': 24.10.0
+      '@types/node': 22.19.0
     transitivePeerDependencies:
       - aws-crt
 
@@ -7128,14 +7134,14 @@ snapshots:
   '@types/request@2.48.13':
     dependencies:
       '@types/caseless': 0.12.5
-      '@types/node': 24.10.0
+      '@types/node': 22.19.0
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.5
     optional: true
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 24.10.0
+      '@types/node': 22.19.0
 
   '@types/send@0.17.6':
     dependencies:
@@ -7144,7 +7150,7 @@ snapshots:
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 24.10.0
+      '@types/node': 22.19.0
 
   '@types/serve-static@1.15.10':
     dependencies:
@@ -9266,7 +9272,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 24.10.0
+      '@types/node': 22.19.0
       long: 5.3.2
 
   proxy-addr@2.0.7:

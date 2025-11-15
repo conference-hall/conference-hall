@@ -1,0 +1,17 @@
+{
+  "name": "@conference-hall/e2e",
+  "version": "1.0.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "test": "playwright test",
+    "ui": "playwright test --ui --ui-host=localhost"
+  },
+  "packageManager": "pnpm@10.18.3",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^22.19.0"
+  }
+}
