@@ -84,6 +84,7 @@
     "@dotenvx/dotenvx": "^1.51.1",
     "@mdx-js/rollup": "^3.1.1",
     "@ngneat/falso": "^8.0.2",
+    "@playwright/test": "^1.56.1",
     "@react-router/dev": "~7.9.5",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.19",

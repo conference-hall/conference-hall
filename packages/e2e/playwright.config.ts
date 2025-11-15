@@ -1,10 +1,16 @@
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import dotenv from '@dotenvx/dotenvx';
 import { defineConfig, devices } from '@playwright/test';
 import { getSharedServerEnv } from '../../servers/environment.server.ts';
 
 // biome-ignore lint/style/noProcessEnv: dotenv not loaded yet
 const CI = Boolean(process.env.CI);
-dotenv.config({ path: CI ? '../../.env.test' : '../../.env.dev', quiet: true });
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+dotenv.config({ path: CI ? join(__dirname, '../../.env.test') : join(__dirname, '../../.env.dev'), quiet: true });
 
 const { APP_URL } = getSharedServerEnv();
 
