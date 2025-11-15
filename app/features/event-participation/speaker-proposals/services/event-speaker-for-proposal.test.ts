@@ -1,9 +1,9 @@
-import { db } from 'prisma/db.server.ts';
-import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { db } from '@conference-hall/database';
+import { eventSpeakerFactory } from '@conference-hall/database/tests/factories/event-speakers.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { UserNotFoundError } from '~/shared/errors.server.ts';
 import { EventSpeakerForProposal } from './event-speaker-for-proposal.ts';
 

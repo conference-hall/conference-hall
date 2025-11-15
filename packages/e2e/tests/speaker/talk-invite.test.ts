@@ -1,5 +1,5 @@
-import { talkFactory } from 'tests/factories/talks.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { expect, loginWith, test } from '../../helpers/fixtures.ts';
 import { TalkInvitePage } from './talk-invite.page.ts';
 

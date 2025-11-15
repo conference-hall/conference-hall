@@ -1,6 +1,6 @@
-import { db } from 'prisma/db.server.ts';
-import { organizerKeyFactory } from 'tests/factories/organizer-key.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { db } from '@conference-hall/database';
+import { organizerKeyFactory } from '@conference-hall/database/tests/factories/organizer-key.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { InvalidAccessKeyError } from '~/shared/errors.server.ts';
 import { TeamBetaAccess } from './team-beta-access.server.ts';
 

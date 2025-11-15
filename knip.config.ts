@@ -3,7 +3,7 @@ import type { KnipConfig } from 'knip';
 const config: KnipConfig = {
   workspaces: {
     '.': {
-      entry: ['servers/*.ts', 'servers/express/app.ts', 'prisma/seed.ts'],
+      entry: ['servers/*.ts', 'servers/express/app.ts'],
     },
     'packages/e2e': {
       playwright: {

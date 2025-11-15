@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import z from 'zod';
 import { SurveyInvalidError } from '~/shared/errors.server.ts';
 import type { SurveyQuestion } from '~/shared/types/survey.types.ts';

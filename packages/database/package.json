@@ -1,0 +1,30 @@
+{
+  "name": "@conference-hall/database",
+  "version": "1.0.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "license": "AGPL-3.0",
+  "packageManager": "pnpm@10.18.3",
+  "exports": {
+    ".": "./index.ts",
+    "./tests/*": "./tests/*"
+  },
+  "scripts": {
+    "migrate:dev": "prisma migrate dev",
+    "migrate:test": "prisma db push --accept-data-loss",
+    "migrate:prod": "prisma migrate deploy",
+    "reset": "prisma migrate reset -f",
+    "postinstall": "prisma generate"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "prisma": "catalog:prisma",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "catalog:prisma",
+    "@prisma/client": "catalog:prisma"
+  }
+}

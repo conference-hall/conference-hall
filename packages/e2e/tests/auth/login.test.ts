@@ -1,5 +1,5 @@
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { href } from 'react-router';
-import { userFactory } from 'tests/factories/users.ts';
 import { test } from '../../helpers/fixtures.ts';
 import { SettingsProfilePage } from '../speaker/settings-profile.page.ts';
 import { LoginPage } from './login.page.ts';

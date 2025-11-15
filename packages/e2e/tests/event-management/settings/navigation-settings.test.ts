@@ -1,7 +1,7 @@
-import { loginWith, test } from 'packages/e2e/helpers/fixtures.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
+import { loginWith, test } from '../../../helpers/fixtures.ts';
 import { NavigationSettingsPage } from './navigation-settings.page.ts';
 
 loginWith('clark-kent');

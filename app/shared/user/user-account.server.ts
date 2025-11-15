@@ -1,5 +1,5 @@
+import { db } from '@conference-hall/database';
 import type { TFunction } from 'i18next';
-import { db } from 'prisma/db.server.ts';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { Notifications } from '~/features/notifications/services/notifications.server.ts';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';

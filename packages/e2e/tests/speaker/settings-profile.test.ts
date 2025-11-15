@@ -1,4 +1,4 @@
-import { userFactory } from 'tests/factories/users.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { expect, loginWith, test } from '../../helpers/fixtures.ts';
 import { SettingsProfilePage } from './settings-profile.page.ts';
 

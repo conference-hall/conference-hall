@@ -1,4 +1,4 @@
-import { eventFactory } from 'tests/factories/events.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
 import { expect, test } from '../../helpers/fixtures.ts';
 import { HomePage } from './home.page.ts';
 

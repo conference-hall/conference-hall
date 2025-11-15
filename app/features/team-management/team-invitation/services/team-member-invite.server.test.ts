@@ -1,6 +1,6 @@
-import { db } from 'prisma/db.server.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { db } from '@conference-hall/database';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { InvitationNotFoundError } from '~/shared/errors.server.ts';
 import { TeamMemberInvite } from './team-member-invite.server.ts';
 

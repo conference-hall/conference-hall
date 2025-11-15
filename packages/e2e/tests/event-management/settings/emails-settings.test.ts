@@ -1,10 +1,10 @@
-import { expect, loginWith, test } from 'packages/e2e/helpers/fixtures.ts';
-import type { Event, Team, User } from 'prisma/generated/client.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import type { Event, Team, User } from '@conference-hall/database';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { CUSTOM_EMAIL_TEMPLATES } from '~/shared/emails/email.types.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
+import { expect, loginWith, test } from '../../../helpers/fixtures.ts';
 import { EmailTemplateSettingsPage } from './email-template-settings.page.ts';
 import { EmailsSettingsPage } from './emails-settings.page.ts';
 

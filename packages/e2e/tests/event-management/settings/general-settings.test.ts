@@ -1,8 +1,8 @@
-import { expect, loginWith, test } from 'packages/e2e/helpers/fixtures.ts';
-import { TeamHomePage } from 'packages/e2e/tests/team-management/team-home.page.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
+import { expect, loginWith, test } from '../../../helpers/fixtures.ts';
+import { TeamHomePage } from '../../../tests/team-management/team-home.page.ts';
 import { GeneralSettingsPage } from './general-settings.page.ts';
 
 loginWith('clark-kent');

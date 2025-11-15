@@ -4,10 +4,25 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  prisma:
+    '@prisma/adapter-pg':
+      specifier: ^6.19.0
+      version: 6.19.0
+    '@prisma/client':
+      specifier: ^6.19.0
+      version: 6.19.0
+    prisma:
+      specifier: ^6.19.0
+      version: 6.19.0
+
 importers:
 
   .:
     dependencies:
+      '@conference-hall/database':
+        specifier: workspace:*
+        version: link:packages/database
       '@conform-to/zod':
         specifier: ^1.13.3
         version: 1.13.3(zod@4.1.12)
@@ -38,12 +53,6 @@ importers:
       '@mjackson/form-data-parser':
         specifier: ^0.9.1
         version: 0.9.1
-      '@prisma/adapter-pg':
-        specifier: ^6.19.0
-        version: 6.19.0
-      '@prisma/client':
-        specifier: ^6.19.0
-        version: 6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3)
       '@react-email/components':
         specifier: ^1.0.0
         version: 1.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -220,14 +229,11 @@ importers:
         specifier: ^9.2.1
         version: 9.2.1
       knip:
-        specifier: ^5.68.0
-        version: 5.68.0(@types/node@22.19.0)(typescript@5.9.3)
+        specifier: ^5.69.1
+        version: 5.69.1(@types/node@22.19.0)(typescript@5.9.3)
       lefthook:
         specifier: ^2.0.2
         version: 2.0.2
-      prisma:
-        specifier: ^6.19.0
-        version: 6.19.0(typescript@5.9.3)
       tailwindcss:
         specifier: ^4.1.17
         version: 4.1.17
@@ -250,8 +256,33 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(vitest@4.0.4)
 
+  packages/database:
+    dependencies:
+      '@prisma/adapter-pg':
+        specifier: catalog:prisma
+        version: 6.19.0
+      '@prisma/client':
+        specifier: catalog:prisma
+        version: 6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3)
+    devDependencies:
+      '@types/node':
+        specifier: ^22.19.0
+        version: 22.19.0
+      prisma:
+        specifier: catalog:prisma
+        version: 6.19.0(typescript@5.9.3)
+      tsx:
+        specifier: ^4.20.6
+        version: 4.20.6
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/e2e:
     devDependencies:
+      '@conference-hall/database':
+        specifier: workspace:*
+        version: link:../database
       '@playwright/test':
         specifier: ^1.56.1
         version: 1.56.1
@@ -3251,8 +3282,8 @@ packages:
   jws@4.0.0:
     resolution: {integrity: sha512-KDncfTmOZoOMTFG4mBlG0qUIOlc03fmzH+ru6RgYVZhPkyiy/92Owlt/8UEN+a4TXR1FQetfIpJE8ApdvdVxTg==}
 
-  knip@5.68.0:
-    resolution: {integrity: sha512-YFTu0uy/0x3UhNhlKGsFSwDXkdw+1ZKobrkPL5rbPJtmHnZrGOFI1yjTAi/emicy06zvLYhmW51jPKvwZETgQA==}
+  knip@5.69.1:
+    resolution: {integrity: sha512-duK61dmrk9O3RiPQtDrsWGzxGyNoyf9gQyjXPcvmcecZypdv9x0ixzPdBU4YTPRbwvUaRtNGulHYUyixz2fbKg==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     peerDependencies:
@@ -8433,7 +8464,7 @@ snapshots:
       jwa: 2.0.1
       safe-buffer: 5.2.1
 
-  knip@5.68.0(@types/node@22.19.0)(typescript@5.9.3):
+  knip@5.69.1(@types/node@22.19.0)(typescript@5.9.3):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@types/node': 22.19.0

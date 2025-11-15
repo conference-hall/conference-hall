@@ -1,5 +1,5 @@
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { loginWith, test } from '../../helpers/fixtures.ts';
 import { TeamInvitePage } from './team-invite.page.ts';
 

@@ -1,9 +1,4 @@
-import { db } from 'prisma/db.server.ts';
-import type {
-  ProposalOrderByWithRelationInput,
-  ProposalWhereInput,
-  ReviewListRelationFilter,
-} from 'prisma/generated/models.ts';
+import { db, type Prisma } from '@conference-hall/database';
 import type { Pagination } from '~/shared/pagination/pagination.ts';
 import type { ProposalsFilters, ReviewsFilter, StatusFilter } from './proposal-search-builder.schema.server.ts';
 
@@ -81,7 +76,7 @@ export class ProposalSearchBuilder {
     });
   }
 
-  private whereClause(): ProposalWhereInput {
+  private whereClause(): Prisma.ProposalWhereInput {
     const { query, reviews, formats, categories, tags, speakers, status } = this.filters;
     return {
       event: { slug: this.eventSlug },
@@ -96,7 +91,7 @@ export class ProposalSearchBuilder {
     };
   }
 
-  private whereStatus(status?: StatusFilter): ProposalWhereInput {
+  private whereStatus(status?: StatusFilter): Prisma.ProposalWhereInput {
     if (status === 'pending') return { deliberationStatus: 'PENDING' };
     if (status === 'accepted') return { deliberationStatus: 'ACCEPTED' };
     if (status === 'rejected') return { deliberationStatus: 'REJECTED' };
@@ -109,8 +104,8 @@ export class ProposalSearchBuilder {
   private whereSearchClause(query?: string) {
     if (!query) return undefined;
 
-    const byTitle: ProposalWhereInput = { title: { contains: query, mode: 'insensitive' } };
-    const bySpeakers: ProposalWhereInput = {
+    const byTitle: Prisma.ProposalWhereInput = { title: { contains: query, mode: 'insensitive' } };
+    const bySpeakers: Prisma.ProposalWhereInput = {
       speakers: { some: { name: { contains: query, mode: 'insensitive' } } },
     };
     if (this.options.withSpeakers) return [byTitle, bySpeakers];
@@ -118,14 +113,14 @@ export class ProposalSearchBuilder {
     return [byTitle];
   }
 
-  private reviewsClause(reviews?: ReviewsFilter): ReviewListRelationFilter | undefined {
+  private reviewsClause(reviews?: ReviewsFilter): Prisma.ReviewListRelationFilter | undefined {
     if (!reviews) return undefined;
     if (reviews === 'reviewed') return { some: { userId: this.userId } };
     if (reviews === 'not-reviewed') return { none: { userId: this.userId } };
     if (reviews === 'my-favorites') return { some: { userId: this.userId, feeling: 'POSITIVE' } };
   }
 
-  private orderByClause(): ProposalOrderByWithRelationInput[] {
+  private orderByClause(): Prisma.ProposalOrderByWithRelationInput[] {
     switch (this.filters.sort) {
       case 'highest':
         return [{ avgRateForSort: { sort: 'desc', nulls: 'last' } }, { title: 'asc' }];

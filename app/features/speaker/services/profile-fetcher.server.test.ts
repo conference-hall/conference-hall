@@ -1,4 +1,4 @@
-import { userFactory } from 'tests/factories/users.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { ProfileFetcher, ProfileNotFoundError } from './profile-fetcher.server.ts';
 
 describe('ProfileFetcher', () => {

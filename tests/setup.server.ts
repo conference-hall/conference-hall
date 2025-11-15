@@ -1,6 +1,6 @@
+import { disconnectDB, resetDB } from '@conference-hall/database/tests/db-helpers.ts';
 import { disconnectRedis } from '~/shared/cache/redis.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
-import { disconnectDB, resetDB } from './db-helpers.ts';
 
 beforeAll(() => {
   vi.resetModules();

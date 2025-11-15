@@ -1,4 +1,4 @@
-import { eventFactory } from 'tests/factories/events.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
 import { parseUrlFilters } from './event-search.schema.server.ts';
 import { EventsSearch } from './event-search.server.ts';
 

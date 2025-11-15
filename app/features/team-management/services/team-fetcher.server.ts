@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { TeamNotFoundError } from '~/shared/errors.server.ts';
 import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
 

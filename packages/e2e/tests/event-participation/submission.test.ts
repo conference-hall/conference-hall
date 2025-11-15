@@ -1,8 +1,8 @@
-import { eventCategoryFactory } from 'tests/factories/categories.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { eventFormatFactory } from 'tests/factories/formats.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { eventCategoryFactory } from '@conference-hall/database/tests/factories/categories.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { eventFormatFactory } from '@conference-hall/database/tests/factories/formats.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { expect, loginWith, test } from '../../helpers/fixtures.ts';
 import { SubmissionPage } from './submission.page.ts';
 import { SurveyPage } from './survey.page.ts';

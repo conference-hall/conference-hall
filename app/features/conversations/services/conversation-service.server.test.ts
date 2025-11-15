@@ -1,13 +1,12 @@
-import { db } from 'prisma/db.server.ts';
-import type { Event, Team, User } from 'prisma/generated/client.ts';
-import { ConversationContextType, ConversationParticipantRole } from 'prisma/generated/enums.ts';
-import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
-import { conversationFactory } from 'tests/factories/conversations.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import type { Event, Team, User } from '@conference-hall/database';
+import { ConversationContextType, ConversationParticipantRole, db } from '@conference-hall/database';
+import { conversationMessageFactory } from '@conference-hall/database/tests/factories/conversation-messages.ts';
+import { conversationFactory } from '@conference-hall/database/tests/factories/conversations.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 
 import { ConversationService } from './conversation-service.server.ts';
 import { notifyConversationMessage } from './jobs/notify-conversation-message.job.ts';

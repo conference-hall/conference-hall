@@ -1,12 +1,12 @@
+import { db } from '@conference-hall/database';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { FirebaseError } from 'firebase/app';
 import { AuthClientErrorCode } from 'firebase-admin/auth';
 import type { TFunction } from 'i18next';
-import { db } from 'prisma/db.server.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
 import { auth } from '~/shared/auth/firebase.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';

@@ -1,7 +1,7 @@
-import type { User } from 'prisma/generated/client.ts';
+import type { User } from '@conference-hall/database';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { TeamFetcher } from './team-fetcher.server.ts';
 

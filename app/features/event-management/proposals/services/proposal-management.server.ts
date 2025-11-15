@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import type {
   ProposalCreationData,

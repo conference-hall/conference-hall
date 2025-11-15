@@ -1,5 +1,4 @@
-import { db } from 'prisma/db.server.ts';
-import { Prisma } from 'prisma/generated/client.ts';
+import { db, Prisma } from '@conference-hall/database';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { EventFetcher } from '../../services/event-fetcher.server.ts';
 

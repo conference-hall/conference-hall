@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import type { ProfileData, SocialLinks } from '~/shared/types/speaker.types.ts';
 
 export class SpeakerProfile {

@@ -1,5 +1,5 @@
-import { MailBox } from 'packages/e2e/common/mailbox.page.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
+import { MailBox } from '../../common/mailbox.page.ts';
 import { expect, test } from '../../helpers/fixtures.ts';
 import { LoginPage } from '../auth/login.page.ts';
 import { SignupPage } from '../auth/signup.page.ts';

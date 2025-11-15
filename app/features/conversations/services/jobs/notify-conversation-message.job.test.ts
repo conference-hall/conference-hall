@@ -1,11 +1,10 @@
-import { db } from 'prisma/db.server.ts';
-import { ConversationParticipantRole } from 'prisma/generated/enums.ts';
-import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
-import { conversationFactory } from 'tests/factories/conversations.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { ConversationParticipantRole, db } from '@conference-hall/database';
+import { conversationMessageFactory } from '@conference-hall/database/tests/factories/conversation-messages.ts';
+import { conversationFactory } from '@conference-hall/database/tests/factories/conversations.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { notifyConversationMessage } from './notify-conversation-message.job.ts';
 

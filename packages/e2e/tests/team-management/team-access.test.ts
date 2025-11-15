@@ -1,5 +1,5 @@
-import { organizerKeyFactory } from 'tests/factories/organizer-key.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { organizerKeyFactory } from '@conference-hall/database/tests/factories/organizer-key.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { expect, loginWith, test } from '../../helpers/fixtures.ts';
 import { TeamAccessPage } from './team-access.page.ts';
 

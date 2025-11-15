@@ -1,12 +1,12 @@
-import type { Event, EventCategory, EventFormat, Team, User } from 'prisma/generated/client.ts';
-import { eventCategoryFactory } from 'tests/factories/categories.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { eventFormatFactory } from 'tests/factories/formats.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
-import { reviewFactory } from 'tests/factories/reviews.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import type { Event, EventCategory, EventFormat, Team, User } from '@conference-hall/database';
+import { eventCategoryFactory } from '@conference-hall/database/tests/factories/categories.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { eventFormatFactory } from '@conference-hall/database/tests/factories/formats.ts';
+import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
+import { reviewFactory } from '@conference-hall/database/tests/factories/reviews.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { CfpMetrics } from './cfp-metrics.server.ts';
 

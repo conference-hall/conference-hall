@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
-import type { EventProposalTagWhereInput } from 'prisma/generated/models.ts';
+import type { Prisma } from '@conference-hall/database';
+import { db } from '@conference-hall/database';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import type { TagFilters, TagSaveData } from './event-proposal-tags.schema.server.ts';
@@ -12,7 +12,7 @@ export class EventProposalTags extends EventAuthorization {
   async list(filters: TagFilters, page = 1, pageSize?: number) {
     const { event } = await this.checkAuthorizedEvent('canEditEvent');
 
-    const tagsWhereInput: EventProposalTagWhereInput = {
+    const tagsWhereInput: Prisma.EventProposalTagWhereInput = {
       eventId: event.id,
       name: { contains: filters.query, mode: 'insensitive' },
     };

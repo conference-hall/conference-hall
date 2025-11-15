@@ -5,12 +5,13 @@
   "sideEffects": false,
   "type": "module",
   "license": "AGPL-3.0",
+  "packageManager": "pnpm@10.18.3",
   "scripts": {
     "test": "playwright test",
     "ui": "playwright test --ui --ui-host=localhost"
   },
-  "packageManager": "pnpm@10.18.3",
   "devDependencies": {
+    "@conference-hall/database": "workspace:*",
     "@playwright/test": "^1.56.1",
     "@types/node": "^22.19.0"
   }

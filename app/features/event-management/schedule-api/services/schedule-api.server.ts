@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { ApiKeyInvalidError, EventNotFoundError } from '~/shared/errors.server.ts';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { EventScheduleExport } from '../../schedule/services/schedule-export.server.ts';

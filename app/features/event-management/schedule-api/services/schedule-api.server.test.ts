@@ -1,8 +1,8 @@
-import type { Event, Schedule, Team, User } from 'prisma/generated/client.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { scheduleFactory } from 'tests/factories/schedule.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import type { Event, Schedule, Team, User } from '@conference-hall/database';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { scheduleFactory } from '@conference-hall/database/tests/factories/schedule.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { ApiKeyInvalidError, EventNotFoundError, ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { EventScheduleApi } from './schedule-api.server.ts';
 

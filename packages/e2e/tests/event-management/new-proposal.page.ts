@@ -1,5 +1,5 @@
-import { SpeakerPanelComponent } from 'packages/e2e/common/speaker-panel.component.ts';
-import { TalkFormComponent } from 'packages/e2e/common/talk-form.component.ts';
+import { SpeakerPanelComponent } from '../../common/speaker-panel.component.ts';
+import { TalkFormComponent } from '../../common/talk-form.component.ts';
 import { expect } from '../../helpers/fixtures.ts';
 import { PageObject } from '../../helpers/page-object.ts';
 

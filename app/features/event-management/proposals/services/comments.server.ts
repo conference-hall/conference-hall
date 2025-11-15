@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server.ts';
+import { db } from '@conference-hall/database';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';

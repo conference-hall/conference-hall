@@ -1,9 +1,9 @@
-import { db } from 'prisma/db.server.ts';
-import type { Event, Team, User } from 'prisma/generated/client.ts';
-import { eventEmailCustomizationFactory } from 'tests/factories/event-email-customizations.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import type { Event, Team, User } from '@conference-hall/database';
+import { db } from '@conference-hall/database';
+import { eventEmailCustomizationFactory } from '@conference-hall/database/tests/factories/event-email-customizations.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { EventEmailCustomizations } from './event-email-customizations.server.tsx';
 
 describe('EventEmailCustomizations', () => {

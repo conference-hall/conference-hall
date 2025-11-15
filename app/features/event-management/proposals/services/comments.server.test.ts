@@ -1,11 +1,11 @@
-import { db } from 'prisma/db.server.ts';
-import type { Event, Team, User } from 'prisma/generated/client.ts';
-import { commentFactory } from 'tests/factories/comments.ts';
-import { eventFactory } from 'tests/factories/events.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import type { Event, Team, User } from '@conference-hall/database';
+import { db } from '@conference-hall/database';
+import { commentFactory } from '@conference-hall/database/tests/factories/comments.ts';
+import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
+import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 

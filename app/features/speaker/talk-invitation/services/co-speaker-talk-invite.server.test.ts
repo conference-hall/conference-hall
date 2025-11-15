@@ -1,6 +1,6 @@
-import { db } from 'prisma/db.server.ts';
-import { talkFactory } from 'tests/factories/talks.ts';
-import { userFactory } from 'tests/factories/users.ts';
+import { db } from '@conference-hall/database';
+import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
+import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
 import { InvitationNotFoundError } from '~/shared/errors.server.ts';
 import { CoSpeakerTalkInvite } from './co-speaker-talk-invite.server.ts';
 
