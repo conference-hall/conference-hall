@@ -1,0 +1,9 @@
+onlyBuiltDependencies:
+  - '@firebase/util'
+  - '@prisma/client'
+  - '@prisma/engines'
+  - esbuild
+  - lefthook
+  - msgpackr-extract
+  - prisma
+  - protobufjs
