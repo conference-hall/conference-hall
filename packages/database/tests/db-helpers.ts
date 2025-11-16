@@ -1,4 +1,4 @@
-import { getSharedServerEnv } from '../../shared/src/environment/environment.ts';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import { db } from '../index.ts';
 
 const { NODE_ENV } = getSharedServerEnv();

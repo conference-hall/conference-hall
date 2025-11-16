@@ -1,5 +1,5 @@
+import { generateGradientColor } from '@conference-hall/shared/colors.ts';
 import { cx } from 'class-variance-authority';
-import { generateGradientColor } from '../../../shared/src/colors/colors.ts';
 import { Tooltip } from './tooltip.tsx';
 import { Text } from './typography.tsx';
 

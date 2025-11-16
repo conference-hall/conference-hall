@@ -1,4 +1,4 @@
-import { getJobServerEnv, getSharedServerEnv } from '../../../../../shared/src/environment/environment.ts';
+import { getJobServerEnv, getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import { MailgunProvider } from './mailgun-provider.ts';
 import { MailpitProvider } from './mailpit-provider.ts';
 

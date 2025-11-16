@@ -1,9 +1,9 @@
 import { db } from '@conference-hall/database';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import type { MessageRole } from '@conference-hall/shared/types/conversation.types.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ConversationMessageEmail from '~/shared/emails/templates/speakers/conversation-message.tsx';
 import { job } from '~/shared/jobs/job.ts';
-import { getSharedServerEnv } from '../../../../../../shared/src/environment/environment.ts';
 
 type NotifyConversationMessagePayload = {
   conversationId: string;

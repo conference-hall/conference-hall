@@ -5,7 +5,6 @@
   "sideEffects": false,
   "type": "module",
   "license": "AGPL-3.0",
-  "packageManager": "pnpm@10.18.3",
   "exports": {
     "./environment.ts": "./src/environment/environment.ts",
     "./constants.ts": "./src/constants.ts",
@@ -13,8 +12,8 @@
     "./types/*.ts": "./src/types/*.ts",
     "./validators/*.ts": "./src/validators/*.ts"
   },
-  "devDependencies": {
-    "typescript": "^5.9.3"
+  "scripts": {
+    "test": "vitest"
   },
   "dependencies": {
     "zod": "^4.1.12"

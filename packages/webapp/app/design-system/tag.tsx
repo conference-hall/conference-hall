@@ -1,6 +1,6 @@
+import { getContrastColor } from '@conference-hall/shared/colors.ts';
 import type { Tag as TagType } from '@conference-hall/shared/types/tags.types.ts';
 import { Link, useParams, useSearchParams } from 'react-router';
-import { getContrastColor } from '../../../shared/src/colors/colors.ts';
 
 type TagProps = { tag: TagType; isSearchLink?: boolean };
 

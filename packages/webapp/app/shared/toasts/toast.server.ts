@@ -1,7 +1,7 @@
+import { getWebServerEnv } from '@conference-hall/shared/environment.ts';
 import { createCookieSessionStorage, data } from 'react-router';
 import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
-import { getWebServerEnv } from '../../../../shared/src/environment/environment.ts';
 
 const { COOKIE_SIGNED_SECRET } = getWebServerEnv();
 

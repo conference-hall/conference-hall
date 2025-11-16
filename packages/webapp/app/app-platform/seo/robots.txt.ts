@@ -1,5 +1,5 @@
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
-import { getSharedServerEnv } from '../../../../shared/src/environment/environment.ts';
 
 const { APP_URL } = getSharedServerEnv();
 

@@ -1,3 +1,6 @@
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import dotenv from '@dotenvx/dotenvx';
 import { z } from 'zod';
 
 const SharedServerSchema = z.object({
@@ -74,4 +77,10 @@ export function getJobServerEnv() {
   jobServerEnv = initEnv(JobServerSchema);
   Object.freeze(jobServerEnv);
   return jobServerEnv;
+}
+
+export function loadEnvFile(filename: '.env.test' | '.env.dev') {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  return dotenv.config({ path: join(__dirname, `../../../../${filename}`), quiet: true });
 }

@@ -1,6 +1,6 @@
+import { getWebServerEnv } from '@conference-hall/shared/environment.ts';
 import type express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { getWebServerEnv } from '../../../../shared/src/environment/environment.ts';
 
 const { FIREBASE_PROJECT_ID } = getWebServerEnv();
 

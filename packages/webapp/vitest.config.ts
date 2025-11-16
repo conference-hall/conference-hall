@@ -1,23 +1,16 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import dotenv from '@dotenvx/dotenvx';
+import { getSharedServerEnv, loadEnvFile } from '@conference-hall/shared/environment.ts';
 import tailwindcss from '@tailwindcss/vite';
 import { playwright } from '@vitest/browser-playwright';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
-import { getSharedServerEnv } from '../shared/src/environment/environment.ts';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const env = dotenv.config({ path: join(__dirname, '../../.env.test'), quiet: true });
-
+const env = loadEnvFile('.env.test');
 const { CI } = getSharedServerEnv();
 
 export default defineConfig({
   plugins: [tailwindcss(), tsconfigPaths()],
-  server: { watch: { ignored: ['.*\\/node_modules\\/.*', '.*\\/build\\/.*'] } },
   test: {
     env: env.parsed,
     globals: true,
@@ -31,7 +24,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'server',
-          include: ['./**/*.test.ts', '!./**/*.test.tsx', '!./packages/e2e/**/*'],
+          include: ['./**/*.test.ts', '!./**/*.test.tsx'],
           setupFiles: ['./tests/setup.server.ts'],
           environment: 'node',
         },
@@ -40,7 +33,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'browser',
-          include: ['./**/*.test.tsx', '!./**/*.test.ts', '!./packages/e2e/**/*'],
+          include: ['./**/*.test.tsx', '!./**/*.test.ts'],
           setupFiles: ['./tests/setup.browser.tsx'],
           css: true,
           includeTaskLocation: true,

@@ -1,7 +1,7 @@
 import { db } from '@conference-hall/database';
+import { SlugSchema } from '@conference-hall/shared/validators/slug.ts';
 import { z } from 'zod';
 import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
-import { SlugSchema } from '../../../../../../shared/src/validators/slug.ts';
 
 const TeamUpdateSchema = z.object({
   name: z.string().trim().min(3).max(50),

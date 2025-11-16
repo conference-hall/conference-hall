@@ -7,10 +7,10 @@
   "license": "AGPL-3.0",
   "scripts": {
     "dev": "dotenvx run -f .env.dev -- pnpm -F @conference-hall/webapp dev",
-    "test": "pnpm test:db && pnpm -F @conference-hall/webapp test",
-    "test:db": "dotenvx run -f .env.test -- pnpm -F @conference-hall/database migrate:test",
-    "db:migrate": "dotenvx run -f .env.dev -- pnpm -F @conference-hall/database migrate:dev",
-    "db:reset": "dotenvx run -f .env.dev -- pnpm -F @conference-hall/database reset",
+    "dev:migrate": "dotenvx run -f .env.dev -- pnpm -F @conference-hall/database migrate:dev",
+    "dev:reset": "dotenvx run -f .env.dev -- pnpm -F @conference-hall/database reset",
+    "test": "pnpm test:migrate && pnpm -r test",
+    "test:migrate": "dotenvx run -f .env.test -- pnpm -F @conference-hall/database migrate:test",
     "lint": "biome check",
     "lint:ci": "biome ci",
     "tsc": "pnpm -F @conference-hall/webapp typegen && tsc -b",
@@ -26,7 +26,7 @@
     "typescript": "^5.9.3",
     "vitest": "^4.0.4"
   },
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.22.0",
   "engines": {
     "node": "22.x"
   }

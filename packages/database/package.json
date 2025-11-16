@@ -5,7 +5,6 @@
   "sideEffects": false,
   "type": "module",
   "license": "AGPL-3.0",
-  "packageManager": "pnpm@10.18.3",
   "exports": {
     ".": "./index.ts",
     "./tests/*": "./tests/*"
@@ -15,14 +14,13 @@
     "migrate:test": "prisma db push --accept-data-loss",
     "migrate:prod": "prisma migrate deploy",
     "reset": "prisma migrate reset -f",
+    "test": "vitest",
     "postinstall": "prisma generate"
   },
   "devDependencies": {
     "@ngneat/falso": "^8.0.2",
-    "@types/node": "^22.19.0",
     "prisma": "^6.19.0",
-    "tsx": "^4.20.6",
-    "typescript": "^5.9.3"
+    "tsx": "^4.20.6"
   },
   "dependencies": {
     "@conference-hall/shared": "workspace:*",

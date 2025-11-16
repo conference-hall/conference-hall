@@ -1,8 +1,8 @@
 import stream from 'node:stream';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import type { FileUpload, FileUploadHandler } from '@mjackson/form-data-parser';
 import { v4 as uuid } from 'uuid';
 import { storage } from '~/shared/auth/firebase.server.ts';
-import { getSharedServerEnv } from '../../../../../shared/src/environment/environment.ts';
 
 const { APP_URL } = getSharedServerEnv();
 

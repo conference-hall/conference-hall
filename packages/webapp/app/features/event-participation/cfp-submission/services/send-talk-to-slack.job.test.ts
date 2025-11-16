@@ -5,9 +5,9 @@ import { proposalFactory } from '@conference-hall/database/tests/factories/propo
 import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
 import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
 import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import type { Mock } from 'vitest';
 import { Slack } from '~/shared/integrations/slack.server.ts';
-import { getSharedServerEnv } from '../../../../../../shared/src/environment/environment.ts';
 import { sendTalkToSlack } from './send-talk-to-slack.job.ts';
 
 const { APP_URL } = getSharedServerEnv();

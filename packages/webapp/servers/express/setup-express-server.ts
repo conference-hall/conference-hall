@@ -1,8 +1,8 @@
 import { db } from '@conference-hall/database';
+import { getWebServerEnv } from '@conference-hall/shared/environment.ts';
 import compression from 'compression';
 import express from 'express';
 import { disconnectRedis } from '~/shared/cache/redis.server.ts';
-import { getWebServerEnv } from '../../../shared/src/environment/environment.ts';
 import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
 import { applyLogging } from './middlewares/logging.ts';
 import { applyProxyFirebaseAuth } from './middlewares/proxy-firebase-auth.ts';

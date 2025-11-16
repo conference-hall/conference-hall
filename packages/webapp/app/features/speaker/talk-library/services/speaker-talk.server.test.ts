@@ -4,9 +4,9 @@ import { eventFactory } from '@conference-hall/database/tests/factories/events.t
 import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
 import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
 import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import { SpeakerProposalStatus } from '@conference-hall/shared/types/speaker.types.ts';
 import { TalkNotFoundError } from '~/shared/errors.server.ts';
-import { getSharedServerEnv } from '../../../../../../shared/src/environment/environment.ts';
 import { SpeakerTalk } from './speaker-talk.server.ts';
 
 const { APP_URL } = getSharedServerEnv();

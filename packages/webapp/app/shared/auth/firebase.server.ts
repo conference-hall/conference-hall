@@ -1,3 +1,4 @@
+import { getWebServerEnv } from '@conference-hall/shared/environment.ts';
 import admin from 'firebase-admin';
 import type { App } from 'firebase-admin/app';
 import { getApp, getApps, initializeApp } from 'firebase-admin/app';
@@ -5,7 +6,6 @@ import type { Auth } from 'firebase-admin/auth';
 import { getAuth } from 'firebase-admin/auth';
 import type { Storage } from 'firebase-admin/storage';
 import { getStorage } from 'firebase-admin/storage';
-import { getWebServerEnv } from '../../../../shared/src/environment/environment.ts';
 import type { FirebaseConfig } from './firebase.ts';
 
 const {

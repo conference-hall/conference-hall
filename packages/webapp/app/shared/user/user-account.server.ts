@@ -1,4 +1,5 @@
 import { db } from '@conference-hall/database';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import type { TFunction } from 'i18next';
 import { Notifications } from '~/features/notifications/services/notifications.server.ts';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
@@ -8,7 +9,6 @@ import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import AccountDeletedEmail from '~/shared/emails/templates/auth/account-deleted.tsx';
 import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
-import { getSharedServerEnv } from '../../../../shared/src/environment/environment.ts';
 import { validateCaptchaToken } from '../auth/captcha.server.ts';
 import { NotAuthorizedError } from '../errors.server.ts';
 import { flags } from '../feature-flags/flags.server.ts';

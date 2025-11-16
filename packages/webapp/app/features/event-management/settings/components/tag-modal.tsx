@@ -1,3 +1,4 @@
+import { getContrastColor, getRandomColor } from '@conference-hall/shared/colors.ts';
 import type { Tag as TagType } from '@conference-hall/shared/types/tags.types.ts';
 import { PaintBrushIcon } from '@heroicons/react/24/outline';
 import { type ReactNode, useId, useState } from 'react';
@@ -8,7 +9,6 @@ import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Tag } from '~/design-system/tag.tsx';
 import { Tooltip } from '~/design-system/tooltip.tsx';
-import { getContrastColor, getRandomColor } from '../../../../../../shared/src/colors/colors.ts';
 
 type TagModalProps = {
   mode: 'create' | 'edit';

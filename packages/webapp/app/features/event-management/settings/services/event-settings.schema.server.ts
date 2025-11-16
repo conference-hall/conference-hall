@@ -1,6 +1,6 @@
+import { SlugSchema } from '@conference-hall/shared/validators/slug.ts';
 import { z } from 'zod';
 import { parseToUtcEndOfDay, parseToUtcStartOfDay } from '~/shared/datetimes/timezone.ts';
-import { SlugSchema } from '../../../../../../shared/src/validators/slug.ts';
 
 export const EventGeneralSettingsSchema = z.object({
   name: z.string().trim().min(3).max(50),

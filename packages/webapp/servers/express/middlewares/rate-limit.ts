@@ -1,7 +1,7 @@
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import type express from 'express';
 import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import { href } from 'react-router';
-import { getSharedServerEnv } from '../../../../shared/src/environment/environment.ts';
 
 const { NODE_ENV } = getSharedServerEnv();
 

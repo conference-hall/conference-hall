@@ -1,7 +1,7 @@
+import { getWebServerEnv } from '@conference-hall/shared/environment.ts';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestoration } from 'react-router';
-import { getWebServerEnv } from '../../shared/src/environment/environment.ts';
 import type { Route } from './+types/root.ts';
 import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';

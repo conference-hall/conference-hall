@@ -5,6 +5,7 @@ import { eventFormatFactory } from '@conference-hall/database/tests/factories/fo
 import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
 import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
 import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import {
@@ -14,7 +15,6 @@ import {
   ProposalNotFoundError,
   TalkNotFoundError,
 } from '~/shared/errors.server.ts';
-import { getSharedServerEnv } from '../../../../../../shared/src/environment/environment.ts';
 import { TalkSubmission } from './talk-submission.server.ts';
 
 const { APP_URL } = getSharedServerEnv();

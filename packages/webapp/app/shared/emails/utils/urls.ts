@@ -1,5 +1,5 @@
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import { href } from 'react-router';
-import { getSharedServerEnv } from '../../../../../shared/src/environment/environment.ts';
 
 const { APP_URL } = getSharedServerEnv();
 

@@ -1,8 +1,8 @@
+import { getWebServerEnv } from '@conference-hall/shared/environment.ts';
 import type { RouterContextProvider, Session } from 'react-router';
 import { createCookieSessionStorage, redirect } from 'react-router';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
-import { getWebServerEnv } from '../../../../shared/src/environment/environment.ts';
 import { getLocale } from '../i18n/i18n.middleware.ts';
 import { validateCaptchaToken } from './captcha.server.ts';
 import { auth as serverAuth } from './firebase.server.ts';

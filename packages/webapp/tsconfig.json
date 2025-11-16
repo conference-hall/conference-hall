@@ -1,7 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "include": ["**/**.ts", "**/**.tsx", ".react-router/types/**/*"],
-  "references": [{ "path": "../shared" }, { "path": "../database" }],
   "compilerOptions": {
     "types": ["node", "mdx", "@react-router/node", "vitest/globals"],
     "baseUrl": ".",

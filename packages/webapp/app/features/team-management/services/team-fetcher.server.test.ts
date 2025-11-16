@@ -1,8 +1,8 @@
 import type { User } from '@conference-hall/database';
 import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
 import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-import { getSharedServerEnv } from '../../../../../shared/src/environment/environment.ts';
 import { TeamFetcher } from './team-fetcher.server.ts';
 
 const { APP_URL } = getSharedServerEnv();

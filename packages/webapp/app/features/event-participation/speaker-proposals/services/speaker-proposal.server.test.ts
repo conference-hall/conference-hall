@@ -5,10 +5,10 @@ import { eventFormatFactory } from '@conference-hall/database/tests/factories/fo
 import { proposalFactory } from '@conference-hall/database/tests/factories/proposals.ts';
 import { talkFactory } from '@conference-hall/database/tests/factories/talks.ts';
 import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import { SpeakerProposalStatus } from '@conference-hall/shared/types/speaker.types.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/shared/errors.server.ts';
-import { getSharedServerEnv } from '../../../../../../shared/src/environment/environment.ts';
 import { SpeakerProposal } from './speaker-proposal.server.ts';
 
 const { APP_URL } = getSharedServerEnv();

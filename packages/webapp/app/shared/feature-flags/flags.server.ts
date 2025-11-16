@@ -1,4 +1,4 @@
-import { getSharedServerEnv } from '../../../../shared/src/environment/environment.ts';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import flagsConfig from '../../../flags.config.ts';
 import { MemoryCacheLayer } from '../cache/memory-cache-layer.ts';
 import { FlagsClient } from './flags-client.ts';

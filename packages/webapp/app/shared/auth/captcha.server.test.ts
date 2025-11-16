@@ -1,4 +1,4 @@
-import { getWebServerEnv } from '../../../../shared/src/environment/environment.ts';
+import { getWebServerEnv } from '@conference-hall/shared/environment.ts';
 import { flags } from '../feature-flags/flags.server.ts';
 import { getCaptchaSiteKey, validateCaptchaToken } from './captcha.server.ts';
 

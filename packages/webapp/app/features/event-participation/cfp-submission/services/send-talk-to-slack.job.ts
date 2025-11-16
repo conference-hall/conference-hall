@@ -1,8 +1,8 @@
 import { db } from '@conference-hall/database';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import { Slack, type SlackMessage } from '~/shared/integrations/slack.server.ts';
 import { job } from '~/shared/jobs/job.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
-import { getSharedServerEnv } from '../../../../../../shared/src/environment/environment.ts';
 
 const { APP_URL } = getSharedServerEnv();
 

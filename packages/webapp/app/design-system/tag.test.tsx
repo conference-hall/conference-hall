@@ -1,7 +1,7 @@
+import { getContrastColor } from '@conference-hall/shared/colors.ts';
 import type { JSX } from 'react';
 import { createRoutesStub } from 'react-router';
 import { render } from 'vitest-browser-react';
-import { getContrastColor } from '../../../shared/src/colors/colors.ts';
 import { Tag } from './tag.tsx';
 
 describe('Tag component', () => {

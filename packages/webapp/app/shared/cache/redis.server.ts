@@ -1,5 +1,5 @@
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import { Redis } from 'ioredis';
-import { getSharedServerEnv } from '../../../../shared/src/environment/environment.ts';
 
 const { REDIS_URL } = getSharedServerEnv();
 
