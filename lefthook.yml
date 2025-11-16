@@ -3,5 +3,5 @@ output: false
 pre-commit:
   commands:
     linter:
-      run: pnpm lint -- --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      run: pnpm lint --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
       stage_fixed: true

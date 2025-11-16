@@ -26,6 +26,7 @@
     "typescript": "^5.9.3",
     "vitest": "^4.0.4"
   },
+  "packageManager": "pnpm@10.18.3",
   "engines": {
     "node": "22.x"
   }

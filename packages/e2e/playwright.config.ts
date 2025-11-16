@@ -30,9 +30,11 @@ export default defineConfig({
   ],
 
   webServer: [
-    { command: 'pnpm -w jobs:start' },
+    { command: 'pnpm -F @conference-hall/webapp jobs:start' },
     {
-      command: CI ? 'pnpm -F @conference-hall/database migrate:prod && pnpm -w start' : 'pnpm -w dev',
+      command: CI
+        ? 'pnpm -F @conference-hall/database migrate:prod && pnpm -F @conference-hall/webapp start'
+        : 'pnpm -F @conference-hall/webapp dev:web',
       url: APP_URL,
       reuseExistingServer: !CI,
     },
