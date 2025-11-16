@@ -1,5 +1,4 @@
 import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
-import { href } from 'react-router';
 import { test } from '../../helpers/fixtures.ts';
 import { SettingsProfilePage } from '../speaker/settings-profile.page.ts';
 import { LoginPage } from './login.page.ts';
@@ -7,7 +6,7 @@ import { LoginPage } from './login.page.ts';
 test('log in with Google and redirect', async ({ page }) => {
   const user = await userFactory({ traits: ['clark-kent'] });
 
-  await page.goto(href('/speaker/settings/profile'));
+  await page.goto('/speaker/settings/profile');
 
   const loginPage = new LoginPage(page);
   await loginPage.waitFor();

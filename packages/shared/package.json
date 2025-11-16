@@ -1,0 +1,22 @@
+{
+  "name": "@conference-hall/shared",
+  "version": "1.0.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "license": "AGPL-3.0",
+  "packageManager": "pnpm@10.18.3",
+  "exports": {
+    "./environment.ts": "./src/environment/environment.ts",
+    "./constants.ts": "./src/constants.ts",
+    "./colors.ts": "./src/colors/colors.ts",
+    "./types/*.ts": "./src/types/*.ts",
+    "./validators/*.ts": "./src/validators/*.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
+  }
+}

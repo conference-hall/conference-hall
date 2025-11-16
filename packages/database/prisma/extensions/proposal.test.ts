@@ -1,5 +1,5 @@
-import { getSharedServerEnv } from 'servers/environment.server.ts';
-import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
+import { SpeakerProposalStatus } from '@conference-hall/shared/types/speaker.types.ts';
+import { getSharedServerEnv } from '../../../shared/src/environment/environment.ts';
 import { eventFactory } from '../../tests/factories/events.ts';
 import { proposalFactory } from '../../tests/factories/proposals.ts';
 import { talkFactory } from '../../tests/factories/talks.ts';

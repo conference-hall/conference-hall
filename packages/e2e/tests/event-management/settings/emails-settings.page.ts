@@ -1,4 +1,4 @@
-import type { CustomTemplateName } from '~/shared/emails/email.types.ts';
+import type { CustomTemplateName } from '@conference-hall/webapp/app/shared/emails/email.types.ts';
 import { PageObject } from '../../../helpers/page-object.ts';
 
 export class EmailsSettingsPage extends PageObject {

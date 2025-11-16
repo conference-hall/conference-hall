@@ -1,4 +1,4 @@
-import type { CfpState } from '~/shared/types/events.types.js';
+import type { CfpState } from '@conference-hall/shared/types/events.types.ts';
 import { Prisma } from '../generated/client.ts';
 
 export const eventExtension = Prisma.defineExtension({

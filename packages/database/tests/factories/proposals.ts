@@ -1,5 +1,5 @@
+import type { SocialLinks } from '@conference-hall/shared/types/speaker.types.ts';
 import { randParagraph, randPost } from '@ngneat/falso';
-import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import type {
   Event,
   EventCategory,
@@ -57,7 +57,12 @@ type FactoryOptions = {
 export const proposalFactory = async (options: FactoryOptions) => {
   const { attributes = {}, traits = [], talk, event, speakers, formats, categories, tags } = options;
 
-  const proposalSpeakers = speakers || (await EventSpeakerForProposal.for(event.id).upsertForUsers(talk.speakers));
+  const proposalSpeakers = speakers || [];
+  if (!speakers) {
+    for (const speaker of talk.speakers) {
+      proposalSpeakers.push(await saveEventSpeaker(event.id, speaker));
+    }
+  }
 
   const defaultAttributes: Prisma.ProposalCreateInput = {
     title: talk?.title || randPost().title,
@@ -90,3 +95,24 @@ export const proposalFactory = async (options: FactoryOptions) => {
 
   return db.proposal.create({ data, include: { event: true, speakers: true } });
 };
+
+async function saveEventSpeaker(eventId: string, user: User) {
+  const speaker = await db.eventSpeaker.findFirst({ where: { userId: user.id, eventId } });
+  if (speaker) return speaker;
+
+  return db.eventSpeaker.create({
+    data: {
+      userId: user.id,
+      eventId: eventId,
+      email: user.email,
+      name: user.name,
+      picture: user.picture,
+      bio: user.bio,
+      references: user.references,
+      company: user.company,
+      location: user.location,
+      socialLinks: user.socialLinks as SocialLinks,
+      locale: user.locale,
+    },
+  });
+}

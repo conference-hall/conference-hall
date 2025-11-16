@@ -1,4 +1,4 @@
-import { getSharedServerEnv } from 'servers/environment.server.ts';
+import { getSharedServerEnv } from '../../../shared/src/environment/environment.ts';
 import { teamFactory } from '../../tests/factories/team.ts';
 
 const { APP_URL } = getSharedServerEnv();

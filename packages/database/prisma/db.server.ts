@@ -1,5 +1,5 @@
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { eventExtension } from './extensions/event.js';
 import { proposalExtension } from './extensions/proposal.js';
 import { talkExtension } from './extensions/talk.js';

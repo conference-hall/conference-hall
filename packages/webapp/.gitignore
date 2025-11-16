@@ -1,0 +1,6 @@
+# react router
+.react-router
+build
+
+# vite
+vite.config.ts.timestamp*.mjs

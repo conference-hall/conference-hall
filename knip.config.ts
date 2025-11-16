@@ -2,9 +2,6 @@ import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
   workspaces: {
-    '.': {
-      entry: ['servers/*.ts', 'servers/express/app.ts'],
-    },
     'packages/e2e': {
       playwright: {
         entry: ['tests/*.setup.ts'],
@@ -12,6 +9,9 @@ const config: KnipConfig = {
     },
     'packages/database': {
       ignoreDependencies: ['@prisma/client'],
+    },
+    'packages/webapp': {
+      entry: ['servers/*.ts', 'servers/express/app.ts'],
     },
   },
 };

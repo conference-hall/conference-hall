@@ -1,5 +1,5 @@
-import { getSharedServerEnv } from 'servers/environment.server.js';
-import { SpeakerProposalStatus } from '~/shared/types/speaker.types.js';
+import { SpeakerProposalStatus } from '@conference-hall/shared/types/speaker.types.ts';
+import { getSharedServerEnv } from '../../../shared/src/environment/environment.ts';
 import { ConfirmationStatus, DeliberationStatus, Prisma, PublicationStatus } from '../generated/client.ts';
 
 const { APP_URL } = getSharedServerEnv();

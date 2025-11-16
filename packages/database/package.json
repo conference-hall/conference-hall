@@ -18,13 +18,16 @@
     "postinstall": "prisma generate"
   },
   "devDependencies": {
+    "@ngneat/falso": "^8.0.2",
     "@types/node": "^22.19.0",
     "prisma": "catalog:prisma",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@conference-hall/shared": "workspace:*",
     "@prisma/adapter-pg": "catalog:prisma",
-    "@prisma/client": "catalog:prisma"
+    "@prisma/client": "catalog:prisma",
+    "@sindresorhus/slugify": "^3.0.0"
   }
 }

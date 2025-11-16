@@ -1,5 +1,5 @@
+import type { SocialLinks } from '@conference-hall/shared/types/speaker.types.ts';
 import { randEmail, randFullName } from '@ngneat/falso';
-import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import type { Event, Prisma, User } from '../../index.ts';
 import { db } from '../../index.ts';
 

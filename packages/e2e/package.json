@@ -11,8 +11,13 @@
     "ui": "playwright test --ui --ui-host=localhost"
   },
   "devDependencies": {
-    "@conference-hall/database": "workspace:*",
     "@playwright/test": "^1.56.1",
-    "@types/node": "^22.19.0"
+    "@types/node": "^22.19.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@conference-hall/database": "workspace:*",
+    "@conference-hall/shared": "workspace:*",
+    "@conference-hall/webapp": "workspace:*"
   }
 }

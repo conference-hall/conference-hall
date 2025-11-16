@@ -1,29 +1,9 @@
 {
-  "include": ["**/*.ts", "**/*.tsx", ".react-router/types/**/*"],
-  "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["mdx", "@react-router/node", "vitest/globals"],
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "verbatimModuleSyntax": true,
-    "target": "ES2022",
-    "strict": true,
-    "allowJs": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
-    "rootDirs": [".", "./.react-router/types"],
-    "paths": {
-      "~/*": ["./app/*"],
-      "tests/*": ["./tests/*"],
-      "@conference-hall/database": ["./packages/database/index.ts"],
-      "@conference-hall/database/tests/*": ["./packages/database/tests/*"]
-    },
-    "skipLibCheck": true,
-    "noEmit": true
-  }
+  "files": [],
+  "references": [
+    { "path": "packages/database" },
+    { "path": "packages/e2e" },
+    { "path": "packages/shared" },
+    { "path": "packages/webapp" }
+  ]
 }

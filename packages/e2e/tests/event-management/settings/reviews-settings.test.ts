@@ -1,7 +1,7 @@
 import { eventFactory } from '@conference-hall/database/tests/factories/events.ts';
 import { teamFactory } from '@conference-hall/database/tests/factories/team.ts';
 import { userFactory } from '@conference-hall/database/tests/factories/users.ts';
-import { flags } from '~/shared/feature-flags/flags.server.ts';
+import { flags } from '@conference-hall/webapp/app/shared/feature-flags/flags.server.ts';
 import { expect, loginWith, test } from '../../../helpers/fixtures.ts';
 import { ReviewsSettingsPage } from './reviews-settings.page.ts';
 

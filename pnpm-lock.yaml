@@ -4,25 +4,106 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  prisma:
-    '@prisma/adapter-pg':
-      specifier: ^6.19.0
-      version: 6.19.0
-    '@prisma/client':
-      specifier: ^6.19.0
-      version: 6.19.0
-    prisma:
-      specifier: ^6.19.0
-      version: 6.19.0
-
 importers:
 
   .:
+    devDependencies:
+      '@biomejs/biome':
+        specifier: ^2.3.4
+        version: 2.3.4
+      '@dotenvx/dotenvx':
+        specifier: ^1.51.1
+        version: 1.51.1
+      '@playwright/test':
+        specifier: ^1.56.1
+        version: 1.56.1
+      '@types/node':
+        specifier: ^22.19.0
+        version: 22.19.0
+      knip:
+        specifier: ^5.69.1
+        version: 5.69.1(@types/node@22.19.0)(typescript@5.9.3)
+      lefthook:
+        specifier: ^2.0.2
+        version: 2.0.2
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.4
+        version: 4.0.4(@types/debug@4.1.12)(@types/node@22.19.0)(@vitest/browser-playwright@4.0.4)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)
+
+  packages/database:
+    dependencies:
+      '@conference-hall/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@prisma/adapter-pg':
+        specifier: catalog:prisma
+        version: 6.19.0
+      '@prisma/client':
+        specifier: catalog:prisma
+        version: 6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3)
+      '@sindresorhus/slugify':
+        specifier: ^3.0.0
+        version: 3.0.0
+    devDependencies:
+      '@ngneat/falso':
+        specifier: ^8.0.2
+        version: 8.0.2
+      '@types/node':
+        specifier: ^22.19.0
+        version: 22.19.0
+      prisma:
+        specifier: catalog:prisma
+        version: 6.19.0(typescript@5.9.3)
+      tsx:
+        specifier: ^4.20.6
+        version: 4.20.6
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/e2e:
     dependencies:
       '@conference-hall/database':
         specifier: workspace:*
-        version: link:packages/database
+        version: link:../database
+      '@conference-hall/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@conference-hall/webapp':
+        specifier: workspace:*
+        version: link:../webapp
+    devDependencies:
+      '@playwright/test':
+        specifier: ^1.56.1
+        version: 1.56.1
+      '@types/node':
+        specifier: ^22.19.0
+        version: 22.19.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/shared:
+    dependencies:
+      zod:
+        specifier: ^4.1.12
+        version: 4.1.12
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/webapp:
+    dependencies:
+      '@conference-hall/database':
+        specifier: workspace:*
+        version: link:../database
+      '@conference-hall/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@conform-to/zod':
         specifier: ^1.13.3
         version: 1.13.3(zod@4.1.12)
@@ -171,21 +252,9 @@ importers:
         specifier: ^4.1.12
         version: 4.1.12
     devDependencies:
-      '@biomejs/biome':
-        specifier: ^2.3.4
-        version: 2.3.4
-      '@dotenvx/dotenvx':
-        specifier: ^1.51.1
-        version: 1.51.1
       '@mdx-js/rollup':
         specifier: ^3.1.1
         version: 3.1.1(rollup@4.53.1)
-      '@ngneat/falso':
-        specifier: ^8.0.2
-        version: 8.0.2
-      '@playwright/test':
-        specifier: ^1.56.1
-        version: 1.56.1
       '@react-router/dev':
         specifier: ~7.9.5
         version: 7.9.5(@types/node@22.19.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.9.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(tsx@4.20.6)(typescript@5.9.3)(vite@7.2.2(@types/node@22.19.0)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6))
@@ -228,12 +297,6 @@ importers:
       concurrently:
         specifier: ^9.2.1
         version: 9.2.1
-      knip:
-        specifier: ^5.69.1
-        version: 5.69.1(@types/node@22.19.0)(typescript@5.9.3)
-      lefthook:
-        specifier: ^2.0.2
-        version: 2.0.2
       tailwindcss:
         specifier: ^4.1.17
         version: 4.1.17
@@ -255,40 +318,6 @@ importers:
       vitest-browser-react:
         specifier: ^2.0.2
         version: 2.0.2(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(vitest@4.0.4)
-
-  packages/database:
-    dependencies:
-      '@prisma/adapter-pg':
-        specifier: catalog:prisma
-        version: 6.19.0
-      '@prisma/client':
-        specifier: catalog:prisma
-        version: 6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3)
-    devDependencies:
-      '@types/node':
-        specifier: ^22.19.0
-        version: 22.19.0
-      prisma:
-        specifier: catalog:prisma
-        version: 6.19.0(typescript@5.9.3)
-      tsx:
-        specifier: ^4.20.6
-        version: 4.20.6
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/e2e:
-    devDependencies:
-      '@conference-hall/database':
-        specifier: workspace:*
-        version: link:../database
-      '@playwright/test':
-        specifier: ^1.56.1
-        version: 1.56.1
-      '@types/node':
-        specifier: ^22.19.0
-        version: 22.19.0
 
 packages:
 

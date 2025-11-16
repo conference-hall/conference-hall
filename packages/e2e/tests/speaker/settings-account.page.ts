@@ -1,5 +1,4 @@
 import type { Locator } from '@playwright/test';
-import { href } from 'react-router';
 import { PageObject } from '../../helpers/page-object.ts';
 
 export class SettingsAccountPage extends PageObject {
@@ -9,7 +8,7 @@ export class SettingsAccountPage extends PageObject {
   readonly authMethods: Locator = this.page.getByRole('list', { name: 'Authentication methods list' });
 
   async goto() {
-    await this.page.goto(href('/speaker/settings'));
+    await this.page.goto('/speaker/settings');
     await this.waitFor();
   }
 

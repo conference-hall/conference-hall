@@ -1,6 +1,6 @@
 import { disconnectDB, resetDB } from '@conference-hall/database/tests/db-helpers.ts';
+import { flags } from '@conference-hall/webapp/app/shared/feature-flags/flags.server.ts';
 import { test as base } from '@playwright/test';
-import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { MAILBOX_URL } from '../common/mailbox.page.ts';
 import { getUserAuthPath, type TestUser } from './helpers.ts';
 

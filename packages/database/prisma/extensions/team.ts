@@ -1,4 +1,4 @@
-import { getSharedServerEnv } from 'servers/environment.server.js';
+import { getSharedServerEnv } from '../../../shared/src/environment/environment.ts';
 import { Prisma } from '../generated/client.ts';
 
 const { APP_URL } = getSharedServerEnv();

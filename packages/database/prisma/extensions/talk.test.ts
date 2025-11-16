@@ -1,4 +1,4 @@
-import { getSharedServerEnv } from 'servers/environment.server.ts';
+import { getSharedServerEnv } from '../../../shared/src/environment/environment.ts';
 import { talkFactory } from '../../tests/factories/talks.ts';
 import { userFactory } from '../../tests/factories/users.ts';
 

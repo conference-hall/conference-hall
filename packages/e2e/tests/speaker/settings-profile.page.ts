@@ -1,5 +1,4 @@
 import type { Locator } from '@playwright/test';
-import { href } from 'react-router';
 import { PageObject } from '../../helpers/page-object.ts';
 
 export class SettingsProfilePage extends PageObject {
@@ -11,7 +10,7 @@ export class SettingsProfilePage extends PageObject {
   readonly socialLinkInput: Locator = this.page.getByLabel('Social link 1');
 
   async goto() {
-    await this.page.goto(href('/speaker/settings/profile'));
+    await this.page.goto('/speaker/settings/profile');
     await this.waitFor();
   }
 

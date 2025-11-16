@@ -113,7 +113,7 @@ jobs:
         run: ./docker/wait-for-db.sh
 
       - name: Build the app
-        run: pnpm build
+        run: pnpm -F @conference-hall/webapp build
 
       - name: Run e2e tests
         run: pnpm -F @conference-hall/e2e test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}

@@ -1,9 +1,9 @@
+import { getRandomColor } from '@conference-hall/shared/colors.ts';
 import { rand, randAnimal, randEmail, randFullAddress, randParagraph, randText, randUrl } from '@ngneat/falso';
 import { slugifyWithCounter } from '@sindresorhus/slugify';
-import { generateImagePlaceholder } from 'tests/img-placeholder.ts';
-import { getRandomColor } from '~/shared/colors/colors.ts';
 import type { Prisma, Team, User } from '../../index.ts';
 import { db, EventType, EventVisibility } from '../../index.ts';
+import { generateImagePlaceholder } from './helpers/img-placeholder.ts';
 import { applyTraits } from './helpers/traits.ts';
 import { teamFactory } from './team.ts';
 import { userFactory } from './users.ts';

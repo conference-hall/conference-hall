@@ -1,8 +1,8 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { getSharedServerEnv } from '@conference-hall/shared/environment.ts';
 import dotenv from '@dotenvx/dotenvx';
 import { defineConfig, devices } from '@playwright/test';
-import { getSharedServerEnv } from '../../servers/environment.server.ts';
 
 // biome-ignore lint/style/noProcessEnv: dotenv not loaded yet
 const CI = Boolean(process.env.CI);
