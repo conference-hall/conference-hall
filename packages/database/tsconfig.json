@@ -1,12 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["**/*.ts"],
   "compilerOptions": {
     "composite": true,
     "types": ["node", "vitest/globals"],
-    "baseUrl": ".",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "dist"
+    "baseUrl": "."
   }
 }

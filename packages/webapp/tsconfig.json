@@ -1,13 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["**/**.ts", "**/**.tsx", ".react-router/types/**/*"],
+  "include": [".", ".react-router/types/**/*"],
   "compilerOptions": {
     "types": ["node", "mdx", "@react-router/node", "vitest/globals"],
     "baseUrl": ".",
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "~/*": ["./app/*"]
-    },
-    "noEmit": true
+    }
   }
 }
