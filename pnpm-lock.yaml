@@ -39,10 +39,10 @@ importers:
         specifier: workspace:*
         version: link:../shared
       '@prisma/adapter-pg':
-        specifier: catalog:prisma
+        specifier: ^6.19.0
         version: 6.19.0
       '@prisma/client':
-        specifier: catalog:prisma
+        specifier: ^6.19.0
         version: 6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3)
       '@sindresorhus/slugify':
         specifier: ^3.0.0
@@ -55,7 +55,7 @@ importers:
         specifier: ^22.19.0
         version: 22.19.0
       prisma:
-        specifier: catalog:prisma
+        specifier: ^6.19.0
         version: 6.19.0(typescript@5.9.3)
       tsx:
         specifier: ^4.20.6
