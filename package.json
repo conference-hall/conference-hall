@@ -1,7 +1,6 @@
 {
   "name": "conference-hall",
   "version": "1.0.0",
-  "description": "to remove...",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -10,8 +9,8 @@
     "dev": "concurrently -k -c '#fdba74,#93c5fd' 'npm:dev:*'",
     "dev:web": "tsx ./servers/web.dev.ts",
     "dev:job": "tsx watch ./servers/jobs.ts",
-    "build": "react-router build",
     "start": "node ./build/server/index.js",
+    "build": "react-router build",
     "jobs:start": "tsx ./servers/jobs.ts",
     "jobs:build": "echo 'no build needed'",
     "test": "npm run test:db && npm run test:unit",
