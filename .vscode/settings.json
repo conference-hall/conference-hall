@@ -33,7 +33,7 @@
   "tailwindCSS.experimental.classRegex": [["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]],
   "i18n-ally.keystyle": "flat",
   "i18n-ally.sortKeys": true,
-  "i18n-ally.localesPaths": ["app/locales", "app/libs/i18n"],
+  "i18n-ally.localesPaths": ["app/locales"],
   "i18n-ally.pathMatcher": "{locale}.{namespace}.json",
   "i18n-ally.sourceLanguage": "en"
 }
