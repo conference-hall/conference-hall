@@ -1,4 +1,14 @@
+/** biome-ignore-all lint/style/noProcessEnv: process.env should only be used here */
+
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import dotenv from '@dotenvx/dotenvx';
 import { z } from 'zod';
+
+let environmentLoaded = false;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const SharedServerSchema = z.object({
   TZ: z.string(),
@@ -43,8 +53,8 @@ type JobServerEnv = z.infer<typeof JobServerSchema>;
 let jobServerEnv: JobServerEnv;
 
 function initEnv<T extends z.ZodType>(schema: T): z.infer<T> {
-  // biome-ignore lint/style/noProcessEnv: process.env should only be used here
-  const envData = schema.safeParse(process.env);
+  const env = loadEnvironment();
+  const envData = schema.safeParse(env);
 
   if (!envData.success) {
     console.error('❌ Invalid environment variables:');
@@ -53,6 +63,18 @@ function initEnv<T extends z.ZodType>(schema: T): z.infer<T> {
   }
 
   return envData.data;
+}
+
+export function loadEnvironment() {
+  const { NODE_ENV, CI } = process.env;
+  if (environmentLoaded) return process.env;
+  if (NODE_ENV === 'production') return process.env;
+
+  const envFile = CI || NODE_ENV === 'test' ? '.env.test' : '.env.dev';
+  const absolutePath = path.resolve(__dirname, '..', envFile);
+  dotenv.config({ path: absolutePath, quiet: true });
+  environmentLoaded = true;
+  return process.env;
 }
 
 export function getSharedServerEnv() {

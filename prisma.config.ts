@@ -1,4 +1,7 @@
 import { defineConfig, env } from 'prisma/config';
+import { loadEnvironment } from './servers/environment.server.ts';
+
+loadEnvironment();
 
 export default defineConfig({
   schema: './prisma/schema.prisma',

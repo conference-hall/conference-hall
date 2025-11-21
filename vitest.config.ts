@@ -1,25 +1,22 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
 
-import dotenv from '@dotenvx/dotenvx';
 import tailwindcss from '@tailwindcss/vite';
 import { playwright } from '@vitest/browser-playwright';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
-import { getSharedServerEnv } from './servers/environment.server.ts';
+import { loadEnvironment } from './servers/environment.server.ts';
 
-const env = dotenv.config({ path: '.env.test', quiet: true });
-
-const { CI } = getSharedServerEnv();
+const env = loadEnvironment();
 
 export default defineConfig({
   plugins: [tailwindcss(), tsconfigPaths()],
   server: { watch: { ignored: ['.*\\/node_modules\\/.*', '.*\\/build\\/.*'] } },
   test: {
-    env: env.parsed,
+    env,
     globals: true,
     mockReset: true,
-    reporters: CI ? ['default', 'junit'] : 'default',
+    reporters: env.CI ? ['default', 'junit'] : 'default',
     outputFile: './test-results/unit.xml',
     projects: [
       {
