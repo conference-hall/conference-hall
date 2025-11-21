@@ -1,5 +1,5 @@
 import { cx } from 'class-variance-authority';
-import type { TalkLevel } from 'prisma/generated/enums.ts';
+import type { TalkLevel } from 'prisma/generated/client.ts';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '~/design-system/badges.tsx';

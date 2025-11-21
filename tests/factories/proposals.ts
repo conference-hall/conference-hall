@@ -8,7 +8,7 @@ import type {
   Talk,
   User,
 } from 'prisma/generated/client.ts';
-import { ConfirmationStatus, DeliberationStatus, PublicationStatus, TalkLevel } from 'prisma/generated/enums.ts';
+import { ConfirmationStatus, DeliberationStatus, PublicationStatus, TalkLevel } from 'prisma/generated/client.ts';
 import type { ProposalCreateInput } from 'prisma/generated/models.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import { db } from '../../prisma/db.server.ts';

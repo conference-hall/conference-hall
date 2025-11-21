@@ -1,7 +1,7 @@
 import { rand, randAnimal, randEmail, randFullAddress, randParagraph, randText, randUrl } from '@ngneat/falso';
 import { slugifyWithCounter } from '@sindresorhus/slugify';
 import type { Team, User } from 'prisma/generated/client.ts';
-import { EventType, EventVisibility } from 'prisma/generated/enums.ts';
+import { EventType, EventVisibility } from 'prisma/generated/client.ts';
 import type { EventCreateInput } from 'prisma/generated/models.ts';
 import { generateImagePlaceholder } from 'tests/img-placeholder.ts';
 import { getRandomColor } from '~/shared/colors/colors.ts';

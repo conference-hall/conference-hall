@@ -1,5 +1,5 @@
 import type { Team, User } from 'prisma/generated/client.ts';
-import { CommentChannel } from 'prisma/generated/enums.ts';
+import { CommentChannel } from 'prisma/generated/client.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';

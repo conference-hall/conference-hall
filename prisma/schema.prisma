@@ -1,13 +1,10 @@
 generator client {
   provider     = "prisma-client"
   output       = "./generated"
-  engineType   = "client"
-  moduleFormat = "esm"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {

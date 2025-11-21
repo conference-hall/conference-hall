@@ -1,4 +1,3 @@
-import type { Decimal } from '@prisma/client/runtime/library';
 import { db } from 'prisma/db.server.ts';
 import { Prisma } from 'prisma/generated/client.ts';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
@@ -8,7 +7,7 @@ type ReviewerMetricsInfo = {
   name: string;
   picture: string;
   reviewsCount: number;
-  averageNote: Decimal;
+  averageNote: Prisma.Decimal;
   positiveCount: number;
   negativeCount: number;
 };

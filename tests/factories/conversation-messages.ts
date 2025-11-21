@@ -1,6 +1,6 @@
 import { randParagraph } from '@ngneat/falso';
 import type { Conversation, User } from 'prisma/generated/client.ts';
-import { ConversationMessageType, ConversationParticipantRole } from 'prisma/generated/enums.ts';
+import { ConversationMessageType, ConversationParticipantRole } from 'prisma/generated/client.ts';
 import type { ConversationMessageCreateInput } from 'prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 
