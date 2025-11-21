@@ -21,8 +21,6 @@ export default defineConfig({
     mockReset: true,
     reporters: CI ? ['default', 'junit'] : 'default',
     outputFile: './test-results/unit.xml',
-    maxWorkers: 1,
-    isolate: false,
     projects: [
       {
         extends: true,
@@ -31,6 +29,9 @@ export default defineConfig({
           include: ['./**/*.test.ts', '!./**/*.test.tsx', '!./e2e/**/*'],
           setupFiles: ['./tests/setup.server.ts'],
           environment: 'node',
+          isolate: false,
+          maxWorkers: 1,
+          sequence: { groupOrder: 1 },
         },
       },
       {
@@ -49,6 +50,7 @@ export default defineConfig({
             viewport: { width: 1920, height: 1080 },
             screenshotFailures: false,
           },
+          sequence: { groupOrder: 2 },
         },
       },
     ],
