@@ -203,6 +203,7 @@ describe('useOptimisticReactions hook', () => {
         method: 'POST',
         fetcherKey: 'react-message:msg-1:thumbsup',
         preventScrollReset: true,
+        flushSync: true,
         navigate: false,
       },
     );

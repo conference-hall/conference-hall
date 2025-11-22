@@ -16,6 +16,7 @@ export function useOptimisticReactions(message: Message, intentSuffix: string) {
         method: 'POST',
         fetcherKey: `${intent}:${message.id}:${code}`,
         preventScrollReset: true,
+        flushSync: true,
         navigate: false,
       },
     );
