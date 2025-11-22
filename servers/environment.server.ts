@@ -1,20 +1,21 @@
 /** biome-ignore-all lint/style/noProcessEnv: process.env should only be used here */
 
-import path from 'node:path';
+import { existsSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import dotenv from '@dotenvx/dotenvx';
 import { z } from 'zod';
 
 let environmentLoaded = false;
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = dirname(__filename);
+const __projectRoot = findProjectRoot(__dirname);
 
 const SharedServerSchema = z.object({
+  NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
   TZ: z.string(),
   CI: z.stringbool().optional().default(false),
   VITEST: z.stringbool().optional().default(false),
-  NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
   APP_URL: z.url(),
   DATABASE_URL: z.url(),
   REDIS_URL: z.url(),
@@ -61,7 +62,6 @@ function initEnv<T extends z.ZodType>(schema: T): z.infer<T> {
     console.error(z.prettifyError(envData.error));
     throw new Error('Invalid environment variables');
   }
-
   return envData.data;
 }
 
@@ -70,9 +70,11 @@ export function loadEnvironment() {
   if (environmentLoaded) return process.env;
   if (NODE_ENV === 'production') return process.env;
 
-  const envFile = CI || NODE_ENV === 'test' ? '.env.test' : '.env.dev';
-  const absolutePath = path.resolve(__dirname, '..', envFile);
-  dotenv.config({ path: absolutePath, quiet: true });
+  if (CI || NODE_ENV === 'test') {
+    process.loadEnvFile(resolve(__projectRoot, 'tests/.env.test'));
+  }
+  process.loadEnvFile(resolve(__projectRoot, '.env.local'));
+
   environmentLoaded = true;
   return process.env;
 }
@@ -96,4 +98,17 @@ export function getJobServerEnv() {
   jobServerEnv = initEnv(JobServerSchema);
   Object.freeze(jobServerEnv);
   return jobServerEnv;
+}
+
+function findProjectRoot(startDir: string) {
+  let current = startDir;
+  while (true) {
+    const pkgPath = join(current, 'package.json');
+    if (existsSync(pkgPath)) return current;
+
+    const parent = dirname(current);
+    if (parent === current) throw new Error('Could not find project root');
+
+    current = parent;
+  }
 }
