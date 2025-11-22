@@ -4,7 +4,7 @@ import { eventExtension } from './extensions/event.ts';
 import { proposalExtension } from './extensions/proposal.ts';
 import { talkExtension } from './extensions/talk.ts';
 import { teamExtension } from './extensions/team.ts';
-import { PrismaClient } from './generated/client.js';
+import { PrismaClient } from './generated/client.ts';
 
 const { NODE_ENV, DATABASE_URL } = getSharedServerEnv();
 
