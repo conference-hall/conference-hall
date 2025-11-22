@@ -67,6 +67,7 @@ export function SpeakerForm({ formId, defaultValues = {}, errors, className }: S
         name="bio"
         label={t('speaker.profile.biography')}
         rows={5}
+        className="field-sizing-content min-h-32"
         error={errors?.bio}
         defaultValue={bio}
       />
@@ -95,7 +96,8 @@ export function SpeakerForm({ formId, defaultValues = {}, errors, className }: S
         name="references"
         label={t('speaker.profile.references')}
         description={t('speaker.profile.references.placeholder')}
-        rows={5}
+        rows={2}
+        className="field-sizing-content min-h-16"
         error={errors?.references}
         defaultValue={references}
       />

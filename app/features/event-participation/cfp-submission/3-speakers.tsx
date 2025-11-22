@@ -68,10 +68,10 @@ export default function SubmissionSpeakerRoute({ loaderData, actionData: errors 
             <MarkdownTextArea
               name="bio"
               label={t('speaker.profile.biography')}
-              rows={5}
               error={errors?.bio}
               defaultValue={speaker.bio || ''}
-              className="mb-3"
+              rows={5}
+              className="field-sizing-content min-h-32"
             />
           </Form>
           <div className="mt-4">
