@@ -10,7 +10,7 @@ export function Markdown({ as: Tag = 'div', children, className }: Props) {
 
   return (
     <Tag
-      className={cx('max-w-full min-w-0 break-words prose prose-sm', className)}
+      className={cx('max-w-full min-w-0 wrap-break-word prose prose-sm', className)}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

@@ -69,7 +69,7 @@ export function MessageBlock({ message, intentSuffix, canManageConversations = f
           autoFocus
         />
       ) : (
-        <Text className="whitespace-pre-line break-words">{message.content}</Text>
+        <Text className="whitespace-pre-line wrap-break-word">{message.content}</Text>
       )}
 
       {reactions.length > 0 ? (
