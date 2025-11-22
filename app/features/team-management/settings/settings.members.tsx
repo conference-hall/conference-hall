@@ -1,5 +1,5 @@
 import { CubeTransparentIcon } from '@heroicons/react/24/outline';
-import type { TeamRole } from 'prisma/generated/enums.ts';
+import type { TeamRole } from 'prisma/generated/client.ts';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { useUser } from '~/app-platform/components/user-context.tsx';

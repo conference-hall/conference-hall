@@ -1,12 +1,7 @@
-import dotenv from '@dotenvx/dotenvx';
 import { defineConfig, devices } from '@playwright/test';
 import { getSharedServerEnv } from './servers/environment.server.ts';
 
-// biome-ignore lint/style/noProcessEnv: dotenv not loaded yet
-const CI = Boolean(process.env.CI);
-dotenv.config({ path: CI ? '.env.test' : '.env.dev', quiet: true });
-
-const { APP_URL } = getSharedServerEnv();
+const { APP_URL, CI } = getSharedServerEnv();
 
 export default defineConfig({
   testDir: './e2e',

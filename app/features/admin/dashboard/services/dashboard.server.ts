@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import type { EventType } from 'prisma/generated/enums.ts';
+import type { EventType } from 'prisma/generated/client.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
 
 export class AdminDashboard {

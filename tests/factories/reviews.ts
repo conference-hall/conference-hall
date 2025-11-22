@@ -1,5 +1,5 @@
 import type { Proposal, User } from 'prisma/generated/client.ts';
-import { ReviewFeeling } from 'prisma/generated/enums.ts';
+import { ReviewFeeling } from 'prisma/generated/client.ts';
 import type { ReviewCreateInput } from 'prisma/generated/models.ts';
 import { ReviewDetails } from '../../app/features/event-management/proposals/models/review-details.ts';
 import { db } from '../../prisma/db.server.ts';

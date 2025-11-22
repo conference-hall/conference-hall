@@ -1,4 +1,4 @@
-import type { JsonValue } from '@prisma/client/runtime/library';
+import type { Prisma } from 'prisma/generated/client.ts';
 import z from 'zod';
 import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 
@@ -21,7 +21,7 @@ export class SurveyConfig {
   public enabled: boolean;
   public questions: Array<SurveyQuestion>;
 
-  constructor(json: JsonValue) {
+  constructor(json: Prisma.JsonValue) {
     const result = SurveyConfigSchema.safeParse(json);
 
     const data = result.success ? result.data : { enabled: false, questions: [] };

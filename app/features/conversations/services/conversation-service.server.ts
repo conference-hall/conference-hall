@@ -1,6 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import type { ConversationReaction, User } from 'prisma/generated/client.ts';
-import type { ConversationContextType } from 'prisma/generated/enums.ts';
+import type { ConversationContextType, ConversationReaction, User } from 'prisma/generated/client.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import type {
   ConversationMessageDeleteData,

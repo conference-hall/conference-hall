@@ -55,7 +55,6 @@ export function MessageInputForm({
           aria-label={inputLabel}
           placeholder={placeholder}
           autoComplete="off"
-          // @ts-expect-error fieldSizing not supported yet
           style={{ fieldSizing: 'content', maxHeight: '400px' }}
           // biome-ignore lint/a11y/noAutofocus: need autoFocus on message when opening
           autoFocus={autoFocus}

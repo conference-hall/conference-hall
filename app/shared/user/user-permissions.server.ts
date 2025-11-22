@@ -1,4 +1,4 @@
-import { TeamRole } from 'prisma/generated/enums.ts';
+import { TeamRole } from 'prisma/generated/client.ts';
 
 export type UserPermissions = {
   canAccessTeam: boolean;

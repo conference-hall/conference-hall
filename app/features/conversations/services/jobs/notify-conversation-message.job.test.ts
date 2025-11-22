@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { ConversationParticipantRole } from 'prisma/generated/enums.ts';
+import { ConversationParticipantRole } from 'prisma/generated/client.ts';
 import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
 import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
