@@ -109,8 +109,5 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.13",
     "vitest-browser-react": "^2.0.2"
-  },
-  "engines": {
-    "node": "24.x"
   }
 }
