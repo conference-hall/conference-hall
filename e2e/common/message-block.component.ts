@@ -12,6 +12,7 @@ export class MessageBlockComponent extends PageObject {
 
   async openActionsMenu() {
     await this.component.getByRole('button', { name: 'Message action menu' }).click();
+    await this.page.getByRole('menu', { name: 'Message action menu' }).waitFor();
   }
 
   async clickEdit() {
