@@ -34,8 +34,8 @@ describe('FlagsClient', () => {
     it('loads default values if not present in storage', async () => {
       await client.load();
 
-      expect(storage.getValue('new-dashboard')).resolves.toBe(true);
-      expect(storage.getValue('max-items-limit')).resolves.toBe(50);
+      await expect(storage.getValue('new-dashboard')).resolves.toBe(true);
+      await expect(storage.getValue('max-items-limit')).resolves.toBe(50);
     });
 
     it('deletes old flags not present in config', async () => {
@@ -44,7 +44,7 @@ describe('FlagsClient', () => {
 
       await client.load();
 
-      expect(storage.getValue('old-flag')).resolves.toBeNull();
+      await expect(storage.getValue('old-flag')).resolves.toBeNull();
     });
 
     it('does not delete flags present in config', async () => {
@@ -74,7 +74,7 @@ describe('FlagsClient', () => {
   describe('#set', () => {
     it('sets the value in storage', async () => {
       await client.set('new-dashboard', false);
-      expect(storage.getValue('new-dashboard')).resolves.toBe(false);
+      await expect(storage.getValue('new-dashboard')).resolves.toBe(false);
     });
   });
 
@@ -118,7 +118,7 @@ describe('FlagsClient', () => {
 
       await client.resetDefaults();
 
-      expect(storage.getAllValues()).resolves.toEqual({
+      await expect(storage.getAllValues()).resolves.toEqual({
         'new-dashboard': true,
         'max-items-limit': 50,
       });
