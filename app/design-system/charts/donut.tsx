@@ -111,7 +111,7 @@ export const DonutChart = ({
 
   return (
     <div ref={ref} className={cx('h-40 w-40', className)} {...other}>
-      <ResponsiveContainer className="size-full">
+      <ResponsiveContainer height="100%" width="100%" initialDimension={{ height: 160, width: 160 }}>
         <PieChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }}>
           {showLabel && isDonut && (
             <text
