@@ -230,6 +230,7 @@ test.describe('As a owner', () => {
 
     // Select tags
     await proposalPage.tagsButton.click();
+    await page.getByRole('listbox').waitFor();
     await page.getByRole('option', { name: 'Tag 1' }).click();
     await page.getByRole('option', { name: 'Tag 2' }).click();
     await proposalPage.tagsButton.click();
@@ -249,6 +250,7 @@ test.describe('As a owner', () => {
 
     // Remove a speaker and add it back
     await proposalPage.speakerPanel.togglePanel();
+    await page.getByRole('listbox').waitFor();
     await page.getByRole('option', { name: 'Marie Jane' }).click();
     await proposalPage.speakerPanel.togglePanel();
 
@@ -258,6 +260,7 @@ test.describe('As a owner', () => {
 
     // Add speaker back
     await proposalPage.speakerPanel.togglePanel();
+    await page.getByRole('listbox').waitFor();
     await page.getByPlaceholder('Search...').fill('Marie');
     await page.getByRole('option', { name: 'Marie Jane' }).click();
     await proposalPage.speakerPanel.togglePanel();
@@ -287,6 +290,7 @@ test.describe('As a owner', () => {
 
     // Change format
     await proposalPage.formatsButton.click();
+    await page.getByRole('listbox').waitFor();
     await page.getByRole('option', { name: 'Format 1' }).click();
     await page.getByRole('option', { name: 'Format 2' }).click();
     await proposalPage.formatsButton.click();
@@ -306,6 +310,7 @@ test.describe('As a owner', () => {
 
     // Change category
     await proposalPage.categoriesButton.click();
+    await page.getByRole('listbox').waitFor();
     await page.getByRole('option', { name: 'Category 1' }).click();
     await page.getByRole('option', { name: 'Category 2' }).click();
     await proposalPage.categoriesButton.click();
