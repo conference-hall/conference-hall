@@ -93,7 +93,7 @@
     "@types/compression": "^1.8.1",
     "@types/mdx": "^2.0.13",
     "@types/morgan": "^1.9.10",
-    "@types/node": "^22.19.1",
+    "@types/node": "^24.10.1",
     "@types/nodemailer": "^7.0.4",
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
@@ -109,8 +109,5 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.13",
     "vitest-browser-react": "^2.0.2"
-  },
-  "engines": {
-    "node": "22.x"
   }
 }
