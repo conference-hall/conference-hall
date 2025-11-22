@@ -47,7 +47,7 @@ function createJobWorker(queue: string, jobs: Array<Job<any>>): JobWorker {
   );
 
   worker.on('ready', () => {
-    logger.info(`Jobs worker is ready for "${queue}" queue:`);
+    logger.info(`🚀 Jobs worker is ready for "${queue}" queue:`);
     for (const job of jobs) {
       logger.info(` - "${job.config.name}" job.`);
     }

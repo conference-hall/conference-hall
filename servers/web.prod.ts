@@ -4,8 +4,6 @@ import { setupExpressServer } from './express/setup-express-server.ts';
 const APP_BUILD_PATH = './app.js';
 
 await setupExpressServer(async (app) => {
-  console.log('🚀 Starting production server');
-
   app.use('/fonts', express.static('build/client/fonts', { immutable: true, maxAge: '1y' }));
   app.use('/assets', express.static('build/client/assets', { immutable: true, maxAge: '1y' }));
   app.use('/locales', express.static('build/client/locales', { immutable: true, maxAge: '1y' }));

@@ -6,7 +6,7 @@
   "type": "module",
   "license": "AGPL-3.0",
   "scripts": {
-    "dev": "concurrently -k -c '#fdba74,#93c5fd' 'npm:dev:*'",
+    "dev": "concurrently -k -c 'yellow,blue' 'npm:dev:*'",
     "dev:web": "tsx ./servers/web.dev.ts",
     "dev:job": "tsx watch ./servers/jobs.ts",
     "start": "node ./build/server/index.js",

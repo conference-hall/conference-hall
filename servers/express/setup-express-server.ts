@@ -47,7 +47,7 @@ export async function setupExpressServer(environmentConfig: EnvironmentConfig) {
 
   // Start the server
   const server = app.listen(PORT, () => {
-    console.log(`Server is running on http://${HOST}:${PORT}`);
+    console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
   });
 
   // Avoid server crash due to unhandled promise rejections

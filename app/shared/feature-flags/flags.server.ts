@@ -18,7 +18,7 @@ async function getClient() {
   }
 
   if (isProduction) {
-    console.info('🚩 Feature flags config loaded.');
+    console.info('🚩 Feature flags config loaded');
   }
 
   const cache = VITEST ? new MemoryCacheLayer() : undefined;
