@@ -65,7 +65,8 @@ export function TalkForm({
         label={t('talk.abstract')}
         description={t('talk.abstract.description')}
         required
-        rows={6}
+        rows={5}
+        className="field-sizing-content min-h-32"
         defaultValue={initialValues?.abstract}
         error={errors?.abstract}
       />
@@ -113,7 +114,8 @@ export function TalkForm({
         name="references"
         label={t('talk.references')}
         description={t('talk.references.description')}
-        rows={4}
+        rows={2}
+        className="field-sizing-content min-h-16"
         defaultValue={initialValues?.references ?? ''}
         error={errors?.references}
       />

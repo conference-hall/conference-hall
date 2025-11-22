@@ -76,6 +76,7 @@ export function EventDetailsForm({
         label={t('event-management.fields.description')}
         defaultValue={description || ''}
         rows={5}
+        className="field-sizing-content min-h-32"
         autoComplete="off"
         error={errors?.description}
       />

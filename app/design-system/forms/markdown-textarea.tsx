@@ -27,6 +27,7 @@ export function MarkdownTextArea({
   error,
   defaultValue,
   preview = true,
+  rows,
   ...rest
 }: MarkdownTextAreaProps) {
   const { t } = useTranslation();
@@ -43,7 +44,7 @@ export function MarkdownTextArea({
   });
 
   return (
-    <div className={className}>
+    <div>
       <Label htmlFor={name} mb={1}>
         {label}
       </Label>
@@ -52,7 +53,8 @@ export function MarkdownTextArea({
           <textarea
             id={name}
             name={name}
-            className="block w-full border-0 py-3 placeholder-gray-500 focus:ring-0 text-sm"
+            rows={rows}
+            className={cx('block w-full border-0 py-3 placeholder-gray-500 focus:ring-0 text-sm', className)}
             {...rest}
             defaultValue={defaultValue}
             onChange={handleChangeText}
