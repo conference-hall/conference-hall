@@ -6,9 +6,10 @@ import type { Route } from './+types/root.ts';
 import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
 import { UserProvider } from './app-platform/components/user-context.tsx';
+import { getSession, sessionMiddleware } from './shared/auth/auth.middleware.ts';
 import { getFirebaseClientConfig } from './shared/auth/firebase.server.ts';
 import { initializeFirebaseClient } from './shared/auth/firebase.ts';
-import { destroySession, getUserSession } from './shared/auth/session.ts';
+import { destroySession } from './shared/auth/session.ts';
 import { flags } from './shared/feature-flags/flags.server.ts';
 import { FlagsProvider } from './shared/feature-flags/flags-context.tsx';
 import { getI18n, getLocale, i18nextMiddleware, setLocaleCookie } from './shared/i18n/i18n.middleware.ts';
@@ -45,16 +46,16 @@ export const links: Route.LinksFunction = () => {
   ];
 };
 
-export const middleware = [i18nextMiddleware];
+export const middleware = [i18nextMiddleware, sessionMiddleware];
 
 export const loader = async ({ request, context }: Route.LoaderArgs) => {
   if (MAINTENANCE_ENABLED) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
 
-  const { userId } = (await getUserSession(request)) || {};
-  const user = await UserAccount.get(userId);
-  if (userId && !user) await destroySession(request);
+  const session = getSession(context);
+  const user = await UserAccount.get(session?.userId);
+  if (session?.userId && !user) await destroySession(request);
 
   const { toast, toastHeaders } = await getToast(request);
 
