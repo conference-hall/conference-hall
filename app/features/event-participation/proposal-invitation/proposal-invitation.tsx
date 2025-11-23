@@ -6,24 +6,25 @@ import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession, protectedRouteMiddleware } from '~/shared/auth/auth.middleware.ts';
 import { EventCard } from '../../event-search/components/event-card.tsx';
 import { SpeakerPill } from '../../speaker/talk-library/components/speakers.tsx';
 import type { Route } from './+types/proposal-invitation.ts';
 import { CoSpeakerProposalInvite } from './services/co-speaker-proposal-invite.server.ts';
 
+export const middleware = [protectedRouteMiddleware];
+
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Proposal invitation | Conference Hall' }]);
 };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  await requireUserSession(request);
+export const loader = async ({ params }: Route.LoaderArgs) => {
   const proposal = await CoSpeakerProposalInvite.with(params.code).check();
   return proposal;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ params, context }: Route.ActionArgs) => {
+  const { userId } = getProtectedSession(context);
   const proposal = await CoSpeakerProposalInvite.with(params.code).addCoSpeaker(userId);
   return redirect(href('/:event/proposals/:proposal', { event: proposal.event.slug, proposal: proposal.id }));
 };

@@ -21,7 +21,7 @@ import {
 } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.schema.server.ts';
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession, protectedRouteMiddleware } from '~/shared/auth/auth.middleware.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -32,15 +32,17 @@ import { useCurrentEvent } from '../event-page-context.tsx';
 import type { Route } from './+types/speaker-proposal.ts';
 import { ProposalStatusSection } from './components/proposal-status-section.tsx';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const middleware = [protectedRouteMiddleware];
+
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const proposal = await SpeakerProposal.for(userId, params.proposal).get();
   const conversation = await ProposalConversationForSpeakers.for(userId, params.proposal).getConversation();
   return { proposal, conversation };
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+  const { userId } = getProtectedSession(context);
 
   const i18n = getI18n(context);
   const proposal = SpeakerProposal.for(userId, params.proposal);
