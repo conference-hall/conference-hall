@@ -9,22 +9,22 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import { SurveyForm } from '~/features/speaker/talk-library/components/talk-forms/survey-form.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/5-survey.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'survey' };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const survey = SpeakerSurvey.for(params.event);
   const questions = await survey.getQuestions();
   const answers = await survey.getSpeakerAnswers(userId);
   return { questions, answers };
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
+  const { userId } = getProtectedSession(context);
   const survey = SpeakerSurvey.for(params.event);
   const schema = await survey.buildSurveySchema();
   const form = await request.formData();

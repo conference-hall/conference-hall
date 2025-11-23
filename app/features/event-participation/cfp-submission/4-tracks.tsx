@@ -13,20 +13,20 @@ import { EventPage } from '~/features/event-participation/event-page/services/ev
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { CategoriesForm } from '~/features/speaker/talk-library/components/talk-forms/categories-form.tsx';
 import { FormatsForm } from '~/features/speaker/talk-library/components/talk-forms/formats-form.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/4-tracks.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'tracks' };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
   return { formats: proposal.formats.map(({ id }) => id), categories: proposal.categories.map(({ id }) => id) };
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
+  const { userId } = getProtectedSession(context);
   const form = await request.formData();
   const schema = await EventPage.of(params.event).buildTracksSchema();
   const result = parseWithZod(form, { schema });

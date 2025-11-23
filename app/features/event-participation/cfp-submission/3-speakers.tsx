@@ -12,15 +12,15 @@ import { TalkSubmission } from '~/features/event-participation/cfp-submission/se
 import { ProfileFetcher } from '~/features/speaker/services/profile-fetcher.server.ts';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { Speakers } from '~/features/speaker/talk-library/components/speakers.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { FunnelSpeakerSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/3-speakers.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'speakers' };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const speaker = await ProfileFetcher.for(userId).get();
   const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
 
@@ -32,8 +32,8 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   };
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
+  const { userId } = getProtectedSession(context);
   const form = await request.formData();
   const intent = form.get('intent');
 

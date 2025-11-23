@@ -11,15 +11,15 @@ import { TalkSubmission } from '~/features/event-participation/cfp-submission/se
 import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
 import { TalkSaveSchema } from '~/features/speaker/talk-library/services/talks-library.schema.server.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { TalkAlreadySubmittedError } from '~/shared/errors.server.ts';
 import type { Route } from './+types/2-talk.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'proposal' };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   if (params.talk === 'new') return null;
 
   const talk = TalksLibrary.of(userId).talk(params.talk);
@@ -29,8 +29,8 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return talk.get();
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
+  const { userId } = getProtectedSession(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TalkSaveSchema });
   if (result.status !== 'success') return result.error;
