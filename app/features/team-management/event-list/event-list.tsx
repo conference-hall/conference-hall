@@ -8,12 +8,12 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 import { EventCardLink } from '~/features/event-search/components/event-card.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/event-list.ts';
 import { TeamEvents } from './services/team-events.server.ts';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const url = new URL(request.url);
   const archived = url.searchParams.get('archived') === 'true';
   return TeamEvents.for(userId, params.team).list(archived);
