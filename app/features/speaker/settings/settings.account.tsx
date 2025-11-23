@@ -9,8 +9,9 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
-import { destroySession, requireUserSession, sendEmailVerification } from '~/shared/auth/session.ts';
+import { destroySession, sendEmailVerification } from '~/shared/auth/session.ts';
 import { getI18n, getLocale } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { UnlinkProviderSchema } from '~/shared/types/speaker.types.ts';
@@ -24,14 +25,8 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Account | Conference Hall' }]);
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
-  return null;
-};
-
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const { userId, uid } = await requireUserSession(request);
-
+  const { userId, uid } = getProtectedSession(context);
   const i18n = getI18n(context);
   const locale = getLocale(context);
   const form = await request.formData();

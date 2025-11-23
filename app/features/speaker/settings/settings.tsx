@@ -5,16 +5,10 @@ import { href, Outlet } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/settings.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Settings | Conference Hall' }]);
-};
-
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
-  return null;
 };
 
 const menuItems = (t: TFunction) => {

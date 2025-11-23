@@ -7,22 +7,23 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { CoSpeakerTalkInvite } from '~/features/speaker/talk-invitation/services/co-speaker-talk-invite.server.ts';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession, protectedRouteMiddleware } from '~/shared/auth/auth.middleware.ts';
 import { SpeakerPill } from '../talk-library/components/speakers.tsx';
 import type { Route } from './+types/talk-invitation.ts';
+
+export const middleware = [protectedRouteMiddleware];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Talk invitation | Conference Hall' }]);
 };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  await requireUserSession(request);
+export const loader = async ({ params }: Route.LoaderArgs) => {
   const talk = await CoSpeakerTalkInvite.with(params.code).check();
   return talk;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ params, context }: Route.ActionArgs) => {
+  const { userId } = getProtectedSession(context);
   const talk = await CoSpeakerTalkInvite.with(params.code).addCoSpeaker(userId);
   return redirect(href('/speaker/talks/:talk', { talk: talk.id }));
 };

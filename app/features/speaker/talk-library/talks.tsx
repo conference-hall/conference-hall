@@ -11,7 +11,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/talks.ts';
 import { TalksListFilterSchema } from './services/talks-library.schema.server.ts';
 import { TalksLibrary } from './services/talks-library.server.ts';
@@ -20,8 +20,8 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'My talks library | Conference Hall' }]);
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ request, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const { searchParams } = new URL(request.url);
   const filter = TalksListFilterSchema.safeParse(searchParams.get('filter'));
   return TalksLibrary.of(userId).list(filter.data);

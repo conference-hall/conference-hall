@@ -6,7 +6,7 @@ import { Button } from '~/design-system/button.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { getI18n, getLocale, setLocaleCookie } from '~/shared/i18n/i18n.middleware.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -18,15 +18,14 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Preferences | Conference Hall' }]);
 };
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
-  await requireUserSession(request);
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  // todo(middleware): is it necessary to get the locale from the backend?
   const locale = getLocale(context);
   return { locale };
 };
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const { userId } = getProtectedSession(context);
   const form = await request.formData();
   const locale = form.get('locale') as string;
   await UserAccount.changeLocale(userId, locale);
