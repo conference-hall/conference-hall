@@ -12,7 +12,7 @@ import {
   ScheduleTracksSaveSchema,
   SchedulSessionIdSchema,
 } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/schedule.ts';
@@ -25,8 +25,8 @@ import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
 import { EventSchedule } from './services/schedule.server.ts';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
 
   const schedule = await eventSchedule.getScheduleSessions();
@@ -36,8 +36,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const { userId } = getProtectedSession(context);
   const i18n = getI18n(context);
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
   const form = await request.formData();

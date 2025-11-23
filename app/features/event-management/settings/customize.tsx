@@ -12,7 +12,7 @@ import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/customize.ts';
@@ -20,13 +20,8 @@ import type { Route } from './+types/customize.ts';
 const MAX_FILE_SIZE = 300 * 1024; // 300kB
 const FILE_SCHEMA = z.object({ name: z.url() });
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
-  return null;
-};
-
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+  const { userId } = getProtectedSession(context);
   const i18n = getI18n(context);
   const formData = await parseFormData(request, uploadToStorageHandler({ name: 'logo', maxFileSize: MAX_FILE_SIZE }));
   const result = FILE_SCHEMA.safeParse(formData.get('logo'));

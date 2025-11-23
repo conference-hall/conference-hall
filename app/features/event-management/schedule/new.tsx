@@ -10,20 +10,20 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { ScheduleCreateSchema } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { useCurrentEventTeam } from '../event-team-context.tsx';
 import type { Route } from './+types/new.ts';
 import { EventSchedule } from './services/schedule.server.ts';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
   if (schedule) return redirect(`/team/${params.team}/${params.event}/schedule/0`);
   return null;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
+  const { userId } = getProtectedSession(context);
   const schedule = EventSchedule.for(userId, params.team, params.event);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ScheduleCreateSchema });

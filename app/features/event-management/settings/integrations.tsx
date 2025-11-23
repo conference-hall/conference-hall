@@ -13,23 +13,22 @@ import { H2, Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSlackSettingsSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/integrations.ts';
 import { OpenPlannerConfigSchema, UpdateIntegrationConfigSchema } from './services/event-integrations.schema.server.ts';
 import { EventIntegrations } from './services/event-integrations.server.ts';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
   const integrations = await eventIntegrations.getConfigurations();
   return integrations;
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const { userId } = getProtectedSession(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent');

@@ -80,18 +80,6 @@ export async function destroySession(request: Request, redirectTo?: string, head
   });
 }
 
-export async function requireUserSession(request: Request) {
-  const sessionUser = await getAuthSession(request);
-
-  if (!sessionUser) {
-    const redirectTo = new URL(request.url).pathname;
-    const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
-    throw redirect(`/auth/login?${searchParams}`);
-  }
-
-  return sessionUser;
-}
-
 export async function getAuthSession(request: Request) {
   const session = await getSession(request);
   const jwt = session.get('jwt') as string | null;

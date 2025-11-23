@@ -9,7 +9,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSpeakers } from '~/features/event-management/speakers/services/event-speakers.server.ts';
 import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -22,8 +22,8 @@ import { TagsPanel } from './components/form-panels/tags-panel.tsx';
 import { ProposalCreationSchema } from './services/proposal-management.schema.server.ts';
 import { ProposalManagement } from './services/proposal-management.server.ts';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const proposalManagement = ProposalManagement.for(userId, params.team, params.event);
   await proposalManagement.canCreate();
 
@@ -52,8 +52,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const { userId } = getProtectedSession(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;

@@ -5,7 +5,7 @@ import { href } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import {
   CustomTemplateSchema,
   EventEmailCustomDeleteSchema,
@@ -20,9 +20,8 @@ import { EmailCustomBadge } from './components/email-custom-badge.tsx';
 import { EmailPreview } from './components/email-preview.tsx';
 import { EventEmailCustomizations } from './services/event-email-customizations.server.tsx';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-
+export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const url = new URL(request.url);
   const locale = url.searchParams.get('locale') || 'en';
   if (!isSupportedLanguage(locale)) throw new Response('Not Found', { status: 404 });
@@ -38,8 +37,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const { userId } = getProtectedSession(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent');

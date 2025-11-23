@@ -19,7 +19,7 @@ import { ProposalConversationForOrganizers } from '~/features/conversations/serv
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -56,8 +56,8 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Review proposal | Conference Hall' }]);
 };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const filters = parseUrlFilters(request.url);
 
   const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
@@ -78,7 +78,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+  const { userId } = getProtectedSession(context);
 
   const i18n = getI18n(context);
   const form = await request.formData();

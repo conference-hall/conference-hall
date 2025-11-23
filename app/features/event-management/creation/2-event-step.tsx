@@ -6,20 +6,15 @@ import { Form, href, redirect } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import type { EventType } from '~/shared/types/events.types.ts';
 import type { Route } from './+types/2-event-step.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 import { EventForm } from './components/event-form.tsx';
 import { EventCreateSchema, EventCreation } from './services/event-creation.server.ts';
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
-  return null;
-};
-
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
+  const { userId } = getProtectedSession(context);
   const form = await request.formData();
   const result = await parseWithZod(form, { schema: EventCreateSchema, async: true });
   if (result.status !== 'success') return result.error;
