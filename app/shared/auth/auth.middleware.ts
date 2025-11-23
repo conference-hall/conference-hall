@@ -5,6 +5,7 @@ type UserSession = { userId: string; uid: string };
 
 const sessionContext = createContext<UserSession | null>();
 
+// todo(middleware): add tests
 export const sessionMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
   const session = await getAuthSession(request);
   context.set(sessionContext, session);
@@ -16,6 +17,7 @@ export function getSession(context: Readonly<RouterContextProvider>) {
 
 const protectedRouteContext = createContext<UserSession>();
 
+// todo(middleware): add tests
 export const protectedRouteMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
   const session = getSession(context);
 
