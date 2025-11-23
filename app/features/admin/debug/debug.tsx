@@ -6,14 +6,14 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, H2 } from '~/design-system/typography.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/debug.ts';
 import { AdminDebug, TestEmailSchema } from './services/admin-debug.server.ts';
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+  const { userId } = getProtectedSession(context);
 
   const i18n = getI18n(context);
   const debug = await AdminDebug.for(userId);

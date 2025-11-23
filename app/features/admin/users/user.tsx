@@ -6,22 +6,21 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, H2, H3, Subtitle, Text } from '~/design-system/typography.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
 import { formatDatetime } from '~/shared/datetimes/datetimes.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/user.ts';
 import { AdminUsers } from './services/admin-users.server.ts';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ context, params }: Route.LoaderArgs) => {
+  const { userId } = getProtectedSession(context);
   const adminUsers = await AdminUsers.for(userId);
   return adminUsers.getUserInfo(params.user);
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const { userId } = getProtectedSession(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;
