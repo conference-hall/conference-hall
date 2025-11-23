@@ -10,7 +10,7 @@ import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { getCaptchaSiteKey } from '~/shared/auth/captcha.server.ts';
-import { createSession, getUserSession } from '~/shared/auth/session.ts';
+import { createSession, getAuthSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/signin.ts';
 import { AuthProvidersResult } from './components/auth-providers-result.tsx';
 import { AuthProvidersSignin } from './components/auth-providers-signin.tsx';
@@ -21,7 +21,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getUserSession(request);
+  const userId = await getAuthSession(request);
   if (userId) return redirect('/');
 
   const captchaSiteKey = await getCaptchaSiteKey();

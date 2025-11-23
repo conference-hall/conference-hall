@@ -8,7 +8,7 @@ import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { getCaptchaSiteKey } from '~/shared/auth/captcha.server.ts';
-import { getUserSession } from '~/shared/auth/session.ts';
+import { getAuthSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/signup.ts';
 import { AuthProvidersSignin } from './components/auth-providers-signin.tsx';
 import { EmailPasswordSignup } from './components/email-password-signup.tsx';
@@ -18,7 +18,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getUserSession(request);
+  const userId = await getAuthSession(request);
   if (userId) return redirect('/');
 
   const captchaSiteKey = await getCaptchaSiteKey();

@@ -14,7 +14,7 @@ import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
-import { getUserSession } from '~/shared/auth/session.ts';
+import { getAuthSession } from '~/shared/auth/session.ts';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { validatePassword } from '~/shared/validators/auth.ts';
 import type { Route } from './+types/reset-password.ts';
@@ -24,7 +24,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getUserSession(request);
+  const userId = await getAuthSession(request);
   if (userId) return redirect('/');
 
   const url = new URL(request.url);

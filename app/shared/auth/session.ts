@@ -81,7 +81,7 @@ export async function destroySession(request: Request, redirectTo?: string, head
 }
 
 export async function requireUserSession(request: Request) {
-  const sessionUser = await getUserSession(request);
+  const sessionUser = await getAuthSession(request);
 
   if (!sessionUser) {
     const redirectTo = new URL(request.url).pathname;
@@ -92,7 +92,7 @@ export async function requireUserSession(request: Request) {
   return sessionUser;
 }
 
-export async function getUserSession(request: Request) {
+export async function getAuthSession(request: Request) {
   const session = await getSession(request);
   const jwt = session.get('jwt') as string | null;
   const uid = session.get('uid') as string | null;
