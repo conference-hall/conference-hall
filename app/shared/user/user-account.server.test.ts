@@ -27,7 +27,6 @@ const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as 
 const deleteUserMock = auth.deleteUser as Mock;
 
 describe('UserAccount', () => {
-  // todo(middleware): add tests about `teams`, `hasTeamAccess` and `notificationsUnreadCount`
   describe('getByUid', () => {
     it('returns the authenticated user info', async () => {
       const user = await userFactory({ traits: ['clark-kent'] });
@@ -42,6 +41,39 @@ describe('UserAccount', () => {
         teams: [],
         hasTeamAccess: false,
         notificationsUnreadCount: 0,
+      });
+    });
+
+    it('returns the authenticated user info with teams and notifications', async () => {
+      const user = await userFactory({ traits: ['clark-kent'] });
+      const team = await teamFactory({ attributes: { name: 'A' }, owners: [user] });
+      const event = await eventFactory({ team, attributes: { name: 'A' } });
+      const talk = await talkFactory({ speakers: [user] });
+      await proposalFactory({ event, talk, traits: ['accepted-published'] });
+
+      const response = await UserAccount.getByUid(user.uid);
+      expect(response).toEqual({
+        id: user.id,
+        uid: user.uid,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        teams: [
+          {
+            slug: team.slug,
+            name: team.name,
+            events: [
+              {
+                slug: event.slug,
+                name: event.name,
+                logoUrl: event.logoUrl,
+                archived: event.archived,
+              },
+            ],
+          },
+        ],
+        hasTeamAccess: true,
+        notificationsUnreadCount: 1,
       });
     });
 

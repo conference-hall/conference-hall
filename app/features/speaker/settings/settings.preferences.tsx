@@ -7,7 +7,7 @@ import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
-import { getI18n, getLocale, setLocaleCookie } from '~/shared/i18n/i18n.middleware.ts';
+import { getI18n, setLocaleCookie } from '~/shared/i18n/i18n.middleware.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
@@ -16,12 +16,6 @@ import type { Route } from './+types/settings.preferences.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Preferences | Conference Hall' }]);
-};
-
-export const loader = async ({ context }: Route.LoaderArgs) => {
-  // todo(middleware): is it necessary to get the locale from the backend?
-  const locale = getLocale(context);
-  return { locale };
 };
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
@@ -40,9 +34,9 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   });
 };
 
-export default function PreferencesRoute({ loaderData }: Route.ComponentProps) {
-  const { locale } = loaderData;
-  const { t } = useTranslation();
+export default function PreferencesRoute() {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
   const formId = useId();
 
   const locales = SUPPORTED_LANGUAGES.map((locale) => ({
