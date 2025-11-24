@@ -12,8 +12,8 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
+import { getAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getCaptchaSiteKey } from '~/shared/auth/captcha.server.ts';
-import { getAuthSession } from '~/shared/auth/session.ts';
 import { getI18n, getLocale } from '~/shared/i18n/i18n.middleware.ts';
 import { useNonce } from '~/shared/nonce/use-nonce.ts';
 import { dataWithToast } from '~/shared/toasts/toast.server.ts';
@@ -24,9 +24,9 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Forgot password | Conference Hall' }]);
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getAuthSession(request);
-  if (userId) return redirect('/');
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const user = getAuthUser(context);
+  if (user) return redirect('/');
 
   const captchaSiteKey = await getCaptchaSiteKey();
   return { captchaSiteKey };
