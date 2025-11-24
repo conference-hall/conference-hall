@@ -1,14 +1,16 @@
 import { json2csv } from 'json-2-csv';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { Route } from './+types/csv.ts';
 import { CfpReviewsExports } from './services/cfp-reviews-exports.server.ts';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const middleware = [requiredAuthMiddleware];
+
+export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
   const filters = parseUrlFilters(request.url);
-  const exports = CfpReviewsExports.for(userId, params.team, params.event);
+  const exports = CfpReviewsExports.for(authUser.id, params.team, params.event);
   const results = await exports.forJson(filters);
 
   const csvContent = json2csv(

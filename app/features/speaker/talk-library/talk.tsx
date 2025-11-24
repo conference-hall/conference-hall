@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/talk.ts';
@@ -19,16 +19,15 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: `${args.data?.title} | Conference Hall` }]);
 };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-  return TalksLibrary.of(userId).talk(params.talk).get();
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  return TalksLibrary.of(authUser.id).talk(params.talk).get();
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
-  const talk = TalksLibrary.of(userId).talk(params.talk);
+  const talk = TalksLibrary.of(authUser.id).talk(params.talk);
   const form = await request.formData();
   const intent = form.get('intent');
 

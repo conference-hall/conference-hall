@@ -12,6 +12,7 @@ import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.ts
 import { validateCaptchaToken } from '../auth/captcha.server.ts';
 import { NotAuthorizedError } from '../errors.server.ts';
 import { flags } from '../feature-flags/flags.server.ts';
+import type { AuthenticatedUser } from '../types/user.types.ts';
 import { sortBy } from '../utils/arrays-sort-by.ts';
 
 const { APP_URL } = getSharedServerEnv();
@@ -25,18 +26,19 @@ type UserAccountRegisterInput = {
 };
 
 export class UserAccount {
-  static async get(userId: string | undefined) {
-    if (!userId) return null;
+  static async getByUid(uid?: string | null): Promise<AuthenticatedUser | null> {
+    if (!uid) return null;
 
-    const user = await db.user.findUnique({ where: { id: userId } });
+    const user = await db.user.findFirst({ where: { uid } });
     if (!user) return null;
 
-    const teams = await UserAccount.teams(userId);
+    const teams = await UserAccount.teams(user.id);
     const hasTeamAccess = TeamBetaAccess.hasAccess(user, teams.length);
     const notificationsUnreadCount = await Notifications.for(user.id).unreadCount();
 
     return {
       id: user.id,
+      uid: user.uid,
       name: user.name,
       email: user.email,
       picture: user.picture,

@@ -21,7 +21,7 @@ import {
 } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.schema.server.ts';
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -32,18 +32,20 @@ import { useCurrentEvent } from '../event-page-context.tsx';
 import type { Route } from './+types/speaker-proposal.ts';
 import { ProposalStatusSection } from './components/proposal-status-section.tsx';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-  const proposal = await SpeakerProposal.for(userId, params.proposal).get();
-  const conversation = await ProposalConversationForSpeakers.for(userId, params.proposal).getConversation();
+export const middleware = [requiredAuthMiddleware];
+
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  const proposal = await SpeakerProposal.for(authUser.id, params.proposal).get();
+  const conversation = await ProposalConversationForSpeakers.for(authUser.id, params.proposal).getConversation();
   return { proposal, conversation };
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+  const authUser = getRequiredAuthUser(context);
 
   const i18n = getI18n(context);
-  const proposal = SpeakerProposal.for(userId, params.proposal);
+  const proposal = SpeakerProposal.for(authUser.id, params.proposal);
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -76,21 +78,21 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       return toast('success', i18n.t('event.proposal.feedbacks.saved'));
     }
     case 'save-message': {
-      const conversation = ProposalConversationForSpeakers.for(userId, params.proposal);
+      const conversation = ProposalConversationForSpeakers.for(authUser.id, params.proposal);
       const result = parseWithZod(form, { schema: ConversationMessageSaveSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.saveMessage(result.value);
       break;
     }
     case 'react-message': {
-      const conversation = ProposalConversationForSpeakers.for(userId, params.proposal);
+      const conversation = ProposalConversationForSpeakers.for(authUser.id, params.proposal);
       const result = parseWithZod(form, { schema: ConversationMessageReactSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.reactMessage(result.value);
       break;
     }
     case 'delete-message': {
-      const conversation = ProposalConversationForSpeakers.for(userId, params.proposal);
+      const conversation = ProposalConversationForSpeakers.for(authUser.id, params.proposal);
       const result = parseWithZod(form, { schema: ConversationMessageDeleteSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.deleteMessage(result.value);

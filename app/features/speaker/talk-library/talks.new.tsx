@@ -7,7 +7,7 @@ import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/talks.new.ts';
@@ -20,14 +20,13 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TalkSaveSchema });
   if (result.status !== 'success') return result.error;
 
-  const talk = await TalksLibrary.of(userId).add(result.value);
+  const talk = await TalksLibrary.of(authUser.id).add(result.value);
 
   const headers = await toastHeaders('success', i18n.t('talk.feedbacks.created'));
   return redirect(href('/speaker/talks/:talk', { talk: talk.id }), { headers });

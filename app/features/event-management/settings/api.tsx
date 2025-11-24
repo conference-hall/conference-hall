@@ -1,21 +1,16 @@
 import { v4 as uuid } from 'uuid';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/api.ts';
 import { EventProposalApiTryout, EventScheduleApiTryout } from './components/api-tryout-section.tsx';
 import { EnableApiSection } from './components/enable-api-section.tsx';
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
-  return null;
-};
-
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
+  const authUser = getRequiredAuthUser(context);
   const form = await request.formData();
   const intent = form.get('intent');
-  const event = EventSettings.for(userId, params.team, params.event);
+  const event = EventSettings.for(authUser.id, params.team, params.event);
 
   switch (intent) {
     case 'revoke-api-key': {

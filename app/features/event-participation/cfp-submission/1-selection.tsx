@@ -8,7 +8,7 @@ import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { SpeakerProposals } from '~/features/event-participation/speaker-proposals/services/speaker-proposals.server.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/1-selection.ts';
 import { MaxProposalsReached } from './components/max-proposals.tsx';
 import { NoSubmissionState } from './components/no-submissions-state.tsx';
@@ -16,10 +16,10 @@ import { SubmissionTalksList } from './components/submission-talks-list.tsx';
 
 export const handle = { step: 'selection' };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-  const speakerProposals = SpeakerProposals.for(userId, params.event);
-  const talkLibrary = TalksLibrary.of(userId);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  const speakerProposals = SpeakerProposals.for(authUser.id, params.event);
+  const talkLibrary = TalksLibrary.of(authUser.id);
   return {
     proposalsCount: await speakerProposals.count(),
     drafts: await speakerProposals.drafts(),

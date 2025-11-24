@@ -13,26 +13,26 @@ import { EventPage } from '~/features/event-participation/event-page/services/ev
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { CategoriesForm } from '~/features/speaker/talk-library/components/talk-forms/categories-form.tsx';
 import { FormatsForm } from '~/features/speaker/talk-library/components/talk-forms/formats-form.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/4-tracks.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'tracks' };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-  const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  const proposal = await TalkSubmission.for(authUser.id, params.event).get(params.talk);
   return { formats: proposal.formats.map(({ id }) => id), categories: proposal.categories.map(({ id }) => id) };
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
+  const authUser = getRequiredAuthUser(context);
   const form = await request.formData();
   const schema = await EventPage.of(params.event).buildTracksSchema();
   const result = parseWithZod(form, { schema });
   if (result.status !== 'success') return result.error;
 
-  const submission = TalkSubmission.for(userId, params.event);
+  const submission = TalkSubmission.for(authUser.id, params.event);
   await submission.saveTracks(params.talk, result.value);
   return redirect(String(form.get('redirectTo')));
 };

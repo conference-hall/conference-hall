@@ -9,7 +9,7 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -18,21 +18,20 @@ import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components
 import { MemberFilters } from './components/member-filters.tsx';
 import { parseUrlFilters, TeamMembers } from './services/team-members.server.ts';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
-  return TeamMembers.for(userId, params.team).list(filters, page);
+  return TeamMembers.for(authUser.id, params.team).list(filters, page);
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent')!;
   const memberId = String(form.get('memberId'))!;
-  const members = TeamMembers.for(userId, params.team);
+  const members = TeamMembers.for(authUser.id, params.team);
 
   switch (intent) {
     case 'change-role': {

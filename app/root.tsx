@@ -6,9 +6,9 @@ import type { Route } from './+types/root.ts';
 import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
 import { UserProvider } from './app-platform/components/user-context.tsx';
+import { authMiddleware, getAuthUser } from './shared/auth/auth.middleware.ts';
 import { getFirebaseClientConfig } from './shared/auth/firebase.server.ts';
 import { initializeFirebaseClient } from './shared/auth/firebase.ts';
-import { destroySession, getUserSession } from './shared/auth/session.ts';
 import { flags } from './shared/feature-flags/flags.server.ts';
 import { FlagsProvider } from './shared/feature-flags/flags-context.tsx';
 import { getI18n, getLocale, i18nextMiddleware, setLocaleCookie } from './shared/i18n/i18n.middleware.ts';
@@ -17,7 +17,6 @@ import { useNonce } from './shared/nonce/use-nonce.ts';
 import type { Toast } from './shared/toasts/toast.server.ts';
 import { getToast } from './shared/toasts/toast.server.ts';
 import { Toaster } from './shared/toasts/toaster.tsx';
-import { UserAccount } from './shared/user/user-account.server.ts';
 import { combineHeaders } from './shared/utils/headers.ts';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
@@ -45,16 +44,14 @@ export const links: Route.LinksFunction = () => {
   ];
 };
 
-export const middleware = [i18nextMiddleware];
+export const middleware = [i18nextMiddleware, authMiddleware];
 
 export const loader = async ({ request, context }: Route.LoaderArgs) => {
   if (MAINTENANCE_ENABLED) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
 
-  const { userId } = (await getUserSession(request)) || {};
-  const user = await UserAccount.get(userId);
-  if (userId && !user) await destroySession(request);
+  const user = getAuthUser(context);
 
   const { toast, toastHeaders } = await getToast(request);
 

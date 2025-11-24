@@ -9,8 +9,9 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
-import { destroySession, requireUserSession, sendEmailVerification } from '~/shared/auth/session.ts';
+import { destroySession, sendEmailVerification } from '~/shared/auth/session.ts';
 import { getI18n, getLocale } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { UnlinkProviderSchema } from '~/shared/types/speaker.types.ts';
@@ -24,14 +25,8 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Account | Conference Hall' }]);
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
-  return null;
-};
-
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const { userId, uid } = await requireUserSession(request);
-
+  const user = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const locale = getLocale(context);
   const form = await request.formData();
@@ -42,14 +37,20 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
       const result = parseWithZod(form, { schema: EmailSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
 
-      await SpeakerProfile.for(userId).save(result.value);
+      await SpeakerProfile.for(user.id).save(result.value);
       return toast('success', i18n.t('settings.account.feedbacks.contact-changed'));
     }
     case 'link-email-provider': {
       const result = parseWithZod(form, { schema: EmailPasswordSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      if (result.status !== 'success' || !user.uid) return toast('error', i18n.t('error.global'));
 
-      const error = await UserAccount.linkEmailProvider(uid, result.value.email, result.value.password, locale, i18n.t);
+      const error = await UserAccount.linkEmailProvider(
+        user.uid,
+        result.value.email,
+        result.value.password,
+        locale,
+        i18n.t,
+      );
       if (error) return toast('error', error);
 
       const headers = await toastHeaders('success', i18n.t('settings.account.feedbacks.authentication-method-linked'));
@@ -59,7 +60,7 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
       const result = parseWithZod(form, { schema: UnlinkProviderSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       if (result.value.newEmail) {
-        await SpeakerProfile.for(userId).save({ email: result.value.newEmail });
+        await SpeakerProfile.for(user.id).save({ email: result.value.newEmail });
       }
       return toast('success', i18n.t('settings.account.feedbacks.authentication-method-unlinked'));
     }
@@ -68,7 +69,7 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
       return toast('success', i18n.t('settings.account.feedbacks.verification-email-sent'));
     }
     case 'delete-account': {
-      await UserAccount.deleteAccount(userId, locale);
+      await UserAccount.deleteAccount(user.id, locale);
       const headers = await toastHeaders('success', i18n.t('settings.account.feedbacks.account-deleted'));
       await destroySession(request, '/', headers);
       return null;

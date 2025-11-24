@@ -12,7 +12,7 @@ import { getSocialIcon } from '~/design-system/social-link.tsx';
 import { H1, H2, Label, Subtitle } from '~/design-system/typography.tsx';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { extractSocialProfile } from '~/shared/formatters/social-links.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -25,20 +25,14 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Profile | Conference Hall' }]);
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
-  return null;
-};
-
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ProfileSchema });
   if (result.status !== 'success') return result.error;
 
-  await SpeakerProfile.for(userId).save(result.value);
+  await SpeakerProfile.for(authUser.id).save(result.value);
   return toast('success', i18n.t('settings.profile.feebacks.updated'));
 };
 

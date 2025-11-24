@@ -11,7 +11,7 @@ import { List } from '~/design-system/list/list.tsx';
 import { Tag } from '~/design-system/tag.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { TagModal } from '~/features/event-management/settings/components/tag-modal.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -19,11 +19,11 @@ import type { Route } from './+types/tags.ts';
 import { parseUrlFilters, TagDeleteSchema, TagSaveSchema } from './services/event-proposal-tags.schema.server.ts';
 import { EventProposalTags } from './services/event-proposal-tags.server.ts';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
-  const { count, tags, pagination } = await EventProposalTags.for(userId, params.team, params.event).list(
+  const { count, tags, pagination } = await EventProposalTags.for(authUser.id, params.team, params.event).list(
     filters,
     page,
   );
@@ -31,12 +31,12 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+  const authUser = getRequiredAuthUser(context);
 
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent');
-  const tags = EventProposalTags.for(userId, params.team, params.event);
+  const tags = EventProposalTags.for(authUser.id, params.team, params.event);
 
   switch (intent) {
     case 'save-tag': {

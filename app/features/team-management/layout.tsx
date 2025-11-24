@@ -7,17 +7,19 @@ import { Badge } from '~/design-system/badges.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { CurrentTeamProvider } from '~/features/team-management/team-context.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/layout.ts';
 import { TeamFetcher } from './services/team-fetcher.server.ts';
+
+export const middleware = [requiredAuthMiddleware];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: `${args.data?.name} | Conference Hall` }]);
 };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-  return TeamFetcher.for(userId, params.team).get();
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  return TeamFetcher.for(authUser.id, params.team).get();
 };
 
 export default function TeamLayout({ loaderData: team }: Route.ComponentProps) {

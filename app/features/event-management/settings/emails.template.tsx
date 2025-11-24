@@ -5,7 +5,7 @@ import { href } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import {
   CustomTemplateSchema,
   EventEmailCustomDeleteSchema,
@@ -20,9 +20,8 @@ import { EmailCustomBadge } from './components/email-custom-badge.tsx';
 import { EmailPreview } from './components/email-preview.tsx';
 import { EventEmailCustomizations } from './services/event-email-customizations.server.tsx';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-
+export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
   const url = new URL(request.url);
   const locale = url.searchParams.get('locale') || 'en';
   if (!isSupportedLanguage(locale)) throw new Response('Not Found', { status: 404 });
@@ -31,20 +30,19 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const result = CustomTemplateSchema.safeParse(template);
   if (!result.success) throw new Response('Not Found', { status: 404 });
 
-  const emailCustomizations = EventEmailCustomizations.for(userId, params.team, params.event);
+  const emailCustomizations = EventEmailCustomizations.for(authUser.id, params.team, params.event);
   const customizationPreview = await emailCustomizations.getForPreview(result.data, locale);
 
   return { ...customizationPreview, locale };
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent');
 
-  const emailCustomizations = EventEmailCustomizations.for(userId, params.team, params.event);
+  const emailCustomizations = EventEmailCustomizations.for(authUser.id, params.team, params.event);
 
   switch (intent) {
     case 'save': {

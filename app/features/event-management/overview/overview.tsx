@@ -3,17 +3,11 @@ import { Outlet } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
 import type { Route } from './+types/overview.ts';
 import { CfpStatusCard } from './components/cfp-tab/cfp-status-card.tsx';
 import { ReviewStatusCard } from './components/cfp-tab/review-status-card.tsx';
 import { VisibilityStatusCard } from './components/cfp-tab/visibility-status-card.tsx';
 import { DashboardTabs } from './components/dashboard-tabs.tsx';
-
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
-  return null;
-};
 
 export default function OverviewRoute({ params }: Route.ComponentProps) {
   const { t } = useTranslation();

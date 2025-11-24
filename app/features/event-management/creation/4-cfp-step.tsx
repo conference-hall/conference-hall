@@ -10,24 +10,24 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { EventCfpConferenceForm } from '~/features/event-management/creation/components/event-cfp-conference-form.tsx';
 import { CfpConferenceOpeningSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { EventFetcher } from '../services/event-fetcher.server.ts';
 import type { Route } from './+types/4-cfp-step.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 import { useCurrentTeam } from './team-context.tsx';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-  const event = await EventFetcher.for(userId, params.team, params.event).get();
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  const event = await EventFetcher.for(authUser.id, params.team, params.event).get();
   if (event.type === 'MEETUP') {
     return redirect(`/team/${params.team}/${params.event}`);
   }
   return event;
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-  const event = EventSettings.for(userId, params.team, params.event);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  const event = EventSettings.for(authUser.id, params.team, params.event);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: CfpConferenceOpeningSchema });
   if (result.status !== 'success') return result.error;

@@ -7,17 +7,14 @@ import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/cfp-submission.ts';
 import { Steps } from './components/steps.tsx';
 import { SubmissionContextProvider } from './components/submission-context.tsx';
 
-export const handle = { step: 'root' };
+export const middleware = [requiredAuthMiddleware];
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
-  return null;
-};
+export const handle = { step: 'root' };
 
 export default function EventSubmissionRoute({ params }: Route.ComponentProps) {
   const { t } = useTranslation();

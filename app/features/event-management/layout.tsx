@@ -15,26 +15,27 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { CurrentEventTeamProvider, useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
 import { TeamFetcher } from '../team-management/services/team-fetcher.server.ts';
 import type { Route } from './+types/layout.ts';
 import { useScheduleFullscreen } from './schedule/components/header/use-schedule-fullscreen.tsx';
 import { EventFetcher } from './services/event-fetcher.server.ts';
 
+export const middleware = [requiredAuthMiddleware];
+
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: `${args.data?.event.name} | ${args.data?.team.name} | Conference Hall` }]);
 };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-
+export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
   const url = new URL(request.url);
   if (url.pathname === `/team/${params.team}/${params.event}`) {
     return redirect(`/team/${params.team}/${params.event}/overview`);
   }
 
-  const team = await TeamFetcher.for(userId, params.team).get();
-  const event = await EventFetcher.for(userId, params.team, params.event).get();
+  const team = await TeamFetcher.for(authUser.id, params.team).get();
+  const event = await EventFetcher.for(authUser.id, params.team, params.event).get();
 
   return { team, event };
 };

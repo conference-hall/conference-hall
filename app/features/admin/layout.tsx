@@ -3,13 +3,15 @@ import { href, Outlet } from 'react-router';
 import { NavbarEvent } from '~/app-platform/components/navbar/navbar-event.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
 import type { Route } from './+types/layout.ts';
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-  await UserAccount.needsAdminRole(userId);
+export const middleware = [requiredAuthMiddleware];
+
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  await UserAccount.needsAdminRole(authUser.id);
   return null;
 };
 

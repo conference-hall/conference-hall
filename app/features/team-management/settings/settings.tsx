@@ -5,13 +5,13 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
 import type { Route } from './+types/settings.ts';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-  const authorization = new TeamAuthorization(userId, params.team);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  const authorization = new TeamAuthorization(authUser.id, params.team);
   await authorization.checkMemberPermissions('canAccessTeam');
   return null;
 };

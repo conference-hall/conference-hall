@@ -53,7 +53,7 @@ export async function createSession(request: Request, context: Readonly<RouterCo
 
   const locale = getLocale(context);
   const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
-  const userId = await UserAccount.register({ uid, name, email, picture, locale });
+  await UserAccount.register({ uid, name, email, picture, locale });
 
   const needVerification = await UserAccount.checkEmailVerification(
     email,
@@ -65,8 +65,6 @@ export async function createSession(request: Request, context: Readonly<RouterCo
 
   const session = await getSession(request);
   session.set('jwt', jwt);
-  session.set('uid', uid);
-  session.set('userId', userId);
 
   return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
 }
@@ -80,53 +78,29 @@ export async function destroySession(request: Request, redirectTo?: string, head
   });
 }
 
-export async function requireUserSession(request: Request) {
-  const sessionUser = await getUserSession(request);
-
-  if (!sessionUser) {
-    const redirectTo = new URL(request.url).pathname;
-    const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
-    throw redirect(`/auth/login?${searchParams}`);
-  }
-
-  return sessionUser;
-}
-
-export async function getUserSession(request: Request) {
+export async function getSessionUid(request: Request) {
   const session = await getSession(request);
   const jwt = session.get('jwt') as string | null;
-  const uid = session.get('uid') as string | null;
-  const userId = session.get('userId') as string | null;
-
-  if (!jwt || !uid || !userId) {
-    return null;
-  }
+  if (!jwt) return null;
 
   try {
     const idToken = await serverAuth.verifySessionCookie(jwt, true);
-    if (uid !== idToken.uid) throw new Error('Invalid token uid');
-
-    return { userId, uid };
-  } catch (_error) {
+    return idToken.uid;
+  } catch {
     await destroySession(request);
     return null;
   }
 }
 
 export async function sendEmailVerification(request: Request, context: Readonly<RouterContextProvider>) {
-  const session = await getSession(request);
-  const jwt = session.get('jwt');
-  const uid = session.get('uid');
-  if (!jwt || !uid) return;
+  const sessionUid = await getSessionUid(request);
+  if (!sessionUid) return;
 
-  const idToken = await serverAuth.verifySessionCookie(jwt, true);
-  if (uid !== idToken.uid) return null;
-
-  const firebaseUser = await serverAuth.getUser(uid);
-  if (!firebaseUser) return null;
+  const firebaseUser = await serverAuth.getUser(sessionUid);
+  if (!firebaseUser) return;
 
   const provider = firebaseUser.providerData.find((p) => p.providerId === 'password');
-  if (!provider) return null;
+  if (!provider) return;
 
   const locale = getLocale(context);
   await UserAccount.checkEmailVerification(provider.email, false, 'password', locale);

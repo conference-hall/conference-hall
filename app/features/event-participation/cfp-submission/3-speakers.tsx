@@ -12,39 +12,39 @@ import { TalkSubmission } from '~/features/event-participation/cfp-submission/se
 import { ProfileFetcher } from '~/features/speaker/services/profile-fetcher.server.ts';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { Speakers } from '~/features/speaker/talk-library/components/speakers.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { FunnelSpeakerSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/3-speakers.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'speakers' };
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-  const speaker = await ProfileFetcher.for(userId).get();
-  const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  const speaker = await ProfileFetcher.for(authUser.id).get();
+  const proposal = await TalkSubmission.for(authUser.id, params.event).get(params.talk);
 
   return {
     speaker,
     invitationLink: proposal.invitationLink,
     isOwner: proposal.isOwner,
-    speakers: proposal.speakers.filter((speaker) => speaker.userId !== userId),
+    speakers: proposal.speakers.filter((speaker) => speaker.userId !== authUser.id),
   };
 };
 
-export const action = async ({ request, params }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ request, params, context }: Route.ActionArgs) => {
+  const authUser = getRequiredAuthUser(context);
   const form = await request.formData();
   const intent = form.get('intent');
 
   if (intent === 'remove-speaker') {
     const speakerId = String(form.get('_speakerId'));
-    await TalkSubmission.for(userId, params.event).removeCoSpeaker(params.talk, speakerId);
+    await TalkSubmission.for(authUser.id, params.event).removeCoSpeaker(params.talk, speakerId);
     return null;
   } else {
     const result = parseWithZod(form, { schema: FunnelSpeakerSchema });
     if (result.status !== 'success') return result.error;
-    await SpeakerProfile.for(userId).save(result.value);
+    await SpeakerProfile.for(authUser.id).save(result.value);
   }
 
   return redirect(String(form.get('redirectTo')));

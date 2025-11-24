@@ -5,16 +5,9 @@ import { href } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
 import type { EventType } from '~/shared/types/events.types.ts';
-import type { Route } from './+types/1-type-step.ts';
 import { EventTypeRadioGroup } from './components/event-type-radio-group.tsx';
 import { useCurrentTeam } from './team-context.tsx';
-
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
-  return null;
-};
 
 export default function NewEventTypeRoute() {
   const { t } = useTranslation();

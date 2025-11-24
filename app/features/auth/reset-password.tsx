@@ -12,9 +12,9 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
+import { getAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
 import { getClientAuth } from '~/shared/auth/firebase.ts';
-import { getUserSession } from '~/shared/auth/session.ts';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { validatePassword } from '~/shared/validators/auth.ts';
 import type { Route } from './+types/reset-password.ts';
@@ -23,9 +23,9 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Reset password | Conference Hall' }]);
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const userId = await getUserSession(request);
-  if (userId) return redirect('/');
+export const loader = async ({ request, context }: Route.LoaderArgs) => {
+  const user = getAuthUser(context);
+  if (user) return redirect('/');
 
   const url = new URL(request.url);
   const oobCode = url.searchParams.get('oobCode');

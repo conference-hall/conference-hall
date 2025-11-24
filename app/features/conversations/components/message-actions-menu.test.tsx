@@ -10,6 +10,7 @@ import { MessageActionsMenu } from './message-actions-menu.tsx';
 describe('MessageActionsMenu component', () => {
   const mockUser = {
     id: 'user-1',
+    uid: 'user-uid-1',
     name: 'John Doe',
     email: 'john@example.com',
     picture: null,

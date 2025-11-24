@@ -6,7 +6,7 @@ import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -15,23 +15,22 @@ import type { Route } from './+types/new-speaker.ts';
 import { SpeakerForm } from './components/speaker-form.tsx';
 import { EventSpeakers } from './services/event-speakers.server.ts';
 
-export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
-  const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  const eventSpeakers = EventSpeakers.for(authUser.id, params.team, params.event);
   await eventSpeakers.canCreate();
   return null;
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
-
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: EventSpeakerSaveSchema });
   if (result.status !== 'success') return { errors: result.error || null };
 
   try {
-    const speaker = await EventSpeakers.for(userId, params.team, params.event).create(result.value);
+    const speaker = await EventSpeakers.for(authUser.id, params.team, params.event).create(result.value);
     const headers = await toastHeaders('success', i18n.t('event-management.speakers.new.feedbacks.created'));
     return redirect(href('/team/:team/:event/speakers/:speaker', { ...params, speaker: speaker.id }), { headers });
   } catch (error) {

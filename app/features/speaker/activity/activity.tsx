@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { useSpeakerProfile } from '../speaker-profile-context.tsx';
 import type { Route } from './+types/activity.ts';
@@ -14,10 +14,10 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Activity | Conference Hall' }]);
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const { userId } = await requireUserSession(request);
+export const loader = async ({ request, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
   const page = parseUrlPage(request.url);
-  return SpeakerActivities.for(userId).list(page);
+  return SpeakerActivities.for(authUser.id).list(page);
 };
 
 export default function ProfileRoute({ loaderData }: Route.ComponentProps) {

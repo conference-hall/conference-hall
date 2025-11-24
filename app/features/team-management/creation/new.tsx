@@ -6,22 +6,19 @@ import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { TeamCreateSchema, TeamCreation } from '~/features/team-management/creation/services/team-creation.server.ts';
-import { requireUserSession } from '~/shared/auth/session.ts';
+import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/new.ts';
 import { TeamForm } from './components/team-form.tsx';
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  await requireUserSession(request);
-  return null;
-};
+export const middleware = [requiredAuthMiddleware];
 
-export const action = async ({ request }: Route.ActionArgs) => {
-  const { userId } = await requireUserSession(request);
+export const action = async ({ request, context }: Route.ActionArgs) => {
+  const authUser = getRequiredAuthUser(context);
   const form = await request.formData();
   const result = await parseWithZod(form, { schema: TeamCreateSchema, async: true });
   if (result.status !== 'success') return result.error;
 
-  const team = await TeamCreation.for(userId).create(result.value);
+  const team = await TeamCreation.for(authUser.id).create(result.value);
   return redirect(`/team/${team.slug}`);
 };
 
