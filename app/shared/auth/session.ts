@@ -80,7 +80,7 @@ export async function destroySession(request: Request, redirectTo?: string, head
   });
 }
 
-export async function getAuthSession(request: Request) {
+export async function getSessionUid(request: Request) {
   const session = await getSession(request);
   const jwt = session.get('jwt') as string | null;
   const uid = session.get('uid') as string | null;
@@ -94,7 +94,7 @@ export async function getAuthSession(request: Request) {
     const idToken = await serverAuth.verifySessionCookie(jwt, true);
     if (uid !== idToken.uid) throw new Error('Invalid token uid');
 
-    return { userId, uid };
+    return uid;
   } catch (_error) {
     await destroySession(request);
     return null;

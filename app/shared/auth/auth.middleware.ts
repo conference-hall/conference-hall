@@ -1,15 +1,15 @@
 import { createContext, type MiddlewareFunction, type RouterContextProvider, redirect } from 'react-router';
 import type { AuthenticatedUser } from '../types/user.types.ts';
 import { UserAccount } from '../user/user-account.server.ts';
-import { destroySession, getAuthSession } from './session.ts';
+import { destroySession, getSessionUid } from './session.ts';
 
 const authContext = createContext<AuthenticatedUser | null>();
 
 export const authMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
-  const session = await getAuthSession(request);
+  const sessionUid = await getSessionUid(request);
 
-  const user = await UserAccount.getByUid(session?.uid);
-  if (session?.uid && !user) await destroySession(request);
+  const user = await UserAccount.getByUid(sessionUid);
+  if (sessionUid && !user) await destroySession(request);
 
   context.set(authContext, user);
 };
