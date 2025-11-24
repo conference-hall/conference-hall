@@ -7,13 +7,14 @@ export class EmailTemplateSettingsPage extends PageObject {
   readonly editButton = this.page.getByRole('button', { name: 'Edit template' });
   readonly resetButton = this.page.getByRole('button', { name: 'Reset to default' });
 
-  async goto(team: string, event: string, template: string, locale = 'en') {
+  async goto(team: string, event: string, template: CustomTemplateName, locale: string) {
     await this.page.goto(`/team/${team}/${event}/settings/emails/${template}?locale=${locale}`);
-    await this.waitFor();
+    await this.waitFor(template);
   }
 
-  async waitFor() {
+  async waitFor(template: CustomTemplateName) {
     await this.waitForHydration();
+    await this.getTemplateHeading(template).waitFor();
   }
 
   getTemplateHeading(template: CustomTemplateName) {
