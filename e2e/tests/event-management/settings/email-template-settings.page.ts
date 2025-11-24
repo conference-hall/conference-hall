@@ -13,6 +13,7 @@ export class EmailTemplateSettingsPage extends PageObject {
   }
 
   async waitFor(template: CustomTemplateName) {
+    await this.page.waitForLoadState('networkidle'); // needed to wait for the iframe load
     await this.waitForHydration();
     await this.getTemplateHeading(template).waitFor();
   }
