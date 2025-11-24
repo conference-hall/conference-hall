@@ -21,6 +21,7 @@ export class ProposalListPage extends PageObject {
   }
 
   async waitFor() {
+    await this.waitForHydration();
     await this.heading.waitFor();
   }
 

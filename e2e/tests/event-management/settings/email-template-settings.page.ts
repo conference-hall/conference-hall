@@ -13,7 +13,7 @@ export class EmailTemplateSettingsPage extends PageObject {
   }
 
   async waitFor() {
-    await this.page.waitForLoadState('networkidle');
+    await this.waitForHydration();
   }
 
   getTemplateHeading(template: CustomTemplateName) {

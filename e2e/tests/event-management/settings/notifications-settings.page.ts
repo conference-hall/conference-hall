@@ -14,6 +14,7 @@ export class NotificationsSettingsPage extends PageObject {
   }
 
   async waitFor() {
+    await this.waitForHydration();
     await this.heading.waitFor();
   }
 }

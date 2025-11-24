@@ -16,6 +16,7 @@ export class TeamAccessPage extends PageObject {
 
   async goto() {
     await this.page.goto('/team/request');
+    await this.waitForHydration();
     await this.heading.waitFor();
   }
 

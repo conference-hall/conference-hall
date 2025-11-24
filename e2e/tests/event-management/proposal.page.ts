@@ -31,11 +31,11 @@ export class ProposalPage extends PageObject {
 
   async goto(team: string, event: string, id: string, title: string) {
     await this.page.goto(`/team/${team}/${event}/proposals/${id}`);
-    await this.waitForHydration();
     await this.waitFor(title);
   }
 
   async waitFor(name: string) {
+    await this.waitForHydration();
     await this.page.getByRole('heading', { name }).waitFor();
   }
 
