@@ -20,6 +20,10 @@ export class PageObject {
     this.authEmulator = new AuthEmulator(page);
   }
 
+  async waitForHydration() {
+    await this.page.waitForFunction(() => window.__APP_HYDRATED__ === true, undefined, { timeout: 10_000 });
+  }
+
   async closeModal() {
     await this.page.getByRole('button', { name: 'Close' }).click();
   }
