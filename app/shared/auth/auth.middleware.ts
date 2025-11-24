@@ -5,7 +5,6 @@ import { destroySession, getAuthSession } from './session.ts';
 
 const authContext = createContext<AuthenticatedUser | null>();
 
-// todo(middleware): add tests
 export const authMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
   const session = await getAuthSession(request);
 
@@ -21,7 +20,6 @@ export function getAuthUser(context: Readonly<RouterContextProvider>) {
 
 const protectedRouteContext = createContext<AuthenticatedUser>();
 
-// todo(middleware): add tests
 export const requiredAuthMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
   const user = getAuthUser(context);
 
