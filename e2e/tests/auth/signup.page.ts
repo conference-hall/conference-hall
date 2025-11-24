@@ -16,11 +16,13 @@ export class SignupPage extends PageObject {
 
   async waitFor() {
     await this.page.waitForLoadState('networkidle');
+    await this.waitForHydration();
     await this.heading.waitFor();
   }
 
   async emailVerificationSent() {
     await this.page.waitForLoadState('networkidle');
+    await this.waitForHydration();
     await this.page.getByRole('heading', { name: 'Email verification' }).waitFor();
   }
 }
