@@ -8,6 +8,7 @@ const authContext = createContext<AuthenticatedUser | null>();
 export const authMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
   const sessionUid = await getSessionUid(request);
 
+  // todo(cache): can be cached to improve performances (called on each request)
   const user = await UserAccount.getByUid(sessionUid);
   if (sessionUid && !user) await destroySession(request);
 
