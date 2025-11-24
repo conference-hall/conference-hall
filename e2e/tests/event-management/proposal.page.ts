@@ -35,6 +35,7 @@ export class ProposalPage extends PageObject {
   }
 
   async waitFor(name: string) {
+    await this.waitForHydration();
     await this.page.getByRole('heading', { name }).waitFor();
   }
 

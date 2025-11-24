@@ -8,7 +8,7 @@ export class SpeakerPage extends PageObject {
 
   async goto(team: string, event: string, speaker: string) {
     await this.page.goto(`/team/${team}/${event}/speakers/${speaker}`);
-    await this.page.waitForLoadState('networkidle');
+    await this.waitForHydration();
   }
 
   async expandReferences() {

@@ -8,6 +8,7 @@ export class TeamInvitePage extends PageObject {
   }
 
   async waitFor(teamName: string) {
+    await this.waitForHydration();
     await this.page.getByRole('heading', { name: teamName }).waitFor();
   }
 

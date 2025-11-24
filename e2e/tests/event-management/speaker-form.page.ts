@@ -72,6 +72,7 @@ export class NewSpeakerPage extends SpeakerFormPage {
   }
 
   async waitFor() {
+    await this.waitForHydration();
     await this.heading.waitFor();
   }
 
@@ -89,6 +90,7 @@ export class EditSpeakerPage extends SpeakerFormPage {
 
   async goto(team: string, event: string, speaker: string, speakerName?: string) {
     await this.page.goto(`/team/${team}/${event}/speakers/${speaker}/edit`);
+    await this.waitForHydration();
     if (speakerName) {
       await this.waitFor(speakerName);
     }

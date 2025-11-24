@@ -15,6 +15,7 @@ export class IntegrationsSettingsPage extends PageObject {
   }
 
   async waitFor() {
+    await this.waitForHydration();
     await this.heading.waitFor();
   }
 }

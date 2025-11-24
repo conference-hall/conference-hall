@@ -19,6 +19,7 @@ export class NewTalkPage extends PageObject {
   }
 
   async waitFor() {
+    await this.waitForHydration();
     await this.heading.waitFor();
   }
 

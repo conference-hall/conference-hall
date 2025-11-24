@@ -27,6 +27,7 @@ export class EventPage extends PageObject {
   }
 
   async waitFor(name: string) {
+    await this.waitForHydration();
     await this.heading(name).waitFor();
   }
 
