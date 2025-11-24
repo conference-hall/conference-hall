@@ -10,7 +10,7 @@ import { List } from '~/design-system/list/list.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { NotFoundError } from '~/shared/errors.server.ts';
 import { ProposalItem } from '../proposals/components/list/items/proposal-item.tsx';
 import type { Route } from './+types/speaker.ts';
@@ -20,8 +20,8 @@ import { SpeakerTitle } from './components/speaker-details/speaker-title.tsx';
 import { EventSpeakers } from './services/event-speakers.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
-  const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
+  const authUser = getRequiredAuthUser(context);
+  const eventSpeakers = EventSpeakers.for(authUser.id, params.team, params.event);
   const speaker = await eventSpeakers.getById(params.speaker);
 
   if (!speaker) throw new NotFoundError('Speaker not found');

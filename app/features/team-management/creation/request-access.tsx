@@ -9,22 +9,22 @@ import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
-import { getProtectedSession, protectedRouteMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import type { Route } from './+types/request-access.ts';
 
-export const middleware = [protectedRouteMiddleware];
+export const middleware = [requiredAuthMiddleware];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Request access | Conference Hall' }]);
 };
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   try {
-    await TeamBetaAccess.for(userId).validateAccessKey(String(form.get('key')));
+    await TeamBetaAccess.for(authUser.id).validateAccessKey(String(form.get('key')));
   } catch (_error) {
     return { key: [i18n.t('error.invalid-access-key')] };
   }

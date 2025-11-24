@@ -9,13 +9,13 @@ import {
   GlobalReviewNote,
   UserReviewNote,
 } from '~/features/event-management/proposals/components/shared/review-note.tsx';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/overview.reviewers.ts';
 import { ReviewersMetrics } from './services/reviewers-metrics.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
-  const metrics = await ReviewersMetrics.for(userId, params.team, params.event).get();
+  const authUser = getRequiredAuthUser(context);
+  const metrics = await ReviewersMetrics.for(authUser.id, params.team, params.event).get();
   return { metrics };
 };
 

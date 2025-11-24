@@ -27,13 +27,15 @@ const generateEmailVerificationLinkMock = auth.generateEmailVerificationLink as 
 const deleteUserMock = auth.deleteUser as Mock;
 
 describe('UserAccount', () => {
-  describe('get', () => {
-    it('returns the user info', async () => {
-      const user = await userFactory();
+  // todo(middleware): add tests about `teams`, `hasTeamAccess` and `notificationsUnreadCount`
+  describe('getByUid', () => {
+    it('returns the authenticated user info', async () => {
+      const user = await userFactory({ traits: ['clark-kent'] });
 
-      const response = await UserAccount.get(user.id);
+      const response = await UserAccount.getByUid(user.uid);
       expect(response).toEqual({
         id: user.id,
+        uid: user.uid,
         name: user.name,
         email: user.email,
         picture: user.picture,
@@ -41,6 +43,16 @@ describe('UserAccount', () => {
         hasTeamAccess: false,
         notificationsUnreadCount: 0,
       });
+    });
+
+    it('returns null when no uid', async () => {
+      const response = await UserAccount.getByUid();
+      expect(response).toBeNull();
+    });
+
+    it('returns null when user for given uid is not found', async () => {
+      const response = await UserAccount.getByUid('no-existing-uid');
+      expect(response).toBeNull();
     });
   });
 

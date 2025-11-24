@@ -8,16 +8,16 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { SpeakerProposals } from '~/features/event-participation/speaker-proposals/services/speaker-proposals.server.ts';
-import { getProtectedSession, protectedRouteMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
 import { useCurrentEvent } from '../event-page-context.tsx';
 import type { Route } from './+types/speaker-proposals.ts';
 import { ProposalStatusLabel } from './components/proposal-status-label.tsx';
 
-export const middleware = [protectedRouteMiddleware];
+export const middleware = [requiredAuthMiddleware];
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
-  return SpeakerProposals.for(userId, params.event).list();
+  const authUser = getRequiredAuthUser(context);
+  return SpeakerProposals.for(authUser.id, params.event).list();
 };
 
 export default function EventSpeakerProposalsRoute({ loaderData: proposals }: Route.ComponentProps) {

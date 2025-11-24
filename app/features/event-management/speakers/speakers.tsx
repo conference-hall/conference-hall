@@ -4,7 +4,7 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import type { Route } from './+types/speakers.ts';
 import { Filters } from './components/filters.tsx';
@@ -13,10 +13,10 @@ import { SpeakersEmptyState } from './components/speakers-empty-state.tsx';
 import { EventSpeakers, parseUrlFilters } from './services/event-speakers.server.ts';
 
 export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
-  const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
+  const eventSpeakers = EventSpeakers.for(authUser.id, params.team, params.event);
   return eventSpeakers.search(filters, page);
 };
 

@@ -1,35 +1,39 @@
 import { createContext, type MiddlewareFunction, type RouterContextProvider, redirect } from 'react-router';
-import { getAuthSession } from './session.ts';
+import type { AuthenticatedUser } from '../types/user.types.ts';
+import { UserAccount } from '../user/user-account.server.ts';
+import { destroySession, getAuthSession } from './session.ts';
 
-type UserSession = { userId: string; uid: string };
-
-const sessionContext = createContext<UserSession | null>();
+const authContext = createContext<AuthenticatedUser | null>();
 
 // todo(middleware): add tests
-export const sessionMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
+export const authMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
   const session = await getAuthSession(request);
-  context.set(sessionContext, session);
+
+  const user = await UserAccount.getByUid(session?.uid);
+  if (session?.uid && !user) await destroySession(request);
+
+  context.set(authContext, user);
 };
 
-export function getSession(context: Readonly<RouterContextProvider>) {
-  return context.get(sessionContext);
+export function getAuthUser(context: Readonly<RouterContextProvider>) {
+  return context.get(authContext);
 }
 
-const protectedRouteContext = createContext<UserSession>();
+const protectedRouteContext = createContext<AuthenticatedUser>();
 
 // todo(middleware): add tests
-export const protectedRouteMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
-  const session = getSession(context);
+export const requiredAuthMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
+  const user = getAuthUser(context);
 
-  if (!session) {
+  if (!user) {
     const redirectTo = new URL(request.url).pathname;
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
     throw redirect(`/auth/login?${searchParams}`);
   }
 
-  context.set(protectedRouteContext, session);
+  context.set(protectedRouteContext, user);
 };
 
-export function getProtectedSession(context: Readonly<RouterContextProvider>) {
+export function getRequiredAuthUser(context: Readonly<RouterContextProvider>) {
   return context.get(protectedRouteContext);
 }

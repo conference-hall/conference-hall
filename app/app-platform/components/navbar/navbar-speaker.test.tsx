@@ -8,6 +8,7 @@ import { NavbarSpeaker } from './navbar-speaker.tsx';
 
 const mockUser = {
   id: 'user-1',
+  uid: 'user-uid-1',
   email: 'test@example.com',
   name: 'Test User',
   picture: 'https://example.com/avatar.jpg',

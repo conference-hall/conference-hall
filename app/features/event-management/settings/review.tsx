@@ -5,16 +5,16 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/review.ts';
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
-  const event = EventSettings.for(userId, params.team, params.event);
+  const event = EventSettings.for(authUser.id, params.team, params.event);
   const form = await request.formData();
   const settingName = form.get('_setting') as string;
   await event.update({ [settingName]: form.get(settingName) === 'true' });

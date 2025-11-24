@@ -11,7 +11,7 @@ import { TalkSubmission } from '~/features/event-participation/cfp-submission/se
 import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
 import { TalkSaveSchema } from '~/features/speaker/talk-library/services/talks-library.schema.server.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { TalkAlreadySubmittedError } from '~/shared/errors.server.ts';
 import type { Route } from './+types/2-talk.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
@@ -19,10 +19,10 @@ import { useSubmissionNavigation } from './components/submission-context.tsx';
 export const handle = { step: 'proposal' };
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   if (params.talk === 'new') return null;
 
-  const talk = TalksLibrary.of(userId).talk(params.talk);
+  const talk = TalksLibrary.of(authUser.id).talk(params.talk);
   const alreadySubmitted = await talk.isSubmittedTo(params.event);
   if (alreadySubmitted) throw new TalkAlreadySubmittedError();
 
@@ -30,12 +30,12 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TalkSaveSchema });
   if (result.status !== 'success') return result.error;
 
-  const submission = TalkSubmission.for(userId, params.event);
+  const submission = TalkSubmission.for(authUser.id, params.event);
   const proposal = await submission.saveDraft(params.talk, result.value);
   return redirect(href('/:event/submission/:talk/speakers', { event: params.event, talk: proposal.talkId }));
 };

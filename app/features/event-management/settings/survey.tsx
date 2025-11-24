@@ -1,5 +1,5 @@
 import { parseWithZod } from '@conform-to/zod/v4';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/survey.ts';
@@ -12,15 +12,15 @@ import {
 } from './services/event-survey-settings.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
-  const surveySettings = EventSurveySettings.for(userId, params.team, params.event);
+  const authUser = getRequiredAuthUser(context);
+  const surveySettings = EventSurveySettings.for(authUser.id, params.team, params.event);
   return surveySettings.getConfig();
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
-  const surveySettings = EventSurveySettings.for(userId, params.team, params.event);
+  const surveySettings = EventSurveySettings.for(authUser.id, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');
 

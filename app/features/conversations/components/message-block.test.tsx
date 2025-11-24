@@ -9,6 +9,7 @@ import { MessageBlock } from './message-block.tsx';
 describe('MessageBlock component', () => {
   const mockUser = {
     id: 'user-1',
+    uid: 'user-uid-1',
     name: 'John Doe',
     email: 'john@example.com',
     picture: null,

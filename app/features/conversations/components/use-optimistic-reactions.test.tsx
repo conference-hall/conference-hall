@@ -16,6 +16,7 @@ vi.mock('~/app-platform/components/user-context.tsx', () => ({
 describe('useOptimisticReactions hook', () => {
   const mockUser = {
     id: 'user-1',
+    uid: 'user-uid-1',
     name: 'John Doe',
     email: 'john@example.com',
     picture: null,

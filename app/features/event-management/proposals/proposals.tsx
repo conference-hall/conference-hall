@@ -7,7 +7,7 @@ import { SearchInput } from '~/design-system/forms/search-input.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -22,21 +22,21 @@ import { CfpReviewsSearch } from './services/cfp-reviews-search.server.ts';
 import { ProposalStatusBulkSchema, ProposalStatusUpdater } from './services/proposal-status-updater.server.ts';
 
 export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
-  return CfpReviewsSearch.for(userId, params.team, params.event).search(filters, page);
+  return CfpReviewsSearch.for(authUser.id, params.team, params.event).search(filters, page);
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ProposalStatusBulkSchema });
   if (result.status !== 'success') return toast('error', i18n.t('error.global'));
 
   const { selection, deliberationStatus, allPagesSelected } = result.value;
-  const deliberate = ProposalStatusUpdater.for(userId, params.team, params.event);
+  const deliberate = ProposalStatusUpdater.for(authUser.id, params.team, params.event);
   let count = 0;
   if (allPagesSelected) {
     const filters = parseUrlFilters(request.url);

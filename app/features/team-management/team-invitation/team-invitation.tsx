@@ -5,11 +5,11 @@ import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
-import { getProtectedSession, protectedRouteMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/team-invitation.ts';
 import { TeamMemberInvite } from './services/team-member-invite.server.ts';
 
-export const middleware = [protectedRouteMiddleware];
+export const middleware = [requiredAuthMiddleware];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Team invitation | Conference Hall' }]);
@@ -21,8 +21,8 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ params, context }: Route.ActionArgs) => {
-  const { userId } = getProtectedSession(context);
-  const team = await TeamMemberInvite.with(params.code).addMember(userId);
+  const authUser = getRequiredAuthUser(context);
+  const team = await TeamMemberInvite.with(params.code).addMember(authUser.id);
   return redirect(href('/team/:team', { team: team.slug }));
 };
 

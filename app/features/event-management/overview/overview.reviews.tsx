@@ -2,15 +2,15 @@ import { HeartIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { ProgressCard } from '~/design-system/dashboard/progress-card.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import type { Route } from './+types/overview.reviews.ts';
 import { ProposalNotesDistribution } from './components/reviews-tab/proposal-notes-distribution.tsx';
 import { ReviewCountDistribution } from './components/reviews-tab/review-count-distribution.tsx';
 import { ReviewsMetrics } from './services/reviews-metrics.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
-  const metrics = await ReviewsMetrics.for(userId, params.team, params.event).get();
+  const authUser = getRequiredAuthUser(context);
+  const metrics = await ReviewsMetrics.for(authUser.id, params.team, params.event).get();
   return { metrics };
 };
 

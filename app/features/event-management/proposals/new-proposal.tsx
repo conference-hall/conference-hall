@@ -9,7 +9,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSpeakers } from '~/features/event-management/speakers/services/event-speakers.server.ts';
 import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -23,8 +23,8 @@ import { ProposalCreationSchema } from './services/proposal-management.schema.se
 import { ProposalManagement } from './services/proposal-management.server.ts';
 
 export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
-  const proposalManagement = ProposalManagement.for(userId, params.team, params.event);
+  const authUser = getRequiredAuthUser(context);
+  const proposalManagement = ProposalManagement.for(authUser.id, params.team, params.event);
   await proposalManagement.canCreate();
 
   const url = new URL(request.url);
@@ -32,7 +32,7 @@ export const loader = async ({ request, params, context }: Route.LoaderArgs) => 
 
   if (speakerId) {
     try {
-      const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
+      const eventSpeakers = EventSpeakers.for(authUser.id, params.team, params.event);
       const speaker = await eventSpeakers.getById(speakerId);
       if (speaker) {
         return {
@@ -52,7 +52,7 @@ export const loader = async ({ request, params, context }: Route.LoaderArgs) => 
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;
@@ -63,7 +63,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       if (result.status !== 'success') return { errors: result.error };
 
       try {
-        const proposal = await ProposalManagement.for(userId, params.team, params.event).create(result.value);
+        const proposal = await ProposalManagement.for(authUser.id, params.team, params.event).create(result.value);
         const headers = await toastHeaders('success', i18n.t('event-management.proposals.new.feedbacks.created'));
         return redirect(href('/team/:team/:event/proposals/:proposal', { ...params, proposal: proposal.id }), {
           headers,
@@ -77,7 +77,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       if (result.status !== 'success') return { errors: result.error };
 
       try {
-        const speaker = await EventSpeakers.for(userId, params.team, params.event).create(result.value);
+        const speaker = await EventSpeakers.for(authUser.id, params.team, params.event).create(result.value);
         return { speaker };
       } catch (error) {
         if (error instanceof SpeakerEmailAlreadyExistsError) {

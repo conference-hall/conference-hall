@@ -17,13 +17,13 @@ import { Outlet } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import type { Route } from './+types/settings.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
-  const authorization = new EventAuthorization(userId, params.team, params.event);
+  const authUser = getRequiredAuthUser(context);
+  const authorization = new EventAuthorization(authUser.id, params.team, params.event);
   await authorization.checkAuthorizedEvent('canEditEvent');
   return null;
 };

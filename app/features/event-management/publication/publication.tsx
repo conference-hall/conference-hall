@@ -8,7 +8,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { BadRequestError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -17,19 +17,19 @@ import { PublicationButton } from './components/publication-confirm-modal.tsx';
 import { Publication, PublishResultFormSchema } from './services/publication.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
-  return Publication.for(userId, params.team, params.event).statistics();
+  const authUser = getRequiredAuthUser(context);
+  return Publication.for(authUser.id, params.team, params.event).statistics();
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: PublishResultFormSchema });
   if (result.status !== 'success') throw new BadRequestError(i18n.t('error.invalid-form-data'));
 
   const { type, sendEmails } = result.value;
-  await Publication.for(userId, params.team, params.event).publishAll(type, sendEmails);
+  await Publication.for(authUser.id, params.team, params.event).publishAll(type, sendEmails);
   return toast(
     'success',
     type === 'ACCEPTED'

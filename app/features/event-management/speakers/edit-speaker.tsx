@@ -6,7 +6,7 @@ import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -17,8 +17,8 @@ import { SpeakerForm } from './components/speaker-form.tsx';
 import { EventSpeakers } from './services/event-speakers.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const { userId } = getProtectedSession(context);
-  const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
+  const authUser = getRequiredAuthUser(context);
+  const eventSpeakers = EventSpeakers.for(authUser.id, params.team, params.event);
   await eventSpeakers.canUpdate();
 
   const speaker = await eventSpeakers.getById(params.speaker);
@@ -28,14 +28,14 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: EventSpeakerSaveSchema });
   if (result.status !== 'success') return { errors: result.error || null };
 
   try {
-    const eventSpeakers = EventSpeakers.for(userId, params.team, params.event);
+    const eventSpeakers = EventSpeakers.for(authUser.id, params.team, params.event);
     await eventSpeakers.update(params.speaker, result.value);
     const headers = await toastHeaders('success', i18n.t('event-management.speakers.edit.feedbacks.updated'));
     return redirect(href('/team/:team/:event/speakers/:speaker', params), { headers });

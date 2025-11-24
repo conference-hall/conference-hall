@@ -6,7 +6,7 @@ import {
   CfpPreferencesSchema,
 } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
-import { getProtectedSession } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/cfp.ts';
@@ -15,9 +15,9 @@ import { ConferenceCfpOpening } from './components/conference-cfp-opening.tsx';
 import { MeetupCfpOpening } from './components/meetup-cfp-opening.tsx';
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const { userId } = getProtectedSession(context);
+  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
-  const event = EventSettings.for(userId, params.team, params.event);
+  const event = EventSettings.for(authUser.id, params.team, params.event);
   const form = await request.formData();
   const intent = form.get('intent');
 
