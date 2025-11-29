@@ -1,5 +1,5 @@
-import { parseFormData } from '@mjackson/form-data-parser';
-import type { ChangeEvent } from 'react';
+import { parseFormData } from '@remix-run/form-data-parser';
+import { type ChangeEvent, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
 import { z } from 'zod';
@@ -20,28 +20,55 @@ import type { Route } from './+types/customize.ts';
 const MAX_FILE_SIZE = 300 * 1024; // 300kB
 const FILE_SCHEMA = z.object({ name: z.url() });
 
+function toKB(size: number) {
+  return `${(size / 1024).toFixed(0)} KB`;
+}
+
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
-  const formData = await parseFormData(request, uploadToStorageHandler({ name: 'logo', maxFileSize: MAX_FILE_SIZE }));
-  const result = FILE_SCHEMA.safeParse(formData.get('logo'));
-  if (result.success) {
+
+  try {
+    const formData = await parseFormData(
+      request,
+      { maxFiles: 1, maxFileSize: MAX_FILE_SIZE },
+      uploadToStorageHandler({ name: 'logo' }),
+    );
+    const data = FILE_SCHEMA.parse(formData.get('logo'));
     const settings = await EventSettings.for(authUser.id, params.team, params.event);
-    await settings.update({ logoUrl: result.data.name });
+    await settings.update({ logoUrl: data.name });
     return toast('success', i18n.t('event-management.settings.customize.feedbacks.logo-updated'));
-  } else {
-    return { status: 'error', message: i18n.t('event-management.settings.customize.errors.upload') };
+  } catch {
+    return toast('error', i18n.t('error.global'));
   }
 };
 
-export default function EventGeneralSettingsRoute({ actionData: errors }: Route.ComponentProps) {
+export default function EventGeneralSettingsRoute() {
   const { t } = useTranslation();
   const { event } = useCurrentEventTeam();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string | null>(null);
+
   const submit = useSubmit();
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
-    if (e.currentTarget[0] && (e.currentTarget[0] as HTMLInputElement).value) {
-      submit(e.currentTarget);
+    if (!inputRef.current) return;
+    const file = inputRef.current.files?.item(0);
+
+    if (!file) return;
+    if (file.size <= 0 || file.size > MAX_FILE_SIZE) {
+      setError(
+        t('event-management.settings.customize.errors.max-size', {
+          size: toKB(file.size),
+          maxSize: toKB(MAX_FILE_SIZE),
+        }),
+      );
+      return;
     }
+
+    const formData = new FormData(e.currentTarget);
+    submit(formData, { method: 'post', encType: 'multipart/form-data' });
+    setError(null);
   };
 
   return (
@@ -56,15 +83,16 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
         <Callout title={t('event-management.settings.customize.logo.info.heading')}>
           <Trans
             i18nKey="event-management.settings.customize.logo.info"
+            values={{ maxSize: toKB(MAX_FILE_SIZE) }}
             components={[<br key="1" />, <ExternalLink key="2" href="https://squoosh.app" weight="medium" />]}
           />
         </Callout>
-        {errors?.status === 'error' && <p className="text-sm text-red-600">{errors.message}</p>}
+        {error ? <p className="text-sm text-red-600">{error}</p> : null}
       </Card.Content>
 
       <Card.Actions>
         <Form method="POST" encType="multipart/form-data" onChange={handleSubmit}>
-          <ButtonFileUpload name="logo" accept="image/jpeg,image/png,image/webp,image/avif">
+          <ButtonFileUpload ref={inputRef} name="logo" accept="image/jpeg,image/png,image/webp,image/avif">
             {t('event-management.settings.customize.logo.submit')}
           </ButtonFileUpload>
         </Form>
