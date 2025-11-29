@@ -149,6 +149,7 @@ model EventFormat {
   id          String     @id @default(cuid())
   name        String
   description String?
+  order       Int        @default(0)
   migrationId String?
   event       Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId     String
@@ -161,6 +162,7 @@ model EventCategory {
   id          String     @id @default(cuid())
   name        String
   description String?
+  order       Int        @default(0)
   migrationId String?
   event       Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId     String
