@@ -37,6 +37,29 @@ describe('EventTracksSettings', () => {
       expect(updated?.formats[0].description).toBe('Format 1');
     });
 
+    it('adds a new format with correct order at the end', async () => {
+      await eventFormatFactory({ event, attributes: { name: 'Format 1' } });
+      await eventFormatFactory({ event, attributes: { name: 'Format 2' } });
+
+      await EventTracksSettings.for(owner.id, team.slug, event.slug).saveFormat({
+        name: 'Format 3',
+        description: 'New format',
+      });
+
+      const updated = await db.event.findUnique({
+        where: { slug: event.slug },
+        include: { formats: { orderBy: { order: 'asc' } } },
+      });
+
+      expect(updated?.formats.length).toBe(3);
+      expect(updated?.formats[0].name).toBe('Format 1');
+      expect(updated?.formats[0].order).toBe(0);
+      expect(updated?.formats[1].name).toBe('Format 2');
+      expect(updated?.formats[1].order).toBe(1);
+      expect(updated?.formats[2].name).toBe('Format 3');
+      expect(updated?.formats[2].order).toBe(2);
+    });
+
     it('updates an event format', async () => {
       const format = await eventFormatFactory({ event, attributes: { name: 'name', description: 'desc' } });
       await EventTracksSettings.for(owner.id, team.slug, event.slug).saveFormat({
@@ -131,6 +154,25 @@ describe('EventTracksSettings', () => {
       expect(updated?.formats.length).toBe(0);
     });
 
+    it('reorders remaining formats after deletion', async () => {
+      const format2 = await eventFormatFactory({ event });
+      const format3 = await eventFormatFactory({ event });
+
+      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      await settings.deleteFormat(format2.id);
+
+      const updated = await db.event.findUnique({
+        where: { slug: event.slug },
+        include: { formats: { orderBy: { order: 'asc' } } },
+      });
+
+      expect(updated?.formats.length).toBe(2);
+      expect(updated?.formats[0].id).toBe(format.id);
+      expect(updated?.formats[0].order).toBe(0);
+      expect(updated?.formats[1].id).toBe(format3.id);
+      expect(updated?.formats[1].order).toBe(1);
+    });
+
     it('throws an error if user is not owner', async () => {
       const settings = EventTracksSettings.for(reviewer.id, team.slug, event.slug);
       await expect(settings.deleteFormat(format.id)).rejects.toThrowError(ForbiddenOperationError);
@@ -157,6 +199,25 @@ describe('EventTracksSettings', () => {
       expect(updated?.categories.length).toBe(0);
     });
 
+    it('reorders remaining categories after deletion', async () => {
+      const category2 = await eventCategoryFactory({ event });
+      const category3 = await eventCategoryFactory({ event });
+
+      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      await settings.deleteCategory(category2.id);
+
+      const updated = await db.event.findUnique({
+        where: { slug: event.slug },
+        include: { categories: { orderBy: { order: 'asc' } } },
+      });
+
+      expect(updated?.categories.length).toBe(2);
+      expect(updated?.categories[0].id).toBe(category.id);
+      expect(updated?.categories[0].order).toBe(0);
+      expect(updated?.categories[1].id).toBe(category3.id);
+      expect(updated?.categories[1].order).toBe(1);
+    });
+
     it('throws an error if user is not owner', async () => {
       const settings = EventTracksSettings.for(reviewer.id, team.slug, event.slug);
       await expect(settings.deleteCategory(category.id)).rejects.toThrowError(ForbiddenOperationError);
@@ -166,6 +227,178 @@ describe('EventTracksSettings', () => {
       const user = await userFactory();
       const settings = EventTracksSettings.for(user.id, team.slug, event.slug);
       await expect(settings.deleteCategory(category.id)).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
+  describe('#reorderFormat', () => {
+    it('moves format up in the list', async () => {
+      const format1 = await eventFormatFactory({ event });
+      const format2 = await eventFormatFactory({ event });
+      const format3 = await eventFormatFactory({ event });
+
+      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      await settings.reorderFormat(format2.id, 'up');
+
+      const updated = await db.event.findUnique({
+        where: { slug: event.slug },
+        include: { formats: { orderBy: { order: 'asc' } } },
+      });
+
+      expect(updated?.formats[0].id).toBe(format2.id);
+      expect(updated?.formats[0].order).toBe(0);
+      expect(updated?.formats[1].id).toBe(format1.id);
+      expect(updated?.formats[1].order).toBe(1);
+      expect(updated?.formats[2].id).toBe(format3.id);
+      expect(updated?.formats[2].order).toBe(2);
+    });
+
+    it('moves format down in the list', async () => {
+      const format1 = await eventFormatFactory({ event });
+      const format2 = await eventFormatFactory({ event });
+      const format3 = await eventFormatFactory({ event });
+
+      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      await settings.reorderFormat(format2.id, 'down');
+
+      const updated = await db.event.findUnique({
+        where: { slug: event.slug },
+        include: { formats: { orderBy: { order: 'asc' } } },
+      });
+
+      expect(updated?.formats[0].id).toBe(format1.id);
+      expect(updated?.formats[0].order).toBe(0);
+      expect(updated?.formats[1].id).toBe(format3.id);
+      expect(updated?.formats[1].order).toBe(1);
+      expect(updated?.formats[2].id).toBe(format2.id);
+      expect(updated?.formats[2].order).toBe(2);
+    });
+
+    it('does not reorder if format is already at the top and moving up', async () => {
+      const format1 = await eventFormatFactory({ event });
+      const format2 = await eventFormatFactory({ event });
+
+      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      await settings.reorderFormat(format1.id, 'up');
+
+      const updated = await db.event.findUnique({
+        where: { slug: event.slug },
+        include: { formats: { orderBy: { order: 'asc' } } },
+      });
+
+      expect(updated?.formats[0].id).toBe(format1.id);
+      expect(updated?.formats[0].order).toBe(0);
+      expect(updated?.formats[1].id).toBe(format2.id);
+      expect(updated?.formats[1].order).toBe(1);
+    });
+
+    it('does not reorder if format is already at the bottom and moving down', async () => {
+      const format1 = await eventFormatFactory({ event });
+      const format2 = await eventFormatFactory({ event });
+
+      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      await settings.reorderFormat(format2.id, 'down');
+
+      const updated = await db.event.findUnique({
+        where: { slug: event.slug },
+        include: { formats: { orderBy: { order: 'asc' } } },
+      });
+
+      expect(updated?.formats[0].id).toBe(format1.id);
+      expect(updated?.formats[0].order).toBe(0);
+      expect(updated?.formats[1].id).toBe(format2.id);
+      expect(updated?.formats[1].order).toBe(1);
+    });
+
+    it('throws an error if user is not owner', async () => {
+      const format = await eventFormatFactory({ event });
+      const settings = EventTracksSettings.for(reviewer.id, team.slug, event.slug);
+      await expect(settings.reorderFormat(format.id, 'up')).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
+  describe('#reorderCategory', () => {
+    it('moves category up in the list', async () => {
+      const category1 = await eventCategoryFactory({ event });
+      const category2 = await eventCategoryFactory({ event });
+      const category3 = await eventCategoryFactory({ event });
+
+      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      await settings.reorderCategory(category2.id, 'up');
+
+      const updated = await db.event.findUnique({
+        where: { slug: event.slug },
+        include: { categories: { orderBy: { order: 'asc' } } },
+      });
+
+      expect(updated?.categories[0].id).toBe(category2.id);
+      expect(updated?.categories[0].order).toBe(0);
+      expect(updated?.categories[1].id).toBe(category1.id);
+      expect(updated?.categories[1].order).toBe(1);
+      expect(updated?.categories[2].id).toBe(category3.id);
+      expect(updated?.categories[2].order).toBe(2);
+    });
+
+    it('moves category down in the list', async () => {
+      const category1 = await eventCategoryFactory({ event });
+      const category2 = await eventCategoryFactory({ event });
+      const category3 = await eventCategoryFactory({ event });
+
+      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      await settings.reorderCategory(category2.id, 'down');
+
+      const updated = await db.event.findUnique({
+        where: { slug: event.slug },
+        include: { categories: { orderBy: { order: 'asc' } } },
+      });
+
+      expect(updated?.categories[0].id).toBe(category1.id);
+      expect(updated?.categories[0].order).toBe(0);
+      expect(updated?.categories[1].id).toBe(category3.id);
+      expect(updated?.categories[1].order).toBe(1);
+      expect(updated?.categories[2].id).toBe(category2.id);
+      expect(updated?.categories[2].order).toBe(2);
+    });
+
+    it('does not reorder if category is already at the top and moving up', async () => {
+      const category1 = await eventCategoryFactory({ event });
+      const category2 = await eventCategoryFactory({ event });
+
+      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      await settings.reorderCategory(category1.id, 'up');
+
+      const updated = await db.event.findUnique({
+        where: { slug: event.slug },
+        include: { categories: { orderBy: { order: 'asc' } } },
+      });
+
+      expect(updated?.categories[0].id).toBe(category1.id);
+      expect(updated?.categories[0].order).toBe(0);
+      expect(updated?.categories[1].id).toBe(category2.id);
+      expect(updated?.categories[1].order).toBe(1);
+    });
+
+    it('does not reorder if category is already at the bottom and moving down', async () => {
+      const category1 = await eventCategoryFactory({ event });
+      const category2 = await eventCategoryFactory({ event });
+
+      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      await settings.reorderCategory(category2.id, 'down');
+
+      const updated = await db.event.findUnique({
+        where: { slug: event.slug },
+        include: { categories: { orderBy: { order: 'asc' } } },
+      });
+
+      expect(updated?.categories[0].id).toBe(category1.id);
+      expect(updated?.categories[0].order).toBe(0);
+      expect(updated?.categories[1].id).toBe(category2.id);
+      expect(updated?.categories[1].order).toBe(1);
+    });
+
+    it('throws an error if user is not owner', async () => {
+      const category = await eventCategoryFactory({ event });
+      const settings = EventTracksSettings.for(reviewer.id, team.slug, event.slug);
+      await expect(settings.reorderCategory(category.id, 'up')).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

@@ -8,12 +8,20 @@ type FactoryOptions = {
   attributes?: Partial<EventFormatCreateInput>;
 };
 
-export const eventFormatFactory = (options: FactoryOptions) => {
+export const eventFormatFactory = async (options: FactoryOptions) => {
   const { attributes = {}, event } = options;
+
+  const maxOrder = await db.eventFormat.aggregate({
+    where: { eventId: event.id },
+    _max: { order: true },
+  });
+
+  const order = maxOrder._max.order !== null ? maxOrder._max.order + 1 : 0;
 
   const defaultAttributes: EventFormatCreateInput = {
     name: randCatchPhrase(),
     description: randText({ charCount: 100 }),
+    order: attributes.order ?? order,
     event: { connect: { id: event.id } },
   };
 

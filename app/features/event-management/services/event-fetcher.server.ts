@@ -11,7 +11,12 @@ export class EventFetcher extends EventAuthorization {
 
   async get() {
     const event = await db.event.findFirst({
-      include: { formats: true, categories: true, integrations: true, proposalTags: true },
+      include: {
+        formats: { orderBy: { order: 'asc' } },
+        categories: { orderBy: { order: 'asc' } },
+        integrations: true,
+        proposalTags: true,
+      },
       where: { slug: this.event, team: { slug: this.team, members: { some: { memberId: this.userId } } } },
     });
     if (!event) throw new EventNotFoundError();
@@ -48,8 +53,8 @@ export class EventFetcher extends EventAuthorization {
       cfpStart: event.cfpStart,
       cfpEnd: event.cfpEnd,
       cfpState: event.cfpState,
-      formats: event.formats.map(({ id, name, description }) => ({ id, name, description })),
-      categories: event.categories.map(({ id, name, description }) => ({ id, name, description })),
+      formats: event.formats.map(({ id, name, description, order }) => ({ id, name, description, order })),
+      categories: event.categories.map(({ id, name, description, order }) => ({ id, name, description, order })),
       integrations: event.integrations.map((integration) => integration.name),
       archived: event.archived,
       tags: sortBy(

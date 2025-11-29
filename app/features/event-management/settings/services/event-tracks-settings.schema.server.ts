@@ -14,3 +14,8 @@ export const TracksSettingsSchema = z.object({
   categoriesRequired: z.stringbool(),
   categoriesAllowMultiple: z.stringbool(),
 });
+
+export const TrackReorderSchema = z.object({
+  trackId: z.string(),
+  direction: z.enum(['up', 'down']),
+});
