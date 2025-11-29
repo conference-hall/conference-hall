@@ -17,13 +17,14 @@ export function ButtonFileUpload({
   disabled,
   loading,
   className,
+  ref,
   ...rest
 }: ButtonFileUploadProps) {
   const styles = buttonStyles({ variant, size, block, disabled, loading, className });
   return (
     <>
       <Label htmlFor={name} role="button" tabIndex={0} className={cx(styles, 'cursor-pointer')}>
-        <Input id={name} name={name} type="file" className="sr-only" {...rest} />
+        <Input ref={ref} id={name} name={name} type="file" className="sr-only" {...rest} />
         {children}
       </Label>
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
