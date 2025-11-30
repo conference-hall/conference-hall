@@ -21,7 +21,7 @@
         "useLiteralKeys": "off"
       },
       "correctness": {
-        "noUnusedImports": "error",
+        "noUnusedImports": { "fix": "safe", "level": "error" },
         "noUnusedVariables": "error"
       },
       "style": {
