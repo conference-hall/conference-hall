@@ -35,7 +35,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       uploadToStorageHandler({ name: 'logo' }),
     );
     const data = FILE_SCHEMA.parse(formData.get('logo'));
-    const settings = await EventSettings.for(authUser.id, params.team, params.event);
+    const settings = EventSettings.for(authUser.id, params.team, params.event);
     await settings.update({ logoUrl: data.name });
     return toast('success', i18n.t('event-management.settings.customize.feedbacks.logo-updated'));
   } catch {
