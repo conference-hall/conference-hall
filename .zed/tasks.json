@@ -14,5 +14,13 @@
     "show_summary": false,
     "show_command": false,
     "tags": ["tsx-test", "ts-test", "js-test"]
+  },
+  {
+    "label": "Run e2e Tests",
+    "command": "npm run test:e2e --",
+    "args": ["\"$ZED_RELATIVE_FILE\" -g \"$ZED_SYMBOL\""],
+    "show_summary": false,
+    "show_command": false,
+    "tags": ["ts-test", "js-test"]
   }
 ]
