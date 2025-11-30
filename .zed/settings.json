@@ -1,0 +1,70 @@
+{
+  "lsp": {
+    // Setup tailwind config
+    "tailwindcss-language-server": {
+      "settings": {
+        "classFunctions": ["cva", "cx"],
+        "experimental": { "configFile": "app/styles/tailwind.css" }
+      }
+    },
+    // Ignore unknown @ rules in tailwindcss file
+    "vscode-css-language-server": {
+      "settings": { "css": { "lint": { "unknownAtRules": "ignore" } } }
+    }
+  },
+  "languages": {
+    "JavaScript": {
+      "formatter": { "language_server": { "name": "biome" } },
+      "code_actions_on_format": {
+        "source.fixAll.biome": true,
+        "source.organizeImports.biome": true,
+        "source.removeUnusedImports": true,
+        "source.addMissingImports": true
+      }
+    },
+    "TypeScript": {
+      "formatter": { "language_server": { "name": "biome" } },
+      "code_actions_on_format": {
+        "source.fixAll.biome": true,
+        "source.organizeImports.biome": true,
+        "source.removeUnusedImports": true,
+        "source.addMissingImports": true
+      }
+    },
+    "TSX": {
+      "formatter": { "language_server": { "name": "biome" } },
+      "code_actions_on_format": {
+        "source.fixAll.biome": true,
+        "source.organizeImports.biome": true,
+        "source.removeUnusedImports": true,
+        "source.addMissingImports": true
+      }
+    },
+    "JSON": {
+      "formatter": { "language_server": { "name": "biome" } },
+      "code_actions_on_format": {
+        "source.fixAll.biome": true,
+        "source.organizeImports.biome": true
+      }
+    },
+    "JSONC": {
+      "formatter": { "language_server": { "name": "biome" } },
+      "code_actions_on_format": {
+        "source.fixAll.biome": true,
+        "source.organizeImports.biome": true
+      }
+    },
+    "CSS": {
+      "formatter": { "language_server": { "name": "biome" } },
+      "code_actions_on_format": {
+        "source.fixAll.biome": true
+      }
+    },
+    "HTML": {
+      "formatter": { "language_server": { "name": "biome" } },
+      "code_actions_on_format": {
+        "source.fixAll.biome": true
+      }
+    }
+  }
+}
