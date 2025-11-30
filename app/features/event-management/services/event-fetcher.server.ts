@@ -11,7 +11,12 @@ export class EventFetcher extends EventAuthorization {
 
   async get() {
     const event = await db.event.findFirst({
-      include: { formats: true, categories: true, integrations: true, proposalTags: true },
+      include: {
+        integrations: true,
+        proposalTags: true,
+        formats: { orderBy: { order: 'asc' } },
+        categories: { orderBy: { order: 'asc' } },
+      },
       where: { slug: this.event, team: { slug: this.team, members: { some: { memberId: this.userId } } } },
     });
     if (!event) throw new EventNotFoundError();

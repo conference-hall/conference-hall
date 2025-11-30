@@ -16,14 +16,31 @@ export class EventTracksSettings extends EventAuthorization {
         data: { name: data.name, description: data.description },
       });
     }
-    return db.eventFormat.create({
-      data: { name: data.name, description: data.description, event: { connect: { id: event.id } } },
+
+    const formatsCount = await db.eventFormat.count({ where: { eventId: event.id } });
+    await db.eventFormat.create({
+      data: {
+        name: data.name,
+        description: data.description,
+        order: formatsCount,
+        event: { connect: { id: event.id } },
+      },
     });
   }
 
   async deleteFormat(formatId: string) {
-    await this.checkAuthorizedEvent('canEditEvent');
-    return db.eventFormat.delete({ where: { id: formatId } });
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+
+    const trackToDelete = await db.eventFormat.findUnique({ where: { id: formatId } });
+    if (!trackToDelete) return;
+
+    await db.$transaction(async (tx) => {
+      await tx.eventFormat.delete({ where: { id: formatId } });
+      await tx.eventFormat.updateMany({
+        where: { eventId: event.id, order: { gt: trackToDelete.order } },
+        data: { order: { decrement: 1 } },
+      });
+    });
   }
 
   async saveCategory(data: TrackSaveData) {
@@ -35,13 +52,90 @@ export class EventTracksSettings extends EventAuthorization {
         data: { name: data.name, description: data.description },
       });
     }
-    return db.eventCategory.create({
-      data: { name: data.name, description: data.description, event: { connect: { id: event.id } } },
+
+    const categoriesCount = await db.eventCategory.count({ where: { eventId: event.id } });
+    await db.eventCategory.create({
+      data: {
+        name: data.name,
+        description: data.description,
+        order: categoriesCount,
+        event: { connect: { id: event.id } },
+      },
     });
   }
 
   async deleteCategory(categoryId: string) {
-    await this.checkAuthorizedEvent('canEditEvent');
-    return db.eventCategory.delete({ where: { id: categoryId } });
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+
+    const trackToDelete = await db.eventCategory.findUnique({ where: { id: categoryId } });
+    if (!trackToDelete) return;
+
+    await db.$transaction(async (tx) => {
+      await tx.eventCategory.delete({ where: { id: categoryId } });
+      await tx.eventCategory.updateMany({
+        where: { eventId: event.id, order: { gt: trackToDelete.order } },
+        data: { order: { decrement: 1 } },
+      });
+    });
+  }
+
+  async reorderFormat(formatId: string, direction: 'up' | 'down') {
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+
+    const currentTrack = await db.eventFormat.findUnique({ where: { id: formatId } });
+    if (!currentTrack) return;
+
+    const targetOrder = direction === 'up' ? currentTrack.order - 1 : currentTrack.order + 1;
+    if (targetOrder < 0) return;
+
+    const maxOrder = await db.eventFormat.aggregate({ where: { eventId: event.id }, _max: { order: true } });
+    if (maxOrder._max.order !== null && targetOrder > maxOrder._max.order) return;
+
+    await db.$transaction(async (tx) => {
+      if (targetOrder < currentTrack.order) {
+        // Moving UP: increment tracks in range
+        await tx.eventFormat.updateMany({
+          where: { eventId: event.id, order: { gte: targetOrder, lt: currentTrack.order } },
+          data: { order: { increment: 1 } },
+        });
+      } else {
+        // Moving DOWN: decrement tracks in range
+        await tx.eventFormat.updateMany({
+          where: { eventId: event.id, order: { gt: currentTrack.order, lte: targetOrder } },
+          data: { order: { decrement: 1 } },
+        });
+      }
+      await tx.eventFormat.update({ where: { id: formatId }, data: { order: targetOrder } });
+    });
+  }
+
+  async reorderCategory(categoryId: string, direction: 'up' | 'down') {
+    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+
+    const currentTrack = await db.eventCategory.findUnique({ where: { id: categoryId } });
+    if (!currentTrack) return;
+
+    const targetOrder = direction === 'up' ? currentTrack.order - 1 : currentTrack.order + 1;
+    if (targetOrder < 0) return;
+
+    const maxOrder = await db.eventCategory.aggregate({ where: { eventId: event.id }, _max: { order: true } });
+    if (maxOrder._max.order !== null && targetOrder > maxOrder._max.order) return;
+
+    await db.$transaction(async (tx) => {
+      if (targetOrder < currentTrack.order) {
+        // Moving UP: increment tracks in range
+        await tx.eventCategory.updateMany({
+          where: { eventId: event.id, order: { gte: targetOrder, lt: currentTrack.order } },
+          data: { order: { increment: 1 } },
+        });
+      } else {
+        // Moving DOWN: decrement tracks in range
+        await tx.eventCategory.updateMany({
+          where: { eventId: event.id, order: { gt: currentTrack.order, lte: targetOrder } },
+          data: { order: { decrement: 1 } },
+        });
+      }
+      await tx.eventCategory.update({ where: { id: categoryId }, data: { order: targetOrder } });
+    });
   }
 }

@@ -39,7 +39,13 @@ describe('EventPage', () => {
         isCfpOpen: true,
         hasSurvey: true,
         hasTracks: true,
-        formats: [{ id: format.id, name: format.name, description: format.description }],
+        formats: [
+          {
+            id: format.id,
+            name: format.name,
+            description: format.description,
+          },
+        ],
         formatsRequired: false,
         formatsAllowMultiple: false,
         categories: [

@@ -11,7 +11,11 @@ import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/tracks.ts';
 import { TrackList } from './components/track-list.tsx';
-import { TrackSaveSchema, TracksSettingsSchema } from './services/event-tracks-settings.schema.server.ts';
+import {
+  TrackReorderSchema,
+  TrackSaveSchema,
+  TracksSettingsSchema,
+} from './services/event-tracks-settings.schema.server.ts';
 import { EventTracksSettings } from './services/event-tracks-settings.server.ts';
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
@@ -50,6 +54,18 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       const event = EventSettings.for(authUser.id, params.team, params.event);
       await event.update(result.value);
       return toast('success', i18n.t('event-management.settings.tracks.feedbacks.updated'));
+    }
+    case 'reorder-formats': {
+      const result = parseWithZod(form, { schema: TrackReorderSchema });
+      if (result.status !== 'success') return result.error;
+      await tracks.reorderFormat(result.value.trackId, result.value.direction);
+      break;
+    }
+    case 'reorder-categories': {
+      const result = parseWithZod(form, { schema: TrackReorderSchema });
+      if (result.status !== 'success') return result.error;
+      await tracks.reorderCategory(result.value.trackId, result.value.direction);
+      break;
     }
   }
   return null;

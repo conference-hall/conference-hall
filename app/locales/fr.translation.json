@@ -714,6 +714,8 @@
   "event-management.settings.tracks.formats.required.description": "Lorsqu'un speaker soumet une proposition, le choix du format est obligatoire.",
   "event-management.settings.tracks.formats.required.label": "Sélection du format obligatoire",
   "event-management.settings.tracks.formats.save": "Enregistrer le format",
+  "event-management.settings.tracks.reorder.down": "Descendre",
+  "event-management.settings.tracks.reorder.up": "Monter",
   "event-management.settings.web-api.api-key.placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx",
   "event-management.settings.web-api.api-key": "Clé API",
   "event-management.settings.web-api.description": "Utilisez l'API HTTP si vous souhaitez connecter un service à un événement du Conference Hall.",

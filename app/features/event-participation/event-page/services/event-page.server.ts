@@ -17,7 +17,11 @@ export class EventPage {
   async get() {
     const event = await db.event.findUnique({
       where: { slug: this.slug },
-      include: { formats: true, categories: true, team: true },
+      include: {
+        team: true,
+        formats: { orderBy: { order: 'asc' } },
+        categories: { orderBy: { order: 'asc' } },
+      },
     });
 
     if (!event) throw new EventNotFoundError();
