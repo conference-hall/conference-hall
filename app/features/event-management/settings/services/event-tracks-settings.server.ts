@@ -18,7 +18,7 @@ export class EventTracksSettings extends EventAuthorization {
     }
 
     const formatsCount = await db.eventFormat.count({ where: { eventId: event.id } });
-    const newFormat = await db.eventFormat.create({
+    await db.eventFormat.create({
       data: {
         name: data.name,
         description: data.description,
@@ -26,23 +26,21 @@ export class EventTracksSettings extends EventAuthorization {
         event: { connect: { id: event.id } },
       },
     });
-    await this.orderAllFormats(event.id, newFormat.id, formatsCount);
   }
 
   async deleteFormat(formatId: string) {
     const { event } = await this.checkAuthorizedEvent('canEditEvent');
 
-    await db.eventFormat.delete({ where: { id: formatId } });
+    const trackToDelete = await db.eventFormat.findUnique({ where: { id: formatId } });
+    if (!trackToDelete) return;
 
-    const remainingFormats = await db.eventFormat.findMany({
-      where: { eventId: event.id },
-      orderBy: { order: 'asc' },
-      select: { id: true },
+    await db.$transaction(async (tx) => {
+      await tx.eventFormat.delete({ where: { id: formatId } });
+      await tx.eventFormat.updateMany({
+        where: { eventId: event.id, order: { gt: trackToDelete.order } },
+        data: { order: { decrement: 1 } },
+      });
     });
-
-    if (remainingFormats.length > 0) {
-      await this.orderAllFormats(event.id, remainingFormats[0].id, 0);
-    }
   }
 
   async saveCategory(data: TrackSaveData) {
@@ -56,7 +54,7 @@ export class EventTracksSettings extends EventAuthorization {
     }
 
     const categoriesCount = await db.eventCategory.count({ where: { eventId: event.id } });
-    const newCategory = await db.eventCategory.create({
+    await db.eventCategory.create({
       data: {
         name: data.name,
         description: data.description,
@@ -64,80 +62,80 @@ export class EventTracksSettings extends EventAuthorization {
         event: { connect: { id: event.id } },
       },
     });
-    await this.orderAllCategories(event.id, newCategory.id, categoriesCount);
   }
 
   async deleteCategory(categoryId: string) {
     const { event } = await this.checkAuthorizedEvent('canEditEvent');
 
-    await db.eventCategory.delete({ where: { id: categoryId } });
+    const trackToDelete = await db.eventCategory.findUnique({ where: { id: categoryId } });
+    if (!trackToDelete) return;
 
-    const remainingCategories = await db.eventCategory.findMany({
-      where: { eventId: event.id },
-      orderBy: { order: 'asc' },
-      select: { id: true },
+    await db.$transaction(async (tx) => {
+      await tx.eventCategory.delete({ where: { id: categoryId } });
+      await tx.eventCategory.updateMany({
+        where: { eventId: event.id, order: { gt: trackToDelete.order } },
+        data: { order: { decrement: 1 } },
+      });
     });
-
-    if (remainingCategories.length > 0) {
-      await this.orderAllCategories(event.id, remainingCategories[0].id, 0);
-    }
   }
 
-  async reorderFormat(trackId: string, direction: 'up' | 'down') {
+  async reorderFormat(formatId: string, direction: 'up' | 'down') {
     const { event } = await this.checkAuthorizedEvent('canEditEvent');
 
-    const currentTrack = await db.eventFormat.findUnique({ where: { id: trackId } });
+    const currentTrack = await db.eventFormat.findUnique({ where: { id: formatId } });
     if (!currentTrack) return;
 
     const targetOrder = direction === 'up' ? currentTrack.order - 1 : currentTrack.order + 1;
-    await this.orderAllFormats(event.id, trackId, targetOrder);
+    if (targetOrder < 0) return;
+
+    const maxOrder = await db.eventFormat.aggregate({ where: { eventId: event.id }, _max: { order: true } });
+    if (maxOrder._max.order !== null && targetOrder > maxOrder._max.order) return;
+
+    await db.$transaction(async (tx) => {
+      if (targetOrder < currentTrack.order) {
+        // Moving UP: increment tracks in range
+        await tx.eventFormat.updateMany({
+          where: { eventId: event.id, order: { gte: targetOrder, lt: currentTrack.order } },
+          data: { order: { increment: 1 } },
+        });
+      } else {
+        // Moving DOWN: decrement tracks in range
+        await tx.eventFormat.updateMany({
+          where: { eventId: event.id, order: { gt: currentTrack.order, lte: targetOrder } },
+          data: { order: { decrement: 1 } },
+        });
+      }
+      await tx.eventFormat.update({ where: { id: formatId }, data: { order: targetOrder } });
+    });
   }
 
-  async reorderCategory(trackId: string, direction: 'up' | 'down') {
+  async reorderCategory(categoryId: string, direction: 'up' | 'down') {
     const { event } = await this.checkAuthorizedEvent('canEditEvent');
 
-    const currentTrack = await db.eventCategory.findUnique({ where: { id: trackId } });
+    const currentTrack = await db.eventCategory.findUnique({ where: { id: categoryId } });
     if (!currentTrack) return;
 
     const targetOrder = direction === 'up' ? currentTrack.order - 1 : currentTrack.order + 1;
-    await this.orderAllCategories(event.id, trackId, targetOrder);
-  }
+    if (targetOrder < 0) return;
 
-  private async orderAllFormats(eventId: string, formatId: string, targetOrder: number) {
-    const formats = await db.eventFormat.findMany({ where: { eventId }, orderBy: { order: 'asc' } });
+    const maxOrder = await db.eventCategory.aggregate({ where: { eventId: event.id }, _max: { order: true } });
+    if (maxOrder._max.order !== null && targetOrder > maxOrder._max.order) return;
 
-    const currentIndex = formats.findIndex((f) => f.id === formatId);
-    if (currentIndex === -1) return;
-
-    const [movedFormat] = formats.splice(currentIndex, 1);
-    formats.splice(targetOrder, 0, movedFormat);
-
-    await db.$transaction(
-      formats.map((format, index) =>
-        db.eventFormat.update({
-          where: { id: format.id },
-          data: { order: index },
-        }),
-      ),
-    );
-  }
-
-  private async orderAllCategories(eventId: string, categoryId: string, targetOrder: number) {
-    const categories = await db.eventCategory.findMany({ where: { eventId }, orderBy: { order: 'asc' } });
-
-    const currentIndex = categories.findIndex((c) => c.id === categoryId);
-    if (currentIndex === -1) return;
-
-    const [movedCategory] = categories.splice(currentIndex, 1);
-    categories.splice(targetOrder, 0, movedCategory);
-
-    await db.$transaction(
-      categories.map((category, index) =>
-        db.eventCategory.update({
-          where: { id: category.id },
-          data: { order: index },
-        }),
-      ),
-    );
+    await db.$transaction(async (tx) => {
+      if (targetOrder < currentTrack.order) {
+        // Moving UP: increment tracks in range
+        await tx.eventCategory.updateMany({
+          where: { eventId: event.id, order: { gte: targetOrder, lt: currentTrack.order } },
+          data: { order: { increment: 1 } },
+        });
+      } else {
+        // Moving DOWN: decrement tracks in range
+        await tx.eventCategory.updateMany({
+          where: { eventId: event.id, order: { gt: currentTrack.order, lte: targetOrder } },
+          data: { order: { decrement: 1 } },
+        });
+      }
+      await tx.eventCategory.update({ where: { id: categoryId }, data: { order: targetOrder } });
+    });
   }
 }
