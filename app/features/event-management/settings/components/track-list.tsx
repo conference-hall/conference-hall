@@ -8,7 +8,7 @@ import { EditTrackButton, NewTrackButton } from './save-track-form.tsx';
 
 type TrackListProps = {
   type: 'formats' | 'categories';
-  tracks: Array<{ id: string; name: string; description: string | null; order: number }>;
+  tracks: Array<{ id: string; name: string; description: string | null }>;
 };
 
 export function TrackList({ type, tracks }: TrackListProps) {
@@ -33,7 +33,7 @@ export function TrackList({ type, tracks }: TrackListProps) {
           <List.Row key={track.id} className="flex items-center justify-between p-4">
             <div className="truncate">
               <Text weight="medium" truncate>
-                #{track.order + 1} - {track.name}
+                {track.name}
               </Text>
               <Subtitle truncate>{track.description}</Subtitle>
             </div>
