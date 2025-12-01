@@ -40,10 +40,10 @@ export function EventProposalApiTryout({ slug, apiKey }: Props) {
           name="deliberationStatus"
           label={t('event-management.settings.web-api.tryout.proposals.status.label')}
           options={[
-            { id: '', name: t('common.all') },
-            { id: 'pending', name: t('common.proposals.status.pending') },
-            { id: 'accepted', name: t('common.proposals.status.accepted') },
-            { id: 'rejected', name: t('common.proposals.status.rejected') },
+            { value: '', name: t('common.all') },
+            { value: 'pending', name: t('common.proposals.status.pending') },
+            { value: 'accepted', name: t('common.proposals.status.accepted') },
+            { value: 'rejected', name: t('common.proposals.status.rejected') },
           ]}
           defaultValue={status}
           onChange={(_name, value) => setStatus(value)}

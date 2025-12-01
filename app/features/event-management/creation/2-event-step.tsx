@@ -62,8 +62,8 @@ export default function NewEventRoute({ params, loaderData, actionData: errors }
                 defaultValue=""
                 label={t('event-management.fields.event-template')}
                 options={[
-                  { id: '', name: t('event-management.fields.event-template-placeholder') },
-                  ...existingEvents.map((event) => ({ name: event.name, id: event.id })),
+                  { value: '', name: t('event-management.fields.event-template-placeholder') },
+                  ...existingEvents.map((event) => ({ name: event.name, value: event.id })),
                 ]}
               />
             ) : null}

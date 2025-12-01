@@ -115,7 +115,10 @@ function FiltersContent({ close }: FiltersContentProps) {
                 name="formats"
                 label={t('common.formats')}
                 defaultValue={params.get('formats') || ''}
-                options={[{ id: '', name: t('event-management.proposals.filters.formats.placeholder') }, ...formats]}
+                options={[
+                  { value: '', name: t('event-management.proposals.filters.formats.placeholder') },
+                  ...formats.map((item) => ({ name: item.name, value: item.id })),
+                ]}
                 srOnly
               />
             )}
@@ -124,7 +127,10 @@ function FiltersContent({ close }: FiltersContentProps) {
                 name="categories"
                 label={t('common.categories')}
                 defaultValue={params.get('categories') || ''}
-                options={[{ id: '', name: t('event-management.proposals.filters.categories') }, ...categories]}
+                options={[
+                  { value: '', name: t('event-management.proposals.filters.categories') },
+                  ...categories.map((item) => ({ name: item.name, value: item.id })),
+                ]}
                 srOnly
               />
             )}
@@ -141,7 +147,10 @@ function FiltersContent({ close }: FiltersContentProps) {
             name="tags"
             label={t('common.tags')}
             defaultValue={params.get('tags') || ''}
-            options={[{ id: '', name: t('event-management.proposals.filters.tags') }, ...tags]}
+            options={[
+              { value: '', name: t('event-management.proposals.filters.tags') },
+              ...tags.map((item) => ({ name: item.name, value: item.id })),
+            ]}
             srOnly
           />
         </div>
