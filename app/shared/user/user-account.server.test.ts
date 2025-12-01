@@ -62,14 +62,8 @@ describe('UserAccount', () => {
           {
             slug: team.slug,
             name: team.name,
-            events: [
-              {
-                slug: event.slug,
-                name: event.name,
-                logoUrl: event.logoUrl,
-                archived: event.archived,
-              },
-            ],
+            role: 'OWNER',
+            events: [{ slug: event.slug, name: event.name, logoUrl: event.logoUrl, archived: false }],
           },
         ],
         hasTeamAccess: true,
@@ -95,7 +89,7 @@ describe('UserAccount', () => {
       const team2 = await teamFactory({ attributes: { name: 'B' }, members: [user] });
       const team3 = await teamFactory({ attributes: { name: 'C' }, reviewers: [user] });
       const event1 = await eventFactory({ team: team1, attributes: { name: 'A' } });
-      const event2 = await eventFactory({ team: team1, attributes: { name: 'B' } });
+      const event2 = await eventFactory({ team: team1, attributes: { name: 'B', archived: true } });
 
       const teams = await UserAccount.teams(user.id);
 
@@ -103,13 +97,14 @@ describe('UserAccount', () => {
         {
           slug: team1.slug,
           name: 'A',
+          role: 'OWNER',
           events: [
             { slug: event1.slug, name: event1.name, logoUrl: event1.logoUrl, archived: false },
-            { slug: event2.slug, name: event2.name, logoUrl: event2.logoUrl, archived: false },
+            { slug: event2.slug, name: event2.name, logoUrl: event2.logoUrl, archived: true },
           ],
         },
-        { slug: team2.slug, name: 'B', events: [] },
-        { slug: team3.slug, name: 'C', events: [] },
+        { slug: team2.slug, name: 'B', role: 'MEMBER', events: [] },
+        { slug: team3.slug, name: 'C', role: 'REVIEWER', events: [] },
       ]);
     });
   });

@@ -13,6 +13,7 @@ import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Form, useLocation, useSearchParams } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button, buttonStyles } from '~/design-system/button.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -59,7 +60,8 @@ type FiltersContentProps = { close: VoidFunction };
 
 function FiltersContent({ close }: FiltersContentProps) {
   const { t } = useTranslation();
-  const { event, team } = useCurrentEventTeam();
+  const { event } = useCurrentEventTeam();
+  const permissions = useUserTeamPermissions();
 
   const location = useLocation();
   const [params] = useSearchParams();
@@ -89,7 +91,7 @@ function FiltersContent({ close }: FiltersContentProps) {
         className="px-4 py-3"
       />
 
-      {team.userPermissions.canChangeProposalStatus && (
+      {permissions.canChangeProposalStatus && (
         <FiltersRadio
           label={t('common.proposals')}
           name="status"

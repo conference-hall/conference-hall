@@ -1,3 +1,5 @@
+import type { TeamRole } from '../user/team-permissions.ts';
+
 export type AuthenticatedUser = {
   id: string;
   uid: string | null;
@@ -9,11 +11,12 @@ export type AuthenticatedUser = {
   teams: Array<{
     slug: string;
     name: string;
+    role: TeamRole;
     events: Array<{
       slug: string;
       name: string;
-      archived: boolean;
       logoUrl: string | null;
+      archived: boolean;
     }>;
   }>;
 };

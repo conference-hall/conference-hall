@@ -1,11 +1,11 @@
 import { TeamRole } from 'prisma/generated/client.ts';
 
-import { UserPermissions } from './user-permissions.server.ts';
+import { UserTeamPermissions } from './team-permissions.ts';
 
-describe('UserPermissions', () => {
+describe('UserTeamPermissions', () => {
   describe('#getPermissions', () => {
     it('returns owner permissions', async () => {
-      const permissions = UserPermissions.getPermissions(TeamRole.OWNER);
+      const permissions = UserTeamPermissions.getPermissions(TeamRole.OWNER);
 
       expect(permissions).toEqual({
         canAccessTeam: true,
@@ -30,7 +30,7 @@ describe('UserPermissions', () => {
     });
 
     it('returns member permissions', async () => {
-      const permissions = UserPermissions.getPermissions(TeamRole.MEMBER);
+      const permissions = UserTeamPermissions.getPermissions(TeamRole.MEMBER);
 
       expect(permissions).toEqual({
         canAccessTeam: true,
@@ -55,7 +55,7 @@ describe('UserPermissions', () => {
     });
 
     it('returns member permissions', async () => {
-      const permissions = UserPermissions.getPermissions(TeamRole.REVIEWER);
+      const permissions = UserTeamPermissions.getPermissions(TeamRole.REVIEWER);
 
       expect(permissions).toEqual({
         canAccessTeam: true,
@@ -82,13 +82,13 @@ describe('UserPermissions', () => {
 
   describe('#getRoleWith', () => {
     it('returns roles for a permission with all roles', async () => {
-      const permissions = UserPermissions.getRoleWith('canAccessEvent');
+      const permissions = UserTeamPermissions.getRoleWith('canAccessEvent');
 
       expect(permissions).toEqual([TeamRole.OWNER, TeamRole.MEMBER, TeamRole.REVIEWER]);
     });
 
     it('returns roles for a permission with some roles', async () => {
-      const permissions = UserPermissions.getRoleWith('canEditTeam');
+      const permissions = UserTeamPermissions.getRoleWith('canEditTeam');
 
       expect(permissions).toEqual([TeamRole.OWNER]);
     });

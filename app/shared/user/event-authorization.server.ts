@@ -1,7 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 import { ForbiddenOperationError } from '../errors.server.ts';
 import { TeamAuthorization } from './team-authorization.server.ts';
-import type { Permission } from './user-permissions.server.ts';
+import type { TeamPermission } from './team-permissions.ts';
 
 export class EventAuthorization extends TeamAuthorization {
   protected event: string;
@@ -11,7 +11,7 @@ export class EventAuthorization extends TeamAuthorization {
     this.event = event;
   }
 
-  async checkAuthorizedEvent(forPermission?: Permission) {
+  async checkAuthorizedEvent(forPermission?: TeamPermission) {
     const { permissions } = await this.checkMemberPermissions(forPermission);
 
     const event = await db.event.findUnique({ where: { slug: this.event, team: { slug: this.team } } });

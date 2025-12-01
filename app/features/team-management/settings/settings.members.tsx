@@ -2,7 +2,7 @@ import { CubeTransparentIcon } from '@heroicons/react/24/outline';
 import type { TeamRole } from 'prisma/generated/client.ts';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { useUser } from '~/app-platform/components/user-context.tsx';
+import { useUser, useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { AvatarName } from '~/design-system/avatar.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
@@ -50,7 +50,8 @@ export default function TeamMembersRoute({ loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
   const user = useUser();
   const currentTeam = useCurrentTeam();
-  const { canManageTeamMembers } = currentTeam.userPermissions;
+  const permissions = useUserTeamPermissions();
+
   const { members, pagination, statistics } = loaderData;
 
   return (
@@ -60,9 +61,9 @@ export default function TeamMembersRoute({ loaderData }: Route.ComponentProps) {
           <H3 size="base">
             {t('team.settings.members.heading')} ({statistics.total})
           </H3>
-          {canManageTeamMembers ? <Subtitle>{t('team.settings.members.description')}</Subtitle> : null}
+          {permissions.canManageTeamMembers ? <Subtitle>{t('team.settings.members.description')}</Subtitle> : null}
         </div>
-        {canManageTeamMembers ? <InviteMemberButton invitationLink={currentTeam.invitationLink} /> : null}
+        {permissions.canManageTeamMembers ? <InviteMemberButton invitationLink={currentTeam.invitationLink} /> : null}
       </Card.Title>
 
       <Card.Content>
@@ -82,7 +83,7 @@ export default function TeamMembersRoute({ loaderData }: Route.ComponentProps) {
                     name={member.name || t('common.unknown')}
                     subtitle={t(`common.member.role.label.${member.role}`)}
                   />
-                  {canManageTeamMembers && user?.id !== member.id && (
+                  {permissions.canManageTeamMembers && user?.id !== member.id && (
                     <div className="flex w-full gap-2 mt-4 sm:mt-0 sm:w-auto">
                       <ChangeRoleButton memberId={member.id} memberName={member.name} memberRole={member.role} />
                       <RemoveButton memberId={member.id} memberName={member.name} />

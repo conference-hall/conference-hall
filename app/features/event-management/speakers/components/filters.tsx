@@ -1,16 +1,14 @@
 import { PlusIcon } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { SearchInput } from '~/design-system/forms/search-input.tsx';
-import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { FiltersMenu } from './filters-menu.tsx';
 import { SortMenu } from './sort-menu.tsx';
 
 export function Filters() {
   const { t } = useTranslation();
-  const { team } = useCurrentEventTeam();
-
-  const { canCreateEventSpeaker } = team.userPermissions;
+  const permissions = useUserTeamPermissions();
 
   return (
     <div className="flex flex-col gap-2 sm:flex-row">
@@ -23,7 +21,7 @@ export function Filters() {
 
         <SortMenu />
 
-        {canCreateEventSpeaker && (
+        {permissions.canCreateEventSpeaker && (
           <Button iconLeft={PlusIcon} to="new" block>
             {t('event-management.speakers.new-speaker')}
           </Button>

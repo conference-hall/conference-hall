@@ -1,12 +1,12 @@
 import type { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { BadgeDot } from '~/design-system/badges.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { Tag } from '~/design-system/tag.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
-import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { formatDate } from '~/shared/datetimes/datetimes.ts';
 import { GlobalReviewNote, UserReviewNote } from '../../shared/review-note.tsx';
 import type { ProposalData } from '../../shared/types.ts';
@@ -30,9 +30,7 @@ export function ProposalItem({
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const [params] = useSearchParams();
-
-  const { team } = useCurrentEventTeam();
-  const { canChangeProposalStatus } = team.userPermissions;
+  const { canChangeProposalStatus } = useUserTeamPermissions();
 
   const { id, title, reviews } = proposal;
   const { you, summary } = reviews;

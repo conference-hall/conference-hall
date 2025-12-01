@@ -54,14 +54,19 @@ export class UserAccount {
       include: { team: { include: { events: true } } },
     });
 
-    const teams = teamsMembership.map(({ team }) => {
+    const teams = teamsMembership.map(({ team, role }) => {
       const events = team.events.map((event) => ({
         slug: event.slug,
         name: event.name,
         archived: event.archived,
         logoUrl: event.logoUrl,
       }));
-      return { slug: team.slug, name: team.name, events: sortBy(events, 'name') };
+      return {
+        slug: team.slug,
+        name: team.name,
+        role,
+        events: sortBy(events, 'name'),
+      };
     });
 
     return sortBy(teams, 'name');

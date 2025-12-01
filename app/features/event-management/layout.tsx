@@ -10,6 +10,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { href, Outlet, redirect, useMatch, useSearchParams } from 'react-router';
 import { NavbarTeam } from '~/app-platform/components/navbar/navbar-team.tsx';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
@@ -59,7 +60,7 @@ export default function EventLayoutRoute({ loaderData }: Route.ComponentProps) {
 function EventTabs() {
   const { t } = useTranslation();
   const { team, event } = useCurrentEventTeam();
-  const { canEditEvent, canPublishEventResults, canEditEventSchedule } = team.userPermissions;
+  const permissions = useUserTeamPermissions();
 
   const [searchParams] = useSearchParams();
   const search = searchParams.toString();
@@ -99,7 +100,7 @@ function EventTabs() {
           </NavTab>
         ) : null}
 
-        {event.type === 'CONFERENCE' && canPublishEventResults ? (
+        {event.type === 'CONFERENCE' && permissions.canPublishEventResults ? (
           <NavTab
             to={href('/team/:team/:event/publication', { team: team.slug, event: event.slug })}
             icon={MegaphoneIcon}
@@ -108,7 +109,7 @@ function EventTabs() {
           </NavTab>
         ) : null}
 
-        {event.type === 'CONFERENCE' && canEditEventSchedule ? (
+        {event.type === 'CONFERENCE' && permissions.canEditEventSchedule ? (
           <NavTab
             to={href('/team/:team/:event/schedule', { team: team.slug, event: event.slug })}
             icon={CalendarIcon}
@@ -118,7 +119,7 @@ function EventTabs() {
           </NavTab>
         ) : null}
 
-        {canEditEvent ? (
+        {permissions.canEditEvent ? (
           <NavTab to={href('/team/:team/:event/settings', { team: team.slug, event: event.slug })} icon={Cog6ToothIcon}>
             {t('common.settings')}
           </NavTab>

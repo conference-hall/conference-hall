@@ -2,6 +2,7 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -91,11 +92,12 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 
 export default function NewProposalRoute({ actionData, params, loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { team, event } = useCurrentEventTeam();
+  const { event } = useCurrentEventTeam();
+  const permissions = useUserTeamPermissions();
   const formId = useId();
   const preselectedSpeaker = loaderData?.preselectedSpeaker;
 
-  if (!team.userPermissions?.canCreateEventProposal) {
+  if (!permissions.canCreateEventProposal) {
     return null;
   }
 
@@ -133,8 +135,8 @@ export default function NewProposalRoute({ actionData, params, loaderData }: Rou
               form={formId}
               error={actionData?.errors?.speakers}
               canChangeSpeakers
-              canCreateSpeaker={team.userPermissions?.canCreateEventSpeaker}
-              canEditSpeaker={team.userPermissions?.canEditEventSpeaker}
+              canCreateSpeaker={permissions.canCreateEventSpeaker}
+              canEditSpeaker={permissions.canEditEventSpeaker}
               value={preselectedSpeaker ? [preselectedSpeaker] : undefined}
               className="space-y-3 p-4 lg:px-6"
             />
