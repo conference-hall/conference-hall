@@ -50,7 +50,7 @@
     "compression": "^1.8.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
-    "express": "^5.1.0",
+    "express": "^5.2.0",
     "express-rate-limit": "^8.2.1",
     "firebase": "^12.6.0",
     "firebase-admin": "^13.6.0",
