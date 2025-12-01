@@ -354,7 +354,7 @@
   "event-management.fields.visibility": "Visibility",
   "event-management.fields.website": "Website URL",
   "event-management.fields.event-template": "Use existing event as template",
-  "event-management.fields.event-template-placeholder": "Select an event template",
+  "event-management.fields.event-template-placeholder": "No template",
   "event-management.nav.event-page-link": "Event page",
   "event-management.nav.overview": "Overview",
   "event-management.nav.proposals": "Proposals",

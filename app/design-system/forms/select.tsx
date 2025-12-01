@@ -69,7 +69,7 @@ export default function Select({
               <SelectTransition show={open}>
                 <ListboxOptions
                   anchor={{ to: 'bottom start', gap: '4px' }}
-                  className={cx(menuItems(), 'w-[var(--button-width)]')}
+                  className={cx(menuItems(), 'w-(--button-width)')}
                 >
                   {options
                     .filter((o) => !o.hidden)

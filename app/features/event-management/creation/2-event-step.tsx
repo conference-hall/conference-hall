@@ -6,7 +6,7 @@ import { Form, href, redirect } from 'react-router';
 import z from 'zod';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { Button } from '~/design-system/button.tsx';
-import { SelectNative } from '~/design-system/forms/select-native.tsx';
+import Select from '~/design-system/forms/select.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import type { EventType } from '~/shared/types/events.types.ts';
@@ -57,11 +57,14 @@ export default function NewEventRoute({ params, loaderData, actionData: errors }
             <EventForm errors={errors} />
 
             {existingEvents.length > 0 ? (
-              <SelectNative
+              <Select
                 name="eventTemplateId"
+                defaultValue=""
                 label={t('event-management.fields.event-template')}
-                placeholder={t('event-management.fields.event-template-placeholder')}
-                options={existingEvents.map((event) => ({ name: event.name, value: event.id }))}
+                options={[
+                  { id: '', name: t('event-management.fields.event-template-placeholder') },
+                  ...existingEvents.map((event) => ({ name: event.name, id: event.id })),
+                ]}
               />
             ) : null}
 

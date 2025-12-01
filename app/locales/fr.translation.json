@@ -352,7 +352,7 @@
   "event-management.fields.visibility": "Visibilité",
   "event-management.fields.website": "URL du site web",
   "event-management.fields.event-template": "Utiliser un événement comme modèle",
-  "event-management.fields.event-template-placeholder": "Sélectionner un modèle",
+  "event-management.fields.event-template-placeholder": "Aucun modèle",
   "event-management.nav.event-page-link": "Page de l'événement",
   "event-management.nav.overview": "Vue d'ensemble",
   "event-management.nav.proposals": "Propositions",
