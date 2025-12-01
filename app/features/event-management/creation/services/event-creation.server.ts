@@ -15,7 +15,7 @@ export class EventCreation extends TeamAuthorization {
 
     const { eventTemplateId, ...eventData } = data;
 
-    const eventTemplateData = await this.getEventTemplateData(eventTemplateId);
+    const eventTemplateData = await this.getEventTemplateData(eventData.type, eventTemplateId);
 
     return db.event.create({
       data: {
@@ -27,12 +27,15 @@ export class EventCreation extends TeamAuthorization {
     });
   }
 
-  private async getEventTemplateData(eventTemplateId?: string): Promise<Partial<EventCreateInput> | null> {
+  private async getEventTemplateData(
+    type: EventType,
+    eventTemplateId?: string,
+  ): Promise<Partial<EventCreateInput> | null> {
     if (!eventTemplateId) return null;
 
     const eventTemplate = await db.event.findUnique({
       include: { formats: true, categories: true, proposalTags: true, emailCustomizations: true },
-      where: { id: eventTemplateId, team: { slug: this.team } },
+      where: { id: eventTemplateId, type, team: { slug: this.team } },
     });
     if (!eventTemplate) return null;
 
@@ -44,10 +47,6 @@ export class EventCreation extends TeamAuthorization {
       contactEmail: eventTemplate.contactEmail,
       location: eventTemplate.location,
       onlineEvent: eventTemplate.onlineEvent,
-      conferenceStart: eventTemplate.conferenceStart,
-      conferenceEnd: eventTemplate.conferenceEnd,
-      cfpStart: eventTemplate.cfpStart,
-      cfpEnd: eventTemplate.cfpEnd,
       maxProposals: eventTemplate.maxProposals,
       displayProposalsReviews: eventTemplate.displayProposalsReviews,
       displayProposalsSpeakers: eventTemplate.displayProposalsSpeakers,

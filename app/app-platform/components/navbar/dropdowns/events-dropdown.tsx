@@ -1,14 +1,13 @@
 import { Menu, MenuButton, MenuItem, MenuItems, MenuSeparator } from '@headlessui/react';
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-import type { TeamRole } from 'prisma/generated/enums.ts';
 import { useTranslation } from 'react-i18next';
 import { href, Link, useParams } from 'react-router';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { menuItem, menuItemIcon, menuItems, menuSeparator } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
-import { UserTeamPermissions } from '~/shared/user/team-permissions.ts';
+import { type TeamRole, UserTeamPermissions } from '~/shared/user/team-permissions.ts';
 
 const menuStyle = cx(
   'flex items-center gap-1',

@@ -102,14 +102,7 @@ describe('EventCreation', () => {
             ],
           },
           emailCustomizations: {
-            create: [
-              {
-                template: 'ACCEPTED',
-                locale: 'en',
-                subject: 'Congrats!',
-                content: 'You are accepted',
-              },
-            ],
+            create: [{ template: 'ACCEPTED', locale: 'en', subject: 'Congrats!', content: 'You are accepted' }],
           },
         },
       });

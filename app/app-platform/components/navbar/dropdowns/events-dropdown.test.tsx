@@ -1,4 +1,3 @@
-import type { TeamRole } from 'prisma/generated/enums.ts';
 import type { JSX } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
@@ -7,13 +6,11 @@ import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { EventsDropdown } from './events-dropdown.tsx';
 
-const OWNER: TeamRole = 'OWNER';
-const MEMBER: TeamRole = 'MEMBER';
 const mockTeams = [
   {
     slug: 'team-1',
     name: 'Team 1',
-    role: OWNER,
+    role: 'OWNER' as const,
     events: [
       { slug: 'event-1', name: 'Event 1', logoUrl: null, archived: false },
       { slug: 'event-2', name: 'Event 2', logoUrl: 'https://example.com/logo.jpg', archived: false },
@@ -23,7 +20,7 @@ const mockTeams = [
   {
     slug: 'team-2',
     name: 'Team 2',
-    role: MEMBER,
+    role: 'MEMBER' as const,
     events: [{ slug: 'event-4', name: 'Event 4', logoUrl: null, archived: false }],
   },
 ];
@@ -129,7 +126,7 @@ describe('EventsDropdown component', () => {
 
   describe('Edge cases', () => {
     it('handles team with no events', async () => {
-      const teamsWithNoEvents = [{ slug: 'empty-team', name: 'Empty Team', role: OWNER, events: [] }];
+      const teamsWithNoEvents = [{ slug: 'empty-team', name: 'Empty Team', role: 'OWNER' as const, events: [] }];
 
       const screen = await renderComponent(<EventsDropdown teams={teamsWithNoEvents} />, ['/team/empty-team/event-1']);
 
