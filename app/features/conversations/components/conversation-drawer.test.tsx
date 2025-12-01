@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { UserProvider } from '~/app-platform/components/user-context.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { ConversationDrawer } from './conversation-drawer.tsx';
@@ -52,33 +51,36 @@ describe('ConversationDrawer component', () => {
         ),
       },
     ]);
-    return render(<RouteStub initialEntries={['/']} />);
+    return page.render(<RouteStub initialEntries={['/']} />);
   };
 
   it('opens drawer when clicking trigger button', async () => {
-    const screen = await renderComponent({ messages });
+    await renderComponent({ messages });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
+    const element = page.getByRole('button', { name: 'Open Conversation' });
+    await element.click();
 
-    await expect.element(screen.getByText('First message')).toBeInTheDocument();
-    await expect.element(screen.getByText('Second message')).toBeInTheDocument();
-    await expect.element(screen.getByRole('button', { name: 'Send' })).toBeInTheDocument();
+    await expect.element(page.getByText('First message')).toBeInTheDocument();
+    await expect.element(page.getByText('Second message')).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Send' })).toBeInTheDocument();
   });
 
   it('displays empty state when no messages', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
+    const element = page.getByRole('button', { name: 'Open Conversation' });
+    await element.click();
 
-    await expect.element(screen.getByText('Start a conversation')).toBeInTheDocument();
+    await expect.element(page.getByText('Start a conversation')).toBeInTheDocument();
   });
 
   it('displays recipients in empty state when provided', async () => {
-    const screen = await renderComponent({ recipients: ['Alice', 'Bob'] });
+    await renderComponent({ recipients: ['Alice', 'Bob'] });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
+    const element = page.getByRole('button', { name: 'Open Conversation' });
+    await element.click();
 
-    await expect.element(screen.getByText(/Start a conversation with/)).toBeInTheDocument();
+    await expect.element(page.getByText(/Start a conversation with/)).toBeInTheDocument();
   });
 
   it('hides action menu for other users messages when canManageConversations is false', async () => {
@@ -89,12 +91,13 @@ describe('ConversationDrawer component', () => {
       reactions: [],
       sentAt: new Date('2023-01-01T10:00:00Z'),
     };
-    const screen = await renderComponent({ messages: [otherUserMessage], canManageConversations: false });
+    await renderComponent({ messages: [otherUserMessage], canManageConversations: false });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
+    const element = page.getByRole('button', { name: 'Open Conversation' });
+    await element.click();
 
-    await expect.element(screen.getByText('Message from another user')).toBeInTheDocument();
-    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).not.toBeInTheDocument();
+    await expect.element(page.getByText('Message from another user')).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Message action menu' })).not.toBeInTheDocument();
   });
 
   it('shows action menu for other users messages when canManageConversations is true', async () => {
@@ -105,12 +108,13 @@ describe('ConversationDrawer component', () => {
       reactions: [],
       sentAt: new Date('2023-01-01T10:00:00Z'),
     };
-    const screen = await renderComponent({ messages: [otherUserMessage], canManageConversations: true });
+    await renderComponent({ messages: [otherUserMessage], canManageConversations: true });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
+    const element = page.getByRole('button', { name: 'Open Conversation' });
+    await element.click();
 
-    await expect.element(screen.getByText('Message from another user')).toBeInTheDocument();
-    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
+    await expect.element(page.getByText('Message from another user')).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
   });
 
   it('shows action menu for own messages regardless of canManageConversations', async () => {
@@ -121,11 +125,12 @@ describe('ConversationDrawer component', () => {
       reactions: [],
       sentAt: new Date('2023-01-01T10:00:00Z'),
     };
-    const screen = await renderComponent({ messages: [ownMessage], canManageConversations: false });
+    await renderComponent({ messages: [ownMessage], canManageConversations: false });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Conversation' }));
+    const element = page.getByRole('button', { name: 'Open Conversation' });
+    await element.click();
 
-    await expect.element(screen.getByText('My own message')).toBeInTheDocument();
-    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
+    await expect.element(page.getByText('My own message')).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
   });
 });

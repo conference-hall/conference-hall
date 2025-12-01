@@ -1,6 +1,6 @@
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { DetailsSection } from './details-section.tsx';
 
 describe('DetailsSection', () => {
@@ -27,56 +27,56 @@ describe('DetailsSection', () => {
   };
 
   test('renders conference type correctly', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} />
       </I18nextProvider>,
     );
 
-    await expect.element(screen.getByText('Conference')).toBeInTheDocument();
+    await expect.element(page.getByText('Conference')).toBeInTheDocument();
   });
 
   test('renders meetup type correctly', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} type="MEETUP" />
       </I18nextProvider>,
     );
 
-    await expect.element(screen.getByText('Meetup')).toBeInTheDocument();
+    await expect.element(page.getByText('Meetup')).toBeInTheDocument();
   });
 
   test('renders description markdown', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} description="**Bold text**" />
       </I18nextProvider>,
     );
 
-    const boldElement = screen.getByText('Bold text');
+    const boldElement = page.getByText('Bold text');
     await expect.element(boldElement).toBeInTheDocument();
     await expect(boldElement.element().tagName.toLowerCase()).toBe('strong');
   });
 
   test('renders location when provided', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} location="Paris, France" />
       </I18nextProvider>,
     );
 
-    const locationText = screen.getByText('Paris, France');
+    const locationText = page.getByText('Paris, France');
     await expect.element(locationText).toBeInTheDocument();
   });
 
   test('renders online event info when onlineEvent is true', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} onlineEvent={true} />
       </I18nextProvider>,
     );
 
-    const onlineText = screen.getByText('Online');
+    const onlineText = page.getByText('Online');
     await expect.element(onlineText).toBeInTheDocument();
   });
 
@@ -84,13 +84,13 @@ describe('DetailsSection', () => {
     const conferenceStart = new Date('2023-03-15T09:00:00');
     const conferenceEnd = new Date('2023-03-15T18:00:00');
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} conferenceStart={conferenceStart} conferenceEnd={conferenceEnd} />
       </I18nextProvider>,
     );
 
-    const dateText = screen.getByText(/March 15, 2023/);
+    const dateText = page.getByText(/March 15, 2023/);
     await expect.element(dateText).toBeInTheDocument();
   });
 
@@ -98,50 +98,50 @@ describe('DetailsSection', () => {
     const conferenceStart = new Date('2023-03-15T09:00:00');
     const conferenceEnd = new Date('2023-03-17T18:00:00');
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} conferenceStart={conferenceStart} conferenceEnd={conferenceEnd} />
       </I18nextProvider>,
     );
 
-    await expect.element(screen.getByText('March 15 / March 17, 2023')).toBeInTheDocument();
+    await expect.element(page.getByText('March 15 / March 17, 2023')).toBeInTheDocument();
   });
 
   test('renders website link when provided', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} websiteUrl="https://example.com" />
       </I18nextProvider>,
     );
 
-    const link = await screen.getByRole('link', { name: 'Website' });
+    const link = await page.getByRole('link', { name: 'Website' });
     await expect.element(link).toHaveAttribute('href', 'https://example.com');
   });
 
   test('renders contact email link when provided', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} contactEmail="contact@example.com" />
       </I18nextProvider>,
     );
 
-    const link = await screen.getByRole('link', { name: 'Contact' });
+    const link = await page.getByRole('link', { name: 'Contact' });
     await expect.element(link).toHaveAttribute('href', 'mailto:contact@example.com');
   });
 
   test('renders code of conduct link when provided', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection {...defaultProps} codeOfConductUrl="https://example.com/coc" />
       </I18nextProvider>,
     );
 
-    const link = await screen.getByRole('link', { name: 'Code of Conduct' });
+    const link = await page.getByRole('link', { name: 'Code of Conduct' });
     await expect.element(link).toHaveAttribute('href', 'https://example.com/coc');
   });
 
   test('renders all links when provided', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <DetailsSection
           {...defaultProps}
@@ -152,8 +152,8 @@ describe('DetailsSection', () => {
       </I18nextProvider>,
     );
 
-    await expect.element(screen.getByRole('link', { name: 'Website' })).toBeInTheDocument();
-    await expect.element(screen.getByRole('link', { name: 'Contact' })).toBeInTheDocument();
-    await expect.element(screen.getByRole('link', { name: 'Code of Conduct' })).toBeInTheDocument();
+    await expect.element(page.getByRole('link', { name: 'Website' })).toBeInTheDocument();
+    await expect.element(page.getByRole('link', { name: 'Contact' })).toBeInTheDocument();
+    await expect.element(page.getByRole('link', { name: 'Code of Conduct' })).toBeInTheDocument();
   });
 });

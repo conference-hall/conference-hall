@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { TagsPanel } from './tags-panel.tsx';
 
 describe('TagsPanel component', () => {
@@ -27,7 +26,7 @@ describe('TagsPanel component', () => {
         ),
       },
     ]);
-    return render(<RouteStub />);
+    return page.render(<RouteStub />);
   };
 
   it('displays default selected tags', async () => {
@@ -36,24 +35,26 @@ describe('TagsPanel component', () => {
       { value: 'beginner', label: 'Beginner', color: '#F59E0B' },
     ];
 
-    const screen = await renderComponent({ defaultValue: selectedTags });
+    await renderComponent({ defaultValue: selectedTags });
 
-    await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
-    await expect.element(screen.getByText('Beginner')).toBeInTheDocument();
+    await expect.element(page.getByText('Frontend')).toBeInTheDocument();
+    await expect.element(page.getByText('Beginner')).toBeInTheDocument();
   });
 
   it('shows no tags message when none selected', async () => {
-    const screen = await renderComponent({ defaultValue: [] });
+    await renderComponent({ defaultValue: [] });
 
-    await expect.element(screen.getByText('No tags')).toBeInTheDocument();
+    await expect.element(page.getByText('No tags')).toBeInTheDocument();
   });
 
   it('calls onChange when selecting tags', async () => {
     const onChangeMock = vi.fn();
-    const screen = await renderComponent({ onChange: onChangeMock });
+    await renderComponent({ onChange: onChangeMock });
 
-    await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
-    await userEvent.click(screen.getByText('Frontend'));
+    const element = page.getByRole('button', { name: /Tags/ });
+    await element.click();
+    const element1 = page.getByText('Frontend');
+    await element1.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([{ value: 'frontend', label: 'Frontend', color: '#3B82F6' }]);
   });
@@ -62,15 +63,17 @@ describe('TagsPanel component', () => {
     const onChangeMock = vi.fn();
     const selectedTags = [{ value: 'frontend', label: 'Frontend', color: '#3B82F6' }];
 
-    const screen = await renderComponent({
+    await renderComponent({
       value: selectedTags,
       onChange: onChangeMock,
     });
 
-    await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
+    await expect.element(page.getByText('Frontend')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
-    await userEvent.click(screen.getByText('Backend'));
+    const element = page.getByRole('button', { name: /Tags/ });
+    await element.click();
+    const element1 = page.getByText('Backend');
+    await element1.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([
       { value: 'frontend', label: 'Frontend', color: '#3B82F6' },
@@ -79,52 +82,57 @@ describe('TagsPanel component', () => {
   });
 
   it('renders manage tags action when showAction is true', async () => {
-    const screen = await renderComponent({ showAction: true });
+    await renderComponent({ showAction: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
+    const element = page.getByRole('button', { name: /Tags/ });
+    await element.click();
 
-    await expect.element(screen.getByText('Manage tags')).toBeInTheDocument();
+    await expect.element(page.getByText('Manage tags')).toBeInTheDocument();
   });
 
   it('does not render manage action when showAction is false', async () => {
-    const screen = await renderComponent({ showAction: false });
+    await renderComponent({ showAction: false });
 
-    await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
+    const element = page.getByRole('button', { name: /Tags/ });
+    await element.click();
 
-    await expect.element(screen.getByText('Manage tags')).not.toBeInTheDocument();
+    await expect.element(page.getByText('Manage tags')).not.toBeInTheDocument();
   });
 
   it('renders in readonly mode without select functionality', async () => {
     const selectedTags = [{ value: 'frontend', label: 'Frontend', color: '#3B82F6' }];
-    const screen = await renderComponent({
+    await renderComponent({
       readonly: true,
       defaultValue: selectedTags,
     });
 
-    await expect.element(screen.getByText('Tags')).toBeInTheDocument();
-    await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
+    await expect.element(page.getByText('Tags')).toBeInTheDocument();
+    await expect.element(page.getByText('Frontend')).toBeInTheDocument();
 
-    await expect.element(screen.getByRole('button', { name: /Tags/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: /Tags/ })).not.toBeInTheDocument();
   });
 
   it('includes form name when provided', async () => {
-    const screen = await renderComponent({
+    await renderComponent({
       form: 'proposal-form',
       defaultValue: [{ value: 'frontend', label: 'Frontend', color: '#3B82F6' }],
     });
 
-    const hiddenInput = screen.container.querySelector('input[name="tags"][type="hidden"]');
+    const hiddenInput = document.body.querySelector('input[name="tags"][type="hidden"]');
     expect(hiddenInput).toBeInTheDocument();
     expect(hiddenInput).toHaveAttribute('form', 'proposal-form');
   });
 
   it('supports multiple tag selection by default', async () => {
     const onChangeMock = vi.fn();
-    const screen = await renderComponent({ onChange: onChangeMock });
+    await renderComponent({ onChange: onChangeMock });
 
-    await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
-    await userEvent.click(screen.getByText('Frontend'));
-    await userEvent.click(screen.getByText('Backend'));
+    const element = page.getByRole('button', { name: /Tags/ });
+    await element.click();
+    const element1 = page.getByText('Frontend');
+    await element1.click();
+    const element2 = page.getByText('Backend');
+    await element2.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([
       { value: 'frontend', label: 'Frontend', color: '#3B82F6' },
@@ -134,10 +142,12 @@ describe('TagsPanel component', () => {
 
   it('preserves tag color information in selection', async () => {
     const onChangeMock = vi.fn();
-    const screen = await renderComponent({ onChange: onChangeMock });
+    await renderComponent({ onChange: onChangeMock });
 
-    await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
-    await userEvent.click(screen.getByText('Beginner'));
+    const element = page.getByRole('button', { name: /Tags/ });
+    await element.click();
+    const element1 = page.getByText('Beginner');
+    await element1.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([{ value: 'beginner', label: 'Beginner', color: '#F59E0B' }]);
   });

@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { ProposalActionsMenu } from './proposal-actions-menu.tsx';
 
 describe('ProposalActionsMenu component', () => {
@@ -29,40 +28,46 @@ describe('ProposalActionsMenu component', () => {
         ),
       },
     ]);
-    return render(<RouteStub initialEntries={['/team/my-team/my-event/proposals/proposal-123']} />);
+    return page.render(<RouteStub initialEntries={['/team/my-team/my-event/proposals/proposal-123']} />);
   };
 
   it('opens menu and shows actions', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
-    await expect.element(screen.getByRole('menuitem', { name: /Edit/ })).toBeInTheDocument();
-    await expect.element(screen.getByRole('menuitem', { name: /Share link/ })).toBeInTheDocument();
+    const element = page.getByRole('button', { name: 'Proposal action menu' });
+    await element.click();
+    await expect.element(page.getByRole('menuitem', { name: /Edit/ })).toBeInTheDocument();
+    await expect.element(page.getByRole('menuitem', { name: /Share link/ })).toBeInTheDocument();
   });
 
   it('opens TalkEditDrawer when clicking Edit', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
-    await userEvent.click(screen.getByRole('menuitem', { name: /Edit/ }));
+    const element = page.getByRole('button', { name: 'Proposal action menu' });
+    await element.click();
+    const element1 = page.getByRole('menuitem', { name: /Edit/ });
+    await element1.click();
 
-    await expect.element(screen.getByRole('dialog', { name: 'Test Proposal' })).toBeInTheDocument();
+    await expect.element(page.getByRole('dialog', { name: 'Test Proposal' })).toBeInTheDocument();
   });
 
   it('opens ShareProposalModal when clicking Share link', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
-    await userEvent.click(screen.getByRole('menuitem', { name: /Share link/ }));
+    const element = page.getByRole('button', { name: 'Proposal action menu' });
+    await element.click();
+    const element1 = page.getByRole('menuitem', { name: /Share link/ });
+    await element1.click();
 
-    await expect.element(screen.getByRole('dialog', { name: 'Share proposal' })).toBeInTheDocument();
+    await expect.element(page.getByRole('dialog', { name: 'Share proposal' })).toBeInTheDocument();
   });
 
   it('hides Edit action when canEditEventProposal is false', async () => {
-    const screen = await renderComponent({ canEditEventProposal: false });
+    await renderComponent({ canEditEventProposal: false });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Proposal action menu' }));
-    await expect.element(screen.getByRole('menuitem', { name: /Edit/ })).not.toBeInTheDocument();
-    await expect.element(screen.getByRole('menuitem', { name: /Share link/ })).toBeInTheDocument();
+    const element = page.getByRole('button', { name: 'Proposal action menu' });
+    await element.click();
+    await expect.element(page.getByRole('menuitem', { name: /Edit/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('menuitem', { name: /Share link/ })).toBeInTheDocument();
   });
 });

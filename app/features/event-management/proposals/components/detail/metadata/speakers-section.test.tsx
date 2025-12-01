@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { SpeakersSection } from './speakers-section.tsx';
 
 // Mock useFetcher
@@ -92,21 +91,23 @@ describe('SpeakersSection component', () => {
         ),
       },
     ]);
-    return render(<RouteStub />);
+    return page.render(<RouteStub />);
   };
 
   it('displays current proposal speakers', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await expect.element(screen.getByText('John Doe')).toBeInTheDocument();
-    await expect.element(screen.getByText('Jane Smith')).toBeInTheDocument();
+    await expect.element(page.getByText('John Doe')).toBeInTheDocument();
+    await expect.element(page.getByText('Jane Smith')).toBeInTheDocument();
   });
 
   it('submits form data when speakers are changed', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
-    await userEvent.click(screen.getByText('Alice Johnson'));
+    const element = page.getByRole('button', { name: /Speakers/ });
+    await element.click();
+    const element1 = page.getByText('Alice Johnson');
+    await element1.click();
 
     expect(mockFetcher.submit).toHaveBeenCalledWith(expect.any(FormData), { method: 'POST', preventScrollReset: true });
 
@@ -118,19 +119,20 @@ describe('SpeakersSection component', () => {
   });
 
   it('renders in readonly mode when canChangeSpeakers is false', async () => {
-    const screen = await renderComponent({ canChangeSpeakers: false });
+    await renderComponent({ canChangeSpeakers: false });
 
-    await expect.element(screen.getByText('Speakers')).toBeInTheDocument();
-    await expect.element(screen.getByText('John Doe')).toBeInTheDocument();
+    await expect.element(page.getByText('Speakers')).toBeInTheDocument();
+    await expect.element(page.getByText('John Doe')).toBeInTheDocument();
 
-    await expect.element(screen.getByRole('button', { name: /Speakers/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: /Speakers/ })).not.toBeInTheDocument();
   });
 
   it('does not show action button (manage speakers)', async () => {
-    const screen = await renderComponent({ canCreateSpeaker: false });
+    await renderComponent({ canCreateSpeaker: false });
 
-    await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
+    const element = page.getByRole('button', { name: /Speakers/ });
+    await element.click();
 
-    await expect.element(screen.getByText('Create speaker')).not.toBeInTheDocument();
+    await expect.element(page.getByText('Create speaker')).not.toBeInTheDocument();
   });
 });

@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { MessageInputForm } from './message-input-form.tsx';
 
@@ -24,14 +23,14 @@ describe('MessageInputForm component', () => {
         ),
       },
     ]);
-    return render(<RouteStub initialEntries={['/']} />);
+    return page.render(<RouteStub initialEntries={['/']} />);
   };
 
   it('renders form with textarea and submit button', async () => {
-    const screen = await renderComponent({ buttonLabel: 'Send' });
+    await renderComponent({ buttonLabel: 'Send' });
 
-    await expect.element(screen.getByRole('textbox', { name: 'Message input' })).toBeInTheDocument();
-    await expect.element(screen.getByRole('button', { name: 'Send' })).toBeInTheDocument();
+    await expect.element(page.getByRole('textbox', { name: 'Message input' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Send' })).toBeInTheDocument();
   });
 
   it('renders with default value when editing message', async () => {
@@ -43,20 +42,21 @@ describe('MessageInputForm component', () => {
       sentAt: new Date(),
     };
 
-    const screen = await renderComponent({ message });
+    await renderComponent({ message });
 
-    const textarea = screen.getByRole('textbox', { name: 'Message input' });
+    const textarea = page.getByRole('textbox', { name: 'Message input' });
     expect(textarea).toHaveValue('Existing message');
   });
 
   it('renders cancel button when onClose is provided', async () => {
     const onClose = vi.fn();
-    const screen = await renderComponent({ onClose, buttonLabel: 'Save' });
+    await renderComponent({ onClose, buttonLabel: 'Save' });
 
-    await expect.element(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
-    await expect.element(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Save' })).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    const cancelButton = page.getByRole('button', { name: 'Cancel' });
+    await cancelButton.click();
     expect(onClose).toHaveBeenCalledOnce();
   });
 });

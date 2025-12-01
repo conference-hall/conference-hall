@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { FormatsSection } from './formats-section.tsx';
 
 // Mock useFetcher
@@ -55,21 +54,23 @@ describe('FormatsSection component', () => {
         ),
       },
     ]);
-    return render(<RouteStub />);
+    return page.render(<RouteStub />);
   };
 
   it('displays current proposal formats', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await expect.element(screen.getByText('Lightning Talk (5min)')).toBeInTheDocument();
-    await expect.element(screen.getByText('Short Talk (20min)')).toBeInTheDocument();
+    await expect.element(page.getByText('Lightning Talk (5min)')).toBeInTheDocument();
+    await expect.element(page.getByText('Short Talk (20min)')).toBeInTheDocument();
   });
 
   it('submits form data when formats are changed', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
-    await userEvent.click(screen.getByText('Long Talk (45min)'));
+    const element = page.getByRole('button', { name: /Formats/ });
+    await element.click();
+    const element1 = page.getByText('Long Talk (45min)');
+    await element1.click();
 
     expect(mockFetcher.submit).toHaveBeenCalledWith(expect.any(FormData), { method: 'POST', preventScrollReset: true });
 
@@ -81,27 +82,29 @@ describe('FormatsSection component', () => {
   });
 
   it('renders in readonly mode when canChangeFormats is false', async () => {
-    const screen = await renderComponent({ canChangeFormats: false });
+    await renderComponent({ canChangeFormats: false });
 
-    await expect.element(screen.getByText('Formats')).toBeInTheDocument();
-    await expect.element(screen.getByText('Lightning Talk (5min)')).toBeInTheDocument();
+    await expect.element(page.getByText('Formats')).toBeInTheDocument();
+    await expect.element(page.getByText('Lightning Talk (5min)')).toBeInTheDocument();
 
-    await expect.element(screen.getByRole('button', { name: /Formats/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: /Formats/ })).not.toBeInTheDocument();
   });
 
   it('hides action button when canCreateFormats is false', async () => {
-    const screen = await renderComponent({ canCreateFormats: false });
+    await renderComponent({ canCreateFormats: false });
 
-    await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
+    const element = page.getByRole('button', { name: /Formats/ });
+    await element.click();
 
-    await expect.element(screen.getByText('Manage formats')).not.toBeInTheDocument();
+    await expect.element(page.getByText('Manage formats')).not.toBeInTheDocument();
   });
 
   it('shows action button when canCreateFormats is true', async () => {
-    const screen = await renderComponent({ canCreateFormats: true });
+    await renderComponent({ canCreateFormats: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
+    const element = page.getByRole('button', { name: /Formats/ });
+    await element.click();
 
-    await expect.element(screen.getByText('Manage formats')).toBeInTheDocument();
+    await expect.element(page.getByText('Manage formats')).toBeInTheDocument();
   });
 });

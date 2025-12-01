@@ -1,7 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { UserProvider } from '~/app-platform/components/user-context.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { MessageBlock } from './message-block.tsx';
@@ -49,15 +49,15 @@ describe('MessageBlock component', () => {
         ),
       },
     ]);
-    return render(<RouteStub initialEntries={['/']} />);
+    return page.render(<RouteStub initialEntries={['/']} />);
   };
 
   it('renders message content and sender', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await expect.element(screen.getByText('John Doe')).toBeInTheDocument();
-    await expect.element(screen.getByText('Test message content')).toBeInTheDocument();
-    await expect.element(screen.getByText('SPEAKER')).toBeInTheDocument();
+    await expect.element(page.getByText('John Doe')).toBeInTheDocument();
+    await expect.element(page.getByText('Test message content')).toBeInTheDocument();
+    await expect.element(page.getByText('SPEAKER')).toBeInTheDocument();
   });
 
   it('renders message with reactions', async () => {
@@ -72,8 +72,8 @@ describe('MessageBlock component', () => {
       ],
     };
 
-    const screen = await renderComponent({ message: messageWithReactions });
+    await renderComponent({ message: messageWithReactions });
 
-    await expect.element(screen.getByText('🎉')).toBeInTheDocument();
+    await expect.element(page.getByText('🎉')).toBeInTheDocument();
   });
 });

@@ -3,7 +3,7 @@ import type { JSX } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { BackButton, useBackNavigation } from './back-button.tsx';
 
 describe('BackButton component', () => {
@@ -14,21 +14,21 @@ describe('BackButton component', () => {
         Component: () => Component,
       },
     ]);
-    return render(<RouteStub initialEntries={initialEntries} />);
+    return page.render(<RouteStub initialEntries={initialEntries} />);
   };
 
   it('renders back button with default arrow icon', async () => {
-    const screen = await renderComponent(<BackButton to="/home" label="home" />);
+    await renderComponent(<BackButton to="/home" label="home" />);
 
-    const backButton = screen.getByRole('link');
+    const backButton = page.getByRole('link');
     await expect.element(backButton).toBeInTheDocument();
     await expect.element(backButton).toHaveAttribute('href', '/home');
   });
 
   it('renders back button with custom icon', async () => {
-    const screen = await renderComponent(<BackButton to="/dashboard" label="dashboard" icon={HomeIcon} />);
+    await renderComponent(<BackButton to="/dashboard" label="dashboard" icon={HomeIcon} />);
 
-    const backButton = screen.getByRole('link');
+    const backButton = page.getByRole('link');
     await expect.element(backButton).toBeInTheDocument();
     await expect.element(backButton).toHaveAttribute('href', '/dashboard');
   });
@@ -56,17 +56,17 @@ describe('useBackNavigation hook', () => {
         ),
       },
     ]);
-    return render(<RouteStub initialEntries={[pathname]} />);
+    return page.render(<RouteStub initialEntries={[pathname]} />);
   };
 
   describe('Route matching', () => {
     it('returns fallback when no route matches', async () => {
       const routes = [{ path: '/team/:team', back: '/', title: 'Team' }];
 
-      const screen = await renderHook(routes, '/unknown/route');
+      await renderHook(routes, '/unknown/route');
 
-      await expect.element(screen.getByTestId('back-path')).toHaveTextContent('/');
-      await expect.element(screen.getByTestId('title')).toHaveTextContent('No title');
+      await expect.element(page.getByTestId('back-path')).toHaveTextContent('/');
+      await expect.element(page.getByTestId('title')).toHaveTextContent('No title');
     });
 
     it('handles wildcard routes', async () => {
@@ -75,10 +75,10 @@ describe('useBackNavigation hook', () => {
         { path: '/*', back: '/' },
       ];
 
-      const screen = await renderHook(routes, '/speaker/talks/my-awesome-talk');
+      await renderHook(routes, '/speaker/talks/my-awesome-talk');
 
-      await expect.element(screen.getByTestId('back-path')).toHaveTextContent('/speaker/talks');
-      await expect.element(screen.getByTestId('title')).toHaveTextContent('Talk Detail');
+      await expect.element(page.getByTestId('back-path')).toHaveTextContent('/speaker/talks');
+      await expect.element(page.getByTestId('title')).toHaveTextContent('Talk Detail');
     });
   });
 
@@ -86,26 +86,26 @@ describe('useBackNavigation hook', () => {
     it('returns title when provided', async () => {
       const routes = [{ path: '/settings/*', back: '/', title: 'Settings Page' }];
 
-      const screen = await renderHook(routes, '/settings/profile');
+      await renderHook(routes, '/settings/profile');
 
-      await expect.element(screen.getByTestId('title')).toHaveTextContent('Settings Page');
+      await expect.element(page.getByTestId('title')).toHaveTextContent('Settings Page');
     });
 
     it('returns undefined when title not provided', async () => {
       const routes = [{ path: '/home', back: '/' }];
 
-      const screen = await renderHook(routes, '/home');
+      await renderHook(routes, '/home');
 
-      await expect.element(screen.getByTestId('title')).toHaveTextContent('No title');
+      await expect.element(page.getByTestId('title')).toHaveTextContent('No title');
     });
   });
 
   describe('Edge cases', () => {
     it('handles empty routes array', async () => {
-      const screen = await renderHook([], '/any/path');
+      await renderHook([], '/any/path');
 
-      await expect.element(screen.getByTestId('back-path')).toHaveTextContent('/');
-      await expect.element(screen.getByTestId('title')).toHaveTextContent('No title');
+      await expect.element(page.getByTestId('back-path')).toHaveTextContent('/');
+      await expect.element(page.getByTestId('title')).toHaveTextContent('No title');
     });
 
     it('handles malformed route patterns', async () => {
@@ -114,10 +114,10 @@ describe('useBackNavigation hook', () => {
         { path: '/valid/:param', back: '/valid', title: 'Valid' },
       ];
 
-      const screen = await renderHook(routes, '/valid/test');
+      await renderHook(routes, '/valid/test');
 
-      await expect.element(screen.getByTestId('back-path')).toHaveTextContent('/valid');
-      await expect.element(screen.getByTestId('title')).toHaveTextContent('Valid');
+      await expect.element(page.getByTestId('back-path')).toHaveTextContent('/valid');
+      await expect.element(page.getByTestId('title')).toHaveTextContent('Valid');
     });
   });
 });

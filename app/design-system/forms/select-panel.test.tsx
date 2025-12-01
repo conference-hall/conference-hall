@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page, userEvent } from 'vitest/browser';
 import { SelectPanel, type SelectPanelProps } from './select-panel.tsx';
 
 describe('SelectPanel component', () => {
@@ -46,112 +45,112 @@ describe('SelectPanel component', () => {
         ),
       },
     ]);
-    return render(<RouteStub />);
+    return page.render(<RouteStub />);
   };
 
   it('renders the component and opens the dropdown on button click', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    await expect.element(screen.getByRole('option', { name: /Option 1/ })).toBeInTheDocument();
-    await expect.element(screen.getByRole('option', { name: /Option 2/ })).toBeInTheDocument();
-    await expect.element(screen.getByRole('option', { name: /Option 3/ })).toBeInTheDocument();
+    await expect.element(page.getByRole('option', { name: /Option 1/ })).toBeInTheDocument();
+    await expect.element(page.getByRole('option', { name: /Option 2/ })).toBeInTheDocument();
+    await expect.element(page.getByRole('option', { name: /Option 3/ })).toBeInTheDocument();
   });
 
   it('filters options case-insensitively', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    const searchInput = screen.getByPlaceholder('Filter...');
+    const searchInput = page.getByPlaceholder('Filter...');
     await userEvent.type(searchInput, 'another');
 
-    await expect.element(screen.getByRole('option', { name: /Another Option/ })).toBeInTheDocument();
-    await expect.element(screen.getByRole('option', { name: /Option 1/ })).not.toBeInTheDocument();
-    await expect.element(screen.getByRole('option', { name: /Option 2/ })).not.toBeInTheDocument();
-    await expect.element(screen.getByRole('option', { name: /Option 3/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('option', { name: /Another Option/ })).toBeInTheDocument();
+    await expect.element(page.getByRole('option', { name: /Option 1/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('option', { name: /Option 2/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('option', { name: /Option 3/ })).not.toBeInTheDocument();
   });
 
   it('shows "No results" message when no options match filter', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    const searchInput = screen.getByPlaceholder('Filter...');
+    const searchInput = page.getByPlaceholder('Filter...');
     await userEvent.type(searchInput, 'nonexistent');
 
-    await expect.element(screen.getByText('No results found')).toBeInTheDocument();
+    await expect.element(page.getByText('No results found')).toBeInTheDocument();
   });
 
   it('calls onChange when selecting options in multiple mode', async () => {
-    const screen = await renderComponent({ multiple: true, values: [] });
+    await renderComponent({ multiple: true, values: [] });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    await userEvent.click(screen.getByText('Option 1'));
+    await page.getByText('Option 1').click();
     expect(onChangeMock).toHaveBeenCalledWith([options[0]]);
 
-    await userEvent.click(screen.getByText('Option 2'));
+    await page.getByText('Option 2').click();
     expect(onChangeMock).toHaveBeenCalledWith([options[1]]);
   });
 
   it('shows selected options as checked in multiple mode', async () => {
-    const screen = await renderComponent({ multiple: true, values: [options[0].value, options[2].value] });
+    await renderComponent({ multiple: true, values: [options[0].value, options[2].value] });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    const selectedOption1 = screen.getByRole('option', { name: /Option 1/ });
-    const selectedOption3 = screen.getByRole('option', { name: /Option 3/ });
+    const selectedOption1 = page.getByRole('option', { name: /Option 1/ });
+    const selectedOption3 = page.getByRole('option', { name: /Option 3/ });
 
     expect(selectedOption1).toHaveAttribute('aria-selected', 'true');
     expect(selectedOption3).toHaveAttribute('aria-selected', 'true');
   });
 
   it('handles unselecting options in multiple mode', async () => {
-    const screen = await renderComponent({ multiple: true, values: [options[0].value, options[1].value] });
+    await renderComponent({ multiple: true, values: [options[0].value, options[1].value] });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
-    await userEvent.click(screen.getByText('Option 1'));
+    await page.getByRole('button', { name: 'Open Select' }).click();
+    await page.getByText('Option 1').click();
 
     expect(onChangeMock).toHaveBeenCalledWith([options[1]]);
   });
 
   it('calls onChange when selecting option in single mode', async () => {
-    const screen = await renderComponent({ multiple: false, values: [options[0].value] });
+    await renderComponent({ multiple: false, values: [options[0].value] });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
-    await userEvent.click(screen.getByText('Option 1'));
+    await page.getByRole('button', { name: 'Open Select' }).click();
+    await page.getByText('Option 1').click();
 
     expect(onChangeMock).toHaveBeenCalledWith([options[0]]);
   });
 
   it('shows selected item with radio button in single mode', async () => {
-    const screen = await renderComponent({ multiple: false, values: [options[0].value] });
+    await renderComponent({ multiple: false, values: [options[0].value] });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    const selectedOption = screen.getByRole('option', { name: /Option 1/ });
+    const selectedOption = page.getByRole('option', { name: /Option 1/ });
     expect(selectedOption).toHaveAttribute('aria-selected', 'true');
   });
 
   it('renders footer when provided', async () => {
     const footer = <div>Custom Footer</div>;
-    const screen = await renderComponent({ footer });
+    await renderComponent({ footer });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    await expect.element(screen.getByText('Custom Footer')).toBeInTheDocument();
+    await expect.element(page.getByText('Custom Footer')).toBeInTheDocument();
   });
 
   it('calls onSearch when provided', async () => {
     vi.useFakeTimers();
     const onSearchMock = vi.fn();
-    const screen = await renderComponent({ onSearch: onSearchMock });
+    await renderComponent({ onSearch: onSearchMock });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    const searchInput = screen.getByPlaceholder('Search...');
+    const searchInput = page.getByPlaceholder('Search...');
     await userEvent.type(searchInput, 'test query');
 
     vi.advanceTimersByTime(300);
@@ -163,11 +162,11 @@ describe('SelectPanel component', () => {
   it('debounces onSearch calls', async () => {
     vi.useFakeTimers();
     const onSearchMock = vi.fn();
-    const screen = await renderComponent({ onSearch: onSearchMock });
+    await renderComponent({ onSearch: onSearchMock });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    const searchInput = screen.getByPlaceholder('Search...');
+    const searchInput = page.getByPlaceholder('Search...');
 
     // Type multiple characters quickly
     await userEvent.type(searchInput, 'a');
@@ -190,9 +189,9 @@ describe('SelectPanel component', () => {
   });
 
   it('creates hidden form inputs when name is provided', async () => {
-    const screen = await renderComponent({ name: 'test-field', values: [options[0].value, options[1].value] });
+    await renderComponent({ name: 'test-field', values: [options[0].value, options[1].value] });
 
-    const hiddenInputs = screen.container.querySelectorAll('input[type="hidden"]');
+    const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
     expect(hiddenInputs).toHaveLength(2);
     expect(hiddenInputs[0]).toHaveAttribute('name', 'test-field');
     expect(hiddenInputs[0]).toHaveAttribute('value', 'option1');
@@ -201,24 +200,22 @@ describe('SelectPanel component', () => {
   });
 
   it('displays pictures when displayPicture is true', async () => {
-    const screen = await renderComponent({ displayPicture: true });
+    await renderComponent({ displayPicture: true });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    await expect.element(screen.getByRole('option', { name: /Option 1/ })).toBeInTheDocument();
+    await expect.element(page.getByRole('option', { name: /Option 1/ })).toBeInTheDocument();
 
     const allImages = document.querySelectorAll('img');
     expect(allImages.length).toBeGreaterThan(0);
   });
 
   it('does not display pictures when displayPicture is false or undefined', async () => {
-    const screen = await renderComponent({ displayPicture: false });
+    await renderComponent({ displayPicture: false });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    const avatars = screen.container.querySelectorAll(
-      'img[src*="user1.jpg"], img[src*="user2.jpg"], img[src*="user4.jpg"]',
-    );
+    const avatars = document.querySelectorAll('img[src*="user1.jpg"], img[src*="user2.jpg"], img[src*="user4.jpg"]');
     expect(avatars).toHaveLength(0);
   });
 
@@ -230,10 +227,10 @@ describe('SelectPanel component', () => {
       { value: 'test3', label: 'Test 3' }, // Without data attribute
     ];
 
-    const screen = await renderComponent({ options: optionsWithData });
+    await renderComponent({ options: optionsWithData });
 
     // Just verify the component renders without errors
-    expect(screen.getByRole('button', { name: 'Open Select' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Open Select' })).toBeInTheDocument();
   });
 
   it('preserves data attribute in options throughout component lifecycle', async () => {
@@ -244,15 +241,15 @@ describe('SelectPanel component', () => {
       { value: 'test2', label: 'Test 2', data: { category: 'B', priority: 2 } },
     ];
 
-    const screen = await renderComponent({
+    await renderComponent({
       options: optionsWithData,
       onChange: onChangeMockWithData,
       multiple: true,
       values: [],
     });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
-    await userEvent.click(screen.getByText('Test 1'));
+    await page.getByRole('button', { name: 'Open Select' }).click();
+    await page.getByText('Test 1').click();
 
     // Verify onChange is called with the selected option objects (including data)
     expect(onChangeMockWithData).toHaveBeenCalledWith([optionsWithData[0]]);
@@ -277,10 +274,10 @@ describe('SelectPanel component', () => {
       },
     ];
 
-    const screen = await renderComponent({ options: complexOptions });
+    await renderComponent({ options: complexOptions });
 
     // Verify component renders with complex data structures
-    expect(screen.getByRole('button', { name: 'Open Select' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Open Select' })).toBeInTheDocument();
 
     // Verify data is preserved exactly as provided
     expect(complexOptions[0].data).toEqual({ nested: { key: 'value' }, array: [1, 2, 3] });
@@ -289,21 +286,21 @@ describe('SelectPanel component', () => {
 
   it('uses custom placeholder when provided', async () => {
     const customPlaceholder = 'Type to search options...';
-    const screen = await renderComponent({ placeholder: customPlaceholder });
+    await renderComponent({ placeholder: customPlaceholder });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
-    const searchInput = screen.getByPlaceholder(customPlaceholder);
+    const searchInput = page.getByPlaceholder(customPlaceholder);
     expect(searchInput).toBeInTheDocument();
   });
 
   it('uses default placeholder when custom placeholder is not provided', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Select' }));
+    await page.getByRole('button', { name: 'Open Select' }).click();
 
     // Default placeholder should be the filter placeholder
-    const searchInput = screen.getByPlaceholder('Filter...');
+    const searchInput = page.getByPlaceholder('Filter...');
     expect(searchInput).toBeInTheDocument();
   });
 });

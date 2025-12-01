@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { UserProvider } from '../user-context.tsx';
 import { NavbarSpeaker } from './navbar-speaker.tsx';
 
@@ -27,7 +26,7 @@ describe('NavbarSpeaker component', () => {
       { path: '/speaker/settings/*', Component: () => <NavbarSpeaker /> },
       { path: '/notifications', Component: () => <NavbarSpeaker /> },
     ]);
-    return render(
+    return page.render(
       <I18nextProvider i18n={i18nTest}>
         <UserProvider user={user}>
           <RouteStub initialEntries={initialEntries} />
@@ -37,31 +36,31 @@ describe('NavbarSpeaker component', () => {
   };
 
   it('renders logo and user menu when user is authenticated', async () => {
-    const screen = await renderComponent(mockUser);
+    await renderComponent(mockUser);
 
-    const logo = screen.getByRole('link', { name: 'Go to Home' });
+    const logo = page.getByRole('link', { name: 'Go to Home' });
     await expect.element(logo).toBeInTheDocument();
     await expect.element(logo).toHaveAttribute('href', '/');
 
-    const userMenuButton = screen.getByRole('button', { name: 'Open user menu' });
+    const userMenuButton = page.getByRole('button', { name: 'Open user menu' });
     await expect.element(userMenuButton).toBeInTheDocument();
   });
 
   it('renders login button when user is not authenticated', async () => {
-    const screen = await renderComponent(null);
+    await renderComponent(null);
 
-    const loginButton = screen.getByRole('link', { name: 'Login' });
+    const loginButton = page.getByRole('link', { name: 'Login' });
     await expect.element(loginButton).toBeInTheDocument();
   });
 
   it('opens user menu when clicked', async () => {
-    const screen = await renderComponent(mockUser);
+    await renderComponent(mockUser);
 
-    const userMenuButton = screen.getByRole('button', { name: 'Open user menu' });
-    await userEvent.click(userMenuButton);
+    const userMenuButton = page.getByRole('button', { name: 'Open user menu' });
+    await userMenuButton.click();
 
-    await expect.element(screen.getByRole('link', { name: 'Activity' })).toBeInTheDocument();
-    await expect.element(screen.getByRole('link', { name: 'Talks library' })).toBeInTheDocument();
-    await expect.element(screen.getByRole('link', { name: 'Settings' })).toBeInTheDocument();
+    await expect.element(page.getByRole('link', { name: 'Activity' })).toBeInTheDocument();
+    await expect.element(page.getByRole('link', { name: 'Talks library' })).toBeInTheDocument();
+    await expect.element(page.getByRole('link', { name: 'Settings' })).toBeInTheDocument();
   });
 });

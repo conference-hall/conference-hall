@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { TagsSection } from './tags-section.tsx';
 
 // Mock useFetcher
@@ -55,21 +54,23 @@ describe('TagsSection component', () => {
         ),
       },
     ]);
-    return render(<RouteStub />);
+    return page.render(<RouteStub />);
   };
 
   it('displays current proposal tags with colors', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
-    await expect.element(screen.getByText('Backend')).toBeInTheDocument();
+    await expect.element(page.getByText('Frontend')).toBeInTheDocument();
+    await expect.element(page.getByText('Backend')).toBeInTheDocument();
   });
 
   it('submits form data when tags are changed', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
-    await userEvent.click(screen.getByText('Beginner'));
+    const element = page.getByRole('button', { name: /Tags/ });
+    await element.click();
+    const element1 = page.getByText('Beginner');
+    await element1.click();
 
     expect(mockFetcher.submit).toHaveBeenCalledWith(expect.any(FormData), { method: 'POST', preventScrollReset: true });
 
@@ -83,44 +84,48 @@ describe('TagsSection component', () => {
   it('shows submitting state when fetcher is submitting', async () => {
     mockFetcher.state = 'submitting';
 
-    const screen = await renderComponent();
+    await renderComponent();
 
     // Should still display current tags during submission
-    await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
-    await expect.element(screen.getByText('Backend')).toBeInTheDocument();
+    await expect.element(page.getByText('Frontend')).toBeInTheDocument();
+    await expect.element(page.getByText('Backend')).toBeInTheDocument();
   });
 
   it('renders in readonly mode when canChangeTags is false', async () => {
-    const screen = await renderComponent({ canChangeTags: false });
+    await renderComponent({ canChangeTags: false });
 
-    await expect.element(screen.getByText('Tags')).toBeInTheDocument();
-    await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
+    await expect.element(page.getByText('Tags')).toBeInTheDocument();
+    await expect.element(page.getByText('Frontend')).toBeInTheDocument();
 
     // Should not have interactive button when readonly
-    await expect.element(screen.getByRole('button', { name: /Tags/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: /Tags/ })).not.toBeInTheDocument();
   });
 
   it('hides action button when canCreateTags is false', async () => {
-    const screen = await renderComponent({ canCreateTags: false });
+    await renderComponent({ canCreateTags: false });
 
-    await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
+    const element = page.getByRole('button', { name: /Tags/ });
+    await element.click();
 
-    await expect.element(screen.getByText('Manage tags')).not.toBeInTheDocument();
+    await expect.element(page.getByText('Manage tags')).not.toBeInTheDocument();
   });
 
   it('shows action button when canCreateTags is true', async () => {
-    const screen = await renderComponent({ canCreateTags: true });
+    await renderComponent({ canCreateTags: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
+    const element = page.getByRole('button', { name: /Tags/ });
+    await element.click();
 
-    await expect.element(screen.getByText('Manage tags')).toBeInTheDocument();
+    await expect.element(page.getByText('Manage tags')).toBeInTheDocument();
   });
 
   it('supports multiple tag selection by default', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: /Tags/ }));
-    await userEvent.click(screen.getByText('Beginner'));
+    const element = page.getByRole('button', { name: /Tags/ });
+    await element.click();
+    const element1 = page.getByText('Beginner');
+    await element1.click();
 
     const submittedFormData = mockFetcher.submit.mock.calls[0][0] as FormData;
     expect(submittedFormData.getAll('tags')).toContain('1'); // Frontend (existing)
@@ -129,17 +134,17 @@ describe('TagsSection component', () => {
   });
 
   it('preserves tag colors in the display', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
     // Tags should render with their color information preserved
-    await expect.element(screen.getByText('Frontend')).toBeInTheDocument();
-    await expect.element(screen.getByText('Backend')).toBeInTheDocument();
+    await expect.element(page.getByText('Frontend')).toBeInTheDocument();
+    await expect.element(page.getByText('Backend')).toBeInTheDocument();
   });
 
   it('applies custom className', async () => {
-    const screen = await renderComponent({ className: 'custom-tags' });
+    await renderComponent({ className: 'custom-tags' });
 
-    const section = screen.container.querySelector('.custom-tags');
+    const section = document.body.querySelector('.custom-tags');
     expect(section).toBeInTheDocument();
   });
 
@@ -150,12 +155,12 @@ describe('TagsSection component', () => {
       { id: '3', name: 'Beta', color: '#F59E0B' },
     ];
 
-    const screen = await renderComponent({ proposalTags: unsortedTags });
+    await renderComponent({ proposalTags: unsortedTags });
 
     // Check that all tags are displayed (sorting is handled by the component)
-    await expect.element(screen.getByText('Alpha')).toBeInTheDocument();
-    await expect.element(screen.getByText('Beta')).toBeInTheDocument();
-    await expect.element(screen.getByText('Zebra')).toBeInTheDocument();
+    await expect.element(page.getByText('Alpha')).toBeInTheDocument();
+    await expect.element(page.getByText('Beta')).toBeInTheDocument();
+    await expect.element(page.getByText('Zebra')).toBeInTheDocument();
   });
 
   it('handles tags without colors', async () => {
@@ -170,12 +175,12 @@ describe('TagsSection component', () => {
       { id: '3', name: 'Another No Color', color: '' },
     ];
 
-    const screen = await renderComponent({
+    await renderComponent({
       proposalTags: tagsWithoutColors,
       eventTags: eventTagsWithoutColors,
     });
 
-    await expect.element(screen.getByText('No Color Tag')).toBeInTheDocument();
-    await expect.element(screen.getByText('Regular Tag')).toBeInTheDocument();
+    await expect.element(page.getByText('No Color Tag')).toBeInTheDocument();
+    await expect.element(page.getByText('Regular Tag')).toBeInTheDocument();
   });
 });

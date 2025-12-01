@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page, userEvent } from 'vitest/browser';
 import { SpeakersPanel } from './speakers-panel.tsx';
 
 // Mock useFetcher
@@ -54,29 +53,29 @@ describe('SpeakersPanel component', () => {
         ),
       },
     ]);
-    return render(<RouteStub />);
+    return page.render(<RouteStub />);
   };
 
   it('displays selected speakers', async () => {
     const selectedSpeakers = [{ value: 'speaker1', label: 'John Doe', picture: 'https://example.com/john.jpg' }];
 
-    const screen = await renderComponent({ value: selectedSpeakers });
+    await renderComponent({ value: selectedSpeakers });
 
-    await expect.element(screen.getByText('John Doe')).toBeInTheDocument();
+    await expect.element(page.getByText('John Doe')).toBeInTheDocument();
   });
 
   it('shows no speakers message when none selected', async () => {
-    const screen = await renderComponent({ value: [] });
+    await renderComponent({ value: [] });
 
-    await expect.element(screen.getByText('No speakers')).toBeInTheDocument();
+    await expect.element(page.getByText('No speakers')).toBeInTheDocument();
   });
 
   it('calls onChange when selecting speakers', async () => {
     const onChangeMock = vi.fn();
-    const screen = await renderComponent({ onChange: onChangeMock, canChangeSpeakers: true });
+    await renderComponent({ onChange: onChangeMock, canChangeSpeakers: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
-    await userEvent.click(screen.getByText('John Doe'));
+    await userEvent.click(page.getByRole('button', { name: /Speakers/ }));
+    await userEvent.click(page.getByText('John Doe'));
 
     expect(onChangeMock).toHaveBeenCalledWith([
       {
@@ -90,38 +89,38 @@ describe('SpeakersPanel component', () => {
 
   it('displays error messages when provided', async () => {
     const error = ['At least one speaker is required'];
-    const screen = await renderComponent({ error, canChangeSpeakers: true });
+    await renderComponent({ error, canChangeSpeakers: true });
 
-    await expect.element(screen.getByText('At least one speaker is required')).toBeInTheDocument();
+    await expect.element(page.getByText('At least one speaker is required')).toBeInTheDocument();
   });
 
   it('renders manage speakers action when canCreateSpeaker is true', async () => {
-    const screen = await renderComponent({ canCreateSpeaker: true, canChangeSpeakers: true });
+    await renderComponent({ canCreateSpeaker: true, canChangeSpeakers: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
+    await userEvent.click(page.getByRole('button', { name: /Speakers/ }));
 
-    await expect.element(screen.getByText('Create speaker')).toBeInTheDocument();
+    await expect.element(page.getByText('Create speaker')).toBeInTheDocument();
   });
 
   it('does not render manage action when canCreateSpeaker is false', async () => {
-    const screen = await renderComponent({ canCreateSpeaker: false, canChangeSpeakers: true });
+    await renderComponent({ canCreateSpeaker: false, canChangeSpeakers: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
+    await userEvent.click(page.getByRole('button', { name: /Speakers/ }));
 
-    await expect.element(screen.getByText('Create speaker')).not.toBeInTheDocument();
+    await expect.element(page.getByText('Create speaker')).not.toBeInTheDocument();
   });
 
   it('renders in readonly mode without select functionality', async () => {
     const selectedSpeakers = [{ value: 'speaker1', label: 'John Doe', picture: 'https://example.com/john.jpg' }];
-    const screen = await renderComponent({
+    await renderComponent({
       canChangeSpeakers: false,
       value: selectedSpeakers,
     });
 
-    await expect.element(screen.getByText('Speakers')).toBeInTheDocument();
-    await expect.element(screen.getByText('John Doe')).toBeInTheDocument();
+    await expect.element(page.getByText('Speakers')).toBeInTheDocument();
+    await expect.element(page.getByText('John Doe')).toBeInTheDocument();
 
-    await expect.element(screen.getByRole('button', { name: /Speakers/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: /Speakers/ })).not.toBeInTheDocument();
   });
 
   it('makes speaker row clickable when speaker details are available', async () => {
@@ -140,31 +139,31 @@ describe('SpeakersPanel component', () => {
       },
     ];
 
-    const screen = await renderComponent({
+    await renderComponent({
       value: selectedSpeakers,
       speakersDetails,
     });
 
-    const speakerButton = screen.getByRole('button', { name: /John Doe/ });
+    const speakerButton = page.getByRole('button', { name: /John Doe/ });
     expect(speakerButton).toBeInTheDocument();
   });
 
   it('includes form name when provided', async () => {
     const selectedSpeakers = [{ value: 'speaker1', label: 'John Doe', picture: 'https://example.com/john.jpg' }];
-    const screen = await renderComponent({ form: 'proposal-form', value: selectedSpeakers, canChangeSpeakers: true });
+    await renderComponent({ form: 'proposal-form', value: selectedSpeakers, canChangeSpeakers: true });
 
-    const hiddenInput = screen.container.querySelector('input[name="speakers"][type="hidden"]');
+    const hiddenInput = document.body.querySelector('input[name="speakers"][type="hidden"]');
     expect(hiddenInput).toBeInTheDocument();
     expect(hiddenInput).toHaveAttribute('form', 'proposal-form');
   });
 
   it('triggers search when typing in search input', async () => {
     vi.useFakeTimers();
-    const screen = await renderComponent({ canChangeSpeakers: true });
+    await renderComponent({ canChangeSpeakers: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
+    await userEvent.click(page.getByRole('button', { name: /Speakers/ }));
 
-    const searchInput = screen.getByPlaceholder('Search...');
+    const searchInput = page.getByPlaceholder('Search...');
     await userEvent.type(searchInput, 'John');
 
     // Advance timers to trigger debounced search
@@ -180,11 +179,11 @@ describe('SpeakersPanel component', () => {
   it('displays loading state when fetcher is loading', async () => {
     mockFetcher.state = 'loading';
 
-    const screen = await renderComponent({ canChangeSpeakers: true });
+    await renderComponent({ canChangeSpeakers: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
+    await userEvent.click(page.getByRole('button', { name: /Speakers/ }));
 
-    const searchInput = screen.getByPlaceholder('Search...');
+    const searchInput = page.getByPlaceholder('Search...');
     expect(searchInput).toBeInTheDocument();
 
     // Reset the mock state
@@ -193,12 +192,12 @@ describe('SpeakersPanel component', () => {
 
   it('handles multiple speaker selection', async () => {
     const onChangeMock = vi.fn();
-    const screen = await renderComponent({ onChange: onChangeMock, canChangeSpeakers: true });
+    await renderComponent({ onChange: onChangeMock, canChangeSpeakers: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Speakers/ }));
+    await userEvent.click(page.getByRole('button', { name: /Speakers/ }));
 
-    await userEvent.click(screen.getByText('John Doe'));
-    await userEvent.click(screen.getByText('Jane Smith'));
+    await userEvent.click(page.getByText('John Doe'));
+    await userEvent.click(page.getByText('Jane Smith'));
 
     expect(onChangeMock).toHaveBeenCalledWith([
       {
