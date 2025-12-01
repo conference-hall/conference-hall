@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { CategoriesPanel } from './categories-panel.tsx';
 
 describe('CategoriesPanel component', () => {
@@ -27,7 +26,7 @@ describe('CategoriesPanel component', () => {
         ),
       },
     ]);
-    return render(<RouteStub />);
+    return page.render(<RouteStub />);
   };
 
   it('displays default selected categories', async () => {
@@ -36,24 +35,26 @@ describe('CategoriesPanel component', () => {
       { value: 'ai', label: 'Artificial Intelligence' },
     ];
 
-    const screen = await renderComponent({ defaultValue: selectedCategories });
+    await renderComponent({ defaultValue: selectedCategories });
 
-    await expect.element(screen.getByText('Web Development')).toBeInTheDocument();
-    await expect.element(screen.getByText('Artificial Intelligence')).toBeInTheDocument();
+    await expect.element(page.getByText('Web Development')).toBeInTheDocument();
+    await expect.element(page.getByText('Artificial Intelligence')).toBeInTheDocument();
   });
 
   it('shows no categories message when none selected', async () => {
-    const screen = await renderComponent({ defaultValue: [] });
+    await renderComponent({ defaultValue: [] });
 
-    await expect.element(screen.getByText('No categories')).toBeInTheDocument();
+    await expect.element(page.getByText('No categories')).toBeInTheDocument();
   });
 
   it('calls onChange when selecting categories', async () => {
     const onChangeMock = vi.fn();
-    const screen = await renderComponent({ onChange: onChangeMock });
+    await renderComponent({ onChange: onChangeMock });
 
-    await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
-    await userEvent.click(screen.getByText('Web Development'));
+    const element = page.getByRole('button', { name: /Categories/ });
+    await element.click();
+    const element1 = page.getByText('Web Development');
+    await element1.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([{ value: 'web', label: 'Web Development' }]);
   });
@@ -62,15 +63,17 @@ describe('CategoriesPanel component', () => {
     const onChangeMock = vi.fn();
     const selectedCategories = [{ value: 'web', label: 'Web Development' }];
 
-    const screen = await renderComponent({
+    await renderComponent({
       value: selectedCategories,
       onChange: onChangeMock,
     });
 
-    await expect.element(screen.getByText('Web Development')).toBeInTheDocument();
+    await expect.element(page.getByText('Web Development')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
-    await userEvent.click(screen.getByText('Mobile Development'));
+    const element = page.getByRole('button', { name: /Categories/ });
+    await element.click();
+    const element1 = page.getByText('Mobile Development');
+    await element1.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([
       { value: 'web', label: 'Web Development' },
@@ -80,64 +83,69 @@ describe('CategoriesPanel component', () => {
 
   it('displays error messages when provided', async () => {
     const error = ['At least one category is required'];
-    const screen = await renderComponent({ error });
+    await renderComponent({ error });
 
-    await expect.element(screen.getByText('At least one category is required')).toBeInTheDocument();
+    await expect.element(page.getByText('At least one category is required')).toBeInTheDocument();
   });
 
   it('renders manage categories action when showAction is true', async () => {
-    const screen = await renderComponent({ showAction: true });
+    await renderComponent({ showAction: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
+    const element = page.getByRole('button', { name: /Categories/ });
+    await element.click();
 
-    await expect.element(screen.getByText('Manage categories')).toBeInTheDocument();
+    await expect.element(page.getByText('Manage categories')).toBeInTheDocument();
   });
 
   it('does not render manage action when showAction is false', async () => {
-    const screen = await renderComponent({ showAction: false });
+    await renderComponent({ showAction: false });
 
-    await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
+    const element = page.getByRole('button', { name: /Categories/ });
+    await element.click();
 
-    await expect.element(screen.getByText('Manage categories')).not.toBeInTheDocument();
+    await expect.element(page.getByText('Manage categories')).not.toBeInTheDocument();
   });
 
   it('renders in readonly mode without select functionality', async () => {
     const selectedCategories = [{ value: 'web', label: 'Web Development' }];
-    const screen = await renderComponent({
+    await renderComponent({
       readonly: true,
       defaultValue: selectedCategories,
     });
 
-    await expect.element(screen.getByText('Categories')).toBeInTheDocument();
-    await expect.element(screen.getByText('Web Development')).toBeInTheDocument();
+    await expect.element(page.getByText('Categories')).toBeInTheDocument();
+    await expect.element(page.getByText('Web Development')).toBeInTheDocument();
 
-    await expect.element(screen.getByRole('button', { name: /Categories/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: /Categories/ })).not.toBeInTheDocument();
   });
 
   it('supports single selection mode', async () => {
     const onChangeMock = vi.fn();
-    const screen = await renderComponent({
+    await renderComponent({
       multiple: false,
       onChange: onChangeMock,
     });
 
-    await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
-    await userEvent.click(screen.getByText('Web Development'));
+    const element = page.getByRole('button', { name: /Categories/ });
+    await element.click();
+    const element1 = page.getByText('Web Development');
+    await element1.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([{ value: 'web', label: 'Web Development' }]);
 
-    await userEvent.click(screen.getByText('Mobile Development'));
+    const element2 = page.getByText('Mobile Development');
+    await element2.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([{ value: 'mobile', label: 'Mobile Development' }]);
   });
 
   it('includes form name when provided', async () => {
-    const screen = await renderComponent({
+    await renderComponent({
       form: 'proposal-form',
       defaultValue: [{ value: 'web', label: 'Web Development' }],
     });
 
-    const hiddenInput = screen.container.querySelector('input[name="categories"][type="hidden"]');
+    const hiddenInput = document.body.querySelector('input[name="categories"][type="hidden"]');
     expect(hiddenInput).toBeInTheDocument();
     expect(hiddenInput).toHaveAttribute('form', 'proposal-form');
   });

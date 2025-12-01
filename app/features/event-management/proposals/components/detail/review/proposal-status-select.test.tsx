@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '~/shared/types/proposals.types.ts';
 import { ProposalStatusSelect } from './proposal-status-select.tsx';
 
@@ -32,73 +31,73 @@ describe('ProposalStatusSelect component', () => {
         action: vi.fn(),
       },
     ]);
-    return render(<RouteStub />);
+    return page.render(<RouteStub />);
   };
 
   describe('Basic rendering', () => {
     it('renders with pending status', async () => {
-      const screen = await renderComponent();
+      await renderComponent();
 
-      await expect.element(screen.getByLabelText('Change proposal status')).toBeInTheDocument();
-      await expect.element(screen.getByText('Not deliberated')).toBeInTheDocument();
+      await expect.element(page.getByLabelText('Change proposal status')).toBeInTheDocument();
+      await expect.element(page.getByText('Not deliberated')).toBeInTheDocument();
     });
 
     it('renders with accepted status', async () => {
-      const screen = await renderComponent({ ...defaultProps, deliberationStatus: 'ACCEPTED' });
+      await renderComponent({ ...defaultProps, deliberationStatus: 'ACCEPTED' });
 
-      await expect.element(screen.getByText('Accepted')).toBeInTheDocument();
+      await expect.element(page.getByText('Accepted')).toBeInTheDocument();
     });
 
     it('renders with rejected status', async () => {
-      const screen = await renderComponent({ ...defaultProps, deliberationStatus: 'REJECTED' });
+      await renderComponent({ ...defaultProps, deliberationStatus: 'REJECTED' });
 
-      await expect.element(screen.getByText('Rejected')).toBeInTheDocument();
+      await expect.element(page.getByText('Rejected')).toBeInTheDocument();
     });
 
     it('renders with confirmation pending status', async () => {
-      const screen = await renderComponent({
+      await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'PENDING',
       });
 
-      await expect.element(screen.getByText('Waiting for speaker confirmation')).toBeInTheDocument();
+      await expect.element(page.getByText('Waiting for speaker confirmation')).toBeInTheDocument();
     });
 
     it('renders with confirmed status', async () => {
-      const screen = await renderComponent({
+      await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'CONFIRMED',
       });
 
-      await expect.element(screen.getByText('Confirmed by speaker')).toBeInTheDocument();
+      await expect.element(page.getByText('Confirmed by speaker')).toBeInTheDocument();
     });
 
     it('renders with declined status', async () => {
-      const screen = await renderComponent({
+      await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'DECLINED',
       });
 
-      await expect.element(screen.getByText('Declined by speaker')).toBeInTheDocument();
+      await expect.element(page.getByText('Declined by speaker')).toBeInTheDocument();
     });
   });
 
   describe('Status selection', () => {
     it('shows all appropriate options when no confirmation status', async () => {
-      const screen = await renderComponent();
+      await renderComponent();
 
-      const selectButton = screen.getByRole('button', { name: /not deliberated/i });
-      await userEvent.click(selectButton);
+      const selectButton = page.getByRole('button', { name: /not deliberated/i });
+      await selectButton.click();
 
-      await expect.element(screen.getByRole('option', { name: /Not deliberated/ })).toBeInTheDocument();
-      await expect.element(screen.getByRole('option', { name: /Accepted/ })).toBeInTheDocument();
-      await expect.element(screen.getByRole('option', { name: /Rejected/ })).toBeInTheDocument();
+      await expect.element(page.getByRole('option', { name: /Not deliberated/ })).toBeInTheDocument();
+      await expect.element(page.getByRole('option', { name: /Accepted/ })).toBeInTheDocument();
+      await expect.element(page.getByRole('option', { name: /Rejected/ })).toBeInTheDocument();
 
       // Confirmation status options should be hidden - let's check they're not in the DOM
-      const allOptions = screen.getByRole('option').all();
+      const allOptions = page.getByRole('option').all();
       const optionTexts = allOptions.map((option) => option.element().textContent);
       expect(optionTexts).not.toContain('Waiting for speaker confirmation');
       expect(optionTexts).not.toContain('Confirmed by speaker');
@@ -106,23 +105,21 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('shows confirmation options when confirmation status exists', async () => {
-      const screen = await renderComponent({
+      await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'PENDING',
       });
 
-      const selectButton = screen.getByRole('button', { name: /waiting for speaker confirmation/i });
-      await userEvent.click(selectButton);
+      const selectButton = page.getByRole('button', { name: /waiting for speaker confirmation/i });
+      await selectButton.click();
 
-      await expect
-        .element(screen.getByRole('option', { name: /Waiting for speaker confirmation/ }))
-        .toBeInTheDocument();
-      await expect.element(screen.getByRole('option', { name: /Confirmed by speaker/ })).toBeInTheDocument();
-      await expect.element(screen.getByRole('option', { name: /Declined by speaker/ })).toBeInTheDocument();
+      await expect.element(page.getByRole('option', { name: /Waiting for speaker confirmation/ })).toBeInTheDocument();
+      await expect.element(page.getByRole('option', { name: /Confirmed by speaker/ })).toBeInTheDocument();
+      await expect.element(page.getByRole('option', { name: /Declined by speaker/ })).toBeInTheDocument();
 
       // Accepted option should be hidden when confirmation status exists
-      const allOptions = screen.getByRole('option').all();
+      const allOptions = page.getByRole('option').all();
       const optionTexts = allOptions.map((option) => option.element().textContent);
       expect(optionTexts).not.toContain('Accepted');
     });
@@ -132,17 +129,17 @@ describe('ProposalStatusSelect component', () => {
     it('shows confirmation dialog when changing published proposal status', async () => {
       confirmMock.mockReturnValue(true);
 
-      const screen = await renderComponent({
+      await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'PUBLISHED',
       });
 
-      const selectButton = screen.getByRole('button', { name: /accepted/i });
-      await userEvent.click(selectButton);
+      const selectButton = page.getByRole('button', { name: /accepted/i });
+      await selectButton.click();
 
-      const rejectedOption = screen.getByRole('option', { name: /Rejected/ });
-      await userEvent.click(rejectedOption);
+      const rejectedOption = page.getByRole('option', { name: /Rejected/ });
+      await rejectedOption.click();
 
       expect(confirmMock).toHaveBeenCalledWith(
         "Attention: The proposal result has already been published. Any modifications will require re-publishing for the speakers' visibility.",
@@ -150,17 +147,17 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('does not show confirmation for non-published proposals', async () => {
-      const screen = await renderComponent({
+      await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'NOT_PUBLISHED',
       });
 
-      const selectButton = screen.getByRole('button', { name: /accepted/i });
-      await userEvent.click(selectButton);
+      const selectButton = page.getByRole('button', { name: /accepted/i });
+      await selectButton.click();
 
-      const rejectedOption = screen.getByRole('option', { name: /Rejected/ });
-      await userEvent.click(rejectedOption);
+      const rejectedOption = page.getByRole('option', { name: /Rejected/ });
+      await rejectedOption.click();
 
       expect(confirmMock).not.toHaveBeenCalled();
     });
@@ -168,24 +165,24 @@ describe('ProposalStatusSelect component', () => {
 
   describe('Publication modal', () => {
     it('shows publication button when proposal can be published', async () => {
-      const screen = await renderComponent({
+      await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'NOT_PUBLISHED',
       });
 
-      await expect.element(screen.getByRole('button', { name: /Publish result to speakers/i })).toBeInTheDocument();
+      await expect.element(page.getByRole('button', { name: /Publish result to speakers/i })).toBeInTheDocument();
     });
 
     it('does not show publication button when proposal is already published', async () => {
-      const screen = await renderComponent({
+      await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'PUBLISHED',
       });
 
       // Check that the publish button doesn't exist in the DOM
-      const allButtons = screen.getByRole('button').all();
+      const allButtons = page.getByRole('button').all();
       const hasPublishButton = allButtons.some((button) =>
         button.element().textContent?.includes('Publish result to speakers'),
       );
@@ -193,14 +190,14 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('does not show publication button when deliberation is pending', async () => {
-      const screen = await renderComponent({
+      await renderComponent({
         ...defaultProps,
         deliberationStatus: 'PENDING',
         publicationStatus: 'NOT_PUBLISHED',
       });
 
       // Check that the publish button doesn't exist in the DOM
-      const allButtons = screen.getByRole('button').all();
+      const allButtons = page.getByRole('button').all();
       const hasPublishButton = allButtons.some((button) =>
         button.element().textContent?.includes('Publish result to speakers'),
       );
@@ -208,16 +205,16 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('opens publication modal when button is clicked', async () => {
-      const screen = await renderComponent({
+      await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'NOT_PUBLISHED',
       });
 
-      const publishButton = screen.getByRole('button', { name: /Publish result to speakers/i });
-      await userEvent.click(publishButton);
+      const publishButton = page.getByRole('button', { name: /Publish result to speakers/i });
+      await publishButton.click();
 
-      const modal = screen.getByRole('dialog', { name: /Publish result to speakers/i });
+      const modal = page.getByRole('dialog', { name: /Publish result to speakers/i });
       await expect.element(modal).toBeInTheDocument();
 
       const checkbox = modal.getByRole('checkbox', { name: /Notify speakers via email/i });
@@ -225,15 +222,16 @@ describe('ProposalStatusSelect component', () => {
     });
 
     it('has submit button with correct intent value', async () => {
-      const screen = await renderComponent({
+      await renderComponent({
         ...defaultProps,
         deliberationStatus: 'ACCEPTED',
         publicationStatus: 'NOT_PUBLISHED',
       });
 
-      await userEvent.click(screen.getByRole('button', { name: /Publish result to speakers/i }));
+      const element = page.getByRole('button', { name: /Publish result to speakers/i });
+      await element.click();
 
-      const modal = screen.getByRole('dialog', { name: /Publish result to speakers/i });
+      const modal = page.getByRole('dialog', { name: /Publish result to speakers/i });
       const submitButtons = modal
         .getByRole('button')
         .all()

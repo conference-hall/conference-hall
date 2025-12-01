@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { SurveySettingsForm, type SurveySettingsFormProps } from './survey-settings-form.tsx';
 
 describe('SurveySettingsForm component', () => {
@@ -17,7 +16,7 @@ describe('SurveySettingsForm component', () => {
         ),
       },
     ]);
-    return render(<RouteStub initialEntries={['/']} />);
+    return page.render(<RouteStub initialEntries={['/']} />);
   };
 
   it('renders the survey settings form', async () => {
@@ -27,10 +26,10 @@ describe('SurveySettingsForm component', () => {
       questions: [],
     };
 
-    const screen = await renderComponent({ config });
+    await renderComponent({ config });
 
-    await expect.element(screen.getByRole('heading', { name: 'Speaker survey' })).toBeInTheDocument();
-    await expect.element(screen.getByText(/Speaker survey activation/)).toBeInTheDocument();
+    await expect.element(page.getByRole('heading', { name: 'Speaker survey' })).toBeInTheDocument();
+    await expect.element(page.getByText(/Speaker survey activation/)).toBeInTheDocument();
   });
 
   it('adds a new question', async () => {
@@ -40,10 +39,11 @@ describe('SurveySettingsForm component', () => {
       questions: [],
     };
 
-    const screen = await renderComponent({ config });
+    await renderComponent({ config });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Add question' }));
+    const element = page.getByRole('button', { name: 'Add question' });
+    await element.click();
 
-    await expect.element(screen.getByRole('dialog')).toBeInTheDocument();
+    await expect.element(page.getByRole('dialog')).toBeInTheDocument();
   });
 });

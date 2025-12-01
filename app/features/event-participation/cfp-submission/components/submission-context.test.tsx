@@ -1,7 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { SubmissionContextProvider, useSteps, useSubmissionNavigation } from './submission-context.tsx';
 
 describe('SubmissionContext', () => {
@@ -15,7 +15,7 @@ describe('SubmissionContext', () => {
   }
 
   it('returns steps for a complete event', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey>
           <TestSubmissionContextComponent />
@@ -23,7 +23,7 @@ describe('SubmissionContext', () => {
       </I18nextProvider>,
     );
 
-    const links = screen.getByRole('link').all();
+    const links = page.getByRole('link').all();
     expect(links).toHaveLength(6);
 
     await expect.element(links[0]).toHaveTextContent('Selection');
@@ -41,7 +41,7 @@ describe('SubmissionContext', () => {
   });
 
   it('returns steps for an event without tracks and survey', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks={false} hasSurvey={false}>
           <TestSubmissionContextComponent />
@@ -49,7 +49,7 @@ describe('SubmissionContext', () => {
       </I18nextProvider>,
     );
 
-    const links = screen.getByRole('link').all();
+    const links = page.getByRole('link').all();
     expect(links).toHaveLength(4);
     await expect.element(links[0]).toHaveTextContent('Selection');
     await expect.element(links[0]).toHaveAttribute('href', '/event-1/submission');
@@ -62,7 +62,7 @@ describe('SubmissionContext', () => {
   });
 
   it('returns steps for an event with tracks but without survey', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks hasSurvey={false}>
           <TestSubmissionContextComponent />
@@ -70,7 +70,7 @@ describe('SubmissionContext', () => {
       </I18nextProvider>,
     );
 
-    const links = screen.getByRole('link').all();
+    const links = page.getByRole('link').all();
     expect(links).toHaveLength(5);
     await expect.element(links[0]).toHaveTextContent('Selection');
     await expect.element(links[0]).toHaveAttribute('href', '/event-1/submission');
@@ -85,7 +85,7 @@ describe('SubmissionContext', () => {
   });
 
   it('returns steps for an event without tracks but with survey', async () => {
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <SubmissionContextProvider eventSlug="event-1" talkId="talk-1" hasTracks={false} hasSurvey>
           <TestSubmissionContextComponent />
@@ -93,7 +93,7 @@ describe('SubmissionContext', () => {
       </I18nextProvider>,
     );
 
-    const links = screen.getByRole('link').all();
+    const links = page.getByRole('link').all();
     expect(links).toHaveLength(5);
     await expect.element(links[0]).toHaveTextContent('Selection');
     await expect.element(links[0]).toHaveAttribute('href', '/event-1/submission');
@@ -135,10 +135,10 @@ describe('useSubmissionNavigation', () => {
       },
     ]);
 
-    const screen = await render(<RouteStub initialEntries={[path]} />);
+    await page.render(<RouteStub initialEntries={[path]} />);
 
-    await expect.element(screen.getByText('Previous: none')).toBeInTheDocument();
-    await expect.element(screen.getByText('Next: /event-1/submission/new')).toBeInTheDocument();
+    await expect.element(page.getByText('Previous: none')).toBeInTheDocument();
+    await expect.element(page.getByText('Next: /event-1/submission/new')).toBeInTheDocument();
   });
 
   it('returns previous and next step paths', async () => {
@@ -157,10 +157,10 @@ describe('useSubmissionNavigation', () => {
       },
     ]);
 
-    const screen = await render(<RouteStub initialEntries={[path]} />);
+    await page.render(<RouteStub initialEntries={[path]} />);
 
-    await expect.element(screen.getByText('Previous: /event-1/submission/talk-1')).toBeInTheDocument();
-    await expect.element(screen.getByText('Next: /event-1/submission/talk-1/tracks')).toBeInTheDocument();
+    await expect.element(page.getByText('Previous: /event-1/submission/talk-1')).toBeInTheDocument();
+    await expect.element(page.getByText('Next: /event-1/submission/talk-1/tracks')).toBeInTheDocument();
   });
 
   it('returns last step paths', async () => {
@@ -179,9 +179,9 @@ describe('useSubmissionNavigation', () => {
       },
     ]);
 
-    const screen = await render(<RouteStub initialEntries={[path]} />);
+    await page.render(<RouteStub initialEntries={[path]} />);
 
-    await expect.element(screen.getByText('Previous: /event-1/submission/talk-1/survey')).toBeInTheDocument();
-    await expect.element(screen.getByText('Next: none')).toBeInTheDocument();
+    await expect.element(page.getByText('Previous: /event-1/submission/talk-1/survey')).toBeInTheDocument();
+    await expect.element(page.getByText('Next: none')).toBeInTheDocument();
   });
 });

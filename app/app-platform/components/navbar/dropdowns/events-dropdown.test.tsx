@@ -2,8 +2,7 @@ import type { JSX } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { EventsDropdown } from './events-dropdown.tsx';
 
 const mockTeams = [
@@ -31,7 +30,7 @@ describe('EventsDropdown component', () => {
       { path: '/team/:team/:event/*', Component: () => Component },
       { path: '/team/:team/:event', Component: () => Component },
     ]);
-    return render(
+    return page.render(
       <I18nextProvider i18n={i18nTest}>
         <RouteStub initialEntries={initialEntries} />
       </I18nextProvider>,
@@ -39,20 +38,20 @@ describe('EventsDropdown component', () => {
   };
 
   it('displays current event name in dropdown button', async () => {
-    const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
+    await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
 
-    const dropdownButton = screen.getByRole('button');
+    const dropdownButton = page.getByRole('button');
     await expect.element(dropdownButton).toHaveTextContent('Event 1');
   });
 
   it('opens dropdown menu and generates correct navigation links for events', async () => {
-    const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
+    await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
 
-    const dropdownButton = screen.getByRole('button');
-    await userEvent.click(dropdownButton);
+    const dropdownButton = page.getByRole('button');
+    await dropdownButton.click();
 
-    const eventLink1 = screen.getByRole('menuitem', { name: /Event 1/ });
-    const eventLink2 = screen.getByRole('menuitem', { name: /Event 2/ });
+    const eventLink1 = page.getByRole('menuitem', { name: /Event 1/ });
+    const eventLink2 = page.getByRole('menuitem', { name: /Event 2/ });
 
     await expect.element(eventLink1).toHaveAttribute('href', '/team/team-1/event-1');
     await expect.element(eventLink2).toHaveAttribute('href', '/team/team-1/event-2');
@@ -60,66 +59,65 @@ describe('EventsDropdown component', () => {
 
   describe('Event filtering', () => {
     it('filters out archived events by default', async () => {
-      const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
+      await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
 
-      const dropdownButton = screen.getByRole('button');
-      await userEvent.click(dropdownButton);
+      const dropdownButton = page.getByRole('button');
+      await dropdownButton.click();
 
-      const eventLink1 = screen.getByRole('menuitem', { name: /Event 1/ });
-      const eventLink2 = screen.getByRole('menuitem', { name: /Event 2/ });
+      const eventLink1 = page.getByRole('menuitem', { name: /Event 1/ });
+      const eventLink2 = page.getByRole('menuitem', { name: /Event 2/ });
       await expect.element(eventLink1).toBeInTheDocument();
       await expect.element(eventLink2).toBeInTheDocument();
 
-      const archivedEvent = screen.getByRole('menuitem', { name: /Event 3/ });
+      const archivedEvent = page.getByRole('menuitem', { name: /Event 3/ });
       await expect.element(archivedEvent).not.toBeInTheDocument();
     });
 
     it('shows archived event if it is the current event', async () => {
-      const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-3']);
+      await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-3']);
 
-      const dropdownButton = screen.getByRole('button');
+      const dropdownButton = page.getByRole('button');
       await expect.element(dropdownButton).toHaveTextContent('Event 3');
+      await dropdownButton.click();
 
-      await userEvent.click(dropdownButton);
-
-      const archivedCurrentEvent = screen.getByRole('menuitem', { name: /Event 3/ });
+      const archivedCurrentEvent = page.getByRole('menuitem', { name: /Event 3/ });
       await expect.element(archivedCurrentEvent).toBeInTheDocument();
     });
 
     it('only shows events from current team', async () => {
-      const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
+      await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
 
-      const dropdownButton = screen.getByRole('button');
-      await userEvent.click(dropdownButton);
+      const dropdownButton = page.getByRole('button');
+      await dropdownButton.click();
 
-      const event1 = screen.getByRole('menuitem', { name: /Event 1/ });
-      const event2 = screen.getByRole('menuitem', { name: /Event 2/ });
+      const event1 = page.getByRole('menuitem', { name: /Event 1/ });
+      const event2 = page.getByRole('menuitem', { name: /Event 2/ });
       await expect.element(event1).toBeInTheDocument();
       await expect.element(event2).toBeInTheDocument();
 
-      const otherTeamEvent = screen.getByRole('menuitem', { name: /Event 4/ });
+      const otherTeamEvent = page.getByRole('menuitem', { name: /Event 4/ });
       await expect.element(otherTeamEvent).not.toBeInTheDocument();
     });
   });
 
   describe('Event creation from menu', () => {
     it('shows event creation when user has the permission', async () => {
-      const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
+      await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
 
-      const dropdownButton = screen.getByRole('button');
-      await userEvent.click(dropdownButton);
+      const dropdownButton = page.getByRole('button');
+      await dropdownButton.click();
 
-      const newEventLink = screen.getByRole('menuitem', { name: /New event/ });
+      const newEventLink = page.getByRole('menuitem', { name: /New event/ });
       await expect.element(newEventLink).toBeInTheDocument();
     });
 
     it('hides event creation when user has not the permission', async () => {
-      const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-2/event-4']);
+      await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-2/event-4']);
 
-      const dropdownButton = screen.getByRole('button');
-      await userEvent.click(dropdownButton);
+      const dropdownButton = page.getByRole('button');
+      await dropdownButton.click();
 
-      const newEventLink = screen.getByRole('menuitem', { name: /New event/ });
+      const newEventLink = page.getByRole('menuitem', { name: /New event/ });
       await expect.element(newEventLink).not.toBeInTheDocument();
     });
   });
@@ -128,9 +126,9 @@ describe('EventsDropdown component', () => {
     it('handles team with no events', async () => {
       const teamsWithNoEvents = [{ slug: 'empty-team', name: 'Empty Team', role: 'OWNER' as const, events: [] }];
 
-      const screen = await renderComponent(<EventsDropdown teams={teamsWithNoEvents} />, ['/team/empty-team/event-1']);
+      await renderComponent(<EventsDropdown teams={teamsWithNoEvents} />, ['/team/empty-team/event-1']);
 
-      const button = screen.getByRole('button');
+      const button = page.getByRole('button');
       await expect.element(button).not.toBeInTheDocument();
     });
   });

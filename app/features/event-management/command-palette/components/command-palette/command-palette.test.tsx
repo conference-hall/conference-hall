@@ -1,8 +1,7 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page, userEvent } from 'vitest/browser';
 import { CommandPalette, type CommandPaletteItemData } from './command-palette.tsx';
 
 // Mock use-debounce to avoid React context issues in tests
@@ -44,7 +43,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -58,10 +57,10 @@ describe('CommandPalette integration tests', () => {
       </I18nextProvider>,
     );
 
-    const searchInput = screen.getByRole('combobox');
+    const searchInput = page.getByRole('combobox');
     await expect.element(searchInput).toBeVisible();
 
-    const emptyStateTitle = screen.getByText('Search');
+    const emptyStateTitle = page.getByText('Search');
     await expect.element(emptyStateTitle).toBeVisible();
   });
 
@@ -70,7 +69,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -85,15 +84,15 @@ describe('CommandPalette integration tests', () => {
     );
 
     // Check sections are displayed
-    const proposalsSection = screen.getByText('Proposals');
-    const speakersSection = screen.getByText('Speakers');
+    const proposalsSection = page.getByText('Proposals');
+    const speakersSection = page.getByText('Speakers');
     await expect.element(proposalsSection).toBeVisible();
     await expect.element(speakersSection).toBeVisible();
 
     // Check items are displayed
-    const proposal1 = screen.getByText('React Performance Best Practices');
-    const proposal2 = screen.getByText('Vue.js Advanced Patterns');
-    const speaker = screen.getByText('Alice Johnson');
+    const proposal1 = page.getByText('React Performance Best Practices');
+    const proposal2 = page.getByText('Vue.js Advanced Patterns');
+    const speaker = page.getByText('Alice Johnson');
 
     await expect.element(proposal1).toBeVisible();
     await expect.element(proposal2).toBeVisible();
@@ -105,7 +104,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -119,7 +118,7 @@ describe('CommandPalette integration tests', () => {
       </I18nextProvider>,
     );
 
-    const searchInput = screen.getByRole('combobox');
+    const searchInput = page.getByRole('combobox');
     await userEvent.type(searchInput, 'React');
 
     // onSearch should be called with debounce, wait for it
@@ -133,7 +132,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -148,12 +147,12 @@ describe('CommandPalette integration tests', () => {
     );
 
     // Type to set query
-    const searchInput = screen.getByRole('combobox');
+    const searchInput = page.getByRole('combobox');
     await userEvent.type(searchInput, 'React');
 
     // Click on first proposal
-    const proposal = screen.getByRole('option', { name: /React Performance Best Practices/ });
-    await userEvent.click(proposal);
+    const proposal = page.getByRole('option', { name: /React Performance Best Practices/ });
+    await proposal.click();
 
     expect(mockOnClick).toHaveBeenCalledWith(MOCK_ITEMS[0], 'React');
     expect(mockOnClose).toHaveBeenCalled();
@@ -164,7 +163,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -178,7 +177,7 @@ describe('CommandPalette integration tests', () => {
       </I18nextProvider>,
     );
 
-    const loadingIcon = screen.getByLabelText('Loading');
+    const loadingIcon = page.getByLabelText('Loading');
     await expect.element(loadingIcon).toBeVisible();
   });
 
@@ -187,7 +186,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -201,11 +200,11 @@ describe('CommandPalette integration tests', () => {
       </I18nextProvider>,
     );
 
-    const searchInput = screen.getByRole('combobox');
+    const searchInput = page.getByRole('combobox');
     await userEvent.type(searchInput, 'R');
 
     // Should show loading while typing and waiting for debounced search
-    const loadingIcon = screen.getByLabelText('Loading');
+    const loadingIcon = page.getByLabelText('Loading');
     await expect.element(loadingIcon).toBeVisible();
   });
 
@@ -214,7 +213,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -228,7 +227,7 @@ describe('CommandPalette integration tests', () => {
       </I18nextProvider>,
     );
 
-    const searchInput = screen.getByRole('combobox');
+    const searchInput = page.getByRole('combobox');
     await userEvent.type(searchInput, 'NoResults');
 
     // Wait for search to complete
@@ -237,7 +236,7 @@ describe('CommandPalette integration tests', () => {
     });
 
     // Empty state should be visible with the query
-    const emptyStateTitle = screen.getByText('Search');
+    const emptyStateTitle = page.getByText('Search');
     await expect.element(emptyStateTitle).toBeVisible();
   });
 
@@ -246,7 +245,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -261,7 +260,7 @@ describe('CommandPalette integration tests', () => {
       </I18nextProvider>,
     );
 
-    const closeText = screen.getByText('Custom close');
+    const closeText = page.getByText('Custom close');
     await expect.element(closeText).toBeVisible();
   });
 
@@ -270,7 +269,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -288,7 +287,7 @@ describe('CommandPalette integration tests', () => {
     await userEvent.keyboard('[ArrowDown]');
 
     // First item should be focused (HeadlessUI handles the focus automatically)
-    const firstItem = screen.getByRole('option', { name: /React Performance Best Practices/ });
+    const firstItem = page.getByRole('option', { name: /React Performance Best Practices/ });
     await expect.element(firstItem).toHaveAttribute('data-focus');
 
     // Press Enter to select focused item
@@ -303,7 +302,7 @@ describe('CommandPalette integration tests', () => {
     const mockOnClick = vi.fn();
     const mockOnClose = vi.fn();
 
-    const screen = await render(
+    await page.render(
       <I18nextProvider i18n={i18nTest}>
         <CommandPalette
           title="Search"
@@ -317,7 +316,7 @@ describe('CommandPalette integration tests', () => {
       </I18nextProvider>,
     );
 
-    const searchInput = screen.getByRole('combobox');
+    const searchInput = page.getByRole('combobox');
 
     // Type something
     await userEvent.type(searchInput, 'React');

@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { UserProvider } from '~/app-platform/components/user-context.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { MessageActionsMenu } from './message-actions-menu.tsx';
@@ -47,24 +46,27 @@ describe('MessageActionsMenu component', () => {
         ),
       },
     ]);
-    return render(<RouteStub initialEntries={['/']} />);
+    return page.render(<RouteStub initialEntries={['/']} />);
   };
 
   it('opens menu with edit and delete options', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Message action menu' }));
+    const element = page.getByRole('button', { name: 'Message action menu' });
+    await element.click();
 
-    await expect.element(screen.getByRole('menuitem', { name: 'Edit' })).toBeInTheDocument();
-    await expect.element(screen.getByRole('menuitem', { name: 'Delete' })).toBeInTheDocument();
+    await expect.element(page.getByRole('menuitem', { name: 'Edit' })).toBeInTheDocument();
+    await expect.element(page.getByRole('menuitem', { name: 'Delete' })).toBeInTheDocument();
   });
 
   it('calls onEdit when edit button is clicked', async () => {
     const onEdit = vi.fn();
-    const screen = await renderComponent({ onEdit });
+    await renderComponent({ onEdit });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Message action menu' }));
-    await userEvent.click(screen.getByRole('menuitem', { name: 'Edit' }));
+    const element = page.getByRole('button', { name: 'Message action menu' });
+    await element.click();
+    const element1 = page.getByRole('menuitem', { name: 'Edit' });
+    await element1.click();
 
     expect(onEdit).toHaveBeenCalledOnce();
   });
@@ -74,9 +76,9 @@ describe('MessageActionsMenu component', () => {
       ...message,
       sender: { userId: 'user-2', name: 'Jane Doe', picture: null },
     };
-    const screen = await renderComponent({ message: otherUserMessage, canManageConversations: false });
+    await renderComponent({ message: otherUserMessage, canManageConversations: false });
 
-    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Message action menu' })).not.toBeInTheDocument();
   });
 
   it('shows menu when user is not the message sender but canManageConversations is true', async () => {
@@ -84,14 +86,14 @@ describe('MessageActionsMenu component', () => {
       ...message,
       sender: { userId: 'user-2', name: 'Jane Doe', picture: null },
     };
-    const screen = await renderComponent({ message: otherUserMessage, canManageConversations: true });
+    await renderComponent({ message: otherUserMessage, canManageConversations: true });
 
-    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
   });
 
   it('shows menu when user is the message sender regardless of canManageConversations', async () => {
-    const screen = await renderComponent({ canManageConversations: false });
+    await renderComponent({ canManageConversations: false });
 
-    await expect.element(screen.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Message action menu' })).toBeInTheDocument();
   });
 });

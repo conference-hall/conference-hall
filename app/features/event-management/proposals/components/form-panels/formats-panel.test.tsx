@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { FormatsPanel } from './formats-panel.tsx';
 
 describe('FormatsPanel component', () => {
@@ -27,7 +26,7 @@ describe('FormatsPanel component', () => {
         ),
       },
     ]);
-    return render(<RouteStub />);
+    return page.render(<RouteStub />);
   };
 
   it('displays default selected formats', async () => {
@@ -36,24 +35,26 @@ describe('FormatsPanel component', () => {
       { value: 'short', label: 'Short Talk (20min)' },
     ];
 
-    const screen = await renderComponent({ defaultValue: selectedFormats });
+    await renderComponent({ defaultValue: selectedFormats });
 
-    await expect.element(screen.getByText('Lightning Talk (5min)')).toBeInTheDocument();
-    await expect.element(screen.getByText('Short Talk (20min)')).toBeInTheDocument();
+    await expect.element(page.getByText('Lightning Talk (5min)')).toBeInTheDocument();
+    await expect.element(page.getByText('Short Talk (20min)')).toBeInTheDocument();
   });
 
   it('shows no formats message when none selected', async () => {
-    const screen = await renderComponent({ defaultValue: [] });
+    await renderComponent({ defaultValue: [] });
 
-    await expect.element(screen.getByText('No formats')).toBeInTheDocument();
+    await expect.element(page.getByText('No formats')).toBeInTheDocument();
   });
 
   it('calls onChange when selecting formats', async () => {
     const onChangeMock = vi.fn();
-    const screen = await renderComponent({ onChange: onChangeMock });
+    await renderComponent({ onChange: onChangeMock });
 
-    await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
-    await userEvent.click(screen.getByText('Lightning Talk (5min)'));
+    const element = page.getByRole('button', { name: /Formats/ });
+    await element.click();
+    const element1 = page.getByText('Lightning Talk (5min)');
+    await element1.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([{ value: 'lightning', label: 'Lightning Talk (5min)' }]);
   });
@@ -62,15 +63,17 @@ describe('FormatsPanel component', () => {
     const onChangeMock = vi.fn();
     const selectedFormats = [{ value: 'lightning', label: 'Lightning Talk (5min)' }];
 
-    const screen = await renderComponent({
+    await renderComponent({
       value: selectedFormats,
       onChange: onChangeMock,
     });
 
-    await expect.element(screen.getByText('Lightning Talk (5min)')).toBeInTheDocument();
+    await expect.element(page.getByText('Lightning Talk (5min)')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
-    await userEvent.click(screen.getByText('Short Talk (20min)'));
+    const element = page.getByRole('button', { name: /Formats/ });
+    await element.click();
+    const element1 = page.getByText('Short Talk (20min)');
+    await element1.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([
       { value: 'lightning', label: 'Lightning Talk (5min)' },
@@ -80,64 +83,69 @@ describe('FormatsPanel component', () => {
 
   it('displays error messages when provided', async () => {
     const error = ['Please select at least one format'];
-    const screen = await renderComponent({ error });
+    await renderComponent({ error });
 
-    await expect.element(screen.getByText('Please select at least one format')).toBeInTheDocument();
+    await expect.element(page.getByText('Please select at least one format')).toBeInTheDocument();
   });
 
   it('renders manage formats action when showAction is true', async () => {
-    const screen = await renderComponent({ showAction: true });
+    await renderComponent({ showAction: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
+    const element = page.getByRole('button', { name: /Formats/ });
+    await element.click();
 
-    await expect.element(screen.getByText('Manage formats')).toBeInTheDocument();
+    await expect.element(page.getByText('Manage formats')).toBeInTheDocument();
   });
 
   it('does not render manage action when showAction is false', async () => {
-    const screen = await renderComponent({ showAction: false });
+    await renderComponent({ showAction: false });
 
-    await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
+    const element = page.getByRole('button', { name: /Formats/ });
+    await element.click();
 
-    await expect.element(screen.getByText('Manage formats')).not.toBeInTheDocument();
+    await expect.element(page.getByText('Manage formats')).not.toBeInTheDocument();
   });
 
   it('renders in readonly mode without select functionality', async () => {
     const selectedFormats = [{ value: 'lightning', label: 'Lightning Talk (5min)' }];
-    const screen = await renderComponent({
+    await renderComponent({
       readonly: true,
       defaultValue: selectedFormats,
     });
 
-    await expect.element(screen.getByText('Formats')).toBeInTheDocument();
-    await expect.element(screen.getByText('Lightning Talk (5min)')).toBeInTheDocument();
+    await expect.element(page.getByText('Formats')).toBeInTheDocument();
+    await expect.element(page.getByText('Lightning Talk (5min)')).toBeInTheDocument();
 
-    await expect.element(screen.getByRole('button', { name: /Formats/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: /Formats/ })).not.toBeInTheDocument();
   });
 
   it('supports single selection mode', async () => {
     const onChangeMock = vi.fn();
-    const screen = await renderComponent({
+    await renderComponent({
       multiple: false,
       onChange: onChangeMock,
     });
 
-    await userEvent.click(screen.getByRole('button', { name: /Formats/ }));
-    await userEvent.click(screen.getByText('Lightning Talk (5min)'));
+    const element = page.getByRole('button', { name: /Formats/ });
+    await element.click();
+    const element1 = page.getByText('Lightning Talk (5min)');
+    await element1.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([{ value: 'lightning', label: 'Lightning Talk (5min)' }]);
 
-    await userEvent.click(screen.getByText('Short Talk (20min)'));
+    const element2 = page.getByText('Short Talk (20min)');
+    await element2.click();
 
     expect(onChangeMock).toHaveBeenCalledWith([{ value: 'short', label: 'Short Talk (20min)' }]);
   });
 
   it('includes form name when provided', async () => {
-    const screen = await renderComponent({
+    await renderComponent({
       form: 'proposal-form',
       defaultValue: [{ value: 'lightning', label: 'Lightning Talk (5min)' }],
     });
 
-    const hiddenInput = screen.container.querySelector('input[name="formats"][type="hidden"]');
+    const hiddenInput = document.body.querySelector('input[name="formats"][type="hidden"]');
     expect(hiddenInput).toBeInTheDocument();
     expect(hiddenInput).toHaveAttribute('form', 'proposal-form');
   });

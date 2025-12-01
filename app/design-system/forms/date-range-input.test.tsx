@@ -1,5 +1,4 @@
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { DateRangeInput } from './date-range-input.tsx';
 
 describe('DateRangeInput', () => {
@@ -19,17 +18,17 @@ describe('DateRangeInput', () => {
   };
 
   it('renders start and end date inputs', async () => {
-    const screen = await render(<DateRangeInput {...defaultProps} />);
+    await page.render(<DateRangeInput {...defaultProps} />);
 
-    await expect.element(screen.getByLabelText('Start Date')).toBeInTheDocument();
-    await expect.element(screen.getByLabelText('End Date')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Start Date')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('End Date')).toBeInTheDocument();
   });
 
   it('initializes with provided date values', async () => {
     const startDate = new Date('2023-01-15');
     const endDate = new Date('2023-01-20');
 
-    const screen = await render(
+    await page.render(
       <DateRangeInput
         start={{ name: 'start-date', label: 'Start Date', value: startDate }}
         end={{ name: 'end-date', label: 'End Date', value: endDate }}
@@ -37,8 +36,8 @@ describe('DateRangeInput', () => {
       />,
     );
 
-    const startInput = screen.getByLabelText('Start Date');
-    const endInput = screen.getByLabelText('End Date');
+    const startInput = page.getByLabelText('Start Date');
+    const endInput = page.getByLabelText('End Date');
 
     await expect.element(startInput).toHaveValue('2023-01-15');
     await expect.element(endInput).toHaveValue('2023-01-20');
@@ -48,7 +47,7 @@ describe('DateRangeInput', () => {
     const startDate = new Date('2023-01-15');
     const endDate = new Date('2023-01-20');
 
-    const screen = await render(
+    await page.render(
       <DateRangeInput
         start={{ name: 'start-date', label: 'Start Date', value: startDate }}
         end={{ name: 'end-date', label: 'End Date', value: endDate }}
@@ -56,8 +55,8 @@ describe('DateRangeInput', () => {
       />,
     );
 
-    const startInput = screen.getByLabelText('Start Date');
-    const endInput = screen.getByLabelText('End Date');
+    const startInput = page.getByLabelText('Start Date');
+    const endInput = page.getByLabelText('End Date');
 
     await expect.element(startInput).toHaveValue('2023-01-14');
     await expect.element(endInput).toHaveValue('2023-01-19');
@@ -66,25 +65,25 @@ describe('DateRangeInput', () => {
   it('shows error message when provided', async () => {
     const errorMessage = ['Invalid date range'];
 
-    const screen = await render(<DateRangeInput {...defaultProps} error={errorMessage} />);
+    await page.render(<DateRangeInput {...defaultProps} error={errorMessage} />);
 
-    await expect.element(screen.getByText('Invalid date range')).toBeInTheDocument();
+    await expect.element(page.getByText('Invalid date range')).toBeInTheDocument();
   });
 
   it('calls onChange when provided', async () => {
     const mockOnChange = vi.fn();
 
-    const screen = await render(<DateRangeInput {...defaultProps} onChange={mockOnChange} />);
+    await page.render(<DateRangeInput {...defaultProps} onChange={mockOnChange} />);
 
-    const startInput = screen.getByLabelText('Start Date');
-    const endInput = screen.getByLabelText('End Date');
+    const startInput = page.getByLabelText('Start Date');
+    const endInput = page.getByLabelText('End Date');
 
-    await userEvent.fill(startInput, '2023-01-12');
+    await startInput.fill('2023-01-12');
     expect(mockOnChange).toHaveBeenCalledWith(new Date('2023-01-12'), new Date('2023-01-12'));
     await expect.element(endInput).toHaveAttribute('min', '2023-01-12');
     mockOnChange.mockClear();
 
-    await userEvent.fill(endInput, '2023-01-18');
+    await endInput.fill('2023-01-18');
     expect(mockOnChange).toHaveBeenCalledWith(new Date('2023-01-12'), new Date('2023-01-18'));
     mockOnChange.mockClear();
   });
@@ -93,10 +92,10 @@ describe('DateRangeInput', () => {
     const minDate = new Date('2023-01-05');
     const maxDate = new Date('2023-01-25');
 
-    const screen = await render(<DateRangeInput {...defaultProps} min={minDate} max={maxDate} />);
+    await page.render(<DateRangeInput {...defaultProps} min={minDate} max={maxDate} />);
 
-    const startInput = screen.getByLabelText('Start Date');
-    const endInput = screen.getByLabelText('End Date');
+    const startInput = page.getByLabelText('Start Date');
+    const endInput = page.getByLabelText('End Date');
 
     await expect.element(startInput).toHaveAttribute('min', '2023-01-05');
     await expect.element(startInput).toHaveAttribute('max', '2023-01-25');

@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page, userEvent } from 'vitest/browser';
 import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 import { SurveyQuestionModal } from './survey-question-modal.tsx';
 
@@ -24,49 +23,49 @@ describe('SurveyQuestionModal component', () => {
         ),
       },
     ]);
-    return render(<RouteStub />);
+    return page.render(<RouteStub />);
   };
 
   it('renders the modal in create mode', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
+    await userEvent.click(page.getByRole('button', { name: 'Open Modal' }));
 
-    await expect.element(screen.getByRole('button', { name: 'Add question' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Add question' })).toBeInTheDocument();
 
-    const questionInput = screen.getByLabelText('Question', { exact: true });
+    const questionInput = page.getByLabelText('Question', { exact: true });
     await expect.element(questionInput).toBeInTheDocument();
   });
 
   it('renders the modal in edit mode', async () => {
-    const screen = await renderComponent({ id: '1', label: 'Existing Question', type: 'text', required: false });
+    await renderComponent({ id: '1', label: 'Existing Question', type: 'text', required: false });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
+    await userEvent.click(page.getByRole('button', { name: 'Open Modal' }));
 
-    await expect.element(screen.getByRole('button', { name: 'Save question' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Save question' })).toBeInTheDocument();
 
-    const questionInput = screen.getByLabelText('Question', { exact: true });
+    const questionInput = page.getByLabelText('Question', { exact: true });
     await expect.element(questionInput).toHaveValue('Existing Question');
   });
 
   it('adds a new option', async () => {
-    const screen = await renderComponent({
+    await renderComponent({
       id: '1',
       label: 'Question with options',
       type: 'checkbox',
       required: false,
     });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
-    await userEvent.type(screen.getByPlaceholder('New answer'), 'Option 1');
-    await userEvent.click(screen.getByRole('button', { name: 'Add answer' }));
+    await userEvent.click(page.getByRole('button', { name: 'Open Modal' }));
+    await userEvent.type(page.getByPlaceholder('New answer'), 'Option 1');
+    await userEvent.click(page.getByRole('button', { name: 'Add answer' }));
 
-    const optionInput = screen.getByLabelText('Option 1', { exact: true });
+    const optionInput = page.getByLabelText('Option 1', { exact: true });
     await expect.element(optionInput).toHaveValue('Option 1');
   });
 
   it('removes an existing option', async () => {
-    const screen = await renderComponent({
+    await renderComponent({
       id: '1',
       label: 'Question with options',
       type: 'checkbox',
@@ -74,27 +73,27 @@ describe('SurveyQuestionModal component', () => {
       options: [{ id: 'opt1', label: 'Option 1' }],
     });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
-    await expect.element(screen.getByLabelText('Option 1', { exact: true })).toBeInTheDocument();
+    await userEvent.click(page.getByRole('button', { name: 'Open Modal' }));
+    await expect.element(page.getByLabelText('Option 1', { exact: true })).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Remove answer: Option 1' }));
-    await expect.element(screen.getByLabelText('Option 1', { exact: true })).not.toBeInTheDocument();
+    await userEvent.click(page.getByRole('button', { name: 'Remove answer: Option 1' }));
+    await expect.element(page.getByLabelText('Option 1', { exact: true })).not.toBeInTheDocument();
   });
 
   it('disables the submit button when no options are provided for checkbox or radio types', async () => {
-    const screen = await renderComponent({
+    await renderComponent({
       id: '1',
       label: 'Question with options',
       type: 'checkbox',
       required: false,
     });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
-    const submitButton = screen.getByRole('button', { name: 'Save question' });
+    await userEvent.click(page.getByRole('button', { name: 'Open Modal' }));
+    const submitButton = page.getByRole('button', { name: 'Save question' });
     await expect.element(submitButton).toBeDisabled();
 
-    await userEvent.type(screen.getByPlaceholder('New answer'), 'Option 1');
-    await userEvent.click(screen.getByRole('button', { name: 'Add answer' }));
+    await userEvent.type(page.getByPlaceholder('New answer'), 'Option 1');
+    await userEvent.click(page.getByRole('button', { name: 'Add answer' }));
     await expect.element(submitButton).not.toBeDisabled();
   });
 });

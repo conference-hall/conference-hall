@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { CategoriesSection } from './categories-section.tsx';
 
 // Mock useFetcher
@@ -55,21 +54,23 @@ describe('CategoriesSection component', () => {
         ),
       },
     ]);
-    return render(<RouteStub />);
+    return page.render(<RouteStub />);
   };
 
   it('displays current proposal categories', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await expect.element(screen.getByText('Web Development')).toBeInTheDocument();
-    await expect.element(screen.getByText('AI/ML')).toBeInTheDocument();
+    await expect.element(page.getByText('Web Development')).toBeInTheDocument();
+    await expect.element(page.getByText('AI/ML')).toBeInTheDocument();
   });
 
   it('submits form data when categories are changed', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
-    await userEvent.click(screen.getByText('Mobile Development'));
+    const button = page.getByRole('button', { name: /Categories/ });
+    await button.click();
+    const option = page.getByText('Mobile Development');
+    await option.click();
 
     expect(mockFetcher.submit).toHaveBeenCalledWith(expect.any(FormData), { method: 'POST', preventScrollReset: true });
 
@@ -81,27 +82,29 @@ describe('CategoriesSection component', () => {
   });
 
   it('renders in readonly mode when canChangeCategory is false', async () => {
-    const screen = await renderComponent({ canChangeCategory: false });
+    await renderComponent({ canChangeCategory: false });
 
-    await expect.element(screen.getByText('Categories')).toBeInTheDocument();
-    await expect.element(screen.getByText('Web Development')).toBeInTheDocument();
+    await expect.element(page.getByText('Categories')).toBeInTheDocument();
+    await expect.element(page.getByText('Web Development')).toBeInTheDocument();
 
-    await expect.element(screen.getByRole('button', { name: /Categories/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: /Categories/ })).not.toBeInTheDocument();
   });
 
   it('hides action button when canCreateCategory is false', async () => {
-    const screen = await renderComponent({ canCreateCategory: false });
+    await renderComponent({ canCreateCategory: false });
 
-    await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
+    const button = page.getByRole('button', { name: /Categories/ });
+    await button.click();
 
-    await expect.element(screen.getByText('Manage categories')).not.toBeInTheDocument();
+    await expect.element(page.getByText('Manage categories')).not.toBeInTheDocument();
   });
 
   it('shows action button when canCreateCategory is true', async () => {
-    const screen = await renderComponent({ canCreateCategory: true });
+    await renderComponent({ canCreateCategory: true });
 
-    await userEvent.click(screen.getByRole('button', { name: /Categories/ }));
+    const button = page.getByRole('button', { name: /Categories/ });
+    await button.click();
 
-    await expect.element(screen.getByText('Manage categories')).toBeInTheDocument();
+    await expect.element(page.getByText('Manage categories')).toBeInTheDocument();
   });
 });

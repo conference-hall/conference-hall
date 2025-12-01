@@ -1,8 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { SpeakerModal } from './speaker-modal.tsx';
 
 describe('SpeakerModal component', () => {
@@ -32,7 +31,7 @@ describe('SpeakerModal component', () => {
         ),
       },
     ]);
-    return render(<RouteStub initialEntries={['/']} />);
+    return page.render(<RouteStub initialEntries={['/']} />);
   };
 
   beforeEach(() => {
@@ -40,40 +39,43 @@ describe('SpeakerModal component', () => {
   });
 
   it('renders the modal trigger button', async () => {
-    const screen = await renderComponent();
-    await expect.element(screen.getByRole('button', { name: 'Open Modal' })).toBeInTheDocument();
+    await renderComponent();
+    await expect.element(page.getByRole('button', { name: 'Open Modal' })).toBeInTheDocument();
   });
 
   it('opens and displays the modal when trigger is clicked', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
+    const element = page.getByRole('button', { name: 'Open Modal' });
+    await element.click();
 
-    await expect.element(screen.getByRole('button', { name: 'Create speaker' })).toBeInTheDocument();
-    await expect.element(screen.getByLabelText('Email')).toBeInTheDocument();
-    await expect.element(screen.getByLabelText('Full Name')).toBeInTheDocument();
-    await expect.element(screen.getByLabelText('Company')).toBeInTheDocument();
-    await expect.element(screen.getByLabelText('Biography')).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Create speaker' })).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Email')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Full Name')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Company')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Biography')).toBeInTheDocument();
   });
 
   it('has required validation for email and name fields', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
+    const element = page.getByRole('button', { name: 'Open Modal' });
+    await element.click();
 
-    const emailInput = screen.getByLabelText('Email');
-    const nameInput = screen.getByLabelText('Full Name');
+    const emailInput = page.getByLabelText('Email');
+    const nameInput = page.getByLabelText('Full Name');
 
     await expect.element(emailInput).toBeRequired();
     await expect.element(nameInput).toBeRequired();
   });
 
   it('shows email type validation for email field', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Open Modal' }));
+    const element = page.getByRole('button', { name: 'Open Modal' });
+    await element.click();
 
-    const emailInput = screen.getByLabelText('Email');
+    const emailInput = page.getByLabelText('Email');
     await expect.element(emailInput).toHaveAttribute('type', 'email');
   });
 });

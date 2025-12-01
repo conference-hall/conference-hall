@@ -1,7 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
-import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { ShareProposalModal } from './share-proposal-modal.tsx';
 
 describe('ShareProposalModal component', () => {
@@ -21,35 +21,35 @@ describe('ShareProposalModal component', () => {
         ),
       },
     ]);
-    return render(<RouteStub initialEntries={['/team/my-team/my-event/proposals/proposal-123']} />);
+    return page.render(<RouteStub initialEntries={['/team/my-team/my-event/proposals/proposal-123']} />);
   };
 
   it('displays the modal with title', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    const dialog = screen.getByRole('dialog', { name: 'Share proposal' });
+    const dialog = page.getByRole('dialog', { name: 'Share proposal' });
     await expect.element(dialog).toBeInTheDocument();
   });
 
   it('displays organizer link', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    const dialog = screen.getByRole('dialog');
+    const dialog = page.getByRole('dialog');
     await expect.element(dialog.getByText('Organizer link')).toBeInTheDocument();
 
-    const organizerInput = screen.getByRole('textbox', { name: 'Organizer link' });
+    const organizerInput = page.getByRole('textbox', { name: 'Organizer link' });
     await expect
       .element(organizerInput)
       .toHaveValue(expect.stringContaining('/team/my-team/my-event/proposals/proposal-123'));
   });
 
   it('displays speaker link', async () => {
-    const screen = await renderComponent();
+    await renderComponent();
 
-    const dialog = screen.getByRole('dialog');
+    const dialog = page.getByRole('dialog');
     await expect.element(dialog.getByText('Speaker link')).toBeInTheDocument();
 
-    const speakerInput = screen.getByRole('textbox', { name: 'Speaker link' });
+    const speakerInput = page.getByRole('textbox', { name: 'Speaker link' });
     await expect.element(speakerInput).toHaveValue(expect.stringContaining('/my-event/proposals/proposal-123'));
   });
 });
