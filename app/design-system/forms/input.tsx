@@ -1,4 +1,4 @@
-import { cva } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { Label } from '../typography.tsx';
 
@@ -29,7 +29,7 @@ export function Input({
   ...rest
 }: InputProps) {
   return (
-    <div className={className}>
+    <div className={cx(className, { hidden: type === 'hidden' })}>
       {label && (
         <Label htmlFor={name} mb={1}>
           {label}
@@ -80,7 +80,7 @@ const containerStyle = cva(
   },
 );
 
-const inputStyle = cva('block flex-1 border-0 bg-transparent focus:ring-0', {
+const inputStyle = cva('flex-1 border-0 bg-transparent focus:ring-0', {
   variants: {
     color: {
       light: 'text-gray-900 placeholder:text-gray-400',

@@ -15,7 +15,7 @@ type Props = {
 
 export function SelectNative({ name, label, options, placeholder, inline, srOnly, className, ...rest }: Props) {
   return (
-    <div className={cx({ 'flex items-center gap-2': inline })}>
+    <div className={cx({ 'space-y-1': !inline, 'flex items-center gap-2.5': inline })}>
       <Label htmlFor={name} className={cx({ 'sr-only': srOnly })}>
         {label}
       </Label>
