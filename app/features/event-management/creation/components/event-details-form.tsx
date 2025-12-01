@@ -42,7 +42,7 @@ export function EventDetailsForm({
   const [onlineChecked, setOnlineChanged] = useState<boolean>(onlineEvent);
 
   return (
-    <Form id={formId} method="POST" className="space-y-4 lg:space-y-6">
+    <Form id={formId} method="POST" className="flex flex-col gap-4 lg:gap-6">
       {type === 'CONFERENCE' && (
         <DateRangeInput
           start={{ name: 'conferenceStart', label: t('event-management.fields.start-date'), value: conferenceStart }}
@@ -81,25 +81,23 @@ export function EventDetailsForm({
         error={errors?.description}
       />
 
-      {!compact ? (
-        <Input
-          name="websiteUrl"
-          label={t('event-management.fields.website')}
-          defaultValue={websiteUrl || ''}
-          error={errors?.websiteUrl}
-        />
-      ) : null}
+      <Input
+        name="websiteUrl"
+        type={compact ? 'hidden' : 'text'}
+        label={compact ? undefined : t('event-management.fields.website')}
+        defaultValue={websiteUrl || ''}
+        error={errors?.websiteUrl}
+      />
 
-      {!compact ? (
-        <Input
-          name="contactEmail"
-          label={t('event-management.fields.contact-email')}
-          defaultValue={contactEmail || ''}
-          error={errors?.contactEmail}
-        />
-      ) : null}
+      <Input
+        name="contactEmail"
+        type={compact ? 'hidden' : 'text'}
+        label={compact ? undefined : t('event-management.fields.contact-email')}
+        defaultValue={contactEmail || ''}
+        error={errors?.contactEmail}
+      />
 
-      <input type="hidden" name="timezone" value={timezone} />
+      <input type="hidden" name="timezone" value={timezone} className="hidden" />
     </Form>
   );
 }
