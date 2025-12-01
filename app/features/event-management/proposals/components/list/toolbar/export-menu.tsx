@@ -3,6 +3,7 @@ import { CalendarDaysIcon, CodeBracketIcon, Squares2X2Icon, TableCellsIcon } fro
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetchers, useParams, useSearchParams } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
@@ -10,7 +11,8 @@ import { useCurrentEventTeam } from '~/features/event-management/event-team-cont
 
 export function ExportMenu() {
   const { t } = useTranslation();
-  const { team, event } = useCurrentEventTeam();
+  const { event } = useCurrentEventTeam();
+  const permissions = useUserTeamPermissions();
 
   const params = useParams();
   const [searchParams] = useSearchParams();
@@ -22,7 +24,7 @@ export function ExportMenu() {
 
   const isOpenPlannerEnabled = event.integrations.includes('OPEN_PLANNER');
 
-  if (!team.userPermissions.canExportEventProposals) return null;
+  if (!permissions.canExportEventProposals) return null;
 
   return (
     <Menu>

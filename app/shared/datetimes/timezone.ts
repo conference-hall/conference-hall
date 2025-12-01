@@ -36,7 +36,7 @@ export function getTimezonesList(locale: string) {
   });
 
   // Sort timezones by offset and name
-  return timezoneObjects.sort((a, b) => a.name.localeCompare(b.name)).map(({ id, name }) => ({ id, name }));
+  return timezoneObjects.sort((a, b) => a.name.localeCompare(b.name)).map(({ id, name }) => ({ name, value: id }));
 }
 
 /** Get GMT offset from a timezone */

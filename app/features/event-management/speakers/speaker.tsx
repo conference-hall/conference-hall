@@ -2,6 +2,7 @@ import { PlusIcon } from '@heroicons/react/16/solid';
 import { InboxIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
@@ -9,7 +10,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { NotFoundError } from '~/shared/errors.server.ts';
 import { ProposalItem } from '../proposals/components/list/items/proposal-item.tsx';
@@ -31,7 +31,7 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
 
 export default function SpeakerRoute({ loaderData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { team } = useCurrentEventTeam();
+  const permissions = useUserTeamPermissions();
   const { speaker } = loaderData;
 
   return (
@@ -39,7 +39,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
       <Page.Heading
         component={<SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />}
       >
-        {team.userPermissions?.canEditEventSpeaker && (
+        {permissions.canEditEventSpeaker && (
           <Button
             variant="secondary"
             iconLeft={PencilSquareIcon}
@@ -80,7 +80,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
           <Text>
             {t('common.proposals')} ({speaker.proposals.length})
           </Text>
-          {team.userPermissions?.canCreateEventProposal && (
+          {permissions.canCreateEventProposal && (
             <Button
               variant="secondary"
               iconLeft={PlusIcon}

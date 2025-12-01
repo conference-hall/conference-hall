@@ -3,6 +3,7 @@ import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from '@heroicons/react/20/so
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, Link, useParams } from 'react-router';
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { menuItem, menuItemIcon, menuItems, menuSeparator } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 
@@ -30,9 +31,9 @@ export function TeamsDropdown({ teams = [] }: Props) {
           <>
             {currentTeam ? currentTeam.name : t('navbar.teams')}
             {open ? (
-              <ChevronUpIcon className="size-5 shrinl-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+              <ChevronUpIcon className="size-5 shrink-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
             ) : (
-              <ChevronDownIcon className="size-5 shrinl-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+              <ChevronDownIcon className="size-5 shrink-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
             )}
           </>
         )}
@@ -48,6 +49,7 @@ export function TeamsDropdown({ teams = [] }: Props) {
               className={cx(menuItem(), { 'font-semibold': team.slug === currentTeam?.slug })}
             >
               <span className="truncate">{team.name}</span>
+              {team.slug === currentTeam?.slug ? <StatusPill size="sm" /> : null}
             </MenuItem>
           ))}
 

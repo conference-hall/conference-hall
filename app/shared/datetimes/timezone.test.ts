@@ -81,9 +81,9 @@ describe('timezone', () => {
     it('returns the formatted list of timezones with en-US locale', async () => {
       const timezones = getTimezonesList('en-US');
 
-      const london = timezones.find((t) => t.id === 'Europe/London');
+      const london = timezones.find((t) => t.value === 'Europe/London');
       expect(london).toEqual({
-        id: 'Europe/London',
+        value: 'Europe/London',
         name: '(GMT+00:00) United Kingdom Time - Europe/London',
       });
     });
@@ -91,9 +91,9 @@ describe('timezone', () => {
     it('returns the formatted list of timezones with other locale', async () => {
       const timezones = getTimezonesList('fr');
 
-      const london = timezones.find((t) => t.id === 'Europe/London');
+      const london = timezones.find((t) => t.value === 'Europe/London');
       expect(london).toEqual({
-        id: 'Europe/London',
+        value: 'Europe/London',
         name: expect.stringContaining('Europe/London'),
       });
     });

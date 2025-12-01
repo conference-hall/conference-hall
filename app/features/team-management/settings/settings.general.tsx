@@ -1,6 +1,7 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { DeleteModalButton } from '~/design-system/dialogs/delete-modal.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -48,11 +49,11 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 export default function TeamSettingsRoute({ actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
-  const { canEditTeam, canLeaveTeam, canDeleteTeam } = currentTeam.userPermissions;
+  const permissions = useUserTeamPermissions();
 
   return (
     <div className="space-y-4 lg:space-y-8">
-      {canEditTeam ? (
+      {permissions.canEditTeam ? (
         <Card as="section">
           <Form method="POST" preventScrollReset>
             <Card.Title>
@@ -79,7 +80,7 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
         </Card.Title>
 
         <ul className="divide-y border-t mt-8">
-          {canLeaveTeam ? (
+          {permissions.canLeaveTeam ? (
             <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
               <div className="space-y-1 grow">
                 <Text weight="semibold">{t('team.settings.danger.leave-team.heading')}</Text>
@@ -101,7 +102,7 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
             </li>
           ) : null}
 
-          {canDeleteTeam ? (
+          {permissions.canDeleteTeam ? (
             <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
               <div className="space-y-1 grow">
                 <Text weight="semibold">{t('team.settings.danger.delete-team.heading')}</Text>

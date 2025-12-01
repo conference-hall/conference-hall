@@ -2,10 +2,10 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { PlusIcon } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { SearchInput } from '~/design-system/forms/search-input.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
@@ -55,8 +55,7 @@ export default function ReviewsRoute({ loaderData, params }: Route.ComponentProp
   const { t } = useTranslation();
   const { results, filters, pagination, statistics } = loaderData;
   const filtersHash = getObjectHash(filters);
-  const { team } = useCurrentEventTeam();
-  const { canCreateEventProposal } = team.userPermissions;
+  const permissions = useUserTeamPermissions();
 
   return (
     <Page>
@@ -75,7 +74,7 @@ export default function ReviewsRoute({ loaderData, params }: Route.ComponentProp
                 <SortMenu />
                 <ExportMenu />
               </div>
-              {canCreateEventProposal && (
+              {permissions.canCreateEventProposal && (
                 <Button iconLeft={PlusIcon} to={href('/team/:team/:event/proposals/new', params)}>
                   {t('event-management.proposals.new-proposal')}
                 </Button>

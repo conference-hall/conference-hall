@@ -13,6 +13,7 @@ import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Form, useLocation, useSearchParams } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button, buttonStyles } from '~/design-system/button.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -59,7 +60,8 @@ type FiltersContentProps = { close: VoidFunction };
 
 function FiltersContent({ close }: FiltersContentProps) {
   const { t } = useTranslation();
-  const { event, team } = useCurrentEventTeam();
+  const { event } = useCurrentEventTeam();
+  const permissions = useUserTeamPermissions();
 
   const location = useLocation();
   const [params] = useSearchParams();
@@ -89,7 +91,7 @@ function FiltersContent({ close }: FiltersContentProps) {
         className="px-4 py-3"
       />
 
-      {team.userPermissions.canChangeProposalStatus && (
+      {permissions.canChangeProposalStatus && (
         <FiltersRadio
           label={t('common.proposals')}
           name="status"
@@ -113,7 +115,10 @@ function FiltersContent({ close }: FiltersContentProps) {
                 name="formats"
                 label={t('common.formats')}
                 defaultValue={params.get('formats') || ''}
-                options={[{ id: '', name: t('event-management.proposals.filters.formats.placeholder') }, ...formats]}
+                options={[
+                  { value: '', name: t('event-management.proposals.filters.formats.placeholder') },
+                  ...formats.map((item) => ({ name: item.name, value: item.id })),
+                ]}
                 srOnly
               />
             )}
@@ -122,7 +127,10 @@ function FiltersContent({ close }: FiltersContentProps) {
                 name="categories"
                 label={t('common.categories')}
                 defaultValue={params.get('categories') || ''}
-                options={[{ id: '', name: t('event-management.proposals.filters.categories') }, ...categories]}
+                options={[
+                  { value: '', name: t('event-management.proposals.filters.categories') },
+                  ...categories.map((item) => ({ name: item.name, value: item.id })),
+                ]}
                 srOnly
               />
             )}
@@ -139,7 +147,10 @@ function FiltersContent({ close }: FiltersContentProps) {
             name="tags"
             label={t('common.tags')}
             defaultValue={params.get('tags') || ''}
-            options={[{ id: '', name: t('event-management.proposals.filters.tags') }, ...tags]}
+            options={[
+              { value: '', name: t('event-management.proposals.filters.tags') },
+              ...tags.map((item) => ({ name: item.name, value: item.id })),
+            ]}
             srOnly
           />
         </div>

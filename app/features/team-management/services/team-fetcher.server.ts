@@ -17,7 +17,6 @@ export class TeamFetcher extends TeamAuthorization {
       id: team.id,
       name: team.name,
       slug: team.slug,
-      userPermissions: permissions,
       userRole: member.role,
       invitationLink: permissions.canManageTeamMembers ? team.invitationLink : undefined,
     };

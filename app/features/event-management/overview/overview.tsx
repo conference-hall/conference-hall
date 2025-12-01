@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
@@ -11,8 +12,8 @@ import { DashboardTabs } from './components/dashboard-tabs.tsx';
 
 export default function OverviewRoute({ params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { team, event } = useCurrentEventTeam();
-  const { canEditEvent } = team.userPermissions;
+  const { event } = useCurrentEventTeam();
+  const { canEditEvent } = useUserTeamPermissions();
 
   return (
     <Page>

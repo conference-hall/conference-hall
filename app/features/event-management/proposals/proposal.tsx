@@ -3,6 +3,7 @@ import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Await } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Divider } from '~/design-system/divider.tsx';
@@ -206,16 +207,9 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 
 export default function ProposalReviewLayoutRoute({ params, loaderData, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { team, event } = useCurrentEventTeam();
+  const { event } = useCurrentEventTeam();
+  const permissions = useUserTeamPermissions();
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
-  const {
-    canEditEvent,
-    canEditEventProposal,
-    canCreateEventSpeaker,
-    canEditEventSpeaker,
-    canChangeProposalStatus,
-    canManageConversations,
-  } = team.userPermissions;
 
   const hasSpeakers = proposal.speakers.length > 0;
   const hasFormats = event.formats && event.formats.length > 0;
@@ -234,7 +228,11 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           <TalkSection
             talk={proposal}
             action={
-              <ProposalActionsMenu proposal={proposal} errors={errors} canEditEventProposal={canEditEventProposal} />
+              <ProposalActionsMenu
+                proposal={proposal}
+                errors={errors}
+                canEditEventProposal={permissions.canEditEventProposal}
+              />
             }
           >
             <Suspense fallback={null}>
@@ -251,7 +249,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   activity={activity}
                   speakersConversation={speakersConversation}
                   speakers={proposal.speakers}
-                  canManageConversations={canManageConversations}
+                  canManageConversations={permissions.canManageConversations}
                 />
               )}
             </Await>
@@ -262,7 +260,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           <ReviewSidebar
             proposal={proposal}
             reviewEnabled={event.reviewEnabled}
-            canDeliberate={canChangeProposalStatus}
+            canDeliberate={permissions.canChangeProposalStatus}
           />
 
           <Card as="section">
@@ -274,9 +272,9 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                     event={params.event}
                     proposalId={params.proposal}
                     proposalSpeakers={proposal.speakers}
-                    canChangeSpeakers={canEditEventProposal}
-                    canCreateSpeaker={canCreateEventSpeaker}
-                    canEditSpeaker={canEditEventSpeaker}
+                    canChangeSpeakers={permissions.canEditEventProposal}
+                    canCreateSpeaker={permissions.canCreateEventSpeaker}
+                    canEditSpeaker={permissions.canEditEventSpeaker}
                     className="space-y-3 px-4 lg:px-6"
                   />
 
@@ -287,7 +285,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                           <ConversationDrawer
                             messages={speakersConversation}
                             recipients={speakersWithAccount}
-                            canManageConversations={canManageConversations}
+                            canManageConversations={permissions.canManageConversations}
                             className="flex gap-2 cursor-pointer px-4 lg:px-6 hover:underline"
                           >
                             <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
@@ -318,8 +316,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   proposalFormats={proposal.formats}
                   eventFormats={event.formats}
                   multiple={event.formatsAllowMultiple}
-                  canChangeFormats={canEditEventProposal}
-                  canCreateFormats={canEditEvent}
+                  canChangeFormats={permissions.canEditEventProposal}
+                  canCreateFormats={permissions.canEditEvent}
                   className="space-y-3 p-4 lg:px-6"
                 />
                 <Divider />
@@ -335,8 +333,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   proposalCategories={proposal.categories}
                   eventCategories={event.categories}
                   multiple={event.categoriesAllowMultiple}
-                  canChangeCategory={canEditEventProposal}
-                  canCreateCategory={canEditEvent}
+                  canChangeCategory={permissions.canEditEventProposal}
+                  canCreateCategory={permissions.canEditEvent}
                   className="space-y-3 p-4 lg:px-6"
                 />
                 <Divider />
@@ -349,8 +347,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
               proposalId={params.proposal}
               proposalTags={proposal.tags}
               eventTags={event.tags}
-              canChangeTags={canEditEventProposal}
-              canCreateTags={canEditEvent}
+              canChangeTags={permissions.canEditEventProposal}
+              canCreateTags={permissions.canEditEvent}
               className="space-y-3 p-4 pb-6 lg:px-6"
             />
           </Card>

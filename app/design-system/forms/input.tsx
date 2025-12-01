@@ -28,6 +28,10 @@ export function Input({
   ref,
   ...rest
 }: InputProps) {
+  if (type === 'hidden') {
+    return <input id={name} name={name} type="hidden" ref={ref} {...rest} className="hidden" />;
+  }
+
   return (
     <div className={className}>
       {label && (

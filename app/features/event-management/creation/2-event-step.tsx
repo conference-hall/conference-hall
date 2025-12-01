@@ -3,8 +3,10 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, href, redirect } from 'react-router';
+import z from 'zod';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { Button } from '~/design-system/button.tsx';
+import Select from '~/design-system/forms/select.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import type { EventType } from '~/shared/types/events.types.ts';
@@ -12,6 +14,16 @@ import type { Route } from './+types/2-event-step.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 import { EventForm } from './components/event-form.tsx';
 import { EventCreateSchema, EventCreation } from './services/event-creation.server.ts';
+
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const authUser = getRequiredAuthUser(context);
+  const result = z.enum(['CONFERENCE', 'MEETUP']).safeParse(params.type);
+  if (!result.success) return { existingEvents: [] };
+
+  const eventCreation = EventCreation.for(authUser.id, params.team);
+  const existingEvents = await eventCreation.findExistingEvents(result.data);
+  return { existingEvents };
+};
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const authUser = getRequiredAuthUser(context);
@@ -23,9 +35,10 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
   return redirect(href('/team/:team/new/:event/details', { team: params.team, event: event.slug }));
 };
 
-export default function NewEventRoute({ params, actionData: errors }: Route.ComponentProps) {
+export default function NewEventRoute({ params, loaderData, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
   const formId = useId();
+  const { existingEvents } = loaderData;
   const type = (params.type || 'CONFERENCE') as EventType;
   const title =
     type === 'CONFERENCE'
@@ -42,10 +55,22 @@ export default function NewEventRoute({ params, actionData: errors }: Route.Comp
         <Card.Content>
           <Form id={formId} method="POST" replace className="flex grow flex-col gap-4 lg:gap-6">
             <EventForm errors={errors} />
+
+            {existingEvents.length > 0 ? (
+              <Select
+                name="eventTemplateId"
+                defaultValue=""
+                label={t('event-management.fields.event-template')}
+                options={[
+                  { value: '', name: t('event-management.fields.event-template-placeholder') },
+                  ...existingEvents.map((event) => ({ name: event.name, value: event.id })),
+                ]}
+              />
+            ) : null}
+
             <input name="type" type="hidden" value={type} />
           </Form>
         </Card.Content>
-
         <Card.Actions>
           <Button to=".." variant="secondary">
             {t('common.go-back')}

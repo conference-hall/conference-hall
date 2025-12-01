@@ -12,8 +12,8 @@ type Props = {
   defaultValue?: string | null;
   onChange?: (name: string, value: string) => void;
   options: Array<{
-    id?: string | null;
     name: string;
+    value: string;
     icon?: React.ComponentType<{ className?: string }>;
     disabled?: boolean;
     hidden?: boolean;
@@ -48,7 +48,7 @@ export default function Select({
   return (
     <Listbox name={name} value={currentValue || ''} onChange={handleChange}>
       {({ open }) => {
-        const { name, icon: Icon, iconClassname } = options.find((o) => o.id === currentValue) || {};
+        const { name, icon: Icon, iconClassname } = options.find((o) => o.value === currentValue) || {};
 
         return (
           <Field className={className}>
@@ -69,14 +69,14 @@ export default function Select({
               <SelectTransition show={open}>
                 <ListboxOptions
                   anchor={{ to: 'bottom start', gap: '4px' }}
-                  className={cx(menuItems(), 'w-[var(--button-width)]')}
+                  className={cx(menuItems(), 'w-(--button-width)')}
                 >
                   {options
                     .filter((o) => !o.hidden)
                     .map((option) => (
                       <ListboxOption
-                        key={option.id}
-                        value={option.id}
+                        key={option.value}
+                        value={option.value}
                         disabled={option.disabled}
                         className={({ focus, disabled }) =>
                           cx(menuItem(), {

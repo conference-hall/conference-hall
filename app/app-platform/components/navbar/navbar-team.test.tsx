@@ -3,10 +3,11 @@ import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import type { AuthenticatedUser } from '~/shared/types/user.types.ts';
 import { UserProvider } from '../user-context.tsx';
 import { NavbarTeam } from './navbar-team.tsx';
 
-const mockUser = {
+const mockUser: AuthenticatedUser = {
   id: 'user-1',
   uid: 'user-uid-1',
   email: 'test@example.com',
@@ -16,6 +17,7 @@ const mockUser = {
     {
       slug: 'team-1',
       name: 'Team 1',
+      role: 'OWNER',
       events: [
         { slug: 'event-1', name: 'Event 1', logoUrl: null, archived: false },
         { slug: 'event-2', name: 'Event 2', logoUrl: null, archived: false },

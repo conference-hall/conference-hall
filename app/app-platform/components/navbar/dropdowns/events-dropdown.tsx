@@ -1,10 +1,13 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
+import { Menu, MenuButton, MenuItem, MenuItems, MenuSeparator } from '@headlessui/react';
+import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
+import { useTranslation } from 'react-i18next';
 import { href, Link, useParams } from 'react-router';
 import { Avatar } from '~/design-system/avatar.tsx';
-import { menuItem, menuItems } from '~/design-system/styles/menu.styles.ts';
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
+import { menuItem, menuItemIcon, menuItems, menuSeparator } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
+import { type TeamRole, UserTeamPermissions } from '~/shared/user/team-permissions.ts';
 
 const menuStyle = cx(
   'flex items-center gap-1',
@@ -17,23 +20,20 @@ type Props = {
   teams: Array<{
     slug: string;
     name: string;
-    events: Array<{
-      slug: string;
-      name: string;
-      logoUrl: string | null;
-      archived: boolean;
-    }>;
+    role: TeamRole;
+    events: Array<{ slug: string; name: string; logoUrl: string | null; archived: boolean }>;
   }>;
 };
 
 export function EventsDropdown({ teams = [] }: Props) {
+  const { t } = useTranslation();
   const { team, event } = useParams();
 
   const currentTeam = teams.find(({ slug }) => slug === team);
   const currentEvent = currentTeam?.events?.find(({ slug }) => slug === event);
-
   if (!currentTeam || !currentEvent) return null;
 
+  const permissions = UserTeamPermissions.getPermissions(currentTeam.role);
   const eventsDisplayed = currentTeam?.events?.filter((event) => !event.archived || event.slug === currentEvent.slug);
 
   return (
@@ -70,8 +70,20 @@ export function EventsDropdown({ teams = [] }: Props) {
             >
               <Avatar size="xs" picture={logoUrl} name={name} square aria-hidden />
               <span className="truncate">{name}</span>
+              {slug === currentEvent.slug ? <StatusPill size="sm" /> : null}
             </MenuItem>
           ))}
+
+          {permissions.canCreateEvent ? (
+            <>
+              <MenuSeparator className={menuSeparator()} />
+
+              <MenuItem as={Link} to={href('/team/:team/new', { team: currentTeam.slug })} className={menuItem()}>
+                <PlusIcon className={menuItemIcon()} aria-hidden="true" />
+                {t('team.events-list.new-event-button')}
+              </MenuItem>
+            </>
+          ) : null}
         </MenuItems>
       </MenuTransition>
     </Menu>

@@ -25,9 +25,8 @@ describe('TeamFetcher', () => {
         id: team.id,
         name: 'My team 2',
         slug: 'my-team2',
-        invitationLink: `${APP_URL}/invite/team/${team.invitationCode}`,
         userRole: 'OWNER',
-        userPermissions: expect.objectContaining({ canEditTeam: true }),
+        invitationLink: `${APP_URL}/invite/team/${team.invitationCode}`,
       });
     });
 

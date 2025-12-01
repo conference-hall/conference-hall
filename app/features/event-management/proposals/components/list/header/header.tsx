@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { ReviewsProgress } from '../../shared/reviews-progress.tsx';
 import { DeliberationButton } from './deliberation-button.tsx';
 
@@ -17,12 +17,12 @@ type Props = {
 
 export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, selection, isAllPagesSelected }: Props) {
   const { t } = useTranslation();
-  const { team } = useCurrentEventTeam();
+  const permissions = useUserTeamPermissions();
 
   return (
     <List.Header className="sm:h-16">
       <div className="flex flex-col gap-4 md:flex-row md:items-center ">
-        {team.userPermissions.canChangeProposalStatus ? (
+        {permissions.canChangeProposalStatus ? (
           <Checkbox aria-label={t('event-management.proposals.list.check-item')} ref={checkboxRef}>
             {totalSelected === 0
               ? t('event-management.proposals.list.items', { count: total })

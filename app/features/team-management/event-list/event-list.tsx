@@ -2,6 +2,7 @@ import { PlusIcon } from '@heroicons/react/20/solid';
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, useSearchParams } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -22,6 +23,7 @@ export const loader = async ({ request, params, context }: Route.LoaderArgs) => 
 export default function TeamEventsRoute({ loaderData: events }: Route.ComponentProps) {
   const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
+  const permissions = useUserTeamPermissions();
   const [searchParams] = useSearchParams();
   const archived = searchParams.get('archived') === 'true';
   const hasEvent = events.length > 0;
@@ -37,7 +39,7 @@ export default function TeamEventsRoute({ loaderData: events }: Route.ComponentP
             { value: 'false', label: t('common.active') },
           ]}
         />
-        {currentTeam.userPermissions.canCreateEvent ? (
+        {permissions.canCreateEvent ? (
           <Button to={href('/team/:team/new', { team: currentTeam.slug })} iconLeft={PlusIcon}>
             {t('team.events-list.new-event-button')}
           </Button>

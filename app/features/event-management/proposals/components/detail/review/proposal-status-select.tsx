@@ -40,40 +40,40 @@ function mapOptionValueToStatuses(value: string) {
 function getOptions(t: TFunction, confirmationStatus: ConfirmationStatus) {
   return [
     {
-      id: 'PENDING',
+      value: 'PENDING',
       name: t('common.proposals.status.pending'),
       icon: QuestionMarkCircleIcon,
       iconClassname: 'text-gray-600',
     },
     {
-      id: 'ACCEPTED',
+      value: 'ACCEPTED',
       name: t('common.proposals.status.accepted'),
       icon: CheckIcon,
       iconClassname: 'text-green-600',
       hidden: Boolean(confirmationStatus),
     },
     {
-      id: 'REJECTED',
+      value: 'REJECTED',
       name: t('common.proposals.status.rejected'),
       icon: XMarkIcon,
       iconClassname: 'text-red-600',
     },
     {
-      id: 'NOT_ANSWERED',
+      value: 'NOT_ANSWERED',
       name: t('common.proposals.status.not-answered'),
       icon: ClockIcon,
       iconClassname: 'text-blue-600',
       hidden: !confirmationStatus,
     },
     {
-      id: 'CONFIRMED',
+      value: 'CONFIRMED',
       name: t('common.proposals.status.confirmed'),
       icon: CheckCircleIcon,
       iconClassname: 'text-green-600',
       hidden: !confirmationStatus,
     },
     {
-      id: 'DECLINED',
+      value: 'DECLINED',
       name: t('common.proposals.status.declined'),
       icon: XCircleIcon,
       iconClassname: 'text-red-600',

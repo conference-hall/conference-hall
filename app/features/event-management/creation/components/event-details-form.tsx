@@ -81,25 +81,23 @@ export function EventDetailsForm({
         error={errors?.description}
       />
 
-      {!compact ? (
-        <Input
-          name="websiteUrl"
-          label={t('event-management.fields.website')}
-          defaultValue={websiteUrl || ''}
-          error={errors?.websiteUrl}
-        />
-      ) : null}
+      <Input
+        name="websiteUrl"
+        type={compact ? 'hidden' : 'text'}
+        label={t('event-management.fields.website')}
+        defaultValue={websiteUrl || ''}
+        error={errors?.websiteUrl}
+      />
 
-      {!compact ? (
-        <Input
-          name="contactEmail"
-          label={t('event-management.fields.contact-email')}
-          defaultValue={contactEmail || ''}
-          error={errors?.contactEmail}
-        />
-      ) : null}
+      <Input
+        name="contactEmail"
+        type={compact ? 'hidden' : 'text'}
+        label={t('event-management.fields.contact-email')}
+        defaultValue={contactEmail || ''}
+        error={errors?.contactEmail}
+      />
 
-      <input type="hidden" name="timezone" value={timezone} />
+      <input type="hidden" name="timezone" value={timezone} className="hidden" />
     </Form>
   );
 }

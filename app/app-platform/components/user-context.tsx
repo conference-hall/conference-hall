@@ -1,6 +1,8 @@
 import { createContext, type ReactNode, useContext } from 'react';
+import { useParams } from 'react-router';
 import type { loader } from '~/root.tsx';
 import type { SerializeFrom } from '~/shared/types/react-router.types.ts';
+import { UserTeamPermissions } from '~/shared/user/team-permissions.ts';
 
 type User = SerializeFrom<typeof loader>['user'];
 
@@ -17,7 +19,6 @@ export const UserProvider = ({ children, user }: UserProviderProps) => {
 
 /**
  * Returns the authenticated user under the route "root"
- * @returns {User}
  */
 export function useUser(): User {
   const context = useContext(UserContext);
@@ -25,4 +26,15 @@ export function useUser(): User {
     throw new Error('useUser must be used within a UserProvider');
   }
   return context;
+}
+
+/**
+ * Returns permissions of the user for the current team
+ */
+export function useUserTeamPermissions() {
+  const { team } = useParams();
+  const user = useUser();
+  const currentTeam = user?.teams.find((t) => t.slug === team);
+
+  return UserTeamPermissions.getPermissions(currentTeam?.role);
 }

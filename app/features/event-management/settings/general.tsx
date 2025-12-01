@@ -3,6 +3,7 @@ import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/2
 import { useId } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { DeleteModalButton } from '~/design-system/dialogs/delete-modal.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -60,7 +61,8 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 
 export default function EventGeneralSettingsRoute({ actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { team, event } = useCurrentEventTeam();
+  const { event } = useCurrentEventTeam();
+  const permissions = useUserTeamPermissions();
 
   const generalFormId = useId();
   const detailsFormId = useId();
@@ -144,7 +146,7 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
               </Button>
             </Form>
           </li>
-          {team.userPermissions.canDeleteEvent ? (
+          {permissions.canDeleteEvent ? (
             <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
               <div className="space-y-1 grow">
                 <Text weight="semibold">{t('event-management.settings.danger.delete.heading')}</Text>

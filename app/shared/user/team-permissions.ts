@@ -1,6 +1,6 @@
-import { TeamRole } from 'prisma/generated/client.ts';
+export type TeamRole = 'OWNER' | 'MEMBER' | 'REVIEWER';
 
-export type UserPermissions = {
+type TeamPermissions = {
   canAccessTeam: boolean;
   canEditTeam: boolean;
   canDeleteTeam: boolean;
@@ -21,9 +21,9 @@ export type UserPermissions = {
   canEditEventSchedule: boolean;
 };
 
-export type Permission = keyof UserPermissions;
+export type TeamPermission = keyof TeamPermissions;
 
-const TEAM_OWNER_PERMISSIONS: UserPermissions = {
+const TEAM_OWNER_PERMISSIONS: TeamPermissions = {
   canAccessTeam: true,
   canEditTeam: true,
   canDeleteTeam: true,
@@ -44,7 +44,7 @@ const TEAM_OWNER_PERMISSIONS: UserPermissions = {
   canEditEventSchedule: true,
 };
 
-const TEAM_MEMBER_PERMISSIONS: UserPermissions = {
+const TEAM_MEMBER_PERMISSIONS: TeamPermissions = {
   canAccessTeam: true,
   canEditTeam: false,
   canDeleteTeam: false,
@@ -65,7 +65,7 @@ const TEAM_MEMBER_PERMISSIONS: UserPermissions = {
   canEditEventSchedule: true,
 };
 
-const TEAM_REVIEWER_PERMISSIONS: UserPermissions = {
+const TEAM_REVIEWER_PERMISSIONS: TeamPermissions = {
   canAccessTeam: true,
   canEditTeam: false,
   canDeleteTeam: false,
@@ -86,23 +86,46 @@ const TEAM_REVIEWER_PERMISSIONS: UserPermissions = {
   canEditEventSchedule: false,
 };
 
-function getPermissions(teamRole: TeamRole) {
+const NO_PERMISSIONS: TeamPermissions = {
+  canAccessTeam: false,
+  canEditTeam: false,
+  canDeleteTeam: false,
+  canManageTeamMembers: false,
+  canLeaveTeam: false,
+  canAccessEvent: false,
+  canCreateEvent: false,
+  canEditEvent: false,
+  canDeleteEvent: false,
+  canCreateEventProposal: false,
+  canCreateEventSpeaker: false,
+  canEditEventSpeaker: false,
+  canEditEventProposal: false,
+  canManageConversations: false,
+  canExportEventProposals: false,
+  canChangeProposalStatus: false,
+  canPublishEventResults: false,
+  canEditEventSchedule: false,
+};
+
+function getPermissions(teamRole?: TeamRole) {
   switch (teamRole) {
-    case TeamRole.OWNER:
+    case 'OWNER':
       return TEAM_OWNER_PERMISSIONS;
-    case TeamRole.MEMBER:
+    case 'MEMBER':
       return TEAM_MEMBER_PERMISSIONS;
-    case TeamRole.REVIEWER:
+    case 'REVIEWER':
       return TEAM_REVIEWER_PERMISSIONS;
+    default:
+      return NO_PERMISSIONS;
   }
 }
 
-function getRoleWith(permission: Permission) {
+function getRoleWith(permission: TeamPermission) {
   const roles: Array<TeamRole> = [];
-  if (TEAM_OWNER_PERMISSIONS[permission]) roles.push(TeamRole.OWNER);
-  if (TEAM_MEMBER_PERMISSIONS[permission]) roles.push(TeamRole.MEMBER);
-  if (TEAM_REVIEWER_PERMISSIONS[permission]) roles.push(TeamRole.REVIEWER);
+  if (TEAM_OWNER_PERMISSIONS[permission]) roles.push('OWNER');
+  if (TEAM_MEMBER_PERMISSIONS[permission]) roles.push('MEMBER');
+  if (TEAM_REVIEWER_PERMISSIONS[permission]) roles.push('REVIEWER');
   return roles;
 }
 
-export const UserPermissions = { getPermissions, getRoleWith };
+export const UserTeamPermissions = { getPermissions, getRoleWith };

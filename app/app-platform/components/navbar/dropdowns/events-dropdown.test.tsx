@@ -10,6 +10,7 @@ const mockTeams = [
   {
     slug: 'team-1',
     name: 'Team 1',
+    role: 'OWNER' as const,
     events: [
       { slug: 'event-1', name: 'Event 1', logoUrl: null, archived: false },
       { slug: 'event-2', name: 'Event 2', logoUrl: 'https://example.com/logo.jpg', archived: false },
@@ -19,6 +20,7 @@ const mockTeams = [
   {
     slug: 'team-2',
     name: 'Team 2',
+    role: 'MEMBER' as const,
     events: [{ slug: 'event-4', name: 'Event 4', logoUrl: null, archived: false }],
   },
 ];
@@ -68,12 +70,8 @@ describe('EventsDropdown component', () => {
       await expect.element(eventLink1).toBeInTheDocument();
       await expect.element(eventLink2).toBeInTheDocument();
 
-      try {
-        screen.getByRole('menuitem', { name: /Event 3/ });
-        expect.fail('Should not find archived event in dropdown');
-      } catch (error) {
-        expect(error).toBeDefined();
-      }
+      const archivedEvent = screen.getByRole('menuitem', { name: /Event 3/ });
+      await expect.element(archivedEvent).not.toBeInTheDocument();
     });
 
     it('shows archived event if it is the current event', async () => {
@@ -99,27 +97,41 @@ describe('EventsDropdown component', () => {
       await expect.element(event1).toBeInTheDocument();
       await expect.element(event2).toBeInTheDocument();
 
-      try {
-        screen.getByRole('menuitem', { name: /Event 4/ });
-        expect.fail('Should not find event from different team');
-      } catch (error) {
-        expect(error).toBeDefined();
-      }
+      const otherTeamEvent = screen.getByRole('menuitem', { name: /Event 4/ });
+      await expect.element(otherTeamEvent).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Event creation from menu', () => {
+    it('shows event creation when user has the permission', async () => {
+      const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
+
+      const dropdownButton = screen.getByRole('button');
+      await userEvent.click(dropdownButton);
+
+      const newEventLink = screen.getByRole('menuitem', { name: /New event/ });
+      await expect.element(newEventLink).toBeInTheDocument();
+    });
+
+    it('hides event creation when user has not the permission', async () => {
+      const screen = await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-2/event-4']);
+
+      const dropdownButton = screen.getByRole('button');
+      await userEvent.click(dropdownButton);
+
+      const newEventLink = screen.getByRole('menuitem', { name: /New event/ });
+      await expect.element(newEventLink).not.toBeInTheDocument();
     });
   });
 
   describe('Edge cases', () => {
     it('handles team with no events', async () => {
-      const teamsWithNoEvents = [{ slug: 'empty-team', name: 'Empty Team', events: [] }];
+      const teamsWithNoEvents = [{ slug: 'empty-team', name: 'Empty Team', role: 'OWNER' as const, events: [] }];
 
       const screen = await renderComponent(<EventsDropdown teams={teamsWithNoEvents} />, ['/team/empty-team/event-1']);
 
-      try {
-        screen.getByRole('button');
-        expect.fail('Should not find dropdown button when team has no events');
-      } catch (error) {
-        expect(error).toBeDefined();
-      }
+      const button = screen.getByRole('button');
+      await expect.element(button).not.toBeInTheDocument();
     });
   });
 });

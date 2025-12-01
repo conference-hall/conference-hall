@@ -2,10 +2,10 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
+import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
@@ -49,11 +49,11 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 
 export default function EditSpeakerRoute({ loaderData, actionData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { team } = useCurrentEventTeam();
+  const permissions = useUserTeamPermissions();
   const formId = useId();
   const { speaker } = loaderData;
 
-  if (!team.userPermissions?.canEditEventSpeaker) {
+  if (!permissions.canEditEventSpeaker) {
     return null;
   }
 
