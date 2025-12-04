@@ -9,7 +9,7 @@
     "dev": "concurrently -k -c 'yellow,blue' 'npm:dev:*'",
     "dev:web": "tsx ./servers/web.dev.ts",
     "dev:job": "tsx watch ./servers/jobs.ts",
-    "start": "node ./build/server/server-build.js",
+    "start": "node ./build/server/index.js",
     "build": "react-router build",
     "jobs:start": "tsx ./servers/jobs.ts",
     "jobs:build": "echo 'no build needed'",
