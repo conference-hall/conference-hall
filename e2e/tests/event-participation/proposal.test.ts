@@ -13,13 +13,14 @@ import { expect, loginWith, test } from '../../fixtures.ts';
 import { ProposalPage } from './proposal.page.ts';
 
 let event: Event;
+let speaker1: User;
 let organizer: User;
 let proposal1: Proposal;
 let proposal2: Proposal;
 let proposal3: Proposal;
 
 test.beforeEach(async () => {
-  const speaker1 = await userFactory({ traits: ['clark-kent'] });
+  speaker1 = await userFactory({ traits: ['clark-kent'] });
   const speaker2 = await userFactory({ traits: ['bruce-wayne'] });
   organizer = await userFactory({ attributes: { name: 'Organizer Name' } });
 
@@ -169,19 +170,28 @@ test('manages conversation with organizers', async ({ page }) => {
     role: 'ORGANIZER',
     attributes: { content: 'Hello from organizer' },
   });
+  await conversationMessageFactory({
+    conversation,
+    sender: speaker1,
+    role: 'SPEAKER',
+    attributes: { content: 'Hello from speaker' },
+  });
 
   await proposalPage.goto(event.slug, proposal1.id);
   await expect(proposalPage.conversationFeed).toBeVisible();
 
-  await proposalPage.sendMessage('Response from speaker');
+  await proposalPage.sendMessage('New message from organizer');
   await expect(page.getByText('Hello from organizer')).toBeVisible();
-  await expect(page.getByText('Response from speaker')).toBeVisible();
+  await expect(page.getByText('Hello from speaker')).toBeVisible();
+  await expect(page.getByText('New message from organizer')).toBeVisible();
 
+  // We test edit and delete on second message because optimistic rendering
+  // make it flaky with playwright automation tests
   const messages = await proposalPage.getConversationMessages();
 
-  await messages[1].editMessage('New Response from speaker');
-  await expect(page.getByText('New Response from speaker')).toBeVisible();
+  await messages[1].editMessage('Updated message from speaker');
+  await expect(page.getByText('Updated message from speaker')).toBeVisible();
 
   await messages[1].clickDelete();
-  await expect(page.getByText('New Response from speaker')).not.toBeVisible();
+  await expect(page.getByText('Updated message from speaker')).not.toBeVisible();
 });

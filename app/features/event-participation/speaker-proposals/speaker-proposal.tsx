@@ -138,7 +138,10 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
   const user = useUser();
 
   const intentSuffix = 'message';
-  const optimisticMessages = useOptimisticMessages(messages, intentSuffix, 'SPEAKER');
+  const { optimisticMessages, onOptimisticSaveMessage, onOptimisticDeleteMessage } = useOptimisticMessages(
+    messages,
+    'SPEAKER',
+  );
 
   return (
     <ActivityFeed label={t('event.proposal.activity-feed')} className="pl-4">
@@ -150,7 +153,12 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
           marker={<Avatar picture={message.sender.picture} name={message.sender.name} />}
           withLine
         >
-          <MessageBlock intentSuffix={intentSuffix} message={message} />
+          <MessageBlock
+            intentSuffix={intentSuffix}
+            message={message}
+            onOptimisticSave={onOptimisticSaveMessage}
+            onOptimisticDelete={onOptimisticDeleteMessage}
+          />
         </ActivityFeed.Entry>
       ))}
 
@@ -160,6 +168,7 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
           buttonLabel={t('common.send')}
           inputLabel={t('common.conversation.send.label')}
           placeholder={t('event.proposal.conversation.placeholder', { event: '' })}
+          onOptimisticSave={onOptimisticSaveMessage}
         />
       </ActivityFeed.Entry>
     </ActivityFeed>

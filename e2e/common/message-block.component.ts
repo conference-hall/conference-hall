@@ -35,7 +35,8 @@ export class MessageBlockComponent extends PageObject {
 
   async editMessage(newContent: string) {
     const input = await this.clickEdit();
-    await input.clear();
+    await expect(input).toBeVisible();
+    await input.fill('');
     await input.fill(newContent);
     await this.component.getByRole('button', { name: 'Save' }).click();
     await expect(input).not.toBeVisible();

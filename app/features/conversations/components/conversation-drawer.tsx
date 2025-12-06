@@ -22,7 +22,10 @@ export function ConversationDrawer({ messages, recipients = [], children, canMan
   const [open, setOpen] = useState(false);
 
   const intentSuffix = 'message';
-  const optimisticMessages = useOptimisticMessages(messages, intentSuffix, 'ORGANIZER');
+  const { optimisticMessages, onOptimisticSaveMessage, onOptimisticDeleteMessage } = useOptimisticMessages(
+    messages,
+    'ORGANIZER',
+  );
 
   const recipientNames = recipients.map((recipient) => recipient.name);
   const sendMessageLabel =
@@ -56,13 +59,15 @@ export function ConversationDrawer({ messages, recipients = [], children, canMan
           </SlideOver.Content>
         ) : (
           <SlideOver.Content as="ul" className="flex flex-col-reverse gap-6 pb-6 border-t border-t-gray-200">
-            {optimisticMessages.reverse().map((message) => (
+            {[...optimisticMessages].reverse().map((message) => (
               <li key={message.id} className="flex gap-4">
                 <Avatar picture={message.sender.picture} name={message.sender.name} size="s" className="mt-1" />
                 <MessageBlock
                   intentSuffix={intentSuffix}
                   message={message}
                   canManageConversations={canManageConversations}
+                  onOptimisticSave={onOptimisticSaveMessage}
+                  onOptimisticDelete={onOptimisticDeleteMessage}
                 />
               </li>
             ))}
@@ -75,6 +80,7 @@ export function ConversationDrawer({ messages, recipients = [], children, canMan
             buttonLabel={t('common.send')}
             inputLabel={sendMessageLabel}
             placeholder={sendMessageLabel}
+            onOptimisticSave={onOptimisticSaveMessage}
             autoFocus
           />
         </SlideOver.Actions>
