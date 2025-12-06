@@ -25,7 +25,9 @@ import { EventFetcher } from './services/event-fetcher.server.ts';
 export const middleware = [requiredAuthMiddleware];
 
 export const meta = (args: Route.MetaArgs) => {
-  return mergeMeta(args.matches, [{ title: `${args.data?.event.name} | ${args.data?.team.name} | Conference Hall` }]);
+  return mergeMeta(args.matches, [
+    { title: `${args.loaderData?.event.name} | ${args.loaderData?.team.name} | Conference Hall` },
+  ]);
 };
 
 export const loader = async ({ request, params, context }: Route.LoaderArgs) => {

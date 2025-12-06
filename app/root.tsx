@@ -26,9 +26,12 @@ const { MAINTENANCE_ENABLED } = getWebServerEnv();
 
 const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
 
-export const meta = ({ data }: Route.MetaArgs) => {
-  const metatags: MetaDescriptor[] = [{ title: data?.title }, { name: 'description', content: data?.description }];
-  const isSeoEnabled = data?.flags?.seo;
+export const meta = ({ loaderData }: Route.MetaArgs) => {
+  const metatags: MetaDescriptor[] = [
+    { title: loaderData?.title },
+    { name: 'description', content: loaderData?.description },
+  ];
+  const isSeoEnabled = loaderData?.flags?.seo;
   if (!isSeoEnabled) metatags.push({ name: 'robots', content: 'noindex' });
   return metatags;
 };

@@ -17,11 +17,13 @@ import type { Route } from './+types/layout.ts';
 import { CurrentEventPageProvider } from './event-page-context.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
-  const { data, matches } = args;
+  const { loaderData, matches } = args;
   return mergeMeta(matches, [
-    { title: `${data?.name} | Conference Hall` },
-    { name: 'description', content: `Submit your proposal to ${data?.name} call for papers.` },
-    ...(data ? eventSocialCard({ name: data.name, slug: data.slug, logoUrl: data.logoUrl }) : []),
+    { title: `${loaderData?.name} | Conference Hall` },
+    { name: 'description', content: `Submit your proposal to ${loaderData?.name} call for papers.` },
+    ...(loaderData
+      ? eventSocialCard({ name: loaderData.name, slug: loaderData.slug, logoUrl: loaderData.logoUrl })
+      : []),
   ]);
 };
 
