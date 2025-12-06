@@ -14,7 +14,7 @@ import { TeamFetcher } from './services/team-fetcher.server.ts';
 export const middleware = [requiredAuthMiddleware];
 
 export const meta = (args: Route.MetaArgs) => {
-  return mergeMeta(args.matches, [{ title: `${args.data?.name} | Conference Hall` }]);
+  return mergeMeta(args.matches, [{ title: `${args.loaderData?.name} | Conference Hall` }]);
 };
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {

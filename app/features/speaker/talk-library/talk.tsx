@@ -16,7 +16,7 @@ import { TalkSaveSchema } from './services/talks-library.schema.server.ts';
 import { TalksLibrary } from './services/talks-library.server.ts';
 
 export const meta = (args: Route.MetaArgs) => {
-  return mergeMeta(args.matches, [{ title: `${args.data?.title} | Conference Hall` }]);
+  return mergeMeta(args.matches, [{ title: `${args.loaderData?.title} | Conference Hall` }]);
 };
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {

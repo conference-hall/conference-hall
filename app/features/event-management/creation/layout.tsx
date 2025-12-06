@@ -9,7 +9,7 @@ import { CurrentTeamProvider } from './team-context.tsx';
 export const middleware = [requiredAuthMiddleware];
 
 export const meta = (args: Route.MetaArgs) => {
-  return mergeMeta(args.matches, [{ title: `New event | ${args.data?.name} | Conference Hall` }]);
+  return mergeMeta(args.matches, [{ title: `New event | ${args.loaderData?.name} | Conference Hall` }]);
 };
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
