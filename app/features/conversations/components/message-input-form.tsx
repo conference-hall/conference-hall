@@ -1,6 +1,6 @@
-import { useId, useRef } from 'react';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useFetcher } from 'react-router';
+import { Form, useFetcher } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Label } from '~/design-system/typography.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
@@ -12,13 +12,15 @@ type Props = {
   buttonLabel?: string;
   message?: Message;
   autoFocus?: boolean;
+  onOptimisticSave?: (data: { id?: string; content: string }) => void;
   onClose?: VoidFunction;
 };
 
 export function MessageInputForm({
   intent,
-  placeholder,
   inputLabel,
+  onOptimisticSave,
+  placeholder,
   buttonLabel,
   message,
   autoFocus = false,
@@ -28,17 +30,22 @@ export function MessageInputForm({
   const inputId = useId();
   const fetcherKey = message?.id ? `${intent}:${message.id}` : `${intent}:new`;
   const fetcher = useFetcher({ key: fetcherKey });
-  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const data = Object.fromEntries(formData);
+    onOptimisticSave?.({ id: message?.id, content: String(data.message) });
+    onClose?.();
+
+    fetcher.submit(formData, { method: 'POST', preventScrollReset: true, flushSync: true });
+  };
+
+  const isLoading = fetcher.state === 'submitting';
 
   return (
-    <fetcher.Form
-      ref={formRef}
-      method="POST"
-      className="relative w-full"
-      key={fetcher.state}
-      onSubmit={onClose}
-      preventScrollReset={true}
-    >
+    <Form className="relative w-full" key={fetcher.state} navigate={false} onSubmit={handleSubmit}>
       <Label htmlFor={inputId} className="sr-only">
         {inputLabel}
       </Label>
@@ -69,10 +76,15 @@ export function MessageInputForm({
           </Button>
         ) : null}
 
-        <Button type="submit" variant={onClose ? 'primary' : 'secondary'} size={onClose ? 'sm' : 'base'}>
+        <Button
+          type="submit"
+          variant={onClose ? 'primary' : 'secondary'}
+          size={onClose ? 'sm' : 'base'}
+          disabled={isLoading}
+        >
           {buttonLabel || t('common.save')}
         </Button>
       </div>
-    </fetcher.Form>
+    </Form>
   );
 }

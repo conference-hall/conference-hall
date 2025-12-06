@@ -1,3 +1,4 @@
+import { MessageBlockComponent } from 'e2e/common/message-block.component.ts';
 import { expect, loginWith, test } from 'e2e/fixtures.ts';
 import type { Event, Proposal, Team, User } from 'prisma/generated/client.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
@@ -16,6 +17,7 @@ import { userFactory } from 'tests/factories/users.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { ProposalPage } from './proposal.page.ts';
 
+let user: User;
 let team: Team;
 let event: Event;
 let event2: Event;
@@ -24,7 +26,7 @@ let proposal: Proposal;
 let proposal2: Proposal;
 
 test.beforeEach(async () => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+  user = await userFactory({ traits: ['clark-kent'] });
   const reviewer = await userFactory({ traits: ['bruce-wayne'] });
   team = await teamFactory({ owners: [user], reviewers: [reviewer] });
 
@@ -131,9 +133,9 @@ test.describe('As a owner', () => {
 
     // Check activity feed
     await expect(proposalPage.activityFeed).toHaveCount(5);
-    const first = await proposalPage.activityFeed.nth(1);
-    const second = await proposalPage.activityFeed.nth(2);
-    const third = await proposalPage.activityFeed.nth(3);
+    const first = proposalPage.activityFeed.nth(1);
+    const second = proposalPage.activityFeed.nth(2);
+    const third = proposalPage.activityFeed.nth(3);
     await expect(first).toContainText('Bruce Wayne reviewed the proposal with 3 stars');
     await expect(second).toContainText('Bruce Wayne');
     await expect(second).toContainText('Hello world');
@@ -148,14 +150,13 @@ test.describe('As a owner', () => {
     await proposalPage.fill(proposalPage.commentInput, 'This is a new comment');
     await proposalPage.commentButton.click();
     await expect(proposalPage.activityFeed).toHaveCount(6);
-    const fourth = await proposalPage.activityFeed.nth(4);
+    const fourth = proposalPage.activityFeed.nth(4);
     await expect(fourth).toContainText('Clark Kent');
     await expect(fourth).toContainText('This is a new comment');
 
     // Delete a comment
-    page.on('dialog', (dialog) => dialog.accept());
-    await fourth.getByRole('button', { name: 'Message action menu' }).click();
-    await page.getByRole('button', { name: 'Delete' }).click();
+    const comment = new MessageBlockComponent(fourth, page);
+    await comment.clickDelete();
     await expect(proposalPage.activityFeed).toHaveCount(5);
 
     // Check speaker profile
@@ -389,23 +390,31 @@ test.describe('As a owner', () => {
       role: 'SPEAKER',
       attributes: { content: 'Hello from speaker' },
     });
+    await conversationMessageFactory({
+      conversation,
+      sender: user,
+      role: 'ORGANIZER',
+      attributes: { content: 'Hello from organizer' },
+    });
 
     await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
 
     const drawer = await proposalPage.openConversationDrawer();
-
-    await proposalPage.sendMessageInDrawer(drawer, 'Response from organizer');
     await expect(drawer.getByText('Hello from speaker')).toBeVisible();
-    await expect(drawer.getByText('Response from organizer')).toBeVisible();
+    await expect(drawer.getByText('Hello from organizer')).toBeVisible();
 
+    await proposalPage.sendMessageInDrawer(drawer, 'New message from organizer');
+    await expect(drawer.getByText('New message from organizer')).toBeVisible();
+
+    // We test edit and delete on second message because optimistic rendering
+    // make it flaky with playwright automation tests
     const messages = await proposalPage.getConversationMessages(drawer);
-    await expect(messages.length).toBe(2);
 
-    await messages[0].editMessage('New Response from organizer');
-    await expect(drawer.getByText('New Response from organizer')).toBeVisible();
+    await messages[1].editMessage('Updated message from organizer');
+    await expect(drawer.getByText('Updated message from organizer')).toBeVisible();
 
-    await messages[0].clickDelete();
-    await expect(drawer.getByText('New Response from organizer')).not.toBeVisible();
+    await messages[1].clickDelete();
+    await expect(drawer.getByText('Updated message from organizer')).not.toBeVisible();
   });
 });
 

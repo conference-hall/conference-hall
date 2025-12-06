@@ -32,12 +32,12 @@ export class SubmissionPage extends PageObject {
 
   async goto(slug: string) {
     await this.page.goto(`/${slug}/submission`);
+    await this.waitForHydration();
     await this.selectionStep.waitFor();
   }
 
   async waitFor(name: string) {
-    await this.waitForHydration();
-    await this.page.getByRole('heading', { name });
+    await this.page.getByRole('heading', { name }).waitFor();
   }
 
   async clickOnNewProposal() {

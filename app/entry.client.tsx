@@ -4,12 +4,6 @@ import { I18nextProvider } from 'react-i18next';
 import { HydratedRouter } from 'react-router/dom';
 import { initializeI18n } from './shared/i18n/i18n.browser.ts';
 
-declare global {
-  interface Window {
-    __APP_HYDRATED__?: boolean;
-  }
-}
-
 async function hydrate() {
   try {
     const i18n = await initializeI18n();
@@ -23,10 +17,6 @@ async function hydrate() {
           </StrictMode>
         </I18nextProvider>,
       );
-
-      queueMicrotask(() => {
-        window.__APP_HYDRATED__ = true;
-      });
     });
   } catch (error) {
     console.error(error);

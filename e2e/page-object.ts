@@ -21,7 +21,7 @@ export class PageObject {
   }
 
   async waitForHydration() {
-    await this.page.waitForFunction(() => window.__APP_HYDRATED__ === true, undefined, { timeout: 10_000 });
+    await this.page.locator('[data-test-hydrated]').waitFor({ state: 'attached', timeout: 10_000 });
   }
 
   async closeModal() {

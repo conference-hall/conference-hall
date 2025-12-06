@@ -17,11 +17,20 @@ import { useOptimisticReactions } from './use-optimistic-reactions.ts';
 type Props = {
   message: Message;
   intentSuffix: string;
+  onOptimisticSave?: (data: { id?: string; content: string }) => void;
+  onOptimisticDelete?: (id: string) => void;
   canManageConversations?: boolean;
   className?: string;
 };
 
-export function MessageBlock({ message, intentSuffix, canManageConversations = false, className }: Props) {
+export function MessageBlock({
+  message,
+  intentSuffix,
+  onOptimisticSave,
+  onOptimisticDelete,
+  canManageConversations = false,
+  className,
+}: Props) {
   const { t } = useTranslation();
   const currentUser = useUser();
 
@@ -41,6 +50,7 @@ export function MessageBlock({ message, intentSuffix, canManageConversations = f
           message={message}
           intentSuffix={intentSuffix}
           onEdit={() => setEditing(!isEditing)}
+          onDelete={onOptimisticDelete}
           canManageConversations={canManageConversations}
         />
 
@@ -65,6 +75,7 @@ export function MessageBlock({ message, intentSuffix, canManageConversations = f
           message={message}
           intent={`save-${intentSuffix}`}
           inputLabel={t('common.conversation.edit.label')}
+          onOptimisticSave={onOptimisticSave}
           onClose={() => setEditing(false)}
           autoFocus
         />

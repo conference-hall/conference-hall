@@ -4,6 +4,7 @@ import { PageObject } from 'e2e/page-object.ts';
 
 export class MessageBlockComponent extends PageObject {
   readonly component: Locator;
+  readonly actionsMenu = this.page.getByRole('menu', { name: 'Message action menu' });
 
   constructor(messageBlock: Locator, page: Page) {
     super(page);
@@ -11,25 +12,31 @@ export class MessageBlockComponent extends PageObject {
   }
 
   async openActionsMenu() {
-    await this.component.getByRole('button', { name: 'Message action menu' }).click();
-    await this.page.getByRole('menu', { name: 'Message action menu' }).waitFor();
+    const menuButton = this.component.getByRole('button', { name: 'Message action menu' });
+    await menuButton.click({ force: true });
+    await this.actionsMenu.waitFor({ state: 'visible' });
   }
 
   async clickEdit() {
     await this.openActionsMenu();
-    await this.page.getByRole('menuitem', { name: 'Edit' }).click();
+    const editButton = this.actionsMenu.getByRole('menuitem', { name: 'Edit' });
+    await expect(editButton).toBeVisible();
+    await editButton.click({ force: true });
     return this.component.getByRole('textbox');
   }
 
   async clickDelete() {
     this.page.on('dialog', (dialog) => dialog.accept());
     await this.openActionsMenu();
-    await this.page.getByRole('menuitem', { name: 'Delete' }).click();
+    const deleteButton = this.actionsMenu.getByRole('menuitem', { name: 'Delete' });
+    await expect(deleteButton).toBeVisible();
+    await deleteButton.click({ force: true });
   }
 
   async editMessage(newContent: string) {
     const input = await this.clickEdit();
-    await input.clear();
+    await expect(input).toBeVisible();
+    await input.fill('');
     await input.fill(newContent);
     await this.component.getByRole('button', { name: 'Save' }).click();
     await expect(input).not.toBeVisible();

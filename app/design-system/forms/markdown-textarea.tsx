@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { Button } from '../button.tsx';
@@ -33,6 +33,7 @@ export function MarkdownTextArea({
   const { t } = useTranslation();
   const [isPreviewOpen, setPreviewOpen] = useState(false);
   const [markdown, setMarkdown] = useState(defaultValue);
+  const textareaId = useId();
 
   const handleClosePreview = () => setPreviewOpen(false);
   const handleOpenPreview = () => setPreviewOpen(true);
@@ -45,13 +46,13 @@ export function MarkdownTextArea({
 
   return (
     <div>
-      <Label htmlFor={name} mb={1}>
+      <Label htmlFor={textareaId} mb={1}>
         {label}
       </Label>
       <div className="relative">
         <div className={styles}>
           <textarea
-            id={name}
+            id={textareaId}
             name={name}
             rows={rows}
             className={cx('block w-full border-0 py-3 placeholder-gray-500 focus:ring-0 text-sm', className)}

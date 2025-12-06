@@ -6,6 +6,7 @@ import type { Route } from './+types/root.ts';
 import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
 import { UserProvider } from './app-platform/components/user-context.tsx';
+import { ClientOnly } from './design-system/utils/client-only.tsx';
 import { authMiddleware, getAuthUser } from './shared/auth/auth.middleware.ts';
 import { getFirebaseClientConfig } from './shared/auth/firebase.server.ts';
 import { initializeFirebaseClient } from './shared/auth/firebase.ts';
@@ -83,6 +84,7 @@ function Document({ nonce, toast, children }: DocumentProps) {
       </head>
       <body className="overflow-x-hidden bg-slate-50 font-sans text-gray-900 antialiased">
         <GlobalLoading />
+        <ClientOnly>{() => <div data-test-hydrated className="hidden" />}</ClientOnly>
         <Toaster toast={toast} />
         {children}
         <ScrollRestoration nonce={nonce} />
