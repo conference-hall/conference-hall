@@ -1,9 +1,0 @@
-{
-  "recommendations": [
-    "EditorConfig.EditorConfig",
-    "biomejs.biome",
-    "bradlc.vscode-tailwindcss",
-    "Prisma.prisma",
-    "lokalise.i18n-ally"
-  ]
-}
