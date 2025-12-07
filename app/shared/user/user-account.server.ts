@@ -1,3 +1,4 @@
+import { FirebaseAuthError } from 'firebase-admin/auth';
 import type { TFunction } from 'i18next';
 import { db } from 'prisma/db.server.ts';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
@@ -99,7 +100,6 @@ export class UserAccount {
       await firebaseAuth.updateUser(uid, { email, password, emailVerified: false });
       await UserAccount.checkEmailVerification(email, false, 'password', locale);
     } catch (error) {
-      console.warn('linkEmailProvider', error);
       return getFirebaseError(error, t);
     }
   }
@@ -131,7 +131,11 @@ export class UserAccount {
         }),
       );
     } catch (error) {
-      console.warn('sendResetPasswordEmail', error);
+      if (error instanceof FirebaseAuthError) {
+        console.warn('sendResetPasswordEmail:', error.message);
+      } else {
+        console.error('sendResetPasswordEmail:', error);
+      }
     }
   }
 
@@ -164,8 +168,11 @@ export class UserAccount {
 
       return true;
     } catch (error) {
-      console.warn('checkEmailVerification', error);
-      return false;
+      if (error instanceof FirebaseAuthError) {
+        console.warn('checkEmailVerification:', error.message);
+      } else {
+        console.error('checkEmailVerification:', error);
+      }
     }
   }
 
@@ -234,7 +241,9 @@ export class UserAccount {
         await sendEmail.trigger(AccountDeletedEmail.buildPayload(email, locale, { deletionDate }));
       }
     } catch (error) {
-      console.error('deleteAccount', error);
+      if (error instanceof FirebaseAuthError) {
+        console.warn('deleteAccount:', error.message);
+      }
       throw error;
     }
   }
