@@ -1,4 +1,3 @@
-import { cacheHeader } from 'pretty-cache-header';
 import { data } from 'react-router';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { z } from 'zod';
@@ -6,6 +5,11 @@ import { i18nResources } from '~/shared/i18n/i18n.resources.ts';
 import type { Route } from './+types/locales.ts';
 
 const { NODE_ENV } = getSharedServerEnv();
+
+const CACHE_MAX_AGE = 5 * 60; // Cache in the browser for 5 minutes
+const CACHE_S_MAX_AGE = 24 * 60 * 60; // Cache in the CDN for 1 day
+const CACHE_STALE_WHILE_REVALIDATE = 7 * 24 * 60 * 60; // Serve stale content while revalidating for 7 days
+const CACHE_STALE_IF_ERROR = 7 * 24 * 60 * 60; // Serve stale content if there's an error for 7 days
 
 export async function loader({ params }: Route.LoaderArgs) {
   const lng = z.enum(Object.keys(i18nResources) as Array<keyof typeof i18nResources>).safeParse(params.lng);
@@ -24,12 +28,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   if (NODE_ENV === 'production') {
     headers.set(
       'Cache-Control',
-      cacheHeader({
-        maxAge: '5m', // Cache in the browser for 5 minutes
-        sMaxage: '1d', // Cache in the CDN for 1 day
-        staleWhileRevalidate: '7d', // Serve stale content while revalidating for 7 days
-        staleIfError: '7d', // Serve stale content if there's an error for 7 days
-      }),
+      `max-age=${CACHE_MAX_AGE}, s-maxage=${CACHE_S_MAX_AGE}, stale-while-revalidate=${CACHE_STALE_WHILE_REVALIDATE}, stale-if-error=${CACHE_STALE_IF_ERROR}`,
     );
   }
 
