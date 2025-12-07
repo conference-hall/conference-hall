@@ -79,8 +79,8 @@ export class EventEmailCustomizations extends EventAuthorization {
       await db.eventEmailCustomization.delete({
         where: { eventId_template_locale: { eventId: event.id, template, locale } },
       });
-    } catch (_error) {
-      throw new NotFoundError(`Customization for template "${template}" and locale "${locale}" not found`);
+    } catch {
+      console.warn(`Customization for template "${template}" and locale "${locale}" not found`);
     }
   }
 }
