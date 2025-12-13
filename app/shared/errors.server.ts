@@ -106,6 +106,16 @@ export class ApiKeyInvalidError extends BadRequestError {
   }
 }
 
+export class ApiKeyQueryParamsDeprecatedError extends BadRequestError {
+  constructor() {
+    super(
+      'API key authentication via query parameters is deprecated and has been disabled. ' +
+        'Please use the X-API-Key header instead. ' +
+        'Example: curl -H "X-API-Key: your-api-key" https://api.example.com/endpoint',
+    );
+  }
+}
+
 export class InvalidAccessKeyError extends BadRequestError {
   constructor() {
     super('Invalid access key.');
