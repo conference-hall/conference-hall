@@ -3,7 +3,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { scheduleFactory } from 'tests/factories/schedule.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import { ForbiddenOperationError, NotFoundError } from '~/shared/errors.server.ts';
 import { EventScheduleApi } from './schedule-api.server.ts';
 
 describe('EventScheduleApi', () => {
@@ -32,6 +32,11 @@ describe('EventScheduleApi', () => {
         timeZone: schedule.timezone,
         sessions: expect.any(Array),
       });
+    });
+
+    it('throws not found error when no schedule found for event', async () => {
+      const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'], attributes: { apiKey: '123' } });
+      await expect(EventScheduleApi.forJsonApi(eventWithoutSchedule)).rejects.toThrowError(NotFoundError);
     });
 
     it('throws forbidden error for meetups', async () => {
