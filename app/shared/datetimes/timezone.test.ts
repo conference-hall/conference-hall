@@ -84,7 +84,7 @@ describe('timezone', () => {
       const london = timezones.find((t) => t.value === 'Europe/London');
       expect(london).toEqual({
         value: 'Europe/London',
-        name: '(GMT+00:00) United Kingdom Time - Europe/London',
+        name: '(GMT+00:00) Europe/London',
       });
     });
 
