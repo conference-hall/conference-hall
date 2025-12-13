@@ -28,11 +28,7 @@ export function getTimezonesList(locale: string) {
     const timezoneOffset = tzFormatShort.formatToParts(now).find((part) => part.type === 'timeZoneName')?.value;
     const offsetName = timezoneOffset === 'GMT' ? 'GMT+00:00' : timezoneOffset;
 
-    // TZ Long name
-    const tzFormatLong = new Intl.DateTimeFormat(locale, { timeZone: tz, timeZoneName: 'longGeneric' });
-    const longName = tzFormatLong.formatToParts(now).find((part) => part.type === 'timeZoneName')?.value;
-
-    return { id: tz, name: `(${offsetName}) ${longName} - ${tz.replace('_', ' ')}` };
+    return { id: tz, name: `(${offsetName}) ${tz.replace('_', ' ')}` };
   });
 
   // Sort timezones by offset and name

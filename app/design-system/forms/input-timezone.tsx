@@ -9,11 +9,16 @@ export function InputTimezone({ name, label, defaultValue, onChange }: Props) {
   const userTimezone = getUserTimezone();
   const timezonesOptions = getTimezonesList(i18n.language);
 
+  const handleChange = (_name: string, value: string) => {
+    if (!onChange) return;
+    onChange(value);
+  };
+
   return (
     <Select
       name={name}
       label={label}
-      onChange={(_, value) => (onChange ? onChange(value) : null)}
+      onChange={handleChange}
       defaultValue={defaultValue || userTimezone}
       options={timezonesOptions}
     />

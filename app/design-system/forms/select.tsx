@@ -55,6 +55,7 @@ export default function Select({
             <Label className={cx('block text-sm font-medium leading-6 text-gray-900', { 'sr-only': srOnly })}>
               {label}
             </Label>
+
             <div className={cx('relative', { 'mt-1': !srOnly })}>
               <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 ring-1 ring-inset ring-gray-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-600 text-sm leading-6">
                 <span className="flex justify-start items-center gap-2 truncate">
@@ -69,7 +70,7 @@ export default function Select({
               <SelectTransition show={open}>
                 <ListboxOptions
                   anchor={{ to: 'bottom start', gap: '4px' }}
-                  className={cx(menuItems(), 'w-(--button-width)')}
+                  className={cx(menuItems(), 'w-(--button-width)', '[--anchor-max-height:256px]')}
                 >
                   {options
                     .filter((o) => !o.hidden)
