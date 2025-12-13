@@ -1,3 +1,4 @@
+import { SparklesIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useId } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
@@ -52,7 +53,14 @@ export function ApiKeySection({ apiKey }: Props) {
       </Card.Content>
 
       <Card.Actions>
-        <Button type="submit" name="intent" value={apiKey ? 'revoke-api-key' : 'generate-api-key'} form={formId}>
+        <Button
+          type="submit"
+          name="intent"
+          value={apiKey ? 'revoke-api-key' : 'generate-api-key'}
+          iconLeft={apiKey ? TrashIcon : SparklesIcon}
+          variant={apiKey ? 'important' : 'primary'}
+          form={formId}
+        >
           {apiKey ? t('event-management.settings.web-api.revoke') : t('event-management.settings.web-api.generate')}
         </Button>
       </Card.Actions>

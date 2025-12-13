@@ -731,7 +731,7 @@
   "event-management.settings.web-api.rate-limit.title": "Rate limit",
   "event-management.settings.web-api.revoke": "Revoke API key",
   "event-management.settings.web-api.tryout.curl": "cURL command",
-  "event-management.settings.web-api.tryout.proposals.description": "List event proposals, you can filters them around different criterias.",
+  "event-management.settings.web-api.tryout.proposals.description": "List event proposals, you can filter them around different criteria.",
   "event-management.settings.web-api.tryout.proposals.heading": "Event proposals API",
   "event-management.settings.web-api.tryout.proposals.query.label": "query",
   "event-management.settings.web-api.tryout.proposals.query.placeholder": "Search by term in proposal titles or speaker names",
