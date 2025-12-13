@@ -7,7 +7,6 @@ import { reviewFactory } from 'tests/factories/reviews.ts';
 import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { ApiKeyInvalidError, EventNotFoundError } from '~/shared/errors.server.ts';
 import { EventProposalsApi } from './proposals-api.server.ts';
 
 describe('#EventProposalsApi', () => {
@@ -29,8 +28,7 @@ describe('#EventProposalsApi', () => {
       });
       const review = await reviewFactory({ proposal, user: speaker });
 
-      const eventApi = new EventProposalsApi(event.slug, '123');
-      const result = await eventApi.proposals({});
+      const result = await EventProposalsApi.proposals(event, {});
 
       expect(result).toEqual({
         startDate: event.conferenceStart,
@@ -86,23 +84,10 @@ describe('#EventProposalsApi', () => {
 
       await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const eventApi = new EventProposalsApi(event.slug, '123');
-      const result = await eventApi.proposals({ status: 'accepted' });
+      const result = await EventProposalsApi.proposals(event, { status: 'accepted' });
 
       expect(result.proposals.length).toBe(1);
       expect(result.proposals[0].title).toBe(proposal.title);
-    });
-
-    it('returns an error when event not found', async () => {
-      await eventFactory({ attributes: { apiKey: '123' } });
-      const eventApi = new EventProposalsApi('xxx', '123');
-      await expect(eventApi.proposals({})).rejects.toThrowError(EventNotFoundError);
-    });
-
-    it('returns an error when Api key mismatch', async () => {
-      const event = await eventFactory({ attributes: { apiKey: '123' } });
-      const eventApi = new EventProposalsApi(event.slug, '456');
-      await expect(eventApi.proposals({})).rejects.toThrowError(ApiKeyInvalidError);
     });
 
     it('includes speaker survey data when available', async () => {
@@ -144,8 +129,7 @@ describe('#EventProposalsApi', () => {
         talk: await talkFactory({ speakers: [speaker1, speaker2] }),
       });
 
-      const eventApi = new EventProposalsApi(event.slug, '123');
-      const result = await eventApi.proposals({});
+      const result = await EventProposalsApi.proposals(event, {});
 
       expect(result.proposals[0].speakers).toHaveLength(2);
 
@@ -210,8 +194,7 @@ describe('#EventProposalsApi', () => {
         talk: await talkFactory({ speakers: [speaker3] }),
       });
 
-      const eventApi = new EventProposalsApi(event.slug, '123');
-      const result = await eventApi.proposals({});
+      const result = await EventProposalsApi.proposals(event, {});
 
       expect(result.proposals).toHaveLength(2);
 
@@ -257,8 +240,7 @@ describe('#EventProposalsApi', () => {
         talk: await talkFactory({ speakers: [speaker1, speaker2] }),
       });
 
-      const eventApi = new EventProposalsApi(event.slug, '123');
-      const result = await eventApi.proposals({});
+      const result = await EventProposalsApi.proposals(event, {});
 
       result.proposals[0].speakers.forEach((speaker) => {
         expect(speaker.survey).toEqual([]);
@@ -317,8 +299,7 @@ describe('#EventProposalsApi', () => {
         talk: await talkFactory({ speakers: [speaker] }),
       });
 
-      const eventApi = new EventProposalsApi(event.slug, '123');
-      const result = await eventApi.proposals({});
+      const result = await EventProposalsApi.proposals(event, {});
 
       expect(result.proposals[0].speakers[0].survey).toEqual([
         { id: 'name', question: 'What is your name?', answer: 'John Doe' },

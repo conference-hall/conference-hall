@@ -1,28 +1,16 @@
-import { db } from 'prisma/db.server.ts';
+import type { Event } from 'prisma/generated/client.ts';
 import { ReviewDetails } from '~/features/event-management/proposals/models/review-details.ts';
 import type { ProposalsFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from '~/features/event-management/proposals/services/proposal-search-builder.server.ts';
 import { SurveyConfig } from '~/features/event-management/settings/models/survey-config.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
-import { ApiKeyInvalidError, EventNotFoundError } from '~/shared/errors.server.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
 
 export class EventProposalsApi {
-  constructor(
-    private eventSlug: string,
-    private apiKey: string,
-  ) {}
-
-  async proposals(filters: ProposalsFilters) {
-    const event = await db.event.findFirst({ where: { slug: this.eventSlug } });
-
-    if (!event) throw new EventNotFoundError();
-
-    if (event.apiKey !== this.apiKey) throw new ApiKeyInvalidError();
-
-    const search = new ProposalSearchBuilder(this.eventSlug, 'no-user', filters);
+  static async proposals(event: Event, filters: ProposalsFilters) {
+    const search = new ProposalSearchBuilder(event.slug, 'no-user', filters);
 
     const proposals = await search.proposals();
 
@@ -70,7 +58,7 @@ export class EventProposalsApi {
             location: speaker.location,
             email: speaker.email,
             socialLinks: speaker.socialLinks as SocialLinks,
-            survey: speaker.userId ? this.#mapSpeakerSurvey(speaker.userId, speakerSurveys) : [],
+            survey: speaker.userId ? EventProposalsApi.#mapSpeakerSurvey(speaker.userId, speakerSurveys) : [],
           })),
           review: reviews.summary(),
         };
@@ -78,7 +66,7 @@ export class EventProposalsApi {
     };
   }
 
-  #mapSpeakerSurvey(userId: string, speakerSurveys: Record<string, Array<SurveyDetailedAnswer>>) {
+  static #mapSpeakerSurvey(userId: string, speakerSurveys: Record<string, Array<SurveyDetailedAnswer>>) {
     const survey = speakerSurveys[userId];
     if (!survey) return [];
 
