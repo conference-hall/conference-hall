@@ -21,6 +21,7 @@ export default defineFlagsConfig({
   disableApiKeyInQueryParams: {
     description: 'Disables API key authentication via query parameters (forces header-based authentication).',
     type: 'boolean',
+    tags: ['frontend'] as const,
     defaultValue: false,
   },
 });

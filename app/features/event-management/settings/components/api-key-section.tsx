@@ -6,12 +6,15 @@ import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
+import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 
 type Props = { apiKey: string | null };
 
-export function EnableApiSection({ apiKey }: Props) {
+export function ApiKeySection({ apiKey }: Props) {
   const { t } = useTranslation();
   const formId = useId();
+  const disableApiKeyInQueryParams = useFlag('disableApiKeyInQueryParams');
+
   return (
     <Card as="section">
       <Card.Title>
@@ -20,17 +23,31 @@ export function EnableApiSection({ apiKey }: Props) {
       </Card.Title>
 
       <Card.Content>
-        <Form method="POST" id={formId} className="space-y-4">
+        <Form method="POST" id={formId} className="space-y-8">
           <Input
             name="apiKey"
-            label={t('event-management.settings.web-api.api-key')}
             disabled
             value={apiKey || ''}
+            addon="X-API-Key:&nbsp;&nbsp;"
+            label={t('event-management.settings.web-api.api-key')}
             placeholder={t('event-management.settings.web-api.api-key.placeholder')}
+            description={t('event-management.settings.web-api.api-key.description')}
           />
-          <Callout title="Rate limit">
-            <Trans i18nKey="event-management.settings.web-api.info" components={[<strong key="1" />]} />
-          </Callout>
+
+          <section className="space-y-6">
+            <Callout title={t('event-management.settings.web-api.rate-limit.title')}>
+              <Trans
+                i18nKey="event-management.settings.web-api.rate-limit.description"
+                components={[<strong key="1" />]}
+              />
+            </Callout>
+
+            {apiKey && !disableApiKeyInQueryParams ? (
+              <Callout variant="warning" title={t('event-management.settings.web-api.deprecation.title')}>
+                {t('event-management.settings.web-api.deprecation.description')}
+              </Callout>
+            ) : null}
+          </section>
         </Form>
       </Card.Content>
 
