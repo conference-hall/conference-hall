@@ -1,19 +1,13 @@
-import { db } from 'prisma/db.server.ts';
-import { ApiKeyInvalidError, EventNotFoundError } from '~/shared/errors.server.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
+import type { Event } from 'prisma/generated/client.ts';
+import { NotFoundError } from '~/shared/errors.server.ts';
 import { EventScheduleExport } from '../../schedule/services/schedule-export.server.ts';
 
-export class EventScheduleApi extends EventAuthorization {
-  static for(userId: string, team: string, event: string) {
-    return new EventScheduleApi(userId, team, event);
-  }
+export class EventScheduleApi {
+  static async forJsonApi(event: Event) {
+    const scheduleExport = await EventScheduleExport.toJson(event.id, event.type);
 
-  static async forJsonApi(eventSlug: string, apiKey: string) {
-    const event = await db.event.findFirst({ where: { slug: eventSlug } });
+    if (!scheduleExport) throw new NotFoundError(`No schedule found for "${event.slug}" event`);
 
-    if (!event) throw new EventNotFoundError();
-    if (event.apiKey !== apiKey) throw new ApiKeyInvalidError();
-
-    return EventScheduleExport.toJson(event.id, event.type);
+    return scheduleExport;
   }
 }

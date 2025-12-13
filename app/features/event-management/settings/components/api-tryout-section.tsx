@@ -1,25 +1,23 @@
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CodeBlock } from '~/design-system/code-block.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 
-type Props = { slug: string; apiKey: string };
+type Props = { slug: string; apiKey: string; appUrl: string };
 
-export function EventProposalApiTryout({ slug, apiKey }: Props) {
+export function EventProposalApiTryout({ slug, apiKey, appUrl }: Props) {
   const { t } = useTranslation();
   const [query, setQuery] = useState<string>('');
   const [status, setStatus] = useState<string>('');
 
-  const params = new URLSearchParams();
-  params.set('key', apiKey);
-  if (query) params.set('query', query);
-  if (status) params.set('status', status);
+  const url = new URL(`/api/v1/event/${slug}`, appUrl);
+  if (query) url.searchParams.set('query', query);
+  if (status) url.searchParams.set('status', status);
 
-  const url = `/api/v1/event/${slug}?${params.toString()}`;
+  const curlCommand = `curl -H "X-API-Key: ${apiKey}" "${url.toString()}"`;
 
   return (
     <Card as="section">
@@ -29,7 +27,6 @@ export function EventProposalApiTryout({ slug, apiKey }: Props) {
       </Card.Title>
 
       <Card.Content>
-        <code className="rounded-sm bg-gray-100 p-4 text-sm">{url}</code>
         <Input
           name="query"
           label={t('event-management.settings.web-api.tryout.proposals.query.label')}
@@ -48,23 +45,17 @@ export function EventProposalApiTryout({ slug, apiKey }: Props) {
           defaultValue={status}
           onChange={(_name, value) => setStatus(value)}
         />
+        <CodeBlock code={curlCommand} label={t('event-management.settings.web-api.tryout.curl')} />
       </Card.Content>
-
-      <Card.Actions>
-        <ExternalLink href={url} target="_blank" iconRight={ArrowRightIcon} weight="medium">
-          {t('common.try-out')}
-        </ExternalLink>
-      </Card.Actions>
     </Card>
   );
 }
 
-export function EventScheduleApiTryout({ slug, apiKey }: Props) {
+export function EventScheduleApiTryout({ slug, apiKey, appUrl }: Props) {
   const { t } = useTranslation();
-  const params = new URLSearchParams();
-  params.set('key', apiKey);
 
-  const url = `/api/v1/event/${slug}/schedule?${params.toString()}`;
+  const url = new URL(`/api/v1/event/${slug}/schedule`, appUrl);
+  const curlCommand = `curl -H "X-API-Key: ${apiKey}" "${url.toString()}"`;
 
   return (
     <Card as="section">
@@ -74,14 +65,8 @@ export function EventScheduleApiTryout({ slug, apiKey }: Props) {
       </Card.Title>
 
       <Card.Content>
-        <code className="rounded-sm bg-gray-100 p-4 text-sm">{url}</code>
+        <CodeBlock code={curlCommand} label={t('event-management.settings.web-api.tryout.curl')} />
       </Card.Content>
-
-      <Card.Actions>
-        <ExternalLink href={url} target="_blank" iconRight={ArrowRightIcon} weight="medium">
-          {t('common.try-out')}
-        </ExternalLink>
-      </Card.Actions>
     </Card>
   );
 }
