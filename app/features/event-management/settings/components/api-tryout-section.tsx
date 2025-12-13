@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CodeBlock } from '~/design-system/code-block.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -44,10 +45,7 @@ export function EventProposalApiTryout({ slug, apiKey, appUrl }: Props) {
           defaultValue={status}
           onChange={(_name, value) => setStatus(value)}
         />
-        <div className="space-y-2">
-          <div className="text-sm font-medium text-gray-700">{t('event-management.settings.web-api.tryout.curl')}</div>
-          <code className="block overflow-x-auto rounded-sm bg-gray-100 p-4 text-sm">{curlCommand}</code>
-        </div>
+        <CodeBlock code={curlCommand} label={t('event-management.settings.web-api.tryout.curl')} />
       </Card.Content>
     </Card>
   );
@@ -67,10 +65,7 @@ export function EventScheduleApiTryout({ slug, apiKey, appUrl }: Props) {
       </Card.Title>
 
       <Card.Content>
-        <div className="space-y-2">
-          <div className="text-sm font-medium text-gray-700">{t('event-management.settings.web-api.tryout.curl')}</div>
-          <code className="block overflow-x-auto rounded-sm bg-gray-100 p-4 text-sm">{curlCommand}</code>
-        </div>
+        <CodeBlock code={curlCommand} label={t('event-management.settings.web-api.tryout.curl')} />
       </Card.Content>
     </Card>
   );
