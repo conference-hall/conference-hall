@@ -2,7 +2,7 @@
   {
     "label": "Run Tests",
     "command": "npm run test:unit -- --run",
-    "args": ["\"$ZED_RELATIVE_FILE\" -t=\"$ZED_SYMBOL\""],
+    "args": ["\"$ZED_RELATIVE_FILE\" -t=\"$ZED_SYMBOL\" --hideSkippedTests"],
     "show_summary": false,
     "show_command": false,
     "tags": ["tsx-test", "ts-test", "js-test"]
@@ -10,7 +10,7 @@
   {
     "label": "Watch Tests",
     "command": "npm run test:unit --",
-    "args": ["\"$ZED_RELATIVE_FILE\" -t=\"$ZED_SYMBOL\""],
+    "args": ["\"$ZED_RELATIVE_FILE\" -t=\"$ZED_SYMBOL\" --hideSkippedTests"],
     "show_summary": false,
     "show_command": false,
     "tags": ["tsx-test", "ts-test", "js-test"]
