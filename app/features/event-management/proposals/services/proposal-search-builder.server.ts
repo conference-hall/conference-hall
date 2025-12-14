@@ -93,6 +93,7 @@ export class ProposalSearchBuilder {
       reviews: this.reviewsClause(reviews),
       OR: this.whereSearchClause(query),
       ...this.whereStatus(status),
+      ...this.whereArchived(status),
     };
   }
 
@@ -104,6 +105,11 @@ export class ProposalSearchBuilder {
     if (status === 'confirmed') return { deliberationStatus: 'ACCEPTED', confirmationStatus: 'CONFIRMED' };
     if (status === 'declined') return { deliberationStatus: 'ACCEPTED', confirmationStatus: 'DECLINED' };
     return {};
+  }
+
+  private whereArchived(status?: StatusFilter): ProposalWhereInput {
+    if (status === 'archived') return { archivedAt: { not: null } };
+    return { archivedAt: null };
   }
 
   private whereSearchClause(query?: string) {

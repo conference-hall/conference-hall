@@ -20,7 +20,7 @@ import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 
 const reviewOptions = ['reviewed', 'not-reviewed', 'my-favorites'] as const;
-const statusOptions = ['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined'] as const;
+const statusOptions = ['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined', 'archived'] as const;
 
 export function FiltersMenu() {
   const { t } = useTranslation();

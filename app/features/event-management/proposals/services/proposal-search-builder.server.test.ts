@@ -239,6 +239,38 @@ describe('EventProposalsSearch', () => {
       expect(proposals[0].title).toBe(proposal5.title);
     });
 
+    it('hides archived proposals by default', async () => {
+      const { db } = await import('prisma/db.server.ts');
+      await db.proposal.update({
+        where: { id: proposal1.id },
+        data: { archivedAt: new Date() },
+      });
+
+      const search = new ProposalSearchBuilder(event.slug, owner.id, {});
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(4);
+      expect(proposals.find((p) => p.id === proposal1.id)).toBeUndefined();
+    });
+
+    it('shows only archived proposals with status=archived', async () => {
+      const { db } = await import('prisma/db.server.ts');
+      await db.proposal.update({
+        where: { id: proposal1.id },
+        data: { archivedAt: new Date() },
+      });
+      await db.proposal.update({
+        where: { id: proposal2.id },
+        data: { archivedAt: new Date() },
+      });
+
+      const filters: ProposalsFilters = { status: 'archived' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(2);
+      expect(proposals[0].title).toBe(proposal2.title);
+      expect(proposals[1].title).toBe(proposal1.title);
+    });
+
     it('filters proposals by user reviewed only', async () => {
       const filters: ProposalsFilters = { reviews: 'reviewed' };
       const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
