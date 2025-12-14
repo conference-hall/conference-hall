@@ -12,9 +12,11 @@ describe('ProposalActionsMenu component', () => {
       references: null,
       languages: ['en'],
       level: 'BEGINNER' as const,
+      archivedAt: null,
     },
     errors: null,
     canEditEventProposal: true,
+    canArchiveProposal: true,
   };
 
   const renderComponent = (props = {}) => {
@@ -69,5 +71,35 @@ describe('ProposalActionsMenu component', () => {
     await element.click();
     await expect.element(page.getByRole('menuitem', { name: /Edit/ })).not.toBeInTheDocument();
     await expect.element(page.getByRole('menuitem', { name: /Share link/ })).toBeInTheDocument();
+  });
+
+  it('shows Archive action when canArchiveProposal is true and proposal is not archived', async () => {
+    await renderComponent();
+
+    const button = page.getByRole('button', { name: 'Proposal action menu' });
+    await button.click();
+    await expect.element(page.getByRole('button', { name: /Archive/ })).toBeInTheDocument();
+  });
+
+  it('shows Restore action when canArchiveProposal is true and proposal is archived', async () => {
+    await renderComponent({
+      proposal: {
+        ...defaultProps.proposal,
+        archivedAt: '2024-01-01T00:00:00.000Z',
+      },
+    });
+
+    const button = page.getByRole('button', { name: 'Proposal action menu' });
+    await button.click();
+    await expect.element(page.getByRole('button', { name: /Restore/ })).toBeInTheDocument();
+  });
+
+  it('hides Archive/Restore action when canArchiveProposal is false', async () => {
+    await renderComponent({ canArchiveProposal: false });
+
+    const button = page.getByRole('button', { name: 'Proposal action menu' });
+    await button.click();
+    await expect.element(page.getByRole('button', { name: /Archive/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: /Restore/ })).not.toBeInTheDocument();
   });
 });
