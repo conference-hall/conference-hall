@@ -58,6 +58,7 @@ export class ProposalReview extends EventAuthorization {
       deliberationStatus: proposal.deliberationStatus,
       publicationStatus: proposal.publicationStatus,
       confirmationStatus: proposal.confirmationStatus,
+      archivedAt: proposal.archivedAt?.toISOString() ?? null,
       createdAt: proposal.createdAt,
       languages: proposal.languages as Languages,
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
