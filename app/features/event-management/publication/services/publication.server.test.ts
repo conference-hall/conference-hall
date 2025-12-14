@@ -1,3 +1,4 @@
+import { db } from 'prisma/db.server.ts';
 import type { Event, Proposal, Team, User } from 'prisma/generated/client.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
@@ -6,6 +7,7 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
+import { ProposalStatusUpdater } from '../../proposals/services/proposal-status-updater.server.ts';
 import { Publication } from './publication.server.ts';
 
 describe('Publication', () => {
@@ -62,6 +64,32 @@ describe('Publication', () => {
     it('returns results statistics for the event', async () => {
       const publication = Publication.for(owner.id, team.slug, event.slug);
       const count = await publication.statistics();
+      expect(count).toEqual({
+        deliberation: { total: 7, pending: 1, accepted: 5, rejected: 1 },
+        accepted: { published: 3, notPublished: 2 },
+        rejected: { published: 0, notPublished: 1 },
+        confirmations: { pending: 1, confirmed: 1, declined: 1 },
+      });
+    });
+
+    it('excludes archived proposals from statistics', async () => {
+      const archivedAccepted = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker1] }),
+        traits: ['accepted'],
+      });
+      const archivedRejected = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker1] }),
+        traits: ['rejected'],
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      await proposalStatus.archive([archivedAccepted.id, archivedRejected.id]);
+
+      const publication = Publication.for(owner.id, team.slug, event.slug);
+      const count = await publication.statistics();
+
       expect(count).toEqual({
         deliberation: { total: 7, pending: 1, accepted: 5, rejected: 1 },
         accepted: { published: 3, notPublished: 2 },
@@ -127,6 +155,27 @@ describe('Publication', () => {
           template: 'speakers-proposal-rejected',
           to: [speaker1.email],
         }),
+      );
+    });
+
+    it('does not publish archived proposals when publishing all accepted', async () => {
+      const uniqueSpeaker = await userFactory({ attributes: { email: 'unique-speaker@example.com' } });
+      const archivedProposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [uniqueSpeaker] }),
+        traits: ['accepted'],
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      await proposalStatus.archive([archivedProposal.id]);
+
+      const publication = Publication.for(owner.id, team.slug, event.slug);
+      await publication.publishAll('ACCEPTED', true);
+
+      const updated = await db.proposal.findUnique({ where: { id: archivedProposal.id } });
+      expect(updated?.publicationStatus).toBe('NOT_PUBLISHED');
+      expect(sendEmail.trigger).not.toHaveBeenCalledWith(
+        expect.objectContaining({ to: expect.arrayContaining([uniqueSpeaker.email]) }),
       );
     });
 
@@ -198,6 +247,20 @@ describe('Publication', () => {
     it('cannot publish result for a proposal not accepted or rejected', async () => {
       const publication = Publication.for(owner.id, team.slug, event.slug);
       await expect(publication.publish(proposalSubmitted.id, false)).rejects.toThrowError(ProposalNotFoundError);
+    });
+
+    it('cannot publish an archived proposal', async () => {
+      const archivedProposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker1] }),
+        traits: ['accepted'],
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      await proposalStatus.archive([archivedProposal.id]);
+
+      const publication = Publication.for(owner.id, team.slug, event.slug);
+      await expect(publication.publish(archivedProposal.id, true)).rejects.toThrowError(ProposalNotFoundError);
     });
 
     it('cannot be sent by team reviewers', async () => {

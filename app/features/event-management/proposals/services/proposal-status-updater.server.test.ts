@@ -484,6 +484,23 @@ describe('ProposalStatusUpdater', () => {
       expect(updated2?.publicationStatus).toBe('NOT_PUBLISHED'); // Reset
     });
 
+    it('does not update archived proposals when using updateAll', async () => {
+      const activeProposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const archivedProposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      await proposalStatus.archive([archivedProposal.id]);
+
+      const result = await proposalStatus.updateAll({}, 'ACCEPTED');
+
+      expect(result).toBe(1);
+      const updatedActive = await db.proposal.findUnique({ where: { id: activeProposal.id } });
+      const updatedArchived = await db.proposal.findUnique({ where: { id: archivedProposal.id } });
+
+      expect(updatedActive?.deliberationStatus).toBe('ACCEPTED');
+      expect(updatedArchived?.deliberationStatus).toBe('PENDING');
+    });
+
     it('throws an error if user has not a owner or member role in the team', async () => {
       const deliberate = ProposalStatusUpdater.for(reviewer.id, team.slug, event.slug);
       await expect(deliberate.updateAll({}, 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);

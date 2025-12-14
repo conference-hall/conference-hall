@@ -44,7 +44,7 @@ export function ProposalItem({
           aria-label={t('event-management.proposals.list.select-item', { title })}
           value={id}
           checked={isSelected}
-          disabled={isAllPagesSelected}
+          disabled={isAllPagesSelected || archivedAt !== null}
           onChange={toggle}
           className="self-start pt-3.75 pr-4"
         />
