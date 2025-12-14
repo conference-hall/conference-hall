@@ -13,7 +13,7 @@ import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '
 
 type ProposalStatus = { deliberationStatus: DeliberationStatus; confirmationStatus: ConfirmationStatus };
 
-type Props = ProposalStatus & { publicationStatus: PublicationStatus; archivedAt: string | null };
+type Props = ProposalStatus & { publicationStatus: PublicationStatus; archivedAt: Date | null };
 
 function mapStatusesToOptionValue(statuses: ProposalStatus) {
   if (statuses.confirmationStatus === 'PENDING') return 'NOT_ANSWERED';

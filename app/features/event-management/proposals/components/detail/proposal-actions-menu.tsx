@@ -24,7 +24,7 @@ type ProposalActionsMenuProps = {
     references: string | null;
     languages: string[];
     level: string | null;
-    archivedAt: string | null;
+    archivedAt: Date | null;
     formats?: Array<{ id: string }>;
     categories?: Array<{ id: string }>;
   };
