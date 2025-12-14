@@ -1,8 +1,16 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { EllipsisHorizontalIcon, PencilSquareIcon, ShareIcon } from '@heroicons/react/16/solid';
+import {
+  ArchiveBoxIcon,
+  ArchiveBoxXMarkIcon,
+  EllipsisHorizontalIcon,
+  PencilSquareIcon,
+  ShareIcon,
+} from '@heroicons/react/16/solid';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Form } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
+import { Divider } from '~/design-system/divider.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import { TalkEditDrawer } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
@@ -16,14 +24,21 @@ type ProposalActionsMenuProps = {
     references: string | null;
     languages: string[];
     level: string | null;
+    archivedAt: Date | null;
     formats?: Array<{ id: string }>;
     categories?: Array<{ id: string }>;
   };
   errors: SubmissionErrors;
   canEditEventProposal: boolean;
+  canArchiveProposal: boolean;
 };
 
-export function ProposalActionsMenu({ proposal, errors, canEditEventProposal }: ProposalActionsMenuProps) {
+export function ProposalActionsMenu({
+  proposal,
+  errors,
+  canEditEventProposal,
+  canArchiveProposal,
+}: ProposalActionsMenuProps) {
   const { t } = useTranslation();
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -40,6 +55,7 @@ export function ProposalActionsMenu({ proposal, errors, canEditEventProposal }: 
           as={Button}
           label={t('event-management.proposal-page.actions-menu')}
           icon={EllipsisHorizontalIcon}
+          className="self-start"
           variant="tertiary"
           size="sm"
         />
@@ -57,6 +73,32 @@ export function ProposalActionsMenu({ proposal, errors, canEditEventProposal }: 
               <ShareIcon className={menuItemIcon()} aria-hidden="true" />
               {t('event-management.proposal-page.share-link')}
             </MenuItem>
+
+            {canArchiveProposal && (
+              <>
+                <Divider className="my-2" />
+                <MenuItem as={Form} method="POST" className={menuItem()}>
+                  <button
+                    type="submit"
+                    name="intent"
+                    value={proposal.archivedAt ? 'restore-proposal' : 'archive-proposal'}
+                    className="flex w-full items-center cursor-pointer gap-2"
+                  >
+                    {proposal.archivedAt ? (
+                      <>
+                        <ArchiveBoxXMarkIcon className={menuItemIcon()} aria-hidden="true" />
+                        {t('common.restore')}
+                      </>
+                    ) : (
+                      <>
+                        <ArchiveBoxIcon className={menuItemIcon()} aria-hidden="true" />
+                        {t('common.archive')}
+                      </>
+                    )}
+                  </button>
+                </MenuItem>
+              </>
+            )}
           </MenuItems>
         </MenuTransition>
       </Menu>

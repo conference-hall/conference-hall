@@ -17,6 +17,7 @@ describe('ProposalStatusSelect component', () => {
     deliberationStatus: 'PENDING' as DeliberationStatus,
     confirmationStatus: null as ConfirmationStatus,
     publicationStatus: 'NOT_PUBLISHED' as PublicationStatus,
+    archivedAt: null,
   };
 
   const renderComponent = (props = defaultProps) => {

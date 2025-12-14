@@ -21,6 +21,7 @@ type Props = {
   }>;
   className?: string;
   srOnly?: boolean;
+  disabled?: boolean;
 };
 
 export default function Select({
@@ -32,6 +33,7 @@ export default function Select({
   options,
   className,
   srOnly = false,
+  disabled = false,
 }: Props) {
   const [_value, setValue] = useState(defaultValue);
 
@@ -46,7 +48,7 @@ export default function Select({
   const currentValue = value ?? _value;
 
   return (
-    <Listbox name={name} value={currentValue || ''} onChange={handleChange}>
+    <Listbox name={name} value={currentValue || ''} onChange={handleChange} disabled={disabled}>
       {({ open }) => {
         const { name, icon: Icon, iconClassname } = options.find((o) => o.value === currentValue) || {};
 
@@ -57,9 +59,19 @@ export default function Select({
             </Label>
 
             <div className={cx('relative', { 'mt-1': !srOnly })}>
-              <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 ring-1 ring-inset ring-gray-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-600 text-sm leading-6">
+              <ListboxButton
+                className={cx(
+                  'relative w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-left ring-1 ring-inset ring-gray-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-600 text-sm leading-6',
+                  {
+                    'text-gray-900 cursor-default': !disabled,
+                    'text-gray-500 cursor-not-allowed': disabled,
+                  },
+                )}
+              >
                 <span className="flex justify-start items-center gap-2 truncate">
-                  {Icon && <Icon className={cx('h-4 w-4 shrink-0', iconClassname)} aria-hidden="true" />}
+                  {Icon && (
+                    <Icon className={cx('h-4 w-4 shrink-0', { [iconClassname || '']: !disabled })} aria-hidden="true" />
+                  )}
                   {name}
                 </span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -78,7 +90,7 @@ export default function Select({
                       <ListboxOption
                         key={option.value}
                         value={option.value}
-                        disabled={option.disabled}
+                        disabled={option.disabled || disabled}
                         className={({ focus, disabled }) =>
                           cx(menuItem(), {
                             'bg-gray-100': focus,

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Badge } from '~/design-system/badges.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
-import { H1, Text } from '~/design-system/typography.tsx';
+import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDatetime } from '~/shared/datetimes/datetimes.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
@@ -23,6 +23,7 @@ type Props = {
     speakers: Array<SpeakerProps>;
     invitationLink?: string;
     archived?: boolean;
+    archivedAt?: Date | null;
     formats?: Array<{ id: string; name: string }>;
     categories?: Array<{ id: string; name: string }>;
     createdAt: Date;
@@ -78,16 +79,31 @@ export function TalkSection({
           />
         ) : null}
 
-        <Text size="xs" variant="secondary" className="text-nowrap pl-1.5 hidden sm:block">
+        <div className="flex gap-1">
+          <ClientOnly>
+            {() => (
+              <Subtitle size="xs">
+                {t('common.created-on', {
+                  date: formatDatetime(talk.createdAt, { format: 'short', locale }),
+                  interpolation: { escapeValue: false },
+                })}
+              </Subtitle>
+            )}
+          </ClientOnly>
+
           <ClientOnly>
             {() =>
-              t('common.created-on', {
-                date: formatDatetime(talk.createdAt, { format: 'medium', locale }),
-                interpolation: { escapeValue: false },
-              })
+              talk.archivedAt ? (
+                <Subtitle size="xs">
+                  {` - ${t('common.archived-at', {
+                    date: formatDatetime(talk.archivedAt, { format: 'short', locale }),
+                    interpolation: { escapeValue: false },
+                  })}`}
+                </Subtitle>
+              ) : null
             }
           </ClientOnly>
-        </Text>
+        </div>
       </div>
 
       <dl className="p-6 pt-2 flex flex-col gap-8">

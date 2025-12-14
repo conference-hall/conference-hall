@@ -252,6 +252,7 @@ model Proposal {
   deliberationStatus DeliberationStatus  @default(PENDING)
   publicationStatus  PublicationStatus   @default(NOT_PUBLISHED)
   confirmationStatus ConfirmationStatus?
+  archivedAt         DateTime?
   invitationCode     String              @unique @default(cuid())
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt

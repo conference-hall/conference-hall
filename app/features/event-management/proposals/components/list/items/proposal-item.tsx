@@ -2,7 +2,7 @@ import type { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
-import { BadgeDot } from '~/design-system/badges.tsx';
+import { Badge, BadgeDot } from '~/design-system/badges.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { Tag } from '~/design-system/tag.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -32,7 +32,7 @@ export function ProposalItem({
   const [params] = useSearchParams();
   const { canChangeProposalStatus } = useUserTeamPermissions();
 
-  const { id, title, reviews } = proposal;
+  const { id, title, reviews, archivedAt, createdAt, deliberationStatus, tags, speakers, comments } = proposal;
   const { you, summary } = reviews;
 
   const defaultLinkTo = linkTo || { pathname: id, search: params.toString() };
@@ -44,9 +44,9 @@ export function ProposalItem({
           aria-label={t('event-management.proposals.list.select-item', { title })}
           value={id}
           checked={isSelected}
-          disabled={isAllPagesSelected}
+          disabled={isAllPagesSelected || archivedAt !== null}
           onChange={toggle}
-          className="self-start pt-[15px] pr-4"
+          className="self-start pt-3.75 pr-4"
         />
       ) : undefined}
 
@@ -56,29 +56,31 @@ export function ProposalItem({
         className="flex items-center justify-between gap-4 py-3 grow min-w-0 hover:text-indigo-700"
       >
         <div className="space-y-2 md:space-y-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-x-2">
             <span className="font-semibold">{title}</span>
 
-            {canChangeProposalStatus && proposal.deliberationStatus !== 'PENDING' && (
+            {archivedAt ? <Badge pill>{t('common.archived')}</Badge> : null}
+
+            {canChangeProposalStatus && deliberationStatus !== 'PENDING' && (
               <>
                 <DeliberationBadge {...proposal} />
                 <PublicationBadge {...proposal} />
               </>
             )}
 
-            {proposal.tags.map((tag) => (
+            {tags.map((tag) => (
               <Tag key={tag.id} tag={tag} isSearchLink={false} />
             ))}
           </div>
 
           <Text size="xs" variant="secondary">
-            {proposal.speakers.length ? t('common.by', { names: proposal.speakers.map((a) => a.name) }) : null}
-            <ClientOnly>{() => ` - ${formatDate(proposal.createdAt, { format: 'medium', locale })}`}</ClientOnly>
+            {speakers.length ? t('common.by', { names: speakers.map((a) => a.name) }) : null}
+            <ClientOnly>{() => ` - ${formatDate(createdAt, { format: 'medium', locale })}`}</ClientOnly>
           </Text>
         </div>
 
         <div className="hidden sm:flex sm:items-center sm:gap-2 sm:*:w-14">
-          <ReviewComments count={proposal.comments.count} />
+          <ReviewComments count={comments.count} />
           <UserReviewNote feeling={you.feeling} note={you.note} />
           {summary && <GlobalReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty />}
         </div>

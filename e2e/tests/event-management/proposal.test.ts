@@ -416,6 +416,31 @@ test.describe('As a owner', () => {
     await messages[1].clickDelete();
     await expect(drawer.getByText('Updated message from organizer')).not.toBeVisible();
   });
+
+  test('archives and restores a proposal', async ({ page }) => {
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+
+    // Verify proposal is not archived initially
+    await expect(page.getByText(/Archived at/)).not.toBeVisible();
+    await expect(proposalPage.deliberationStatus).toBeEnabled();
+
+    // Archive the proposal
+    await proposalPage.archiveProposal();
+    await expect(page.getByText('Proposal archived.')).toBeVisible();
+
+    // Verify proposal is archived
+    await expect(page.getByText(/Archived at/)).toBeVisible();
+    await expect(proposalPage.deliberationStatus).toBeDisabled();
+
+    // Restore the proposal
+    await proposalPage.restoreProposal();
+    await expect(page.getByText('Proposal restored.')).toBeVisible();
+
+    // Wait for archived indicator to disappear (ensures page has updated)
+    await expect(page.getByText(/Archived at/)).not.toBeVisible();
+    await expect(proposalPage.deliberationStatus).toBeEnabled();
+  });
 });
 
 test.describe('As a reviewer', () => {

@@ -13,6 +13,7 @@ export type ProposalData = {
   deliberationStatus: DeliberationStatus;
   publicationStatus: PublicationStatus;
   confirmationStatus: ConfirmationStatus | null;
+  archivedAt: Date | null;
   createdAt: Date;
   speakers: Array<{ name: string | null }>;
   reviews: { summary?: GlobalReview; you: UserReview };

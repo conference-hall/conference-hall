@@ -4,7 +4,7 @@ import { z } from 'zod';
 const ReviewsFiltersSchema = z.enum(['reviewed', 'not-reviewed', 'my-favorites']).optional();
 
 const StatusFilterSchema = z
-  .enum(['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined'])
+  .enum(['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined', 'archived'])
   .optional();
 
 const ProposalsFiltersSchema = z.object({

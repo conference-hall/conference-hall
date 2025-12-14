@@ -201,6 +201,16 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       await proposal.saveCategories(result.value);
       break;
     }
+    case 'archive-proposal': {
+      const proposalStatus = ProposalStatusUpdater.for(authUser.id, params.team, params.event);
+      await proposalStatus.archive([params.proposal]);
+      return toast('success', i18n.t('event-management.proposal-page.feedbacks.archived'));
+    }
+    case 'restore-proposal': {
+      const proposalStatus = ProposalStatusUpdater.for(authUser.id, params.team, params.event);
+      await proposalStatus.restore([params.proposal]);
+      return toast('success', i18n.t('event-management.proposal-page.feedbacks.restored'));
+    }
   }
   return null;
 };
@@ -232,6 +242,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                 proposal={proposal}
                 errors={errors}
                 canEditEventProposal={permissions.canEditEventProposal}
+                canArchiveProposal={permissions.canChangeProposalStatus}
               />
             }
           >

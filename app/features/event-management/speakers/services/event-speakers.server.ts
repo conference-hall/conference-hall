@@ -135,6 +135,7 @@ export class EventSpeakers extends EventAuthorization {
             deliberationStatus: proposal.deliberationStatus,
             publicationStatus: proposal.publicationStatus,
             confirmationStatus: proposal.confirmationStatus,
+            archivedAt: proposal.archivedAt,
             createdAt: proposal.createdAt,
             speakers: proposal.speakers.map((speaker) => ({ name: speaker.name })),
             reviews: {
