@@ -55,6 +55,7 @@ export function ProposalActionsMenu({
           as={Button}
           label={t('event-management.proposal-page.actions-menu')}
           icon={EllipsisHorizontalIcon}
+          className="self-start"
           variant="tertiary"
           size="sm"
         />

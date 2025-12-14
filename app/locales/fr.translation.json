@@ -72,6 +72,7 @@
   "common.apply-now": "Appliquer",
   "common.archive": "Archiver",
   "common.archived": "Archivé",
+  "common.archived-at": "Archivé le {{date}}",
   "common.by": "par {{names, list}}",
   "common.call-for-paper": "Call for papers",
   "common.cancel": "Annuler",

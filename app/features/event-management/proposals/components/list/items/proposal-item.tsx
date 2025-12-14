@@ -59,7 +59,7 @@ export function ProposalItem({
           <div className="flex flex-wrap items-center gap-x-2">
             <span className="font-semibold">{title}</span>
 
-            {archivedAt ? <Badge>{t('common.archived')}</Badge> : null}
+            {archivedAt ? <Badge pill>{t('common.archived')}</Badge> : null}
 
             {canChangeProposalStatus && deliberationStatus !== 'PENDING' && (
               <>
