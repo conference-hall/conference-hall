@@ -249,6 +249,125 @@ describe('ProposalStatusUpdater', () => {
       expect(updatedAccepted?.deliberationStatus).toBe('ACCEPTED');
       expect(updatedPending?.deliberationStatus).toBe('ACCEPTED');
     });
+
+    it('does not update archived proposals deliberation status', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      await proposalStatus.archive([proposal.id]);
+
+      const result = await proposalStatus.update([proposal.id], { deliberationStatus: 'ACCEPTED' });
+
+      expect(result).toBe(0);
+      const updated = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(updated?.deliberationStatus).toBe('PENDING');
+    });
+
+    it('does not update archived proposals confirmation status', async () => {
+      const proposal = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['accepted'],
+      });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      await proposalStatus.archive([proposal.id]);
+
+      const result = await proposalStatus.update([proposal.id], { confirmationStatus: 'CONFIRMED' });
+
+      expect(result).toBe(0);
+      const updated = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(updated?.confirmationStatus).toBe(null);
+    });
+  });
+
+  describe('#archive', () => {
+    it('archives proposals by setting archivedAt timestamp', async () => {
+      const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.archive([proposal1.id, proposal2.id]);
+
+      expect(result).toBe(2);
+      const proposals = await db.proposal.findMany();
+
+      const updated1 = proposals.find((p) => p.id === proposal1.id);
+      expect(updated1?.archivedAt).not.toBe(null);
+
+      const updated2 = proposals.find((p) => p.id === proposal2.id);
+      expect(updated2?.archivedAt).not.toBe(null);
+    });
+
+    it('does not archive already archived proposals', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      await proposalStatus.archive([proposal.id]);
+      const result = await proposalStatus.archive([proposal.id]);
+
+      expect(result).toBe(0);
+    });
+
+    it('throws an error if user has not a owner or member role in the team', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposalStatus = ProposalStatusUpdater.for(reviewer.id, team.slug, event.slug);
+      await expect(proposalStatus.archive([proposal.id])).rejects.toThrowError(ForbiddenOperationError);
+    });
+
+    it('throws an error if user does not belong to event team', async () => {
+      const user = await userFactory();
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposalStatus = ProposalStatusUpdater.for(user.id, team.slug, event.slug);
+      await expect(proposalStatus.archive([proposal.id])).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
+  describe('#restore', () => {
+    it('restores archived proposals by clearing archivedAt timestamp', async () => {
+      const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      await proposalStatus.archive([proposal1.id, proposal2.id]);
+
+      const result = await proposalStatus.restore([proposal1.id, proposal2.id]);
+
+      expect(result).toBe(2);
+      const proposals = await db.proposal.findMany();
+
+      const updated1 = proposals.find((p) => p.id === proposal1.id);
+      expect(updated1?.archivedAt).toBe(null);
+
+      const updated2 = proposals.find((p) => p.id === proposal2.id);
+      expect(updated2?.archivedAt).toBe(null);
+    });
+
+    it('does not restore non-archived proposals', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const result = await proposalStatus.restore([proposal.id]);
+
+      expect(result).toBe(0);
+    });
+
+    it('throws an error if user has not a owner or member role in the team', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await ProposalStatusUpdater.for(owner.id, team.slug, event.slug).archive([proposal.id]);
+
+      const proposalStatus = ProposalStatusUpdater.for(reviewer.id, team.slug, event.slug);
+      await expect(proposalStatus.restore([proposal.id])).rejects.toThrowError(ForbiddenOperationError);
+    });
+
+    it('throws an error if user does not belong to event team', async () => {
+      const user = await userFactory();
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await ProposalStatusUpdater.for(owner.id, team.slug, event.slug).archive([proposal.id]);
+
+      const proposalStatus = ProposalStatusUpdater.for(user.id, team.slug, event.slug);
+      await expect(proposalStatus.restore([proposal.id])).rejects.toThrowError(ForbiddenOperationError);
+    });
   });
 
   describe('#updateAll', () => {

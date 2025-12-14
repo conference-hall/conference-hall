@@ -28,7 +28,7 @@ export class ProposalStatusUpdater extends EventAuthorization {
 
     if (confirmationStatus) {
       const result = await db.proposal.updateMany({
-        where: { id: { in: proposalIds } },
+        where: { id: { in: proposalIds }, archivedAt: null },
         data: { deliberationStatus: 'ACCEPTED', publicationStatus: 'PUBLISHED', confirmationStatus },
       });
       return result.count;
@@ -36,7 +36,7 @@ export class ProposalStatusUpdater extends EventAuthorization {
 
     if (deliberationStatus) {
       const result = await db.proposal.updateMany({
-        where: { id: { in: proposalIds }, deliberationStatus: { not: deliberationStatus } },
+        where: { id: { in: proposalIds }, deliberationStatus: { not: deliberationStatus }, archivedAt: null },
         data: { deliberationStatus, publicationStatus: 'NOT_PUBLISHED', confirmationStatus: null },
       });
       return result.count;
@@ -52,5 +52,25 @@ export class ProposalStatusUpdater extends EventAuthorization {
     const proposalIds = await search.proposalsIds();
 
     return this.update(proposalIds, { deliberationStatus });
+  }
+
+  async archive(proposalIds: string[]) {
+    const { event } = await this.checkAuthorizedEvent('canChangeProposalStatus');
+
+    const result = await db.proposal.updateMany({
+      where: { id: { in: proposalIds }, eventId: event.id, archivedAt: null },
+      data: { archivedAt: new Date() },
+    });
+    return result.count;
+  }
+
+  async restore(proposalIds: string[]) {
+    const { event } = await this.checkAuthorizedEvent('canChangeProposalStatus');
+
+    const result = await db.proposal.updateMany({
+      where: { id: { in: proposalIds }, eventId: event.id, archivedAt: { not: null } },
+      data: { archivedAt: null },
+    });
+    return result.count;
   }
 }
