@@ -28,6 +28,7 @@ export class ProposalPage extends PageObject {
   readonly categoriesButton = this.page.getByRole('button', { name: 'Categories', exact: true });
 
   readonly conversationDrawerButton = this.page.getByRole('button').filter({ hasText: /message|Conversation/ });
+  readonly actionsMenuButton = this.page.getByRole('button', { name: 'Proposal action menu' });
 
   async goto(team: string, event: string, id: string, title: string) {
     await this.page.goto(`/team/${team}/${event}/proposals/${id}`);
@@ -40,10 +41,22 @@ export class ProposalPage extends PageObject {
   }
 
   async clickOnEdit() {
-    await this.page.getByRole('button', { name: 'Proposal action menu' }).click();
+    await this.actionsMenuButton.click();
     await this.page.getByRole('menu', { name: 'Proposal action menu' }).waitFor();
     await this.page.getByRole('menuitem', { name: 'Edit', exact: true }).click();
     return new TalkFormComponent(this.page, true);
+  }
+
+  async archiveProposal() {
+    await this.actionsMenuButton.click();
+    await this.page.getByRole('menu', { name: 'Proposal action menu' }).waitFor();
+    await this.page.getByRole('button', { name: 'Archive' }).click();
+  }
+
+  async restoreProposal() {
+    await this.actionsMenuButton.click();
+    await this.page.getByRole('menu', { name: 'Proposal action menu' }).waitFor();
+    await this.page.getByRole('button', { name: 'Restore' }).click();
   }
 
   speaker(name: string) {
