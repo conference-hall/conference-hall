@@ -22,7 +22,7 @@ export class Publication extends EventAuthorization {
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const proposals = await db.proposal.findMany({
-      where: { eventId: event.id, publicationStatus: 'NOT_PUBLISHED', deliberationStatus: status },
+      where: { eventId: event.id, publicationStatus: 'NOT_PUBLISHED', deliberationStatus: status, archivedAt: null },
       include: { speakers: true, formats: true },
     });
     if (!proposals.length) throw new ForbiddenOperationError();
@@ -54,6 +54,7 @@ export class Publication extends EventAuthorization {
         eventId: event.id,
         publicationStatus: 'NOT_PUBLISHED',
         deliberationStatus: { in: ['ACCEPTED', 'REJECTED'] },
+        archivedAt: null,
       },
       include: { speakers: true, formats: true },
     });
@@ -83,7 +84,7 @@ export class Publication extends EventAuthorization {
     const results = await db.proposal.groupBy({
       by: ['deliberationStatus', 'publicationStatus', 'confirmationStatus'],
       _count: { _all: true },
-      where: { eventId: event.id, isDraft: false },
+      where: { eventId: event.id, isDraft: false, archivedAt: null },
     });
 
     const deliberation = {

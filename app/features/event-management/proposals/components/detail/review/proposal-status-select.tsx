@@ -13,7 +13,7 @@ import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '
 
 type ProposalStatus = { deliberationStatus: DeliberationStatus; confirmationStatus: ConfirmationStatus };
 
-type Props = ProposalStatus & { publicationStatus: PublicationStatus };
+type Props = ProposalStatus & { publicationStatus: PublicationStatus; archivedAt: string | null };
 
 function mapStatusesToOptionValue(statuses: ProposalStatus) {
   if (statuses.confirmationStatus === 'PENDING') return 'NOT_ANSWERED';
@@ -82,13 +82,14 @@ function getOptions(t: TFunction, confirmationStatus: ConfirmationStatus) {
   ];
 }
 
-export function ProposalStatusSelect({ deliberationStatus, publicationStatus, confirmationStatus }: Props) {
+export function ProposalStatusSelect({ deliberationStatus, publicationStatus, confirmationStatus, archivedAt }: Props) {
   const { t } = useTranslation();
   const submit = useSubmit();
 
   const proposalStatus = mapStatusesToOptionValue({ confirmationStatus, deliberationStatus });
 
-  const canPublish = publicationStatus === 'NOT_PUBLISHED' && deliberationStatus !== 'PENDING';
+  const isArchived = archivedAt !== null;
+  const canPublish = !isArchived && publicationStatus === 'NOT_PUBLISHED' && deliberationStatus !== 'PENDING';
 
   const handleSubmit = (_name: string, value: string) => {
     const confirmation = t('event-management.proposal-page.proposal-status.confirmation');
@@ -109,6 +110,7 @@ export function ProposalStatusSelect({ deliberationStatus, publicationStatus, co
         value={proposalStatus}
         onChange={handleSubmit}
         options={getOptions(t, confirmationStatus)}
+        disabled={isArchived}
         srOnly
       />
 

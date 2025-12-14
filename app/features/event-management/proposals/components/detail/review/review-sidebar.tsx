@@ -46,6 +46,7 @@ export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate }: Props)
             deliberationStatus={proposal.deliberationStatus}
             publicationStatus={proposal.publicationStatus}
             confirmationStatus={proposal.confirmationStatus}
+            archivedAt={proposal.archivedAt}
           />
         </div>
       )}
