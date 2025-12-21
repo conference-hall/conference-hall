@@ -1,6 +1,7 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
+import z from 'zod';
 import { useUser } from '~/app-platform/components/user-context.tsx';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
@@ -64,8 +65,9 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       return toast('success', i18n.t('event.proposal.feedbacks.cospeaker-removed'));
     }
     case 'edit-talk': {
-      const tracksSchema = await EventPage.of(params.event).buildTracksSchema();
-      const result = parseWithZod(form, { schema: TalkSaveSchema.extend(tracksSchema) });
+      const TracksSchema = await EventPage.of(params.event).getTracksSchema();
+      const schema = z.object({ ...TalkSaveSchema.shape, ...TracksSchema.shape });
+      const result = parseWithZod(form, { schema });
       if (result.status !== 'success') return result.error;
       await proposal.update(result.value);
       return toast('success', i18n.t('event.proposal.feedbacks.saved'));

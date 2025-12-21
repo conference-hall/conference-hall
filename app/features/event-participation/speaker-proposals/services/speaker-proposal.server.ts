@@ -6,7 +6,7 @@ import ProposalDeclinedEmail from '~/shared/emails/templates/organizers/proposal
 import { CfpNotOpenError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
-import type { TalkSaveData, TrackSaveData } from '~/shared/types/speaker-talk.types.ts';
+import type { TalkSaveData, TracksSaveData } from '~/shared/types/speaker-talk.types.ts';
 
 export class SpeakerProposal {
   constructor(
@@ -57,7 +57,7 @@ export class SpeakerProposal {
     };
   }
 
-  async update(data: TalkSaveData & TrackSaveData) {
+  async update(data: TalkSaveData & TracksSaveData) {
     const proposal = await db.proposal.findFirst({
       where: { id: this.proposalId, speakers: { some: { userId: this.userId } } },
       include: { event: true },

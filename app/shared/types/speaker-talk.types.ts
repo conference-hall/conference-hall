@@ -18,7 +18,7 @@ export type TalkSaveData = z.infer<typeof TalkSaveSchema>;
 export const TracksMandatorySchema = z.array(z.string()).nonempty();
 export const TracksOptionalSchema = z.array(z.string()).optional();
 const TracksSaveSchema = z.object({ formats: TracksOptionalSchema, categories: TracksOptionalSchema });
-export type TrackSaveData = z.infer<typeof TracksSaveSchema>;
+export type TracksSaveData = z.infer<typeof TracksSaveSchema>;
 
 // Proposal participation
 export const ProposalParticipationSchema = z.object({ participation: z.enum(['CONFIRMED', 'DECLINED']) });

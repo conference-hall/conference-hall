@@ -13,7 +13,7 @@ import {
 } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
-import type { TalkSaveData, TrackSaveData } from '~/shared/types/speaker-talk.types.ts';
+import type { TalkSaveData, TracksSaveData } from '~/shared/types/speaker-talk.types.ts';
 
 export class TalkSubmission {
   constructor(
@@ -63,7 +63,7 @@ export class TalkSubmission {
     return { talkId: talk.id };
   }
 
-  async saveTracks(talkId: string, data: TrackSaveData) {
+  async saveTracks(talkId: string, data: TracksSaveData) {
     const proposal = await db.proposal.findFirst({
       select: { id: true },
       where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { userId: this.userId } } },

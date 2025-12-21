@@ -66,7 +66,7 @@ export class EventPage {
     };
   }
 
-  async buildTracksSchema() {
+  async getTracksSchema() {
     const { formatsRequired, categoriesRequired, formats, categories } = await this.get();
     return z.object({
       formats: formatsRequired && formats.length > 0 ? TracksMandatorySchema : TracksOptionalSchema,

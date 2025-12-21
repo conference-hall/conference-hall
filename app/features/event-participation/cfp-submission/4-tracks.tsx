@@ -28,8 +28,8 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const authUser = getRequiredAuthUser(context);
   const form = await request.formData();
-  const schema = await EventPage.of(params.event).buildTracksSchema();
-  const result = parseWithZod(form, { schema });
+  const TracksSchema = await EventPage.of(params.event).getTracksSchema();
+  const result = parseWithZod(form, { schema: TracksSchema });
   if (result.status !== 'success') return result.error;
 
   const submission = TalkSubmission.for(authUser.id, params.event);
