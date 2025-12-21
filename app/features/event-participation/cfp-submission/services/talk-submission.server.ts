@@ -118,6 +118,8 @@ export class TalkSubmission {
     if (event.slackWebhookUrl) {
       await sendTalkToSlack.trigger({ eventId: event.id, proposalId: proposal.id });
     }
+
+    return proposal.id;
   }
 
   async get(talkId: string) {
