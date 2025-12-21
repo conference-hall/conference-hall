@@ -11,6 +11,7 @@ import type {
 import { ConfirmationStatus, DeliberationStatus, PublicationStatus, TalkLevel } from 'prisma/generated/client.ts';
 import type { ProposalCreateInput } from 'prisma/generated/models.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
+import { getNextProposalNumber } from '~/shared/utils/proposal-number.server.ts';
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 
@@ -89,5 +90,11 @@ export const proposalFactory = async (options: FactoryOptions) => {
     ...attributes,
   };
 
-  return db.proposal.create({ data, include: { event: true, speakers: true } });
+  return db.$transaction(async (trx) => {
+    if (!data.isDraft && !data.proposalNumber) {
+      data.proposalNumber = await getNextProposalNumber(event.id, trx);
+    }
+
+    return trx.proposal.create({ data, include: { event: true, speakers: true } });
+  });
 };
