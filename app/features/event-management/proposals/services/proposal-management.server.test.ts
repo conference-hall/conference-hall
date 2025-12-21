@@ -36,6 +36,7 @@ describe('ProposalManagement', () => {
 
       const proposal = await db.proposal.findUnique({ where: { id: result.id }, include: { speakers: true } });
       expect(proposal).toBeDefined();
+      expect(proposal?.proposalNumber).toBe(1);
       expect(proposal?.title).toBe('Test Talk');
       expect(proposal?.abstract).toBe('This is a test talk abstract');
       expect(proposal?.level).toBe('INTERMEDIATE');
