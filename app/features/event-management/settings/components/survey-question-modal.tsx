@@ -1,6 +1,5 @@
 import { PlusIcon } from '@heroicons/react/16/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
-import slugify from '@sindresorhus/slugify';
 import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
@@ -166,7 +165,7 @@ function NewOptionInput({ setOptions }: NewOptionInputProps) {
 
   const handleAddOption = () => {
     if (!label) return;
-    const id = slugify(label);
+    const id = uuid();
     if (!id) return;
     setOptions((options) => [...options, { id, label: label }]);
     setLabel('');
