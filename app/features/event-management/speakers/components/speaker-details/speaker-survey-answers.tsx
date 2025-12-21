@@ -12,8 +12,8 @@ export function SpeakerSurveyAnswers({ survey, className }: Props) {
 
   return survey?.map((question) => (
     <div key={question.id} className={className}>
-      <div className="text-sm font-medium leading-6 text-gray-900">{question.label}</div>
-      <div className="text-sm leading-6 text-gray-700 wrap-break-word">
+      <div className="font-medium text-gray-900 text-sm leading-6">{question.label}</div>
+      <div className="wrap-break-word text-gray-700 text-sm leading-6">
         {question.type === 'text' ? question.answer : question.answers?.map((a) => a.label).join(', ')}
       </div>
     </div>

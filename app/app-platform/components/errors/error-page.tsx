@@ -7,7 +7,7 @@ type Props = { children?: ReactNode };
 
 export function ErrorPage({ children }: Props) {
   return (
-    <div className="flex flex-col items-center h-screen w-screen">
+    <div className="flex h-screen w-screen flex-col items-center">
       <div className="flex flex-col items-center justify-center gap-2 pt-32">
         <ConferenceHallLogo width="32px" height="32px" aria-hidden className="fill-slate-300" />
 
@@ -16,7 +16,7 @@ export function ErrorPage({ children }: Props) {
         </H1>
       </div>
 
-      <div className="flex flex-col grow items-center gap-4 px-8 text-center">{children}</div>
+      <div className="flex grow flex-col items-center gap-4 px-8 text-center">{children}</div>
 
       <Footer />
     </div>

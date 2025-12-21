@@ -30,7 +30,7 @@ export default function InvitationRoute({ loaderData: team }: Route.ComponentPro
   const { t } = useTranslation();
   return (
     <FullscreenPage className="text-center">
-      <Card className="p-8 md:p-16 space-y-16">
+      <Card className="space-y-16 p-8 md:p-16">
         <div className="space-y-6">
           <H1 size="3xl" weight="bold">
             {team.name}

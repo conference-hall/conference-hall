@@ -6,8 +6,8 @@ type Props = { title: string; subtitle: string; children?: ReactNode };
 
 export function ErrorDisplay({ title, subtitle, children }: Props) {
   return (
-    <div className="flex flex-col items-center w-full pt-20">
-      <div className="flex flex-col grow items-center gap-4 px-8">
+    <div className="flex w-full flex-col items-center pt-20">
+      <div className="flex grow flex-col items-center gap-4 px-8">
         <H1 size="3xl" weight="bold">
           {title}
         </H1>

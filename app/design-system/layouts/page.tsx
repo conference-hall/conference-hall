@@ -7,7 +7,7 @@ type Props = { children: React.ReactNode; className?: string };
 
 export function Page({ children, className }: Props) {
   return (
-    <Container as="main" className={cx('gap-4 my-4 lg:gap-8 lg:my-8', className)}>
+    <Container as="main" className={cx('my-4 gap-4 lg:my-8 lg:gap-8', className)}>
       {children}
     </Container>
   );
@@ -34,8 +34,8 @@ type HeadingProps = {
 
 function Heading({ title, subtitle, component, children }: HeadingProps) {
   return (
-    <div className="flex flex-col mb-6 sm:mb-8 gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+    <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex min-w-0 items-center gap-2 sm:gap-4">
         <div className="min-w-0">
           {component ? (
             component
@@ -48,7 +48,7 @@ function Heading({ title, subtitle, component, children }: HeadingProps) {
         </div>
       </div>
 
-      {children && <div className="flex flex-col-reverse sm:items-center gap-4 sm:mt-0 sm:flex-row">{children}</div>}
+      {children && <div className="flex flex-col-reverse gap-4 sm:mt-0 sm:flex-row sm:items-center">{children}</div>}
     </div>
   );
 }

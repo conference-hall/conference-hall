@@ -9,7 +9,7 @@ export function NavbarFullscreen() {
   const { backPath, title } = useBackNavigation(getFullscreenRoutes());
 
   return (
-    <div className="flex h-16 items-center justify-between px-4 lg:px-8 bg-transparent absolute inset-x-0 z-30">
+    <div className="absolute inset-x-0 z-30 flex h-16 items-center justify-between bg-transparent px-4 lg:px-8">
       <LogoButton hideLabel />
       <BackButton
         to={backPath}

@@ -44,7 +44,7 @@ export default function EventRoute({ loaderData: event }: Route.ComponentProps) 
       <NavbarEvent />
 
       <header className={cx(BG_COLOR, 'hidden lg:block')}>
-        <Container className="flex flex-row gap-6 pt-2 pb-6 items-center relative">
+        <Container className="relative flex flex-row items-center gap-6 pt-2 pb-6">
           <Avatar
             picture={event.logoUrl}
             name={event.name}
@@ -66,7 +66,7 @@ export default function EventRoute({ loaderData: event }: Route.ComponentProps) 
       </header>
 
       {!isSubmissionRoute && isAuthenticated ? (
-        <Page.NavHeader className={cx('flex pb-0 flex-row items-center', { 'hidden lg:flex ': !isEventRoute })}>
+        <Page.NavHeader className={cx('flex flex-row items-center pb-0', { 'hidden lg:flex': !isEventRoute })}>
           <NavTabs py={4} scrollable className="grow">
             <NavTab to={href('/:event', { event: event.slug })} end className="hidden lg:flex">
               {t(`common.event.type.label.${event.type}`)}

@@ -82,7 +82,7 @@ export function ProposalActionsMenu({
                     type="submit"
                     name="intent"
                     value={proposal.archivedAt ? 'restore-proposal' : 'archive-proposal'}
-                    className="flex w-full items-center cursor-pointer gap-2"
+                    className="flex w-full cursor-pointer items-center gap-2"
                   >
                     {proposal.archivedAt ? (
                       <>

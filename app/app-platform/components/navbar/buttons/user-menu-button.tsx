@@ -56,7 +56,7 @@ export function UserMenuButton({ email, name, picture, hasTeamAccess, teams, not
                 {t('navbar.user-menu.notifications')}
               </MenuLink>
 
-              <Divider as="li" className="mb-2 mt-4" />
+              <Divider as="li" className="mt-4 mb-2" />
 
               <li className="px-2 pb-2">
                 <Text size="xs" weight="semibold" variant="secondary">
@@ -74,7 +74,7 @@ export function UserMenuButton({ email, name, picture, hasTeamAccess, teams, not
                 {t('speaker.nav.settings')}
               </MenuLink>
 
-              <Divider as="li" className="mb-2 mt-4" />
+              <Divider as="li" className="mt-4 mb-2" />
 
               {teams.length >= 0 && (
                 <li className="px-2 pb-2">
@@ -105,7 +105,7 @@ export function UserMenuButton({ email, name, picture, hasTeamAccess, teams, not
                 </MenuLink>
               )}
 
-              <Divider as="li" className="mb-2 mt-4" />
+              <Divider as="li" className="mt-4 mb-2" />
 
               <SignOutMenu />
             </ul>
@@ -134,7 +134,7 @@ function MenuLink({ to, icon: Icon, count, onClick, children }: LinkProps) {
     <li>
       <Link
         to={to}
-        className="group flex items-center gap-x-2 rounded-md p-2 text-sm leading-6 font-medium text-gray-700 hover:bg-gray-100"
+        className="group flex items-center gap-x-2 rounded-md p-2 font-medium text-gray-700 text-sm leading-6 hover:bg-gray-100"
         onClick={onClick}
       >
         <Icon className="size-5 shrink-0 text-gray-500" aria-hidden="true" />
@@ -142,7 +142,7 @@ function MenuLink({ to, icon: Icon, count, onClick, children }: LinkProps) {
         {count && count > 0 ? (
           <>
             <span className="size-2 rounded-full bg-red-400" aria-hidden="true" />
-            <span className="ml-auto w-9 min-w-max whitespace-nowrap rounded-full bg-white px-2.5 py-0.5 text-center text-xs font-medium leading-5 text-gray-600 ring-1 ring-inset ring-gray-200">
+            <span className="ml-auto w-9 min-w-max whitespace-nowrap rounded-full bg-white px-2.5 py-0.5 text-center font-medium text-gray-600 text-xs leading-5 ring-1 ring-gray-200 ring-inset">
               {count}
             </span>
           </>
@@ -160,16 +160,16 @@ function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
     <button
       type="button"
       onClick={onClick}
-      className="rounded-full text-sm focus:outline-2 focus:outline-white focus:outline-offset-1 cursor-pointer hover:bg-gray-900 hover:text-white p-0.5"
+      className="cursor-pointer rounded-full p-0.5 text-sm hover:bg-gray-900 hover:text-white focus:outline-2 focus:outline-white focus:outline-offset-1"
     >
       <div className="flex items-center gap-1">
         <div className="relative">
           <Avatar picture={picture} name={name} size="s" />
           {notificationsCount > 0 && (
-            <span className="absolute bottom-0 right-0 block size-2 rounded-full bg-red-400 ring-2 ring-gray-800" />
+            <span className="absolute right-0 bottom-0 block size-2 rounded-full bg-red-400 ring-2 ring-gray-800" />
           )}
         </div>
-        <ChevronDownIcon className="h-5 w-5 shrink-0 text-gray-400 mr-0.5 hidden lg:block" />
+        <ChevronDownIcon className="mr-0.5 hidden h-5 w-5 shrink-0 text-gray-400 lg:block" />
         <span className="sr-only">{t('navbar.user-menu.open')}</span>
       </div>
     </button>
@@ -192,7 +192,7 @@ function SignOutMenu() {
       <button
         type="submit"
         onClick={signOut}
-        className="group flex items-center gap-x-3 w-full text-left rounded-md p-2 text-sm leading-6 font-medium text-gray-700 hover:bg-gray-100 cursor-pointer"
+        className="group flex w-full cursor-pointer items-center gap-x-3 rounded-md p-2 text-left font-medium text-gray-700 text-sm leading-6 hover:bg-gray-100"
       >
         <ArrowRightStartOnRectangleIcon className="size-5 shrink-0 text-gray-400" aria-hidden="true" />
         {t('navbar.user-menu.sign-out')}

@@ -47,7 +47,7 @@ export default function TeamEventsRoute({ loaderData: events }: Route.ComponentP
       </Page.Heading>
 
       {hasEvent ? (
-        <ul aria-label={t('team.events-list.list')} className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-2">
+        <ul aria-label={t('team.events-list.list')} className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
           {events.map((event) => (
             <EventCardLink
               key={event.slug}

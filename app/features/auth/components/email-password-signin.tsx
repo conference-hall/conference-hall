@@ -77,7 +77,7 @@ export function EmailPasswordSignin({ redirectTo, defaultEmail, captchaSiteKey }
         />
       )}
 
-      <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
+      <Button type="submit" variant="primary" loading={loading} className="mt-2 w-full">
         {t('auth.common.sign-in')}
       </Button>
 

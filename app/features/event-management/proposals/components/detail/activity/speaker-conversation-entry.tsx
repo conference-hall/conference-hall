@@ -20,14 +20,14 @@ export function SpeakerConversationEntry({ messages, speakers, canManageConversa
     <ActivityFeed.Entry
       withLine
       marker={
-        <div className="relative flex h-8 w-8 flex-none items-center bg-indigo-50 border border-blue-100 justify-center rounded-full">
+        <div className="relative flex h-8 w-8 flex-none items-center justify-center rounded-full border border-blue-100 bg-indigo-50">
           <ChatBubbleLeftRightIcon className="h-4 w-4 text-gray-600" aria-hidden />
         </div>
       }
     >
-      <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between p-3 rounded-md ring-1 ring-inset ring-blue-100 bg-indigo-50/50">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-1 truncate">
-          <AvatarGroup avatars={speakers} size="xs" className="hidden sm:flex pr-2" />
+      <div className="flex flex-col justify-between gap-2 rounded-md bg-indigo-50/50 p-3 ring-1 ring-blue-100 ring-inset sm:flex-row sm:items-center">
+        <div className="flex flex-col truncate sm:flex-row sm:items-center sm:gap-1">
+          <AvatarGroup avatars={speakers} size="xs" className="hidden pr-2 sm:flex" />
           <Text size="s" weight="semibold">
             {t('event-management.proposal-page.activity-feed.conversation.title')}
             <span className="hidden sm:inline"> ⋅ </span>

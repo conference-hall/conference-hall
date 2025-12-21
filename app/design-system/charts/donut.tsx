@@ -115,7 +115,7 @@ export const DonutChart = ({
         <PieChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }}>
           {showLabel && isDonut && (
             <text
-              className="text-2xl font-semibold fill-gray-700"
+              className="fill-gray-700 font-semibold text-2xl"
               x="50%"
               y="50%"
               textAnchor="middle"

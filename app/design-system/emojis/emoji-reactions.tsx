@@ -12,7 +12,7 @@ type EmojiReactionsProps = {
   className?: string;
 };
 
-const emojiReactionStyles = cva('flex items-center gap-2 rounded-full shrink-0 py-0.5 px-1.5 cursor-pointer', {
+const emojiReactionStyles = cva('flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-1.5 py-0.5', {
   variants: {
     reacted: {
       true: 'bg-blue-50 ring-1 ring-blue-600',
@@ -26,7 +26,7 @@ export function EmojiReactions({ emojis, reactions, currentUserId, onChangeEmoji
   const { t } = useTranslation();
 
   return (
-    <ul className={cx('flex items-center flex-wrap gap-2', className)}>
+    <ul className={cx('flex flex-wrap items-center gap-2', className)}>
       {reactions.map((reaction) => {
         const emoji = emojis.find((emoji) => emoji.code === reaction.code);
         if (!emoji) return null;

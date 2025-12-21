@@ -19,8 +19,8 @@ export function NavigationHeader({ current, total, reviewed, nextId, previousId 
   const nextPath = nextId !== undefined ? `/team/${params.team}/${params.event}/proposals/${nextId}` : undefined;
 
   return (
-    <header className="flex justify-between items-center gap-4 pb-4 lg:-mt-4">
-      <nav className="flex items-center justify-between sm:justify-start grow gap-2 lg:gap-4">
+    <header className="flex items-center justify-between gap-4 pb-4 lg:-mt-4">
+      <nav className="flex grow items-center justify-between gap-2 sm:justify-start lg:gap-4">
         <Button
           to={{ pathname: previousPath, search }}
           icon={ChevronLeftIcon}

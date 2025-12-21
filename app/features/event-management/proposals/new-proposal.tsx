@@ -111,7 +111,7 @@ export default function NewProposalRoute({ actionData, params, loaderData }: Rou
         subtitle={t('event-management.proposals.new.subtitle')}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
         <Card className="md:col-span-2">
           <Card.Content>
             <TalkForm id={formId} errors={actionData?.errors} />
@@ -177,7 +177,7 @@ export default function NewProposalRoute({ actionData, params, loaderData }: Rou
               event={params.event}
               form={formId}
               options={event.tags.map((c) => ({ value: c.id, label: c.name, color: c.color }))}
-              className="hidden md:block space-y-3 p-4 pb-6 lg:px-6"
+              className="hidden space-y-3 p-4 pb-6 md:block lg:px-6"
             />
           </Card>
         </div>

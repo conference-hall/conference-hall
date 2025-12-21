@@ -20,14 +20,14 @@ export function SelectAllBanner({
 
   if (isAllPagesSelected) {
     return (
-      <div className="bg-blue-50 border-b border-gray-200 px-4 py-3 sm:px-6 text-center">
+      <div className="border-gray-200 border-b bg-blue-50 px-4 py-3 text-center sm:px-6">
         <Text variant="secondary" size="s">
           <Trans
             i18nKey="event-management.proposals.selection.all-pages.label"
             values={{ total }}
             components={[<strong key="1" />]}
           />
-          <button type="button" className="underline hover:font-semibold cursor-pointer ml-1" onClick={toggleAllPages}>
+          <button type="button" className="ml-1 cursor-pointer underline hover:font-semibold" onClick={toggleAllPages}>
             {t('event-management.proposals.selection.all-pages.button')}
           </button>
         </Text>
@@ -38,14 +38,14 @@ export function SelectAllBanner({
   if (!isCurrentPageSelected) return null;
 
   return (
-    <div className="bg-blue-50 border-b border-gray-200 px-4 py-3 sm:px-6 text-center">
+    <div className="border-gray-200 border-b bg-blue-50 px-4 py-3 text-center sm:px-6">
       <Text variant="secondary" size="s">
         <Trans
           i18nKey="event-management.proposals.selection.select-all.label"
           values={{ totalSelected }}
           components={[<strong key="1" />]}
         />
-        <button type="button" className="underline hover:font-semibold cursor-pointer ml-1" onClick={toggleAllPages}>
+        <button type="button" className="ml-1 cursor-pointer underline hover:font-semibold" onClick={toggleAllPages}>
           {t('event-management.proposals.selection.select-all.button', { total })}
         </button>
       </Text>

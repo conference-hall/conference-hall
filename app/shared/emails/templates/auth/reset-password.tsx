@@ -19,7 +19,7 @@ export default function ResetPasswordEmail({ passwordResetUrl, locale }: EmailPr
       <Text>{t('auth.reset-password.body.greeting')}</Text>
       <Text>{t('auth.reset-password.body.text1')}</Text>
 
-      <Section className="text-center my-8">
+      <Section className="my-8 text-center">
         <Button href={passwordResetUrl} className={styles.button}>
           {t('auth.reset-password.body.cta')}
         </Button>

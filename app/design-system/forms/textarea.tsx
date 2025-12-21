@@ -15,7 +15,7 @@ const errorStyles =
   'border-red-300 text-red-900 placeholder-red-300 focus:outline-hidden focus:ring-red-500 focus:border-red-500';
 
 export function TextArea({ name, label, hint, description, className, error, ...rest }: Props) {
-  const styles = cx('block w-full text-gray-900 text-sm rounded-md', {
+  const styles = cx('block w-full rounded-md text-gray-900 text-sm', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
   });
@@ -23,7 +23,7 @@ export function TextArea({ name, label, hint, description, className, error, ...
   return (
     <div className={className}>
       {label && (
-        <div className="flex items-center mb-1">
+        <div className="mb-1 flex items-center">
           <Label htmlFor={name}>{label}</Label>
 
           {hint && (
@@ -43,8 +43,8 @@ export function TextArea({ name, label, hint, description, className, error, ...
         aria-describedby={description || error ? `${name}-describe` : undefined}
       />
       <div id={`${name}-describe`}>
-        {description && <p className="mt-2 text-sm text-gray-500">{description}</p>}
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+        {description && <p className="mt-2 text-gray-500 text-sm">{description}</p>}
+        {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
       </div>
     </div>
   );

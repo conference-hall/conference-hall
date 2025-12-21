@@ -37,7 +37,7 @@ export default function ProposalSubmittedEmail({ event, proposal, locale, custom
         </>
       )}
 
-      <Section className="text-center my-8">
+      <Section className="my-8 text-center">
         <Button href={!preview ? buildSpeakerProfileUrl() : '#'} className={styles.button}>
           {t('speakers.proposal-submitted.body.cta')}
         </Button>

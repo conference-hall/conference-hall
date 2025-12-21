@@ -6,13 +6,13 @@ import { Background, ModalTransition } from '../transitions.tsx';
 import { CloseButton } from './close-button.tsx';
 
 const layout = cva(
-  'relative transform overflow-hidden rounded-xl bg-white text:left shadow-xl transition-all w-full p-4 md:p-8',
+  'text:left relative w-full transform overflow-hidden rounded-xl bg-white p-4 shadow-xl transition-all md:p-8',
   {
     variants: {
       size: {
         m: 'sm:max-w-lg',
         l: 'sm:max-w-2xl',
-        full: 'sm:max-w-4xl h-full overflow-y-auto',
+        full: 'h-full overflow-y-auto sm:max-w-4xl',
       },
     },
     defaultVariants: { size: 'm' },
@@ -32,8 +32,8 @@ export function Modal({ title, children, size, open, onClose }: Props) {
       <Dialog className="relative z-40" onClose={onClose}>
         <Background />
 
-        <div className="fixed inset-0 z-40 overflow-y-auto h-full">
-          <div className="flex min-h-full items-end justify-center sm:items-center h-full p-4 sm:py-16 overflow-hidden">
+        <div className="fixed inset-0 z-40 h-full overflow-y-auto">
+          <div className="flex h-full min-h-full items-end justify-center overflow-hidden p-4 sm:items-center sm:py-16">
             <ModalTransition>
               <DialogPanel as="div" className={layout({ size })}>
                 <Title onClose={onClose}>{title}</Title>
@@ -52,7 +52,7 @@ export function Modal({ title, children, size, open, onClose }: Props) {
 function Title({ children, onClose }: { children: ReactNode; onClose: VoidFunction }) {
   return (
     <div className="flex items-start justify-between">
-      <DialogTitle as="h1" className="text-base font-semibold leading-6 text-gray-900">
+      <DialogTitle as="h1" className="font-semibold text-base text-gray-900 leading-6">
         {children}
       </DialogTitle>
       <CloseButton onClose={onClose} />
@@ -71,7 +71,7 @@ Modal.Content = Content;
 // MODAL Actions
 
 function Actions({ children }: { children: ReactNode }) {
-  return <div className="pt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">{children}</div>;
+  return <div className="flex flex-col gap-3 pt-8 sm:flex-row sm:justify-end">{children}</div>;
 }
 
 Modal.Actions = Actions;

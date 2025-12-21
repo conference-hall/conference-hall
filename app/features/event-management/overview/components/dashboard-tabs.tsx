@@ -8,8 +8,8 @@ export function DashboardTabs({ team, event }: Props) {
   const { t } = useTranslation();
 
   return (
-    <div className="border-b border-gray-200">
-      <nav aria-label="Tabs" className="flex space-x-8 px-6 overflow-x-auto -mb-px">
+    <div className="border-gray-200 border-b">
+      <nav aria-label="Tabs" className="-mb-px flex space-x-8 overflow-x-auto px-6">
         <DashboardTab to={href('/team/:team/:event/overview', { team, event })}>
           {t('common.call-for-paper')}
         </DashboardTab>
@@ -34,9 +34,9 @@ function DashboardTab({ to, children }: DashboardTabProps) {
       discover="render"
       preventScrollReset
       className={({ isActive }) =>
-        cx('border-b-2 px-1 p-4 text-sm flex gap-2 whitespace-nowrap', {
-          'border-indigo-500 text-indigo-600 font-semibold': isActive,
-          'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-900 font-medium': !isActive,
+        cx('flex gap-2 whitespace-nowrap border-b-2 p-4 px-1 text-sm', {
+          'border-indigo-500 font-semibold text-indigo-600': isActive,
+          'border-transparent font-medium text-gray-500 hover:border-gray-300 hover:text-gray-900': !isActive,
         })
       }
     >

@@ -17,8 +17,8 @@ export default function CFPTabRoute({ loaderData: { metrics } }: Route.Component
   const { t } = useTranslation();
 
   return (
-    <div className="px-4 lg:px-6 space-y-4 lg:space-y-8">
-      <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
+    <div className="space-y-4 px-4 lg:space-y-8 lg:px-6">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
         <StatisticCard label={t('common.proposals')} stat={`${metrics.proposalsCount}`} />
         <StatisticCard label={t('common.speakers')} stat={`${metrics.speakersCount}`} />
         <ProgressCard
@@ -28,9 +28,9 @@ export default function CFPTabRoute({ loaderData: { metrics } }: Route.Component
         />
       </div>
 
-      <ProposalsByDayChart data={metrics.byDays} className="p-6 space-y-6" />
+      <ProposalsByDayChart data={metrics.byDays} className="space-y-6 p-6" />
 
-      <div className="grid grid-cols-1 gap-4 lg:gap-6 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-6">
         {metrics.byFormats && (
           <BarListCard label={t('event-management.overview.proposals-by-formats')} data={metrics.byFormats} />
         )}

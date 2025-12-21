@@ -53,7 +53,7 @@ export function MessageInputForm({
       <input type="hidden" name="intent" value={intent} />
       {message ? <input type="hidden" name="id" value={message.id} /> : null}
 
-      <div className="overflow-hidden bg-white rounded-lg pb-12 shadow-xs ring-1 ring-inset ring-gray-200 focus-within:ring-2 focus-within:ring-indigo-600">
+      <div className="overflow-hidden rounded-lg bg-white pb-12 shadow-xs ring-1 ring-gray-200 ring-inset focus-within:ring-2 focus-within:ring-indigo-600">
         <textarea
           id={inputId}
           name="message"
@@ -65,11 +65,11 @@ export function MessageInputForm({
           style={{ fieldSizing: 'content', maxHeight: '400px' }}
           // biome-ignore lint/a11y/noAutofocus: need autoFocus on message when opening
           autoFocus={autoFocus}
-          className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-sm leading-6"
+          className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 text-sm leading-6 placeholder:text-gray-400 focus:ring-0"
         />
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 flex justify-end gap-x-2 pb-2 pl-3 pr-2">
+      <div className="absolute inset-x-0 bottom-0 flex justify-end gap-x-2 pr-2 pb-2 pl-3">
         {onClose ? (
           <Button type="button" variant="secondary" onClick={onClose} size="sm">
             {t('common.cancel')}

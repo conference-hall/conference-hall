@@ -77,16 +77,16 @@ export default function ForgotPasswordSent({ loaderData, actionData }: Route.Com
 
   return (
     <Page>
-      <header className="flex flex-col items-center pt-8 sm:pt-16 sm:mx-auto sm:w-full sm:max-w-md">
+      <header className="flex flex-col items-center pt-8 sm:mx-auto sm:w-full sm:max-w-md sm:pt-16">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
-        <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 className="mt-6 text-center font-bold text-2xl text-gray-900 leading-9 tracking-tight">
           {emailSent ? t('auth.forgot-password.sent.heading') : t('auth.forgot-password.form.heading')}
         </h2>
       </header>
 
       {emailSent ? (
-        <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
-          <EnvelopeIcon className="size-16 mx-auto text-slate-300" />
+        <Card className="mt-10 space-y-8 p-6 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12">
+          <EnvelopeIcon className="mx-auto size-16 text-slate-300" />
           <div className="flex flex-col items-center gap-4">
             <Subtitle align="center">{t('auth.forgot-password.sent.confirmation')}</Subtitle>
             <Subtitle align="center" weight="semibold">
@@ -95,7 +95,7 @@ export default function ForgotPasswordSent({ loaderData, actionData }: Route.Com
           </div>
         </Card>
       ) : (
-        <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
+        <Card className="mt-10 space-y-8 p-6 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12">
           <Subtitle>{t('auth.forgot-password.form.description')}</Subtitle>
 
           <Form method="POST" className="space-y-4" onSubmit={resetPassword}>
@@ -122,7 +122,7 @@ export default function ForgotPasswordSent({ loaderData, actionData }: Route.Com
               />
             )}
 
-            <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
+            <Button type="submit" variant="primary" loading={loading} className="mt-2 w-full">
               {t('auth.forgot-password.form.submit')}
             </Button>
 

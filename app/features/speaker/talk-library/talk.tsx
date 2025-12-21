@@ -65,7 +65,7 @@ export default function SpeakerTalkRoute({ loaderData: talk, actionData: errors 
         <TalkSection
           talk={talk}
           actions={
-            <div className="flex flex-row sm:justify-between items-center gap-3">
+            <div className="flex flex-row items-center gap-3 sm:justify-between">
               <TalkArchiveButton archived={Boolean(talk.archived)} />
               {!talk.archived && <TalkEditButton initialValues={talk} errors={errors} />}
               {!talk.archived && <TalkSubmitButton talkId={talk.id} />}

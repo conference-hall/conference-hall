@@ -11,11 +11,11 @@ export function StatisticCard({ label, stat, children }: Props) {
 
   return (
     <Card className="flex flex-col" aria-labelledby={id}>
-      <div className="flex flex-col gap-0.5 grow p-6 flex-1">
+      <div className="flex flex-1 grow flex-col gap-0.5 p-6">
         <Text id={id} variant="secondary">
           {label}
         </Text>
-        <div className="text-3xl font-semibold">{stat}</div>
+        <div className="font-semibold text-3xl">{stat}</div>
       </div>
       {children}
     </Card>
@@ -32,7 +32,7 @@ function Footer({ children }: { children: ReactNode }) {
   return (
     <>
       <Divider />
-      <div className="flex flex-row items-center justify-end py-3 px-4">{children}</div>
+      <div className="flex flex-row items-center justify-end px-4 py-3">{children}</div>
     </>
   );
 }

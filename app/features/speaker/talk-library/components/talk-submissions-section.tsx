@@ -34,7 +34,7 @@ export function TalkSubmissionsSection({ submissions }: Props) {
             <Link
               to={href('/:event/proposals/:proposal', { event: submission.slug, proposal: submission.proposalId })}
               aria-label={t('common.go-to', { name: submission.name })}
-              className="flex items-center gap-4 justify-between hover:bg-gray-100 px-4 py-3"
+              className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-gray-100"
             >
               <div className="flex items-center gap-4 overflow-hidden">
                 <Avatar picture={submission.logoUrl} name={submission.name} square size="s" aria-hidden />
@@ -54,7 +54,7 @@ export function TalkSubmissionsSection({ submissions }: Props) {
             </Link>
           </li>
         ))}
-        <li className="flex justify-between items-center px-4 py-3">
+        <li className="flex items-center justify-between px-4 py-3">
           <Subtitle size="xs">{t('talk.page.submissions.count', { count: submissions.length })}</Subtitle>
         </li>
       </ul>

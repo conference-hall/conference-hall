@@ -44,16 +44,16 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
   };
 
   return (
-    <Combobox as="div" value={value} onChange={handleChange} className="absolute inset-0 bg-white z-10">
+    <Combobox as="div" value={value} onChange={handleChange} className="absolute inset-0 z-10 bg-white">
       {/* Search */}
-      <div className="relative border-b border-gray-100">
+      <div className="relative border-gray-100 border-b">
         <MagnifyingGlassIcon
-          className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400"
+          className="pointer-events-none absolute top-3.5 left-4 h-5 w-5 text-gray-400"
           aria-hidden="true"
         />
         <ComboboxInput
           autoFocus
-          className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
+          className="h-12 w-full border-0 bg-transparent pr-4 pl-11 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
           placeholder={t('event-management.schedule.edit-session.proposal.search.placeholder')}
           onChange={debouncedOnChange}
         />
@@ -63,7 +63,7 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
         {/* Result list */}
         {results.length > 0 && (
           <li className="p-2">
-            <ul className="text-sm text-gray-700">
+            <ul className="text-gray-700 text-sm">
               {results.map((proposal) => (
                 <ComboboxOption
                   as="li"
@@ -72,10 +72,10 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
                   className="group flex cursor-default select-none items-center rounded-md px-3 py-2 data-focus:bg-gray-100"
                 >
                   <div className="flex-auto truncate">
-                    <p className="font-semibold truncate">{proposal.title}</p>
-                    <p className="text-xs truncate">{proposal?.speakers.map((s) => s.name).join(', ')}</p>
+                    <p className="truncate font-semibold">{proposal.title}</p>
+                    <p className="truncate text-xs">{proposal?.speakers.map((s) => s.name).join(', ')}</p>
                   </div>
-                  <ChevronRightIcon className="ml-3 shrink-0 h-6 w-6 text-gray-400" />
+                  <ChevronRightIcon className="ml-3 h-6 w-6 shrink-0 text-gray-400" />
                 </ComboboxOption>
               ))}
             </ul>
@@ -84,7 +84,7 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
 
         {/* Quick actions */}
         <li className="p-2">
-          <ul className="text-sm text-gray-700">
+          <ul className="text-gray-700 text-sm">
             <ComboboxOption
               as="li"
               value={{ intent: 'raw-session' }}

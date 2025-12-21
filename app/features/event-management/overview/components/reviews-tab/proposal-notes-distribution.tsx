@@ -19,7 +19,7 @@ export function ProposalNotesDistribution({ proposalNotesDistribution }: Props) 
       <H2>{t('event-management.overview.reviews.proposal-notes-distribution.title')}</H2>
 
       <div className="mt-6 space-y-4">
-        <ClientOnly fallback={<div className="h-48 animate-pulse bg-gray-200 rounded" />}>
+        <ClientOnly fallback={<div className="h-48 animate-pulse rounded bg-gray-200" />}>
           {() => (
             <ResponsiveContainer width="100%" height={256}>
               <BarChart data={proposalNotesDistribution} margin={{ top: 16 }}>
@@ -52,7 +52,7 @@ export function ProposalNotesDistribution({ proposalNotesDistribution }: Props) 
                     const totalProposals = proposalNotesDistribution.reduce((sum, item) => sum + item.count, 0);
                     const percentage = totalProposals > 0 ? Math.round((Number(data.value) / totalProposals) * 100) : 0;
                     return (
-                      <div className="border border-gray-200 bg-white text-sm shadow-sm rounded-md p-3">
+                      <div className="rounded-md border border-gray-200 bg-white p-3 text-sm shadow-sm">
                         <div className="font-medium">
                           {t('event-management.overview.reviews.proposal-notes-distribution.tooltip.average')}:{' '}
                           {data.payload?.averageNote}
@@ -78,7 +78,7 @@ export function ProposalNotesDistribution({ proposalNotesDistribution }: Props) 
           )}
         </ClientOnly>
 
-        <div className="pt-4 border-t border-gray-200">
+        <div className="border-gray-200 border-t pt-4">
           <ProposalAveragesAnalysis proposalNotesDistribution={proposalNotesDistribution} />
         </div>
       </div>
@@ -106,7 +106,7 @@ function ProposalAveragesAnalysis({ proposalNotesDistribution }: Props) {
   return (
     <div className="grid grid-cols-4 gap-4 text-center">
       <div>
-        <div className="text-lg font-bold text-red-500">
+        <div className="font-bold text-lg text-red-500">
           {totalProposals > 0 ? Math.round((poor / totalProposals) * 100) : 0}%
         </div>
         <Subtitle size="xs">
@@ -114,7 +114,7 @@ function ProposalAveragesAnalysis({ proposalNotesDistribution }: Props) {
         </Subtitle>
       </div>
       <div>
-        <div className="text-lg font-bold text-orange-500">
+        <div className="font-bold text-lg text-orange-500">
           {totalProposals > 0 ? Math.round((average / totalProposals) * 100) : 0}%
         </div>
         <Subtitle size="xs">
@@ -122,7 +122,7 @@ function ProposalAveragesAnalysis({ proposalNotesDistribution }: Props) {
         </Subtitle>
       </div>
       <div>
-        <div className="text-lg font-bold text-blue-500">
+        <div className="font-bold text-blue-500 text-lg">
           {totalProposals > 0 ? Math.round((good / totalProposals) * 100) : 0}%
         </div>
         <Subtitle size="xs">
@@ -130,7 +130,7 @@ function ProposalAveragesAnalysis({ proposalNotesDistribution }: Props) {
         </Subtitle>
       </div>
       <div>
-        <div className="text-lg font-bold text-green-500">
+        <div className="font-bold text-green-500 text-lg">
           {totalProposals > 0 ? Math.round((excellent / totalProposals) * 100) : 0}%
         </div>
         <Subtitle size="xs">

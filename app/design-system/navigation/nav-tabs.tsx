@@ -67,7 +67,7 @@ export function NavTab({ to, end, count, variant = 'light', icon: Icon, classNam
       end={end}
       className={(tab) =>
         cx(
-          'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap focus-visible:outline-2',
+          'flex items-center gap-2 whitespace-nowrap rounded-md px-3 py-2 font-medium text-sm focus-visible:outline-2',
           {
             [DEFAULT_LINKS[variant]]: !tab.isActive,
             [ACTIVE_LINKS[variant]]: tab.isActive,
@@ -79,7 +79,7 @@ export function NavTab({ to, end, count, variant = 'light', icon: Icon, classNam
       {Icon ? <Icon className={ICON[variant]} /> : null}
       {children}
       {count ? (
-        <span className="ml-3 hidden rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-900 md:inline-block">
+        <span className="ml-3 hidden rounded-full bg-gray-200 px-2.5 py-0.5 font-medium text-gray-900 text-xs md:inline-block">
           {count}
         </span>
       ) : null}

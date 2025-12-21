@@ -51,7 +51,7 @@ export default function PublicationRoute({ loaderData: statistics }: Route.Compo
             <Subtitle>{t('event-management.publication.publish.description')}</Subtitle>
           </Card.Title>
 
-          <Card.Content className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
+          <Card.Content className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
             <ProgressCard
               label={t('event-management.publication.publish.total-published')}
               value={statistics.accepted.published + statistics.rejected.published}

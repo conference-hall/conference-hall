@@ -17,11 +17,11 @@ export function CommandPaletteInput({ value, onChange, loading, closeText }: Pro
 
   return (
     <div className="flex items-center px-5 py-1">
-      <div className="flex items-center gap-2 flex-1">
+      <div className="flex flex-1 items-center gap-2">
         <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-400" />
         <ComboboxInput
           autoFocus
-          className="flex-1 border-0 bg-transparent py-3 text-gray-900 placeholder:text-gray-500 focus:ring-0 text-sm leading-6 font-medium"
+          className="flex-1 border-0 bg-transparent py-3 font-medium text-gray-900 text-sm leading-6 placeholder:text-gray-500 focus:ring-0"
           value={value}
           onChange={onChange}
           autoComplete="off"

@@ -3,7 +3,7 @@ import { cva, cx } from 'class-variance-authority';
 type DividerProps = { as?: React.ElementType; className?: string };
 
 export function Divider({ as: Tag = 'div', className }: DividerProps) {
-  return <Tag role="presentation" aria-hidden="true" className={cx('border-t border-gray-200', className)} />;
+  return <Tag role="presentation" aria-hidden="true" className={cx('border-gray-200 border-t', className)} />;
 }
 
 type DividerWithLabelProps = {
@@ -24,10 +24,10 @@ const dividerLabelStyle = cva('text-nowrap', {
 
 export function DividerWithLabel({ label, placement = 'center', className }: DividerWithLabelProps) {
   return (
-    <div className={cx('flex items-center text-sm font-medium text-gray-600', className)} role="presentation">
-      {placement !== 'start' ? <div className="w-full border-t border-gray-200" aria-hidden="true" /> : null}
+    <div className={cx('flex items-center font-medium text-gray-600 text-sm', className)} role="presentation">
+      {placement !== 'start' ? <div className="w-full border-gray-200 border-t" aria-hidden="true" /> : null}
       <div className={dividerLabelStyle({ placement })}>{label}</div>
-      {placement !== 'end' ? <div className="w-full border-t border-gray-200" aria-hidden="true" /> : null}
+      {placement !== 'end' ? <div className="w-full border-gray-200 border-t" aria-hidden="true" /> : null}
     </div>
   );
 }

@@ -28,7 +28,7 @@ export default function ReviewersTabRoute({ loaderData: { metrics } }: Route.Com
   }
 
   return (
-    <ul className="px-6 space-y-8" aria-label={t('event-management.overview.reviewers.heading')}>
+    <ul className="space-y-8 px-6" aria-label={t('event-management.overview.reviewers.heading')}>
       {reviewersMetrics.map((reviewer, index) => {
         const max = proposalsCount;
         const value = reviewer.reviewsCount;
@@ -41,14 +41,14 @@ export default function ReviewersTabRoute({ loaderData: { metrics } }: Route.Com
             aria-label={reviewer.name}
             className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:gap-4"
           >
-            <div className="sm:w-1/3 flex items-center">
+            <div className="flex items-center sm:w-1/3">
               <Text weight="semibold" variant="secondary" className="w-12">
                 #{index + 1}
               </Text>
               <AvatarName name={reviewer.name} picture={reviewer.picture} size="xs" truncate />
             </div>
 
-            <div className="flex items-center gap-4 grow">
+            <div className="flex grow items-center gap-4">
               <ProgressBar
                 value={value}
                 max={max}
@@ -59,7 +59,7 @@ export default function ReviewersTabRoute({ loaderData: { metrics } }: Route.Com
               </Text>
             </div>
 
-            <div className="sm:w-48 flex gap-8 sm:grid sm:grid-cols-3 sm:gap-4">
+            <div className="flex gap-8 sm:grid sm:w-48 sm:grid-cols-3 sm:gap-4">
               <Tooltip text={t('event-management.overview.reviewers.negatives-count')}>
                 <UserReviewNote feeling="NEGATIVE" note={reviewer.negativeCount} />
               </Tooltip>

@@ -28,7 +28,7 @@ export function DisplayTimes({ displayedTimes, onChangeDisplayTime }: Props) {
         anchor={{ to: 'bottom start', gap: '4px' }}
         className="z-30 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden"
       >
-        <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-b-gray-200 rounded-t-md">
+        <div className="flex items-center justify-between rounded-t-md border-b border-b-gray-200 bg-gray-50 px-4 py-2">
           <Text variant="secondary" weight="semibold">
             {t('event-management.schedule.actions.times')}
           </Text>

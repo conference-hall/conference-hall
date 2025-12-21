@@ -79,10 +79,10 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
           <H2>{t('team.settings.danger.heading')}</H2>
         </Card.Title>
 
-        <ul className="divide-y border-t mt-8">
+        <ul className="mt-8 divide-y border-t">
           {permissions.canLeaveTeam ? (
-            <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
-              <div className="space-y-1 grow">
+            <li className="flex flex-col gap-6 p-4 sm:flex-row sm:items-center lg:px-8">
+              <div className="grow space-y-1">
                 <Text weight="semibold">{t('team.settings.danger.leave-team.heading')}</Text>
                 <Subtitle>{t('team.settings.danger.description')}</Subtitle>
               </div>
@@ -103,8 +103,8 @@ export default function TeamSettingsRoute({ actionData: errors }: Route.Componen
           ) : null}
 
           {permissions.canDeleteTeam ? (
-            <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
-              <div className="space-y-1 grow">
+            <li className="flex flex-col gap-6 p-4 sm:flex-row sm:items-center lg:px-8">
+              <div className="grow space-y-1">
                 <Text weight="semibold">{t('team.settings.danger.delete-team.heading')}</Text>
                 <Subtitle>
                   <Trans

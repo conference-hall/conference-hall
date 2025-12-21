@@ -26,7 +26,7 @@ export function PublicationButton({ type, statistics }: PublicationProps) {
   if (statistics.notPublished === 0) {
     return (
       <div className="flex items-center">
-        <CheckIcon className="h-5 w-5 mr-1 text-green-600" aria-hidden="true" />
+        <CheckIcon className="mr-1 h-5 w-5 text-green-600" aria-hidden="true" />
         <Text weight="medium">{t('event-management.publication.publish.published')}</Text>
       </div>
     );
@@ -34,7 +34,7 @@ export function PublicationButton({ type, statistics }: PublicationProps) {
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className={cx(link(), 'text-sm font-medium')}>
+      <button type="button" onClick={() => setOpen(true)} className={cx(link(), 'font-medium text-sm')}>
         {type === 'ACCEPTED'
           ? t('event-management.publication.publish.publish-accepted')
           : t('event-management.publication.publish.publish-rejected')}{' '}
@@ -61,7 +61,7 @@ function PublicationConfirmModal({ type, statistics, open, onClose }: ModalProps
 
   return (
     <Modal title={title} open={open} onClose={onClose}>
-      <Modal.Content className="pt-6 space-y-4">
+      <Modal.Content className="space-y-4 pt-6">
         <StatisticCard
           label={t('event-management.publication.publish.modal.to-publish')}
           stat={`${statistics.notPublished}`}

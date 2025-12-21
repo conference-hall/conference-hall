@@ -35,11 +35,11 @@ export function ScheduleHeader({
   return (
     <header
       className={cx(
-        'sticky top-0 z-30 flex flex-row items-center justify-between border-b border-b-gray-200 gap-4 h-[64px] px-6 bg-slate-100',
+        'sticky top-0 z-30 flex h-[64px] flex-row items-center justify-between gap-4 border-b border-b-gray-200 bg-slate-100 px-6',
         { 'rounded-t-lg': !scheduleFullscreen.isFullscreen },
       )}
     >
-      <div className="flex items-center gap-3 shrink">
+      <div className="flex shrink items-center gap-3">
         <DisplayDays
           scheduleDays={scheduleDays}
           displayedDays={displayedDays}
@@ -49,7 +49,7 @@ export function ScheduleHeader({
         <DisplayTimes displayedTimes={displayedTimes} onChangeDisplayTime={onChangeDisplayTime} />
       </div>
 
-      <div className="flex items-center gap-3 shrink">
+      <div className="flex shrink items-center gap-3">
         <OptionsMenu openTracksModal={() => setTracksModalOpen(true)} zoomHandlers={zoomHandlers} />
       </div>
 

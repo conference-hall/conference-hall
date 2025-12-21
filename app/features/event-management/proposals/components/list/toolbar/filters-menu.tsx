@@ -27,7 +27,7 @@ export function FiltersMenu() {
   return (
     <>
       {/* Desktop */}
-      <Popover className="hidden sm:block w-full">
+      <Popover className="hidden w-full sm:block">
         <PopoverButton as={Button} variant="secondary" block iconLeft={AdjustmentsHorizontalIcon}>
           {t('common.filters')}
         </PopoverButton>
@@ -40,7 +40,7 @@ export function FiltersMenu() {
       </Popover>
 
       {/* Mobile */}
-      <Popover className="sm:hidden w-full">
+      <Popover className="w-full sm:hidden">
         <PopoverButton as={Button} variant="secondary" block iconLeft={AdjustmentsHorizontalIcon}>
           {t('common.filters')}
         </PopoverButton>
@@ -71,7 +71,7 @@ function FiltersContent({ close }: FiltersContentProps) {
 
   return (
     <Form method="GET" onSubmit={close}>
-      <div className="px-4 py-3 bg-gray-50 border-b border-b-gray-200 rounded-t-md">
+      <div className="rounded-t-md border-b border-b-gray-200 bg-gray-50 px-4 py-3">
         <Text variant="secondary" weight="semibold">
           {t('common.filters')}
         </Text>
@@ -105,7 +105,7 @@ function FiltersContent({ close }: FiltersContentProps) {
       )}
 
       {hasTracks && (
-        <div className="px-4 py-3 space-y-2">
+        <div className="space-y-2 px-4 py-3">
           <Text variant="secondary" weight="medium" size="s">
             {t('common.tracks')}
           </Text>
@@ -139,7 +139,7 @@ function FiltersContent({ close }: FiltersContentProps) {
       )}
 
       {tags.length > 0 && (
-        <div className="px-4 py-3 space-y-2">
+        <div className="space-y-2 px-4 py-3">
           <Text variant="secondary" weight="medium" size="s">
             {t('common.tags')}
           </Text>
@@ -155,7 +155,7 @@ function FiltersContent({ close }: FiltersContentProps) {
           />
         </div>
       )}
-      <div className="mt-2 px-4 py-3 sm:rounded-b-md border-t border-t-gray-200 flex justify-between">
+      <div className="mt-2 flex justify-between border-t border-t-gray-200 px-4 py-3 sm:rounded-b-md">
         <Button to={location.pathname} variant="secondary" onClick={close}>
           {t('common.reset')}
         </Button>
@@ -176,16 +176,16 @@ type FiltersRadioProps = {
 function FiltersRadio({ label, name, defaultValue, options, className }: FiltersRadioProps) {
   return (
     <Fieldset className={className}>
-      <Legend className="text-gray-600 text-sm font-medium">{label}</Legend>
+      <Legend className="font-medium text-gray-600 text-sm">{label}</Legend>
       <RadioGroup name={name} defaultValue={defaultValue}>
-        <div className="flex gap-2 flex-wrap mt-1">
+        <div className="mt-1 flex flex-wrap gap-2">
           {options.map((option) => (
             <Radio
               key={option.name}
               value={option.value}
               className={({ checked }) =>
                 cx('cursor-pointer', buttonStyles({ variant: 'secondary', size: 'sm' }), {
-                  'bg-indigo-100! ring-indigo-200 text-indigo-700 hover:bg-indigo-100': checked,
+                  'bg-indigo-100! text-indigo-700 ring-indigo-200 hover:bg-indigo-100': checked,
                 })
               }
             >

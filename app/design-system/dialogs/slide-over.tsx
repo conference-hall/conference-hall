@@ -17,7 +17,7 @@ export function SlideOver({ open, title, size = 'm', withBorder = true, onClose,
     <Dialog className="z-40" open={open} onClose={onClose}>
       <Background />
 
-      <div className="fixed inset-0 overflow-hidden z-40">
+      <div className="fixed inset-0 z-40 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
             <DialogPanel
@@ -35,7 +35,7 @@ export function SlideOver({ open, title, size = 'm', withBorder = true, onClose,
               >
                 <div className="z-50">
                   {title ? (
-                    <DialogTitle className="text-base font-semibold leading-6 text-gray-900 px-4 py-4">
+                    <DialogTitle className="px-4 py-4 font-semibold text-base text-gray-900 leading-6">
                       {title}
                     </DialogTitle>
                   ) : null}
@@ -61,7 +61,7 @@ interface ContentProps<T extends React.ElementType = 'div'> {
 function Content<T extends React.ElementType = 'div'>({ as, children, className, ref }: ContentProps<T>) {
   const Component = (as || 'div') as React.ElementType;
   return (
-    <Component ref={ref} className={cx('flex-1 overflow-y-auto h-full p-4', className)}>
+    <Component ref={ref} className={cx('h-full flex-1 overflow-y-auto p-4', className)}>
       {children}
     </Component>
   );

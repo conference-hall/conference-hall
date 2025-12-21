@@ -29,7 +29,7 @@ export default function AdminDashboardRoute({ loaderData }: Route.ComponentProps
     <Page>
       <H1 srOnly>{t('admin.nav.dashboard')}</H1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-6">
         <Suspense fallback={t('common.loading')}>
           <Await resolve={users}>
             {(users) => (

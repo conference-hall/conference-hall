@@ -16,7 +16,7 @@ export function SubmissionTalksList({ label, talks }: Props) {
       <List>
         <List.Content aria-label={label}>
           {talks.map((talk) => (
-            <List.RowLink key={talk.id} to={talk.id} className="flex justify-between items-center gap-4">
+            <List.RowLink key={talk.id} to={talk.id} className="flex items-center justify-between gap-4">
               <div className="min-w-0">
                 <Text size="s" weight="medium" truncate>
                   {talk.title}

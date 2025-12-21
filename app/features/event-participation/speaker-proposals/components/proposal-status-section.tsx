@@ -38,7 +38,7 @@ export function ProposalStatusSection(props: Props) {
 function Draft({ proposal, event }: Props) {
   const { t } = useTranslation();
   return (
-    <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
+    <Card as="section" p={8} className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between">
       <div>
         <H2 mb={1}>{t('speaker.proposal-status.draft.heading')}</H2>
         {event.isCfpOpen ? (
@@ -66,7 +66,7 @@ function Draft({ proposal, event }: Props) {
 function Submitted({ event }: Props) {
   const { t } = useTranslation();
   return (
-    <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
+    <Card as="section" p={8} className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between">
       <div>
         <H2 mb={1}>{t('speaker.proposal-status.submitted.heading', { event: event.name })}</H2>
         {event.isCfpOpen ? (
@@ -97,7 +97,7 @@ function DeliberationPending() {
 function AcceptedByOrganizers({ event }: Props) {
   const { t } = useTranslation();
   return (
-    <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
+    <Card as="section" p={8} className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between">
       <div>
         <H2 mb={1}>{t('speaker.proposal-status.accepted.heading', { event: event.name })}</H2>
         <Text variant="secondary">{t('speaker.proposal-status.accepted.description')}</Text>

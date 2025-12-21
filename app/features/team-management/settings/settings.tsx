@@ -41,7 +41,7 @@ export default function TeamSettingsLayout() {
       <NavSideMenu
         aria-label={t('team.settings.menu')}
         items={menus}
-        className="w-full mb-4 lg:mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
+        className="mb-4 w-full lg:sticky lg:top-4 lg:col-span-3 lg:mb-6 lg:self-start"
       />
 
       <div className="lg:col-span-9">

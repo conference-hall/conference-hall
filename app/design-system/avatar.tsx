@@ -117,7 +117,7 @@ type AvatarImageProps = {
 function AvatarImage({ picture, name, 'aria-hidden': ariaHidden, size, className }: AvatarImageProps) {
   return (
     <img
-      className={cx('outline -outline-offset-1 outline-black/5', className)}
+      className={cx('outline outline-black/5 -outline-offset-1', className)}
       src={picture}
       height={sizes[size]}
       width={sizes[size]}
@@ -159,7 +159,7 @@ type AvatarGroupProps = {
 
 export function AvatarGroup({ avatars, size, className }: AvatarGroupProps) {
   return (
-    <div className={cx('flex flex-nowrap -space-x-1 shrink-0 overflow-hidden', className)}>
+    <div className={cx('flex shrink-0 flex-nowrap -space-x-1 overflow-hidden', className)}>
       {avatars.map((avatar, index) => (
         <Tooltip key={index} text={avatar.name}>
           <Avatar name={avatar.name} picture={avatar.picture} size={size} className="ring-2 ring-white" />

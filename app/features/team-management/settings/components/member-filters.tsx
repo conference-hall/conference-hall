@@ -21,7 +21,7 @@ export function MemberFilters() {
     <Form
       ref={formRef}
       method="GET"
-      className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full"
+      className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
     >
       <Input
         type="search"

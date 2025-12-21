@@ -10,7 +10,7 @@ export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaul
 
   return (
     <Fieldset>
-      <Legend className="text-sm font-medium text-gray-900">{t('event-management.fields.visibility')}</Legend>
+      <Legend className="font-medium text-gray-900 text-sm">{t('event-management.fields.visibility')}</Legend>
 
       <RadioGroup name="visibility" value={selected} onChange={setSelected}>
         <div className="mt-2 -space-y-px rounded-md bg-white">
@@ -21,7 +21,7 @@ export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaul
                 className={({ checked }) =>
                   cx(
                     index === 0 ? 'rounded-tl-md rounded-tr-md' : '',
-                    index === EVENT_VISIBILITY.length - 1 ? 'rounded-bl-md rounded-br-md' : '',
+                    index === EVENT_VISIBILITY.length - 1 ? 'rounded-br-md rounded-bl-md' : '',
                     checked ? 'z-10 border-indigo-200 bg-indigo-50' : 'border-gray-200',
                     'relative flex cursor-pointer border p-4 focus:outline-hidden',
                   )
@@ -40,7 +40,7 @@ export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaul
                       <span className="h-1.5 w-1.5 rounded-full bg-white" />
                     </span>
                     <span className="ml-3 flex flex-col">
-                      <Label className={cx(checked ? 'text-indigo-900' : 'text-gray-900', 'block text-sm font-medium')}>
+                      <Label className={cx(checked ? 'text-indigo-900' : 'text-gray-900', 'block font-medium text-sm')}>
                         {t(`common.event.visibility.label.${visibility}`)}
                       </Label>
                       <Description className={cx(checked ? 'text-indigo-700' : 'text-gray-500', 'block text-sm')}>

@@ -93,7 +93,7 @@ export default function AccountRoute() {
   }, []);
 
   return (
-    <div className="space-y-4 lg:space-y-6 lg:col-span-9">
+    <div className="space-y-4 lg:col-span-9 lg:space-y-6">
       <H1 srOnly>{t('settings.account.heading')}</H1>
 
       <ChangeContactEmailForm email={email} authLoaded={authLoaded} />
@@ -105,9 +105,9 @@ export default function AccountRoute() {
           <H2>{t('settings.account.danger.heading')}</H2>
         </Card.Title>
 
-        <ul className="divide-y border-t mt-8">
-          <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
-            <div className="space-y-1 grow">
+        <ul className="mt-8 divide-y border-t">
+          <li className="flex flex-col gap-6 p-4 sm:flex-row sm:items-center lg:px-8">
+            <div className="grow space-y-1">
               <Text weight="semibold">{t('settings.account.danger.delete-account.heading')}</Text>
               <Subtitle>{t('settings.account.danger.delete-account.description')}</Subtitle>
             </div>

@@ -92,7 +92,7 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
         </List.Header>
         <List.Content aria-label={t('event-management.proposals.list')}>
           {speaker.proposals.map((proposal) => (
-            <List.Row key={proposal.id} className="hover:bg-gray-50 px-4">
+            <List.Row key={proposal.id} className="px-4 hover:bg-gray-50">
               <ProposalItem
                 proposal={proposal}
                 linkTo={`/team/${params.team}/${params.event}/proposals/${proposal.id}?speakers=${speaker.id}`}

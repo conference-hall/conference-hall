@@ -120,9 +120,9 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
           <H2>{t('event-management.settings.danger.heading')}</H2>
         </Card.Title>
 
-        <ul className="divide-y border-t mt-8">
-          <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
-            <div className="space-y-1 grow">
+        <ul className="mt-8 divide-y border-t">
+          <li className="flex flex-col gap-6 p-4 sm:flex-row sm:items-center lg:px-8">
+            <div className="grow space-y-1">
               <Text weight="semibold">
                 {event.archived
                   ? t('event-management.settings.danger.restore.heading')
@@ -147,8 +147,8 @@ export default function EventGeneralSettingsRoute({ actionData: errors }: Route.
             </Form>
           </li>
           {permissions.canDeleteEvent ? (
-            <li className="p-4 lg:px-8 flex flex-col sm:flex-row sm:items-center gap-6">
-              <div className="space-y-1 grow">
+            <li className="flex flex-col gap-6 p-4 sm:flex-row sm:items-center lg:px-8">
+              <div className="grow space-y-1">
                 <Text weight="semibold">{t('event-management.settings.danger.delete.heading')}</Text>
                 <Subtitle>
                   <Trans

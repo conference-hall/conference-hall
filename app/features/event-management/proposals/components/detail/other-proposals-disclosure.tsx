@@ -30,7 +30,7 @@ export function OtherProposalsDisclosure({ proposals }: OtherProposalsDisclosure
             to={`../${proposal.id}`}
             target="_blank"
             relative="path"
-            className="flex justify-between gap-4 hover:bg-gray-100 rounded-md w-full p-2"
+            className="flex w-full justify-between gap-4 rounded-md p-2 hover:bg-gray-100"
           >
             <span>
               <Text weight="semibold">{proposal.title}</Text>

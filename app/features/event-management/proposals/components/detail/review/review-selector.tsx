@@ -63,7 +63,7 @@ export function ReviewSelector({ value, onChange }: Props) {
         <div
           role="button"
           tabIndex={0}
-          className="flex gap-1 justify-between items-center"
+          className="flex items-center justify-between gap-1"
           onMouseOut={() => setOverIndex(-1)}
         >
           {options.map((option, index) => (

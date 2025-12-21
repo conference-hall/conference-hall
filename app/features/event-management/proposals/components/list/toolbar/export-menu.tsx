@@ -72,7 +72,7 @@ export function ExportMenu() {
               className={menuItem()}
             >
               <CalendarDaysIcon className={menuItemIcon()} aria-hidden="true" />
-              <button type="submit" className="w-full text-left cursor-pointer">
+              <button type="submit" className="w-full cursor-pointer text-left">
                 {t('event-management.proposals.export.open-planner')}
               </button>
             </MenuItem>

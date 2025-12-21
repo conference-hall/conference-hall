@@ -34,11 +34,11 @@ function DesktopNavbar() {
       <nav className="flex items-center">
         <LogoButton hideLabel className="mr-2" />
         <TeamsDropdown teams={user.teams} />
-        {event ? <SlashBarIcon className="hidden sm:flex h-4 w-4 fill-gray-500" /> : null}
+        {event ? <SlashBarIcon className="hidden h-4 w-4 fill-gray-500 sm:flex" /> : null}
         {event ? <EventsDropdown teams={user.teams} /> : null}
       </nav>
 
-      <div className="gap-4 flex shrink-0 items-center justify-end">
+      <div className="flex shrink-0 items-center justify-end gap-4">
         <EventCommandPaletteButton />
 
         <UserMenuButton

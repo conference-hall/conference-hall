@@ -35,7 +35,7 @@ export default function EventRoute() {
       />
 
       {hasTracks && (
-        <div className="mt-4 gap-4 grid grid-cols-1 lg:mt-8 md:grid-cols-2 lg:gap-8">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:mt-8 lg:gap-8">
           <TrackSection title={t('common.formats')} tracks={currentEvent.formats} />
           <TrackSection title={t('common.categories')} tracks={currentEvent.categories} />
         </div>

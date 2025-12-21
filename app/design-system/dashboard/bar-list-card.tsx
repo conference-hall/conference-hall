@@ -24,13 +24,13 @@ export function BarListCard({ label, data = [] }: BarListCardProps) {
   const onClose = () => setOpen(false);
 
   return (
-    <Card className="space-y-6 p-6 relative" aria-labelledby={id}>
+    <Card className="relative space-y-6 p-6" aria-labelledby={id}>
       <H2 id={id}>{label}</H2>
-      <div className={cx('overflow-hidden max-h-[260px]', { 'pb-6': data.length > MAX_BAR })}>
+      <div className={cx('max-h-[260px] overflow-hidden', { 'pb-6': data.length > MAX_BAR })}>
         {data.length !== 0 ? <BarList data={data} /> : <NoData />}
       </div>
       {data.length > MAX_BAR && (
-        <div className="flex justify-center absolute inset-x-0 rounded-b-md bottom-0 bg-linear-to-t from-white to-transparent py-7 pt-12">
+        <div className="absolute inset-x-0 bottom-0 flex justify-center rounded-b-md bg-linear-to-t from-white to-transparent py-7 pt-12">
           <Button variant="secondary" onClick={onOpen}>
             {t('common.show-more')}
           </Button>

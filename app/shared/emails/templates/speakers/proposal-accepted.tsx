@@ -47,7 +47,7 @@ export default function ProposalAcceptedEmail({ event, proposal, locale, customi
         </Text>
       </Section>
 
-      <Section className="text-center my-8">
+      <Section className="my-8 text-center">
         <Button href={!preview ? buildSpeakerProposalUrl(event.slug, proposal.id) : '#'} className={styles.button}>
           {t('speakers.proposal-accepted.body.cta')}
         </Button>

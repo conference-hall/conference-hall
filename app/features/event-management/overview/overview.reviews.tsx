@@ -18,8 +18,8 @@ export default function ReviewsTabRoute({ loaderData: { metrics } }: Route.Compo
   const { t } = useTranslation();
 
   return (
-    <div className="px-6 space-y-8">
-      <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
+    <div className="space-y-8 px-6">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
         <StatisticCard
           label={t('event-management.overview.reviews.global-average-score')}
           stat={metrics.averageNote > 0 ? metrics.averageNote.toFixed(1) : '-'}
@@ -40,7 +40,7 @@ export default function ReviewsTabRoute({ loaderData: { metrics } }: Route.Compo
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
         <ProposalNotesDistribution proposalNotesDistribution={metrics.proposalNotesDistribution} />
 
         <ReviewCountDistribution

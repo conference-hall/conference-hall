@@ -32,7 +32,7 @@ export function PasswordInput({
 
   return (
     <div>
-      <div className="flex justify-between mb-1">
+      <div className="mb-1 flex justify-between">
         <Label htmlFor={name || 'password'}>{label || t('common.password.label')}</Label>
         {forgotPasswordPath ? (
           <Link to={forgotPasswordPath} weight="semibold">
@@ -55,7 +55,7 @@ export function PasswordInput({
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="rounded-full self-center size-7 cursor-pointer p-1 mr-1"
+          className="mr-1 size-7 cursor-pointer self-center rounded-full p-1"
         >
           <span className="sr-only">{t('common.password.toggle-visibility')}</span>
           <ToggleIcon className="size-5 shrink-0" aria-hidden="true" />
@@ -74,7 +74,7 @@ function StrengthMeter({ password }: { password: string }) {
 
   return (
     <div className="mt-2 flex items-center gap-4">
-      <div className="h-1.5 bg-slate-200 rounded-md w-full">
+      <div className="h-1.5 w-full rounded-md bg-slate-200">
         <div className={cx('h-full rounded-md', strength.bg)} style={{ width: password ? `${strength.value}%` : 0 }} />
       </div>
       <Subtitle size="xs" weight="semibold" className={cx('shrink-0', { [strength.text]: password })}>

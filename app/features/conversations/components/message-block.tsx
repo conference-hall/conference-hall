@@ -41,11 +41,11 @@ export function MessageBlock({
     <div
       id={message.id}
       className={cx(
-        'relative group w-full rounded-md p-4 space-y-1.5 ring-1 ring-inset ring-gray-200 bg-white',
+        'group relative w-full space-y-1.5 rounded-md bg-white p-4 ring-1 ring-gray-200 ring-inset',
         className,
       )}
     >
-      <div className="absolute right-0 top-0 p-2 flex gap-x-1 text-gray-500">
+      <div className="absolute top-0 right-0 flex gap-x-1 p-2 text-gray-500">
         <MessageActionsMenu
           message={message}
           intentSuffix={intentSuffix}
@@ -80,7 +80,7 @@ export function MessageBlock({
           autoFocus
         />
       ) : (
-        <Text className="whitespace-pre-line wrap-break-word">{message.content}</Text>
+        <Text className="wrap-break-word whitespace-pre-line">{message.content}</Text>
       )}
 
       {reactions.length > 0 ? (

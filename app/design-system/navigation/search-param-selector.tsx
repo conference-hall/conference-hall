@@ -27,7 +27,7 @@ export function SearchParamSelector({ param, defaultValue, className, selectors 
   return (
     <div
       className={cx(
-        'hidden lg:flex gap-1  w-fit rounded-lg bg-slate-100 p-1 ring-1 ring-inset ring-gray-200',
+        'hidden w-fit gap-1 rounded-lg bg-slate-100 p-1 ring-1 ring-gray-200 ring-inset lg:flex',
         className,
       )}
     >
@@ -36,7 +36,7 @@ export function SearchParamSelector({ param, defaultValue, className, selectors 
           key={selector.value}
           to={{ search: paramsFor(selector.value) }}
           className={cx(
-            'flex items-center rounded-md py-1 px-3 text-sm font-semibold outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
+            'flex items-center rounded-md px-3 py-1 font-semibold text-sm outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
             {
               'bg-white shadow-sm': current === selector.value,
             },

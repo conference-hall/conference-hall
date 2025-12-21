@@ -30,7 +30,7 @@ export default function SpeakerRoute({ loaderData: profile }: Route.ComponentPro
       <NavbarSpeaker />
 
       <header className={cx(BG_COLOR, 'hidden lg:block')}>
-        <Container className="h-24 flex flex-row items-center relative">
+        <Container className="relative flex h-24 flex-row items-center">
           <Avatar
             picture={profile.picture}
             name={profile.name}
@@ -39,7 +39,7 @@ export default function SpeakerRoute({ loaderData: profile }: Route.ComponentPro
             ringColor="white"
             className="absolute -bottom-12"
           />
-          <div className="ml-2 sm:ml-40 p-2 overflow-hidden">
+          <div className="ml-2 overflow-hidden p-2 sm:ml-40">
             <H1 size="2xl" variant="light" truncate>
               {profile.name}
             </H1>
@@ -52,7 +52,7 @@ export default function SpeakerRoute({ loaderData: profile }: Route.ComponentPro
         </Container>
       </header>
 
-      <Page.NavHeader className="flex flex-col sm:pb-0 sm:flex-row sm:items-center sm:space-between">
+      <Page.NavHeader className="sm:space-between flex flex-col sm:flex-row sm:items-center sm:pb-0">
         <NavTabs py={4} scrollable className="grow sm:ml-40">
           <NavTab to={href('/speaker')} icon={FireIcon} end>
             {t('speaker.nav.activity')}

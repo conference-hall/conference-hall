@@ -25,7 +25,7 @@ type EntryProps = {
 function Entry({ marker, children, withLine, className, ...rest }: EntryProps) {
   return (
     <li {...rest} className="relative flex gap-x-4">
-      <div className="flex flex-col items-center w-8 shrink-0">
+      <div className="flex w-8 shrink-0 flex-col items-center">
         {marker}
         {withLine ? <Line /> : null}
       </div>
@@ -49,11 +49,11 @@ function Loading({ className }: { className?: string }) {
     <ActivityFeed label="Loading activities" className={className}>
       <Entry className="h-6" withLine aria-hidden />
       <Entry
-        marker={<div className="h-8 w-8 bg-gray-200 shrink-0 rounded-full animate-pulse" />}
+        marker={<div className="h-8 w-8 shrink-0 animate-pulse rounded-full bg-gray-200" />}
         className="animate-pulse"
         aria-hidden
       >
-        <div className="w-full space-y-2 shrink-0 rounded-lg bg-white border border-gray-200 p-4">
+        <div className="w-full shrink-0 space-y-2 rounded-lg border border-gray-200 bg-white p-4">
           <div className="h-2.5 w-2/3 rounded-full bg-gray-200" />
           <div className="h-2.5 w-1/3 rounded-full bg-gray-200" />
           <div className="h-2.5 w-1/3 rounded-full bg-gray-200" />

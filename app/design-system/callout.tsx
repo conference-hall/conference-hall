@@ -21,13 +21,13 @@ const calloutVariants = cva('flex flex-col overflow-hidden rounded-md p-4 text-s
       ],
       error: [
         // text color
-        ' text-red-900',
+        'text-red-900',
         // background color
         'bg-red-50',
       ],
       warning: [
         // text color
-        ' text-yellow-900',
+        'text-yellow-900',
         // background color
         'bg-yellow-50',
       ],
@@ -59,7 +59,7 @@ export const Callout = ({ title, icon: Icon, className, variant, children, ref, 
         </div>
       ) : null}
 
-      <div className={cx('flex items-start wrap-anywhere', children && title ? 'mt-2' : '')}>
+      <div className={cx('wrap-anywhere flex items-start', children && title ? 'mt-2' : '')}>
         {Icon && !title ? <Icon className={cx('mr-1.5 size-5 shrink-0')} aria-hidden="true" /> : null}
         <span>{children}</span>
       </div>

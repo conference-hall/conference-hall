@@ -54,11 +54,11 @@ type ToggleGroupProps = {
 export function ToggleGroup({ name, label, value, description, reverse, onChange }: ToggleGroupProps) {
   return (
     <Field className={cx('flex items-center', { 'flex-row-reverse gap-4': reverse })}>
-      <span className="flex grow flex-col mr-4">
-        <Label className="text-sm font-medium leading-6 text-gray-900" passive>
+      <span className="mr-4 flex grow flex-col">
+        <Label className="font-medium text-gray-900 text-sm leading-6" passive>
           {label}
         </Label>
-        {description && <Description className="text-sm text-gray-500">{description}</Description>}
+        {description && <Description className="text-gray-500 text-sm">{description}</Description>}
       </span>
 
       <Toggle name={name} value={value} onChange={onChange} />
