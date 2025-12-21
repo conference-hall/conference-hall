@@ -4,6 +4,7 @@ import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
+import { ProposalListPage } from './proposal-list.page.ts';
 import { SubmissionPage } from './submission.page.ts';
 import { SurveyPage } from './survey.page.ts';
 
@@ -55,15 +56,10 @@ test('submits a new talk for a conference (full funnel)', async ({ page }) => {
   // Step: confirmation
   await submissionPage.waitFor('New title');
   await submissionPage.checkboxInput('Please agree with the code of conduct of the event.').check();
-  const proposalListPage = await submissionPage.clickOnSubmit();
+  const proposalPage = await submissionPage.clickOnSubmit();
   await expect(submissionPage.toast).toHaveText('Congratulation! Proposal submitted!');
 
-  // Check the proposal is in the list
-  await proposalListPage.waitFor();
-  await expect(proposalListPage.proposals).toHaveCount(1);
-
   // Check the proposal details
-  const proposalPage = await proposalListPage.clickOnProposal('New title');
   await proposalPage.waitFor();
   await expect(proposalPage.speaker('Clark Kent')).toBeVisible();
   await expect(page.getByText('New abstract')).toBeVisible();
@@ -114,15 +110,10 @@ test('submits an existing talk', async ({ page }) => {
   // Step: confirmation
   await submissionPage.waitFor('Update title');
   await submissionPage.checkboxInput('Please agree with the code of conduct of the event.').check();
-  const proposalListPage = await submissionPage.clickOnSubmit();
+  const proposalPage = await submissionPage.clickOnSubmit();
   await expect(submissionPage.toast).toHaveText('Congratulation! Proposal submitted!');
 
-  // Check the proposal is in the list
-  await proposalListPage.waitFor();
-  await expect(proposalListPage.proposals).toHaveCount(1);
-
   // Check the proposal details
-  const proposalPage = await proposalListPage.clickOnProposal('Update title');
   await proposalPage.waitFor();
   await expect(proposalPage.speaker('Clark Kent')).toBeVisible();
   await expect(page.getByText('Update abstract')).toBeVisible();
@@ -182,12 +173,8 @@ test('submits a talk for an event w/o survey', async ({ page }) => {
   // Step: confirmation
   await submissionPage.waitFor('New title');
   await submissionPage.checkboxInput('Please agree with the code of conduct of the event.').check();
-  const proposalListPage = await submissionPage.clickOnSubmit();
+  await submissionPage.clickOnSubmit();
   await expect(submissionPage.toast).toHaveText('Congratulation! Proposal submitted!');
-
-  // Check the proposal is in the list
-  await proposalListPage.waitFor();
-  await expect(proposalListPage.proposals).toHaveCount(1);
 });
 
 test('submits a talk for an event w/o tracks', async ({ page }) => {
@@ -214,12 +201,8 @@ test('submits a talk for an event w/o tracks', async ({ page }) => {
   // Step: confirmation
   await submissionPage.waitFor('New title');
   await submissionPage.checkboxInput('Please agree with the code of conduct of the event.').check();
-  const proposalListPage = await submissionPage.clickOnSubmit();
+  await submissionPage.clickOnSubmit();
   await expect(submissionPage.toast).toHaveText('Congratulation! Proposal submitted!');
-
-  // Check the proposal is in the list
-  await proposalListPage.waitFor();
-  await expect(proposalListPage.proposals).toHaveCount(1);
 });
 
 test('submits a talk for an event w/o tracks, survey and cod', async ({ page }) => {
@@ -241,12 +224,8 @@ test('submits a talk for an event w/o tracks, survey and cod', async ({ page }) 
 
   // Step: confirmation
   await submissionPage.waitFor('New title');
-  const proposalListPage = await submissionPage.clickOnSubmit();
+  await submissionPage.clickOnSubmit();
   await expect(submissionPage.toast).toHaveText('Congratulation! Proposal submitted!');
-
-  // Check the proposal is in the list
-  await proposalListPage.waitFor();
-  await expect(proposalListPage.proposals).toHaveCount(1);
 });
 
 test('cannot submit a talk when max proposal reached', async ({ page }) => {
@@ -273,10 +252,14 @@ test('cannot submit a talk when max proposal reached', async ({ page }) => {
 
   // Step: confirmation
   await submissionPage.waitFor('New title');
-  const proposalList = await submissionPage.clickOnSubmit();
+  const proposalPage = await submissionPage.clickOnSubmit();
   await expect(submissionPage.toast).toHaveText('Congratulation! Proposal submitted!');
+  await proposalPage.waitFor();
 
   // Check the proposal is in the list
+  await page.getByRole('link', { name: 'Your proposals' }).click();
+  const proposalList = new ProposalListPage(page);
+  await proposalList.waitFor();
   await proposalList.clickOnSubmitProposal();
   await expect(
     page.getByText('You have reached the maximum of submitted proposals for the event (1 max)'),

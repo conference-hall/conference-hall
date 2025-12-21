@@ -218,7 +218,7 @@ describe('TalkSubmission', () => {
   });
 
   describe('#submit', () => {
-    it('submit a proposal', async () => {
+    it('submit a draft proposal', async () => {
       const event = await eventFactory({
         traits: ['conference-cfp-open'],
         attributes: { name: 'Event 1', emailOrganizer: 'ben@email.com', emailNotifications: ['submitted'] },
@@ -227,7 +227,9 @@ describe('TalkSubmission', () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk: talk, traits: ['draft'] });
 
-      await TalkSubmission.for(speaker.id, event.slug).submit(talk.id);
+      const proposalId = await TalkSubmission.for(speaker.id, event.slug).submit(talk.id);
+
+      expect(proposalId).toEqual(proposal.id);
 
       const result = await db.proposal.findUnique({ where: { id: proposal.id } });
       expect(result?.isDraft).toEqual(false);

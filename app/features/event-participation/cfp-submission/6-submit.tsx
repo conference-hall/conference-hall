@@ -26,10 +26,10 @@ export const action = async ({ params, context }: Route.ActionArgs) => {
   const authUser = getRequiredAuthUser(context);
 
   const i18n = getI18n(context);
-  await TalkSubmission.for(authUser.id, params.event).submit(params.talk);
+  const proposalId = await TalkSubmission.for(authUser.id, params.event).submit(params.talk);
 
   const headers = await toastHeaders('success', i18n.t('event.submission.submit.feedback.submitted'));
-  return redirect(href('/:event/proposals', { event: params.event }), { headers });
+  return redirect(href('/:event/proposals/:proposal', { event: params.event, proposal: proposalId }), { headers });
 };
 
 export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.ComponentProps) {
