@@ -66,13 +66,13 @@ describe('EventPage', () => {
     });
   });
 
-  describe('#buildTracksSchema', () => {
+  describe('getTracksSchema', () => {
     it('validates given tracks', async () => {
       const event = await eventFactory();
       const format = await eventFormatFactory({ event });
       const category = await eventCategoryFactory({ event });
 
-      const schema = await EventPage.of(event.slug).buildTracksSchema();
+      const schema = await EventPage.of(event.slug).getTracksSchema();
       const result = schema.safeParse({ formats: [format.name], categories: [category.name] });
 
       expect(result.success && result.data).toEqual({ formats: [format.name], categories: [category.name] });
@@ -83,7 +83,7 @@ describe('EventPage', () => {
       await eventFormatFactory({ event });
       await eventCategoryFactory({ event });
 
-      const schema = await EventPage.of(event.slug).buildTracksSchema();
+      const schema = await EventPage.of(event.slug).getTracksSchema();
       const result = schema.safeParse({ formats: [], categories: [] });
 
       expect(result.success && result.data).toEqual({ formats: [], categories: [] });
@@ -94,7 +94,7 @@ describe('EventPage', () => {
       const format = await eventFormatFactory({ event });
       const category = await eventCategoryFactory({ event });
 
-      const schema = await EventPage.of(event.slug).buildTracksSchema();
+      const schema = await EventPage.of(event.slug).getTracksSchema();
       const result = schema.safeParse({ formats: [format.name], categories: [category.name] });
 
       expect(result.success && result.data).toEqual({ formats: [format.name], categories: [category.name] });
@@ -103,7 +103,7 @@ describe('EventPage', () => {
     it('validates no tracks given when tracks are mandatory but no track created for the event', async () => {
       const event = await eventFactory({ attributes: { formatsRequired: true, categoriesRequired: true } });
 
-      const schema = await EventPage.of(event.slug).buildTracksSchema();
+      const schema = await EventPage.of(event.slug).getTracksSchema();
       const result = schema.safeParse({ formats: [], categories: [] });
 
       expect(result.success && result.data).toEqual({ formats: [], categories: [] });
@@ -114,7 +114,7 @@ describe('EventPage', () => {
       await eventFormatFactory({ event });
       await eventCategoryFactory({ event });
 
-      const schema = await EventPage.of(event.slug).buildTracksSchema();
+      const schema = await EventPage.of(event.slug).getTracksSchema();
       const result = schema.safeParse({ formats: [], categories: [] });
 
       const { fieldErrors } = z.flattenError(result.error!);

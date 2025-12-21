@@ -9,10 +9,10 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { TalkSubmission } from '~/features/event-participation/cfp-submission/services/talk-submission.server.ts';
 import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
-import { TalkSaveSchema } from '~/features/speaker/talk-library/services/talks-library.schema.server.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
 import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { TalkAlreadySubmittedError } from '~/shared/errors.server.ts';
+import { TalkSaveSchema } from '~/shared/types/speaker-talk.types.ts';
 import type { Route } from './+types/2-talk.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 

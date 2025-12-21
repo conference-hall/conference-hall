@@ -6,13 +6,13 @@ import { H1 } from '~/design-system/typography.tsx';
 import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
+import { TalkSaveSchema } from '~/shared/types/speaker-talk.types.ts';
 import type { Route } from './+types/talk.ts';
 import { TalkArchiveButton } from './components/talk-forms/talk-archive-button.tsx';
 import { TalkEditButton } from './components/talk-forms/talk-form-drawer.tsx';
 import { TalkSubmitButton } from './components/talk-forms/talk-submit-button.tsx';
 import { TalkSection } from './components/talk-section.tsx';
 import { TalkSubmissionsSection } from './components/talk-submissions-section.tsx';
-import { TalkSaveSchema } from './services/talks-library.schema.server.ts';
 import { TalksLibrary } from './services/talks-library.server.ts';
 
 export const meta = (args: Route.MetaArgs) => {
