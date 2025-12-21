@@ -14,6 +14,7 @@ import {
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { TalkSaveData, TracksSaveData } from '~/shared/types/speaker-talk.types.ts';
+import { getNextProposalNumber } from '~/shared/utils/proposal-number.server.ts';
 
 export class TalkSubmission {
   constructor(
@@ -102,7 +103,13 @@ export class TalkSubmission {
     });
     if (!proposal) throw new ProposalNotFoundError();
 
-    await db.proposal.update({ data: { isDraft: false }, where: { id: proposal.id } });
+    await db.$transaction(async (trx) => {
+      const proposalNumber = await getNextProposalNumber(event.id, trx);
+      await trx.proposal.update({
+        data: { isDraft: false, proposalNumber },
+        where: { id: proposal.id },
+      });
+    });
 
     // send speaker email
     await sendEmail.trigger(SpeakerProposalSubmittedEmail.buildPayload({ event, proposal }));

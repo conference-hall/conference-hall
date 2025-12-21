@@ -45,6 +45,7 @@ describe('TalkSubmission', () => {
       expect(talk?.speakers[0].id).toEqual(speaker.id);
 
       const proposal = await db.proposal.findFirst({ where: { talkId }, include: { speakers: true } });
+      expect(proposal?.proposalNumber).toBeNull();
       expect(proposal?.title).toEqual(data.title);
       expect(proposal?.abstract).toEqual(data.abstract);
       expect(proposal?.references).toEqual(data.references);
@@ -80,6 +81,7 @@ describe('TalkSubmission', () => {
       expect(updatedTalk?.speakers.map((s) => s.id)).toEqual(expect.arrayContaining([speaker.id, speaker2.id]));
 
       const proposal = await db.proposal.findFirst({ where: { talkId }, include: { speakers: true } });
+      expect(proposal?.proposalNumber).toBeNull();
       expect(proposal?.title).toEqual(data.title);
       expect(proposal?.abstract).toEqual(data.abstract);
       expect(proposal?.references).toEqual(data.references);
@@ -232,6 +234,7 @@ describe('TalkSubmission', () => {
       expect(proposalId).toEqual(proposal.id);
 
       const result = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(result?.proposalNumber).toEqual(1);
       expect(result?.isDraft).toEqual(false);
       expect(result?.deliberationStatus).toEqual('PENDING');
 
