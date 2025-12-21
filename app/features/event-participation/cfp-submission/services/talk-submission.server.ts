@@ -1,7 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
-import type { TalkSaveData } from '~/features/speaker/talk-library/services/talks-library.schema.server.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import OrganizerProposalSubmittedEmail from '~/shared/emails/templates/organizers/proposal-submitted.tsx';
@@ -14,7 +13,7 @@ import {
 } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
-import type { TrackUpdateData } from './talk-submission.schema.server.ts';
+import type { TalkSaveData, TrackSaveData } from '~/shared/types/speaker-talk.types.ts';
 
 export class TalkSubmission {
   constructor(
@@ -64,7 +63,7 @@ export class TalkSubmission {
     return { talkId: talk.id };
   }
 
-  async saveTracks(talkId: string, data: TrackUpdateData) {
+  async saveTracks(talkId: string, data: TrackSaveData) {
     const proposal = await db.proposal.findFirst({
       select: { id: true },
       where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { userId: this.userId } } },

@@ -10,9 +10,9 @@ import { H1 } from '~/design-system/typography.tsx';
 import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
+import { TalkSaveSchema } from '~/shared/types/speaker-talk.types.ts';
 import type { Route } from './+types/talks.new.ts';
 import { TalkForm } from './components/talk-forms/talk-form.tsx';
-import { TalkSaveSchema } from './services/talks-library.schema.server.ts';
 import { TalksLibrary } from './services/talks-library.server.ts';
 
 export const meta = (args: Route.MetaArgs) => {

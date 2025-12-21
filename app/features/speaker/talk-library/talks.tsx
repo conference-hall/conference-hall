@@ -12,8 +12,8 @@ import { List } from '~/design-system/list/list.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { TalksListFilterSchema } from '~/shared/types/speaker-talk.types.ts';
 import type { Route } from './+types/talks.ts';
-import { TalksListFilterSchema } from './services/talks-library.schema.server.ts';
 import { TalksLibrary } from './services/talks-library.server.ts';
 
 export const meta = (args: Route.MetaArgs) => {

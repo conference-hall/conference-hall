@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
+import type { TalkSaveData, TalksListFilter } from '~/shared/types/speaker-talk.types.ts';
 import { SpeakerTalk } from './speaker-talk.server.ts';
-import type { TalkSaveData, TalksListFilter } from './talks-library.schema.server.ts';
 
 export class TalksLibrary {
   constructor(private speakerId: string) {}

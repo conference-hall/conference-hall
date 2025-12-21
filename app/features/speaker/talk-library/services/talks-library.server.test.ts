@@ -4,7 +4,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { z } from 'zod';
-import { TalkSaveSchema } from './talks-library.schema.server.ts';
+import { TalkSaveSchema } from '~/shared/types/speaker-talk.types.ts';
 import { TalksLibrary } from './talks-library.server.ts';
 
 describe('TalksLibrary', () => {

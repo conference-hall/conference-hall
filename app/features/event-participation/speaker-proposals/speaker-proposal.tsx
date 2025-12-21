@@ -15,10 +15,6 @@ import {
 } from '~/features/conversations/services/conversation.schema.server.ts';
 import { ProposalConversationForSpeakers } from '~/features/conversations/services/proposal-conversation-for-speakers.server.ts';
 import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
-import {
-  getProposalUpdateSchema,
-  ProposalParticipationSchema,
-} from '~/features/event-participation/speaker-proposals/services/speaker-proposal.schema.server.ts';
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
 import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
@@ -27,6 +23,7 @@ import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
+import { ProposalParticipationSchema, TalkSaveSchema } from '~/shared/types/speaker-talk.types.ts';
 import { TalkSection } from '../../speaker/talk-library/components/talk-section.tsx';
 import { useCurrentEvent } from '../event-page-context.tsx';
 import type { Route } from './+types/speaker-proposal.ts';
@@ -67,13 +64,9 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       return toast('success', i18n.t('event.proposal.feedbacks.cospeaker-removed'));
     }
     case 'edit-talk': {
-      const event = await EventPage.of(params.event).get();
-      const formatsRequired = event.formats.length > 0 && event.formatsRequired;
-      const categoriesRequired = event.categories.length > 0 && event.categoriesRequired;
-
-      const result = parseWithZod(form, { schema: getProposalUpdateSchema(formatsRequired, categoriesRequired) });
+      const tracksSchema = await EventPage.of(params.event).buildTracksSchema();
+      const result = parseWithZod(form, { schema: TalkSaveSchema.extend(tracksSchema) });
       if (result.status !== 'success') return result.error;
-
       await proposal.update(result.value);
       return toast('success', i18n.t('event.proposal.feedbacks.saved'));
     }
