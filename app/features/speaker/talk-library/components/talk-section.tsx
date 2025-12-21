@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Badge } from '~/design-system/badges.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
-import { H1, Subtitle } from '~/design-system/typography.tsx';
+import { H1, Subtitle, Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDatetime } from '~/shared/datetimes/datetimes.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
@@ -20,6 +20,7 @@ type Props = {
     references: string | null;
     level: TalkLevel | null;
     languages: Languages;
+    proposalNumber?: number | null;
     speakers: Array<SpeakerProps>;
     invitationLink?: string;
     archived?: boolean;
@@ -60,7 +61,14 @@ export function TalkSection({
           'flex items-center justify-between': Boolean(action),
         })}
       >
-        <H1 size="base">{talk.title}</H1>
+        <H1 size="base" className="space-x-2">
+          <span>{talk.title}</span>
+          {talk.proposalNumber ? (
+            <Text as="span" variant="secondary" size="base">
+              #{talk.proposalNumber}
+            </Text>
+          ) : null}
+        </H1>
 
         {action ? (
           action
