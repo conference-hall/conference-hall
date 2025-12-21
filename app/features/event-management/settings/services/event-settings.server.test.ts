@@ -64,8 +64,6 @@ describe('EventSettings', () => {
       expect(updated?.apiKey).toBe('apiKey');
     });
 
-    it.todo('test location geocoding');
-
     it('throws an error if user is not owner', async () => {
       await expect(
         EventSettings.for(reviewer.id, team.slug, event.slug).update({ name: 'Hello world' }),
