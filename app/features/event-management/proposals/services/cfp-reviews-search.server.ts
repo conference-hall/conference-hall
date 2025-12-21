@@ -30,6 +30,7 @@ export class CfpReviewsSearch extends EventAuthorization {
 
         return {
           id: proposal.id,
+          proposalNumber: proposal.proposalNumber,
           title: proposal.title,
           deliberationStatus: proposal.deliberationStatus,
           publicationStatus: proposal.publicationStatus,

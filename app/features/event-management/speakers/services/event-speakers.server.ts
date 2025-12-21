@@ -131,6 +131,7 @@ export class EventSpeakers extends EventAuthorization {
           const reviews = new ReviewDetails(proposal.reviews);
           return {
             id: proposal.id,
+            proposalNumber: proposal.proposalNumber,
             title: proposal.title,
             deliberationStatus: proposal.deliberationStatus,
             publicationStatus: proposal.publicationStatus,

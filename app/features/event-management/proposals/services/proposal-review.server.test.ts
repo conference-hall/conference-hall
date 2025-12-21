@@ -52,6 +52,7 @@ describe('ProposalReview', () => {
 
       expect(review).toEqual({
         id: proposal.id,
+        proposalNumber: proposal.proposalNumber,
         title: proposal.title,
         abstract: proposal.abstract,
         references: proposal.references,

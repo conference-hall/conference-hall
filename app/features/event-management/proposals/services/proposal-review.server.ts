@@ -51,6 +51,7 @@ export class ProposalReview extends EventAuthorization {
 
     return {
       id: proposal.id,
+      proposalNumber: proposal.proposalNumber,
       title: proposal.title,
       abstract: proposal.abstract,
       references: proposal.references,
