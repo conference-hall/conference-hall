@@ -107,7 +107,7 @@ function SelectPanelContent({
           value={query}
         >
           {isLoading ? (
-            <div className="self-center mx-2">
+            <div className="mx-2 self-center">
               <LoadingIcon className="h-4 w-4 shrink-0" aria-hidden />
             </div>
           ) : null}
@@ -115,7 +115,7 @@ function SelectPanelContent({
       </ComboboxInput>
 
       {displayedOptions.length > 0 ? (
-        <ComboboxOptions className={cx('max-h-48 py-2 overflow-y-auto', { 'pb-0': !footer })} static>
+        <ComboboxOptions className={cx('max-h-48 overflow-y-auto py-2', { 'pb-0': !footer })} static>
           {displayedOptions.map((option) => {
             const isSelected = isOptionSelected(option);
 
@@ -136,7 +136,7 @@ function SelectPanelContent({
                       aria-hidden="true"
                       tabIndex={-1}
                       disabled={isSelected && selected.length === 1 && !allowEmpty}
-                      className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600  disabled:bg-gray-300 focus:ring-0 outline-none"
+                      className="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 outline-none focus:ring-0 disabled:bg-gray-300"
                     />
                   ) : (
                     <input
@@ -147,7 +147,7 @@ function SelectPanelContent({
                       aria-hidden="true"
                       tabIndex={-1}
                       disabled={isSelected && selected.length === 1 && !allowEmpty}
-                      className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 disabled:bg-gray-300 focus:ring-0 outline-none"
+                      className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 outline-none focus:ring-0 disabled:bg-gray-300"
                     />
                   )}
 
@@ -261,7 +261,7 @@ export function SelectPanel({
       <Popover>
         {({ close }) => (
           <>
-            <PopoverButton className="w-full cursor-pointer rounded-sm focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600">
+            <PopoverButton className="w-full cursor-pointer rounded-sm focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2">
               {children}
             </PopoverButton>
             <PopoverPanel className={cx('mt-2', menuItems('w-(--button-width)'))} anchor="bottom">

@@ -29,7 +29,7 @@ export function SpeakerDrawer({ team, event, speaker, canEditSpeaker, children }
         type="button"
         aria-label={t('speaker.view-profile', { name: speaker.name })}
         onClick={() => setOpen(true)}
-        className="cursor-pointer group rounded-full focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600"
+        className="group cursor-pointer rounded-full focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2"
       >
         {children}
       </button>
@@ -61,7 +61,7 @@ function DrawerHeading({ team, event, speaker, canEditSpeaker }: SpeakerDataProp
   const { t } = useTranslation();
 
   return (
-    <div className="flex items-start justify-between gap-4 mr-10">
+    <div className="mr-10 flex items-start justify-between gap-4">
       <SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />
 
       <div className="flex items-center gap-2">

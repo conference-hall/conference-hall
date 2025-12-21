@@ -137,13 +137,13 @@ function ScheduleDay({
     <div className={cx('w-full bg-white', { 'select-none': newSession !== null })}>
       <table className="w-full table-fixed border-separate border-spacing-0">
         {/* header */}
-        <thead className="sticky top-[64px] bg-white z-30 shadow-sm">
+        <thead className="sticky top-[64px] z-30 bg-white shadow-sm">
           {displayMultipleDays && (
             <tr className="h-8">
               {/* gutter */}
               {dayIndex === 0 && <th className="w-12 border-b" />}
               {/* day */}
-              <th className="border-b text-sm font-semibold" colSpan={tracks.length}>
+              <th className="border-b font-semibold text-sm" colSpan={tracks.length}>
                 {formatDate(day, { format: 'long', locale })}
               </th>
             </tr>
@@ -151,13 +151,13 @@ function ScheduleDay({
           <tr className={cx('divide-x', { 'h-12': !displayMultipleDays, 'h-8': displayMultipleDays })}>
             {/* gutter */}
             {dayIndex === 0 && (
-              <th className="w-12 text-xs font-normal text-center bg-white text-gray-400">
+              <th className="w-12 bg-white text-center font-normal text-gray-400 text-xs">
                 {getGMTOffset(timezone, locale)}
               </th>
             )}
             {/* tracks header */}
             {tracks.map((track) => (
-              <th key={track.id} className="px-2 text-sm font-semibold text-gray-900">
+              <th key={track.id} className="px-2 font-semibold text-gray-900 text-sm">
                 <div className="truncate" title={track.name}>
                   {track.name}
                 </div>
@@ -186,7 +186,7 @@ function ScheduleDay({
               <tr key={`${startHour}-${endHour}`} className="divide-x">
                 {/* gutter */}
                 {dayIndex === 0 && (
-                  <td className="relative whitespace-nowrap text-xs text-gray-500">
+                  <td className="relative whitespace-nowrap text-gray-500 text-xs">
                     <time className="absolute -top-2 right-2" dateTime={startHour}>
                       {startHour}
                     </time>
@@ -311,7 +311,7 @@ function Timeslot({
         'z-10': !session,
         'bg-blue-200': droppable.isDropTarget,
         'hover:bg-gray-50': !session && !newSession,
-        "before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:border-t":
+        "before:absolute before:top-0 before:right-0 before:left-0 before:border-t before:content-['']":
           isFirstTimeslot && !droppable.isDropTarget && !isTimeSlotIncluded(timeslot, newSession?.timeslot),
       })}
     >
@@ -400,7 +400,7 @@ function SessionWrapper({ session, renderSession, interval, zoomLevel }: Session
       <div
         ref={movable.ref}
         className={cx('absolute z-20 overflow-hidden', {
-          'ring-1 ring-blue-600 rounded-md': droppable.isDropTarget,
+          'rounded-md ring-1 ring-blue-600': droppable.isDropTarget,
           'shadow-lg': movable.isDragging,
         })}
         style={{ top: '0px', left: '1px', right: '1px', zIndex: movable.isDragging ? '40' : undefined }}
@@ -414,7 +414,7 @@ function SessionWrapper({ session, renderSession, interval, zoomLevel }: Session
       <div
         ref={resizable.ref}
         style={{ top: `${height}px` }}
-        className="absolute -bottom-1 h-1 w-full cursor-ns-resize z-40"
+        className="absolute -bottom-1 z-40 h-1 w-full cursor-ns-resize"
       />
     </>
   );

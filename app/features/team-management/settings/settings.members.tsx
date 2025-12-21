@@ -56,7 +56,7 @@ export default function TeamMembersRoute({ loaderData }: Route.ComponentProps) {
 
   return (
     <Card as="section">
-      <Card.Title className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+      <Card.Title className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <H3 size="base">
             {t('team.settings.members.heading')} ({statistics.total})
@@ -84,7 +84,7 @@ export default function TeamMembersRoute({ loaderData }: Route.ComponentProps) {
                     subtitle={t(`common.member.role.label.${member.role}`)}
                   />
                   {permissions.canManageTeamMembers && user?.id !== member.id && (
-                    <div className="flex w-full gap-2 mt-4 sm:mt-0 sm:w-auto">
+                    <div className="mt-4 flex w-full gap-2 sm:mt-0 sm:w-auto">
                       <ChangeRoleButton memberId={member.id} memberName={member.name} memberRole={member.role} />
                       <RemoveButton memberId={member.id} memberName={member.name} />
                     </div>

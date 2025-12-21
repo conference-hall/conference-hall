@@ -55,9 +55,9 @@ export function TalkSection({
   return (
     <Card as="section">
       <div
-        className={cx('gap-4 p-3 pl-6 border-b border-b-gray-200', {
-          'flex flex-col sm:flex-row justify-between sm:items-center': Boolean(actions),
-          'flex justify-between items-center': Boolean(action),
+        className={cx('gap-4 border-b border-b-gray-200 p-3 pl-6', {
+          'flex flex-col justify-between sm:flex-row sm:items-center': Boolean(actions),
+          'flex items-center justify-between': Boolean(action),
         })}
       >
         <H1 size="base">{talk.title}</H1>
@@ -65,11 +65,11 @@ export function TalkSection({
         {action ? (
           action
         ) : actions ? (
-          <div className="flex flex-row sm:justify-between items-center gap-3">{actions}</div>
+          <div className="flex flex-row items-center gap-3 sm:justify-between">{actions}</div>
         ) : null}
       </div>
 
-      <div className="py-4 px-6 flex gap-4">
+      <div className="flex gap-4 px-6 py-4">
         {showSpeakers ? (
           <Speakers
             speakers={talk.speakers}
@@ -106,7 +106,7 @@ export function TalkSection({
         </div>
       </div>
 
-      <dl className="p-6 pt-2 flex flex-col gap-8">
+      <dl className="flex flex-col gap-8 p-6 pt-2">
         <div>
           <dt className="sr-only">{t('talk.abstract')}</dt>
           <Markdown as="dd" className="text-gray-700">
@@ -116,8 +116,8 @@ export function TalkSection({
 
         {showFormats && talk.formats && talk.formats?.length > 0 && (
           <div>
-            <dt className="text-sm font-medium leading-6 text-gray-900">{t('common.formats')}</dt>
-            <dd className="text-sm leading-6 text-gray-700">
+            <dt className="font-medium text-gray-900 text-sm leading-6">{t('common.formats')}</dt>
+            <dd className="text-gray-700 text-sm leading-6">
               {talk.formats?.map(({ id, name }) => (
                 <p key={id}>{name}</p>
               ))}
@@ -127,8 +127,8 @@ export function TalkSection({
 
         {showCategories && talk.categories && talk.categories?.length > 0 && (
           <div>
-            <dt className="text-sm font-medium leading-6 text-gray-900">{t('common.categories')}</dt>
-            <dd className="text-sm leading-6 text-gray-700">
+            <dt className="font-medium text-gray-900 text-sm leading-6">{t('common.categories')}</dt>
+            <dd className="text-gray-700 text-sm leading-6">
               {talk.categories?.map(({ id, name }) => (
                 <p key={id}>{name}</p>
               ))}
@@ -136,7 +136,7 @@ export function TalkSection({
           </div>
         )}
 
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-wrap gap-2">
           {talk.level && <Badge color="indigo">{t(`common.level.${talk.level}`)}</Badge>}
           {talk.languages.map((lang) => (
             <Badge key={lang}>{`${t(`common.languages.${lang}.flag`)} ${t(`common.languages.${lang}.label`)}`}</Badge>

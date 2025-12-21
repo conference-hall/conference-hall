@@ -45,7 +45,7 @@ export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.Co
 
       <Card>
         <Card.Content>
-          <Form method="POST" id={formId} className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <Form method="POST" id={formId} className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             {currentEvent.codeOfConductUrl ? (
               <Checkbox name="cod-agreement" value="agree" onChange={() => setAcceptCod(!acceptedCod)}>
                 <Trans
@@ -57,7 +57,7 @@ export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.Co
               <div />
             )}
 
-            <div className="flex flex-row justify-end items-center gap-4">
+            <div className="flex flex-row items-center justify-end gap-4">
               <Button to={previousPath} variant="secondary">
                 {t('common.go-back')}
               </Button>

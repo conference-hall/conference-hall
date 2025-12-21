@@ -42,12 +42,12 @@ export default function MultiSelect({ name, label, placeholder, options, default
 
   return (
     <Field className={className}>
-      <Label className="block text-sm font-medium leading-6 text-gray-900">{label}</Label>
+      <Label className="block font-medium text-gray-900 text-sm leading-6">{label}</Label>
 
       <Combobox name={name} value={selected} onChange={handleSelect} multiple immediate>
         <div className="relative mt-2">
-          <div className="relative w-full cursor-default rounded-md border border-gray-300 bg-white min-h-0 py-1 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
-            <ul className="flex items-center w-full flex-wrap gap-1 pl-1.5 pr-7 py-[1px]">
+          <div className="relative min-h-0 w-full cursor-default rounded-md border border-gray-300 bg-white py-1 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
+            <ul className="flex w-full flex-wrap items-center gap-1 py-[1px] pr-7 pl-1.5">
               {selectedOptions.map((option) => (
                 <li key={option?.value} className="flex items-center" aria-label={option?.label}>
                   <Badge onClose={() => handleRemove(option?.value || '')} closeLabel={option?.label}>
@@ -57,7 +57,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
               ))}
               <li className="flex-1">
                 <ComboboxInput
-                  className="border-0 w-full min-w-24 py-0 px-1 text-sm leading-6 text-gray-900 placeholder:text-gray-400 focus:ring-0 outline-none"
+                  className="w-full min-w-24 border-0 px-1 py-0 text-gray-900 text-sm leading-6 outline-none placeholder:text-gray-400 focus:ring-0"
                   placeholder={selected.length === 0 ? placeholder : t('common.search.placeholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -70,12 +70,12 @@ export default function MultiSelect({ name, label, placeholder, options, default
             </ComboboxButton>
           </div>
 
-          <ComboboxOptions className="z-40 absolute w-full max-h-64 mt-1 text-sm rounded-xl bg-white shadow-lg ring-1 ring-black/5 py-2 focus:outline-hidden overflow-auto">
+          <ComboboxOptions className="absolute z-40 mt-1 max-h-64 w-full overflow-auto rounded-xl bg-white py-2 text-sm shadow-lg ring-1 ring-black/5 focus:outline-hidden">
             {filteredOptions.map((option) => (
               <ComboboxOption
                 key={option.value}
                 value={option.value}
-                className="relative mx-2 px-2 py-1.5 rounded-lg cursor-default select-none text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+                className="relative mx-2 cursor-default select-none rounded-lg px-2 py-1.5 text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
               >
                 {({ selected }) => (
                   <>
@@ -84,7 +84,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
                     </span>
 
                     {selected ? (
-                      <span className="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600">
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
                       </span>
                     ) : null}
@@ -94,7 +94,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
             ))}
 
             {filteredOptions.length === 0 && (
-              <div className="py-2 px-3 text-gray-500 text-sm">{t('common.no-results')}</div>
+              <div className="px-3 py-2 text-gray-500 text-sm">{t('common.no-results')}</div>
             )}
           </ComboboxOptions>
         </div>

@@ -10,7 +10,7 @@ export function NoData({ subtitle, className }: Props) {
   return (
     <div
       className={cx(
-        'flex min-h-60 items-center justify-center rounded-md border border-dashed border-gray-200 p-4',
+        'flex min-h-60 items-center justify-center rounded-md border border-gray-200 border-dashed p-4',
         className,
       )}
     >

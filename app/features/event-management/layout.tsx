@@ -71,7 +71,7 @@ function EventTabs() {
   const isSpeakersRoute = Boolean(useMatch('/team/:team/:event/speakers/*'));
 
   return (
-    <Page.NavHeader className="flex items-center space-between">
+    <Page.NavHeader className="space-between flex items-center">
       <NavTabs py={4} className="grow" scrollable>
         <NavTab
           to={{ pathname: href('/team/:team/:event/overview', { team: team.slug, event: event.slug }) }}

@@ -62,7 +62,7 @@ export function UserReviewNote({ feeling, note }: Props) {
             </Text>
             {feeling === 'NEUTRAL' ? (
               <UserCircleIcon
-                className="size-5 text-gray-700 shrink-0"
+                className="size-5 shrink-0 text-gray-700"
                 aria-label={t('common.review.user', { note: formattedNote })}
               />
             ) : (

@@ -19,7 +19,7 @@ export default function OverviewRoute({ params }: Route.ComponentProps) {
     <Page>
       <h1 className="sr-only">{t('event-management.overview.heading')}</h1>
       <div className="space-y-4 lg:space-y-6">
-        <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
           <CfpStatusCard
             team={params.team}
             event={params.event}
@@ -46,7 +46,7 @@ export default function OverviewRoute({ params }: Route.ComponentProps) {
         </div>
 
         <div>
-          <Card className="pb-6 space-y-8">
+          <Card className="space-y-8 pb-6">
             <DashboardTabs team={params.team} event={params.event} />
             <Outlet />
           </Card>

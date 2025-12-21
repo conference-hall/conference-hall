@@ -94,7 +94,7 @@ export default function ProposalTagsRoute({ loaderData }: Route.ComponentProps) 
 
           <List.Content aria-label={t('event-management.settings.tags.list.label')}>
             {tags.map((tag) => (
-              <List.Row key={tag.id} className="p-4 flex justify-between">
+              <List.Row key={tag.id} className="flex justify-between p-4">
                 <Tag tag={tag} />
 
                 <div className="flex gap-2">

@@ -57,7 +57,7 @@ type SpeakerPillProps = { speaker: Pick<SpeakerProps, 'name' | 'picture'>; class
 
 export function SpeakerPill({ speaker, className }: SpeakerPillProps) {
   return (
-    <span className={cx('flex items-center gap-2  p-1 pr-3 rounded-full border border-gray-200', className)}>
+    <span className={cx('flex items-center gap-2 rounded-full border border-gray-200 p-1 pr-3', className)}>
       <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
       <Text weight="medium" size="xs" variant="secondary" truncate>
         {speaker.name}
@@ -116,9 +116,9 @@ function AddCoSpeakerButton({ invitationLink }: AddCoSpeakerProps) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1 hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200 cursor-pointer"
+        className="flex cursor-pointer items-center gap-1 rounded-full border border-gray-200 p-1 pr-3 hover:bg-gray-100"
       >
-        <PlusIcon className="h-6 w-6 text-gray-400 shrink-0" aria-hidden />
+        <PlusIcon className="h-6 w-6 shrink-0 text-gray-400" aria-hidden />
         <Text variant="secondary" size="xs">
           {t('speaker.add')}
         </Text>

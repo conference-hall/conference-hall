@@ -65,7 +65,7 @@ export default function SpeakerTalksRoute({ loaderData: talks }: Route.Component
 
           <List.Content aria-label={t('talk.library.list')}>
             {talks.map((talk) => (
-              <List.RowLink key={talk.id} to={talk.id} className="flex justify-between items-center gap-4">
+              <List.RowLink key={talk.id} to={talk.id} className="flex items-center justify-between gap-4">
                 <div className="min-w-0">
                   <Text size="s" weight="medium" truncate>
                     {talk.title}

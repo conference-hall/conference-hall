@@ -48,14 +48,14 @@ export default function Signin({ loaderData }: Route.ComponentProps) {
 
   return (
     <Page>
-      <header className="flex flex-col items-center pt-8 sm:pt-16 sm:mx-auto sm:w-full sm:max-w-md">
+      <header className="flex flex-col items-center pt-8 sm:mx-auto sm:w-full sm:max-w-md sm:pt-16">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
-        <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 className="mt-6 text-center font-bold text-2xl text-gray-900 leading-9 tracking-tight">
           {t('auth.signin.heading')}
         </h2>
       </header>
 
-      <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
+      <Card className="mt-10 space-y-8 p-6 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12">
         <EmailPasswordSignin redirectTo={redirectTo} defaultEmail={defaultEmail} captchaSiteKey={captchaSiteKey} />
 
         <DividerWithLabel label={t('common.or')} />
@@ -69,7 +69,7 @@ export default function Signin({ loaderData }: Route.ComponentProps) {
         ) : null}
       </Card>
 
-      <footer className="flex justify-center gap-2 my-8">
+      <footer className="my-8 flex justify-center gap-2">
         <Subtitle>{t('auth.signin.no-account')}</Subtitle>
         <Link to={{ pathname: '/auth/signup', search: `${searchParams}` }} weight="semibold">
           {t('auth.common.sign-up')}

@@ -30,7 +30,7 @@ export default function AdminUsersRoute({ loaderData }: Route.ComponentProps) {
       <H1 srOnly>{t('admin.nav.users')}</H1>
 
       <List>
-        <List.Header className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
+        <List.Header className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <Text weight="semibold">{t('admin.users.total', { count: statistics.total })}</Text>
           <Form method="GET">
             <Input
@@ -46,7 +46,7 @@ export default function AdminUsersRoute({ loaderData }: Route.ComponentProps) {
 
         <List.Content aria-label={t('admin.nav.users')}>
           {results.map((user) => (
-            <List.RowLink key={user.id} to={user.id} className="flex justify-between items-center gap-4">
+            <List.RowLink key={user.id} to={user.id} className="flex items-center justify-between gap-4">
               <div className="min-w-0">
                 <Text size="s" weight="medium" truncate>
                   {user.name}

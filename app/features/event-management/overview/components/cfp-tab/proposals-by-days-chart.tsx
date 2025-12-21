@@ -25,7 +25,7 @@ export function ProposalsByDayChart({ data, className }: ProposalsByDayChartProp
 
   return (
     <Card className={className}>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center justify-between">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <H2>{t('event-management.overview.submissions-by-day.heading')}</H2>
         <ChartSelector selected={type} onSelect={setType} />
       </div>
@@ -141,12 +141,12 @@ function CustomTooltip({ payload }: TooltipContentProps<ValueType, NameType>) {
   const date = payload?.[0]?.payload?.date;
 
   return (
-    <div className="border border-gray-200 bg-white text-sm shadow-sm rounded-md" aria-hidden="true">
+    <div className="rounded-md border border-gray-200 bg-white text-sm shadow-sm" aria-hidden="true">
       <div className="p-2 px-3">
         <Text weight="medium">{date ? formatDay(date, { format: 'long', locale }) : t('common.unknown')}</Text>
       </div>
       <Divider />
-      <div className="flex flex-row items-center space-between p-2 px-3 space-x-16">
+      <div className="space-between flex flex-row items-center space-x-16 p-2 px-3">
         <div className="flex items-center space-x-2">
           <span className="h-0.5 w-3 bg-indigo-500" aria-hidden={true} />
           <Text variant="secondary">{t('common.proposals')}</Text>
@@ -166,12 +166,12 @@ type ChartSelectorProps = { selected: ChartType; onSelect: (value: ChartType) =>
 function ChartSelector({ selected, onSelect }: ChartSelectorProps) {
   const { t } = useTranslation();
   return (
-    <div className="flex gap-1  w-fit rounded-lg bg-slate-100 p-1 ring-1 ring-inset ring-gray-200">
+    <div className="flex w-fit gap-1 rounded-lg bg-slate-100 p-1 ring-1 ring-gray-200 ring-inset">
       <button
         type="button"
         onClick={() => onSelect('count')}
         className={cx(
-          'flex items-center rounded-md py-1 px-3 text-sm font-semibold outline-hidden cursor-pointer focus-within:ring-2 focus-within:ring-indigo-500',
+          'flex cursor-pointer items-center rounded-md px-3 py-1 font-semibold text-sm outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
           { 'bg-white shadow-sm': selected === 'count' },
         )}
       >
@@ -181,7 +181,7 @@ function ChartSelector({ selected, onSelect }: ChartSelectorProps) {
         type="button"
         onClick={() => onSelect('cumulative')}
         className={cx(
-          'flex items-center rounded-md py-1 px-3 text-sm font-semibold outline-hidden cursor-pointer focus-within:ring-2 focus-within:ring-indigo-500',
+          'flex cursor-pointer items-center rounded-md px-3 py-1 font-semibold text-sm outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
           { 'bg-white shadow-sm': selected === 'cumulative' },
         )}
       >

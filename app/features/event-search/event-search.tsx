@@ -36,14 +36,14 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
     <>
       <NavbarEvent />
 
-      <div className={cx(BG_COLOR, 'shadow-sm p-4 pt-0 lg:pb-16 lg:pt-10')}>
+      <div className={cx(BG_COLOR, 'p-4 pt-0 shadow-sm lg:pt-10 lg:pb-16')}>
         <div className="hidden lg:mb-8 lg:block">
           <H1 size="2xl" weight="bold" variant="light" align="center">
             {t('home.title')}
           </H1>
         </div>
-        <div className="flex flex-col w-full items-center">
-          <div className="flex flex-col gap-2 w-full lg:w-6/12 lg:max-w-5xl items-end">
+        <div className="flex w-full flex-col items-center">
+          <div className="flex w-full flex-col items-end gap-2 lg:w-6/12 lg:max-w-5xl">
             <SearchEventsInput filters={filters} />
 
             {!user?.hasTeamAccess ? (
@@ -65,7 +65,7 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
           <EmptyState icon={FaceFrownIcon} label={t('common.no-results')} />
         ) : (
           <div className="flex flex-col items-center space-y-8">
-            <ul aria-label={t('home.results')} className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 w-full">
+            <ul aria-label={t('home.results')} className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
               {results.map((event) => (
                 <EventCardLink
                   key={event.slug}
@@ -84,7 +84,7 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
               ))}
             </ul>
 
-            <div className="flex justify-between w-full">
+            <div className="flex w-full justify-between">
               <Pagination {...pagination} />
               <PaginationMobile {...pagination} />
             </div>

@@ -48,18 +48,18 @@ export default function EmailVerificationLink() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex h-screen items-center justify-center">
         <LoadingIcon className="size-10" />
       </div>
     );
   }
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex h-screen items-center justify-center">
       <EmptyState
         label={error}
         icon={ExclamationCircleIcon}
-        className="flex flex-col items-center pt-8 sm:pt-16 sm:mx-auto sm:w-full sm:max-w-md"
+        className="flex flex-col items-center pt-8 sm:mx-auto sm:w-full sm:max-w-md sm:pt-16"
       >
         <Link to="/auth/login" weight="semibold">
           {t('auth.common.go-back-login')}

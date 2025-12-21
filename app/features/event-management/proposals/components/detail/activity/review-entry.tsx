@@ -25,17 +25,17 @@ export function ReviewEntry({ item }: { item: FeedItem }) {
   return (
     <ActivityFeed.Entry
       marker={<ReviewIcon feeling={item.feeling} />}
-      className="flex flex-col sm:flex-row gap-1 p-1"
+      className="flex flex-col gap-1 p-1 sm:flex-row"
       withLine
     >
-      <p className="text-xs text-gray-500">
+      <p className="text-gray-500 text-xs">
         <Trans
           i18nKey={review.i18nKey}
           values={{ name: item.user, count: item.note }}
           components={[<span key="1" className="font-medium text-gray-900" />, <strong key="2" />]}
         />
       </p>
-      <TimeDistance date={item.timestamp} className="block text-xs text-gray-500" />
+      <TimeDistance date={item.timestamp} className="block text-gray-500 text-xs" />
     </ActivityFeed.Entry>
   );
 }
@@ -44,7 +44,7 @@ function ReviewIcon({ feeling }: { feeling: ReviewFeeling }) {
   const review = ReviewTypes[feeling];
 
   return (
-    <div className={cx('relative flex h-6 w-6 flex-none items-center justify-center rounded-full z-10', review.color)}>
+    <div className={cx('relative z-10 flex h-6 w-6 flex-none items-center justify-center rounded-full', review.color)}>
       <review.Icon className="h-4 w-4 text-white" aria-hidden="true" />
     </div>
   );

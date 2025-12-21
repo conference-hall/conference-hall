@@ -53,12 +53,12 @@ export function ConversationDrawer({ messages, recipients = [], children, canMan
 
       <SlideOver title={DrawerHeader} open={open} onClose={() => setOpen(false)} withBorder={false} size="l">
         {optimisticMessages.length === 0 ? (
-          <SlideOver.Content className="flex flex-col items-center justify-center gap-6 text-gray-400 border-t border-t-gray-200">
+          <SlideOver.Content className="flex flex-col items-center justify-center gap-6 border-t border-t-gray-200 text-gray-400">
             <ChatBubbleLeftRightIcon className="h-16 w-16" aria-hidden />
             <Subtitle weight="semibold">{t('common.conversation.empty-state', { count: recipients.length })}</Subtitle>
           </SlideOver.Content>
         ) : (
-          <SlideOver.Content as="ul" className="flex flex-col-reverse gap-6 pb-6 border-t border-t-gray-200">
+          <SlideOver.Content as="ul" className="flex flex-col-reverse gap-6 border-t border-t-gray-200 pb-6">
             {[...optimisticMessages].reverse().map((message) => (
               <li key={message.id} className="flex gap-4">
                 <Avatar picture={message.sender.picture} name={message.sender.name} size="s" className="mt-1" />

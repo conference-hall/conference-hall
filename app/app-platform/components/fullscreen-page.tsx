@@ -9,17 +9,17 @@ type Props = { children: ReactNode; compact?: boolean; className?: string };
 
 export function FullscreenPage({ children, compact, className }: Props) {
   return (
-    <div className="relative grid grid-cols-1 lg:grid-cols-3 h-screen w-screen overflow-hidden">
+    <div className="relative grid h-screen w-screen grid-cols-1 overflow-hidden lg:grid-cols-3">
       <NavbarFullscreen />
 
       <div
-        className={cx('flex flex-col space-between col-span-2 h-screen w-full px-4 md:px-8 lg:px-32 overflow-auto', {
+        className={cx('space-between col-span-2 flex h-screen w-full flex-col overflow-auto px-4 md:px-8 lg:px-32', {
           'pt-16 md:pt-36': !compact,
           'pt-16 md:pt-24': compact,
         })}
       >
         <main
-          className={cx('grow max-w-4xl', { 'space-y-8 md:space-y-16': !compact, 'space-y-8': compact }, className)}
+          className={cx('max-w-4xl grow', { 'space-y-8 md:space-y-16': !compact, 'space-y-8': compact }, className)}
         >
           {children}
         </main>
@@ -27,8 +27,8 @@ export function FullscreenPage({ children, compact, className }: Props) {
         <Footer />
       </div>
 
-      <div className="bg-linear-to-b from-gray-800 to-slate-700 h-screen hidden lg:block pt-16 text-white relative">
-        <div className="flex flex-row justify-center items-end h-full">
+      <div className="relative hidden h-screen bg-linear-to-b from-gray-800 to-slate-700 pt-16 text-white lg:block">
+        <div className="flex h-full flex-row items-end justify-center">
           <ConferenceHallLogo className="-mr-60 -mb-16 -rotate-12 text-black/10" width="480px" height="480px" />
         </div>
       </div>

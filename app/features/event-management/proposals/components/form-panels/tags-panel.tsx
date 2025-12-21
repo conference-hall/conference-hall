@@ -65,7 +65,7 @@ export function TagsPanel({
         onChange={handleChange}
         footer={showAction ? <Action team={team} event={event} /> : null}
       >
-        <div className="flex items-center justify-between group">
+        <div className="group flex items-center justify-between">
           <H2 size="s" className="group-hover:text-indigo-600">
             {t('common.tags')}
           </H2>

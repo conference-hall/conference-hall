@@ -104,7 +104,7 @@ type ProviderItemProps = {
 
 function ProviderItem({ icon: Icon, label, email, loading, children }: ProviderItemProps) {
   return (
-    <List.Row className="flex-col sm:flex-row justify-between gap-4 p-4">
+    <List.Row className="flex-col justify-between gap-4 p-4 sm:flex-row">
       <div className="flex items-center gap-4">
         <Icon className="size-5 shrink-0" aria-hidden="true" />
         <div>

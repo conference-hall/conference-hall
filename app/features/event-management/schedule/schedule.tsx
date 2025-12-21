@@ -90,7 +90,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
 
   if (settings.displayedDays.length === 0) {
     return (
-      <main className="px-8 my-8 mx-auto max-w-7xl">
+      <main className="mx-auto my-8 max-w-7xl px-8">
         <EmptyState icon={CalendarDaysIcon} label={t('event-management.schedule.empty')}>
           <Button to=".." relative="path">
             {t('event-management.schedule.go-to')}
@@ -101,10 +101,10 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
   }
 
   return (
-    <main className={cx({ 'px-8 my-8 mx-auto max-w-7xl': !isFullscreen })}>
+    <main className={cx({ 'mx-auto my-8 max-w-7xl px-8': !isFullscreen })}>
       <h1 className="sr-only">{schedule.name}</h1>
 
-      <div className={cx({ 'border border-gray-200 rounded-t-lg': !isFullscreen })}>
+      <div className={cx({ 'rounded-t-lg border border-gray-200': !isFullscreen })}>
         <ScheduleHeader
           scheduleDays={settings.scheduleDays}
           displayedDays={settings.displayedDays}

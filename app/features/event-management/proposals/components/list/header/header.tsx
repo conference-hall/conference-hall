@@ -21,7 +21,7 @@ export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, s
 
   return (
     <List.Header className="sm:h-16">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center ">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center">
         {permissions.canChangeProposalStatus ? (
           <Checkbox aria-label={t('event-management.proposals.list.check-item')} ref={checkboxRef}>
             {totalSelected === 0

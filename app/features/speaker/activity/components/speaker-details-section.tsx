@@ -20,7 +20,7 @@ export function SpeakerDetailsSection({ email, bio, location, socialLinks }: Pro
   const { t } = useTranslation();
 
   return (
-    <div className="hidden sm:block space-y-6">
+    <div className="hidden space-y-6 sm:block">
       <Card className="divide-y divide-gray-200">
         <div className="p-6">
           {bio ? (
@@ -34,7 +34,7 @@ export function SpeakerDetailsSection({ email, bio, location, socialLinks }: Pro
           <SpeakerLinks email={email} location={location} socialLinks={socialLinks} />
         </div>
 
-        <div className="px-6 py-4 flex items-center gap-3">
+        <div className="flex items-center gap-3 px-6 py-4">
           <IconLabel icon={LockClosedIcon}>{t('speaker.activity.visibility')}</IconLabel>
         </div>
 

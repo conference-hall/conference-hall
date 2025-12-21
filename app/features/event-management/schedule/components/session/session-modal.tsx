@@ -34,11 +34,11 @@ export function SessionModal({
     <Dialog className="relative z-40" open onClose={handleClose}>
       <Background />
 
-      <div className="fixed inset-0 z-40 overflow-y-auto h-full">
-        <div className="flex min-h-full relative items-end justify-center sm:items-center h-full p-4 overflow-hidden">
+      <div className="fixed inset-0 z-40 h-full overflow-y-auto">
+        <div className="relative flex h-full min-h-full items-end justify-center overflow-hidden p-4 sm:items-center">
           <DialogPanel
             as="div"
-            className="relative transform overflow-hidden rounded-lg bg-white text:left shadow-xl transition-all w-full max-w-2xl"
+            className="text:left relative w-full max-w-2xl transform overflow-hidden rounded-lg bg-white shadow-xl transition-all"
           >
             <DialogTitle className="sr-only">{t('event-management.schedule.edit-session.heading')}</DialogTitle>
 

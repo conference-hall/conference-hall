@@ -45,7 +45,7 @@ export default function PreferencesRoute() {
   }));
 
   return (
-    <div className="space-y-4 lg:space-y-6 ">
+    <div className="space-y-4 lg:space-y-6">
       <H1 srOnly>{t('settings.preferences')}</H1>
 
       <Card as="section">

@@ -42,7 +42,7 @@ export default function ProfileRoute({ actionData: errors }: Route.ComponentProp
   const { name, picture, bio, company, location, references, socialLinks } = useSpeakerProfile();
 
   return (
-    <div className="space-y-4 lg:space-y-6 ">
+    <div className="space-y-4 lg:space-y-6">
       <H1 srOnly>{t('settings.profile.heading')}</H1>
 
       <Card as="section">

@@ -60,17 +60,17 @@ export default function DonutCard({
               colors={colors}
             />
             <div>
-              <p className="mt-4 flex items-center justify-between text-xs text-gray-500">
+              <p className="mt-4 flex items-center justify-between text-gray-500 text-xs">
                 <span>{categoryLabel}</span>
                 <span>{amountLabel}</span>
               </p>
-              <ul className="mt-2 divide-y divide-gray-200 text-sm text-gray-500">
+              <ul className="mt-2 divide-y divide-gray-200 text-gray-500 text-sm">
                 {data.map((item) => (
                   <li key={item.name} className="relative flex items-center justify-between py-2">
                     <div className="flex items-center space-x-2.5 truncate">
                       <span className={cx(item.colorLegend, 'size-2.5 shrink-0 rounded-xs')} aria-hidden={true} />
                       {item.to ? (
-                        <Link to={item.to} className="underline-offset-2 hover:underline truncate">
+                        <Link to={item.to} className="truncate underline-offset-2 hover:underline">
                           {item.name}
                         </Link>
                       ) : (
@@ -78,7 +78,7 @@ export default function DonutCard({
                       )}
                     </div>
                     <p className="flex items-center space-x-2">
-                      <span className="font-medium tabular-nums text-gray-900">{item.amount}</span>
+                      <span className="font-medium text-gray-900 tabular-nums">{item.amount}</span>
                     </p>
                   </li>
                 ))}

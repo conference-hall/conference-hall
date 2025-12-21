@@ -47,8 +47,8 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
         />
 
         <List>
-          <List.Header className="flex flex-col gap-2 items-start sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-baseline gap-2 grow">
+          <List.Header className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex grow items-baseline gap-2">
               <Text weight="medium">
                 {t('event-management.settings.survey.questions', { count: questions.length })}
               </Text>
@@ -75,9 +75,9 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
             {questions.map((question, index) => (
               <List.Row
                 key={question.id}
-                className="p-4 flex flex-col items-start gap-4 sm:flex-row sm:justify-between"
+                className="flex flex-col items-start gap-4 p-4 sm:flex-row sm:justify-between"
               >
-                <div className="space-y-0.5 grow">
+                <div className="grow space-y-0.5">
                   <div className="flex gap-2">
                     <Text>
                       {question.label}

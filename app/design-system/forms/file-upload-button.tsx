@@ -27,7 +27,7 @@ export function ButtonFileUpload({
         <Input ref={ref} id={name} name={name} type="file" className="sr-only" {...rest} />
         {children}
       </Label>
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-red-600 text-sm">{error}</p>}
     </>
   );
 }

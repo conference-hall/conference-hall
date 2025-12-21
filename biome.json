@@ -44,6 +44,12 @@
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "warn",
+          "options": { "functions": ["cx", "cva"] }
+        }
       }
     }
   },

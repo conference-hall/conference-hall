@@ -68,20 +68,20 @@ export default function ResetPassword() {
 
   return (
     <Page>
-      <header className="flex flex-col items-center pt-8 sm:pt-16 sm:mx-auto sm:w-full sm:max-w-md">
+      <header className="flex flex-col items-center pt-8 sm:mx-auto sm:w-full sm:max-w-md sm:pt-16">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
-        <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 className="mt-6 text-center font-bold text-2xl text-gray-900 leading-9 tracking-tight">
           {t('auth.reset-password.heading')}
         </h2>
       </header>
 
-      <Card className="p-6 mt-10 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12 space-y-8">
+      <Card className="mt-10 space-y-8 p-6 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12">
         <Subtitle>{t('auth.reset-password.description')}</Subtitle>
 
         <Form className="space-y-4" onSubmit={resetPassword}>
           <PasswordInput value={password} onChange={setPassword} isNewPassword error={fieldErrors?.password} />
 
-          <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
+          <Button type="submit" variant="primary" loading={loading} className="mt-2 w-full">
             {t('auth.reset-password.submit')}
           </Button>
 
@@ -93,7 +93,7 @@ export default function ResetPassword() {
         </Form>
       </Card>
 
-      <footer className="text-center my-8">
+      <footer className="my-8 text-center">
         <Link to="/auth/login" weight="semibold">
           {t('auth.common.go-back-login')}
         </Link>

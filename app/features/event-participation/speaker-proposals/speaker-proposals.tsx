@@ -42,7 +42,7 @@ export default function EventSpeakerProposalsRoute({ loaderData: proposals }: Ro
         <List>
           <List.Content aria-label={t('event.proposals.list')}>
             {proposals.map((proposal) => (
-              <List.RowLink key={proposal.id} to={proposal.id} className="flex justify-between items-center gap-4">
+              <List.RowLink key={proposal.id} to={proposal.id} className="flex items-center justify-between gap-4">
                 <div className="min-w-0">
                   <Text size="s" weight="medium" truncate>
                     {proposal.title}

@@ -37,7 +37,7 @@ export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, noBorder = false,
     <Tag
       className={cx(
         'flex flex-col bg-white',
-        { 'shadow-xs border border-gray-200': !noBorder },
+        { 'border border-gray-200 shadow-xs': !noBorder },
         ROUNDED[rounded],
         PADDING[p],
         className,
@@ -115,11 +115,11 @@ type CardDisclosureProps = {
 function CardDisclosure({ title, as, children, defaultOpen, className }: CardDisclosureProps) {
   return (
     <Disclosure defaultOpen={defaultOpen}>
-      <DisclosureButton className="px-6 py-4 group flex items-center justify-between gap-2 text-sm font-medium leading-6 w-full text-gray-900 cursor-pointer hover:bg-gray-50 border-t border-t-gray-200">
+      <DisclosureButton className="group flex w-full cursor-pointer items-center justify-between gap-2 border-t border-t-gray-200 px-6 py-4 font-medium text-gray-900 text-sm leading-6 hover:bg-gray-50">
         <span>{title}</span>
         <ChevronDownIcon className="h-5 w-5 group-data-open:rotate-180" />
       </DisclosureButton>
-      <DisclosurePanel as={as} className={cx(className, 'px-6 pb-4 pt-2')}>
+      <DisclosurePanel as={as} className={cx(className, 'px-6 pt-2 pb-4')}>
         {children}
       </DisclosurePanel>
     </Disclosure>

@@ -21,7 +21,7 @@ function GlobalLoadingComponent() {
   }, [active]);
 
   return (
-    <div aria-hidden={!active} className="fixed inset-x-0 left-0 top-0 z-50 h-1">
+    <div aria-hidden={!active} className="fixed inset-x-0 top-0 left-0 z-50 h-1">
       <div
         ref={ref}
         className={cx(

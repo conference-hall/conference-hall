@@ -47,7 +47,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
       </Link>
 
       <Card className="divide-y divide-gray-100">
-        <div className="px-6 py-4 flex items-start justify-between gap-4">
+        <div className="flex items-start justify-between gap-4 px-6 py-4">
           <div>
             <H1>{user.name}</H1>
             <Subtitle>{user.email}</Subtitle>
@@ -62,7 +62,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
           )}
         </div>
         <dl className="divide-y divide-gray-100">
-          <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
+          <div className="px-6 py-3 sm:grid sm:grid-cols-4 sm:gap-4">
             <Text as="dt" size="s" weight="medium">
               {t('admin.users.page.talks-count')}
             </Text>
@@ -70,7 +70,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
               {user.talksCount}
             </Text>
           </div>
-          <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
+          <div className="px-6 py-3 sm:grid sm:grid-cols-4 sm:gap-4">
             <Text as="dt" size="s" weight="medium">
               {t('admin.users.page.terms-accepted')}
             </Text>
@@ -78,7 +78,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
               {user.termsAccepted ? t('common.yes') : t('common.no')}
             </Text>
           </div>
-          <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
+          <div className="px-6 py-3 sm:grid sm:grid-cols-4 sm:gap-4">
             <Text as="dt" size="s" weight="medium">
               {t('admin.users.page.email-verified')}
             </Text>
@@ -87,7 +87,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
             </Text>
           </div>
           {user.lastSignInAt ? (
-            <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
+            <div className="px-6 py-3 sm:grid sm:grid-cols-4 sm:gap-4">
               <Text as="dt" size="s" weight="medium">
                 {t('admin.users.page.last-signed-in')}
               </Text>
@@ -96,7 +96,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
               </Text>
             </div>
           ) : null}
-          <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
+          <div className="px-6 py-3 sm:grid sm:grid-cols-4 sm:gap-4">
             <Text as="dt" size="s" weight="medium">
               {t('common.created-at')}
             </Text>
@@ -104,7 +104,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
               {formatDatetime(user.createdAt, { format: 'short', locale })}
             </Text>
           </div>
-          <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
+          <div className="px-6 py-3 sm:grid sm:grid-cols-4 sm:gap-4">
             <Text as="dt" size="s" weight="medium">
               {t('common.updated-at')}
             </Text>
@@ -113,7 +113,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
             </Text>
           </div>
           {user.deletedAt ? (
-            <div className="sm:grid sm:grid-cols-4 sm:gap-4 px-6 py-3">
+            <div className="px-6 py-3 sm:grid sm:grid-cols-4 sm:gap-4">
               <Text as="dt" size="s" weight="medium">
                 {t('admin.users.page.deleted-at')}
               </Text>
@@ -132,7 +132,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
         </List.Header>
         <List.Content aria-label={t('admin.users.page.authentication-methods')}>
           {user.authenticationMethods.map((methods) => (
-            <List.Row key={methods.provider} className="py-4 px-6 flex items-center gap-2">
+            <List.Row key={methods.provider} className="flex items-center gap-2 px-6 py-4">
               <H3>{methods.provider}</H3>
               <Subtitle size="xs">{methods.email}</Subtitle>
             </List.Row>
@@ -146,8 +146,8 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
         </List.Header>
         <List.Content aria-label={t('admin.users.page.teams-membership')}>
           {user.teams.map((team) => (
-            <List.Row key={team.slug} className="py-4 px-6 flex justify-between items-center">
-              <div className="sm:flex gap-4 items-baseline">
+            <List.Row key={team.slug} className="flex items-center justify-between px-6 py-4">
+              <div className="items-baseline gap-4 sm:flex">
                 <H3>{team.name}</H3>
                 <Subtitle size="xs">{team.role}</Subtitle>
               </div>

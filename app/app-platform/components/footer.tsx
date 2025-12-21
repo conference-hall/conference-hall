@@ -7,8 +7,8 @@ export function Footer() {
   const { t } = useTranslation();
   const year = new Date().getFullYear();
   return (
-    <footer className="py-8 text-sm text-gray-500 hidden lg:block">
-      <Container className="flex gap-4 justify-center items-center">
+    <footer className="hidden py-8 text-gray-500 text-sm lg:block">
+      <Container className="flex items-center justify-center gap-4">
         <span>{t('footer.copyright', { year })}</span>
         <LegalLinks />
       </Container>
@@ -19,20 +19,20 @@ export function Footer() {
 export function LegalLinks() {
   const { t } = useTranslation();
   return (
-    <div className="flex gap-4 justify-center items-center text-sm text-gray-500">
-      <Link to={href('/docs/terms')} target="_blank" className="hover:underline underline-offset-2">
+    <div className="flex items-center justify-center gap-4 text-gray-500 text-sm">
+      <Link to={href('/docs/terms')} target="_blank" className="underline-offset-2 hover:underline">
         {t('footer.terms')}
       </Link>
-      <Link to={href('/docs/privacy')} target="_blank" className="hover:underline underline-offset-2">
+      <Link to={href('/docs/privacy')} target="_blank" className="underline-offset-2 hover:underline">
         {t('footer.privacy')}
       </Link>
-      <Link to={href('/docs/license')} target="_blank" className="hover:underline underline-offset-2">
+      <Link to={href('/docs/license')} target="_blank" className="underline-offset-2 hover:underline">
         {t('footer.license')}
       </Link>
       <a
         href="https://github.com/conference-hall/conference-hall"
         target="_blank"
-        className="hover:underline underline-offset-2"
+        className="underline-offset-2 hover:underline"
         rel="noreferrer"
       >
         {t('footer.source')}
@@ -40,7 +40,7 @@ export function LegalLinks() {
       <a
         href="https://github.com/sponsors/conference-hall"
         target="_blank"
-        className="hover:underline underline-offset-2"
+        className="underline-offset-2 hover:underline"
         rel="noreferrer"
       >
         {t('footer.sponsor')}

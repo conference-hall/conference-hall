@@ -29,7 +29,7 @@ export default function DocsRoute() {
       </Page.NavHeader>
 
       <Page className="prose prose-sm">
-        <main className=" bg-white shadow-xs rounded-lg p-8 border border-gray-200">
+        <main className="rounded-lg border border-gray-200 bg-white p-8 shadow-xs">
           <Outlet />
         </main>
       </Page>

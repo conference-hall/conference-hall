@@ -54,10 +54,10 @@ export default function SpeakersRoute({ loaderData }: Route.ComponentProps) {
 
                 return (
                   <List.RowLink key={speaker.id} to={{ pathname: speaker.id, search }} className="p-4">
-                    <div className="flex items-start justify-between w-full">
-                      <div className="flex items-center space-x-4 flex-1 min-w-0 shrink-0">
+                    <div className="flex w-full items-start justify-between">
+                      <div className="flex min-w-0 flex-1 shrink-0 items-center space-x-4">
                         <Avatar picture={speaker.picture} name={speaker.name} size="m" />
-                        <div className="flex-1 min-w-0">
+                        <div className="min-w-0 flex-1">
                           <Text size="s" weight="medium" truncate>
                             {speaker.name}
                           </Text>
@@ -69,25 +69,25 @@ export default function SpeakersRoute({ loaderData }: Route.ComponentProps) {
                         </div>
                       </div>
 
-                      <div className="hidden md:flex flex-col items-end space-y-1 ml-4">
+                      <div className="ml-4 hidden flex-col items-end space-y-1 md:flex">
                         <div className="flex items-center space-x-6 text-sm">
                           <div className="text-center">
                             <div className="font-semibold text-gray-900">{totalProposals}</div>
-                            <div className="text-xs text-gray-500">{t('common.proposals')}</div>
+                            <div className="text-gray-500 text-xs">{t('common.proposals')}</div>
                           </div>
                           <div className="text-center">
                             <div className="font-semibold text-blue-600">{acceptedProposals}</div>
-                            <div className="text-xs text-gray-500">{t('event-management.speakers.stats.accepted')}</div>
+                            <div className="text-gray-500 text-xs">{t('event-management.speakers.stats.accepted')}</div>
                           </div>
                           <div className="text-center">
                             <div className="font-semibold text-green-600">{confirmedProposals}</div>
-                            <div className="text-xs text-gray-500">
+                            <div className="text-gray-500 text-xs">
                               {t('event-management.speakers.stats.confirmed')}
                             </div>
                           </div>
                           <div className="text-center">
                             <div className="font-semibold text-red-600">{declinedProposals}</div>
-                            <div className="text-xs text-gray-500">{t('event-management.speakers.stats.declined')}</div>
+                            <div className="text-gray-500 text-xs">{t('event-management.speakers.stats.declined')}</div>
                           </div>
                         </div>
                       </div>

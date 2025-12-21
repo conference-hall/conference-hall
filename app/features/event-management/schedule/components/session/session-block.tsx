@@ -44,11 +44,11 @@ export function SessionBlock({
       onClick={() => setEdit(true)}
       onKeyDown={() => {}}
       className={cx(
-        'flex flex-col h-full w-full text-left px-1 rounded-sm cursor-pointer',
+        'flex h-full w-full cursor-pointer flex-col rounded-sm px-1 text-left',
         {
-          'text-[10px] items-center gap-1 flex-row': size === 'sm',
-          'text-[10px] items-baseline leading-3 gap-1 flex-row': size === 'md',
-          'text-xs leading-3.5 justify-between': size === 'lg' || size === 'xl',
+          'flex-row items-center gap-1 text-[10px]': size === 'sm',
+          'flex-row items-baseline gap-1 text-[10px] leading-3': size === 'md',
+          'justify-between text-xs leading-3.5': size === 'lg' || size === 'xl',
           'border-dotted': session.isCreating,
         },
         block,
@@ -56,7 +56,7 @@ export function SessionBlock({
     >
       {title ? (
         <div className={cx({ truncate: size !== 'xl' })}>
-          <p className={cx('font-semibold line-clamp-3', { truncate: size !== 'xl' })}>{title}</p>
+          <p className={cx('line-clamp-3 font-semibold', { truncate: size !== 'xl' })}>{title}</p>
           <SessionSpeakers speakers={proposal?.speakers} size={size} />
         </div>
       ) : null}

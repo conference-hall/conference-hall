@@ -29,7 +29,7 @@ export function Tooltip({ text, placement = 'top', as: Tag = 'div', children }: 
         <div
           ref={refs.setFloating}
           style={floatingStyles}
-          className="bg-gray-800 text-white text-xs font-medium max-w-sm p-3 py-2 rounded-sm z-50"
+          className="z-50 max-w-sm rounded-sm bg-gray-800 p-3 py-2 font-medium text-white text-xs"
         >
           {text}
           <FloatingArrow ref={arrowRef} context={context} fill="#1F2937" />

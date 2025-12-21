@@ -91,7 +91,7 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
           suppressHydrationWarning
         />
       </div>
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-red-600 text-sm">{error}</p>}
     </div>
   );
 }

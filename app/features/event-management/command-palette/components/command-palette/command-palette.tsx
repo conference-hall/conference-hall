@@ -86,7 +86,7 @@ export function CommandPalette({
       <CommandPaletteInput value={query} onChange={handleQueryChange} loading={isLoading} closeText={closeText} />
 
       <ComboboxOptions
-        className="max-h-[28rem] scroll-py-2 divide-y divide-gray-200 border-t border-t-gray-200 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300"
+        className="scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 max-h-[28rem] scroll-py-2 divide-y divide-gray-200 overflow-y-auto border-t border-t-gray-200"
         autoFocus
         static
       >

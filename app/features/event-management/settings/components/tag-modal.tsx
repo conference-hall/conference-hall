@@ -63,18 +63,18 @@ function TagModalContent({ mode, initialValues, open, onClose }: TagModalContent
             <input type="hidden" name="id" value={initialValues?.id} />
 
             <Tooltip text={t('event-management.settings.tags.pick-a-color')} placement="bottom">
-              <div className="relative h-9 w-12 group">
+              <div className="group relative h-9 w-12">
                 <input
                   type="color"
                   name="color"
                   aria-label={t('event-management.settings.tags.pick-a-color')}
                   defaultValue={color}
                   onChange={(event) => setColor(event.target.value)}
-                  className="bg-white [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-md [&::-webkit-color-swatch-wrapper]:p-0 h-9 w-12 cursor-pointer"
+                  className="h-9 w-12 cursor-pointer bg-white [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-md [&::-webkit-color-swatch]:border-none"
                   required
                 />
                 <PaintBrushIcon
-                  className="size-6 absolute left-3 top-1.5 pointer-events-none"
+                  className="pointer-events-none absolute top-1.5 left-3 size-6"
                   style={{ color: getContrastColor(color) }}
                 />
               </div>

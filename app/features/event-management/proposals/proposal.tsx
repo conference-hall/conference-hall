@@ -267,7 +267,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           </Suspense>
         </div>
 
-        <div className="lg:col-span-4 flex flex-col-reverse lg:flex-col gap-4">
+        <div className="flex flex-col-reverse gap-4 lg:col-span-4 lg:flex-col">
           <ReviewSidebar
             proposal={proposal}
             reviewEnabled={event.reviewEnabled}
@@ -277,7 +277,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           <Card as="section">
             {hasSpeakers ? (
               <>
-                <div className="py-4 space-y-4">
+                <div className="space-y-4 py-4">
                   <SpeakersSection
                     team={params.team}
                     event={params.event}
@@ -297,7 +297,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                             messages={speakersConversation}
                             recipients={speakersWithAccount}
                             canManageConversations={permissions.canManageConversations}
-                            className="flex gap-2 cursor-pointer px-4 lg:px-6 hover:underline"
+                            className="flex cursor-pointer gap-2 px-4 hover:underline lg:px-6"
                           >
                             <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
                             <Text size="xs" weight="semibold">

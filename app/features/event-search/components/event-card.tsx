@@ -39,17 +39,17 @@ function CardContent({ name, type, logoUrl, cfpState, cfpStart, cfpEnd }: CardCo
   const { t } = useTranslation();
 
   return (
-    <span className="flex h-20 lg:h-32 justify-between">
+    <span className="flex h-20 justify-between lg:h-32">
       {/* Desktop */}
-      <Avatar picture={logoUrl} name={name} size="4xl" square className="hidden lg:flex rounded-r-none" />
+      <Avatar picture={logoUrl} name={name} size="4xl" square className="hidden rounded-r-none lg:flex" />
       {/* Mobile */}
-      <Avatar picture={logoUrl} name={name} size="2xl" square className="lg:hidden rounded-r-none" />
+      <Avatar picture={logoUrl} name={name} size="2xl" square className="rounded-r-none lg:hidden" />
 
-      <div className="flex flex-1 flex-col justify-between overflow-hidden py-2 px-4 lg:p-4">
+      <div className="flex flex-1 flex-col justify-between overflow-hidden px-4 py-2 lg:p-4">
         <Text size="base" weight="semibold" className="lg:text-lg" truncate>
           {name}
         </Text>
-        <div className="flex flex-1 justify-between items-end sm:flex-row-reverse lg:flex-col lg:items-start truncate">
+        <div className="flex flex-1 items-end justify-between truncate sm:flex-row-reverse lg:flex-col lg:items-start">
           <Subtitle weight="medium" className="hidden sm:block">
             {t(`common.event.type.label.${type}`)}
           </Subtitle>

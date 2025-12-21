@@ -15,7 +15,7 @@ export function CloseButton({ onClose, className }: Props) {
       icon={XMarkIcon}
       variant="tertiary"
       size="sm"
-      className={cx('absolute right-4 top-4', className)}
+      className={cx('absolute top-4 right-4', className)}
     />
   );
 }

@@ -28,7 +28,7 @@ export const ProgressBar = ({ value = 0, max = 100, label, className, ref, ...pr
         <span
           className={cx(
             // base
-            'ml-2 whitespace-nowrap text-sm font-medium leading-none',
+            'ml-2 whitespace-nowrap font-medium text-sm leading-none',
             // text color
             'text-gray-900',
           )}

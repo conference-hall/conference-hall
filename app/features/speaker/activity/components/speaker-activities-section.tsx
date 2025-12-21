@@ -79,7 +79,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                   <li key={submission.id}>
                     <RouterLink
                       to={href('/:event/proposals/:proposal', { event: event.slug, proposal: submission.id })}
-                      className="flex justify-between items-center gap-4 p-4 hover:bg-gray-50 focus-visible:-outline-offset-1"
+                      className="flex items-center justify-between gap-4 p-4 hover:bg-gray-50 focus-visible:-outline-offset-1"
                     >
                       <div className="overflow-hidden">
                         <H3 weight="medium" size="s" truncate>

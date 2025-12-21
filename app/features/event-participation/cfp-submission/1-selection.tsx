@@ -45,9 +45,9 @@ export default function EventSubmitRoute({ loaderData }: Route.ComponentProps) {
   return (
     <Page>
       <Card>
-        <Card.Title className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
+        <Card.Title className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <H1 className="text-2xl font-bold">{t('event.submission.selection.heading')}</H1>
+            <H1 className="font-bold text-2xl">{t('event.submission.selection.heading')}</H1>
             <Subtitle>{t('event.submission.selection.description')}</Subtitle>
           </div>
           {hasTalksToSubmit && (

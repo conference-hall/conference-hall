@@ -39,7 +39,7 @@ export default function EventSettingsRoute({ params }: Route.ComponentProps) {
       <NavSideMenu
         aria-label={t('event-management.settings.menu.heading')}
         items={menus}
-        className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
+        className="mb-6 w-full lg:sticky lg:top-4 lg:col-span-3 lg:self-start"
       />
 
       <div className="space-y-6 lg:col-span-9">

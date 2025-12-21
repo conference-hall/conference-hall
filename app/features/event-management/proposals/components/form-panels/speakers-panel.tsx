@@ -144,7 +144,7 @@ export function SpeakersPanel({
         displayPicture
         allowEmpty={allowEmpty}
       >
-        <div className="flex items-center justify-between group">
+        <div className="group flex items-center justify-between">
           <H2 size="s" className="group-hover:text-indigo-600">
             {t('common.speakers')}
           </H2>

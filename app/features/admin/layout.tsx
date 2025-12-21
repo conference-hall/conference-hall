@@ -22,7 +22,7 @@ export default function AdminLayoutRoute() {
     <>
       <NavbarEvent />
 
-      <Page.NavHeader className="flex flex-col pb-2 sm:pb-0 sm:flex-row sm:items-center sm:space-between">
+      <Page.NavHeader className="sm:space-between flex flex-col pb-2 sm:flex-row sm:items-center sm:pb-0">
         <NavTabs py={4} scrollable className="grow">
           <NavTab to={href('/admin')} end>
             {t('admin.nav.dashboard')}

@@ -10,8 +10,8 @@ type RadioProps = {
 export function Radio({ name, description, className, children, ...rest }: RadioProps) {
   const id = useId();
   return (
-    <div className={cx('relative flex ', { 'items-start': description, 'items-center': !description }, className)}>
-      <div className="flex h-5 items-center mt-0.5">
+    <div className={cx('relative flex', { 'items-start': description, 'items-center': !description }, className)}>
+      <div className="mt-0.5 flex h-5 items-center">
         <input
           id={id}
           name={name}

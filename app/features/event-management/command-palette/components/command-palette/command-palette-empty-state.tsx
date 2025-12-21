@@ -22,18 +22,18 @@ export function CommandPaletteEmptyState({ title, description, hasQuery, loading
   if (hasQuery && wasNoResults) {
     return (
       <div className="px-8 py-16 text-center">
-        <div className="p-3 rounded-full bg-gray-100 w-fit mx-auto mb-6">
+        <div className="mx-auto mb-6 w-fit rounded-full bg-gray-100 p-3">
           <MagnifyingGlassIcon className="h-6 w-6 text-gray-400" />
         </div>
-        <p className="text-sm font-semibold text-gray-900 mb-2">{t('common.no-results')}</p>
-        <p className="text-xs text-gray-500 mb-4">{t('event-management.command-palette.no-result.description')}</p>
+        <p className="mb-2 font-semibold text-gray-900 text-sm">{t('common.no-results')}</p>
+        <p className="mb-4 text-gray-500 text-xs">{t('event-management.command-palette.no-result.description')}</p>
       </div>
     );
   }
 
   return (
     <div className="px-8 py-16 text-center">
-      <div className="p-3 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 w-fit mx-auto mb-4">
+      <div className="mx-auto mb-4 w-fit rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 p-3">
         <CommandLineIcon className="h-6 w-6 text-indigo-600" />
       </div>
       <Text size="s" weight="semibold" className="mb-2">

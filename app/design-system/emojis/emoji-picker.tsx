@@ -30,7 +30,7 @@ export function EmojiPicker({ emojis, label, icon: Icon, variant, anchor, onSele
 
       <PopoverPanel
         anchor={anchor || 'bottom end'}
-        className="grid grid-cols-5 gap-2 p-2 rounded-xl bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden [--anchor-gap:8px] z-50"
+        className="z-50 grid grid-cols-5 gap-2 rounded-xl bg-white p-2 shadow-lg ring-1 ring-black/5 [--anchor-gap:8px] focus:outline-hidden"
       >
         {({ close }) => (
           <>
@@ -39,7 +39,7 @@ export function EmojiPicker({ emojis, label, icon: Icon, variant, anchor, onSele
                 key={emoji.code}
                 type="button"
                 className={cx(
-                  'flex items-center justify-center rounded-lg shrink-0 h-8 w-8 cursor-pointer font-serif text-lg hover:bg-gray-100',
+                  'flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg font-serif text-lg hover:bg-gray-100',
                 )}
                 aria-label={emoji.name}
                 title={emoji.name}

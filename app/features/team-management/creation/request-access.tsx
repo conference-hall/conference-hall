@@ -39,7 +39,7 @@ export default function RequestAccessRoute({ actionData: errors }: Route.Compone
       <FullscreenPage.Title title={t('team.request.heading')} subtitle={t('team.request.description')} />
 
       <Card className="p-8 md:p-12">
-        <Form method="POST" className="flex flex-col sm:flex-row gap-2">
+        <Form method="POST" className="flex flex-col gap-2 sm:flex-row">
           <Input
             name="key"
             aria-label={t('team.request.form.access-key')}

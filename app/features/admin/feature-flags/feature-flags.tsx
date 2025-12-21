@@ -40,7 +40,7 @@ export default function AdminFlagsRoute({ loaderData: flags }: Route.ComponentPr
 
         <List.Content aria-label={t('admin.flags.list')}>
           {flags.map((flag) => (
-            <List.Row key={flag.key} className="flex items-start justify-between px-6 py-4 gap-2">
+            <List.Row key={flag.key} className="flex items-start justify-between gap-2 px-6 py-4">
               <div>
                 <Text as="pre" weight="semibold">
                   {flag.key}

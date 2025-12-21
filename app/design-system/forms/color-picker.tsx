@@ -14,7 +14,7 @@ export default function ColorPicker({ label, value, onChange, srOnly, options, c
   return (
     <Fieldset className={className}>
       <Legend
-        className={cx('block text-sm font-semibold leading-6 text-gray-900', { 'sr-only': srOnly, 'mb-6': !srOnly })}
+        className={cx('block font-semibold text-gray-900 text-sm leading-6', { 'sr-only': srOnly, 'mb-6': !srOnly })}
       >
         {label}
       </Legend>
@@ -26,7 +26,7 @@ export default function ColorPicker({ label, value, onChange, srOnly, options, c
             aria-label={option.name}
             className={cx(
               option.color,
-              'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-current focus:outline-hidden data-checked:ring-2 data-focus:data-checked:ring-3 data-focus:data-checked:ring-offset-1',
+              'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-current focus:outline-hidden data-focus:data-checked:ring-3 data-focus:data-checked:ring-offset-1 data-checked:ring-2',
             )}
           >
             <span aria-hidden="true" className="h-5 w-5 rounded-full border border-black/10 bg-current" />

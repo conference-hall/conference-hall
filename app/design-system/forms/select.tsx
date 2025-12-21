@@ -54,21 +54,21 @@ export default function Select({
 
         return (
           <Field className={className}>
-            <Label className={cx('block text-sm font-medium leading-6 text-gray-900', { 'sr-only': srOnly })}>
+            <Label className={cx('block font-medium text-gray-900 text-sm leading-6', { 'sr-only': srOnly })}>
               {label}
             </Label>
 
             <div className={cx('relative', { 'mt-1': !srOnly })}>
               <ListboxButton
                 className={cx(
-                  'relative w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-left ring-1 ring-inset ring-gray-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-600 text-sm leading-6',
+                  'relative w-full rounded-md bg-white py-1.5 pr-10 pl-3 text-left text-sm leading-6 ring-1 ring-gray-300 ring-inset focus:outline-hidden focus:ring-2 focus:ring-indigo-600',
                   {
-                    'text-gray-900 cursor-default': !disabled,
-                    'text-gray-500 cursor-not-allowed': disabled,
+                    'cursor-default text-gray-900': !disabled,
+                    'cursor-not-allowed text-gray-500': disabled,
                   },
                 )}
               >
-                <span className="flex justify-start items-center gap-2 truncate">
+                <span className="flex items-center justify-start gap-2 truncate">
                   {Icon && (
                     <Icon className={cx('h-4 w-4 shrink-0', { [iconClassname || '']: !disabled })} aria-hidden="true" />
                   )}
@@ -94,8 +94,8 @@ export default function Select({
                         className={({ focus, disabled }) =>
                           cx(menuItem(), {
                             'bg-gray-100': focus,
-                            'text-gray-900 cursor-pointer': !disabled,
-                            'text-gray-500 cursor-not-allowed': disabled,
+                            'cursor-pointer text-gray-900': !disabled,
+                            'cursor-not-allowed text-gray-500': disabled,
                           })
                         }
                       >
@@ -103,7 +103,7 @@ export default function Select({
                           <span
                             className={cx(
                               selected ? 'font-semibold' : 'font-normal',
-                              'flex justify-start items-center gap-2 truncate',
+                              'flex items-center justify-start gap-2 truncate',
                             )}
                           >
                             {option.icon && (

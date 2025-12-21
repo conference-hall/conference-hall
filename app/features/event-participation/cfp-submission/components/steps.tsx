@@ -14,7 +14,7 @@ function StepsMobile({ steps, currentStep }: Props) {
 
   return (
     <nav aria-label={t('event.submission.steps.nav.label')} className="flex items-center px-4 lg:px-0 xl:hidden">
-      <p className="text-sm font-bold">
+      <p className="font-bold text-sm">
         {t('event.submission.steps.nav.progress', { current: currentStepIdx + 1, total: steps.length })}
       </p>
       <ol className="ml-8 flex items-center space-x-5">
@@ -50,7 +50,7 @@ function StepsDesktop({ steps, currentStep }: Props) {
 
   return (
     <nav aria-label={t('event.submission.steps.nav.label')} className="hidden xl:block">
-      <ol className="divide-y divide-gray-300 rounded-full border  border-gray-300 md:flex md:divide-y-0">
+      <ol className="divide-y divide-gray-300 rounded-full border border-gray-300 md:flex md:divide-y-0">
         {steps.map((step, stepIdx) => (
           <li
             key={step.key}
@@ -59,27 +59,27 @@ function StepsDesktop({ steps, currentStep }: Props) {
           >
             {stepIdx < currentStepIdx ? (
               <Link to={step.path} className="group flex w-full items-center">
-                <span className="flex items-center px-4 py-1.5 text-sm font-medium">
+                <span className="flex items-center px-4 py-1.5 font-medium text-sm">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-600 group-hover:bg-indigo-800">
                     <CheckIcon className="h-4 w-4 text-white" aria-hidden="true" />
                   </span>
-                  <span className="mx-4 text-sm font-medium text-gray-900">{step.name}</span>
+                  <span className="mx-4 font-medium text-gray-900 text-sm">{step.name}</span>
                 </span>
               </Link>
             ) : stepIdx === currentStepIdx ? (
-              <span className="flex items-center px-4 py-1.5 text-sm font-medium">
+              <span className="flex items-center px-4 py-1.5 font-medium text-sm">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-indigo-600">
                   <span className="text-indigo-600">{stepIdx + 1}</span>
                 </span>
-                <span className="mx-4 text-sm font-medium text-indigo-600">{step.name}</span>
+                <span className="mx-4 font-medium text-indigo-600 text-sm">{step.name}</span>
               </span>
             ) : (
               <span className="flex items-center">
-                <span className="flex items-center px-4 py-1.5 text-sm font-medium">
+                <span className="flex items-center px-4 py-1.5 font-medium text-sm">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-gray-300">
                     <span className="text-gray-500">{stepIdx + 1}</span>
                   </span>
-                  <span className="mx-4 text-sm font-medium text-gray-500">{step.name}</span>
+                  <span className="mx-4 font-medium text-gray-500 text-sm">{step.name}</span>
                 </span>
               </span>
             )}
@@ -87,7 +87,7 @@ function StepsDesktop({ steps, currentStep }: Props) {
             {stepIdx !== steps.length - 1 ? (
               <>
                 {/* Arrow separator for lg screens and up */}
-                <div className="absolute right-0 top-0 hidden h-full w-5 md:block" aria-hidden="true">
+                <div className="absolute top-0 right-0 hidden h-full w-5 md:block" aria-hidden="true">
                   <svg
                     role="presentation"
                     className="h-full w-full text-gray-300"

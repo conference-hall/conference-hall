@@ -53,9 +53,9 @@ export function ProposalItem({
       <Link
         to={defaultLinkTo}
         aria-label={t('event-management.proposals.list.open', { title })}
-        className="flex items-center justify-between gap-4 py-3 grow min-w-0 hover:text-indigo-700"
+        className="flex min-w-0 grow items-center justify-between gap-4 py-3 hover:text-indigo-700"
       >
-        <div className="space-y-2 md:space-y-1 min-w-0">
+        <div className="min-w-0 space-y-2 md:space-y-1">
           <div className="flex flex-wrap items-center gap-x-2">
             <span className="font-semibold">{title}</span>
 

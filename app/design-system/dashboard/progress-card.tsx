@@ -13,7 +13,7 @@ export function ProgressCard({ label, value = 0, max = 100, children }: Props) {
 
   return (
     <Card className="flex flex-col" aria-labelledby={id}>
-      <div className="flex flex-col justify-center gap-4 p-4 px-6 grow">
+      <div className="flex grow flex-col justify-center gap-4 p-4 px-6">
         <div className="flex items-center gap-x-5">
           <ProgressCircle value={percentage}>
             <Text weight="medium">{`${Math.round(percentage)}%`}</Text>
@@ -28,7 +28,7 @@ export function ProgressCard({ label, value = 0, max = 100, children }: Props) {
       {children && (
         <>
           <Divider />
-          <div className="flex flex-row items-center justify-end py-3 px-4">{children}</div>
+          <div className="flex flex-row items-center justify-end px-4 py-3">{children}</div>
         </>
       )}
     </Card>

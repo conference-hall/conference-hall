@@ -20,7 +20,7 @@ export function ReviewCountDistribution({ totalProposals, reviewCountDistributio
     <Card className="p-6">
       <H2>{t('event-management.overview.reviews.review-count-distribution.title')}</H2>
 
-      <div className="mt-6 flex flex-col gap-4 h-full">
+      <div className="mt-6 flex h-full flex-col gap-4">
         <div className="grow space-y-3">
           <DistributionLine
             status="error"
@@ -63,14 +63,14 @@ type DistributionLineProps = {
 
 function DistributionLine({ status, label, percentage, count }: DistributionLineProps) {
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex items-center justify-between">
       <div className="flex items-center space-x-2">
         <StatusPill status={status} />
-        <span className="text-sm text-gray-600">{label}</span>
+        <span className="text-gray-600 text-sm">{label}</span>
       </div>
       <div className="text-right">
-        <span className="text-sm font-medium">{percentage}%</span>
-        <span className="text-xs text-gray-500 ml-1">({count})</span>
+        <span className="font-medium text-sm">{percentage}%</span>
+        <span className="ml-1 text-gray-500 text-xs">({count})</span>
       </div>
     </div>
   );
@@ -86,14 +86,14 @@ function ReviewCountAnalysis({ reviewCountDistribution }: Props) {
     reviewCountDistribution.missingReviews * 0.0;
 
   return (
-    <div className="pt-5 border-t border-gray-200">
-      <div className="flex justify-between items-center">
-        <span className="text-sm font-medium text-gray-700">
+    <div className="border-gray-200 border-t pt-5">
+      <div className="flex items-center justify-between">
+        <span className="font-medium text-gray-700 text-sm">
           {t('event-management.overview.reviews.quality-score.title')}
         </span>
         <div className="flex items-center space-x-2">
-          <span className="text-sm font-bold text-gray-900">{Math.round(weightedReviewed)}%</span>
-          <span className="text-xs text-gray-500">
+          <span className="font-bold text-gray-900 text-sm">{Math.round(weightedReviewed)}%</span>
+          <span className="text-gray-500 text-xs">
             {reviewCountDistribution.wellReviewed >= 60 ? (
               <StatusPill status="success" />
             ) : reviewCountDistribution.wellReviewed + reviewCountDistribution.adequatelyReviewed >= 80 ? (
@@ -107,7 +107,7 @@ function ReviewCountAnalysis({ reviewCountDistribution }: Props) {
         </div>
       </div>
 
-      <p className="text-xs text-gray-500 mt-1">{t('event-management.overview.reviews.quality-score.description')}</p>
+      <p className="mt-1 text-gray-500 text-xs">{t('event-management.overview.reviews.quality-score.description')}</p>
     </div>
   );
 }

@@ -3,26 +3,26 @@ import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 
-const defaultBadge = cva('inline-flex items-center text-nowrap gap-1', {
+const defaultBadge = cva('inline-flex items-center gap-1 text-nowrap', {
   variants: {
     color: {
-      gray: 'bg-gray-100 text-gray-800 ring-1 ring-inset ring-gray-500/10',
-      red: 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/10',
-      yellow: 'bg-yellow-50 text-yellow-800 ring-1 ring-inset ring-yellow-600/20',
-      green: 'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20',
-      blue: 'bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-700/10',
-      indigo: 'bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-700/10',
-      purple: 'bg-purple-50 text-purple-700 ring-1 ring-inset ring-purple-700/10',
-      pink: 'bg-pink-50 text-pink-700 ring-1 ring-inset ring-pink-700/10',
+      gray: 'bg-gray-100 text-gray-800 ring-1 ring-gray-500/10 ring-inset',
+      red: 'bg-red-50 text-red-700 ring-1 ring-red-600/10 ring-inset',
+      yellow: 'bg-yellow-50 text-yellow-800 ring-1 ring-yellow-600/20 ring-inset',
+      green: 'bg-green-50 text-green-700 ring-1 ring-green-600/20 ring-inset',
+      blue: 'bg-blue-50 text-blue-700 ring-1 ring-blue-700/10 ring-inset',
+      indigo: 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-700/10 ring-inset',
+      purple: 'bg-purple-50 text-purple-700 ring-1 ring-purple-700/10 ring-inset',
+      pink: 'bg-pink-50 text-pink-700 ring-1 ring-pink-700/10 ring-inset',
     },
-    compact: { true: 'px-1.5 py-0.5 h-5 text-[10px] font-medium', false: 'px-2 py-0.5 text-xs font-medium' },
+    compact: { true: 'h-5 px-1.5 py-0.5 font-medium text-[10px]', false: 'px-2 py-0.5 font-medium text-xs' },
     pill: { true: 'rounded-full', false: 'rounded-md' },
   },
   defaultVariants: { color: 'gray', pill: false, compact: false },
 });
 
 const dotBadge = cva(
-  'inline-flex items-center text-xs font-semibold gap-x-1.5 text-gray-600 ring-1 ring-inset ring-gray-200 text-nowrap',
+  'inline-flex items-center gap-x-1.5 text-nowrap font-semibold text-gray-600 text-xs ring-1 ring-gray-200 ring-inset',
   {
     variants: {
       color: {
@@ -96,7 +96,7 @@ function CloseButton({ closeLabel, onClose }: CloseButtonProps) {
           onClose();
         }
       }}
-      className="hover:bg-black/10 rounded-full p-0.5 -mr-1 cursor-pointer"
+      className="-mr-1 cursor-pointer rounded-full p-0.5 hover:bg-black/10"
     >
       <XMarkIcon className="h-3 w-3" aria-hidden="true" />
     </span>

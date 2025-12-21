@@ -81,7 +81,7 @@ export default function ConversationMessageEmail({
         </Section>
       )}
 
-      <Section className="text-center my-8">
+      <Section className="my-8 text-center">
         <Button href={conversationUrl} className={styles.button}>
           {t('speakers.conversation-message.body.cta')}
         </Button>

@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useSearchParams } from 'react-router';
 import { Button } from '../button.tsx';
 
-const pageStyle = cva('relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20', {
+const pageStyle = cva('relative inline-flex items-center px-4 py-2 font-semibold text-sm focus:z-20', {
   variants: {
     active: {
-      true: 'z-10 bg-indigo-600 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
-      false: 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0',
+      true: 'z-10 bg-indigo-600 text-white focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2',
+      false: 'text-gray-900 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:outline-offset-0',
     },
   },
 });
@@ -36,14 +36,14 @@ export function Pagination({ current, total }: Props) {
 
   return (
     <nav
-      className="isolate hidden sm:inline-flex -space-x-px rounded-md bg-white shadow-xs"
+      className="isolate hidden -space-x-px rounded-md bg-white shadow-xs sm:inline-flex"
       aria-label={t('pagination')}
     >
       <Link
         key="previous"
         to={{ pathname: location.pathname, search: getPageSearchParams(previous, searchParams) }}
         preventScrollReset
-        className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+        className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
       >
         <span className="sr-only">{t('pagination.previous')}</span>
         <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
@@ -74,7 +74,7 @@ export function Pagination({ current, total }: Props) {
         key="next"
         to={{ pathname: location.pathname, search: getPageSearchParams(next, searchParams) }}
         preventScrollReset
-        className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+        className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
       >
         <span className="sr-only">{t('pagination.next')}</span>
         <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />

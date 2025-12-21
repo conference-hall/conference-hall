@@ -89,7 +89,7 @@ export function SessionForm({
               <H2 size="l">{proposal?.title}</H2>
               <Subtitle truncate>{proposal?.speakers.map((s) => s.name).join(', ')}</Subtitle>
             </div>
-            <div className="flex gap-2 shrink-0">
+            <div className="flex shrink-0 gap-2">
               <Button
                 icon={ArrowTopRightOnSquareIcon}
                 label={t('event-management.schedule.edit-session.proposal.see')}
