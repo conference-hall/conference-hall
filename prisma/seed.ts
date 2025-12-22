@@ -1,3 +1,4 @@
+import { disconnectRedis } from 'app/shared/cache/redis.server.ts';
 import { disconnectDB } from 'tests/db-helpers.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { eventCategoryFactory } from '../tests/factories/categories.ts';
@@ -342,4 +343,5 @@ try {
   process.exit(1);
 } finally {
   await disconnectDB();
+  await disconnectRedis();
 }
