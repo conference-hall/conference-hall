@@ -1,6 +1,6 @@
 generator client {
-  provider     = "prisma-client"
-  output       = "./generated"
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 datasource db {
@@ -131,6 +131,7 @@ model Event {
   speakers                    EventSpeaker[]
   emailCustomizations         EventEmailCustomization[]
   conversations               Conversation[]
+  proposalCounter             EventProposalCounter?
 
   @@map("events")
 }
@@ -253,6 +254,7 @@ model Proposal {
   publicationStatus  PublicationStatus   @default(NOT_PUBLISHED)
   confirmationStatus ConfirmationStatus?
   archivedAt         DateTime?
+  proposalNumber     Int?
   invitationCode     String              @unique @default(cuid())
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
@@ -261,6 +263,7 @@ model Proposal {
   ScheduleSession    ScheduleSession[]
 
   @@unique([talkId, eventId])
+  @@unique([proposalNumber, eventId])
   @@map("proposals")
 }
 
@@ -279,6 +282,14 @@ enum ConfirmationStatus {
   PENDING
   CONFIRMED
   DECLINED
+}
+
+model EventProposalCounter {
+  eventId            String @id
+  event              Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  lastProposalNumber Int    @default(0)
+
+  @@map("event_proposal_counters")
 }
 
 model EventSpeaker {

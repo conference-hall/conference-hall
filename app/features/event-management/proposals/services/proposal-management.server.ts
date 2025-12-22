@@ -1,4 +1,5 @@
 import { db } from 'prisma/db.server.ts';
+import { getNextProposalNumber } from '~/shared/counters/proposal-counter.server.ts';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import type {
   ProposalCreationData,
@@ -48,6 +49,8 @@ export class ProposalManagement extends EventAuthorization {
         throw new Error(`Speakers with IDs ${data.speakers.join(', ')} do not belong to this event`);
       }
 
+      const proposalNumber = await getNextProposalNumber(event.id, trx);
+
       const proposal = await trx.proposal.create({
         data: {
           title: data.title,
@@ -61,6 +64,7 @@ export class ProposalManagement extends EventAuthorization {
           categories: categoriesConnect,
           tags: tagsConnect,
           isDraft: false,
+          proposalNumber,
         },
       });
 

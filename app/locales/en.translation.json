@@ -254,6 +254,7 @@
   "common.proposals.status.pending": "Not deliberated",
   "common.proposals.status.rejected": "Rejected",
   "common.proposals": "Proposals",
+  "common.proposed-by": "proposed by {{names, list}}",
   "common.publication": "Publication",
   "common.remove-item": "Remove {{item}}",
   "common.remove": "Remove",

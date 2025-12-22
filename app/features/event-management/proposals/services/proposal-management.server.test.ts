@@ -9,12 +9,15 @@ import { talkFactory } from '~/../tests/factories/talks.ts';
 import { teamFactory } from '~/../tests/factories/team.ts';
 import { userFactory } from '~/../tests/factories/users.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import type { ProposalCreationData } from './proposal-management.schema.server.ts';
 import { ProposalManagement } from './proposal-management.server.ts';
 
 describe('ProposalManagement', () => {
   describe('create', () => {
     it('creates a proposal', async () => {
+      await flags.set('useProposalsNumbering', true);
+
       const organizer = await userFactory();
       const speaker = await userFactory();
       const team = await teamFactory({ owners: [organizer] });
@@ -36,6 +39,7 @@ describe('ProposalManagement', () => {
 
       const proposal = await db.proposal.findUnique({ where: { id: result.id }, include: { speakers: true } });
       expect(proposal).toBeDefined();
+      expect(proposal?.proposalNumber).toBe(1);
       expect(proposal?.title).toBe('Test Talk');
       expect(proposal?.abstract).toBe('This is a test talk abstract');
       expect(proposal?.level).toBe('INTERMEDIATE');

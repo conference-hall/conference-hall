@@ -16,6 +16,7 @@ import {
   ProposalNotFoundError,
   TalkNotFoundError,
 } from '~/shared/errors.server.ts';
+import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { TalkSubmission } from './talk-submission.server.ts';
 
 const { APP_URL } = getSharedServerEnv();
@@ -23,6 +24,8 @@ const { APP_URL } = getSharedServerEnv();
 describe('TalkSubmission', () => {
   describe('#saveDraft', () => {
     it('create a new draft proposal from scratch', async () => {
+      await flags.set('useProposalsNumbering', true);
+
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
 
@@ -45,6 +48,7 @@ describe('TalkSubmission', () => {
       expect(talk?.speakers[0].id).toEqual(speaker.id);
 
       const proposal = await db.proposal.findFirst({ where: { talkId }, include: { speakers: true } });
+      expect(proposal?.proposalNumber).toBeNull();
       expect(proposal?.title).toEqual(data.title);
       expect(proposal?.abstract).toEqual(data.abstract);
       expect(proposal?.references).toEqual(data.references);
@@ -56,6 +60,8 @@ describe('TalkSubmission', () => {
     });
 
     it('create a new draft proposal from a existing talk', async () => {
+      await flags.set('useProposalsNumbering', true);
+
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
       const speaker2 = await userFactory();
@@ -80,6 +86,7 @@ describe('TalkSubmission', () => {
       expect(updatedTalk?.speakers.map((s) => s.id)).toEqual(expect.arrayContaining([speaker.id, speaker2.id]));
 
       const proposal = await db.proposal.findFirst({ where: { talkId }, include: { speakers: true } });
+      expect(proposal?.proposalNumber).toBeNull();
       expect(proposal?.title).toEqual(data.title);
       expect(proposal?.abstract).toEqual(data.abstract);
       expect(proposal?.references).toEqual(data.references);
@@ -219,6 +226,8 @@ describe('TalkSubmission', () => {
 
   describe('#submit', () => {
     it('submit a draft proposal', async () => {
+      await flags.set('useProposalsNumbering', true);
+
       const event = await eventFactory({
         traits: ['conference-cfp-open'],
         attributes: { name: 'Event 1', emailOrganizer: 'ben@email.com', emailNotifications: ['submitted'] },
@@ -232,6 +241,7 @@ describe('TalkSubmission', () => {
       expect(proposalId).toEqual(proposal.id);
 
       const result = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(result?.proposalNumber).toEqual(1);
       expect(result?.isDraft).toEqual(false);
       expect(result?.deliberationStatus).toEqual('PENDING');
 

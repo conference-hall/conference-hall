@@ -5,7 +5,13 @@ import { Button } from '~/design-system/button.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ReviewsProgress } from '../shared/reviews-progress.tsx';
 
-type Props = { current: number; total: number; reviewed: number; nextId?: string; previousId?: string };
+type Props = {
+  current: number;
+  total: number;
+  reviewed: number;
+  nextId?: string;
+  previousId?: string;
+};
 
 export function NavigationHeader({ current, total, reviewed, nextId, previousId }: Props) {
   const { t } = useTranslation();
