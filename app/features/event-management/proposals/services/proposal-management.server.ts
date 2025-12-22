@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
+import { getNextProposalNumber } from '~/shared/counters/proposal-counter.server.ts';
 import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
-import { getNextProposalNumber } from '~/shared/utils/proposal-number.server.ts';
 import type {
   ProposalCreationData,
   ProposalSaveCategoriesData,

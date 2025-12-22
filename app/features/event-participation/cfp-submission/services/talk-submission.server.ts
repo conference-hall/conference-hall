@@ -2,6 +2,7 @@ import { db } from 'prisma/db.server.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
+import { getNextProposalNumber } from '~/shared/counters/proposal-counter.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import OrganizerProposalSubmittedEmail from '~/shared/emails/templates/organizers/proposal-submitted.tsx';
 import SpeakerProposalSubmittedEmail from '~/shared/emails/templates/speakers/proposal-submitted.tsx';
@@ -14,7 +15,6 @@ import {
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { TalkSaveData, TracksSaveData } from '~/shared/types/speaker-talk.types.ts';
-import { getNextProposalNumber } from '~/shared/utils/proposal-number.server.ts';
 
 export class TalkSubmission {
   constructor(

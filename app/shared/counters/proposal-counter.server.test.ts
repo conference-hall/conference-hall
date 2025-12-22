@@ -2,7 +2,7 @@ import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { flags } from '../feature-flags/flags.server.ts';
-import { getNextProposalNumber } from './proposal-number.server.ts';
+import { getNextProposalNumber } from './proposal-counter.server.ts';
 
 describe('getNextProposalNumber', () => {
   beforeEach(async () => {
