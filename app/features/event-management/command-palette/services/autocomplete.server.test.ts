@@ -54,7 +54,7 @@ describe('Autocomplete for event management', () => {
           });
 
           expect(results).toEqual([
-            { kind: 'proposals', id: proposal.id, title: 'React Best Practices', description: 'Peter Parker' },
+            { kind: 'proposals', id: proposal.id, label: 'React Best Practices', description: 'Peter Parker' },
           ]);
         });
 
@@ -86,7 +86,7 @@ describe('Autocomplete for event management', () => {
           expect(results[0]).toEqual({
             kind: 'proposals',
             id: proposal.id,
-            title: 'Advanced React',
+            label: 'Advanced React',
             description: 'Peter Parker, Tony Stark',
           });
         });
@@ -109,7 +109,7 @@ describe('Autocomplete for event management', () => {
           expect(results[0]).toEqual({
             kind: 'proposals',
             id: proposal.id,
-            title: 'Advanced React',
+            label: 'Advanced React',
             description: '',
           });
         });
@@ -140,7 +140,7 @@ describe('Autocomplete for event management', () => {
             {
               kind: 'speakers',
               id: eventSpeaker.id,
-              title: eventSpeaker.name,
+              label: eventSpeaker.name,
               description: eventSpeaker.company,
               picture: eventSpeaker.picture,
             },
@@ -162,7 +162,7 @@ describe('Autocomplete for event management', () => {
             {
               kind: 'speakers',
               id: eventSpeaker.id,
-              title: eventSpeaker.name,
+              label: eventSpeaker.name,
               description: eventSpeaker.company,
               picture: eventSpeaker.picture,
             },
@@ -225,7 +225,7 @@ describe('Autocomplete for event management', () => {
             {
               kind: 'speakers',
               id: eventSpeaker.id,
-              title: eventSpeaker.name,
+              label: eventSpeaker.name,
               description: eventSpeaker.company,
               picture: eventSpeaker.picture,
             },
@@ -250,7 +250,7 @@ describe('Autocomplete for event management', () => {
           expect(proposalResult).toEqual({
             kind: 'proposals',
             id: proposal.id,
-            title: 'React Testing',
+            label: 'React Testing',
             description: 'Peter Parker',
           });
 
@@ -258,7 +258,7 @@ describe('Autocomplete for event management', () => {
           expect(speakerResult).toEqual({
             kind: 'speakers',
             id: eventSpeaker.id,
-            title: eventSpeaker.name,
+            label: eventSpeaker.name,
             description: eventSpeaker.company,
             picture: eventSpeaker.picture,
           });

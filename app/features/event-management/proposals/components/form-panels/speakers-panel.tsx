@@ -53,7 +53,7 @@ export function SpeakersPanel({
     return (
       fetcher.data?.map((item) => ({
         value: item.id,
-        label: item.title,
+        label: item.label,
         picture: item.picture,
         data: { description: item.description },
       })) ?? []

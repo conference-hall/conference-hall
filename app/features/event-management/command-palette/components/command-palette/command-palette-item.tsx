@@ -7,7 +7,7 @@ import type { CommandPaletteItemData } from './command-palette.tsx';
 type Props = { item: CommandPaletteItemData; query: string };
 
 export function CommandPaletteItem({ item, query }: Props) {
-  const title = typeof item.title === 'function' ? item.title(query) : item.title;
+  const title = typeof item.label === 'function' ? item.label(query) : item.label;
 
   return (
     <ComboboxOption

@@ -28,7 +28,7 @@ export function EventCommandPalette({ team, event, closeText, onClose }: Props) 
       proposals.push({
         section: t('common.proposals'),
         id: 'search-more-proposals',
-        title: (query: string) => t('event-management.command-palette.event.more.proposals', { query }),
+        label: (query: string) => t('event-management.command-palette.event.more.proposals', { query }),
         icon: EllipsisHorizontalIcon,
       });
     }
@@ -42,7 +42,7 @@ export function EventCommandPalette({ team, event, closeText, onClose }: Props) 
       speakers.push({
         section: t('common.speakers'),
         id: 'search-more-speakers',
-        title: (query: string) => t('event-management.command-palette.event.more.speakers', { query }),
+        label: (query: string) => t('event-management.command-palette.event.more.speakers', { query }),
         icon: EllipsisHorizontalIcon,
       });
     }
