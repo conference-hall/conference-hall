@@ -27,7 +27,8 @@ type Props = {
     archivedAt?: Date | null;
     formats?: Array<{ id: string; name: string }>;
     categories?: Array<{ id: string; name: string }>;
-    createdAt: Date;
+    createdAt?: Date;
+    submittedAt?: Date;
   };
   actions?: ReactNode;
   action?: ReactNode;
@@ -89,21 +90,36 @@ export function TalkSection({
 
         <div className="flex gap-1">
           <ClientOnly>
-            {() => (
-              <Subtitle size="xs">
-                {t('common.created-on', {
-                  date: formatDatetime(talk.createdAt, { format: 'short', locale }),
-                  interpolation: { escapeValue: false },
-                })}
-              </Subtitle>
-            )}
+            {() =>
+              talk.createdAt ? (
+                <Subtitle size="xs">
+                  {t('common.created-on', {
+                    date: formatDatetime(talk.createdAt, { format: 'short', locale }),
+                    interpolation: { escapeValue: false },
+                  })}
+                </Subtitle>
+              ) : null
+            }
+          </ClientOnly>
+
+          <ClientOnly>
+            {() =>
+              talk.submittedAt ? (
+                <Subtitle size="xs">
+                  {t('common.submitted-on', {
+                    date: formatDatetime(talk.submittedAt, { format: 'short', locale }),
+                    interpolation: { escapeValue: false },
+                  })}
+                </Subtitle>
+              ) : null
+            }
           </ClientOnly>
 
           <ClientOnly>
             {() =>
               talk.archivedAt ? (
                 <Subtitle size="xs">
-                  {` - ${t('common.archived-at', {
+                  {` - ${t('common.archived-on', {
                     date: formatDatetime(talk.archivedAt, { format: 'short', locale }),
                     interpolation: { escapeValue: false },
                   })}`}

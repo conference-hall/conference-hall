@@ -15,7 +15,7 @@ export type ProposalData = {
   publicationStatus: PublicationStatus;
   confirmationStatus: ConfirmationStatus | null;
   archivedAt: Date | null;
-  createdAt: Date;
+  submittedAt: Date;
   speakers: Array<{ name: string | null }>;
   reviews: { summary?: GlobalReview; you: UserReview };
   comments: { count: number };

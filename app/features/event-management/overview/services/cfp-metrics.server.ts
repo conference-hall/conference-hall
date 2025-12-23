@@ -55,10 +55,10 @@ export class CfpMetrics extends EventAuthorization {
 
     const byFormats = await db.$queryRaw<Array<{ id: string; value: bigint }>>(
       Prisma.sql`
-        SELECT _proposals_formats."A" AS id, count(proposals.id) AS value 
+        SELECT _proposals_formats."A" AS id, count(proposals.id) AS value
         FROM _proposals_formats
         JOIN proposals ON proposals.id = _proposals_formats."B"
-        WHERE proposals."isDraft" IS FALSE 
+        WHERE proposals."isDraft" IS FALSE
         AND proposals."eventId" = ${eventId}
         GROUP BY _proposals_formats."A"
       `,
@@ -80,10 +80,10 @@ export class CfpMetrics extends EventAuthorization {
 
     const byCategories = await db.$queryRaw<Array<{ id: string; value: bigint }>>(
       Prisma.sql`
-        SELECT _proposals_categories."A" AS id, count(proposals.id) AS value 
+        SELECT _proposals_categories."A" AS id, count(proposals.id) AS value
         FROM _proposals_categories
         JOIN proposals ON proposals.id = _proposals_categories."B"
-        WHERE proposals."isDraft" IS FALSE 
+        WHERE proposals."isDraft" IS FALSE
         AND proposals."eventId" = ${eventId}
         GROUP BY _proposals_categories."A"
       `,
@@ -104,7 +104,7 @@ export class CfpMetrics extends EventAuthorization {
     const proposalsByDays = await db.$queryRaw<Array<{ date: Date; count: bigint; cumulative: bigint }>>(
       Prisma.sql`
         WITH data AS (
-          SELECT DATE_TRUNC('day', "createdAt") AS date, count(id) AS count
+          SELECT DATE_TRUNC('day', "submittedAt") AS date, count(id) AS count
           FROM proposals
           WHERE "eventId"=${eventId}
           AND "isDraft" IS FALSE
