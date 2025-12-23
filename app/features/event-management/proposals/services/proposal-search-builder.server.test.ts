@@ -154,6 +154,99 @@ describe('EventProposalsSearch', () => {
       expect(proposals.length).toBe(0);
     });
 
+    it('filters proposals by proposal number', async () => {
+      const { db } = await import('prisma/db.server.ts');
+      await db.proposal.update({
+        where: { id: proposal1.id },
+        data: { proposalNumber: 123 },
+      });
+
+      const filters = { query: '123' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBeGreaterThanOrEqual(1);
+      expect(proposals.some((p) => p.id === proposal1.id)).toBe(true);
+    });
+
+    it('filters proposals by proposal number with hash prefix', async () => {
+      const { db } = await import('prisma/db.server.ts');
+      await db.proposal.update({
+        where: { id: proposal2.id },
+        data: { proposalNumber: 456 },
+      });
+
+      const filters = { query: '#456' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBeGreaterThanOrEqual(1);
+      expect(proposals.some((p) => p.id === proposal2.id)).toBe(true);
+    });
+
+    it('searches proposal number OR title OR speaker with numeric query', async () => {
+      const { db } = await import('prisma/db.server.ts');
+      await db.proposal.update({
+        where: { id: proposal2.id },
+        data: { title: 'Talk about the year 1984' },
+      });
+      await db.proposal.update({
+        where: { id: proposal3.id },
+        data: { proposalNumber: 1984 },
+      });
+
+      const filters = { query: '1984' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(2);
+      expect(proposals.some((p) => p.id === proposal2.id)).toBe(true);
+      expect(proposals.some((p) => p.id === proposal3.id)).toBe(true);
+    });
+
+    it('does not search by proposal number when query contains non-numeric characters', async () => {
+      const { db } = await import('prisma/db.server.ts');
+      await db.proposal.update({
+        where: { id: proposal1.id },
+        data: { proposalNumber: 42, title: 'React 42 best practices' },
+      });
+
+      const filters = { query: 'react 42' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(1);
+      expect(proposals[0].id).toBe(proposal1.id);
+      expect(proposals[0].title).toBe('React 42 best practices');
+    });
+
+    it('does not filter by speaker when searching proposal number if withSpeakers is false', async () => {
+      const { db } = await import('prisma/db.server.ts');
+      await db.proposal.update({
+        where: { id: proposal1.id },
+        data: { proposalNumber: 999 },
+      });
+
+      const filters = { query: '999' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters, {
+        withSpeakers: false,
+        withReviews: false,
+      });
+      const proposals = await search.proposals();
+      expect(proposals.length).toBeGreaterThanOrEqual(1);
+      expect(proposals.some((p) => p.id === proposal1.id)).toBe(true);
+    });
+
+    it('handles query with whitespace around proposal number', async () => {
+      const { db } = await import('prisma/db.server.ts');
+      await db.proposal.update({
+        where: { id: proposal1.id },
+        data: { proposalNumber: 789 },
+      });
+
+      const filters = { query: '  789  ' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBeGreaterThanOrEqual(1);
+      expect(proposals.some((p) => p.id === proposal1.id)).toBe(true);
+    });
+
     it('filters proposals by formats', async () => {
       const filters = { formats: format.id };
       const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
