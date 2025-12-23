@@ -33,7 +33,7 @@ describe('SpeakerProposal', () => {
         abstract: proposal.abstract,
         references: proposal.references,
         level: proposal.level,
-        createdAt: proposal.createdAt,
+        submittedAt: proposal.submittedAt,
         languages: proposal.languages,
         invitationLink: `${APP_URL}/invite/proposal/${proposal.invitationCode}`,
         status: SpeakerProposalStatus.Submitted,

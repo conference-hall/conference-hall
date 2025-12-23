@@ -106,7 +106,7 @@ export class TalkSubmission {
     await db.$transaction(async (trx) => {
       const proposalNumber = await getNextProposalNumber(event.id, trx);
       await trx.proposal.update({
-        data: { isDraft: false, proposalNumber },
+        data: { isDraft: false, proposalNumber, submittedAt: new Date() },
         where: { id: proposal.id },
       });
     });

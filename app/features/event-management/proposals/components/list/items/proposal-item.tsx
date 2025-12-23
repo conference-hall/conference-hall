@@ -32,7 +32,7 @@ export function ProposalItem({
   const [params] = useSearchParams();
   const { canChangeProposalStatus } = useUserTeamPermissions();
 
-  const { id, proposalNumber, title, reviews, archivedAt, createdAt, deliberationStatus, tags, speakers, comments } =
+  const { id, proposalNumber, title, reviews, archivedAt, submittedAt, deliberationStatus, tags, speakers, comments } =
     proposal;
   const { you, summary } = reviews;
 
@@ -77,7 +77,9 @@ export function ProposalItem({
           <Text size="xs" variant="secondary" className="space-x-1">
             {proposalNumber ? <span>#{proposalNumber}</span> : null}
             {speakers.length ? <span>{t('common.proposed-by', { names: speakers.map((a) => a.name) })}</span> : null}
-            <ClientOnly>{() => <span>{` - ${formatDate(createdAt, { format: 'medium', locale })}`}</span>}</ClientOnly>
+            <ClientOnly>
+              {() => <span>{` - ${formatDate(submittedAt, { format: 'medium', locale })}`}</span>}
+            </ClientOnly>
           </Text>
         </div>
 

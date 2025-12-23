@@ -61,7 +61,7 @@ describe('ProposalReview', () => {
         publicationStatus: proposal.publicationStatus,
         confirmationStatus: proposal.confirmationStatus,
         archivedAt: null,
-        createdAt: proposal.createdAt,
+        submittedAt: proposal.submittedAt,
         languages: ['en'],
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],

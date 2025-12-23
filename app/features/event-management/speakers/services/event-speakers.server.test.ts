@@ -447,7 +447,7 @@ describe('EventSpeakers', () => {
           deliberationStatus: 'ACCEPTED',
           publicationStatus: 'PUBLISHED',
           confirmationStatus: 'CONFIRMED',
-          createdAt: proposal.createdAt,
+          submittedAt: proposal.submittedAt,
           speakers: [{ name: 'Peter Parker' }],
           comments: { count: 1 },
           tags: [{ id: tag.id, name: tag.name, color: tag.color }],

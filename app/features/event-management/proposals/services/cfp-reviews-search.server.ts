@@ -36,7 +36,7 @@ export class CfpReviewsSearch extends EventAuthorization {
           publicationStatus: proposal.publicationStatus,
           confirmationStatus: proposal.confirmationStatus,
           archivedAt: proposal.archivedAt,
-          createdAt: proposal.createdAt,
+          submittedAt: proposal.submittedAt,
           speakers: event.displayProposalsSpeakers
             ? proposal.speakers.map(({ name, picture }) => ({ name, picture }))
             : [],

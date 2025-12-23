@@ -137,7 +137,7 @@ export class EventSpeakers extends EventAuthorization {
             publicationStatus: proposal.publicationStatus,
             confirmationStatus: proposal.confirmationStatus,
             archivedAt: proposal.archivedAt,
-            createdAt: proposal.createdAt,
+            submittedAt: proposal.submittedAt,
             speakers: proposal.speakers.map((speaker) => ({ name: speaker.name })),
             reviews: {
               summary: event.displayProposalsReviews ? reviews.summary() : undefined,
@@ -147,7 +147,7 @@ export class EventSpeakers extends EventAuthorization {
             tags: proposal.tags,
           };
         })
-        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
+        .sort((a, b) => b.submittedAt.getTime() - a.submittedAt.getTime()),
     };
   }
 

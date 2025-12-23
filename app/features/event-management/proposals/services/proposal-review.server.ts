@@ -60,7 +60,7 @@ export class ProposalReview extends EventAuthorization {
       publicationStatus: proposal.publicationStatus,
       confirmationStatus: proposal.confirmationStatus,
       archivedAt: proposal.archivedAt,
-      createdAt: proposal.createdAt,
+      submittedAt: proposal.submittedAt,
       languages: proposal.languages as Languages,
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
