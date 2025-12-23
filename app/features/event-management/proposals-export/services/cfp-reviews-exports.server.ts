@@ -26,6 +26,7 @@ export class CfpReviewsExports extends EventAuthorization {
 
       return {
         id: proposal.id,
+        proposalNumber: proposal.proposalNumber,
         title: proposal.title,
         abstract: proposal.abstract,
         deliberationStatus: proposal.deliberationStatus,
@@ -76,6 +77,7 @@ export class CfpReviewsExports extends EventAuthorization {
 
       return {
         id: proposal.id,
+        proposalNumber: proposal.proposalNumber,
         title: proposal.title,
         level: proposal.level,
         formats: proposal.formats,
