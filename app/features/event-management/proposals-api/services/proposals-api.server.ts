@@ -37,6 +37,7 @@ export class EventProposalsApi {
 
         return {
           id: proposal.id,
+          proposalNumber: proposal.proposalNumber,
           title: proposal.title,
           abstract: proposal.abstract,
           deliberationStatus: proposal.deliberationStatus,

@@ -9,6 +9,11 @@ import type { ProposalsFilters, ReviewsFilter, StatusFilter } from './proposal-s
 
 type SearchOptions = { withSpeakers: boolean; withReviews: boolean };
 
+type QueryParseResult =
+  | { type: 'proposal-number'; number: number }
+  | { type: 'text-search'; query: string }
+  | { type: 'empty' };
+
 export class ProposalSearchBuilder {
   eventSlug: string;
   userId: string;
@@ -112,16 +117,33 @@ export class ProposalSearchBuilder {
     return { archivedAt: null };
   }
 
+  private parseSearchQuery(query?: string): QueryParseResult {
+    const trimmedQuery = query?.trim();
+    if (!trimmedQuery) return { type: 'empty' };
+
+    const withoutHash = trimmedQuery.startsWith('#') ? trimmedQuery.slice(1) : trimmedQuery;
+    if (/^\d+$/.test(withoutHash)) {
+      return { type: 'proposal-number', number: Number(withoutHash) };
+    }
+    return { type: 'text-search', query: trimmedQuery };
+  }
+
   private whereSearchClause(query?: string) {
-    if (!query) return undefined;
+    const parsed = this.parseSearchQuery(query);
+    if (parsed.type === 'empty') return undefined;
 
-    const byTitle: ProposalWhereInput = { title: { contains: query, mode: 'insensitive' } };
-    const bySpeakers: ProposalWhereInput = {
-      speakers: { some: { name: { contains: query, mode: 'insensitive' } } },
-    };
-    if (this.options.withSpeakers) return [byTitle, bySpeakers];
+    const searchValue = parsed.type === 'proposal-number' ? String(parsed.number) : parsed.query;
+    const clauses: ProposalWhereInput[] = [];
 
-    return [byTitle];
+    if (parsed.type === 'proposal-number') {
+      clauses.push({ proposalNumber: parsed.number });
+    }
+    clauses.push({ title: { contains: searchValue, mode: 'insensitive' } });
+
+    if (this.options.withSpeakers) {
+      clauses.push({ speakers: { some: { name: { contains: searchValue, mode: 'insensitive' } } } });
+    }
+    return clauses;
   }
 
   private reviewsClause(reviews?: ReviewsFilter): ReviewListRelationFilter | undefined {

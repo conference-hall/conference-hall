@@ -25,8 +25,8 @@ export default function ExportProposalsCards({ loaderData: results }: Route.Comp
       {results?.map((proposal) => (
         <div key={proposal.id} className="card">
           <div className="grow">
-            <Text size="l" weight="medium" truncate>
-              {proposal.title}
+            <Text size="l" weight="medium" className="line-clamp-2">
+              <span className="text-gray-500">#{proposal.proposalNumber}</span> {proposal.title}
             </Text>
             <Subtitle truncate>{proposal.speakers?.join(', ')}</Subtitle>
           </div>

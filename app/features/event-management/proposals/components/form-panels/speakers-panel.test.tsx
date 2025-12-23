@@ -9,13 +9,13 @@ const mockFetcher = {
   data: [
     {
       id: 'speaker1',
-      title: 'John Doe',
+      label: 'John Doe',
       description: 'Senior Developer',
       picture: 'https://example.com/john.jpg',
     },
     {
       id: 'speaker2',
-      title: 'Jane Smith',
+      label: 'Jane Smith',
       description: 'Tech Lead',
       picture: 'https://example.com/jane.jpg',
     },

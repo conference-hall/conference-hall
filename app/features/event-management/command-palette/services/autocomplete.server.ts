@@ -11,12 +11,11 @@ const AutocompleteFilterSchema = z.object({ query: z.string().optional(), kind: 
 
 type AutocompleteFilters = z.infer<typeof AutocompleteFilterSchema>;
 
-// todo(autocomplete): rename title to label
 // todo(autocomplete): migrate other proposal autocomplete to use this one
 type AutocompleteResult = {
   kind: string;
   id: string;
-  title: string;
+  label: string;
   description: string | null;
   picture?: string | null;
 };
@@ -57,7 +56,7 @@ export class Autocomplete extends EventAuthorization {
       return {
         kind: 'proposals',
         id: proposal.id,
-        title: proposal.title,
+        label: proposal.title,
         description:
           sortBy(proposal.speakers, 'name')
             ?.map(({ name }) => name)
@@ -83,7 +82,7 @@ export class Autocomplete extends EventAuthorization {
       return {
         kind: 'speakers',
         id: speaker.id,
-        title: speaker.name,
+        label: speaker.name,
         description: speaker.company,
         picture: speaker.picture,
       };

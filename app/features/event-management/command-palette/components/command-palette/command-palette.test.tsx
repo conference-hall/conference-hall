@@ -18,20 +18,20 @@ const MOCK_ITEMS: CommandPaletteItemData[] = [
   {
     section: 'Proposals',
     id: '1',
-    title: 'React Performance Best Practices',
+    label: 'React Performance Best Practices',
     description: 'John Doe',
     icon: MagnifyingGlassIcon,
   },
   {
     section: 'Proposals',
     id: '2',
-    title: 'Vue.js Advanced Patterns',
+    label: 'Vue.js Advanced Patterns',
     description: 'Jane Smith',
   },
   {
     section: 'Speakers',
     id: '3',
-    title: 'Alice Johnson',
+    label: 'Alice Johnson',
     description: 'Frontend Developer at Tech Corp',
     picture: '/avatar.jpg',
   },

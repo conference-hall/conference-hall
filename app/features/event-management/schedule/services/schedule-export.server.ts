@@ -42,6 +42,7 @@ export class EventScheduleExport extends EventAuthorization {
         proposal: proposal
           ? {
               id: proposal.id,
+              proposalNumber: proposal.proposalNumber,
               abstract: proposal.abstract,
               level: proposal.level || null,
               formats: proposal.formats.map(({ name }) => name),

@@ -49,6 +49,7 @@ describe('CfpReviewsExports', () => {
       expect(result).toEqual([
         {
           id: proposal.id,
+          proposalNumber: proposal.proposalNumber,
           title: proposal.title,
           deliberationStatus: proposal.deliberationStatus,
           confirmationStatus: proposal.confirmationStatus,
@@ -94,6 +95,7 @@ describe('CfpReviewsExports', () => {
       expect(result).toEqual([
         {
           id: proposal.id,
+          proposalNumber: proposal.proposalNumber,
           title: proposal.title,
           languages: proposal.languages,
           level: proposal.level,

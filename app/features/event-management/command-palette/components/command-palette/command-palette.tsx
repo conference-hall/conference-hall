@@ -9,7 +9,7 @@ import { CommandPaletteSection } from './command-palette-section.tsx';
 export type CommandPaletteItemData = {
   section: string;
   id: string;
-  title: string | ((query: string) => string);
+  label: string | ((query: string) => string);
   description?: string | null;
   icon?: React.ComponentType<any>;
   picture?: string | null;
