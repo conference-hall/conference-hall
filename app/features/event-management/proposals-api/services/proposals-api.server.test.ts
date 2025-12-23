@@ -36,12 +36,13 @@ describe('#EventProposalsApi', () => {
         name: event.name,
         proposals: [
           {
+            id: proposal.id,
+            proposalNumber: proposal.proposalNumber,
             title: proposal.title,
             abstract: proposal.abstract,
             level: 'BEGINNER',
             references: proposal.references,
             formats: [format.name],
-            id: proposal.id,
             categories: [category.name],
             tags: [tag.name],
             deliberationStatus: 'ACCEPTED',

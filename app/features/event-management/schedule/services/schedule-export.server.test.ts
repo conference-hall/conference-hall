@@ -17,7 +17,6 @@ describe('EventScheduleExport', () => {
   let event: Event;
   let schedule: Schedule;
   let track: ScheduleTrack;
-  let _track2: ScheduleTrack;
 
   beforeEach(async () => {
     owner = await userFactory();
@@ -26,7 +25,7 @@ describe('EventScheduleExport', () => {
     event = await eventFactory({ team, traits: ['conference'], attributes: { apiKey: '123' } });
     schedule = await scheduleFactory({ event });
     track = await scheduleTrackFactory({ name: 'Room 1', schedule });
-    _track2 = await scheduleTrackFactory({ name: 'Room 2', schedule });
+    await scheduleTrackFactory({ name: 'Room 2', schedule });
     await eventFactory({ team, traits: ['conference', 'withSchedule'] });
   });
 
@@ -67,6 +66,7 @@ describe('EventScheduleExport', () => {
             language: 'en',
             proposal: {
               id: proposal.id,
+              proposalNumber: proposal.proposalNumber,
               abstract: proposal.abstract,
               level: proposal.level || null,
               formats: [],
