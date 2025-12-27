@@ -1,4 +1,4 @@
-import type { TeamRole } from '../user/team-permissions.ts';
+import type { TeamRole } from '../authorization/types.ts';
 
 export type AuthenticatedUser = {
   id: string;

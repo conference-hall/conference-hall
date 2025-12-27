@@ -1,6 +1,7 @@
 import { db } from 'prisma/db.server.ts';
+import { UserTeamPermissions } from '../authorization/team-permissions.ts';
+import type { TeamPermission } from '../authorization/types.ts';
 import { ForbiddenOperationError } from '../errors.server.ts';
-import { type TeamPermission, UserTeamPermissions } from './team-permissions.ts';
 
 export class TeamAuthorization {
   protected userId: string;

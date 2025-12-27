@@ -1,6 +1,5 @@
 import { TeamRole } from 'prisma/generated/client.ts';
-
-import { UserTeamPermissions } from './team-permissions.ts';
+import { UserTeamPermissions } from '../authorization/team-permissions.ts';
 
 describe('UserTeamPermissions', () => {
   describe('#getPermissions', () => {

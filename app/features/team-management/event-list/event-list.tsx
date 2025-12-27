@@ -9,15 +9,16 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 import { EventCardLink } from '~/features/event-search/components/event-card.tsx';
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedTeamContext } from '~/shared/authorization/authorization.middleware.ts';
 import type { Route } from './+types/event-list.ts';
 import { TeamEvents } from './services/team-events.server.ts';
 
-export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+export const loader = async ({ request, context }: Route.LoaderArgs) => {
   const url = new URL(request.url);
   const archived = url.searchParams.get('archived') === 'true';
-  return TeamEvents.for(authUser.id, params.team).list(archived);
+
+  const authorizedTeam = context.get(AuthorizedTeamContext);
+  return TeamEvents.for(authorizedTeam).list(archived);
 };
 
 export default function TeamEventsRoute({ loaderData: events }: Route.ComponentProps) {

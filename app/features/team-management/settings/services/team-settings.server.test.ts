@@ -4,6 +4,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { z } from 'zod';
+import { getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { TeamSettings } from './team-settings.server.ts';
 
@@ -19,7 +20,8 @@ describe('TeamSettings', () => {
       const team = await teamFactory({ owners: [user], attributes: { name: 'My team', slug: 'my-team' } });
       const event = await eventFactory({ team });
 
-      await TeamSettings.for(user.id, team.slug).delete();
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+      await TeamSettings.for(authorizedTeam).delete();
 
       const deletedEvent = await db.event.findUnique({ where: { id: event.id } });
       expect(deletedEvent).toBeNull();
@@ -35,11 +37,8 @@ describe('TeamSettings', () => {
 
     it('throws an error if user is not owner', async () => {
       const team = await teamFactory({ members: [user] });
-      await expect(TeamSettings.for(user.id, team.slug).delete()).rejects.toThrowError(ForbiddenOperationError);
-    });
-
-    it('throws an error when team not found', async () => {
-      await expect(TeamSettings.for(user.id, 'XXX').delete()).rejects.toThrowError(ForbiddenOperationError);
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+      await expect(TeamSettings.for(authorizedTeam).delete()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -50,11 +49,13 @@ describe('TeamSettings', () => {
         owners: [user],
       });
 
-      let result = await TeamSettings.for(user.id, team.slug).updateSettings({ name: 'name', slug: 'slug' });
+      const authorizedSlug1 = await getAuthorizedTeam(user.id, team.slug);
+      let result = await TeamSettings.for(authorizedSlug1).updateSettings({ name: 'name', slug: 'slug' });
       expect(result.name).toEqual('name');
       expect(result.slug).toEqual('slug');
 
-      result = await TeamSettings.for(user.id, result.slug).updateSettings({ name: 'name 2', slug: 'slug' });
+      const authorizedSlug2 = await getAuthorizedTeam(user.id, result.slug);
+      result = await TeamSettings.for(authorizedSlug2).updateSettings({ name: 'name 2', slug: 'slug' });
       expect(result.name).toEqual('name 2');
       expect(result.slug).toEqual('slug');
     });
@@ -62,8 +63,9 @@ describe('TeamSettings', () => {
     it('throws an error if user is not owner', async () => {
       const team = await teamFactory({ members: [user] });
 
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
       await expect(
-        TeamSettings.for(user.id, team.slug).updateSettings({ name: 'name', slug: 'slug' }),
+        TeamSettings.for(authorizedTeam).updateSettings({ name: 'name', slug: 'slug' }),
       ).rejects.toThrowError(ForbiddenOperationError);
     });
   });
@@ -76,13 +78,15 @@ describe('TeamSettings', () => {
     });
 
     it('validates the team data', async () => {
-      const schema = await TeamSettings.for(user.id, team.slug).buildUpdateSchema();
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+      const schema = await TeamSettings.for(authorizedTeam).buildUpdateSchema();
       const result = await schema.safeParseAsync({ name: 'Hello world', slug: 'hello-world' });
       expect(result.success && result.data).toEqual({ name: 'Hello world', slug: 'hello-world' });
     });
 
     it('returns errors when data invalid', async () => {
-      const schema = await TeamSettings.for(user.id, team.slug).buildUpdateSchema();
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+      const schema = await TeamSettings.for(authorizedTeam).buildUpdateSchema();
       const result = await schema.safeParseAsync({ name: 'H', slug: 'h' });
 
       expect(result.success).toBe(false);
@@ -94,7 +98,8 @@ describe('TeamSettings', () => {
     });
 
     it('validates slug format (alpha-num and dash only)', async () => {
-      const schema = await TeamSettings.for(user.id, team.slug).buildUpdateSchema();
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+      const schema = await TeamSettings.for(authorizedTeam).buildUpdateSchema();
       const result = await schema.safeParseAsync({ name: 'Hello world', slug: 'Hello world/' });
 
       expect(result.success).toBe(false);
@@ -106,8 +111,9 @@ describe('TeamSettings', () => {
 
     it('returns an error when slug already exists', async () => {
       await teamFactory({ attributes: { slug: 'hello-world2' } });
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
 
-      const schema = await TeamSettings.for(user.id, team.slug).buildUpdateSchema();
+      const schema = await TeamSettings.for(authorizedTeam).buildUpdateSchema();
       const result = await schema.safeParseAsync({ name: 'Hello world', slug: 'hello-world2' });
 
       expect(result.success).toBe(false);

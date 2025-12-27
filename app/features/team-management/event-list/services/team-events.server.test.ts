@@ -1,7 +1,7 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import { getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { TeamEvents } from './team-events.server.ts';
 
 describe('TeamEvents', () => {
@@ -15,7 +15,8 @@ describe('TeamEvents', () => {
       const team2 = await teamFactory({ owners: [user] });
       await eventFactory({ traits: ['conference-cfp-open'], team: team2 });
 
-      const events = await TeamEvents.for(user.id, team.slug).list(false);
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+      const events = await TeamEvents.for(authorizedTeam).list(false);
 
       expect(events).toEqual([
         {
@@ -47,7 +48,8 @@ describe('TeamEvents', () => {
       const event = await eventFactory({ attributes: { name: 'B' }, team, traits: ['meetup', 'archived'] });
       await eventFactory({ attributes: { name: 'A' }, team, traits: ['conference'] });
 
-      const events = await TeamEvents.for(user.id, team.slug).list(true);
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+      const events = await TeamEvents.for(authorizedTeam).list(true);
 
       expect(events).toEqual([
         {
@@ -61,14 +63,6 @@ describe('TeamEvents', () => {
           cfpState: 'CLOSED',
         },
       ]);
-    });
-
-    it('throws an error when user not member of event team', async () => {
-      const user = await userFactory();
-      const team = await teamFactory({ attributes: { slug: 'my-team' } });
-      await eventFactory({ team });
-
-      await expect(TeamEvents.for(user.id, team.slug).list(false)).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

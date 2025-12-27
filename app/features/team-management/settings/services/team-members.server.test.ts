@@ -1,5 +1,6 @@
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { TeamMembers } from './team-members.server.ts';
 
@@ -27,7 +28,9 @@ describe('TeamMembers', () => {
       const other = await userFactory();
       await teamFactory({ owners: [other] });
 
-      const data = await TeamMembers.for(owner.id, team.slug).list({}, 1);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const data = await TeamMembers.for(authorizedTeam).list({}, 1);
       expect(data.pagination).toEqual({ current: 1, total: 1 });
 
       expect(data.members).toEqual([
@@ -36,23 +39,15 @@ describe('TeamMembers', () => {
         { id: '3', name: 'Peter Parker', role: 'REVIEWER', picture: 'https://img.com/c.png' },
       ]);
 
-      const filtered = await TeamMembers.for(owner.id, team.slug).list({ query: 'kent' }, 1);
+      const filtered = await TeamMembers.for(authorizedTeam).list({ query: 'kent' }, 1);
       expect(filtered.members).toEqual([
         { id: '1', name: 'Clark Kent', role: 'OWNER', picture: 'https://img.com/a.png' },
       ]);
 
-      const roleFiltered = await TeamMembers.for(owner.id, team.slug).list({ role: 'MEMBER' }, 1);
+      const roleFiltered = await TeamMembers.for(authorizedTeam).list({ role: 'MEMBER' }, 1);
       expect(roleFiltered.members).toEqual([
         { id: '2', name: 'Bruce Wayne', role: 'MEMBER', picture: 'https://img.com/b.png' },
       ]);
-    });
-
-    it('returns nothing when user is not owner of the team', async () => {
-      const user = await userFactory();
-      const owner = await userFactory();
-      const team = await teamFactory({ owners: [owner], attributes: { slug: 'my-team' } });
-
-      await expect(TeamMembers.for(user.id, team.slug).list({}, 1)).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -62,9 +57,11 @@ describe('TeamMembers', () => {
       const member = await userFactory();
       const team = await teamFactory({ owners: [owner], members: [member] });
 
-      await TeamMembers.for(member.id, team.slug).leave();
+      const authorizedMember = await getAuthorizedTeam(member.id, team.slug);
+      await TeamMembers.for(authorizedMember).leave();
 
-      const data = await TeamMembers.for(owner.id, team.slug).list({}, 1);
+      const authorizedOwner = await getAuthorizedTeam(owner.id, team.slug);
+      const data = await TeamMembers.for(authorizedOwner).list({}, 1);
       expect(data.members).toEqual([{ id: owner.id, name: owner.name, role: 'OWNER', picture: owner.picture }]);
     });
 
@@ -72,15 +69,8 @@ describe('TeamMembers', () => {
       const owner = await userFactory();
       const team = await teamFactory({ owners: [owner] });
 
-      await expect(TeamMembers.for(owner.id, team.slug).leave()).rejects.toThrowError(ForbiddenOperationError);
-    });
-
-    it('throws an error when user does not belong to the team', async () => {
-      const user = await userFactory();
-      const owner = await userFactory();
-      const team = await teamFactory({ owners: [owner] });
-
-      await expect(TeamMembers.for(user.id, team.slug).leave()).rejects.toThrowError(ForbiddenOperationError);
+      const authorizedOwner = await getAuthorizedTeam(owner.id, team.slug);
+      await expect(TeamMembers.for(authorizedOwner).leave()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -90,9 +80,10 @@ describe('TeamMembers', () => {
       const member = await userFactory();
       const team = await teamFactory({ owners: [owner], members: [member] });
 
-      await TeamMembers.for(owner.id, team.slug).remove(member.id);
+      const authorizedOwner = await getAuthorizedTeam(owner.id, team.slug);
+      await TeamMembers.for(authorizedOwner).remove(member.id);
 
-      const data = await TeamMembers.for(owner.id, team.slug).list({}, 1);
+      const data = await TeamMembers.for(authorizedOwner).list({}, 1);
       expect(data.members).toEqual([{ id: owner.id, name: owner.name, role: 'OWNER', picture: owner.picture }]);
     });
 
@@ -100,15 +91,8 @@ describe('TeamMembers', () => {
       const owner = await userFactory();
       const team = await teamFactory({ owners: [owner] });
 
-      await expect(TeamMembers.for(owner.id, team.slug).remove(owner.id)).rejects.toThrowError(ForbiddenOperationError);
-    });
-
-    it('throws an error when user is not owner of the team', async () => {
-      const user = await userFactory();
-      const owner = await userFactory();
-      const team = await teamFactory({ owners: [owner] });
-
-      await expect(TeamMembers.for(user.id, team.slug).remove(owner.id)).rejects.toThrowError(ForbiddenOperationError);
+      const authorizedOwner = await getAuthorizedTeam(owner.id, team.slug);
+      await expect(TeamMembers.for(authorizedOwner).remove(owner.id)).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -118,9 +102,10 @@ describe('TeamMembers', () => {
       const member = await userFactory();
       const team = await teamFactory({ owners: [owner], members: [member] });
 
-      await TeamMembers.for(owner.id, team.slug).changeRole(member.id, 'REVIEWER');
+      const authorizedOwner = await getAuthorizedTeam(owner.id, team.slug);
+      await TeamMembers.for(authorizedOwner).changeRole(member.id, 'REVIEWER');
 
-      const data = await TeamMembers.for(owner.id, team.slug).list({ query: member.name }, 1);
+      const data = await TeamMembers.for(authorizedOwner).list({ query: member.name }, 1);
       expect(data.members).toEqual([{ id: member.id, name: member.name, role: 'REVIEWER', picture: member.picture }]);
     });
 
@@ -128,17 +113,8 @@ describe('TeamMembers', () => {
       const owner = await userFactory();
       const team = await teamFactory({ owners: [owner] });
 
-      await expect(TeamMembers.for(owner.id, team.slug).changeRole(owner.id, 'REVIEWER')).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
-    });
-
-    it('throws an error when user is not owner of the team', async () => {
-      const owner = await userFactory();
-      const member = await userFactory();
-      const team = await teamFactory({ owners: [owner], members: [member] });
-
-      await expect(TeamMembers.for(member.id, team.slug).changeRole(owner.id, 'REVIEWER')).rejects.toThrowError(
+      const authorizedOwner = await getAuthorizedTeam(owner.id, team.slug);
+      await expect(TeamMembers.for(authorizedOwner).changeRole(owner.id, 'REVIEWER')).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });

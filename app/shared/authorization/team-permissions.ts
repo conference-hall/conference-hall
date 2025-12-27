@@ -1,27 +1,4 @@
-export type TeamRole = 'OWNER' | 'MEMBER' | 'REVIEWER';
-
-type TeamPermissions = {
-  canAccessTeam: boolean;
-  canEditTeam: boolean;
-  canDeleteTeam: boolean;
-  canManageTeamMembers: boolean;
-  canLeaveTeam: boolean;
-  canAccessEvent: boolean;
-  canCreateEvent: boolean;
-  canEditEvent: boolean;
-  canDeleteEvent: boolean;
-  canCreateEventProposal: boolean;
-  canCreateEventSpeaker: boolean;
-  canEditEventSpeaker: boolean;
-  canEditEventProposal: boolean;
-  canManageConversations: boolean;
-  canExportEventProposals: boolean;
-  canChangeProposalStatus: boolean;
-  canPublishEventResults: boolean;
-  canEditEventSchedule: boolean;
-};
-
-export type TeamPermission = keyof TeamPermissions;
+import type { TeamPermission, TeamPermissions, TeamRole } from './types.ts';
 
 const TEAM_OWNER_PERMISSIONS: TeamPermissions = {
   canAccessTeam: true,

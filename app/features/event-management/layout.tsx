@@ -17,12 +17,14 @@ import { Link } from '~/design-system/links.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { CurrentEventTeamProvider, useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedTeamContext, requireAuthorizedTeam } from '~/shared/authorization/authorization.middleware.ts';
 import { TeamFetcher } from '../team-management/services/team-fetcher.server.ts';
 import type { Route } from './+types/layout.ts';
 import { useScheduleFullscreen } from './schedule/components/header/use-schedule-fullscreen.tsx';
 import { EventFetcher } from './services/event-fetcher.server.ts';
 
-export const middleware = [requiredAuthMiddleware];
+// todo(autho): change with requireAuthorizedEvent
+export const middleware = [requiredAuthMiddleware, requireAuthorizedTeam];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [
@@ -37,7 +39,8 @@ export const loader = async ({ request, params, context }: Route.LoaderArgs) => 
     return redirect(`/team/${params.team}/${params.event}/overview`);
   }
 
-  const team = await TeamFetcher.for(authUser.id, params.team).get();
+  const authorizedTeam = context.get(AuthorizedTeamContext);
+  const team = await TeamFetcher.for(authorizedTeam).get();
   const event = await EventFetcher.for(authUser.id, params.team, params.event).get();
 
   return { team, event };
