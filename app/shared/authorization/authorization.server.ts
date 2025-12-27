@@ -2,7 +2,8 @@ import { db } from 'prisma/db.server.ts';
 import { ForbiddenOperationError } from '../errors.server.ts';
 import { UserTeamPermissions } from './team-permissions.ts';
 
-export async function checkTeamAuthorizations(userId: string, teamSlug: string) {
+// todo(autho): add exhaustive tests
+export async function getAuthorizedTeam(userId: string, teamSlug: string) {
   const member = await db.teamMember.findFirst({ where: { memberId: userId, team: { slug: teamSlug } } });
   if (!member) throw new ForbiddenOperationError();
 
@@ -16,8 +17,9 @@ export async function checkTeamAuthorizations(userId: string, teamSlug: string) 
   };
 }
 
-export async function checkEventAuthorizations(userId: string, teamSlug: string, eventSlug: string) {
-  const teamAuthContext = await checkTeamAuthorizations(userId, teamSlug);
+// todo(autho): add exhaustive tests
+export async function getAuthorizedEvent(userId: string, teamSlug: string, eventSlug: string) {
+  const teamAuthContext = await getAuthorizedTeam(userId, teamSlug);
 
   const event = await db.event.findUnique({ where: { slug: eventSlug, teamId: teamAuthContext.teamId } });
   if (!event) throw new ForbiddenOperationError();
