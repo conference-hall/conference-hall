@@ -1,6 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
-import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
+import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
 
 const TeamUpdateSchema = z.object({
@@ -8,23 +9,28 @@ const TeamUpdateSchema = z.object({
   slug: SlugSchema,
 });
 
-export class TeamSettings extends TeamAuthorization {
-  static for(userId: string, team: string) {
-    return new TeamSettings(userId, team);
+export class TeamSettings {
+  constructor(private authorizedTeam: AuthorizedTeam) {}
+
+  static for(authorizedTeam: AuthorizedTeam) {
+    return new TeamSettings(authorizedTeam);
   }
 
   async delete() {
-    const { member } = await this.checkMemberPermissions('canEditTeam');
-    return db.team.delete({ where: { id: member.teamId } });
+    const { teamId, permissions } = this.authorizedTeam;
+    if (!permissions.canEditTeam) throw new ForbiddenOperationError();
+    return db.team.delete({ where: { id: teamId } });
   }
 
   async updateSettings(data: z.infer<typeof TeamUpdateSchema>) {
-    await this.checkMemberPermissions('canEditTeam');
-    return db.team.update({ where: { slug: this.team }, data });
+    const { teamId, permissions } = this.authorizedTeam;
+    if (!permissions.canEditTeam) throw new ForbiddenOperationError();
+    return db.team.update({ where: { id: teamId }, data });
   }
 
   async isSlugValid(slug: string) {
-    const count = await db.team.count({ where: { AND: [{ slug }, { slug: { not: this.team } }] } });
+    const { teamId } = this.authorizedTeam;
+    const count = await db.team.count({ where: { AND: [{ slug }, { id: { not: teamId } }] } });
     return count === 0;
   }
 

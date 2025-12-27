@@ -3,25 +3,28 @@ import { db } from 'prisma/db.server.ts';
 import type { TeamRole } from 'prisma/generated/client.ts';
 import type { TeamMemberWhereInput } from 'prisma/generated/models.ts';
 import { z } from 'zod';
+import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
 
 export const MembersFiltersSchema = z.object({
   query: z.string().trim().optional(),
   role: z.enum(['OWNER', 'MEMBER', 'REVIEWER']).optional(),
 });
 
-export class TeamMembers extends TeamAuthorization {
-  static for(userId: string, team: string) {
-    return new TeamMembers(userId, team);
+export class TeamMembers {
+  constructor(private authorizedTeam: AuthorizedTeam) {}
+
+  static for(authorizedTeam: AuthorizedTeam) {
+    return new TeamMembers(authorizedTeam);
   }
 
   async list(filters: z.infer<typeof MembersFiltersSchema>, page: number) {
-    await this.checkMemberPermissions('canAccessTeam');
+    const { teamId, permissions } = this.authorizedTeam;
+    if (!permissions.canAccessTeam) throw new ForbiddenOperationError();
 
     const whereClause: TeamMemberWhereInput = {
-      team: { slug: this.team },
+      teamId,
       ...(filters?.query && { member: { name: { contains: filters.query, mode: 'insensitive' } } }),
       ...(filters?.role && { role: filters.role }),
     };
@@ -51,22 +54,26 @@ export class TeamMembers extends TeamAuthorization {
   }
 
   async leave() {
-    const {
-      member: { memberId, teamId },
-    } = await this.checkMemberPermissions('canLeaveTeam');
-    return db.teamMember.delete({ where: { memberId_teamId: { memberId, teamId } } });
+    const { userId, teamId, permissions } = this.authorizedTeam;
+    if (!permissions.canLeaveTeam) throw new ForbiddenOperationError();
+    return db.teamMember.delete({ where: { memberId_teamId: { memberId: userId, teamId } } });
   }
 
   async remove(memberId: string) {
-    await this.checkMemberPermissions('canManageTeamMembers');
-    if (memberId === this.userId) throw new ForbiddenOperationError();
-    return db.teamMember.deleteMany({ where: { team: { slug: this.team }, memberId } });
+    const { userId, teamId, permissions } = this.authorizedTeam;
+    if (!permissions.canManageTeamMembers) throw new ForbiddenOperationError();
+    if (memberId === userId) throw new ForbiddenOperationError();
+    return db.teamMember.delete({ where: { memberId_teamId: { memberId, teamId } } });
   }
 
   async changeRole(memberId: string, role: TeamRole) {
-    await this.checkMemberPermissions('canManageTeamMembers');
-    if (memberId === this.userId) throw new ForbiddenOperationError();
-    return await db.teamMember.updateMany({ data: { role }, where: { team: { slug: this.team }, memberId } });
+    const { userId, teamId, permissions } = this.authorizedTeam;
+    if (!permissions.canManageTeamMembers) throw new ForbiddenOperationError();
+    if (memberId === userId) throw new ForbiddenOperationError();
+    return db.teamMember.update({
+      data: { role },
+      where: { memberId_teamId: { memberId, teamId } },
+    });
   }
 }
 
