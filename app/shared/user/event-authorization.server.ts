@@ -1,7 +1,7 @@
 import { db } from 'prisma/db.server.ts';
+import type { TeamPermission } from '../authorization/types.ts';
 import { ForbiddenOperationError } from '../errors.server.ts';
 import { TeamAuthorization } from './team-authorization.server.ts';
-import type { TeamPermission } from './team-permissions.ts';
 
 export class EventAuthorization extends TeamAuthorization {
   protected event: string;
