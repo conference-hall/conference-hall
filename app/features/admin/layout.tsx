@@ -3,17 +3,10 @@ import { href, Outlet } from 'react-router';
 import { NavbarEvent } from '~/app-platform/components/navbar/navbar-event.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
-import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
-import { UserAccount } from '~/shared/user/user-account.server.ts';
-import type { Route } from './+types/layout.ts';
+import { requireAuth } from '~/shared/authentication/auth.middleware.ts';
+import { requireAdmin } from '~/shared/authorization/authorization.middleware.ts';
 
-export const middleware = [requireAuth];
-
-export const loader = async ({ context }: Route.LoaderArgs) => {
-  const authUser = context.get(RequireAuthContext);
-  await UserAccount.needsAdminRole(authUser.id);
-  return null;
-};
+export const middleware = [requireAuth, requireAdmin];
 
 export default function AdminLayoutRoute() {
   const { t } = useTranslation();

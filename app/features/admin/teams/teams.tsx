@@ -8,14 +8,12 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { SortMenu } from '~/design-system/list/sort-menu.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import type { Route } from './+types/teams.ts';
 import { AdminTeams, TeamsSearchFiltersSchema } from './services/admin-teams.server.ts';
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
-  const authUser = context.get(RequireAuthContext);
-  const adminTeams = await AdminTeams.for(authUser.id);
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const adminTeams = new AdminTeams();
   const { searchParams } = new URL(request.url);
   const result = parseWithZod(searchParams, { schema: TeamsSearchFiltersSchema });
   const filters = result.status === 'success' ? result.value : {};

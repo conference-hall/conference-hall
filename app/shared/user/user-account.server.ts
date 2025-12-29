@@ -176,13 +176,6 @@ export class UserAccount {
     }
   }
 
-  static async needsAdminRole(userId: string) {
-    const user = await db.user.findUnique({ where: { id: userId, admin: true } });
-    if (!user) {
-      throw new NotAuthorizedError();
-    }
-  }
-
   static async deleteAccount(userId: string, locale: string, sendConfirmationEmail = true) {
     const user = await db.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotAuthorizedError();

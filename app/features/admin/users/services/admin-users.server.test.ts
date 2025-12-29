@@ -4,7 +4,7 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
 import { auth } from '~/shared/authentication/firebase.server.ts';
-import { NotAuthorizedError, UserNotFoundError } from '~/shared/errors.server.ts';
+import { UserNotFoundError } from '~/shared/errors.server.ts';
 import { AdminUsers } from './admin-users.server.ts';
 
 vi.mock('~/shared/authentication/firebase.server.ts', () => ({ auth: { getUser: vi.fn(), deleteUser: vi.fn() } }));
@@ -20,15 +20,9 @@ describe('AdminUsers', () => {
     user2 = await userFactory({ traits: ['peter-parker'] });
   });
 
-  describe('AdminUsers.for', () => {
-    it('throws an error when user is not admin', async () => {
-      await expect(AdminUsers.for(user1.id)).rejects.toThrowError(NotAuthorizedError);
-    });
-  });
-
   describe('#listUsers', () => {
     it('lists all users', async () => {
-      const adminUsers = await AdminUsers.for(admin.id);
+      const adminUsers = new AdminUsers();
       const users = await adminUsers.listUsers({}, 1);
 
       expect(users.filters).toEqual({});
@@ -48,7 +42,7 @@ describe('AdminUsers', () => {
     });
 
     it('filters users by name', async () => {
-      const adminUsers = await AdminUsers.for(admin.id);
+      const adminUsers = new AdminUsers();
       const users = await adminUsers.listUsers({ query: 'bruce way' }, 1);
 
       expect(users.filters).toEqual({ query: 'bruce way' });
@@ -60,7 +54,7 @@ describe('AdminUsers', () => {
     });
 
     it('filters users by email', async () => {
-      const adminUsers = await AdminUsers.for(admin.id);
+      const adminUsers = new AdminUsers();
       const users = await adminUsers.listUsers({ query: 'batman@example.com' }, 1);
 
       expect(users.filters).toEqual({ query: 'batman@example.com' });
@@ -72,7 +66,7 @@ describe('AdminUsers', () => {
     });
 
     it('paginates results', async () => {
-      const adminUsers = await AdminUsers.for(admin.id);
+      const adminUsers = new AdminUsers();
       const users = await adminUsers.listUsers({}, 1, 1);
 
       expect(users.pagination).toEqual({ current: 1, pages: 3 });
@@ -95,7 +89,7 @@ describe('AdminUsers', () => {
         providerData: [{ providerId: 'password', email: user1.email }],
       });
 
-      const adminUsers = await AdminUsers.for(admin.id);
+      const adminUsers = new AdminUsers();
       const user = await adminUsers.getUserInfo(user1.id);
 
       const teamMember = await db.teamMember.findFirst({ where: { memberId: user1.id, teamId: team.id } });
@@ -126,7 +120,7 @@ describe('AdminUsers', () => {
       const getUser = auth.getUser as Mock;
       getUser.mockRejectedValue(new Error('User not found'));
 
-      const adminUsers = await AdminUsers.for(admin.id);
+      const adminUsers = new AdminUsers();
       const user = await adminUsers.getUserInfo(user1.id);
 
       const teamMember = await db.teamMember.findFirst({ where: { memberId: user1.id, teamId: team.id } });
@@ -154,7 +148,7 @@ describe('AdminUsers', () => {
     });
 
     it('throws an error when user is not found', async () => {
-      const adminUsers = await AdminUsers.for(admin.id);
+      const adminUsers = new AdminUsers();
 
       await expect(adminUsers.getUserInfo('xxx')).rejects.toThrowError(UserNotFoundError);
     });
@@ -165,7 +159,7 @@ describe('AdminUsers', () => {
       const deleteUserMock = auth.deleteUser as Mock;
       deleteUserMock.mockResolvedValue(undefined);
 
-      const adminUsers = await AdminUsers.for(admin.id);
+      const adminUsers = new AdminUsers();
       await adminUsers.deleteUser(user1.id);
 
       const deletedUser = await db.user.findUnique({ where: { id: user1.id } });
@@ -173,13 +167,9 @@ describe('AdminUsers', () => {
     });
 
     it('throws an error when target user is not found', async () => {
-      const adminUsers = await AdminUsers.for(admin.id);
+      const adminUsers = new AdminUsers();
 
       await expect(adminUsers.deleteUser('xxx')).rejects.toThrowError(UserNotFoundError);
-    });
-
-    it('throws an error when user is not admin', async () => {
-      await expect(AdminUsers.for(user1.id)).rejects.toThrowError(NotAuthorizedError);
     });
   });
 });

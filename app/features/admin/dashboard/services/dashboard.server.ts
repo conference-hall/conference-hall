@@ -1,12 +1,8 @@
 import { db } from 'prisma/db.server.ts';
 import type { EventType } from 'prisma/generated/client.ts';
-import { UserAccount } from '~/shared/user/user-account.server.ts';
 
 export class AdminDashboard {
-  private constructor() {}
-
-  static async for(userId: string) {
-    await UserAccount.needsAdminRole(userId);
+  static async for() {
     return new AdminDashboard();
   }
 

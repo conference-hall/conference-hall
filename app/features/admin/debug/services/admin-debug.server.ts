@@ -1,17 +1,13 @@
 import { z } from 'zod';
 import { testJob } from '~/features/admin/debug/services/jobs/test.job.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
-import { UserAccount } from '~/shared/user/user-account.server.ts';
 
 export const TestEmailSchema = z.object({ to: z.email() });
 
 type TestEmail = z.infer<typeof TestEmailSchema>;
 
 export class AdminDebug {
-  private constructor() {}
-
-  static async for(userId: string) {
-    await UserAccount.needsAdminRole(userId);
+  static async for() {
     return new AdminDebug();
   }
 

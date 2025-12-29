@@ -1,32 +1,18 @@
-import type { User } from 'prisma/generated/client.ts';
-import { userFactory } from 'tests/factories/users.ts';
-import { NotAuthorizedError, NotFoundError } from '~/shared/errors.server.ts';
+import { NotFoundError } from '~/shared/errors.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { AdminFlags } from './admin-flags.server.ts';
 
 describe('AdminFlags', () => {
-  let admin: User;
-  let user: User;
-
-  beforeEach(async () => {
-    admin = await userFactory({ traits: ['admin'] });
-    user = await userFactory();
-  });
-
   describe('AdminFlags.for', () => {
-    it('throws an error when user is not admin', async () => {
-      await expect(AdminFlags.for(user.id)).rejects.toThrowError(NotAuthorizedError);
-    });
-
     it('returns an instance for admin user', async () => {
-      const adminFlags = await AdminFlags.for(admin.id);
+      const adminFlags = new AdminFlags();
       expect(adminFlags).toBeInstanceOf(AdminFlags);
     });
   });
 
   describe('#list', () => {
     it('lists all flags with their configurations', async () => {
-      const adminFlags = await AdminFlags.for(admin.id);
+      const adminFlags = new AdminFlags();
       const flagsList = await adminFlags.list();
 
       expect(flagsList).toEqual(
@@ -45,7 +31,7 @@ describe('AdminFlags', () => {
 
   describe('#update', () => {
     it('updates a flag value', async () => {
-      const adminFlags = await AdminFlags.for(admin.id);
+      const adminFlags = new AdminFlags();
       const flagKey = 'seo';
       const newValue = 'true';
 
@@ -56,7 +42,7 @@ describe('AdminFlags', () => {
     });
 
     it('throws an error when updating a non-existent flag', async () => {
-      const adminFlags = await AdminFlags.for(admin.id);
+      const adminFlags = new AdminFlags();
       const nonExistentFlagKey = 'nonExistentFlag';
       const newValue = 'true';
 

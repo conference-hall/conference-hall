@@ -2,18 +2,15 @@ import type { Team, User } from 'prisma/generated/client.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { NotAuthorizedError } from '~/shared/errors.server.ts';
 import { AdminTeams } from './admin-teams.server.ts';
 
 describe('AdminTeams', () => {
-  let admin: User;
   let user1: User;
   let user2: User;
   let team1: Team;
   let team2: Team;
 
   beforeEach(async () => {
-    admin = await userFactory({ traits: ['clark-kent', 'admin'] });
     user1 = await userFactory({ traits: ['bruce-wayne'] });
     user2 = await userFactory({ traits: ['peter-parker'] });
     team1 = await teamFactory({ attributes: { name: 'Team 1' }, owners: [user1] });
@@ -21,15 +18,9 @@ describe('AdminTeams', () => {
     await eventFactory({ team: team2 });
   });
 
-  describe('AdminTeams.for', () => {
-    it('throws an error when user is not admin', async () => {
-      await expect(AdminTeams.for(user1.id)).rejects.toThrowError(NotAuthorizedError);
-    });
-  });
-
   describe('#listTeams', () => {
     it('lists all teams', async () => {
-      const adminTeams = await AdminTeams.for(admin.id);
+      const adminTeams = new AdminTeams();
       const teams = await adminTeams.listTeams({}, 1);
 
       expect(teams.filters).toEqual({});
@@ -50,7 +41,7 @@ describe('AdminTeams', () => {
     });
 
     it('filters teams by name', async () => {
-      const adminTeams = await AdminTeams.for(admin.id);
+      const adminTeams = new AdminTeams();
       const teams = await adminTeams.listTeams({ query: 'team 1' }, 1);
 
       expect(teams.filters).toEqual({ query: 'team 1' });
@@ -62,7 +53,7 @@ describe('AdminTeams', () => {
     });
 
     it('sort by members', async () => {
-      const adminTeams = await AdminTeams.for(admin.id);
+      const adminTeams = new AdminTeams();
       const teams = await adminTeams.listTeams({ sort: 'members', order: 'asc' }, 1);
 
       expect(teams.results.length).toBe(2);
@@ -70,7 +61,7 @@ describe('AdminTeams', () => {
     });
 
     it('sort by events', async () => {
-      const adminTeams = await AdminTeams.for(admin.id);
+      const adminTeams = new AdminTeams();
       const teams = await adminTeams.listTeams({ sort: 'events', order: 'asc' }, 1);
 
       expect(teams.results.length).toBe(2);
@@ -78,7 +69,7 @@ describe('AdminTeams', () => {
     });
 
     it('paginates results', async () => {
-      const adminTeams = await AdminTeams.for(admin.id);
+      const adminTeams = new AdminTeams();
       const teams = await adminTeams.listTeams({}, 1, 1);
 
       expect(teams.pagination).toEqual({ current: 1, pages: 2 });

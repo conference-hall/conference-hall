@@ -2,7 +2,6 @@ import { db } from 'prisma/db.server.ts';
 import type { TeamOrderByWithRelationInput, TeamWhereInput } from 'prisma/generated/models.ts';
 import { z } from 'zod';
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import { UserAccount } from '~/shared/user/user-account.server.ts';
 
 export const TeamsSearchFiltersSchema = z.object({
   query: z.string().trim().optional(),
@@ -13,10 +12,7 @@ export const TeamsSearchFiltersSchema = z.object({
 type TeamsSearchFilters = z.infer<typeof TeamsSearchFiltersSchema>;
 
 export class AdminTeams {
-  private constructor() {}
-
-  static async for(userId: string) {
-    await UserAccount.needsAdminRole(userId);
+  static async for() {
     return new AdminTeams();
   }
 

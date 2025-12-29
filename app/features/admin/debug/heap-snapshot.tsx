@@ -1,13 +1,7 @@
 import { PassThrough } from 'node:stream';
 import { getHeapSnapshot } from 'node:v8';
-import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
-import { UserAccount } from '~/shared/user/user-account.server.ts';
-import type { Route } from './+types/heap-snapshot.ts';
 
-export const loader = async ({ context }: Route.LoaderArgs) => {
-  const authUser = context.get(RequireAuthContext);
-  await UserAccount.needsAdminRole(authUser.id);
-
+export const loader = async () => {
   const snapshotStream = getHeapSnapshot();
   const passThrough = new PassThrough();
 

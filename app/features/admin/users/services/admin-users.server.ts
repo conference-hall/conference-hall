@@ -11,10 +11,7 @@ export const UsersSearchFiltersSchema = z.object({ query: z.string().trim().opti
 type UsersSearchFilters = z.infer<typeof UsersSearchFiltersSchema>;
 
 export class AdminUsers {
-  private constructor() {}
-
-  static async for(userId: string) {
-    await UserAccount.needsAdminRole(userId);
+  static async for() {
     return new AdminUsers();
   }
 
