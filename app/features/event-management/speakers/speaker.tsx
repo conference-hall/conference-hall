@@ -10,7 +10,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { NotFoundError } from '~/shared/errors.server.ts';
 import { ProposalItem } from '../proposals/components/list/items/proposal-item.tsx';
 import type { Route } from './+types/speaker.ts';
@@ -20,10 +20,8 @@ import { SpeakerTitle } from './components/speaker-details/speaker-title.tsx';
 import { EventSpeakers } from './services/event-speakers.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
-  const eventSpeakers = EventSpeakers.for(authUser.id, params.team, params.event);
-  const speaker = await eventSpeakers.getById(params.speaker);
-
+  const authorizedEvent = context.get(AuthorizedEventContext);
+  const speaker = await EventSpeakers.for(authorizedEvent).getById(params.speaker);
   if (!speaker) throw new NotFoundError('Speaker not found');
 
   return { speaker };

@@ -6,8 +6,8 @@ import { useUserTeamPermissions } from '~/app-platform/components/user-context.t
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
-import { NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
+import { ForbiddenOperationError, NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { EventSpeakerSaveSchema } from '~/shared/types/speaker.types.ts';
@@ -17,26 +17,24 @@ import { SpeakerForm } from './components/speaker-form.tsx';
 import { EventSpeakers } from './services/event-speakers.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
-  const eventSpeakers = EventSpeakers.for(authUser.id, params.team, params.event);
-  await eventSpeakers.canUpdate();
+  const authorizedEvent = context.get(AuthorizedEventContext);
+  if (!authorizedEvent.permissions.canEditEventSpeaker) throw new ForbiddenOperationError();
 
-  const speaker = await eventSpeakers.getById(params.speaker);
+  const speaker = await EventSpeakers.for(authorizedEvent).getById(params.speaker);
   if (!speaker) throw new NotFoundError('Speaker not found');
 
   return { speaker };
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
   const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: EventSpeakerSaveSchema });
   if (result.status !== 'success') return { errors: result.error || null };
 
   try {
-    const eventSpeakers = EventSpeakers.for(authUser.id, params.team, params.event);
-    await eventSpeakers.update(params.speaker, result.value);
+    const authorizedEvent = context.get(AuthorizedEventContext);
+    await EventSpeakers.for(authorizedEvent).update(params.speaker, result.value);
     const headers = await toastHeaders('success', i18n.t('event-management.speakers.edit.feedbacks.updated'));
     return redirect(href('/team/:team/:event/speakers/:speaker', params), { headers });
   } catch (error) {
