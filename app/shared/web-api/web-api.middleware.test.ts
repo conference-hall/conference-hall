@@ -7,7 +7,7 @@ import {
   ForbiddenError,
 } from '../errors.server.ts';
 import { flags } from '../feature-flags/flags.server.ts';
-import { getWebApiEvent, webApiMiddleware } from './web-api.middleware.ts';
+import { WebApiAuthContext, webApiAuth } from './web-api.middleware.ts';
 
 function createMockContext() {
   const store = new Map();
@@ -19,7 +19,7 @@ function createMockContext() {
 
 const mockNext = vi.fn(async () => new Response());
 
-describe('webApiMiddleware', () => {
+describe('webApiAuth middleware', () => {
   describe('header-based authentication', () => {
     it('sets event in context when API key is valid in header', async () => {
       const event = await eventFactory({ attributes: { apiKey: 'valid-api-key', slug: 'test-event' } });
@@ -29,9 +29,9 @@ describe('webApiMiddleware', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext);
+      await webApiAuth({ request, context, params, unstable_pattern: '' }, mockNext);
 
-      const contextEvent = getWebApiEvent(context);
+      const contextEvent = context.get(WebApiAuthContext);
       expect(contextEvent?.id).toBe(event.id);
       expect(contextEvent?.slug).toBe('test-event');
       expect(contextEvent?.apiKey).toBe('valid-api-key');
@@ -45,7 +45,7 @@ describe('webApiMiddleware', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await expect(webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
+      await expect(webApiAuth({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
         ApiKeyInvalidError,
       );
     });
@@ -58,9 +58,9 @@ describe('webApiMiddleware', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext);
+      await webApiAuth({ request, context, params, unstable_pattern: '' }, mockNext);
 
-      const contextEvent = getWebApiEvent(context);
+      const contextEvent = context.get(WebApiAuthContext);
       expect(contextEvent?.id).toBe(event.id);
     });
   });
@@ -72,9 +72,9 @@ describe('webApiMiddleware', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext);
+      await webApiAuth({ request, context, params, unstable_pattern: '' }, mockNext);
 
-      const contextEvent = getWebApiEvent(context);
+      const contextEvent = context.get(WebApiAuthContext);
       expect(contextEvent?.id).toBe(event.id);
       expect(contextEvent?.slug).toBe('test-event');
       expect(contextEvent?.apiKey).toBe('valid-api-key');
@@ -86,9 +86,9 @@ describe('webApiMiddleware', () => {
       const context = createMockContext();
       const params = { event: 'my-event' };
 
-      await webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext);
+      await webApiAuth({ request, context, params, unstable_pattern: '' }, mockNext);
 
-      const contextEvent = getWebApiEvent(context);
+      const contextEvent = context.get(WebApiAuthContext);
       expect(contextEvent?.slug).toBe('my-event');
     });
 
@@ -99,7 +99,7 @@ describe('webApiMiddleware', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await expect(webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
+      await expect(webApiAuth({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
         ApiKeyQueryParamsDeprecatedError,
       );
 
@@ -115,9 +115,9 @@ describe('webApiMiddleware', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext);
+      await webApiAuth({ request, context, params, unstable_pattern: '' }, mockNext);
 
-      const contextEvent = getWebApiEvent(context);
+      const contextEvent = context.get(WebApiAuthContext);
       expect(contextEvent?.id).toBe(event.id);
 
       await flags.set('disableApiKeyInQueryParams', false);
@@ -130,7 +130,7 @@ describe('webApiMiddleware', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await expect(webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
+      await expect(webApiAuth({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
         ForbiddenError,
       );
     });
@@ -140,7 +140,7 @@ describe('webApiMiddleware', () => {
       const context = createMockContext();
       const params = {};
 
-      await expect(webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
+      await expect(webApiAuth({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
         EventNotFoundError,
       );
     });
@@ -150,7 +150,7 @@ describe('webApiMiddleware', () => {
       const context = createMockContext();
       const params = { event: 'non-existent-event' };
 
-      await expect(webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
+      await expect(webApiAuth({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
         EventNotFoundError,
       );
     });
@@ -161,24 +161,9 @@ describe('webApiMiddleware', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await expect(webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
+      await expect(webApiAuth({ request, context, params, unstable_pattern: '' }, mockNext)).rejects.toThrow(
         ApiKeyInvalidError,
       );
     });
-  });
-});
-
-describe('getWebApiEvent', () => {
-  it('returns event from context', async () => {
-    const event = await eventFactory({ attributes: { apiKey: 'test-key', slug: 'test-event' } });
-    const request = new Request('https://example.com/api/test?key=test-key');
-    const context = createMockContext();
-    const params = { event: 'test-event' };
-
-    await webApiMiddleware({ request, context, params, unstable_pattern: '' }, mockNext);
-
-    const contextEvent = getWebApiEvent(context);
-    expect(contextEvent?.id).toBe(event.id);
-    expect(contextEvent?.slug).toBe('test-event');
   });
 });
