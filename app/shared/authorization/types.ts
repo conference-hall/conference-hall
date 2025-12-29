@@ -1,3 +1,5 @@
+import type { EventType } from '../types/events.types.ts';
+
 export type TeamRole = 'OWNER' | 'MEMBER' | 'REVIEWER';
 
 export type TeamPermissions = {
@@ -30,4 +32,4 @@ export type AuthorizedTeam = {
   permissions: TeamPermissions;
 };
 
-export type AuthorizedEvent = AuthorizedTeam & { eventId: string };
+export type AuthorizedEvent = AuthorizedTeam & { eventId: string; eventType: EventType };

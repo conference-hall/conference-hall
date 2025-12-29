@@ -12,7 +12,7 @@ import {
   ScheduleTracksSaveSchema,
   SchedulSessionIdSchema,
 } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/schedule.ts';
@@ -26,19 +26,18 @@ import { useSessions } from './components/use-sessions.ts';
 import { EventSchedule } from './services/schedule.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
-  const eventSchedule = EventSchedule.for(authUser.id, params.team, params.event);
+  const authorizedEvent = context.get(AuthorizedEventContext);
 
-  const schedule = await eventSchedule.getScheduleSessions();
+  const schedule = await EventSchedule.for(authorizedEvent).getScheduleSessions();
   if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
 
   return schedule;
 };
 
-export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+export const action = async ({ request, context }: Route.ActionArgs) => {
   const i18n = getI18n(context);
-  const eventSchedule = EventSchedule.for(authUser.id, params.team, params.event);
+  const authorizedEvent = context.get(AuthorizedEventContext);
+  const eventSchedule = EventSchedule.for(authorizedEvent);
   const form = await request.formData();
   const intent = form.get('intent');
 
