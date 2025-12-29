@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
-import { requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import {
   AuthorizedEventContext,
   requireAuthorizedEvent,
@@ -12,7 +12,7 @@ import type { Route } from './+types/cards.ts';
 import styles from './cards.css?url';
 import { CfpReviewsExports } from './services/cfp-reviews-exports.server.ts';
 
-export const middleware = [requiredAuthMiddleware, requireAuthorizedTeam, requireAuthorizedEvent];
+export const middleware = [requireAuth, requireAuthorizedTeam, requireAuthorizedEvent];
 
 export const links = () => [{ rel: 'stylesheet', href: styles }];
 

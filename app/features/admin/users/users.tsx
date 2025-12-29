@@ -6,7 +6,7 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import type { Route } from './+types/users.ts';
 import { AdminUsers, UsersSearchFiltersSchema } from './services/admin-users.server.ts';

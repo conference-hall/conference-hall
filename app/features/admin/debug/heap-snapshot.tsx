@@ -1,6 +1,6 @@
 import { PassThrough } from 'node:stream';
 import { getHeapSnapshot } from 'node:v8';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
 import type { Route } from './+types/heap-snapshot.ts';
 

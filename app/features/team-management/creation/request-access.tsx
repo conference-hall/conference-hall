@@ -9,11 +9,11 @@ import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
-import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import type { Route } from './+types/request-access.ts';
 
-export const middleware = [requiredAuthMiddleware];
+export const middleware = [requireAuth];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Request access | Conference Hall' }]);

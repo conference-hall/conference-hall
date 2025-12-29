@@ -1,5 +1,5 @@
 import { createContext, type MiddlewareFunction } from 'react-router';
-import { getRequiredAuthUser } from '../auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '../authentication/auth.middleware.ts';
 import { BadRequestError } from '../errors.server.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from './authorization.server.ts';
 import type { AuthorizedEvent, AuthorizedTeam } from './types.ts';

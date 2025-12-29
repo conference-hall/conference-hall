@@ -3,25 +3,25 @@ import type { AuthenticatedUser } from '../types/user.types.ts';
 import { UserAccount } from '../user/user-account.server.ts';
 import { destroySession, getSessionUid } from './session.ts';
 
-const authContext = createContext<AuthenticatedUser | null>();
+const OptionalAuthContext = createContext<AuthenticatedUser | null>();
 
-export const authMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
+export const optionalAuth: MiddlewareFunction<Response> = async ({ request, context }) => {
   const sessionUid = await getSessionUid(request);
 
   // todo(cache): can be cached to improve performances (called on each request)
   const user = await UserAccount.getByUid(sessionUid);
   if (sessionUid && !user) await destroySession(request);
 
-  context.set(authContext, user);
+  context.set(OptionalAuthContext, user);
 };
 
 export function getAuthUser(context: Readonly<RouterContextProvider>) {
-  return context.get(authContext);
+  return context.get(OptionalAuthContext);
 }
 
-const protectedRouteContext = createContext<AuthenticatedUser>();
+const RequireAuthContext = createContext<AuthenticatedUser>();
 
-export const requiredAuthMiddleware: MiddlewareFunction<Response> = async ({ request, context }) => {
+export const requireAuth: MiddlewareFunction<Response> = async ({ request, context }) => {
   const user = getAuthUser(context);
 
   if (!user) {
@@ -30,9 +30,9 @@ export const requiredAuthMiddleware: MiddlewareFunction<Response> = async ({ req
     throw redirect(`/auth/login?${searchParams}`);
   }
 
-  context.set(protectedRouteContext, user);
+  context.set(RequireAuthContext, user);
 };
 
 export function getRequiredAuthUser(context: Readonly<RouterContextProvider>) {
-  return context.get(protectedRouteContext);
+  return context.get(RequireAuthContext);
 }

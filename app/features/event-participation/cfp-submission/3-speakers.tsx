@@ -12,7 +12,7 @@ import { TalkSubmission } from '~/features/event-participation/cfp-submission/se
 import { ProfileFetcher } from '~/features/speaker/services/profile-fetcher.server.ts';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { Speakers } from '~/features/speaker/talk-library/components/speakers.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import { FunnelSpeakerSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/3-speakers.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';

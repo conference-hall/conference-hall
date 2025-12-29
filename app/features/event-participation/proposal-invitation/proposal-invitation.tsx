@@ -6,13 +6,13 @@ import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import { EventCard } from '../../event-search/components/event-card.tsx';
 import { SpeakerPill } from '../../speaker/talk-library/components/speakers.tsx';
 import type { Route } from './+types/proposal-invitation.ts';
 import { CoSpeakerProposalInvite } from './services/co-speaker-proposal-invite.server.ts';
 
-export const middleware = [requiredAuthMiddleware];
+export const middleware = [requireAuth];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Proposal invitation | Conference Hall' }]);

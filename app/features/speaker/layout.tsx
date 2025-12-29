@@ -11,11 +11,11 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { SpeakerProfileProvider } from '~/features/speaker/speaker-profile-context.tsx';
-import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/layout.ts';
 import { ProfileFetcher } from './services/profile-fetcher.server.ts';
 
-export const middleware = [requiredAuthMiddleware];
+export const middleware = [requireAuth];
 
 export const loader = async ({ context }: Route.LoaderArgs) => {
   const authUser = getRequiredAuthUser(context);

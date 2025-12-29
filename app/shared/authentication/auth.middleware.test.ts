@@ -1,7 +1,7 @@
 import type { createContext } from 'react-router';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
-import { authMiddleware, getAuthUser, getRequiredAuthUser, requiredAuthMiddleware } from './auth.middleware.ts';
+import { getAuthUser, getRequiredAuthUser, optionalAuth, requireAuth } from './auth.middleware.ts';
 import { destroySession, getSessionUid } from './session.ts';
 
 vi.mock('./session.ts', () => ({
@@ -26,14 +26,14 @@ function createMockRequest(url = 'https://example.com/test') {
 
 const mockNext = vi.fn(async () => new Response());
 
-describe('authMiddleware', () => {
+describe('optionalAuth middleware', () => {
   it('sets authenticated user in context when session is valid', async () => {
     const user = await userFactory({ traits: ['clark-kent'] });
     getSessionUidMock.mockResolvedValue(user.uid);
     const request = createMockRequest();
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(getSessionUidMock).toHaveBeenCalledWith(request);
     expect(getAuthUser(context)).toEqual({
@@ -54,7 +54,7 @@ describe('authMiddleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(getSessionUidMock).toHaveBeenCalledWith(request);
     expect(getAuthUser(context)).toBeNull();
@@ -66,7 +66,7 @@ describe('authMiddleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(getSessionUidMock).toHaveBeenCalledWith(request);
     expect(getAuthUser(context)).toBeNull();
@@ -78,7 +78,7 @@ describe('authMiddleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(destroySessionMock).toHaveBeenCalledWith(request);
   });
@@ -88,7 +88,7 @@ describe('authMiddleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(getAuthUser(context)).toBeNull();
     expect(destroySessionMock).not.toHaveBeenCalled();
@@ -102,7 +102,7 @@ describe('getAuthUser', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(getAuthUser(context)).toEqual({
       id: user.id,
@@ -117,15 +117,15 @@ describe('getAuthUser', () => {
   });
 });
 
-describe('requiredAuthMiddleware', () => {
+describe('requireAuth middleware', () => {
   it('sets user in protected context when authenticated', async () => {
     const user = await userFactory({ traits: ['clark-kent'] });
     getSessionUidMock.mockResolvedValue(user.uid);
     const request = createMockRequest();
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-    await requiredAuthMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(getRequiredAuthUser(context)).toEqual({
       id: user.id,
@@ -144,14 +144,14 @@ describe('requiredAuthMiddleware', () => {
     const request = createMockRequest('https://example.com/protected/page');
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     await expect(async () => {
-      await requiredAuthMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
     }).rejects.toThrow();
 
     try {
-      await requiredAuthMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
     } catch (error) {
       const response = error as Response;
       expect(response.status).toBe(302);
@@ -164,10 +164,10 @@ describe('requiredAuthMiddleware', () => {
     const request = createMockRequest('https://example.com/team/my-team/settings');
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     try {
-      await requiredAuthMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
     } catch (error) {
       const response = error as Response;
       expect(response.headers.get('Location')).toBe('/auth/login?redirectTo=%2Fteam%2Fmy-team%2Fsettings');
@@ -179,10 +179,10 @@ describe('requiredAuthMiddleware', () => {
     const request = createMockRequest('https://example.com/');
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     try {
-      await requiredAuthMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
     } catch (error) {
       const response = error as Response;
       expect(response.headers.get('Location')).toBe('/auth/login?redirectTo=%2F');
@@ -197,8 +197,8 @@ describe('getRequiredAuthUser', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-    await requiredAuthMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(getRequiredAuthUser(context)).toEqual({
       id: user.id,
@@ -220,8 +220,8 @@ describe('middleware chain behavior', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await authMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-    await requiredAuthMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(getAuthUser(context)).toEqual({
       id: user.id,
@@ -250,7 +250,7 @@ describe('middleware chain behavior', () => {
     const context = createMockContext();
 
     await expect(async () => {
-      await requiredAuthMiddleware({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
     }).rejects.toThrow();
   });
 });

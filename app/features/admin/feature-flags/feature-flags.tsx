@@ -7,7 +7,7 @@ import { Toggle } from '~/design-system/forms/toggles.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/feature-flags.ts';
 import { AdminFlags } from './services/admin-flags.server.ts';
 

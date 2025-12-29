@@ -7,11 +7,11 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { CoSpeakerTalkInvite } from '~/features/speaker/talk-invitation/services/co-speaker-talk-invite.server.ts';
-import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import { SpeakerPill } from '../talk-library/components/speakers.tsx';
 import type { Route } from './+types/talk-invitation.ts';
 
-export const middleware = [requiredAuthMiddleware];
+export const middleware = [requireAuth];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Talk invitation | Conference Hall' }]);

@@ -7,8 +7,8 @@ import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
-import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
-import { getClientAuth, PROVIDERS, type ProviderId } from '~/shared/auth/firebase.ts';
+import { getFirebaseError } from '~/shared/authentication/firebase.errors.ts';
+import { getClientAuth, PROVIDERS, type ProviderId } from '~/shared/authentication/firebase.ts';
 import { EmailProviderSettings } from './email-provider-settings.tsx';
 import { LinkProvider, UnlinkProvider } from './social-providers-settings.tsx';
 

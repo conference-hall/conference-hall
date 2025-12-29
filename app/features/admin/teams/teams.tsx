@@ -8,7 +8,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { SortMenu } from '~/design-system/list/sort-menu.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import type { Route } from './+types/teams.ts';
 import { AdminTeams, TeamsSearchFiltersSchema } from './services/admin-teams.server.ts';

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { TalkSaveSchema } from '~/shared/types/speaker-talk.types.ts';

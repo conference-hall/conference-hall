@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/button.tsx';
 import { useHydrated } from '~/design-system/utils/use-hydrated.ts';
-import { getClientAuth, PROVIDERS, type ProviderId } from '~/shared/auth/firebase.ts';
+import { getClientAuth, PROVIDERS, type ProviderId } from '~/shared/authentication/firebase.ts';
 
 type AuthProvidersSigninProps = { redirectTo: string };
 

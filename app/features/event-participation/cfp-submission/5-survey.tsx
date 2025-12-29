@@ -9,7 +9,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import { SurveyForm } from '~/features/speaker/talk-library/components/talk-forms/survey-form.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/5-survey.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 

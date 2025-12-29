@@ -11,7 +11,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import { TalksListFilterSchema } from '~/shared/types/speaker-talk.types.ts';
 import type { Route } from './+types/talks.ts';
 import { TalksLibrary } from './services/talks-library.server.ts';

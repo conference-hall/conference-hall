@@ -18,7 +18,7 @@ import { ProposalConversationForSpeakers } from '~/features/conversations/servic
 import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
-import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -30,7 +30,7 @@ import { useCurrentEvent } from '../event-page-context.tsx';
 import type { Route } from './+types/speaker-proposal.ts';
 import { ProposalStatusSection } from './components/proposal-status-section.tsx';
 
-export const middleware = [requiredAuthMiddleware];
+export const middleware = [requireAuth];
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
   const authUser = getRequiredAuthUser(context);

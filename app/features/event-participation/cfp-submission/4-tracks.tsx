@@ -13,7 +13,7 @@ import { EventPage } from '~/features/event-participation/event-page/services/ev
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { CategoriesForm } from '~/features/speaker/talk-library/components/talk-forms/categories-form.tsx';
 import { FormatsForm } from '~/features/speaker/talk-library/components/talk-forms/formats-form.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/4-tracks.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 

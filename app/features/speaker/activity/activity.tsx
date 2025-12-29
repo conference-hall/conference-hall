@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { useSpeakerProfile } from '../speaker-profile-context.tsx';
 import type { Route } from './+types/activity.ts';

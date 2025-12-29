@@ -16,7 +16,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { CurrentEventTeamProvider, useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import {
   AuthorizedEventContext,
   AuthorizedTeamContext,
@@ -28,7 +28,7 @@ import type { Route } from './+types/layout.ts';
 import { useScheduleFullscreen } from './schedule/components/header/use-schedule-fullscreen.tsx';
 import { EventFetcher } from './services/event-fetcher.server.ts';
 
-export const middleware = [requiredAuthMiddleware, requireAuthorizedTeam, requireAuthorizedEvent];
+export const middleware = [requireAuth, requireAuthorizedTeam, requireAuthorizedEvent];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [

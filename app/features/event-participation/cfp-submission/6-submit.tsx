@@ -9,7 +9,7 @@ import { ExternalLink } from '~/design-system/links.tsx';
 import { TalkSubmission } from '~/features/event-participation/cfp-submission/services/talk-submission.server.ts';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/6-submit.ts';

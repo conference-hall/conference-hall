@@ -6,7 +6,7 @@ import { Button } from '~/design-system/button.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import { getI18n, setLocaleCookie } from '~/shared/i18n/i18n.middleware.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';

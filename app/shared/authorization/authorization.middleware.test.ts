@@ -3,7 +3,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
-import * as authMiddleware from '../auth/auth.middleware.ts';
+import * as authMiddleware from '../authentication/auth.middleware.ts';
 import { BadRequestError, EventNotFoundError, ForbiddenOperationError } from '../errors.server.ts';
 import type { AuthenticatedUser } from '../types/user.types.ts';
 import {
@@ -23,8 +23,8 @@ vi.mock('./authorization.server.ts', async () => {
   };
 });
 
-vi.mock('../auth/auth.middleware.ts', async () => {
-  const actual = await vi.importActual<typeof authMiddleware>('../auth/auth.middleware.ts');
+vi.mock('../authentication/auth.middleware.ts', async () => {
+  const actual = await vi.importActual<typeof authMiddleware>('../authentication/auth.middleware.ts');
   return {
     ...actual,
     getRequiredAuthUser: vi.fn(),

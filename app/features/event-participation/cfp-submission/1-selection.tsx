@@ -8,7 +8,7 @@ import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { SpeakerProposals } from '~/features/event-participation/speaker-proposals/services/speaker-proposals.server.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/1-selection.ts';
 import { MaxProposalsReached } from './components/max-proposals.tsx';
 import { NoSubmissionState } from './components/no-submissions-state.tsx';
