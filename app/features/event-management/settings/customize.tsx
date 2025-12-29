@@ -12,7 +12,7 @@ import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/customize.ts';
@@ -24,8 +24,8 @@ function toKB(size: number) {
   return `${(size / 1024).toFixed(0)} KB`;
 }
 
-export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+export const action = async ({ request, context }: Route.ActionArgs) => {
+  const authorizedEvent = context.get(AuthorizedEventContext);
   const i18n = getI18n(context);
 
   try {
@@ -35,7 +35,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       uploadToStorageHandler({ name: 'logo' }),
     );
     const data = FILE_SCHEMA.parse(formData.get('logo'));
-    const settings = EventSettings.for(authUser.id, params.team, params.event);
+    const settings = EventSettings.for(authorizedEvent);
     await settings.update({ logoUrl: data.name });
     return toast('success', i18n.t('event-management.settings.customize.feedbacks.logo-updated'));
   } catch {

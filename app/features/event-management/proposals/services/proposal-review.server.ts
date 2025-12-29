@@ -1,10 +1,10 @@
 import { db } from 'prisma/db.server.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ProposalNotFoundError, ReviewDisabledError } from '~/shared/errors.server.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { ReviewDetails } from '../models/review-details.ts';
 import type { ReviewUpdateData } from './proposal-review.schema.server.ts';
@@ -13,20 +13,18 @@ import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
 export type ProposalReviewData = Awaited<ReturnType<typeof ProposalReview.prototype.get>>;
 
-export class ProposalReview extends EventAuthorization {
-  private proposalId: string;
+export class ProposalReview {
+  constructor(
+    private authorizedEvent: AuthorizedEvent,
+    private proposalId: string,
+  ) {}
 
-  constructor(userId: string, team: string, event: string, proposalId: string) {
-    super(userId, team, event);
-    this.proposalId = proposalId;
-  }
-
-  static for(userId: string, team: string, event: string, proposalId: string) {
-    return new ProposalReview(userId, team, event, proposalId);
+  static for(authorizedEvent: AuthorizedEvent, proposalId: string) {
+    return new ProposalReview(authorizedEvent, proposalId);
   }
 
   async get() {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { event } = this.authorizedEvent;
 
     const proposal = await db.proposal.findFirst({
       include: {
@@ -65,7 +63,7 @@ export class ProposalReview extends EventAuthorization {
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
       reviews: {
-        you: reviews.ofUser(this.userId),
+        you: reviews.ofUser(this.authorizedEvent.userId),
         summary: event.displayProposalsReviews ? reviews.summary() : null,
       },
       speakers:
@@ -91,7 +89,7 @@ export class ProposalReview extends EventAuthorization {
   }
 
   async getOtherProposals(speakerIds: Array<string>) {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { event } = this.authorizedEvent;
 
     if (!event.displayProposalsSpeakers) return [];
 
@@ -117,9 +115,8 @@ export class ProposalReview extends EventAuthorization {
   }
 
   async getPreviousAndNextReviews(filters: ProposalsFilters) {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
-
-    const search = new ProposalSearchBuilder(event.slug, this.userId, filters);
+    const { event, userId } = this.authorizedEvent;
+    const search = new ProposalSearchBuilder(event.id, userId, filters);
 
     const { total, reviewed } = await search.statistics();
     const proposalIds = await search.proposalsIds();
@@ -132,12 +129,12 @@ export class ProposalReview extends EventAuthorization {
   }
 
   async addReview(data: ReviewUpdateData) {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { event } = this.authorizedEvent;
     if (!event.reviewEnabled) throw new ReviewDisabledError();
 
     await db.review.upsert({
-      where: { userId_proposalId: { userId: this.userId, proposalId: this.proposalId } },
-      create: { userId: this.userId, proposalId: this.proposalId, ...data },
+      where: { userId_proposalId: { userId: this.authorizedEvent.userId, proposalId: this.proposalId } },
+      create: { userId: this.authorizedEvent.userId, proposalId: this.proposalId, ...data },
       update: data,
     });
 

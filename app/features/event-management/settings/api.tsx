@@ -3,7 +3,7 @@ import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { v4 as uuid } from 'uuid';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import type { Route } from './+types/api.ts';
 import { ApiKeySection } from './components/api-key-section.tsx';
 import { EventProposalApiTryout, EventScheduleApiTryout } from './components/api-tryout-section.tsx';
@@ -13,11 +13,11 @@ export const loader = async () => {
   return { appUrl: APP_URL };
 };
 
-export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+export const action = async ({ request, context }: Route.ActionArgs) => {
+  const authorizedEvent = context.get(AuthorizedEventContext);
   const form = await request.formData();
   const intent = form.get('intent');
-  const event = EventSettings.for(authUser.id, params.team, params.event);
+  const event = EventSettings.for(authorizedEvent);
 
   switch (intent) {
     case 'revoke-api-key': {

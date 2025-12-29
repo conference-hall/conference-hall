@@ -1,6 +1,7 @@
 import { db } from 'prisma/db.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { getNextProposalNumber } from '~/shared/counters/proposal-counter.server.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type {
   ProposalCreationData,
   ProposalSaveCategoriesData,
@@ -10,24 +11,25 @@ import type {
   ProposalUpdateData,
 } from './proposal-management.schema.server.ts';
 
-export class ProposalManagement extends EventAuthorization {
-  private proposalId?: string;
+export class ProposalManagement {
+  constructor(
+    private authorizedEvent: AuthorizedEvent,
+    private proposalId?: string,
+  ) {}
 
-  constructor(userId: string, teamSlug: string, eventSlug: string, proposalId?: string) {
-    super(userId, teamSlug, eventSlug);
-    this.proposalId = proposalId;
-  }
-
-  static for(userId: string, teamSlug: string, eventSlug: string, proposalId?: string) {
-    return new ProposalManagement(userId, teamSlug, eventSlug, proposalId);
+  static for(authorizedEvent: AuthorizedEvent, proposalId?: string) {
+    return new ProposalManagement(authorizedEvent, proposalId);
   }
 
   async canCreate() {
-    return this.checkAuthorizedEvent('canCreateEventProposal');
+    const { permissions } = this.authorizedEvent;
+    if (!permissions.canCreateEventProposal) throw new ForbiddenOperationError();
+    return this.authorizedEvent;
   }
 
   async create(data: ProposalCreationData) {
-    const { event } = await this.checkAuthorizedEvent('canCreateEventProposal');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canCreateEventProposal) throw new ForbiddenOperationError();
 
     return await db.$transaction(async (trx) => {
       const formatsConnect = data.formats?.length
@@ -75,7 +77,8 @@ export class ProposalManagement extends EventAuthorization {
   async update(data: ProposalUpdateData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for update operation');
 
-    const { event } = await this.checkAuthorizedEvent('canEditEventProposal');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEventProposal) throw new ForbiddenOperationError();
 
     return db.proposal.update({ where: { id: this.proposalId, eventId: event.id }, data });
   }
@@ -83,7 +86,8 @@ export class ProposalManagement extends EventAuthorization {
   async saveTags(data: ProposalSaveTagsData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for saveTags operation');
 
-    const { event } = await this.checkAuthorizedEvent('canEditEventProposal');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEventProposal) throw new ForbiddenOperationError();
 
     return db.proposal.update({
       where: { id: this.proposalId, eventId: event.id },
@@ -94,7 +98,8 @@ export class ProposalManagement extends EventAuthorization {
   async saveSpeakers(data: ProposalSaveSpeakersData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for saveSpeakers operation');
 
-    const { event } = await this.checkAuthorizedEvent('canEditEventProposal');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEventProposal) throw new ForbiddenOperationError();
 
     const eventSpeakers = await db.eventSpeaker.findMany({
       where: { eventId: event.id, id: { in: data.speakers } },
@@ -117,7 +122,8 @@ export class ProposalManagement extends EventAuthorization {
   async saveFormats(data: ProposalSaveFormatsData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for saveFormats operation');
 
-    const { event } = await this.checkAuthorizedEvent('canEditEventProposal');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEventProposal) throw new ForbiddenOperationError();
 
     const eventFormats = await db.eventFormat.findMany({
       where: { eventId: event.id, id: { in: data.formats } },
@@ -140,7 +146,8 @@ export class ProposalManagement extends EventAuthorization {
   async saveCategories(data: ProposalSaveCategoriesData) {
     if (!this.proposalId) throw new Error('Proposal ID is required for saveCategories operation');
 
-    const { event } = await this.checkAuthorizedEvent('canEditEventProposal');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEventProposal) throw new ForbiddenOperationError();
 
     const eventCategories = await db.eventCategory.findMany({
       where: { eventId: event.id, id: { in: data.categories } },

@@ -2,8 +2,8 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { db } from 'prisma/db.server.ts';
 import type { Event } from 'prisma/generated/client.ts';
 import { z } from 'zod';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { ProposalSearchBuilder } from '../../proposals/services/proposal-search-builder.server.ts';
 
@@ -22,13 +22,15 @@ type AutocompleteResult = {
 
 const pagination = new Pagination({ page: 1, pageSize: 3, total: 3 });
 
-export class Autocomplete extends EventAuthorization {
-  static for(userId: string, team: string, event: string) {
-    return new Autocomplete(userId, team, event);
+export class Autocomplete {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new Autocomplete(authorizedEvent);
   }
 
   async search(filters: AutocompleteFilters) {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { event } = this.authorizedEvent;
 
     const { query, kind } = filters;
     if (!query) return [];
@@ -44,8 +46,8 @@ export class Autocomplete extends EventAuthorization {
 
   async #searchProposals(event: Event, query: string): Promise<AutocompleteResult[]> {
     const search = new ProposalSearchBuilder(
-      event.slug,
-      this.userId,
+      this.authorizedEvent.event.id,
+      this.authorizedEvent.userId,
       { query },
       { withSpeakers: event.displayProposalsSpeakers, withReviews: false },
     );

@@ -1,14 +1,18 @@
 import { db } from 'prisma/db.server.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { TrackSaveData } from './event-tracks-settings.schema.server.ts';
 
-export class EventTracksSettings extends EventAuthorization {
-  static for(userId: string, teamSlug: string, eventSlug: string) {
-    return new EventTracksSettings(userId, teamSlug, eventSlug);
+export class EventTracksSettings {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new EventTracksSettings(authorizedEvent);
   }
 
   async saveFormat(data: TrackSaveData) {
-    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
     if (data.id) {
       return db.eventFormat.update({
@@ -29,7 +33,8 @@ export class EventTracksSettings extends EventAuthorization {
   }
 
   async deleteFormat(formatId: string) {
-    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
     const trackToDelete = await db.eventFormat.findUnique({ where: { id: formatId } });
     if (!trackToDelete) return;
@@ -44,7 +49,8 @@ export class EventTracksSettings extends EventAuthorization {
   }
 
   async saveCategory(data: TrackSaveData) {
-    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
     if (data.id) {
       return db.eventCategory.update({
@@ -65,7 +71,8 @@ export class EventTracksSettings extends EventAuthorization {
   }
 
   async deleteCategory(categoryId: string) {
-    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
     const trackToDelete = await db.eventCategory.findUnique({ where: { id: categoryId } });
     if (!trackToDelete) return;
@@ -80,7 +87,8 @@ export class EventTracksSettings extends EventAuthorization {
   }
 
   async reorderFormat(formatId: string, direction: 'up' | 'down') {
-    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
     const currentTrack = await db.eventFormat.findUnique({ where: { id: formatId } });
     if (!currentTrack) return;
@@ -110,7 +118,8 @@ export class EventTracksSettings extends EventAuthorization {
   }
 
   async reorderCategory(categoryId: string, direction: 'up' | 'down') {
-    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
     const currentTrack = await db.eventCategory.findUnique({ where: { id: categoryId } });
     if (!currentTrack) return;

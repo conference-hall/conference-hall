@@ -15,14 +15,13 @@ type QueryParseResult =
   | { type: 'empty' };
 
 export class ProposalSearchBuilder {
-  eventSlug: string;
+  eventId: string;
   userId: string;
   filters: ProposalsFilters;
   options: SearchOptions;
 
-  // todo: eventSlug can be replaced by eventId ?
-  constructor(eventSlug: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
-    this.eventSlug = eventSlug;
+  constructor(eventId: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
+    this.eventId = eventId;
     this.userId = userId;
     this.filters = filters;
     this.options = options || { withSpeakers: true, withReviews: true };
@@ -89,7 +88,7 @@ export class ProposalSearchBuilder {
   private whereClause(): ProposalWhereInput {
     const { query, reviews, formats, categories, tags, speakers, status } = this.filters;
     return {
-      event: { slug: this.eventSlug },
+      eventId: this.eventId,
       isDraft: false,
       formats: formats ? { some: { id: formats } } : undefined,
       categories: categories ? { some: { id: categories } } : undefined,

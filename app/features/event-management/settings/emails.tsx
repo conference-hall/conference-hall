@@ -2,16 +2,16 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H2, H3, Subtitle } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { CUSTOM_EMAIL_TEMPLATES } from '~/shared/emails/email.types.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import type { Route } from './+types/emails.ts';
 import { EmailCustomBadge } from './components/email-custom-badge.tsx';
 import { EventEmailCustomizations } from './services/event-email-customizations.server.tsx';
 
-export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
-  const emailCustomizations = EventEmailCustomizations.for(authUser.id, params.team, params.event);
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const authorizedEvent = context.get(AuthorizedEventContext);
+  const emailCustomizations = EventEmailCustomizations.for(authorizedEvent);
   const customizations = await emailCustomizations.list();
   return { customizations };
 };

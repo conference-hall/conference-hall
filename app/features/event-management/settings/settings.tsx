@@ -17,14 +17,13 @@ import { Outlet } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { Route } from './+types/settings.ts';
 
-export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
-  const authorization = new EventAuthorization(authUser.id, params.team, params.event);
-  await authorization.checkAuthorizedEvent('canEditEvent');
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const { permissions } = context.get(AuthorizedEventContext);
+  if (!permissions.canEditEvent) throw new ForbiddenOperationError();
   return null;
 };
 

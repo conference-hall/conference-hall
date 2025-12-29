@@ -8,6 +8,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { CfpReviewsExports } from './cfp-reviews-exports.server.ts';
 import { exportToOpenPlanner } from './jobs/export-to-open-planner.job.ts';
@@ -44,7 +45,10 @@ describe('CfpReviewsExports', () => {
         talk: await talkFactory({ speakers: [speaker] }),
       });
 
-      const result = await CfpReviewsExports.for(owner.id, team.slug, event.slug).forJson({});
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const result = await CfpReviewsExports.for(authorizedEvent).forJson({});
 
       expect(result).toEqual([
         {
@@ -80,7 +84,9 @@ describe('CfpReviewsExports', () => {
     });
 
     it('throws an error if user is not owner', async () => {
-      const exports = await CfpReviewsExports.for(member.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const exports = CfpReviewsExports.for(authorizedEvent);
 
       await expect(exports.forJson({})).rejects.toThrowError(ForbiddenOperationError);
     });
@@ -90,7 +96,10 @@ describe('CfpReviewsExports', () => {
     it('export a proposal', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const result = await CfpReviewsExports.for(owner.id, team.slug, event.slug).forCards({});
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const result = await CfpReviewsExports.for(authorizedEvent).forCards({});
 
       expect(result).toEqual([
         {
@@ -112,7 +121,9 @@ describe('CfpReviewsExports', () => {
     });
 
     it('throws an error if user is not owner', async () => {
-      const exports = await CfpReviewsExports.for(member.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const exports = CfpReviewsExports.for(authorizedEvent);
 
       await expect(exports.forCards({})).rejects.toThrowError(ForbiddenOperationError);
     });
@@ -120,20 +131,22 @@ describe('CfpReviewsExports', () => {
 
   describe('#forOpenPlanner', () => {
     it('triggers job to export sessions and speakers to OpenPlanner', async () => {
-      const exports = CfpReviewsExports.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const exports = CfpReviewsExports.for(authorizedEvent);
 
       await exports.forOpenPlanner({});
 
       expect(exportToOpenPlanner.trigger).toHaveBeenCalledWith({
-        userId: owner.id,
-        teamSlug: team.slug,
-        eventSlug: event.slug,
+        authorizedEvent,
         filters: {},
       });
     });
 
     it('throws an error if user is not owner', async () => {
-      const exports = CfpReviewsExports.for(member.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const exports = CfpReviewsExports.for(authorizedEvent);
 
       await expect(exports.forOpenPlanner({})).rejects.toThrowError(ForbiddenOperationError);
     });

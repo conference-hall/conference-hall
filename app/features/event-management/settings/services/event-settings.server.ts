@@ -1,27 +1,34 @@
 import { db } from 'prisma/db.server.ts';
 import type { EventCreateInput } from 'prisma/generated/models.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { EventGeneralSettingsSchema } from './event-settings.schema.server.ts';
 
-export class EventSettings extends EventAuthorization {
-  static for(userId: string, teamSlug: string, eventSlug: string) {
-    return new EventSettings(userId, teamSlug, eventSlug);
+export class EventSettings {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new EventSettings(authorizedEvent);
   }
 
   async update(data: Partial<EventCreateInput>) {
-    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEvent) throw new ForbiddenOperationError();
     return db.event.update({ where: { id: event.id }, data: { ...data } });
   }
 
   async delete() {
-    const { event } = await this.checkAuthorizedEvent('canDeleteEvent');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canDeleteEvent) throw new ForbiddenOperationError();
     return db.event.delete({ where: { id: event.id } });
   }
 
   async buildGeneralSettingsSchema() {
     return EventGeneralSettingsSchema.refine(
       async ({ slug }) => {
-        const count = await db.event.count({ where: { AND: [{ slug }, { slug: { not: this.event } }] } });
+        const count = await db.event.count({
+          where: { AND: [{ slug }, { slug: { not: this.authorizedEvent.event.slug } }] },
+        });
         return count === 0;
       },
       { path: ['slug'], error: 'This URL already exists.' },

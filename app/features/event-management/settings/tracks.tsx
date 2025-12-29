@@ -6,7 +6,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/tracks.ts';
@@ -18,10 +18,10 @@ import {
 } from './services/event-tracks-settings.schema.server.ts';
 import { EventTracksSettings } from './services/event-tracks-settings.server.ts';
 
-export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+export const action = async ({ request, context }: Route.ActionArgs) => {
+  const authorizedEvent = context.get(AuthorizedEventContext);
   const i18n = getI18n(context);
-  const tracks = EventTracksSettings.for(authUser.id, params.team, params.event);
+  const tracks = EventTracksSettings.for(authorizedEvent);
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -51,7 +51,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
     case 'update-track-settings': {
       const result = parseWithZod(form, { schema: TracksSettingsSchema });
       if (result.status !== 'success') return result.error;
-      const event = EventSettings.for(authUser.id, params.team, params.event);
+      const event = EventSettings.for(authorizedEvent);
       await event.update(result.value);
       return toast('success', i18n.t('event-management.settings.tracks.feedbacks.updated'));
     }

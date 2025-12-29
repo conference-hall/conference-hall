@@ -9,7 +9,6 @@ import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EventDetailsForm } from '~/features/event-management/creation/components/event-details-form.tsx';
 import { EventDetailsSettingsSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
 import { AuthorizedEventContext, requireAuthorizedEvent } from '~/shared/authorization/authorization.middleware.ts';
 import { EventFetcher } from '../services/event-fetcher.server.ts';
 import { EventSettings } from '../settings/services/event-settings.server.ts';
@@ -25,8 +24,8 @@ export const loader = async ({ context }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
-  const event = EventSettings.for(authUser.id, params.team, params.event);
+  const authorizedEvent = context.get(AuthorizedEventContext);
+  const event = EventSettings.for(authorizedEvent);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: EventDetailsSettingsSchema });
   if (result.status !== 'success') return result.error;

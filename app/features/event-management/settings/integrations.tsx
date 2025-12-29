@@ -13,22 +13,22 @@ import { H2, Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSlackSettingsSchema } from '~/features/event-management/settings/services/event-settings.schema.server.ts';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/integrations.ts';
 import { OpenPlannerConfigSchema, UpdateIntegrationConfigSchema } from './services/event-integrations.schema.server.ts';
 import { EventIntegrations } from './services/event-integrations.server.ts';
 
-export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
-  const eventIntegrations = EventIntegrations.for(authUser.id, params.team, params.event);
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const authorizedEvent = context.get(AuthorizedEventContext);
+  const eventIntegrations = EventIntegrations.for(authorizedEvent);
   const integrations = await eventIntegrations.getConfigurations();
   return integrations;
 };
 
-export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+export const action = async ({ request, context }: Route.ActionArgs) => {
+  const authorizedEvent = context.get(AuthorizedEventContext);
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent');
@@ -38,7 +38,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       const result = parseWithZod(form, { schema: EventSlackSettingsSchema });
       if (result.status !== 'success') return result.error;
 
-      const event = EventSettings.for(authUser.id, params.team, params.event);
+      const event = EventSettings.for(authorizedEvent);
       await event.update(result.value);
       break;
     }
@@ -46,7 +46,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       const resultConfig = parseWithZod(form, { schema: UpdateIntegrationConfigSchema });
       if (resultConfig.status !== 'success') return resultConfig.error;
 
-      const eventIntegrations = EventIntegrations.for(authUser.id, params.team, params.event);
+      const eventIntegrations = EventIntegrations.for(authorizedEvent);
       if (resultConfig.value.name === 'OPEN_PLANNER') {
         const { id, name, ...configuration } = resultConfig.value;
         await eventIntegrations.save({ id, name, configuration });
@@ -60,7 +60,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       const resultConfig = parseWithZod(form, { schema: OpenPlannerConfigSchema });
       if (resultConfig.status !== 'success') return resultConfig.error;
 
-      const eventIntegrations = EventIntegrations.for(authUser.id, params.team, params.event);
+      const eventIntegrations = EventIntegrations.for(authorizedEvent);
       const data = { id: resultId.value.id, name: 'OPEN_PLANNER', configuration: resultConfig.value } as const;
       const result = await eventIntegrations.checkConfiguration(data);
 
@@ -71,7 +71,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       const resultId = parseWithZod(form, { schema: z.object({ id: z.string() }) });
       if (resultId.status !== 'success') return toast('error', i18n.t('error.global'));
 
-      const eventIntegrations = EventIntegrations.for(authUser.id, params.team, params.event);
+      const eventIntegrations = EventIntegrations.for(authorizedEvent);
       await eventIntegrations.delete(resultId.value.id);
       return toast('success', i18n.t('event-management.settings.integrations.feedbacks.disabled'));
     }

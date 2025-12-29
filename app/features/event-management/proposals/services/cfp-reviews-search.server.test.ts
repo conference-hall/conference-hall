@@ -7,6 +7,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { CfpReviewsSearch } from './cfp-reviews-search.server.ts';
 
@@ -30,7 +31,9 @@ describe('CfpReviewsSearch', () => {
       const tag = await eventProposalTagFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), tags: [tag] });
       await commentFactory({ proposal: proposal, user: owner });
-      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({ status: 'pending' });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposals = await CfpReviewsSearch.for(authorizedEvent).search({ status: 'pending' });
 
       expect(proposals.results).toEqual([
         {
@@ -61,10 +64,13 @@ describe('CfpReviewsSearch', () => {
       await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
       await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      let proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({});
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      let proposals = await CfpReviewsSearch.for(authorizedEvent).search({});
       expect(proposals.results[0]?.speakers).toEqual([]);
 
-      proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({ query: 'parker' });
+      proposals = await CfpReviewsSearch.for(authorizedEvent).search({ query: 'parker' });
       expect(proposals.results.length).toEqual(0);
     });
 
@@ -72,12 +78,16 @@ describe('CfpReviewsSearch', () => {
       await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
       await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({});
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposals = await CfpReviewsSearch.for(authorizedEvent).search({});
       expect(proposals.results[0].reviews.summary).toBeUndefined();
     });
 
     it('returns empty results of an event without proposals', async () => {
-      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({});
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposals = await CfpReviewsSearch.for(authorizedEvent).search({});
 
       expect(proposals.results).toEqual([]);
       expect(proposals.filters).toEqual({});
@@ -90,16 +100,21 @@ describe('CfpReviewsSearch', () => {
       const event = await eventFactory();
       await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
 
-      const reviewsSearch = CfpReviewsSearch.for(user.id, team.slug, event.slug);
-
-      await expect(reviewsSearch.search({})).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const reviewsSearch = CfpReviewsSearch.for(authorizedEvent);
+        await reviewsSearch.search({});
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('#autocomplete', () => {
     it('returns event proposals info', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).autocomplete({ status: 'pending' });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposals = await CfpReviewsSearch.for(authorizedEvent).autocomplete({ status: 'pending' });
 
       expect(proposals).toEqual([
         {
@@ -113,7 +128,9 @@ describe('CfpReviewsSearch', () => {
     });
 
     it('returns empty results of an event without proposals', async () => {
-      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).autocomplete({});
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposals = await CfpReviewsSearch.for(authorizedEvent).autocomplete({});
 
       expect(proposals).toEqual([]);
     });
@@ -123,9 +140,12 @@ describe('CfpReviewsSearch', () => {
       const event = await eventFactory();
       await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
 
-      const reviewsSearch = CfpReviewsSearch.for(user.id, team.slug, event.slug);
-
-      await expect(reviewsSearch.autocomplete({})).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const reviewsSearch = CfpReviewsSearch.for(authorizedEvent);
+        await reviewsSearch.autocomplete({});
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

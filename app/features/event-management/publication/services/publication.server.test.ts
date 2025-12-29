@@ -90,10 +90,7 @@ describe('Publication', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalStatusUpdater.for(owner.id, team.slug, event.slug).archive([
-        archivedAccepted.id,
-        archivedRejected.id,
-      ]);
+      await ProposalStatusUpdater.for(authorizedEvent).archive([archivedAccepted.id, archivedRejected.id]);
 
       const count = await Publication.for(authorizedEvent).statistics();
 
@@ -182,7 +179,7 @@ describe('Publication', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalStatusUpdater.for(owner.id, team.slug, event.slug).archive([archivedProposal.id]);
+      await ProposalStatusUpdater.for(authorizedEvent).archive([archivedProposal.id]);
 
       await Publication.for(authorizedEvent).publishAll('ACCEPTED', true);
 
@@ -289,7 +286,7 @@ describe('Publication', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalStatusUpdater.for(owner.id, team.slug, event.slug).archive([archivedProposal.id]);
+      await ProposalStatusUpdater.for(authorizedEvent).archive([archivedProposal.id]);
 
       await expect(Publication.for(authorizedEvent).publish(archivedProposal.id, true)).rejects.toThrowError(
         ProposalNotFoundError,

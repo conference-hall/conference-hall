@@ -11,6 +11,7 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError, ReviewDisabledError } from '~/shared/errors.server.ts';
 import { ProposalReview } from './proposal-review.server.ts';
 
@@ -48,7 +49,9 @@ describe('ProposalReview', () => {
       });
       await surveyFactory({ event, user: speaker, attributes: { answers: { info: 'Hello world' } } });
 
-      const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const review = await ProposalReview.for(authorizedEvent, proposal.id).get();
 
       expect(review).toEqual({
         id: proposal.id,
@@ -95,7 +98,9 @@ describe('ProposalReview', () => {
       await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const review = await ProposalReview.for(authorizedEvent, proposal.id).get();
       expect(review.speakers).toEqual([]);
     });
 
@@ -104,7 +109,9 @@ describe('ProposalReview', () => {
       await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
       await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5 } });
 
-      const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const review = await ProposalReview.for(authorizedEvent, proposal.id).get();
 
       expect(review.reviews).toEqual({
         summary: { average: 2.5, positives: 1, negatives: 1 },
@@ -117,7 +124,9 @@ describe('ProposalReview', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
 
-      const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const review = await ProposalReview.for(authorizedEvent, proposal.id).get();
 
       expect(review.reviews).toEqual({
         summary: null,
@@ -129,9 +138,11 @@ describe('ProposalReview', () => {
       const user = await userFactory();
       const event = await eventFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
-      await expect(ProposalReview.for(user.id, team.slug, event.slug, proposal.id).get()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await ProposalReview.for(authorizedEvent, proposal.id).get();
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -149,7 +160,9 @@ describe('ProposalReview', () => {
         attributes: { feeling: 'NEUTRAL', note: 3 },
       });
 
-      const proposalReview = ProposalReview.for(owner.id, team.slug, event.slug, proposal1.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalReview = ProposalReview.for(authorizedEvent, proposal1.id);
       const otherProposals = await proposalReview.getOtherProposals([eventSpeaker.id]);
 
       expect(otherProposals).toEqual([
@@ -168,7 +181,9 @@ describe('ProposalReview', () => {
         attributes: { feeling: 'NEUTRAL', note: 3 },
       });
 
-      const proposalReview = ProposalReview.for(owner.id, team.slug, event2.slug, proposal1.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event2.slug);
+      const proposalReview = ProposalReview.for(authorizedEvent, proposal1.id);
       const otherProposals = await proposalReview.getOtherProposals([eventSpeaker.id]);
 
       expect(otherProposals).toEqual([
@@ -182,7 +197,9 @@ describe('ProposalReview', () => {
       const proposal1 = await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
       await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalReview = ProposalReview.for(owner.id, team.slug, event2.slug, proposal1.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event2.slug);
+      const proposalReview = ProposalReview.for(authorizedEvent, proposal1.id);
       const otherProposals = await proposalReview.getOtherProposals([eventSpeaker.id]);
 
       expect(otherProposals).toEqual([]);
@@ -191,9 +208,11 @@ describe('ProposalReview', () => {
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
-      await expect(
-        ProposalReview.for(user.id, team.slug, event.slug, proposal.id).getOtherProposals([]),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await ProposalReview.for(authorizedEvent, proposal.id).getOtherProposals([]);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -206,7 +225,9 @@ describe('ProposalReview', () => {
         talk: await talkFactory({ speakers: [speaker] }),
       });
 
-      const review = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const review = ProposalReview.for(authorizedEvent, proposal.id);
       const pagination = await review.getPreviousAndNextReviews({});
 
       expect(pagination).toEqual({ current: 1, total: 1, reviewed: 0, previousId: undefined, nextId: undefined });
@@ -217,7 +238,9 @@ describe('ProposalReview', () => {
       const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const proposal3 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const review = ProposalReview.for(owner.id, team.slug, event.slug, proposal2.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const review = ProposalReview.for(authorizedEvent, proposal2.id);
       const pagination = await review.getPreviousAndNextReviews({});
 
       expect(pagination).toEqual({
@@ -245,7 +268,9 @@ describe('ProposalReview', () => {
         talk: await talkFactory({ speakers: [speaker], attributes: { title: 'foo' } }),
       });
 
-      const review = ProposalReview.for(owner.id, team.slug, event.slug, proposal3.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const review = ProposalReview.for(authorizedEvent, proposal3.id);
       const pagination = await review.getPreviousAndNextReviews({ query: 'foo' });
 
       expect(pagination).toEqual({
@@ -261,9 +286,11 @@ describe('ProposalReview', () => {
       const user = await userFactory();
       const event = await eventFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
-      await expect(
-        ProposalReview.for(user.id, team.slug, event.slug, proposal.id).getPreviousAndNextReviews({}),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await ProposalReview.for(authorizedEvent, proposal.id).getPreviousAndNextReviews({});
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -271,8 +298,11 @@ describe('ProposalReview', () => {
     it('adds then updates a review for a proposal', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
       // First review
-      await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).addReview({
+      await ProposalReview.for(authorizedEvent, proposal.id).addReview({
         feeling: 'NEUTRAL',
         note: 2,
       });
@@ -286,7 +316,7 @@ describe('ProposalReview', () => {
       expect(review.proposal.avgRateForSort).toBe(2);
 
       // Update first review
-      await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).addReview({
+      await ProposalReview.for(authorizedEvent, proposal.id).addReview({
         feeling: 'POSITIVE',
         note: 5,
       });
@@ -300,7 +330,9 @@ describe('ProposalReview', () => {
       expect(updatedReview.proposal.avgRateForSort).toBe(5);
 
       // Second review
-      await ProposalReview.for(member.id, team.slug, event.slug, proposal.id).addReview({
+      const authorizedTeamMember = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEventMember = await getAuthorizedEvent(authorizedTeamMember, event.slug);
+      await ProposalReview.for(authorizedEventMember, proposal.id).addReview({
         feeling: 'NEUTRAL',
         note: 0,
       });
@@ -314,7 +346,9 @@ describe('ProposalReview', () => {
       await db.event.update({ data: { reviewEnabled: false }, where: { id: event.id } });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const review = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const review = ProposalReview.for(authorizedEvent, proposal.id);
       await expect(review.addReview({ feeling: 'NEUTRAL', note: 2 })).rejects.toThrowError(ReviewDisabledError);
     });
 
@@ -322,8 +356,12 @@ describe('ProposalReview', () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const review = ProposalReview.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(review.addReview({ feeling: 'NEUTRAL', note: 2 })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const review = ProposalReview.for(authorizedEvent, proposal.id);
+        await review.addReview({ feeling: 'NEUTRAL', note: 2 });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

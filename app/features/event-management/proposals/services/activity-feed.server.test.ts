@@ -7,6 +7,7 @@ import { reviewFactory } from 'tests/factories/reviews.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ActivityFeed } from './activity-feed.server.ts';
 
 describe('ActivityFeed', () => {
@@ -35,7 +36,9 @@ describe('ActivityFeed', () => {
 
       await commentFactory({ proposal, user: member1, attributes: { channel: CommentChannel.SPEAKER } });
 
-      const activity = await ActivityFeed.for(owner.id, team.slug, event.slug, proposal.id).activity();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const activity = await ActivityFeed.for(authorizedEvent, proposal.id).activity();
 
       expect(activity).toEqual([
         {
@@ -93,7 +96,9 @@ describe('ActivityFeed', () => {
       const message = await commentFactory({ proposal, user: owner });
       await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
 
-      const activity = await ActivityFeed.for(owner.id, team.slug, event.slug, proposal.id).activity();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const activity = await ActivityFeed.for(authorizedEvent, proposal.id).activity();
 
       expect(activity).toEqual([
         {
