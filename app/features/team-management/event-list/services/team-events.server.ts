@@ -1,6 +1,5 @@
 import { db } from 'prisma/db.server.ts';
 import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
-import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 
 export class TeamEvents {
   constructor(private authorizedTeam: AuthorizedTeam) {}
@@ -10,8 +9,7 @@ export class TeamEvents {
   }
 
   async list(archived: boolean) {
-    const { teamId, permissions } = this.authorizedTeam;
-    if (!permissions.canAccessTeam) throw new ForbiddenOperationError();
+    const { teamId } = this.authorizedTeam;
 
     const events = await db.event.findMany({
       where: { teamId, archived },

@@ -7,7 +7,7 @@ import { reviewFactory } from 'tests/factories/reviews.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { CfpMetrics } from './cfp-metrics.server.ts';
 
 describe('CfpMetrics', () => {
@@ -65,7 +65,10 @@ describe('CfpMetrics', () => {
 
   describe('#get', () => {
     it('returns metrics for an event with proposals', async () => {
-      const metrics = await CfpMetrics.for(owner.id, team.slug, event.slug).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const metrics = await CfpMetrics.for(authorizedEvent).get();
 
       expect(metrics.proposalsCount).toBe(2);
       expect(metrics.speakersCount).toBe(2);
@@ -94,7 +97,10 @@ describe('CfpMetrics', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
 
-      const metrics = await CfpMetrics.for(owner.id, team.slug, event.slug).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const metrics = await CfpMetrics.for(authorizedEvent).get();
 
       expect(metrics.proposalsCount).toBe(0);
       expect(metrics.speakersCount).toBe(0);
@@ -110,7 +116,10 @@ describe('CfpMetrics', () => {
       const talk = await talkFactory({ speakers: [owner] });
       await proposalFactory({ event, talk });
 
-      const metrics = await CfpMetrics.for(owner.id, team.slug, event.slug).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const metrics = await CfpMetrics.for(authorizedEvent).get();
 
       expect(metrics.proposalsCount).toBe(1);
       expect(metrics.speakersCount).toBe(1);
@@ -118,12 +127,6 @@ describe('CfpMetrics', () => {
       expect(metrics.byCategories).toBe(null);
       expect(metrics.byFormats).toBe(null);
       expect(metrics.byDays.length).toBe(1);
-    });
-
-    it('throws an error if the user does not have permission to access the event', async () => {
-      await expect(CfpMetrics.for(owner.id, team.slug, event2.slug).get()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
     });
   });
 });

@@ -20,8 +20,7 @@ export class TeamMembers {
   }
 
   async list(filters: z.infer<typeof MembersFiltersSchema>, page: number) {
-    const { teamId, permissions } = this.authorizedTeam;
-    if (!permissions.canAccessTeam) throw new ForbiddenOperationError();
+    const { teamId } = this.authorizedTeam;
 
     const whereClause: TeamMemberWhereInput = {
       teamId,

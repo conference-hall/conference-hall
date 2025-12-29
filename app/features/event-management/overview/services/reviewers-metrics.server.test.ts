@@ -5,7 +5,7 @@ import { reviewFactory } from 'tests/factories/reviews.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ReviewersMetrics } from './reviewers-metrics.server.ts';
 
 describe('ReviewersMetrics', () => {
@@ -38,7 +38,10 @@ describe('ReviewersMetrics', () => {
 
   describe('#get', () => {
     it('returns reviewers metrics for an event', async () => {
-      const metrics = await ReviewersMetrics.for(owner.id, team.slug, event.slug).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const metrics = await ReviewersMetrics.for(authorizedEvent).get();
 
       expect(metrics).toEqual({
         proposalsCount: 2,
@@ -69,15 +72,12 @@ describe('ReviewersMetrics', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
 
-      const metrics = await ReviewersMetrics.for(owner.id, team.slug, event.slug).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const metrics = await ReviewersMetrics.for(authorizedEvent).get();
 
       expect(metrics).toEqual({ proposalsCount: 0, reviewersMetrics: [] });
-    });
-
-    it('throws an error if the user does not have permission to access the event', async () => {
-      await expect(ReviewersMetrics.for(owner.id, team.slug, event2.slug).get()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
     });
   });
 });

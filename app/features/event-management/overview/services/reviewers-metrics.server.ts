@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 import { Prisma } from 'prisma/generated/client.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 
 type ReviewerMetricsInfo = {
   id: string;
@@ -12,32 +12,34 @@ type ReviewerMetricsInfo = {
   negativeCount: number;
 };
 
-export class ReviewersMetrics extends EventAuthorization {
-  static for(userId: string, team: string, event: string) {
-    return new ReviewersMetrics(userId, team, event);
+export class ReviewersMetrics {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new ReviewersMetrics(authorizedEvent);
   }
 
   async get() {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { eventId } = this.authorizedEvent;
 
-    const proposalsCount = await this.proposalsCount(event.id);
+    const proposalsCount = await this.proposalsCount(eventId);
     if (proposalsCount === 0) {
       return { proposalsCount: 0, reviewersMetrics: [] };
     }
 
     const reviewersMetrics = await db.$queryRaw<Array<ReviewerMetricsInfo>>(Prisma.sql`
-      SELECT 
+      SELECT
         users."id",
         users."name",
         users."picture",
         COUNT(reviews."id") as "reviewsCount",
-        AVG(reviews."note") as "averageNote", 
+        AVG(reviews."note") as "averageNote",
         COUNT(reviews."feeling") FILTER (WHERE reviews."feeling" = 'POSITIVE') as "positiveCount",
         COUNT(reviews."feeling") FILTER (WHERE reviews."feeling" = 'NEGATIVE') as "negativeCount"
       FROM reviews
       JOIN users ON reviews."userId" = users.id
       JOIN proposals ON reviews."proposalId" = proposals.id
-      WHERE proposals."eventId" = ${event.id}
+      WHERE proposals."eventId" = ${eventId}
       GROUP BY 1, 2, 3
       ORDER BY "reviewsCount" DESC
     `);

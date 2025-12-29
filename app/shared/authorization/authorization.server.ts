@@ -9,6 +9,7 @@ export async function getAuthorizedTeam(userId: string, teamSlug: string): Promi
   if (!member) throw new ForbiddenOperationError();
 
   const permissions = UserTeamPermissions.getPermissions(member.role);
+  if (!permissions.canAccessTeam) throw new ForbiddenOperationError();
 
   return {
     userId,
@@ -20,6 +21,8 @@ export async function getAuthorizedTeam(userId: string, teamSlug: string): Promi
 
 // todo(autho): add exhaustive tests
 export async function getAuthorizedEvent(authorizedTeam: AuthorizedTeam, eventSlug: string): Promise<AuthorizedEvent> {
+  if (!authorizedTeam.permissions.canAccessEvent) throw new ForbiddenOperationError();
+
   const event = await db.event.findUnique({
     select: { id: true },
     where: { slug: eventSlug, teamId: authorizedTeam.teamId },
