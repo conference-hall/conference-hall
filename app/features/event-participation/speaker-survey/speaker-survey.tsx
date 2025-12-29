@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { getRequiredAuthUser, requireAuth } from '~/shared/authentication/auth.middleware.ts';
+import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { SurveyForm } from '../../speaker/talk-library/components/talk-forms/survey-form.tsx';
@@ -14,7 +14,7 @@ import { SpeakerSurvey } from './services/speaker-survey.server.ts';
 export const middleware = [requireAuth];
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const survey = SpeakerSurvey.for(params.event);
   const questions = await survey.getQuestions();
   const answers = await survey.getSpeakerAnswers(authUser.id);
@@ -23,7 +23,7 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const i18n = getI18n(context);
   const survey = SpeakerSurvey.for(params.event);
   const schema = await survey.buildSurveySchema();

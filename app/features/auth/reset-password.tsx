@@ -12,7 +12,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
-import { getAuthUser } from '~/shared/authentication/auth.middleware.ts';
+import { OptionalAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { getFirebaseError } from '~/shared/authentication/firebase.errors.ts';
 import { getClientAuth } from '~/shared/authentication/firebase.ts';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
@@ -24,7 +24,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request, context }: Route.LoaderArgs) => {
-  const user = getAuthUser(context);
+  const user = context.get(OptionalAuthContext);
   if (user) return redirect('/');
 
   const url = new URL(request.url);

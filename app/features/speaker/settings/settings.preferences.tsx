@@ -6,7 +6,7 @@ import { Button } from '~/design-system/button.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
+import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { getI18n, setLocaleCookie } from '~/shared/i18n/i18n.middleware.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -19,7 +19,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const form = await request.formData();
   const locale = form.get('locale') as string;
   await UserAccount.changeLocale(authUser.id, locale);

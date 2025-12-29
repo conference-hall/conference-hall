@@ -7,19 +7,19 @@ import { Toggle } from '~/design-system/forms/toggles.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
+import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/feature-flags.ts';
 import { AdminFlags } from './services/admin-flags.server.ts';
 
 export const loader = async ({ context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const adminFlags = await AdminFlags.for(authUser.id);
   const flags = await adminFlags.list();
   return flags;
 };
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const formData = await request.formData();
   const key = formData.get('key') as string;
   const value = formData.get('value') as string;

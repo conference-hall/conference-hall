@@ -9,7 +9,7 @@ import { ExternalLink } from '~/design-system/links.tsx';
 import { TalkSubmission } from '~/features/event-participation/cfp-submission/services/talk-submission.server.ts';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
-import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
+import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/6-submit.ts';
@@ -18,12 +18,12 @@ import { useSubmissionNavigation } from './components/submission-context.tsx';
 export const handle = { step: 'submission' };
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   return TalkSubmission.for(authUser.id, params.event).get(params.talk);
 };
 
 export const action = async ({ params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
 
   const i18n = getI18n(context);
   const proposalId = await TalkSubmission.for(authUser.id, params.event).submit(params.talk);

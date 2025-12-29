@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
+import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { useSpeakerProfile } from '../speaker-profile-context.tsx';
 import type { Route } from './+types/activity.ts';
@@ -15,7 +15,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const page = parseUrlPage(request.url);
   return SpeakerActivities.for(authUser.id).list(page);
 };

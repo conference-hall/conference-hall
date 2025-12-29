@@ -6,7 +6,7 @@ import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser, requireAuth } from '~/shared/authentication/auth.middleware.ts';
+import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import { EventCard } from '../../event-search/components/event-card.tsx';
 import { SpeakerPill } from '../../speaker/talk-library/components/speakers.tsx';
 import type { Route } from './+types/proposal-invitation.ts';
@@ -24,7 +24,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const proposal = await CoSpeakerProposalInvite.with(params.code).addCoSpeaker(authUser.id);
   return redirect(href('/:event/proposals/:proposal', { event: proposal.event.slug, proposal: proposal.id }));
 };

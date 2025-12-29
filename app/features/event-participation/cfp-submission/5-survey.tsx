@@ -9,14 +9,14 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import { SurveyForm } from '~/features/speaker/talk-library/components/talk-forms/survey-form.tsx';
-import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
+import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/5-survey.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'survey' };
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const survey = SpeakerSurvey.for(params.event);
   const questions = await survey.getQuestions();
   const answers = await survey.getSpeakerAnswers(authUser.id);
@@ -24,7 +24,7 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const survey = SpeakerSurvey.for(params.event);
   const schema = await survey.buildSurveySchema();
   const form = await request.formData();

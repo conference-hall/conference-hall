@@ -1,5 +1,5 @@
 import { createContext, type MiddlewareFunction } from 'react-router';
-import { getRequiredAuthUser } from '../authentication/auth.middleware.ts';
+import { RequireAuthContext } from '../authentication/auth.middleware.ts';
 import { BadRequestError } from '../errors.server.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from './authorization.server.ts';
 import type { AuthorizedEvent, AuthorizedTeam } from './types.ts';
@@ -8,7 +8,7 @@ import type { AuthorizedEvent, AuthorizedTeam } from './types.ts';
 export const AuthorizedTeamContext = createContext<AuthorizedTeam>();
 
 export const requireAuthorizedTeam: MiddlewareFunction<Response> = async ({ params, context }) => {
-  const user = getRequiredAuthUser(context);
+  const user = context.get(RequireAuthContext);
   if (!user) throw new BadRequestError('`requireAuthorizedTeam` must be defined after `requireAuthUser`');
   if (!params?.team) throw new BadRequestError('Team authorization must be defined on a `/team/:team` route.');
 

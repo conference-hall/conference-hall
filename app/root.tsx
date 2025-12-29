@@ -7,7 +7,7 @@ import { GeneralErrorBoundary } from './app-platform/components/errors/error-bou
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
 import { UserProvider } from './app-platform/components/user-context.tsx';
 import { ClientOnly } from './design-system/utils/client-only.tsx';
-import { getAuthUser, optionalAuth } from './shared/authentication/auth.middleware.ts';
+import { OptionalAuthContext, optionalAuth } from './shared/authentication/auth.middleware.ts';
 import { getFirebaseClientConfig } from './shared/authentication/firebase.server.ts';
 import { initializeFirebaseClient } from './shared/authentication/firebase.ts';
 import { flags } from './shared/feature-flags/flags.server.ts';
@@ -55,7 +55,7 @@ export const loader = async ({ request, context }: Route.LoaderArgs) => {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
 
-  const user = getAuthUser(context);
+  const user = context.get(OptionalAuthContext);
 
   const { toast, toastHeaders } = await getToast(request);
 

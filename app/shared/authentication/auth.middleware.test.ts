@@ -1,7 +1,7 @@
 import type { createContext } from 'react-router';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
-import { getAuthUser, getRequiredAuthUser, optionalAuth, requireAuth } from './auth.middleware.ts';
+import { OptionalAuthContext, optionalAuth, RequireAuthContext, requireAuth } from './auth.middleware.ts';
 import { destroySession, getSessionUid } from './session.ts';
 
 vi.mock('./session.ts', () => ({
@@ -36,7 +36,7 @@ describe('optionalAuth middleware', () => {
     await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(getSessionUidMock).toHaveBeenCalledWith(request);
-    expect(getAuthUser(context)).toEqual({
+    expect(context.get(OptionalAuthContext)).toEqual({
       id: user.id,
       uid: user.uid,
       name: user.name,
@@ -57,7 +57,7 @@ describe('optionalAuth middleware', () => {
     await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(getSessionUidMock).toHaveBeenCalledWith(request);
-    expect(getAuthUser(context)).toBeNull();
+    expect(context.get(OptionalAuthContext)).toBeNull();
     expect(destroySessionMock).not.toHaveBeenCalled();
   });
 
@@ -69,7 +69,7 @@ describe('optionalAuth middleware', () => {
     await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
     expect(getSessionUidMock).toHaveBeenCalledWith(request);
-    expect(getAuthUser(context)).toBeNull();
+    expect(context.get(OptionalAuthContext)).toBeNull();
     expect(destroySessionMock).not.toHaveBeenCalled();
   });
 
@@ -90,30 +90,8 @@ describe('optionalAuth middleware', () => {
 
     await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
-    expect(getAuthUser(context)).toBeNull();
+    expect(context.get(OptionalAuthContext)).toBeNull();
     expect(destroySessionMock).not.toHaveBeenCalled();
-  });
-});
-
-describe('getAuthUser', () => {
-  it('returns authenticated user from context', async () => {
-    const user = await userFactory({ traits: ['clark-kent'] });
-    getSessionUidMock.mockResolvedValue(user.uid);
-    const request = createMockRequest();
-    const context = createMockContext();
-
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-
-    expect(getAuthUser(context)).toEqual({
-      id: user.id,
-      uid: user.uid,
-      name: user.name,
-      email: user.email,
-      picture: user.picture,
-      teams: [],
-      hasTeamAccess: false,
-      notificationsUnreadCount: 0,
-    });
   });
 });
 
@@ -127,7 +105,7 @@ describe('requireAuth middleware', () => {
     await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
     await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
-    expect(getRequiredAuthUser(context)).toEqual({
+    expect(context.get(RequireAuthContext)).toEqual({
       id: user.id,
       uid: user.uid,
       name: user.name,
@@ -190,29 +168,6 @@ describe('requireAuth middleware', () => {
   });
 });
 
-describe('getRequiredAuthUser', () => {
-  it('returns authenticated user from protected context', async () => {
-    const user = await userFactory({ traits: ['clark-kent'] });
-    getSessionUidMock.mockResolvedValue(user.uid);
-    const request = createMockRequest();
-    const context = createMockContext();
-
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-    await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-
-    expect(getRequiredAuthUser(context)).toEqual({
-      id: user.id,
-      uid: user.uid,
-      name: user.name,
-      email: user.email,
-      picture: user.picture,
-      teams: [],
-      hasTeamAccess: false,
-      notificationsUnreadCount: 0,
-    });
-  });
-});
-
 describe('middleware chain behavior', () => {
   it('works correctly when both middlewares run in sequence', async () => {
     const user = await userFactory({ traits: ['clark-kent'] });
@@ -223,7 +178,7 @@ describe('middleware chain behavior', () => {
     await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
     await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
 
-    expect(getAuthUser(context)).toEqual({
+    expect(context.get(OptionalAuthContext)).toEqual({
       id: user.id,
       uid: user.uid,
       name: user.name,
@@ -233,7 +188,7 @@ describe('middleware chain behavior', () => {
       hasTeamAccess: false,
       notificationsUnreadCount: 0,
     });
-    expect(getRequiredAuthUser(context)).toEqual({
+    expect(context.get(RequireAuthContext)).toEqual({
       id: user.id,
       uid: user.uid,
       name: user.name,

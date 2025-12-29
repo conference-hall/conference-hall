@@ -9,7 +9,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
-import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
+import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { getClientAuth } from '~/shared/authentication/firebase.ts';
 import { destroySession, sendEmailVerification } from '~/shared/authentication/session.ts';
 import { getI18n, getLocale } from '~/shared/i18n/i18n.middleware.ts';
@@ -26,7 +26,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const user = getRequiredAuthUser(context);
+  const user = context.get(RequireAuthContext);
   const i18n = getI18n(context);
   const locale = getLocale(context);
   const form = await request.formData();

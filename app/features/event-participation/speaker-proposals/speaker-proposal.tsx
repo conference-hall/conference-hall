@@ -18,7 +18,7 @@ import { ProposalConversationForSpeakers } from '~/features/conversations/servic
 import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
-import { getRequiredAuthUser, requireAuth } from '~/shared/authentication/auth.middleware.ts';
+import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -33,14 +33,14 @@ import { ProposalStatusSection } from './components/proposal-status-section.tsx'
 export const middleware = [requireAuth];
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const proposal = await SpeakerProposal.for(authUser.id, params.proposal).get();
   const conversation = await ProposalConversationForSpeakers.for(authUser.id, params.proposal).getConversation();
   return { proposal, conversation };
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
 
   const i18n = getI18n(context);
   const proposal = SpeakerProposal.for(authUser.id, params.proposal);

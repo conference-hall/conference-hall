@@ -1,9 +1,9 @@
-import { createContext, type MiddlewareFunction, type RouterContextProvider, redirect } from 'react-router';
+import { createContext, type MiddlewareFunction, redirect } from 'react-router';
 import type { AuthenticatedUser } from '../types/user.types.ts';
 import { UserAccount } from '../user/user-account.server.ts';
 import { destroySession, getSessionUid } from './session.ts';
 
-const OptionalAuthContext = createContext<AuthenticatedUser | null>();
+export const OptionalAuthContext = createContext<AuthenticatedUser | null>();
 
 export const optionalAuth: MiddlewareFunction<Response> = async ({ request, context }) => {
   const sessionUid = await getSessionUid(request);
@@ -15,14 +15,11 @@ export const optionalAuth: MiddlewareFunction<Response> = async ({ request, cont
   context.set(OptionalAuthContext, user);
 };
 
-export function getAuthUser(context: Readonly<RouterContextProvider>) {
-  return context.get(OptionalAuthContext);
-}
-
-const RequireAuthContext = createContext<AuthenticatedUser>();
+export const RequireAuthContext = createContext<AuthenticatedUser>();
 
 export const requireAuth: MiddlewareFunction<Response> = async ({ request, context }) => {
-  const user = getAuthUser(context);
+  const user = context.get(OptionalAuthContext);
+  context.get(OptionalAuthContext);
 
   if (!user) {
     const redirectTo = new URL(request.url).pathname;
@@ -32,7 +29,3 @@ export const requireAuth: MiddlewareFunction<Response> = async ({ request, conte
 
   context.set(RequireAuthContext, user);
 };
-
-export function getRequiredAuthUser(context: Readonly<RouterContextProvider>) {
-  return context.get(RequireAuthContext);
-}

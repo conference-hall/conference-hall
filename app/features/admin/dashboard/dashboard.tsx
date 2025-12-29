@@ -5,12 +5,12 @@ import { KpiProgressBar } from '~/design-system/dashboard/kpi-progress-bar.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/authentication/auth.middleware.ts';
+import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/dashboard.ts';
 import { AdminDashboard } from './services/dashboard.server.ts';
 
 export const loader = async ({ context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const dashboard = await AdminDashboard.for(authUser.id);
   return {
     users: dashboard.usersMetrics(),
