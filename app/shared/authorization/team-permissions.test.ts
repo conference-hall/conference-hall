@@ -53,7 +53,7 @@ describe('UserTeamPermissions', () => {
       });
     });
 
-    it('returns member permissions', async () => {
+    it('returns reviewer permissions', async () => {
       const permissions = UserTeamPermissions.getPermissions(TeamRole.REVIEWER);
 
       expect(permissions).toEqual({

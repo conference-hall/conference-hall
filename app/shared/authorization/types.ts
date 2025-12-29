@@ -3,33 +3,33 @@ import type { Event } from 'prisma/generated/client.ts';
 export type TeamRole = 'OWNER' | 'MEMBER' | 'REVIEWER';
 
 export type TeamPermissions = {
-  canAccessTeam: boolean;
-  canEditTeam: boolean;
-  canDeleteTeam: boolean;
-  canManageTeamMembers: boolean;
-  canLeaveTeam: boolean;
-  canAccessEvent: boolean;
-  canCreateEvent: boolean;
-  canEditEvent: boolean;
-  canDeleteEvent: boolean;
-  canCreateEventProposal: boolean;
-  canCreateEventSpeaker: boolean;
-  canEditEventSpeaker: boolean;
-  canEditEventProposal: boolean;
-  canManageConversations: boolean;
-  canExportEventProposals: boolean;
-  canChangeProposalStatus: boolean;
-  canPublishEventResults: boolean;
-  canEditEventSchedule: boolean;
+  readonly canAccessTeam: boolean;
+  readonly canEditTeam: boolean;
+  readonly canDeleteTeam: boolean;
+  readonly canManageTeamMembers: boolean;
+  readonly canLeaveTeam: boolean;
+  readonly canAccessEvent: boolean;
+  readonly canCreateEvent: boolean;
+  readonly canEditEvent: boolean;
+  readonly canDeleteEvent: boolean;
+  readonly canCreateEventProposal: boolean;
+  readonly canCreateEventSpeaker: boolean;
+  readonly canEditEventSpeaker: boolean;
+  readonly canEditEventProposal: boolean;
+  readonly canManageConversations: boolean;
+  readonly canExportEventProposals: boolean;
+  readonly canChangeProposalStatus: boolean;
+  readonly canPublishEventResults: boolean;
+  readonly canEditEventSchedule: boolean;
 };
 
 export type TeamPermission = keyof TeamPermissions;
 
 export type AuthorizedTeam = {
-  userId: string;
-  teamId: string;
-  role: TeamRole;
-  permissions: TeamPermissions;
+  readonly userId: string;
+  readonly teamId: string;
+  readonly role: TeamRole;
+  readonly permissions: TeamPermissions;
 };
 
-export type AuthorizedEvent = AuthorizedTeam & { event: Event };
+export type AuthorizedEvent = AuthorizedTeam & { readonly event: Event };
