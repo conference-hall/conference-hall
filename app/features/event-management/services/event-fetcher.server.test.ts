@@ -1,7 +1,7 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { EventNotFoundError } from '~/shared/errors.server.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { EventFetcher } from './event-fetcher.server.ts';
 
 describe('EventFetcher', () => {
@@ -19,7 +19,10 @@ describe('EventFetcher', () => {
         team,
       });
 
-      const result = await EventFetcher.for(user.id, team.slug, event.slug).get();
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const result = await EventFetcher.for(authorizedEvent).get();
 
       expect(result).toEqual({
         id: event.id,
@@ -59,21 +62,6 @@ describe('EventFetcher', () => {
         tags: [],
         archived: false,
       });
-    });
-
-    it('throws an error if user does not belong to event team', async () => {
-      const user = await userFactory();
-      const team = await teamFactory();
-      const event = await eventFactory({ team });
-      await expect(EventFetcher.for(user.id, team.slug, event.slug).get()).rejects.toThrowError(EventNotFoundError);
-    });
-
-    it('throws an error if event does not belong to team', async () => {
-      const user = await userFactory();
-      const team = await teamFactory({ owners: [user] });
-      const team2 = await teamFactory({ owners: [user] });
-      const event = await eventFactory({ team: team2 });
-      await expect(EventFetcher.for(user.id, team.slug, event.slug).get()).rejects.toThrowError(EventNotFoundError);
     });
   });
 });

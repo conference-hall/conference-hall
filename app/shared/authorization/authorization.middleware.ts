@@ -9,6 +9,7 @@ export const AuthorizedTeamContext = createContext<AuthorizedTeam>();
 
 export const requireAuthorizedTeam: MiddlewareFunction<Response> = async ({ params, context }) => {
   const user = getRequiredAuthUser(context);
+  if (!user) throw new BadRequestError('`requireAuthorizedTeam` must be defined after `requireAuthUser`');
   if (!params?.team) throw new BadRequestError('Team authorization must be defined on a `/team/:team` route.');
 
   const authorizedTeam = await getAuthorizedTeam(user.id, params.team);
@@ -19,11 +20,11 @@ export const requireAuthorizedTeam: MiddlewareFunction<Response> = async ({ para
 export const AuthorizedEventContext = createContext<AuthorizedEvent>();
 
 export const requireAuthorizedEvent: MiddlewareFunction<Response> = async ({ params, context }) => {
-  const user = getRequiredAuthUser(context);
+  const authorizedTeam = context.get(AuthorizedTeamContext);
+  if (!authorizedTeam)
+    throw new BadRequestError('`requireAuthorizedEvent` must be defined after `requireAuthorizedTeam`');
+  if (!params?.event) throw new BadRequestError('Event authorization must be defined on a `/team/:team/:event` route.');
 
-  if (!params?.team || !params?.event)
-    throw new BadRequestError('Event authorization must be defined on a `/team/:team/:event` route.');
-
-  const authorizedEvent = await getAuthorizedEvent(user.id, params.team, params.event);
+  const authorizedEvent = await getAuthorizedEvent(authorizedTeam, params.event);
   context.set(AuthorizedEventContext, authorizedEvent);
 };

@@ -1,15 +1,19 @@
 import { db } from 'prisma/db.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { EventNotFoundError } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 
-export class EventFetcher extends EventAuthorization {
-  static for(userId: string, teamSlug: string, eventSlug: string) {
-    return new EventFetcher(userId, teamSlug, eventSlug);
+export class EventFetcher {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new EventFetcher(authorizedEvent);
   }
 
   async get() {
+    const { teamId, eventId } = this.authorizedEvent;
+
     const event = await db.event.findFirst({
       include: {
         integrations: true,
@@ -17,7 +21,7 @@ export class EventFetcher extends EventAuthorization {
         formats: { orderBy: { order: 'asc' } },
         categories: { orderBy: { order: 'asc' } },
       },
-      where: { slug: this.event, team: { slug: this.team, members: { some: { memberId: this.userId } } } },
+      where: { id: eventId, teamId },
     });
     if (!event) throw new EventNotFoundError();
 

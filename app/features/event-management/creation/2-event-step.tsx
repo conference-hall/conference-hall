@@ -8,7 +8,7 @@ import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { Button } from '~/design-system/button.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedTeamContext } from '~/shared/authorization/authorization.middleware.ts';
 import type { EventType } from '~/shared/types/events.types.ts';
 import type { Route } from './+types/2-event-step.ts';
 import { EventCreationStepper } from './components/event-creation-stepper.tsx';
@@ -16,22 +16,22 @@ import { EventForm } from './components/event-form.tsx';
 import { EventCreateSchema, EventCreation } from './services/event-creation.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authorizedTeam = context.get(AuthorizedTeamContext);
   const result = z.enum(['CONFERENCE', 'MEETUP']).safeParse(params.type);
   if (!result.success) return { existingEvents: [] };
 
-  const eventCreation = EventCreation.for(authUser.id, params.team);
-  const existingEvents = await eventCreation.findExistingEvents(result.data);
+  const eventCreation = EventCreation.for(authorizedTeam);
+  const existingEvents = await eventCreation.findTemplateEvents(result.data);
   return { existingEvents };
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authorizedTeam = context.get(AuthorizedTeamContext);
   const form = await request.formData();
   const result = await parseWithZod(form, { schema: EventCreateSchema, async: true });
   if (result.status !== 'success') return result.error;
 
-  const event = await EventCreation.for(authUser.id, params.team).create(result.value);
+  const event = await EventCreation.for(authorizedTeam).create(result.value);
   return redirect(href('/team/:team/new/:event/details', { team: params.team, event: event.slug }));
 };
 

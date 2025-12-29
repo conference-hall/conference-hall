@@ -1,5 +1,5 @@
 import { db } from 'prisma/db.server.ts';
-import { ForbiddenOperationError } from '../errors.server.ts';
+import { EventNotFoundError, ForbiddenOperationError } from '../errors.server.ts';
 import { UserTeamPermissions } from './team-permissions.ts';
 import type { AuthorizedEvent, AuthorizedTeam } from './types.ts';
 
@@ -19,21 +19,12 @@ export async function getAuthorizedTeam(userId: string, teamSlug: string): Promi
 }
 
 // todo(autho): add exhaustive tests
-export async function getAuthorizedEvent(
-  userId: string,
-  teamSlug: string,
-  eventSlug: string,
-): Promise<AuthorizedEvent> {
-  const teamAuthContext = await getAuthorizedTeam(userId, teamSlug);
-
+export async function getAuthorizedEvent(authorizedTeam: AuthorizedTeam, eventSlug: string): Promise<AuthorizedEvent> {
   const event = await db.event.findUnique({
     select: { id: true },
-    where: { slug: eventSlug, teamId: teamAuthContext.teamId },
+    where: { slug: eventSlug, teamId: authorizedTeam.teamId },
   });
-  if (!event) throw new ForbiddenOperationError();
+  if (!event) throw new EventNotFoundError();
 
-  return {
-    ...teamAuthContext,
-    eventId: event.id,
-  };
+  return { ...authorizedTeam, eventId: event.id };
 }
