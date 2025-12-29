@@ -24,14 +24,9 @@ export async function getAuthorizedEvent(authorizedTeam: AuthorizedTeam, eventSl
   if (!authorizedTeam.permissions.canAccessEvent) throw new ForbiddenOperationError();
 
   const event = await db.event.findUnique({
-    select: { id: true, type: true },
     where: { slug: eventSlug, teamId: authorizedTeam.teamId },
   });
   if (!event) throw new EventNotFoundError();
 
-  return {
-    ...authorizedTeam,
-    eventId: event.id,
-    eventType: event.type,
-  };
+  return { ...authorizedTeam, event };
 }

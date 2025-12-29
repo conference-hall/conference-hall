@@ -20,9 +20,9 @@ export class ReviewersMetrics {
   }
 
   async get() {
-    const { eventId } = this.authorizedEvent;
+    const { event } = this.authorizedEvent;
 
-    const proposalsCount = await this.proposalsCount(eventId);
+    const proposalsCount = await this.proposalsCount(event.id);
     if (proposalsCount === 0) {
       return { proposalsCount: 0, reviewersMetrics: [] };
     }
@@ -39,7 +39,7 @@ export class ReviewersMetrics {
       FROM reviews
       JOIN users ON reviews."userId" = users.id
       JOIN proposals ON reviews."proposalId" = proposals.id
-      WHERE proposals."eventId" = ${eventId}
+      WHERE proposals."eventId" = ${event.id}
       GROUP BY 1, 2, 3
       ORDER BY "reviewsCount" DESC
     `);

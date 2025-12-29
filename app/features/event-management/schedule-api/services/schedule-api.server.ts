@@ -4,7 +4,7 @@ import { EventScheduleExport } from '../../schedule/services/schedule-export.ser
 
 export class EventScheduleApi {
   static async forJsonApi(event: Event) {
-    const scheduleExport = await EventScheduleExport.toJson(event.id, event.type);
+    const scheduleExport = await EventScheduleExport.toJson(event);
 
     if (!scheduleExport) throw new NotFoundError(`No schedule found for "${event.slug}" event`);
 

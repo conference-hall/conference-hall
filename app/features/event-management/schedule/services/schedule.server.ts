@@ -18,11 +18,11 @@ export class EventSchedule {
   }
 
   async get() {
-    const { eventId, eventType, permissions } = this.authorizedEvent;
-    if (eventType === 'MEETUP') throw new ForbiddenOperationError();
+    const { event, permissions } = this.authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
     if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
 
-    const schedule = await db.schedule.findFirst({ where: { eventId }, include: { tracks: true } });
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id }, include: { tracks: true } });
     if (!schedule) return null;
 
     return {
@@ -38,8 +38,8 @@ export class EventSchedule {
   }
 
   async create(data: ScheduleCreateData) {
-    const { eventId, eventType, permissions } = this.authorizedEvent;
-    if (eventType === 'MEETUP') throw new ForbiddenOperationError();
+    const { event, permissions } = this.authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
     if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
 
     await db.schedule.create({
@@ -51,39 +51,39 @@ export class EventSchedule {
         displayStartMinutes: 9 * 60,
         displayEndMinutes: 18 * 60,
         tracks: { create: { name: 'Main stage' } },
-        event: { connect: { id: eventId } },
+        event: { connect: { id: event.id } },
       },
     });
   }
 
   async update(data: Partial<ScheduleCreateInput>) {
-    const { eventId, eventType, permissions } = this.authorizedEvent;
-    if (eventType === 'MEETUP') throw new ForbiddenOperationError();
+    const { event, permissions } = this.authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
     if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
 
-    const schedule = await db.schedule.findFirst({ where: { eventId } });
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
     if (!schedule) throw new NotFoundError('Schedule not found');
 
     await db.schedule.update({ data, where: { id: schedule.id } });
   }
 
   async delete() {
-    const { eventId, eventType, permissions } = this.authorizedEvent;
-    if (eventType === 'MEETUP') throw new ForbiddenOperationError();
+    const { event, permissions } = this.authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
     if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
 
-    const schedule = await db.schedule.findFirst({ where: { eventId } });
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
     if (!schedule) throw new NotFoundError('Schedule not found');
 
     await db.schedule.delete({ where: { id: schedule.id } });
   }
 
   async addSession(data: ScheduleSessionCreateData) {
-    const { eventId, eventType, permissions } = this.authorizedEvent;
-    if (eventType === 'MEETUP') throw new ForbiddenOperationError();
+    const { event, permissions } = this.authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
     if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
 
-    const schedule = await db.schedule.findFirst({ where: { eventId } });
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
     if (!schedule) throw new NotFoundError('Schedule not found');
 
     return db.scheduleSession.create({
@@ -98,11 +98,11 @@ export class EventSchedule {
   }
 
   async updateSession(data: ScheduleSessionUpdateData) {
-    const { eventId, eventType, permissions } = this.authorizedEvent;
-    if (eventType === 'MEETUP') throw new ForbiddenOperationError();
+    const { event, permissions } = this.authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
     if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
 
-    const schedule = await db.schedule.findFirst({ where: { eventId } });
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
     if (!schedule) throw new NotFoundError('Schedule not found');
 
     let language = data.language ?? null;
@@ -127,11 +127,11 @@ export class EventSchedule {
   }
 
   async deleteSession(sessionId: string) {
-    const { eventId, eventType, permissions } = this.authorizedEvent;
-    if (eventType === 'MEETUP') throw new ForbiddenOperationError();
+    const { event, permissions } = this.authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
     if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
 
-    const schedule = await db.schedule.findFirst({ where: { eventId } });
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
     if (!schedule) throw new NotFoundError('Schedule not found');
 
     if (!sessionId) return; // sessionId checked and deleteMany to avoid "Record to delete does not exist"
@@ -139,11 +139,11 @@ export class EventSchedule {
   }
 
   async saveTracks(tracks: ScheduleTracksSaveData['tracks']) {
-    const { eventId, eventType, permissions } = this.authorizedEvent;
-    if (eventType === 'MEETUP') throw new ForbiddenOperationError();
+    const { event, permissions } = this.authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
     if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
 
-    const schedule = await db.schedule.findFirst({ where: { eventId }, include: { tracks: true } });
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id }, include: { tracks: true } });
     if (!schedule) throw new NotFoundError('Schedule not found');
 
     const deletedTracks = schedule.tracks.filter((t) => !tracks.find((ut) => ut.id === t.id));
@@ -164,12 +164,12 @@ export class EventSchedule {
   }
 
   async getScheduleSessions() {
-    const { eventId, eventType, permissions } = this.authorizedEvent;
-    if (eventType === 'MEETUP') throw new ForbiddenOperationError();
+    const { event, permissions } = this.authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
     if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
 
     const schedule = await db.schedule.findFirst({
-      where: { eventId },
+      where: { eventId: event.id },
       include: { tracks: true, sessions: true },
     });
     if (!schedule) return null;

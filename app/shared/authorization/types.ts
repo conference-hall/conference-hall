@@ -1,4 +1,4 @@
-import type { EventType } from '../types/events.types.ts';
+import type { Event } from 'prisma/generated/client.ts';
 
 export type TeamRole = 'OWNER' | 'MEMBER' | 'REVIEWER';
 
@@ -32,4 +32,4 @@ export type AuthorizedTeam = {
   permissions: TeamPermissions;
 };
 
-export type AuthorizedEvent = AuthorizedTeam & { eventId: string; eventType: EventType };
+export type AuthorizedEvent = AuthorizedTeam & { event: Event };

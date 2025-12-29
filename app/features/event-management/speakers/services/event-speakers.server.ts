@@ -5,12 +5,7 @@ import { z } from 'zod';
 import { ReviewDetails } from '~/features/event-management/proposals/models/review-details.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
-import {
-  EventNotFoundError,
-  ForbiddenOperationError,
-  NotFoundError,
-  SpeakerEmailAlreadyExistsError,
-} from '~/shared/errors.server.ts';
+import { ForbiddenOperationError, NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import type { EventSpeakerSaveData, SocialLinks } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
@@ -31,8 +26,7 @@ export class EventSpeakers {
   }
 
   async search(filters: SpeakerSearchFilters, page = 1) {
-    const event = await db.event.findUnique({ where: { id: this.authorizedEvent.eventId } });
-    if (!event) throw new EventNotFoundError();
+    const { event } = this.authorizedEvent;
 
     if (!event.displayProposalsSpeakers) {
       return {
@@ -102,8 +96,7 @@ export class EventSpeakers {
   }
 
   async getById(speakerId: string) {
-    const event = await db.event.findUnique({ where: { id: this.authorizedEvent.eventId } });
-    if (!event) throw new EventNotFoundError();
+    const { event } = this.authorizedEvent;
 
     const speaker = await db.eventSpeaker.findFirst({
       where: { id: speakerId, eventId: event.id },
@@ -161,11 +154,11 @@ export class EventSpeakers {
   }
 
   async create(data: EventSpeakerSaveData) {
-    const { eventId, permissions } = this.authorizedEvent;
+    const { event, permissions } = this.authorizedEvent;
     if (!permissions.canCreateEventSpeaker) throw new ForbiddenOperationError();
 
     const existingSpeaker = await db.eventSpeaker.findFirst({
-      where: { eventId, email: { equals: data.email, mode: 'insensitive' } },
+      where: { eventId: event.id, email: { equals: data.email, mode: 'insensitive' } },
     });
 
     if (existingSpeaker) {
@@ -174,7 +167,7 @@ export class EventSpeakers {
 
     const speaker = await db.eventSpeaker.create({
       data: {
-        eventId,
+        eventId: event.id,
         userId: null,
         name: data.name,
         email: data.email,
@@ -201,24 +194,24 @@ export class EventSpeakers {
   }
 
   async update(speakerId: string, data: EventSpeakerSaveData) {
-    const { eventId, permissions } = this.authorizedEvent;
+    const { event, permissions } = this.authorizedEvent;
     if (!permissions.canEditEventSpeaker) throw new ForbiddenOperationError();
 
     const speaker = await db.eventSpeaker.findFirst({
-      where: { id: speakerId, eventId },
+      where: { id: speakerId, eventId: event.id },
     });
 
     if (!speaker) throw new NotFoundError('Speaker not found');
 
     if (data.email !== speaker.email) {
       const existingSpeaker = await db.eventSpeaker.findFirst({
-        where: { eventId, email: { equals: data.email, mode: 'insensitive' }, id: { not: speakerId } },
+        where: { eventId: event.id, email: { equals: data.email, mode: 'insensitive' }, id: { not: speakerId } },
       });
 
       if (existingSpeaker) throw new SpeakerEmailAlreadyExistsError();
     }
 
-    return db.eventSpeaker.update({ where: { id: speakerId, eventId }, data });
+    return db.eventSpeaker.update({ where: { id: speakerId, eventId: event.id }, data });
   }
 }
 

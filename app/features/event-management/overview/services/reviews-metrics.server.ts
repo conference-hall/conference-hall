@@ -28,9 +28,9 @@ export class ReviewsMetrics {
   }
 
   async get() {
-    const { eventId } = this.authorizedEvent;
+    const { event } = this.authorizedEvent;
 
-    const totalProposals = await this.proposalsCount(eventId);
+    const totalProposals = await this.proposalsCount(event.id);
     if (totalProposals === 0) {
       return {
         totalProposals: 0,
@@ -44,9 +44,9 @@ export class ReviewsMetrics {
     }
 
     const [overallMetrics, proposalReviewCounts, proposalNotesDistribution] = await Promise.all([
-      this.getOverallMetrics(eventId),
-      this.getProposalReviewCounts(eventId),
-      this.getProposalAverageNotes(eventId),
+      this.getOverallMetrics(event.id),
+      this.getProposalReviewCounts(event.id),
+      this.getProposalAverageNotes(event.id),
     ]);
 
     const reviewedProposals = Number(overallMetrics?.reviewedProposals ?? 0);
