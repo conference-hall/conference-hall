@@ -24,11 +24,10 @@ export class EventSettings {
   }
 
   async buildGeneralSettingsSchema() {
+    const { event } = this.authorizedEvent;
     return EventGeneralSettingsSchema.refine(
       async ({ slug }) => {
-        const count = await db.event.count({
-          where: { AND: [{ slug }, { slug: { not: this.authorizedEvent.event.slug } }] },
-        });
+        const count = await db.event.count({ where: { AND: [{ slug }, { id: { not: event.id } }] } });
         return count === 0;
       },
       { path: ['slug'], error: 'This URL already exists.' },

@@ -21,7 +21,6 @@ describe('SurveySettingsForm component', () => {
 
   it('renders the survey settings form', async () => {
     const config = {
-      legacy: false,
       enabled: true,
       questions: [],
     };
@@ -34,7 +33,6 @@ describe('SurveySettingsForm component', () => {
 
   it('adds a new question', async () => {
     const config = {
-      legacy: false,
       enabled: true,
       questions: [],
     };

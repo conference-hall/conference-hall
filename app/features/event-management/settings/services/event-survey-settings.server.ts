@@ -23,7 +23,6 @@ export class EventSurveySettings {
     const survey = new SurveyConfig(event.surveyConfig);
 
     return {
-      legacy: false,
       enabled: survey.enabled,
       questions: survey.questions,
     };

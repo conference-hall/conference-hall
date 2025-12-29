@@ -28,7 +28,6 @@ describe('EventSurveySettings', () => {
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const config = await EventSurveySettings.for(authorizedEvent).getConfig();
 
-      expect(config.legacy).toEqual(false);
       expect(config.enabled).toEqual(true);
       expect(config.questions).toEqual([
         {
@@ -67,7 +66,6 @@ describe('EventSurveySettings', () => {
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSurvey.slug);
       const config = await EventSurveySettings.for(authorizedEvent).getConfig();
 
-      expect(config.legacy).toEqual(false);
       expect(config.enabled).toEqual(false);
       expect(config.questions).toEqual([]);
     });
