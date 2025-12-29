@@ -1,8 +1,8 @@
 import { db } from 'prisma/db.server.ts';
 import { Prisma } from 'prisma/generated/client.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { Comments } from './comments.server.ts';
 
 type ReviewFeed = {
@@ -27,20 +27,18 @@ export type Feed = Awaited<ReturnType<ActivityFeed['activity']>>;
 
 export type FeedItem = Feed[number];
 
-export class ActivityFeed extends EventAuthorization {
-  private proposalId: string;
+export class ActivityFeed {
+  constructor(
+    private authorizedEvent: AuthorizedEvent,
+    private proposalId: string,
+  ) {}
 
-  constructor(userId: string, team: string, event: string, proposalId: string) {
-    super(userId, team, event);
-    this.proposalId = proposalId;
-  }
-
-  static for(userId: string, team: string, event: string, proposalId: string) {
-    return new ActivityFeed(userId, team, event, proposalId);
+  static for(authorizedEvent: AuthorizedEvent, proposalId: string) {
+    return new ActivityFeed(authorizedEvent, proposalId);
   }
 
   async activity() {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { event } = this.authorizedEvent;
 
     let results: Array<ReviewFeed | CommentFeed> = [];
 
@@ -78,7 +76,7 @@ export class ActivityFeed extends EventAuthorization {
 
     // Get comments reactions
     const commentIds = results.filter((result) => result.type === 'comment').map((result) => result.id);
-    const reactions = await Comments.listReactions(commentIds, this.userId);
+    const reactions = await Comments.listReactions(commentIds, this.authorizedEvent.userId);
 
     return results.map((result) => {
       const user = users.find((user) => user.id === result.userId);

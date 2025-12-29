@@ -1,25 +1,27 @@
 import { db } from 'prisma/db.server.ts';
 import z from 'zod';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ProposalAcceptedEmail from '~/shared/emails/templates/speakers/proposal-accepted.tsx';
 import ProposalRejectedEmail from '~/shared/emails/templates/speakers/proposal-rejected.tsx';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 
 export const PublishResultFormSchema = z.object({
   type: z.enum(['ACCEPTED', 'REJECTED']),
   sendEmails: z.boolean().default(false),
 });
 
-export class Publication extends EventAuthorization {
-  static for(userId: string, team: string, event: string) {
-    return new Publication(userId, team, event);
+export class Publication {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new Publication(authorizedEvent);
   }
 
   async publishAll(status: 'ACCEPTED' | 'REJECTED', withEmails: boolean) {
-    const { event } = await this.checkAuthorizedEvent('canPublishEventResults');
-
+    const { event, permissions } = this.authorizedEvent;
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+    if (!permissions.canPublishEventResults) throw new ForbiddenOperationError();
 
     const proposals = await db.proposal.findMany({
       where: { eventId: event.id, publicationStatus: 'NOT_PUBLISHED', deliberationStatus: status, archivedAt: null },
@@ -46,7 +48,9 @@ export class Publication extends EventAuthorization {
   }
 
   async publish(proposalId: string, withEmails: boolean) {
-    const { event } = await this.checkAuthorizedEvent('canPublishEventResults');
+    const { event, permissions } = this.authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+    if (!permissions.canPublishEventResults) throw new ForbiddenOperationError();
 
     const proposal = await db.proposal.findUnique({
       where: {
@@ -78,8 +82,9 @@ export class Publication extends EventAuthorization {
   }
 
   async statistics() {
-    const { event } = await this.checkAuthorizedEvent('canPublishEventResults');
+    const { event, permissions } = this.authorizedEvent;
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+    if (!permissions.canPublishEventResults) throw new ForbiddenOperationError();
 
     const results = await db.proposal.groupBy({
       by: ['deliberationStatus', 'publicationStatus', 'confirmationStatus'],

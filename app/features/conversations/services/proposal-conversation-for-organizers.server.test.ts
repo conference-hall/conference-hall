@@ -8,9 +8,8 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
-import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
-
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
+import { ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { ProposalConversationForOrganizers } from './proposal-conversation-for-organizers.server.ts';
 
 describe('ProposalConversationForOrganizers', () => {
@@ -32,8 +31,10 @@ describe('ProposalConversationForOrganizers', () => {
     it('saves message to proposal conversation', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(owner.id, team.slug, event.slug, proposal.id).saveMessage({
+      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).saveMessage({
         message: 'Hello speaker!',
       });
 
@@ -56,8 +57,10 @@ describe('ProposalConversationForOrganizers', () => {
         role: ConversationParticipantRole.ORGANIZER,
         attributes: { content: 'Original message' },
       });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(owner.id, team.slug, event.slug, proposal.id).saveMessage({
+      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).saveMessage({
         id: message.id,
         message: 'Updated by owner',
       });
@@ -76,23 +79,15 @@ describe('ProposalConversationForOrganizers', () => {
         role: ConversationParticipantRole.ORGANIZER,
         attributes: { content: 'Original message' },
       });
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const service = ProposalConversationForOrganizers.for(member.id, team.slug, event.slug, proposal.id);
+      const service = ProposalConversationForOrganizers.for(authorizedEvent, proposal.id);
 
       await service.saveMessage({ id: message.id, message: 'Attempted update' });
 
       const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
       expect(result?.content).toBe('Original message');
-    });
-
-    it('throws error when user does not belong to team', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const otherUser = await userFactory();
-
-      const service = ProposalConversationForOrganizers.for(otherUser.id, team.slug, event.slug, proposal.id);
-
-      await expect(service.saveMessage({ message: 'Hello!' })).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -106,8 +101,10 @@ describe('ProposalConversationForOrganizers', () => {
         sender: speaker,
         role: ConversationParticipantRole.SPEAKER,
       });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(owner.id, team.slug, event.slug, proposal.id).reactMessage({
+      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).reactMessage({
         id: message.id,
         code: 'tada',
       });
@@ -116,24 +113,6 @@ describe('ProposalConversationForOrganizers', () => {
         where: { messageId_userId_code: { messageId: message.id, userId: owner.id, code: 'tada' } },
       });
       expect(reaction).toBeDefined();
-    });
-
-    it('throws error when user does not belong to team', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-      });
-      const otherUser = await userFactory();
-
-      const service = ProposalConversationForOrganizers.for(otherUser.id, team.slug, event.slug, proposal.id);
-
-      await expect(service.reactMessage({ id: message.id, code: 'tada' })).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
     });
   });
 
@@ -147,8 +126,10 @@ describe('ProposalConversationForOrganizers', () => {
         sender: owner,
         role: ConversationParticipantRole.ORGANIZER,
       });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(owner.id, team.slug, event.slug, proposal.id).deleteMessage({
+      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).deleteMessage({
         id: message.id,
       });
 
@@ -165,8 +146,10 @@ describe('ProposalConversationForOrganizers', () => {
         sender: member,
         role: ConversationParticipantRole.ORGANIZER,
       });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(owner.id, team.slug, event.slug, proposal.id).deleteMessage({
+      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).deleteMessage({
         id: message.id,
       });
 
@@ -183,28 +166,14 @@ describe('ProposalConversationForOrganizers', () => {
         sender: owner,
         role: ConversationParticipantRole.ORGANIZER,
       });
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const service = ProposalConversationForOrganizers.for(member.id, team.slug, event.slug, proposal.id);
+      const service = ProposalConversationForOrganizers.for(authorizedEvent, proposal.id);
       await service.deleteMessage({ id: message.id });
 
       const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
       expect(result).toBeDefined();
-    });
-
-    it('throws error when user does not belong to team', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: owner,
-        role: ConversationParticipantRole.ORGANIZER,
-      });
-      const otherUser = await userFactory();
-
-      const service = ProposalConversationForOrganizers.for(otherUser.id, team.slug, event.slug, proposal.id);
-
-      await expect(service.deleteMessage({ id: message.id })).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -219,13 +188,10 @@ describe('ProposalConversationForOrganizers', () => {
         role: ConversationParticipantRole.ORGANIZER,
         attributes: { content: 'Message from organizer' },
       });
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const messages = await ProposalConversationForOrganizers.for(
-        owner.id,
-        team.slug,
-        event.slug,
-        proposal.id,
-      ).getConversation();
+      const messages = await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).getConversation();
 
       expect(messages.length).toBe(1);
       expect(messages[0].content).toBe('Message from organizer');
@@ -235,20 +201,12 @@ describe('ProposalConversationForOrganizers', () => {
       const otherEvent = await eventFactory({ team });
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event: otherEvent, talk });
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const service = ProposalConversationForOrganizers.for(owner.id, team.slug, event.slug, proposal.id);
+      const service = ProposalConversationForOrganizers.for(authorizedEvent, proposal.id);
 
       await expect(service.getConversation()).rejects.toThrowError(ProposalNotFoundError);
-    });
-
-    it('throws error when user does not belong to team', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const otherUser = await userFactory();
-
-      const service = ProposalConversationForOrganizers.for(otherUser.id, team.slug, event.slug, proposal.id);
-
-      await expect(service.getConversation()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

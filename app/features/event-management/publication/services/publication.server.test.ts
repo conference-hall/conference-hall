@@ -5,6 +5,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { ProposalStatusUpdater } from '../../proposals/services/proposal-status-updater.server.ts';
@@ -62,8 +63,10 @@ describe('Publication', () => {
 
   describe('#statistics', () => {
     it('returns results statistics for the event', async () => {
-      const publication = Publication.for(owner.id, team.slug, event.slug);
-      const count = await publication.statistics();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const count = await Publication.for(authorizedEvent).statistics();
       expect(count).toEqual({
         deliberation: { total: 7, pending: 1, accepted: 5, rejected: 1 },
         accepted: { published: 3, notPublished: 2 },
@@ -84,11 +87,12 @@ describe('Publication', () => {
         traits: ['rejected'],
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
-      await proposalStatus.archive([archivedAccepted.id, archivedRejected.id]);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const publication = Publication.for(owner.id, team.slug, event.slug);
-      const count = await publication.statistics();
+      await ProposalStatusUpdater.for(authorizedEvent).archive([archivedAccepted.id, archivedRejected.id]);
+
+      const count = await Publication.for(authorizedEvent).statistics();
 
       expect(count).toEqual({
         deliberation: { total: 7, pending: 1, accepted: 5, rejected: 1 },
@@ -99,27 +103,32 @@ describe('Publication', () => {
     });
 
     it('cannot be see by team reviewers', async () => {
-      const publication = Publication.for(reviewer.id, team.slug, event.slug);
-      await expect(publication.statistics()).rejects.toThrowError(ForbiddenOperationError);
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(Publication.for(authorizedEvent).statistics()).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('cannot be see for meetup event', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      const publication = Publication.for(owner.id, team.slug, meetup.slug);
-      await expect(publication.statistics()).rejects.toThrowError(ForbiddenOperationError);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
+      await expect(Publication.for(authorizedEvent).statistics()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('#publishAll', () => {
     it('publish for the even all results for accepted proposals not already announced', async () => {
-      const publication = Publication.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const count = await publication.statistics();
+      const count = await Publication.for(authorizedEvent).statistics();
       expect(count.accepted).toEqual({ published: 3, notPublished: 2 });
 
-      await publication.publishAll('ACCEPTED', true);
+      await Publication.for(authorizedEvent).publishAll('ACCEPTED', true);
 
-      const countAccepted = await publication.statistics();
+      const countAccepted = await Publication.for(authorizedEvent).statistics();
       expect(countAccepted.accepted).toEqual({ published: 5, notPublished: 0 });
 
       expect(sendEmail.trigger).toHaveBeenNthCalledWith(
@@ -140,14 +149,15 @@ describe('Publication', () => {
     });
 
     it('publish for the even all results for rejected proposals not already announced', async () => {
-      const publication = Publication.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const count = await publication.statistics();
+      const count = await Publication.for(authorizedEvent).statistics();
       expect(count.rejected).toEqual({ published: 0, notPublished: 1 });
 
-      await publication.publishAll('REJECTED', true);
+      await Publication.for(authorizedEvent).publishAll('REJECTED', true);
 
-      const countRejected = await publication.statistics();
+      const countRejected = await Publication.for(authorizedEvent).statistics();
       expect(countRejected.rejected).toEqual({ published: 1, notPublished: 0 });
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
@@ -166,11 +176,12 @@ describe('Publication', () => {
         traits: ['accepted'],
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
-      await proposalStatus.archive([archivedProposal.id]);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const publication = Publication.for(owner.id, team.slug, event.slug);
-      await publication.publishAll('ACCEPTED', true);
+      await ProposalStatusUpdater.for(authorizedEvent).archive([archivedProposal.id]);
+
+      await Publication.for(authorizedEvent).publishAll('ACCEPTED', true);
 
       const updated = await db.proposal.findUnique({ where: { id: archivedProposal.id } });
       expect(updated?.publicationStatus).toBe('NOT_PUBLISHED');
@@ -180,34 +191,43 @@ describe('Publication', () => {
     });
 
     it('can be sent by team members', async () => {
-      const publication = Publication.for(member.id, team.slug, event.slug);
-      await publication.publishAll('ACCEPTED', true);
-      const count = await publication.statistics();
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await Publication.for(authorizedEvent).publishAll('ACCEPTED', true);
+      const count = await Publication.for(authorizedEvent).statistics();
       expect(count.accepted).toEqual({ published: 5, notPublished: 0 });
     });
 
     it('cannot be sent by team reviewers', async () => {
-      const publication = Publication.for(reviewer.id, team.slug, event.slug);
-      await expect(publication.publishAll('ACCEPTED', false)).rejects.toThrowError(ForbiddenOperationError);
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(Publication.for(authorizedEvent).publishAll('ACCEPTED', false)).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
 
     it('cannot be sent to all for meetup event', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      const publication = Publication.for(owner.id, team.slug, meetup.slug);
-      await expect(publication.statistics()).rejects.toThrowError(ForbiddenOperationError);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
+      await expect(Publication.for(authorizedEvent).statistics()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('#publish', () => {
     it('publish result an accepted proposal', async () => {
-      const publication = Publication.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const count = await publication.statistics();
+      const count = await Publication.for(authorizedEvent).statistics();
       expect(count.accepted).toEqual({ published: 3, notPublished: 2 });
 
-      await publication.publish(proposal.id, true);
+      await Publication.for(authorizedEvent).publish(proposal.id, true);
 
-      const countAccepted = await publication.statistics();
+      const countAccepted = await Publication.for(authorizedEvent).statistics();
       expect(countAccepted.accepted).toEqual({ published: 4, notPublished: 1 });
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
@@ -219,14 +239,15 @@ describe('Publication', () => {
     });
 
     it('publish result a rejected proposal', async () => {
-      const publication = Publication.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const count = await publication.statistics();
+      const count = await Publication.for(authorizedEvent).statistics();
       expect(count.rejected).toEqual({ published: 0, notPublished: 1 });
 
-      await publication.publish(rejectedProposal.id, true);
+      await Publication.for(authorizedEvent).publish(rejectedProposal.id, true);
 
-      const countRejected = await publication.statistics();
+      const countRejected = await Publication.for(authorizedEvent).statistics();
       expect(countRejected.rejected).toEqual({ published: 1, notPublished: 0 });
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
@@ -238,15 +259,21 @@ describe('Publication', () => {
     });
 
     it('can be sent by team members', async () => {
-      const publication = Publication.for(member.id, team.slug, event.slug);
-      await publication.publish(proposal.id, false);
-      const count = await publication.statistics();
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await Publication.for(authorizedEvent).publish(proposal.id, false);
+      const count = await Publication.for(authorizedEvent).statistics();
       expect(count.accepted).toEqual({ published: 4, notPublished: 1 });
     });
 
     it('cannot publish result for a proposal not accepted or rejected', async () => {
-      const publication = Publication.for(owner.id, team.slug, event.slug);
-      await expect(publication.publish(proposalSubmitted.id, false)).rejects.toThrowError(ProposalNotFoundError);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(Publication.for(authorizedEvent).publish(proposalSubmitted.id, false)).rejects.toThrowError(
+        ProposalNotFoundError,
+      );
     });
 
     it('cannot publish an archived proposal', async () => {
@@ -256,16 +283,23 @@ describe('Publication', () => {
         traits: ['accepted'],
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
-      await proposalStatus.archive([archivedProposal.id]);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const publication = Publication.for(owner.id, team.slug, event.slug);
-      await expect(publication.publish(archivedProposal.id, true)).rejects.toThrowError(ProposalNotFoundError);
+      await ProposalStatusUpdater.for(authorizedEvent).archive([archivedProposal.id]);
+
+      await expect(Publication.for(authorizedEvent).publish(archivedProposal.id, true)).rejects.toThrowError(
+        ProposalNotFoundError,
+      );
     });
 
     it('cannot be sent by team reviewers', async () => {
-      const publication = Publication.for(reviewer.id, team.slug, event.slug);
-      await expect(publication.publish(proposal.id, false)).rejects.toThrowError(ForbiddenOperationError);
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(Publication.for(authorizedEvent).publish(proposal.id, false)).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
   });
 });

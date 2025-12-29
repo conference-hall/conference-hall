@@ -7,7 +7,8 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { menuItem, menuItemIcon, menuItems, menuSeparator } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
-import { type TeamRole, UserTeamPermissions } from '~/shared/user/team-permissions.ts';
+import { UserTeamPermissions } from '~/shared/authorization/team-permissions.ts';
+import type { TeamRole } from '~/shared/authorization/types.ts';
 
 const menuStyle = cx(
   'flex items-center gap-1',

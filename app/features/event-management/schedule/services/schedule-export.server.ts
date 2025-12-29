@@ -1,24 +1,28 @@
 import { db } from 'prisma/db.server.ts';
-import type { EventType } from 'prisma/generated/client.ts';
+import type { Event } from 'prisma/generated/client.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { getDatesRange } from '~/shared/datetimes/datetimes.ts';
 import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 
-export class EventScheduleExport extends EventAuthorization {
-  static for(userId: string, team: string, event: string) {
-    return new EventScheduleExport(userId, team, event);
+export class EventScheduleExport {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new EventScheduleExport(authorizedEvent);
   }
 
   async forJsonExport() {
-    const { event } = await this.checkAuthorizedEvent('canEditEventSchedule');
-    return EventScheduleExport.toJson(event.id, event.type);
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
+
+    return EventScheduleExport.toJson(event);
   }
 
-  static async toJson(eventId: string, eventType: EventType) {
-    if (eventType === 'MEETUP') throw new ForbiddenOperationError();
+  static async toJson(event: Event) {
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
-    const schedule = await db.schedule.findFirst({ where: { eventId }, include: { sessions: true } });
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id }, include: { sessions: true } });
     if (!schedule) return null;
 
     const sessions = await db.scheduleSession.findMany({

@@ -4,10 +4,80 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { z } from 'zod';
+import { getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { EventCreateSchema, EventCreation } from './event-creation.server.ts';
 
 describe('EventCreation', () => {
+  describe('findTemplateEvents', () => {
+    let owner: User;
+    let team: Team;
+
+    beforeEach(async () => {
+      owner = await userFactory();
+      team = await teamFactory({ owners: [owner] });
+    });
+
+    it('returns existing events of same type', async () => {
+      await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Conference 1' } });
+      await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Conference 2' } });
+      await eventFactory({ team, creator: owner, attributes: { type: 'MEETUP', name: 'Meetup 1' } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const events = await EventCreation.for(authorizedTeam).findTemplateEvents('CONFERENCE');
+
+      expect(events).toHaveLength(2);
+      expect(events[0]?.name).toBe('Conference 2');
+      expect(events[1]?.name).toBe('Conference 1');
+    });
+
+    it('excludes archived events', async () => {
+      await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Active' } });
+      await eventFactory({
+        team,
+        creator: owner,
+        attributes: { type: 'CONFERENCE', name: 'Archived', archived: true },
+      });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const events = await EventCreation.for(authorizedTeam).findTemplateEvents('CONFERENCE');
+
+      expect(events).toHaveLength(1);
+      expect(events[0]?.name).toBe('Active');
+    });
+
+    it('returns events ordered by creation date descending', async () => {
+      const event1 = await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'First' } });
+      await db.event.update({ where: { id: event1.id }, data: { createdAt: new Date('2023-01-01') } });
+
+      const event2 = await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Second' } });
+      await db.event.update({ where: { id: event2.id }, data: { createdAt: new Date('2023-06-01') } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const events = await EventCreation.for(authorizedTeam).findTemplateEvents('CONFERENCE');
+
+      expect(events[0]?.name).toBe('Second');
+      expect(events[1]?.name).toBe('First');
+    });
+
+    it('returns empty array when no events exist', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const events = await EventCreation.for(authorizedTeam).findTemplateEvents('CONFERENCE');
+
+      expect(events).toEqual([]);
+    });
+
+    it('throws error if user is not team owner', async () => {
+      const reviewer = await userFactory();
+      const teamWithReviewer = await teamFactory({ owners: [owner], reviewers: [reviewer] });
+
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, teamWithReviewer.slug);
+      await expect(EventCreation.for(authorizedTeam).findTemplateEvents('CONFERENCE')).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
+    });
+  });
+
   describe('create', () => {
     let owner: User;
     let reviewer: User;
@@ -20,7 +90,8 @@ describe('EventCreation', () => {
     });
 
     it('creates a new event into the team', async () => {
-      const created = await EventCreation.for(owner.id, team.slug).create({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const created = await EventCreation.for(authorizedTeam).create({
         type: 'CONFERENCE',
         name: 'Hello world',
         slug: 'hello-world',
@@ -40,21 +111,9 @@ describe('EventCreation', () => {
     });
 
     it('throws an error if user is not owner', async () => {
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
       await expect(
-        EventCreation.for(reviewer.id, team.slug).create({
-          type: 'CONFERENCE',
-          name: 'Hello world',
-          slug: 'hello-world',
-          visibility: 'PUBLIC',
-          timezone: 'Europe/Paris',
-        }),
-      ).rejects.toThrowError(ForbiddenOperationError);
-    });
-
-    it('throws an error if user does not belong to event team', async () => {
-      const user = await userFactory();
-      await expect(
-        EventCreation.for(user.id, team.slug).create({
+        EventCreation.for(authorizedTeam).create({
           type: 'CONFERENCE',
           name: 'Hello world',
           slug: 'hello-world',
@@ -107,7 +166,8 @@ describe('EventCreation', () => {
         },
       });
 
-      const created = await EventCreation.for(owner.id, team.slug).create({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const created = await EventCreation.for(authorizedTeam).create({
         type: 'CONFERENCE',
         name: 'New Event',
         slug: 'new-event',
@@ -162,7 +222,8 @@ describe('EventCreation', () => {
         },
       });
 
-      const created = await EventCreation.for(owner.id, team.slug).create({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const created = await EventCreation.for(authorizedTeam).create({
         type: 'CONFERENCE',
         name: 'New Event',
         slug: 'new-event',
@@ -192,7 +253,8 @@ describe('EventCreation', () => {
         },
       });
 
-      const created = await EventCreation.for(owner.id, team.slug).create({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const created = await EventCreation.for(authorizedTeam).create({
         type: 'CONFERENCE',
         name: 'New Event',
         slug: 'new-event',
@@ -206,7 +268,8 @@ describe('EventCreation', () => {
     });
 
     it('does not copy template when template does not exist', async () => {
-      const created = await EventCreation.for(owner.id, team.slug).create({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const created = await EventCreation.for(authorizedTeam).create({
         type: 'CONFERENCE',
         name: 'New Event',
         slug: 'new-event',
@@ -217,70 +280,6 @@ describe('EventCreation', () => {
 
       const event = await db.event.findUnique({ where: { slug: created.slug } });
       expect(event?.description).toBeNull();
-    });
-  });
-
-  describe('findExistingEvents', () => {
-    let owner: User;
-    let team: Team;
-
-    beforeEach(async () => {
-      owner = await userFactory();
-      team = await teamFactory({ owners: [owner] });
-    });
-
-    it('returns existing events of same type', async () => {
-      await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Conference 1' } });
-      await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Conference 2' } });
-      await eventFactory({ team, creator: owner, attributes: { type: 'MEETUP', name: 'Meetup 1' } });
-
-      const events = await EventCreation.for(owner.id, team.slug).findExistingEvents('CONFERENCE');
-
-      expect(events).toHaveLength(2);
-      expect(events[0]?.name).toBe('Conference 2');
-      expect(events[1]?.name).toBe('Conference 1');
-    });
-
-    it('excludes archived events', async () => {
-      await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Active' } });
-      await eventFactory({
-        team,
-        creator: owner,
-        attributes: { type: 'CONFERENCE', name: 'Archived', archived: true },
-      });
-
-      const events = await EventCreation.for(owner.id, team.slug).findExistingEvents('CONFERENCE');
-
-      expect(events).toHaveLength(1);
-      expect(events[0]?.name).toBe('Active');
-    });
-
-    it('returns events ordered by creation date descending', async () => {
-      const event1 = await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'First' } });
-      await db.event.update({ where: { id: event1.id }, data: { createdAt: new Date('2023-01-01') } });
-
-      const event2 = await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Second' } });
-      await db.event.update({ where: { id: event2.id }, data: { createdAt: new Date('2023-06-01') } });
-
-      const events = await EventCreation.for(owner.id, team.slug).findExistingEvents('CONFERENCE');
-
-      expect(events[0]?.name).toBe('Second');
-      expect(events[1]?.name).toBe('First');
-    });
-
-    it('returns empty array when no events exist', async () => {
-      const events = await EventCreation.for(owner.id, team.slug).findExistingEvents('CONFERENCE');
-
-      expect(events).toEqual([]);
-    });
-
-    it('throws error if user is not team owner', async () => {
-      const reviewer = await userFactory();
-      const teamWithReviewer = await teamFactory({ owners: [owner], reviewers: [reviewer] });
-
-      await expect(
-        EventCreation.for(reviewer.id, teamWithReviewer.slug).findExistingEvents('CONFERENCE'),
-      ).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 

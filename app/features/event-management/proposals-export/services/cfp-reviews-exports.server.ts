@@ -1,23 +1,24 @@
 import { ReviewDetails } from '~/features/event-management/proposals/models/review-details.ts';
 import type { ProposalsFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from '~/features/event-management/proposals/services/proposal-search-builder.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { exportToOpenPlanner } from './jobs/export-to-open-planner.job.ts';
 
-export class CfpReviewsExports extends EventAuthorization {
-  static for(userId: string, team: string, event: string) {
-    return new CfpReviewsExports(userId, team, event);
+export class CfpReviewsExports {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new CfpReviewsExports(authorizedEvent);
   }
 
   async forJson(filters: ProposalsFilters) {
-    const { event } = await this.checkAuthorizedEvent('canExportEventProposals');
+    const { event, userId, permissions } = this.authorizedEvent;
+    if (!permissions.canExportEventProposals) throw new ForbiddenOperationError();
 
-    const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
-      withSpeakers: true,
-      withReviews: true,
-    });
+    const search = new ProposalSearchBuilder(event.id, userId, filters, { withSpeakers: true, withReviews: true });
 
     const proposals = await search.proposals({ reviews: true });
 
@@ -63,12 +64,10 @@ export class CfpReviewsExports extends EventAuthorization {
   }
 
   async forCards(filters: ProposalsFilters) {
-    const { event } = await this.checkAuthorizedEvent('canExportEventProposals');
+    const { event, userId, permissions } = this.authorizedEvent;
+    if (!permissions.canExportEventProposals) throw new ForbiddenOperationError();
 
-    const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
-      withSpeakers: true,
-      withReviews: true,
-    });
+    const search = new ProposalSearchBuilder(event.id, userId, filters, { withSpeakers: true, withReviews: true });
 
     const proposals = await search.proposals({ reviews: true });
 
@@ -90,8 +89,9 @@ export class CfpReviewsExports extends EventAuthorization {
   }
 
   async forOpenPlanner(filters: ProposalsFilters) {
-    await this.checkAuthorizedEvent('canExportEventProposals');
+    const { permissions } = this.authorizedEvent;
+    if (!permissions.canExportEventProposals) throw new ForbiddenOperationError();
 
-    await exportToOpenPlanner.trigger({ userId: this.userId, teamSlug: this.team, eventSlug: this.event, filters });
+    await exportToOpenPlanner.trigger({ authorizedEvent: this.authorizedEvent, filters });
   }
 }

@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 import { Prisma } from 'prisma/generated/client.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 
 type ReviewsMetricsInfo = {
   totalProposals: number;
@@ -20,13 +20,15 @@ type ProposalAverageNote = {
   count: number;
 };
 
-export class ReviewsMetrics extends EventAuthorization {
-  static for(userId: string, team: string, event: string) {
-    return new ReviewsMetrics(userId, team, event);
+export class ReviewsMetrics {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new ReviewsMetrics(authorizedEvent);
   }
 
   async get() {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { event } = this.authorizedEvent;
 
     const totalProposals = await this.proposalsCount(event.id);
     if (totalProposals === 0) {
@@ -70,7 +72,7 @@ export class ReviewsMetrics extends EventAuthorization {
 
   private async getOverallMetrics(eventId: string): Promise<ReviewsMetricsInfo | null> {
     const result = await db.$queryRaw<Array<ReviewsMetricsInfo>>(Prisma.sql`
-      SELECT 
+      SELECT
         COUNT(DISTINCT proposals.id) as "totalProposals",
         COUNT(reviews.id) as "totalReviews",
         COUNT(DISTINCT CASE WHEN reviews.id IS NOT NULL THEN proposals.id END) as "reviewedProposals",
@@ -86,7 +88,7 @@ export class ReviewsMetrics extends EventAuthorization {
 
   private async getProposalReviewCounts(eventId: string): Promise<Array<ProposalReviewCount>> {
     return db.$queryRaw<Array<ProposalReviewCount>>(Prisma.sql`
-      SELECT 
+      SELECT
         proposals.id as "proposalId",
         COUNT(reviews.id) as "reviewCount"
       FROM proposals
@@ -131,11 +133,11 @@ export class ReviewsMetrics extends EventAuthorization {
 
   private async getProposalAverageNotes(eventId: string): Promise<Array<ProposalAverageNote>> {
     return db.$queryRaw<Array<ProposalAverageNote>>(Prisma.sql`
-      SELECT 
+      SELECT
         ROUND(proposal_avg, 1) as "averageNote",
         COUNT(*) as count
       FROM (
-        SELECT 
+        SELECT
           proposals.id,
           AVG(reviews.note) as proposal_avg
         FROM proposals

@@ -14,6 +14,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { z } from 'zod';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { EventSettings } from './event-settings.server.ts';
 
@@ -32,7 +33,9 @@ describe('EventSettings', () => {
     });
 
     it('updates an event', async () => {
-      const created = await EventSettings.for(owner.id, team.slug, event.slug).update({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const created = await EventSettings.for(authorizedEvent).update({
         name: 'Updated',
         slug: 'updated',
         visibility: 'PUBLIC',
@@ -65,16 +68,20 @@ describe('EventSettings', () => {
     });
 
     it('throws an error if user is not owner', async () => {
-      await expect(
-        EventSettings.for(reviewer.id, team.slug, event.slug).update({ name: 'Hello world' }),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await EventSettings.for(authorizedEvent).update({ name: 'Hello world' });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      await expect(
-        EventSettings.for(user.id, team.slug, event.slug).update({ name: 'Hello world' }),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await EventSettings.for(authorizedEvent).update({ name: 'Hello world' });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -104,7 +111,9 @@ describe('EventSettings', () => {
       const schedule = await scheduleFactory({ event });
       const integration = await eventIntegrationFactory({ event });
 
-      await EventSettings.for(owner.id, team.slug, event.slug).delete();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventSettings.for(authorizedEvent).delete();
 
       const deletedEvent = await db.event.findUnique({ where: { id: event.id } });
       expect(deletedEvent).toBeNull();
@@ -138,16 +147,20 @@ describe('EventSettings', () => {
     });
 
     it('throws an error if user is not owner', async () => {
-      await expect(EventSettings.for(member.id, team.slug, event.slug).delete()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await EventSettings.for(authorizedEvent).delete();
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      await expect(EventSettings.for(user.id, team.slug, event.slug).delete()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await EventSettings.for(authorizedEvent).delete();
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -163,7 +176,9 @@ describe('EventSettings', () => {
     });
 
     it('validates when slug is the same as the original', async () => {
-      const schema = await EventSettings.for(owner.id, team.slug, event.slug).buildGeneralSettingsSchema();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const schema = await EventSettings.for(authorizedEvent).buildGeneralSettingsSchema();
 
       const result = await schema.safeParseAsync({
         name: 'Hello',
@@ -178,7 +193,9 @@ describe('EventSettings', () => {
     it('returns an error when slug already exists', async () => {
       await eventFactory({ attributes: { slug: 'hello-world' } });
 
-      const schema = await EventSettings.for(owner.id, team.slug, event.slug).buildGeneralSettingsSchema();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const schema = await EventSettings.for(authorizedEvent).buildGeneralSettingsSchema();
 
       const result = await schema.safeParseAsync({
         name: 'Hello',

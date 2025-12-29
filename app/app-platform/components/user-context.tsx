@@ -1,8 +1,8 @@
 import { createContext, type ReactNode, useContext } from 'react';
 import { useParams } from 'react-router';
 import type { loader } from '~/root.tsx';
+import { UserTeamPermissions } from '~/shared/authorization/team-permissions.ts';
 import type { SerializeFrom } from '~/shared/types/react-router.types.ts';
-import { UserTeamPermissions } from '~/shared/user/team-permissions.ts';
 
 type User = SerializeFrom<typeof loader>['user'];
 

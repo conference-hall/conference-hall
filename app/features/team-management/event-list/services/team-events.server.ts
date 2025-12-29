@@ -1,16 +1,18 @@
 import { db } from 'prisma/db.server.ts';
-import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
+import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
 
-export class TeamEvents extends TeamAuthorization {
-  static for(userId: string, team: string) {
-    return new TeamEvents(userId, team);
+export class TeamEvents {
+  constructor(private authorizedTeam: AuthorizedTeam) {}
+
+  static for(authorizedTeam: AuthorizedTeam) {
+    return new TeamEvents(authorizedTeam);
   }
 
   async list(archived: boolean) {
-    await this.checkMemberPermissions('canAccessEvent');
+    const { teamId } = this.authorizedTeam;
 
     const events = await db.event.findMany({
-      where: { team: { slug: this.team }, archived },
+      where: { teamId, archived },
       orderBy: [{ createdAt: 'desc' }, { name: 'asc' }],
     });
 

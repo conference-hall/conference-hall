@@ -1,19 +1,21 @@
 import { db } from 'prisma/db.server.ts';
 import { Prisma } from 'prisma/generated/client.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { EventFetcher } from '../../services/event-fetcher.server.ts';
 
 type TrackType = { id: string; name: string };
 
-export class CfpMetrics extends EventAuthorization {
-  static for(userId: string, team: string, event: string) {
-    return new CfpMetrics(userId, team, event);
+export class CfpMetrics {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new CfpMetrics(authorizedEvent);
   }
 
   async get() {
-    await this.checkAuthorizedEvent('canAccessEvent');
+    const { userId } = this.authorizedEvent;
 
-    const eventFetcher = EventFetcher.for(this.userId, this.team, this.event);
+    const eventFetcher = EventFetcher.for(this.authorizedEvent);
     const { id, formats, categories } = await eventFetcher.get();
 
     const proposalsCount = await this.proposalsCount(id);
@@ -31,7 +33,7 @@ export class CfpMetrics extends EventAuthorization {
     return {
       proposalsCount,
       speakersCount: await this.speakersCount(id),
-      reviewsCount: await this.reviewsCount(id),
+      reviewsCount: await this.reviewsCount(id, userId),
       byFormats: await this.proposalsByFormats(id, formats),
       byCategories: await this.proposalsByCategories(id, categories),
       byDays: await this.proposalsByDays(id),
@@ -42,8 +44,8 @@ export class CfpMetrics extends EventAuthorization {
     return db.proposal.count({ where: { eventId, isDraft: false } });
   }
 
-  private async reviewsCount(eventId: string) {
-    return db.review.count({ where: { proposal: { eventId, isDraft: false }, userId: this.userId } });
+  private async reviewsCount(eventId: string, userId: string) {
+    return db.review.count({ where: { proposal: { eventId, isDraft: false }, userId } });
   }
 
   private async speakersCount(eventId: string) {

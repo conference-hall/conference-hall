@@ -6,6 +6,7 @@ import { scheduleTrackFactory } from 'tests/factories/schedule-track.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/shared/errors.server.ts';
 import { EventSchedule } from './schedule.server.ts';
 
@@ -31,9 +32,10 @@ describe('EventSchedule', () => {
 
   describe('#get', () => {
     it('get schedule', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const actual = await eventSchedule.get();
+      const actual = await EventSchedule.for(authorizedEvent).get();
       expect(actual).toEqual({
         id: schedule.id,
         name: schedule.name,
@@ -49,21 +51,26 @@ describe('EventSchedule', () => {
 
     it('returns null when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
-      const actual = await EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSchedule.slug);
+
+      const actual = await EventSchedule.for(authorizedEvent).get();
       expect(actual).toBe(null);
     });
 
     it('throws forbidden error for reviewers', async () => {
-      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).get()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).get()).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).get()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).get()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -72,11 +79,12 @@ describe('EventSchedule', () => {
 
     it('create a schedule', async () => {
       const event = await eventFactory({ team, traits: ['conference'] });
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await eventSchedule.create(expected);
+      await EventSchedule.for(authorizedEvent).create(expected);
 
-      const actual = await eventSchedule.get();
+      const actual = await EventSchedule.for(authorizedEvent).get();
       expect(actual?.name).toEqual('My schedule');
       expect(actual?.timezone).toEqual('Europe/Paris');
       expect(actual?.start).toEqual(expected.start);
@@ -86,16 +94,18 @@ describe('EventSchedule', () => {
 
     it('throws forbidden error for reviewers', async () => {
       const event = await eventFactory({ team, traits: ['conference'] });
-      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).create(expected)).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).create(expected)).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).create(expected)).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).create(expected)).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -103,10 +113,12 @@ describe('EventSchedule', () => {
     const expected = { name: 'My schedule', start: new Date(), end: new Date() };
 
     it('updates schedule settings', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      await eventSchedule.update(expected);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const actual = await eventSchedule.get();
+      await EventSchedule.for(authorizedEvent).update(expected);
+
+      const actual = await EventSchedule.for(authorizedEvent).get();
       expect(actual?.name).toEqual(expected.name);
       expect(actual?.start).toEqual(expected.start);
       expect(actual?.end).toEqual(expected.end);
@@ -114,60 +126,69 @@ describe('EventSchedule', () => {
 
     it('throws not found Error when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
-      await expect(
-        EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).update(expected),
-      ).rejects.toThrowError(NotFoundError);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSchedule.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).update(expected)).rejects.toThrowError(NotFoundError);
     });
 
     it('throws forbidden error for reviewers', async () => {
-      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).update(expected)).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).update(expected)).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).update(expected)).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).update(expected)).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('#delete', () => {
     it('deletes a schedule', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      await eventSchedule.delete();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const actual = await eventSchedule.get();
+      await EventSchedule.for(authorizedEvent).delete();
+
+      const actual = await EventSchedule.for(authorizedEvent).get();
       expect(actual).toBe(null);
     });
 
     it('throws not found Error when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
-      await expect(EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).delete()).rejects.toThrowError(
-        NotFoundError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSchedule.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).delete()).rejects.toThrowError(NotFoundError);
     });
 
     it('throws forbidden error for reviewers', async () => {
-      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).delete()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).delete()).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).delete()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).delete()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('#addSession', () => {
     it('adds a session to a schedule', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const session = await eventSchedule.addSession({
+      const session = await EventSchedule.for(authorizedEvent).addSession({
         trackId: track.id,
         start: new Date(schedule.start),
         end: new Date(schedule.end),
@@ -181,8 +202,11 @@ describe('EventSchedule', () => {
 
     it('throws not found Error when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSchedule.slug);
+
       await expect(
-        EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).addSession({
+        EventSchedule.for(authorizedEvent).addSession({
           trackId: 'track',
           start: new Date(schedule.start),
           end: new Date(schedule.end),
@@ -191,8 +215,11 @@ describe('EventSchedule', () => {
     });
 
     it('throws forbidden error for reviewers', async () => {
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
       await expect(
-        EventSchedule.for(reviewer.id, team.slug, event.slug).addSession({
+        EventSchedule.for(authorizedEvent).addSession({
           trackId: 'track',
           start: new Date(schedule.start),
           end: new Date(schedule.end),
@@ -202,8 +229,11 @@ describe('EventSchedule', () => {
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
       await expect(
-        EventSchedule.for(owner.id, team.slug, meetup.slug).addSession({
+        EventSchedule.for(authorizedEvent).addSession({
           trackId: 'track',
           start: new Date(schedule.start),
           end: new Date(schedule.end),
@@ -214,8 +244,10 @@ describe('EventSchedule', () => {
 
   describe('#updateSession', () => {
     it('updates a session with a proposal', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const session = await eventSchedule.addSession({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const session = await EventSchedule.for(authorizedEvent).addSession({
         trackId: track.id,
         start: new Date(schedule.start),
         end: new Date(schedule.start),
@@ -223,7 +255,7 @@ describe('EventSchedule', () => {
 
       const talk = await talkFactory({ speakers: [owner] });
       const proposal = await proposalFactory({ event, talk });
-      const actual = await eventSchedule.updateSession({
+      const actual = await EventSchedule.for(authorizedEvent).updateSession({
         id: session.id,
         trackId: track2.id,
         color: 'gray',
@@ -243,14 +275,16 @@ describe('EventSchedule', () => {
     });
 
     it('updates a session without a proposal', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const session = await eventSchedule.addSession({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const session = await EventSchedule.for(authorizedEvent).addSession({
         trackId: track.id,
         start: new Date(schedule.start),
         end: new Date(schedule.start),
       });
 
-      const actual = await eventSchedule.updateSession({
+      const actual = await EventSchedule.for(authorizedEvent).updateSession({
         id: session.id,
         trackId: track.id,
         color: 'gray',
@@ -269,8 +303,11 @@ describe('EventSchedule', () => {
 
     it('throws not found Error when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSchedule.slug);
+
       await expect(
-        EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).updateSession({
+        EventSchedule.for(authorizedEvent).updateSession({
           id: 'id',
           trackId: 'track',
           color: 'gray',
@@ -283,8 +320,11 @@ describe('EventSchedule', () => {
     });
 
     it('throws forbidden error for reviewers', async () => {
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
       await expect(
-        EventSchedule.for(reviewer.id, team.slug, event.slug).updateSession({
+        EventSchedule.for(authorizedEvent).updateSession({
           id: 'id',
           trackId: 'track',
           color: 'gray',
@@ -298,8 +338,11 @@ describe('EventSchedule', () => {
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
       await expect(
-        EventSchedule.for(owner.id, team.slug, meetup.slug).updateSession({
+        EventSchedule.for(authorizedEvent).updateSession({
           id: 'id',
           trackId: 'track',
           color: 'gray',
@@ -314,35 +357,44 @@ describe('EventSchedule', () => {
 
   describe('#deleteSession', () => {
     it('deletes a session from a schedule', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const session = await eventSchedule.addSession({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const session = await EventSchedule.for(authorizedEvent).addSession({
         trackId: track.id,
         start: new Date(schedule.start),
         end: new Date(schedule.start),
       });
 
-      await eventSchedule.deleteSession(session.id);
+      await EventSchedule.for(authorizedEvent).deleteSession(session.id);
 
-      const actual = await eventSchedule.getScheduleSessions();
+      const actual = await EventSchedule.for(authorizedEvent).getScheduleSessions();
       expect(actual?.sessions.length).toBe(0);
     });
 
     it('throws not found Error when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
-      await expect(
-        EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).deleteSession('sessionId'),
-      ).rejects.toThrowError(NotFoundError);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSchedule.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).deleteSession('sessionId')).rejects.toThrowError(NotFoundError);
     });
 
     it('throws forbidden error for reviewers', async () => {
-      await expect(
-        EventSchedule.for(reviewer.id, team.slug, event.slug).deleteSession('sessionId'),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).deleteSession('sessionId')).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).deleteSession('sessionId')).rejects.toThrowError(
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).deleteSession('sessionId')).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
@@ -350,71 +402,83 @@ describe('EventSchedule', () => {
 
   describe('#saveTracks', () => {
     it('adds a new track', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      await eventSchedule.saveTracks([track, track2, { id: 'NEW-track3', name: 'Room 3' }]);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const actual = await eventSchedule.get();
+      await EventSchedule.for(authorizedEvent).saveTracks([track, track2, { id: 'NEW-track3', name: 'Room 3' }]);
+
+      const actual = await EventSchedule.for(authorizedEvent).get();
       expect(actual?.tracks[0].name).toBe('Room 1');
       expect(actual?.tracks[1].name).toBe('Room 2');
       expect(actual?.tracks[2].name).toBe('Room 3');
     });
 
     it('updates a track', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      await eventSchedule.saveTracks([track, { ...track2, name: 'Room 2 updated' }]);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const actual = await eventSchedule.get();
+      await EventSchedule.for(authorizedEvent).saveTracks([track, { ...track2, name: 'Room 2 updated' }]);
+
+      const actual = await EventSchedule.for(authorizedEvent).get();
       expect(actual?.tracks[0].name).toBe('Room 1');
       expect(actual?.tracks[1].name).toBe('Room 2 updated');
     });
 
     it('deletes a track', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      await eventSchedule.saveTracks([track]);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const actual = await eventSchedule.get();
+      await EventSchedule.for(authorizedEvent).saveTracks([track]);
+
+      const actual = await EventSchedule.for(authorizedEvent).get();
       expect(actual?.tracks.length).toBe(1);
       expect(actual?.tracks[0].name).toBe('Room 1');
     });
 
     it('must remain at least one track', async () => {
-      await expect(EventSchedule.for(owner.id, team.slug, event.slug).saveTracks([])).rejects.toThrowError(
-        ForbiddenError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).saveTracks([])).rejects.toThrowError(ForbiddenError);
     });
 
     it('throws not found Error when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
-      await expect(
-        EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).saveTracks([]),
-      ).rejects.toThrowError(NotFoundError);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSchedule.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).saveTracks([])).rejects.toThrowError(NotFoundError);
     });
 
     it('throws forbidden error for reviewers', async () => {
-      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).saveTracks([])).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).saveTracks([])).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).saveTracks([])).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).saveTracks([])).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('#getScheduleSessions', () => {
     it('get schedule data and sessions', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const session = await eventSchedule.addSession({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const session = await EventSchedule.for(authorizedEvent).addSession({
         trackId: track.id,
         start: new Date(schedule.start),
         end: new Date(schedule.start),
       });
       const talk = await talkFactory({ speakers: [owner] });
       const proposal = await proposalFactory({ event, talk });
-      await eventSchedule.updateSession({
+      await EventSchedule.for(authorizedEvent).updateSession({
         id: session.id,
         trackId: track.id,
         color: 'gray',
@@ -424,7 +488,7 @@ describe('EventSchedule', () => {
         proposalId: proposal.id,
       });
 
-      const scheduleSessions = await eventSchedule.getScheduleSessions();
+      const scheduleSessions = await EventSchedule.for(authorizedEvent).getScheduleSessions();
       expect(scheduleSessions).toEqual({
         name: schedule.name,
         start: schedule.start,
@@ -469,19 +533,28 @@ describe('EventSchedule', () => {
 
     it('returns null when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
-      const result = await EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).getScheduleSessions();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSchedule.slug);
+
+      const result = await EventSchedule.for(authorizedEvent).getScheduleSessions();
       expect(result).toBe(null);
     });
 
     it('throws forbidden error for reviewers', async () => {
-      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).getScheduleSessions()).rejects.toThrowError(
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).getScheduleSessions()).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).getScheduleSessions()).rejects.toThrowError(
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).getScheduleSessions()).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });

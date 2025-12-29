@@ -5,7 +5,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 
 import { EventTracksSettings } from './event-tracks-settings.server.ts';
@@ -25,7 +25,9 @@ describe('EventTracksSettings', () => {
 
   describe('#saveFormat', () => {
     it('adds a new format', async () => {
-      await EventTracksSettings.for(owner.id, team.slug, event.slug).saveFormat({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveFormat({
         name: 'Format 1',
         description: 'Format 1',
       });
@@ -41,7 +43,9 @@ describe('EventTracksSettings', () => {
       await eventFormatFactory({ event, attributes: { name: 'Format 1' } });
       await eventFormatFactory({ event, attributes: { name: 'Format 2' } });
 
-      await EventTracksSettings.for(owner.id, team.slug, event.slug).saveFormat({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveFormat({
         name: 'Format 3',
         description: 'New format',
       });
@@ -62,7 +66,9 @@ describe('EventTracksSettings', () => {
 
     it('updates an event format', async () => {
       const format = await eventFormatFactory({ event, attributes: { name: 'name', description: 'desc' } });
-      await EventTracksSettings.for(owner.id, team.slug, event.slug).saveFormat({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveFormat({
         id: format.id,
         name: 'Format 1',
         description: 'Format 1',
@@ -76,28 +82,34 @@ describe('EventTracksSettings', () => {
     });
 
     it('throws an error if user is not owner', async () => {
-      await expect(
-        EventTracksSettings.for(reviewer.id, team.slug, event.slug).saveFormat({
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await EventTracksSettings.for(authorizedEvent).saveFormat({
           name: 'Hello world',
           description: 'Hello world',
-        }),
-      ).rejects.toThrowError(ForbiddenOperationError);
+        });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      await expect(
-        EventTracksSettings.for(user.id, team.slug, event.slug).saveFormat({
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await EventTracksSettings.for(authorizedEvent).saveFormat({
           name: 'Hello world',
           description: 'Hello world',
-        }),
-      ).rejects.toThrowError(ForbiddenOperationError);
+        });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('#saveCategory', () => {
     it('adds a new category', async () => {
-      await EventTracksSettings.for(owner.id, team.slug, event.slug).saveCategory({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveCategory({
         name: 'Category 1',
         description: 'Category 1',
       });
@@ -111,7 +123,9 @@ describe('EventTracksSettings', () => {
 
     it('updates an event category', async () => {
       const category = await eventCategoryFactory({ event, attributes: { name: 'name', description: 'desc' } });
-      await EventTracksSettings.for(owner.id, team.slug, event.slug).saveCategory({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveCategory({
         id: category.id,
         name: 'Category 1',
         description: 'Category 1',
@@ -125,18 +139,22 @@ describe('EventTracksSettings', () => {
     });
 
     it('throws an error if user is not owner', async () => {
-      const settings = EventTracksSettings.for(reviewer.id, team.slug, event.slug);
-      await expect(settings.saveCategory({ name: 'Hello world', description: 'Hello world' })).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const settings = EventTracksSettings.for(authorizedEvent);
+        await settings.saveCategory({ name: 'Hello world', description: 'Hello world' });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      const settings = EventTracksSettings.for(user.id, team.slug, event.slug);
-      await expect(settings.saveCategory({ name: 'Hello world', description: 'Hello world' })).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const settings = EventTracksSettings.for(authorizedEvent);
+        await settings.saveCategory({ name: 'Hello world', description: 'Hello world' });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -148,7 +166,9 @@ describe('EventTracksSettings', () => {
     });
 
     it('deletes an event format', async () => {
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.deleteFormat(format.id);
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
       expect(updated?.formats.length).toBe(0);
@@ -158,7 +178,9 @@ describe('EventTracksSettings', () => {
       const format2 = await eventFormatFactory({ event });
       const format3 = await eventFormatFactory({ event });
 
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.deleteFormat(format2.id);
 
       const updated = await db.event.findUnique({
@@ -174,14 +196,22 @@ describe('EventTracksSettings', () => {
     });
 
     it('throws an error if user is not owner', async () => {
-      const settings = EventTracksSettings.for(reviewer.id, team.slug, event.slug);
-      await expect(settings.deleteFormat(format.id)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const settings = EventTracksSettings.for(authorizedEvent);
+        await settings.deleteFormat(format.id);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      const settings = EventTracksSettings.for(user.id, team.slug, event.slug);
-      await expect(settings.deleteFormat(format.id)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const settings = EventTracksSettings.for(authorizedEvent);
+        await settings.deleteFormat(format.id);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -193,7 +223,9 @@ describe('EventTracksSettings', () => {
     });
 
     it('deletes an event category', async () => {
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.deleteCategory(category.id);
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
       expect(updated?.categories.length).toBe(0);
@@ -203,7 +235,9 @@ describe('EventTracksSettings', () => {
       const category2 = await eventCategoryFactory({ event });
       const category3 = await eventCategoryFactory({ event });
 
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.deleteCategory(category2.id);
 
       const updated = await db.event.findUnique({
@@ -219,14 +253,22 @@ describe('EventTracksSettings', () => {
     });
 
     it('throws an error if user is not owner', async () => {
-      const settings = EventTracksSettings.for(reviewer.id, team.slug, event.slug);
-      await expect(settings.deleteCategory(category.id)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const settings = EventTracksSettings.for(authorizedEvent);
+        await settings.deleteCategory(category.id);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      const settings = EventTracksSettings.for(user.id, team.slug, event.slug);
-      await expect(settings.deleteCategory(category.id)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const settings = EventTracksSettings.for(authorizedEvent);
+        await settings.deleteCategory(category.id);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -236,7 +278,9 @@ describe('EventTracksSettings', () => {
       const format2 = await eventFormatFactory({ event });
       const format3 = await eventFormatFactory({ event });
 
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.reorderFormat(format2.id, 'up');
 
       const updated = await db.event.findUnique({
@@ -257,7 +301,9 @@ describe('EventTracksSettings', () => {
       const format2 = await eventFormatFactory({ event });
       const format3 = await eventFormatFactory({ event });
 
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.reorderFormat(format2.id, 'down');
 
       const updated = await db.event.findUnique({
@@ -277,7 +323,9 @@ describe('EventTracksSettings', () => {
       const format1 = await eventFormatFactory({ event });
       const format2 = await eventFormatFactory({ event });
 
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.reorderFormat(format1.id, 'up');
 
       const updated = await db.event.findUnique({
@@ -295,7 +343,9 @@ describe('EventTracksSettings', () => {
       const format1 = await eventFormatFactory({ event });
       const format2 = await eventFormatFactory({ event });
 
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.reorderFormat(format2.id, 'down');
 
       const updated = await db.event.findUnique({
@@ -311,8 +361,12 @@ describe('EventTracksSettings', () => {
 
     it('throws an error if user is not owner', async () => {
       const format = await eventFormatFactory({ event });
-      const settings = EventTracksSettings.for(reviewer.id, team.slug, event.slug);
-      await expect(settings.reorderFormat(format.id, 'up')).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const settings = EventTracksSettings.for(authorizedEvent);
+        await settings.reorderFormat(format.id, 'up');
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -322,7 +376,9 @@ describe('EventTracksSettings', () => {
       const category2 = await eventCategoryFactory({ event });
       const category3 = await eventCategoryFactory({ event });
 
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.reorderCategory(category2.id, 'up');
 
       const updated = await db.event.findUnique({
@@ -343,7 +399,9 @@ describe('EventTracksSettings', () => {
       const category2 = await eventCategoryFactory({ event });
       const category3 = await eventCategoryFactory({ event });
 
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.reorderCategory(category2.id, 'down');
 
       const updated = await db.event.findUnique({
@@ -363,7 +421,9 @@ describe('EventTracksSettings', () => {
       const category1 = await eventCategoryFactory({ event });
       const category2 = await eventCategoryFactory({ event });
 
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.reorderCategory(category1.id, 'up');
 
       const updated = await db.event.findUnique({
@@ -381,7 +441,9 @@ describe('EventTracksSettings', () => {
       const category1 = await eventCategoryFactory({ event });
       const category2 = await eventCategoryFactory({ event });
 
-      const settings = EventTracksSettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const settings = EventTracksSettings.for(authorizedEvent);
       await settings.reorderCategory(category2.id, 'down');
 
       const updated = await db.event.findUnique({
@@ -397,8 +459,12 @@ describe('EventTracksSettings', () => {
 
     it('throws an error if user is not owner', async () => {
       const category = await eventCategoryFactory({ event });
-      const settings = EventTracksSettings.for(reviewer.id, team.slug, event.slug);
-      await expect(settings.reorderCategory(category.id, 'up')).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const settings = EventTracksSettings.for(authorizedEvent);
+        await settings.reorderCategory(category.id, 'up');
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

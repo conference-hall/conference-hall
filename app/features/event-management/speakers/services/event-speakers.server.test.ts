@@ -10,6 +10,7 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError, NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import type { EventSpeakerSaveData } from '~/shared/types/speaker.types.ts';
 import { EventSpeakers } from './event-speakers.server.ts';
@@ -61,7 +62,10 @@ describe('EventSpeakers', () => {
   describe('#search', () => {
     describe('when user has access to event', () => {
       it('returns all speakers for the event by default', async () => {
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({});
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).search({});
 
         expect(result.speakers).toHaveLength(3);
         expect(result.speakers[0]).toEqual({
@@ -88,7 +92,10 @@ describe('EventSpeakers', () => {
       });
 
       it('returns pagination metadata', async () => {
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({});
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).search({});
 
         expect(result.pagination).toEqual({
           current: 1,
@@ -100,7 +107,10 @@ describe('EventSpeakers', () => {
       });
 
       it('filters speakers by query (case insensitive)', async () => {
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).search({
           query: 'alice',
         });
 
@@ -109,7 +119,10 @@ describe('EventSpeakers', () => {
       });
 
       it('filters speakers by partial name match', async () => {
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).search({
           query: 'bob',
         });
 
@@ -122,8 +135,10 @@ describe('EventSpeakers', () => {
           event,
           attributes: { name: 'Jane Doe', email: 'jane.doe@example.com' },
         });
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+        const result = await EventSpeakers.for(authorizedEvent).search({
           query: 'JANE.DOE@EXAMPLE.COM',
         });
 
@@ -133,7 +148,10 @@ describe('EventSpeakers', () => {
       });
 
       it('returns empty results for non-matching query', async () => {
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).search({
           query: 'nonexistent',
         });
 
@@ -142,13 +160,19 @@ describe('EventSpeakers', () => {
 
       describe('sorting', () => {
         it('sorts speakers by name ascending by default', async () => {
-          const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({});
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const result = await EventSpeakers.for(authorizedEvent).search({});
 
           expect(result.speakers.map((s) => s.name)).toEqual(['Alice Johnson', 'Bob Wilson', 'Peter Parker']);
         });
 
         it('sorts speakers by name ascending when explicitly specified', async () => {
-          const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const result = await EventSpeakers.for(authorizedEvent).search({
             sort: 'name-asc',
           });
 
@@ -156,7 +180,10 @@ describe('EventSpeakers', () => {
         });
 
         it('sorts speakers by name descending', async () => {
-          const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const result = await EventSpeakers.for(authorizedEvent).search({
             sort: 'name-desc',
           });
 
@@ -199,7 +226,10 @@ describe('EventSpeakers', () => {
         });
 
         it('filters speakers with accepted proposals', async () => {
-          const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const result = await EventSpeakers.for(authorizedEvent).search({
             proposalStatus: 'accepted',
           });
 
@@ -208,7 +238,10 @@ describe('EventSpeakers', () => {
         });
 
         it('filters speakers with confirmed proposals', async () => {
-          const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const result = await EventSpeakers.for(authorizedEvent).search({
             proposalStatus: 'confirmed',
           });
 
@@ -217,7 +250,10 @@ describe('EventSpeakers', () => {
         });
 
         it('filters speakers with declined proposals', async () => {
-          const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const result = await EventSpeakers.for(authorizedEvent).search({
             proposalStatus: 'declined',
           });
 
@@ -235,8 +271,10 @@ describe('EventSpeakers', () => {
               isDraft: true,
             },
           });
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-          const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+          const result = await EventSpeakers.for(authorizedEvent).search({
             proposalStatus: 'accepted',
           });
 
@@ -257,7 +295,10 @@ describe('EventSpeakers', () => {
         });
 
         it('returns first page by default', async () => {
-          const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({});
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const result = await EventSpeakers.for(authorizedEvent).search({});
 
           expect(result.speakers).toHaveLength(20); // Default page size
           expect(result.pagination).toEqual({
@@ -267,7 +308,10 @@ describe('EventSpeakers', () => {
         });
 
         it('returns specified page', async () => {
-          const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({}, 2);
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const result = await EventSpeakers.for(authorizedEvent).search({}, 2);
 
           expect(result.speakers).toHaveLength(5); // Remaining speakers on page 2
           expect(result.pagination).toEqual({
@@ -288,7 +332,10 @@ describe('EventSpeakers', () => {
         });
 
         it('combines query and proposal status filters', async () => {
-          const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const result = await EventSpeakers.for(authorizedEvent).search({
             query: 'peter',
             proposalStatus: 'accepted',
           });
@@ -298,7 +345,10 @@ describe('EventSpeakers', () => {
         });
 
         it("returns empty results when filters don't match", async () => {
-          const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const result = await EventSpeakers.for(authorizedEvent).search({
             query: 'bob',
             proposalStatus: 'accepted',
           });
@@ -318,8 +368,10 @@ describe('EventSpeakers', () => {
             confirmationStatus: 'CONFIRMED',
           },
         });
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).search({});
+        const result = await EventSpeakers.for(authorizedEvent).search({});
 
         const speakerWithProposal = result.speakers.find((s) => s.id === eventSpeaker1.id);
         expect(speakerWithProposal?.proposals).toEqual([
@@ -336,33 +388,14 @@ describe('EventSpeakers', () => {
         const eventWithHiddenSpeakers = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
         await eventSpeakerFactory({ event: eventWithHiddenSpeakers, attributes: { name: 'John Doe' } });
 
-        const result = await EventSpeakers.for(owner.id, team.slug, eventWithHiddenSpeakers.slug).search({});
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithHiddenSpeakers.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).search({});
 
         expect(result.speakers).toEqual([]);
         expect(result.pagination).toEqual({ current: 1, total: 0 });
         expect(result.statistics).toEqual({ total: 0 });
-      });
-    });
-
-    describe('when user does not have access to event', () => {
-      it('throws ForbiddenOperationError for non-member', async () => {
-        const outsider = await userFactory();
-
-        await expect(EventSpeakers.for(outsider.id, team.slug, event.slug).search({})).rejects.toThrow(
-          ForbiddenOperationError,
-        );
-      });
-    });
-
-    describe('when event does not exist', () => {
-      it('throws error for non-existent event', async () => {
-        await expect(EventSpeakers.for(owner.id, team.slug, 'non-existent').search({})).rejects.toThrow();
-      });
-    });
-
-    describe('when team does not exist', () => {
-      it('throws error for non-existent team', async () => {
-        await expect(EventSpeakers.for(owner.id, 'non-existent', event.slug).search({})).rejects.toThrow();
       });
     });
   });
@@ -370,7 +403,10 @@ describe('EventSpeakers', () => {
   describe('#getById', () => {
     describe('when user has access to event', () => {
       it('returns complete speaker details with basic information', async () => {
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).getById(eventSpeaker1.id);
 
         expect(result).toMatchObject({
           id: eventSpeaker1.id,
@@ -394,7 +430,10 @@ describe('EventSpeakers', () => {
       });
 
       it('returns speaker without proposals when none exist', async () => {
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker2.id);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).getById(eventSpeaker2.id);
 
         expect(result?.proposals).toEqual([]);
       });
@@ -405,8 +444,10 @@ describe('EventSpeakers', () => {
           event,
           attributes: { answers: [{ question: 'experience', answer: 'expert' }] },
         });
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+        const result = await EventSpeakers.for(authorizedEvent).getById(eventSpeaker1.id);
 
         expect(result?.survey).toBeDefined();
         expect(Array.isArray(result?.survey)).toBe(true);
@@ -414,8 +455,10 @@ describe('EventSpeakers', () => {
 
       it('returns empty survey when speaker has no userId', async () => {
         const speakerWithoutUser = await eventSpeakerFactory({ event, attributes: { name: 'Guest Speaker' } });
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(speakerWithoutUser.id);
+        const result = await EventSpeakers.for(authorizedEvent).getById(speakerWithoutUser.id);
 
         expect(result?.survey).toEqual([]);
         expect(result?.userId).toBeNull();
@@ -438,7 +481,10 @@ describe('EventSpeakers', () => {
         await reviewFactory({ proposal, user: owner, attributes: { feeling: 'POSITIVE', note: 4 } });
         await commentFactory({ proposal, user: member });
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).getById(eventSpeaker1.id);
 
         expect(result?.proposals).toHaveLength(1);
         expect(result?.proposals[0]).toMatchObject({
@@ -465,7 +511,10 @@ describe('EventSpeakers', () => {
         // Create draft proposal
         await proposalFactory({ event, talk: talk2, attributes: { title: 'Draft Proposal', isDraft: true } });
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).getById(eventSpeaker1.id);
 
         expect(result?.proposals).toHaveLength(1);
         expect(result?.proposals[0].title).toBe('Published Proposal');
@@ -480,7 +529,10 @@ describe('EventSpeakers', () => {
         await reviewFactory({ proposal, user: owner, attributes: { feeling: 'POSITIVE', note: 4 } });
         await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5 } });
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).getById(eventSpeaker1.id);
 
         expect(result?.proposals[0].reviews.summary).toBeDefined();
         expect(result?.proposals[0].reviews.summary?.average).toBeDefined();
@@ -497,8 +549,10 @@ describe('EventSpeakers', () => {
           user: owner,
           attributes: { feeling: 'POSITIVE', note: 4 },
         });
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+        const result = await EventSpeakers.for(authorizedEvent).getById(eventSpeaker1.id);
 
         expect(result?.proposals[0].reviews.summary).toBeUndefined();
       });
@@ -508,14 +562,19 @@ describe('EventSpeakers', () => {
         const proposal = await proposalFactory({ event, talk });
         await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 2 } });
         await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5 } });
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+        const result = await EventSpeakers.for(authorizedEvent).getById(eventSpeaker1.id);
 
         expect(result?.proposals[0].reviews.you).toMatchObject({ feeling: 'NEGATIVE', note: 2 });
       });
 
       it('returns null when speaker not found', async () => {
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById('non-existent-id');
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).getById('non-existent-id');
 
         expect(result).toBeNull();
       });
@@ -523,8 +582,10 @@ describe('EventSpeakers', () => {
       it('returns null when speaker exists but not in the requested event', async () => {
         const otherEvent = await eventFactory({ team });
         const speakerInOtherEvent = await eventSpeakerFactory({ event: otherEvent });
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(speakerInOtherEvent.id);
+        const result = await EventSpeakers.for(authorizedEvent).getById(speakerInOtherEvent.id);
 
         expect(result).toBeNull();
       });
@@ -542,7 +603,10 @@ describe('EventSpeakers', () => {
           attributes: { title: 'Second Talk', deliberationStatus: 'PENDING', confirmationStatus: null },
         });
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(eventSpeaker1.id);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).getById(eventSpeaker1.id);
 
         expect(result?.proposals).toHaveLength(2);
 
@@ -561,7 +625,10 @@ describe('EventSpeakers', () => {
           },
         });
 
-        const result = await EventSpeakers.for(owner.id, team.slug, event.slug).getById(speakerWithSocialLinks.id);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).getById(speakerWithSocialLinks.id);
 
         expect(result?.socialLinks).toEqual([
           { type: 'twitter', link: 'https://twitter.com/speaker' },
@@ -569,38 +636,15 @@ describe('EventSpeakers', () => {
         ]);
       });
     });
-
-    describe('when user does not have access to event', () => {
-      it('throws ForbiddenOperationError for non-member', async () => {
-        const outsider = await userFactory();
-
-        await expect(EventSpeakers.for(outsider.id, team.slug, event.slug).getById(eventSpeaker1.id)).rejects.toThrow(
-          ForbiddenOperationError,
-        );
-      });
-    });
-
-    describe('when event does not exist', () => {
-      it('throws error for non-existent event', async () => {
-        await expect(
-          EventSpeakers.for(owner.id, team.slug, 'non-existent').getById(eventSpeaker1.id),
-        ).rejects.toThrow();
-      });
-    });
-
-    describe('when team does not exist', () => {
-      it('throws error for non-existent team', async () => {
-        await expect(
-          EventSpeakers.for(owner.id, 'non-existent', event.slug).getById(eventSpeaker1.id),
-        ).rejects.toThrow();
-      });
-    });
   });
 
   describe('#create', () => {
     describe('when user has create speaker permission', () => {
       it('creates an event speaker', async () => {
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
 
         const speakerData = {
           name: 'John Doe',
@@ -648,7 +692,10 @@ describe('EventSpeakers', () => {
       });
 
       it('creates speaker with minimal required fields', async () => {
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
 
         const speakerData = {
           name: 'John Doe',
@@ -677,7 +724,10 @@ describe('EventSpeakers', () => {
       });
 
       it('throws SpeakerEmailAlreadyExistsError when email already exists for the event', async () => {
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
 
         // Create first speaker
         const firstSpeakerData = {
@@ -738,11 +788,14 @@ describe('EventSpeakers', () => {
         };
 
         // Create speaker in first event
-        const firstEventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const firstEventSpeakers = EventSpeakers.for(authorizedEvent);
         const firstSpeaker = await firstEventSpeakers.create(speakerData);
 
         // Create speaker with same email in second event (should succeed)
-        const secondEventSpeakers = EventSpeakers.for(owner.id, team.slug, otherEvent.slug);
+        const authorizedEvent2 = await getAuthorizedEvent(authorizedTeam, otherEvent.slug);
+        const secondEventSpeakers = EventSpeakers.for(authorizedEvent2);
         const secondSpeaker = await secondEventSpeakers.create(speakerData);
 
         expect(firstSpeaker.email).toEqual(secondSpeaker.email);
@@ -755,27 +808,10 @@ describe('EventSpeakers', () => {
         const reviewer = await userFactory();
         const reviewerTeam = await teamFactory({ reviewers: [reviewer] });
         const reviewerEvent = await eventFactory({ team: reviewerTeam });
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, reviewerTeam.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, reviewerEvent.slug);
 
-        const eventSpeakers = EventSpeakers.for(reviewer.id, reviewerTeam.slug, reviewerEvent.slug);
-
-        const speakerData = {
-          name: 'John Doe',
-          email: 'john.doe@example.com',
-          picture: null,
-          bio: null,
-          references: null,
-          company: null,
-          location: null,
-          socialLinks: [],
-        };
-
-        await expect(eventSpeakers.create(speakerData)).rejects.toThrow(ForbiddenOperationError);
-      });
-
-      it('throws ForbiddenOperationError for non-member', async () => {
-        const outsider = await userFactory();
-
-        const eventSpeakers = EventSpeakers.for(outsider.id, team.slug, event.slug);
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
 
         const speakerData = {
           name: 'John Doe',
@@ -789,44 +825,6 @@ describe('EventSpeakers', () => {
         };
 
         await expect(eventSpeakers.create(speakerData)).rejects.toThrow(ForbiddenOperationError);
-      });
-    });
-
-    describe('when event does not exist', () => {
-      it('throws error for non-existent event', async () => {
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, 'non-existent');
-
-        const speakerData = {
-          name: 'John Doe',
-          email: 'john.doe@example.com',
-          picture: null,
-          bio: null,
-          references: null,
-          company: null,
-          location: null,
-          socialLinks: [],
-        };
-
-        await expect(eventSpeakers.create(speakerData)).rejects.toThrow();
-      });
-    });
-
-    describe('when team does not exist', () => {
-      it('throws error for non-existent team', async () => {
-        const eventSpeakers = EventSpeakers.for(owner.id, 'non-existent', event.slug);
-
-        const speakerData = {
-          name: 'John Doe',
-          email: 'john.doe@example.com',
-          picture: null,
-          bio: null,
-          references: null,
-          company: null,
-          location: null,
-          socialLinks: [],
-        };
-
-        await expect(eventSpeakers.create(speakerData)).rejects.toThrow();
       });
     });
   });
@@ -845,7 +843,10 @@ describe('EventSpeakers', () => {
           socialLinks: [],
         };
 
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
         const updatedSpeaker = await eventSpeakers.update(eventSpeaker1.id, updateData);
 
         expect(updatedSpeaker.name).toBe('Updated Name');
@@ -869,7 +870,10 @@ describe('EventSpeakers', () => {
           socialLinks: [],
         };
 
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
         const updatedSpeaker = await eventSpeakers.update(eventSpeaker1.id, updateData);
 
         expect(updatedSpeaker.name).toBe(originalName);
@@ -888,7 +892,10 @@ describe('EventSpeakers', () => {
           socialLinks: [],
         };
 
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
         await expect(eventSpeakers.update('non-existent-speaker-id', updateData)).rejects.toThrowError(NotFoundError);
       });
 
@@ -907,7 +914,10 @@ describe('EventSpeakers', () => {
           socialLinks: [],
         };
 
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
         await expect(eventSpeakers.update(otherEventSpeaker.id, updateData)).rejects.toThrowError(NotFoundError);
       });
     });
@@ -919,7 +929,10 @@ describe('EventSpeakers', () => {
         const reviewerEvent = await eventFactory({ team: reviewerTeam });
         const reviewerEventSpeaker = await eventSpeakerFactory({ event: reviewerEvent });
 
-        const eventSpeakers = EventSpeakers.for(reviewer.id, reviewerTeam.slug, reviewerEvent.slug);
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, reviewerTeam.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, reviewerEvent.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
         const updateData: EventSpeakerSaveData = {
           name: 'Updated Name',
           email: 'test@example.com',
@@ -934,24 +947,6 @@ describe('EventSpeakers', () => {
         await expect(eventSpeakers.update(reviewerEventSpeaker.id, updateData)).rejects.toThrow(
           ForbiddenOperationError,
         );
-      });
-
-      it('throws ForbiddenOperationError for non-member', async () => {
-        const outsider = await userFactory();
-
-        const eventSpeakers = EventSpeakers.for(outsider.id, team.slug, event.slug);
-        const updateData: EventSpeakerSaveData = {
-          name: 'Updated Name',
-          email: 'test@example.com',
-          picture: null,
-          bio: null,
-          references: null,
-          company: null,
-          location: null,
-          socialLinks: [],
-        };
-
-        await expect(eventSpeakers.update(eventSpeaker1.id, updateData)).rejects.toThrow(ForbiddenOperationError);
       });
     });
 
@@ -968,7 +963,10 @@ describe('EventSpeakers', () => {
           socialLinks: [],
         };
 
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
         const updatedSpeaker = await eventSpeakers.update(eventSpeaker1.id, updateData);
 
         expect(updatedSpeaker.email).toBe('newemail@example.com');
@@ -987,7 +985,10 @@ describe('EventSpeakers', () => {
           socialLinks: [],
         };
 
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
         const updatedSpeaker = await eventSpeakers.update(eventSpeaker1.id, updateData);
 
         expect(updatedSpeaker.email).toBe(originalEmail);
@@ -1007,7 +1008,10 @@ describe('EventSpeakers', () => {
           socialLinks: [],
         };
 
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
 
         // throw error when email already exists
         await expect(eventSpeakers.update(eventSpeaker1.id, updateData)).rejects.toThrow(
@@ -1035,7 +1039,10 @@ describe('EventSpeakers', () => {
           socialLinks: [],
         };
 
-        const eventSpeakers = EventSpeakers.for(owner.id, team.slug, event.slug);
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const eventSpeakers = EventSpeakers.for(authorizedEvent);
         const updatedSpeaker = await eventSpeakers.update(eventSpeaker1.id, updateData);
 
         expect(updatedSpeaker.email).toBe('shared@example.com');

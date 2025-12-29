@@ -1,19 +1,21 @@
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { ReviewDetails } from '../models/review-details.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
-export class CfpReviewsSearch extends EventAuthorization {
-  static for(userId: string, team: string, event: string) {
-    return new CfpReviewsSearch(userId, team, event);
+export class CfpReviewsSearch {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new CfpReviewsSearch(authorizedEvent);
   }
 
   async search(filters: ProposalsFilters, page = 1) {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { event, userId } = this.authorizedEvent;
 
-    const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
+    const search = new ProposalSearchBuilder(event.id, userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
       withReviews: true,
     });
@@ -46,7 +48,7 @@ export class CfpReviewsSearch extends EventAuthorization {
           ),
           reviews: {
             summary: event.displayProposalsReviews ? reviews.summary() : undefined,
-            you: reviews.ofUser(this.userId),
+            you: reviews.ofUser(this.authorizedEvent.userId),
           },
           comments: {
             count: proposal._count.comments,
@@ -57,12 +59,9 @@ export class CfpReviewsSearch extends EventAuthorization {
   }
 
   async autocomplete(filters: ProposalsFilters) {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { event, userId } = this.authorizedEvent;
 
-    const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
-      withSpeakers: true,
-      withReviews: true,
-    });
+    const search = new ProposalSearchBuilder(event.id, userId, filters, { withSpeakers: true, withReviews: true });
     const pagination = new Pagination({ page: 1, total: 10, pageSize: 5 });
     const proposals = await search.proposalsByPage(pagination);
 

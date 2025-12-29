@@ -4,11 +4,11 @@ import type { EventSpeakerWhereInput } from 'prisma/generated/models.ts';
 import { z } from 'zod';
 import { ReviewDetails } from '~/features/event-management/proposals/models/review-details.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
-import { NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
+import { ForbiddenOperationError, NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import type { EventSpeakerSaveData, SocialLinks } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 
 const SpeakerSearchFiltersSchema = z.object({
   query: z.string().trim().optional(),
@@ -18,13 +18,15 @@ const SpeakerSearchFiltersSchema = z.object({
 
 type SpeakerSearchFilters = z.infer<typeof SpeakerSearchFiltersSchema>;
 
-export class EventSpeakers extends EventAuthorization {
-  static for(userId: string, team: string, event: string) {
-    return new EventSpeakers(userId, team, event);
+export class EventSpeakers {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new EventSpeakers(authorizedEvent);
   }
 
   async search(filters: SpeakerSearchFilters, page = 1) {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { event } = this.authorizedEvent;
 
     if (!event.displayProposalsSpeakers) {
       return {
@@ -94,7 +96,7 @@ export class EventSpeakers extends EventAuthorization {
   }
 
   async getById(speakerId: string) {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { event } = this.authorizedEvent;
 
     const speaker = await db.eventSpeaker.findFirst({
       where: { id: speakerId, eventId: event.id },
@@ -141,7 +143,7 @@ export class EventSpeakers extends EventAuthorization {
             speakers: proposal.speakers.map((speaker) => ({ name: speaker.name })),
             reviews: {
               summary: event.displayProposalsReviews ? reviews.summary() : undefined,
-              you: reviews.ofUser(this.userId),
+              you: reviews.ofUser(this.authorizedEvent.userId),
             },
             comments: { count: proposal.comments.length },
             tags: proposal.tags,
@@ -151,12 +153,9 @@ export class EventSpeakers extends EventAuthorization {
     };
   }
 
-  async canCreate() {
-    return this.checkAuthorizedEvent('canCreateEventSpeaker');
-  }
-
   async create(data: EventSpeakerSaveData) {
-    const { event } = await this.checkAuthorizedEvent('canCreateEventSpeaker');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canCreateEventSpeaker) throw new ForbiddenOperationError();
 
     const existingSpeaker = await db.eventSpeaker.findFirst({
       where: { eventId: event.id, email: { equals: data.email, mode: 'insensitive' } },
@@ -194,12 +193,9 @@ export class EventSpeakers extends EventAuthorization {
     };
   }
 
-  async canUpdate() {
-    return this.checkAuthorizedEvent('canEditEventSpeaker');
-  }
-
   async update(speakerId: string, data: EventSpeakerSaveData) {
-    const { event } = await this.checkAuthorizedEvent('canEditEventSpeaker');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEventSpeaker) throw new ForbiddenOperationError();
 
     const speaker = await db.eventSpeaker.findFirst({
       where: { id: speakerId, eventId: event.id },

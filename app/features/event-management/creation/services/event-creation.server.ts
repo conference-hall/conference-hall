@@ -2,16 +2,36 @@ import { db } from 'prisma/db.server.ts';
 import type { EventType } from 'prisma/generated/enums.ts';
 import type { EventCreateInput } from 'prisma/generated/models.ts';
 import { z } from 'zod';
-import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
+import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
 
-export class EventCreation extends TeamAuthorization {
-  static for(userId: string, team: string) {
-    return new EventCreation(userId, team);
+export class EventCreation {
+  constructor(private authorizedTeam: AuthorizedTeam) {}
+
+  static for(authorizedTeam: AuthorizedTeam) {
+    return new EventCreation(authorizedTeam);
+  }
+
+  static async isSlugValid(slug: string) {
+    const count = await db.event.count({ where: { slug } });
+    return count === 0;
+  }
+
+  async findTemplateEvents(type: EventType) {
+    const { teamId, permissions } = this.authorizedTeam;
+    if (!permissions.canCreateEvent) throw new ForbiddenOperationError();
+
+    return db.event.findMany({
+      select: { id: true, name: true },
+      where: { type, teamId, archived: false },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async create(data: z.infer<typeof EventCreateSchema>) {
-    await this.checkMemberPermissions('canCreateEvent');
+    const { userId, teamId, permissions } = this.authorizedTeam;
+    if (!permissions.canCreateEvent) throw new ForbiddenOperationError();
 
     const { eventTemplateId, ...eventData } = data;
 
@@ -21,8 +41,8 @@ export class EventCreation extends TeamAuthorization {
       data: {
         ...eventTemplateData,
         ...eventData,
-        creator: { connect: { id: this.userId } },
-        team: { connect: { slug: this.team } },
+        creator: { connect: { id: userId } },
+        team: { connect: { id: teamId } },
       },
     });
   }
@@ -33,9 +53,10 @@ export class EventCreation extends TeamAuthorization {
   ): Promise<Partial<EventCreateInput> | null> {
     if (!eventTemplateId) return null;
 
+    const { teamId } = this.authorizedTeam;
     const eventTemplate = await db.event.findUnique({
       include: { formats: true, categories: true, proposalTags: true, emailCustomizations: true },
-      where: { id: eventTemplateId, type, team: { slug: this.team } },
+      where: { id: eventTemplateId, type, teamId },
     });
     if (!eventTemplate) return null;
 
@@ -87,21 +108,6 @@ export class EventCreation extends TeamAuthorization {
         })),
       },
     };
-  }
-
-  async findExistingEvents(type: EventType) {
-    await this.checkMemberPermissions('canCreateEvent');
-
-    return db.event.findMany({
-      select: { id: true, name: true },
-      where: { type, team: { slug: this.team }, archived: false },
-      orderBy: { createdAt: 'desc' },
-    });
-  }
-
-  static async isSlugValid(slug: string) {
-    const count = await db.event.count({ where: { slug } });
-    return count === 0;
   }
 }
 

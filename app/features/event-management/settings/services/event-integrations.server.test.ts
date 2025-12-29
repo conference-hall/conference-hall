@@ -3,7 +3,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { eventIntegrationFactory } from 'tests/factories/integrations.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 
 import { EventIntegrations } from './event-integrations.server.ts';
@@ -27,7 +27,9 @@ describe('EventIntegrations', () => {
       await eventIntegrationFactory({ event: otherEvent });
       const existingIntegration = await eventIntegrationFactory({ event });
 
-      const eventIntegrations = EventIntegrations.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const eventIntegrations = EventIntegrations.for(authorizedEvent);
 
       const integration = await eventIntegrations.getConfiguration(existingIntegration.name);
       expect(integration).toEqual({
@@ -39,15 +41,19 @@ describe('EventIntegrations', () => {
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      await expect(
-        EventIntegrations.for(user.id, team.slug, event.slug).getConfiguration('OPEN_PLANNER'),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await EventIntegrations.for(authorizedEvent).getConfiguration('OPEN_PLANNER');
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('#save', () => {
     it('adds a new integration', async () => {
-      const eventIntegrations = EventIntegrations.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const eventIntegrations = EventIntegrations.for(authorizedEvent);
 
       await eventIntegrations.save({
         name: 'OPEN_PLANNER',
@@ -62,7 +68,9 @@ describe('EventIntegrations', () => {
     it('updates an integration', async () => {
       const integrationToUpdate = await eventIntegrationFactory({ event });
 
-      const eventIntegrations = EventIntegrations.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const eventIntegrations = EventIntegrations.for(authorizedEvent);
 
       await eventIntegrations.save({
         id: integrationToUpdate.id,
@@ -76,31 +84,37 @@ describe('EventIntegrations', () => {
     });
 
     it('throws an error if user is not owner', async () => {
-      const eventIntegrations = EventIntegrations.for(reviewer.id, team.slug, event.slug);
-      await expect(
-        eventIntegrations.save({
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const eventIntegrations = EventIntegrations.for(authorizedEvent);
+        await eventIntegrations.save({
           name: 'OPEN_PLANNER',
           configuration: { eventId: 'eventId!', apiKey: 'apiKey!' },
-        }),
-      ).rejects.toThrowError(ForbiddenOperationError);
+        });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      const eventIntegrations = EventIntegrations.for(user.id, team.slug, event.slug);
-      await expect(
-        eventIntegrations.save({
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const eventIntegrations = EventIntegrations.for(authorizedEvent);
+        await eventIntegrations.save({
           name: 'OPEN_PLANNER',
           configuration: { eventId: 'eventId!', apiKey: 'apiKey!' },
-        }),
-      ).rejects.toThrowError(ForbiddenOperationError);
+        });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('#delete', () => {
     it('deletes an integration', async () => {
       const integration = await eventIntegrationFactory({ event });
-      const eventIntegrations = EventIntegrations.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const eventIntegrations = EventIntegrations.for(authorizedEvent);
       await eventIntegrations.delete(integration.id);
 
       const result = await eventIntegrations.getConfiguration('OPEN_PLANNER');
@@ -109,15 +123,23 @@ describe('EventIntegrations', () => {
 
     it('throws an error if user is not owner', async () => {
       const integration = await eventIntegrationFactory({ event });
-      const eventIntegrations = EventIntegrations.for(reviewer.id, team.slug, event.slug);
-      await expect(eventIntegrations.delete(integration.id)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const eventIntegrations = EventIntegrations.for(authorizedEvent);
+        await eventIntegrations.delete(integration.id);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       const integration = await eventIntegrationFactory({ event });
-      const eventIntegrations = EventIntegrations.for(user.id, team.slug, event.slug);
-      await expect(eventIntegrations.delete(integration.id)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const eventIntegrations = EventIntegrations.for(authorizedEvent);
+        await eventIntegrations.delete(integration.id);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -131,7 +153,9 @@ describe('EventIntegrations', () => {
       const otherEvent = await eventFactory({ team });
       await eventIntegrationFactory({ event: otherEvent });
 
-      const eventIntegrations = EventIntegrations.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const eventIntegrations = EventIntegrations.for(authorizedEvent);
       const result = await eventIntegrations.getConfigurations();
 
       expect(result).toEqual(
@@ -146,21 +170,31 @@ describe('EventIntegrations', () => {
     });
 
     it('returns an empty array when no integrations exist', async () => {
-      const eventIntegrations = EventIntegrations.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const eventIntegrations = EventIntegrations.for(authorizedEvent);
       const result = await eventIntegrations.getConfigurations();
 
       expect(result).toEqual([]);
     });
 
     it('throws an error if user is not owner', async () => {
-      const eventIntegrations = EventIntegrations.for(reviewer.id, team.slug, event.slug);
-      await expect(eventIntegrations.getConfigurations()).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const eventIntegrations = EventIntegrations.for(authorizedEvent);
+        await eventIntegrations.getConfigurations();
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      const eventIntegrations = EventIntegrations.for(user.id, team.slug, event.slug);
-      await expect(eventIntegrations.getConfigurations()).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const eventIntegrations = EventIntegrations.for(authorizedEvent);
+        await eventIntegrations.getConfigurations();
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

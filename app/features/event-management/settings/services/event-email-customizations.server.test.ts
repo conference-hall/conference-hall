@@ -4,6 +4,7 @@ import { eventEmailCustomizationFactory } from 'tests/factories/event-email-cust
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { EventEmailCustomizations } from './event-email-customizations.server.tsx';
 
 describe('EventEmailCustomizations', () => {
@@ -16,7 +17,9 @@ describe('EventEmailCustomizations', () => {
     user = await userFactory();
     team = await teamFactory({ owners: [user] });
     event = await eventFactory({ team });
-    emailCustomizations = EventEmailCustomizations.for(user.id, team.slug, event.slug);
+    const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+    const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+    emailCustomizations = EventEmailCustomizations.for(authorizedEvent);
   });
 
   describe('list', () => {

@@ -8,6 +8,7 @@ import { proposalFactory } from '~/../tests/factories/proposals.ts';
 import { talkFactory } from '~/../tests/factories/talks.ts';
 import { teamFactory } from '~/../tests/factories/team.ts';
 import { userFactory } from '~/../tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import type { ProposalCreationData } from './proposal-management.schema.server.ts';
@@ -33,7 +34,9 @@ describe('ProposalManagement', () => {
         level: 'INTERMEDIATE',
       };
 
-      const result = await ProposalManagement.for(organizer.id, team.slug, event.slug).create(proposalData);
+      const authorizedTeam = await getAuthorizedTeam(organizer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const result = await ProposalManagement.for(authorizedEvent).create(proposalData);
 
       expect(result).toEqual({ id: expect.any(String) });
 
@@ -68,7 +71,9 @@ describe('ProposalManagement', () => {
         categories: [category.id],
       };
 
-      const result = await ProposalManagement.for(organizer.id, team.slug, event.slug).create(proposalData);
+      const authorizedTeam = await getAuthorizedTeam(organizer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const result = await ProposalManagement.for(authorizedEvent).create(proposalData);
 
       const proposal = await db.proposal.findUnique({
         where: { id: result.id },
@@ -89,7 +94,9 @@ describe('ProposalManagement', () => {
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const updated = await ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id).update({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const updated = await ProposalManagement.for(authorizedEvent, proposal.id).update({
         title: 'Updated',
         abstract: 'Updated',
         level: 'ADVANCED',
@@ -109,15 +116,17 @@ describe('ProposalManagement', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      await expect(
-        ProposalManagement.for(speaker.id, team.slug, event.slug, proposal.id).update({
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(speaker.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await ProposalManagement.for(authorizedEvent, proposal.id).update({
           title: 'Updated',
           abstract: 'Updated',
           level: null,
           references: null,
           languages: [],
-        }),
-      ).rejects.toThrowError(ForbiddenOperationError);
+        });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -127,15 +136,17 @@ describe('ProposalManagement', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      await expect(
-        ProposalManagement.for(user.id, team.slug, event.slug, proposal.id).update({
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await ProposalManagement.for(authorizedEvent, proposal.id).update({
           title: 'Updated',
           abstract: 'Updated',
           level: null,
           references: null,
           languages: [],
-        }),
-      ).rejects.toThrowError(ForbiddenOperationError);
+        });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -148,7 +159,9 @@ describe('ProposalManagement', () => {
       const tag = await eventProposalTagFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveTags({ tags: [tag.id] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -167,7 +180,9 @@ describe('ProposalManagement', () => {
       const tag = await eventProposalTagFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), tags: [tag] });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveTags({ tags: [] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -186,7 +201,9 @@ describe('ProposalManagement', () => {
       const newTag = await eventProposalTagFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), tags: [tag] });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveTags({ tags: [newTag.id] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -203,8 +220,12 @@ describe('ProposalManagement', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposalManagement = ProposalManagement.for(speaker.id, team.slug, event.slug, proposal.id);
-      await expect(proposalManagement.saveTags({ tags: [] })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(speaker.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
+        await proposalManagement.saveTags({ tags: [] });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -214,8 +235,12 @@ describe('ProposalManagement', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposalManagement = ProposalManagement.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(proposalManagement.saveTags({ tags: [] })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
+        await proposalManagement.saveTags({ tags: [] });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -230,7 +255,11 @@ describe('ProposalManagement', () => {
       const eventSpeaker2 = await eventSpeakerFactory({ event, user: speaker2 });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }) });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveSpeakers({ speakers: [eventSpeaker1.id, eventSpeaker2.id] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -256,7 +285,11 @@ describe('ProposalManagement', () => {
         talk: await talkFactory({ speakers: [speaker1, speaker2] }),
       });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveSpeakers({ speakers: [eventSpeaker1.id] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -280,7 +313,11 @@ describe('ProposalManagement', () => {
         talk: await talkFactory({ speakers: [speaker1] }),
       });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveSpeakers({ speakers: [eventSpeaker2.id] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -305,7 +342,11 @@ describe('ProposalManagement', () => {
         talk: await talkFactory({ speakers: [speaker1] }),
       });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
 
       await expect(proposalManagement.saveSpeakers({ speakers: [eventSpeaker2.id] })).rejects.toThrow(
         `Speakers with IDs ${eventSpeaker2.id} do not belong to this event`,
@@ -318,8 +359,15 @@ describe('ProposalManagement', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposalManagement = ProposalManagement.for(speaker.id, team.slug, event.slug, proposal.id);
-      await expect(proposalManagement.saveSpeakers({ speakers: [] })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(speaker.id, team.slug);
+
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
+
+        await proposalManagement.saveSpeakers({ speakers: [] });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -329,8 +377,15 @@ describe('ProposalManagement', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposalManagement = ProposalManagement.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(proposalManagement.saveSpeakers({ speakers: [] })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
+
+        await proposalManagement.saveSpeakers({ speakers: [] });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -344,7 +399,11 @@ describe('ProposalManagement', () => {
       const format2 = await eventFormatFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveFormats({ formats: [format1.id, format2.id] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -368,7 +427,11 @@ describe('ProposalManagement', () => {
         formats: [format1, format2],
       });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveFormats({ formats: [format1.id] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -392,7 +455,11 @@ describe('ProposalManagement', () => {
         formats: [format1],
       });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveFormats({ formats: [format2.id] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -415,7 +482,11 @@ describe('ProposalManagement', () => {
         formats: [format],
       });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveFormats({ formats: [] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -439,7 +510,11 @@ describe('ProposalManagement', () => {
         formats: [format1],
       });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
 
       await expect(proposalManagement.saveFormats({ formats: [format2.id] })).rejects.toThrow(
         `Formats with IDs ${format2.id} do not belong to this event`,
@@ -452,8 +527,15 @@ describe('ProposalManagement', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposalManagement = ProposalManagement.for(speaker.id, team.slug, event.slug, proposal.id);
-      await expect(proposalManagement.saveFormats({ formats: [] })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(speaker.id, team.slug);
+
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
+
+        await proposalManagement.saveFormats({ formats: [] });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -463,8 +545,15 @@ describe('ProposalManagement', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposalManagement = ProposalManagement.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(proposalManagement.saveFormats({ formats: [] })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
+
+        await proposalManagement.saveFormats({ formats: [] });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -478,7 +567,11 @@ describe('ProposalManagement', () => {
       const category2 = await eventCategoryFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveCategories({ categories: [category1.id, category2.id] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -504,7 +597,11 @@ describe('ProposalManagement', () => {
         categories: [category1, category2],
       });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveCategories({ categories: [category1.id] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -528,7 +625,11 @@ describe('ProposalManagement', () => {
         categories: [category1],
       });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveCategories({ categories: [category2.id] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -551,7 +652,11 @@ describe('ProposalManagement', () => {
         categories: [category],
       });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
       await proposalManagement.saveCategories({ categories: [] });
 
       const updatedProposal = await db.proposal.findUnique({
@@ -575,7 +680,11 @@ describe('ProposalManagement', () => {
         categories: [category1],
       });
 
-      const proposalManagement = ProposalManagement.for(owner.id, team.slug, event.slug, proposal.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
 
       await expect(proposalManagement.saveCategories({ categories: [category2.id] })).rejects.toThrow(
         `Categories with IDs ${category2.id} do not belong to this event`,
@@ -588,8 +697,15 @@ describe('ProposalManagement', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposalManagement = ProposalManagement.for(speaker.id, team.slug, event.slug, proposal.id);
-      await expect(proposalManagement.saveCategories({ categories: [] })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(speaker.id, team.slug);
+
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
+
+        await proposalManagement.saveCategories({ categories: [] });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -599,8 +715,15 @@ describe('ProposalManagement', () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposalManagement = ProposalManagement.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(proposalManagement.saveCategories({ categories: [] })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
+
+        await proposalManagement.saveCategories({ categories: [] });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

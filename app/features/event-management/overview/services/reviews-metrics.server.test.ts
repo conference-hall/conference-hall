@@ -5,7 +5,7 @@ import { reviewFactory } from 'tests/factories/reviews.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ReviewsMetrics } from './reviews-metrics.server.ts';
 
 describe('ReviewsMetrics', () => {
@@ -15,7 +15,6 @@ describe('ReviewsMetrics', () => {
   let reviewer2: User;
   let team: Team;
   let event: Event;
-  let otherEvent: Event;
 
   beforeEach(async () => {
     owner = await userFactory({ traits: ['clark-kent'] });
@@ -24,7 +23,6 @@ describe('ReviewsMetrics', () => {
     reviewer2 = await userFactory();
     team = await teamFactory({ owners: [owner] });
     event = await eventFactory({ team });
-    otherEvent = await eventFactory({ team });
   });
 
   describe('#get', () => {
@@ -44,13 +42,14 @@ describe('ReviewsMetrics', () => {
       await reviewFactory({ user: member, proposal: proposal1, attributes: { note: 5, feeling: 'POSITIVE' } });
       await reviewFactory({ user: owner, proposal: proposal1, attributes: { note: 4, feeling: 'POSITIVE' } });
       await reviewFactory({ user: reviewer1, proposal: proposal1, attributes: { note: 3, feeling: 'NEGATIVE' } });
-
       await reviewFactory({ user: member, proposal: proposal2, attributes: { note: 2, feeling: 'NEGATIVE' } });
       await reviewFactory({ user: owner, proposal: proposal2, attributes: { note: 1, feeling: 'NEGATIVE' } });
-
       await reviewFactory({ user: member, proposal: proposal3, attributes: { note: 5, feeling: 'POSITIVE' } });
 
-      const metrics = await ReviewsMetrics.for(owner.id, team.slug, event.slug).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const metrics = await ReviewsMetrics.for(authorizedEvent).get();
 
       expect(metrics).toEqual({
         totalProposals: 4,
@@ -73,7 +72,10 @@ describe('ReviewsMetrics', () => {
     });
 
     it('returns empty metrics for event with no proposals', async () => {
-      const metrics = await ReviewsMetrics.for(owner.id, team.slug, event.slug).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const metrics = await ReviewsMetrics.for(authorizedEvent).get();
 
       expect(metrics).toEqual({
         totalProposals: 0,
@@ -92,13 +94,13 @@ describe('ReviewsMetrics', () => {
     });
 
     it('returns metrics for event with proposals but no reviews', async () => {
-      const talk1 = await talkFactory({ speakers: [member] });
-      const talk2 = await talkFactory({ speakers: [owner] });
+      await proposalFactory({ event, talk: await talkFactory({ speakers: [member] }) });
+      await proposalFactory({ event, talk: await talkFactory({ speakers: [owner] }) });
 
-      await proposalFactory({ event, talk: talk1 });
-      await proposalFactory({ event, talk: talk2 });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const metrics = await ReviewsMetrics.for(owner.id, team.slug, event.slug).get();
+      const metrics = await ReviewsMetrics.for(authorizedEvent).get();
 
       expect(metrics).toEqual({
         totalProposals: 2,
@@ -156,7 +158,10 @@ describe('ReviewsMetrics', () => {
       await reviewFactory({ user: additionalReviewers[0], proposal: wellReviewedProposal, attributes: { note: 4 } });
       await reviewFactory({ user: additionalReviewers[1], proposal: wellReviewedProposal, attributes: { note: 4 } });
 
-      const metrics = await ReviewsMetrics.for(owner.id, team.slug, event.slug).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const metrics = await ReviewsMetrics.for(authorizedEvent).get();
 
       expect(metrics.reviewCountDistribution).toEqual({
         missingReviews: 20, // 1/5 = 20%
@@ -173,15 +178,12 @@ describe('ReviewsMetrics', () => {
       await proposalFactory({ event, talk: talk1, traits: ['draft'] });
       await proposalFactory({ event, talk: talk2 });
 
-      const metrics = await ReviewsMetrics.for(owner.id, team.slug, event.slug).get();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const metrics = await ReviewsMetrics.for(authorizedEvent).get();
 
       expect(metrics.totalProposals).toBe(1);
-    });
-
-    it('throws an error if the user does not have permission to access the event', async () => {
-      await expect(ReviewsMetrics.for(member.id, team.slug, otherEvent.slug).get()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
     });
   });
 });

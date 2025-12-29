@@ -5,6 +5,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { ProposalStatusUpdater } from './proposal-status-updater.server.ts';
 
@@ -28,7 +29,9 @@ describe('ProposalStatusUpdater', () => {
       const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.update([proposal1.id, proposal2.id], { deliberationStatus: 'ACCEPTED' });
 
       expect(result).toBe(2);
@@ -53,7 +56,9 @@ describe('ProposalStatusUpdater', () => {
         traits: ['rejected-published'],
       });
 
-      const deliberate = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const deliberate = ProposalStatusUpdater.for(authorizedEvent);
       const result = await deliberate.update([proposal1.id, proposal2.id], { deliberationStatus: 'ACCEPTED' });
 
       expect(result).toBe(1);
@@ -80,7 +85,9 @@ describe('ProposalStatusUpdater', () => {
         traits: ['rejected-published'],
       });
 
-      const deliberate = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const deliberate = ProposalStatusUpdater.for(authorizedEvent);
       const result = await deliberate.update([proposal1.id, proposal2.id], { deliberationStatus: 'PENDING' });
 
       expect(result).toBe(2);
@@ -98,7 +105,9 @@ describe('ProposalStatusUpdater', () => {
     });
 
     it('throws an error if user has not a owner or member role in the team', async () => {
-      const deliberate = ProposalStatusUpdater.for(reviewer.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const deliberate = ProposalStatusUpdater.for(authorizedEvent);
       await expect(deliberate.update([], { deliberationStatus: 'ACCEPTED' })).rejects.toThrowError(
         ForbiddenOperationError,
       );
@@ -106,10 +115,12 @@ describe('ProposalStatusUpdater', () => {
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      const deliberate = ProposalStatusUpdater.for(user.id, team.slug, event.slug);
-      await expect(deliberate.update([], { deliberationStatus: 'ACCEPTED' })).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const deliberate = ProposalStatusUpdater.for(authorizedEvent);
+        await deliberate.update([], { deliberationStatus: 'ACCEPTED' });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('updates the proposal confirmation status', async () => {
@@ -124,7 +135,9 @@ describe('ProposalStatusUpdater', () => {
         traits: ['accepted'],
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.update([proposal1.id, proposal2.id], { confirmationStatus: 'CONFIRMED' });
 
       expect(result).toBe(2);
@@ -148,7 +161,9 @@ describe('ProposalStatusUpdater', () => {
         traits: ['accepted'],
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.update([proposal.id], { confirmationStatus: 'DECLINED' });
 
       expect(result).toBe(1);
@@ -165,7 +180,9 @@ describe('ProposalStatusUpdater', () => {
         traits: ['confirmed'],
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.update([proposal.id], { confirmationStatus: 'PENDING' });
 
       expect(result).toBe(1);
@@ -182,7 +199,9 @@ describe('ProposalStatusUpdater', () => {
         // Default is PENDING deliberation status
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.update([proposal.id], { confirmationStatus: 'CONFIRMED' });
 
       expect(result).toBe(1);
@@ -195,7 +214,9 @@ describe('ProposalStatusUpdater', () => {
     it('returns 0 when neither deliberationStatus nor confirmationStatus is provided', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.update([proposal.id], {});
 
       expect(result).toBe(0);
@@ -218,7 +239,9 @@ describe('ProposalStatusUpdater', () => {
         traits: ['accepted'],
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.update([proposal1.id, proposal2.id], { deliberationStatus: 'ACCEPTED' });
 
       expect(result).toBe(0); // No updates because they were already ACCEPTED
@@ -236,7 +259,9 @@ describe('ProposalStatusUpdater', () => {
         // PENDING by default
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.update([proposalAccepted.id, proposalPending.id], {
         deliberationStatus: 'ACCEPTED',
       });
@@ -253,7 +278,9 @@ describe('ProposalStatusUpdater', () => {
     it('does not update archived proposals deliberation status', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       await proposalStatus.archive([proposal.id]);
 
       const result = await proposalStatus.update([proposal.id], { deliberationStatus: 'ACCEPTED' });
@@ -270,7 +297,9 @@ describe('ProposalStatusUpdater', () => {
         traits: ['accepted'],
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       await proposalStatus.archive([proposal.id]);
 
       const result = await proposalStatus.update([proposal.id], { confirmationStatus: 'CONFIRMED' });
@@ -286,7 +315,9 @@ describe('ProposalStatusUpdater', () => {
       const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.archive([proposal1.id, proposal2.id]);
 
       expect(result).toBe(2);
@@ -302,7 +333,9 @@ describe('ProposalStatusUpdater', () => {
     it('does not archive already archived proposals', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       await proposalStatus.archive([proposal.id]);
       const result = await proposalStatus.archive([proposal.id]);
 
@@ -311,15 +344,21 @@ describe('ProposalStatusUpdater', () => {
 
     it('throws an error if user has not a owner or member role in the team', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposalStatus = ProposalStatusUpdater.for(reviewer.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       await expect(proposalStatus.archive([proposal.id])).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposalStatus = ProposalStatusUpdater.for(user.id, team.slug, event.slug);
-      await expect(proposalStatus.archive([proposal.id])).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
+        await proposalStatus.archive([proposal.id]);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -328,7 +367,9 @@ describe('ProposalStatusUpdater', () => {
       const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       await proposalStatus.archive([proposal1.id, proposal2.id]);
 
       const result = await proposalStatus.restore([proposal1.id, proposal2.id]);
@@ -346,7 +387,9 @@ describe('ProposalStatusUpdater', () => {
     it('does not restore non-archived proposals', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.restore([proposal.id]);
 
       expect(result).toBe(0);
@@ -354,19 +397,29 @@ describe('ProposalStatusUpdater', () => {
 
     it('throws an error if user has not a owner or member role in the team', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      await ProposalStatusUpdater.for(owner.id, team.slug, event.slug).archive([proposal.id]);
+      const ownerTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const ownerEvent = await getAuthorizedEvent(ownerTeam, event.slug);
+      await ProposalStatusUpdater.for(ownerEvent).archive([proposal.id]);
 
-      const proposalStatus = ProposalStatusUpdater.for(reviewer.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       await expect(proposalStatus.restore([proposal.id])).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      await ProposalStatusUpdater.for(owner.id, team.slug, event.slug).archive([proposal.id]);
+      const ownerTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const ownerEvent = await getAuthorizedEvent(ownerTeam, event.slug);
+      await ProposalStatusUpdater.for(ownerEvent).archive([proposal.id]);
 
-      const proposalStatus = ProposalStatusUpdater.for(user.id, team.slug, event.slug);
-      await expect(proposalStatus.restore([proposal.id])).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
+        await proposalStatus.restore([proposal.id]);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -379,7 +432,9 @@ describe('ProposalStatusUpdater', () => {
       });
       const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.updateAll({ status: 'pending' }, 'REJECTED');
 
       expect(result).toBe(1);
@@ -413,7 +468,9 @@ describe('ProposalStatusUpdater', () => {
         traits: ['accepted'],
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.updateAll(
         {
           formats: format1.id, // Use single ID instead of array
@@ -444,7 +501,9 @@ describe('ProposalStatusUpdater', () => {
         traits: ['confirmed'],
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.updateAll({}, 'PENDING');
 
       expect(result).toBe(2);
@@ -469,7 +528,9 @@ describe('ProposalStatusUpdater', () => {
         traits: ['rejected-published'],
       });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       const result = await proposalStatus.updateAll({ status: 'rejected' }, 'ACCEPTED');
 
       expect(result).toBe(1); // Only the rejected one was updated
@@ -488,7 +549,9 @@ describe('ProposalStatusUpdater', () => {
       const activeProposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const archivedProposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      const proposalStatus = ProposalStatusUpdater.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
       await proposalStatus.archive([archivedProposal.id]);
 
       const result = await proposalStatus.updateAll({}, 'ACCEPTED');
@@ -502,14 +565,20 @@ describe('ProposalStatusUpdater', () => {
     });
 
     it('throws an error if user has not a owner or member role in the team', async () => {
-      const deliberate = ProposalStatusUpdater.for(reviewer.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const deliberate = ProposalStatusUpdater.for(authorizedEvent);
       await expect(deliberate.updateAll({}, 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
-      const deliberate = ProposalStatusUpdater.for(user.id, team.slug, event.slug);
-      await expect(deliberate.updateAll({}, 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const deliberate = ProposalStatusUpdater.for(authorizedEvent);
+        await deliberate.updateAll({}, 'ACCEPTED');
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

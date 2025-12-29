@@ -1,16 +1,19 @@
 import { db } from 'prisma/db.server.ts';
 import type { EventIntegrationName } from 'prisma/generated/client.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { OpenPlanner } from '~/shared/integrations/open-planner.server.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { type IntegrationConfigData, IntegrationConfigSchema } from './event-integrations.schema.server.ts';
 
-export class EventIntegrations extends EventAuthorization {
-  static for(userId: string, teamSlug: string, eventSlug: string) {
-    return new EventIntegrations(userId, teamSlug, eventSlug);
+export class EventIntegrations {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new EventIntegrations(authorizedEvent);
   }
 
   async getConfiguration(name: EventIntegrationName) {
-    const { event } = await this.checkAuthorizedEvent('canAccessEvent');
+    const { event } = this.authorizedEvent;
     const integration = await db.eventIntegrationConfig.findFirst({ where: { eventId: event.id, name } });
 
     if (!integration) return null;
@@ -23,7 +26,8 @@ export class EventIntegrations extends EventAuthorization {
   }
 
   async getConfigurations() {
-    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEvent) throw new ForbiddenOperationError();
     const integrations = await db.eventIntegrationConfig.findMany({ where: { eventId: event.id } });
 
     return integrations.map((integration) => ({
@@ -34,7 +38,8 @@ export class EventIntegrations extends EventAuthorization {
   }
 
   async save(data: IntegrationConfigData) {
-    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
     if (!data.id) {
       await db.eventIntegrationConfig.create({ data: { ...data, eventId: event.id } });
@@ -51,7 +56,8 @@ export class EventIntegrations extends EventAuthorization {
   }
 
   async delete(id: string) {
-    const { event } = await this.checkAuthorizedEvent('canEditEvent');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEvent) throw new ForbiddenOperationError();
     await db.eventIntegrationConfig.delete({ where: { id, eventId: event.id } });
   }
 }

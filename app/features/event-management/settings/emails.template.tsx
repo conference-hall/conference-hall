@@ -5,7 +5,7 @@ import { href } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import {
   CustomTemplateSchema,
   EventEmailCustomDeleteSchema,
@@ -21,7 +21,7 @@ import { EmailPreview } from './components/email-preview.tsx';
 import { EventEmailCustomizations } from './services/event-email-customizations.server.tsx';
 
 export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authorizedEvent = context.get(AuthorizedEventContext);
   const url = new URL(request.url);
   const locale = url.searchParams.get('locale') || 'en';
   if (!isSupportedLanguage(locale)) throw new Response('Not Found', { status: 404 });
@@ -30,19 +30,19 @@ export const loader = async ({ request, params, context }: Route.LoaderArgs) => 
   const result = CustomTemplateSchema.safeParse(template);
   if (!result.success) throw new Response('Not Found', { status: 404 });
 
-  const emailCustomizations = EventEmailCustomizations.for(authUser.id, params.team, params.event);
+  const emailCustomizations = EventEmailCustomizations.for(authorizedEvent);
   const customizationPreview = await emailCustomizations.getForPreview(result.data, locale);
 
   return { ...customizationPreview, locale };
 };
 
-export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+export const action = async ({ request, context }: Route.ActionArgs) => {
+  const authorizedEvent = context.get(AuthorizedEventContext);
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent');
 
-  const emailCustomizations = EventEmailCustomizations.for(authUser.id, params.team, params.event);
+  const emailCustomizations = EventEmailCustomizations.for(authorizedEvent);
 
   switch (intent) {
     case 'save': {

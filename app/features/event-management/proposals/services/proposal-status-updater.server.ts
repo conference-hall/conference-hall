@@ -1,7 +1,8 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
+import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { DeliberationStatus } from '~/shared/types/proposals.types.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
@@ -18,13 +19,16 @@ export const ProposalStatusBulkSchema = z.object({
 
 type ProposalStatus = z.infer<typeof ProposalStatusSchema>;
 
-export class ProposalStatusUpdater extends EventAuthorization {
-  static for(userId: string, team: string, event: string) {
-    return new ProposalStatusUpdater(userId, team, event);
+export class ProposalStatusUpdater {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new ProposalStatusUpdater(authorizedEvent);
   }
 
   async update(proposalIds: string[], { confirmationStatus, deliberationStatus }: ProposalStatus) {
-    await this.checkAuthorizedEvent('canChangeProposalStatus');
+    const { permissions } = this.authorizedEvent;
+    if (!permissions.canChangeProposalStatus) throw new ForbiddenOperationError();
 
     if (confirmationStatus) {
       const result = await db.proposal.updateMany({
@@ -46,16 +50,18 @@ export class ProposalStatusUpdater extends EventAuthorization {
   }
 
   async updateAll(filters: ProposalsFilters, deliberationStatus: DeliberationStatus) {
-    const { event } = await this.checkAuthorizedEvent('canChangeProposalStatus');
+    const { event, userId, permissions } = this.authorizedEvent;
+    if (!permissions.canChangeProposalStatus) throw new ForbiddenOperationError();
 
-    const search = new ProposalSearchBuilder(event.slug, this.userId, filters);
+    const search = new ProposalSearchBuilder(event.id, userId, filters);
     const proposalIds = await search.proposalsIds();
 
     return this.update(proposalIds, { deliberationStatus });
   }
 
   async archive(proposalIds: string[]) {
-    const { event } = await this.checkAuthorizedEvent('canChangeProposalStatus');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canChangeProposalStatus) throw new ForbiddenOperationError();
 
     const result = await db.proposal.updateMany({
       where: { id: { in: proposalIds }, eventId: event.id, archivedAt: null },
@@ -65,7 +71,8 @@ export class ProposalStatusUpdater extends EventAuthorization {
   }
 
   async restore(proposalIds: string[]) {
-    const { event } = await this.checkAuthorizedEvent('canChangeProposalStatus');
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canChangeProposalStatus) throw new ForbiddenOperationError();
 
     const result = await db.proposal.updateMany({
       where: { id: { in: proposalIds }, eventId: event.id, archivedAt: { not: null } },

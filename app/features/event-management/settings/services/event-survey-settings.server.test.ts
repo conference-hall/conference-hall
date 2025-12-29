@@ -1,9 +1,12 @@
+import { db } from 'prisma/db.server.ts';
 import type { Event, Team, User } from 'prisma/generated/client.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
+import { SurveyConfig } from '../models/survey-config.ts';
 import { EventSurveySettings, type SurveyMoveQuestion } from './event-survey-settings.server.ts';
 
 describe('EventSurveySettings', () => {
@@ -21,9 +24,10 @@ describe('EventSurveySettings', () => {
 
   describe('getConfig', () => {
     it('returns the enabled survey config with questions', async () => {
-      const config = await EventSurveySettings.for(owner.id, team.slug, event.slug).getConfig();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const config = await EventSurveySettings.for(authorizedEvent).getConfig();
 
-      expect(config.legacy).toEqual(false);
       expect(config.enabled).toEqual(true);
       expect(config.questions).toEqual([
         {
@@ -58,91 +62,101 @@ describe('EventSurveySettings', () => {
 
     it('returns the disabled survey config with no questions', async () => {
       const eventWithoutSurvey = await eventFactory({ team });
-      const config = await EventSurveySettings.for(owner.id, team.slug, eventWithoutSurvey.slug).getConfig();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSurvey.slug);
+      const config = await EventSurveySettings.for(authorizedEvent).getConfig();
 
-      expect(config.legacy).toEqual(false);
       expect(config.enabled).toEqual(false);
       expect(config.questions).toEqual([]);
     });
 
     it('throws an error when user not authorized', async () => {
-      await expect(EventSurveySettings.for(reviewer.id, team.slug, event.slug).getConfig()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(async () => {
+        await EventSurveySettings.for(authorizedEvent).getConfig();
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('toggleSurvey', () => {
     it('toggles the survey for custom survey', async () => {
-      const enabled = await EventSurveySettings.for(owner.id, team.slug, event.slug).toggleSurvey();
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const enabled = await EventSurveySettings.for(authorizedEvent).toggleSurvey();
 
       expect(enabled).toEqual(false);
     });
 
     it('throws an error when user not authorized', async () => {
-      await expect(EventSurveySettings.for(reviewer.id, team.slug, event.slug).toggleSurvey()).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(async () => {
+        await EventSurveySettings.for(authorizedEvent).toggleSurvey();
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('addQuestion', () => {
-    it('adds a question to the survey', async () => {
-      const newQuestion: SurveyQuestion = {
-        id: 'new-question',
-        label: 'New Question',
-        type: 'text',
-        required: false,
-      };
+    const newQuestion: SurveyQuestion = {
+      id: 'new-question',
+      label: 'New Question',
+      type: 'text',
+      required: false,
+    };
 
-      const surveySettings = EventSurveySettings.for(owner.id, team.slug, event.slug);
+    it('adds a question to the survey', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const surveySettings = EventSurveySettings.for(authorizedEvent);
       await surveySettings.addQuestion(newQuestion);
 
-      const config = await surveySettings.getConfig();
-      expect(config.questions).toContainEqual(newQuestion);
+      const result = await db.event.findUnique({ where: { id: event.id } });
+      if (!result) expect.fail();
+      const survey = new SurveyConfig(result?.surveyConfig);
+      expect(survey.questions).toContainEqual(newQuestion);
     });
 
     it('throws an error when user not authorized', async () => {
-      const newQuestion: SurveyQuestion = {
-        id: 'new-question',
-        label: 'New Question',
-        type: 'text',
-        required: false,
-      };
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await expect(
-        EventSurveySettings.for(reviewer.id, team.slug, event.slug).addQuestion(newQuestion),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        await EventSurveySettings.for(authorizedEvent).addQuestion(newQuestion);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('updateQuestion', () => {
-    it('updates a question in the survey', async () => {
-      const updatedQuestion: SurveyQuestion = {
-        id: 'info',
-        label: 'Updated Question',
-        type: 'text',
-        required: true,
-      };
+    const updatedQuestion: SurveyQuestion = {
+      id: 'info',
+      label: 'Updated Question',
+      type: 'text',
+      required: true,
+    };
 
-      const surveySettings = EventSurveySettings.for(owner.id, team.slug, event.slug);
+    it('updates a question in the survey', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const surveySettings = EventSurveySettings.for(authorizedEvent);
       await surveySettings.updateQuestion(updatedQuestion);
 
-      const config = await surveySettings.getConfig();
-      expect(config.questions).toContainEqual(updatedQuestion);
+      const result = await db.event.findUnique({ where: { id: event.id } });
+      if (!result) expect.fail();
+      const survey = new SurveyConfig(result?.surveyConfig);
+      expect(survey.questions).toContainEqual(updatedQuestion);
     });
 
     it('throws an error when user not authorized', async () => {
-      const updatedQuestion: SurveyQuestion = {
-        id: 'info',
-        label: 'Updated Question',
-        type: 'text',
-        required: true,
-      };
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await expect(
-        EventSurveySettings.for(reviewer.id, team.slug, event.slug).updateQuestion(updatedQuestion),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        await EventSurveySettings.for(authorizedEvent).updateQuestion(updatedQuestion);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -150,19 +164,25 @@ describe('EventSurveySettings', () => {
     it('removes a question from the survey', async () => {
       const questionId = 'info';
 
-      const surveySettings = EventSurveySettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const surveySettings = EventSurveySettings.for(authorizedEvent);
       await surveySettings.removeQuestion(questionId);
 
-      const config = await surveySettings.getConfig();
-      expect(config.questions).not.toContainEqual(expect.objectContaining({ id: questionId }));
+      const result = await db.event.findUnique({ where: { id: event.id } });
+      if (!result) expect.fail();
+      const survey = new SurveyConfig(result?.surveyConfig);
+      expect(survey.questions).not.toContainEqual(expect.objectContaining({ id: questionId }));
     });
 
     it('throws an error when user not authorized', async () => {
       const questionId = 'existing-question';
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await expect(
-        EventSurveySettings.for(reviewer.id, team.slug, event.slug).removeQuestion(questionId),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        await EventSurveySettings.for(authorizedEvent).removeQuestion(questionId);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -170,11 +190,15 @@ describe('EventSurveySettings', () => {
     it('moves a question in the survey', async () => {
       const moveParams: SurveyMoveQuestion = { id: 'info', direction: 'up' };
 
-      const surveySettings = EventSurveySettings.for(owner.id, team.slug, event.slug);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const surveySettings = EventSurveySettings.for(authorizedEvent);
       await surveySettings.moveQuestion(moveParams);
 
-      const config = await surveySettings.getConfig();
-      expect(config.questions).toEqual([
+      const result = await db.event.findUnique({ where: { id: event.id } });
+      if (!result) expect.fail();
+      const survey = new SurveyConfig(result?.surveyConfig);
+      expect(survey.questions).toEqual([
         {
           id: 'accomodation',
           label: 'Do you need accommodation funding? (Hotel, AirBnB...)',
@@ -207,10 +231,12 @@ describe('EventSurveySettings', () => {
 
     it('throws an error when user not authorized', async () => {
       const moveParams: SurveyMoveQuestion = { id: 'info', direction: 'up' };
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await expect(
-        EventSurveySettings.for(reviewer.id, team.slug, event.slug).moveQuestion(moveParams),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        await EventSurveySettings.for(authorizedEvent).moveQuestion(moveParams);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

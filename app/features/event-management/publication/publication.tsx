@@ -8,7 +8,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { BadRequestError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -16,20 +16,20 @@ import type { Route } from './+types/publication.ts';
 import { PublicationButton } from './components/publication-confirm-modal.tsx';
 import { Publication, PublishResultFormSchema } from './services/publication.server.ts';
 
-export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
-  return Publication.for(authUser.id, params.team, params.event).statistics();
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const authorizedEvent = context.get(AuthorizedEventContext);
+  return Publication.for(authorizedEvent).statistics();
 };
 
-export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+export const action = async ({ request, context }: Route.ActionArgs) => {
+  const authorizedEvent = context.get(AuthorizedEventContext);
   const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: PublishResultFormSchema });
   if (result.status !== 'success') throw new BadRequestError(i18n.t('error.invalid-form-data'));
 
   const { type, sendEmails } = result.value;
-  await Publication.for(authUser.id, params.team, params.event).publishAll(type, sendEmails);
+  await Publication.for(authorizedEvent).publishAll(type, sendEmails);
   return toast(
     'success',
     type === 'ACCEPTED'

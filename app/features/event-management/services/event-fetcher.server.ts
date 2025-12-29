@@ -1,64 +1,68 @@
 import { db } from 'prisma/db.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { EventNotFoundError } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 
-export class EventFetcher extends EventAuthorization {
-  static for(userId: string, teamSlug: string, eventSlug: string) {
-    return new EventFetcher(userId, teamSlug, eventSlug);
+export class EventFetcher {
+  constructor(private authorizedEvent: AuthorizedEvent) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    return new EventFetcher(authorizedEvent);
   }
 
   async get() {
-    const event = await db.event.findFirst({
+    const { teamId, event } = this.authorizedEvent;
+
+    const fullEvent = await db.event.findFirst({
       include: {
         integrations: true,
         proposalTags: true,
         formats: { orderBy: { order: 'asc' } },
         categories: { orderBy: { order: 'asc' } },
       },
-      where: { slug: this.event, team: { slug: this.team, members: { some: { memberId: this.userId } } } },
+      where: { id: event.id, teamId },
     });
-    if (!event) throw new EventNotFoundError();
+    if (!fullEvent) throw new EventNotFoundError();
 
     return {
-      id: event.id,
-      name: event.name,
-      slug: event.slug,
-      type: event.type,
-      location: event.location,
-      onlineEvent: event.onlineEvent,
-      timezone: event.timezone,
-      conferenceStart: event.conferenceStart,
-      conferenceEnd: event.conferenceEnd,
-      description: event.description,
-      visibility: event.visibility,
-      websiteUrl: event.websiteUrl,
-      codeOfConductUrl: event.codeOfConductUrl,
-      contactEmail: event.contactEmail,
-      logoUrl: event.logoUrl,
-      maxProposals: event.maxProposals,
-      reviewEnabled: event.reviewEnabled,
-      displayProposalsReviews: event.displayProposalsReviews,
-      displayProposalsSpeakers: event.displayProposalsSpeakers,
-      speakersConversationEnabled: event.speakersConversationEnabled,
-      formatsRequired: event.formatsRequired,
-      formatsAllowMultiple: event.formatsAllowMultiple,
-      categoriesRequired: event.categoriesRequired,
-      categoriesAllowMultiple: event.categoriesAllowMultiple,
-      emailOrganizer: event.emailOrganizer,
-      emailNotifications: (event.emailNotifications || []) as EventEmailNotificationsKeys,
-      slackWebhookUrl: event.slackWebhookUrl,
-      apiKey: event.apiKey,
-      cfpStart: event.cfpStart,
-      cfpEnd: event.cfpEnd,
-      cfpState: event.cfpState,
-      formats: event.formats.map(({ id, name, description }) => ({ id, name, description })),
-      categories: event.categories.map(({ id, name, description }) => ({ id, name, description })),
-      integrations: event.integrations.map((integration) => integration.name),
-      archived: event.archived,
+      id: fullEvent.id,
+      name: fullEvent.name,
+      slug: fullEvent.slug,
+      type: fullEvent.type,
+      location: fullEvent.location,
+      onlineEvent: fullEvent.onlineEvent,
+      timezone: fullEvent.timezone,
+      conferenceStart: fullEvent.conferenceStart,
+      conferenceEnd: fullEvent.conferenceEnd,
+      description: fullEvent.description,
+      visibility: fullEvent.visibility,
+      websiteUrl: fullEvent.websiteUrl,
+      codeOfConductUrl: fullEvent.codeOfConductUrl,
+      contactEmail: fullEvent.contactEmail,
+      logoUrl: fullEvent.logoUrl,
+      maxProposals: fullEvent.maxProposals,
+      reviewEnabled: fullEvent.reviewEnabled,
+      displayProposalsReviews: fullEvent.displayProposalsReviews,
+      displayProposalsSpeakers: fullEvent.displayProposalsSpeakers,
+      speakersConversationEnabled: fullEvent.speakersConversationEnabled,
+      formatsRequired: fullEvent.formatsRequired,
+      formatsAllowMultiple: fullEvent.formatsAllowMultiple,
+      categoriesRequired: fullEvent.categoriesRequired,
+      categoriesAllowMultiple: fullEvent.categoriesAllowMultiple,
+      emailOrganizer: fullEvent.emailOrganizer,
+      emailNotifications: (fullEvent.emailNotifications || []) as EventEmailNotificationsKeys,
+      slackWebhookUrl: fullEvent.slackWebhookUrl,
+      apiKey: fullEvent.apiKey,
+      cfpStart: fullEvent.cfpStart,
+      cfpEnd: fullEvent.cfpEnd,
+      cfpState: fullEvent.cfpState,
+      formats: fullEvent.formats.map(({ id, name, description }) => ({ id, name, description })),
+      categories: fullEvent.categories.map(({ id, name, description }) => ({ id, name, description })),
+      integrations: fullEvent.integrations.map((integration) => integration.name),
+      archived: fullEvent.archived,
       tags: sortBy(
-        event.proposalTags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),
+        fullEvent.proposalTags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),
         'name',
       ),
     };

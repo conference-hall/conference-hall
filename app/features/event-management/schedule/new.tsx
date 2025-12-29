@@ -10,21 +10,21 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { ScheduleCreateSchema } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { useCurrentEventTeam } from '../event-team-context.tsx';
 import type { Route } from './+types/new.ts';
 import { EventSchedule } from './services/schedule.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
-  const schedule = await EventSchedule.for(authUser.id, params.team, params.event).get();
+  const authorizedEvent = context.get(AuthorizedEventContext);
+  const schedule = await EventSchedule.for(authorizedEvent).get();
   if (schedule) return redirect(`/team/${params.team}/${params.event}/schedule/0`);
   return null;
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
-  const schedule = EventSchedule.for(authUser.id, params.team, params.event);
+  const authorizedEvent = context.get(AuthorizedEventContext);
+  const schedule = EventSchedule.for(authorizedEvent);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ScheduleCreateSchema });
   if (result.status !== 'success') return result.error;

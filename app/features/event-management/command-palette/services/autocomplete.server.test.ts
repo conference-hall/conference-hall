@@ -5,6 +5,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { Autocomplete, parseUrlFilters } from './autocomplete.server.ts';
 
@@ -26,7 +27,10 @@ describe('Autocomplete for event management', () => {
   describe('#search', () => {
     describe('when user has access to event', () => {
       it('returns empty array when no query provided', async () => {
-        const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const results = await Autocomplete.for(authorizedEvent).search({
           query: '',
           kind: ['proposals', 'speakers'],
         });
@@ -35,7 +39,10 @@ describe('Autocomplete for event management', () => {
       });
 
       it('returns empty array when no kinds specified', async () => {
-        const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+        const results = await Autocomplete.for(authorizedEvent).search({
           query: 'test',
           kind: [],
         });
@@ -48,7 +55,10 @@ describe('Autocomplete for event management', () => {
           const talk = await talkFactory({ speakers: [speaker] });
           const proposal = await proposalFactory({ event, talk, attributes: { title: 'React Best Practices' } });
 
-          const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'React',
             kind: ['proposals'],
           });
@@ -64,7 +74,10 @@ describe('Autocomplete for event management', () => {
             await proposalFactory({ event, talk, attributes: { title: `React Tutorial ${i}` } });
           }
 
-          const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'React',
             kind: ['proposals'],
           });
@@ -78,7 +91,10 @@ describe('Autocomplete for event management', () => {
           const talk = await talkFactory({ speakers: [speaker, speaker2] });
           const proposal = await proposalFactory({ event, talk, attributes: { title: 'Advanced React' } });
 
-          const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'Advanced',
             kind: ['proposals'],
           });
@@ -101,7 +117,10 @@ describe('Autocomplete for event management', () => {
             attributes: { title: 'Advanced React' },
           });
 
-          const results = await Autocomplete.for(owner.id, team.slug, eventWithoutSpeakers.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSpeakers.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'Advanced',
             kind: ['proposals'],
           });
@@ -118,7 +137,10 @@ describe('Autocomplete for event management', () => {
           const talk = await talkFactory({ speakers: [speaker] });
           await proposalFactory({ event, talk, attributes: { title: 'React Best Practices' } });
 
-          const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'React',
             kind: ['speakers'],
           });
@@ -131,7 +153,10 @@ describe('Autocomplete for event management', () => {
         it('returns matching speakers when searching by name', async () => {
           const eventSpeaker = await eventSpeakerFactory({ event, attributes: { name: 'John Doe' } });
 
-          const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'John',
             kind: ['speakers'],
           });
@@ -153,7 +178,10 @@ describe('Autocomplete for event management', () => {
             attributes: { name: 'John Doe', email: 'john.doe@example.com' },
           });
 
-          const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'JOHN.DOE@EXAMPLE.COM',
             kind: ['speakers'],
           });
@@ -175,7 +203,10 @@ describe('Autocomplete for event management', () => {
             await eventSpeakerFactory({ event, attributes: { name: `John Speaker ${i}` } });
           }
 
-          const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'John',
             kind: ['speakers'],
           });
@@ -187,7 +218,10 @@ describe('Autocomplete for event management', () => {
         it('does not return speakers when kind is not included', async () => {
           await eventSpeakerFactory({ event, attributes: { name: 'John Doe' } });
 
-          const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'John',
             kind: ['proposals'],
           });
@@ -199,7 +233,10 @@ describe('Autocomplete for event management', () => {
           const eventWithHiddenSpeakers = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
           await eventSpeakerFactory({ event: eventWithHiddenSpeakers, attributes: { name: 'John Doe' } });
 
-          const results = await Autocomplete.for(owner.id, team.slug, eventWithHiddenSpeakers.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithHiddenSpeakers.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'John',
             kind: ['speakers'],
           });
@@ -216,7 +253,10 @@ describe('Autocomplete for event management', () => {
             attributes: { name: 'John Doe' },
           });
 
-          const results = await Autocomplete.for(owner.id, team.slug, eventWithoutSpeakers.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSpeakers.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'John',
             kind: ['speakers-for-proposal'],
           });
@@ -239,7 +279,10 @@ describe('Autocomplete for event management', () => {
           const proposal = await proposalFactory({ event, talk, attributes: { title: 'React Testing' } });
           const eventSpeaker = await eventSpeakerFactory({ event, attributes: { name: 'React Expert' } });
 
-          const results = await Autocomplete.for(owner.id, team.slug, event.slug).search({
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({
             query: 'React',
             kind: ['proposals', 'speakers'],
           });
@@ -270,34 +313,40 @@ describe('Autocomplete for event management', () => {
       it('throws ForbiddenOperationError for non-member', async () => {
         const outsider = await userFactory();
 
-        await expect(
-          Autocomplete.for(outsider.id, team.slug, event.slug).search({
+        await expect(async () => {
+          const authorizedTeam = await getAuthorizedTeam(outsider.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+          await Autocomplete.for(authorizedEvent).search({
             query: 'test',
             kind: ['proposals'],
-          }),
-        ).rejects.toThrow(ForbiddenOperationError);
+          });
+        }).rejects.toThrow(ForbiddenOperationError);
       });
     });
 
     describe('when event does not exist', () => {
       it('throws error for non-existent event', async () => {
-        await expect(
-          Autocomplete.for(owner.id, team.slug, 'non-existent').search({
+        await expect(async () => {
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, 'non-existent');
+          await Autocomplete.for(authorizedEvent).search({
             query: 'test',
             kind: ['proposals'],
-          }),
-        ).rejects.toThrow();
+          });
+        }).rejects.toThrow();
       });
     });
 
     describe('when team does not exist', () => {
       it('throws error for non-existent team', async () => {
-        await expect(
-          Autocomplete.for(owner.id, 'non-existent', event.slug).search({
+        await expect(async () => {
+          const authorizedTeam = await getAuthorizedTeam(owner.id, 'non-existent');
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+          await Autocomplete.for(authorizedEvent).search({
             query: 'test',
             kind: ['proposals'],
-          }),
-        ).rejects.toThrow();
+          });
+        }).rejects.toThrow();
       });
     });
   });

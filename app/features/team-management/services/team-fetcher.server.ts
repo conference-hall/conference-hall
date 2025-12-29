@@ -1,23 +1,25 @@
 import { db } from 'prisma/db.server.ts';
+import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
 import { TeamNotFoundError } from '~/shared/errors.server.ts';
-import { TeamAuthorization } from '~/shared/user/team-authorization.server.ts';
 
-export class TeamFetcher extends TeamAuthorization {
-  static for(userId: string, team: string) {
-    return new TeamFetcher(userId, team);
+export class TeamFetcher {
+  constructor(private authorizedTeam: AuthorizedTeam) {}
+
+  static for(authorizedTeam: AuthorizedTeam) {
+    return new TeamFetcher(authorizedTeam);
   }
 
   async get() {
-    const { member, permissions } = await this.checkMemberPermissions('canAccessTeam');
+    const { teamId, role, permissions } = this.authorizedTeam;
 
-    const team = await db.team.findUnique({ where: { slug: this.team } });
+    const team = await db.team.findUnique({ where: { id: teamId } });
     if (!team) throw new TeamNotFoundError();
 
     return {
       id: team.id,
       name: team.name,
       slug: team.slug,
-      userRole: member.role,
+      userRole: role,
       invitationLink: permissions.canManageTeamMembers ? team.invitationLink : undefined,
     };
   }

@@ -11,7 +11,7 @@ import { List } from '~/design-system/list/list.tsx';
 import { Tag } from '~/design-system/tag.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { TagModal } from '~/features/event-management/settings/components/tag-modal.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -19,24 +19,21 @@ import type { Route } from './+types/tags.ts';
 import { parseUrlFilters, TagDeleteSchema, TagSaveSchema } from './services/event-proposal-tags.schema.server.ts';
 import { EventProposalTags } from './services/event-proposal-tags.server.ts';
 
-export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+export const loader = async ({ request, context }: Route.LoaderArgs) => {
+  const authorizedEvent = context.get(AuthorizedEventContext);
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
-  const { count, tags, pagination } = await EventProposalTags.for(authUser.id, params.team, params.event).list(
-    filters,
-    page,
-  );
+  const { count, tags, pagination } = await EventProposalTags.for(authorizedEvent).list(filters, page);
   return { count, tags, filters, pagination };
 };
 
-export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+export const action = async ({ request, context }: Route.ActionArgs) => {
+  const authorizedEvent = context.get(AuthorizedEventContext);
 
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent');
-  const tags = EventProposalTags.for(authUser.id, params.team, params.event);
+  const tags = EventProposalTags.for(authorizedEvent);
 
   switch (intent) {
     case 'save-tag': {

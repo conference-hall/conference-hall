@@ -1,66 +1,64 @@
 import { db } from 'prisma/db.server.ts';
-import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
-import { EventAuthorization } from '~/shared/user/event-authorization.server.ts';
 import type { CommentReactionData, CommentSaveData } from './comments.schema.server.ts';
 
-export class Comments extends EventAuthorization {
-  private proposalId: string;
+export class Comments {
+  constructor(
+    private authorizedEvent: AuthorizedEvent,
+    private proposalId: string,
+  ) {}
 
-  constructor(userId: string, team: string, event: string, proposalId: string) {
-    super(userId, team, event);
-    this.proposalId = proposalId;
-  }
-
-  static for(userId: string, team: string, event: string, proposalId: string) {
-    return new Comments(userId, team, event, proposalId);
+  static for(authorizedEvent: AuthorizedEvent, proposalId: string) {
+    return new Comments(authorizedEvent, proposalId);
   }
 
   async save(comment: CommentSaveData) {
-    const { permissions } = await this.checkAuthorizedEvent();
-    if (!permissions.canAccessEvent) throw new ForbiddenOperationError();
+    const { permissions } = this.authorizedEvent;
 
     if (comment.id) {
       await db.comment.updateMany({
         data: { comment: comment.message },
-        where: { id: comment.id, userId: permissions.canManageConversations ? undefined : this.userId },
+        where: { id: comment.id, userId: permissions.canManageConversations ? undefined : this.authorizedEvent.userId },
       });
     } else {
       await db.comment.create({
-        data: { userId: this.userId, proposalId: this.proposalId, comment: comment.message, channel: 'ORGANIZER' },
+        data: {
+          userId: this.authorizedEvent.userId,
+          proposalId: this.proposalId,
+          comment: comment.message,
+          channel: 'ORGANIZER',
+        },
       });
     }
   }
 
   async remove(id: string) {
-    const { permissions } = await this.checkAuthorizedEvent();
-    if (!permissions.canAccessEvent) throw new ForbiddenOperationError();
+    const { permissions } = this.authorizedEvent;
 
     await db.comment.deleteMany({
       where: {
         id,
-        userId: permissions.canManageConversations ? undefined : this.userId,
+        userId: permissions.canManageConversations ? undefined : this.authorizedEvent.userId,
         proposalId: this.proposalId,
       },
     });
   }
 
   async reactToComment({ id, code }: CommentReactionData) {
-    await this.checkAuthorizedEvent('canAccessEvent');
-
     const existingReaction = await db.commentReaction.findUnique({
-      where: { userId_commentId_code: { userId: this.userId, commentId: id, code } },
+      where: { userId_commentId_code: { userId: this.authorizedEvent.userId, commentId: id, code } },
     });
 
     // delete
     if (existingReaction) {
       return db.commentReaction.delete({
-        where: { userId_commentId_code: { userId: this.userId, commentId: id, code } },
+        where: { userId_commentId_code: { userId: this.authorizedEvent.userId, commentId: id, code } },
       });
     }
 
     // create
-    return db.commentReaction.create({ data: { userId: this.userId, commentId: id, code } });
+    return db.commentReaction.create({ data: { userId: this.authorizedEvent.userId, commentId: id, code } });
   }
 
   static async listReactions(commentIds: Array<string>, currentUserId: string) {

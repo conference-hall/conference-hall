@@ -1,6 +1,5 @@
 import { TeamRole } from 'prisma/generated/client.ts';
-
-import { UserTeamPermissions } from './team-permissions.ts';
+import { UserTeamPermissions } from '../authorization/team-permissions.ts';
 
 describe('UserTeamPermissions', () => {
   describe('#getPermissions', () => {
@@ -54,7 +53,7 @@ describe('UserTeamPermissions', () => {
       });
     });
 
-    it('returns member permissions', async () => {
+    it('returns reviewer permissions', async () => {
       const permissions = UserTeamPermissions.getPermissions(TeamRole.REVIEWER);
 
       expect(permissions).toEqual({

@@ -10,7 +10,7 @@ import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
 
 export class EventProposalsApi {
   static async proposals(event: Event, filters: ProposalsFilters) {
-    const search = new ProposalSearchBuilder(event.slug, 'no-user', filters);
+    const search = new ProposalSearchBuilder(event.id, 'no-user', filters);
 
     const proposals = await search.proposals();
 

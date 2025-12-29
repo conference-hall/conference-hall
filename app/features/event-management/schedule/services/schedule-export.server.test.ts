@@ -6,6 +6,7 @@ import { scheduleTrackFactory } from 'tests/factories/schedule-track.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { EventSchedule } from './schedule.server.ts';
 import { EventScheduleExport } from './schedule-export.server.ts';
@@ -31,15 +32,17 @@ describe('EventScheduleExport', () => {
 
   describe('#forJsonExport', () => {
     it('exports schedule as JSON', async () => {
-      const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
-      const session = await eventSchedule.addSession({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const session = await EventSchedule.for(authorizedEvent).addSession({
         trackId: track.id,
         start: new Date(schedule.start),
         end: new Date(schedule.start),
       });
       const talk = await talkFactory({ speakers: [owner] });
       const proposal = await proposalFactory({ event, talk });
-      await eventSchedule.updateSession({
+      await EventSchedule.for(authorizedEvent).updateSession({
         id: session.id,
         trackId: track.id,
         color: 'gray',
@@ -49,8 +52,7 @@ describe('EventScheduleExport', () => {
         proposalId: proposal.id,
       });
 
-      const scheduleExport = EventScheduleExport.for(owner.id, team.slug, event.slug);
-      const json = await scheduleExport.forJsonExport();
+      const json = await EventScheduleExport.for(authorizedEvent).forJsonExport();
 
       expect(json).toEqual({
         name: schedule.name,
@@ -88,14 +90,20 @@ describe('EventScheduleExport', () => {
     });
 
     it('throws forbidden error for reviewers', async () => {
-      await expect(EventScheduleExport.for(reviewer.id, team.slug, event.slug).forJsonExport()).rejects.toThrowError(
+      const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(EventScheduleExport.for(authorizedEvent).forJsonExport()).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(EventScheduleExport.for(owner.id, team.slug, meetup.slug).forJsonExport()).rejects.toThrowError(
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
+
+      await expect(EventScheduleExport.for(authorizedEvent).forJsonExport()).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });

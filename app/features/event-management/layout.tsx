@@ -16,13 +16,19 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { CurrentEventTeamProvider, useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import {
+  AuthorizedEventContext,
+  AuthorizedTeamContext,
+  requireAuthorizedEvent,
+  requireAuthorizedTeam,
+} from '~/shared/authorization/authorization.middleware.ts';
 import { TeamFetcher } from '../team-management/services/team-fetcher.server.ts';
 import type { Route } from './+types/layout.ts';
 import { useScheduleFullscreen } from './schedule/components/header/use-schedule-fullscreen.tsx';
 import { EventFetcher } from './services/event-fetcher.server.ts';
 
-export const middleware = [requiredAuthMiddleware];
+export const middleware = [requiredAuthMiddleware, requireAuthorizedTeam, requireAuthorizedEvent];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [
@@ -31,14 +37,16 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
   const url = new URL(request.url);
   if (url.pathname === `/team/${params.team}/${params.event}`) {
     return redirect(`/team/${params.team}/${params.event}/overview`);
   }
 
-  const team = await TeamFetcher.for(authUser.id, params.team).get();
-  const event = await EventFetcher.for(authUser.id, params.team, params.event).get();
+  const authorizedTeam = context.get(AuthorizedTeamContext);
+  const authorizedEvent = context.get(AuthorizedEventContext);
+
+  const team = await TeamFetcher.for(authorizedTeam).get();
+  const event = await EventFetcher.for(authorizedEvent).get();
 
   return { team, event };
 };

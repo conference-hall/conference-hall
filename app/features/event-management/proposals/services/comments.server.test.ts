@@ -7,6 +7,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 
 import { Comments } from './comments.server.ts';
@@ -30,7 +31,9 @@ describe('Comments', () => {
     it('adds comment to a proposal', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      await Comments.for(owner.id, team.slug, event.slug, proposal.id).save({ message: 'My message' });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await Comments.for(authorizedEvent, proposal.id).save({ message: 'My message' });
 
       const messages = await db.comment.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
       expect(messages.length).toBe(1);
@@ -44,7 +47,9 @@ describe('Comments', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const comment = await commentFactory({ user: member, proposal, attributes: { comment: 'Original comment' } });
 
-      await Comments.for(owner.id, team.slug, event.slug, proposal.id).save({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await Comments.for(authorizedEvent, proposal.id).save({
         id: comment.id,
         message: 'Updated by owner',
       });
@@ -57,7 +62,9 @@ describe('Comments', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const comment = await commentFactory({ user: owner, proposal, attributes: { comment: 'Original comment' } });
 
-      await Comments.for(member.id, team.slug, event.slug, proposal.id).save({
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await Comments.for(authorizedEvent, proposal.id).save({
         id: comment.id,
         message: 'Attempted update',
       });
@@ -69,8 +76,12 @@ describe('Comments', () => {
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const discussion = Comments.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(discussion.save({ message: 'My message' })).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const discussion = Comments.for(authorizedEvent, proposal.id);
+        await discussion.save({ message: 'My message' });
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -79,7 +90,9 @@ describe('Comments', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const message = await commentFactory({ user: owner, proposal });
 
-      await Comments.for(owner.id, team.slug, event.slug, proposal.id).remove(message.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await Comments.for(authorizedEvent, proposal.id).remove(message.id);
 
       const messages = await db.comment.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
       expect(messages.length).toBe(0);
@@ -89,7 +102,9 @@ describe('Comments', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const message = await commentFactory({ user: member, proposal });
 
-      await Comments.for(owner.id, team.slug, event.slug, proposal.id).remove(message.id);
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await Comments.for(authorizedEvent, proposal.id).remove(message.id);
 
       const messages = await db.comment.findMany({ where: { userId: member.id, proposalId: proposal.id } });
       expect(messages.length).toBe(0);
@@ -99,7 +114,9 @@ describe('Comments', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const message = await commentFactory({ user: owner, proposal });
 
-      await Comments.for(member.id, team.slug, event.slug, proposal.id).remove(message.id);
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await Comments.for(authorizedEvent, proposal.id).remove(message.id);
 
       const result = await db.comment.findUnique({ where: { id: message.id } });
       expect(result).toBeDefined();
@@ -109,8 +126,12 @@ describe('Comments', () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const message = await commentFactory({ user, proposal });
-      const discussion = Comments.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(discussion.remove(message.id)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const discussion = Comments.for(authorizedEvent, proposal.id);
+        await discussion.remove(message.id);
+      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -119,7 +140,9 @@ describe('Comments', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const message = await commentFactory({ user: owner, proposal });
 
-      await Comments.for(owner.id, team.slug, event.slug, proposal.id).reactToComment({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await Comments.for(authorizedEvent, proposal.id).reactToComment({
         id: message.id,
         code: 'tada',
       });
@@ -134,7 +157,9 @@ describe('Comments', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const message = await commentFactory({ user: owner, proposal, traits: ['withReaction'] });
 
-      await Comments.for(owner.id, team.slug, event.slug, proposal.id).reactToComment({
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await Comments.for(authorizedEvent, proposal.id).reactToComment({
         id: message.id,
         code: 'tada',
       });
