@@ -107,7 +107,8 @@ export class AdminUsers {
           email: provider.email,
         })),
       };
-    } catch (_) {
+    } catch (error) {
+      console.error(`Error fetching user info from Firebase Auth for uid "${uid}"`, error);
       return null;
     }
   }

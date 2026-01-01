@@ -19,7 +19,6 @@ export const RequireAuthContext = createContext<AuthenticatedUser>();
 
 export const requireAuth: MiddlewareFunction<Response> = async ({ request, context }) => {
   const user = context.get(OptionalAuthContext);
-  context.get(OptionalAuthContext);
 
   if (!user) {
     const redirectTo = new URL(request.url).pathname;

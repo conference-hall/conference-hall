@@ -76,7 +76,7 @@ describe('requireAdmin', () => {
     }
   });
 
-  it('throws NotAuthorizedError when user is not admin', async () => {
+  it('throws NotFoundError when user is not admin', async () => {
     const user = await userFactory();
     const request = createMockRequest();
     const context = createMockContext();
