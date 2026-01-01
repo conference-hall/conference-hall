@@ -1,7 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 import { createContext, type MiddlewareFunction } from 'react-router';
 import { RequireAuthContext } from '../authentication/auth.middleware.ts';
-import { BadRequestError, NotAuthorizedError } from '../errors.server.ts';
+import { BadRequestError, NotFoundError } from '../errors.server.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from './authorization.server.ts';
 import type { AuthorizedEvent, AuthorizedTeam } from './types.ts';
 
@@ -11,7 +11,7 @@ export const requireAdmin: MiddlewareFunction<Response> = async ({ context }) =>
   if (!user) throw new BadRequestError('`requireAdmin` must be defined after `requireAuthUser`');
 
   const admin = await db.user.findUnique({ where: { id: user.id, admin: true } });
-  if (!admin) throw new NotAuthorizedError();
+  if (!admin) throw new NotFoundError('Page not found');
 };
 
 // Team authorizations

@@ -4,7 +4,7 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
 import { RequireAuthContext } from '../authentication/auth.middleware.ts';
-import { BadRequestError, EventNotFoundError, ForbiddenOperationError, NotAuthorizedError } from '../errors.server.ts';
+import { BadRequestError, EventNotFoundError, ForbiddenOperationError, NotFoundError } from '../errors.server.ts';
 import {
   AuthorizedEventContext,
   AuthorizedTeamContext,
@@ -39,6 +39,64 @@ function createMockRequest(url = 'https://example.com/test') {
 }
 
 const mockNext = vi.fn(async () => new Response());
+
+describe('requireAdmin', () => {
+  it('allows access when user is admin', async () => {
+    const user = await userFactory({ traits: ['admin'] });
+    const request = createMockRequest();
+    const context = createMockContext();
+
+    context.set(RequireAuthContext, {
+      id: user.id,
+      uid: user.uid,
+      name: user.name,
+      email: user.email,
+      picture: user.picture,
+      teams: [],
+      hasTeamAccess: false,
+      notificationsUnreadCount: 0,
+    });
+
+    await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+  });
+
+  it('throws BadRequestError when requireAuthUser middleware was not run first', async () => {
+    const request = createMockRequest();
+    const context = createMockContext();
+
+    context.set(RequireAuthContext, null);
+
+    try {
+      await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      expect.fail('Should have thrown BadRequestError');
+    } catch (error) {
+      expect(error).toBeInstanceOf(BadRequestError);
+      expect((error as Response).status).toBe(400);
+      expect((error as Response).statusText).toBe('`requireAdmin` must be defined after `requireAuthUser`');
+    }
+  });
+
+  it('throws NotAuthorizedError when user is not admin', async () => {
+    const user = await userFactory();
+    const request = createMockRequest();
+    const context = createMockContext();
+
+    context.set(RequireAuthContext, {
+      id: user.id,
+      uid: user.uid,
+      name: user.name,
+      email: user.email,
+      picture: user.picture,
+      teams: [],
+      hasTeamAccess: false,
+      notificationsUnreadCount: 0,
+    });
+
+    await expect(async () => {
+      await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    }).rejects.toThrow(NotFoundError);
+  });
+});
 
 describe('requireAuthorizedTeam', () => {
   it('sets authorized team in context when user is authenticated and is team member', async () => {
@@ -423,63 +481,5 @@ describe('middleware chain behavior', () => {
         mockNext,
       );
     }).rejects.toThrow(BadRequestError);
-  });
-});
-
-describe('requireAdmin', () => {
-  it('allows access when user is admin', async () => {
-    const user = await userFactory({ traits: ['admin'] });
-    const request = createMockRequest();
-    const context = createMockContext();
-
-    context.set(RequireAuthContext, {
-      id: user.id,
-      uid: user.uid,
-      name: user.name,
-      email: user.email,
-      picture: user.picture,
-      teams: [],
-      hasTeamAccess: false,
-      notificationsUnreadCount: 0,
-    });
-
-    await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-  });
-
-  it('throws BadRequestError when requireAuthUser middleware was not run first', async () => {
-    const request = createMockRequest();
-    const context = createMockContext();
-
-    context.set(RequireAuthContext, null);
-
-    try {
-      await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-      expect.fail('Should have thrown BadRequestError');
-    } catch (error) {
-      expect(error).toBeInstanceOf(BadRequestError);
-      expect((error as Response).status).toBe(400);
-      expect((error as Response).statusText).toBe('`requireAuthorizedTeam` must be defined after `requireAuthUser`');
-    }
-  });
-
-  it('throws NotAuthorizedError when user is not admin', async () => {
-    const user = await userFactory();
-    const request = createMockRequest();
-    const context = createMockContext();
-
-    context.set(RequireAuthContext, {
-      id: user.id,
-      uid: user.uid,
-      name: user.name,
-      email: user.email,
-      picture: user.picture,
-      teams: [],
-      hasTeamAccess: false,
-      notificationsUnreadCount: 0,
-    });
-
-    await expect(async () => {
-      await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-    }).rejects.toThrow(NotAuthorizedError);
   });
 });
