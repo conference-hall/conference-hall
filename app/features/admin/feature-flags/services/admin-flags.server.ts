@@ -1,13 +1,13 @@
-import { NotFoundError } from '~/shared/errors.server.ts';
+import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
+import { NotAuthorizedError, NotFoundError } from '~/shared/errors.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import type { FlagConfig } from '~/shared/feature-flags/types.ts';
-import { UserAccount } from '~/shared/user/user-account.server.ts';
 
 export class AdminFlags {
   private constructor() {}
 
-  static async for(userId: string) {
-    await UserAccount.needsAdminRole(userId);
+  static for(authorizedAdmin: AuthorizedAdmin) {
+    if (!authorizedAdmin) throw new NotAuthorizedError();
     return new AdminFlags();
   }
 

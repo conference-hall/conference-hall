@@ -8,12 +8,11 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
-import { auth } from '~/shared/auth/firebase.server.ts';
+import { auth } from '~/shared/authentication/firebase.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
-import { NotAuthorizedError } from '../errors.server.ts';
 import { UserAccount } from './user-account.server.ts';
 
-vi.mock('~/shared/auth/firebase.server.ts', () => ({
+vi.mock('~/shared/authentication/firebase.server.ts', () => ({
   auth: {
     updateUser: vi.fn(),
     generatePasswordResetLink: vi.fn(),
@@ -310,22 +309,6 @@ describe('UserAccount', () => {
       expect(needVerification).toEqual(false);
       expect(generateEmailVerificationLinkMock).not.toHaveBeenCalled();
       expect(sendEmail.trigger).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('#needsAdminRole', () => {
-    it('allows admin', async () => {
-      const user = await userFactory({ attributes: { admin: true } });
-      await expect(UserAccount.needsAdminRole(user.id)).resolves.not.toThrow();
-    });
-
-    it('throws an error when user is not found', async () => {
-      await expect(UserAccount.needsAdminRole('123')).rejects.toThrowError(NotAuthorizedError);
-    });
-
-    it('throws an error when user is not admin', async () => {
-      const user = await userFactory();
-      await expect(UserAccount.needsAdminRole(user.id)).rejects.toThrowError(NotAuthorizedError);
     });
   });
 

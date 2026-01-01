@@ -6,18 +6,18 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { AuthorizedAdminContext } from '~/shared/authorization/authorization.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import type { Route } from './+types/users.ts';
 import { AdminUsers, UsersSearchFiltersSchema } from './services/admin-users.server.ts';
 
 export const loader = async ({ request, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
   const { searchParams } = new URL(request.url);
   const result = parseWithZod(searchParams, { schema: UsersSearchFiltersSchema });
   const filters = result.status === 'success' ? result.value : {};
   const page = parseUrlPage(request.url);
-  const adminUsers = await AdminUsers.for(authUser.id);
+  const admin = context.get(AuthorizedAdminContext);
+  const adminUsers = AdminUsers.for(admin);
   return adminUsers.listUsers(filters, page);
 };
 

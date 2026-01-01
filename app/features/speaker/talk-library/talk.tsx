@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { TalkSaveSchema } from '~/shared/types/speaker-talk.types.ts';
@@ -20,12 +20,12 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   return TalksLibrary.of(authUser.id).talk(params.talk).get();
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const i18n = getI18n(context);
   const talk = TalksLibrary.of(authUser.id).talk(params.talk);
   const form = await request.formData();

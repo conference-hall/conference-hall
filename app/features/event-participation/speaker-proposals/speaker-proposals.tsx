@@ -8,15 +8,15 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { SpeakerProposals } from '~/features/event-participation/speaker-proposals/services/speaker-proposals.server.ts';
-import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import { useCurrentEvent } from '../event-page-context.tsx';
 import type { Route } from './+types/speaker-proposals.ts';
 import { ProposalStatusLabel } from './components/proposal-status-label.tsx';
 
-export const middleware = [requiredAuthMiddleware];
+export const middleware = [requireAuth];
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   return SpeakerProposals.for(authUser.id, params.event).list();
 };
 

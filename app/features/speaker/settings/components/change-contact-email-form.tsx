@@ -5,7 +5,7 @@ import { Button } from '~/design-system/button.tsx';
 import { type Option, SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
-import { getClientAuth } from '~/shared/auth/firebase.ts';
+import { getClientAuth } from '~/shared/authentication/firebase.ts';
 
 type Props = { email: string; authLoaded: boolean };
 

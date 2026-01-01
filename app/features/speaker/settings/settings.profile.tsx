@@ -12,7 +12,7 @@ import { getSocialIcon } from '~/design-system/social-link.tsx';
 import { H1, H2, Label, Subtitle } from '~/design-system/typography.tsx';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { extractSocialProfile } from '~/shared/formatters/social-links.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -26,7 +26,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ProfileSchema });

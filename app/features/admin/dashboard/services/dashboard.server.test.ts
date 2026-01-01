@@ -4,7 +4,6 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { NotAuthorizedError } from '~/shared/errors.server.ts';
 import { AdminDashboard } from './dashboard.server.ts';
 
 describe('AdminDashboard', () => {
@@ -32,16 +31,9 @@ describe('AdminDashboard', () => {
     await proposalFactory({ event: meetupClose, talk: talk2 });
   });
 
-  describe('AdminDashboard.for', () => {
-    it('throws an error when user is not admin', async () => {
-      await expect(AdminDashboard.for(speaker.id)).rejects.toThrowError(NotAuthorizedError);
-    });
-  });
-
   describe('#usersMetrics', () => {
     it('returns metrics for users', async () => {
-      const dashboard = await AdminDashboard.for(admin.id);
-      const metrics = await dashboard.usersMetrics();
+      const metrics = await AdminDashboard.for(admin).usersMetrics();
 
       expect(metrics).toEqual({ total: 3, organizers: 2, speakers: 1 });
     });
@@ -49,15 +41,13 @@ describe('AdminDashboard', () => {
 
   describe('#eventsMetrics', () => {
     it('returns metrics for conferences', async () => {
-      const dashboard = await AdminDashboard.for(admin.id);
-      const metrics = await dashboard.eventsMetrics('CONFERENCE');
+      const metrics = await AdminDashboard.for(admin).eventsMetrics('CONFERENCE');
 
       expect(metrics).toEqual({ total: 2, public: 1, private: 1, cfpOpen: 1 });
     });
 
     it('returns metrics for meetups', async () => {
-      const dashboard = await AdminDashboard.for(admin.id);
-      const metrics = await dashboard.eventsMetrics('MEETUP');
+      const metrics = await AdminDashboard.for(admin).eventsMetrics('MEETUP');
 
       expect(metrics).toEqual({ total: 2, public: 1, private: 1, cfpOpen: 1 });
     });
@@ -65,8 +55,7 @@ describe('AdminDashboard', () => {
 
   describe('#teamsMetrics', () => {
     it('returns metrics for teams', async () => {
-      const dashboard = await AdminDashboard.for(admin.id);
-      const metrics = await dashboard.teamsMetrics();
+      const metrics = await AdminDashboard.for(admin).teamsMetrics();
 
       expect(metrics).toEqual({ total: 1, organizers: 2, owners: 1, members: 1, reviewers: 0 });
     });
@@ -74,8 +63,7 @@ describe('AdminDashboard', () => {
 
   describe('#proposalsMetrics', () => {
     it('returns metrics for proposals', async () => {
-      const dashboard = await AdminDashboard.for(admin.id);
-      const metrics = await dashboard.proposalsMetrics();
+      const metrics = await AdminDashboard.for(admin).proposalsMetrics();
 
       expect(metrics).toEqual({ total: 5, submitted: 4, draft: 1 });
     });

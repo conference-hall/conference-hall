@@ -12,7 +12,7 @@ import { TalkSubmission } from '~/features/event-participation/cfp-submission/se
 import { ProfileFetcher } from '~/features/speaker/services/profile-fetcher.server.ts';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { Speakers } from '~/features/speaker/talk-library/components/speakers.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { FunnelSpeakerSchema } from '~/shared/types/speaker.types.ts';
 import type { Route } from './+types/3-speakers.ts';
 import { useSubmissionNavigation } from './components/submission-context.tsx';
@@ -20,7 +20,7 @@ import { useSubmissionNavigation } from './components/submission-context.tsx';
 export const handle = { step: 'speakers' };
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const speaker = await ProfileFetcher.for(authUser.id).get();
   const proposal = await TalkSubmission.for(authUser.id, params.event).get(params.talk);
 
@@ -33,7 +33,7 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const form = await request.formData();
   const intent = form.get('intent');
 

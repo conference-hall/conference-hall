@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { db } from 'prisma/db.server.ts';
 import type { Event } from 'prisma/generated/client.ts';
-import { createContext, type MiddlewareFunction, type RouterContextProvider } from 'react-router';
+import { createContext, type MiddlewareFunction } from 'react-router';
 import { z } from 'zod';
 import {
   ApiKeyInvalidError,
@@ -13,9 +13,9 @@ import { flags } from '../feature-flags/flags.server.ts';
 
 const API_KEY_SCHEMA = z.object({ key: z.string() });
 
-const webApiContext = createContext<Event>();
+export const WebApiAuthContext = createContext<Event>();
 
-export const webApiMiddleware: MiddlewareFunction<Response> = async ({ request, params, context }) => {
+export const webApiAuth: MiddlewareFunction<Response> = async ({ request, params, context }) => {
   const disableQueryParams = await flags.get('disableApiKeyInQueryParams');
 
   let apiKey: string | null = null;
@@ -45,9 +45,5 @@ export const webApiMiddleware: MiddlewareFunction<Response> = async ({ request, 
   if (!event) throw new EventNotFoundError();
   if (event.apiKey !== apiKey) throw new ApiKeyInvalidError();
 
-  context.set(webApiContext, event);
+  context.set(WebApiAuthContext, event);
 };
-
-export function getWebApiEvent(context: Readonly<RouterContextProvider>) {
-  return context.get(webApiContext);
-}

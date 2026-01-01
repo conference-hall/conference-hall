@@ -7,12 +7,12 @@ import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
-import { requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/cfp-submission.ts';
 import { Steps } from './components/steps.tsx';
 import { SubmissionContextProvider } from './components/submission-context.tsx';
 
-export const middleware = [requiredAuthMiddleware];
+export const middleware = [requireAuth];
 
 export const handle = { step: 'root' };
 

@@ -8,18 +8,18 @@ import { CardLink } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser, requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/notifications.ts';
 import { Notifications } from './services/notifications.server.ts';
 
-export const middleware = [requiredAuthMiddleware];
+export const middleware = [requireAuth];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Notifications | Conference Hall' }]);
 };
 
 export const loader = async ({ context }: Route.LoaderArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   return Notifications.for(authUser.id).list();
 };
 

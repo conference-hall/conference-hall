@@ -3,12 +3,12 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
-import * as authMiddleware from '../auth/auth.middleware.ts';
-import { BadRequestError, EventNotFoundError, ForbiddenOperationError } from '../errors.server.ts';
-import type { AuthenticatedUser } from '../types/user.types.ts';
+import { RequireAuthContext } from '../authentication/auth.middleware.ts';
+import { BadRequestError, EventNotFoundError, ForbiddenOperationError, NotFoundError } from '../errors.server.ts';
 import {
   AuthorizedEventContext,
   AuthorizedTeamContext,
+  requireAdmin,
   requireAuthorizedEvent,
   requireAuthorizedTeam,
 } from './authorization.middleware.ts';
@@ -23,17 +23,8 @@ vi.mock('./authorization.server.ts', async () => {
   };
 });
 
-vi.mock('../auth/auth.middleware.ts', async () => {
-  const actual = await vi.importActual<typeof authMiddleware>('../auth/auth.middleware.ts');
-  return {
-    ...actual,
-    getRequiredAuthUser: vi.fn(),
-  };
-});
-
 const getAuthorizedTeamMock = authorizationServer.getAuthorizedTeam as Mock;
 const getAuthorizedEventMock = authorizationServer.getAuthorizedEvent as Mock;
-const getRequiredAuthUserMock = authMiddleware.getRequiredAuthUser as Mock;
 
 function createMockContext() {
   const store = new Map();
@@ -49,14 +40,13 @@ function createMockRequest(url = 'https://example.com/test') {
 
 const mockNext = vi.fn(async () => new Response());
 
-describe('requireAuthorizedTeam', () => {
-  it('sets authorized team in context when user is authenticated and is team member', async () => {
-    const user = await userFactory();
-    const team = await teamFactory({ owners: [user] });
+describe('requireAdmin', () => {
+  it('allows access when user is admin', async () => {
+    const user = await userFactory({ traits: ['admin'] });
     const request = createMockRequest();
     const context = createMockContext();
 
-    const mockAuthUser: AuthenticatedUser = {
+    context.set(RequireAuthContext, {
       id: user.id,
       uid: user.uid,
       name: user.name,
@@ -65,9 +55,66 @@ describe('requireAuthorizedTeam', () => {
       teams: [],
       hasTeamAccess: false,
       notificationsUnreadCount: 0,
-    };
+    });
 
-    getRequiredAuthUserMock.mockReturnValue(mockAuthUser);
+    await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+  });
+
+  it('throws BadRequestError when requireAuthUser middleware was not run first', async () => {
+    const request = createMockRequest();
+    const context = createMockContext();
+
+    context.set(RequireAuthContext, null);
+
+    try {
+      await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      expect.fail('Should have thrown BadRequestError');
+    } catch (error) {
+      expect(error).toBeInstanceOf(BadRequestError);
+      expect((error as Response).status).toBe(400);
+      expect((error as Response).statusText).toBe('`requireAdmin` must be defined after `requireAuthUser`');
+    }
+  });
+
+  it('throws NotFoundError when user is not admin', async () => {
+    const user = await userFactory();
+    const request = createMockRequest();
+    const context = createMockContext();
+
+    context.set(RequireAuthContext, {
+      id: user.id,
+      uid: user.uid,
+      name: user.name,
+      email: user.email,
+      picture: user.picture,
+      teams: [],
+      hasTeamAccess: false,
+      notificationsUnreadCount: 0,
+    });
+
+    await expect(async () => {
+      await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    }).rejects.toThrow(NotFoundError);
+  });
+});
+
+describe('requireAuthorizedTeam', () => {
+  it('sets authorized team in context when user is authenticated and is team member', async () => {
+    const user = await userFactory();
+    const team = await teamFactory({ owners: [user] });
+    const request = createMockRequest();
+    const context = createMockContext();
+
+    context.set(RequireAuthContext, {
+      id: user.id,
+      uid: user.uid,
+      name: user.name,
+      email: user.email,
+      picture: user.picture,
+      teams: [],
+      hasTeamAccess: false,
+      notificationsUnreadCount: 0,
+    });
 
     const authorizedTeam = {
       userId: user.id,
@@ -107,7 +154,7 @@ describe('requireAuthorizedTeam', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    getRequiredAuthUserMock.mockReturnValue(null);
+    context.set(RequireAuthContext, null);
 
     try {
       await requireAuthorizedTeam({ request, context, params: { team: 'test-team' }, unstable_pattern: '' }, mockNext);
@@ -124,7 +171,7 @@ describe('requireAuthorizedTeam', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    const mockAuthUser: AuthenticatedUser = {
+    context.set(RequireAuthContext, {
       id: user.id,
       uid: user.uid,
       name: user.name,
@@ -133,9 +180,7 @@ describe('requireAuthorizedTeam', () => {
       teams: [],
       hasTeamAccess: false,
       notificationsUnreadCount: 0,
-    };
-
-    getRequiredAuthUserMock.mockReturnValue(mockAuthUser);
+    });
 
     try {
       await requireAuthorizedTeam({ request, context, params: {}, unstable_pattern: '' }, mockNext);
@@ -152,7 +197,7 @@ describe('requireAuthorizedTeam', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    const mockAuthUser: AuthenticatedUser = {
+    context.set(RequireAuthContext, {
       id: user.id,
       uid: user.uid,
       name: user.name,
@@ -161,9 +206,7 @@ describe('requireAuthorizedTeam', () => {
       teams: [],
       hasTeamAccess: false,
       notificationsUnreadCount: 0,
-    };
-
-    getRequiredAuthUserMock.mockReturnValue(mockAuthUser);
+    });
     getAuthorizedTeamMock.mockRejectedValue(new ForbiddenOperationError());
 
     await expect(async () => {
@@ -380,17 +423,6 @@ describe('middleware chain behavior', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    const mockAuthUser: AuthenticatedUser = {
-      id: user.id,
-      uid: user.uid,
-      name: user.name,
-      email: user.email,
-      picture: user.picture,
-      teams: [],
-      hasTeamAccess: false,
-      notificationsUnreadCount: 0,
-    };
-
     const authorizedTeam = {
       userId: user.id,
       teamId: team.id,
@@ -417,9 +449,18 @@ describe('middleware chain behavior', () => {
       },
     };
 
-    const authorizedEvent = { ...authorizedTeam, event };
+    context.set(RequireAuthContext, {
+      id: user.id,
+      uid: user.uid,
+      name: user.name,
+      email: user.email,
+      picture: user.picture,
+      teams: [],
+      hasTeamAccess: false,
+      notificationsUnreadCount: 0,
+    });
 
-    getRequiredAuthUserMock.mockReturnValue(mockAuthUser);
+    const authorizedEvent = { ...authorizedTeam, event };
     getAuthorizedTeamMock.mockResolvedValue(authorizedTeam);
     getAuthorizedEventMock.mockResolvedValue(authorizedEvent);
 

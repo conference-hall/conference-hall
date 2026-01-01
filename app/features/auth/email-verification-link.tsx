@@ -8,8 +8,8 @@ import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Link } from '~/design-system/links.tsx';
-import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
-import { getClientAuth } from '~/shared/auth/firebase.ts';
+import { getFirebaseError } from '~/shared/authentication/firebase.errors.ts';
+import { getClientAuth } from '~/shared/authentication/firebase.ts';
 import type { Route } from './+types/email-verification-link.ts';
 
 export const meta = (args: Route.MetaArgs) => {

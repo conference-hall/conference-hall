@@ -2,12 +2,12 @@ import { Outlet } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { TeamFetcher } from '~/features/team-management/services/team-fetcher.server.ts';
-import { requiredAuthMiddleware } from '~/shared/auth/auth.middleware.ts';
+import { requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import { AuthorizedTeamContext, requireAuthorizedTeam } from '~/shared/authorization/authorization.middleware.ts';
 import type { Route } from './+types/layout.ts';
 import { CurrentTeamProvider } from './team-context.tsx';
 
-export const middleware = [requiredAuthMiddleware, requireAuthorizedTeam];
+export const middleware = [requireAuth, requireAuthorizedTeam];
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: `New event | ${args.loaderData?.name} | Conference Hall` }]);

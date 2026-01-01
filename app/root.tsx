@@ -7,9 +7,9 @@ import { GeneralErrorBoundary } from './app-platform/components/errors/error-bou
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
 import { UserProvider } from './app-platform/components/user-context.tsx';
 import { ClientOnly } from './design-system/utils/client-only.tsx';
-import { authMiddleware, getAuthUser } from './shared/auth/auth.middleware.ts';
-import { getFirebaseClientConfig } from './shared/auth/firebase.server.ts';
-import { initializeFirebaseClient } from './shared/auth/firebase.ts';
+import { OptionalAuthContext, optionalAuth } from './shared/authentication/auth.middleware.ts';
+import { getFirebaseClientConfig } from './shared/authentication/firebase.server.ts';
+import { initializeFirebaseClient } from './shared/authentication/firebase.ts';
 import { flags } from './shared/feature-flags/flags.server.ts';
 import { FlagsProvider } from './shared/feature-flags/flags-context.tsx';
 import { getI18n, getLocale, i18nextMiddleware, setLocaleCookie } from './shared/i18n/i18n.middleware.ts';
@@ -48,14 +48,14 @@ export const links: Route.LinksFunction = () => {
   ];
 };
 
-export const middleware = [i18nextMiddleware, authMiddleware];
+export const middleware = [i18nextMiddleware, optionalAuth];
 
 export const loader = async ({ request, context }: Route.LoaderArgs) => {
   if (MAINTENANCE_ENABLED) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
 
-  const user = getAuthUser(context);
+  const user = context.get(OptionalAuthContext);
 
   const { toast, toastHeaders } = await getToast(request);
 

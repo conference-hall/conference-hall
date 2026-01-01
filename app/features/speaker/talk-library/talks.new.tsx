@@ -7,7 +7,7 @@ import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-import { getRequiredAuthUser } from '~/shared/auth/auth.middleware.ts';
+import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { TalkSaveSchema } from '~/shared/types/speaker-talk.types.ts';
@@ -20,7 +20,7 @@ export const meta = (args: Route.MetaArgs) => {
 };
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
-  const authUser = getRequiredAuthUser(context);
+  const authUser = context.get(RequireAuthContext);
   const i18n = getI18n(context);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TalkSaveSchema });

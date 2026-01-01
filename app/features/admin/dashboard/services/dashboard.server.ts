@@ -1,12 +1,13 @@
 import { db } from 'prisma/db.server.ts';
 import type { EventType } from 'prisma/generated/client.ts';
-import { UserAccount } from '~/shared/user/user-account.server.ts';
+import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
+import { NotAuthorizedError } from '~/shared/errors.server.ts';
 
 export class AdminDashboard {
   private constructor() {}
 
-  static async for(userId: string) {
-    await UserAccount.needsAdminRole(userId);
+  static for(authorizedAdmin: AuthorizedAdmin) {
+    if (!authorizedAdmin) throw new NotAuthorizedError();
     return new AdminDashboard();
   }
 

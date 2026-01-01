@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
-import { getFirebaseError } from '~/shared/auth/firebase.errors.ts';
-import { getClientAuth } from '~/shared/auth/firebase.ts';
+import { getFirebaseError } from '~/shared/authentication/firebase.errors.ts';
+import { getClientAuth } from '~/shared/authentication/firebase.ts';
 
 type AuthProvidersResultProps = {
   redirectTo: string;
