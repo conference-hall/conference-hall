@@ -1,5 +1,7 @@
 import type { Event } from 'prisma/generated/client.ts';
 
+export type AuthorizedAdmin = { id: string };
+
 export type TeamRole = 'OWNER' | 'MEMBER' | 'REVIEWER';
 
 export type TeamPermissions = {

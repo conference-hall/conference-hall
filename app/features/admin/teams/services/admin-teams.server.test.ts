@@ -11,7 +11,7 @@ describe('AdminTeams', () => {
   let team2: Team;
 
   beforeEach(async () => {
-    user1 = await userFactory({ traits: ['bruce-wayne'] });
+    user1 = await userFactory({ traits: ['bruce-wayne', 'admin'] });
     user2 = await userFactory({ traits: ['peter-parker'] });
     team1 = await teamFactory({ attributes: { name: 'Team 1' }, owners: [user1] });
     team2 = await teamFactory({ attributes: { name: 'Team 2' }, owners: [user1, user2] });
@@ -20,7 +20,7 @@ describe('AdminTeams', () => {
 
   describe('#listTeams', () => {
     it('lists all teams', async () => {
-      const adminTeams = new AdminTeams();
+      const adminTeams = AdminTeams.for(user1);
       const teams = await adminTeams.listTeams({}, 1);
 
       expect(teams.filters).toEqual({});
@@ -41,7 +41,7 @@ describe('AdminTeams', () => {
     });
 
     it('filters teams by name', async () => {
-      const adminTeams = new AdminTeams();
+      const adminTeams = AdminTeams.for(user1);
       const teams = await adminTeams.listTeams({ query: 'team 1' }, 1);
 
       expect(teams.filters).toEqual({ query: 'team 1' });
@@ -53,7 +53,7 @@ describe('AdminTeams', () => {
     });
 
     it('sort by members', async () => {
-      const adminTeams = new AdminTeams();
+      const adminTeams = AdminTeams.for(user1);
       const teams = await adminTeams.listTeams({ sort: 'members', order: 'asc' }, 1);
 
       expect(teams.results.length).toBe(2);
@@ -61,7 +61,7 @@ describe('AdminTeams', () => {
     });
 
     it('sort by events', async () => {
-      const adminTeams = new AdminTeams();
+      const adminTeams = AdminTeams.for(user1);
       const teams = await adminTeams.listTeams({ sort: 'events', order: 'asc' }, 1);
 
       expect(teams.results.length).toBe(2);
@@ -69,7 +69,7 @@ describe('AdminTeams', () => {
     });
 
     it('paginates results', async () => {
-      const adminTeams = new AdminTeams();
+      const adminTeams = AdminTeams.for(user1);
       const teams = await adminTeams.listTeams({}, 1, 1);
 
       expect(teams.pagination).toEqual({ current: 1, pages: 2 });

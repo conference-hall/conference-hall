@@ -1,3 +1,4 @@
+import { userFactory } from 'tests/factories/users.ts';
 import { NotFoundError } from '~/shared/errors.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { AdminFlags } from './admin-flags.server.ts';
@@ -5,14 +6,18 @@ import { AdminFlags } from './admin-flags.server.ts';
 describe('AdminFlags', () => {
   describe('AdminFlags.for', () => {
     it('returns an instance for admin user', async () => {
-      const adminFlags = new AdminFlags();
+      const admin = await userFactory({ traits: ['clark-kent', 'admin'] });
+
+      const adminFlags = AdminFlags.for(admin);
       expect(adminFlags).toBeInstanceOf(AdminFlags);
     });
   });
 
   describe('#list', () => {
     it('lists all flags with their configurations', async () => {
-      const adminFlags = new AdminFlags();
+      const admin = await userFactory({ traits: ['clark-kent', 'admin'] });
+
+      const adminFlags = AdminFlags.for(admin);
       const flagsList = await adminFlags.list();
 
       expect(flagsList).toEqual(
@@ -31,7 +36,9 @@ describe('AdminFlags', () => {
 
   describe('#update', () => {
     it('updates a flag value', async () => {
-      const adminFlags = new AdminFlags();
+      const admin = await userFactory({ traits: ['clark-kent', 'admin'] });
+
+      const adminFlags = AdminFlags.for(admin);
       const flagKey = 'seo';
       const newValue = 'true';
 
@@ -42,7 +49,9 @@ describe('AdminFlags', () => {
     });
 
     it('throws an error when updating a non-existent flag', async () => {
-      const adminFlags = new AdminFlags();
+      const admin = await userFactory({ traits: ['clark-kent', 'admin'] });
+
+      const adminFlags = AdminFlags.for(admin);
       const nonExistentFlagKey = 'nonExistentFlag';
       const newValue = 'true';
 

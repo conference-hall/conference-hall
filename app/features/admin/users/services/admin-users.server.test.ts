@@ -22,7 +22,7 @@ describe('AdminUsers', () => {
 
   describe('#listUsers', () => {
     it('lists all users', async () => {
-      const adminUsers = new AdminUsers();
+      const adminUsers = AdminUsers.for(admin);
       const users = await adminUsers.listUsers({}, 1);
 
       expect(users.filters).toEqual({});
@@ -42,7 +42,7 @@ describe('AdminUsers', () => {
     });
 
     it('filters users by name', async () => {
-      const adminUsers = new AdminUsers();
+      const adminUsers = AdminUsers.for(admin);
       const users = await adminUsers.listUsers({ query: 'bruce way' }, 1);
 
       expect(users.filters).toEqual({ query: 'bruce way' });
@@ -54,7 +54,7 @@ describe('AdminUsers', () => {
     });
 
     it('filters users by email', async () => {
-      const adminUsers = new AdminUsers();
+      const adminUsers = AdminUsers.for(admin);
       const users = await adminUsers.listUsers({ query: 'batman@example.com' }, 1);
 
       expect(users.filters).toEqual({ query: 'batman@example.com' });
@@ -66,7 +66,7 @@ describe('AdminUsers', () => {
     });
 
     it('paginates results', async () => {
-      const adminUsers = new AdminUsers();
+      const adminUsers = AdminUsers.for(admin);
       const users = await adminUsers.listUsers({}, 1, 1);
 
       expect(users.pagination).toEqual({ current: 1, pages: 3 });
@@ -89,7 +89,7 @@ describe('AdminUsers', () => {
         providerData: [{ providerId: 'password', email: user1.email }],
       });
 
-      const adminUsers = new AdminUsers();
+      const adminUsers = AdminUsers.for(admin);
       const user = await adminUsers.getUserInfo(user1.id);
 
       const teamMember = await db.teamMember.findFirst({ where: { memberId: user1.id, teamId: team.id } });
@@ -120,7 +120,7 @@ describe('AdminUsers', () => {
       const getUser = auth.getUser as Mock;
       getUser.mockRejectedValue(new Error('User not found'));
 
-      const adminUsers = new AdminUsers();
+      const adminUsers = AdminUsers.for(admin);
       const user = await adminUsers.getUserInfo(user1.id);
 
       const teamMember = await db.teamMember.findFirst({ where: { memberId: user1.id, teamId: team.id } });
@@ -148,7 +148,7 @@ describe('AdminUsers', () => {
     });
 
     it('throws an error when user is not found', async () => {
-      const adminUsers = new AdminUsers();
+      const adminUsers = AdminUsers.for(admin);
 
       await expect(adminUsers.getUserInfo('xxx')).rejects.toThrowError(UserNotFoundError);
     });
@@ -159,7 +159,7 @@ describe('AdminUsers', () => {
       const deleteUserMock = auth.deleteUser as Mock;
       deleteUserMock.mockResolvedValue(undefined);
 
-      const adminUsers = new AdminUsers();
+      const adminUsers = AdminUsers.for(admin);
       await adminUsers.deleteUser(user1.id);
 
       const deletedUser = await db.user.findUnique({ where: { id: user1.id } });
@@ -167,7 +167,7 @@ describe('AdminUsers', () => {
     });
 
     it('throws an error when target user is not found', async () => {
-      const adminUsers = new AdminUsers();
+      const adminUsers = AdminUsers.for(admin);
 
       await expect(adminUsers.deleteUser('xxx')).rejects.toThrowError(UserNotFoundError);
     });

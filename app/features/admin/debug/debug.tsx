@@ -6,6 +6,7 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, H2 } from '~/design-system/typography.tsx';
+import { AuthorizedAdminContext } from '~/shared/authorization/authorization.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/debug.ts';
@@ -13,7 +14,8 @@ import { AdminDebug, TestEmailSchema } from './services/admin-debug.server.ts';
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
   const i18n = getI18n(context);
-  const debug = new AdminDebug();
+  const admin = context.get(AuthorizedAdminContext);
+  const debug = AdminDebug.for(admin);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 

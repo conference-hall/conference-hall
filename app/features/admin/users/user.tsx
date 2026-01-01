@@ -6,25 +6,29 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, H2, H3, Subtitle, Text } from '~/design-system/typography.tsx';
+import { AuthorizedAdminContext } from '~/shared/authorization/authorization.middleware.ts';
 import { formatDatetime } from '~/shared/datetimes/datetimes.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/user.ts';
 import { AdminUsers } from './services/admin-users.server.ts';
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
-  const adminUsers = new AdminUsers();
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const admin = context.get(AuthorizedAdminContext);
+  const adminUsers = AdminUsers.for(admin);
   return adminUsers.getUserInfo(params.user);
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
+  const admin = context.get(AuthorizedAdminContext);
+  const adminUsers = AdminUsers.for(admin);
+
   const i18n = getI18n(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
   switch (intent) {
     case 'delete-user': {
-      const adminUsers = new AdminUsers();
       await adminUsers.deleteUser(params.user);
       return toast('success', i18n.t('admin.users.page.feedbacks.deleted'));
     }

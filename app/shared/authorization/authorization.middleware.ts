@@ -3,15 +3,19 @@ import { createContext, type MiddlewareFunction } from 'react-router';
 import { RequireAuthContext } from '../authentication/auth.middleware.ts';
 import { BadRequestError, NotFoundError } from '../errors.server.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from './authorization.server.ts';
-import type { AuthorizedEvent, AuthorizedTeam } from './types.ts';
+import type { AuthorizedAdmin, AuthorizedEvent, AuthorizedTeam } from './types.ts';
 
 // Admin authorizations
+export const AuthorizedAdminContext = createContext<AuthorizedAdmin>();
+
 export const requireAdmin: MiddlewareFunction<Response> = async ({ context }) => {
   const user = context.get(RequireAuthContext);
   if (!user) throw new BadRequestError('`requireAdmin` must be defined after `requireAuthUser`');
 
   const admin = await db.user.findUnique({ where: { id: user.id, admin: true } });
   if (!admin) throw new NotFoundError('Page not found');
+
+  context.set(AuthorizedAdminContext, { id: admin.id });
 };
 
 // Team authorizations

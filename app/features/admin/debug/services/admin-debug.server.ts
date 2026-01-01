@@ -1,13 +1,18 @@
 import { z } from 'zod';
 import { testJob } from '~/features/admin/debug/services/jobs/test.job.ts';
+import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
+import { NotAuthorizedError } from '~/shared/errors.server.ts';
 
 export const TestEmailSchema = z.object({ to: z.email() });
 
 type TestEmail = z.infer<typeof TestEmailSchema>;
 
 export class AdminDebug {
-  static async for() {
+  private constructor() {}
+
+  static for(authorizedAdmin: AuthorizedAdmin) {
+    if (!authorizedAdmin) throw new NotAuthorizedError();
     return new AdminDebug();
   }
 

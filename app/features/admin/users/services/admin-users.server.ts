@@ -2,7 +2,8 @@ import { db } from 'prisma/db.server.ts';
 import type { UserWhereInput } from 'prisma/generated/models.ts';
 import { z } from 'zod';
 import { auth } from '~/shared/authentication/firebase.server.ts';
-import { UserNotFoundError } from '~/shared/errors.server.ts';
+import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
+import { NotAuthorizedError, UserNotFoundError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
 
@@ -11,7 +12,10 @@ export const UsersSearchFiltersSchema = z.object({ query: z.string().trim().opti
 type UsersSearchFilters = z.infer<typeof UsersSearchFiltersSchema>;
 
 export class AdminUsers {
-  static async for() {
+  private constructor() {}
+
+  static for(authorizedAdmin: AuthorizedAdmin) {
+    if (!authorizedAdmin) throw new NotAuthorizedError();
     return new AdminUsers();
   }
 

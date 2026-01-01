@@ -5,11 +5,13 @@ import { KpiProgressBar } from '~/design-system/dashboard/kpi-progress-bar.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
+import { AuthorizedAdminContext } from '~/shared/authorization/authorization.middleware.ts';
 import type { Route } from './+types/dashboard.ts';
 import { AdminDashboard } from './services/dashboard.server.ts';
 
-export const loader = async () => {
-  const dashboard = new AdminDashboard();
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const admin = context.get(AuthorizedAdminContext);
+  const dashboard = AdminDashboard.for(admin);
   return {
     users: dashboard.usersMetrics(),
     conferences: dashboard.eventsMetrics('CONFERENCE'),

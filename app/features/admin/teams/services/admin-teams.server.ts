@@ -1,6 +1,8 @@
 import { db } from 'prisma/db.server.ts';
 import type { TeamOrderByWithRelationInput, TeamWhereInput } from 'prisma/generated/models.ts';
 import { z } from 'zod';
+import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
+import { NotAuthorizedError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 
 export const TeamsSearchFiltersSchema = z.object({
@@ -12,7 +14,10 @@ export const TeamsSearchFiltersSchema = z.object({
 type TeamsSearchFilters = z.infer<typeof TeamsSearchFiltersSchema>;
 
 export class AdminTeams {
-  static async for() {
+  private constructor() {}
+
+  static for(authorizedAdmin: AuthorizedAdmin) {
+    if (!authorizedAdmin) throw new NotAuthorizedError();
     return new AdminTeams();
   }
 

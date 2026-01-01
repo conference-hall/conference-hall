@@ -33,8 +33,7 @@ describe('AdminDashboard', () => {
 
   describe('#usersMetrics', () => {
     it('returns metrics for users', async () => {
-      const dashboard = new AdminDashboard();
-      const metrics = await dashboard.usersMetrics();
+      const metrics = AdminDashboard.for(admin).usersMetrics();
 
       expect(metrics).toEqual({ total: 3, organizers: 2, speakers: 1 });
     });
@@ -42,15 +41,13 @@ describe('AdminDashboard', () => {
 
   describe('#eventsMetrics', () => {
     it('returns metrics for conferences', async () => {
-      const dashboard = new AdminDashboard();
-      const metrics = await dashboard.eventsMetrics('CONFERENCE');
+      const metrics = AdminDashboard.for(admin).eventsMetrics('CONFERENCE');
 
       expect(metrics).toEqual({ total: 2, public: 1, private: 1, cfpOpen: 1 });
     });
 
     it('returns metrics for meetups', async () => {
-      const dashboard = new AdminDashboard();
-      const metrics = await dashboard.eventsMetrics('MEETUP');
+      const metrics = AdminDashboard.for(admin).eventsMetrics('MEETUP');
 
       expect(metrics).toEqual({ total: 2, public: 1, private: 1, cfpOpen: 1 });
     });
@@ -58,8 +55,7 @@ describe('AdminDashboard', () => {
 
   describe('#teamsMetrics', () => {
     it('returns metrics for teams', async () => {
-      const dashboard = new AdminDashboard();
-      const metrics = await dashboard.teamsMetrics();
+      const metrics = AdminDashboard.for(admin).teamsMetrics();
 
       expect(metrics).toEqual({ total: 1, organizers: 2, owners: 1, members: 1, reviewers: 0 });
     });
@@ -67,8 +63,7 @@ describe('AdminDashboard', () => {
 
   describe('#proposalsMetrics', () => {
     it('returns metrics for proposals', async () => {
-      const dashboard = new AdminDashboard();
-      const metrics = await dashboard.proposalsMetrics();
+      const metrics = AdminDashboard.for(admin).proposalsMetrics();
 
       expect(metrics).toEqual({ total: 5, submitted: 4, draft: 1 });
     });
