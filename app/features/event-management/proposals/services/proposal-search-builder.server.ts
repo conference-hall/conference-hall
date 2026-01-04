@@ -64,7 +64,6 @@ export class ProposalSearchBuilder {
     });
   }
 
-  // todo(numbers): add tests
   async proposalIds() {
     const proposals = await db.proposal.findMany({
       select: { id: true },
@@ -74,7 +73,6 @@ export class ProposalSearchBuilder {
     return proposals.map(({ id }) => id);
   }
 
-  // todo(numbers): add tests
   async proposalRouteIds() {
     const proposals = await db.proposal.findMany({
       select: { id: true, routeId: true },
