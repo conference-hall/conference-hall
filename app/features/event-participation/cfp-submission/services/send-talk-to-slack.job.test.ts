@@ -49,7 +49,7 @@ describe('Job: sendTalkToSlack', () => {
       author_name: `by ${speaker1.name} & ${speaker2.name}`,
       title: proposal.title,
       text: proposal.abstract,
-      title_link: `${APP_URL}/team/${team.slug}/${event.slug}/proposals/${proposal.id}`,
+      title_link: `${APP_URL}/team/${team.slug}/${event.slug}/proposals/${proposal.proposalNumber}`,
       thumb_url: speaker1.picture,
       color: '#ffab00',
       fields: [
