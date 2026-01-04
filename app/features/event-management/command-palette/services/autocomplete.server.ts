@@ -57,7 +57,7 @@ export class Autocomplete {
     return proposals.map((proposal) => {
       return {
         kind: 'proposals',
-        id: proposal.id,
+        id: proposal.proposalNumber ? String(proposal.proposalNumber) : proposal.id,
         label: proposal.title,
         description:
           sortBy(proposal.speakers, 'name')
