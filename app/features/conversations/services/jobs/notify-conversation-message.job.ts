@@ -1,4 +1,5 @@
 import { db } from 'prisma/db.server.ts';
+import type { EventSpeaker, Proposal } from 'prisma/generated/client.ts';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ConversationMessageEmail from '~/shared/emails/templates/speakers/conversation-message.tsx';
@@ -47,12 +48,12 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
     const senderId = lastMessage.senderId;
 
     // Get proposal if this is a proposal conversation
+    let proposal: (Proposal & { speakers: Array<EventSpeaker> }) | null;
     let proposalSpeakers: Array<{ email: string; locale: string; userId: string | null }> = [];
-    let proposalId: string | undefined;
 
     if (conversation.contextType === 'PROPOSAL_CONVERSATION' && conversation.contextIds.length > 0) {
-      proposalId = conversation.contextIds[0];
-      const proposal = await db.proposal.findUnique({ where: { id: proposalId }, include: { speakers: true } });
+      const proposalId = conversation.contextIds[0];
+      proposal = await db.proposal.findUnique({ where: { id: proposalId }, include: { speakers: true } });
 
       if (proposal) {
         proposalSpeakers = proposal.speakers.map((speaker) => ({
@@ -103,7 +104,7 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
               logoUrl: conversation.event.logoUrl,
               teamSlug: conversation.event.team.slug,
             },
-            proposal: proposalId ? { id: proposalId } : undefined,
+            proposal: proposal ? { id: proposal.id, proposalNumber: proposal.proposalNumber } : undefined,
             sender: {
               name: lastMessage.sender?.name || 'System',
               role: conversation.participants.find((p) => p.userId === senderId)?.role || null,

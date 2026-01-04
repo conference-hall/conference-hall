@@ -24,6 +24,7 @@ describe('Conversation Message Email', () => {
     },
     proposal: {
       id: 'proposal-1',
+      proposalNumber: 456,
     },
     sender: {
       name: 'John Doe',
