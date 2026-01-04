@@ -22,6 +22,7 @@ describe('Proposal Submitted', () => {
     };
     const proposal: TemplateData['proposal'] = {
       id: '123',
+      routeId: '456',
       title: 'Random Proposal w/ special characters ✨',
       speakers: [{ name: 'Gwenaëlle B.' }],
     };

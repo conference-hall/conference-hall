@@ -1,3 +1,4 @@
+import { db } from 'prisma/db.server.ts';
 import type {
   Event,
   EventCategory,
@@ -155,11 +156,7 @@ describe('EventProposalsSearch', () => {
     });
 
     it('filters proposals by proposal number', async () => {
-      const { db } = await import('prisma/db.server.ts');
-      await db.proposal.update({
-        where: { id: proposal1.id },
-        data: { proposalNumber: 123 },
-      });
+      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 123 } });
 
       const filters = { query: '123' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
@@ -169,11 +166,7 @@ describe('EventProposalsSearch', () => {
     });
 
     it('filters proposals by proposal number with hash prefix', async () => {
-      const { db } = await import('prisma/db.server.ts');
-      await db.proposal.update({
-        where: { id: proposal2.id },
-        data: { proposalNumber: 456 },
-      });
+      await db.proposal.update({ where: { id: proposal2.id }, data: { proposalNumber: 456 } });
 
       const filters = { query: '#456' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
@@ -183,15 +176,8 @@ describe('EventProposalsSearch', () => {
     });
 
     it('searches proposal number OR title OR speaker with numeric query', async () => {
-      const { db } = await import('prisma/db.server.ts');
-      await db.proposal.update({
-        where: { id: proposal2.id },
-        data: { title: 'Talk about the year 1984' },
-      });
-      await db.proposal.update({
-        where: { id: proposal3.id },
-        data: { proposalNumber: 1984 },
-      });
+      await db.proposal.update({ where: { id: proposal2.id }, data: { title: 'Talk about the year 1984' } });
+      await db.proposal.update({ where: { id: proposal3.id }, data: { proposalNumber: 1984 } });
 
       const filters = { query: '1984' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
@@ -202,7 +188,6 @@ describe('EventProposalsSearch', () => {
     });
 
     it('does not search by proposal number when query contains non-numeric characters', async () => {
-      const { db } = await import('prisma/db.server.ts');
       await db.proposal.update({
         where: { id: proposal1.id },
         data: { proposalNumber: 42, title: 'React 42 best practices' },
@@ -217,11 +202,7 @@ describe('EventProposalsSearch', () => {
     });
 
     it('does not filter by speaker when searching proposal number if withSpeakers is false', async () => {
-      const { db } = await import('prisma/db.server.ts');
-      await db.proposal.update({
-        where: { id: proposal1.id },
-        data: { proposalNumber: 999 },
-      });
+      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 999 } });
 
       const filters = { query: '999' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters, {
@@ -234,11 +215,7 @@ describe('EventProposalsSearch', () => {
     });
 
     it('handles query with whitespace around proposal number', async () => {
-      const { db } = await import('prisma/db.server.ts');
-      await db.proposal.update({
-        where: { id: proposal1.id },
-        data: { proposalNumber: 789 },
-      });
+      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 789 } });
 
       const filters = { query: '  789  ' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
@@ -333,11 +310,7 @@ describe('EventProposalsSearch', () => {
     });
 
     it('hides archived proposals by default', async () => {
-      const { db } = await import('prisma/db.server.ts');
-      await db.proposal.update({
-        where: { id: proposal1.id },
-        data: { archivedAt: new Date() },
-      });
+      await db.proposal.update({ where: { id: proposal1.id }, data: { archivedAt: new Date() } });
 
       const search = new ProposalSearchBuilder(event.id, owner.id, {});
       const proposals = await search.proposals();
@@ -346,15 +319,8 @@ describe('EventProposalsSearch', () => {
     });
 
     it('shows only archived proposals with status=archived', async () => {
-      const { db } = await import('prisma/db.server.ts');
-      await db.proposal.update({
-        where: { id: proposal1.id },
-        data: { archivedAt: new Date() },
-      });
-      await db.proposal.update({
-        where: { id: proposal2.id },
-        data: { archivedAt: new Date() },
-      });
+      await db.proposal.update({ where: { id: proposal1.id }, data: { archivedAt: new Date() } });
+      await db.proposal.update({ where: { id: proposal2.id }, data: { archivedAt: new Date() } });
 
       const filters: ProposalsFilters = { status: 'archived' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
@@ -471,5 +437,119 @@ describe('EventProposalsSearch', () => {
     const proposals = await search.proposals();
 
     expect(proposals.length).toBe(5);
+  });
+
+  describe('#search.proposalIds', () => {
+    it('returns array of proposal IDs only', async () => {
+      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+
+      const ids = await search.proposalIds();
+
+      expect(ids.length).toBe(5);
+      expect(ids).toEqual([proposal5.id, proposal4.id, proposal3.id, proposal2.id, proposal1.id]);
+    });
+
+    it('respects filters when returning proposal IDs', async () => {
+      const filters = { query: 'world' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+
+      const ids = await search.proposalIds();
+
+      expect(ids.length).toBe(1);
+      expect(ids[0]).toBe(proposal1.id);
+    });
+
+    it('respects sorting when returning proposal IDs', async () => {
+      const filters: ProposalsFilters = { sort: 'oldest' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+
+      const ids = await search.proposalIds();
+
+      expect(ids.length).toBe(5);
+      expect(ids).toEqual([proposal1.id, proposal2.id, proposal3.id, proposal4.id, proposal5.id]);
+    });
+
+    it('returns empty array when no proposals match filters', async () => {
+      const filters = { query: 'nonexistent' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+
+      const ids = await search.proposalIds();
+
+      expect(ids).toEqual([]);
+    });
+  });
+
+  describe('#search.proposalRouteIds', () => {
+    it('returns array of objects with id and routeId', async () => {
+      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 1 } });
+      await db.proposal.update({ where: { id: proposal2.id }, data: { proposalNumber: 2 } });
+
+      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+
+      const routeIds = await search.proposalRouteIds();
+
+      expect(routeIds.length).toBe(5);
+      routeIds.forEach((item) => {
+        expect(item).toHaveProperty('id');
+        expect(item).toHaveProperty('routeId');
+      });
+    });
+
+    it('returns routeId as proposal number when available', async () => {
+      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 42 } });
+
+      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+      const routeIds = await search.proposalRouteIds();
+
+      const proposal1RouteId = routeIds.find((item) => item.id === proposal1.id);
+      expect(proposal1RouteId?.routeId).toBe('42');
+    });
+
+    it('returns routeId as proposal id when proposal number is null', async () => {
+      await db.proposal.update({ where: { id: proposal3.id }, data: { proposalNumber: null } });
+
+      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+      const routeIds = await search.proposalRouteIds();
+
+      const proposal3RouteId = routeIds.find((item) => item.id === proposal3.id);
+      expect(proposal3RouteId?.routeId).toBe(proposal3.id);
+    });
+
+    it('respects filters when returning route IDs', async () => {
+      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 1 } });
+      await db.proposal.update({ where: { id: proposal2.id }, data: { proposalNumber: 2 } });
+
+      const filters = { query: 'world' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+
+      const routeIds = await search.proposalRouteIds();
+
+      expect(routeIds.length).toBe(1);
+      expect(routeIds[0].id).toBe(proposal1.id);
+      expect(routeIds[0].routeId).toBe('1');
+    });
+
+    it('respects sorting when returning route IDs', async () => {
+      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 1 } });
+      await db.proposal.update({ where: { id: proposal2.id }, data: { proposalNumber: 2 } });
+
+      const filters: ProposalsFilters = { sort: 'oldest' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+
+      const routeIds = await search.proposalRouteIds();
+
+      expect(routeIds.length).toBe(5);
+      expect(routeIds[0].id).toBe(proposal1.id);
+      expect(routeIds[1].id).toBe(proposal2.id);
+    });
+
+    it('returns empty array when no proposals match filters', async () => {
+      const filters = { query: 'nonexistent' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+
+      const routeIds = await search.proposalRouteIds();
+
+      expect(routeIds).toEqual([]);
+    });
   });
 });

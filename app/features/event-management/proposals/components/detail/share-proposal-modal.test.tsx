@@ -8,6 +8,9 @@ describe('ShareProposalModal component', () => {
   const defaultProps = {
     open: true,
     onClose: () => {},
+    team: 'my-team',
+    event: 'my-event',
+    proposal: { id: 'proposal-123', routeId: '456' },
   };
 
   const renderComponent = (props = defaultProps) => {
@@ -38,9 +41,7 @@ describe('ShareProposalModal component', () => {
     await expect.element(dialog.getByText('Organizer link')).toBeInTheDocument();
 
     const organizerInput = page.getByRole('textbox', { name: 'Organizer link' });
-    await expect
-      .element(organizerInput)
-      .toHaveValue(expect.stringContaining('/team/my-team/my-event/proposals/proposal-123'));
+    await expect.element(organizerInput).toHaveValue(expect.stringContaining('/team/my-team/my-event/proposals/456'));
   });
 
   it('displays speaker link', async () => {

@@ -65,7 +65,7 @@ describe('AdminDashboard', () => {
     it('returns metrics for proposals', async () => {
       const metrics = await AdminDashboard.for(admin).proposalsMetrics();
 
-      expect(metrics).toEqual({ total: 5, submitted: 4, draft: 1 });
+      expect(metrics).toEqual({ total: 5, submitted: 4, draft: 1, withoutProposalNumber: 0 });
     });
   });
 });

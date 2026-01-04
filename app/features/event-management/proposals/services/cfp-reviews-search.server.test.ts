@@ -38,7 +38,7 @@ describe('CfpReviewsSearch', () => {
       expect(proposals.results).toEqual([
         {
           id: proposal.id,
-          proposalNumber: proposal.proposalNumber,
+          routeId: proposal.routeId,
           title: proposal.title,
           deliberationStatus: proposal.deliberationStatus,
           confirmationStatus: proposal.confirmationStatus,

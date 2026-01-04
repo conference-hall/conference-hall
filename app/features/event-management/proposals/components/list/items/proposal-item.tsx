@@ -1,6 +1,6 @@
 import type { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useSearchParams } from 'react-router';
+import { href, Link, useSearchParams } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Badge, BadgeDot } from '~/design-system/badges.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
@@ -13,30 +13,47 @@ import type { ProposalData } from '../../shared/types.ts';
 import { ReviewComments } from './review-comments.tsx';
 
 type ProposalItemProps = {
+  team: string;
+  event: string;
   proposal: ProposalData;
+  queryParams?: string;
   isSelected?: boolean;
   isAllPagesSelected?: boolean;
   toggle?: (event: ChangeEvent<HTMLInputElement>) => void;
-  linkTo?: string;
 };
 
 export function ProposalItem({
+  team,
+  event,
   proposal,
+  queryParams,
   isSelected = false,
   isAllPagesSelected = false,
   toggle,
-  linkTo,
 }: ProposalItemProps) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
-  const [params] = useSearchParams();
+  const [currentQueryParams] = useSearchParams();
   const { canChangeProposalStatus } = useUserTeamPermissions();
 
-  const { id, proposalNumber, title, reviews, archivedAt, submittedAt, deliberationStatus, tags, speakers, comments } =
-    proposal;
-  const { you, summary } = reviews;
+  const {
+    id,
+    routeId,
+    title,
+    reviews: { you, summary },
+    archivedAt,
+    submittedAt,
+    deliberationStatus,
+    tags,
+    speakers,
+    comments,
+  } = proposal;
 
-  const defaultLinkTo = linkTo || { pathname: id, search: params.toString() };
+  const pathname = href('/team/:team/:event/proposals/:proposal', {
+    team,
+    event,
+    proposal: routeId,
+  });
 
   return (
     <>
@@ -52,7 +69,7 @@ export function ProposalItem({
       ) : undefined}
 
       <Link
-        to={defaultLinkTo}
+        to={{ pathname, search: queryParams || currentQueryParams.toString() }}
         aria-label={t('event-management.proposals.list.open', { title })}
         className="flex min-w-0 grow items-center justify-between gap-4 py-3 hover:text-indigo-700"
       >
@@ -75,7 +92,7 @@ export function ProposalItem({
           </div>
 
           <Text size="xs" variant="secondary" className="space-x-1">
-            {proposalNumber ? <span>#{proposalNumber}</span> : null}
+            <span>#{routeId}</span>
             {speakers.length ? <span>{t('common.proposed-by', { names: speakers.map((a) => a.name) })}</span> : null}
             <ClientOnly>
               {() => <span>{` - ${formatDate(submittedAt, { format: 'medium', locale })}`}</span>}

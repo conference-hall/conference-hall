@@ -64,13 +64,22 @@ export class ProposalSearchBuilder {
     });
   }
 
-  async proposalsIds() {
+  async proposalIds() {
     const proposals = await db.proposal.findMany({
       select: { id: true },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
     });
     return proposals.map(({ id }) => id);
+  }
+
+  async proposalRouteIds() {
+    const proposals = await db.proposal.findMany({
+      select: { id: true, routeId: true },
+      where: this.whereClause(),
+      orderBy: this.orderByClause(),
+    });
+    return proposals.map(({ id, routeId }) => ({ id, routeId }));
   }
 
   /// Privates methods

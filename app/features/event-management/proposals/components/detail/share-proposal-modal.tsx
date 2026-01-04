@@ -1,22 +1,34 @@
 import { useTranslation } from 'react-i18next';
-import { href, useParams } from 'react-router';
+import { href } from 'react-router';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { CopyInput } from '~/design-system/forms/copy-input.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useHydrated } from '~/design-system/utils/use-hydrated.ts';
 
-type ShareProposalModalProps = { open: boolean; onClose: VoidFunction };
+type ShareProposalModalProps = {
+  open: boolean;
+  onClose: VoidFunction;
+  team: string;
+  event: string;
+  proposal: {
+    id: string;
+    routeId: string;
+  };
+};
 
-export function ShareProposalModal({ open, onClose }: ShareProposalModalProps) {
+export function ShareProposalModal({ open, onClose, team, event, proposal }: ShareProposalModalProps) {
   const { t } = useTranslation();
-  const params = useParams() as { team: string; event: string; proposal: string };
 
   const hydrated = useHydrated();
   if (!hydrated) return null;
 
   const { origin } = window.location;
-  const organizerLink = new URL(href('/team/:team/:event/proposals/:proposal', params), origin).toString();
-  const speakerLink = new URL(href('/:event/proposals/:proposal', params), origin).toString();
+  const organizerLink = new URL(
+    href('/team/:team/:event/proposals/:proposal', { team, event, proposal: proposal.routeId }),
+    origin,
+  ).toString();
+
+  const speakerLink = new URL(href('/:event/proposals/:proposal', { event, proposal: proposal.id }), origin).toString();
 
   return (
     <Modal title={t('event-management.proposal-page.share-modal.title')} open={open} size="l" onClose={onClose}>

@@ -9,7 +9,7 @@ import type { Tag } from '~/shared/types/tags.types.ts';
 
 export type ProposalData = {
   id: string;
-  proposalNumber: number | null;
+  routeId: string;
   title: string;
   deliberationStatus: DeliberationStatus;
   publicationStatus: PublicationStatus;

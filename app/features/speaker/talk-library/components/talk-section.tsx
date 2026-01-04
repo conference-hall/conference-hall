@@ -20,7 +20,7 @@ type Props = {
     references: string | null;
     level: TalkLevel | null;
     languages: Languages;
-    proposalNumber?: number | null;
+    routeId?: string;
     speakers: Array<SpeakerProps>;
     invitationLink?: string;
     archived?: boolean;
@@ -64,9 +64,9 @@ export function TalkSection({
       >
         <H1 size="base" className="space-x-2">
           <span>{talk.title}</span>
-          {talk.proposalNumber ? (
+          {talk.routeId ? (
             <Text as="span" variant="secondary" size="base">
-              #{talk.proposalNumber}
+              #{talk.routeId}
             </Text>
           ) : null}
         </H1>

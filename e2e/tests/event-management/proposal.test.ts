@@ -1,6 +1,6 @@
 import { MessageBlockComponent } from 'e2e/common/message-block.component.ts';
 import { expect, loginWith, test } from 'e2e/fixtures.ts';
-import type { Event, Proposal, Team, User } from 'prisma/generated/client.ts';
+import type { Event, Team, User } from 'prisma/generated/client.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
@@ -8,7 +8,7 @@ import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
-import { proposalFactory } from 'tests/factories/proposals.ts';
+import { type ProposalFactory, proposalFactory } from 'tests/factories/proposals.ts';
 import { reviewFactory } from 'tests/factories/reviews.ts';
 import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
@@ -22,8 +22,8 @@ let team: Team;
 let event: Event;
 let event2: Event;
 let speaker1: User;
-let proposal: Proposal;
-let proposal2: Proposal;
+let proposal: ProposalFactory;
+let proposal2: ProposalFactory;
 
 test.beforeEach(async () => {
   user = await userFactory({ traits: ['clark-kent'] });
@@ -110,7 +110,7 @@ test.describe('As a owner', () => {
 
   test('displays proposal data and review the proposal', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
     // Check proposal values
     await expect(page.getByText(proposal.title)).toBeVisible();
@@ -176,6 +176,21 @@ test.describe('As a owner', () => {
 
   test('navigates between proposals', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    // Previous proposal
+    await proposalPage.previousProposal.click();
+    await expect(page.getByText('1/2')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Talk 2' })).toBeVisible();
+
+    // Next proposal
+    await proposalPage.nextProposal.click();
+    await expect(page.getByText('2/2')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Talk 1' })).toBeVisible();
+  });
+
+  test('navigates proposal with proposal id in URL', async ({ page }) => {
+    const proposalPage = new ProposalPage(page);
     await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
 
     // Previous proposal
@@ -191,7 +206,7 @@ test.describe('As a owner', () => {
 
   test('deliberates the proposal', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
     // Default deliberation status
     await expect(proposalPage.deliberationStatus).toContainText('Not deliberated');
@@ -223,7 +238,7 @@ test.describe('As a owner', () => {
 
   test('manage tags', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
     // Check default tags
     await expect(page.getByText('Tag 1')).toBeVisible();
@@ -243,7 +258,7 @@ test.describe('As a owner', () => {
 
   test('manage speakers', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
     // Check default speakers
     await expect(page.getByText('Marie Jane')).toBeVisible();
@@ -283,7 +298,7 @@ test.describe('As a owner', () => {
 
   test('manage formats', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
     // Check default format
     await expect(page.getByText('Format 1')).toBeVisible();
@@ -303,7 +318,7 @@ test.describe('As a owner', () => {
 
   test('manage categories', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
     // Check default category
     await expect(page.getByText('Category 1')).toBeVisible();
@@ -323,7 +338,7 @@ test.describe('As a owner', () => {
 
   test('edit proposal', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
     const talkEdit = await proposalPage.clickOnEdit();
     await talkEdit.waitFor();
@@ -352,7 +367,7 @@ test.describe('As a owner', () => {
 
   test('hides reviews, speakers following event settings', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
-    await proposalPage.goto(team.slug, event2.slug, proposal2.id, proposal2.title);
+    await proposalPage.goto(team.slug, event2.slug, proposal2.routeId, proposal2.title);
 
     await expect(page.getByRole('heading', { name: 'Global review' })).not.toBeVisible();
     await expect(page.getByText('Marie Jane')).not.toBeVisible();
@@ -362,7 +377,7 @@ test.describe('As a owner', () => {
   test('opens speaker details and edit pages from drawer', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
 
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
     const speakerDrawer = await proposalPage.clickOnSpeaker('Marie Jane');
 
     const detailsButton = speakerDrawer.getByRole('link', { name: 'Details' });
@@ -370,7 +385,7 @@ test.describe('As a owner', () => {
     await detailsButton.click();
     await expect(page.getByRole('heading', { name: 'Marie Jane' })).toBeVisible();
 
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
     const speakerDrawer2 = await proposalPage.clickOnSpeaker('Marie Jane');
 
     const editButton = speakerDrawer2.getByRole('link', { name: 'Edit' });
@@ -397,7 +412,7 @@ test.describe('As a owner', () => {
       attributes: { content: 'Hello from organizer' },
     });
 
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
     const drawer = await proposalPage.openConversationDrawer();
     await expect(drawer.getByText('Hello from speaker')).toBeVisible();
@@ -419,7 +434,7 @@ test.describe('As a owner', () => {
 
   test('archives and restores a proposal', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
     // Verify proposal is not archived initially
     await expect(page.getByText(/Archived at/)).not.toBeVisible();
@@ -448,7 +463,7 @@ test.describe('As a reviewer', () => {
 
   test('does not show proposal status panel', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
-    await proposalPage.goto(team.slug, event.slug, proposal.id, proposal.title);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
     await expect(page.getByRole('heading', { name: 'Proposal status' })).not.toBeVisible();
   });

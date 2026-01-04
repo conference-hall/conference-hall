@@ -9,13 +9,15 @@ import { SelectAllBanner } from './header/select-all-banner.tsx';
 import { ProposalItem } from './items/proposal-item.tsx';
 
 type Props = {
+  team: string;
+  event: string;
   proposals: Array<ProposalData>;
   pagination: { current: number; total: number };
   statistics: { total: number; reviewed: number };
   filtersHash: string;
 };
 
-export function ProposalsList({ proposals, pagination, statistics, filtersHash }: Props) {
+export function ProposalsList({ team, event, proposals, pagination, statistics, filtersHash }: Props) {
   const { t } = useTranslation();
   const ids = proposals.map((proposal) => proposal.id);
 
@@ -42,6 +44,8 @@ export function ProposalsList({ proposals, pagination, statistics, filtersHash }
         {proposals.map((proposal) => (
           <List.Row key={proposal.id} className="px-4 hover:bg-gray-50">
             <ProposalItem
+              team={team}
+              event={event}
               proposal={proposal}
               isSelected={selector.isSelected(proposal.id)}
               isAllPagesSelected={selector.isAllPagesSelected}

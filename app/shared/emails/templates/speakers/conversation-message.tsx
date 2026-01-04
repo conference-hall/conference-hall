@@ -21,6 +21,7 @@ export type TemplateData = {
   };
   proposal?: {
     id: string;
+    routeId: string;
   };
   sender: {
     name: string;
@@ -50,7 +51,7 @@ export default function ConversationMessageEmail({
   const conversationUrl = proposal
     ? recipient.role === 'SPEAKER'
       ? buildSpeakerProposalUrl(event.slug, proposal.id)
-      : buildReviewProposalUrl(event.teamSlug, event.slug, proposal.id)
+      : buildReviewProposalUrl(event.teamSlug, event.slug, proposal.routeId)
     : '#';
 
   return (
@@ -122,6 +123,7 @@ ConversationMessageEmail.PreviewProps = {
   },
   proposal: {
     id: 'proposal-123',
+    routeId: '456',
   },
   sender: {
     name: 'John Doe',

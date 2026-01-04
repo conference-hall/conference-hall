@@ -24,6 +24,7 @@ describe('Conversation Message Email', () => {
     },
     proposal: {
       id: 'proposal-1',
+      routeId: '456',
     },
     sender: {
       name: 'John Doe',

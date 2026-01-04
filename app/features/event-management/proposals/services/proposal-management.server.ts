@@ -70,7 +70,7 @@ export class ProposalManagement {
         },
       });
 
-      return { id: proposal.id };
+      return proposal;
     });
   }
 

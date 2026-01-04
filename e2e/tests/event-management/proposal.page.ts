@@ -30,8 +30,8 @@ export class ProposalPage extends PageObject {
   readonly conversationDrawerButton = this.page.getByRole('button').filter({ hasText: /message|Conversation/ });
   readonly actionsMenuButton = this.page.getByRole('button', { name: 'Proposal action menu' });
 
-  async goto(team: string, event: string, id: string, title: string) {
-    await this.page.goto(`/team/${team}/${event}/proposals/${id}`);
+  async goto(team: string, event: string, routeId: string, title: string) {
+    await this.page.goto(`/team/${team}/${event}/proposals/${routeId}`);
     await this.waitFor(title);
   }
 
