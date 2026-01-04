@@ -62,7 +62,7 @@ test.describe('Speaker Page', () => {
 
     await speakerPage.clickProposal('React Hooks Talk');
     await expect(page).toHaveURL(
-      `/team/${team.slug}/${event.slug}/proposals/${proposal.id}?speakers=${eventSpeaker.id}`,
+      `/team/${team.slug}/${event.slug}/proposals/${proposal.proposalNumber}?speakers=${eventSpeaker.id}`,
     );
   });
 
