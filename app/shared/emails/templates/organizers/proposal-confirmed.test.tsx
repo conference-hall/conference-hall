@@ -22,6 +22,7 @@ describe('Proposal Confirmed', () => {
     };
     const proposal: TemplateData['proposal'] = {
       id: '123',
+      proposalNumber: 456,
       title: 'Random Proposal w/ special characters ✨',
       speakers: [{ name: 'Gwenaëlle B.' }],
     };

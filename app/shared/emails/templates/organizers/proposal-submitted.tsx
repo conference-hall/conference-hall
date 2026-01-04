@@ -15,7 +15,7 @@ export type TemplateData = {
     emailNotifications: any;
     team: { slug: string };
   };
-  proposal: { id: string; title: string; speakers: Array<{ name: string }> };
+  proposal: { id: string; proposalNumber: number | null; title: string; speakers: Array<{ name: string }> };
 };
 
 type EmailProps = TemplateData & LocaleEmailData;
@@ -36,7 +36,7 @@ export default function ProposalSubmittedEmail({ event, proposal, locale }: Emai
       </Section>
 
       <Section className="my-8 text-center">
-        <Button href={buildReviewProposalUrl(event.team.slug, event.slug, proposal.id)} className={styles.button}>
+        <Button href={buildReviewProposalUrl(event.team.slug, event.slug, proposal)} className={styles.button}>
           {t('organizers.proposal-submitted.body.cta')}
         </Button>
       </Section>
