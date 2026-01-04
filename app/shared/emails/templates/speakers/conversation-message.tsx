@@ -123,6 +123,7 @@ ConversationMessageEmail.PreviewProps = {
   },
   proposal: {
     id: 'proposal-123',
+    routeId: '456',
   },
   sender: {
     name: 'John Doe',

@@ -48,7 +48,7 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
     const senderId = lastMessage.senderId;
 
     // Get proposal if this is a proposal conversation
-    let proposal: (Proposal & { routeId: string; speakers: Array<EventSpeaker> }) | null;
+    let proposal: (Proposal & { routeId: string; speakers: Array<EventSpeaker> }) | null = null;
     let proposalSpeakers: Array<{ email: string; locale: string; userId: string | null }> = [];
 
     if (conversation.contextType === 'PROPOSAL_CONVERSATION' && conversation.contextIds.length > 0) {
