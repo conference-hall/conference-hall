@@ -6,7 +6,11 @@ import { ProposalActionsMenu } from './proposal-actions-menu.tsx';
 
 describe('ProposalActionsMenu component', () => {
   const defaultProps = {
+    team: 'my-team',
+    event: 'my-event',
     proposal: {
+      id: '123',
+      proposalNumber: 456,
       title: 'Test Proposal',
       abstract: 'Test abstract',
       references: null,

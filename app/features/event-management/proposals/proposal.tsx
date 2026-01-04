@@ -38,6 +38,7 @@ import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
 import { ActivityFeed as ActivityFeedService } from './services/activity-feed.server.ts';
 import { CommentReactionSchema, CommentSaveSchema } from './services/comments.schema.server.ts';
 import { Comments } from './services/comments.server.ts';
+import { resolveProposalId } from './services/proposal-id-resolver.server.ts';
 import {
   ProposalSaveCategoriesSchema,
   ProposalSaveFormatsSchema,
@@ -61,9 +62,11 @@ export const loader = async ({ request, params, context }: Route.LoaderArgs) => 
   const authorizedEvent = context.get(AuthorizedEventContext);
   const filters = parseUrlFilters(request.url);
 
-  const proposalReview = ProposalReview.for(authorizedEvent, params.proposal);
-  const activityFeed = ActivityFeedService.for(authorizedEvent, params.proposal);
-  const speakerProposalConversation = ProposalConversationForOrganizers.for(authorizedEvent, params.proposal);
+  const proposalId = await resolveProposalId(authorizedEvent, params.proposal);
+
+  const proposalReview = ProposalReview.for(authorizedEvent, proposalId);
+  const activityFeed = ActivityFeedService.for(authorizedEvent, proposalId);
+  const speakerProposalConversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
 
   const activityPromise = Promise.all([activityFeed.activity(), speakerProposalConversation.getConversation()]);
   const proposal = await proposalReview.get();
@@ -75,6 +78,7 @@ export const loader = async ({ request, params, context }: Route.LoaderArgs) => 
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
+  const proposalId = await resolveProposalId(authorizedEvent, params.proposal);
 
   const i18n = getI18n(context);
   const form = await request.formData();
@@ -84,46 +88,46 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
     case 'add-review': {
       const result = parseWithZod(form, { schema: ReviewUpdateDataSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      const review = ProposalReview.for(authorizedEvent, params.proposal);
+      const review = ProposalReview.for(authorizedEvent, proposalId);
       await review.addReview(result.value);
       break;
     }
     case 'save-comment': {
-      const discussions = Comments.for(authorizedEvent, params.proposal);
+      const discussions = Comments.for(authorizedEvent, proposalId);
       const result = parseWithZod(form, { schema: CommentSaveSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await discussions.save(result.value);
       break;
     }
     case 'delete-comment': {
-      const discussions = Comments.for(authorizedEvent, params.proposal);
+      const discussions = Comments.for(authorizedEvent, proposalId);
       const commentId = form.get('id');
       if (commentId) await discussions.remove(commentId.toString());
       break;
     }
     case 'react-comment': {
-      const discussions = Comments.for(authorizedEvent, params.proposal);
+      const discussions = Comments.for(authorizedEvent, proposalId);
       const result = parseWithZod(form, { schema: CommentReactionSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await discussions.reactToComment(result.value);
       break;
     }
     case 'save-message': {
-      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, params.proposal);
+      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
       const result = parseWithZod(form, { schema: ConversationMessageSaveSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.saveMessage(result.value);
       break;
     }
     case 'react-message': {
-      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, params.proposal);
+      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
       const result = parseWithZod(form, { schema: ConversationMessageReactSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.reactMessage(result.value);
       break;
     }
     case 'delete-message': {
-      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, params.proposal);
+      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
       const result = parseWithZod(form, { schema: ConversationMessageDeleteSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.deleteMessage(result.value);
@@ -133,57 +137,57 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       const result = parseWithZod(form, { schema: ProposalStatusSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       const deliberate = ProposalStatusUpdater.for(authorizedEvent);
-      await deliberate.update([params.proposal], result.value);
+      await deliberate.update([proposalId], result.value);
       break;
     }
     case 'publish-results': {
       const publication = Publication.for(authorizedEvent);
-      await publication.publish(params.proposal, form.get('send-email') === 'on');
+      await publication.publish(proposalId, form.get('send-email') === 'on');
       break;
     }
     case 'edit-talk': {
       const result = parseWithZod(form, { schema: ProposalUpdateSchema });
       if (result.status !== 'success') return result.error;
-      const proposal = ProposalManagement.for(authorizedEvent, params.proposal);
+      const proposal = ProposalManagement.for(authorizedEvent, proposalId);
       await proposal.update(result.value);
       return toast('success', i18n.t('event-management.proposal-page.feedbacks.saved'));
     }
     case 'save-tags': {
       const result = parseWithZod(form, { schema: ProposalSaveTagsSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      const proposal = ProposalManagement.for(authorizedEvent, params.proposal);
+      const proposal = ProposalManagement.for(authorizedEvent, proposalId);
       await proposal.saveTags(result.value);
       break;
     }
     case 'save-speakers': {
       const result = parseWithZod(form, { schema: ProposalSaveSpeakersSchema });
       if (result.status !== 'success') return toast('error', result?.error?.speakers?.[0] || i18n.t('error.global'));
-      const proposal = ProposalManagement.for(authorizedEvent, params.proposal);
+      const proposal = ProposalManagement.for(authorizedEvent, proposalId);
       await proposal.saveSpeakers(result.value);
       break;
     }
     case 'save-formats': {
       const result = parseWithZod(form, { schema: ProposalSaveFormatsSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      const proposal = ProposalManagement.for(authorizedEvent, params.proposal);
+      const proposal = ProposalManagement.for(authorizedEvent, proposalId);
       await proposal.saveFormats(result.value);
       break;
     }
     case 'save-categories': {
       const result = parseWithZod(form, { schema: ProposalSaveCategoriesSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      const proposal = ProposalManagement.for(authorizedEvent, params.proposal);
+      const proposal = ProposalManagement.for(authorizedEvent, proposalId);
       await proposal.saveCategories(result.value);
       break;
     }
     case 'archive-proposal': {
       const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
-      await proposalStatus.archive([params.proposal]);
+      await proposalStatus.archive([proposalId]);
       return toast('success', i18n.t('event-management.proposal-page.feedbacks.archived'));
     }
     case 'restore-proposal': {
       const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
-      await proposalStatus.restore([params.proposal]);
+      await proposalStatus.restore([proposalId]);
       return toast('success', i18n.t('event-management.proposal-page.feedbacks.restored'));
     }
   }
@@ -206,7 +210,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
 
   return (
     <Page>
-      <NavigationHeader {...pagination} />
+      <NavigationHeader team={params.team} event={params.event} {...pagination} />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <div className="lg:col-span-8">
@@ -214,6 +218,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
             talk={proposal}
             action={
               <ProposalActionsMenu
+                team={params.team}
+                event={params.event}
                 proposal={proposal}
                 errors={errors}
                 canEditEventProposal={permissions.canEditEventProposal}
@@ -223,7 +229,9 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           >
             <Suspense fallback={null}>
               <Await resolve={otherProposalsPromise}>
-                {(proposals) => <OtherProposalsDisclosure proposals={proposals} />}
+                {(proposals) => (
+                  <OtherProposalsDisclosure team={params.team} event={params.event} proposals={proposals} />
+                )}
               </Await>
             </Suspense>
           </TalkSection>

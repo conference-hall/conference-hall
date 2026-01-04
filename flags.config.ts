@@ -27,6 +27,6 @@ export default defineFlagsConfig({
   useProposalsNumbering: {
     description: 'Enable proposals numbering.',
     type: 'boolean',
-    defaultValue: false,
+    defaultValue: true,
   },
 });

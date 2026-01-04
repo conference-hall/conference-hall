@@ -18,7 +18,11 @@ import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { ShareProposalModal } from './share-proposal-modal.tsx';
 
 type ProposalActionsMenuProps = {
+  team: string;
+  event: string;
   proposal: {
+    id: string;
+    proposalNumber: number | null;
     title: string;
     abstract: string;
     references: string | null;
@@ -34,6 +38,8 @@ type ProposalActionsMenuProps = {
 };
 
 export function ProposalActionsMenu({
+  team,
+  event,
   proposal,
   errors,
   canEditEventProposal,
@@ -103,7 +109,7 @@ export function ProposalActionsMenu({
         </MenuTransition>
       </Menu>
 
-      <ShareProposalModal open={shareModalOpen} onClose={onCloseShare} />
+      <ShareProposalModal open={shareModalOpen} onClose={onCloseShare} team={team} event={event} proposal={proposal} />
 
       {canEditEventProposal && (
         <TalkEditDrawer initialValues={proposal} errors={errors} open={editDrawerOpen} onClose={onCloseEdit} />

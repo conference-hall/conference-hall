@@ -107,6 +107,7 @@ export class ProposalReview {
       const reviews = new ReviewDetails(proposal.reviews);
       return {
         id: proposal.id,
+        proposalNumber: proposal.proposalNumber,
         title: proposal.title,
         review: event.displayProposalsReviews ? reviews.summary().average : null,
         speakers: proposal.speakers.map((speaker) => speaker.name),
@@ -119,13 +120,19 @@ export class ProposalReview {
     const search = new ProposalSearchBuilder(event.id, userId, filters);
 
     const { total, reviewed } = await search.statistics();
-    const proposalIds = await search.proposalsIds();
+    const proposalNumbers = await search.proposalNumbers();
 
-    const curIndex = proposalIds.indexOf(this.proposalId);
-    const previousId = curIndex - 1 >= 0 ? proposalIds.at(curIndex - 1) : undefined;
-    const nextId = curIndex + 1 < total ? proposalIds.at(curIndex + 1) : undefined;
+    const curIndex = proposalNumbers.findIndex(({ id }) => id === this.proposalId);
+    const previous = curIndex - 1 >= 0 ? proposalNumbers.at(curIndex - 1) : undefined;
+    const next = curIndex + 1 < total ? proposalNumbers.at(curIndex + 1) : undefined;
 
-    return { total, reviewed, current: curIndex + 1, previousId, nextId };
+    return {
+      total,
+      reviewed,
+      current: curIndex + 1,
+      previous: previous?.proposalNumber || previous?.id,
+      next: next?.proposalNumber || next?.id,
+    };
   }
 
   async addReview(data: ReviewUpdateData) {

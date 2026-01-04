@@ -166,7 +166,13 @@ describe('ProposalReview', () => {
       const otherProposals = await proposalReview.getOtherProposals([eventSpeaker.id]);
 
       expect(otherProposals).toEqual([
-        { id: proposal2.id, title: proposal2.title, review: review.note, speakers: [speaker.name] },
+        {
+          id: proposal2.id,
+          proposalNumber: proposal2.proposalNumber,
+          title: proposal2.title,
+          review: review.note,
+          speakers: [speaker.name],
+        },
       ]);
     });
 
@@ -187,7 +193,13 @@ describe('ProposalReview', () => {
       const otherProposals = await proposalReview.getOtherProposals([eventSpeaker.id]);
 
       expect(otherProposals).toEqual([
-        { id: proposal2.id, title: proposal2.title, review: null, speakers: [speaker.name] },
+        {
+          id: proposal2.id,
+          proposalNumber: proposal2.proposalNumber,
+          title: proposal2.title,
+          review: null,
+          speakers: [speaker.name],
+        },
       ]);
     });
 
@@ -247,8 +259,8 @@ describe('ProposalReview', () => {
         current: 2,
         total: 3,
         reviewed: 0,
-        nextId: proposal1.id,
-        previousId: proposal3.id,
+        next: proposal1.proposalNumber,
+        previous: proposal3.proposalNumber,
       });
     });
 
@@ -277,8 +289,8 @@ describe('ProposalReview', () => {
         current: 2,
         total: 3,
         reviewed: 0,
-        nextId: proposal1.id,
-        previousId: proposal5.id,
+        next: proposal1.proposalNumber,
+        previous: proposal5.proposalNumber,
       });
     });
 

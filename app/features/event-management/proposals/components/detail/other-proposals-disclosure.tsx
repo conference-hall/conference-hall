@@ -1,19 +1,22 @@
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { href, Link } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote } from '../shared/review-note.tsx';
 
 type OtherProposalsDisclosureProps = {
+  team: string;
+  event: string;
   proposals: Array<{
     id: string;
+    proposalNumber: number | null;
     title: string;
     review: number | null;
     speakers: Array<string>;
   }>;
 };
 
-export function OtherProposalsDisclosure({ proposals }: OtherProposalsDisclosureProps) {
+export function OtherProposalsDisclosure({ team, event, proposals }: OtherProposalsDisclosureProps) {
   const { t } = useTranslation();
 
   if (proposals.length === 0) return null;
@@ -27,7 +30,11 @@ export function OtherProposalsDisclosure({ proposals }: OtherProposalsDisclosure
       {proposals.map((proposal) => (
         <li key={proposal.id}>
           <Link
-            to={`../${proposal.id}`}
+            to={href('/team/:team/:event/proposals/:proposal', {
+              team,
+              event,
+              proposal: proposal.proposalNumber ? String(proposal.proposalNumber) : proposal.id,
+            })}
             target="_blank"
             relative="path"
             className="flex w-full justify-between gap-4 rounded-md p-2 hover:bg-gray-100"
