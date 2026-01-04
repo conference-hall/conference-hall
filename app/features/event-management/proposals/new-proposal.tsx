@@ -66,9 +66,10 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       try {
         const proposal = await ProposalManagement.for(authorizedEvent).create(result.value);
         const headers = await toastHeaders('success', i18n.t('event-management.proposals.new.feedbacks.created'));
-        return redirect(href('/team/:team/:event/proposals/:proposal', { ...params, proposal: proposal.id }), {
-          headers,
-        });
+        return redirect(
+          href('/team/:team/:event/proposals/:proposal', { ...params, proposal: String(proposal.proposalNumber) }),
+          { headers },
+        );
       } catch (_error) {
         return toast('error', i18n.t('error.global'));
       }
