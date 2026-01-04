@@ -10,7 +10,7 @@ import {
 import type { FormEvent } from 'react';
 import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router';
+import { href, useParams } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { EmojiSelect } from '~/design-system/emojis/emoji-select.tsx';
@@ -86,14 +86,18 @@ export function SessionForm({
         {proposal ? (
           <div className="flex items-start justify-between gap-6">
             <div>
-              <H2 size="l">{proposal?.title}</H2>
-              <Subtitle truncate>{proposal?.speakers.map((s) => s.name).join(', ')}</Subtitle>
+              <H2 size="l">{proposal.title}</H2>
+              <Subtitle truncate>{proposal.speakers.map((s) => s.name).join(', ')}</Subtitle>
             </div>
             <div className="flex shrink-0 gap-2">
               <Button
                 icon={ArrowTopRightOnSquareIcon}
                 label={t('event-management.schedule.edit-session.proposal.see')}
-                to={`/team/${team}/${event}/proposals/${proposal?.id}`}
+                to={href('/team/:team/:event/proposals/:proposal', {
+                  team: team || '',
+                  event: event || '',
+                  proposal: proposal.proposalNumber ? String(proposal.proposalNumber) : proposal.id,
+                })}
                 variant="secondary"
                 target="_blank"
               />

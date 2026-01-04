@@ -201,6 +201,7 @@ export class EventSchedule {
         proposal: proposal
           ? {
               id: proposal.id,
+              proposalNumber: proposal.proposalNumber,
               title: proposal.title,
               deliberationStatus: proposal.deliberationStatus,
               confirmationStatus: proposal.confirmationStatus,
