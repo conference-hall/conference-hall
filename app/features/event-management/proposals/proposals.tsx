@@ -84,7 +84,14 @@ export default function ReviewsRoute({ loaderData, params }: Route.ComponentProp
           <FiltersTags filters={filters} />
         </div>
 
-        <ProposalsList proposals={results} pagination={pagination} statistics={statistics} filtersHash={filtersHash} />
+        <ProposalsList
+          team={params.team}
+          event={params.event}
+          proposals={results}
+          pagination={pagination}
+          statistics={statistics}
+          filtersHash={filtersHash}
+        />
       </div>
     </Page>
   );

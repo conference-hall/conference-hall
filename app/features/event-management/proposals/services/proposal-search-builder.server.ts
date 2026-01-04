@@ -64,13 +64,24 @@ export class ProposalSearchBuilder {
     });
   }
 
-  async proposalsIds() {
+  // todo(numbers): add tests
+  async proposalIds() {
     const proposals = await db.proposal.findMany({
       select: { id: true },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
     });
     return proposals.map(({ id }) => id);
+  }
+
+  // todo(numbers): add tests
+  async proposalNumbers() {
+    const proposals = await db.proposal.findMany({
+      select: { id: true, proposalNumber: true },
+      where: this.whereClause(),
+      orderBy: this.orderByClause(),
+    });
+    return proposals;
   }
 
   /// Privates methods
