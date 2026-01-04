@@ -7,6 +7,8 @@
   "admin.dashboard.meetups.public": "Meetups publics",
   "admin.dashboard.proposals.label": "Total des propositions",
   "admin.dashboard.proposals.submitted": "Soumis",
+  "admin.dashboard.proposals.without-number.ko": "{{count}} propositions n'ont pas de numérotation",
+  "admin.dashboard.proposals.without-number.ok": "L'intégrité de la numérotation des propositions est bonne",
   "admin.dashboard.teams.label": "Total des équipes",
   "admin.dashboard.users.label": "Total des utilisateurs",
   "admin.debug.email.feedbacks.sent": "E-mail envoyé",

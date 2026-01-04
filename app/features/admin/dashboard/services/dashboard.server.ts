@@ -50,11 +50,13 @@ export class AdminDashboard {
 
   async proposalsMetrics() {
     const results = await db.proposal.groupBy({ by: ['isDraft'], _count: { _all: true } });
+    const withoutProposalNumber = await db.proposal.count({ where: { isDraft: false, proposalNumber: null } });
 
     return {
       total: sum(results),
       draft: sum(results.filter((p) => p.isDraft)),
       submitted: sum(results.filter((p) => !p.isDraft)),
+      withoutProposalNumber,
     };
   }
 }

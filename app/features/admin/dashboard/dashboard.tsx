@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Await } from 'react-router';
+import { BadgeDot } from '~/design-system/badges.tsx';
 import { KpiProgressBar } from '~/design-system/dashboard/kpi-progress-bar.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -109,6 +110,15 @@ export default function AdminDashboardRoute({ loaderData }: Route.ComponentProps
                     value={proposals.submitted}
                     max={proposals.total}
                   />
+                  <div className="mt-6">
+                    {proposals.withoutProposalNumber > 0 ? (
+                      <BadgeDot color="red">
+                        {t('admin.dashboard.proposals.without-number.ko', { count: proposals.withoutProposalNumber })}
+                      </BadgeDot>
+                    ) : (
+                      <BadgeDot color="green">{t('admin.dashboard.proposals.without-number.ok')}</BadgeDot>
+                    )}
+                  </div>
                 </StatisticCard.Content>
               </StatisticCard>
             )}
