@@ -55,7 +55,7 @@ describe('ProposalReview', () => {
 
       expect(review).toEqual({
         id: proposal.id,
-        proposalNumber: proposal.proposalNumber,
+        routeId: proposal.routeId,
         title: proposal.title,
         abstract: proposal.abstract,
         references: proposal.references,
@@ -168,7 +168,7 @@ describe('ProposalReview', () => {
       expect(otherProposals).toEqual([
         {
           id: proposal2.id,
-          proposalNumber: proposal2.proposalNumber,
+          routeId: proposal2.routeId,
           title: proposal2.title,
           review: review.note,
           speakers: [speaker.name],
@@ -195,7 +195,7 @@ describe('ProposalReview', () => {
       expect(otherProposals).toEqual([
         {
           id: proposal2.id,
-          proposalNumber: proposal2.proposalNumber,
+          routeId: proposal2.routeId,
           title: proposal2.title,
           review: null,
           speakers: [speaker.name],
@@ -259,8 +259,8 @@ describe('ProposalReview', () => {
         current: 2,
         total: 3,
         reviewed: 0,
-        next: proposal1.proposalNumber,
-        previous: proposal3.proposalNumber,
+        next: proposal1.routeId,
+        previous: proposal3.routeId,
       });
     });
 
@@ -289,8 +289,8 @@ describe('ProposalReview', () => {
         current: 2,
         total: 3,
         reviewed: 0,
-        next: proposal1.proposalNumber,
-        previous: proposal5.proposalNumber,
+        next: proposal1.routeId,
+        previous: proposal5.routeId,
       });
     });
 

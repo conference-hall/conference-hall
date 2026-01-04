@@ -133,7 +133,7 @@ export class EventSpeakers {
           const reviews = new ReviewDetails(proposal.reviews);
           return {
             id: proposal.id,
-            proposalNumber: proposal.proposalNumber,
+            routeId: proposal.routeId,
             title: proposal.title,
             deliberationStatus: proposal.deliberationStatus,
             publicationStatus: proposal.publicationStatus,

@@ -96,7 +96,7 @@ export function SessionForm({
                 to={href('/team/:team/:event/proposals/:proposal', {
                   team: team || '',
                   event: event || '',
-                  proposal: proposal.proposalNumber ? String(proposal.proposalNumber) : proposal.id,
+                  proposal: proposal.routeId,
                 })}
                 variant="secondary"
                 target="_blank"

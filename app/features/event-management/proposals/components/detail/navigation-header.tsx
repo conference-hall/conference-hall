@@ -11,8 +11,8 @@ type Props = {
   current: number;
   total: number;
   reviewed: number;
-  next?: string | number | null;
-  previous?: string | number | null;
+  next?: string;
+  previous?: string;
 };
 
 export function NavigationHeader({ team, event, current, total, reviewed, next, previous }: Props) {
@@ -20,12 +20,10 @@ export function NavigationHeader({ team, event, current, total, reviewed, next, 
   const [searchParams] = useSearchParams();
 
   const previousPath = previous
-    ? href('/team/:team/:event/proposals/:proposal', { team, event, proposal: String(previous) })
+    ? href('/team/:team/:event/proposals/:proposal', { team, event, proposal: previous })
     : undefined;
 
-  const nextPath = next
-    ? href('/team/:team/:event/proposals/:proposal', { team, event, proposal: String(next) })
-    : undefined;
+  const nextPath = next ? href('/team/:team/:event/proposals/:proposal', { team, event, proposal: next }) : undefined;
 
   return (
     <header className="flex items-center justify-between gap-4 pb-4 lg:-mt-4">

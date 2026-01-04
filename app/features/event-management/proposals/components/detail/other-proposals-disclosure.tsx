@@ -9,7 +9,7 @@ type OtherProposalsDisclosureProps = {
   event: string;
   proposals: Array<{
     id: string;
-    proposalNumber: number | null;
+    routeId: string;
     title: string;
     review: number | null;
     speakers: Array<string>;
@@ -28,13 +28,9 @@ export function OtherProposalsDisclosure({ team, event, proposals }: OtherPropos
       defaultOpen={false}
     >
       {proposals.map((proposal) => (
-        <li key={proposal.id}>
+        <li key={proposal.routeId}>
           <Link
-            to={href('/team/:team/:event/proposals/:proposal', {
-              team,
-              event,
-              proposal: proposal.proposalNumber ? String(proposal.proposalNumber) : proposal.id,
-            })}
+            to={href('/team/:team/:event/proposals/:proposal', { team, event, proposal: proposal.routeId })}
             target="_blank"
             relative="path"
             className="flex w-full justify-between gap-4 rounded-md p-2 hover:bg-gray-100"

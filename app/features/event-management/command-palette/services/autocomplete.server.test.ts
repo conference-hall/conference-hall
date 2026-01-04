@@ -66,7 +66,7 @@ describe('Autocomplete for event management', () => {
           expect(results).toEqual([
             {
               kind: 'proposals',
-              id: String(proposal.proposalNumber),
+              id: proposal.routeId,
               label: 'React Best Practices',
               description: 'Peter Parker',
             },
@@ -106,7 +106,7 @@ describe('Autocomplete for event management', () => {
 
           expect(results[0]).toEqual({
             kind: 'proposals',
-            id: String(proposal.proposalNumber),
+            id: proposal.routeId,
             label: 'Advanced React',
             description: 'Peter Parker, Tony Stark',
           });
@@ -132,7 +132,7 @@ describe('Autocomplete for event management', () => {
 
           expect(results[0]).toEqual({
             kind: 'proposals',
-            id: String(proposal.proposalNumber),
+            id: proposal.routeId,
             label: 'Advanced React',
             description: '',
           });
@@ -297,7 +297,7 @@ describe('Autocomplete for event management', () => {
           const proposalResult = results.find((r) => r.kind === 'proposals');
           expect(proposalResult).toEqual({
             kind: 'proposals',
-            id: String(proposal.proposalNumber),
+            id: proposal.routeId,
             label: 'React Testing',
             description: 'Peter Parker',
           });

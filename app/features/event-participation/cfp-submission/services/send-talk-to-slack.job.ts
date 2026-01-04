@@ -35,7 +35,7 @@ export const sendTalkToSlack = job<SendSubmissionToSlackPayload>({
         .join(' & ')}`,
       title: proposal.title,
       text: proposal.abstract,
-      title_link: buildReviewProposalUrl(event.team.slug, event.slug, proposal),
+      title_link: buildReviewProposalUrl(event.team.slug, event.slug, proposal.routeId),
       thumb_url: proposal.speakers[0].picture,
       color: '#ffab00',
       fields: [],

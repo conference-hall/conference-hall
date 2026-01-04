@@ -39,11 +39,11 @@ describe('ProposalManagement', () => {
       const result = await ProposalManagement.for(authorizedEvent).create(proposalData);
 
       expect(result?.id).toBeDefined();
-      expect(result?.proposalNumber).toBeDefined();
 
       const proposal = await db.proposal.findUnique({ where: { id: result.id }, include: { speakers: true } });
       expect(proposal).toBeDefined();
       expect(proposal?.proposalNumber).toBe(1);
+      expect(proposal?.routeId).toBe('1');
       expect(proposal?.title).toBe('Test Talk');
       expect(proposal?.abstract).toBe('This is a test talk abstract');
       expect(proposal?.level).toBe('INTERMEDIATE');

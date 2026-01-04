@@ -75,13 +75,13 @@ export class ProposalSearchBuilder {
   }
 
   // todo(numbers): add tests
-  async proposalNumbers() {
+  async proposalRouteIds() {
     const proposals = await db.proposal.findMany({
-      select: { id: true, proposalNumber: true },
+      select: { id: true, routeId: true },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
     });
-    return proposals;
+    return proposals.map(({ id, routeId }) => ({ id, routeId }));
   }
 
   /// Privates methods

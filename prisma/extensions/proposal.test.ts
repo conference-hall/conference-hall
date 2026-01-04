@@ -8,6 +8,26 @@ import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 
 const { APP_URL } = getSharedServerEnv();
 
+describe('Proposal#routeId', () => {
+  it('returns the proposal number when present', async () => {
+    const speaker = await userFactory();
+    const event = await eventFactory();
+    const talk = await talkFactory({ speakers: [speaker] });
+    const proposal = await proposalFactory({ event, talk });
+
+    expect(proposal.routeId).toBe(`${proposal.proposalNumber}`);
+  });
+
+  it('returns the proposal id when proposal number is null', async () => {
+    const speaker = await userFactory();
+    const event = await eventFactory();
+    const talk = await talkFactory({ speakers: [speaker] });
+    const proposal = await proposalFactory({ event, talk, traits: ['draft'] });
+
+    expect(proposal.routeId).toBe(`${proposal.id}`);
+  });
+});
+
 describe('Proposal#invitationLink', () => {
   it('returns the invitation link', async () => {
     const speaker = await userFactory();

@@ -512,7 +512,7 @@ describe('EventSchedule', () => {
             color: 'gray',
             proposal: {
               id: proposal.id,
-              proposalNumber: proposal.proposalNumber,
+              routeId: proposal.routeId,
               title: proposal.title,
               confirmationStatus: proposal.confirmationStatus,
               deliberationStatus: proposal.deliberationStatus,

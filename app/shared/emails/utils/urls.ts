@@ -11,11 +11,6 @@ export function buildSpeakerProposalUrl(event: string, proposal: string) {
   return `${APP_URL}${href('/:event/proposals/:proposal', { event, proposal })}`;
 }
 
-export function buildReviewProposalUrl(
-  team: string,
-  event: string,
-  proposal: { id: string; proposalNumber: number | null },
-) {
-  const proposalId = proposal.proposalNumber ? String(proposal.proposalNumber) : proposal.id;
-  return `${APP_URL}${href('/team/:team/:event/proposals/:proposal', { team, event, proposal: proposalId })}`;
+export function buildReviewProposalUrl(team: string, event: string, proposal: string) {
+  return `${APP_URL}${href('/team/:team/:event/proposals/:proposal', { team, event, proposal: proposal })}`;
 }

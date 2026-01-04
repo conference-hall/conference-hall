@@ -32,7 +32,7 @@ export class CfpReviewsSearch {
 
         return {
           id: proposal.id,
-          proposalNumber: proposal.proposalNumber,
+          routeId: proposal.routeId,
           title: proposal.title,
           deliberationStatus: proposal.deliberationStatus,
           publicationStatus: proposal.publicationStatus,

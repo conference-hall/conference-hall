@@ -10,7 +10,7 @@ describe('ShareProposalModal component', () => {
     onClose: () => {},
     team: 'my-team',
     event: 'my-event',
-    proposal: { id: 'proposal-123', proposalNumber: 456 },
+    proposal: { id: 'proposal-123', routeId: '456' },
   };
 
   const renderComponent = (props = defaultProps) => {

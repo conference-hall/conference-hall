@@ -22,7 +22,7 @@ type ProposalActionsMenuProps = {
   event: string;
   proposal: {
     id: string;
-    proposalNumber: number | null;
+    routeId: string;
     title: string;
     abstract: string;
     references: string | null;

@@ -36,14 +36,23 @@ export function ProposalItem({
   const [currentQueryParams] = useSearchParams();
   const { canChangeProposalStatus } = useUserTeamPermissions();
 
-  const { id, proposalNumber, title, reviews, archivedAt, submittedAt, deliberationStatus, tags, speakers, comments } =
-    proposal;
-  const { you, summary } = reviews;
+  const {
+    id,
+    routeId,
+    title,
+    reviews: { you, summary },
+    archivedAt,
+    submittedAt,
+    deliberationStatus,
+    tags,
+    speakers,
+    comments,
+  } = proposal;
 
   const pathname = href('/team/:team/:event/proposals/:proposal', {
     team,
     event,
-    proposal: proposalNumber ? String(proposalNumber) : id,
+    proposal: routeId,
   });
 
   return (
@@ -83,7 +92,7 @@ export function ProposalItem({
           </div>
 
           <Text size="xs" variant="secondary" className="space-x-1">
-            {proposalNumber ? <span>#{proposalNumber}</span> : null}
+            <span>#{routeId}</span>
             {speakers.length ? <span>{t('common.proposed-by', { names: speakers.map((a) => a.name) })}</span> : null}
             <ClientOnly>
               {() => <span>{` - ${formatDate(submittedAt, { format: 'medium', locale })}`}</span>}

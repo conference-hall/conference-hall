@@ -30,7 +30,7 @@ export type SessionData = {
 
 export type ScheduleProposalData = {
   id: string;
-  proposalNumber: number | null;
+  routeId: string;
   title: string;
   deliberationStatus: DeliberationStatus;
   confirmationStatus: ConfirmationStatus | null;

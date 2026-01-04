@@ -10,7 +10,7 @@ describe('ProposalActionsMenu component', () => {
     event: 'my-event',
     proposal: {
       id: '123',
-      proposalNumber: 456,
+      routeId: '123',
       title: 'Test Proposal',
       abstract: 'Test abstract',
       references: null,

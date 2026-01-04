@@ -12,7 +12,7 @@ type ShareProposalModalProps = {
   event: string;
   proposal: {
     id: string;
-    proposalNumber: number | null;
+    routeId: string;
   };
 };
 
@@ -24,11 +24,7 @@ export function ShareProposalModal({ open, onClose, team, event, proposal }: Sha
 
   const { origin } = window.location;
   const organizerLink = new URL(
-    href('/team/:team/:event/proposals/:proposal', {
-      team,
-      event,
-      proposal: proposal.proposalNumber ? String(proposal.proposalNumber) : proposal.id,
-    }),
+    href('/team/:team/:event/proposals/:proposal', { team, event, proposal: proposal.routeId }),
     origin,
   ).toString();
 

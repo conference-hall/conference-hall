@@ -49,7 +49,7 @@ export class ProposalReview {
 
     return {
       id: proposal.id,
-      proposalNumber: proposal.proposalNumber,
+      routeId: proposal.routeId,
       title: proposal.title,
       abstract: proposal.abstract,
       references: proposal.references,
@@ -107,7 +107,7 @@ export class ProposalReview {
       const reviews = new ReviewDetails(proposal.reviews);
       return {
         id: proposal.id,
-        proposalNumber: proposal.proposalNumber,
+        routeId: proposal.routeId,
         title: proposal.title,
         review: event.displayProposalsReviews ? reviews.summary().average : null,
         speakers: proposal.speakers.map((speaker) => speaker.name),
@@ -120,18 +120,18 @@ export class ProposalReview {
     const search = new ProposalSearchBuilder(event.id, userId, filters);
 
     const { total, reviewed } = await search.statistics();
-    const proposalNumbers = await search.proposalNumbers();
+    const proposalRouteIds = await search.proposalRouteIds();
 
-    const curIndex = proposalNumbers.findIndex(({ id }) => id === this.proposalId);
-    const previous = curIndex - 1 >= 0 ? proposalNumbers.at(curIndex - 1) : undefined;
-    const next = curIndex + 1 < total ? proposalNumbers.at(curIndex + 1) : undefined;
+    const curIndex = proposalRouteIds.findIndex(({ id }) => id === this.proposalId);
+    const previous = curIndex - 1 >= 0 ? proposalRouteIds.at(curIndex - 1) : undefined;
+    const next = curIndex + 1 < total ? proposalRouteIds.at(curIndex + 1) : undefined;
 
     return {
       total,
       reviewed,
       current: curIndex + 1,
-      previous: previous?.proposalNumber || previous?.id,
-      next: next?.proposalNumber || next?.id,
+      previous: previous?.routeId,
+      next: next?.routeId,
     };
   }
 

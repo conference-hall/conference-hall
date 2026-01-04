@@ -7,6 +7,13 @@ const { APP_URL } = getSharedServerEnv();
 export const proposalExtension = Prisma.defineExtension({
   result: {
     proposal: {
+      routeId: {
+        needs: { id: true, proposalNumber: true },
+        compute({ id, proposalNumber }) {
+          if (proposalNumber) return String(proposalNumber);
+          return id;
+        },
+      },
       invitationLink: {
         needs: { invitationCode: true },
         compute({ invitationCode }) {

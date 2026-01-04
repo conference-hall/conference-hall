@@ -48,7 +48,7 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
     const senderId = lastMessage.senderId;
 
     // Get proposal if this is a proposal conversation
-    let proposal: (Proposal & { speakers: Array<EventSpeaker> }) | null;
+    let proposal: (Proposal & { routeId: string; speakers: Array<EventSpeaker> }) | null;
     let proposalSpeakers: Array<{ email: string; locale: string; userId: string | null }> = [];
 
     if (conversation.contextType === 'PROPOSAL_CONVERSATION' && conversation.contextIds.length > 0) {
@@ -104,7 +104,7 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
               logoUrl: conversation.event.logoUrl,
               teamSlug: conversation.event.team.slug,
             },
-            proposal: proposal ? { id: proposal.id, proposalNumber: proposal.proposalNumber } : undefined,
+            proposal: proposal ? { id: proposal.id, routeId: proposal.routeId } : undefined,
             sender: {
               name: lastMessage.sender?.name || 'System',
               role: conversation.participants.find((p) => p.userId === senderId)?.role || null,
