@@ -92,8 +92,10 @@ export default function SpeakerRoute({ loaderData, params }: Route.ComponentProp
           {speaker.proposals.map((proposal) => (
             <List.Row key={proposal.id} className="px-4 hover:bg-gray-50">
               <ProposalItem
+                team={params.team}
+                event={params.event}
                 proposal={proposal}
-                linkTo={`/team/${params.team}/${params.event}/proposals/${proposal.id}?speakers=${speaker.id}`}
+                queryParams={`?speakers=${speaker.id}`}
               />
             </List.Row>
           ))}
