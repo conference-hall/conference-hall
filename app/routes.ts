@@ -126,7 +126,6 @@ export default [
   ]),
 
   // Event reviews export routes
-  // todo(api): can be move into route team ? change /cards to download to html ?
   route('team/:team/:event/export/json', './features/event-management/proposals-export/json.tsx'),
   route('team/:team/:event/export/csv', './features/event-management/proposals-export/csv.tsx'),
   route('team/:team/:event/export/cards', './features/event-management/proposals-export/cards.tsx'),
