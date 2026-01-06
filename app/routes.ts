@@ -103,7 +103,7 @@ export default [
     // Event schedule pages
     route('schedule', './features/event-management/schedule/new.tsx'),
     route('schedule/:day', './features/event-management/schedule/schedule.tsx'),
-    route('schedule/export/json', './features/event-management/schedule/export.json.tsx'),
+    route('schedule/export/json', './features/event-management/schedule-export/json.tsx'),
 
     // Event settings pages
     route('settings', './features/event-management/settings/settings.tsx', [
@@ -151,7 +151,7 @@ export default [
 
   // Api pages
   route('api/v1/event/:event', './features/event-management/proposals-api/proposals-api.tsx'),
-  route('api/v1/event/:event/schedule', './features/event-management/schedule-api/schedule-api.tsx'),
+  route('api/v1/event/:event/schedule', './features/event-management/schedule-export/api.tsx'),
 
   // Locales route
   route('locales/:lng/:ns', './app-platform/locales.ts'),
