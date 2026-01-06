@@ -6,25 +6,24 @@ import {
   requireAuthorizedEvent,
   requireAuthorizedTeam,
 } from '~/shared/authorization/authorization.middleware.ts';
-import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { Route } from './+types/csv.ts';
-import { CfpReviewsExports } from './services/cfp-reviews-exports.server.ts';
+import { ProposalsExport } from './services/proposals-export.server.ts';
 
 export const middleware = [requireAuth, requireAuthorizedTeam, requireAuthorizedEvent];
 
 export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
   const filters = parseUrlFilters(request.url);
-  const exports = CfpReviewsExports.for(authorizedEvent);
-  const results = await exports.forJson(filters);
+
+  const json = await ProposalsExport.forUser(authorizedEvent).toJson(filters);
 
   const csvContent = json2csv(
-    results.map((result) => ({
+    json.proposals.map((result) => ({
       ...result,
       tags: result.tags.join(','),
-      languages: (result.languages as Languages).join(','),
-      formats: formatObjectArray(result.formats),
-      categories: formatObjectArray(result.categories),
+      languages: result.languages.join(','),
+      formats: result.formats.join(','),
+      categories: result.categories.join(','),
       speakers: formatObjectArray(result.speakers),
     })),
   );

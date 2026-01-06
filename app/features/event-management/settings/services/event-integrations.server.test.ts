@@ -27,25 +27,12 @@ describe('EventIntegrations', () => {
       await eventIntegrationFactory({ event: otherEvent });
       const existingIntegration = await eventIntegrationFactory({ event });
 
-      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
-      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-      const eventIntegrations = EventIntegrations.for(authorizedEvent);
-
-      const integration = await eventIntegrations.getConfiguration(existingIntegration.name);
+      const integration = await EventIntegrations.getConfiguration(event.id, existingIntegration.name);
       expect(integration).toEqual({
         id: existingIntegration.id,
         name: existingIntegration.name,
         configuration: existingIntegration.configuration,
       });
-    });
-
-    it('throws an error if user does not belong to event team', async () => {
-      const user = await userFactory();
-      await expect(async () => {
-        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
-        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-        await EventIntegrations.for(authorizedEvent).getConfiguration('OPEN_PLANNER');
-      }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -60,7 +47,7 @@ describe('EventIntegrations', () => {
         configuration: { eventId: 'eventId!', apiKey: 'apiKey!' },
       });
 
-      const integration = await eventIntegrations.getConfiguration('OPEN_PLANNER');
+      const integration = await EventIntegrations.getConfiguration(event.id, 'OPEN_PLANNER');
       expect(integration?.name).toBe('OPEN_PLANNER');
       expect(integration?.configuration).toEqual({ eventId: 'eventId!', apiKey: 'apiKey!' });
     });
@@ -78,7 +65,7 @@ describe('EventIntegrations', () => {
         configuration: { eventId: 'eventId!', apiKey: 'apiKey!' },
       });
 
-      const integration = await eventIntegrations.getConfiguration('OPEN_PLANNER');
+      const integration = await EventIntegrations.getConfiguration(event.id, 'OPEN_PLANNER');
       expect(integration?.name).toBe('OPEN_PLANNER');
       expect(integration?.configuration).toEqual({ eventId: 'eventId!', apiKey: 'apiKey!' });
     });
@@ -117,7 +104,7 @@ describe('EventIntegrations', () => {
       const eventIntegrations = EventIntegrations.for(authorizedEvent);
       await eventIntegrations.delete(integration.id);
 
-      const result = await eventIntegrations.getConfiguration('OPEN_PLANNER');
+      const result = await EventIntegrations.getConfiguration(event.id, 'OPEN_PLANNER');
       expect(result).toBe(null);
     });
 

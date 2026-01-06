@@ -126,6 +126,7 @@ export default [
   ]),
 
   // Event reviews export routes
+  // todo(api): can be move into route team ? change /cards to download to html ?
   route('team/:team/:event/export/json', './features/event-management/proposals-export/json.tsx'),
   route('team/:team/:event/export/csv', './features/event-management/proposals-export/csv.tsx'),
   route('team/:team/:event/export/cards', './features/event-management/proposals-export/cards.tsx'),
@@ -150,7 +151,7 @@ export default [
   ]),
 
   // Api pages
-  route('api/v1/event/:event', './features/event-management/proposals-api/proposals-api.tsx'),
+  route('api/v1/event/:event', './features/event-management/proposals-export/api.tsx'),
   route('api/v1/event/:event/schedule', './features/event-management/schedule-export/api.tsx'),
 
   // Locales route

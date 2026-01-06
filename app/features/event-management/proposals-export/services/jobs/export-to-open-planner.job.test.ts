@@ -7,7 +7,6 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
-import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { OpenPlanner } from '~/shared/integrations/open-planner.server.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import { exportToOpenPlanner } from './export-to-open-planner.job.ts';
@@ -49,10 +48,7 @@ describe('Job: exportToOpenPlanner', () => {
   it('exports sessions and speakers to OpenPlanner', async () => {
     postSessionsAndSpeakersMock.mockResolvedValue({ success: true });
 
-    const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
-    const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-
-    await exportToOpenPlanner.config.run({ authorizedEvent, filters: {} });
+    await exportToOpenPlanner.config.run({ userId: owner.id, eventId: event.id, filters: {} });
 
     const expectedSpeaker = proposal1.speakers.at(0);
     const expectedSocialLinks = expectedSpeaker?.socialLinks as SocialLinks;
@@ -102,10 +98,8 @@ describe('Job: exportToOpenPlanner', () => {
 
   it('does not call OpenPlanner if no configuration set for the event', async () => {
     const event2 = await eventFactory({ team });
-    const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
-    const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event2.slug);
 
-    await exportToOpenPlanner.config.run({ authorizedEvent, filters: {} });
+    await exportToOpenPlanner.config.run({ userId: owner.id, eventId: event2.id, filters: {} });
 
     expect(postSessionsAndSpeakersMock).not.toHaveBeenCalled();
   });
