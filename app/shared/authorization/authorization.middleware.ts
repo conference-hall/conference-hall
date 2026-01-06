@@ -1,9 +1,19 @@
+import { parseWithZod } from '@conform-to/zod/v4';
 import { db } from 'prisma/db.server.ts';
 import { createContext, type MiddlewareFunction } from 'react-router';
+import z from 'zod';
 import { RequireAuthContext } from '../authentication/auth.middleware.ts';
-import { BadRequestError, NotFoundError } from '../errors.server.ts';
+import {
+  ApiKeyInvalidError,
+  ApiKeyQueryParamsDeprecatedError,
+  BadRequestError,
+  EventNotFoundError,
+  ForbiddenError,
+  NotFoundError,
+} from '../errors.server.ts';
+import { flags } from '../feature-flags/flags.server.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from './authorization.server.ts';
-import type { AuthorizedAdmin, AuthorizedEvent, AuthorizedTeam } from './types.ts';
+import type { AuthorizedAdmin, AuthorizedApiEvent, AuthorizedEvent, AuthorizedTeam } from './types.ts';
 
 // Admin authorizations
 export const AuthorizedAdminContext = createContext<AuthorizedAdmin>();
@@ -41,4 +51,39 @@ export const requireAuthorizedEvent: MiddlewareFunction<Response> = async ({ par
 
   const authorizedEvent = await getAuthorizedEvent(authorizedTeam, params.event);
   context.set(AuthorizedEventContext, authorizedEvent);
+};
+
+// Web API Event authorizations
+export const AuthorizedApiEventContext = createContext<AuthorizedApiEvent>();
+
+export const requireAuthorizedApiEvent: MiddlewareFunction<Response> = async ({ request, params, context }) => {
+  const disableQueryParams = await flags.get('disableApiKeyInQueryParams');
+
+  let apiKey: string | null = null;
+
+  const headerApiKey = request.headers.get('X-API-Key');
+  if (headerApiKey) {
+    apiKey = headerApiKey;
+  } else {
+    const url = new URL(request.url);
+    const result = parseWithZod(url.searchParams, { schema: z.object({ key: z.string() }) });
+
+    if (result.status === 'success') {
+      if (disableQueryParams) {
+        throw new ApiKeyQueryParamsDeprecatedError();
+      }
+      apiKey = result.value.key;
+    }
+  }
+
+  if (!apiKey) throw new ForbiddenError('API key is required');
+
+  const eventSlug = params.event;
+  if (!eventSlug) throw new EventNotFoundError();
+
+  const event = await db.event.findUnique({ where: { slug: eventSlug } });
+  if (!event) throw new EventNotFoundError();
+  if (event.apiKey !== apiKey) throw new ApiKeyInvalidError();
+
+  context.set(AuthorizedApiEventContext, { event });
 };
