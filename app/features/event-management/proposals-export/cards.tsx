@@ -10,7 +10,7 @@ import {
 import { formatReviewNote } from '~/shared/formatters/reviews.ts';
 import type { Route } from './+types/cards.ts';
 import styles from './cards.css?url';
-import { CfpReviewsExports } from './services/cfp-reviews-exports.server.ts';
+import { ProposalsExport } from './services/proposals-export.server.ts';
 
 export const middleware = [requireAuth, requireAuthorizedTeam, requireAuthorizedEvent];
 
@@ -18,9 +18,10 @@ export const links = () => [{ rel: 'stylesheet', href: styles }];
 
 export const loader = async ({ request, context }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
+
   const filters = parseUrlFilters(request.url);
-  const exports = CfpReviewsExports.for(authorizedEvent);
-  return exports.forCards(filters);
+
+  return ProposalsExport.forUser(authorizedEvent).toCards(filters);
 };
 
 export default function ExportProposalsCards({ loaderData: results }: Route.ComponentProps) {

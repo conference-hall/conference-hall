@@ -12,9 +12,8 @@ export class EventIntegrations {
     return new EventIntegrations(authorizedEvent);
   }
 
-  async getConfiguration(name: EventIntegrationName) {
-    const { event } = this.authorizedEvent;
-    const integration = await db.eventIntegrationConfig.findFirst({ where: { eventId: event.id, name } });
+  static async getConfiguration(eventId: string, name: EventIntegrationName) {
+    const integration = await db.eventIntegrationConfig.findFirst({ where: { eventId, name } });
 
     if (!integration) return null;
 

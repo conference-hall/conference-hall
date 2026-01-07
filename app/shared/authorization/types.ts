@@ -35,3 +35,5 @@ export type AuthorizedTeam = {
 };
 
 export type AuthorizedEvent = AuthorizedTeam & { readonly event: Event };
+
+export type AuthorizedApiEvent = { readonly event: Event };

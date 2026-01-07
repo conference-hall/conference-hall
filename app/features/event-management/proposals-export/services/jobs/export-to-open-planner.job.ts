@@ -1,7 +1,6 @@
 import type { ProposalsFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from '~/features/event-management/proposals/services/proposal-search-builder.server.ts';
 import { EventIntegrations } from '~/features/event-management/settings/services/event-integrations.server.ts';
-import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { extractSocialProfile } from '~/shared/formatters/social-links.ts';
 import { OpenPlanner, type OpenPlannerSessionsPayload } from '~/shared/integrations/open-planner.server.ts';
 import { job } from '~/shared/jobs/job.ts';
@@ -10,21 +9,19 @@ import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import { compactObject } from '~/shared/utils/object-compact.ts';
 
 type ExportToOpenPlannerPayload = {
-  authorizedEvent: AuthorizedEvent;
+  userId: string;
+  eventId: string;
   filters: ProposalsFilters;
 };
 
 export const exportToOpenPlanner = job<ExportToOpenPlannerPayload>({
   name: 'export-to-open-planner',
   queue: 'default',
-  run: async ({ authorizedEvent, filters }: ExportToOpenPlannerPayload) => {
-    const eventIntegrations = EventIntegrations.for(authorizedEvent);
-
-    const openPlanner = await eventIntegrations.getConfiguration('OPEN_PLANNER');
+  run: async ({ userId, eventId, filters }: ExportToOpenPlannerPayload) => {
+    const openPlanner = await EventIntegrations.getConfiguration(eventId, 'OPEN_PLANNER');
     if (openPlanner?.name !== 'OPEN_PLANNER') return;
 
-    const { event, userId } = authorizedEvent;
-    const search = new ProposalSearchBuilder(event.id, userId, filters, { withSpeakers: true, withReviews: false });
+    const search = new ProposalSearchBuilder(eventId, userId, filters, { withSpeakers: true, withReviews: false });
 
     const proposals = await search.proposals();
 
@@ -82,7 +79,7 @@ export const exportToOpenPlanner = job<ExportToOpenPlannerPayload>({
       { sessions: [], speakers: [] },
     );
 
-    const { eventId, apiKey } = openPlanner.configuration;
-    await OpenPlanner.postSessionsAndSpeakers(eventId, apiKey, payload);
+    const { eventId: openPlannerEventId, apiKey } = openPlanner.configuration;
+    await OpenPlanner.postSessionsAndSpeakers(openPlannerEventId, apiKey, payload);
   },
 });

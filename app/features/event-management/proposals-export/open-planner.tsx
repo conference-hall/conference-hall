@@ -8,7 +8,7 @@ import {
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/open-planner.ts';
-import { CfpReviewsExports } from './services/cfp-reviews-exports.server.ts';
+import { ProposalsExport } from './services/proposals-export.server.ts';
 
 export const middleware = [requireAuth, requireAuthorizedTeam, requireAuthorizedEvent];
 
@@ -16,7 +16,8 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
   const i18n = getI18n(context);
   const filters = parseUrlFilters(request.url);
-  const exports = CfpReviewsExports.for(authorizedEvent);
-  await exports.forOpenPlanner(filters);
+
+  await ProposalsExport.forUser(authorizedEvent).toOpenPlanner(filters);
+
   return toast('success', i18n.t('event-management.proposals.export.open-planner.feedbacks'));
 };
