@@ -68,6 +68,7 @@ export class CfpReviewsSearch {
     return proposals.map((proposal) => {
       return {
         id: proposal.id,
+        routeId: proposal.routeId,
         title: proposal.title,
         deliberationStatus: proposal.deliberationStatus,
         confirmationStatus: proposal.confirmationStatus,
