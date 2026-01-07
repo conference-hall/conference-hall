@@ -11,8 +11,10 @@ export const middleware = [requireAuthorizedApiEvent];
 export const loader = async ({ context }: Route.LoaderArgs) => {
   const authorizedApiEvent = context.get(AuthorizedApiEventContext);
 
-  const schedule = await EventScheduleExport.forApi(authorizedApiEvent).toJson();
-  if (!schedule) throw new NotFoundError(`No schedule found for event "${authorizedApiEvent.event.slug}"`);
+  const stream = await EventScheduleExport.forApi(authorizedApiEvent).toJsonStream();
+  if (!stream) throw new NotFoundError(`No schedule found for event "${authorizedApiEvent.event.slug}"`);
 
-  return Response.json(schedule);
+  return new Response(stream, {
+    headers: { 'Content-Type': 'application/json' },
+  });
 };
