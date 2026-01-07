@@ -59,6 +59,7 @@ export class ProposalsExport {
           proposalNumber: proposal.proposalNumber,
           title: proposal.title,
           abstract: proposal.abstract,
+          submittedAt: proposal.submittedAt,
           deliberationStatus: proposal.deliberationStatus,
           confirmationStatus: proposal.confirmationStatus,
           publicationStatus: proposal.publicationStatus,
