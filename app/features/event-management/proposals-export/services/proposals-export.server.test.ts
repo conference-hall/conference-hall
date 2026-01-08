@@ -86,6 +86,7 @@ describe('ProposalsExport', () => {
             id: proposal.id,
             proposalNumber: proposal.proposalNumber,
             title: proposal.title,
+            submittedAt: proposal.submittedAt,
             deliberationStatus: proposal.deliberationStatus,
             confirmationStatus: proposal.confirmationStatus,
             publicationStatus: proposal.publicationStatus,
