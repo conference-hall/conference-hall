@@ -59,7 +59,7 @@
     "i18next": "^25.7.4",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-fetch-backend": "^7.0.0",
-    "ioredis": "^5.9.1",
+    "ioredis": "~5.8.2",
     "isbot": "^5.1.32",
     "json-2-csv": "^5.5.10",
     "mailgun.js": "^12.6.0",
