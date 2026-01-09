@@ -1,14 +1,9 @@
 import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
-import { flags } from '../feature-flags/flags.server.ts';
 import { getNextProposalNumber } from './proposal-counter.server.ts';
 
 describe('getNextProposalNumber', () => {
-  beforeEach(async () => {
-    await flags.set('useProposalsNumbering', true);
-  });
-
   it('assigns number 1 for first proposal in event', async () => {
     const team = await teamFactory();
     const event = await eventFactory({ team });
@@ -105,17 +100,5 @@ describe('getNextProposalNumber', () => {
 
     expect(uniqueNumbers.size).toBe(10);
     expect(numbers.sort()).toEqual([1, 10, 2, 3, 4, 5, 6, 7, 8, 9]);
-  });
-
-  it('returns null when feature flag is disabled', async () => {
-    await flags.set('useProposalsNumbering', false);
-    const team = await teamFactory();
-    const event = await eventFactory({ team });
-
-    const number = await db.$transaction(async (trx) => {
-      return await getNextProposalNumber(event.id, trx);
-    });
-
-    expect(number).toBeNull();
   });
 });

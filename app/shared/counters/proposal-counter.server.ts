@@ -1,10 +1,6 @@
 import type { DbTransaction } from 'prisma/db.server.ts';
-import { flags } from '../feature-flags/flags.server.ts';
 
 export async function getNextProposalNumber(eventId: string, trx: DbTransaction): Promise<number | null> {
-  const useProposalNumbering = await flags.get('useProposalsNumbering');
-  if (!useProposalNumbering) return null;
-
   try {
     // Atomic increment using INSERT ... ON CONFLICT DO UPDATE
     // This ensures only one transaction can increment the counter at a time

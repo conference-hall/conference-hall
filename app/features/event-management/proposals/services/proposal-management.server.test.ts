@@ -10,15 +10,12 @@ import { teamFactory } from '~/../tests/factories/team.ts';
 import { userFactory } from '~/../tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-import { flags } from '~/shared/feature-flags/flags.server.ts';
 import type { ProposalCreationData } from './proposal-management.schema.server.ts';
 import { ProposalManagement } from './proposal-management.server.ts';
 
 describe('ProposalManagement', () => {
   describe('create', () => {
     it('creates a proposal', async () => {
-      await flags.set('useProposalsNumbering', true);
-
       const organizer = await userFactory();
       const speaker = await userFactory();
       const team = await teamFactory({ owners: [organizer] });
