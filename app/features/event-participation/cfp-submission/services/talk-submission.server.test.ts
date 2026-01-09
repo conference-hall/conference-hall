@@ -16,7 +16,6 @@ import {
   ProposalNotFoundError,
   TalkNotFoundError,
 } from '~/shared/errors.server.ts';
-import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { TalkSubmission } from './talk-submission.server.ts';
 
 const { APP_URL } = getSharedServerEnv();
@@ -24,8 +23,6 @@ const { APP_URL } = getSharedServerEnv();
 describe('TalkSubmission', () => {
   describe('#saveDraft', () => {
     it('create a new draft proposal from scratch', async () => {
-      await flags.set('useProposalsNumbering', true);
-
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
 
@@ -60,8 +57,6 @@ describe('TalkSubmission', () => {
     });
 
     it('create a new draft proposal from a existing talk', async () => {
-      await flags.set('useProposalsNumbering', true);
-
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
       const speaker2 = await userFactory();
@@ -226,8 +221,6 @@ describe('TalkSubmission', () => {
 
   describe('#submit', () => {
     it('submit a draft proposal', async () => {
-      await flags.set('useProposalsNumbering', true);
-
       const event = await eventFactory({
         traits: ['conference-cfp-open'],
         attributes: { name: 'Event 1', emailOrganizer: 'ben@email.com', emailNotifications: ['submitted'] },
