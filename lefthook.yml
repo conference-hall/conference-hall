@@ -1,4 +1,4 @@
-output: true
+output: false
 
 pre-commit:
   commands:
