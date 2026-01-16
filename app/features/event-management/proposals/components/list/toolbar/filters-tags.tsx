@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
+import type { ProposalsFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { FilterTag } from '~/design-system/filter-tag.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import type { ProposalsFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 
 type FiltersBadgesProps = { filters: ProposalsFilters };
 

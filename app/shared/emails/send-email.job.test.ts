@@ -9,8 +9,8 @@ vi.mock('./providers/provider.ts', () => ({
 import { eventEmailCustomizationFactory } from 'tests/factories/event-email-customizations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { renderEmail } from '~/shared/emails/email.renderer.tsx';
-import { getEmailProvider } from './providers/provider.ts';
 import type { EmailPayload } from './send-email.job.ts';
+import { getEmailProvider } from './providers/provider.ts';
 import { sendEmail } from './send-email.job.ts';
 
 const mockRenderEmail = vi.mocked(renderEmail);

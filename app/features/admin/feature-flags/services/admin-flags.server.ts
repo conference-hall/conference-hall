@@ -1,7 +1,7 @@
 import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
+import type { FlagConfig } from '~/shared/feature-flags/types.ts';
 import { NotAuthorizedError, NotFoundError } from '~/shared/errors.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
-import type { FlagConfig } from '~/shared/feature-flags/types.ts';
 
 export class AdminFlags {
   private constructor() {}

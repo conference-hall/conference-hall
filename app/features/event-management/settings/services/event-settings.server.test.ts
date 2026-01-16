@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { Event, Team, User } from 'prisma/generated/client.ts';
+import { db } from 'prisma/db.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';
@@ -13,7 +13,6 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { z } from 'zod';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { EventSettings } from './event-settings.server.ts';
@@ -205,10 +204,13 @@ describe('EventSettings', () => {
       });
 
       expect(result.success).toBe(false);
-      if (!result.success) {
-        const { fieldErrors } = z.flattenError(result.error);
-        expect(fieldErrors.slug).toEqual(['This URL already exists.']);
-      }
+      expect(result.error?.issues).toEqual([
+        {
+          code: 'custom',
+          message: 'This URL already exists.',
+          path: ['slug'],
+        },
+      ]);
     });
   });
 });

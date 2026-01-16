@@ -6,7 +6,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
-import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import { EventNotFoundError, ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { Autocomplete, parseUrlFilters } from './autocomplete.server.ts';
 
 describe('Autocomplete for event management', () => {
@@ -338,7 +338,7 @@ describe('Autocomplete for event management', () => {
             query: 'test',
             kind: ['proposals'],
           });
-        }).rejects.toThrow();
+        }).rejects.toThrow(EventNotFoundError);
       });
     });
 
@@ -351,7 +351,7 @@ describe('Autocomplete for event management', () => {
             query: 'test',
             kind: ['proposals'],
           });
-        }).rejects.toThrow();
+        }).rejects.toThrow(ForbiddenOperationError);
       });
     });
   });

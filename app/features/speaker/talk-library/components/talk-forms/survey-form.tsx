@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
+import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
+import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { Radio } from '~/design-system/forms/input-radio.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
-import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
-import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 
 type Props = {
   id: string;

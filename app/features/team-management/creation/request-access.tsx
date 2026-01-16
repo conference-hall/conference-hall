@@ -25,7 +25,7 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   const form = await request.formData();
   try {
     await TeamBetaAccess.for(authUser.id).validateAccessKey(String(form.get('key')));
-  } catch (_error) {
+  } catch {
     return { key: [i18n.t('error.invalid-access-key')] };
   }
   return replace(href('/team/new'));

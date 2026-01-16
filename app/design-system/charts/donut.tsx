@@ -1,7 +1,6 @@
-import { cx } from 'class-variance-authority';
 import type React from 'react';
+import { cx } from 'class-variance-authority';
 import { Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
-
 import type { AvailableChartColorsKeys } from './chart-utils.ts';
 import { AvailableChartColors, constructCategoryColors, getColorClassName } from './chart-utils.ts';
 
@@ -52,7 +51,7 @@ const ChartTooltip = ({ active, payload, valueFormatter }: ChartTooltipProps) =>
                 <p
                   className={cx(
                     // base
-                    'whitespace-nowrap text-right',
+                    'text-right whitespace-nowrap',
                     // text color
                     'text-gray-700',
                   )}
@@ -63,7 +62,7 @@ const ChartTooltip = ({ active, payload, valueFormatter }: ChartTooltipProps) =>
               <p
                 className={cx(
                   // base
-                  'whitespace-nowrap text-right font-medium tabular-nums',
+                  'text-right font-medium whitespace-nowrap tabular-nums',
                   // text color
                   'text-gray-900',
                 )}
@@ -115,7 +114,7 @@ export const DonutChart = ({
         <PieChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }}>
           {showLabel && isDonut && (
             <text
-              className="fill-gray-700 font-semibold text-2xl"
+              className="fill-gray-700 text-2xl font-semibold"
               x="50%"
               y="50%"
               textAnchor="middle"

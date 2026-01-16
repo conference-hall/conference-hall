@@ -1,5 +1,5 @@
-import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { VariantProps } from 'class-variance-authority';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 import { cva } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 
@@ -15,14 +15,14 @@ const defaultBadge = cva('inline-flex items-center gap-1 text-nowrap', {
       purple: 'bg-purple-50 text-purple-700 ring-1 ring-purple-700/10 ring-inset',
       pink: 'bg-pink-50 text-pink-700 ring-1 ring-pink-700/10 ring-inset',
     },
-    compact: { true: 'h-5 px-1.5 py-0.5 font-medium text-[10px]', false: 'px-2 py-0.5 font-medium text-xs' },
+    compact: { true: 'h-5 px-1.5 py-0.5 text-[10px] font-medium', false: 'px-2 py-0.5 text-xs font-medium' },
     pill: { true: 'rounded-full', false: 'rounded-md' },
   },
   defaultVariants: { color: 'gray', pill: false, compact: false },
 });
 
 const dotBadge = cva(
-  'inline-flex items-center gap-x-1.5 text-nowrap font-semibold text-gray-600 text-xs ring-1 ring-gray-200 ring-inset',
+  'inline-flex items-center gap-x-1.5 text-xs font-semibold text-nowrap text-gray-600 ring-1 ring-gray-200 ring-inset',
   {
     variants: {
       color: {

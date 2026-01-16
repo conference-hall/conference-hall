@@ -36,7 +36,7 @@ export function SearchParamSelector({ param, defaultValue, className, selectors 
           key={selector.value}
           to={{ search: paramsFor(selector.value) }}
           className={cx(
-            'flex items-center rounded-md px-3 py-1 font-semibold text-sm outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
+            'flex items-center rounded-md px-3 py-1 text-sm font-semibold outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
             {
               'bg-white shadow-sm': current === selector.value,
             },

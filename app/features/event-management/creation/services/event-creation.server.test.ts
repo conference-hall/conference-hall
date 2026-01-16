@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { Team, User } from 'prisma/generated/client.ts';
+import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
@@ -331,13 +331,11 @@ describe('EventCreation', () => {
       });
 
       expect(result.success).toBe(false);
-      if (!result.success) {
-        const { fieldErrors } = z.flattenError(result.error!);
-        expect(fieldErrors.name).toEqual(['Too small: expected string to have >=3 characters']);
-        expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
-        expect(fieldErrors.type).toEqual(['Invalid option: expected one of "CONFERENCE"|"MEETUP"']);
-        expect(fieldErrors.visibility).toEqual(['Invalid option: expected one of "PUBLIC"|"PRIVATE"']);
-      }
+      const { fieldErrors } = z.flattenError(result.error!);
+      expect(fieldErrors.name).toEqual(['Too small: expected string to have >=3 characters']);
+      expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
+      expect(fieldErrors.type).toEqual(['Invalid option: expected one of "CONFERENCE"|"MEETUP"']);
+      expect(fieldErrors.visibility).toEqual(['Invalid option: expected one of "PUBLIC"|"PRIVATE"']);
     });
 
     it('returns an error when slug already exists', async () => {
@@ -351,10 +349,8 @@ describe('EventCreation', () => {
       });
 
       expect(result.success).toBe(false);
-      if (!result.success) {
-        const { fieldErrors } = z.flattenError(result.error!);
-        expect(fieldErrors.slug).toEqual(['This URL already exists.']);
-      }
+      const { fieldErrors } = z.flattenError(result.error!);
+      expect(fieldErrors.slug).toEqual(['This URL already exists.']);
     });
   });
 });

@@ -54,14 +54,14 @@ export default function Select({
 
         return (
           <Field className={className}>
-            <Label className={cx('block font-medium text-gray-900 text-sm leading-6', { 'sr-only': srOnly })}>
+            <Label className={cx('block text-sm leading-6 font-medium text-gray-900', { 'sr-only': srOnly })}>
               {label}
             </Label>
 
             <div className={cx('relative', { 'mt-1': !srOnly })}>
               <ListboxButton
                 className={cx(
-                  'relative w-full rounded-md bg-white py-1.5 pr-10 pl-3 text-left text-sm leading-6 ring-1 ring-gray-300 ring-inset focus:outline-hidden focus:ring-2 focus:ring-indigo-600',
+                  'relative w-full rounded-md bg-white py-1.5 pr-10 pl-3 text-left text-sm leading-6 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600 focus:outline-hidden',
                   {
                     'cursor-default text-gray-900': !disabled,
                     'cursor-not-allowed text-gray-500': disabled,

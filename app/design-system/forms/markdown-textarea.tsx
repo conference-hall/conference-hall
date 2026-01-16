@@ -1,5 +1,5 @@
-import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
+import { cx } from 'class-variance-authority';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
@@ -39,7 +39,7 @@ export function MarkdownTextArea({
   const handleOpenPreview = () => setPreviewOpen(true);
   const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) => setMarkdown(e.target.value);
 
-  const styles = cx('mt-1 block w-full overflow-hidden rounded-md border text-gray-900 text-sm', {
+  const styles = cx('mt-1 block w-full overflow-hidden rounded-md border text-sm text-gray-900', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
   });
@@ -68,8 +68,8 @@ export function MarkdownTextArea({
             </div>
           </div>
         </div>
-        <div className="absolute inset-x-px bottom-0 flex h-11 items-center justify-between space-x-3 border-gray-200 border-t px-2 py-2 sm:px-3">
-          <p className="text-gray-500 text-xs">{t('common.markdown-supported')}</p>
+        <div className="absolute inset-x-px bottom-0 flex h-11 items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
+          <p className="text-xs text-gray-500">{t('common.markdown-supported')}</p>
           {preview ? (
             <div className="shrink-0">
               <Button type="button" variant="secondary" size="sm" onClick={handleOpenPreview}>
@@ -86,8 +86,8 @@ export function MarkdownTextArea({
         </div>
       </div>
       <div id={`${name}-describe`}>
-        {description && <p className="mt-2 text-gray-500 text-sm">{description}</p>}
-        {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
+        {description && <p className="mt-2 text-sm text-gray-500">{description}</p>}
+        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </div>
     </div>
   );

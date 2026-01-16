@@ -1,9 +1,9 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from 'react-router';
+import type { Message } from '~/shared/types/conversation.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Label } from '~/design-system/typography.tsx';
-import type { Message } from '~/shared/types/conversation.types.ts';
 
 type Props = {
   intent: string;
@@ -63,9 +63,9 @@ export function MessageInputForm({
           placeholder={placeholder}
           autoComplete="off"
           style={{ fieldSizing: 'content', maxHeight: '400px' }}
-          // biome-ignore lint/a11y/noAutofocus: need autoFocus on message when opening
+          // oxlint-disable-next-line
           autoFocus={autoFocus}
-          className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 text-sm leading-6 placeholder:text-gray-400 focus:ring-0"
+          className="block w-full resize-none border-0 bg-transparent py-1.5 text-sm leading-6 text-gray-900 placeholder:text-gray-400 focus:ring-0"
         />
       </div>
 

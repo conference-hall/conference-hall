@@ -1,8 +1,8 @@
-import { db } from 'prisma/db.server.ts';
 import type { Team, User } from 'prisma/generated/client.ts';
+import type { Mock } from 'vitest';
+import { db } from 'prisma/db.server.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import type { Mock } from 'vitest';
 import { auth } from '~/shared/authentication/firebase.server.ts';
 import { UserNotFoundError } from '~/shared/errors.server.ts';
 import { AdminUsers } from './admin-users.server.ts';

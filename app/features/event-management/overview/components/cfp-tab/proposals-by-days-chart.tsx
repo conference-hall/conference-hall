@@ -1,9 +1,9 @@
+import type { TooltipContentProps } from 'recharts';
+import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent.js';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { TooltipContentProps } from 'recharts';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent.js';
 import { NoData } from '~/design-system/dashboard/no-data.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -69,7 +69,7 @@ function CumulativeByDayChart({ data }: { data: ChartData }) {
           tick={{ transform: 'translate(0, 6)' }}
           minTickGap={5}
         />
-        <CartesianGrid vertical={false} className="stroke-1 stroke-gray-200" />
+        <CartesianGrid vertical={false} className="stroke-gray-200 stroke-1" />
         <Area
           dataKey="cumulative"
           stroke="#6366f1"
@@ -121,7 +121,7 @@ function CountByDayChart({ data }: { data: ChartData }) {
           tick={{ transform: 'translate(0, 6)' }}
           minTickGap={5}
         />
-        <CartesianGrid vertical={false} className="stroke-1 stroke-gray-200" />
+        <CartesianGrid vertical={false} className="stroke-gray-200 stroke-1" />
         <Bar dataKey="count" type="linear" fill="#6366f1" maxBarSize={40} isAnimationActive={false} />
         <Tooltip
           isAnimationActive={false}
@@ -171,7 +171,7 @@ function ChartSelector({ selected, onSelect }: ChartSelectorProps) {
         type="button"
         onClick={() => onSelect('count')}
         className={cx(
-          'flex cursor-pointer items-center rounded-md px-3 py-1 font-semibold text-sm outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
+          'flex cursor-pointer items-center rounded-md px-3 py-1 text-sm font-semibold outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
           { 'bg-white shadow-sm': selected === 'count' },
         )}
       >
@@ -181,7 +181,7 @@ function ChartSelector({ selected, onSelect }: ChartSelectorProps) {
         type="button"
         onClick={() => onSelect('cumulative')}
         className={cx(
-          'flex cursor-pointer items-center rounded-md px-3 py-1 font-semibold text-sm outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
+          'flex cursor-pointer items-center rounded-md px-3 py-1 text-sm font-semibold outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
           { 'bg-white shadow-sm': selected === 'cumulative' },
         )}
       >

@@ -37,10 +37,8 @@ describe('Speaker schemas', () => {
       });
 
       expect(result.success).toEqual(false);
-      if (!result.success) {
-        const { fieldErrors } = z.flattenError(result.error);
-        expect(fieldErrors.name).toEqual(['Too small: expected string to have >=1 characters']);
-      }
+      const { fieldErrors } = z.flattenError(result.error!);
+      expect(fieldErrors.name).toEqual(['Too small: expected string to have >=1 characters']);
     });
   });
 
@@ -81,10 +79,8 @@ describe('Speaker schemas', () => {
       });
 
       expect(result.success).toEqual(false);
-      if (!result.success) {
-        const { fieldErrors } = z.flattenError(result.error);
-        expect(fieldErrors.email).toEqual(['Invalid email address']);
-      }
+      const { fieldErrors } = z.flattenError(result.error!);
+      expect(fieldErrors.email).toEqual(['Invalid email address']);
     });
   });
 });

@@ -15,7 +15,7 @@ export function StatisticCard({ label, stat, children }: Props) {
         <Text id={id} variant="secondary">
           {label}
         </Text>
-        <div className="font-semibold text-3xl">{stat}</div>
+        <div className="text-3xl font-semibold">{stat}</div>
       </div>
       {children}
     </Card>

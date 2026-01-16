@@ -1,5 +1,5 @@
-import { arrow, FloatingArrow, flip, offset, type Placement, shift, useFloating } from '@floating-ui/react';
 import type React from 'react';
+import { arrow, FloatingArrow, flip, offset, type Placement, shift, useFloating } from '@floating-ui/react';
 import { useRef, useState } from 'react';
 
 interface TooltipProps {
@@ -29,7 +29,7 @@ export function Tooltip({ text, placement = 'top', as: Tag = 'div', children }: 
         <div
           ref={refs.setFloating}
           style={floatingStyles}
-          className="z-50 max-w-sm rounded-sm bg-gray-800 p-3 py-2 font-medium text-white text-xs"
+          className="z-50 max-w-sm rounded-sm bg-gray-800 p-3 py-2 text-xs font-medium text-white"
         >
           {text}
           <FloatingArrow ref={arrowRef} context={context} fill="#1F2937" />

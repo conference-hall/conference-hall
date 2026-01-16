@@ -8,8 +8,8 @@ import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { CoSpeakerTalkInvite } from '~/features/speaker/talk-invitation/services/co-speaker-talk-invite.server.ts';
 import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
-import { SpeakerPill } from '../talk-library/components/speakers.tsx';
 import type { Route } from './+types/talk-invitation.ts';
+import { SpeakerPill } from '../talk-library/components/speakers.tsx';
 
 export const middleware = [requireAuth];
 

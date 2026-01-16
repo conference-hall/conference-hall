@@ -1,7 +1,7 @@
-import { Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react';
 import type { VariantProps } from 'class-variance-authority';
-import { cva, cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
+import { Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react';
+import { cva, cx } from 'class-variance-authority';
 import { Background, ModalTransition } from '../transitions.tsx';
 import { CloseButton } from './close-button.tsx';
 
@@ -52,7 +52,7 @@ export function Modal({ title, children, size, open, onClose }: Props) {
 function Title({ children, onClose }: { children: ReactNode; onClose: VoidFunction }) {
   return (
     <div className="flex items-start justify-between">
-      <DialogTitle as="h1" className="font-semibold text-base text-gray-900 leading-6">
+      <DialogTitle as="h1" className="text-base leading-6 font-semibold text-gray-900">
         {children}
       </DialogTitle>
       <CloseButton onClose={onClose} />

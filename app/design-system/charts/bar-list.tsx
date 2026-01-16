@@ -71,7 +71,7 @@ function BarListInner<T>({
                     relative="path"
                     className={cx(
                       // base
-                      'truncate whitespace-nowrap rounded-sm text-sm',
+                      'truncate rounded-sm text-sm whitespace-nowrap',
                       // text color
                       'text-gray-900',
                       // hover
@@ -84,7 +84,7 @@ function BarListInner<T>({
                   <p
                     className={cx(
                       // base
-                      'truncate whitespace-nowrap text-sm',
+                      'truncate text-sm whitespace-nowrap',
                       // text color
                       'text-gray-900',
                     )}
@@ -110,7 +110,7 @@ function BarListInner<T>({
             <p
               className={cx(
                 // base
-                'truncate whitespace-nowrap text-sm leading-none',
+                'truncate text-sm leading-none whitespace-nowrap',
                 // text color
                 'text-gray-900',
               )}

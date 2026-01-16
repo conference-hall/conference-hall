@@ -32,7 +32,7 @@ export function EmailPreview({ from, subject, preview }: Props) {
 
   return (
     <div className="space-y-4 rounded-lg border border-gray-200 pb-4">
-      <div className="space-y-4 rounded-t-lg border-gray-200 border-b bg-gray-50 p-6">
+      <div className="space-y-4 rounded-t-lg border-b border-gray-200 bg-gray-50 p-6">
         <Text variant="secondary">
           <strong>{t('event-management.settings.emails.preview.from')}</strong> {from}
         </Text>

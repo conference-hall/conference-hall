@@ -1,7 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
-import { ProposalPage } from './proposal.page.ts';
-import { SubmissionPage } from './submission.page.ts';
 
 export class ProposalListPage extends PageObject {
   readonly heading: Locator;
@@ -31,11 +29,9 @@ export class ProposalListPage extends PageObject {
 
   async clickOnProposal(title: string) {
     await this.proposal(title).click();
-    return new ProposalPage(this.page);
   }
 
   async clickOnSubmitProposal() {
     await this.page.getByRole('link', { name: 'Submit a proposal' }).click();
-    return new SubmissionPage(this.page);
   }
 }

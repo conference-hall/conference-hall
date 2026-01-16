@@ -1,7 +1,7 @@
 import type { VariantProps } from 'class-variance-authority';
-import { cva, cx } from 'class-variance-authority';
 import type React from 'react';
 import type { LinkProps as RouterLinkProps } from 'react-router';
+import { cva, cx } from 'class-variance-authority';
 import { Link as RouterLink } from 'react-router';
 import type { TypographyVariantProps } from './typography.tsx';
 import { typography } from './typography.tsx';

@@ -1,6 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
-import { ProposalPage } from './proposal.page.ts';
 
 export class ProposalsListPage extends PageObject {
   readonly heading: Locator;
@@ -46,7 +45,6 @@ export class ProposalsListPage extends PageObject {
 
   async clickOnProposal(name: string) {
     await this.proposal(name).click();
-    return new ProposalPage(this.page);
   }
 
   async clickOnProposalCheckbox(name: string) {

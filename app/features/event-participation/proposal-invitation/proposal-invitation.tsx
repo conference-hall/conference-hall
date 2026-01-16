@@ -7,9 +7,9 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
+import type { Route } from './+types/proposal-invitation.ts';
 import { EventCard } from '../../event-search/components/event-card.tsx';
 import { SpeakerPill } from '../../speaker/talk-library/components/speakers.tsx';
-import type { Route } from './+types/proposal-invitation.ts';
 import { CoSpeakerProposalInvite } from './services/co-speaker-proposal-invite.server.ts';
 
 export const middleware = [requireAuth];

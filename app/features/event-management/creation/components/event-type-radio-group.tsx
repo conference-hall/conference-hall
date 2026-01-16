@@ -1,8 +1,8 @@
 import { Description, Field, Fieldset, Label, Legend, Radio, RadioGroup } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { EVENT_TYPES } from '~/shared/constants.ts';
 import type { EventType } from '~/shared/types/events.types.ts';
+import { EVENT_TYPES } from '~/shared/constants.ts';
 
 type Props = { selected: EventType; onSelect: (type: EventType) => void };
 
@@ -10,7 +10,7 @@ export function EventTypeRadioGroup({ selected, onSelect }: Props) {
   const { t } = useTranslation();
   return (
     <Fieldset>
-      <Legend className="font-medium text-gray-900 text-sm">{t('event-management.fields.type')}</Legend>
+      <Legend className="text-sm font-medium text-gray-900">{t('event-management.fields.type')}</Legend>
 
       <RadioGroup name="type" value={selected} onChange={onSelect}>
         <div className="mt-4 -space-y-px rounded-md bg-white">
@@ -40,7 +40,7 @@ export function EventTypeRadioGroup({ selected, onSelect }: Props) {
                       <span className="h-1.5 w-1.5 rounded-full bg-white" />
                     </span>
                     <span className="ml-3 flex flex-col gap-2">
-                      <Label className={cx(checked ? 'text-indigo-900' : 'text-gray-900', 'block font-medium text-sm')}>
+                      <Label className={cx(checked ? 'text-indigo-900' : 'text-gray-900', 'block text-sm font-medium')}>
                         {t(`common.event.type.label.${type}`)}
                       </Label>
                       <Description className={cx(checked ? 'text-indigo-700' : 'text-gray-500', 'block text-sm')}>

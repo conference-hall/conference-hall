@@ -22,9 +22,10 @@ interface MyJobPayload {
 }
 
 export const myJob = job<MyJobPayload>({
-  name: 'unique-job-name',      // Required: Job identifier
-  queue: 'default',             // Optional: Queue name
-  run: async (payload) => {     // Required: Job execution function
+  name: 'unique-job-name', // Required: Job identifier
+  queue: 'default', // Optional: Queue name
+  run: async (payload) => {
+    // Required: Job execution function
     // Implementation
     console.log('Processing job for user:', payload.userId);
   },
@@ -32,6 +33,7 @@ export const myJob = job<MyJobPayload>({
 ```
 
 **Default Settings:**
+
 - **Retry attempts**: 5
 - **Backoff strategy**: Exponential with 3000ms delay
 - **Concurrency**: 1 per worker
@@ -59,10 +61,10 @@ import { myJob } from './my-job.ts';
 
 test('processes job successfully', async () => {
   const payload = { userId: 'user-123', data: {} };
-  
+
   // Call job logic directly
   await myJob.config.run(payload);
-  
+
   // Assert expected behavior
   expect(/* your assertions */);
 });
@@ -81,7 +83,7 @@ test('sends email job', async () => {
     to: ['test@example.com'],
     // ... other properties
   });
-  
+
   // Verify job was triggered
   expect(sendEmail.trigger).toHaveBeenCalledWith({
     template: 'test-template',
@@ -103,18 +105,21 @@ test('sends email job', async () => {
 ## Environment Configuration
 
 Required environment variables:
+
 - `REDIS_URL` - Redis connection string
 - `DATABASE_URL` - PostgreSQL connection
 
 ## Monitoring
 
 Jobs are logged with structured data including:
+
 - Job name and queue
 - Execution time
 - Success/failure status
 - Error details for failed jobs
 
 Worker events are logged:
+
 - `ready` - Worker started with available jobs
 - `completed` - Job finished successfully
 - `failed` - Job failed with error details

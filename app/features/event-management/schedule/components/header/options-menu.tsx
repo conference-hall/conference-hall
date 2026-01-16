@@ -14,8 +14,8 @@ import { useParams, useSubmit } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { menuItem, menuItemIcon, menuItems, menuSection, menuSeparator } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
-import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 import type { ZoomHandlers } from './use-zoom-handlers.tsx';
+import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 
 type Props = { openTracksModal: VoidFunction; zoomHandlers: ZoomHandlers };
 

@@ -25,7 +25,7 @@ export function CodeBlock({ code, label }: Props) {
 
   return (
     <div className="space-y-1">
-      {label ? <div className="font-medium text-sm">{label}</div> : null}
+      {label ? <div className="text-sm font-medium">{label}</div> : null}
       <div className="relative">
         <code className="block overflow-x-auto rounded-md bg-gray-100 p-4 pr-16 text-xs">{code}</code>
         <Button

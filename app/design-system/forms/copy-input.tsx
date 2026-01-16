@@ -5,10 +5,9 @@ import { useTranslation } from 'react-i18next';
 
 type Props = {
   label?: string;
-  error?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function CopyInput({ id, type = 'text', value, className, error, ...rest }: Props) {
+export function CopyInput({ id, type = 'text', value, className, ...rest }: Props) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 
@@ -32,7 +31,7 @@ export function CopyInput({ id, type = 'text', value, className, error, ...rest 
         <button
           type="button"
           onClick={handleClick}
-          className="relative -ml-px inline-flex cursor-pointer items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 font-medium text-gray-700 text-sm hover:bg-gray-100 focus:border-indigo-500 focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
+          className="relative -ml-px inline-flex cursor-pointer items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-hidden"
         >
           {copied ? (
             <>

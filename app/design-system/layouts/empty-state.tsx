@@ -1,5 +1,4 @@
 import { cx } from 'class-variance-authority';
-
 import { Text } from '../typography.tsx';
 import { Card } from './card.tsx';
 

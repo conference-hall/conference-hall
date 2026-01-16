@@ -4,15 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
 import { InputTimezone } from '~/design-system/forms/input-timezone.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { ScheduleCreateSchema } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
-import { useCurrentEventTeam } from '../event-team-context.tsx';
 import type { Route } from './+types/new.ts';
+import { useCurrentEventTeam } from '../event-team-context.tsx';
 import { EventSchedule } from './services/schedule.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {

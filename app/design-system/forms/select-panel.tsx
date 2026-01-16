@@ -261,7 +261,7 @@ export function SelectPanel({
       <Popover>
         {({ close }) => (
           <>
-            <PopoverButton className="w-full cursor-pointer rounded-sm focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2">
+            <PopoverButton className="w-full cursor-pointer rounded-sm focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600">
               {children}
             </PopoverButton>
             <PopoverPanel className={cx('mt-2', menuItems('w-(--button-width)'))} anchor="bottom">

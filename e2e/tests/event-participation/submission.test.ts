@@ -5,6 +5,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { ProposalListPage } from './proposal-list.page.ts';
+import { ProposalPage } from './proposal.page.ts';
 import { SubmissionPage } from './submission.page.ts';
 import { SurveyPage } from './survey.page.ts';
 
@@ -56,10 +57,11 @@ test('submits a new talk for a conference (full funnel)', async ({ page }) => {
   // Step: confirmation
   await submissionPage.waitFor('New title');
   await submissionPage.checkboxInput('Please agree with the code of conduct of the event.').check();
-  const proposalPage = await submissionPage.clickOnSubmit();
+  await submissionPage.clickOnSubmit();
   await expect(submissionPage.toast).toHaveText('Congratulation! Proposal submitted!');
 
   // Check the proposal details
+  const proposalPage = new ProposalPage(page);
   await proposalPage.waitFor();
   await expect(proposalPage.speaker('Clark Kent')).toBeVisible();
   await expect(page.getByText('New abstract')).toBeVisible();
@@ -110,10 +112,11 @@ test('submits an existing talk', async ({ page }) => {
   // Step: confirmation
   await submissionPage.waitFor('Update title');
   await submissionPage.checkboxInput('Please agree with the code of conduct of the event.').check();
-  const proposalPage = await submissionPage.clickOnSubmit();
+  await submissionPage.clickOnSubmit();
   await expect(submissionPage.toast).toHaveText('Congratulation! Proposal submitted!');
 
   // Check the proposal details
+  const proposalPage = new ProposalPage(page);
   await proposalPage.waitFor();
   await expect(proposalPage.speaker('Clark Kent')).toBeVisible();
   await expect(page.getByText('Update abstract')).toBeVisible();
@@ -252,8 +255,11 @@ test('cannot submit a talk when max proposal reached', async ({ page }) => {
 
   // Step: confirmation
   await submissionPage.waitFor('New title');
-  const proposalPage = await submissionPage.clickOnSubmit();
+  await submissionPage.clickOnSubmit();
   await expect(submissionPage.toast).toHaveText('Congratulation! Proposal submitted!');
+
+  // Redirect to proposal page
+  const proposalPage = new ProposalPage(page);
   await proposalPage.waitFor();
 
   // Check the proposal is in the list

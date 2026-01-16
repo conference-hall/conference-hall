@@ -1,14 +1,14 @@
 import { db } from 'prisma/db.server.ts';
-import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
-import { ProposalNotFoundError, ReviewDisabledError } from '~/shared/errors.server.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
+import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
+import { ProposalNotFoundError, ReviewDisabledError } from '~/shared/errors.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
-import { ReviewDetails } from '../models/review-details.ts';
 import type { ReviewUpdateData } from './proposal-review.schema.server.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
+import { ReviewDetails } from '../models/review-details.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
 export type ProposalReviewData = Awaited<ReturnType<typeof ProposalReview.prototype.get>>;

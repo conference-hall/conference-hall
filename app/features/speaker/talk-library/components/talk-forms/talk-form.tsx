@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
+import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { Callout } from '~/design-system/callout.tsx';
 import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
 import { Radio } from '~/design-system/forms/input-radio.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import MultiSelect from '~/design-system/forms/multi-select.tsx';
 import { LANGUAGES, TALK_LEVELS } from '~/shared/constants.ts';
-import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { CategoriesForm } from './categories-form.tsx';
 import { FormatsForm } from './formats-form.tsx';
 

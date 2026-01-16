@@ -1,11 +1,11 @@
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import type { Message } from '~/shared/types/conversation.types.ts';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { AvatarGroup } from '~/design-system/avatar.tsx';
 import { buttonStyles } from '~/design-system/button.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ConversationDrawer } from '~/features/conversations/components/conversation-drawer.tsx';
-import type { Message } from '~/shared/types/conversation.types.ts';
 
 type Props = {
   messages: Array<Message>;

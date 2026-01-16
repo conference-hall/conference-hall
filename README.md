@@ -41,7 +41,7 @@ If you want to contribute and make **Conference Hall** better, read our [Contrib
 
 ### Stack
 
-React / React router v7 / Typescript / Tailwind / HeadlessUI / Conform / Zod / Prisma / Firebase Auth / Mailgun / Express / Postgresql / Redis / BullMQ / Biome / Vitest / Playwright
+React / React router v7 / Typescript / Tailwind / HeadlessUI / Conform / Zod / Prisma / Firebase Auth / Mailgun / Express / Postgresql / Redis / BullMQ / Oxlint / Oxfmt / Vitest / Playwright
 
 ### Prerequisites
 

@@ -1,11 +1,11 @@
-import { db } from 'prisma/db.server.ts';
 import type { Event, Team, User } from 'prisma/generated/client.ts';
+import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 import { SurveyConfig } from '../models/survey-config.ts';
 import { EventSurveySettings, type SurveyMoveQuestion } from './event-survey-settings.server.ts';
 
@@ -115,8 +115,7 @@ describe('EventSurveySettings', () => {
       await surveySettings.addQuestion(newQuestion);
 
       const result = await db.event.findUnique({ where: { id: event.id } });
-      if (!result) expect.fail();
-      const survey = new SurveyConfig(result?.surveyConfig);
+      const survey = new SurveyConfig(result!.surveyConfig);
       expect(survey.questions).toContainEqual(newQuestion);
     });
 
@@ -145,8 +144,7 @@ describe('EventSurveySettings', () => {
       await surveySettings.updateQuestion(updatedQuestion);
 
       const result = await db.event.findUnique({ where: { id: event.id } });
-      if (!result) expect.fail();
-      const survey = new SurveyConfig(result?.surveyConfig);
+      const survey = new SurveyConfig(result!.surveyConfig);
       expect(survey.questions).toContainEqual(updatedQuestion);
     });
 
@@ -170,8 +168,7 @@ describe('EventSurveySettings', () => {
       await surveySettings.removeQuestion(questionId);
 
       const result = await db.event.findUnique({ where: { id: event.id } });
-      if (!result) expect.fail();
-      const survey = new SurveyConfig(result?.surveyConfig);
+      const survey = new SurveyConfig(result!.surveyConfig);
       expect(survey.questions).not.toContainEqual(expect.objectContaining({ id: questionId }));
     });
 
@@ -196,8 +193,7 @@ describe('EventSurveySettings', () => {
       await surveySettings.moveQuestion(moveParams);
 
       const result = await db.event.findUnique({ where: { id: event.id } });
-      if (!result) expect.fail();
-      const survey = new SurveyConfig(result?.surveyConfig);
+      const survey = new SurveyConfig(result!.surveyConfig);
       expect(survey.questions).toEqual([
         {
           id: 'accomodation',

@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["unicorn", "typescript", "oxc", "import", "jsx-a11y", "node", "promise", "react", "react-perf", "vitest"],
+  "categories": { "correctness": "error" },
+  "rules": {
+    "import/no-cycle": ["error", { "maxDepth": 3 }],
+    "no-unused-expressions": ["error", { "allowTernary": true }],
+    "no-conditional-expect": "off",
+    "require-to-throw-message": "off",
+    "prefer-tag-over-role": "off",
+    "mouse-events-have-key-events": "off",
+    "no-autofocus": "off"
+  }
+}

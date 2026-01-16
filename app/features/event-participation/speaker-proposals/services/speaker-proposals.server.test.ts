@@ -2,9 +2,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
-
 import { SpeakerProposals } from './speaker-proposals.server.ts';
 
 describe('SpeakerProposals', () => {

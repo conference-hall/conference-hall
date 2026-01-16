@@ -35,7 +35,7 @@ export function SlideOver({ open, title, size = 'm', withBorder = true, onClose,
               >
                 <div className="z-50">
                   {title ? (
-                    <DialogTitle className="px-4 py-4 font-semibold text-base text-gray-900 leading-6">
+                    <DialogTitle className="px-4 py-4 text-base leading-6 font-semibold text-gray-900">
                       {title}
                     </DialogTitle>
                   ) : null}

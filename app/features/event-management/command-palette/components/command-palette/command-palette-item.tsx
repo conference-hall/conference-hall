@@ -13,7 +13,7 @@ export function CommandPaletteItem({ item, query }: Props) {
     <ComboboxOption
       key={item.id}
       value={item}
-      className="group flex cursor-pointer select-none items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-gray-50 data-focus:bg-gray-100"
+      className="group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 select-none hover:bg-gray-50 data-focus:bg-gray-100"
     >
       {item.picture ? <Avatar picture={item.picture} name={title} size="s" /> : <ItemIcon icon={item.icon} />}
 

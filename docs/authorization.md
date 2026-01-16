@@ -26,7 +26,7 @@ Three roles exist with hierarchical permissions:
 Validates that a user is a member of a team and returns an authorized context.
 
 ```typescript
-const authorizedTeam = await getAuthorizedTeam(user.id, "my-team");
+const authorizedTeam = await getAuthorizedTeam(user.id, 'my-team');
 // Returns: { userId, teamId, role, permissions }
 ```
 
@@ -45,7 +45,7 @@ const authorizedTeam = await getAuthorizedTeam(user.id, "my-team");
 Validates that a user can access an event within their authorized team.
 
 ```typescript
-const authorizedEvent = await getAuthorizedEvent(authorizedTeam, "my-event");
+const authorizedEvent = await getAuthorizedEvent(authorizedTeam, 'my-event');
 // Returns: { userId, teamId, role, permissions, event }
 ```
 
@@ -77,11 +77,7 @@ export const middleware = [requiredAuthMiddleware, requireAuthorizedTeam];
 Validates event access and sets authorized event context.
 
 ```typescript
-export const middleware = [
-  requiredAuthMiddleware,
-  requireAuthorizedTeam,
-  requireAuthorizedEvent,
-];
+export const middleware = [requiredAuthMiddleware, requireAuthorizedTeam, requireAuthorizedEvent];
 ```
 
 ### Middleware Chain
@@ -163,7 +159,7 @@ const permissions = UserTeamPermissions.getPermissions(TeamRole.MEMBER);
 Services receive pre-authorized contexts, so tests focus on permission checks:
 
 ```typescript
-it("throws an error if user role is not owner or member", async () => {
+it('throws an error if user role is not owner or member', async () => {
   const reviewer = await userFactory();
   const team = await teamFactory({ reviewers: [reviewer] });
   const event = await eventFactory({ team });
@@ -172,7 +168,7 @@ it("throws an error if user role is not owner or member", async () => {
   const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
   await expect(async () => {
-    await EventSettings.for(authorizedEvent).update({ name: "Updated" });
+    await EventSettings.for(authorizedEvent).update({ name: 'Updated' });
   }).rejects.toThrowError(ForbiddenOperationError);
 });
 ```

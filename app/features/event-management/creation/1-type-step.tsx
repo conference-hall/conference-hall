@@ -2,10 +2,10 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
+import type { EventType } from '~/shared/types/events.types.ts';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import type { EventType } from '~/shared/types/events.types.ts';
 import { EventTypeRadioGroup } from './components/event-type-radio-group.tsx';
 import { useCurrentTeam } from './team-context.tsx';
 

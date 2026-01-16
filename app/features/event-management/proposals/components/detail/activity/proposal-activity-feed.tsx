@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
+import type { Feed } from '~/features/event-management/proposals/services/activity-feed.server.ts';
+import type { Message } from '~/shared/types/conversation.types.ts';
 import { useUser } from '~/app-platform/components/user-context.tsx';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { MessageInputForm } from '~/features/conversations/components/message-input-form.tsx';
-import type { Feed } from '~/features/event-management/proposals/services/activity-feed.server.ts';
-import type { Message } from '~/shared/types/conversation.types.ts';
 import { CommentEntry } from './comment-entry.tsx';
 import { ReviewEntry } from './review-entry.tsx';
 import { SpeakerConversationEntry } from './speaker-conversation-entry.tsx';

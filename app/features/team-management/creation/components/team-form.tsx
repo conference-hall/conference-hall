@@ -1,9 +1,8 @@
 import slugify from '@sindresorhus/slugify';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { Input } from '~/design-system/forms/input.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
+import { Input } from '~/design-system/forms/input.tsx';
 
 type TeamFormProps = {
   initialValues?: { name: string; slug: string };

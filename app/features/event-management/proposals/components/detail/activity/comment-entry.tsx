@@ -1,7 +1,7 @@
+import type { FeedItem } from '~/features/event-management/proposals/services/activity-feed.server.ts';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { MessageBlock } from '~/features/conversations/components/message-block.tsx';
-import type { FeedItem } from '~/features/event-management/proposals/services/activity-feed.server.ts';
 
 // todo(comments): FeedItem type should be shared (not on server)
 export function CommentEntry({ item, canManageConversations }: { item: FeedItem; canManageConversations: boolean }) {

@@ -1,5 +1,5 @@
-import { Transition, TransitionChild } from '@headlessui/react';
 import type { ReactNode } from 'react';
+import { Transition, TransitionChild } from '@headlessui/react';
 
 type TransitionProps = { show?: boolean; children: ReactNode };
 

@@ -1,8 +1,8 @@
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
+import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { toDateInput } from '~/shared/datetimes/datetimes.ts';
 import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
-import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { Input } from './input.tsx';
 
 type Props = {
@@ -91,7 +91,7 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
           suppressHydrationWarning
         />
       </div>
-      {error && <p className="mt-1 text-red-600 text-sm">{error}</p>}
+      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );
 }

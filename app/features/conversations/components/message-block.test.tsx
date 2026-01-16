@@ -2,8 +2,8 @@ import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { page } from 'vitest/browser';
-import { UserProvider } from '~/app-platform/components/user-context.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
+import { UserProvider } from '~/app-platform/components/user-context.tsx';
 import { MessageBlock } from './message-block.tsx';
 
 describe('MessageBlock component', () => {

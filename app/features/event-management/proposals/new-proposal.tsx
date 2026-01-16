@@ -69,7 +69,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
         return redirect(href('/team/:team/:event/proposals/:proposal', { ...params, proposal: proposal.routeId }), {
           headers,
         });
-      } catch (_error) {
+      } catch {
         return toast('error', i18n.t('error.global'));
       }
     }

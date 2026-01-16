@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { TeamOrderByWithRelationInput, TeamWhereInput } from 'prisma/generated/models.ts';
+import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
 import { NotAuthorizedError } from '~/shared/errors.server.ts';

@@ -2,9 +2,9 @@ import { EyeIcon, PencilSquareIcon } from '@heroicons/react/16/solid';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
+import type { SpeakerData } from '~/shared/types/speaker.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
-import type { SpeakerData } from '~/shared/types/speaker.types.ts';
 import { SpeakerInfo } from './speaker-info.tsx';
 import { SpeakerLinks } from './speaker-links.tsx';
 import { SpeakerSurveyAnswers } from './speaker-survey-answers.tsx';
@@ -29,7 +29,7 @@ export function SpeakerDrawer({ team, event, speaker, canEditSpeaker, children }
         type="button"
         aria-label={t('speaker.view-profile', { name: speaker.name })}
         onClick={() => setOpen(true)}
-        className="group cursor-pointer rounded-full focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2"
+        className="group cursor-pointer rounded-full focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600"
       >
         {children}
       </button>

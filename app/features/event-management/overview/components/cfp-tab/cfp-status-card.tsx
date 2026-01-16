@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
+import type { CfpState } from '~/shared/types/events.types.ts';
 import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
@@ -9,7 +10,6 @@ import {
   CallForPaperStatusLabel,
   cfpColorStatus,
 } from '~/features/event-participation/event-page/components/cfp.tsx';
-import type { CfpState } from '~/shared/types/events.types.ts';
 
 type Props = {
   team: string;

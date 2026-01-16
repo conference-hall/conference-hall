@@ -20,7 +20,7 @@ export function SelectAllBanner({
 
   if (isAllPagesSelected) {
     return (
-      <div className="border-gray-200 border-b bg-blue-50 px-4 py-3 text-center sm:px-6">
+      <div className="border-b border-gray-200 bg-blue-50 px-4 py-3 text-center sm:px-6">
         <Text variant="secondary" size="s">
           <Trans
             i18nKey="event-management.proposals.selection.all-pages.label"
@@ -38,7 +38,7 @@ export function SelectAllBanner({
   if (!isCurrentPageSelected) return null;
 
   return (
-    <div className="border-gray-200 border-b bg-blue-50 px-4 py-3 text-center sm:px-6">
+    <div className="border-b border-gray-200 bg-blue-50 px-4 py-3 text-center sm:px-6">
       <Text variant="secondary" size="s">
         <Trans
           i18nKey="event-management.proposals.selection.select-all.label"

@@ -1,12 +1,12 @@
+import type { ReactNode } from 'react';
 import { RestrictToWindow } from '@dnd-kit/dom/modifiers';
 import { DragDropProvider, PointerSensor, useDragDropMonitor, useDraggable, useDroppable } from '@dnd-kit/react';
 import { cx } from 'class-variance-authority';
 import { addMinutes } from 'date-fns';
-import type { ReactNode } from 'react';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatDate, formatTime, toDateInput } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
+import { formatDate, formatTime, toDateInput } from '~/shared/datetimes/datetimes.ts';
 import {
   getDailyTimeSlots,
   haveSameStartDate,
@@ -143,7 +143,7 @@ function ScheduleDay({
               {/* gutter */}
               {dayIndex === 0 && <th className="w-12 border-b" />}
               {/* day */}
-              <th className="border-b font-semibold text-sm" colSpan={tracks.length}>
+              <th className="border-b text-sm font-semibold" colSpan={tracks.length}>
                 {formatDate(day, { format: 'long', locale })}
               </th>
             </tr>
@@ -151,13 +151,13 @@ function ScheduleDay({
           <tr className={cx('divide-x', { 'h-12': !displayMultipleDays, 'h-8': displayMultipleDays })}>
             {/* gutter */}
             {dayIndex === 0 && (
-              <th className="w-12 bg-white text-center font-normal text-gray-400 text-xs">
+              <th className="w-12 bg-white text-center text-xs font-normal text-gray-400">
                 {getGMTOffset(timezone, locale)}
               </th>
             )}
             {/* tracks header */}
             {tracks.map((track) => (
-              <th key={track.id} className="px-2 font-semibold text-gray-900 text-sm">
+              <th key={track.id} className="px-2 text-sm font-semibold text-gray-900">
                 <div className="truncate" title={track.name}>
                   {track.name}
                 </div>
@@ -186,7 +186,7 @@ function ScheduleDay({
               <tr key={`${startHour}-${endHour}`} className="divide-x">
                 {/* gutter */}
                 {dayIndex === 0 && (
-                  <td className="relative whitespace-nowrap text-gray-500 text-xs">
+                  <td className="relative text-xs whitespace-nowrap text-gray-500">
                     <time className="absolute -top-2 right-2" dateTime={startHour}>
                       {startHour}
                     </time>

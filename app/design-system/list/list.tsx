@@ -1,7 +1,7 @@
-import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
-import { Trans } from 'react-i18next';
 import type { LinkProps } from 'react-router';
+import { cx } from 'class-variance-authority';
+import { Trans } from 'react-i18next';
 import { Link } from 'react-router';
 import { Pagination, PaginationMobile } from '~/design-system/list/pagination.tsx';
 
@@ -13,7 +13,7 @@ export function List({ children }: { children: ReactNode }) {
 // <List.Header /> component
 function Header({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cx('flex items-center justify-between border-gray-200 border-b p-4', className)}>{children}</div>
+    <div className={cx('flex items-center justify-between border-b border-gray-200 p-4', className)}>{children}</div>
   );
 }
 
@@ -58,7 +58,7 @@ List.RowLink = RowLink;
 
 // <List.Footer /> component
 function Footer({ children }: { children: ReactNode }) {
-  return <div className="flex items-center justify-between border-gray-200 border-t px-4 py-3">{children}</div>;
+  return <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3">{children}</div>;
 }
 
 List.Footer = Footer;
@@ -70,7 +70,7 @@ function PaginationFooter({ current, pages, total }: { current: number; pages: n
       <PaginationMobile current={current} total={total} />
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
-          <p className="text-gray-700 text-sm">
+          <p className="text-sm text-gray-700">
             <Trans
               i18nKey="pagination.list"
               values={{ current, pages, total }}

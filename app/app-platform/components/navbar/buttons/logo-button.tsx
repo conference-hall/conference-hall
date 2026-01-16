@@ -13,7 +13,7 @@ export function LogoButton({ variant = 'primary', hideLabel = false, className }
       to={href('/')}
       aria-label={t('common.go-to-home')}
       className={cx(
-        'flex shrink-0 items-center gap-4 truncate rounded-sm focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2',
+        'flex shrink-0 items-center gap-4 truncate rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white',
         className,
       )}
     >

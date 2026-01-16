@@ -117,7 +117,7 @@ type AvatarImageProps = {
 function AvatarImage({ picture, name, 'aria-hidden': ariaHidden, size, className }: AvatarImageProps) {
   return (
     <img
-      className={cx('outline outline-black/5 -outline-offset-1', className)}
+      className={cx('outline -outline-offset-1 outline-black/5', className)}
       src={picture}
       height={sizes[size]}
       width={sizes[size]}

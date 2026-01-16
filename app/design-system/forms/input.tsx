@@ -112,7 +112,7 @@ const iconStyle = cva('pointer-events-none flex items-center pl-3', {
   defaultVariants: { color: 'light' },
 });
 
-const addonStyle = cva('hidden select-none items-center pl-3 text-sm md:flex', {
+const addonStyle = cva('hidden items-center pl-3 text-sm select-none md:flex', {
   variants: {
     color: {
       light: 'text-gray-500',

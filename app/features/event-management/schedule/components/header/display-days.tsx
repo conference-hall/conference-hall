@@ -45,7 +45,7 @@ export function DisplayDays({ scheduleDays, displayedDays, timezone, onChangeDis
       <button
         type="button"
         onClick={() => handleDaysChange(PREVIOUS)}
-        className="flex size-9 cursor-pointer items-center justify-center rounded-l-md border-gray-300 border-y border-l text-gray-400 focus:relative enabled:hover:bg-gray-50 enabled:hover:text-gray-500 disabled:cursor-not-allowed"
+        className="flex size-9 cursor-pointer items-center justify-center rounded-l-md border-y border-l border-gray-300 text-gray-400 focus:relative enabled:hover:bg-gray-50 enabled:hover:text-gray-500 disabled:cursor-not-allowed"
         disabled={isSameDay(scheduleStartDay, displayedStartDay)}
       >
         <span className="sr-only">{t('pagination.previous')}</span>
@@ -53,7 +53,7 @@ export function DisplayDays({ scheduleDays, displayedDays, timezone, onChangeDis
       </button>
 
       <Popover>
-        <PopoverButton className="hidden h-full cursor-pointer border-gray-300 border-y px-3.5 font-semibold text-gray-900 text-sm hover:bg-gray-50 focus:relative md:block">
+        <PopoverButton className="hidden h-full cursor-pointer border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 focus:relative md:block">
           {formatDateRange(displayedStartDay, displayedEndDay, { format: 'medium', locale: i18n.language })}
         </PopoverButton>
         <PopoverPanel
@@ -81,7 +81,7 @@ export function DisplayDays({ scheduleDays, displayedDays, timezone, onChangeDis
       <button
         type="button"
         onClick={() => handleDaysChange(NEXT)}
-        className="flex size-9 cursor-pointer items-center justify-center rounded-r-md border-gray-300 border-y border-r text-gray-400 focus:relative enabled:hover:bg-gray-50 enabled:hover:text-gray-500 disabled:cursor-not-allowed"
+        className="flex size-9 cursor-pointer items-center justify-center rounded-r-md border-y border-r border-gray-300 text-gray-400 focus:relative enabled:hover:bg-gray-50 enabled:hover:text-gray-500 disabled:cursor-not-allowed"
         disabled={isSameDay(scheduleEndDay, displayedEndDay)}
       >
         <span className="sr-only">{t('pagination.next')}</span>

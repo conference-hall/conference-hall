@@ -94,7 +94,7 @@ describe('SpeakerSurvey', () => {
       const schema = await survey.buildSurveySchema();
 
       const invalidData = { name: '' };
-      expect(() => schema.parse(invalidData)).toThrowError();
+      expect(() => schema.parse(invalidData)).toThrowError('Required');
     });
 
     it('throws an error when event does not exist', async () => {

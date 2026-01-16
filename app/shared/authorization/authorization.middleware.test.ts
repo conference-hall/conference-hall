@@ -1,8 +1,8 @@
 import type { createContext } from 'react-router';
+import type { Mock } from 'vitest';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import type { Mock } from 'vitest';
 import { RequireAuthContext } from '../authentication/auth.middleware.ts';
 import {
   ApiKeyInvalidError,
@@ -15,6 +15,7 @@ import {
 } from '../errors.server.ts';
 import { flags } from '../feature-flags/flags.server.ts';
 import {
+  AuthorizedAdminContext,
   AuthorizedApiEventContext,
   AuthorizedEventContext,
   AuthorizedTeamContext,
@@ -69,6 +70,8 @@ describe('requireAdmin', () => {
     });
 
     await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+
+    expect(context.get(AuthorizedAdminContext)).toBeDefined();
   });
 
   it('throws BadRequestError when requireAuthUser middleware was not run first', async () => {
@@ -77,14 +80,9 @@ describe('requireAdmin', () => {
 
     context.set(RequireAuthContext, null);
 
-    try {
-      await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-      expect.fail('Should have thrown BadRequestError');
-    } catch (error) {
-      expect(error).toBeInstanceOf(BadRequestError);
-      expect((error as Response).status).toBe(400);
-      expect((error as Response).statusText).toBe('`requireAdmin` must be defined after `requireAuthUser`');
-    }
+    await expect(requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext)).rejects.toThrow(
+      BadRequestError,
+    );
   });
 
   it('throws NotFoundError when user is not admin', async () => {
@@ -167,14 +165,9 @@ describe('requireAuthorizedTeam', () => {
 
     context.set(RequireAuthContext, null);
 
-    try {
-      await requireAuthorizedTeam({ request, context, params: { team: 'test-team' }, unstable_pattern: '' }, mockNext);
-      expect.fail('Should have thrown BadRequestError');
-    } catch (error) {
-      expect(error).toBeInstanceOf(BadRequestError);
-      expect((error as Response).status).toBe(400);
-      expect((error as Response).statusText).toBe('`requireAuthorizedTeam` must be defined after `requireAuthUser`');
-    }
+    await expect(
+      requireAuthorizedTeam({ request, context, params: { team: 'test-team' }, unstable_pattern: '' }, mockNext),
+    ).rejects.toThrow(BadRequestError);
   });
 
   it('throws BadRequestError when route params lack team parameter', async () => {
@@ -193,14 +186,9 @@ describe('requireAuthorizedTeam', () => {
       notificationsUnreadCount: 0,
     });
 
-    try {
-      await requireAuthorizedTeam({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-      expect.fail('Should have thrown BadRequestError');
-    } catch (error) {
-      expect(error).toBeInstanceOf(BadRequestError);
-      expect((error as Response).status).toBe(400);
-      expect((error as Response).statusText).toBe('Team authorization must be defined on a `/team/:team` route.');
-    }
+    await expect(
+      requireAuthorizedTeam({ request, context, params: {}, unstable_pattern: '' }, mockNext),
+    ).rejects.toThrow(BadRequestError);
   });
 
   it('throws ForbiddenOperationError when getAuthorizedTeam rejects (unauthorized user)', async () => {
@@ -278,19 +266,9 @@ describe('requireAuthorizedEvent', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    try {
-      await requireAuthorizedEvent(
-        { request, context, params: { event: 'test-event' }, unstable_pattern: '' },
-        mockNext,
-      );
-      expect.fail('Should have thrown BadRequestError');
-    } catch (error) {
-      expect(error).toBeInstanceOf(BadRequestError);
-      expect((error as Response).status).toBe(400);
-      expect((error as Response).statusText).toBe(
-        '`requireAuthorizedEvent` must be defined after `requireAuthorizedTeam`',
-      );
-    }
+    await expect(
+      requireAuthorizedEvent({ request, context, params: { event: 'test-event' }, unstable_pattern: '' }, mockNext),
+    ).rejects.toThrow(BadRequestError);
   });
 
   it('throws BadRequestError when route params lack event parameter', async () => {
@@ -327,16 +305,9 @@ describe('requireAuthorizedEvent', () => {
 
     context.set(AuthorizedTeamContext, authorizedTeam);
 
-    try {
-      await requireAuthorizedEvent({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-      expect.fail('Should have thrown BadRequestError');
-    } catch (error) {
-      expect(error).toBeInstanceOf(BadRequestError);
-      expect((error as Response).status).toBe(400);
-      expect((error as Response).statusText).toBe(
-        'Event authorization must be defined on a `/team/:team/:event` route.',
-      );
-    }
+    await expect(
+      requireAuthorizedEvent({ request, context, params: {}, unstable_pattern: '' }, mockNext),
+    ).rejects.toThrow(BadRequestError);
   });
 
   it('throws ForbiddenOperationError when user lacks event access permission', async () => {

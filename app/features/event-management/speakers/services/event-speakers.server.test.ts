@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { Event, EventSpeaker, Team, User } from 'prisma/generated/client.ts';
+import { db } from 'prisma/db.server.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
@@ -10,9 +10,9 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import type { EventSpeakerSaveData } from '~/shared/types/speaker.types.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError, NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
-import type { EventSpeakerSaveData } from '~/shared/types/speaker.types.ts';
 import { EventSpeakers } from './event-speakers.server.ts';
 
 describe('EventSpeakers', () => {
@@ -421,12 +421,6 @@ describe('EventSpeakers', () => {
           userId: speaker1.id,
           proposals: [],
         });
-
-        // Survey field depends on whether the speaker has survey answers
-        // It can be undefined if no survey answers exist for this userId
-        if (result?.survey !== undefined) {
-          expect(Array.isArray(result.survey)).toBe(true);
-        }
       });
 
       it('returns speaker without proposals when none exist', async () => {

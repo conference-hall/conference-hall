@@ -1,5 +1,5 @@
-import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
+import { cx } from 'class-variance-authority';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { Footer } from './footer.tsx';

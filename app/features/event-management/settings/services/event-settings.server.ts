@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { EventCreateInput } from 'prisma/generated/models.ts';
+import { db } from 'prisma/db.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { EventGeneralSettingsSchema } from './event-settings.schema.server.ts';

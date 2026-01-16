@@ -1,8 +1,8 @@
 // Tremor Raw Callout [v0.0.0]
 
 import type { VariantProps } from 'class-variance-authority';
-import { cva, cx } from 'class-variance-authority';
 import type React from 'react';
+import { cva, cx } from 'class-variance-authority';
 
 const calloutVariants = cva('flex flex-col overflow-hidden rounded-md p-4 text-sm', {
   variants: {
@@ -59,7 +59,7 @@ export const Callout = ({ title, icon: Icon, className, variant, children, ref, 
         </div>
       ) : null}
 
-      <div className={cx('wrap-anywhere flex items-start', children && title ? 'mt-2' : '')}>
+      <div className={cx('flex items-start wrap-anywhere', children && title ? 'mt-2' : '')}>
         {Icon && !title ? <Icon className={cx('mr-1.5 size-5 shrink-0')} aria-hidden="true" /> : null}
         <span>{children}</span>
       </div>

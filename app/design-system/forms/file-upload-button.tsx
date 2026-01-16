@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 import type { ButtonStylesProps } from '../button.tsx';
+import type { InputProps } from './input.tsx';
 import { buttonStyles } from '../button.tsx';
 import { Label } from '../typography.tsx';
-import type { InputProps } from './input.tsx';
 import { Input } from './input.tsx';
 
 type ButtonFileUploadProps = ButtonStylesProps & InputProps;
@@ -27,7 +27,7 @@ export function ButtonFileUpload({
         <Input ref={ref} id={name} name={name} type="file" className="sr-only" {...rest} />
         {children}
       </Label>
-      {error && <p className="mt-1 text-red-600 text-sm">{error}</p>}
+      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </>
   );
 }

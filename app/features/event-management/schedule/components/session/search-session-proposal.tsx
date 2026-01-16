@@ -46,7 +46,7 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
   return (
     <Combobox as="div" value={value} onChange={handleChange} className="absolute inset-0 z-10 bg-white">
       {/* Search */}
-      <div className="relative border-gray-100 border-b">
+      <div className="relative border-b border-gray-100">
         <MagnifyingGlassIcon
           className="pointer-events-none absolute top-3.5 left-4 h-5 w-5 text-gray-400"
           aria-hidden="true"
@@ -63,13 +63,13 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
         {/* Result list */}
         {results.length > 0 && (
           <li className="p-2">
-            <ul className="text-gray-700 text-sm">
+            <ul className="text-sm text-gray-700">
               {results.map((proposal) => (
                 <ComboboxOption
                   as="li"
                   key={proposal.id}
                   value={{ intent: 'proposal', proposal }}
-                  className="group flex cursor-default select-none items-center rounded-md px-3 py-2 data-focus:bg-gray-100"
+                  className="group flex cursor-default items-center rounded-md px-3 py-2 select-none data-focus:bg-gray-100"
                 >
                   <div className="flex-auto truncate">
                     <p className="truncate font-semibold">{proposal.title}</p>
@@ -84,11 +84,11 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
 
         {/* Quick actions */}
         <li className="p-2">
-          <ul className="text-gray-700 text-sm">
+          <ul className="text-sm text-gray-700">
             <ComboboxOption
               as="li"
               value={{ intent: 'raw-session' }}
-              className="group flex cursor-default select-none items-center rounded-md px-3 py-2 data-focus:bg-indigo-600 data-focus:text-white"
+              className="group flex cursor-default items-center rounded-md px-3 py-2 select-none data-focus:bg-indigo-600 data-focus:text-white"
             >
               <DocumentPlusIcon
                 className="h-6 w-6 flex-none text-gray-400 group-data-focus:text-white"

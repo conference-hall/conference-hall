@@ -1,9 +1,9 @@
 import slugify from '@sindresorhus/slugify';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Input } from '~/design-system/forms/input.tsx';
-import { InputTimezone } from '~/design-system/forms/input-timezone.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
+import { InputTimezone } from '~/design-system/forms/input-timezone.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
 import { EventVisibilityRadioGroup } from './event-visibility-radio-group.tsx';
 
 type Props = {

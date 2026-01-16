@@ -1,13 +1,13 @@
-import { FirebaseError } from 'firebase/app';
-import { AuthClientErrorCode } from 'firebase-admin/auth';
 import type { TFunction } from 'i18next';
+import type { Mock } from 'vitest';
+import { AuthClientErrorCode } from 'firebase-admin/auth';
+import { FirebaseError } from 'firebase/app';
 import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import type { Mock } from 'vitest';
 import { auth } from '~/shared/authentication/firebase.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { UserAccount } from './user-account.server.ts';

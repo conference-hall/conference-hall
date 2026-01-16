@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { EventType } from 'prisma/generated/client.ts';
+import { db } from 'prisma/db.server.ts';
 import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
 import { NotAuthorizedError } from '~/shared/errors.server.ts';
 

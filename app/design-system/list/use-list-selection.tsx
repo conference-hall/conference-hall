@@ -55,7 +55,6 @@ export const useListSelection = (ids: Array<string>, total: number, hash: string
     lastHash.current = hash;
   }, [hash, reset]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: needed for refresh
   useEffect(() => {
     if (!ref.current) return;
     ref.current.disabled = total === 0;
@@ -64,7 +63,6 @@ export const useListSelection = (ids: Array<string>, total: number, hash: string
     ref.current.onchange = toggleAll;
   }, [selection, ids, toggleAll, total, allPagesSelected]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ???
   return useMemo(
     () => ({
       ref,

@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { EventIntegrationName } from 'prisma/generated/client.ts';
+import { db } from 'prisma/db.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { OpenPlanner } from '~/shared/integrations/open-planner.server.ts';

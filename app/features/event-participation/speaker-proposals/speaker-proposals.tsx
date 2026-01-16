@@ -9,8 +9,8 @@ import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { SpeakerProposals } from '~/features/event-participation/speaker-proposals/services/speaker-proposals.server.ts';
 import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
-import { useCurrentEvent } from '../event-page-context.tsx';
 import type { Route } from './+types/speaker-proposals.ts';
+import { useCurrentEvent } from '../event-page-context.tsx';
 import { ProposalStatusLabel } from './components/proposal-status-label.tsx';
 
 export const middleware = [requireAuth];
