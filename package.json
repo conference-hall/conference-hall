@@ -23,7 +23,7 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:reset": "prisma migrate reset -f && prisma db seed",
     "lint": "oxlint",
-    "format": "oxfmt --check",
+    "format": "oxfmt",
     "format:check": "oxfmt --check",
     "tsc": "react-router typegen && tsc -b",
     "knip": "knip",
