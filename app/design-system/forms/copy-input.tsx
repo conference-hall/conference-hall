@@ -5,10 +5,9 @@ import { useTranslation } from 'react-i18next';
 
 type Props = {
   label?: string;
-  error?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function CopyInput({ id, type = 'text', value, className, error, ...rest }: Props) {
+export function CopyInput({ id, type = 'text', value, className, ...rest }: Props) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 

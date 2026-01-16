@@ -154,11 +154,9 @@ describe('TalksLibrary types', () => {
     });
 
     expect(result.success).toBe(false);
-    if (!result.success) {
-      const { fieldErrors } = z.flattenError(result.error!);
-      expect(fieldErrors.title).toEqual(['Too small: expected string to have >=1 characters']);
-      expect(fieldErrors.abstract).toEqual(['Too small: expected string to have >=1 characters']);
-      expect(fieldErrors.level).toEqual(['Invalid option: expected one of "BEGINNER"|"INTERMEDIATE"|"ADVANCED"']);
-    }
+    const { fieldErrors } = z.flattenError(result.error!);
+    expect(fieldErrors.title).toEqual(['Too small: expected string to have >=1 characters']);
+    expect(fieldErrors.abstract).toEqual(['Too small: expected string to have >=1 characters']);
+    expect(fieldErrors.level).toEqual(['Invalid option: expected one of "BEGINNER"|"INTERMEDIATE"|"ADVANCED"']);
   });
 });

@@ -45,7 +45,7 @@ async function uploadToStorage(file: FileUpload, filepath: string) {
     });
 
     return new File([], getStorageProxyUrl(filepath), { type: file.type });
-  } catch (_error) {
+  } catch {
     return null;
   }
 }

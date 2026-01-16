@@ -46,7 +46,7 @@ export function getGMTOffset(timezone: string, locale: string) {
     const gmtOffsetPart = parts.find((part) => part.type === 'timeZoneName');
     if (!gmtOffsetPart) return null;
     return gmtOffsetPart.value;
-  } catch (_error) {
+  } catch {
     return null;
   }
 }

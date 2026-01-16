@@ -63,12 +63,7 @@ describe('EmailSchema', () => {
     const result = EmailSchema.safeParse({ email: '' });
 
     expect(result.success).toEqual(false);
-    if (!result.success) {
-      const { fieldErrors } = z.flattenError(result.error);
-      expect(fieldErrors.email).toEqual([
-        'Invalid email address.',
-        'Too small: expected string to have >=1 characters',
-      ]);
-    }
+    const { fieldErrors } = z.flattenError(result.error!);
+    expect(fieldErrors.email).toEqual(['Invalid email address.', 'Too small: expected string to have >=1 characters']);
   });
 });

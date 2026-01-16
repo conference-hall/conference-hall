@@ -27,12 +27,10 @@ describe('UserEvent types', () => {
       const result = await EventGeneralSettingsSchema.safeParseAsync({ name: '', visibility: 'toto', slug: '!@#' });
 
       expect(result.success).toBe(false);
-      if (!result.success) {
-        const { fieldErrors } = z.flattenError(result.error!);
-        expect(fieldErrors.name).toEqual(['Too small: expected string to have >=3 characters']);
-        expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
-        expect(fieldErrors.visibility).toEqual(['Invalid option: expected one of "PUBLIC"|"PRIVATE"']);
-      }
+      const { fieldErrors } = z.flattenError(result.error!);
+      expect(fieldErrors.name).toEqual(['Too small: expected string to have >=3 characters']);
+      expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
+      expect(fieldErrors.visibility).toEqual(['Invalid option: expected one of "PUBLIC"|"PRIVATE"']);
     });
   });
 

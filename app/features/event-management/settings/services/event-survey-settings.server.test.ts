@@ -115,8 +115,7 @@ describe('EventSurveySettings', () => {
       await surveySettings.addQuestion(newQuestion);
 
       const result = await db.event.findUnique({ where: { id: event.id } });
-      if (!result) expect.fail();
-      const survey = new SurveyConfig(result?.surveyConfig);
+      const survey = new SurveyConfig(result!.surveyConfig);
       expect(survey.questions).toContainEqual(newQuestion);
     });
 
@@ -145,8 +144,7 @@ describe('EventSurveySettings', () => {
       await surveySettings.updateQuestion(updatedQuestion);
 
       const result = await db.event.findUnique({ where: { id: event.id } });
-      if (!result) expect.fail();
-      const survey = new SurveyConfig(result?.surveyConfig);
+      const survey = new SurveyConfig(result!.surveyConfig);
       expect(survey.questions).toContainEqual(updatedQuestion);
     });
 
@@ -170,8 +168,7 @@ describe('EventSurveySettings', () => {
       await surveySettings.removeQuestion(questionId);
 
       const result = await db.event.findUnique({ where: { id: event.id } });
-      if (!result) expect.fail();
-      const survey = new SurveyConfig(result?.surveyConfig);
+      const survey = new SurveyConfig(result!.surveyConfig);
       expect(survey.questions).not.toContainEqual(expect.objectContaining({ id: questionId }));
     });
 
@@ -196,8 +193,7 @@ describe('EventSurveySettings', () => {
       await surveySettings.moveQuestion(moveParams);
 
       const result = await db.event.findUnique({ where: { id: event.id } });
-      if (!result) expect.fail();
-      const survey = new SurveyConfig(result?.surveyConfig);
+      const survey = new SurveyConfig(result!.surveyConfig);
       expect(survey.questions).toEqual([
         {
           id: 'accomodation',

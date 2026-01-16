@@ -90,11 +90,9 @@ describe('TeamSettings', () => {
       const result = await schema.safeParseAsync({ name: 'H', slug: 'h' });
 
       expect(result.success).toBe(false);
-      if (!result.success) {
-        const { fieldErrors } = z.flattenError(result.error);
-        expect(fieldErrors.name).toEqual(['Too small: expected string to have >=3 characters']);
-        expect(fieldErrors.slug).toEqual(['Too small: expected string to have >=3 characters']);
-      }
+      const { fieldErrors } = z.flattenError(result.error!);
+      expect(fieldErrors.name).toEqual(['Too small: expected string to have >=3 characters']);
+      expect(fieldErrors.slug).toEqual(['Too small: expected string to have >=3 characters']);
     });
 
     it('validates slug format (alpha-num and dash only)', async () => {
@@ -103,10 +101,8 @@ describe('TeamSettings', () => {
       const result = await schema.safeParseAsync({ name: 'Hello world', slug: 'Hello world/' });
 
       expect(result.success).toBe(false);
-      if (!result.success) {
-        const { fieldErrors } = z.flattenError(result.error);
-        expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
-      }
+      const { fieldErrors } = z.flattenError(result.error!);
+      expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
     });
 
     it('returns an error when slug already exists', async () => {
@@ -117,10 +113,8 @@ describe('TeamSettings', () => {
       const result = await schema.safeParseAsync({ name: 'Hello world', slug: 'hello-world2' });
 
       expect(result.success).toBe(false);
-      if (!result.success) {
-        const { fieldErrors } = z.flattenError(result.error);
-        expect(fieldErrors.slug).toEqual(['This URL already exists.']);
-      }
+      const { fieldErrors } = z.flattenError(result.error!);
+      expect(fieldErrors.slug).toEqual(['This URL already exists.']);
     });
   });
 });

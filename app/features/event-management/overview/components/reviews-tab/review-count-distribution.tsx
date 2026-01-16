@@ -82,8 +82,7 @@ function ReviewCountAnalysis({ reviewCountDistribution }: Props) {
   const weightedReviewed =
     reviewCountDistribution.wellReviewed * 1.0 +
     reviewCountDistribution.adequatelyReviewed * 0.7 +
-    reviewCountDistribution.underReviewed * 0.3 +
-    reviewCountDistribution.missingReviews * 0.0;
+    reviewCountDistribution.underReviewed * 0.3;
 
   return (
     <div className="border-t border-gray-200 pt-5">

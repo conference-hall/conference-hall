@@ -126,7 +126,7 @@ describe('requireAuth middleware', () => {
 
     await expect(async () => {
       await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-    }).rejects.toThrow();
+    }).rejects.toThrow(Response);
 
     try {
       await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);

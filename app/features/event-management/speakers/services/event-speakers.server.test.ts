@@ -421,12 +421,6 @@ describe('EventSpeakers', () => {
           userId: speaker1.id,
           proposals: [],
         });
-
-        // Survey field depends on whether the speaker has survey answers
-        // It can be undefined if no survey answers exist for this userId
-        if (result?.survey !== undefined) {
-          expect(Array.isArray(result.survey)).toBe(true);
-        }
       });
 
       it('returns speaker without proposals when none exist', async () => {

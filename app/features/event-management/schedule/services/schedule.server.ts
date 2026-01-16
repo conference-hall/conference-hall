@@ -108,7 +108,9 @@ export class EventSchedule {
     let language = data.language ?? null;
     if (!language && data.proposalId) {
       const proposal = await db.proposal.findUnique({ where: { id: data.proposalId } });
-      language = (proposal?.languages as Languages).at(0) ?? null;
+      if (proposal) {
+        language = (proposal.languages as Languages).at(0) ?? null;
+      }
     }
 
     return db.scheduleSession.update({
