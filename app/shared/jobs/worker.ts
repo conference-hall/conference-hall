@@ -39,7 +39,7 @@ function createJobWorker(queue: string, jobs: Array<Job<any>>): JobWorker {
       await job.config.run(data);
     },
     {
-      connection: connection,
+      connection,
       concurrency: 1,
       removeOnComplete: { count: 1000 },
       removeOnFail: { count: 1000 },
