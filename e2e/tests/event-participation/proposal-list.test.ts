@@ -6,6 +6,7 @@ import { userFactory } from 'tests/factories/users.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { LoginPage } from '../auth/login.page.ts';
 import { ProposalListPage } from './proposal-list.page.ts';
+import { ProposalPage } from './proposal.page.ts';
 
 let eventOpen: Event;
 let eventClosed: Event;
@@ -51,7 +52,8 @@ test.describe('when user is connected', () => {
       await expect(proposalListPage.proposal('My talk 5')).toContainText('Declined by you');
       await expect(proposalListPage.proposal('My talk 6')).toContainText('Confirmed');
 
-      const proposalPage = await proposalListPage.clickOnProposal('My talk 1');
+      await proposalListPage.clickOnProposal('My talk 1');
+      const proposalPage = new ProposalPage(page);
       await proposalPage.waitFor();
     });
 

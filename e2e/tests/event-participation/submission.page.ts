@@ -3,7 +3,6 @@ import { CoSpeakerComponent } from 'e2e/common/co-speaker.component.ts';
 import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
 import { PageObject } from 'e2e/page-object.ts';
 import { ProposalListPage } from './proposal-list.page.ts';
-import { ProposalPage } from './proposal.page.ts';
 
 export class SubmissionPage extends PageObject {
   readonly selectionStep: Locator;
@@ -81,7 +80,6 @@ export class SubmissionPage extends PageObject {
 
   async clickOnSubmit() {
     await this.page.getByRole('button', { name: 'Submit proposal' }).click();
-    return new ProposalPage(this.page);
   }
 
   async clickOnCheckMyProposals() {

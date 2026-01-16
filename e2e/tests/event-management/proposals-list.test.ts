@@ -9,6 +9,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
+import { ProposalPage } from './proposal.page.ts';
 import { ProposalsListPage } from './proposals-list.page.ts';
 
 let team: Team;
@@ -137,7 +138,8 @@ test('displays and filters proposals', async ({ page }) => {
   await expect(proposalsPage.proposals).toHaveCount(3);
 
   // open a proposal
-  const proposalPage = await proposalsPage.clickOnProposal(proposal1.title);
+  await proposalsPage.clickOnProposal(proposal1.title);
+  const proposalPage = new ProposalPage(page);
   await proposalPage.waitFor(proposal1.title);
 });
 
