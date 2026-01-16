@@ -40,7 +40,7 @@ export function ProposalNotesDistribution({ proposalNotesDistribution }: Props) 
                   tick={{ transform: 'translate(-3, 0)' }}
                   allowDecimals={false}
                 />
-                <CartesianGrid vertical={false} className="stroke-1 stroke-gray-200" />
+                <CartesianGrid vertical={false} className="stroke-gray-200 stroke-1" />
                 <Bar dataKey="count" fill="#6366f1" maxBarSize={40} isAnimationActive={false} />
                 <Tooltip
                   isAnimationActive={false}
@@ -62,7 +62,7 @@ export function ProposalNotesDistribution({ proposalNotesDistribution }: Props) 
                             count: data.value,
                           })}
                         </div>
-                        <div className="text-gray-500 text-xs">
+                        <div className="text-xs text-gray-500">
                           (
                           {t('event-management.overview.reviews.proposal-notes-distribution.tooltip.percentage', {
                             percentage,
@@ -78,7 +78,7 @@ export function ProposalNotesDistribution({ proposalNotesDistribution }: Props) 
           )}
         </ClientOnly>
 
-        <div className="border-gray-200 border-t pt-4">
+        <div className="border-t border-gray-200 pt-4">
           <ProposalAveragesAnalysis proposalNotesDistribution={proposalNotesDistribution} />
         </div>
       </div>
@@ -106,7 +106,7 @@ function ProposalAveragesAnalysis({ proposalNotesDistribution }: Props) {
   return (
     <div className="grid grid-cols-4 gap-4 text-center">
       <div>
-        <div className="font-bold text-lg text-red-500">
+        <div className="text-lg font-bold text-red-500">
           {totalProposals > 0 ? Math.round((poor / totalProposals) * 100) : 0}%
         </div>
         <Subtitle size="xs">
@@ -114,7 +114,7 @@ function ProposalAveragesAnalysis({ proposalNotesDistribution }: Props) {
         </Subtitle>
       </div>
       <div>
-        <div className="font-bold text-lg text-orange-500">
+        <div className="text-lg font-bold text-orange-500">
           {totalProposals > 0 ? Math.round((average / totalProposals) * 100) : 0}%
         </div>
         <Subtitle size="xs">
@@ -122,7 +122,7 @@ function ProposalAveragesAnalysis({ proposalNotesDistribution }: Props) {
         </Subtitle>
       </div>
       <div>
-        <div className="font-bold text-blue-500 text-lg">
+        <div className="text-lg font-bold text-blue-500">
           {totalProposals > 0 ? Math.round((good / totalProposals) * 100) : 0}%
         </div>
         <Subtitle size="xs">
@@ -130,7 +130,7 @@ function ProposalAveragesAnalysis({ proposalNotesDistribution }: Props) {
         </Subtitle>
       </div>
       <div>
-        <div className="font-bold text-green-500 text-lg">
+        <div className="text-lg font-bold text-green-500">
           {totalProposals > 0 ? Math.round((excellent / totalProposals) * 100) : 0}%
         </div>
         <Subtitle size="xs">

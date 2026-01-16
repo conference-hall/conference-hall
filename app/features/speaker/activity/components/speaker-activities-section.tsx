@@ -3,6 +3,7 @@ import { FireIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, Link as RouterLink } from 'react-router';
+import type { CfpState } from '~/shared/types/events.types.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -10,7 +11,6 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { H2, H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { ProposalStatusLabel } from '~/features/event-participation/speaker-proposals/components/proposal-status-label.tsx';
-import type { CfpState } from '~/shared/types/events.types.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 
 interface Props {

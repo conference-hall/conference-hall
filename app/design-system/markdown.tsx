@@ -1,6 +1,5 @@
-import { cx } from 'class-variance-authority';
 import type React from 'react';
-
+import { cx } from 'class-variance-authority';
 import { MarkdownParser } from '~/shared/markdown/markdown-parser.ts';
 
 type Props = { as?: React.ElementType; children: string | null; className?: string };
@@ -10,7 +9,7 @@ export function Markdown({ as: Tag = 'div', children, className }: Props) {
 
   return (
     <Tag
-      className={cx('wrap-break-word prose prose-sm min-w-0 max-w-full', className)}
+      className={cx('prose prose-sm max-w-full min-w-0 wrap-break-word', className)}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

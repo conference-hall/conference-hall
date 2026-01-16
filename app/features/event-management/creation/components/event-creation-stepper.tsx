@@ -14,7 +14,7 @@ export function EventCreationStepper({ type, currentStep }: Props) {
 
   return (
     <nav className="flex items-center" aria-label="Progress">
-      <p className="font-bold text-sm">{t('event-management.new.steps', { current: currentStep + 1, total })}</p>
+      <p className="text-sm font-bold">{t('event-management.new.steps', { current: currentStep + 1, total })}</p>
       <ol className="ml-8 flex items-center space-x-5">
         {steps.map((_, stepIdx) => (
           <li key={stepIdx}>

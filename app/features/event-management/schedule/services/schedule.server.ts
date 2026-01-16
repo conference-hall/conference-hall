@@ -1,8 +1,8 @@
-import { db } from 'prisma/db.server.ts';
 import type { ScheduleCreateInput } from 'prisma/generated/models.ts';
+import { db } from 'prisma/db.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
-import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/shared/errors.server.ts';
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
+import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/shared/errors.server.ts';
 import type {
   ScheduleCreateData,
   ScheduleSessionCreateData,

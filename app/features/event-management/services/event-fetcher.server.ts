@@ -1,7 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
-import { EventNotFoundError } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
+import { EventNotFoundError } from '~/shared/errors.server.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 
 export class EventFetcher {

@@ -23,8 +23,8 @@ import {
   requireAuthorizedEvent,
   requireAuthorizedTeam,
 } from '~/shared/authorization/authorization.middleware.ts';
-import { TeamFetcher } from '../team-management/services/team-fetcher.server.ts';
 import type { Route } from './+types/layout.ts';
+import { TeamFetcher } from '../team-management/services/team-fetcher.server.ts';
 import { useScheduleFullscreen } from './schedule/components/header/use-schedule-fullscreen.tsx';
 import { EventFetcher } from './services/event-fetcher.server.ts';
 

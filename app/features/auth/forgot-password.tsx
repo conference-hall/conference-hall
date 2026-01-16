@@ -79,7 +79,7 @@ export default function ForgotPasswordSent({ loaderData, actionData }: Route.Com
     <Page>
       <header className="flex flex-col items-center pt-8 sm:mx-auto sm:w-full sm:max-w-md sm:pt-16">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
-        <h2 className="mt-6 text-center font-bold text-2xl text-gray-900 leading-9 tracking-tight">
+        <h2 className="mt-6 text-center text-2xl leading-9 font-bold tracking-tight text-gray-900">
           {emailSent ? t('auth.forgot-password.sent.heading') : t('auth.forgot-password.form.heading')}
         </h2>
       </header>

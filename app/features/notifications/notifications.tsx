@@ -53,7 +53,7 @@ export default function OrganizerRoute({ loaderData: notifications }: Route.Comp
                       components={[<strong key="1" />, <strong key="2" />]}
                     />
                   </H2>
-                  <p className="text-gray-500 text-sm">{t('notifications.item.description')}</p>
+                  <p className="text-sm text-gray-500">{t('notifications.item.description')}</p>
                 </div>
               </CardLink>
             ))}

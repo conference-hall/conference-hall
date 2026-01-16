@@ -1,5 +1,5 @@
-import { AdjustmentsVerticalIcon, ShieldCheckIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import type { TFunction } from 'i18next';
+import { AdjustmentsVerticalIcon, ShieldCheckIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';

@@ -3,12 +3,12 @@ import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, Link } from 'react-router';
+import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { Badge } from '~/design-system/badges.tsx';
 import { SelectPanel, type SelectPanelOption } from '~/design-system/forms/select-panel.tsx';
 import { PencilSquareMicroIcon } from '~/design-system/icons/pencil-square-micro-icon.tsx';
 import { menuItem } from '~/design-system/styles/menu.styles.ts';
 import { H2, Text } from '~/design-system/typography.tsx';
-import type { SubmissionError } from '~/shared/types/errors.types.ts';
 
 type Props = {
   team: string;

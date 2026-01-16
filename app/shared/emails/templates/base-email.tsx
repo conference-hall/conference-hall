@@ -16,12 +16,12 @@ export default function BaseEmail({ children, locale }: BaseEmailProps) {
 
       <Tailwind>
         <Body className="mx-auto my-auto bg-white font-sans">
-          <Container className="mx-auto mt-5 mb-3 rounded-lg border border-[#eaeaea] border-solid px-5 py-2.5">
+          <Container className="mx-auto mt-5 mb-3 rounded-lg border border-solid border-[#eaeaea] px-5 py-2.5">
             {children}
           </Container>
 
           <Section className="mx-auto text-center">
-            <Link href={APP_URL} className="text-gray-400 text-xs">
+            <Link href={APP_URL} className="text-xs text-gray-400">
               Powered by Conference Hall
             </Link>
           </Section>
@@ -35,7 +35,7 @@ export const styles = {
   h1: 'text-xl',
   logo: 'mx-auto mt-5 mb-3 rounded-lg',
   card: 'bg-slate-50 border border-solid border-slate-200 rounded-lg px-5 my-5',
-  button: cx('box-border w-full rounded-lg bg-slate-800 px-5 py-2.5', 'text-center font-semibold text-sm text-white'),
+  button: cx('box-border w-full rounded-lg bg-slate-800 px-5 py-2.5', 'text-center text-sm font-semibold text-white'),
 };
 
 BaseEmail.PreviewProps = {

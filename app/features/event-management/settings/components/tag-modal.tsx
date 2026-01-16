@@ -2,13 +2,13 @@ import { PaintBrushIcon } from '@heroicons/react/24/outline';
 import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
+import type { Tag as TagType } from '~/shared/types/tags.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Tag } from '~/design-system/tag.tsx';
 import { Tooltip } from '~/design-system/tooltip.tsx';
 import { getContrastColor, getRandomColor } from '~/shared/colors/colors.ts';
-import type { Tag as TagType } from '~/shared/types/tags.types.ts';
 
 type TagModalProps = {
   mode: 'create' | 'edit';
@@ -70,7 +70,7 @@ function TagModalContent({ mode, initialValues, open, onClose }: TagModalContent
                   aria-label={t('event-management.settings.tags.pick-a-color')}
                   defaultValue={color}
                   onChange={(event) => setColor(event.target.value)}
-                  className="h-9 w-12 cursor-pointer bg-white [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-md [&::-webkit-color-swatch]:border-none"
+                  className="h-9 w-12 cursor-pointer bg-white [&::-webkit-color-swatch]:rounded-md [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0"
                   required
                 />
                 <PaintBrushIcon

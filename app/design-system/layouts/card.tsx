@@ -1,8 +1,8 @@
+import type { HTMLAttributes } from 'react';
+import type { LinkProps } from 'react-router';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-import type { HTMLAttributes } from 'react';
-import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
 
 const ROUNDED = {
@@ -115,7 +115,7 @@ type CardDisclosureProps = {
 function CardDisclosure({ title, as, children, defaultOpen, className }: CardDisclosureProps) {
   return (
     <Disclosure defaultOpen={defaultOpen}>
-      <DisclosureButton className="group flex w-full cursor-pointer items-center justify-between gap-2 border-t border-t-gray-200 px-6 py-4 font-medium text-gray-900 text-sm leading-6 hover:bg-gray-50">
+      <DisclosureButton className="group flex w-full cursor-pointer items-center justify-between gap-2 border-t border-t-gray-200 px-6 py-4 text-sm leading-6 font-medium text-gray-900 hover:bg-gray-50">
         <span>{title}</span>
         <ChevronDownIcon className="h-5 w-5 group-data-open:rotate-180" />
       </DisclosureButton>

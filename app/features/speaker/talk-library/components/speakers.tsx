@@ -3,6 +3,7 @@ import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
+import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { InvitationModal } from '~/design-system/dialogs/invitation-modal.tsx';
@@ -12,7 +13,6 @@ import { SpeakerInfo } from '~/features/event-management/speakers/components/spe
 import { SpeakerLinks } from '~/features/event-management/speakers/components/speaker-details/speaker-links.tsx';
 import { SpeakerSurveyAnswers } from '~/features/event-management/speakers/components/speaker-details/speaker-survey-answers.tsx';
 import { SpeakerTitle } from '~/features/event-management/speakers/components/speaker-details/speaker-title.tsx';
-import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
 
 export type SpeakerProps = {
   userId: string | null;

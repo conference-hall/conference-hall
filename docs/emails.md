@@ -27,7 +27,6 @@ The system supports two email providers (Provider selection is environment-based
 1. **MailgunProvider** - Production email delivery via Mailgun API
 2. **MailpitProvider** - Development email testing via SMTP
 
-
 ## React Email Integration
 
 Conference Hall uses [React Email](https://react.email/) to build and render email templates with React components.
@@ -61,18 +60,21 @@ export default function ExampleEmail({ locale, ...props }: EmailProps) {
 ### Styling System
 
 Predefined styles from `base-email.tsx`:
+
 ```typescript
 export const styles = {
   h1: 'text-xl',
   logo: 'mx-auto mt-[20px] mb-[32px] rounded-lg',
   card: 'bg-slate-50 border border-solid border-slate-200 rounded-[8px] px-[20px] my-[20px]',
-  button: 'box-border rounded-[8px] bg-slate-800 px-[24px] py-[12px] w-full text-center font-semibold text-sm text-white',
+  button:
+    'box-border rounded-[8px] bg-slate-800 px-[24px] py-[12px] w-full text-center font-semibold text-sm text-white',
 };
 ```
 
 ### Template Development
 
 **Preview Props** - Each template includes preview data for development:
+
 ```typescript
 ExampleEmail.PreviewProps = {
   locale: 'en',
@@ -127,12 +129,14 @@ expect(sendEmail.trigger).toHaveBeenCalledWith({
 ## Environment Configuration
 
 ### Development (Mailpit)
+
 ```env
 MAILPIT_HOST=localhost
 MAILPIT_SMTP_PORT=1025
 ```
 
 ### Production (Mailgun)
+
 ```env
 MAILGUN_API_KEY=your_mailgun_api_key
 MAILGUN_DOMAIN=your_mailgun_domain

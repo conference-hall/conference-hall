@@ -1,10 +1,10 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@plugin "@tailwindcss/forms";
-@plugin "@tailwindcss/typography";
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
 
 @theme {
-  --font-sans: "Inter", "Inter Fallback";
+  --font-sans: 'Inter', 'Inter Fallback';
 }
 
 @layer base {

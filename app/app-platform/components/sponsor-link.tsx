@@ -7,7 +7,7 @@ export function SponsorLink() {
     <a
       href="https://github.com/sponsors/conference-hall"
       target="_blank"
-      className="group flex items-center gap-x-3 rounded-md bg-white p-2 px-3 font-medium text-gray-700 text-sm leading-6 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2"
+      className="group flex items-center gap-x-3 rounded-md bg-white p-2 px-3 text-sm leading-6 font-medium text-gray-700 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
       rel="noreferrer"
     >
       <HeartIcon

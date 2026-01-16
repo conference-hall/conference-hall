@@ -1,6 +1,6 @@
+import type { Event, Team, User } from 'prisma/generated/client.ts';
 import { MessageBlockComponent } from 'e2e/common/message-block.component.ts';
 import { expect, loginWith, test } from 'e2e/fixtures.ts';
-import type { Event, Team, User } from 'prisma/generated/client.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';

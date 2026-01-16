@@ -1,6 +1,6 @@
-import { db } from 'prisma/db.server.ts';
 import type { EventType } from 'prisma/generated/enums.ts';
 import type { EventCreateInput } from 'prisma/generated/models.ts';
+import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';

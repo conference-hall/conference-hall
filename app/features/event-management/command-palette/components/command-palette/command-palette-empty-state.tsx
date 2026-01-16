@@ -25,8 +25,8 @@ export function CommandPaletteEmptyState({ title, description, hasQuery, loading
         <div className="mx-auto mb-6 w-fit rounded-full bg-gray-100 p-3">
           <MagnifyingGlassIcon className="h-6 w-6 text-gray-400" />
         </div>
-        <p className="mb-2 font-semibold text-gray-900 text-sm">{t('common.no-results')}</p>
-        <p className="mb-4 text-gray-500 text-xs">{t('event-management.command-palette.no-result.description')}</p>
+        <p className="mb-2 text-sm font-semibold text-gray-900">{t('common.no-results')}</p>
+        <p className="mb-4 text-xs text-gray-500">{t('event-management.command-palette.no-result.description')}</p>
       </div>
     );
   }

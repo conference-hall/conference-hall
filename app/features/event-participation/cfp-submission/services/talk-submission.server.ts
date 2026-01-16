@@ -1,4 +1,7 @@
 import { db } from 'prisma/db.server.ts';
+import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
+import type { Languages } from '~/shared/types/proposals.types.ts';
+import type { TalkSaveData, TracksSaveData } from '~/shared/types/speaker-talk.types.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
@@ -12,9 +15,6 @@ import {
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
 } from '~/shared/errors.server.ts';
-import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
-import type { Languages } from '~/shared/types/proposals.types.ts';
-import type { TalkSaveData, TracksSaveData } from '~/shared/types/speaker-talk.types.ts';
 
 export class TalkSubmission {
   constructor(

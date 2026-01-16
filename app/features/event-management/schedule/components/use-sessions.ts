@@ -1,9 +1,9 @@
 import { useFetchers, useSubmit } from 'react-router';
 import { v4 as uuid } from 'uuid';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
+import type { Language } from '~/shared/types/proposals.types.ts';
 import { areTimeSlotsOverlapping } from '~/shared/datetimes/timeslots.ts';
 import { timezoneToUtc, utcToTimezone } from '~/shared/datetimes/timezone.ts';
-import type { Language } from '~/shared/types/proposals.types.ts';
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
 export function useSessions(initialSessions: Array<SessionData>, timezone: string) {

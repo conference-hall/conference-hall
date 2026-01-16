@@ -1,6 +1,6 @@
-import { randCatchPhrase, randText } from '@ngneat/falso';
 import type { Event } from 'prisma/generated/client.ts';
 import type { EventFormatCreateInput } from 'prisma/generated/models.ts';
+import { randCatchPhrase, randText } from '@ngneat/falso';
 import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {

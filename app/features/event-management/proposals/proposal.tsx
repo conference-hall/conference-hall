@@ -24,8 +24,9 @@ import { AuthorizedEventContext } from '~/shared/authorization/authorization.mid
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
-import { Publication } from '../publication/services/publication.server.ts';
 import type { Route } from './+types/proposal.ts';
+import type { ProposalReviewData } from './services/proposal-review.server.ts';
+import { Publication } from '../publication/services/publication.server.ts';
 import { ProposalActivityFeed } from './components/detail/activity/proposal-activity-feed.tsx';
 import { CategoriesSection } from './components/detail/metadata/categories-section.tsx';
 import { FormatsSection } from './components/detail/metadata/formats-section.tsx';
@@ -48,7 +49,6 @@ import {
 } from './services/proposal-management.schema.server.ts';
 import { ProposalManagement } from './services/proposal-management.server.ts';
 import { ReviewUpdateDataSchema } from './services/proposal-review.schema.server.ts';
-import type { ProposalReviewData } from './services/proposal-review.server.ts';
 import { ProposalReview } from './services/proposal-review.server.ts';
 import { ProposalStatusSchema, ProposalStatusUpdater } from './services/proposal-status-updater.server.ts';
 

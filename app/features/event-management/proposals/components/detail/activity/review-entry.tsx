@@ -1,10 +1,10 @@
 import { HeartIcon, MinusIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { Trans } from 'react-i18next';
-import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
-import { TimeDistance } from '~/design-system/utils/time-distance.tsx';
 import type { FeedItem } from '~/features/event-management/proposals/services/activity-feed.server.ts';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
+import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
+import { TimeDistance } from '~/design-system/utils/time-distance.tsx';
 
 const ReviewTypes = {
   NO_OPINION: {
@@ -28,14 +28,14 @@ export function ReviewEntry({ item }: { item: FeedItem }) {
       className="flex flex-col gap-1 p-1 sm:flex-row"
       withLine
     >
-      <p className="text-gray-500 text-xs">
+      <p className="text-xs text-gray-500">
         <Trans
           i18nKey={review.i18nKey}
           values={{ name: item.user, count: item.note }}
           components={[<span key="1" className="font-medium text-gray-900" />, <strong key="2" />]}
         />
       </p>
-      <TimeDistance date={item.timestamp} className="block text-gray-500 text-xs" />
+      <TimeDistance date={item.timestamp} className="block text-xs text-gray-500" />
     </ActivityFeed.Entry>
   );
 }

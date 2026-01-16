@@ -1,3 +1,4 @@
+import type { FormEvent } from 'react';
 import { ArrowTopRightOnSquareIcon, MagnifyingGlassIcon } from '@heroicons/react/16/solid';
 import {
   ClockIcon,
@@ -7,10 +8,10 @@ import {
   PaintBrushIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-import type { FormEvent } from 'react';
 import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, useParams } from 'react-router';
+import type { Language } from '~/shared/types/proposals.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { EmojiSelect } from '~/design-system/emojis/emoji-select.tsx';
@@ -21,7 +22,6 @@ import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { LANGUAGES } from '~/shared/constants.ts';
 import { getMinutesFromStartOfDay, setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
-import type { Language } from '~/shared/types/proposals.types.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 import { SearchSessionProposal } from './search-session-proposal.tsx';

@@ -1,6 +1,6 @@
+import type React from 'react';
 // Tremor Raw ProgressBar [v0.0.1]
 import { cx } from 'class-variance-authority';
-import type React from 'react';
 
 interface ProgressBarProps extends React.ComponentProps<'div'> {
   value?: number;
@@ -28,7 +28,7 @@ export const ProgressBar = ({ value = 0, max = 100, label, className, ref, ...pr
         <span
           className={cx(
             // base
-            'ml-2 whitespace-nowrap font-medium text-sm leading-none',
+            'ml-2 text-sm leading-none font-medium whitespace-nowrap',
             // text color
             'text-gray-900',
           )}

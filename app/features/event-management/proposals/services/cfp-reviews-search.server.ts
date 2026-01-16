@@ -1,8 +1,8 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
-import { ReviewDetails } from '../models/review-details.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
+import { ReviewDetails } from '../models/review-details.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
 export class CfpReviewsSearch {

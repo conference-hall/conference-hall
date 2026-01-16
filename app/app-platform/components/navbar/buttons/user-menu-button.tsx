@@ -134,7 +134,7 @@ function MenuLink({ to, icon: Icon, count, onClick, children }: LinkProps) {
     <li>
       <Link
         to={to}
-        className="group flex items-center gap-x-2 rounded-md p-2 font-medium text-gray-700 text-sm leading-6 hover:bg-gray-100"
+        className="group flex items-center gap-x-2 rounded-md p-2 text-sm leading-6 font-medium text-gray-700 hover:bg-gray-100"
         onClick={onClick}
       >
         <Icon className="size-5 shrink-0 text-gray-500" aria-hidden="true" />
@@ -142,7 +142,7 @@ function MenuLink({ to, icon: Icon, count, onClick, children }: LinkProps) {
         {count && count > 0 ? (
           <>
             <span className="size-2 rounded-full bg-red-400" aria-hidden="true" />
-            <span className="ml-auto w-9 min-w-max whitespace-nowrap rounded-full bg-white px-2.5 py-0.5 text-center font-medium text-gray-600 text-xs leading-5 ring-1 ring-gray-200 ring-inset">
+            <span className="ml-auto w-9 min-w-max rounded-full bg-white px-2.5 py-0.5 text-center text-xs leading-5 font-medium whitespace-nowrap text-gray-600 ring-1 ring-gray-200 ring-inset">
               {count}
             </span>
           </>
@@ -160,7 +160,7 @@ function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
     <button
       type="button"
       onClick={onClick}
-      className="cursor-pointer rounded-full p-0.5 text-sm hover:bg-gray-900 hover:text-white focus:outline-2 focus:outline-white focus:outline-offset-1"
+      className="cursor-pointer rounded-full p-0.5 text-sm hover:bg-gray-900 hover:text-white focus:outline-2 focus:outline-offset-1 focus:outline-white"
     >
       <div className="flex items-center gap-1">
         <div className="relative">
@@ -192,7 +192,7 @@ function SignOutMenu() {
       <button
         type="submit"
         onClick={signOut}
-        className="group flex w-full cursor-pointer items-center gap-x-3 rounded-md p-2 text-left font-medium text-gray-700 text-sm leading-6 hover:bg-gray-100"
+        className="group flex w-full cursor-pointer items-center gap-x-3 rounded-md p-2 text-left text-sm leading-6 font-medium text-gray-700 hover:bg-gray-100"
       >
         <ArrowRightStartOnRectangleIcon className="size-5 shrink-0 text-gray-400" aria-hidden="true" />
         {t('navbar.user-menu.sign-out')}

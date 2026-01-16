@@ -1,6 +1,6 @@
-import { randText } from '@ngneat/falso';
 import type { Event } from 'prisma/generated/client.ts';
 import type { ScheduleCreateInput } from 'prisma/generated/models.ts';
+import { randText } from '@ngneat/falso';
 import { db } from '../../prisma/db.server.ts';
 import { eventFactory } from './events.ts';
 

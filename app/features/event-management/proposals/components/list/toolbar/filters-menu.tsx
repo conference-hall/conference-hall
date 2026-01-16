@@ -176,7 +176,7 @@ type FiltersRadioProps = {
 function FiltersRadio({ label, name, defaultValue, options, className }: FiltersRadioProps) {
   return (
     <Fieldset className={className}>
-      <Legend className="font-medium text-gray-600 text-sm">{label}</Legend>
+      <Legend className="text-sm font-medium text-gray-600">{label}</Legend>
       <RadioGroup name={name} defaultValue={defaultValue}>
         <div className="mt-1 flex flex-wrap gap-2">
           {options.map((option) => (

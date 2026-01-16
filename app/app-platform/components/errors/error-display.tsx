@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-
 import { H1, Subtitle } from '~/design-system/typography.tsx';
 
 type Props = { title: string; subtitle: string; children?: ReactNode };

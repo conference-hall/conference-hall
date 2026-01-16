@@ -1,7 +1,6 @@
-import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
+import { cx } from 'class-variance-authority';
 import { Link } from 'react-router';
-
 import type { AvailableChartColorsKeys } from '~/design-system/charts/chart-utils.ts';
 import { DonutChart } from '~/design-system/charts/donut.tsx';
 import { NoData } from '~/design-system/dashboard/no-data.tsx';
@@ -60,11 +59,11 @@ export default function DonutCard({
               colors={colors}
             />
             <div>
-              <p className="mt-4 flex items-center justify-between text-gray-500 text-xs">
+              <p className="mt-4 flex items-center justify-between text-xs text-gray-500">
                 <span>{categoryLabel}</span>
                 <span>{amountLabel}</span>
               </p>
-              <ul className="mt-2 divide-y divide-gray-200 text-gray-500 text-sm">
+              <ul className="mt-2 divide-y divide-gray-200 text-sm text-gray-500">
                 {data.map((item) => (
                   <li key={item.name} className="relative flex items-center justify-between py-2">
                     <div className="flex items-center space-x-2.5 truncate">

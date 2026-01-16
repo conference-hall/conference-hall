@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { Event, Team, User } from 'prisma/generated/client.ts';
+import { db } from 'prisma/db.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';

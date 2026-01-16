@@ -42,7 +42,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
 
   return (
     <Field className={className}>
-      <Label className="block font-medium text-gray-900 text-sm leading-6">{label}</Label>
+      <Label className="block text-sm leading-6 font-medium text-gray-900">{label}</Label>
 
       <Combobox name={name} value={selected} onChange={handleSelect} multiple immediate>
         <div className="relative mt-2">
@@ -57,7 +57,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
               ))}
               <li className="flex-1">
                 <ComboboxInput
-                  className="w-full min-w-24 border-0 px-1 py-0 text-gray-900 text-sm leading-6 outline-none placeholder:text-gray-400 focus:ring-0"
+                  className="w-full min-w-24 border-0 px-1 py-0 text-sm leading-6 text-gray-900 outline-none placeholder:text-gray-400 focus:ring-0"
                   placeholder={selected.length === 0 ? placeholder : t('common.search.placeholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -75,7 +75,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
               <ComboboxOption
                 key={option.value}
                 value={option.value}
-                className="relative mx-2 cursor-default select-none rounded-lg px-2 py-1.5 text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+                className="relative mx-2 cursor-default rounded-lg px-2 py-1.5 text-gray-700 select-none data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
               >
                 {({ selected }) => (
                   <>
@@ -94,7 +94,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
             ))}
 
             {filteredOptions.length === 0 && (
-              <div className="px-3 py-2 text-gray-500 text-sm">{t('common.no-results')}</div>
+              <div className="px-3 py-2 text-sm text-gray-500">{t('common.no-results')}</div>
             )}
           </ComboboxOptions>
         </div>

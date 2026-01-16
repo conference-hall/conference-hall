@@ -28,7 +28,7 @@ export function Toggle({ name, label, value, onChange }: ToggleProps) {
       onChange={handleChange}
       className={cx(
         enabled ? 'bg-indigo-600' : 'bg-gray-200',
-        'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2',
+        'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 focus:outline-hidden',
       )}
     >
       <span
@@ -55,10 +55,10 @@ export function ToggleGroup({ name, label, value, description, reverse, onChange
   return (
     <Field className={cx('flex items-center', { 'flex-row-reverse gap-4': reverse })}>
       <span className="mr-4 flex grow flex-col">
-        <Label className="font-medium text-gray-900 text-sm leading-6" passive>
+        <Label className="text-sm leading-6 font-medium text-gray-900" passive>
           {label}
         </Label>
-        {description && <Description className="text-gray-500 text-sm">{description}</Description>}
+        {description && <Description className="text-sm text-gray-500">{description}</Description>}
       </span>
 
       <Toggle name={name} value={value} onChange={onChange} />

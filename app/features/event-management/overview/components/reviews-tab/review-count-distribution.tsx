@@ -66,11 +66,11 @@ function DistributionLine({ status, label, percentage, count }: DistributionLine
     <div className="flex items-center justify-between">
       <div className="flex items-center space-x-2">
         <StatusPill status={status} />
-        <span className="text-gray-600 text-sm">{label}</span>
+        <span className="text-sm text-gray-600">{label}</span>
       </div>
       <div className="text-right">
-        <span className="font-medium text-sm">{percentage}%</span>
-        <span className="ml-1 text-gray-500 text-xs">({count})</span>
+        <span className="text-sm font-medium">{percentage}%</span>
+        <span className="ml-1 text-xs text-gray-500">({count})</span>
       </div>
     </div>
   );
@@ -86,14 +86,14 @@ function ReviewCountAnalysis({ reviewCountDistribution }: Props) {
     reviewCountDistribution.missingReviews * 0.0;
 
   return (
-    <div className="border-gray-200 border-t pt-5">
+    <div className="border-t border-gray-200 pt-5">
       <div className="flex items-center justify-between">
-        <span className="font-medium text-gray-700 text-sm">
+        <span className="text-sm font-medium text-gray-700">
           {t('event-management.overview.reviews.quality-score.title')}
         </span>
         <div className="flex items-center space-x-2">
-          <span className="font-bold text-gray-900 text-sm">{Math.round(weightedReviewed)}%</span>
-          <span className="text-gray-500 text-xs">
+          <span className="text-sm font-bold text-gray-900">{Math.round(weightedReviewed)}%</span>
+          <span className="text-xs text-gray-500">
             {reviewCountDistribution.wellReviewed >= 60 ? (
               <StatusPill status="success" />
             ) : reviewCountDistribution.wellReviewed + reviewCountDistribution.adequatelyReviewed >= 80 ? (
@@ -107,7 +107,7 @@ function ReviewCountAnalysis({ reviewCountDistribution }: Props) {
         </div>
       </div>
 
-      <p className="mt-1 text-gray-500 text-xs">{t('event-management.overview.reviews.quality-score.description')}</p>
+      <p className="mt-1 text-xs text-gray-500">{t('event-management.overview.reviews.quality-score.description')}</p>
     </div>
   );
 }

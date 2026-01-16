@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { Event, Team, User } from 'prisma/generated/client.ts';
+import { db } from 'prisma/db.server.ts';
 import { ConversationContextType, ConversationParticipantRole } from 'prisma/generated/client.ts';
 import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
 import { conversationFactory } from 'tests/factories/conversations.ts';
@@ -8,7 +8,6 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import { ConversationService } from './conversation-service.server.ts';
 import { notifyConversationMessage } from './jobs/notify-conversation-message.job.ts';
 

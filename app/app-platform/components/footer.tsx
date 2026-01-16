@@ -1,13 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { href, Link } from 'react-router';
-
 import { Container } from '~/design-system/layouts/container.tsx';
 
 export function Footer() {
   const { t } = useTranslation();
   const year = new Date().getFullYear();
   return (
-    <footer className="hidden py-8 text-gray-500 text-sm lg:block">
+    <footer className="hidden py-8 text-sm text-gray-500 lg:block">
       <Container className="flex items-center justify-center gap-4">
         <span>{t('footer.copyright', { year })}</span>
         <LegalLinks />
@@ -19,7 +18,7 @@ export function Footer() {
 export function LegalLinks() {
   const { t } = useTranslation();
   return (
-    <div className="flex items-center justify-center gap-4 text-gray-500 text-sm">
+    <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
       <Link to={href('/docs/terms')} target="_blank" className="underline-offset-2 hover:underline">
         {t('footer.terms')}
       </Link>

@@ -87,7 +87,7 @@ export default function EventGeneralSettingsRoute() {
             components={[<br key="1" />, <ExternalLink key="2" href="https://squoosh.app" weight="medium" />]}
           />
         </Callout>
-        {error ? <p className="text-red-600 text-sm">{error}</p> : null}
+        {error ? <p className="text-sm text-red-600">{error}</p> : null}
       </Card.Content>
 
       <Card.Actions>

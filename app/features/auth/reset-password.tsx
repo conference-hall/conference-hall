@@ -3,6 +3,7 @@ import { type FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
+import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -15,7 +16,6 @@ import { Subtitle } from '~/design-system/typography.tsx';
 import { OptionalAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { getFirebaseError } from '~/shared/authentication/firebase.errors.ts';
 import { getClientAuth } from '~/shared/authentication/firebase.ts';
-import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { validatePassword } from '~/shared/validators/auth.ts';
 import type { Route } from './+types/reset-password.ts';
 
@@ -70,7 +70,7 @@ export default function ResetPassword() {
     <Page>
       <header className="flex flex-col items-center pt-8 sm:mx-auto sm:w-full sm:max-w-md sm:pt-16">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
-        <h2 className="mt-6 text-center font-bold text-2xl text-gray-900 leading-9 tracking-tight">
+        <h2 className="mt-6 text-center text-2xl leading-9 font-bold tracking-tight text-gray-900">
           {t('auth.reset-password.heading')}
         </h2>
       </header>

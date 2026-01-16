@@ -1,5 +1,5 @@
-import { useUser } from '~/app-platform/components/user-context.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
+import { useUser } from '~/app-platform/components/user-context.tsx';
 
 export function useOptimisticMessages(messages: Array<Message>, role: 'SPEAKER' | 'ORGANIZER') {
   const currentUser = useUser();

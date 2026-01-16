@@ -7,7 +7,7 @@ export function CommandPaletteSection({ title, count, children }: Props) {
 
   return (
     <div className="space-y-3 p-3">
-      <Text size="xs" variant="secondary" weight="semibold" className="px-3 uppercase tracking-wide">
+      <Text size="xs" variant="secondary" weight="semibold" className="px-3 tracking-wide uppercase">
         {title}
       </Text>
       <div className="space-y-1">{children}</div>

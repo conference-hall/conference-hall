@@ -1,8 +1,8 @@
 import type { createContext } from 'react-router';
+import type { Mock } from 'vitest';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import type { Mock } from 'vitest';
 import { RequireAuthContext } from '../authentication/auth.middleware.ts';
 import {
   ApiKeyInvalidError,

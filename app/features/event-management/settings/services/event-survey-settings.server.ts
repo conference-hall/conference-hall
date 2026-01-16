@@ -1,8 +1,8 @@
 import { db } from 'prisma/db.server.ts';
 import z from 'zod';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
-import { ForbiddenOperationError, SurveyInvalidError } from '~/shared/errors.server.ts';
 import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
+import { ForbiddenOperationError, SurveyInvalidError } from '~/shared/errors.server.ts';
 import { SurveyConfig } from '../models/survey-config.ts';
 
 export const SurveyRemoveQuestionSchema = z.object({ id: z.string() });

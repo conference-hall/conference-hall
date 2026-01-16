@@ -9,12 +9,12 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
+import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import { TalkEditDrawer } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
-import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { ShareProposalModal } from './share-proposal-modal.tsx';
 
 type ProposalActionsMenuProps = {

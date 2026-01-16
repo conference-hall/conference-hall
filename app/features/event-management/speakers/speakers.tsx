@@ -7,8 +7,8 @@ import { H1, Text } from '~/design-system/typography.tsx';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import type { Route } from './+types/speakers.ts';
-import { Filters } from './components/filters.tsx';
 import { FiltersTags } from './components/filters-tags.tsx';
+import { Filters } from './components/filters.tsx';
 import { SpeakersEmptyState } from './components/speakers-empty-state.tsx';
 import { EventSpeakers, parseUrlFilters } from './services/event-speakers.server.ts';
 
@@ -72,21 +72,21 @@ export default function SpeakersRoute({ loaderData }: Route.ComponentProps) {
                         <div className="flex items-center space-x-6 text-sm">
                           <div className="text-center">
                             <div className="font-semibold text-gray-900">{totalProposals}</div>
-                            <div className="text-gray-500 text-xs">{t('common.proposals')}</div>
+                            <div className="text-xs text-gray-500">{t('common.proposals')}</div>
                           </div>
                           <div className="text-center">
                             <div className="font-semibold text-blue-600">{acceptedProposals}</div>
-                            <div className="text-gray-500 text-xs">{t('event-management.speakers.stats.accepted')}</div>
+                            <div className="text-xs text-gray-500">{t('event-management.speakers.stats.accepted')}</div>
                           </div>
                           <div className="text-center">
                             <div className="font-semibold text-green-600">{confirmedProposals}</div>
-                            <div className="text-gray-500 text-xs">
+                            <div className="text-xs text-gray-500">
                               {t('event-management.speakers.stats.confirmed')}
                             </div>
                           </div>
                           <div className="text-center">
                             <div className="font-semibold text-red-600">{declinedProposals}</div>
-                            <div className="text-gray-500 text-xs">{t('event-management.speakers.stats.declined')}</div>
+                            <div className="text-xs text-gray-500">{t('event-management.speakers.stats.declined')}</div>
                           </div>
                         </div>
                       </div>

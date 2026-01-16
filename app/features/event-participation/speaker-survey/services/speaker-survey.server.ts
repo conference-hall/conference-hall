@@ -1,9 +1,9 @@
-import { db } from 'prisma/db.server.ts';
 import type { Event } from 'prisma/generated/client.ts';
+import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
+import type { SurveyDetailedAnswer, SurveyQuestion } from '~/shared/types/survey.types.ts';
 import { SurveyConfig } from '~/features/event-management/settings/models/survey-config.ts';
 import { EventNotFoundError, SurveyNotEnabledError } from '~/shared/errors.server.ts';
-import type { SurveyDetailedAnswer, SurveyQuestion } from '~/shared/types/survey.types.ts';
 
 type SurveyRawAnswers = Record<string, string | string[] | null>;
 

@@ -1,5 +1,5 @@
-import { FirebaseAuthError } from 'firebase-admin/auth';
 import type { TFunction } from 'i18next';
+import { FirebaseAuthError } from 'firebase-admin/auth';
 import { db } from 'prisma/db.server.ts';
 import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { Notifications } from '~/features/notifications/services/notifications.server.ts';
@@ -10,10 +10,10 @@ import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import AccountDeletedEmail from '~/shared/emails/templates/auth/account-deleted.tsx';
 import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
+import type { AuthenticatedUser } from '../types/user.types.ts';
 import { validateCaptchaToken } from '../authentication/captcha.server.ts';
 import { NotAuthorizedError } from '../errors.server.ts';
 import { flags } from '../feature-flags/flags.server.ts';
-import type { AuthenticatedUser } from '../types/user.types.ts';
 import { sortBy } from '../utils/arrays-sort-by.ts';
 
 const { APP_URL } = getSharedServerEnv();

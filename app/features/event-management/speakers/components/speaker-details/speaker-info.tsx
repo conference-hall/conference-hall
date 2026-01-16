@@ -17,8 +17,8 @@ export function SpeakerInfo({ bio, references, className }: Props) {
 
   return details.map((detail) => (
     <div key={detail.label} className={className}>
-      <div className="font-medium text-gray-900 text-sm leading-6">{detail.label}</div>
-      <div className="wrap-break-word mt-1 text-gray-700 text-sm leading-6">
+      <div className="text-sm leading-6 font-medium text-gray-900">{detail.label}</div>
+      <div className="mt-1 text-sm leading-6 wrap-break-word text-gray-700">
         {(detail.key === 'bio' || detail.key === 'references') && detail.value ? (
           <Markdown>{detail.value as string}</Markdown>
         ) : (

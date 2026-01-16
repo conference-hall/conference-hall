@@ -1,6 +1,5 @@
 import { db } from 'prisma/db.server.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
-
 import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/shared/errors.server.ts';
 
 export class CoSpeakerProposalInvite {

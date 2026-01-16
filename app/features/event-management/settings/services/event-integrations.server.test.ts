@@ -5,7 +5,6 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-
 import { EventIntegrations } from './event-integrations.server.ts';
 
 describe('EventIntegrations', () => {
