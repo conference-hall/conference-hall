@@ -4,10 +4,9 @@ import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { MAILBOX_URL } from './common/mailbox.page.ts';
 import { getUserAuthPath, type TestUser } from './helpers.ts';
 
-// biome-ignore lint: test file
 export const test = base.extend<{ forEachTest: void }>({
   forEachTest: [
-    // biome-ignore lint: test file
+    // oxlint-disable-next-line eslint/no-empty-pattern
     async ({}, use) => {
       // This code runs before all the tests in the worker process.
       await resetDB();

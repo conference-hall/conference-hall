@@ -1,9 +1,7 @@
-/** biome-ignore-all lint/a11y/noStaticElementInteractions: used to manage disable state of links */
-/** biome-ignore-all lint/a11y/useValidAnchor: used to manage disable state of links */
 import type { VariantProps } from 'class-variance-authority';
-import { cva, cx } from 'class-variance-authority';
 import type React from 'react';
 import type { LinkProps } from 'react-router';
+import { cva, cx } from 'class-variance-authority';
 import { Link } from 'react-router';
 import { LoadingIcon } from './icons/loading-icon.tsx';
 
@@ -12,7 +10,7 @@ export type ButtonStylesProps = VariantProps<typeof buttonStyles>;
 export const buttonStyles = cva(
   [
     'items-center justify-center',
-    'focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2',
+    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
   ],
   {
     variants: {
@@ -30,9 +28,9 @@ export const buttonStyles = cva(
       block: { true: 'w-full', false: '' },
     },
     compoundVariants: [
-      { mode: 'text', size: 'base', class: 'h-9 gap-x-2 px-3 py-2 font-semibold text-sm' },
-      { mode: 'text', size: 'sm', class: 'h-7 gap-x-1.5 px-2.5 py-1.5 font-semibold text-xs' },
-      { mode: 'text', size: 'xs', class: 'h-6 gap-x-1 px-2 py-1 font-semibold text-xs' },
+      { mode: 'text', size: 'base', class: 'h-9 gap-x-2 px-3 py-2 text-sm font-semibold' },
+      { mode: 'text', size: 'sm', class: 'h-7 gap-x-1.5 px-2.5 py-1.5 text-xs font-semibold' },
+      { mode: 'text', size: 'xs', class: 'h-6 gap-x-1 px-2 py-1 text-xs font-semibold' },
       { mode: 'icon', size: 'base', class: 'size-9' },
       { mode: 'icon', size: 'sm', class: 'size-7' },
       { mode: 'icon', size: 'xs', class: 'size-6' },
@@ -143,6 +141,7 @@ export function Button(props: ButtonProps) {
   if (href !== undefined) {
     const anchorProps = otherProps as Omit<AnchorProps, keyof CommonProps>;
     return (
+      // oxlint-disable-next-line eslint-plugin-jsx-a11y(click-events-have-key-events)
       <a
         className={buttonClassName}
         aria-disabled={isDisabled ? 'true' : undefined}

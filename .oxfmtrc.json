@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 120,
+  "singleQuote": true,
+  "experimentalSortImports": {
+    "newlinesBetween": false
+  },
+  "experimentalTailwindcss": {
+    "stylesheet": "./app/styles/tailwind.css",
+    "functions": ["cx", "cva"]
+  },
+  "ignorePatterns": []
+}

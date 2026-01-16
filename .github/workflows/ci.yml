@@ -21,13 +21,16 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Linting
-        run: npm run lint:ci
+      - name: Format
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
 
       - name: Typescript checking
         run: npm run tsc
@@ -45,7 +48,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -83,7 +86,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci

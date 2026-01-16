@@ -2,9 +2,9 @@
   "name": "conference-hall",
   "version": "1.0.0",
   "private": true,
-  "sideEffects": false,
-  "type": "module",
   "license": "AGPL-3.0",
+  "type": "module",
+  "sideEffects": false,
   "scripts": {
     "dev": "concurrently -k -c 'yellow,blue' 'npm:dev:*'",
     "dev:web": "tsx ./servers/web.dev.ts",
@@ -22,8 +22,9 @@
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:reset": "prisma migrate reset -f && prisma db seed",
-    "lint": "biome check",
-    "lint:ci": "biome ci",
+    "lint": "oxlint",
+    "format": "oxfmt --check",
+    "format:check": "oxfmt --check",
     "tsc": "react-router typegen && tsc -b",
     "knip": "knip",
     "postinstall": "prisma generate"
@@ -81,7 +82,6 @@
     "zod": "^4.3.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.3.11",
     "@mdx-js/rollup": "^3.1.1",
     "@ngneat/falso": "^8.0.2",
     "@playwright/test": "^1.57.0",
@@ -100,6 +100,8 @@
     "concurrently": "^9.2.1",
     "knip": "^5.81.0",
     "lefthook": "^2.0.15",
+    "oxfmt": "^0.24.0",
+    "oxlint": "^1.39.0",
     "prisma": "^7.2.0",
     "tailwindcss": "^4.1.18",
     "tsx": "^4.21.0",

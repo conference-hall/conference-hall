@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/style/noProcessEnv: process.env should only be used here */
-
 import { existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
