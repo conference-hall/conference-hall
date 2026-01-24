@@ -7,7 +7,7 @@ import { Link } from '~/design-system/links.tsx';
 import { Label, Subtitle } from '~/design-system/typography.tsx';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 
-type PasswordInputProps = {
+type InputPasswordProps = {
   label?: string;
   name?: string;
   value: string;
@@ -17,7 +17,7 @@ type PasswordInputProps = {
   onChange: (password: string) => void;
 };
 
-export function PasswordInput({
+export function InputPassword({
   label,
   name,
   value,
@@ -25,7 +25,7 @@ export function PasswordInput({
   forgotPasswordPath,
   isNewPassword,
   onChange,
-}: PasswordInputProps) {
+}: InputPasswordProps) {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const ToggleIcon = showPassword ? EyeSlashIcon : EyeIcon;

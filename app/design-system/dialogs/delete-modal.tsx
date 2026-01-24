@@ -12,13 +12,14 @@ export type DeleteModalButtonProps = {
   description: string;
   confirmationText: string;
   intent: string;
+  size?: 'base' | 'sm';
 };
 
-export function DeleteModalButton({ title, description, confirmationText, intent }: DeleteModalButtonProps) {
+export function DeleteModalButton({ title, description, confirmationText, intent, size }: DeleteModalButtonProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button type="submit" variant="important" iconLeft={TrashIcon} onClick={() => setOpen(true)}>
+      <Button type="submit" variant="important" size={size} iconLeft={TrashIcon} onClick={() => setOpen(true)}>
         {title}
       </Button>
       <DeleteModal
