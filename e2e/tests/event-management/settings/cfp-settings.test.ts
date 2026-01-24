@@ -1,13 +1,11 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../../fixtures.ts';
+import { expect, test } from '../../../fixtures.ts';
+import { userLoggedFactory } from '../../../helpers.ts';
 import { CfpSettingsPage } from './cfp-settings.page.ts';
 
-loginWith('clark-kent');
-
-test('updates conference CFP settings', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+test('updates conference CFP settings', async ({ context, page }) => {
+  const user = await userLoggedFactory(context);
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
@@ -35,8 +33,8 @@ test('updates conference CFP settings', async ({ page }) => {
   await expect(cfpPage.codeOfConductUrlInput).toHaveValue('https://example.com');
 });
 
-test('updates meetup CFP settings', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+test('updates meetup CFP settings', async ({ context, page }) => {
+  const user = await userLoggedFactory(context);
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['meetup-cfp-close'] });
 

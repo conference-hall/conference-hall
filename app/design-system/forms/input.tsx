@@ -32,6 +32,8 @@ export function Input({
     return <input id={name} name={name} type="hidden" ref={ref} {...rest} className="hidden" />;
   }
 
+  const errorMessage = Array.isArray(error) ? error.join(' ') : error;
+
   return (
     <div className={className}>
       {label && (
@@ -61,7 +63,7 @@ export function Input({
       </div>
       {(error || description) && (
         <p id={`${name}-describe`} className={descriptionStyle({ color, error: !!error })}>
-          {error || description}
+          {errorMessage || description}
         </p>
       )}
     </div>

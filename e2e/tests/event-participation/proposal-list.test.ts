@@ -1,42 +1,40 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
-import { userFactory } from 'tests/factories/users.ts';
 import type { Event } from '../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { LoginPage } from '../auth/login.page.ts';
 import { ProposalListPage } from './proposal-list.page.ts';
 import { ProposalPage } from './proposal.page.ts';
 
-let eventOpen: Event;
-let eventClosed: Event;
-let eventWithoutProposal: Event;
-
-test.beforeEach(async () => {
-  const user = await userFactory({ traits: ['clark-kent'], attributes: { bio: '' } });
-  const talk1 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 1' } });
-  const talk2 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 2' } });
-  const talk3 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 3' } });
-  const talk4 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 4' } });
-  const talk5 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 5' } });
-  const talk6 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 6' } });
-
-  eventOpen = await eventFactory({ traits: ['conference-cfp-open'] });
-  await proposalFactory({ event: eventOpen, talk: talk1 });
-  await proposalFactory({ event: eventOpen, talk: talk2, traits: ['draft'] });
-  await proposalFactory({ event: eventOpen, talk: talk3, traits: ['accepted-published'] });
-  await proposalFactory({ event: eventOpen, talk: talk4, traits: ['rejected-published'] });
-  await proposalFactory({ event: eventOpen, talk: talk5, traits: ['declined'] });
-  await proposalFactory({ event: eventOpen, talk: talk6, traits: ['confirmed'] });
-
-  eventClosed = await eventFactory({ traits: ['conference-cfp-past'] });
-  await proposalFactory({ event: eventClosed, talk: talk1 });
-
-  eventWithoutProposal = await eventFactory({ traits: ['conference-cfp-open'] });
-});
-
 test.describe('when user is connected', () => {
-  loginWith('clark-kent');
+  let eventOpen: Event;
+  let eventClosed: Event;
+  let eventWithoutProposal: Event;
+
+  test.beforeEach(async ({ context }) => {
+    const user = await userLoggedFactory(context, { attributes: { bio: '' } });
+    const talk1 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 1' } });
+    const talk2 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 2' } });
+    const talk3 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 3' } });
+    const talk4 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 4' } });
+    const talk5 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 5' } });
+    const talk6 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 6' } });
+
+    eventOpen = await eventFactory({ traits: ['conference-cfp-open'] });
+    await proposalFactory({ event: eventOpen, talk: talk1 });
+    await proposalFactory({ event: eventOpen, talk: talk2, traits: ['draft'] });
+    await proposalFactory({ event: eventOpen, talk: talk3, traits: ['accepted-published'] });
+    await proposalFactory({ event: eventOpen, talk: talk4, traits: ['rejected-published'] });
+    await proposalFactory({ event: eventOpen, talk: talk5, traits: ['declined'] });
+    await proposalFactory({ event: eventOpen, talk: talk6, traits: ['confirmed'] });
+
+    eventClosed = await eventFactory({ traits: ['conference-cfp-past'] });
+    await proposalFactory({ event: eventClosed, talk: talk1 });
+
+    eventWithoutProposal = await eventFactory({ traits: ['conference-cfp-open'] });
+  });
 
   test('displays proposal list', async ({ page }) => {
     const proposalListPage = new ProposalListPage(page);
@@ -72,6 +70,7 @@ test.describe('when user is connected', () => {
 
 test.describe('when user is not connected', () => {
   test('redirects to signin', async ({ page }) => {
+    const eventOpen = await eventFactory({ traits: ['conference-cfp-open'] });
     await page.goto(`/${eventOpen.slug}/proposals`);
     const loginPage = new LoginPage(page);
     await loginPage.waitFor();

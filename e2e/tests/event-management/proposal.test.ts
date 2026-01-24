@@ -14,99 +14,98 @@ import { userFactory } from 'tests/factories/users.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import type { Event, Team, User } from '../../../prisma/generated/client.ts';
 import { MessageBlockComponent } from '../../common/message-block.component.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { ProposalPage } from './proposal.page.ts';
 
-let user: User;
-let team: Team;
-let event: Event;
-let event2: Event;
-let speaker1: User;
-let proposal: ProposalFactory;
-let proposal2: ProposalFactory;
+test.describe('As owner', () => {
+  let user: User;
+  let team: Team;
+  let event: Event;
+  let event2: Event;
+  let speaker1: User;
+  let proposal: ProposalFactory;
+  let proposal2: ProposalFactory;
 
-test.beforeEach(async () => {
-  user = await userFactory({ traits: ['clark-kent'] });
-  const reviewer = await userFactory({ traits: ['bruce-wayne'] });
-  team = await teamFactory({ owners: [user], reviewers: [reviewer] });
+  test.beforeEach(async ({ context }) => {
+    user = await userLoggedFactory(context, { traits: ['clark-kent'] });
+    const reviewer = await userFactory({ traits: ['bruce-wayne'] });
+    team = await teamFactory({ owners: [user], reviewers: [reviewer] });
 
-  event = await eventFactory({ team, traits: ['conference-cfp-open', 'withSurveyConfig'] });
-  const format1 = await eventFormatFactory({ event, attributes: { name: 'Format 1' } });
-  const format2 = await eventFormatFactory({ event, attributes: { name: 'Format 2' } });
-  const category1 = await eventCategoryFactory({ event, attributes: { name: 'Category 1' } });
-  const category2 = await eventCategoryFactory({ event, attributes: { name: 'Category 2' } });
-  const tag1 = await eventProposalTagFactory({ event, attributes: { name: 'Tag 1' } });
-  await eventProposalTagFactory({ event, attributes: { name: 'Tag 2' } });
+    event = await eventFactory({ team, traits: ['conference-cfp-open', 'withSurveyConfig'] });
+    const format1 = await eventFormatFactory({ event, attributes: { name: 'Format 1' } });
+    const format2 = await eventFormatFactory({ event, attributes: { name: 'Format 2' } });
+    const category1 = await eventCategoryFactory({ event, attributes: { name: 'Category 1' } });
+    const category2 = await eventCategoryFactory({ event, attributes: { name: 'Category 2' } });
+    const tag1 = await eventProposalTagFactory({ event, attributes: { name: 'Tag 1' } });
+    await eventProposalTagFactory({ event, attributes: { name: 'Tag 2' } });
 
-  speaker1 = await userFactory({
-    attributes: {
-      name: 'Marie Jane',
-      email: 'marie@example.com',
-      bio: 'MJ Bio',
-      references: 'MJ References',
-      location: 'Nantes',
-      company: 'MJ Corp',
-      socialLinks: ['https://github.com/mj'],
-    },
-  });
-  const speaker2 = await userFactory({ attributes: { name: 'Robin' } });
-
-  proposal = await proposalFactory({
-    event,
-    formats: [format1],
-    categories: [category1],
-    tags: [tag1],
-    talk: await talkFactory({
+    speaker1 = await userFactory({
       attributes: {
-        title: 'Talk 1',
-        abstract: 'Talk description',
-        level: 'ADVANCED',
-        references: 'My talk references',
-        languages: ['fr'],
+        name: 'Marie Jane',
+        email: 'marie@example.com',
+        bio: 'MJ Bio',
+        references: 'MJ References',
+        location: 'Nantes',
+        company: 'MJ Corp',
+        socialLinks: ['https://github.com/mj'],
       },
-      speakers: [speaker1, speaker2],
-    }),
-  });
-  await proposalFactory({
-    event,
-    traits: ['accepted'],
-    formats: [format2],
-    categories: [category2],
-    talk: await talkFactory({ attributes: { title: 'Talk 2' }, speakers: [speaker2] }),
-  });
+    });
+    const speaker2 = await userFactory({ attributes: { name: 'Robin' } });
 
-  await surveyFactory({
-    event,
-    user: speaker1,
-    attributes: { answers: { accomodation: 'yes', transports: ['taxi', 'train'], info: 'Love you' } },
-  });
+    proposal = await proposalFactory({
+      event,
+      formats: [format1],
+      categories: [category1],
+      tags: [tag1],
+      talk: await talkFactory({
+        attributes: {
+          title: 'Talk 1',
+          abstract: 'Talk description',
+          level: 'ADVANCED',
+          references: 'My talk references',
+          languages: ['fr'],
+        },
+        speakers: [speaker1, speaker2],
+      }),
+    });
+    await proposalFactory({
+      event,
+      traits: ['accepted'],
+      formats: [format2],
+      categories: [category2],
+      talk: await talkFactory({ attributes: { title: 'Talk 2' }, speakers: [speaker2] }),
+    });
 
-  await reviewFactory({ proposal, user: reviewer, attributes: { note: 3, feeling: 'NEUTRAL' } });
-  await commentFactory({
-    proposal,
-    user: reviewer,
-    attributes: { channel: 'ORGANIZER', comment: 'Hello world' },
-    traits: ['withReaction'],
-  });
+    await surveyFactory({
+      event,
+      user: speaker1,
+      attributes: { answers: { accomodation: 'yes', transports: ['taxi', 'train'], info: 'Love you' } },
+    });
 
-  event2 = await eventFactory({
-    team,
-    attributes: {
-      displayProposalsReviews: false,
-      displayProposalsSpeakers: false,
-      reviewEnabled: false,
-    },
-  });
-  proposal2 = await proposalFactory({
-    attributes: { id: 'proposal-2' },
-    event: event2,
-    traits: ['accepted'],
-    talk: await talkFactory({ attributes: { title: 'Talk 3' }, speakers: [speaker1, speaker2] }),
-  });
-});
+    await reviewFactory({ proposal, user: reviewer, attributes: { note: 3, feeling: 'NEUTRAL' } });
+    await commentFactory({
+      proposal,
+      user: reviewer,
+      attributes: { channel: 'ORGANIZER', comment: 'Hello world' },
+      traits: ['withReaction'],
+    });
 
-test.describe('As a owner', () => {
-  loginWith('clark-kent');
+    event2 = await eventFactory({
+      team,
+      attributes: {
+        displayProposalsReviews: false,
+        displayProposalsSpeakers: false,
+        reviewEnabled: false,
+      },
+    });
+    proposal2 = await proposalFactory({
+      attributes: { id: 'proposal-2' },
+      event: event2,
+      traits: ['accepted'],
+      talk: await talkFactory({ attributes: { title: 'Talk 3' }, speakers: [speaker1, speaker2] }),
+    });
+  });
 
   test('displays proposal data and review the proposal', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
@@ -458,10 +457,13 @@ test.describe('As a owner', () => {
   });
 });
 
-test.describe('As a reviewer', () => {
-  loginWith('bruce-wayne');
+test.describe('As reviewer', () => {
+  test('does not show proposal status panel', async ({ page, context }) => {
+    const reviewer = await userLoggedFactory(context);
+    const team = await teamFactory({ reviewers: [reviewer] });
+    const event = await eventFactory({ team, traits: ['conference-cfp-open', 'withSurveyConfig'] });
+    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [reviewer] }) });
 
-  test('does not show proposal status panel', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
     await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 

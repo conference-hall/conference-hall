@@ -41,7 +41,7 @@ If you want to contribute and make **Conference Hall** better, read our [Contrib
 
 ### Stack
 
-React / React router v7 / Typescript / Tailwind / HeadlessUI / Conform / Zod / Prisma / Firebase Auth / Mailgun / Express / Postgresql / Redis / BullMQ / Oxlint / Oxfmt / Vitest / Playwright
+React / React router v7 / Typescript / Tailwind / HeadlessUI / Conform / Zod / Prisma / S3 Storage / Mailgun / Express / Postgresql / Redis / BullMQ / Oxlint / Oxfmt / Vitest / Playwright
 
 ### Prerequisites
 
@@ -56,7 +56,7 @@ Install dependencies:
 npm install
 ```
 
-Start Docker image for Postgres DB, Firebase emulators and Mailpit:
+Start Docker image for Postgres DB, S3 Storage and Mailpit:
 
 ```sh
 docker compose up
@@ -78,14 +78,18 @@ Start the development server:
 npm run dev
 ```
 
+You can connect with test users :
+
+- `superman@example.net` / `password`
+- `batman@example.net` / `password`
+
 ### Useful commands
 
 #### Generate Prisma client code
 
-Need to be done when DB schema has changed
-
 ```sh
-npm run db:reset
+# Need to be done when DB schema has changed
+npx prisma generate
 ```
 
 #### Reset and seed local DB
@@ -96,7 +100,7 @@ npm run db:reset
 
 #### Execute tests
 
-The docker image for Postgres DB, Redis and Firebase emulators MUST be running.
+The docker image with Postgres DB, Redis and S3 Storage MUST be running.
 
 Install Playwright browser for components and e2e tests:
 
@@ -126,11 +130,4 @@ npm run lint
 
 ```sh
 npm run tsc
-```
-
-#### Export emulators data
-
-```sh
-docker exec -it ch_firebase_emulators sh
-firebase --project=conference-hall emulators:export fixtures
 ```

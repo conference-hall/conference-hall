@@ -1,19 +1,17 @@
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
-import { userFactory } from 'tests/factories/users.ts';
 import type { Event } from '../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { EventPage } from './event.page.ts';
 
 let eventOpen: Event;
 let eventFuture: Event;
 let eventPast: Event;
 
-loginWith('clark-kent');
-
-test.beforeEach(async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+test.beforeEach(async ({ context, page }) => {
+  await userLoggedFactory(context);
   eventOpen = await eventFactory({
     attributes: {
       name: 'Devfest Nantes',

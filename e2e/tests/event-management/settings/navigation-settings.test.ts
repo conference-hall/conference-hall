@@ -1,13 +1,11 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
-import { loginWith, test } from '../../../fixtures.ts';
+import { test } from '../../../fixtures.ts';
+import { userLoggedFactory } from '../../../helpers.ts';
 import { NavigationSettingsPage } from './navigation-settings.page.ts';
 
-loginWith('clark-kent');
-
-test('can access to the settings', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+test('can access to the settings', async ({ context, page }) => {
+  const user = await userLoggedFactory(context);
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
@@ -46,8 +44,8 @@ test('can access to the settings', async ({ page }) => {
 });
 
 test.describe('As a member', () => {
-  test('can access to the settings', async ({ page }) => {
-    const user = await userFactory({ traits: ['clark-kent'] });
+  test('can access to the settings', async ({ context, page }) => {
+    const user = await userLoggedFactory(context);
     const team = await teamFactory({ members: [user] });
     const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
@@ -57,8 +55,8 @@ test.describe('As a member', () => {
 });
 
 test.describe('As a reviewer', () => {
-  test('cannot access to the settings', async ({ page }) => {
-    const user = await userFactory({ traits: ['clark-kent'] });
+  test('cannot access to the settings', async ({ context, page }) => {
+    const user = await userLoggedFactory(context);
     const team = await teamFactory({ reviewers: [user] });
     const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 

@@ -9,12 +9,6 @@ node_modules
 /build
 /public/build
 
-# firebase
-.firebaserc
-
-# docker
-/docker/firebase/.cache/firebase
-
 # typescript
 *.tsbuildinfo
 

@@ -27,15 +27,15 @@ export function applySecurity(app: express.Application) {
         reportOnly: true,
         directives: {
           'connect-src': [
-            !isProduction ? 'ws://127.0.0.1:*' : '',
-            !isProduction ? 'http://127.0.0.1:*' : '',
+            !isProduction ? 'ws://localhost:*' : '',
+            !isProduction ? 'http://localhost:*' : '',
             isProduction ? '*.googleapis.com' : '',
             "'self'",
           ].filter(Boolean),
           'frame-src': [
             "'self'",
             'https://challenges.cloudflare.com',
-            !isProduction ? 'http://127.0.0.1:*' : '',
+            !isProduction ? 'http://localhost:*' : '',
           ].filter(Boolean),
           'font-src': ["'self'", 'data:'],
           'img-src': ["'self'", 'data:', 'https:'],

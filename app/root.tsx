@@ -8,8 +8,6 @@ import { GlobalLoading } from './app-platform/components/global-loading.tsx';
 import { UserProvider } from './app-platform/components/user-context.tsx';
 import { ClientOnly } from './design-system/utils/client-only.tsx';
 import { OptionalAuthContext, optionalAuth } from './shared/authentication/auth.middleware.ts';
-import { getFirebaseClientConfig } from './shared/authentication/firebase.server.ts';
-import { initializeFirebaseClient } from './shared/authentication/firebase.ts';
 import { FlagsProvider } from './shared/feature-flags/flags-context.tsx';
 import { flags } from './shared/feature-flags/flags.server.ts';
 import { getI18n, getLocale, i18nextMiddleware, setLocaleCookie } from './shared/i18n/i18n.middleware.ts';
@@ -64,10 +62,9 @@ export const loader = async ({ request, context }: Route.LoaderArgs) => {
   const i18n = getI18n(context);
   const title = i18n.t('app.title');
   const description = i18n.t('app.description');
-  const firebaseConfig = getFirebaseClientConfig();
 
   return data(
-    { title, description, user, locale, toast, firebaseConfig, flags: frontendFlags },
+    { title, description, user, locale, toast, flags: frontendFlags },
     { headers: combineHeaders(toastHeaders, await setLocaleCookie(locale)) },
   );
 };
@@ -98,12 +95,10 @@ function Document({ nonce, toast, children }: DocumentProps) {
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  const { locale, user, firebaseConfig, toast, flags } = loaderData;
+  const { locale, user, toast, flags } = loaderData;
   const nonce = useNonce();
 
   useChangeLanguage(locale);
-
-  initializeFirebaseClient(locale, firebaseConfig);
 
   return (
     <FlagsProvider flags={flags}>

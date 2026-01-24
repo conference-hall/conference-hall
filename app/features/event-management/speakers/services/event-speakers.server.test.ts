@@ -1043,4 +1043,26 @@ describe('EventSpeakers', () => {
       });
     });
   });
+
+  describe('EventSpeakers.updateEmailForUser', () => {
+    it('updates email for all event speakers linked to the user', async () => {
+      const otherEvent = await eventFactory({ team });
+      await eventSpeakerFactory({ event: otherEvent, user: speaker1 });
+
+      await EventSpeakers.updateEmailForUser(speaker1.id, 'newemail@example.com');
+
+      const updatedSpeakers = await db.eventSpeaker.findMany({ where: { userId: speaker1.id } });
+      expect(updatedSpeakers).toHaveLength(2);
+      expect(updatedSpeakers.every((s) => s.email === 'newemail@example.com')).toBe(true);
+    });
+
+    it('does not update speakers belonging to other users', async () => {
+      const originalEmail = eventSpeaker2.email;
+
+      await EventSpeakers.updateEmailForUser(speaker1.id, 'newemail@example.com');
+
+      const unchangedSpeaker = await db.eventSpeaker.findFirst({ where: { id: eventSpeaker2.id } });
+      expect(unchangedSpeaker?.email).toBe(originalEmail);
+    });
+  });
 });

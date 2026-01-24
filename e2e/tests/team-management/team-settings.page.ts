@@ -20,6 +20,11 @@ export class TeamSettingsPage extends PageObject {
     await this.waitFor();
   }
 
+  async gotoMembers(slug: string) {
+    await this.page.goto(`/team/${slug}/settings/members`);
+    await this.waitFor();
+  }
+
   async waitFor() {
     await this.waitForHydration();
     await this.heading.waitFor();
@@ -43,18 +48,23 @@ export class TeamSettingsPage extends PageObject {
 
   // Member list
 
-  async gotoMembers(slug: string) {
-    await this.page.goto(`/team/${slug}/settings/members`);
-    await this.waitFor();
-  }
-
   member(name: string) {
     return this.members.getByText(name);
   }
 
   async clickOnInviteMember() {
     await this.page.getByRole('button', { name: 'Invite member' }).click();
-    return this.page.getByLabel('Copy invitation link');
+    return this.page.getByRole('dialog').getByRole('heading', { name: 'Invite a member' });
+  }
+
+  async clickOnRemoveMember(name: string) {
+    await this.removeMemberButton(name).click();
+    return this.page.getByRole('dialog').getByRole('heading', { name: `Remove ${name} from the team?` });
+  }
+
+  async clickOnChangeRole(name: string) {
+    await this.changeRoleButton(name).click();
+    return this.page.getByRole('dialog').getByRole('heading', { name: `Change the role of ${name}?` });
   }
 
   removeMemberButton(name: string) {

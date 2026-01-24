@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { resolveStorageUrl } from './storage-utils.ts';
 
 vi.mock('../../../servers/environment.server.ts', () => ({
-  getSharedServerEnv: () => ({ APP_URL: 'http://127.0.0.1:3000' }),
+  getSharedServerEnv: () => ({ APP_URL: 'http://localhost:3000' }),
 }));
 
 describe('resolveStorageUrl', () => {
@@ -17,7 +17,7 @@ describe('resolveStorageUrl', () => {
 
   it('resolves bucket keys to proxy URLs', () => {
     expect(resolveStorageUrl('events/abc123/logo-a1b2c3d4.webp')).toBe(
-      'http://127.0.0.1:3000/storage/events/abc123/logo-a1b2c3d4.webp',
+      'http://localhost:3000/storage/events/abc123/logo-a1b2c3d4.webp',
     );
   });
 });

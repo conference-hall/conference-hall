@@ -1,12 +1,10 @@
 import { organizerKeyFactory } from 'tests/factories/organizer-key.ts';
-import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { TeamAccessPage } from './team-access.page.ts';
 
-loginWith('clark-kent');
-
-test('gets access with a beta access key', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+test('gets access with a beta access key', async ({ context, page }) => {
+  await userLoggedFactory(context);
   await organizerKeyFactory({ attributes: { id: '123456' } });
 
   const teamAccessPage = new TeamAccessPage(page);

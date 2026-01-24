@@ -1,13 +1,11 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { SchedulePage } from './schedule.page.ts';
 
-loginWith('clark-kent');
-
-test('displays event schedule', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+test('displays event schedule', async ({ page, context }) => {
+  const user = await userLoggedFactory(context);
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({
     team,
@@ -48,10 +46,8 @@ test('displays event schedule', async ({ page }) => {
 });
 
 test.describe('as a team reviewer', () => {
-  loginWith('bruce-wayne');
-
-  test('does not have access to publication', async ({ page }) => {
-    const user = await userFactory({ traits: ['bruce-wayne'] });
+  test('does not have access to publication', async ({ page, context }) => {
+    const user = await userLoggedFactory(context);
     const team = await teamFactory({ reviewers: [user] });
     const event = await eventFactory({ team });
 

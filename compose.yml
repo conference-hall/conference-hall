@@ -17,16 +17,6 @@ services:
     ports:
       - '6379:6379'
 
-  firebase-emulators:
-    container_name: ch_firebase_emulators
-    build:
-      context: ./docker/firebase
-    volumes:
-      - ./docker/firebase/fixtures:/app/fixtures:ro
-    ports:
-      - '9099:9099'
-      - '4000:4000'
-
   minio:
     container_name: ch_minio
     image: minio/minio:latest
