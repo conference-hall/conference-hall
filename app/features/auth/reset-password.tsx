@@ -1,20 +1,18 @@
-import * as Firebase from 'firebase/auth';
+import type { ParseKeys } from 'i18next';
 import { type FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form, redirect, useNavigate, useSearchParams } from 'react-router';
+import { Form, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
-import { PasswordInput } from '~/design-system/forms/password-input.tsx';
+import { InputPassword } from '~/design-system/forms/input-password.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
-import { OptionalAuthContext } from '~/shared/authentication/auth.middleware.ts';
-import { getFirebaseError } from '~/shared/authentication/firebase.errors.ts';
-import { getClientAuth } from '~/shared/authentication/firebase.ts';
+import { authClient, getAuthError } from '~/shared/better-auth/auth-client.ts';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { validatePassword } from '~/shared/validators/auth.ts';
 import type { Route } from './+types/reset-password.ts';
@@ -23,47 +21,38 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Reset password | Conference Hall' }]);
 };
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
-  const user = context.get(OptionalAuthContext);
-  if (user) return redirect('/');
-
-  const url = new URL(request.url);
-  const oobCode = url.searchParams.get('oobCode');
-  if (!oobCode) return redirect('/auth/login');
-
-  return null;
-};
-
 export default function ResetPassword() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const oobCode = searchParams.get('oobCode');
-  const email = searchParams.get('email');
+  const token = searchParams.get('token');
+  const errorCode = searchParams.get('error');
+  const errorKey = errorCode ? getAuthError({ code: errorCode }) : null;
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<ParseKeys | null>(errorKey);
   const [fieldErrors, setFieldErrors] = useState<SubmissionErrors>(null);
   const [password, setPassword] = useState('');
 
   const resetPassword = async (event: FormEvent) => {
     event.preventDefault();
-    if (loading || !oobCode) return;
+    if (loading || !token) return;
 
     const fieldErrors = validatePassword(password);
     if (fieldErrors) return setFieldErrors(fieldErrors);
 
-    try {
-      setError('');
-      setLoading(true);
-      await Firebase.confirmPasswordReset(getClientAuth(), oobCode, password);
-      toast.success(t('auth.reset-password.toast.success'));
-      navigate({ pathname: '/auth/login', search: `?email=${email}` });
-    } catch (error) {
-      setError(getFirebaseError(error, t));
-    } finally {
-      setLoading(false);
-    }
+    await authClient.resetPassword(
+      { newPassword: password, token },
+      {
+        onRequest: () => setLoading(true),
+        onSuccess: () => {
+          toast.success(t('auth.reset-password.toast.success'));
+          navigate({ pathname: '/auth/login' });
+        },
+        onError: (ctx) => setError(getAuthError(ctx.error)),
+      },
+    );
+    setLoading(false);
   };
 
   return (
@@ -79,15 +68,21 @@ export default function ResetPassword() {
         <Subtitle>{t('auth.reset-password.description')}</Subtitle>
 
         <Form className="space-y-4" onSubmit={resetPassword}>
-          <PasswordInput value={password} onChange={setPassword} isNewPassword error={fieldErrors?.password} />
+          <InputPassword
+            value={password}
+            onChange={setPassword}
+            isNewPassword
+            error={fieldErrors?.password}
+            disabled={!token}
+          />
 
-          <Button type="submit" variant="primary" loading={loading} className="mt-2 w-full">
+          <Button type="submit" variant="primary" loading={loading} disabled={!token} className="mt-2 w-full">
             {t('auth.reset-password.submit')}
           </Button>
 
           {error ? (
             <Callout variant="error" role="alert">
-              {error}
+              {t(error)}
             </Callout>
           ) : null}
         </Form>

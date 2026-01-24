@@ -11,12 +11,12 @@ import {
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { href, Link, useSubmit } from 'react-router';
+import { href, Link, useNavigate } from 'react-router';
 import { Avatar, AvatarName } from '~/design-system/avatar.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { getClientAuth } from '~/shared/authentication/firebase.ts';
+import { authClient } from '~/shared/better-auth/auth-client.ts';
 import { LegalLinks } from '../../footer.tsx';
 import { SponsorLink } from '../../sponsor-link.tsx';
 
@@ -178,19 +178,16 @@ function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
 
 function SignOutMenu() {
   const { t } = useTranslation();
-  const submit = useSubmit();
+  const navigate = useNavigate();
+
   const signOut = async () => {
-    try {
-      await getClientAuth().signOut();
-    } finally {
-      await submit({}, { method: 'POST', action: href('/auth/logout') });
-    }
+    await authClient.signOut({ fetchOptions: { onSuccess: () => navigate('/') } });
   };
 
   return (
     <li>
       <button
-        type="submit"
+        type="button"
         onClick={signOut}
         className="group flex w-full cursor-pointer items-center gap-x-3 rounded-md p-2 text-left text-sm leading-6 font-medium text-gray-700 hover:bg-gray-100"
       >

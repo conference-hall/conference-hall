@@ -1,13 +1,13 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../../fixtures.ts';
 import { CfpSettingsPage } from './cfp-settings.page.ts';
 
-loginWith('clark-kent');
+useLoginSession();
 
 test('updates conference CFP settings', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+  const user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
@@ -36,7 +36,7 @@ test('updates conference CFP settings', async ({ page }) => {
 });
 
 test('updates meetup CFP settings', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+  const user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['meetup-cfp-close'] });
 

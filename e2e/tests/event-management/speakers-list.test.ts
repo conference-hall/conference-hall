@@ -5,7 +5,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Event, Team, User } from '../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { SpeakersListPage } from './speakers-list.page.ts';
 
 let team: Team;
@@ -14,11 +14,11 @@ let speaker1: User;
 let speaker2: User;
 let speaker3: User;
 
-loginWith('clark-kent');
+useLoginSession();
 
 test.beforeEach(async () => {
-  const user = await userFactory({ traits: ['clark-kent'] });
-  const member = await userFactory({ traits: ['bruce-wayne'] });
+  const user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
+  const member = await userFactory();
   team = await teamFactory({ owners: [user], members: [member] });
   event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 

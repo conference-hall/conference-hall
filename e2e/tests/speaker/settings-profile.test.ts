@@ -1,11 +1,11 @@
 import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { SettingsProfilePage } from './settings-profile.page.ts';
 
-loginWith('clark-kent');
+useLoginSession();
 
 test('display speaker profile', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+  await userFactory({ withPasswordAccount: true, withAuthSession: true });
 
   const profilePage = new SettingsProfilePage(page);
   await profilePage.goto();

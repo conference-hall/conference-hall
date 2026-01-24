@@ -1,13 +1,13 @@
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { TalkInvitePage } from './talk-invite.page.ts';
 
-loginWith('bruce-wayne');
+useLoginSession();
 
 test('accepts invite to a talk', async ({ page }) => {
-  await userFactory({ traits: ['bruce-wayne'] });
-  const speaker = await userFactory({ traits: ['clark-kent'] });
+  const user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
+  const speaker = await userFactory();
   const talk = await talkFactory({ speakers: [speaker] });
 
   const talkInvitePage = new TalkInvitePage(page);
@@ -17,6 +17,6 @@ test('accepts invite to a talk', async ({ page }) => {
   await talkPage.waitFor();
 
   expect(await talkPage.speakers).toHaveCount(3);
-  await expect(talkPage.speaker('Clark Kent')).toBeVisible();
-  await expect(talkPage.speaker('Bruce Wayne')).toBeVisible();
+  await expect(talkPage.speaker(speaker.name)).toBeVisible();
+  await expect(talkPage.speaker(user.name)).toBeVisible();
 });

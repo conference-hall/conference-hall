@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { auth } from '~/shared/authentication/firebase.server.ts';
 import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
 import { NotAuthorizedError, UserNotFoundError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
@@ -51,11 +50,12 @@ export class AdminUsers {
   }
 
   async getUserInfo(userId: string) {
-    const user = await db.user.findUnique({ where: { id: userId } });
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      include: { accounts: true, sessions: { orderBy: { createdAt: 'desc' } } },
+    });
 
     if (!user) throw new UserNotFoundError();
-
-    const authUser = await this.#getAuthUser(user.uid);
 
     const memberships = await db.teamMember.findMany({
       where: { memberId: userId },
@@ -66,18 +66,24 @@ export class AdminUsers {
       where: { speakers: { some: { id: userId } } },
     });
 
+    const lastSession = user.sessions.at(0);
+
     return {
       uid: user.uid,
       name: user.name,
       email: user.email,
       termsAccepted: user.termsAccepted,
-      emailVerified: authUser?.emailVerified ?? false,
-      lastSignInAt: authUser?.lastSignInAt ?? null,
+      emailVerified: user.emailVerified,
+      lastSignInAt: lastSession?.createdAt,
       updatedAt: user.updatedAt,
       createdAt: user.createdAt,
       deletedAt: user.deletedAt,
       talksCount,
-      authenticationMethods: authUser?.authenticationMethods || [],
+      accounts: user.accounts.map((account) => ({
+        accountId: account.accountId,
+        providerId: account.providerId,
+        createdAt: account.createdAt,
+      })),
       teams: memberships.map((member) => ({
         slug: member.team.slug,
         name: member.team.name,
@@ -88,28 +94,6 @@ export class AdminUsers {
   }
 
   async deleteUser(targetUserId: string) {
-    const user = await db.user.findUnique({ where: { id: targetUserId } });
-
-    if (!user) throw new UserNotFoundError();
-
-    await UserAccount.deleteAccount(targetUserId, user.locale, false);
-  }
-
-  async #getAuthUser(uid: string | null) {
-    if (!uid) return null;
-    try {
-      const firebaseUser = await auth.getUser(uid);
-      return {
-        lastSignInAt: new Date(firebaseUser.metadata.lastSignInTime),
-        emailVerified: firebaseUser.emailVerified,
-        authenticationMethods: firebaseUser.providerData.map((provider) => ({
-          provider: provider.providerId,
-          email: provider.email,
-        })),
-      };
-    } catch (error) {
-      console.error(`Error fetching user info from Firebase Auth for uid "${uid}"`, error);
-      return null;
-    }
+    await UserAccount.for(targetUserId).deleteAccount({ sendConfirmationEmail: false });
   }
 }

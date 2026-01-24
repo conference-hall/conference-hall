@@ -3,18 +3,21 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Event, Talk, User } from '../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { SubmissionPage } from '../event-participation/submission.page.ts';
 import { TalkPage } from './talk.page.ts';
 
 let user: User;
+let coSpeaker: User;
 let event1: Event;
 let event2: Event;
 let talk: Talk & { speakers: User[] };
 
+useLoginSession();
+
 test.beforeEach(async () => {
-  const coSpeaker = await userFactory({ traits: ['bruce-wayne'] });
-  user = await userFactory({ traits: ['clark-kent'] });
+  coSpeaker = await userFactory();
+  user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
   event1 = await eventFactory({ attributes: { name: 'Devfest Nantes' }, traits: ['conference-cfp-open'] });
   event2 = await eventFactory({ traits: ['meetup-cfp-open'] });
   talk = await talkFactory({
@@ -24,8 +27,6 @@ test.beforeEach(async () => {
   await proposalFactory({ event: event1, talk });
 });
 
-loginWith('clark-kent');
-
 test('displays and manages a talk', async ({ page }) => {
   const talkPage = new TalkPage(page);
   await talkPage.goto(talk.id);
@@ -34,8 +35,8 @@ test('displays and manages a talk', async ({ page }) => {
     await expect(page.getByRole('heading', { name: talk.title })).toBeVisible();
 
     await expect(talkPage.speakers).toHaveCount(3);
-    await expect(talkPage.speaker('Clark Kent')).toBeVisible();
-    await expect(talkPage.speaker('Bruce Wayne')).toBeVisible();
+    await expect(talkPage.speaker(user.name)).toBeVisible();
+    await expect(talkPage.speaker(coSpeaker.name)).toBeVisible();
 
     await expect(page.getByText('My talk abstract')).toBeVisible();
     await expect(page.getByText('Intermediate')).toBeVisible();
@@ -58,9 +59,9 @@ test('displays and manages a talk', async ({ page }) => {
     await expect(talkPage.inviteCoSpeaker).toBeVisible();
     await talkPage.closeModal();
 
-    const cospeaker = await talkPage.clickOnSpeaker('Bruce Wayne');
-    await cospeaker.waitFor();
-    await cospeaker.clickOnRemoveSpeaker('Bruce Wayne');
+    const cospeakerPage = await talkPage.clickOnSpeaker(coSpeaker.name);
+    await cospeakerPage.waitFor();
+    await cospeakerPage.clickOnRemoveSpeaker(coSpeaker.name);
     await expect(talkPage.toast).toHaveText('Co-speaker removed from talk.');
   });
 

@@ -1,18 +1,5 @@
 import { getApps, initializeApp } from 'firebase/app';
 import { browserLocalPersistence, connectAuthEmulator, getAuth, setPersistence } from 'firebase/auth';
-import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
-import { GoogleIcon } from '~/design-system/icons/google-icon.tsx';
-import { XIcon } from '~/design-system/icons/x-icon.tsx';
-
-export type ProviderId = 'google.com' | 'github.com' | 'twitter.com';
-
-type ProviderInfo = { id: ProviderId; label: string; icon: React.ComponentType<{ className?: string }> };
-
-export const PROVIDERS: Array<ProviderInfo> = [
-  { id: 'google.com', label: 'Google', icon: GoogleIcon },
-  { id: 'github.com', label: 'GitHub', icon: GitHubIcon },
-  { id: 'twitter.com', label: 'X.com', icon: XIcon },
-];
 
 export type FirebaseConfig = {
   FIREBASE_API_KEY: string;

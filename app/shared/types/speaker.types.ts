@@ -50,10 +50,6 @@ export const FunnelSpeakerSchema = z.object({
   bio: z.string().trim().nullable().default(null),
 });
 
-export const UnlinkProviderSchema = z.object({
-  newEmail: z.string().nullable().default(null),
-});
-
 export type ProfileData =
   | z.infer<typeof EmailSchema>
   | z.infer<typeof ProfileSchema>

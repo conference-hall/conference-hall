@@ -21,9 +21,10 @@ export default defineConfig({
   webServer: [
     { command: 'npm run jobs:start' },
     {
-      command: CI ? 'npm run db:migrate:deploy && npm run start' : 'npm run dev',
+      command: CI ? 'npm run db:migrate:deploy && npm run start' : 'npm run test:db && npm run dev',
+      stderr: CI ? 'ignore' : 'pipe',
+      // stdout: 'ignore',
       url: APP_URL,
-      reuseExistingServer: !CI,
     },
   ],
 

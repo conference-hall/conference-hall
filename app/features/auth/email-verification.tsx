@@ -7,14 +7,10 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
-import type { Route } from './+types/email-verification-sent.ts';
+import type { Route } from './+types/email-verification.ts';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Email verification | Conference Hall' }]);
-};
-
-export const loader = async () => {
-  return null;
 };
 
 export default function EmailVerificationSent() {
