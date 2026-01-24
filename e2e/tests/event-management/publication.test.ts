@@ -3,13 +3,12 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { PublicationPage } from './publication.page.ts';
 
-loginWith('clark-kent');
-
-test('displays publication page', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+test('displays publication page', async ({ page, context }) => {
+  const user = await userLoggedFactory(context);
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
@@ -45,10 +44,8 @@ test('displays publication page', async ({ page }) => {
 });
 
 test.describe('as a team reviewer', () => {
-  loginWith('bruce-wayne');
-
-  test('does not have access to publication', async ({ page }) => {
-    const user = await userFactory({ traits: ['bruce-wayne'] });
+  test('does not have access to publication', async ({ page, context }) => {
+    const user = await userLoggedFactory(context);
     const team = await teamFactory({ reviewers: [user] });
     const event = await eventFactory({ team });
 

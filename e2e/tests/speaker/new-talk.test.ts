@@ -1,11 +1,9 @@
-import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { NewTalkPage } from './new-talk.page.ts';
 
-loginWith('clark-kent');
-
-test('create a new talk', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+test('create a new talk', async ({ page, context }) => {
+  const user = await userLoggedFactory(context);
 
   const newTalkPage = new NewTalkPage(page);
   await newTalkPage.goto();
@@ -22,7 +20,7 @@ test('create a new talk', async ({ page }) => {
   await talkPage.waitFor();
   await talkPage.clickOnReferences();
 
-  await expect(talkPage.speaker('Clark Kent')).toBeVisible();
+  await expect(talkPage.speaker(user.name)).toBeVisible();
   await expect(page.getByText('Awesome title')).toBeVisible();
   await expect(page.getByText('Awesome abstract')).toBeVisible();
   await expect(page.getByText('Intermediate')).toBeVisible();

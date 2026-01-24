@@ -1,8 +1,8 @@
 import { test as base } from '@playwright/test';
 import { disconnectDB, resetDB } from 'tests/db-helpers.ts';
+import { resetRedis } from '~/shared/cache/redis.server.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import { MAILBOX_URL } from './common/mailbox.page.ts';
-import { getUserAuthPath, type TestUser } from './helpers.ts';
 
 export const test = base.extend<{ forEachTest: void }>({
   forEachTest: [
@@ -10,6 +10,7 @@ export const test = base.extend<{ forEachTest: void }>({
     async ({}, use) => {
       // This code runs before all the tests in the worker process.
       await resetDB();
+      await resetRedis();
       await flags.resetDefaults();
 
       // Execute the tests.
@@ -21,10 +22,6 @@ export const test = base.extend<{ forEachTest: void }>({
     { auto: true },
   ],
 });
-
-export const loginWith = (user: TestUser) => {
-  test.use({ storageState: getUserAuthPath(user) });
-};
 
 export async function resetMailbox() {
   await fetch(`${MAILBOX_URL}/api/v1/messages`, { method: 'DELETE' });

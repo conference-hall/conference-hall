@@ -20,7 +20,6 @@ describe('SpeakerProfile', () => {
 
       await profile.save({
         name: 'John Doe',
-        email: 'john.doe@email.com',
         picture: 'https://example.com/photo.jpg',
         bio: 'lorem ipsum',
         references: 'impedit quidem quisquam',
@@ -31,7 +30,6 @@ describe('SpeakerProfile', () => {
 
       const updated = await ProfileFetcher.for(user.id).get();
       expect(updated?.name).toEqual('John Doe');
-      expect(updated?.email).toEqual('john.doe@email.com');
       expect(updated?.picture).toEqual('https://example.com/photo.jpg');
       expect(updated?.bio).toEqual('lorem ipsum');
       expect(updated?.references).toEqual('impedit quidem quisquam');
@@ -50,7 +48,6 @@ describe('SpeakerProfile', () => {
 
     await profile.save({
       name: 'John Doe',
-      email: 'john.doe@email.com',
       picture: 'https://example.com/photo.jpg',
       bio: 'lorem ipsum',
       references: 'impedit quidem quisquam',
@@ -64,7 +61,6 @@ describe('SpeakerProfile', () => {
       expect.objectContaining({
         eventId: event.id,
         name: 'John Doe',
-        email: 'john.doe@email.com',
         picture: 'https://example.com/photo.jpg',
         bio: 'lorem ipsum',
         references: 'impedit quidem quisquam',

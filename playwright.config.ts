@@ -13,17 +13,15 @@ export default defineConfig({
   reporter: 'list',
   timeout: 20000,
 
-  projects: [
-    { name: 'setup', testMatch: /.*\.setup\.ts/ },
-    { name: 'browser', use: { ...devices['Desktop Chrome'] }, dependencies: ['setup'] },
-  ],
+  projects: [{ name: 'browser', use: { ...devices['Desktop Chrome'] } }],
 
   webServer: [
     { command: 'npm run jobs:start' },
     {
-      command: CI ? 'npm run db:migrate:deploy && npm run start' : 'npm run dev',
+      command: CI ? 'npm run db:migrate:deploy && npm run start' : 'npm run test:db && npm run dev',
       url: APP_URL,
-      reuseExistingServer: !CI,
+      stderr: CI ? 'ignore' : 'pipe',
+      // stdout: 'ignore',
     },
   ],
 

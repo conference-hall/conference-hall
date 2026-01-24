@@ -213,6 +213,10 @@ export class EventSpeakers {
 
     return db.eventSpeaker.update({ where: { id: speakerId, eventId: event.id }, data });
   }
+
+  static async updateEmailForUser(userId: string, email: string) {
+    await db.eventSpeaker.updateMany({ where: { userId }, data: { email } });
+  }
 }
 
 export function parseUrlFilters(url: string) {

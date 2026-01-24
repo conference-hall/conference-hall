@@ -1,125 +1,62 @@
-import { parseWithZod } from '@conform-to/zod/v4';
-import * as Firebase from 'firebase/auth';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { href, redirect } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
-import { DeleteModalButton } from '~/design-system/dialogs/delete-modal.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { H1, H2, Subtitle, Text } from '~/design-system/typography.tsx';
-import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
+import { H1 } from '~/design-system/typography.tsx';
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
 import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
-import { getClientAuth } from '~/shared/authentication/firebase.ts';
-import { destroySession, sendEmailVerification } from '~/shared/authentication/session.ts';
-import { getI18n, getLocale } from '~/shared/i18n/i18n.middleware.ts';
-import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
-import { UnlinkProviderSchema } from '~/shared/types/speaker.types.ts';
+import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
+import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
-import { EmailPasswordSchema, EmailSchema } from '~/shared/validators/auth.ts';
+import { getWebServerEnv } from '../../../../servers/environment.server.ts';
+import { signOut } from '../../../auth.server.ts';
 import type { Route } from './+types/settings.account.ts';
-import { AuthenticationMethods } from './components/authentication-methods.tsx';
-import { ChangeContactEmailForm } from './components/change-contact-email-form.tsx';
+import { DeleteAccountSection } from './components/delete-account-section.tsx';
+import { EmailPasswordSection } from './components/email-password-section.tsx';
+import { SocialAccountsSection } from './components/social-accounts-section.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Account | Conference Hall' }]);
 };
 
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const user = context.get(RequireAuthContext);
+  const accounts = await UserAccount.for(user.id).getAccounts();
+  const { CAPTCHA_SITE_KEY } = getWebServerEnv();
+  return { accounts, captchaSiteKey: CAPTCHA_SITE_KEY };
+};
+
 export const action = async ({ request, context }: Route.ActionArgs) => {
   const user = context.get(RequireAuthContext);
   const i18n = getI18n(context);
-  const locale = getLocale(context);
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
   switch (intent) {
-    case 'change-contact-email': {
-      const result = parseWithZod(form, { schema: EmailSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-
-      await SpeakerProfile.for(user.id).save(result.value);
-      return toast('success', i18n.t('settings.account.feedbacks.contact-changed'));
-    }
-    case 'link-email-provider': {
-      const result = parseWithZod(form, { schema: EmailPasswordSchema });
-      if (result.status !== 'success' || !user.uid) return toast('error', i18n.t('error.global'));
-
-      const error = await UserAccount.linkEmailProvider(
-        user.uid,
-        result.value.email,
-        result.value.password,
-        locale,
-        i18n.t,
-      );
-      if (error) return toast('error', error);
-
-      const headers = await toastHeaders('success', i18n.t('settings.account.feedbacks.authentication-method-linked'));
-      return redirect(href('/auth/email-verification'), { headers });
-    }
-    case 'unlink-provider': {
-      const result = parseWithZod(form, { schema: UnlinkProviderSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      if (result.value.newEmail) {
-        await SpeakerProfile.for(user.id).save({ email: result.value.newEmail });
-      }
-      return toast('success', i18n.t('settings.account.feedbacks.authentication-method-unlinked'));
-    }
-    case 'verify-email': {
-      await sendEmailVerification(request, context);
-      return toast('success', i18n.t('settings.account.feedbacks.verification-email-sent'));
-    }
     case 'delete-account': {
-      await UserAccount.deleteAccount(user.id, locale);
+      await UserAccount.for(user.id).deleteAccount();
       const headers = await toastHeaders('success', i18n.t('settings.account.feedbacks.account-deleted'));
-      await destroySession(request, '/', headers);
-      return null;
+      await signOut(request, '/', headers);
     }
     default:
       return null;
   }
 };
 
-export default function AccountRoute() {
+export default function AccountRoute({ loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const [authLoaded, setAuthLoaded] = useState(false);
   const { email } = useSpeakerProfile();
+  const { accounts, captchaSiteKey } = loaderData;
 
-  useEffect(() => {
-    // Listen to auth state changes to load the user auth state
-    Firebase.onAuthStateChanged(getClientAuth(), (user) => {
-      if (!user) return setAuthLoaded(false);
-      setAuthLoaded(true);
-    });
-  }, []);
+  const hasPassword = accounts.some((account) => account.providerId === 'credential');
 
   return (
     <div className="space-y-4 lg:col-span-9 lg:space-y-6">
       <H1 srOnly>{t('settings.account.heading')}</H1>
 
-      <ChangeContactEmailForm email={email} authLoaded={authLoaded} />
+      <EmailPasswordSection email={email} hasPassword={hasPassword} captchaSiteKey={captchaSiteKey} />
 
-      <AuthenticationMethods email={email} authLoaded={authLoaded} />
+      <SocialAccountsSection accounts={accounts} />
 
-      <Card as="section" className="border-red-300">
-        <Card.Title>
-          <H2>{t('settings.account.danger.heading')}</H2>
-        </Card.Title>
-
-        <ul className="mt-8 divide-y border-t">
-          <li className="flex flex-col gap-6 p-4 sm:flex-row sm:items-center lg:px-8">
-            <div className="grow space-y-1">
-              <Text weight="semibold">{t('settings.account.danger.delete-account.heading')}</Text>
-              <Subtitle>{t('settings.account.danger.delete-account.description')}</Subtitle>
-            </div>
-            <DeleteModalButton
-              intent="delete-account"
-              title={t('settings.account.danger.delete-account.button')}
-              description={t('settings.account.danger.delete-account.modal.description')}
-              confirmationText={t('settings.account.danger.delete-account.confirmation-text')}
-            />
-          </li>
-        </ul>
-      </Card>
+      <DeleteAccountSection />
     </div>
   );
 }

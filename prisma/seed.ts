@@ -16,6 +16,7 @@ import { userFactory } from '../tests/factories/users.ts';
 async function seed() {
   const user = await userFactory({
     traits: ['clark-kent', 'admin'],
+    withPasswordAccount: true,
     attributes: {
       bio: '## 🦸‍♂️ The Dev Who Can Fly (Through Code)\n\n**Mild-mannered developer by day, conference superhero by night!** 🌟\n\nWhen I\'m not saving Metropolis from bad code, I\'m building **React apps** faster than a speeding bullet and organizing conferences that are more powerful than a locomotive.\n\n### ⚡ Superpowers\n- **Frontend wizardry** with React & TypeScript\n- **Backend sorcery** with Node.js\n- **Conference organizing** without breaking a sweat\n- Can debug in **multiple timezones** simultaneously\n\n### 🎯 Secret Identity\n- Tech Lead at Daily Planet Media (shh! 🤫)\n- Maintainer of [metropolis-ui](https://github.com/clark/metropolis-ui) - 2K+ stars\n- **50+ conferences** and counting\n\n> *"With great code comes great responsibility!"* 💪\n\n📍 **Metropolis** (but I travel at light speed) ✈️',
       company: 'Daily Planet Media',
@@ -26,6 +27,7 @@ async function seed() {
   });
   const user2 = await userFactory({
     traits: ['bruce-wayne'],
+    withPasswordAccount: true,
     attributes: {
       bio: "## 🦇 The Dark Knight of Clean Code\n\n**By day: billionaire playboy philanthropist. By night: debugging Gotham's messiest codebases.** 🌃\n\nI fight crime AND technical debt with equal passion! Currently funding Wayne Enterprises' quest to make **enterprise software** less scary than actual villains.\n\n### 🛡️ Vigilante Skills\n- **Security expert** - I see vulnerabilities in my sleep\n- **Microservices architect** - because monoliths are for museums\n- **Angel investor** - funding the good guys (15+ startups)\n- **Penetration testing** - legally breaking things since 2010\n\n### 🏢 Day Job\n- CTO at Wayne Enterprises (the fun division)\n- **Kubernetes whisperer** and cloud native evangelist\n- Gotham's most eligible **backend developer** 😉\n\n> *\"I'm not the hero Gotham deserves, but I'm the one who writes the cleanest code.\"* 🦇\n\n📍 **Gotham City** (mostly working nights) 🌙",
       company: 'Wayne Enterprises',
@@ -36,6 +38,7 @@ async function seed() {
   });
   const user3 = await userFactory({
     traits: ['peter-parker'],
+    withPasswordAccount: true,
     attributes: {
       bio: "## 🕷️ Your Friendly Neighborhood Flutter Dev\n\n**With great power comes great app performance!** ⚡\n\nWhen I'm not swinging between buildings, I'm **optimizing Flutter apps** and making mobile experiences so smooth they'd make a web slinger jealous.\n\n### 🕸️ Web-Slinging Skills\n- **Flutter ninja** - can animate anything that moves\n- **Performance guru** - apps load faster than my reflexes\n- **Cross-platform hero** - iOS, Android, and everything in between\n- **Memory leak detector** - my spider-sense tingles for inefficient code\n\n### 📱 Day Job Adventures\n- Mobile Team Lead at Daily Bugle Digital\n- **50M+ downloads** across my apps (no joke!)\n- **Google Developer Expert** for Flutter\n- **App Store featured** 3 times (and counting)\n\n### 🎯 Fun Facts\n- Organizes Flutter NYC meetups between superhero duties\n- Can debug with **web-shooters tied behind back**\n- Writes **100K+ readers** worth of technical blogs\n\n> *\"Whatever a spider can, whatever a developer can - I've got radioactive code!\"* 🕷️\n\n📍 **NYC** (rooftops preferred, but remote works too) 🏙️",
       company: 'Daily Bugle Digital',
