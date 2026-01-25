@@ -1,3 +1,6 @@
+# Config
+.env
+
 # node
 node_modules
 
