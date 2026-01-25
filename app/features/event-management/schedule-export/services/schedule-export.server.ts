@@ -1,9 +1,9 @@
-import type { Event } from 'prisma/generated/client.ts';
-import { db } from 'prisma/db.server.ts';
 import type { AuthorizedApiEvent, AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { getDatesRange } from '~/shared/datetimes/datetimes.ts';
 import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import type { Event } from '../../../../../prisma/generated/client.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 export class EventScheduleExport {
   private constructor(private event: Event) {}

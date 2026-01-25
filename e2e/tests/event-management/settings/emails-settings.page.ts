@@ -1,5 +1,5 @@
-import { PageObject } from 'e2e/page-object.ts';
 import type { CustomTemplateName } from '~/shared/emails/email.types.ts';
+import { PageObject } from '../../../page-object.ts';
 
 export class EmailsSettingsPage extends PageObject {
   readonly heading = this.page.getByRole('heading', { name: 'Email Templates', exact: true });

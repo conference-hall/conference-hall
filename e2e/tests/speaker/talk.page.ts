@@ -1,7 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
-import { CoSpeakerComponent } from 'e2e/common/co-speaker.component.ts';
-import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
-import { PageObject } from 'e2e/page-object.ts';
+import { CoSpeakerComponent } from '../../common/co-speaker.component.ts';
+import { TalkFormComponent } from '../../common/talk-form.component.ts';
+import { PageObject } from '../../page-object.ts';
 import { ProposalPage } from '../event-participation/proposal.page.ts';
 import { HomePage } from '../event-search/home.page.ts';
 

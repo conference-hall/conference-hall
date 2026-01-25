@@ -1,4 +1,3 @@
-import type { Event, EventCategory, EventFormat, Team, User } from 'prisma/generated/client.ts';
 import type { Mock } from 'vitest';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
@@ -9,6 +8,7 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import { OpenPlanner } from '~/shared/integrations/open-planner.server.ts';
+import type { Event, EventCategory, EventFormat, Team, User } from '../../../../../../prisma/generated/client.ts';
 import { exportToOpenPlanner } from './export-to-open-planner.job.ts';
 
 vi.mock('~/shared/integrations/open-planner.server.ts', () => {

@@ -1,10 +1,10 @@
-import type { Event, EventProposalTag, Team, User } from 'prisma/generated/client.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import type { Event, EventProposalTag, Team, User } from '../../../../../prisma/generated/client.ts';
 import { EventProposalTags } from './event-proposal-tags.server.ts';
 
 describe('EventProposalTags', () => {

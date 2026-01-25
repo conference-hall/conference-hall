@@ -1,6 +1,6 @@
-import type { Talk, User } from 'prisma/generated/client.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import type { Talk, User } from '../../../prisma/generated/client.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { TalkLibraryPage } from './talk-library.page.ts';
 

@@ -1,6 +1,3 @@
-import type { Event, User } from 'prisma/generated/client.ts';
-import { db } from 'prisma/db.server.ts';
-import { ConversationContextType, ConversationParticipantRole } from 'prisma/generated/client.ts';
 import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
 import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
@@ -9,6 +6,9 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { ProposalNotFoundError } from '~/shared/errors.server.ts';
+import type { Event, User } from '../../../../prisma/generated/client.ts';
+import { db } from '../../../../prisma/db.server.ts';
+import { ConversationContextType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
 import { ProposalConversationForSpeakers } from './proposal-conversation-for-speakers.server.ts';
 
 describe('ProposalConversationForSpeakers', () => {

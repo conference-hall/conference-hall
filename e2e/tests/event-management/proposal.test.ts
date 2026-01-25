@@ -1,6 +1,3 @@
-import type { Event, Team, User } from 'prisma/generated/client.ts';
-import { MessageBlockComponent } from 'e2e/common/message-block.component.ts';
-import { expect, loginWith, test } from 'e2e/fixtures.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
@@ -15,6 +12,9 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
+import type { Event, Team, User } from '../../../prisma/generated/client.ts';
+import { MessageBlockComponent } from '../../common/message-block.component.ts';
+import { expect, loginWith, test } from '../../fixtures.ts';
 import { ProposalPage } from './proposal.page.ts';
 
 let user: User;

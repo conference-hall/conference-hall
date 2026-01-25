@@ -1,7 +1,7 @@
-import { SpeakerPanelComponent } from 'e2e/common/speaker-panel.component.ts';
-import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
-import { PageObject } from 'e2e/page-object.ts';
+import { SpeakerPanelComponent } from '../../common/speaker-panel.component.ts';
+import { TalkFormComponent } from '../../common/talk-form.component.ts';
 import { expect } from '../../fixtures.ts';
+import { PageObject } from '../../page-object.ts';
 
 export class NewProposalPage extends PageObject {
   readonly heading = this.page.getByRole('heading', { name: 'New proposal' });

@@ -1,7 +1,7 @@
-import { expect, loginWith, test } from 'e2e/fixtures.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { expect, loginWith, test } from '../../../fixtures.ts';
 import { IntegrationsSettingsPage } from './integrations-settings.page.ts';
 
 loginWith('clark-kent');

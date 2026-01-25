@@ -1,7 +1,7 @@
-import type { Proposal, User } from 'prisma/generated/client.ts';
-import type { CommentCreateInput } from 'prisma/generated/models.ts';
-import { CommentChannel } from 'prisma/generated/client.ts';
+import type { Proposal, User } from '../../prisma/generated/client.ts';
+import type { CommentCreateInput } from '../../prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
+import { CommentChannel } from '../../prisma/generated/client.ts';
 
 type FactoryOptions = {
   user: User;

@@ -1,6 +1,6 @@
 import type { Locator } from '@playwright/test';
-import { PageObject } from 'e2e/page-object.ts';
 import { href } from 'react-router';
+import { PageObject } from '../../page-object.ts';
 
 export class SettingsProfilePage extends PageObject {
   readonly heading: Locator = this.page.getByRole('heading', { name: 'Profile', exact: true });

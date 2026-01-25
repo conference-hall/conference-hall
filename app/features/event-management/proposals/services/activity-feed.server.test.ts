@@ -1,5 +1,3 @@
-import type { Team, User } from 'prisma/generated/client.ts';
-import { CommentChannel } from 'prisma/generated/client.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
@@ -8,6 +6,8 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
+import type { Team, User } from '../../../../../prisma/generated/client.ts';
+import { CommentChannel } from '../../../../../prisma/generated/client.ts';
 import { ActivityFeed } from './activity-feed.server.ts';
 
 describe('ActivityFeed', () => {

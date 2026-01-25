@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
-import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
-import { PageObject } from 'e2e/page-object.ts';
+import { TalkFormComponent } from '../../common/talk-form.component.ts';
+import { PageObject } from '../../page-object.ts';
 import { TalkPage } from './talk.page.ts';
 
 export class NewTalkPage extends PageObject {

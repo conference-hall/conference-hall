@@ -1,8 +1,8 @@
 import compression from 'compression';
 import express from 'express';
-import { db } from 'prisma/db.server.ts';
-import { getWebServerEnv } from 'servers/environment.server.ts';
 import { disconnectRedis } from '~/shared/cache/redis.server.ts';
+import { db } from '../../prisma/db.server.ts';
+import { getWebServerEnv } from '../../servers/environment.server.ts';
 import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
 import { applyLogging } from './middlewares/logging.ts';
 import { applyProxyFirebaseAuth } from './middlewares/proxy-firebase-auth.ts';

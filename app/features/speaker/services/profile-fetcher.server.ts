@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
+import { db } from '../../../../prisma/db.server.ts';
 
 export class ProfileFetcher {
   constructor(private userId: string) {}

@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
-import { expect } from 'e2e/fixtures.ts';
-import { PageObject } from 'e2e/page-object.ts';
+import { expect } from '../fixtures.ts';
+import { PageObject } from '../page-object.ts';
 
 export class MessageBlockComponent extends PageObject {
   readonly component: Locator;

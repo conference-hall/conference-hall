@@ -1,4 +1,3 @@
-import type { TalkLevel } from 'prisma/generated/client.ts';
 import type { ReactNode } from 'react';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,7 @@ import { Markdown } from '~/design-system/markdown.tsx';
 import { H1, Subtitle, Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDatetime } from '~/shared/datetimes/datetimes.ts';
+import type { TalkLevel } from '../../../../../prisma/generated/client.ts';
 import type { SpeakerProps } from './speakers.tsx';
 import { Speakers } from './speakers.tsx';
 

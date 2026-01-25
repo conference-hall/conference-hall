@@ -1,6 +1,3 @@
-import { db } from 'prisma/db.server.ts';
-import { TalkLevel } from 'prisma/generated/client.ts';
-import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
@@ -16,6 +13,9 @@ import {
   ProposalNotFoundError,
   TalkNotFoundError,
 } from '~/shared/errors.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
+import { TalkLevel } from '../../../../../prisma/generated/client.ts';
+import { getSharedServerEnv } from '../../../../../servers/environment.server.ts';
 import { TalkSubmission } from './talk-submission.server.ts';
 
 const { APP_URL } = getSharedServerEnv();

@@ -1,7 +1,7 @@
-import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { SitemapStream, streamToPromise } from 'sitemap';
 import { RedisCacheLayer } from '~/shared/cache/redis-cache-layer.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
+import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 import { getEventsForSitemap } from './services/sitemap.server.ts';
 
 const { APP_URL } = getSharedServerEnv();

@@ -1,10 +1,10 @@
-import type { Event, Team, User } from 'prisma/generated/client.ts';
-import { db } from 'prisma/db.server.ts';
 import { eventEmailCustomizationFactory } from 'tests/factories/event-email-customizations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
+import type { Event, Team, User } from '../../../../../prisma/generated/client.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import { EventEmailCustomizations } from './event-email-customizations.server.tsx';
 
 describe('EventEmailCustomizations', () => {

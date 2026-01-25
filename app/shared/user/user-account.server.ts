@@ -1,7 +1,5 @@
 import type { TFunction } from 'i18next';
 import { FirebaseAuthError } from 'firebase-admin/auth';
-import { db } from 'prisma/db.server.ts';
-import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { Notifications } from '~/features/notifications/services/notifications.server.ts';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { getFirebaseError } from '~/shared/authentication/firebase.errors.ts';
@@ -11,6 +9,8 @@ import AccountDeletedEmail from '~/shared/emails/templates/auth/account-deleted.
 import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
 import type { AuthenticatedUser } from '../types/user.types.ts';
+import { db } from '../../../prisma/db.server.ts';
+import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 import { validateCaptchaToken } from '../authentication/captcha.server.ts';
 import { NotAuthorizedError } from '../errors.server.ts';
 import { flags } from '../feature-flags/flags.server.ts';

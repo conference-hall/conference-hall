@@ -1,10 +1,10 @@
-import type { Event, Proposal, Team, User } from 'prisma/generated/client.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
+import type { Event, Proposal, Team, User } from '../../../../../prisma/generated/client.ts';
 import { SpeakerActivities } from './activity.server.ts';
 
 describe('SpeakerActivities', () => {

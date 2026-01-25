@@ -1,4 +1,4 @@
-import { PageObject } from 'e2e/page-object.ts';
+import { PageObject } from '../page-object.ts';
 
 class SpeakerModalComponent extends PageObject {
   readonly modal = this.page.locator('[role="dialog"]');

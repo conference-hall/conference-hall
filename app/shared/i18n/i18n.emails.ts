@@ -1,6 +1,6 @@
 import type { i18n } from 'i18next';
 import i18next from 'i18next';
-import { getSharedServerEnv } from 'servers/environment.server.ts';
+import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 import { i18nResources } from './i18n.resources.ts';
 import { i18nConfig } from './i18n.ts';
 

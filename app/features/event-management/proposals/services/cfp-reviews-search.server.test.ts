@@ -1,5 +1,3 @@
-import type { Event, Team, User } from 'prisma/generated/client.ts';
-import { db } from 'prisma/db.server.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
@@ -9,6 +7,8 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import type { Event, Team, User } from '../../../../../prisma/generated/client.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import { CfpReviewsSearch } from './cfp-reviews-search.server.ts';
 
 describe('CfpReviewsSearch', () => {

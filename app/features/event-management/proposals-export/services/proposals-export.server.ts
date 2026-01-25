@@ -1,4 +1,3 @@
-import type { Event } from 'prisma/generated/client.ts';
 import type { ProposalsFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import type { AuthorizedApiEvent, AuthorizedEvent } from '~/shared/authorization/types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
@@ -8,6 +7,7 @@ import { ReviewDetails } from '~/features/event-management/proposals/models/revi
 import { ProposalSearchBuilder } from '~/features/event-management/proposals/services/proposal-search-builder.server.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import type { Event } from '../../../../../prisma/generated/client.ts';
 import { SurveyConfig } from '../../settings/models/survey-config.ts';
 import { exportToOpenPlanner } from './jobs/export-to-open-planner.job.ts';
 

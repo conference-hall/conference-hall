@@ -1,8 +1,8 @@
-import type { Event, Team } from 'prisma/generated/client.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import type { Event, Team } from '../../../prisma/generated/client.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { NewSpeakerPage } from './speaker-form.page.ts';
 

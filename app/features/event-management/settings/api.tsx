@@ -1,10 +1,10 @@
 import { useLoaderData } from 'react-router';
-import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { v4 as uuid } from 'uuid';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import type { Route } from './+types/api.ts';
+import { getSharedServerEnv } from '../../../../servers/environment.server.ts';
 import { ApiKeySection } from './components/api-key-section.tsx';
 import { EventProposalApiTryout, EventScheduleApiTryout } from './components/api-tryout-section.tsx';
 

@@ -1,4 +1,4 @@
-import type { DbTransaction } from 'prisma/db.server.ts';
+import type { DbTransaction } from '../../../prisma/db.server.ts';
 
 export async function getNextProposalNumber(eventId: string, trx: DbTransaction): Promise<number | null> {
   try {

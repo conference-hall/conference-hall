@@ -1,8 +1,8 @@
-import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 export class TeamCreation {
   constructor(private userId: string) {}

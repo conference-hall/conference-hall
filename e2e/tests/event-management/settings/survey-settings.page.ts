@@ -1,4 +1,4 @@
-import { PageObject } from 'e2e/page-object.ts';
+import { PageObject } from '../../../page-object.ts';
 
 export class SurveySettingsPage extends PageObject {
   readonly heading = this.page.getByRole('heading', { name: 'Speaker survey' });

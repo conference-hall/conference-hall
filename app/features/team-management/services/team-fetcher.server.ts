@@ -1,6 +1,6 @@
-import { db } from 'prisma/db.server.ts';
 import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
 import { TeamNotFoundError } from '~/shared/errors.server.ts';
+import { db } from '../../../../prisma/db.server.ts';
 
 export class TeamFetcher {
   constructor(private authorizedTeam: AuthorizedTeam) {}

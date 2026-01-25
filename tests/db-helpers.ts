@@ -1,5 +1,5 @@
-import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { db } from '../prisma/db.server.ts';
+import { getSharedServerEnv } from '../servers/environment.server.ts';
 
 const { NODE_ENV } = getSharedServerEnv();
 

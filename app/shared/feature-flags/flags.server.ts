@@ -1,5 +1,5 @@
-import { getSharedServerEnv } from 'servers/environment.server.ts';
 import flagsConfig from '../../../flags.config.ts';
+import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 import { MemoryCacheLayer } from '../cache/memory-cache-layer.ts';
 import { FlagsClient } from './flags-client.ts';
 import { FlagsStorage } from './flags-storage.ts';

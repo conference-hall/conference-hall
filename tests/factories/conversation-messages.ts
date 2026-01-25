@@ -1,8 +1,8 @@
-import type { Conversation, User } from 'prisma/generated/client.ts';
-import type { ConversationMessageCreateInput } from 'prisma/generated/models.ts';
 import { randParagraph } from '@ngneat/falso';
-import { ConversationMessageType, ConversationParticipantRole } from 'prisma/generated/client.ts';
+import type { Conversation, User } from '../../prisma/generated/client.ts';
+import type { ConversationMessageCreateInput } from '../../prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
+import { ConversationMessageType, ConversationParticipantRole } from '../../prisma/generated/client.ts';
 
 type Trait = 'withReaction';
 

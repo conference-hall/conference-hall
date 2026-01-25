@@ -1,4 +1,4 @@
-import { getSharedServerEnv } from 'servers/environment.server.ts';
+import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 import { Slack, type SlackMessage } from './slack.server.ts';
 
 const { APP_URL } = getSharedServerEnv();

@@ -1,6 +1,6 @@
 import { Body, Container, Head, Html, Link, Section, Tailwind } from '@react-email/components';
 import { cx } from 'class-variance-authority';
-import { getSharedServerEnv } from 'servers/environment.server.ts';
+import { getSharedServerEnv } from '../../../../servers/environment.server.ts';
 
 const { APP_URL } = getSharedServerEnv();
 

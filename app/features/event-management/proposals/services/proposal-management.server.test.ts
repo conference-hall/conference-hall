@@ -1,4 +1,3 @@
-import { db } from 'prisma/db.server.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventCategoryFactory } from '~/../tests/factories/categories.ts';
 import { eventFactory } from '~/../tests/factories/events.ts';
@@ -11,6 +10,7 @@ import { userFactory } from '~/../tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { ProposalCreationData } from './proposal-management.schema.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import { ProposalManagement } from './proposal-management.server.ts';
 
 describe('ProposalManagement', () => {

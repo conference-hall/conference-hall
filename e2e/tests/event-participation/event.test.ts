@@ -1,8 +1,8 @@
-import type { Event } from 'prisma/generated/client.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import type { Event } from '../../../prisma/generated/client.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { EventPage } from './event.page.ts';
 

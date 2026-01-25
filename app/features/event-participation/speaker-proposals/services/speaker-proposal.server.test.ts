@@ -1,5 +1,3 @@
-import { db } from 'prisma/db.server.ts';
-import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
@@ -9,6 +7,8 @@ import { userFactory } from 'tests/factories/users.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
+import { db } from '../../../../../prisma/db.server.ts';
+import { getSharedServerEnv } from '../../../../../servers/environment.server.ts';
 import { SpeakerProposal } from './speaker-proposal.server.ts';
 
 const { APP_URL } = getSharedServerEnv();

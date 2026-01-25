@@ -1,9 +1,9 @@
-import type { EventProposalTagWhereInput } from 'prisma/generated/models.ts';
-import { db } from 'prisma/db.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
+import type { EventProposalTagWhereInput } from '../../../../../prisma/generated/models.ts';
 import type { TagFilters, TagSaveData } from './event-proposal-tags.schema.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 export class EventProposalTags {
   constructor(private authorizedEvent: AuthorizedEvent) {}

@@ -1,8 +1,8 @@
 import type { Locator } from '@playwright/test';
-import { MessageBlockComponent } from 'e2e/common/message-block.component.ts';
-import { SpeakerPanelComponent } from 'e2e/common/speaker-panel.component.ts';
-import { TalkFormComponent } from 'e2e/common/talk-form.component.ts';
-import { PageObject } from 'e2e/page-object.ts';
+import { MessageBlockComponent } from '../../common/message-block.component.ts';
+import { SpeakerPanelComponent } from '../../common/speaker-panel.component.ts';
+import { TalkFormComponent } from '../../common/talk-form.component.ts';
+import { PageObject } from '../../page-object.ts';
 
 export class ProposalPage extends PageObject {
   readonly referencesToggle = this.page.getByRole('button', { name: 'References' });

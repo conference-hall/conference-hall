@@ -3,7 +3,7 @@ import type { TemplateData } from './proposal-rejected.tsx';
 import ProposalRejectedEmail from './proposal-rejected.tsx';
 
 // Mock any server-side modules that use process.env
-vi.mock('servers/environment.server.ts', () => ({
+vi.mock('../../../../servers/environment.server.ts', () => ({
   getSharedServerEnv: () => ({
     APP_URL: 'http://localhost:3000',
   }),

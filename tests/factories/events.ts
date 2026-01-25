@@ -1,11 +1,11 @@
-import type { Team, User } from 'prisma/generated/client.ts';
-import type { EventCreateInput } from 'prisma/generated/models.ts';
 import { rand, randAnimal, randEmail, randFullAddress, randParagraph, randText, randUrl } from '@ngneat/falso';
 import { slugifyWithCounter } from '@sindresorhus/slugify';
-import { EventType, EventVisibility } from 'prisma/generated/client.ts';
 import { generateImagePlaceholder } from 'tests/img-placeholder.ts';
 import { getRandomColor } from '~/shared/colors/colors.ts';
+import type { Team, User } from '../../prisma/generated/client.ts';
+import type { EventCreateInput } from '../../prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
+import { EventType, EventVisibility } from '../../prisma/generated/client.ts';
 import { applyTraits } from './helpers/traits.ts';
 import { teamFactory } from './team.ts';
 import { userFactory } from './users.ts';

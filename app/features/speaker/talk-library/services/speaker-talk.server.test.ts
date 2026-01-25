@@ -1,12 +1,12 @@
-import type { User } from 'prisma/generated/client.ts';
-import { db } from 'prisma/db.server.ts';
-import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { TalkNotFoundError } from '~/shared/errors.server.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
+import type { User } from '../../../../../prisma/generated/client.ts';
+import { db } from '../../../../../prisma/db.server.ts';
+import { getSharedServerEnv } from '../../../../../servers/environment.server.ts';
 import { SpeakerTalk } from './speaker-talk.server.ts';
 
 const { APP_URL } = getSharedServerEnv();

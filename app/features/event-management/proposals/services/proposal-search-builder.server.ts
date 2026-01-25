@@ -1,11 +1,11 @@
+import type { Pagination } from '~/shared/pagination/pagination.ts';
 import type {
   ProposalOrderByWithRelationInput,
   ProposalWhereInput,
   ReviewListRelationFilter,
-} from 'prisma/generated/models.ts';
-import { db } from 'prisma/db.server.ts';
-import type { Pagination } from '~/shared/pagination/pagination.ts';
+} from '../../../../../prisma/generated/models.ts';
 import type { ProposalsFilters, ReviewsFilter, StatusFilter } from './proposal-search-builder.schema.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 type SearchOptions = { withSpeakers: boolean; withReviews: boolean };
 

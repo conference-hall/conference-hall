@@ -1,5 +1,4 @@
 import { render } from '@react-email/components';
-import { db } from 'prisma/db.server.ts';
 import xss from 'xss';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import type {
@@ -9,6 +8,7 @@ import type {
 } from '~/shared/emails/email.types.ts';
 import { getCustomTemplate } from '~/shared/emails/templates/templates.ts';
 import { ForbiddenOperationError, NotFoundError } from '~/shared/errors.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 export class EventEmailCustomizations {
   constructor(private authorizedEvent: AuthorizedEvent) {}

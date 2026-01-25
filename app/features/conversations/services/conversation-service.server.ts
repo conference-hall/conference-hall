@@ -1,11 +1,11 @@
-import type { ConversationContextType, ConversationReaction, User } from 'prisma/generated/client.ts';
-import { db } from 'prisma/db.server.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
+import type { ConversationContextType, ConversationReaction, User } from '../../../../prisma/generated/client.ts';
 import type {
   ConversationMessageDeleteData,
   ConversationMessageReactData,
   ConversationMessageSaveData,
 } from './conversation.schema.server.ts';
+import { db } from '../../../../prisma/db.server.ts';
 import { NOTIFICATION_DELAY, notifyConversationMessage } from './jobs/notify-conversation-message.job.ts';
 
 type ConversationServiceContext = {

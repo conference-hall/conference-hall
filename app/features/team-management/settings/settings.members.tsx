@@ -1,4 +1,3 @@
-import type { TeamRole } from 'prisma/generated/client.ts';
 import { CubeTransparentIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
@@ -13,6 +12,7 @@ import { AuthorizedTeamContext } from '~/shared/authorization/authorization.midd
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
+import type { TeamRole } from '../../../../prisma/generated/client.ts';
 import type { Route } from './+types/settings.members.ts';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/member-actions.tsx';
 import { MemberFilters } from './components/member-filters.tsx';

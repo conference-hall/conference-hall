@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
-import { PageObject } from 'e2e/page-object.ts';
 import type { MultiSelectComponent } from './multi-select.component.ts';
+import { PageObject } from '../page-object.ts';
 
 export class TalkFormComponent extends PageObject {
   readonly titleInput: Locator;

@@ -1,6 +1,6 @@
-import type { Event } from 'prisma/generated/client.ts';
-import type { EventProposalTagCreateInput } from 'prisma/generated/models.ts';
 import { randAnimal, randHex } from '@ngneat/falso';
+import type { Event } from '../../prisma/generated/client.ts';
+import type { EventProposalTagCreateInput } from '../../prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {

@@ -1,6 +1,6 @@
-import type { Prisma } from 'prisma/generated/client.ts';
 import z from 'zod';
 import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
+import type { Prisma } from '../../../../../prisma/generated/client.ts';
 
 export const SurveyQuestionSchema = z.object({
   id: z.string(),

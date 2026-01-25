@@ -2,7 +2,7 @@ import { render } from '@react-email/components';
 import type { TemplateData } from './conversation-message.tsx';
 import ConversationMessageEmail from './conversation-message.tsx';
 
-vi.mock('servers/environment.server.ts', () => ({
+vi.mock('../../../../servers/environment.server.ts', () => ({
   getSharedServerEnv: () => ({
     APP_URL: 'http://localhost:3000',
   }),

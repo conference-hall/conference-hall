@@ -1,5 +1,3 @@
-import type { Event, EventSpeaker, Team, User } from 'prisma/generated/client.ts';
-import { db } from 'prisma/db.server.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
@@ -13,6 +11,8 @@ import { userFactory } from 'tests/factories/users.ts';
 import type { EventSpeakerSaveData } from '~/shared/types/speaker.types.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError, NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
+import type { Event, EventSpeaker, Team, User } from '../../../../../prisma/generated/client.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import { EventSpeakers } from './event-speakers.server.ts';
 
 describe('EventSpeakers', () => {

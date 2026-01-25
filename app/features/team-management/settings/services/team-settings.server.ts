@@ -1,8 +1,8 @@
-import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 const TeamUpdateSchema = z.object({
   name: z.string().trim().min(3).max(50),
