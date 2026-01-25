@@ -183,61 +183,58 @@ export class UserAccount {
     const { uid, email } = user;
     const deletedAt = new Date();
 
-    try {
-      await db.$transaction(async (tx) => {
-        // Anonymize User table
-        await tx.user.update({
-          where: { id: userId },
-          data: {
-            uid: null,
-            name: 'Deleted user',
-            email: 'deleted-user-account',
-            bio: null,
-            picture: null,
-            company: null,
-            references: null,
-            location: null,
-            socialLinks: [],
-            deletedAt,
-            talks: { set: [] },
-          },
-        });
-
-        // Delete TeamMember records
-        await tx.teamMember.deleteMany({ where: { memberId: userId } });
-
-        // Delete Survey records
-        await tx.survey.deleteMany({ where: { userId } });
-
-        // Anonymize EventSpeaker records
-        await tx.eventSpeaker.updateMany({
-          where: { userId },
-          data: {
-            userId: null,
-            email: 'deleted-user-account',
-            bio: null,
-            picture: null,
-            company: null,
-            references: null,
-            location: null,
-            socialLinks: [],
-          },
-        });
-
-        // After successful transaction, delete user from Firebase Auth
-        if (uid) await firebaseAuth.deleteUser(uid);
+    await db.$transaction(async (tx) => {
+      // Anonymize User table
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          uid: null,
+          name: 'Deleted user',
+          email: `deleted-${userId}@conference-hall.io`,
+          bio: null,
+          picture: null,
+          company: null,
+          references: null,
+          location: null,
+          socialLinks: [],
+          deletedAt,
+          talks: { set: [] },
+        },
       });
 
-      // Send confirmation email after successful deletion (if requested)
-      if (sendConfirmationEmail) {
-        const deletionDate = deletedAt.toISOString().split('T')[0];
-        await sendEmail.trigger(AccountDeletedEmail.buildPayload(email, locale, { deletionDate }));
+      // Delete TeamMember records
+      await tx.teamMember.deleteMany({ where: { memberId: userId } });
+
+      // Delete Survey records
+      await tx.survey.deleteMany({ where: { userId } });
+
+      // Anonymize EventSpeaker records
+      await tx.eventSpeaker.updateMany({
+        where: { userId },
+        data: {
+          userId: null,
+          email: 'deleted-user-account',
+          bio: null,
+          picture: null,
+          company: null,
+          references: null,
+          location: null,
+          socialLinks: [],
+        },
+      });
+
+      // After successful transaction, delete user from Firebase Auth
+      try {
+        if (uid) await firebaseAuth.deleteUser(uid);
+      } catch {
+        console.warn(`Unable to delete Firebase user for uid ${uid}.`);
       }
-    } catch (error) {
-      if (error instanceof FirebaseAuthError) {
-        console.warn('deleteAccount:', error.message);
-      }
-      throw error;
+    });
+
+    // Send confirmation email after successful deletion (if requested)
+    if (sendConfirmationEmail) {
+      const deletionDate = deletedAt.toISOString().split('T')[0];
+      await sendEmail.trigger(AccountDeletedEmail.buildPayload(email, locale, { deletionDate }));
     }
   }
 }

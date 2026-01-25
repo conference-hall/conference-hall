@@ -335,7 +335,7 @@ describe('UserAccount', () => {
       const deletedUser = await db.user.findUnique({ where: { id: user.id } });
       expect(deletedUser?.uid).toBeNull();
       expect(deletedUser?.name).toEqual('Deleted user');
-      expect(deletedUser?.email).toEqual('deleted-user-account');
+      expect(deletedUser?.email).toEqual(`deleted-${user.id}@conference-hall.io`);
       expect(deletedUser?.bio).toBeNull();
       expect(deletedUser?.picture).toBeNull();
       expect(deletedUser?.company).toBeNull();
@@ -411,18 +411,6 @@ describe('UserAccount', () => {
       const createdTalk = await db.talk.findUnique({ where: { id: talk.id } });
       expect(createdTalk).not.toBeNull();
       expect(createdTalk?.creatorId).toEqual(user.id);
-    });
-
-    it('rethrows error when deletion fails', async () => {
-      const user = await userFactory({ traits: ['clark-kent'] });
-      if (!user.uid) throw new Error('User uid not found');
-
-      deleteUserMock.mockRejectedValue(new Error('Firebase deletion failed'));
-
-      await expect(UserAccount.deleteAccount(user.id, 'en')).rejects.toThrow('Firebase deletion failed');
-
-      const userStillExists = await db.user.findUnique({ where: { id: user.id } });
-      expect(userStillExists?.deletedAt).toBeNull();
     });
   });
 });
