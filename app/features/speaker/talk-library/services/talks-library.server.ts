@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { TalkSaveData, TalksListFilter } from '~/shared/types/speaker-talk.types.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import { SpeakerTalk } from './speaker-talk.server.ts';
 
 export class TalksLibrary {

@@ -1,14 +1,3 @@
-import type {
-  Event,
-  EventCategory,
-  EventFormat,
-  EventProposalTag,
-  EventSpeaker,
-  Proposal,
-  Team,
-  User,
-} from 'prisma/generated/client.ts';
-import { db } from 'prisma/db.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
@@ -21,7 +10,18 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
+import type {
+  Event,
+  EventCategory,
+  EventFormat,
+  EventProposalTag,
+  EventSpeaker,
+  Proposal,
+  Team,
+  User,
+} from '../../../../../prisma/generated/client.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
 describe('EventProposalsSearch', () => {

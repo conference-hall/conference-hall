@@ -1,7 +1,7 @@
 import type express from 'express';
 import morgan from 'morgan';
 import pc from 'picocolors';
-import { getSharedServerEnv } from 'servers/environment.server.ts';
+import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 
 const { NODE_ENV } = getSharedServerEnv();
 

@@ -1,4 +1,3 @@
-import { db } from 'prisma/db.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { getNextProposalNumber } from '~/shared/counters/proposal-counter.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
@@ -10,6 +9,7 @@ import type {
   ProposalSaveTagsData,
   ProposalUpdateData,
 } from './proposal-management.schema.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 export class ProposalManagement {
   constructor(

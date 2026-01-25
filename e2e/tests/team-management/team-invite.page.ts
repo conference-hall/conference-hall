@@ -1,4 +1,4 @@
-import { PageObject } from 'e2e/page-object.ts';
+import { PageObject } from '../../page-object.ts';
 import { TeamHomePage } from './team-home.page.ts';
 
 export class TeamInvitePage extends PageObject {

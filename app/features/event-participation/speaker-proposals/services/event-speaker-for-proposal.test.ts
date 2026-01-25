@@ -1,10 +1,10 @@
-import { db } from 'prisma/db.server.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { UserNotFoundError } from '~/shared/errors.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import { EventSpeakerForProposal } from './event-speaker-for-proposal.ts';
 
 describe('EventSpeakerForProposal', () => {

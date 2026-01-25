@@ -5,6 +5,11 @@ pre-commit:
     formatter:
       run: npm run format -- {staged_files}
       stage_fixed: true
+      glob:
+        - '*.ts'
+        - '*.tsx'
+        - '*.js'
+        - '*.jsx'
     linter:
       run: npm run lint -- {staged_files}
       stage_fixed: true

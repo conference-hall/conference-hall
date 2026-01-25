@@ -1,6 +1,6 @@
-import { db } from 'prisma/db.server.ts';
-import { Prisma } from 'prisma/generated/client.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
+import { db } from '../../../../../prisma/db.server.ts';
+import { Prisma } from '../../../../../prisma/generated/client.ts';
 
 type ReviewerMetricsInfo = {
   id: string;

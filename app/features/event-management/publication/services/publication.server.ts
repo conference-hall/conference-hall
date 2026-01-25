@@ -1,10 +1,10 @@
-import { db } from 'prisma/db.server.ts';
 import z from 'zod';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ProposalAcceptedEmail from '~/shared/emails/templates/speakers/proposal-accepted.tsx';
 import ProposalRejectedEmail from '~/shared/emails/templates/speakers/proposal-rejected.tsx';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 export const PublishResultFormSchema = z.object({
   type: z.enum(['ACCEPTED', 'REJECTED']),

@@ -1,5 +1,5 @@
 import type { Locator } from '@playwright/test';
-import { PageObject } from 'e2e/page-object.ts';
+import { PageObject } from '../../page-object.ts';
 
 export class AdminPage extends PageObject {
   readonly dashboardHeading: Locator = this.page.getByRole('heading', { name: 'Dashboard', exact: true });

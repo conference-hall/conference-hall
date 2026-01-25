@@ -1,5 +1,5 @@
 import type { FrameLocator, Locator } from '@playwright/test';
-import { PageObject } from 'e2e/page-object.ts';
+import { PageObject } from '../page-object.ts';
 
 export const MAILBOX_URL = 'http://127.0.0.1:8025';
 

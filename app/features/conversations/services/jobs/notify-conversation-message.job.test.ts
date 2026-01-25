@@ -1,5 +1,3 @@
-import { db } from 'prisma/db.server.ts';
-import { ConversationParticipantRole } from 'prisma/generated/client.ts';
 import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
 import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
@@ -7,6 +5,8 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
+import { db } from '../../../../../prisma/db.server.ts';
+import { ConversationParticipantRole } from '../../../../../prisma/generated/client.ts';
 import { notifyConversationMessage } from './notify-conversation-message.job.ts';
 
 describe('notifyConversationMessage job', () => {

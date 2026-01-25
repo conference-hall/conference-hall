@@ -1,7 +1,7 @@
 import type { FileUpload, FileUploadHandler } from '@remix-run/form-data-parser';
-import { getSharedServerEnv } from 'servers/environment.server.ts';
 import { v4 as uuid } from 'uuid';
 import { storage } from '~/shared/authentication/firebase.server.ts';
+import { getSharedServerEnv } from '../../../../servers/environment.server.ts';
 
 const { APP_URL } = getSharedServerEnv();
 

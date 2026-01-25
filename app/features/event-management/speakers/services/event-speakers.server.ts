@@ -1,6 +1,4 @@
-import type { EventSpeakerWhereInput } from 'prisma/generated/models.ts';
 import { parseWithZod } from '@conform-to/zod/v4';
-import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import type { EventSpeakerSaveData, SocialLinks } from '~/shared/types/speaker.types.ts';
@@ -9,6 +7,8 @@ import { ReviewDetails } from '~/features/event-management/proposals/models/revi
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import { ForbiddenOperationError, NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
+import type { EventSpeakerWhereInput } from '../../../../../prisma/generated/models.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 const SpeakerSearchFiltersSchema = z.object({
   query: z.string().trim().optional(),

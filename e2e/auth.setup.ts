@@ -1,8 +1,8 @@
-import { HomePage } from 'e2e/tests/event-search/home.page.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { test as setup } from './fixtures.ts';
 import { getUserAuthPath, TEST_USERS } from './helpers.ts';
 import { LoginPage } from './tests/auth/login.page.ts';
+import { HomePage } from './tests/event-search/home.page.ts';
 
 for (const user of TEST_USERS) {
   setup(`authenticate as ${user}`, async ({ page }) => {

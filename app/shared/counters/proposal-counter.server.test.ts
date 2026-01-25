@@ -1,6 +1,6 @@
-import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
+import { db } from '../../../prisma/db.server.ts';
 import { getNextProposalNumber } from './proposal-counter.server.ts';
 
 describe('getNextProposalNumber', () => {

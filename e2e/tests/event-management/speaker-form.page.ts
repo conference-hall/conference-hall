@@ -1,5 +1,5 @@
 import type { Locator } from '@playwright/test';
-import { PageObject } from 'e2e/page-object.ts';
+import { PageObject } from '../../page-object.ts';
 
 class SpeakerFormPage extends PageObject {
   readonly emailInput: Locator = this.page.getByLabel('Email');

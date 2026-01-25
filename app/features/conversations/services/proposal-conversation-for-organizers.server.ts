@@ -1,4 +1,3 @@
-import { db } from 'prisma/db.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ProposalNotFoundError } from '~/shared/errors.server.ts';
 import type {
@@ -6,6 +5,7 @@ import type {
   ConversationMessageReactData,
   ConversationMessageSaveData,
 } from './conversation.schema.server.ts';
+import { db } from '../../../../prisma/db.server.ts';
 import { ConversationService } from './conversation-service.server.ts';
 
 export class ProposalConversationForOrganizers {

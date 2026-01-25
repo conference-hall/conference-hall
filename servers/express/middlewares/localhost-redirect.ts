@@ -1,5 +1,5 @@
 import type express from 'express';
-import { getSharedServerEnv } from 'servers/environment.server.ts';
+import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 
 const { NODE_ENV, APP_URL } = getSharedServerEnv();
 

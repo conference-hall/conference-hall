@@ -1,4 +1,3 @@
-import type { Event, EventCategory, EventFormat, EventProposalTag, Proposal, Team } from 'prisma/generated/client.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
@@ -8,6 +7,14 @@ import { reviewFactory } from 'tests/factories/reviews.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import type {
+  Event,
+  EventCategory,
+  EventFormat,
+  EventProposalTag,
+  Proposal,
+  Team,
+} from '../../../prisma/generated/client.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { ProposalPage } from './proposal.page.ts';
 import { ProposalsListPage } from './proposals-list.page.ts';

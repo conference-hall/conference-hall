@@ -1,8 +1,8 @@
-import { expect, loginWith, test } from 'e2e/fixtures.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
+import { expect, loginWith, test } from '../../../fixtures.ts';
 import { ReviewsSettingsPage } from './reviews-settings.page.ts';
 
 loginWith('clark-kent');

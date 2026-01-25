@@ -1,5 +1,5 @@
-import { MailBox } from 'e2e/common/mailbox.page.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
+import { MailBox } from '../../common/mailbox.page.ts';
 import { expect, resetMailbox, test } from '../../fixtures.ts';
 import { HomePage } from '../event-search/home.page.ts';
 import { ForgotPasswordPage, LoginPage, ResetPasswordPage } from './login.page.ts';

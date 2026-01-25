@@ -1,8 +1,8 @@
-import type { EventWhereInput } from 'prisma/generated/models.ts';
-import { db } from 'prisma/db.server.ts';
-import { EventType } from 'prisma/generated/client.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
+import type { EventWhereInput } from '../../../../prisma/generated/models.ts';
 import type { SearchFilters } from './event-search.schema.server.ts';
+import { db } from '../../../../prisma/db.server.ts';
+import { EventType } from '../../../../prisma/generated/client.ts';
 
 const RESULTS_BY_PAGE = 12;
 

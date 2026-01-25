@@ -1,4 +1,4 @@
-import { getWebServerEnv } from 'servers/environment.server.ts';
+import { getWebServerEnv } from '../../../servers/environment.server.ts';
 import { flags } from '../feature-flags/flags.server.ts';
 
 const { CAPTCHA_SECRET_KEY, CAPTCHA_SITE_KEY } = getWebServerEnv();

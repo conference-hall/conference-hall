@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { PageObject } from 'e2e/page-object.ts';
+import { PageObject } from '../../page-object.ts';
 import { NewEventPage } from './new-event.page.ts';
 
 export class TeamHomePage extends PageObject {

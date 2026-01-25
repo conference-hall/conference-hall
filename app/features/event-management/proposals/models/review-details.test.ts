@@ -1,4 +1,4 @@
-import { ReviewFeeling } from 'prisma/generated/client.ts';
+import { ReviewFeeling } from '../../../../../prisma/generated/client.ts';
 import { ReviewDetails } from './review-details.ts';
 
 describe('#ReviewsDetails', () => {

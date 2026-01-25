@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
-import { EventType, EventVisibility } from 'prisma/generated/client.ts';
+import { db } from '../../../../prisma/db.server.ts';
+import { EventType, EventVisibility } from '../../../../prisma/generated/client.ts';
 
 export async function getEventsForSitemap() {
   const OPEN_MEETUP = { type: EventType.MEETUP, cfpStart: { not: null } };

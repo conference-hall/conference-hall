@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 export class TeamEvents {
   constructor(private authorizedTeam: AuthorizedTeam) {}

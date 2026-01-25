@@ -1,8 +1,8 @@
-import type { Event, Talk, User } from 'prisma/generated/client.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import type { Event, Talk, User } from '../../../prisma/generated/client.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
 import { SubmissionPage } from '../event-participation/submission.page.ts';
 import { TalkPage } from './talk.page.ts';

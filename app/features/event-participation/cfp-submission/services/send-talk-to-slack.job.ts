@@ -1,8 +1,8 @@
-import { db } from 'prisma/db.server.ts';
 import { buildReviewProposalUrl } from '~/shared/emails/utils/urls.ts';
 import { Slack, type SlackMessage } from '~/shared/integrations/slack.server.ts';
 import { job } from '~/shared/jobs/job.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 type SendSubmissionToSlackPayload = {
   eventId: string;

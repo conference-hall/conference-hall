@@ -1,8 +1,8 @@
-import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 import { SurveyConfig } from '~/features/event-management/settings/models/survey-config.ts';
 import { EventNotFoundError } from '~/shared/errors.server.ts';
 import { TracksMandatorySchema, TracksOptionalSchema } from '~/shared/types/speaker-talk.types.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 export class EventPage {
   constructor(private slug: string) {}

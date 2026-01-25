@@ -1,4 +1,4 @@
-import type { Event } from 'prisma/generated/client.ts';
+import type { Event } from '../../../prisma/generated/client.ts';
 
 export type AuthorizedAdmin = { id: string };
 

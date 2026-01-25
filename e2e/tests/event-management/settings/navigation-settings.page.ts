@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { PageObject } from 'e2e/page-object.ts';
+import { PageObject } from '../../../page-object.ts';
 import { CfpSettingsPage } from './cfp-settings.page.ts';
 import { CustomizeSettingsPage } from './customize-settings.page.ts';
 import { GeneralSettingsPage } from './general-settings.page.ts';

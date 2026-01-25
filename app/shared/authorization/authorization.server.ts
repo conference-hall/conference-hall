@@ -1,5 +1,5 @@
-import { db } from 'prisma/db.server.ts';
 import type { AuthorizedEvent, AuthorizedTeam } from './types.ts';
+import { db } from '../../../prisma/db.server.ts';
 import { EventNotFoundError, ForbiddenOperationError } from '../errors.server.ts';
 import { UserTeamPermissions } from './team-permissions.ts';
 

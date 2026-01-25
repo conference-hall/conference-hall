@@ -1,8 +1,8 @@
-import { db } from 'prisma/db.server.ts';
-import { Prisma } from 'prisma/generated/client.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
+import { db } from '../../../../../prisma/db.server.ts';
+import { Prisma } from '../../../../../prisma/generated/client.ts';
 import { Comments } from './comments.server.ts';
 
 type ReviewFeed = {

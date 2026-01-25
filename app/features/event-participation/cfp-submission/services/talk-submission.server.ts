@@ -1,4 +1,3 @@
-import { db } from 'prisma/db.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { TalkSaveData, TracksSaveData } from '~/shared/types/speaker-talk.types.ts';
@@ -15,6 +14,7 @@ import {
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
 } from '~/shared/errors.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 
 export class TalkSubmission {
   constructor(

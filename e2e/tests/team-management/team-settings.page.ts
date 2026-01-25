@@ -1,6 +1,6 @@
 import type { Locator } from '@playwright/test';
-import { PageObject } from 'e2e/page-object.ts';
-import { ActivityPage } from 'e2e/tests/speaker/activity.page.ts';
+import { PageObject } from '../../page-object.ts';
+import { ActivityPage } from '../../tests/speaker/activity.page.ts';
 
 export class TeamSettingsPage extends PageObject {
   readonly heading: Locator = this.page.getByRole('heading', { name: 'Team settings' });

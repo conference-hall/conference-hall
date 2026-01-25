@@ -1,8 +1,8 @@
-import { db } from 'prisma/db.server.ts';
 import { renderEmail } from '~/shared/emails/email.renderer.tsx';
 import { job } from '~/shared/jobs/job.ts';
 import type { CustomTemplateName } from './email.types.ts';
 import type { EmailTemplateName } from './templates/templates.ts';
+import { db } from '../../../prisma/db.server.ts';
 import { getEmailProvider } from './providers/provider.ts';
 
 export type EmailPayload = {

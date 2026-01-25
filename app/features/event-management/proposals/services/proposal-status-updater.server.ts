@@ -1,9 +1,9 @@
-import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import type { DeliberationStatus } from '~/shared/types/proposals.types.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
 export const ProposalStatusSchema = z.object({

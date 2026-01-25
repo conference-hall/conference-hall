@@ -1,4 +1,3 @@
-import { db } from 'prisma/db.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
@@ -8,6 +7,7 @@ import { ProposalNotFoundError, ReviewDisabledError } from '~/shared/errors.serv
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import type { ReviewUpdateData } from './proposal-review.schema.server.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import { ReviewDetails } from '../models/review-details.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
