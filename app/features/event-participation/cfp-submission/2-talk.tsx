@@ -8,6 +8,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { TalkSubmission } from '~/features/event-participation/cfp-submission/services/talk-submission.server.ts';
+import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { TalkForm } from '~/features/speaker/talk-library/components/talk-forms/talk-form.tsx';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
 import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
@@ -44,6 +45,7 @@ export default function SubmissionTalkRoute({ loaderData: talk, actionData: erro
   const { t } = useTranslation();
   const formId = useId();
   const { previousPath } = useSubmissionNavigation();
+  const { languageEnabled } = useCurrentEvent();
 
   return (
     <Page>
@@ -53,7 +55,7 @@ export default function SubmissionTalkRoute({ loaderData: talk, actionData: erro
         </Card.Title>
 
         <Card.Content>
-          <TalkForm id={formId} initialValues={talk} errors={errors} />
+          <TalkForm id={formId} initialValues={talk} languageEnabled={languageEnabled} errors={errors} />
         </Card.Content>
 
         <Card.Actions>

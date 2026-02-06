@@ -108,6 +108,7 @@ model Event {
   categories                  EventCategory[]
   categoriesRequired          Boolean                   @default(false)
   categoriesAllowMultiple     Boolean                   @default(false)
+  languageEnabled             Boolean                   @default(true)
   maxProposals                Int?
   creatorId                   String
   creator                     User                      @relation(fields: [creatorId], references: [id])

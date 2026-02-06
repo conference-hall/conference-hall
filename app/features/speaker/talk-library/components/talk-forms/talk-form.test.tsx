@@ -61,6 +61,18 @@ describe('TalkForm', () => {
     await expect.element(page.getByLabelText('Backend')).toBeInTheDocument();
   });
 
+  it('hides languages field when languageEnabled is false', async () => {
+    await renderComponent({ languageEnabled: false });
+
+    await expect.element(page.getByLabelText(/languages/i)).not.toBeInTheDocument();
+  });
+
+  it('shows languages field when languageEnabled is true', async () => {
+    await renderComponent({ languageEnabled: true });
+
+    await expect.element(page.getByLabelText(/languages/i)).toBeInTheDocument();
+  });
+
   it('displays initial values correctly', async () => {
     const initialValues = {
       title: 'Test Talk Title',

@@ -556,6 +556,8 @@
   "event-management.settings.cfp.preferences.coc-url.description": "Optional. Speakers will be required to agree to the code of conduct before submitting their proposal.",
   "event-management.settings.cfp.preferences.coc-url.label": "Code of conduct URL",
   "event-management.settings.cfp.preferences.heading": "Call for papers preferences",
+  "event-management.settings.cfp.preferences.language-enabled.description": "When enabled, speakers can select the spoken languages for their talk during submission.",
+  "event-management.settings.cfp.preferences.language-enabled.label": "Ask spoken languages for talks",
   "event-management.settings.cfp.preferences.max-proposals.description": "Optional. Limits the number of proposals a speaker can submit to the event.",
   "event-management.settings.cfp.preferences.max-proposals.label": "Maximum of proposals per speaker",
   "event-management.settings.cfp.preferences.submit": "Update CFP preferences",

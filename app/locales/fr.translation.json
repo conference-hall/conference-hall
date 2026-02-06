@@ -554,6 +554,8 @@
   "event-management.settings.cfp.preferences.coc-url.description": "Facultatif. Les speakers devront accepter le code de conduite avant de soumettre leur proposition.",
   "event-management.settings.cfp.preferences.coc-url.label": "URL du code de conduite",
   "event-management.settings.cfp.preferences.heading": "Préférences du call for papers",
+  "event-management.settings.cfp.preferences.language-enabled.description": "Lorsque cette option est activée, les speakers peuvent sélectionner les langues parlées pour leur talk lors de la soumission.",
+  "event-management.settings.cfp.preferences.language-enabled.label": "Demander les langues parlées pour les talks",
   "event-management.settings.cfp.preferences.max-proposals.description": "Facultatif. Limite le nombre de propositions qu'un speaker peut soumettre à l'événement.",
   "event-management.settings.cfp.preferences.max-proposals.label": "Maximum de propositions par speaker",
   "event-management.settings.cfp.preferences.submit": "Mettre à jour les préférences du CFP",

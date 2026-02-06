@@ -62,6 +62,7 @@ export class EventPage {
       })),
       categoriesRequired: event.categoriesRequired,
       categoriesAllowMultiple: event.categoriesAllowMultiple,
+      languageEnabled: event.languageEnabled,
       speakersConversationEnabled: event.speakersConversationEnabled,
     };
   }
