@@ -14,7 +14,7 @@ type FieldsetGroupProps = {
 
 export function FieldsetGroup({ legend, hint, inline, className, children, error }: FieldsetGroupProps) {
   const layoutStyle = cx('mt-3 space-y-2', {
-    'sm:flex sm:flex-wrap sm:items-center sm:space-x-10 sm:space-y-0': inline,
+    'sm:flex sm:flex-wrap sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
 
   return (
