@@ -1,8 +1,11 @@
 FROM node:24-slim AS base
 
-# Install Java + deps in one layer
-RUN apt-get update && apt-get install -y \
-    openjdk-17-jre-headless \
+# Install Java 21 (Adoptium Temurin) + deps in one layer
+RUN apt-get update && apt-get install -y wget gnupg \
+ && wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor -o /usr/share/keyrings/adoptium.gpg \
+ && echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb bookworm main" > /etc/apt/sources.list.d/adoptium.list \
+ && apt-get update && apt-get install -y \
+    temurin-21-jre \
     curl \
  && rm -rf /var/lib/apt/lists/*
 
