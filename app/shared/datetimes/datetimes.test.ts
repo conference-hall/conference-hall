@@ -139,6 +139,13 @@ describe('datetimes', () => {
       const formatted = formatDateRange(startDate, endDate, { format: 'medium', locale: 'en' });
       expect(formatted).toEqual('Feb 26 / Mar 5, 2020');
     });
+
+    it('formats same day with different Date object instances', async () => {
+      const startDate = new Date('2020-02-26T00:00:00.000Z');
+      const endDate = new Date('2020-02-26T00:00:00.000Z');
+      const formatted = formatDateRange(startDate, endDate, { format: 'long', locale: 'en' });
+      expect(formatted).toEqual('February 26, 2020');
+    });
   });
 
   describe('#formatTime', () => {
