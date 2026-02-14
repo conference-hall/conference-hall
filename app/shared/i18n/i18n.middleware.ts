@@ -2,7 +2,7 @@ import { createCookie } from 'react-router';
 import { createI18nextMiddleware } from 'remix-i18next/middleware';
 import { getWebServerEnv } from '../../../servers/environment.server.ts';
 import { i18nResources } from './i18n.resources.ts';
-import { i18nConfig } from './i18n.ts';
+import { FALLBACK_LANGUAGE, i18nConfig, SUPPORTED_LANGUAGES } from './i18n.ts';
 
 const { COOKIE_SIGNED_SECRET } = getWebServerEnv();
 
@@ -17,8 +17,8 @@ const localeCookie = createCookie('locale', {
 
 export const [i18nextMiddleware, getLocale, getI18n] = createI18nextMiddleware({
   detection: {
-    supportedLanguages: i18nConfig.supportedLngs,
-    fallbackLanguage: i18nConfig.fallbackLng,
+    supportedLanguages: [...SUPPORTED_LANGUAGES],
+    fallbackLanguage: FALLBACK_LANGUAGE,
     order: ['cookie', 'header'],
     cookie: localeCookie,
   },
