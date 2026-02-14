@@ -312,6 +312,8 @@ model EventSpeaker {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
+  @@index([userId])
+  @@index([eventId])
   @@map("event_speakers")
 }
 
