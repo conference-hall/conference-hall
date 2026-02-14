@@ -4,6 +4,7 @@ import {
   differenceInMinutes,
   formatDuration,
   intervalToDuration,
+  isSameDay,
   setMinutes,
   startOfDay,
 } from 'date-fns';
@@ -29,17 +30,17 @@ const DATETIME_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
 };
 
 const DATE_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
-  // 10/1/2023
+  // 10/01/2023
   short: { day: '2-digit', month: '2-digit', year: 'numeric' },
   // 1 Oct 2023
   medium: { day: 'numeric', month: 'short', year: 'numeric' },
   // 1 October 2023
-  long: { day: '2-digit', month: 'long', year: 'numeric' },
+  long: { day: 'numeric', month: 'long', year: 'numeric' },
 };
 
 const DAY_FORMATS: Record<FormatType, Intl.DateTimeFormatOptions> = {
-  // 10
-  short: { day: 'numeric' },
+  // 01
+  short: { day: '2-digit' },
   // 1 Oct
   medium: { day: 'numeric', month: 'short' },
   // 1 October
@@ -78,7 +79,7 @@ export function formatDateRange(startDate: Date, endDate: Date, options: FormatO
 
   if (!startDate) return '';
 
-  if (startDate === endDate) {
+  if (isSameDay(startDate, endDate)) {
     return formatDate(startDate, { format: 'long', locale, timezone });
   }
 
