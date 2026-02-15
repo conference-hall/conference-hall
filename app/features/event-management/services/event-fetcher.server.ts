@@ -50,6 +50,7 @@ export class EventFetcher {
       formatsAllowMultiple: fullEvent.formatsAllowMultiple,
       categoriesRequired: fullEvent.categoriesRequired,
       categoriesAllowMultiple: fullEvent.categoriesAllowMultiple,
+      languageEnabled: fullEvent.languageEnabled,
       emailOrganizer: fullEvent.emailOrganizer,
       emailNotifications: (fullEvent.emailNotifications || []) as EventEmailNotificationsKeys,
       slackWebhookUrl: fullEvent.slackWebhookUrl,

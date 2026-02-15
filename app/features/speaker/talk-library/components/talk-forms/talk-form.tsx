@@ -28,6 +28,7 @@ type Props = {
   categories?: Array<{ id: string; name: string; description: string | null }>;
   categoriesRequired?: boolean;
   categoriesAllowMultiple?: boolean;
+  languageEnabled?: boolean;
   errors: SubmissionErrors;
   onSubmit?: VoidFunction;
 };
@@ -41,6 +42,7 @@ export function TalkForm({
   categories,
   categoriesRequired,
   categoriesAllowMultiple,
+  languageEnabled = true,
   errors,
   onSubmit,
 }: Props) {
@@ -79,16 +81,18 @@ export function TalkForm({
         ))}
       </FieldsetGroup>
 
-      <MultiSelect
-        name="languages"
-        label={t('talk.languages')}
-        placeholder={t('talk.languages.placeholder')}
-        options={LANGUAGES.map((lang) => ({
-          value: lang,
-          label: `${t(`common.languages.${lang}.flag`)} ${t(`common.languages.${lang}.label`)}`,
-        }))}
-        defaultValues={initialValues?.languages ?? []}
-      />
+      {languageEnabled && (
+        <MultiSelect
+          name="languages"
+          label={t('talk.languages')}
+          placeholder={t('talk.languages.placeholder')}
+          options={LANGUAGES.map((lang) => ({
+            value: lang,
+            label: `${t(`common.languages.${lang}.flag`)} ${t(`common.languages.${lang}.label`)}`,
+          }))}
+          defaultValues={initialValues?.languages ?? []}
+        />
+      )}
 
       {hasFormats && (
         <FormatsForm

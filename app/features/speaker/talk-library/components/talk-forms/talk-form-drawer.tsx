@@ -23,6 +23,7 @@ type TalkEditProps = {
     categories?: Array<{ id: string; name: string; description: string | null }>;
     categoriesRequired?: boolean;
     categoriesAllowMultiple?: boolean;
+    languageEnabled?: boolean;
   };
   errors: SubmissionErrors;
 };
@@ -64,6 +65,7 @@ export function TalkEditDrawer({ initialValues, event, errors, open, onClose }: 
           formatsAllowMultiple={event?.formatsAllowMultiple}
           categoriesRequired={event?.categoriesRequired}
           categoriesAllowMultiple={event?.categoriesAllowMultiple}
+          languageEnabled={event?.languageEnabled}
           errors={errors}
           onSubmit={onClose}
         />

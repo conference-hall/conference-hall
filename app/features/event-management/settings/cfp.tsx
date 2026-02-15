@@ -40,6 +40,12 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
       await event.update(result.value);
       break;
     }
+    case 'toggle-language-enabled': {
+      await event.update({
+        languageEnabled: form.get('languageEnabled') === 'true',
+      });
+      break;
+    }
   }
 
   return toast('success', i18n.t('event-management.settings.cfp.feedbacks.updated'));
@@ -61,7 +67,12 @@ export default function EventCfpSettingsRoute({ actionData: errors }: Route.Comp
         <MeetupCfpOpening cfpStart={event.cfpStart} timezone={event.timezone} />
       )}
 
-      <CommonCfpSetting maxProposals={event.maxProposals} codeOfConductUrl={event.codeOfConductUrl} errors={errors} />
+      <CommonCfpSetting
+        maxProposals={event.maxProposals}
+        codeOfConductUrl={event.codeOfConductUrl}
+        languageEnabled={event.languageEnabled}
+        errors={errors}
+      />
     </>
   );
 }
