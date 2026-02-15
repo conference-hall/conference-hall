@@ -11,6 +11,21 @@ import type { Event, Schedule, ScheduleTrack, Team, User } from '../../../../../
 import { EventSchedule } from '../../schedule/services/schedule.server.ts';
 import { EventScheduleExport } from './schedule-export.server.ts';
 
+async function readStream(stream: ReadableStream): Promise<string> {
+  const reader = stream.getReader();
+  const decoder = new TextDecoder();
+  let result = '';
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    result += decoder.decode(value, { stream: true });
+  }
+
+  return result;
+}
+
 describe('EventScheduleExport', () => {
   let owner: User;
   let reviewer: User;
@@ -124,6 +139,162 @@ describe('EventScheduleExport', () => {
           },
         ],
       });
+    });
+  });
+
+  describe('toJsonStream', () => {
+    it('streams schedule as JSON with single session', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const session = await EventSchedule.for(authorizedEvent).addSession({
+        trackId: track.id,
+        start: new Date(schedule.start),
+        end: new Date(schedule.start),
+      });
+      const talk = await talkFactory({ speakers: [owner] });
+      const proposal = await proposalFactory({ event, talk });
+      await EventSchedule.for(authorizedEvent).updateSession({
+        id: session.id,
+        trackId: track.id,
+        color: 'gray',
+        emojis: [],
+        start: new Date(schedule.start),
+        end: new Date(schedule.start),
+        proposalId: proposal.id,
+      });
+
+      const stream = await EventScheduleExport.forUser(authorizedEvent).toJsonStream();
+      expect(stream).not.toBeNull();
+
+      const jsonText = await readStream(stream!);
+      const json = JSON.parse(jsonText);
+
+      expect(json).toEqual({
+        name: schedule.name,
+        days: expect.any(Array),
+        timeZone: schedule.timezone,
+        sessions: [
+          {
+            id: session.id,
+            start: expect.any(String),
+            end: expect.any(String),
+            track: track.name,
+            title: proposal.title,
+            language: 'en',
+            proposal: {
+              id: proposal.id,
+              proposalNumber: proposal.proposalNumber,
+              abstract: proposal.abstract,
+              level: proposal.level || null,
+              formats: [],
+              categories: [],
+              speakers: [
+                {
+                  id: proposal.speakers.at(0)?.id,
+                  name: proposal.speakers.at(0)?.name,
+                  bio: proposal.speakers.at(0)?.bio || null,
+                  company: proposal.speakers.at(0)?.company || null,
+                  picture: proposal.speakers.at(0)?.picture || null,
+                  socialLinks: proposal.speakers.at(0)?.socialLinks,
+                },
+              ],
+            },
+          },
+        ],
+      });
+    });
+
+    it('streams schedule with no sessions as empty array', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const stream = await EventScheduleExport.forUser(authorizedEvent).toJsonStream();
+      expect(stream).not.toBeNull();
+
+      const jsonText = await readStream(stream!);
+      const json = JSON.parse(jsonText);
+
+      expect(json).toEqual({
+        name: schedule.name,
+        days: expect.any(Array),
+        timeZone: schedule.timezone,
+        sessions: [],
+      });
+    });
+
+    it('produces same JSON structure as toJson()', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const session = await EventSchedule.for(authorizedEvent).addSession({
+        trackId: track.id,
+        start: new Date(schedule.start),
+        end: new Date(schedule.start),
+      });
+      const talk = await talkFactory({ speakers: [owner] });
+      const proposal = await proposalFactory({ event, talk });
+      await EventSchedule.for(authorizedEvent).updateSession({
+        id: session.id,
+        trackId: track.id,
+        color: 'gray',
+        emojis: [],
+        start: new Date(schedule.start),
+        end: new Date(schedule.start),
+        proposalId: proposal.id,
+      });
+
+      const jsonResult = await EventScheduleExport.forUser(authorizedEvent).toJson();
+      const streamResult = await EventScheduleExport.forUser(authorizedEvent).toJsonStream();
+      const streamJson = JSON.parse(await readStream(streamResult!));
+
+      expect(streamJson).toEqual(jsonResult);
+    });
+
+    it('handles sessions without proposals', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const session = await EventSchedule.for(authorizedEvent).addSession({
+        trackId: track.id,
+        start: new Date(schedule.start),
+        end: new Date(schedule.start),
+      });
+      await EventSchedule.for(authorizedEvent).updateSession({
+        id: session.id,
+        trackId: track.id,
+        name: 'Break',
+        color: 'gray',
+        emojis: [],
+        start: new Date(schedule.start),
+        end: new Date(schedule.start),
+      });
+
+      const stream = await EventScheduleExport.forUser(authorizedEvent).toJsonStream();
+      expect(stream).not.toBeNull();
+
+      const jsonText = await readStream(stream!);
+      const json = JSON.parse(jsonText);
+
+      expect(json.sessions[0]).toEqual({
+        id: session.id,
+        start: expect.any(String),
+        end: expect.any(String),
+        track: track.name,
+        title: 'Break',
+        language: null,
+        proposal: null,
+      });
+    });
+
+    it('returns null when schedule does not exist', async () => {
+      const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSchedule.slug);
+
+      const stream = await EventScheduleExport.forUser(authorizedEvent).toJsonStream();
+
+      expect(stream).toBeNull();
     });
   });
 });
