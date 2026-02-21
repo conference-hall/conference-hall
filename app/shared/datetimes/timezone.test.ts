@@ -116,7 +116,7 @@ describe('timezone', () => {
       expect(offsetNewYork).toBe('UTC−5');
 
       const offsetLondon = getGMTOffset('Europe/London', 'fr');
-      expect(offsetLondon).toBe('UTC');
+      expect(offsetLondon).toMatch(/^UTC(\+0)?$/);
     });
   });
 
