@@ -1,10 +1,10 @@
 import { HeartIcon, MinusIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { Trans } from 'react-i18next';
-import type { FeedItem } from '~/features/event-management/proposals/services/activity-feed.server.ts';
-import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { TimeDistance } from '~/design-system/utils/time-distance.tsx';
+import type { FeedItem } from '~/features/event-management/proposals/services/activity-feed.server.ts';
+import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
 
 const ReviewTypes = {
   NO_OPINION: {

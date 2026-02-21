@@ -5,8 +5,8 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-import type { Event, EventCategory, EventFormat, Team, User } from '../../../../../prisma/generated/client.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import type { Event, EventCategory, EventFormat, Team, User } from '../../../../../prisma/generated/client.ts';
 import { EventTracksSettings } from './event-tracks-settings.server.ts';
 
 describe('EventTracksSettings', () => {

@@ -3,12 +3,12 @@ import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from '@heroicons/react/20/so
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, Link, useParams } from 'react-router';
-import type { TeamRole } from '~/shared/authorization/types.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { menuItem, menuItemIcon, menuItems, menuSeparator } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import { UserTeamPermissions } from '~/shared/authorization/team-permissions.ts';
+import type { TeamRole } from '~/shared/authorization/types.ts';
 
 const menuStyle = cx(
   'flex items-center gap-1',

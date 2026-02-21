@@ -1,8 +1,8 @@
 import { cva, cx } from 'class-variance-authority';
 import { Trans, useTranslation } from 'react-i18next';
-import type { Emoji, EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { Tooltip } from '~/design-system/tooltip.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import type { Emoji, EmojiReaction } from '~/shared/types/emojis.types.ts';
 
 type EmojiReactionsProps = {
   emojis: Array<Emoji>;

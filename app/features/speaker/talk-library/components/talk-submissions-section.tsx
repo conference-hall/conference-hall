@@ -1,13 +1,13 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { href, Link } from 'react-router';
-import type { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { ProposalStatusLabel } from '~/features/event-participation/speaker-proposals/components/proposal-status-label.tsx';
 import { formatDistance } from '~/shared/datetimes/datetimes.ts';
+import type { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 
 type Props = {
   submissions: Array<{

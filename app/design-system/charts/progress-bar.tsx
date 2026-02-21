@@ -1,6 +1,6 @@
-import type React from 'react';
 // Tremor Raw ProgressBar [v0.0.1]
 import { cx } from 'class-variance-authority';
+import type React from 'react';
 
 interface ProgressBarProps extends React.ComponentProps<'div'> {
   value?: number;

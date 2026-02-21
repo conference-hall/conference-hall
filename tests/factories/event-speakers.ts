@@ -1,8 +1,8 @@
 import { randEmail, randFullName } from '@ngneat/falso';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
+import { db } from '../../prisma/db.server.ts';
 import type { Event, User } from '../../prisma/generated/client.ts';
 import type { EventSpeakerCreateInput } from '../../prisma/generated/models.ts';
-import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {
   event: Event;

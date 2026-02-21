@@ -1,4 +1,3 @@
-import type { TFunction } from 'i18next';
 import {
   BellIcon,
   CodeBracketIcon,
@@ -12,6 +11,7 @@ import {
   SwatchIcon,
   TagIcon,
 } from '@heroicons/react/24/outline';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
 import { Page } from '~/design-system/layouts/page.tsx';

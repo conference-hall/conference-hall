@@ -1,13 +1,13 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { getSocialIcon } from '~/design-system/social-link.tsx';
 import { Label } from '~/design-system/typography.tsx';
 import { extractSocialProfile } from '~/shared/formatters/social-links.ts';
+import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 
 const MAX_SOCIAL_LINKS = 4;
 

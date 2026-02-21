@@ -1,6 +1,6 @@
+import { db } from '../../prisma/db.server.ts';
 import type { Event, User } from '../../prisma/generated/client.ts';
 import type { SurveyCreateInput } from '../../prisma/generated/models.ts';
-import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {
   user: User;

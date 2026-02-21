@@ -8,8 +8,8 @@ import { Tag } from '~/design-system/tag.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDate } from '~/shared/datetimes/datetimes.ts';
-import type { ProposalData } from '../../shared/types.ts';
 import { GlobalReviewNote, UserReviewNote } from '../../shared/review-note.tsx';
+import type { ProposalData } from '../../shared/types.ts';
 import { ReviewComments } from './review-comments.tsx';
 
 type ProposalItemProps = {

@@ -1,9 +1,9 @@
 import { Button, Heading, Section, Text } from '@react-email/components';
 import type { LocaleEmailData } from '~/shared/emails/email.types.ts';
 import type { EmailPayload } from '~/shared/emails/send-email.job.ts';
-import type { MessageRole } from '~/shared/types/conversation.types.ts';
 import { buildReviewProposalUrl, buildSpeakerProposalUrl } from '~/shared/emails/utils/urls.ts';
 import { getEmailI18n } from '~/shared/i18n/i18n.emails.ts';
+import type { MessageRole } from '~/shared/types/conversation.types.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 

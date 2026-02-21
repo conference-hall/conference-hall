@@ -12,8 +12,8 @@ import { Pagination, PaginationMobile } from '~/design-system/list/pagination.ts
 import { H1, H2 } from '~/design-system/typography.tsx';
 import { parseUrlFilters } from '~/features/event-search/services/event-search.schema.server.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
-import type { Route } from './+types/event-search.ts';
 import { useUser } from '../../app-platform/components/user-context.tsx';
+import type { Route } from './+types/event-search.ts';
 import { EventCardLink } from './components/event-card.tsx';
 import { SearchEventsFilters } from './components/search-events-filters.tsx';
 import { SearchEventsInput } from './components/search-events-input.tsx';

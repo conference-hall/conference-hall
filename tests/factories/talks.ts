@@ -1,8 +1,8 @@
 import { randLine, randPost } from '@ngneat/falso';
-import type { User } from '../../prisma/generated/client.ts';
-import type { TalkCreateInput } from '../../prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
+import type { User } from '../../prisma/generated/client.ts';
 import { TalkLevel } from '../../prisma/generated/client.ts';
+import type { TalkCreateInput } from '../../prisma/generated/models.ts';
 import { applyTraits } from './helpers/traits.ts';
 
 const TRAITS = {

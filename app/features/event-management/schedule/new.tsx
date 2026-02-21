@@ -11,8 +11,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { ScheduleCreateSchema } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
-import type { Route } from './+types/new.ts';
 import { useCurrentEventTeam } from '../event-team-context.tsx';
+import type { Route } from './+types/new.ts';
 import { EventSchedule } from './services/schedule.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {

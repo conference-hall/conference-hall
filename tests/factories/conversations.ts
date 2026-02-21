@@ -1,7 +1,7 @@
-import type { Event } from '../../prisma/generated/client.ts';
-import type { ConversationCreateInput } from '../../prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
+import type { Event } from '../../prisma/generated/client.ts';
 import { ConversationContextType } from '../../prisma/generated/client.ts';
+import type { ConversationCreateInput } from '../../prisma/generated/models.ts';
 
 type FactoryOptions = {
   event: Event;

@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import { cx } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 import { H1, Subtitle } from '../typography.tsx';
 import { Container } from './container.tsx';
 

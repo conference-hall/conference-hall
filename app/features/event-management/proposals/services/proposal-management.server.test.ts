@@ -9,8 +9,8 @@ import { teamFactory } from '~/../tests/factories/team.ts';
 import { userFactory } from '~/../tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-import type { ProposalCreationData } from './proposal-management.schema.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import type { ProposalCreationData } from './proposal-management.schema.server.ts';
 import { ProposalManagement } from './proposal-management.server.ts';
 
 describe('ProposalManagement', () => {

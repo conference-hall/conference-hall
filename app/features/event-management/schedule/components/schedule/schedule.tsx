@@ -1,12 +1,12 @@
-import type { ReactNode } from 'react';
 import { RestrictToWindow } from '@dnd-kit/dom/modifiers';
 import { DragDropProvider, PointerSensor, useDragDropMonitor, useDraggable, useDroppable } from '@dnd-kit/react';
 import { cx } from 'class-variance-authority';
 import { addMinutes } from 'date-fns';
+import type { ReactNode } from 'react';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import { formatDate, formatTime, toDateInput } from '~/shared/datetimes/datetimes.ts';
+import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import {
   getDailyTimeSlots,
   haveSameStartDate,

@@ -1,6 +1,6 @@
-import type React from 'react';
 // Tremor Raw ProgressCircle [v0.0.0]
 import { cx } from 'class-variance-authority';
+import type React from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ProgressCircleProps extends Omit<React.SVGProps<SVGSVGElement>, 'value'> {

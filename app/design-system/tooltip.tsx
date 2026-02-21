@@ -1,5 +1,5 @@
-import type React from 'react';
 import { arrow, FloatingArrow, flip, offset, type Placement, shift, useFloating } from '@floating-ui/react';
+import type React from 'react';
 import { useRef, useState } from 'react';
 
 interface TooltipProps {

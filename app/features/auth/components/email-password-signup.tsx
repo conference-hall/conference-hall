@@ -3,7 +3,6 @@ import * as Firebase from 'firebase/auth';
 import { type FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useNavigation, useSubmit } from 'react-router';
-import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -11,6 +10,7 @@ import { PasswordInput } from '~/design-system/forms/password-input.tsx';
 import { getFirebaseError } from '~/shared/authentication/firebase.errors.ts';
 import { getClientAuth } from '~/shared/authentication/firebase.ts';
 import { useNonce } from '~/shared/nonce/use-nonce.ts';
+import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { validateEmailAndPassword } from '~/shared/validators/auth.ts';
 
 type EmailPasswordSignupProps = { redirectTo: string; defaultEmail: string | null; captchaSiteKey: string | null };

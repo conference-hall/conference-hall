@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
-import type { LinkProps } from 'react-router';
 import { cx } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 import { Trans } from 'react-i18next';
+import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
 import { Pagination, PaginationMobile } from '~/design-system/list/pagination.tsx';
 

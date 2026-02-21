@@ -1,7 +1,7 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-import type { TrackSaveData } from './event-tracks-settings.schema.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import type { TrackSaveData } from './event-tracks-settings.schema.server.ts';
 
 export class EventTracksSettings {
   constructor(private authorizedEvent: AuthorizedEvent) {}

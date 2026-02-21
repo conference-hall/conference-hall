@@ -1,6 +1,6 @@
+import crypto from 'node:crypto';
 import type express from 'express';
 import helmet from 'helmet';
-import crypto from 'node:crypto';
 import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 
 const { NODE_ENV, APP_URL } = getSharedServerEnv();

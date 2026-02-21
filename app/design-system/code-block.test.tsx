@@ -1,6 +1,6 @@
-import type { Mock } from 'vitest';
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
+import type { Mock } from 'vitest';
 import { page } from 'vitest/browser';
 import { CodeBlock } from './code-block.tsx';
 

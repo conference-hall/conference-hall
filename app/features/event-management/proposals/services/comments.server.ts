@@ -1,7 +1,7 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
-import type { CommentReactionData, CommentSaveData } from './comments.schema.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import type { CommentReactionData, CommentSaveData } from './comments.schema.server.ts';
 
 export class Comments {
   constructor(

@@ -10,6 +10,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import type {
   Event,
   EventCategory,
@@ -21,7 +22,6 @@ import type {
   User,
 } from '../../../../../prisma/generated/client.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
-import { db } from '../../../../../prisma/db.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
 describe('EventProposalsSearch', () => {

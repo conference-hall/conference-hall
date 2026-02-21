@@ -1,9 +1,9 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import type { EventVisibility } from '~/shared/types/events.types.ts';
 import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
 import { Link } from '~/design-system/links.tsx';
+import type { EventVisibility } from '~/shared/types/events.types.ts';
 
 type Props = { team: string; event: string; visibility: EventVisibility; showActions: boolean };
 

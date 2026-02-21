@@ -9,8 +9,8 @@ import {
 } from '~/shared/authorization/authorization.middleware.ts';
 import { formatReviewNote } from '~/shared/formatters/reviews.ts';
 import type { Route } from './+types/cards.ts';
-import styles from './cards.css?url';
 import { ProposalsExport } from './services/proposals-export.server.ts';
+import styles from './cards.css?url';
 
 export const middleware = [requireAuth, requireAuthorizedTeam, requireAuthorizedEvent];
 

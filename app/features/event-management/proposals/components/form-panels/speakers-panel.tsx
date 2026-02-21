@@ -4,13 +4,13 @@ import { cx } from 'class-variance-authority';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, useFetcher } from 'react-router';
-import type { SubmissionError } from '~/shared/types/errors.types.ts';
-import type { SpeakerData } from '~/shared/types/speaker.types.ts';
 import { SelectPanel, type SelectPanelOption } from '~/design-system/forms/select-panel.tsx';
 import { menuItem } from '~/design-system/styles/menu.styles.ts';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { SpeakerDrawer } from '~/features/event-management/speakers/components/speaker-details/speaker-drawer.tsx';
 import { SpeakerRow } from '~/features/event-management/speakers/components/speaker-details/speaker-row.tsx';
+import type { SubmissionError } from '~/shared/types/errors.types.ts';
+import type { SpeakerData } from '~/shared/types/speaker.types.ts';
 import type { loader as AutocompleteLoader } from '../../../command-palette/autocomplete.ts';
 import { SpeakerModal } from './speaker-modal.tsx';
 

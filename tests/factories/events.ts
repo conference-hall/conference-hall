@@ -2,10 +2,10 @@ import { rand, randAnimal, randEmail, randFullAddress, randParagraph, randText, 
 import { slugifyWithCounter } from '@sindresorhus/slugify';
 import { generateImagePlaceholder } from 'tests/img-placeholder.ts';
 import { getRandomColor } from '~/shared/colors/colors.ts';
-import type { Team, User } from '../../prisma/generated/client.ts';
-import type { EventCreateInput } from '../../prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
+import type { Team, User } from '../../prisma/generated/client.ts';
 import { EventType, EventVisibility } from '../../prisma/generated/client.ts';
+import type { EventCreateInput } from '../../prisma/generated/models.ts';
 import { applyTraits } from './helpers/traits.ts';
 import { teamFactory } from './team.ts';
 import { userFactory } from './users.ts';

@@ -12,8 +12,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
-import type { Route } from './+types/layout.ts';
 import { useUser } from '../../app-platform/components/user-context.tsx';
+import type { Route } from './+types/layout.ts';
 import { CurrentEventPageProvider } from './event-page-context.tsx';
 
 export const meta = (args: Route.MetaArgs) => {

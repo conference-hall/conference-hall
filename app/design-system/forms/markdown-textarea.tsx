@@ -1,5 +1,5 @@
-import type { ChangeEventHandler } from 'react';
 import { cx } from 'class-variance-authority';
+import type { ChangeEventHandler } from 'react';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
