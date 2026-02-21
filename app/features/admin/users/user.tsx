@@ -132,12 +132,13 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
           <Subtitle size="xs">{user.uid}</Subtitle>
         </List.Header>
         <List.Content aria-label={t('admin.users.page.authentication-methods')}>
-          {user.authenticationMethods.map((methods) => (
+          <List.Row className="flex items-center gap-2 px-6 py-4">todo(auth)</List.Row>
+          {/*{user.authenticationMethods.map((methods) => (
             <List.Row key={methods.provider} className="flex items-center gap-2 px-6 py-4">
               <H3>{methods.provider}</H3>
               <Subtitle size="xs">{methods.email}</Subtitle>
             </List.Row>
-          ))}
+          ))}*/}
         </List.Content>
       </List>
 

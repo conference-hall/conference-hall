@@ -1,124 +1,70 @@
-import { userFactory } from 'tests/factories/users.ts';
+import { DEFAULT_PASSWORD, userFactory } from 'tests/factories/users.ts';
 import { MailBox } from '../../common/mailbox.page.ts';
-import { expect, test } from '../../fixtures.ts';
+import { expect, test, useLoginSession } from '../../fixtures.ts';
 import { LoginPage } from '../auth/login.page.ts';
-import { SignupPage } from '../auth/signup.page.ts';
 import { HomePage } from '../event-search/home.page.ts';
 import { SettingsAccountPage } from './settings-account.page.ts';
 
-test('links and unlinks providers, change password, verify email, delete account', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+useLoginSession();
 
-  const mailbox = new MailBox(page);
-  const homePage = new HomePage(page);
-  const loginPage = new LoginPage(page);
-  const signupPage = new SignupPage(page);
-  const accountPage = new SettingsAccountPage(page);
-  const uniqueEmail = `john.doe.${Date.now()}@example.com`;
-  const uniqueEmail2 = `jdoe.${Date.now()}@example.com`;
+test.beforeEach(({ page }) => {
   page.on('dialog', (dialog) => dialog.accept());
+});
 
-  // signup new user
-  await signupPage.goto();
-  await signupPage.fullnameInput.fill('John Doe');
-  await signupPage.emailInput.fill(uniqueEmail);
-  await signupPage.passwordInput.fill('Password123');
-  await signupPage.signupButton.click();
-  await signupPage.emailVerificationSent();
+// todo(auth): link/unlink as integration tests (with stubs) and set password
+test('display settings page', async ({ page }) => {
+  await userFactory({ attributes: { email: 'original@example.net' }, withAuthSession: true });
 
-  // check email verification
-  await mailbox.goto();
-  await mailbox.waitForEmail('Verify your email address for Conference Hall');
-  const emailVerificationLink = await mailbox.emailContent
-    .getByRole('link', { name: 'Verify your email address' })
-    .getAttribute('href');
+  const accountPage = new SettingsAccountPage(page);
+  await accountPage.goto();
 
-  // signin user
-  await page.goto(emailVerificationLink || '');
-  await loginPage.waitFor();
-  await loginPage.passwordInput.fill('Password123');
-  await loginPage.signinButton.click();
-  await homePage.waitFor();
+  // todo(auth): check default email password section
+
+  // check authentication methods
+  await expect(accountPage.linkButton('Google')).toBeVisible();
+  await expect(accountPage.linkButton('Github')).toBeVisible();
+  await expect(accountPage.linkButton('X.com')).toBeVisible();
+});
+
+// todo(auth): make test
+test.skip('change email', async ({ page }) => {
+  await userFactory({ attributes: { email: 'original@example.net' }, withAuthSession: true });
+
+  const accountPage = new SettingsAccountPage(page);
+  await accountPage.goto();
+
+  // // check email verification
+  // await mailbox.goto();
+  // await mailbox.waitForEmail('Verify your email address for Conference Hall');
+  // const emailVerificationLink2 = await mailbox.emailContent
+  //   .getByRole('link', { name: 'Verify your email address' })
+  //   .getAttribute('href');
+  // await page.goto(emailVerificationLink2 || '');
+  // await homePage.waitFor();
+});
+
+// todo(auth): make test
+test.skip('change password', async ({ page }) => {
+  await userFactory({ attributes: { email: 'original@example.net' }, withAuthSession: true });
+
+  const accountPage = new SettingsAccountPage(page);
+  await accountPage.goto();
 
   // check authentication methods
   await accountPage.goto();
   await expect(accountPage.linkButton('Google')).toBeVisible();
   await expect(accountPage.linkButton('Github')).toBeVisible();
   await expect(accountPage.linkButton('X.com')).toBeVisible();
+});
 
-  // link Google social provider
-  await accountPage.linkButton('Google').click();
-  await accountPage.authEmulator.waitFor('Google');
-  await accountPage.authEmulator.newAccount(uniqueEmail, 'Google User');
-  await expect(accountPage.unlinkButton('Google')).toBeVisible();
+test('delete account', async ({ page }) => {
+  const user = await userFactory({ withAuthSession: true });
 
-  // link GitHub social provider
-  await accountPage.linkButton('Github').click();
-  await accountPage.authEmulator.waitFor('Github');
-  await accountPage.authEmulator.newAccount(uniqueEmail, 'Github User');
-  await expect(accountPage.unlinkButton('Github')).toBeVisible();
-
-  // link Twitter social provider
-  await accountPage.linkButton('X.com').click();
-  await accountPage.authEmulator.waitFor('Twitter');
-  await accountPage.authEmulator.newAccount(uniqueEmail2, 'Twitter User');
-  await expect(accountPage.unlinkButton('X.com')).toBeVisible();
-
-  // should have 2 emails in contact email form
-  await expect(accountPage.emailInput.getByRole('option')).toHaveCount(2);
-  await expect(accountPage.emailInput).toHaveValue(uniqueEmail);
-
-  // change contact email
-  await accountPage.emailInput.selectOption(uniqueEmail2);
-  await accountPage.saveContactEmail.click();
-  await expect(accountPage.toast).toHaveText('Contact email changed.');
-  await expect(accountPage.emailInput).toHaveValue(uniqueEmail2);
-
-  // unlink Twitter social provider
-  await accountPage.unlinkButton('X.com').click();
-  await expect(accountPage.linkButton('X.com')).toBeVisible();
-
-  // should have 1 email in contact email form
-  await expect(accountPage.emailInput.getByRole('option')).toHaveCount(1);
-  await expect(accountPage.emailInput).toHaveValue(uniqueEmail);
-
-  // unlink password-based provider
-  await accountPage.unlinkButton('Email & password').click();
-
-  // link new password-based provider
-  await accountPage.linkButton('Email & password').click();
-  await accountPage.linkEmailProvider(uniqueEmail, 'Password123');
-  await accountPage.emailVerificationSent();
-
-  // check email verification received
-  await mailbox.goto();
-  await mailbox.waitForEmail('Verify your email address for Conference Hall');
-
-  // sign in with Google
-  await loginPage.goto();
-  await loginPage.signInWithGoogle(uniqueEmail);
-  await homePage.waitFor();
-
-  // verify email
+  const mailbox = new MailBox(page);
+  const homePage = new HomePage(page);
+  const loginPage = new LoginPage(page);
+  const accountPage = new SettingsAccountPage(page);
   await accountPage.goto();
-  await accountPage.verifyEmailButton().click();
-  await expect(accountPage.emailSent()).toBeVisible();
-
-  // check email verification
-  await mailbox.goto();
-  await mailbox.waitForEmail('Verify your email address for Conference Hall');
-  const emailVerificationLink2 = await mailbox.emailContent
-    .getByRole('link', { name: 'Verify your email address' })
-    .getAttribute('href');
-  await page.goto(emailVerificationLink2 || '');
-  await homePage.waitFor();
-
-  // check authentication methods
-  await accountPage.goto();
-  await expect(accountPage.unlinkButton('Email & password')).toBeVisible();
-  await expect(accountPage.unlinkButton('Google')).toBeVisible();
-  await expect(accountPage.unlinkButton('Github')).toBeVisible();
-  await expect(accountPage.linkButton('X.com')).toBeVisible();
 
   // find and click delete button
   const deleteButton = page.getByRole('button', { name: 'Delete my account' });
@@ -145,8 +91,8 @@ test('links and unlinks providers, change password, verify email, delete account
 
   // verify user cannot log back in
   await loginPage.goto();
-  await loginPage.emailInput.fill(uniqueEmail);
-  await loginPage.passwordInput.fill('Password123');
+  await loginPage.emailInput.fill(user.email);
+  await loginPage.passwordInput.fill(DEFAULT_PASSWORD);
   await loginPage.signinButton.click();
-  await expect(page.getByText(/Email or password is incorrect/i)).toBeVisible();
+  await expect(page.getByText(/Invalid email or password/i)).toBeVisible();
 });

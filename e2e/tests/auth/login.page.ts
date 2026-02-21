@@ -15,17 +15,14 @@ export class LoginPage extends PageObject {
   }
 
   async waitFor() {
-    await this.page.waitForLoadState('networkidle');
     await this.waitForHydration();
     await this.heading.waitFor();
   }
 
-  async signInWithGoogle(username: string) {
-    await this.page.getByRole('button', { name: 'Google' }).click();
-    await this.authEmulator.waitFor('Google');
-    await this.authEmulator.selectAccount(username);
-    await this.page.waitForLoadState('networkidle');
-    await this.waitForHydration();
+  async signInWithPassword(email: string, password: string) {
+    await this.emailInput.fill(email);
+    await this.passwordInput.fill(password);
+    await this.signinButton.click();
   }
 }
 

@@ -2,7 +2,7 @@ import { cx } from 'class-variance-authority';
 import type { SelectHTMLAttributes } from 'react';
 import { Label } from '../typography.tsx';
 
-export type Option = { name: string; value: string };
+type Option = { name: string; value: string };
 
 type Props = {
   name: string;

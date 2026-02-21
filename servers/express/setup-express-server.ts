@@ -3,7 +3,6 @@ import express from 'express';
 import { disconnectRedis } from '~/shared/cache/redis.server.ts';
 import { db } from '../../prisma/db.server.ts';
 import { getWebServerEnv } from '../../servers/environment.server.ts';
-import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
 import { applyLogging } from './middlewares/logging.ts';
 import { applyProxyFirebaseAuth } from './middlewares/proxy-firebase-auth.ts';
 import { applyRateLimits } from './middlewares/rate-limit.ts';
@@ -17,9 +16,6 @@ type EnvironmentConfig = (app: express.Application) => Promise<void>;
 
 export async function setupExpressServer(environmentConfig: EnvironmentConfig) {
   const app = express();
-
-  // dev only: redirect localhost to 127.0.0.1
-  applyLocalhostRedirect(app);
 
   // Request URL cleaning
   applyUrlCleaning(app);
