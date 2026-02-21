@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useFetcher, useParams } from 'react-router';
-import type { ReviewFeeling, UserReview } from '~/shared/types/proposals.types.ts';
 import { H2 } from '~/design-system/typography.tsx';
+import type { ReviewFeeling, UserReview } from '~/shared/types/proposals.types.ts';
 import { ReviewSelector } from './review-selector.tsx';
 
 type Props = { initialValues: UserReview };

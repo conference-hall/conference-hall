@@ -1,8 +1,8 @@
 import { data } from 'react-router';
 import { z } from 'zod';
 import { i18nResources } from '~/shared/i18n/i18n.resources.ts';
-import type { Route } from './+types/locales.ts';
 import { getSharedServerEnv } from '../../servers/environment.server.ts';
+import type { Route } from './+types/locales.ts';
 
 const { NODE_ENV } = getSharedServerEnv();
 

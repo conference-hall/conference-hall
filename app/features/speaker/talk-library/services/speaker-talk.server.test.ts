@@ -4,8 +4,8 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { TalkNotFoundError } from '~/shared/errors.server.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
-import type { User } from '../../../../../prisma/generated/client.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import type { User } from '../../../../../prisma/generated/client.ts';
 import { getSharedServerEnv } from '../../../../../servers/environment.server.ts';
 import { SpeakerTalk } from './speaker-talk.server.ts';
 

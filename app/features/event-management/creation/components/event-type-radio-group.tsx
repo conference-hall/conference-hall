@@ -1,8 +1,8 @@
 import { Description, Field, Fieldset, Label, Legend, Radio, RadioGroup } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import type { EventType } from '~/shared/types/events.types.ts';
 import { EVENT_TYPES } from '~/shared/constants.ts';
+import type { EventType } from '~/shared/types/events.types.ts';
 
 type Props = { selected: EventType; onSelect: (type: EventType) => void };
 

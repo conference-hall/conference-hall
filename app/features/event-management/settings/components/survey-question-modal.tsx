@@ -4,13 +4,13 @@ import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { v4 as uuid } from 'uuid';
-import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import type { SurveyQuestion } from '~/shared/types/survey.types.ts';
 
 type QuestionType = 'text' | 'checkbox' | 'radio';
 

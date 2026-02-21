@@ -1,5 +1,5 @@
-import type { OrganizerKeyAccessCreateInput } from '../../prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
+import type { OrganizerKeyAccessCreateInput } from '../../prisma/generated/models.ts';
 
 type FactoryOptions = {
   attributes?: Partial<OrganizerKeyAccessCreateInput>;

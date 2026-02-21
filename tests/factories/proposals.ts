@@ -1,6 +1,7 @@
 import { randParagraph, randPost } from '@ngneat/falso';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import { getNextProposalNumber } from '~/shared/counters/proposal-counter.server.ts';
+import { db } from '../../prisma/db.server.ts';
 import type {
   Event,
   EventCategory,
@@ -10,9 +11,8 @@ import type {
   Talk,
   User,
 } from '../../prisma/generated/client.ts';
-import type { ProposalCreateInput } from '../../prisma/generated/models.ts';
-import { db } from '../../prisma/db.server.ts';
 import { ConfirmationStatus, DeliberationStatus, PublicationStatus, TalkLevel } from '../../prisma/generated/client.ts';
+import type { ProposalCreateInput } from '../../prisma/generated/models.ts';
 import { applyTraits } from './helpers/traits.ts';
 
 export type ProposalFactory = Awaited<ReturnType<typeof proposalFactory>>;

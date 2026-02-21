@@ -3,11 +3,11 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ProposalNotFoundError } from '~/shared/errors.server.ts';
-import type { Event, Team, User } from '../../../../../prisma/generated/client.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import type { Event, Team, User } from '../../../../../prisma/generated/client.ts';
 import { resolveProposalId } from './proposal-id-resolver.server.ts';
 
 describe('resolveProposalId', () => {

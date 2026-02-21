@@ -1,5 +1,5 @@
-import type React from 'react';
 import { cx } from 'class-variance-authority';
+import type React from 'react';
 import { Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import type { AvailableChartColorsKeys } from './chart-utils.ts';
 import { AvailableChartColors, constructCategoryColors, getColorClassName } from './chart-utils.ts';

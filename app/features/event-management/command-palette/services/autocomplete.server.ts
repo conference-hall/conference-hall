@@ -3,8 +3,8 @@ import { z } from 'zod';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
-import type { Event } from '../../../../../prisma/generated/client.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import type { Event } from '../../../../../prisma/generated/client.ts';
 import { ProposalSearchBuilder } from '../../proposals/services/proposal-search-builder.server.ts';
 
 const AutocompleteFilterSchema = z.object({ query: z.string().optional(), kind: z.array(z.string()) });

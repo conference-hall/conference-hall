@@ -1,6 +1,6 @@
 import { Worker } from 'bullmq';
-import type { Job } from './job.ts';
 import { getRedisClient } from '../cache/redis.server.ts';
+import type { Job } from './job.ts';
 import { logger } from './logger.ts';
 
 export const DEFAULT_QUEUE = 'default';

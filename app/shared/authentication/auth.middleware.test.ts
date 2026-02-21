@@ -1,6 +1,6 @@
 import type { createContext } from 'react-router';
-import type { Mock } from 'vitest';
 import { userFactory } from 'tests/factories/users.ts';
+import type { Mock } from 'vitest';
 import { OptionalAuthContext, optionalAuth, RequireAuthContext, requireAuth } from './auth.middleware.ts';
 import { destroySession, getSessionUid } from './session.ts';
 

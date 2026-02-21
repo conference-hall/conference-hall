@@ -1,10 +1,10 @@
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Message } from '~/shared/types/conversation.types.ts';
 import { Avatar, AvatarGroup } from '~/design-system/avatar.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
+import type { Message } from '~/shared/types/conversation.types.ts';
 import { MessageBlock } from './message-block.tsx';
 import { MessageInputForm } from './message-input-form.tsx';
 import { useOptimisticMessages } from './use-optimistic-messages.ts';

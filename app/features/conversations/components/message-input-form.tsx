@@ -1,9 +1,9 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from 'react-router';
-import type { Message } from '~/shared/types/conversation.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Label } from '~/design-system/typography.tsx';
+import type { Message } from '~/shared/types/conversation.types.ts';
 
 type Props = {
   intent: string;

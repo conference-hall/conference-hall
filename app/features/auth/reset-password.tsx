@@ -3,7 +3,6 @@ import { type FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
-import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -16,6 +15,7 @@ import { Subtitle } from '~/design-system/typography.tsx';
 import { OptionalAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { getFirebaseError } from '~/shared/authentication/firebase.errors.ts';
 import { getClientAuth } from '~/shared/authentication/firebase.ts';
+import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { validatePassword } from '~/shared/validators/auth.ts';
 import type { Route } from './+types/reset-password.ts';
 

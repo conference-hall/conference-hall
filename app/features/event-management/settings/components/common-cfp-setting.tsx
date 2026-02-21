@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
+import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 
 type Props = {
   maxProposals: number | null;

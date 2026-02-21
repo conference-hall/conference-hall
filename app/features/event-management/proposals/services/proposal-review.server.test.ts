@@ -11,6 +11,7 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError, ReviewDisabledError } from '~/shared/errors.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import type {
   Event,
   EventCategory,
@@ -19,7 +20,6 @@ import type {
   Team,
   User,
 } from '../../../../../prisma/generated/client.ts';
-import { db } from '../../../../../prisma/db.server.ts';
 import { ProposalReview } from './proposal-review.server.ts';
 
 describe('ProposalReview', () => {

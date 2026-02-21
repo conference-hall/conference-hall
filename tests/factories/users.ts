@@ -1,6 +1,6 @@
 import { randAvatar, randCity, randCompanyName, randEmail, randFullName, randParagraph, randUrl } from '@ngneat/falso';
-import type { UserCreateInput } from '../../prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
+import type { UserCreateInput } from '../../prisma/generated/models.ts';
 import { applyTraits } from './helpers/traits.ts';
 import { organizerKeyFactory } from './organizer-key.ts';
 

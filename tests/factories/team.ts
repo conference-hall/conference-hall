@@ -1,8 +1,8 @@
 import { randSportsTeam, randUuid } from '@ngneat/falso';
-import type { User } from '../../prisma/generated/client.ts';
-import type { TeamCreateInput } from '../../prisma/generated/models.ts';
 import { db } from '../../prisma/db.server.ts';
+import type { User } from '../../prisma/generated/client.ts';
 import { TeamRole } from '../../prisma/generated/client.ts';
+import type { TeamCreateInput } from '../../prisma/generated/models.ts';
 import { applyTraits } from './helpers/traits.ts';
 
 const { OWNER, MEMBER, REVIEWER } = TeamRole;

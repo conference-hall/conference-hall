@@ -1,7 +1,6 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { createContext, type MiddlewareFunction } from 'react-router';
 import z from 'zod';
-import type { AuthorizedAdmin, AuthorizedApiEvent, AuthorizedEvent, AuthorizedTeam } from './types.ts';
 import { db } from '../../../prisma/db.server.ts';
 import { RequireAuthContext } from '../authentication/auth.middleware.ts';
 import {
@@ -14,6 +13,7 @@ import {
 } from '../errors.server.ts';
 import { flags } from '../feature-flags/flags.server.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from './authorization.server.ts';
+import type { AuthorizedAdmin, AuthorizedApiEvent, AuthorizedEvent, AuthorizedTeam } from './types.ts';
 
 // Admin authorizations
 export const AuthorizedAdminContext = createContext<AuthorizedAdmin>();

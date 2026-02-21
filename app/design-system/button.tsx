@@ -1,7 +1,7 @@
 import type { VariantProps } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import type React from 'react';
 import type { LinkProps } from 'react-router';
-import { cva, cx } from 'class-variance-authority';
 import { Link } from 'react-router';
 import { LoadingIcon } from './icons/loading-icon.tsx';
 
@@ -141,7 +141,7 @@ export function Button(props: ButtonProps) {
   if (href !== undefined) {
     const anchorProps = otherProps as Omit<AnchorProps, keyof CommonProps>;
     return (
-      // oxlint-disable-next-line eslint-plugin-jsx-a11y(click-events-have-key-events)
+      // oxlint-disable-next-line eslint-plugin-jsx-a11y(click-events-have-key-events),eslint-plugin-jsx-a11y(no-static-element-interactions)
       <a
         className={buttonClassName}
         aria-disabled={isDisabled ? 'true' : undefined}

@@ -2,7 +2,6 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { useTranslation } from 'react-i18next';
 import { href, redirect } from 'react-router';
 import z from 'zod';
-import type { Message } from '~/shared/types/conversation.types.ts';
 import { useUser } from '~/app-platform/components/user-context.tsx';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
@@ -23,11 +22,12 @@ import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.mi
 import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
+import type { Message } from '~/shared/types/conversation.types.ts';
 import { ProposalParticipationSchema, TalkSaveSchema } from '~/shared/types/speaker-talk.types.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
-import type { Route } from './+types/speaker-proposal.ts';
 import { TalkSection } from '../../speaker/talk-library/components/talk-section.tsx';
 import { useCurrentEvent } from '../event-page-context.tsx';
+import type { Route } from './+types/speaker-proposal.ts';
 import { ProposalStatusSection } from './components/proposal-status-section.tsx';
 
 export const middleware = [requireAuth];

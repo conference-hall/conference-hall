@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
 import { testJob } from '~/features/admin/debug/services/jobs/test.job.ts';
+import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { NotAuthorizedError } from '~/shared/errors.server.ts';
 

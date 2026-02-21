@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import { cx } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import type { AvailableChartColorsKeys } from '~/design-system/charts/chart-utils.ts';
 import { DonutChart } from '~/design-system/charts/donut.tsx';

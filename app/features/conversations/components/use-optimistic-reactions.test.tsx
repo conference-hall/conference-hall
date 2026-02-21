@@ -1,7 +1,7 @@
 import { useFetcher } from 'react-router';
 import { renderHook } from 'vitest-browser-react';
-import type { Message } from '~/shared/types/conversation.types.ts';
 import { useUser } from '~/app-platform/components/user-context.tsx';
+import type { Message } from '~/shared/types/conversation.types.ts';
 import { useOptimisticReactions } from './use-optimistic-reactions.ts';
 
 vi.mock('react-router', () => ({

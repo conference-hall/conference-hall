@@ -1,15 +1,15 @@
-import type { TFunction } from 'i18next';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/16/solid';
 import { CheckIcon, ClockIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import type { TFunction } from 'i18next';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useSubmit } from 'react-router';
-import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '~/shared/types/proposals.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import Select from '~/design-system/forms/select.tsx';
+import type { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '~/shared/types/proposals.types.ts';
 
 type ProposalStatus = { deliberationStatus: DeliberationStatus; confirmationStatus: ConfirmationStatus };
 

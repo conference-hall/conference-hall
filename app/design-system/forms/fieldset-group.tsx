@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import { cx } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { Text } from '../typography.tsx';
 

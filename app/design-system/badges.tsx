@@ -1,5 +1,5 @@
-import type { VariantProps } from 'class-variance-authority';
 import { XMarkIcon } from '@heroicons/react/20/solid';
+import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 

@@ -7,8 +7,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
-import type { Route } from './+types/speaker-survey.ts';
 import { SurveyForm } from '../../speaker/talk-library/components/talk-forms/survey-form.tsx';
+import type { Route } from './+types/speaker-survey.ts';
 import { SpeakerSurvey } from './services/speaker-survey.server.ts';
 
 export const middleware = [requireAuth];

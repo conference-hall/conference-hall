@@ -1,8 +1,8 @@
-import type { HTMLAttributes } from 'react';
-import type { LinkProps } from 'react-router';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
+import type { HTMLAttributes } from 'react';
+import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
 
 const ROUNDED = {

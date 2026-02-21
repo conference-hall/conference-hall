@@ -1,11 +1,11 @@
 import { ProposalNotFoundError } from '~/shared/errors.server.ts';
+import { db } from '../../../../prisma/db.server.ts';
+import { ConversationService } from './conversation-service.server.ts';
 import type {
   ConversationMessageDeleteData,
   ConversationMessageReactData,
   ConversationMessageSaveData,
 } from './conversation.schema.server.ts';
-import { db } from '../../../../prisma/db.server.ts';
-import { ConversationService } from './conversation-service.server.ts';
 
 export class ProposalConversationForSpeakers {
   private userId: string;

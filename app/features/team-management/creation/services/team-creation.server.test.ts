@@ -2,8 +2,8 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { z } from 'zod';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-import type { User } from '../../../../../prisma/generated/client.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import type { User } from '../../../../../prisma/generated/client.ts';
 import { TeamCreateSchema, TeamCreation } from './team-creation.server.ts';
 
 describe('TeamCreation', () => {

@@ -1,8 +1,8 @@
 // Tremor Raw Callout [v0.0.0]
 
 import type { VariantProps } from 'class-variance-authority';
-import type React from 'react';
 import { cva, cx } from 'class-variance-authority';
+import type React from 'react';
 
 const calloutVariants = cva('flex flex-col overflow-hidden rounded-md p-4 text-sm', {
   variants: {

@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
-import type { Email, EmailProvider } from './provider.ts';
 import { isValidEmail } from '../utils/email.ts';
+import type { Email, EmailProvider } from './provider.ts';
 
 export class MailpitProvider implements EmailProvider {
   transporter: nodemailer.Transporter;

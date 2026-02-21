@@ -1,11 +1,11 @@
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
-import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 import { DisplayDays } from './display-days.tsx';
 import { DisplayTimes } from './display-times.tsx';
 import { OptionsMenu } from './options-menu.tsx';
 import { TracksModal } from './tracks-modal.tsx';
 import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
+import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 
 type Props = {
   scheduleDays: Array<Date>;

@@ -1,13 +1,13 @@
 import { LockClosedIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
-import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { SpeakerLinks } from '~/features/event-management/speakers/components/speaker-details/speaker-links.tsx';
+import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 
 type Props = {
   email: string;

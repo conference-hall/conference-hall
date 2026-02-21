@@ -1,9 +1,9 @@
-import type { ActionFunctionArgs, EntryContext, LoaderFunctionArgs, RouterContextProvider } from 'react-router';
+import { PassThrough } from 'node:stream';
 import { createReadableStreamFromReadable } from '@react-router/node';
 import { isbot } from 'isbot';
-import { PassThrough } from 'node:stream';
 import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'react-dom/server';
 import { I18nextProvider } from 'react-i18next';
+import type { ActionFunctionArgs, EntryContext, LoaderFunctionArgs, RouterContextProvider } from 'react-router';
 import { ServerRouter } from 'react-router';
 import { getI18n } from './shared/i18n/i18n.middleware.ts';
 import { nonceContext } from './shared/nonce/nonce.server.ts';

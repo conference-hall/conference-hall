@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import type { CfpState } from '~/shared/types/events.types.ts';
 import { formatDatetime, formatDistance } from '~/shared/datetimes/datetimes.ts';
 import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
+import type { CfpState } from '~/shared/types/events.types.ts';
 
 const STATUSES = { OPENED: 'success', CLOSED: 'warning', FINISHED: 'error' } as const;
 

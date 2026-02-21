@@ -1,7 +1,7 @@
 import { randParagraph, randText } from '@ngneat/falso';
+import { db } from '../../prisma/db.server.ts';
 import type { Event } from '../../prisma/generated/client.ts';
 import type { EventEmailCustomizationCreateInput } from '../../prisma/generated/models.ts';
-import { db } from '../../prisma/db.server.ts';
 import { eventFactory } from './events.ts';
 import { applyTraits } from './helpers/traits.ts';
 

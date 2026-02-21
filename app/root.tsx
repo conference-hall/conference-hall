@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { data, Links, Meta, type MetaDescriptor, Outlet, Scripts, ScrollRestoration } from 'react-router';
-import type { Route } from './+types/root.ts';
-import type { Toast } from './shared/toasts/toast.server.ts';
 import { getWebServerEnv } from '../servers/environment.server.ts';
+import type { Route } from './+types/root.ts';
 import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
 import { UserProvider } from './app-platform/components/user-context.tsx';
@@ -16,6 +15,7 @@ import { flags } from './shared/feature-flags/flags.server.ts';
 import { getI18n, getLocale, i18nextMiddleware, setLocaleCookie } from './shared/i18n/i18n.middleware.ts';
 import { useChangeLanguage } from './shared/i18n/use-change-language.ts';
 import { useNonce } from './shared/nonce/use-nonce.ts';
+import type { Toast } from './shared/toasts/toast.server.ts';
 import { getToast } from './shared/toasts/toast.server.ts';
 import { Toaster } from './shared/toasts/toaster.tsx';
 import { combineHeaders } from './shared/utils/headers.ts';

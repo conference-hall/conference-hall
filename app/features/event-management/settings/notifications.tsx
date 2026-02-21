@@ -2,7 +2,6 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from 'react-router';
-import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
@@ -17,6 +16,7 @@ import { EventSettings } from '~/features/event-management/settings/services/eve
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
+import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Route } from './+types/notifications.ts';
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
