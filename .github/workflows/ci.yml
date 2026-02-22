@@ -38,6 +38,12 @@ jobs:
       - name: Knip checking
         run: npm run knip
 
+      - name: Check i18n key orphans
+        run: ./tests/tools/check-i18n-key-orphans.sh app/locales app
+
+      - name: Check i18n key consistency
+        run: ./tests/tools/check-i18n-key-consistency.sh app/locales
+
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-latest
