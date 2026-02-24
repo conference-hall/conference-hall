@@ -11,6 +11,7 @@ test('log in with password and redirect', async ({ page }) => {
 
   const loginPage = new LoginPage(page);
   await loginPage.waitFor();
+  await loginPage.waitForCaptcha();
   await loginPage.signInWithPassword(user.email, DEFAULT_PASSWORD);
 
   const profilePage = new SettingsProfilePage(page);

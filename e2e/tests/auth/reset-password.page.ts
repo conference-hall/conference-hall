@@ -13,7 +13,6 @@ export class ForgotPasswordPage extends PageObject {
   }
 
   async waitFor() {
-    await this.page.waitForLoadState('networkidle');
     await this.waitForHydration();
     await this.heading.waitFor();
   }
@@ -30,7 +29,6 @@ export class ResetPasswordPage extends PageObject {
   }
 
   async waitFor() {
-    await this.page.waitForLoadState('networkidle');
     await this.waitForHydration();
     await this.heading.waitFor();
   }

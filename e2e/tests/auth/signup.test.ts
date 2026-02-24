@@ -21,6 +21,7 @@ test('Signup flow with email and password', async ({ page }) => {
 
   // signup
   await signupPage.waitFor();
+  await signupPage.waitForCaptcha();
   await signupPage.fullnameInput.fill('John Doe');
   await signupPage.emailInput.fill(uniqueEmail);
   await signupPage.passwordInput.fill('abc');
@@ -46,15 +47,4 @@ test('Signup flow with email and password', async ({ page }) => {
   await homePage.userMenu.waitForDialogOpen(uniqueEmail);
   await homePage.userMenu.signOutButton.click();
   await homePage.loginLink.click();
-
-  // signin with captcha enabled
-  // todo(auth): how to test it ? (test all auth with it?)
-  // await flags.set('captcha', true);
-  // await loginPage.loginLink.click();
-  // await loginPage.waitFor();
-  // await loginPage.emailInput.fill(uniqueEmail);
-  // await loginPage.passwordInput.fill('123Password');
-  // await loginPage.waitForCaptcha();
-  // await loginPage.signinButton.click();
-  // await homePage.waitFor();
 });

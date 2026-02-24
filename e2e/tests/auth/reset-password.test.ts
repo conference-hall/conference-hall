@@ -23,6 +23,7 @@ test('Reset password flow with email and password', async ({ page }) => {
   await loginPage.forgotPasswordLink.click();
 
   await forgotPasswordPage.waitFor();
+  await forgotPasswordPage.waitForCaptcha();
   await forgotPasswordPage.emailInput.fill(user.email);
   await forgotPasswordPage.sendResetEmailButton.click();
   await forgotPasswordPage.emailSentHeading.waitFor();
@@ -40,6 +41,7 @@ test('Reset password flow with email and password', async ({ page }) => {
   await resetPasswordPage.resetPasswordButton.click();
 
   await loginPage.waitFor();
+  await loginPage.waitForCaptcha();
   await loginPage.signInWithPassword(user.email, newPassword);
   await homePage.waitFor();
 });

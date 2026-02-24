@@ -99,6 +99,7 @@ test('change password', async ({ page }) => {
   // clear session and verify login with new password
   await page.context().clearCookies();
   await loginPage.goto();
+  await loginPage.waitForCaptcha();
   await loginPage.signInWithPassword('original@example.net', 'NewPassword456');
   await homePage.waitFor();
 });
@@ -121,6 +122,7 @@ test('set a password', async ({ page }) => {
   await accountPage.passwordAddButton.click();
   const modal = page.getByRole('dialog');
   await expect(modal.getByRole('heading', { name: 'Set your password' })).toBeVisible();
+  await accountPage.waitForCaptcha();
 
   // submit to send reset link
   await modal.getByRole('button', { name: 'Send link' }).click();
@@ -144,6 +146,7 @@ test('set a password', async ({ page }) => {
 
   // verify login with the new password
   await loginPage.waitFor();
+  await loginPage.waitForCaptcha();
   await loginPage.signInWithPassword('original@example.net', 'MyNewPassword123');
   await homePage.waitFor();
 });
@@ -182,6 +185,7 @@ test('delete account', async ({ page }) => {
 
   // verify user cannot log back in
   await loginPage.goto();
+  await loginPage.waitForCaptcha();
   await loginPage.emailInput.fill(user.email);
   await loginPage.passwordInput.fill(DEFAULT_PASSWORD);
   await loginPage.signinButton.click();
