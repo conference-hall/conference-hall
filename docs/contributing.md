@@ -20,13 +20,7 @@ Ideally you should talk about it on [Discussions](https://github.com/conference-
 
 ## Development
 
-- [Getting started](../README.md#development)
-- [Authorization](./authorization.md)
-- [Emails](./emails.md)
-- [Feature flags](./feature-flags.md)
-- [I18N](./i18n.md)
-- [Jobs](./jobs.md)
-- [Timezones](./timezones.md)
+[Getting started](../README.md#development)
 
 ## Legals
 
