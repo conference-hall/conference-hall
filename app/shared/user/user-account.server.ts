@@ -96,10 +96,10 @@ export class UserAccount {
         },
       });
 
-      // Delete accounts
+      // Delete Accounts
       await tx.account.deleteMany({ where: { userId: this.userId } });
 
-      // Delete accounts
+      // Delete Sessions
       await tx.session.deleteMany({ where: { userId: this.userId } });
 
       // Delete TeamMember records
