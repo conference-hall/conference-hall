@@ -3,7 +3,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Event } from '../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { LoginPage } from '../auth/login.page.ts';
 import { ProposalListPage } from './proposal-list.page.ts';
 import { ProposalPage } from './proposal.page.ts';
@@ -13,7 +13,7 @@ let eventClosed: Event;
 let eventWithoutProposal: Event;
 
 test.beforeEach(async () => {
-  const user = await userFactory({ traits: ['clark-kent'], attributes: { bio: '' } });
+  const user = await userFactory({ attributes: { bio: '' }, withPasswordAccount: true, withAuthSession: true });
   const talk1 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 1' } });
   const talk2 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 2' } });
   const talk3 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 3' } });
@@ -36,7 +36,7 @@ test.beforeEach(async () => {
 });
 
 test.describe('when user is connected', () => {
-  loginWith('clark-kent');
+  useLoginSession();
 
   test('displays proposal list', async ({ page }) => {
     const proposalListPage = new ProposalListPage(page);

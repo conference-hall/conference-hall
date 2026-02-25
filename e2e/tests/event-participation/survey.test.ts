@@ -2,14 +2,14 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { surveyFactory } from 'tests/factories/surveys.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Event } from '../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { LoginPage } from '../auth/login.page.ts';
 import { SurveyPage } from './survey.page.ts';
 
 let event: Event;
 
 test.beforeEach(async () => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+  const user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
   event = await eventFactory({ traits: ['conference', 'conference-cfp-open', 'withSurveyConfig'] });
   await surveyFactory({
     user,
@@ -19,7 +19,7 @@ test.beforeEach(async () => {
 });
 
 test.describe('when user is connected', () => {
-  loginWith('clark-kent');
+  useLoginSession();
 
   test('survey form', async ({ page }) => {
     const surveyPage = new SurveyPage(page);

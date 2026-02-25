@@ -1,12 +1,12 @@
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { NewTeamPage } from './new-team.page.ts';
 
-loginWith('clark-kent');
+useLoginSession();
 
 test('creates a new team', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+  const user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
   await teamFactory({ owners: [user], attributes: { slug: 'team-1' } });
 
   const newTeamPage = new NewTeamPage(page);

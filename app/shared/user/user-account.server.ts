@@ -1,39 +1,26 @@
-import { FirebaseAuthError } from 'firebase-admin/auth';
-import type { TFunction } from 'i18next';
 import { Notifications } from '~/features/notifications/services/notifications.server.ts';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
-import { getFirebaseError } from '~/shared/authentication/firebase.errors.ts';
-import { auth as firebaseAuth } from '~/shared/authentication/firebase.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import AccountDeletedEmail from '~/shared/emails/templates/auth/account-deleted.tsx';
-import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
-import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
 import { db } from '../../../prisma/db.server.ts';
-import { getSharedServerEnv } from '../../../servers/environment.server.ts';
-import { validateCaptchaToken } from '../authentication/captcha.server.ts';
-import { NotAuthorizedError } from '../errors.server.ts';
-import { flags } from '../feature-flags/flags.server.ts';
+import { UserNotFoundError } from '../errors.server.ts';
 import type { AuthenticatedUser } from '../types/user.types.ts';
 import { sortBy } from '../utils/arrays-sort-by.ts';
 
-const { APP_URL } = getSharedServerEnv();
-
-type UserAccountRegisterInput = {
-  uid: string;
-  name: string;
-  email?: string;
-  picture?: string;
-  locale: string;
-};
+type DeleteAccountOptions = { sendConfirmationEmail: boolean };
 
 export class UserAccount {
-  static async getByUid(uid?: string | null): Promise<AuthenticatedUser | null> {
-    if (!uid) return null;
+  constructor(private userId: string) {}
 
-    const user = await db.user.findFirst({ where: { uid } });
+  static for(userId: string) {
+    return new UserAccount(userId);
+  }
+
+  async get(): Promise<AuthenticatedUser | null> {
+    const user = await db.user.findUnique({ where: { id: this.userId } });
     if (!user) return null;
 
-    const teams = await UserAccount.teams(user.id);
+    const teams = await this.teams();
     const hasTeamAccess = TeamBetaAccess.hasAccess(user, teams.length);
     const notificationsUnreadCount = await Notifications.for(user.id).unreadCount();
 
@@ -49,9 +36,14 @@ export class UserAccount {
     };
   }
 
-  static async teams(userId: string) {
+  async getAccounts() {
+    const accounts = await db.account.findMany({ where: { userId: this.userId } });
+    return accounts.map((account) => ({ providerId: account.providerId, accountId: account.accountId }));
+  }
+
+  async teams() {
     const teamsMembership = await db.teamMember.findMany({
-      where: { memberId: userId },
+      where: { memberId: this.userId },
       include: { team: { include: { events: true } } },
     });
 
@@ -73,124 +65,26 @@ export class UserAccount {
     return sortBy(teams, 'name');
   }
 
-  static async register(data: UserAccountRegisterInput) {
-    const user = await db.user.findFirst({ where: { uid: data.uid } });
-
-    if (user?.uid) {
-      if (user.locale !== data.locale) {
-        await UserAccount.changeLocale(user.id, data.locale);
-      }
-      return user.id;
-    }
-
-    const { uid, name = '(No name)', email = `${data.uid}@example.com`, picture, locale } = data;
-    const newUser = await db.user.create({ data: { name, email, picture, uid, locale } });
-
-    return newUser.id;
-  }
-
-  static async changeLocale(userId: string, locale: string) {
-    const user = await db.user.update({ where: { id: userId }, data: { locale } });
-    await db.eventSpeaker.updateMany({ where: { userId }, data: { locale } });
+  async changeLocale(locale: string) {
+    const user = await db.user.update({ where: { id: this.userId }, data: { locale } });
+    await db.eventSpeaker.updateMany({ where: { userId: this.userId }, data: { locale } });
     return user;
   }
 
-  static async linkEmailProvider(uid: string, email: string, password: string, locale: string, t: TFunction) {
-    try {
-      await firebaseAuth.updateUser(uid, { email, password, emailVerified: false });
-      await UserAccount.checkEmailVerification(email, false, 'password', locale);
-    } catch (error) {
-      return getFirebaseError(error, t);
-    }
-  }
+  async deleteAccount(options?: DeleteAccountOptions) {
+    const user = await db.user.findUnique({ where: { id: this.userId } });
+    if (!user) throw new UserNotFoundError();
 
-  static async sendResetPasswordEmail(email: string, locale: string, captchaToken?: string) {
-    try {
-      // Validate captcha token only if feature is enabled
-      const isCaptchaEnabled = await flags.get('captcha');
-      if (isCaptchaEnabled) {
-        const isCaptchaValid = await validateCaptchaToken(captchaToken);
-        if (!isCaptchaValid) {
-          throw new Response('Captcha validation failed', { status: 403 });
-        }
-      }
-
-      const firebaseResetLink = await firebaseAuth.generatePasswordResetLink(email);
-      const firebaseResetUrl = new URL(firebaseResetLink);
-      const oobCode = firebaseResetUrl.searchParams.get('oobCode');
-
-      if (!oobCode) return;
-
-      const passwordResetUrl = new URL(`${APP_URL}/auth/reset-password`);
-      passwordResetUrl.searchParams.set('oobCode', oobCode);
-      passwordResetUrl.searchParams.set('email', email);
-
-      await sendEmail.trigger(
-        ResetPasswordEmail.buildPayload(email, locale, {
-          passwordResetUrl: passwordResetUrl.toString(),
-        }),
-      );
-    } catch (error) {
-      if (error instanceof FirebaseAuthError) {
-        console.warn('sendResetPasswordEmail:', error.message);
-      } else {
-        console.error('sendResetPasswordEmail:', error);
-      }
-    }
-  }
-
-  static async checkEmailVerification(
-    email: string | undefined,
-    emailVerified: boolean | undefined,
-    provider: string,
-    locale: string,
-  ) {
-    if (!email) return false;
-    if (emailVerified) return false;
-    if (provider !== 'password') return false;
-
-    try {
-      const firebaseVerificationLink = await firebaseAuth.generateEmailVerificationLink(email);
-      const firebaseVerificationUrl = new URL(firebaseVerificationLink);
-      const oobCode = firebaseVerificationUrl.searchParams.get('oobCode');
-
-      if (!oobCode) return false;
-
-      const emailVerificationUrl = new URL(`${APP_URL}/auth/verify-email`);
-      emailVerificationUrl.searchParams.set('oobCode', oobCode);
-      emailVerificationUrl.searchParams.set('email', email);
-
-      await sendEmail.trigger(
-        VerificationEmail.buildPayload(email, locale, {
-          emailVerificationUrl: emailVerificationUrl.toString(),
-        }),
-      );
-
-      return true;
-    } catch (error) {
-      if (error instanceof FirebaseAuthError) {
-        console.warn('checkEmailVerification:', error.message);
-      } else {
-        console.error('checkEmailVerification:', error);
-      }
-    }
-  }
-
-  static async deleteAccount(userId: string, locale: string, sendConfirmationEmail = true) {
-    const user = await db.user.findUnique({ where: { id: userId } });
-    if (!user) throw new NotAuthorizedError();
-
-    const { uid, email } = user;
     const deletedAt = new Date();
 
     await db.$transaction(async (tx) => {
       // Anonymize User table
       await tx.user.update({
-        where: { id: userId },
+        where: { id: this.userId },
         data: {
           uid: null,
           name: 'Deleted user',
-          email: `deleted-${userId}@conference-hall.io`,
+          email: `deleted-${this.userId}@conference-hall.io`,
           bio: null,
           picture: null,
           company: null,
@@ -202,15 +96,21 @@ export class UserAccount {
         },
       });
 
+      // Delete Accounts
+      await tx.account.deleteMany({ where: { userId: this.userId } });
+
+      // Delete Sessions
+      await tx.session.deleteMany({ where: { userId: this.userId } });
+
       // Delete TeamMember records
-      await tx.teamMember.deleteMany({ where: { memberId: userId } });
+      await tx.teamMember.deleteMany({ where: { memberId: this.userId } });
 
       // Delete Survey records
-      await tx.survey.deleteMany({ where: { userId } });
+      await tx.survey.deleteMany({ where: { userId: this.userId } });
 
       // Anonymize EventSpeaker records
       await tx.eventSpeaker.updateMany({
-        where: { userId },
+        where: { userId: this.userId },
         data: {
           userId: null,
           email: 'deleted-user-account',
@@ -222,19 +122,13 @@ export class UserAccount {
           socialLinks: [],
         },
       });
-
-      // After successful transaction, delete user from Firebase Auth
-      try {
-        if (uid) await firebaseAuth.deleteUser(uid);
-      } catch {
-        console.warn(`Unable to delete Firebase user for uid ${uid}.`);
-      }
     });
 
     // Send confirmation email after successful deletion (if requested)
+    const sendConfirmationEmail = options?.sendConfirmationEmail ?? true;
     if (sendConfirmationEmail) {
       const deletionDate = deletedAt.toISOString().split('T')[0];
-      await sendEmail.trigger(AccountDeletedEmail.buildPayload(email, locale, { deletionDate }));
+      await sendEmail.trigger(AccountDeletedEmail.buildPayload(user.email, user.locale, { deletionDate }));
     }
   }
 }

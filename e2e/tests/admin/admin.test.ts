@@ -1,14 +1,13 @@
 import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { AdminPage } from './admin.page.ts';
 
-test.beforeEach(async () => {
-  await userFactory({ traits: ['clark-kent', 'admin'] });
-  await userFactory({ traits: ['bruce-wayne'] });
-});
+useLoginSession();
 
 test.describe('As an admin', () => {
-  loginWith('clark-kent');
+  test.beforeEach(async () => {
+    await userFactory({ traits: ['admin'], withPasswordAccount: true, withAuthSession: true });
+  });
 
   test('can access admin pages', async ({ page }) => {
     const adminPage = new AdminPage(page);
@@ -31,7 +30,9 @@ test.describe('As an admin', () => {
 });
 
 test.describe('As not admin', () => {
-  loginWith('bruce-wayne');
+  test.beforeEach(async () => {
+    await userFactory({ withPasswordAccount: true, withAuthSession: true });
+  });
 
   test('cannot access admin pages', async ({ page }) => {
     const adminPage = new AdminPage(page);

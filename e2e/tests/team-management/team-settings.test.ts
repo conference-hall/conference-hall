@@ -1,10 +1,10 @@
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { ActivityPage } from '../speaker/activity.page.ts';
 import { TeamSettingsPage } from './team-settings.page.ts';
 
-loginWith('clark-kent');
+useLoginSession();
 
 test.beforeEach(async ({ page }) => {
   page.on('dialog', (dialog) => dialog.accept());
@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('as a team owner', () => {
   test('can manage the team but cannot leave the team', async ({ page }) => {
-    const user = await userFactory({ traits: ['clark-kent'] });
+    const user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
     const team = await teamFactory({ owners: [user] });
     const team2 = await teamFactory({ owners: [user] });
 
@@ -51,8 +51,8 @@ test.describe('as a team owner', () => {
     await expect(speakerActivityPage.heading).toBeVisible();
   });
 
-  test('can manage team members', async ({ page }) => {
-    const owner = await userFactory({ traits: ['clark-kent'] });
+  test('filter members', async ({ page }) => {
+    const owner = await userFactory({ traits: ['clark-kent'], withPasswordAccount: true, withAuthSession: true });
     const member = await userFactory({ traits: ['bruce-wayne'] });
     const team = await teamFactory({ owners: [owner], members: [member] });
 
@@ -60,43 +60,62 @@ test.describe('as a team owner', () => {
     await settingsPage.gotoMembers(team.slug);
 
     // Member list
-    await expect(settingsPage.members).toHaveCount(2);
-    await expect(settingsPage.removeMemberButton(member.name)).toBeVisible();
-    await expect(settingsPage.removeMemberButton(owner.name)).not.toBeVisible();
-
-    await settingsPage.fill(settingsPage.findMember, 'bru');
-    await page.keyboard.press('Enter');
-    await expect(settingsPage.members).toHaveCount(1);
+    await expect(page.getByText('Showing 1 to 1 of 2 results')).toBeVisible();
 
     // Filter by role
     await settingsPage.selectRoleFilter('Member');
-    await settingsPage.fill(settingsPage.findMember, '');
-    await page.keyboard.press('Enter');
-    await expect(settingsPage.members).toHaveCount(1);
+    await expect(page.getByText('Showing 1 to 1 of 1 results')).toBeVisible();
     await expect(settingsPage.members.first()).toContainText(member.name);
+  });
+
+  test('search members', async ({ page }) => {
+    const owner = await userFactory({ traits: ['clark-kent'], withPasswordAccount: true, withAuthSession: true });
+    const member = await userFactory({ traits: ['bruce-wayne'] });
+    const team = await teamFactory({ owners: [owner], members: [member] });
+
+    const settingsPage = new TeamSettingsPage(page);
+    await settingsPage.gotoMembers(team.slug);
+
+    // Member list
+    await expect(page.getByText('Showing 1 to 1 of 2 results')).toBeVisible();
+
+    // Search
+    await settingsPage.fill(settingsPage.findMember, 'bru');
+    await settingsPage.findMember.press('Enter');
+    await expect(page.getByText('Showing 1 to 1 of 1 results')).toBeVisible();
+    await expect(settingsPage.members.first()).toContainText(member.name);
+  });
+
+  test('can manage team members', async ({ page }) => {
+    const owner = await userFactory({ traits: ['clark-kent'], withPasswordAccount: true, withAuthSession: true });
+    const member = await userFactory({ traits: ['bruce-wayne'] });
+    const team = await teamFactory({ owners: [owner], members: [member] });
+
+    const settingsPage = new TeamSettingsPage(page);
+    await settingsPage.gotoMembers(team.slug);
 
     // Invite member
-    const invite = await settingsPage.clickOnInviteMember();
-    await expect(invite).toBeVisible();
+    const inviteDialog = await settingsPage.clickOnInviteMember();
+    await expect(inviteDialog).toBeVisible();
     await settingsPage.closeModal();
+
+    // Member list
+    await expect(page.getByText('Showing 1 to 1 of 2 results')).toBeVisible();
+    await expect(settingsPage.removeMemberButton(member.name)).toBeVisible();
+    await expect(settingsPage.removeMemberButton(owner.name)).not.toBeVisible();
 
     // Change member role
     await expect(settingsPage.changeRoleButton(owner.name)).not.toBeVisible();
     await expect(settingsPage.changeRoleButton(member.name)).toBeVisible();
-    await settingsPage.changeRoleButton(member.name).click();
+    const changeRoleDialog = await settingsPage.clickOnChangeRole(member.name);
+    await expect(changeRoleDialog).toBeVisible();
     await settingsPage.clickOnRole('Owner');
     await settingsPage.clickOnConfirmRole(member.name);
     await expect(settingsPage.toast).toHaveText('Member role changed.');
 
-    // Filter by role and search
-    await settingsPage.selectRoleFilter('All roles');
-    await settingsPage.fill(settingsPage.findMember, 'bru');
-    await page.keyboard.press('Enter');
-    await expect(settingsPage.members).toHaveCount(1);
-    await expect(settingsPage.members).toContainText('Owner');
-
     // Remove member
-    await settingsPage.removeMemberButton(member.name).click();
+    const removeDialog = await settingsPage.clickOnRemoveMember(member.name);
+    await expect(removeDialog).toBeVisible();
     await settingsPage.clickOnConfirmRemove(member.name);
     await expect(settingsPage.toast).toHaveText('Member removed from team.');
     await expect(settingsPage.removeMemberButton(member.name)).not.toBeVisible();
@@ -105,8 +124,8 @@ test.describe('as a team owner', () => {
 
 test.describe('as a team member', () => {
   test('cannot edit the team but can leave the team', async ({ page }) => {
-    const member = await userFactory({ traits: ['clark-kent'] });
-    const reviewer = await userFactory({ traits: ['bruce-wayne'] });
+    const member = await userFactory({ withPasswordAccount: true, withAuthSession: true });
+    const reviewer = await userFactory();
     const team = await teamFactory({ members: [member], reviewers: [reviewer] });
 
     const settingsPage = new TeamSettingsPage(page);
@@ -133,8 +152,8 @@ test.describe('as a team member', () => {
 
 test.describe('as a team reviewer', () => {
   test('cannot edit the team but can leave the team', async ({ page }) => {
-    const member = await userFactory({ traits: ['clark-kent'] });
-    const reviewer = await userFactory({ traits: ['bruce-wayne'] });
+    const member = await userFactory();
+    const reviewer = await userFactory({ withPasswordAccount: true, withAuthSession: true });
     const team = await teamFactory({ members: [member], reviewers: [reviewer] });
 
     const settingsPage = new TeamSettingsPage(page);

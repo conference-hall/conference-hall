@@ -4,11 +4,11 @@ import { userFactory } from 'tests/factories/users.ts';
 import { CUSTOM_EMAIL_TEMPLATES } from '~/shared/emails/email.types.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import type { Event, Team, User } from '../../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../../fixtures.ts';
 import { EmailTemplateSettingsPage } from './email-template-settings.page.ts';
 import { EmailsSettingsPage } from './emails-settings.page.ts';
 
-loginWith('clark-kent');
+useLoginSession();
 
 test.describe('Email Settings', () => {
   let user: User;
@@ -16,7 +16,7 @@ test.describe('Email Settings', () => {
   let event: Event;
 
   test.beforeEach(async () => {
-    user = await userFactory({ traits: ['clark-kent'] });
+    user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
     team = await teamFactory({ owners: [user] });
     event = await eventFactory({ team, traits: ['conference-cfp-open'] });
   });

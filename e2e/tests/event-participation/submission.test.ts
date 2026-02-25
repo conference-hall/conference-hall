@@ -3,16 +3,16 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { ProposalListPage } from './proposal-list.page.ts';
 import { ProposalPage } from './proposal.page.ts';
 import { SubmissionPage } from './submission.page.ts';
 import { SurveyPage } from './survey.page.ts';
 
-loginWith('clark-kent');
+useLoginSession();
 
 test('submits a new talk for a conference (full funnel)', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+  const user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const event = await eventFactory({
     attributes: {
       formatsRequired: true,
@@ -63,7 +63,7 @@ test('submits a new talk for a conference (full funnel)', async ({ page }) => {
   // Check the proposal details
   const proposalPage = new ProposalPage(page);
   await proposalPage.waitFor();
-  await expect(proposalPage.speaker('Clark Kent')).toBeVisible();
+  await expect(proposalPage.speaker(user.name)).toBeVisible();
   await expect(page.getByText('New abstract')).toBeVisible();
   await expect(page.getByText('Beginner')).toBeVisible();
   await expect(page.getByText('French')).toBeVisible();
@@ -80,8 +80,8 @@ test('submits a new talk for a conference (full funnel)', async ({ page }) => {
 });
 
 test('submits an existing talk', async ({ page }) => {
-  const speaker1 = await userFactory({ traits: ['clark-kent'] });
-  const speaker2 = await userFactory({ traits: ['bruce-wayne'] });
+  const speaker1 = await userFactory({ withPasswordAccount: true, withAuthSession: true });
+  const speaker2 = await userFactory();
   const talk = await talkFactory({ speakers: [speaker1, speaker2] });
   const event = await eventFactory({ traits: ['conference-cfp-open'] });
 
@@ -99,11 +99,11 @@ test('submits an existing talk', async ({ page }) => {
 
   // Step: speaker
   await submissionPage.speakerStep.waitFor();
-  await expect(submissionPage.speaker('Bruce Wayne')).toBeVisible();
-  const cospeaker = await submissionPage.clickOnSpeaker('Bruce Wayne');
+  await expect(submissionPage.speaker(speaker2.name)).toBeVisible();
+  const cospeaker = await submissionPage.clickOnSpeaker(speaker2.name);
   await cospeaker.waitFor();
-  await cospeaker.clickOnRemoveSpeaker('Bruce Wayne');
-  await expect(submissionPage.speaker('Bruce Wayne')).not.toBeVisible();
+  await cospeaker.clickOnRemoveSpeaker(speaker2.name);
+  await expect(submissionPage.speaker(speaker2.name)).not.toBeVisible();
   await submissionPage.clickOnAddSpeaker();
   await expect(submissionPage.inviteCoSpeaker).toBeVisible();
   await submissionPage.closeModal();
@@ -118,7 +118,7 @@ test('submits an existing talk', async ({ page }) => {
   // Check the proposal details
   const proposalPage = new ProposalPage(page);
   await proposalPage.waitFor();
-  await expect(proposalPage.speaker('Clark Kent')).toBeVisible();
+  await expect(proposalPage.speaker(speaker1.name)).toBeVisible();
   await expect(page.getByText('Update abstract')).toBeVisible();
   await expect(page.getByText('Beginner')).toBeVisible();
   await expect(page.getByText('French')).toBeVisible();
@@ -127,7 +127,7 @@ test('submits an existing talk', async ({ page }) => {
 });
 
 test('saves a proposal as draft', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+  await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const event = await eventFactory({ traits: ['conference-cfp-open'] });
 
   const submissionPage = new SubmissionPage(page);
@@ -151,7 +151,7 @@ test('saves a proposal as draft', async ({ page }) => {
 });
 
 test('submits a talk for an event w/o survey', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+  await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const event = await eventFactory({ traits: ['conference-cfp-open'] });
   await eventFormatFactory({ event, attributes: { name: 'Quickie' } });
   await eventCategoryFactory({ event, attributes: { name: 'Web' } });
@@ -181,7 +181,7 @@ test('submits a talk for an event w/o survey', async ({ page }) => {
 });
 
 test('submits a talk for an event w/o tracks', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+  await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const event = await eventFactory({ traits: ['conference-cfp-open', 'withSurveyConfig'] });
 
   const submissionPage = new SubmissionPage(page);
@@ -209,7 +209,7 @@ test('submits a talk for an event w/o tracks', async ({ page }) => {
 });
 
 test('submits a talk for an event w/o tracks, survey and cod', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+  await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const event = await eventFactory({ traits: ['conference-cfp-open'], attributes: { codeOfConductUrl: null } });
 
   const submissionPage = new SubmissionPage(page);
@@ -232,7 +232,7 @@ test('submits a talk for an event w/o tracks, survey and cod', async ({ page }) 
 });
 
 test('cannot submit a talk when max proposal reached', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+  await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const event = await eventFactory({
     traits: ['conference-cfp-open'],
     attributes: { codeOfConductUrl: null, maxProposals: 1 },
@@ -275,7 +275,7 @@ test('cannot submit a talk when max proposal reached', async ({ page }) => {
 });
 
 test('cannot submit a talk when CFP is not open yet', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+  await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const event = await eventFactory({ traits: ['conference-cfp-future'] });
 
   await page.goto(`/${event.slug}/submission`);
@@ -283,7 +283,7 @@ test('cannot submit a talk when CFP is not open yet', async ({ page }) => {
 });
 
 test('cannot submit a talk when CFP is closed', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+  await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const event = await eventFactory({ traits: ['conference-cfp-past'] });
 
   await page.goto(`/${event.slug}/submission`);

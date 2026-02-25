@@ -5,35 +5,35 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Event, EventSpeaker, Team, User } from '../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { NewProposalPage } from './new-proposal.page.ts';
 import { SpeakerPage } from './speaker.page.ts';
 
-let team: Team;
-let event: Event;
-let speaker: User;
-let eventSpeaker: EventSpeaker;
-
-loginWith('clark-kent');
-
-test.beforeEach(async () => {
-  const owner = await userFactory({ traits: ['clark-kent'] });
-  speaker = await userFactory({
-    attributes: {
-      name: 'Alice Johnson',
-      email: 'alice@example.com',
-      bio: 'Experienced React developer.',
-      company: 'Tech Corp',
-      references: 'Previous speaking engagements at ReactConf.',
-    },
-  });
-
-  team = await teamFactory({ owners: [owner] });
-  event = await eventFactory({ team, traits: ['conference-cfp-open'] });
-  eventSpeaker = await eventSpeakerFactory({ event, user: speaker });
-});
+useLoginSession();
 
 test.describe('Speaker Page', () => {
+  let team: Team;
+  let event: Event;
+  let speaker: User;
+  let eventSpeaker: EventSpeaker;
+
+  test.beforeEach(async () => {
+    const owner = await userFactory({ withPasswordAccount: true, withAuthSession: true });
+    speaker = await userFactory({
+      attributes: {
+        name: 'Alice Johnson',
+        email: 'alice@example.com',
+        bio: 'Experienced React developer.',
+        company: 'Tech Corp',
+        references: 'Previous speaking engagements at ReactConf.',
+      },
+    });
+
+    team = await teamFactory({ owners: [owner] });
+    event = await eventFactory({ team, traits: ['conference-cfp-open'] });
+    eventSpeaker = await eventSpeakerFactory({ event, user: speaker });
+  });
+
   test('displays speaker profile', async ({ page }) => {
     const speakerPage = new SpeakerPage(page);
     await speakerPage.goto(team.slug, event.slug, eventSpeaker.id);
@@ -113,12 +113,16 @@ test.describe('Speaker Page', () => {
 
 test.describe('New Proposal Button Permissions', () => {
   test.describe('As a reviewer', () => {
-    loginWith('peter-parker');
+    let team: Team;
+    let event: Event;
+    let speaker: User;
+    let eventSpeaker: EventSpeaker;
 
     test.beforeEach(async () => {
-      const reviewer = await userFactory({ traits: ['peter-parker'] });
+      const reviewer = await userFactory({ withPasswordAccount: true, withAuthSession: true });
       team = await teamFactory({ reviewers: [reviewer] });
       event = await eventFactory({ team, traits: ['conference-cfp-open'] });
+      speaker = await userFactory();
       eventSpeaker = await eventSpeakerFactory({ event, user: speaker });
     });
 

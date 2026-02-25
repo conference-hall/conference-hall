@@ -1,13 +1,13 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../../fixtures.ts';
 import { TracksSettingsPage } from './tracks-settings.page.ts';
 
-loginWith('clark-kent');
+useLoginSession();
 
 test('adds, edits and removes a format', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+  const user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
@@ -56,7 +56,7 @@ test('adds, edits and removes a format', async ({ page }) => {
 });
 
 test('adds, edits and removes a category', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+  const user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 

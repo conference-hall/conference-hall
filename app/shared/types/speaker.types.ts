@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import type { EmailSchema } from '~/shared/validators/auth.ts';
 import type { SurveyDetailedAnswer } from './survey.types.ts';
 
 export enum SpeakerProposalStatus {
@@ -50,13 +49,6 @@ export const FunnelSpeakerSchema = z.object({
   bio: z.string().trim().nullable().default(null),
 });
 
-export const UnlinkProviderSchema = z.object({
-  newEmail: z.string().nullable().default(null),
-});
-
-export type ProfileData =
-  | z.infer<typeof EmailSchema>
-  | z.infer<typeof ProfileSchema>
-  | z.infer<typeof FunnelSpeakerSchema>;
+export type ProfileData = z.infer<typeof ProfileSchema> | z.infer<typeof FunnelSpeakerSchema>;
 
 export type EventSpeakerSaveData = z.infer<typeof EventSpeakerSaveSchema>;

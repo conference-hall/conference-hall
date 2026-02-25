@@ -9,19 +9,22 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
 import type { Event, Proposal, User } from '../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, useLoginSession, test } from '../../fixtures.ts';
 import { ProposalPage } from './proposal.page.ts';
 
 let event: Event;
 let speaker1: User;
+let speaker2: User;
 let organizer: User;
 let proposal1: Proposal;
 let proposal2: Proposal;
 let proposal3: Proposal;
 
+useLoginSession();
+
 test.beforeEach(async () => {
-  speaker1 = await userFactory({ traits: ['clark-kent'] });
-  const speaker2 = await userFactory({ traits: ['bruce-wayne'] });
+  speaker1 = await userFactory({ withPasswordAccount: true, withAuthSession: true });
+  speaker2 = await userFactory();
   organizer = await userFactory({ attributes: { name: 'Organizer Name' } });
 
   const team = await teamFactory({ owners: [organizer] });
@@ -45,8 +48,6 @@ test.beforeEach(async () => {
   await proposalFactory({ event: event, talk: talk4, traits: ['rejected-published'] });
 });
 
-loginWith('clark-kent');
-
 test('displays a proposal', async ({ page }) => {
   const proposalPage = new ProposalPage(page);
   await proposalPage.goto(event.slug, proposal1.id);
@@ -54,8 +55,8 @@ test('displays a proposal', async ({ page }) => {
   await expect(page.getByRole('heading', { name: proposal1.title })).toBeVisible();
 
   await expect(proposalPage.speakers).toHaveCount(3);
-  await expect(proposalPage.speaker('Clark Kent')).toBeVisible();
-  await expect(proposalPage.speaker('Bruce Wayne')).toBeVisible();
+  await expect(proposalPage.speaker(speaker1.name)).toBeVisible();
+  await expect(proposalPage.speaker(speaker2.name)).toBeVisible();
 
   await expect(page.getByText('My abstract')).toBeVisible();
   await expect(page.getByText('Intermediate')).toBeVisible();
@@ -76,9 +77,9 @@ test('edits a proposal', async ({ page }) => {
     await expect(proposalPage.inviteCoSpeaker).toBeVisible();
     await proposalPage.closeModal();
 
-    const cospeaker = await proposalPage.clickOnSpeaker('Bruce Wayne');
+    const cospeaker = await proposalPage.clickOnSpeaker(speaker2.name);
     await cospeaker.waitFor();
-    await cospeaker.clickOnRemoveSpeaker('Bruce Wayne');
+    await cospeaker.clickOnRemoveSpeaker(speaker2.name);
     await expect(proposalPage.toast).toHaveText('Co-speaker removed from proposal.');
   });
 

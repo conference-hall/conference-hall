@@ -22,7 +22,7 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   const authUser = context.get(RequireAuthContext);
   const form = await request.formData();
   const locale = form.get('locale') as string;
-  await UserAccount.changeLocale(authUser.id, locale);
+  await UserAccount.for(authUser.id).changeLocale(locale);
 
   const i18n = getI18n(context);
   const t = i18n.getFixedT(locale);

@@ -1,17 +1,22 @@
 import { createContext, type MiddlewareFunction, redirect } from 'react-router';
+import { auth } from '../../auth.server.ts';
 import type { AuthenticatedUser } from '../types/user.types.ts';
 import { UserAccount } from '../user/user-account.server.ts';
-import { destroySession, getSessionUid } from './session.ts';
 
 export const OptionalAuthContext = createContext<AuthenticatedUser | null>();
 
 export const optionalAuth: MiddlewareFunction<Response> = async ({ request, context }) => {
-  const sessionUid = await getSessionUid(request);
+  const session = await auth.api.getSession({ headers: request.headers });
+
+  const userId = session?.user.id;
+  if (!userId) {
+    context.set(OptionalAuthContext, null);
+    return;
+  }
 
   // todo(cache): can be cached to improve performances (called on each request)
-  const user = await UserAccount.getByUid(sessionUid);
-  if (sessionUid && !user) await destroySession(request);
-
+  const user = await UserAccount.for(userId).get();
+  if (!user) throw await auth.api.signOut({ headers: request.headers });
   context.set(OptionalAuthContext, user);
 };
 

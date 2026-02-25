@@ -128,14 +128,16 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
 
       <List>
         <List.Header>
-          <H2 size="s">{t('admin.users.page.authentication-methods')}</H2>
-          <Subtitle size="xs">{user.uid}</Subtitle>
+          <H2 size="s">{t('admin.users.page.accounts')}</H2>
         </List.Header>
-        <List.Content aria-label={t('admin.users.page.authentication-methods')}>
-          {user.authenticationMethods.map((methods) => (
-            <List.Row key={methods.provider} className="flex items-center gap-2 px-6 py-4">
-              <H3>{methods.provider}</H3>
-              <Subtitle size="xs">{methods.email}</Subtitle>
+        <List.Content aria-label={t('admin.users.page.accounts')}>
+          {user.accounts.map((account) => (
+            <List.Row key={account.accountId} className="flex items-center justify-between p-4">
+              <div className="items-baseline gap-4 sm:flex">
+                <H3>{account.providerId}</H3>
+                <Subtitle size="xs">{account.accountId}</Subtitle>
+              </div>
+              <Text variant="secondary">{formatDatetime(account.createdAt, { format: 'short', locale })}</Text>
             </List.Row>
           ))}
         </List.Content>
@@ -147,7 +149,7 @@ export default function AdminUserRoute({ loaderData: user }: Route.ComponentProp
         </List.Header>
         <List.Content aria-label={t('admin.users.page.teams-membership')}>
           {user.teams.map((team) => (
-            <List.Row key={team.slug} className="flex items-center justify-between px-6 py-4">
+            <List.Row key={team.slug} className="flex items-center justify-between p-4">
               <div className="items-baseline gap-4 sm:flex">
                 <H3>{team.name}</H3>
                 <Subtitle size="xs">{team.role}</Subtitle>

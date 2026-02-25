@@ -52,7 +52,7 @@ export function Modal({ title, children, size, open, onClose }: Props) {
 function Title({ children, onClose }: { children: ReactNode; onClose: VoidFunction }) {
   return (
     <div className="flex items-start justify-between">
-      <DialogTitle as="h1" className="text-base leading-6 font-semibold text-gray-900">
+      <DialogTitle as="h1" className="text-lg leading-6 font-semibold text-gray-900">
         {children}
       </DialogTitle>
       <CloseButton onClose={onClose} />

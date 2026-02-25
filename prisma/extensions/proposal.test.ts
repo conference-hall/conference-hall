@@ -3,8 +3,8 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
-import type { Event, Talk, User } from '../../prisma/generated/client.ts';
 import { getSharedServerEnv } from '../../servers/environment.server.ts';
+import type { Event, Talk, User } from '../generated/client.ts';
 
 const { APP_URL } = getSharedServerEnv();
 

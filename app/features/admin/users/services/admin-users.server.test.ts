@@ -1,26 +1,26 @@
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import type { Mock } from 'vitest';
-import { auth } from '~/shared/authentication/firebase.server.ts';
 import { UserNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { Team, User } from '../../../../../prisma/generated/client.ts';
 import { AdminUsers } from './admin-users.server.ts';
 
-vi.mock('~/shared/authentication/firebase.server.ts', () => ({ auth: { getUser: vi.fn(), deleteUser: vi.fn() } }));
-
 describe('AdminUsers', () => {
   let admin: User;
-  let user1: User;
-  let user2: User;
 
   beforeEach(async () => {
     admin = await userFactory({ traits: ['clark-kent', 'admin'] });
-    user1 = await userFactory({ traits: ['bruce-wayne'] });
-    user2 = await userFactory({ traits: ['peter-parker'] });
   });
 
   describe('#listUsers', () => {
+    let user1: User;
+    let user2: User;
+
+    beforeEach(async () => {
+      user1 = await userFactory({ traits: ['bruce-wayne'], withPasswordAccount: true });
+      user2 = await userFactory({ traits: ['peter-parker'], withPasswordAccount: true });
+    });
+
     it('lists all users', async () => {
       const adminUsers = AdminUsers.for(admin);
       const users = await adminUsers.listUsers({}, 1);
@@ -76,66 +76,36 @@ describe('AdminUsers', () => {
 
   describe('#getUserInfo', () => {
     let team: Team;
+    let user: User;
 
     beforeEach(async () => {
-      team = await teamFactory({ owners: [user1] });
+      user = await userFactory({ withPasswordAccount: true, withAuthSession: true });
+      team = await teamFactory({ owners: [user] });
     });
 
     it('get user info', async () => {
-      const getUser = auth.getUser as Mock;
-      getUser.mockResolvedValue({
-        emailVerified: true,
-        metadata: { lastSignInTime: new Date('2024-02-02').toISOString() },
-        providerData: [{ providerId: 'password', email: user1.email }],
-      });
-
       const adminUsers = AdminUsers.for(admin);
-      const user = await adminUsers.getUserInfo(user1.id);
+      const userInfo = await adminUsers.getUserInfo(user.id);
 
-      const teamMember = await db.teamMember.findFirst({ where: { memberId: user1.id, teamId: team.id } });
-      expect(user).toEqual({
-        uid: user1.uid,
-        name: user1.name,
-        email: user1.email,
+      const teamMember = await db.teamMember.findFirst({ where: { memberId: user.id, teamId: team.id } });
+      expect(userInfo).toEqual({
+        uid: user.uid,
+        name: user.name,
+        email: user.email,
         emailVerified: true,
-        termsAccepted: user1.termsAccepted,
-        lastSignInAt: new Date('2024-02-02'),
-        updatedAt: user1.updatedAt,
-        createdAt: user1.createdAt,
+        termsAccepted: user.termsAccepted,
+        lastSignInAt: expect.any(Date),
+        updatedAt: user.updatedAt,
+        createdAt: user.createdAt,
         deletedAt: null,
         talksCount: 0,
-        authenticationMethods: [{ provider: 'password', email: user1.email }],
-        teams: [
+        accounts: [
           {
-            slug: team.slug,
-            name: team.name,
-            role: teamMember?.role,
-            createdAt: teamMember?.createdAt,
+            providerId: 'credential',
+            accountId: expect.any(String),
+            createdAt: expect.any(Date),
           },
         ],
-      });
-    });
-
-    it('get user info but not found in firebase auth', async () => {
-      const getUser = auth.getUser as Mock;
-      getUser.mockRejectedValue(new Error('User not found'));
-
-      const adminUsers = AdminUsers.for(admin);
-      const user = await adminUsers.getUserInfo(user1.id);
-
-      const teamMember = await db.teamMember.findFirst({ where: { memberId: user1.id, teamId: team.id } });
-      expect(user).toEqual({
-        uid: user1.uid,
-        name: user1.name,
-        email: user1.email,
-        emailVerified: false,
-        termsAccepted: user1.termsAccepted,
-        lastSignInAt: null,
-        updatedAt: user1.updatedAt,
-        createdAt: user1.createdAt,
-        deletedAt: null,
-        talksCount: 0,
-        authenticationMethods: [],
         teams: [
           {
             slug: team.slug,
@@ -155,14 +125,17 @@ describe('AdminUsers', () => {
   });
 
   describe('#deleteUser', () => {
+    let user: User;
+
+    beforeEach(async () => {
+      user = await userFactory({ withPasswordAccount: true });
+    });
+
     it('deletes user account', async () => {
-      const deleteUserMock = auth.deleteUser as Mock;
-      deleteUserMock.mockResolvedValue(undefined);
-
       const adminUsers = AdminUsers.for(admin);
-      await adminUsers.deleteUser(user1.id);
+      await adminUsers.deleteUser(user.id);
 
-      const deletedUser = await db.user.findUnique({ where: { id: user1.id } });
+      const deletedUser = await db.user.findUnique({ where: { id: user.id } });
       expect(deletedUser?.deletedAt).toBeDefined();
     });
 
