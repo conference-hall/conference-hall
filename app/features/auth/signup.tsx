@@ -17,6 +17,8 @@ import { Subtitle } from '~/design-system/typography.tsx';
 import { OptionalAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { authClient, getAuthError } from '~/shared/better-auth/auth-client.ts';
 import { useNonce } from '~/shared/nonce/use-nonce.ts';
+import type { I18nSubmissionErrors } from '~/shared/types/errors.types.ts';
+import { validateEmailAndPassword } from '~/shared/validators/auth.ts';
 import { getWebServerEnv } from '../../../servers/environment.server.ts';
 import type { Route } from './+types/signup.ts';
 import { AuthProvidersSignin } from './components/auth-providers-signin.tsx';
@@ -45,6 +47,7 @@ export default function Signup({ loaderData }: Route.ComponentProps) {
   const [email, setEmail] = useState(defaultEmail || '');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<ParseKeys | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<I18nSubmissionErrors>(null);
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string>('');
   const nonce = useNonce();
@@ -52,6 +55,9 @@ export default function Signup({ loaderData }: Route.ComponentProps) {
   const signUp = async (event: FormEvent) => {
     event.preventDefault();
     if (loading) return;
+
+    const fieldErrors = validateEmailAndPassword(email, password);
+    if (fieldErrors) return setFieldErrors(fieldErrors);
 
     await authClient.signUp.email(
       { email, password, name },
@@ -92,9 +98,15 @@ export default function Signup({ loaderData }: Route.ComponentProps) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            error={fieldErrors?.email?.map((e) => t(e))}
             required
           />
-          <InputPassword value={password} onChange={setPassword} isNewPassword />
+          <InputPassword
+            value={password}
+            onChange={setPassword}
+            isNewPassword
+            error={fieldErrors?.password?.map((e) => t(e))}
+          />
 
           {captchaSiteKey && (
             <Turnstile

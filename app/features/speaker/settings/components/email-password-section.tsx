@@ -14,6 +14,8 @@ import { List } from '~/design-system/list/list.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { authClient, getAuthError } from '~/shared/better-auth/auth-client.ts';
 import { useNonce } from '~/shared/nonce/use-nonce.ts';
+import type { I18nSubmissionErrors } from '~/shared/types/errors.types.ts';
+import { validatePassword } from '~/shared/validators/auth.ts';
 
 type Props = { email: string; hasPassword: boolean; captchaSiteKey?: string };
 
@@ -190,10 +192,15 @@ function ChangePasswordModal({ open, onClose }: ChangePasswordModalProps) {
   const formId = useId();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<I18nSubmissionErrors>(null);
   const disabled = !currentPassword || !newPassword;
 
   const onChangePassword = async (event: FormEvent) => {
     event.preventDefault();
+
+    const fieldErrors = validatePassword(newPassword);
+    if (fieldErrors) return setFieldErrors(fieldErrors);
+
     const { error } = await authClient.changePassword({ currentPassword, newPassword, revokeOtherSessions: true });
     if (!error) {
       toast.success(t('settings.account.feedbacks.password-changed'));
@@ -219,6 +226,7 @@ function ChangePasswordModal({ open, onClose }: ChangePasswordModalProps) {
             value={newPassword}
             onChange={setNewPassword}
             isNewPassword
+            error={fieldErrors?.password?.map((e) => t(e))}
           />
         </Form>
       </Modal.Content>

@@ -61,7 +61,7 @@ export function Input({
       </div>
       {(error || description) && (
         <p id={`${name}-describe`} className={descriptionStyle({ color, error: !!error })}>
-          {error || description}
+          {error ? error.join(' ') : description}
         </p>
       )}
     </div>

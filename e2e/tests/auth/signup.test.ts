@@ -26,9 +26,7 @@ test('Signup flow with email and password', async ({ page }) => {
   await signupPage.emailInput.fill(uniqueEmail);
   await signupPage.passwordInput.fill('abc');
   await signupPage.signupButton.click();
-  await expect(page.getByText('Password too short.')).toBeVisible();
-  // todo(auth): revert this error message
-  // await expect(page.getByText('Minimum 8 characters. Missing uppercase letter. Missing number')).toBeVisible();
+  await expect(page.getByText('Minimum 8 characters. Missing uppercase letter. Missing number')).toBeVisible();
   await signupPage.passwordInput.fill('Password123');
   await signupPage.signupButton.click();
 

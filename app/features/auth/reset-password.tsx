@@ -13,7 +13,7 @@ import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { authClient, getAuthError } from '~/shared/better-auth/auth-client.ts';
-import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
+import type { I18nSubmissionErrors } from '~/shared/types/errors.types.ts';
 import { validatePassword } from '~/shared/validators/auth.ts';
 import type { Route } from './+types/reset-password.ts';
 
@@ -31,7 +31,7 @@ export default function ResetPassword() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ParseKeys | null>(errorKey);
-  const [fieldErrors, setFieldErrors] = useState<SubmissionErrors>(null);
+  const [fieldErrors, setFieldErrors] = useState<I18nSubmissionErrors>(null);
   const [password, setPassword] = useState('');
 
   const resetPassword = async (event: FormEvent) => {
@@ -72,7 +72,7 @@ export default function ResetPassword() {
             value={password}
             onChange={setPassword}
             isNewPassword
-            error={fieldErrors?.password}
+            error={fieldErrors?.password?.map((e) => t(e))}
             disabled={!token}
           />
 
