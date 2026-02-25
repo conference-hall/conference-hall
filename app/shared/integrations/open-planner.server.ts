@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { logger } from '~/shared/logger/logger.server.ts';
 
 const BASE_URL = 'https://api.openplanner.fr';
 
@@ -46,7 +47,7 @@ async function postSessionsAndSpeakers(eventId: string, apiKey: string, payload:
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   }).catch((error) => {
-    console.log({ level: 'error', message: `Open planner error: ${error.message}` });
+    logger.error('Open planner error', { error });
   });
 }
 

@@ -4,19 +4,19 @@ import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/s
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { createJobWorkers } from '~/shared/jobs/worker.ts';
 import { testJob } from '../app/features/admin/debug/services/jobs/test.job.ts';
-import { logger } from '../app/shared/jobs/logger.ts';
+import { logger } from '../app/shared/logger/logger.server.ts';
 import { db } from '../prisma/db.server.ts';
 
 const jobs = [sendEmail, exportToOpenPlanner, sendTalkToSlack, notifyConversationMessage, testJob];
 
 const workers = createJobWorkers(jobs);
 
-process.on('uncaughtException', (err) => {
-  logger.error('Uncaught exception', err);
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught exception', { error });
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  logger.error(`Unhandled Rejection: ${reason}`, promise);
+process.on('unhandledRejection', (error) => {
+  logger.error('Unhandled Rejection', { error });
 });
 
 // Setup graceful shutdown
@@ -40,7 +40,7 @@ const gracefulShutdown = async (signal: string) => {
     clearTimeout(timeout);
     process.exit(0);
   } catch (error) {
-    logger.error(`❌ Error during graceful shutdown: ${error}`);
+    logger.error('Error during graceful shutdown', { error });
     clearTimeout(timeout);
     process.exit(1);
   }

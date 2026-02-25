@@ -13,6 +13,7 @@ import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 import { validateCaptchaToken } from '../authentication/captcha.server.ts';
 import { NotAuthorizedError } from '../errors.server.ts';
 import { flags } from '../feature-flags/flags.server.ts';
+import { logger } from '../logger/logger.server.ts';
 import type { AuthenticatedUser } from '../types/user.types.ts';
 import { sortBy } from '../utils/arrays-sort-by.ts';
 
@@ -132,9 +133,9 @@ export class UserAccount {
       );
     } catch (error) {
       if (error instanceof FirebaseAuthError) {
-        console.warn('sendResetPasswordEmail:', error.message);
+        logger.warn('sendResetPasswordEmail', { error });
       } else {
-        console.error('sendResetPasswordEmail:', error);
+        logger.error('sendResetPasswordEmail', { error });
       }
     }
   }
@@ -169,9 +170,9 @@ export class UserAccount {
       return true;
     } catch (error) {
       if (error instanceof FirebaseAuthError) {
-        console.warn('checkEmailVerification:', error.message);
+        logger.warn('checkEmailVerification', { error });
       } else {
-        console.error('checkEmailVerification:', error);
+        logger.error('checkEmailVerification', { error });
       }
     }
   }
@@ -227,7 +228,7 @@ export class UserAccount {
       try {
         if (uid) await firebaseAuth.deleteUser(uid);
       } catch {
-        console.warn(`Unable to delete Firebase user for uid ${uid}.`);
+        logger.warn(`Unable to delete Firebase user for uid ${uid}.`);
       }
     });
 
