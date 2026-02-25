@@ -1,6 +1,7 @@
 import flagsConfig from '../../../flags.config.ts';
 import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 import { MemoryCacheLayer } from '../cache/memory-cache-layer.ts';
+import { logger } from '../logger/logger.server.ts';
 import { FlagsClient } from './flags-client.ts';
 import { FlagsStorage } from './flags-storage.ts';
 
@@ -18,7 +19,7 @@ async function getClient() {
   }
 
   if (isProduction) {
-    console.info('🚩 Feature flags config loaded');
+    logger.info('🚩 Feature flags config loaded');
   }
 
   const cache = VITEST ? new MemoryCacheLayer() : undefined;

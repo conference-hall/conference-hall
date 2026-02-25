@@ -1,4 +1,5 @@
 import { PrismaPg } from '@prisma/adapter-pg';
+import { logger } from '~/shared/logger/logger.server.ts';
 import { getSharedServerEnv } from '../servers/environment.server.ts';
 import { eventExtension } from './extensions/event.ts';
 import { proposalExtension } from './extensions/proposal.ts';
@@ -45,10 +46,6 @@ function getClient() {
 }
 
 function buildClientWithLogger(): PrismaClient {
-  if (NODE_ENV !== 'production') {
-    return new PrismaClient({ adapter, log: ['warn', 'error'] });
-  }
-
   const client = new PrismaClient({
     adapter,
     log: [
@@ -57,10 +54,10 @@ function buildClientWithLogger(): PrismaClient {
     ],
   });
   client.$on('warn', (event) => {
-    console.log(JSON.stringify({ level: 'warn', message: event.message, timestamp: event.timestamp.toISOString() }));
+    logger.warn(event.message);
   });
   client.$on('error', (event) => {
-    console.log(JSON.stringify({ level: 'error', message: event.message, timestamp: event.timestamp.toISOString() }));
+    logger.error(event.message);
   });
 
   return client;

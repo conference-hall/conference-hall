@@ -1,6 +1,7 @@
 import compression from 'compression';
 import express from 'express';
 import { disconnectRedis } from '~/shared/cache/redis.server.ts';
+import { logger } from '~/shared/logger/logger.server.ts';
 import { db } from '../../prisma/db.server.ts';
 import { getWebServerEnv } from '../../servers/environment.server.ts';
 import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
@@ -47,14 +48,14 @@ export async function setupExpressServer(environmentConfig: EnvironmentConfig) {
 
   // Start the server
   const server = app.listen(PORT, () => {
-    console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
+    logger.info(`🚀 Server is running on http://${HOST}:${PORT}`);
   });
 
   // Avoid server crash due to unhandled promise rejections
   const processEvents = process.eventNames();
   if (!processEvents.includes('unhandledRejection')) {
-    process.on('unhandledRejection', (reason, promise) => {
-      console.error('Unhandled Rejection', promise, reason);
+    process.on('unhandledRejection', (error) => {
+      logger.error('Unhandled Rejection', { error });
     });
   }
 
@@ -66,12 +67,12 @@ export async function setupExpressServer(environmentConfig: EnvironmentConfig) {
     isShuttingDown = true;
 
     const timeout = setTimeout(() => {
-      console.error('❌ Graceful shutdown timed out, forcing exit');
+      logger.error('❌ Graceful shutdown timed out, forcing exit');
       process.exit(1);
     }, 10000);
 
     try {
-      console.log(`🔥 Shutting down web server (${signal})`);
+      logger.info(`🔥 Shutting down web server (${signal})`);
       await new Promise<void>((resolve, reject) => {
         server.close((err) => {
           if (err) reject(err);
@@ -83,7 +84,9 @@ export async function setupExpressServer(environmentConfig: EnvironmentConfig) {
       clearTimeout(timeout);
       process.exit(0);
     } catch (error) {
-      console.error('❌ Error during graceful shutdown:', error);
+      logger.error('Error during graceful shutdown', {
+        error,
+      });
       clearTimeout(timeout);
       process.exit(1);
     }

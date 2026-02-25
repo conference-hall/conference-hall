@@ -1,5 +1,6 @@
 import { getWebServerEnv } from '../../../servers/environment.server.ts';
 import { flags } from '../feature-flags/flags.server.ts';
+import { logger } from '../logger/logger.server.ts';
 
 const { CAPTCHA_SECRET_KEY, CAPTCHA_SITE_KEY } = getWebServerEnv();
 
@@ -23,14 +24,14 @@ export async function validateCaptchaToken(token = ''): Promise<boolean> {
     });
 
     if (!response.ok) {
-      console.error('Captcha validation failed:', response.status);
+      logger.error('Captcha validation failed', { status: response.status });
       return false;
     }
 
     const data = (await response.json()) as CaptchaValidationResponse;
     return data.success;
   } catch (error) {
-    console.error('Captcha validation error:', error);
+    logger.error('Captcha validation error', { error });
     return false;
   }
 }

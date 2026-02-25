@@ -11,6 +11,7 @@ const __projectRoot = findProjectRoot(__dirname);
 
 const SharedServerSchema = z.object({
   NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
+  LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).optional().default('info'),
   TZ: z.string(),
   CI: z.stringbool().optional().default(false),
   VITEST: z.stringbool().optional().default(false),

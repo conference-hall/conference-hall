@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { auth } from '~/shared/authentication/firebase.server.ts';
 import type { AuthorizedAdmin } from '~/shared/authorization/types.ts';
 import { NotAuthorizedError, UserNotFoundError } from '~/shared/errors.server.ts';
+import { logger } from '~/shared/logger/logger.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
@@ -108,7 +109,7 @@ export class AdminUsers {
         })),
       };
     } catch (error) {
-      console.error(`Error fetching user info from Firebase Auth for uid "${uid}"`, error);
+      logger.error(`Error fetching user info from Firebase Auth for uid "${uid}"`, { error });
       return null;
     }
   }

@@ -1,5 +1,6 @@
 import { db } from '../../../prisma/db.server.ts';
 import { EventNotFoundError, ForbiddenOperationError } from '../errors.server.ts';
+import { logger } from '../logger/logger.server.ts';
 import { UserTeamPermissions } from './team-permissions.ts';
 import type { AuthorizedEvent, AuthorizedTeam } from './types.ts';
 
@@ -7,13 +8,13 @@ export async function getAuthorizedTeam(userId: string, teamSlug: string): Promi
   try {
     const member = await db.teamMember.findFirst({ where: { memberId: userId, team: { slug: teamSlug } } });
     if (!member) {
-      console.warn('Authorization failed: User is not a member of team', { userId, teamSlug });
+      logger.warn('Authorization failed: User is not a member of team', { userId, teamSlug });
       throw new ForbiddenOperationError();
     }
 
     const permissions = UserTeamPermissions.getPermissions(member.role);
     if (!permissions.canAccessTeam) {
-      console.warn('Authorization failed: User role lacks canAccessTeam permission', {
+      logger.warn('Authorization failed: User role lacks canAccessTeam permission', {
         userId,
         teamSlug,
         teamId: member.teamId,
@@ -30,14 +31,14 @@ export async function getAuthorizedTeam(userId: string, teamSlug: string): Promi
     };
   } catch (error) {
     if (error instanceof ForbiddenOperationError) throw error;
-    console.error('Database error in getAuthorizedTeam:', { userId, teamSlug, error });
+    logger.error('Database error in getAuthorizedTeam:', { userId, teamSlug, error });
     throw error;
   }
 }
 
 export async function getAuthorizedEvent(authorizedTeam: AuthorizedTeam, eventSlug: string): Promise<AuthorizedEvent> {
   if (!authorizedTeam.permissions.canAccessEvent) {
-    console.warn('Authorization failed: User lacks canAccessEvent permission', {
+    logger.warn('Authorization failed: User lacks canAccessEvent permission', {
       userId: authorizedTeam.userId,
       teamId: authorizedTeam.teamId,
       eventSlug,
@@ -50,7 +51,7 @@ export async function getAuthorizedEvent(authorizedTeam: AuthorizedTeam, eventSl
     const event = await db.event.findUnique({ where: { slug: eventSlug, teamId: authorizedTeam.teamId } });
 
     if (!event) {
-      console.warn('Event not found or does not belong to team', {
+      logger.warn('Event not found or does not belong to team', {
         userId: authorizedTeam.userId,
         teamId: authorizedTeam.teamId,
         eventSlug,
@@ -61,7 +62,7 @@ export async function getAuthorizedEvent(authorizedTeam: AuthorizedTeam, eventSl
     return { ...authorizedTeam, event };
   } catch (error) {
     if (error instanceof EventNotFoundError) throw error;
-    console.error('Database error in getAuthorizedEvent:', {
+    logger.error('Database error in getAuthorizedEvent:', {
       userId: authorizedTeam.userId,
       teamId: authorizedTeam.teamId,
       eventSlug,
