@@ -32,5 +32,8 @@ export default defineConfig({
     locale: 'en-GB',
     timezoneId: 'Europe/Paris',
     trace: 'on-first-retry',
+    contextOptions: {
+      reducedMotion: 'reduce',
+    },
   },
 });

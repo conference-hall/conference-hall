@@ -42,7 +42,7 @@ export default defineConfig({
           testTimeout: 5_000,
           browser: {
             enabled: true,
-            provider: playwright(),
+            provider: playwright({ contextOptions: { reducedMotion: 'reduce' } }),
             instances: [{ browser: 'chromium' }],
             viewport: { width: 1920, height: 1080 },
             screenshotFailures: false,
