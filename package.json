@@ -46,7 +46,7 @@
     "@react-router/node": "~7.13.1",
     "@remix-run/form-data-parser": "^0.15.0",
     "@sindresorhus/slugify": "^3.0.0",
-    "bullmq": "^5.70.1",
+    "bullmq": "^5.70.4",
     "class-variance-authority": "^0.7.1",
     "compression": "^1.8.1",
     "date-fns": "^4.1.0",
