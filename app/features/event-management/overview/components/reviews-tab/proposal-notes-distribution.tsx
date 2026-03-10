@@ -59,7 +59,7 @@ export function ProposalNotesDistribution({ proposalNotesDistribution }: Props) 
                         </div>
                         <div className="text-gray-600">
                           {t('event-management.overview.reviews.proposal-notes-distribution.tooltip.proposals', {
-                            count: data.value,
+                            count: Number(data.value),
                           })}
                         </div>
                         <div className="text-xs text-gray-500">
