@@ -8,6 +8,24 @@ describe('logger', () => {
     expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Something happened'));
   });
 
+  it('logs error objects separately from pretty message', () => {
+    const spy = vi.spyOn(console, 'error');
+    const error = new Error('Boom');
+
+    logger.error('Something happened', { error });
+
+    expect(spy).toHaveBeenCalledTimes(2);
+
+    const [firstCallArgs, secondCallArgs] = spy.mock.calls;
+
+    const [firstArg] = firstCallArgs ?? [];
+    expect(typeof firstArg).toBe('string');
+    expect(firstArg).toEqual(expect.stringContaining('Something happened'));
+
+    const [secondArg] = secondCallArgs ?? [];
+    expect(secondArg).toBe(error);
+  });
+
   it('does not log info messages when LOG_LEVEL=warn', () => {
     logger.info('Should be filtered');
 
