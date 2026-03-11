@@ -85,7 +85,7 @@ export default async function handleRequest(
 export function handleError(error: unknown, { request }: LoaderFunctionArgs | ActionFunctionArgs) {
   if (request.signal.aborted) return;
   if (error instanceof Error) {
-    logger.error('Server error', { error });
+    logger.error(error.message, { error });
   } else {
     const errorResponse = error as Record<string, unknown>;
     const errorMessage = typeof errorResponse?.data === 'string' ? errorResponse?.data : 'Server error';
