@@ -1,4 +1,5 @@
 import { storage } from '~/shared/authentication/firebase.server.ts';
+import { logger } from '~/shared/logger/logger.server.ts';
 import type { Route } from './+types/storage.ts';
 
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
@@ -27,7 +28,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
       },
     });
   } catch (error) {
-    console.log({ level: 'error', message: error });
-    throw new Response('Internal Server Error', { status: 500 });
+    logger.error('Error getting file in storage', { error });
+    throw new Response('File not found', { status: 404 });
   }
 };

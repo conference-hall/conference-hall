@@ -30,6 +30,10 @@ function createLogger(): Logger {
 
     const serialized = data ? serializeData(data) : undefined;
     console[CONSOLE_METHOD[level]](formatter(level, message, serialized));
+
+    if (NODE_ENV !== 'production' && data?.error) {
+      console.error(data.error);
+    }
   }
 
   return {

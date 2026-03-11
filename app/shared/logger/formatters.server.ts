@@ -21,12 +21,14 @@ export function prettyFormatter(level: LogLevel, message: string, data?: LogData
   const color = LEVEL_COLORS[level];
   const tag = color(level.toUpperCase().padEnd(5));
 
-  if (data && isHttpData(data)) {
-    return formatHttpLog(tag, data);
+  const { error: _, ...rest } = data || {};
+
+  if (rest && isHttpData(rest)) {
+    return formatHttpLog(tag, rest);
   }
 
-  if (data && Object.keys(data).length > 0) {
-    return `${tag} ${message} ${formatData(data)}`;
+  if (rest && Object.keys(rest).length > 0) {
+    return `${tag} ${message} ${formatData(rest)}`;
   }
   return `${tag} ${message}`;
 }
