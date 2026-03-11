@@ -6,6 +6,7 @@ import { I18nextProvider } from 'react-i18next';
 import type { ActionFunctionArgs, EntryContext, LoaderFunctionArgs, RouterContextProvider } from 'react-router';
 import { ServerRouter } from 'react-router';
 import { getI18n } from './shared/i18n/i18n.middleware.ts';
+import { logger } from './shared/logger/logger.server.ts';
 import { nonceContext } from './shared/nonce/nonce.server.ts';
 import { Nonce } from './shared/nonce/use-nonce.ts';
 
@@ -18,6 +19,11 @@ export default async function handleRequest(
   entryContext: EntryContext,
   routerContext: RouterContextProvider,
 ) {
+  // https://httpwg.org/specs/rfc9110.html#HEAD
+  if (request.method.toUpperCase() === 'HEAD') {
+    return new Response(null, { status: responseStatusCode, headers: responseHeaders });
+  }
+
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const userAgent = request.headers.get('user-agent');
@@ -26,10 +32,9 @@ export default async function handleRequest(
     const readyOption: keyof RenderToPipeableStreamOptions =
       (userAgent && isbot(userAgent)) || entryContext.isSpaMode ? 'onAllReady' : 'onShellReady';
 
-    // Abort the rendering stream after the `streamTimeout` so it has time to flush down the rejected boundaries
-    let timeoutId: ReturnType<typeof setTimeout> | undefined = setTimeout(() => abort(), streamTimeout + 1000);
-
     const { nonce } = routerContext.get(nonceContext);
+
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
     const { pipe, abort } = renderToPipeableStream(
       <I18nextProvider i18n={getI18n(routerContext)}>
@@ -66,15 +71,24 @@ export default async function handleRequest(
         },
         onError(error: unknown) {
           responseStatusCode = 500;
-          if (shellRendered) console.error(error);
+          if (shellRendered) logger.error('Shell render error', { status: 500, error });
         },
         nonce,
       },
     );
+
+    // Abort the rendering stream after the `streamTimeout` so it has time to flush down the rejected boundaries
+    timeoutId = setTimeout(() => abort(), streamTimeout + 1000);
   });
 }
 
 export function handleError(error: unknown, { request }: LoaderFunctionArgs | ActionFunctionArgs) {
   if (request.signal.aborted) return;
-  console.error('Error', error);
+  if (error instanceof Error) {
+    logger.error('Server error', { error });
+  } else {
+    const errorResponse = error as Record<string, unknown>;
+    const errorMessage = typeof errorResponse?.data === 'string' ? errorResponse?.data : 'Server error';
+    logger.error(errorMessage, errorResponse);
+  }
 }

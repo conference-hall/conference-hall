@@ -1,5 +1,6 @@
 import { disconnectDB } from 'tests/db-helpers.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
+import { logger } from '~/shared/logger/logger.server.ts';
 import { disconnectRedis } from '../app/shared/cache/redis.server.ts';
 import { eventCategoryFactory } from '../tests/factories/categories.ts';
 import { commentFactory } from '../tests/factories/comments.ts';
@@ -339,7 +340,7 @@ async function seed() {
 try {
   await seed();
 } catch (error) {
-  console.error(error);
+  logger.error('Error seeding database', { error });
   process.exit(1);
 } finally {
   await disconnectDB();

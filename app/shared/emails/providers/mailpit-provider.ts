@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { logger } from '~/shared/logger/logger.server.ts';
 import { isValidEmail } from '../utils/email.ts';
 import type { Email, EmailProvider } from './provider.ts';
 
@@ -22,7 +23,7 @@ export class MailpitProvider implements EmailProvider {
         text: email.text,
       });
     } catch (error) {
-      console.error(error);
+      logger.error('Error sending email', { error });
     }
   }
 }

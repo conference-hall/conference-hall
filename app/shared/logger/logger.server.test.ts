@@ -8,17 +8,22 @@ describe('logger', () => {
     expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Something happened'));
   });
 
-  it('logs error messages with serialized error nested under error key', () => {
-    const cause = new Error('root cause');
-    const error = new Error('something broke', { cause });
+  it('logs error objects separately from pretty message', () => {
+    const spy = vi.spyOn(console, 'error');
+    const error = new Error('Boom');
 
-    logger.error('Operation failed', { error });
+    logger.error('Something happened', { error });
 
-    const output = vi.mocked(console.error).mock.calls[0][0] as string;
-    expect(output).toContain('Operation failed');
-    expect(output).toContain('error=');
-    expect(output).toContain('something broke');
-    expect(output).toContain('root cause');
+    expect(spy).toHaveBeenCalledTimes(2);
+
+    const [firstCallArgs, secondCallArgs] = spy.mock.calls;
+
+    const [firstArg] = firstCallArgs ?? [];
+    expect(typeof firstArg).toBe('string');
+    expect(firstArg).toEqual(expect.stringContaining('Something happened'));
+
+    const [secondArg] = secondCallArgs ?? [];
+    expect(secondArg).toBe(error);
   });
 
   it('does not log info messages when LOG_LEVEL=warn', () => {

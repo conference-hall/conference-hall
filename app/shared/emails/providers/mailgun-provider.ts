@@ -1,5 +1,6 @@
 import Mailgun from 'mailgun.js';
 import type { Interfaces } from 'mailgun.js/definitions';
+import { logger } from '~/shared/logger/logger.server.ts';
 import { isValidEmail } from '../utils/email.ts';
 import type { Email, EmailProvider } from './provider.ts';
 
@@ -26,7 +27,7 @@ export class MailgunProvider implements EmailProvider {
         text: email.text,
       });
     } catch (error) {
-      console.error(error);
+      logger.error('Error sending email', { error });
     }
   }
 }
