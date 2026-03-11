@@ -34,8 +34,7 @@ export default async function handleRequest(
 
     const { nonce } = routerContext.get(nonceContext);
 
-    // Abort the rendering stream after the `streamTimeout` so it has time to flush down the rejected boundaries
-    let timeoutId: ReturnType<typeof setTimeout> | undefined = setTimeout(() => abort(), streamTimeout + 1000);
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
     const { pipe, abort } = renderToPipeableStream(
       <I18nextProvider i18n={getI18n(routerContext)}>
@@ -77,6 +76,9 @@ export default async function handleRequest(
         nonce,
       },
     );
+
+    // Abort the rendering stream after the `streamTimeout` so it has time to flush down the rejected boundaries
+    timeoutId = setTimeout(() => abort(), streamTimeout + 1000);
   });
 }
 
