@@ -3,20 +3,20 @@ import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.tsx';
 import { page } from 'vitest/browser';
-import { PasswordInput } from './password-input.tsx';
+import { InputPassword } from './input-password.tsx';
 
-type PasswordInputWrapperProps = Omit<React.ComponentProps<typeof PasswordInput>, 'onChange'>;
+type WrapperProps = Omit<React.ComponentProps<typeof InputPassword>, 'onChange'>;
 
-function PasswordInputWrapper(props: PasswordInputWrapperProps) {
+function InputPasswordWrapper(props: WrapperProps) {
   const [value, onChange] = useState(props.value);
   return (
     <I18nextProvider i18n={i18nTest}>
-      <PasswordInput {...props} value={value} onChange={onChange} />
+      <InputPassword {...props} value={value} onChange={onChange} />
     </I18nextProvider>
   );
 }
 
-describe('PasswordInput component', () => {
+describe('InputPassword component', () => {
   const renderComponent = (Component: JSX.Element) => {
     const RouteStub = createRoutesStub([{ path: '/auth/login', Component: () => Component }]);
     return page.render(<RouteStub initialEntries={['/auth/login']} />);
@@ -24,7 +24,7 @@ describe('PasswordInput component', () => {
 
   describe('For a current password field', () => {
     it('renders password with forgot password link', async () => {
-      await renderComponent(<PasswordInputWrapper value="password123" forgotPasswordPath="/forgot-password" />);
+      await renderComponent(<InputPasswordWrapper value="password123" forgotPasswordPath="/forgot-password" />);
 
       const forgotPasswordLink = page.getByRole('link', { name: 'Forgot password?' });
       await expect.element(forgotPasswordLink).toHaveAttribute('href', '/forgot-password');
@@ -41,7 +41,7 @@ describe('PasswordInput component', () => {
 
   describe('For a new password field', () => {
     it('renders password with strength meter', async () => {
-      await renderComponent(<PasswordInputWrapper value="" isNewPassword />);
+      await renderComponent(<InputPasswordWrapper value="" isNewPassword />);
 
       const forgotPasswordLink = page.getByRole('link', { name: 'Forgot password?' });
       await expect.element(forgotPasswordLink).not.toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('PasswordInput component', () => {
 
   describe('Toggle password visibility', () => {
     it('renders password with forgot password link', async () => {
-      await renderComponent(<PasswordInputWrapper value="password123" />);
+      await renderComponent(<InputPasswordWrapper value="password123" />);
 
       const passwordInput = page.getByLabelText('Password');
       const toggleVisibilityButton = page.getByRole('button', { name: 'Toggle password visibility' });

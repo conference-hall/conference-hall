@@ -1,19 +1,17 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
 import type { Event, Team, User } from '../../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../../fixtures.ts';
+import { expect, test } from '../../../fixtures.ts';
+import { userLoggedFactory } from '../../../helpers.ts';
 import { EmailTemplateSettingsPage } from './email-template-settings.page.ts';
 import { EmailsSettingsPage } from './emails-settings.page.ts';
-
-loginWith('clark-kent');
 
 let user: User;
 let team: Team;
 let event: Event;
 
-test.beforeEach(async () => {
-  user = await userFactory({ traits: ['clark-kent'] });
+test.beforeEach(async ({ context }) => {
+  user = await userLoggedFactory(context);
   team = await teamFactory({ owners: [user] });
   event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 });

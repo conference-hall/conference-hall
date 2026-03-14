@@ -12,6 +12,7 @@ model User {
   uid                      String?
   name                     String
   email                    String
+  emailVerified            Boolean                   @default(false)
   bio                      String?
   picture                  String?
   company                  String?
@@ -39,10 +40,31 @@ model User {
   conversationMessages     ConversationMessage[]
   conversationParticipants ConversationParticipant[]
   conversationReactions    ConversationReaction[]
+  accounts                 Account[]
 
   @@unique([email])
   @@index([uid])
   @@map("users")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("accounts")
 }
 
 model OrganizerKeyAccess {

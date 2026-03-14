@@ -1,14 +1,11 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../../fixtures.ts';
-import { getFileUploadPath } from '../../../helpers.ts';
+import { expect, test } from '../../../fixtures.ts';
+import { getFileUploadPath, userLoggedFactory } from '../../../helpers.ts';
 import { CustomizeSettingsPage } from './customize-settings.page.ts';
 
-loginWith('clark-kent');
-
-test('updates event logo', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+test('updates event logo', async ({ context, page }) => {
+  const user = await userLoggedFactory(context);
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
@@ -21,6 +18,7 @@ test('updates event logo', async ({ page }) => {
   await fileChooser.setFiles(getFileUploadPath('logo.png'));
 
   await expect(customizePage.toast).toHaveText('Logo updated.');
+
   const logoSrc = await customizePage.logoImage.getAttribute('src');
-  await expect(logoSrc).toContain('.png');
+  expect(logoSrc).toContain('.png');
 });

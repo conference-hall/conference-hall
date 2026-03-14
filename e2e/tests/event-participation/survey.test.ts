@@ -1,25 +1,23 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { surveyFactory } from 'tests/factories/surveys.ts';
-import { userFactory } from 'tests/factories/users.ts';
 import type { Event } from '../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { LoginPage } from '../auth/login.page.ts';
 import { SurveyPage } from './survey.page.ts';
 
-let event: Event;
-
-test.beforeEach(async () => {
-  const user = await userFactory({ traits: ['clark-kent'] });
-  event = await eventFactory({ traits: ['conference', 'conference-cfp-open', 'withSurveyConfig'] });
-  await surveyFactory({
-    user,
-    event,
-    attributes: { answers: { accomodation: 'yes', transports: ['taxi', 'train'], info: 'Hello' } },
-  });
-});
-
 test.describe('when user is connected', () => {
-  loginWith('clark-kent');
+  let event: Event;
+
+  test.beforeEach(async ({ context }) => {
+    const user = await userLoggedFactory(context);
+    event = await eventFactory({ traits: ['conference', 'conference-cfp-open', 'withSurveyConfig'] });
+    await surveyFactory({
+      user,
+      event,
+      attributes: { answers: { accomodation: 'yes', transports: ['taxi', 'train'], info: 'Hello' } },
+    });
+  });
 
   test('survey form', async ({ page }) => {
     const surveyPage = new SurveyPage(page);
@@ -63,6 +61,7 @@ test.describe('when user is connected', () => {
 
 test.describe('when user is not connected', () => {
   test('redirects to signin', async ({ page }) => {
+    const event = await eventFactory({ traits: ['conference', 'conference-cfp-open', 'withSurveyConfig'] });
     await page.goto(`/${event.slug}/survey`);
     const loginPage = new LoginPage(page);
     await loginPage.waitFor();

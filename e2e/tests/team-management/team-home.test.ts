@@ -1,15 +1,13 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { NewEventPage } from './new-event.page.ts';
 import { TeamHomePage } from './team-home.page.ts';
 
-loginWith('clark-kent');
-
 test.describe('As a team owner', () => {
-  test('displays event list', async ({ page }) => {
-    const owner = await userFactory({ traits: ['clark-kent'] });
+  test('displays event list', async ({ context, page }) => {
+    const owner = await userLoggedFactory(context);
     const team = await teamFactory({ owners: [owner] });
     const team2 = await teamFactory({ owners: [owner] });
     const event1 = await eventFactory({ team, traits: ['conference-cfp-open'] });
@@ -38,8 +36,8 @@ test.describe('As a team owner', () => {
     await expect(page.getByText(`Welcome to "${team2.name}"`)).toBeVisible();
   });
 
-  test('can create a new conference', async ({ page }) => {
-    const owner = await userFactory({ traits: ['clark-kent'] });
+  test('can create a new conference', async ({ context, page }) => {
+    const owner = await userLoggedFactory(context);
     const team = await teamFactory({ owners: [owner] });
 
     const teamHomePage = new TeamHomePage(page);
@@ -70,8 +68,8 @@ test.describe('As a team owner', () => {
     await eventPage.waitFor();
   });
 
-  test('can create a new meetup', async ({ page }) => {
-    const owner = await userFactory({ traits: ['clark-kent'] });
+  test('can create a new meetup', async ({ context, page }) => {
+    const owner = await userLoggedFactory(context);
     const team = await teamFactory({ owners: [owner] });
 
     const teamHomePage = new TeamHomePage(page);
@@ -97,8 +95,8 @@ test.describe('As a team owner', () => {
     await eventPage.waitFor();
   });
 
-  test('cannot create an event with an existing slug', async ({ page }) => {
-    const owner = await userFactory({ traits: ['clark-kent'] });
+  test('cannot create an event with an existing slug', async ({ context, page }) => {
+    const owner = await userLoggedFactory(context);
     const team = await teamFactory({ owners: [owner] });
     await eventFactory({ team, attributes: { slug: 'event-1' } });
 
@@ -120,8 +118,8 @@ test.describe('As a team owner', () => {
 });
 
 test.describe('As a team member', () => {
-  test('displays correct tabs and actions', async ({ page }) => {
-    const member = await userFactory({ traits: ['clark-kent'] });
+  test('displays correct tabs and actions', async ({ context, page }) => {
+    const member = await userLoggedFactory(context);
     const team = await teamFactory({ members: [member] });
 
     const teamHomePage = new TeamHomePage(page);
@@ -137,8 +135,8 @@ test.describe('As a team member', () => {
 });
 
 test.describe('As a team reviewer', () => {
-  test('displays correct tabs and actions', async ({ page }) => {
-    const reviewer = await userFactory({ traits: ['clark-kent'] });
+  test('displays correct tabs and actions', async ({ context, page }) => {
+    const reviewer = await userLoggedFactory(context);
     const team = await teamFactory({ reviewers: [reviewer] });
 
     const teamHomePage = new TeamHomePage(page);

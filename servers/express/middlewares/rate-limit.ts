@@ -32,12 +32,12 @@ const strongRateLimit = rateLimit({
   max: 10 * maxMultiple,
 });
 
-const securedPaths = [href('/auth/login'), href('/auth/forgot-password'), href('/speaker/settings'), href('/admin')];
+const securedPaths = [href('/speaker/settings'), href('/admin')];
 
 export function applyRateLimits(app: express.Application) {
   app.use((req, res, next) => {
-    // Rate limit for GET /api/
-    if (req.path.startsWith('/api/')) {
+    // Rate limit for GET /api/v1/
+    if (req.path.startsWith('/api/v1/')) {
       return apiRateLimit(req, res, next);
     }
     // Rate limit for secured paths
