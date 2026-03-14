@@ -66,7 +66,7 @@ describe('optionalAuth middleware', () => {
       Response,
     );
 
-    expect(signOutMock).toHaveBeenCalledWith({ headers: request.headers });
+    expect(signOutMock).toHaveBeenCalledWith({ headers: request.headers, returnHeaders: true });
   });
 
   it('sets null in context when session has no user id', async () => {
