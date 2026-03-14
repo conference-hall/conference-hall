@@ -1,7 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { captcha, testUtils } from 'better-auth/plugins';
-import { redirect } from 'react-router';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
@@ -105,15 +104,6 @@ export const auth = betterAuth({
     },
   },
 });
-
-export async function signOut(request: Request, redirectTo?: string, additionalHeaders: Record<string, string> = {}) {
-  const { headers } = await auth.api.signOut({ headers: request.headers, returnHeaders: true });
-  for (const [key, value] of Object.entries(additionalHeaders)) {
-    headers.append(key, value);
-  }
-  const url = new URL(request.url);
-  throw redirect(redirectTo ?? url.pathname, { headers });
-}
 
 function getSecondaryStorage() {
   const redis = getRedisClient();

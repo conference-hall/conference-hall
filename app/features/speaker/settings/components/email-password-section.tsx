@@ -156,9 +156,11 @@ function AddPasswordModal({ email, captchaSiteKey, open, onClose }: AddPasswordM
     <Modal title={t('settings.account.email.set-password.title')} onClose={onClose} open={open}>
       <Modal.Content className="space-y-4">
         <Text>
-          <Trans i18nKey="settings.account.email.set-password.description" values={{ email }}>
-            You will receive a link at <strong>{'{{email}}'}</strong> to create your password.
-          </Trans>
+          <Trans
+            i18nKey="settings.account.email.set-password.description"
+            values={{ email }}
+            components={[<strong key="1" />]}
+          />
         </Text>
         {captchaSiteKey && (
           <Turnstile

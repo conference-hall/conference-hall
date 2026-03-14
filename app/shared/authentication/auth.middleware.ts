@@ -16,7 +16,11 @@ export const optionalAuth: MiddlewareFunction<Response> = async ({ request, cont
 
   // todo(cache): can be cached to improve performances (called on each request)
   const user = await UserAccount.for(userId).get();
-  if (!user) throw await auth.api.signOut({ headers: request.headers });
+  if (!user) {
+    const { headers } = await auth.api.signOut({ headers: request.headers, returnHeaders: true });
+    const url = new URL(request.url);
+    throw redirect(url.pathname, { headers });
+  }
   context.set(OptionalAuthContext, user);
 };
 

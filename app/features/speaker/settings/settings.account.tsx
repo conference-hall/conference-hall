@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { redirect } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { H1 } from '~/design-system/typography.tsx';
 import { useSpeakerProfile } from '~/features/speaker/speaker-profile-context.tsx';
@@ -7,7 +8,7 @@ import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
 import { UserAccount } from '~/shared/user/user-account.server.ts';
 import { getWebServerEnv } from '../../../../servers/environment.server.ts';
-import { signOut } from '../../../auth.server.ts';
+import { auth } from '../../../auth.server.ts';
 import type { Route } from './+types/settings.account.ts';
 import { DeleteAccountSection } from './components/delete-account-section.tsx';
 import { EmailPasswordSection } from './components/email-password-section.tsx';
@@ -33,8 +34,11 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   switch (intent) {
     case 'delete-account': {
       await UserAccount.for(user.id).deleteAccount();
-      const headers = await toastHeaders('success', i18n.t('settings.account.feedbacks.account-deleted'));
-      await signOut(request, '/', headers);
+      await auth.api.revokeSessions({ headers: request.headers });
+      const { headers } = await auth.api.signOut({ headers: request.headers, returnHeaders: true });
+      const toastHeader = await toastHeaders('success', i18n.t('settings.account.feedbacks.account-deleted'));
+      headers.append('set-cookie', toastHeader['set-cookie']);
+      throw redirect('/', { headers });
     }
     default:
       return null;

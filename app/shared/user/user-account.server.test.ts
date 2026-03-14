@@ -125,6 +125,7 @@ describe('UserAccount', () => {
           location: 'Paris',
           socialLinks: [{ type: 'twitter', url: 'https://twitter.com/johndoe' }],
         },
+        withPasswordAccount: true,
       });
       await teamFactory({ members: [user] });
       await talkFactory({ speakers: [user] });
@@ -148,6 +149,9 @@ describe('UserAccount', () => {
 
       const userTalks = await db.user.findUnique({ where: { id: user.id }, include: { talks: true } });
       expect(userTalks?.talks).toHaveLength(0);
+
+      const userAccounts = await db.account.findMany({ where: { userId: user.id } });
+      expect(userAccounts).toHaveLength(0);
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
