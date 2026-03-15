@@ -30,6 +30,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1009.0",
     "@conform-to/zod": "^1.17.1",
     "@dnd-kit/abstract": "^0.3.2",
     "@dnd-kit/dom": "^0.3.2",
