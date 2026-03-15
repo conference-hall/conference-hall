@@ -1,5 +1,6 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import { StorageService } from '~/shared/storage/storage.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { EventCreateInput } from '../../../../../prisma/generated/models.ts';
 import { EventGeneralSettingsSchema } from './event-settings.schema.server.ts';
@@ -15,6 +16,21 @@ export class EventSettings {
     const { event, permissions } = this.authorizedEvent;
     if (!permissions.canEditEvent) throw new ForbiddenOperationError();
     return db.event.update({ where: { id: event.id }, data: { ...data } });
+  }
+
+  async updateLogo(logo: string) {
+    const { event, permissions } = this.authorizedEvent;
+    if (!permissions.canEditEvent) throw new ForbiddenOperationError();
+
+    const current = await db.event.findUniqueOrThrow({ where: { id: event.id }, select: { logo: true } });
+    const result = await db.event.update({ where: { id: event.id }, data: { logo } });
+
+    if (current.logo) {
+      const storage = StorageService.create();
+      await storage.deleteQuietly(current.logo);
+    }
+
+    return result;
   }
 
   async delete() {

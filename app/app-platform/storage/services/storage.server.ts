@@ -1,11 +1,8 @@
 import type { FileUpload, FileUploadHandler } from '@remix-run/form-data-parser';
-import { v4 as uuid } from 'uuid';
-import { storage } from '~/shared/authentication/firebase.server.ts';
-import { getSharedServerEnv } from '../../../../servers/environment.server.ts';
+import { generateStorageKey } from '~/shared/storage/storage-key.server.ts';
+import { StorageService } from '~/shared/storage/storage.server.ts';
 
-const { APP_URL } = getSharedServerEnv();
-
-type StorageUploaderOptions = { name: string };
+type StorageUploaderOptions = { name: string; entityType: string; entityId: string; fileName: string };
 
 const CONTENT_TYPES: Record<string, string> = {
   'image/avif': 'avif',
@@ -20,36 +17,25 @@ export function uploadToStorageHandler(options: StorageUploaderOptions): FileUpl
     if (!Object.keys(CONTENT_TYPES).includes(file.type)) return;
 
     const extension = CONTENT_TYPES[file.type];
-    const filepath = `${uuid()}.${extension}`;
+    const key = generateStorageKey(options.entityType, options.entityId, options.fileName, extension);
 
-    return uploadToStorage(file, filepath);
+    return uploadToStorage(file, key);
   };
 }
 
-async function uploadToStorage(file: FileUpload, filepath: string) {
-  const storedFile = storage.bucket().file(filepath);
+async function uploadToStorage(file: FileUpload, key: string): Promise<File | null> {
+  const chunks: Uint8Array[] = [];
+  const reader = file.stream().getReader();
 
-  try {
-    const writeStream = storedFile.createWriteStream({ contentType: file.type });
-    const reader = file.stream().getReader();
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      writeStream.write(value);
-    }
-
-    await new Promise((resolve, reject) => {
-      writeStream.end();
-      writeStream.on('finish', resolve).on('error', reject);
-    });
-
-    return new File([], getStorageProxyUrl(filepath), { type: file.type });
-  } catch {
-    return null;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
   }
-}
 
-function getStorageProxyUrl(filepath: string) {
-  return `${APP_URL}/storage/${filepath}`;
+  const body = Buffer.concat(chunks);
+  const storage = StorageService.create();
+  await storage.upload(key, body, file.type);
+
+  return new File([], key, { type: file.type });
 }

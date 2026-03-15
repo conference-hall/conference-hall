@@ -13,9 +13,14 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import { StorageService } from '~/shared/storage/storage.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { Event, Team, User } from '../../../../../prisma/generated/client.ts';
 import { EventSettings } from './event-settings.server.ts';
+
+vi.mock('~/shared/storage/storage.server.ts', () => ({
+  StorageService: { create: vi.fn(() => ({ deleteQuietly: vi.fn() })) },
+}));
 
 describe('EventSettings', () => {
   describe('#update', () => {
@@ -80,6 +85,64 @@ describe('EventSettings', () => {
         const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         await EventSettings.for(authorizedEvent).update({ name: 'Hello world' });
+      }).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
+  describe('#updateLogo', () => {
+    let owner: User;
+    let reviewer: User;
+    let team: Team;
+    let event: Event;
+
+    beforeEach(async () => {
+      owner = await userFactory();
+      reviewer = await userFactory();
+      team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
+      event = await eventFactory({ team });
+    });
+
+    it('sets the logo key on the event', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await EventSettings.for(authorizedEvent).updateLogo('events/abc/logo-12345678.webp');
+
+      const updated = await db.event.findUnique({ where: { id: event.id } });
+      expect(updated?.logo).toBe('events/abc/logo-12345678.webp');
+    });
+
+    it('deletes the previous logo from storage when replacing', async () => {
+      const mockDeleteQuietly = vi.fn();
+      vi.mocked(StorageService.create).mockReturnValue({ deleteQuietly: mockDeleteQuietly } as never);
+
+      await db.event.update({ where: { id: event.id }, data: { logo: 'events/abc/old-logo.webp' } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await EventSettings.for(authorizedEvent).updateLogo('events/abc/logo-new.webp');
+
+      expect(mockDeleteQuietly).toHaveBeenCalledWith('events/abc/old-logo.webp');
+    });
+
+    it('does not call delete when there is no previous logo', async () => {
+      const mockDeleteQuietly = vi.fn();
+      vi.mocked(StorageService.create).mockReturnValue({ deleteQuietly: mockDeleteQuietly } as never);
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await EventSettings.for(authorizedEvent).updateLogo('events/abc/logo-first.webp');
+
+      expect(mockDeleteQuietly).not.toHaveBeenCalled();
+    });
+
+    it('throws an error if user is not owner', async () => {
+      await expect(async () => {
+        const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        await EventSettings.for(authorizedEvent).updateLogo('events/abc/logo.webp');
       }).rejects.toThrowError(ForbiddenOperationError);
     });
   });
