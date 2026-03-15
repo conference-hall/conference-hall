@@ -1,7 +1,5 @@
 import { rand, randAnimal, randEmail, randFullAddress, randParagraph, randText, randUrl } from '@ngneat/falso';
 import { slugifyWithCounter } from '@sindresorhus/slugify';
-import { generateImagePlaceholder } from 'tests/img-placeholder.ts';
-import { getRandomColor } from '~/shared/colors/colors.ts';
 import { db } from '../../prisma/db.server.ts';
 import type { Team, User } from '../../prisma/generated/client.ts';
 import { EventType, EventVisibility } from '../../prisma/generated/client.ts';
@@ -128,7 +126,6 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
 
   const name = attributes.name || randAnimal();
   const slug = slugify(name);
-  const backgroundColor = getRandomColor();
 
   const defaultAttributes: EventCreateInput = {
     name,
@@ -136,7 +133,8 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
     description: randParagraph(),
     timezone: 'Europe/Paris',
     location: randFullAddress(),
-    logoUrl: generateImagePlaceholder({ height: 128, width: 128, backgroundColor }),
+    logo: null,
+    logoUrl: null,
     websiteUrl: randUrl(),
     contactEmail: randEmail(),
     codeOfConductUrl: randUrl(),

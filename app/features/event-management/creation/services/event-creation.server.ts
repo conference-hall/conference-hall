@@ -62,6 +62,7 @@ export class EventCreation {
 
     return {
       description: eventTemplate.description,
+      logo: eventTemplate.logo,
       logoUrl: eventTemplate.logoUrl,
       websiteUrl: eventTemplate.websiteUrl,
       codeOfConductUrl: eventTemplate.codeOfConductUrl,

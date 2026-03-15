@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { SurveyConfig } from '~/features/event-management/settings/models/survey-config.ts';
 import { EventNotFoundError } from '~/shared/errors.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
 import { TracksMandatorySchema, TracksOptionalSchema } from '~/shared/types/speaker-talk.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 
@@ -44,7 +45,7 @@ export class EventPage {
       websiteUrl: event.websiteUrl,
       contactEmail: event.contactEmail,
       codeOfConductUrl: event.codeOfConductUrl,
-      logoUrl: event.logoUrl,
+      logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
       maxProposals: event.maxProposals,
       hasSurvey: isActiveForEvent,
       hasTracks: event.categories.length > 0 || event.formats.length > 0,

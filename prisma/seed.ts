@@ -1,7 +1,12 @@
 import { disconnectDB } from 'tests/db-helpers.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
+import { generateImagePlaceholder } from 'tests/img-placeholder.ts';
+import { getRandomColor } from '~/shared/colors/colors.ts';
 import { logger } from '~/shared/logger/logger.server.ts';
+import { generateStorageKey } from '~/shared/storage/storage-key.server.ts';
+import { StorageService } from '~/shared/storage/storage.server.ts';
 import { disconnectRedis } from '../app/shared/cache/redis.server.ts';
+import { db } from '../prisma/db.server.ts';
 import { eventCategoryFactory } from '../tests/factories/categories.ts';
 import { commentFactory } from '../tests/factories/comments.ts';
 import { eventFactory } from '../tests/factories/events.ts';
@@ -335,6 +340,21 @@ async function seed() {
   }
 
   await organizerKeyFactory({ attributes: { id: '123456' } });
+
+  await seedEventLogos();
+}
+
+async function seedEventLogos() {
+  const storage = StorageService.create();
+  const events = await db.event.findMany({ where: { logo: null }, select: { id: true } });
+
+  for (const event of events) {
+    const svg = generateImagePlaceholder({ height: 128, width: 128, backgroundColor: getRandomColor() });
+    const svgContent = Buffer.from(svg.replace('data:image/svg+xml;base64,', ''), 'base64');
+    const key = generateStorageKey('events', event.id, 'logo', 'svg');
+    await storage.upload(key, svgContent, 'image/svg+xml');
+    await db.event.update({ where: { id: event.id }, data: { logo: key } });
+  }
 }
 
 try {

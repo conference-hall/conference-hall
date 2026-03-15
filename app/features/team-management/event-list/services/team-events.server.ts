@@ -1,4 +1,5 @@
 import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 
 export class TeamEvents {
@@ -20,7 +21,7 @@ export class TeamEvents {
       slug: event.slug,
       name: event.name,
       type: event.type,
-      logoUrl: event.logoUrl,
+      logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
       timezone: event.timezone,
       cfpStart: event.cfpStart,
       cfpEnd: event.cfpEnd,
