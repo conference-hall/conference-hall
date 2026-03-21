@@ -7,7 +7,7 @@ import { db } from '../../../../../prisma/db.server.ts';
 import type { TeamRole } from '../../../../../prisma/generated/client.ts';
 import type { TeamMemberWhereInput } from '../../../../../prisma/generated/models.ts';
 
-export const MembersFiltersSchema = z.object({
+const MembersFiltersSchema = z.object({
   query: z.string().trim().optional(),
   role: z.enum(['OWNER', 'MEMBER', 'REVIEWER']).optional(),
 });
