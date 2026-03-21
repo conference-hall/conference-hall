@@ -61,7 +61,7 @@ describe('StorageService', () => {
       const result = await storage.getObject('events/abc/logo.webp');
 
       expect(result.contentType).toBe('application/octet-stream');
-      expect(result.contentLength).toBe(0);
+      expect(result.contentLength).toBeUndefined();
     });
   });
 

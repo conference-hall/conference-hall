@@ -14,16 +14,15 @@ const CONTENT_TYPES: Record<string, string> = {
 export function uploadToStorageHandler(options: StorageUploaderOptions): FileUploadHandler {
   return (file) => {
     if (file.fieldName !== options.name) return;
-    if (!Object.keys(CONTENT_TYPES).includes(file.type)) return;
-
     const extension = CONTENT_TYPES[file.type];
+    if (!extension) return;
     const key = generateStorageKey(options.entityType, options.entityId, options.fileName, extension);
 
     return uploadToStorage(file, key);
   };
 }
 
-async function uploadToStorage(file: FileUpload, key: string): Promise<File | null> {
+async function uploadToStorage(file: FileUpload, key: string): Promise<File> {
   const chunks: Uint8Array[] = [];
   const reader = file.stream().getReader();
 

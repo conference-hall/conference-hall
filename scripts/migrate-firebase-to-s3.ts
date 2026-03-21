@@ -2,9 +2,10 @@
  * Migration script: Copy event logos from Firebase Storage to S3.
  *
  * Prerequisites:
- *   - Firebase Admin SDK: set FIREBASE_SERVICE_ACCOUNT env var
- *   - S3 client: set S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY env vars
- *   - Database: set DATABASE_URL env var
+ *   - Database: set DATABASE_URL
+ *   - S3 client: set S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY
+ *   - Firebase Admin SDK: set FIREBASE_SERVICE_ACCOUNT
+ *   - Firebase storage bucket: FIREBASE_STORAGE_BUCKET
  *
  * Usage:
  *   npx tsx scripts/migrate-firebase-to-s3.ts
@@ -60,7 +61,6 @@ async function migrate() {
         continue;
       }
 
-      const extension = extractExtension(filename);
       const file = bucket.file(filename);
 
       const [exists] = await file.exists();
@@ -72,7 +72,8 @@ async function migrate() {
 
       const [buffer] = await file.download();
       const [metadata] = await file.getMetadata();
-      const contentType = (metadata.contentType as string) || `image/${extension}`;
+      const extension = extractExtension(filename, metadata.contentType);
+      const contentType = metadata.contentType || `image/${extension}`;
 
       const key = generateStorageKey('events', event.id, 'logo', extension);
       await storage.upload(key, buffer, contentType);
@@ -104,9 +105,17 @@ function extractFilename(logoUrl: string): string | null {
   return null;
 }
 
-function extractExtension(filename: string): string {
+function extractExtension(filename: string, contentType?: string): string {
   const match = filename.match(/\.(\w+)$/);
-  return match ? match[1] : 'jpg';
+  if (match) return match[1].toLowerCase();
+
+  if (contentType) {
+    const ctMatch = contentType.match(/^image\/(\w+)/);
+    if (ctMatch) return ctMatch[1].toLowerCase();
+  }
+
+  console.warn(`No extension found for "${filename}", defaulting to "jpg"`);
+  return 'jpg';
 }
 
 migrate()

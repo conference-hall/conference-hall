@@ -29,7 +29,7 @@ export class StorageService {
     return key;
   }
 
-  async getObject(key: string): Promise<{ body: Readable; contentType: string; contentLength: number }> {
+  async getObject(key: string): Promise<{ body: Readable; contentType: string; contentLength?: number }> {
     const response = await s3Client.send(
       new GetObjectCommand({
         Bucket: this.bucket,
@@ -37,10 +37,14 @@ export class StorageService {
       }),
     );
 
+    if (!response.Body) {
+      throw new Error(`S3 returned empty body for key: ${key}`);
+    }
+
     return {
       body: response.Body as Readable,
       contentType: response.ContentType ?? 'application/octet-stream',
-      contentLength: response.ContentLength ?? 0,
+      contentLength: response.ContentLength,
     };
   }
 

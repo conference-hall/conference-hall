@@ -12,15 +12,17 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
     const storage = StorageService.create();
     const { body, contentType, contentLength } = await storage.getObject(key);
 
+    const headers: Record<string, string> = {
+      'Content-Type': contentType,
+      'Cache-Control': `public, max-age=${ONE_YEAR_IN_SECONDS}, immutable`,
+      'Cross-Origin-Resource-Policy': 'cross-origin',
+    };
+    if (contentLength != null) {
+      headers['Content-Length'] = contentLength.toString();
+    }
+
     // @ts-expect-error Node Readable is compatible with Response body
-    return new Response(body, {
-      headers: {
-        'Content-Type': contentType,
-        'Content-Length': contentLength.toString(),
-        'Cache-Control': `public, max-age=${ONE_YEAR_IN_SECONDS}, immutable`,
-        'Cross-Origin-Resource-Policy': 'cross-origin',
-      },
-    });
+    return new Response(body, { headers });
   } catch (error) {
     logger.error('Error getting file from storage', { error });
     throw new Response('File not found', { status: 404 });
