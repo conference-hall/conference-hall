@@ -23,16 +23,6 @@ describe('resolveStorageUrl', () => {
     expect(resolveStorageUrl(null)).toBeNull();
   });
 
-  it('returns http URLs as-is', () => {
-    const url = 'https://firebasestorage.googleapis.com/v0/b/bucket/o/file.jpg';
-    expect(resolveStorageUrl(url)).toBe(url);
-  });
-
-  it('returns http URLs as-is (http)', () => {
-    const url = 'http://localhost:9000/bucket/file.jpg';
-    expect(resolveStorageUrl(url)).toBe(url);
-  });
-
   it('returns data URIs as-is', () => {
     const dataUri = 'data:image/svg+xml;base64,PHN2Zz4=';
     expect(resolveStorageUrl(dataUri)).toBe(dataUri);

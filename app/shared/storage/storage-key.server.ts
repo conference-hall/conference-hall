@@ -8,8 +8,8 @@ export function generateStorageKey(entityType: string, entityId: string, fileNam
   return `${entityType}/${entityId}/${fileName}-${hash}.${extension}`;
 }
 
-export function resolveStorageUrl(keyOrUrl: string | null): string | null {
-  if (!keyOrUrl) return null;
-  if (keyOrUrl.startsWith('http') || keyOrUrl.startsWith('data:')) return keyOrUrl;
-  return `${APP_URL}/storage/${keyOrUrl}`;
+export function resolveStorageUrl(key: string | null): string | null {
+  if (!key) return null;
+  if (key.startsWith('data:')) return key;
+  return `${APP_URL}/storage/${key}`;
 }
