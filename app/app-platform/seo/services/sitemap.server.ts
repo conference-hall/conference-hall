@@ -1,3 +1,4 @@
+import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import { EventType, EventVisibility } from '../../../../prisma/generated/client.ts';
 
@@ -14,5 +15,9 @@ export async function getEventsForSitemap() {
     orderBy: [{ type: 'desc' }, { cfpStart: 'desc' }, { name: 'asc' }],
   });
 
-  return events.map((event) => ({ name: event.name, slug: event.slug, logoUrl: event.logoUrl }));
+  return events.map((event) => ({
+    name: event.name,
+    slug: event.slug,
+    logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
+  }));
 }

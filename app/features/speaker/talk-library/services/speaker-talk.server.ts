@@ -1,4 +1,5 @@
 import { TalkNotFoundError } from '~/shared/errors.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { TalkSaveData } from '~/shared/types/speaker-talk.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
@@ -54,7 +55,7 @@ export class SpeakerTalk {
         .map((proposal) => ({
           slug: proposal.event.slug,
           name: proposal.event.name,
-          logoUrl: proposal.event.logoUrl,
+          logoUrl: resolveStorageUrl(proposal.event.logo) ?? resolveStorageUrl(proposal.event.logoUrl),
           proposalId: proposal.id,
           proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
           createdAt: proposal.createdAt,

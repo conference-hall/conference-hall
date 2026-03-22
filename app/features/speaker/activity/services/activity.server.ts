@@ -1,3 +1,4 @@
+import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import { Prisma } from '../../../../../prisma/generated/client.ts';
 
@@ -36,7 +37,7 @@ export class SpeakerActivities {
           slug: event.slug,
           name: event.name,
           teamName: event.team.name,
-          logoUrl: event.logoUrl,
+          logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
           cfpState: event.cfpState,
           submissions: event.proposals
             .filter((proposal) => proposal.talk && !proposal.talk.archived)

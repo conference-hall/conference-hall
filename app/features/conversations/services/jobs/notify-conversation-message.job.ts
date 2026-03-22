@@ -1,6 +1,7 @@
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ConversationMessageEmail from '~/shared/emails/templates/speakers/conversation-message.tsx';
 import { job } from '~/shared/jobs/job.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
 import type { MessageRole } from '~/shared/types/conversation.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { EventSpeaker, Proposal } from '../../../../../prisma/generated/client.ts';
@@ -101,7 +102,7 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
               id: conversation.event.id,
               slug: conversation.event.slug,
               name: conversation.event.name,
-              logoUrl: conversation.event.logoUrl,
+              logoUrl: resolveStorageUrl(conversation.event.logo) ?? resolveStorageUrl(conversation.event.logoUrl),
               teamSlug: conversation.event.team.slug,
             },
             proposal: proposal ? { id: proposal.id, routeId: proposal.routeId } : undefined,

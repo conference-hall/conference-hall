@@ -18,7 +18,7 @@ import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/customize.ts';
 
 const MAX_FILE_SIZE = 300 * 1024; // 300kB
-const FILE_SCHEMA = z.object({ name: z.url() });
+const FILE_SCHEMA = z.object({ name: z.string().min(1) });
 
 function toKB(size: number) {
   return `${(size / 1024).toFixed(0)} KB`;
@@ -32,11 +32,16 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
     const formData = await parseFormData(
       request,
       { maxFiles: 1, maxFileSize: MAX_FILE_SIZE },
-      uploadToStorageHandler({ name: 'logo' }),
+      uploadToStorageHandler({
+        name: 'logo',
+        entityType: 'events',
+        entityId: authorizedEvent.event.id,
+        fileName: 'logo',
+      }),
     );
     const data = FILE_SCHEMA.parse(formData.get('logo'));
     const settings = EventSettings.for(authorizedEvent);
-    await settings.update({ logoUrl: data.name });
+    await settings.updateLogo(data.name);
     return toast('success', i18n.t('event-management.settings.customize.feedbacks.logo-updated'));
   } catch {
     return toast('error', i18n.t('error.global'));

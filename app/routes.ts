@@ -161,7 +161,7 @@ export default [
   route('sitemap.xml', './app-platform/seo/sitemap.xml.ts'),
 
   // File storage route
-  route('storage/:filename', './app-platform/storage/storage.ts'),
+  route('storage/*', './app-platform/storage/storage.ts'),
 
   // Healthcheck route
   route('healthcheck', './app-platform/healthcheck.ts'),
