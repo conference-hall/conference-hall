@@ -5,7 +5,7 @@
  *   - Database: set DATABASE_URL
  *   - S3 client: set S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY
  *   - Firebase Admin SDK: set FIREBASE_SERVICE_ACCOUNT
- *   - Firebase storage bucket: FIREBASE_STORAGE_BUCKET
+ *   - Firebase storage bucket: FIREBASE_STORAGE
  *
  * Usage:
  *   npx tsx scripts/migrate-firebase-to-s3.ts
@@ -28,7 +28,7 @@ const serviceAccount = JSON.parse(FIREBASE_SERVICE_ACCOUNT);
 
 const app = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  storageBucket: process.env.FIREBASE_STORAGE,
 });
 
 const bucket = getStorage(app).bucket();
