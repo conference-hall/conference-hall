@@ -14,13 +14,13 @@ RUN npm install -g firebase-tools
 
 WORKDIR /app
 
-# Copy config 
-COPY firebase.json storage.rules /app/
+# Copy config
+COPY firebase.json /app/
 
 # Prefetch emulator binaries (avoids downloading on container start)
-RUN firebase setup:emulators:ui && firebase setup:emulators:storage
+RUN firebase setup:emulators:ui
 
 # Ensure fixtures dir exists (can be mounted later)
 RUN mkdir -p /app/fixtures
 
-CMD [ "firebase", "--project=conference-hall", "emulators:start", "--only", "auth,storage", "--import", "fixtures" ]
+CMD [ "firebase", "--project=conference-hall", "emulators:start", "--only", "auth", "--import", "fixtures" ]

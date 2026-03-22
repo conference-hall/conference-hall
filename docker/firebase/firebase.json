@@ -9,11 +9,6 @@
       "host": "0.0.0.0",
       "port": 9099
     },
-    "storage": {
-      "enabled": true,
-      "host": "0.0.0.0",
-      "port": 9199
-    },
     "ui": {
       "enabled": true,
       "host": "0.0.0.0",
@@ -23,8 +18,5 @@
       "host": "0.0.0.0",
       "port": 4500
     }
-  },
-  "storage": {
-    "rules": "./storage.rules"
   }
 }
