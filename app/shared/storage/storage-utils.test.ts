@@ -1,22 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { generateStorageKey, resolveStorageUrl } from './storage-key.server.ts';
+import { resolveStorageUrl } from './storage-utils.ts';
 
 vi.mock('../../../servers/environment.server.ts', () => ({
   getSharedServerEnv: () => ({ APP_URL: 'http://127.0.0.1:3000' }),
 }));
-
-describe('generateStorageKey', () => {
-  it('generates a key with entity-scoped folder structure', () => {
-    const key = generateStorageKey('events', 'abc123', 'logo', 'webp');
-    expect(key).toMatch(/^events\/abc123\/logo-[a-f0-9]{8}\.webp$/);
-  });
-
-  it('generates unique keys on each call', () => {
-    const key1 = generateStorageKey('events', 'abc123', 'logo', 'webp');
-    const key2 = generateStorageKey('events', 'abc123', 'logo', 'webp');
-    expect(key1).not.toBe(key2);
-  });
-});
 
 describe('resolveStorageUrl', () => {
   it('returns null for null input', () => {

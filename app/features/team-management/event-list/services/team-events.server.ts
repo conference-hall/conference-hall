@@ -1,5 +1,5 @@
 import type { AuthorizedTeam } from '~/shared/authorization/types.ts';
-import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 
 export class TeamEvents {

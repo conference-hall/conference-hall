@@ -2,6 +2,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { TeamEvents } from './team-events.server.ts';
 
 describe('TeamEvents', () => {
@@ -23,7 +24,7 @@ describe('TeamEvents', () => {
           name: event2.name,
           slug: event2.slug,
           type: event2.type,
-          logoUrl: event2.logoUrl,
+          logoUrl: resolveStorageUrl(event2.logo),
           timezone: event2.timezone,
           cfpStart: event2.cfpStart,
           cfpEnd: event2.cfpEnd,
@@ -33,7 +34,7 @@ describe('TeamEvents', () => {
           name: event1.name,
           slug: event1.slug,
           type: event1.type,
-          logoUrl: event1.logoUrl,
+          logoUrl: resolveStorageUrl(event1.logo),
           timezone: event1.timezone,
           cfpStart: event1.cfpStart,
           cfpEnd: event1.cfpEnd,
@@ -56,7 +57,7 @@ describe('TeamEvents', () => {
           name: event.name,
           slug: event.slug,
           type: event.type,
-          logoUrl: event.logoUrl,
+          logoUrl: resolveStorageUrl(event.logo),
           timezone: event.timezone,
           cfpStart: event.cfpStart,
           cfpEnd: event.cfpEnd,

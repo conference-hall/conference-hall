@@ -3,6 +3,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import type { Event, Proposal, Team, User } from '../../../../../prisma/generated/client.ts';
 import { SpeakerActivities } from './activity.server.ts';
@@ -39,7 +40,7 @@ describe('SpeakerActivities', () => {
             slug: event2.slug,
             name: event2.name,
             teamName: team.name,
-            logoUrl: event2.logoUrl,
+            logoUrl: resolveStorageUrl(event2.logo),
             cfpState: 'CLOSED',
             submissions: [
               {
@@ -54,7 +55,7 @@ describe('SpeakerActivities', () => {
             slug: event.slug,
             name: event.name,
             teamName: team.name,
-            logoUrl: event.logoUrl,
+            logoUrl: resolveStorageUrl(event.logo),
             cfpState: 'OPENED',
             submissions: [
               {

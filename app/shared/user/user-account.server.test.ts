@@ -10,6 +10,7 @@ import type { Mock } from 'vitest';
 import { auth } from '~/shared/authentication/firebase.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { db } from '../../../prisma/db.server.ts';
+import { resolveStorageUrl } from '../storage/storage-utils.ts';
 import { UserAccount } from './user-account.server.ts';
 
 vi.mock('~/shared/authentication/firebase.server.ts', () => ({
@@ -62,7 +63,7 @@ describe('UserAccount', () => {
             slug: team.slug,
             name: team.name,
             role: 'OWNER',
-            events: [{ slug: event.slug, name: event.name, logoUrl: event.logoUrl, archived: false }],
+            events: [{ slug: event.slug, name: event.name, logoUrl: resolveStorageUrl(event.logo), archived: false }],
           },
         ],
         hasTeamAccess: true,
@@ -98,8 +99,8 @@ describe('UserAccount', () => {
           name: 'A',
           role: 'OWNER',
           events: [
-            { slug: event1.slug, name: event1.name, logoUrl: event1.logoUrl, archived: false },
-            { slug: event2.slug, name: event2.name, logoUrl: event2.logoUrl, archived: true },
+            { slug: event1.slug, name: event1.name, logoUrl: resolveStorageUrl(event1.logo), archived: false },
+            { slug: event2.slug, name: event2.name, logoUrl: resolveStorageUrl(event2.logo), archived: true },
           ],
         },
         { slug: team2.slug, name: 'B', role: 'MEMBER', events: [] },

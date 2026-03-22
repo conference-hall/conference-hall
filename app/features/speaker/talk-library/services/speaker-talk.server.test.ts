@@ -3,6 +3,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { TalkNotFoundError } from '~/shared/errors.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { User } from '../../../../../prisma/generated/client.ts';
@@ -96,7 +97,7 @@ describe('SpeakerTalk', () => {
           name: proposal2.event.name,
           slug: proposal2.event.slug,
           proposalId: proposal2.id,
-          logoUrl: proposal2.event.logoUrl,
+          logoUrl: resolveStorageUrl(proposal2.event.logo),
           proposalStatus: SpeakerProposalStatus.DeliberationPending,
           createdAt: proposal2.createdAt,
         },
@@ -104,7 +105,7 @@ describe('SpeakerTalk', () => {
           name: proposal1.event.name,
           slug: proposal1.event.slug,
           proposalId: proposal1.id,
-          logoUrl: proposal1.event.logoUrl,
+          logoUrl: resolveStorageUrl(proposal1.event.logo),
           proposalStatus: SpeakerProposalStatus.DeliberationPending,
           createdAt: proposal1.createdAt,
         },

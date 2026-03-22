@@ -8,7 +8,7 @@ import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import AccountDeletedEmail from '~/shared/emails/templates/auth/account-deleted.tsx';
 import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
-import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { db } from '../../../prisma/db.server.ts';
 import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 import { validateCaptchaToken } from '../authentication/captcha.server.ts';

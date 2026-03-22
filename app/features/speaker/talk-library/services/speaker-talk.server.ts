@@ -1,5 +1,5 @@
 import { TalkNotFoundError } from '~/shared/errors.server.ts';
-import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { TalkSaveData } from '~/shared/types/speaker-talk.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';

@@ -1,7 +1,7 @@
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ConversationMessageEmail from '~/shared/emails/templates/speakers/conversation-message.tsx';
 import { job } from '~/shared/jobs/job.ts';
-import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import type { MessageRole } from '~/shared/types/conversation.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { EventSpeaker, Proposal } from '../../../../../prisma/generated/client.ts';

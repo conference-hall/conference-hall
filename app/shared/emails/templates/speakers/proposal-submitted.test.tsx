@@ -15,7 +15,7 @@ describe('Proposal Submitted', () => {
     const event: TemplateData['event'] = {
       id: 'bdx-io',
       name: 'BDX I/O',
-      logoUrl: null,
+      logo: null,
     };
     const proposal: TemplateData['proposal'] = {
       title: 'Random Proposal w/ special characters ✨',
