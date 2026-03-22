@@ -1,5 +1,5 @@
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import { EventType } from '../../../../prisma/generated/client.ts';
 import type { EventWhereInput } from '../../../../prisma/generated/models.ts';
@@ -48,7 +48,7 @@ export class EventsSearch {
         name: event.name,
         type: event.type,
         location: event.location,
-        logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
+        logoUrl: resolveStorageUrl(event.logo),
         cfpState: event.cfpState,
         timezone: event.timezone,
         cfpStart: event.cfpStart,

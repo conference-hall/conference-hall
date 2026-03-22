@@ -98,7 +98,6 @@ model Event {
   websiteUrl                  String?
   codeOfConductUrl            String?
   logo                        String?
-  logoUrl                     String?
   conferenceStart             DateTime?
   conferenceEnd               DateTime?
   cfpStart                    DateTime?

@@ -2,6 +2,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { EventFetcher } from './event-fetcher.server.ts';
 
 describe('EventFetcher', () => {
@@ -39,7 +40,7 @@ describe('EventFetcher', () => {
         websiteUrl: event.websiteUrl,
         codeOfConductUrl: event.codeOfConductUrl,
         contactEmail: event.contactEmail,
-        logoUrl: event.logoUrl,
+        logoUrl: resolveStorageUrl(event.logo),
         maxProposals: event.maxProposals,
         reviewEnabled: event.reviewEnabled,
         displayProposalsReviews: event.displayProposalsReviews,

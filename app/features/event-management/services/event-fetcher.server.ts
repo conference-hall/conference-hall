@@ -1,6 +1,6 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { EventNotFoundError } from '~/shared/errors.server.ts';
-import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { db } from '../../../../prisma/db.server.ts';
@@ -41,7 +41,7 @@ export class EventFetcher {
       websiteUrl: fullEvent.websiteUrl,
       codeOfConductUrl: fullEvent.codeOfConductUrl,
       contactEmail: fullEvent.contactEmail,
-      logoUrl: resolveStorageUrl(fullEvent.logo) ?? resolveStorageUrl(fullEvent.logoUrl),
+      logoUrl: resolveStorageUrl(fullEvent.logo),
       maxProposals: fullEvent.maxProposals,
       reviewEnabled: fullEvent.reviewEnabled,
       displayProposalsReviews: fullEvent.displayProposalsReviews,

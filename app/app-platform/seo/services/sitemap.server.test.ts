@@ -1,4 +1,5 @@
 import { eventFactory } from 'tests/factories/events.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { getEventsForSitemap } from './sitemap.server.ts';
 
 describe('#getEventsForSitemap', () => {
@@ -16,7 +17,7 @@ describe('#getEventsForSitemap', () => {
     expect(result.find((r) => r.name === 'conf-1')).toEqual({
       name: event.name,
       slug: event.slug,
-      logoUrl: event.logoUrl,
+      logoUrl: resolveStorageUrl(event.logo),
     });
   });
 

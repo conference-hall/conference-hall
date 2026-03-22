@@ -4,6 +4,7 @@ import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { z } from 'zod';
 import { EventNotFoundError } from '~/shared/errors.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { EventPage } from './event-page.server.ts';
 
 describe('EventPage', () => {
@@ -31,7 +32,7 @@ describe('EventPage', () => {
         websiteUrl: event.websiteUrl,
         contactEmail: event.contactEmail,
         codeOfConductUrl: event.codeOfConductUrl,
-        logoUrl: event.logoUrl,
+        logoUrl: resolveStorageUrl(event.logo),
         maxProposals: event.maxProposals,
         cfpStart: event.cfpStart,
         cfpEnd: event.cfpEnd,

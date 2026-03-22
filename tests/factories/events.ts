@@ -134,7 +134,6 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
     timezone: 'Europe/Paris',
     location: randFullAddress(),
     logo: null,
-    logoUrl: null,
     websiteUrl: randUrl(),
     contactEmail: randEmail(),
     codeOfConductUrl: randUrl(),

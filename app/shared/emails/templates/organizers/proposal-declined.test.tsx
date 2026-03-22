@@ -15,7 +15,7 @@ describe('Proposal Declined', () => {
     const event: TemplateData['event'] = {
       slug: 'bdx-io',
       name: 'BDX I/O',
-      logoUrl: null,
+      logo: null,
       emailOrganizer: 'test@bdxio.com',
       emailNotifications: null,
       team: { slug: 'BDX I/O' },

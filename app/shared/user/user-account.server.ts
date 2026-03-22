@@ -8,7 +8,7 @@ import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import AccountDeletedEmail from '~/shared/emails/templates/auth/account-deleted.tsx';
 import VerificationEmail from '~/shared/emails/templates/auth/email-verification.tsx';
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.tsx';
-import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { db } from '../../../prisma/db.server.ts';
 import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 import { validateCaptchaToken } from '../authentication/captcha.server.ts';
@@ -62,7 +62,7 @@ export class UserAccount {
         slug: event.slug,
         name: event.name,
         archived: event.archived,
-        logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
+        logoUrl: resolveStorageUrl(event.logo),
       }));
       return {
         slug: team.slug,

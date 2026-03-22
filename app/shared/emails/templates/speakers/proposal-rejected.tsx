@@ -3,11 +3,12 @@ import type { CustomEmailData, LocaleEmailData } from '~/shared/emails/email.typ
 import type { EmailPayload } from '~/shared/emails/send-email.job.ts';
 import { EmailMarkdown } from '~/shared/emails/utils/email-markdown.tsx';
 import { getEmailI18n } from '~/shared/i18n/i18n.emails.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
 export type TemplateData = {
-  event: { id: string; name: string; logoUrl: string | null };
+  event: { id: string; name: string; logo: string | null };
   proposal: { title: string; speakers: Array<{ email: string; locale: string }> };
 };
 
@@ -17,7 +18,7 @@ export default function ProposalRejectedEmail({ event, proposal, locale, customi
   const t = getEmailI18n(locale);
 
   return (
-    <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
+    <BaseEventEmail locale={locale} logoUrl={resolveStorageUrl(event.logo)}>
       <Heading className={styles.h1}>{t('speakers.proposal-rejected.body.title')}</Heading>
 
       {customization?.content ? (
@@ -59,6 +60,6 @@ ProposalRejectedEmail.buildPayload = (data: TemplateData, localeOverride?: strin
 };
 
 ProposalRejectedEmail.PreviewProps = {
-  event: { name: 'Awesome event', logoUrl: 'https://picsum.photos/seed/123/128' },
+  event: { name: 'Awesome event', logo: 'seed/123/128.png' },
   proposal: { title: 'My awesome proposal', speakers: [{ email: 'john@email.com', locale: 'en' }] },
 } as EmailProps;

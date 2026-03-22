@@ -1,6 +1,6 @@
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/shared/errors.server.ts';
-import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 
 export class CoSpeakerProposalInvite {
@@ -30,7 +30,7 @@ export class CoSpeakerProposalInvite {
         name: proposal.event.name,
         slug: proposal.event.slug,
         type: proposal.event.type,
-        logoUrl: resolveStorageUrl(proposal.event.logo) ?? resolveStorageUrl(proposal.event.logoUrl),
+        logoUrl: resolveStorageUrl(proposal.event.logo),
         cfpState: proposal.event.cfpState,
         cfpStart: proposal.event.cfpStart,
         cfpEnd: proposal.event.cfpEnd,

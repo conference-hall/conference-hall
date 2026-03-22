@@ -50,7 +50,7 @@ describe('EventSettings', () => {
         formatsRequired: true,
         codeOfConductUrl: 'codeOfConductUrl',
         emailNotifications: ['submitted'],
-        logoUrl: 'logoUrl',
+        logo: 'logoUrl',
         apiKey: 'apiKey',
       });
 
@@ -65,7 +65,7 @@ describe('EventSettings', () => {
       expect(updated?.categoriesRequired).toBe(true);
       expect(updated?.formatsRequired).toBe(true);
       expect(updated?.description).toBe('Updated');
-      expect(updated?.logoUrl).toBe('logoUrl');
+      expect(updated?.logo).toBe('logoUrl');
       expect(updated?.codeOfConductUrl).toBe('codeOfConductUrl');
       expect(updated?.emailNotifications).toEqual(['submitted']);
       expect(updated?.apiKey).toBe('apiKey');

@@ -1,4 +1,4 @@
-import { resolveStorageUrl } from '~/shared/storage/storage-key.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import { EventType, EventVisibility } from '../../../../prisma/generated/client.ts';
 
@@ -18,6 +18,6 @@ export async function getEventsForSitemap() {
   return events.map((event) => ({
     name: event.name,
     slug: event.slug,
-    logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
+    logoUrl: resolveStorageUrl(event.logo),
   }));
 }

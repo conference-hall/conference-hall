@@ -3,6 +3,7 @@ import type { LocaleEmailData } from '~/shared/emails/email.types.ts';
 import type { EmailPayload } from '~/shared/emails/send-email.job.ts';
 import { buildReviewProposalUrl } from '~/shared/emails/utils/urls.ts';
 import { getEmailI18n } from '~/shared/i18n/i18n.emails.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { styles } from '../base-email.tsx';
 import BaseEventEmail from '../base-event-email.tsx';
 
@@ -10,7 +11,7 @@ export type TemplateData = {
   event: {
     slug: string;
     name: string;
-    logoUrl: string | null;
+    logo: string | null;
     emailOrganizer: string | null;
     emailNotifications: any;
     team: { slug: string };
@@ -24,7 +25,7 @@ export default function ProposalConfirmedEmail({ event, proposal, locale }: Emai
   const t = getEmailI18n(locale);
 
   return (
-    <BaseEventEmail locale={locale} logoUrl={event.logoUrl}>
+    <BaseEventEmail locale={locale} logoUrl={resolveStorageUrl(event.logo)}>
       <Heading className={styles.h1}>{t('organizers.proposal-confirmed.body.title')}</Heading>
 
       <Section className={styles.card}>
@@ -66,7 +67,7 @@ ProposalConfirmedEmail.PreviewProps = {
   event: {
     slug: 'awesome-event',
     name: 'Awesome event',
-    logoUrl: 'https://picsum.photos/seed/123/128',
+    logo: 'seed/123/128.png',
     team: { slug: 'awesome-team' },
   },
   proposal: { id: '123', title: 'My awesome proposal', speakers: [{ name: 'John Doe' }] },

@@ -1,4 +1,5 @@
 import { eventFactory } from 'tests/factories/events.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { parseUrlFilters } from './event-search.schema.server.ts';
 import { EventsSearch } from './event-search.server.ts';
 
@@ -25,7 +26,7 @@ describe('EventsSearch', () => {
             timezone: event.timezone,
             cfpStart: event.cfpStart,
             cfpEnd: event.cfpEnd,
-            logoUrl: event.logoUrl,
+            logoUrl: resolveStorageUrl(event.logo),
           },
         ],
       });

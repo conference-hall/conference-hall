@@ -3,6 +3,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { InvitationNotFoundError } from '~/shared/errors.server.ts';
+import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import { CoSpeakerProposalInvite } from './co-speaker-proposal-invite.server.ts';
 
@@ -26,7 +27,7 @@ describe('CoSpeakerProposalInvite', () => {
           name: proposal.event.name,
           slug: proposal.event.slug,
           type: proposal.event.type,
-          logoUrl: proposal.event.logoUrl,
+          logoUrl: resolveStorageUrl(proposal.event.logo),
           cfpState: proposal.event.cfpState,
           cfpStart: proposal.event.cfpStart,
           cfpEnd: proposal.event.cfpEnd,

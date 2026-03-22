@@ -33,7 +33,7 @@ export class AdminDebug {
       data: {
         children:
           'Dear Ben, We’re excited to welcome you as a speaker at our upcoming conference! Your session will be held in Conference Hall A, equipped with a full AV setup, including a projector, microphones, and a sound system. The hall will be open for you to test your presentation 30 minutes before your scheduled time. If you have any specific requirements or need assistance, please let us know in advance. We’re here to ensure everything runs smoothly so you can focus on delivering an outstanding talk. Looking forward to your presentation!',
-        logoUrl: 'https://conference-hall.io/storage/b6cf57b6-b752-4b8d-a280-02e17b0c5262.jpg',
+        logoUrl: 'https://conference-hall.io/storage/events/clzyaa4za0zr013hpbnmgk41g/logo-19acff6e.jpeg',
       },
       locale: 'en',
     });

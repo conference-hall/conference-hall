@@ -1,7 +1,7 @@
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
-  entry: ['servers/*.ts', 'servers/express/app.ts', 'scripts/*.ts'],
+  entry: ['servers/*.ts', 'servers/express/app.ts'],
 
   playwright: {
     entry: ['e2e/**/*.setup.ts'],

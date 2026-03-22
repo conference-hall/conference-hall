@@ -16,7 +16,7 @@ describe('Proposal Accepted', () => {
       id: 'bdx-io',
       slug: 'bdx-io',
       name: 'BDX I/O',
-      logoUrl: null,
+      logo: null,
     };
     const proposal: TemplateData['proposal'] = {
       id: '123',

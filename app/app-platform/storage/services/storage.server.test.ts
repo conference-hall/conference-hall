@@ -6,11 +6,6 @@ vi.mock('~/shared/storage/storage.server.ts', () => ({
   StorageService: { create: () => ({ upload: mockUpload }) },
 }));
 
-vi.mock('~/shared/storage/storage-key.server.ts', () => ({
-  generateStorageKey: (_entityType: string, _entityId: string, _fileName: string, ext: string) =>
-    `events/abc/logo-12345678.${ext}`,
-}));
-
 import { uploadToStorageHandler } from './storage.server.ts';
 
 function createFakeFileUpload(fieldName: string, type: string, data: Uint8Array) {
@@ -28,11 +23,15 @@ function createFakeFileUpload(fieldName: string, type: string, data: Uint8Array)
   };
 }
 
+function generateStorageKey(_entityType: string, _entityId: string, _fileName: string, ext: string) {
+  return `events/abc/logo-12345678.${ext}`;
+}
+
 describe('uploadToStorageHandler', () => {
   const options = { name: 'logo', entityType: 'events', entityId: 'abc', fileName: 'logo' };
 
   it('returns undefined for non-matching field names', async () => {
-    const handler = uploadToStorageHandler(options);
+    const handler = uploadToStorageHandler(options, generateStorageKey);
     const file = createFakeFileUpload('avatar', 'image/webp', new Uint8Array([1, 2, 3]));
 
     const result = await handler(file as never);
@@ -41,7 +40,7 @@ describe('uploadToStorageHandler', () => {
   });
 
   it('returns undefined for unsupported content types', async () => {
-    const handler = uploadToStorageHandler(options);
+    const handler = uploadToStorageHandler(options, generateStorageKey);
     const file = createFakeFileUpload('logo', 'image/gif', new Uint8Array([1, 2, 3]));
 
     const result = await handler(file as never);
@@ -50,7 +49,7 @@ describe('uploadToStorageHandler', () => {
   });
 
   it('uploads the file and returns a File with the bucket key as name', async () => {
-    const handler = uploadToStorageHandler(options);
+    const handler = uploadToStorageHandler(options, generateStorageKey);
     const data = new Uint8Array([1, 2, 3]);
     const file = createFakeFileUpload('logo', 'image/webp', data);
 
@@ -68,7 +67,7 @@ describe('uploadToStorageHandler', () => {
     ['image/png', 'png'],
     ['image/webp', 'webp'],
   ])('supports %s content type', async (contentType, expectedExt) => {
-    const handler = uploadToStorageHandler(options);
+    const handler = uploadToStorageHandler(options, generateStorageKey);
     const file = createFakeFileUpload('logo', contentType, new Uint8Array([1]));
 
     const result = await handler(file as never);
