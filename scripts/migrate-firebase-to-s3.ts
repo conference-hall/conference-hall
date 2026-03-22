@@ -90,13 +90,13 @@ function extractFilename(logoUrl: string): string | null {
 }
 
 function extractExtension(filename: string, contentType?: string): string {
-  const match = filename.match(/\.(\w+)$/);
-  if (match) return match[1].toLowerCase();
-
   if (contentType) {
     const ctMatch = contentType.match(/^image\/(\w+)/);
     if (ctMatch) return ctMatch[1].toLowerCase();
   }
+
+  const match = filename.match(/\.(\w+)$/);
+  if (match) return match[1].toLowerCase();
 
   logger.warn(`No extension found for "${filename}", defaulting to "jpg"`);
   return 'jpg';
