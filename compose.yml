@@ -49,6 +49,7 @@ services:
         echo 'Waiting for MinIO...'; sleep 1;
       done;
       mc mb --ignore-existing local/conference-hall;
+      mc mb --ignore-existing local/conference-hall-test;
       exit 0;
       "
 

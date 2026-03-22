@@ -48,8 +48,6 @@ export class StorageService {
 
       continuationToken = listResponse.IsTruncated ? listResponse.NextContinuationToken : undefined;
     } while (continuationToken);
-
-    logger.info('S3 bucket cleared');
   }
 
   async upload(key: string, body: Buffer, contentType: string): Promise<string> {

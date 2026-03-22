@@ -1,11 +1,16 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { StorageService } from '~/shared/storage/storage.server.ts';
 import { expect, loginWith, test } from '../../../fixtures.ts';
 import { getFileUploadPath } from '../../../helpers.ts';
 import { CustomizeSettingsPage } from './customize-settings.page.ts';
 
 loginWith('clark-kent');
+
+test.afterEach(async () => {
+  await StorageService.clearBucket();
+});
 
 test('updates event logo', async ({ page }) => {
   const user = await userFactory({ traits: ['clark-kent'] });
