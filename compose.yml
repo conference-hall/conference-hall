@@ -25,6 +25,7 @@ services:
       - ./docker/firebase/fixtures:/app/fixtures:ro
     ports:
       - '9099:9099'
+      - '9199:9199'
       - '4000:4000'
 
   minio:
