@@ -37,7 +37,7 @@ export class SpeakerActivities {
           slug: event.slug,
           name: event.name,
           teamName: event.team.name,
-          logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
+          logoUrl: resolveStorageUrl(event.logo),
           cfpState: event.cfpState,
           submissions: event.proposals
             .filter((proposal) => proposal.talk && !proposal.talk.archived)

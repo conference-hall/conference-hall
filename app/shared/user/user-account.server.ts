@@ -62,7 +62,7 @@ export class UserAccount {
         slug: event.slug,
         name: event.name,
         archived: event.archived,
-        logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
+        logoUrl: resolveStorageUrl(event.logo),
       }));
       return {
         slug: team.slug,

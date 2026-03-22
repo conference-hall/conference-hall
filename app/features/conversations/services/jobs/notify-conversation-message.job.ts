@@ -102,7 +102,7 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
               id: conversation.event.id,
               slug: conversation.event.slug,
               name: conversation.event.name,
-              logoUrl: resolveStorageUrl(conversation.event.logo) ?? resolveStorageUrl(conversation.event.logoUrl),
+              logoUrl: resolveStorageUrl(conversation.event.logo),
               teamSlug: conversation.event.team.slug,
             },
             proposal: proposal ? { id: proposal.id, routeId: proposal.routeId } : undefined,

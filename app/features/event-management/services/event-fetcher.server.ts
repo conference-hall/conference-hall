@@ -41,7 +41,7 @@ export class EventFetcher {
       websiteUrl: fullEvent.websiteUrl,
       codeOfConductUrl: fullEvent.codeOfConductUrl,
       contactEmail: fullEvent.contactEmail,
-      logoUrl: resolveStorageUrl(fullEvent.logo) ?? resolveStorageUrl(fullEvent.logoUrl),
+      logoUrl: resolveStorageUrl(fullEvent.logo),
       maxProposals: fullEvent.maxProposals,
       reviewEnabled: fullEvent.reviewEnabled,
       displayProposalsReviews: fullEvent.displayProposalsReviews,

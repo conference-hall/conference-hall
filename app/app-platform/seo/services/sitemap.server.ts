@@ -18,6 +18,6 @@ export async function getEventsForSitemap() {
   return events.map((event) => ({
     name: event.name,
     slug: event.slug,
-    logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
+    logoUrl: resolveStorageUrl(event.logo),
   }));
 }

@@ -21,7 +21,7 @@ export class TeamEvents {
       slug: event.slug,
       name: event.name,
       type: event.type,
-      logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
+      logoUrl: resolveStorageUrl(event.logo),
       timezone: event.timezone,
       cfpStart: event.cfpStart,
       cfpEnd: event.cfpEnd,

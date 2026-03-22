@@ -30,7 +30,7 @@ export class CoSpeakerProposalInvite {
         name: proposal.event.name,
         slug: proposal.event.slug,
         type: proposal.event.type,
-        logoUrl: resolveStorageUrl(proposal.event.logo) ?? resolveStorageUrl(proposal.event.logoUrl),
+        logoUrl: resolveStorageUrl(proposal.event.logo),
         cfpState: proposal.event.cfpState,
         cfpStart: proposal.event.cfpStart,
         cfpEnd: proposal.event.cfpEnd,

@@ -45,7 +45,7 @@ export class EventPage {
       websiteUrl: event.websiteUrl,
       contactEmail: event.contactEmail,
       codeOfConductUrl: event.codeOfConductUrl,
-      logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
+      logoUrl: resolveStorageUrl(event.logo),
       maxProposals: event.maxProposals,
       hasSurvey: isActiveForEvent,
       hasTracks: event.categories.length > 0 || event.formats.length > 0,

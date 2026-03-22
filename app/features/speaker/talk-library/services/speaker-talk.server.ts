@@ -55,7 +55,7 @@ export class SpeakerTalk {
         .map((proposal) => ({
           slug: proposal.event.slug,
           name: proposal.event.name,
-          logoUrl: resolveStorageUrl(proposal.event.logo) ?? resolveStorageUrl(proposal.event.logoUrl),
+          logoUrl: resolveStorageUrl(proposal.event.logo),
           proposalId: proposal.id,
           proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
           createdAt: proposal.createdAt,

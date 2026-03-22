@@ -48,7 +48,7 @@ export class EventsSearch {
         name: event.name,
         type: event.type,
         location: event.location,
-        logoUrl: resolveStorageUrl(event.logo) ?? resolveStorageUrl(event.logoUrl),
+        logoUrl: resolveStorageUrl(event.logo),
         cfpState: event.cfpState,
         timezone: event.timezone,
         cfpStart: event.cfpStart,
