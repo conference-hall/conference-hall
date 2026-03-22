@@ -1,5 +1,11 @@
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
-import { describe, expect, it, vi } from 'vitest';
+import {
+  DeleteObjectCommand,
+  DeleteObjectsCommand,
+  GetObjectCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+} from '@aws-sdk/client-s3';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const mockSend = vi.fn();
 
@@ -14,6 +20,9 @@ vi.mock('../../../servers/environment.server.ts', () => ({
 import { StorageService } from './storage.server.ts';
 
 describe('StorageService', () => {
+  afterEach(() => {
+    mockSend.mockReset();
+  });
   describe('#upload', () => {
     it('sends a PutObjectCommand and returns the key', async () => {
       mockSend.mockResolvedValueOnce({});
@@ -96,6 +105,73 @@ describe('StorageService', () => {
       await storage.deleteQuietly('events/abc/logo.webp');
 
       expect(mockSend.mock.calls[0][0]).toBeInstanceOf(DeleteObjectCommand);
+    });
+  });
+
+  describe('.clearBucket', () => {
+    it('deletes all objects in the bucket', async () => {
+      mockSend
+        .mockResolvedValueOnce({
+          Contents: [{ Key: 'file1.png' }, { Key: 'file2.png' }],
+          IsTruncated: false,
+        })
+        .mockResolvedValueOnce({});
+
+      await StorageService.clearBucket();
+
+      expect(mockSend).toHaveBeenCalledTimes(2);
+      expect(mockSend.mock.calls[0][0]).toBeInstanceOf(ListObjectsV2Command);
+      expect(mockSend.mock.calls[1][0]).toBeInstanceOf(DeleteObjectsCommand);
+      expect(mockSend).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          input: {
+            Bucket: 'test-bucket',
+            Delete: {
+              Objects: [{ Key: 'file1.png' }, { Key: 'file2.png' }],
+              Quiet: true,
+            },
+          },
+        }),
+      );
+    });
+
+    it('paginates when there are more objects', async () => {
+      mockSend
+        .mockResolvedValueOnce({
+          Contents: [{ Key: 'file1.png' }],
+          IsTruncated: true,
+          NextContinuationToken: 'token-abc',
+        })
+        .mockResolvedValueOnce({})
+        .mockResolvedValueOnce({
+          Contents: [{ Key: 'file2.png' }],
+          IsTruncated: false,
+        })
+        .mockResolvedValueOnce({});
+
+      await StorageService.clearBucket();
+
+      expect(mockSend).toHaveBeenCalledTimes(4);
+      expect(mockSend.mock.calls[0][0]).toBeInstanceOf(ListObjectsV2Command);
+      expect(mockSend.mock.calls[1][0]).toBeInstanceOf(DeleteObjectsCommand);
+      expect(mockSend.mock.calls[2][0]).toBeInstanceOf(ListObjectsV2Command);
+      expect(mockSend).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({
+          input: { Bucket: 'test-bucket', ContinuationToken: 'token-abc' },
+        }),
+      );
+      expect(mockSend.mock.calls[3][0]).toBeInstanceOf(DeleteObjectsCommand);
+    });
+
+    it('does nothing when the bucket is empty', async () => {
+      mockSend.mockResolvedValueOnce({ Contents: [], IsTruncated: false });
+
+      await StorageService.clearBucket();
+
+      expect(mockSend).toHaveBeenCalledTimes(1);
+      expect(mockSend.mock.calls[0][0]).toBeInstanceOf(ListObjectsV2Command);
     });
   });
 });

@@ -1,5 +1,11 @@
 import type { Readable } from 'node:stream';
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  DeleteObjectsCommand,
+  GetObjectCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+} from '@aws-sdk/client-s3';
 import { getWebServerEnv } from '../../../servers/environment.server.ts';
 import { logger } from '../logger/logger.server.ts';
 import { s3Client } from './s3-client.server.ts';
@@ -15,6 +21,35 @@ export class StorageService {
 
   static create(): StorageService {
     return new StorageService(S3_BUCKET);
+  }
+
+  static async clearBucket(): Promise<void> {
+    let continuationToken: string | undefined;
+
+    do {
+      const listResponse = await s3Client.send(
+        new ListObjectsV2Command({
+          Bucket: S3_BUCKET,
+          ContinuationToken: continuationToken,
+        }),
+      );
+
+      if (listResponse.Contents?.length) {
+        await s3Client.send(
+          new DeleteObjectsCommand({
+            Bucket: S3_BUCKET,
+            Delete: {
+              Objects: listResponse.Contents.map(({ Key }) => ({ Key })),
+              Quiet: true,
+            },
+          }),
+        );
+      }
+
+      continuationToken = listResponse.IsTruncated ? listResponse.NextContinuationToken : undefined;
+    } while (continuationToken);
+
+    logger.info('S3 bucket cleared');
   }
 
   async upload(key: string, body: Buffer, contentType: string): Promise<string> {

@@ -19,6 +19,8 @@ import { teamFactory } from '../tests/factories/team.ts';
 import { userFactory } from '../tests/factories/users.ts';
 
 async function seed() {
+  await StorageService.clearBucket();
+
   const user = await userFactory({
     traits: ['clark-kent', 'admin'],
     attributes: {
