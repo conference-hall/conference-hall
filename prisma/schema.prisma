@@ -97,6 +97,7 @@ model Event {
   contactEmail                String?
   websiteUrl                  String?
   codeOfConductUrl            String?
+  logo                        String?
   logoUrl                     String?
   conferenceStart             DateTime?
   conferenceEnd               DateTime?
