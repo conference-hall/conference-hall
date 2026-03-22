@@ -4,34 +4,20 @@
  * Prerequisites:
  *   - Database: set DATABASE_URL
  *   - S3 client: set S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY
- *   - Firebase Admin SDK: set FIREBASE_SERVICE_ACCOUNT
- *   - Firebase storage bucket: FIREBASE_STORAGE
+ *   - Firebase: set FIREBASE_SERVICE_ACCOUNT + FIREBASE_STORAGE (via shared Firebase module)
  *
  * Usage:
  *   npx tsx scripts/migrate-firebase-to-s3.ts
  *
  * Idempotent: only processes events where logo IS NULL.
  */
-import admin from 'firebase-admin';
-import { getStorage } from 'firebase-admin/storage';
+import { storage as firebaseStorage } from '../app/shared/authentication/firebase.server.ts';
+import { logger } from '../app/shared/logger/logger.server.ts';
 import { generateStorageKey } from '../app/shared/storage/storage-key.server.ts';
 import { StorageService } from '../app/shared/storage/storage.server.ts';
 import { db } from '../prisma/db.server.ts';
 
-const FIREBASE_SERVICE_ACCOUNT = process.env.FIREBASE_SERVICE_ACCOUNT;
-if (!FIREBASE_SERVICE_ACCOUNT) {
-  console.error('FIREBASE_SERVICE_ACCOUNT env var is required');
-  process.exit(1);
-}
-
-const serviceAccount = JSON.parse(FIREBASE_SERVICE_ACCOUNT);
-
-const app = admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  storageBucket: process.env.FIREBASE_STORAGE,
-});
-
-const bucket = getStorage(app).bucket();
+const bucket = firebaseStorage.bucket();
 const storage = StorageService.create();
 
 async function migrate() {
@@ -40,7 +26,7 @@ async function migrate() {
     select: { id: true, logoUrl: true },
   });
 
-  console.log(`Found ${events.length} events to migrate`);
+  logger.info(`Found ${events.length} events to migrate`);
 
   let success = 0;
   let failed = 0;
@@ -56,7 +42,7 @@ async function migrate() {
     try {
       const filename = extractFilename(logoUrl);
       if (!filename) {
-        console.warn(`[${index + 1}/${events.length}] ${event.id} — could not extract filename from: ${logoUrl}`);
+        logger.warn(`[${index + 1}/${events.length}] ${event.id} — could not extract filename from: ${logoUrl}`);
         skipped++;
         continue;
       }
@@ -65,7 +51,7 @@ async function migrate() {
 
       const [exists] = await file.exists();
       if (!exists) {
-        console.warn(`[${index + 1}/${events.length}] ${event.id} — file not found in Firebase: ${filename}`);
+        logger.warn(`[${index + 1}/${events.length}] ${event.id} — file not found in Firebase: ${filename}`);
         skipped++;
         continue;
       }
@@ -80,17 +66,15 @@ async function migrate() {
 
       await db.event.update({ where: { id: event.id }, data: { logo: key } });
 
-      console.log(`[${index + 1}/${events.length}] ${event.id} → ${key}`);
+      logger.info(`[${index + 1}/${events.length}] ${event.id} → ${key}`);
       success++;
     } catch (error) {
-      console.error(`[${index + 1}/${events.length}] ${event.id} — ERROR:`, error);
+      logger.error(`[${index + 1}/${events.length}] ${event.id} — migration error`, { error });
       failed++;
     }
   }
 
-  console.log(
-    `\nMigration complete: ${success} success, ${failed} failed, ${skipped} skipped (total: ${events.length})`,
-  );
+  logger.info(`Migration complete: ${success} success, ${failed} failed, ${skipped} skipped (total: ${events.length})`);
 }
 
 function extractFilename(logoUrl: string): string | null {
@@ -114,13 +98,13 @@ function extractExtension(filename: string, contentType?: string): string {
     if (ctMatch) return ctMatch[1].toLowerCase();
   }
 
-  console.warn(`No extension found for "${filename}", defaulting to "jpg"`);
+  logger.warn(`No extension found for "${filename}", defaulting to "jpg"`);
   return 'jpg';
 }
 
 migrate()
   .catch((error) => {
-    console.error('Migration failed:', error);
+    logger.error('Migration failed', { error });
     process.exit(1);
   })
   .finally(async () => {
