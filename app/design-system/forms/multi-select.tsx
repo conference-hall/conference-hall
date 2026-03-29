@@ -38,6 +38,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
 
   const handleSelect = (selectedOptions: string[]) => {
     setSelected(selectedOptions);
+    setSearchTerm('');
   };
 
   return (
