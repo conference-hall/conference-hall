@@ -23,12 +23,11 @@ import { TagsPanel } from './components/form-panels/tags-panel.tsx';
 import { ProposalCreationSchema } from './services/proposal-management.schema.server.ts';
 import { ProposalManagement } from './services/proposal-management.server.ts';
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
+export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
   const proposalManagement = ProposalManagement.for(authorizedEvent);
   await proposalManagement.canCreate();
 
-  const url = new URL(request.url);
   const speakerId = url.searchParams.get('speaker');
 
   if (speakerId) {

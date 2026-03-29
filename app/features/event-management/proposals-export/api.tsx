@@ -8,9 +8,9 @@ import { ProposalsExport } from './services/proposals-export.server.ts';
 
 export const middleware = [requireAuthorizedApiEvent];
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
+export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
   const authorizedApiEvent = context.get(AuthorizedApiEventContext);
-  const filters = parseUrlFilters(request.url);
+  const filters = parseUrlFilters(url);
 
   const proposals = await ProposalsExport.forApi(authorizedApiEvent).toJson(filters);
 

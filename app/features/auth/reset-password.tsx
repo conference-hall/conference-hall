@@ -23,11 +23,10 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Reset password | Conference Hall' }]);
 };
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
+export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
   const user = context.get(OptionalAuthContext);
   if (user) return redirect('/');
 
-  const url = new URL(request.url);
   const oobCode = url.searchParams.get('oobCode');
   if (!oobCode) return redirect('/auth/login');
 

@@ -44,19 +44,19 @@ describe('Pagination', () => {
 
 describe('parseUrlPage', () => {
   it('returns valid page', async () => {
-    const url = 'http://localhost/?page=1';
+    const url = new URL('http://localhost/?page=1');
     const result = parseUrlPage(url);
     expect(result).toBe(1);
   });
 
   it('returns page 1 when page number invalid', async () => {
-    const url = 'http://localhost/?query=XXX';
+    const url = new URL('http://localhost/?query=XXX');
     const result = parseUrlPage(url);
     expect(result).toBe(1);
   });
 
   it('returns page 1 when no query params', async () => {
-    const url = 'http://localhost';
+    const url = new URL('http://localhost');
     const result = parseUrlPage(url);
     expect(result).toBe(1);
   });

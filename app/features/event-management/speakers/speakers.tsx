@@ -12,9 +12,9 @@ import { Filters } from './components/filters.tsx';
 import { SpeakersEmptyState } from './components/speakers-empty-state.tsx';
 import { EventSpeakers, parseUrlFilters } from './services/event-speakers.server.ts';
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
-  const filters = parseUrlFilters(request.url);
-  const page = parseUrlPage(request.url);
+export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
+  const filters = parseUrlFilters(url);
+  const page = parseUrlPage(url);
   const authorizedEvent = context.get(AuthorizedEventContext);
   return EventSpeakers.for(authorizedEvent).search(filters, page);
 };

@@ -46,8 +46,9 @@ function createMockContext() {
   };
 }
 
-function createMockRequest(url = 'https://example.com/test') {
-  return new Request(url);
+const DEFAULT_URL = new URL('https://example.com/test');
+function createMockRequest(url = DEFAULT_URL, headers: Record<string, string> = {}) {
+  return new Request(url, { headers });
 }
 
 const mockNext = vi.fn(async () => new Response());
@@ -69,7 +70,7 @@ describe('requireAdmin', () => {
       notificationsUnreadCount: 0,
     });
 
-    await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await requireAdmin({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
 
     expect(context.get(AuthorizedAdminContext)).toBeDefined();
   });
@@ -80,9 +81,9 @@ describe('requireAdmin', () => {
 
     context.set(RequireAuthContext, null);
 
-    await expect(requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext)).rejects.toThrow(
-      BadRequestError,
-    );
+    await expect(
+      requireAdmin({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext),
+    ).rejects.toThrow(BadRequestError);
   });
 
   it('throws NotFoundError when user is not admin', async () => {
@@ -102,7 +103,7 @@ describe('requireAdmin', () => {
     });
 
     await expect(async () => {
-      await requireAdmin({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      await requireAdmin({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
     }).rejects.toThrow(NotFoundError);
   });
 });
@@ -153,7 +154,10 @@ describe('requireAuthorizedTeam', () => {
 
     getAuthorizedTeamMock.mockResolvedValue(authorizedTeam);
 
-    await requireAuthorizedTeam({ request, context, params: { team: team.slug }, unstable_pattern: '' }, mockNext);
+    await requireAuthorizedTeam(
+      { request, context, params: { team: team.slug }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+      mockNext,
+    );
 
     expect(getAuthorizedTeamMock).toHaveBeenCalledWith(user.id, team.slug);
     expect(context.get(AuthorizedTeamContext)).toEqual(authorizedTeam);
@@ -166,7 +170,10 @@ describe('requireAuthorizedTeam', () => {
     context.set(RequireAuthContext, null);
 
     await expect(
-      requireAuthorizedTeam({ request, context, params: { team: 'test-team' }, unstable_pattern: '' }, mockNext),
+      requireAuthorizedTeam(
+        { request, context, params: { team: 'test-team' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+        mockNext,
+      ),
     ).rejects.toThrow(BadRequestError);
   });
 
@@ -187,7 +194,10 @@ describe('requireAuthorizedTeam', () => {
     });
 
     await expect(
-      requireAuthorizedTeam({ request, context, params: {}, unstable_pattern: '' }, mockNext),
+      requireAuthorizedTeam(
+        { request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL },
+        mockNext,
+      ),
     ).rejects.toThrow(BadRequestError);
   });
 
@@ -210,7 +220,7 @@ describe('requireAuthorizedTeam', () => {
 
     await expect(async () => {
       await requireAuthorizedTeam(
-        { request, context, params: { team: 'unauthorized-team' }, unstable_pattern: '' },
+        { request, context, params: { team: 'unauthorized-team' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
         mockNext,
       );
     }).rejects.toThrow(ForbiddenOperationError);
@@ -256,7 +266,10 @@ describe('requireAuthorizedEvent', () => {
     context.set(AuthorizedTeamContext, authorizedTeam);
     getAuthorizedEventMock.mockResolvedValue(authorizedEvent);
 
-    await requireAuthorizedEvent({ request, context, params: { event: event.slug }, unstable_pattern: '' }, mockNext);
+    await requireAuthorizedEvent(
+      { request, context, params: { event: event.slug }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+      mockNext,
+    );
 
     expect(getAuthorizedEventMock).toHaveBeenCalledWith(authorizedTeam, event.slug);
     expect(context.get(AuthorizedEventContext)).toEqual(authorizedEvent);
@@ -267,7 +280,10 @@ describe('requireAuthorizedEvent', () => {
     const context = createMockContext();
 
     await expect(
-      requireAuthorizedEvent({ request, context, params: { event: 'test-event' }, unstable_pattern: '' }, mockNext),
+      requireAuthorizedEvent(
+        { request, context, params: { event: 'test-event' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+        mockNext,
+      ),
     ).rejects.toThrow(BadRequestError);
   });
 
@@ -306,7 +322,10 @@ describe('requireAuthorizedEvent', () => {
     context.set(AuthorizedTeamContext, authorizedTeam);
 
     await expect(
-      requireAuthorizedEvent({ request, context, params: {}, unstable_pattern: '' }, mockNext),
+      requireAuthorizedEvent(
+        { request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL },
+        mockNext,
+      ),
     ).rejects.toThrow(BadRequestError);
   });
 
@@ -347,7 +366,7 @@ describe('requireAuthorizedEvent', () => {
 
     await expect(async () => {
       await requireAuthorizedEvent(
-        { request, context, params: { event: 'unauthorized-event' }, unstable_pattern: '' },
+        { request, context, params: { event: 'unauthorized-event' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
         mockNext,
       );
     }).rejects.toThrow(ForbiddenOperationError);
@@ -390,7 +409,7 @@ describe('requireAuthorizedEvent', () => {
 
     await expect(async () => {
       await requireAuthorizedEvent(
-        { request, context, params: { event: 'non-existent-event' }, unstable_pattern: '' },
+        { request, context, params: { event: 'non-existent-event' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
         mockNext,
       );
     }).rejects.toThrow(EventNotFoundError);
@@ -446,8 +465,14 @@ describe('middleware chain behavior', () => {
     getAuthorizedTeamMock.mockResolvedValue(authorizedTeam);
     getAuthorizedEventMock.mockResolvedValue(authorizedEvent);
 
-    await requireAuthorizedTeam({ request, context, params: { team: team.slug }, unstable_pattern: '' }, mockNext);
-    await requireAuthorizedEvent({ request, context, params: { event: event.slug }, unstable_pattern: '' }, mockNext);
+    await requireAuthorizedTeam(
+      { request, context, params: { team: team.slug }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+      mockNext,
+    );
+    await requireAuthorizedEvent(
+      { request, context, params: { event: event.slug }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+      mockNext,
+    );
 
     expect(context.get(AuthorizedTeamContext)).toEqual(authorizedTeam);
     expect(context.get(AuthorizedEventContext)).toEqual(authorizedEvent);
@@ -459,7 +484,7 @@ describe('middleware chain behavior', () => {
 
     await expect(async () => {
       await requireAuthorizedEvent(
-        { request, context, params: { event: 'test-event' }, unstable_pattern: '' },
+        { request, context, params: { event: 'test-event' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
         mockNext,
       );
     }).rejects.toThrow(BadRequestError);
@@ -470,13 +495,12 @@ describe('requireAuthorizedApiEvent', () => {
   describe('header-based authentication', () => {
     it('sets event in context when API key is valid in header', async () => {
       const event = await eventFactory({ attributes: { apiKey: 'valid-api-key', slug: 'test-event' } });
-      const request = new Request('https://example.com/api/test', {
-        headers: { 'X-API-Key': 'valid-api-key' },
-      });
+      const url = new URL('https://example.com/api/test');
+      const request = createMockRequest(url, { 'X-API-Key': 'valid-api-key' });
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '' }, mockNext);
+      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext);
 
       const contextEvent = context.get(AuthorizedApiEventContext);
       expect(contextEvent?.event.id).toBe(event.id);
@@ -486,26 +510,24 @@ describe('requireAuthorizedApiEvent', () => {
 
     it('throws ApiKeyInvalidError when header API key does not match', async () => {
       await eventFactory({ attributes: { apiKey: 'correct-key', slug: 'test-event' } });
-      const request = new Request('https://example.com/api/test', {
-        headers: { 'X-API-Key': 'wrong-key' },
-      });
+      const url = new URL('https://example.com/api/test');
+      const request = createMockRequest(url, { 'X-API-Key': 'wrong-key' });
       const context = createMockContext();
       const params = { event: 'test-event' };
 
       await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '' }, mockNext),
+        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
       ).rejects.toThrow(ApiKeyInvalidError);
     });
 
     it('prefers header API key over query params', async () => {
       const event = await eventFactory({ attributes: { apiKey: 'header-key', slug: 'test-event' } });
-      const request = new Request('https://example.com/api/test?key=query-key', {
-        headers: { 'X-API-Key': 'header-key' },
-      });
+      const url = new URL('https://example.com/api/test?key=query-key');
+      const request = createMockRequest(url, { 'X-API-Key': 'header-key' });
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '' }, mockNext);
+      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext);
 
       const contextEvent = context.get(AuthorizedApiEventContext);
       expect(contextEvent?.event.id).toBe(event.id);
@@ -515,11 +537,12 @@ describe('requireAuthorizedApiEvent', () => {
   describe('query params authentication (backward compatibility)', () => {
     it('sets event in context when API key is valid in query params', async () => {
       const event = await eventFactory({ attributes: { apiKey: 'valid-api-key', slug: 'test-event' } });
-      const request = new Request('https://example.com/api/test?key=valid-api-key');
+      const url = new URL('https://example.com/api/test?key=valid-api-key');
+      const request = createMockRequest(url);
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '' }, mockNext);
+      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext);
 
       const contextEvent = context.get(AuthorizedApiEventContext);
       expect(contextEvent?.event.id).toBe(event.id);
@@ -529,11 +552,12 @@ describe('requireAuthorizedApiEvent', () => {
 
     it('validates API key from query string correctly', async () => {
       await eventFactory({ attributes: { apiKey: 'my-secret-key-123', slug: 'my-event' } });
-      const request = new Request('https://example.com/api/v1/proposals?key=my-secret-key-123&filter=accepted');
+      const url = new URL('https://example.com/api/v1/proposals?key=my-secret-key-123&filter=accepted');
+      const request = createMockRequest(url);
       const context = createMockContext();
       const params = { event: 'my-event' };
 
-      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '' }, mockNext);
+      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext);
 
       const contextEvent = context.get(AuthorizedApiEventContext);
       expect(contextEvent?.event.slug).toBe('my-event');
@@ -542,12 +566,13 @@ describe('requireAuthorizedApiEvent', () => {
     it('throws ApiKeyQueryParamsDeprecatedError when query params are disabled', async () => {
       await flags.set('disableApiKeyInQueryParams', true);
       await eventFactory({ attributes: { apiKey: 'valid-api-key', slug: 'test-event' } });
-      const request = new Request('https://example.com/api/test?key=valid-api-key');
+      const url = new URL('https://example.com/api/test?key=valid-api-key');
+      const request = createMockRequest(url);
       const context = createMockContext();
       const params = { event: 'test-event' };
 
       await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '' }, mockNext),
+        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
       ).rejects.toThrow(ApiKeyQueryParamsDeprecatedError);
 
       await flags.set('disableApiKeyInQueryParams', false);
@@ -556,13 +581,12 @@ describe('requireAuthorizedApiEvent', () => {
     it('allows header authentication when query params are disabled', async () => {
       await flags.set('disableApiKeyInQueryParams', true);
       const event = await eventFactory({ attributes: { apiKey: 'valid-api-key', slug: 'test-event' } });
-      const request = new Request('https://example.com/api/test', {
-        headers: { 'X-API-Key': 'valid-api-key' },
-      });
+      const url = new URL('https://example.com/api/test');
+      const request = createMockRequest(url, { 'X-API-Key': 'valid-api-key' });
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '' }, mockNext);
+      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext);
 
       const contextEvent = context.get(AuthorizedApiEventContext);
       expect(contextEvent?.event.id).toBe(event.id);
@@ -573,43 +597,47 @@ describe('requireAuthorizedApiEvent', () => {
 
   describe('error handling', () => {
     it('throws ForbiddenError when API key query parameter is missing', async () => {
-      const request = new Request('https://example.com/api/test');
+      const url = new URL('https://example.com/api/test');
+      const request = createMockRequest(url);
       const context = createMockContext();
       const params = { event: 'test-event' };
 
       await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '' }, mockNext),
+        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
       ).rejects.toThrow(ForbiddenError);
     });
 
     it('throws EventNotFoundError when event slug is not in params', async () => {
-      const request = new Request('https://example.com/api/test?key=some-key');
+      const url = new URL('https://example.com/api/test?key=some-key');
+      const request = createMockRequest(url);
       const context = createMockContext();
       const params = {};
 
       await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '' }, mockNext),
+        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
       ).rejects.toThrow(EventNotFoundError);
     });
 
     it('throws EventNotFoundError when event does not exist', async () => {
-      const request = new Request('https://example.com/api/test?key=valid-api-key');
+      const url = new URL('https://example.com/api/test?key=valid-api-key');
+      const request = createMockRequest(url);
       const context = createMockContext();
       const params = { event: 'non-existent-event' };
 
       await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '' }, mockNext),
+        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
       ).rejects.toThrow(EventNotFoundError);
     });
 
     it('throws ApiKeyInvalidError when API key does not match', async () => {
       await eventFactory({ attributes: { apiKey: 'correct-key', slug: 'test-event' } });
-      const request = new Request('https://example.com/api/test?key=wrong-key');
+      const url = new URL('https://example.com/api/test?key=wrong-key');
+      const request = createMockRequest(url);
       const context = createMockContext();
       const params = { event: 'test-event' };
 
       await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '' }, mockNext),
+        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
       ).rejects.toThrow(ApiKeyInvalidError);
     });
   });

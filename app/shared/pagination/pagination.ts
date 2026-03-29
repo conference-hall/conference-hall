@@ -29,8 +29,8 @@ export class Pagination {
   }
 }
 
-export function parseUrlPage(url: string) {
-  const params = new URL(url).searchParams;
+export function parseUrlPage(url: URL) {
+  const params = url.searchParams;
   const result = parseWithZod(params, { schema: z.object({ page: z.number().default(1) }) });
   if (result.status !== 'success') return 1;
   return result.value.page;

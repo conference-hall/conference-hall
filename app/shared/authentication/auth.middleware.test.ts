@@ -20,7 +20,8 @@ function createMockContext() {
   };
 }
 
-function createMockRequest(url = 'https://example.com/test') {
+const DEFAULT_URL = new URL('https://example.com/test');
+function createMockRequest(url = DEFAULT_URL) {
   return new Request(url);
 }
 
@@ -33,7 +34,7 @@ describe('optionalAuth middleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
 
     expect(getSessionUidMock).toHaveBeenCalledWith(request);
     expect(context.get(OptionalAuthContext)).toEqual({
@@ -54,7 +55,7 @@ describe('optionalAuth middleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
 
     expect(getSessionUidMock).toHaveBeenCalledWith(request);
     expect(context.get(OptionalAuthContext)).toBeNull();
@@ -66,7 +67,7 @@ describe('optionalAuth middleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
 
     expect(getSessionUidMock).toHaveBeenCalledWith(request);
     expect(context.get(OptionalAuthContext)).toBeNull();
@@ -78,7 +79,7 @@ describe('optionalAuth middleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
 
     expect(destroySessionMock).toHaveBeenCalledWith(request);
   });
@@ -88,7 +89,7 @@ describe('optionalAuth middleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
 
     expect(context.get(OptionalAuthContext)).toBeNull();
     expect(destroySessionMock).not.toHaveBeenCalled();
@@ -102,8 +103,8 @@ describe('requireAuth middleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-    await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
+    await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
 
     expect(context.get(RequireAuthContext)).toEqual({
       id: user.id,
@@ -119,17 +120,18 @@ describe('requireAuth middleware', () => {
 
   it('redirects to login when user is not authenticated', async () => {
     getSessionUidMock.mockResolvedValue(null);
-    const request = createMockRequest('https://example.com/protected/page');
+    const url = new URL('https://example.com/protected/page');
+    const request = createMockRequest(url);
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
 
     await expect(async () => {
-      await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
     }).rejects.toThrow(Response);
 
     try {
-      await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
     } catch (error) {
       const response = error as Response;
       expect(response.status).toBe(302);
@@ -139,13 +141,14 @@ describe('requireAuth middleware', () => {
 
   it('preserves redirectTo parameter in login URL', async () => {
     getSessionUidMock.mockResolvedValue(null);
-    const request = createMockRequest('https://example.com/team/my-team/settings');
+    const url = new URL('https://example.com/team/my-team/settings');
+    const request = createMockRequest(url);
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
 
     try {
-      await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
     } catch (error) {
       const response = error as Response;
       expect(response.headers.get('Location')).toBe('/auth/login?redirectTo=%2Fteam%2Fmy-team%2Fsettings');
@@ -154,13 +157,14 @@ describe('requireAuth middleware', () => {
 
   it('redirects with root path when accessing root', async () => {
     getSessionUidMock.mockResolvedValue(null);
-    const request = createMockRequest('https://example.com/');
+    const url = new URL('https://example.com/');
+    const request = createMockRequest(url);
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
 
     try {
-      await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
     } catch (error) {
       const response = error as Response;
       expect(response.headers.get('Location')).toBe('/auth/login?redirectTo=%2F');
@@ -175,8 +179,8 @@ describe('middleware chain behavior', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
-    await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
+    await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
 
     expect(context.get(OptionalAuthContext)).toEqual({
       id: user.id,
@@ -205,7 +209,7 @@ describe('middleware chain behavior', () => {
     const context = createMockContext();
 
     await expect(async () => {
-      await requireAuth({ request, context, params: {}, unstable_pattern: '' }, mockNext);
+      await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
     }).rejects.toThrow();
   });
 });

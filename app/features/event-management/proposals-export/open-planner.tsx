@@ -12,10 +12,10 @@ import { ProposalsExport } from './services/proposals-export.server.ts';
 
 export const middleware = [requireAuth, requireAuthorizedTeam, requireAuthorizedEvent];
 
-export const action = async ({ request, context }: Route.ActionArgs) => {
+export const action = async ({ context, unstable_url: url }: Route.ActionArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
   const i18n = getI18n(context);
-  const filters = parseUrlFilters(request.url);
+  const filters = parseUrlFilters(url);
 
   await ProposalsExport.forUser(authorizedEvent).toOpenPlanner(filters);
 

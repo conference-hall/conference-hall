@@ -17,8 +17,8 @@ export type TagSaveData = z.infer<typeof TagSaveSchema>;
 
 export type TagFilters = z.infer<typeof TagFiltersSchema>;
 
-export function parseUrlFilters(url: string) {
-  const params = new URL(url).searchParams;
+export function parseUrlFilters(url: URL) {
+  const params = url.searchParams;
   const result = parseWithZod(params, { schema: TagFiltersSchema });
   if (result.status !== 'success') return {};
   return result.value;

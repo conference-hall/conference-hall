@@ -56,7 +56,12 @@ export const requireAuthorizedEvent: MiddlewareFunction<Response> = async ({ par
 // Web API Event authorizations
 export const AuthorizedApiEventContext = createContext<AuthorizedApiEvent>();
 
-export const requireAuthorizedApiEvent: MiddlewareFunction<Response> = async ({ request, params, context }) => {
+export const requireAuthorizedApiEvent: MiddlewareFunction<Response> = async ({
+  request,
+  params,
+  context,
+  unstable_url: url,
+}) => {
   const disableQueryParams = await flags.get('disableApiKeyInQueryParams');
 
   let apiKey: string | null = null;
@@ -65,7 +70,6 @@ export const requireAuthorizedApiEvent: MiddlewareFunction<Response> = async ({ 
   if (headerApiKey) {
     apiKey = headerApiKey;
   } else {
-    const url = new URL(request.url);
     const result = parseWithZod(url.searchParams, { schema: z.object({ key: z.string() }) });
 
     if (result.status === 'success') {

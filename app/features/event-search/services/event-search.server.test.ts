@@ -198,25 +198,25 @@ describe('EventsSearch', () => {
 describe('EventsSearch schemas', () => {
   describe('parseUrlFilters', () => {
     it('returns valid filters', async () => {
-      const url = 'http://localhost/?query=foo&type=all';
+      const url = new URL('http://localhost/?query=foo&type=all');
       const result = parseUrlFilters(url);
       expect(result).toEqual({ query: 'foo', type: 'all' });
     });
 
     it('trims "query" filter', async () => {
-      const url = 'http://localhost/?query=foo';
+      const url = new URL('http://localhost/?query=foo');
       const result = parseUrlFilters(url);
       expect(result.query).toBe('foo');
     });
 
     it('returns undefined when incorrect "type" filter', async () => {
-      const url = 'http://localhost/?type=foo';
+      const url = new URL('http://localhost/?type=foo');
       const result = parseUrlFilters(url);
       expect(result.type).toBe(undefined);
     });
 
     it('reset filters', async () => {
-      const url = 'http://localhost';
+      const url = new URL('http://localhost');
       const result = parseUrlFilters(url);
       expect(result.query).toBe(undefined);
       expect(result.type).toBe(undefined);

@@ -21,14 +21,14 @@ import { SortMenu } from './components/list/toolbar/sort-menu.tsx';
 import { CfpReviewsSearch } from './services/cfp-reviews-search.server.ts';
 import { ProposalStatusBulkSchema, ProposalStatusUpdater } from './services/proposal-status-updater.server.ts';
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
+export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
-  const filters = parseUrlFilters(request.url);
-  const page = parseUrlPage(request.url);
+  const filters = parseUrlFilters(url);
+  const page = parseUrlPage(url);
   return CfpReviewsSearch.for(authorizedEvent).search(filters, page);
 };
 
-export const action = async ({ request, context }: Route.ActionArgs) => {
+export const action = async ({ request, context, unstable_url: url }: Route.ActionArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
   const i18n = getI18n(context);
   const form = await request.formData();
@@ -39,7 +39,7 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   const deliberate = ProposalStatusUpdater.for(authorizedEvent);
   let count = 0;
   if (allPagesSelected) {
-    const filters = parseUrlFilters(request.url);
+    const filters = parseUrlFilters(url);
     count = await deliberate.updateAll(filters, deliberationStatus);
   } else {
     count = await deliberate.update(selection, { deliberationStatus });

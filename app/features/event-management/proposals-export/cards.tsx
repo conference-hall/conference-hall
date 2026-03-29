@@ -16,10 +16,10 @@ export const middleware = [requireAuth, requireAuthorizedTeam, requireAuthorized
 
 export const links = () => [{ rel: 'stylesheet', href: styles }];
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
+export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
 
-  const filters = parseUrlFilters(request.url);
+  const filters = parseUrlFilters(url);
 
   return ProposalsExport.forUser(authorizedEvent).toCards(filters);
 };
