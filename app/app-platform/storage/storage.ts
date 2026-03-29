@@ -27,7 +27,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
     // @ts-expect-error Node Readable is compatible with Response body
     return new Response(body, { headers: buildResponseHeaders(contentType, contentLength) });
   } catch (error) {
-    logger.error('Error getting file from storage', { error });
+    logger.warn('Error getting file from storage', { storageKey: key, error });
     throw new Response('File not found', { status: 404 });
   }
 };
