@@ -13,8 +13,7 @@ import { AuthorizedTeamContext } from '~/shared/authorization/authorization.midd
 import type { Route } from './+types/event-list.ts';
 import { TeamEvents } from './services/team-events.server.ts';
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
-  const url = new URL(request.url);
+export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
   const archived = url.searchParams.get('archived') === 'true';
 
   const authorizedTeam = context.get(AuthorizedTeamContext);

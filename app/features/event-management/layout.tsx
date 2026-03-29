@@ -36,8 +36,7 @@ export const meta = (args: Route.MetaArgs) => {
   ]);
 };
 
-export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
-  const url = new URL(request.url);
+export const loader = async ({ params, context, unstable_url: url }: Route.LoaderArgs) => {
   if (url.pathname === `/team/${params.team}/${params.event}`) {
     return redirect(`/team/${params.team}/${params.event}/overview`);
   }

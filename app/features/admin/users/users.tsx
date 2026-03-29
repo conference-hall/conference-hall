@@ -11,11 +11,11 @@ import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import type { Route } from './+types/users.ts';
 import { AdminUsers, UsersSearchFiltersSchema } from './services/admin-users.server.ts';
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
-  const { searchParams } = new URL(request.url);
+export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
+  const { searchParams } = url;
   const result = parseWithZod(searchParams, { schema: UsersSearchFiltersSchema });
   const filters = result.status === 'success' ? result.value : {};
-  const page = parseUrlPage(request.url);
+  const page = parseUrlPage(url);
   const admin = context.get(AuthorizedAdminContext);
   const adminUsers = AdminUsers.for(admin);
   return adminUsers.listUsers(filters, page);

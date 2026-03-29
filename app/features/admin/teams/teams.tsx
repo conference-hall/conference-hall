@@ -13,13 +13,13 @@ import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import type { Route } from './+types/teams.ts';
 import { AdminTeams, TeamsSearchFiltersSchema } from './services/admin-teams.server.ts';
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
+export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
   const admin = context.get(AuthorizedAdminContext);
   const adminTeams = AdminTeams.for(admin);
-  const { searchParams } = new URL(request.url);
+  const { searchParams } = url;
   const result = parseWithZod(searchParams, { schema: TeamsSearchFiltersSchema });
   const filters = result.status === 'success' ? result.value : {};
-  const page = parseUrlPage(request.url);
+  const page = parseUrlPage(url);
   return adminTeams.listTeams(filters, page);
 };
 

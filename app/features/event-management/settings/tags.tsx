@@ -19,10 +19,10 @@ import type { Route } from './+types/tags.ts';
 import { parseUrlFilters, TagDeleteSchema, TagSaveSchema } from './services/event-proposal-tags.schema.server.ts';
 import { EventProposalTags } from './services/event-proposal-tags.server.ts';
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
+export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
-  const filters = parseUrlFilters(request.url);
-  const page = parseUrlPage(request.url);
+  const filters = parseUrlFilters(url);
+  const page = parseUrlPage(url);
   const { count, tags, pagination } = await EventProposalTags.for(authorizedEvent).list(filters, page);
   return { count, tags, filters, pagination };
 };

@@ -19,9 +19,9 @@ import { SearchEventsFilters } from './components/search-events-filters.tsx';
 import { SearchEventsInput } from './components/search-events-input.tsx';
 import { EventsSearch } from './services/event-search.server.ts';
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const filters = parseUrlFilters(request.url);
-  const page = parseUrlPage(request.url);
+export const loader = async ({ unstable_url: url }: Route.LoaderArgs) => {
+  const filters = parseUrlFilters(url);
+  const page = parseUrlPage(url);
   return EventsSearch.with(filters, page).search();
 };
 

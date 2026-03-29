@@ -10,9 +10,9 @@ import { ProposalsExport } from './services/proposals-export.server.ts';
 
 export const middleware = [requireAuth, requireAuthorizedTeam, requireAuthorizedEvent];
 
-export const loader = async ({ request, params, context }: Route.LoaderArgs) => {
+export const loader = async ({ params, context, unstable_url: url }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
-  const filters = parseUrlFilters(request.url);
+  const filters = parseUrlFilters(url);
 
   const results = await ProposalsExport.forUser(authorizedEvent).toJson(filters);
 

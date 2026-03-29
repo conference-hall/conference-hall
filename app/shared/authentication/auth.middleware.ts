@@ -17,11 +17,11 @@ export const optionalAuth: MiddlewareFunction<Response> = async ({ request, cont
 
 export const RequireAuthContext = createContext<AuthenticatedUser>();
 
-export const requireAuth: MiddlewareFunction<Response> = async ({ request, context }) => {
+export const requireAuth: MiddlewareFunction<Response> = async ({ context, unstable_url: url }) => {
   const user = context.get(OptionalAuthContext);
 
   if (!user) {
-    const redirectTo = new URL(request.url).pathname;
+    const redirectTo = url.pathname;
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
     throw redirect(`/auth/login?${searchParams}`);
   }

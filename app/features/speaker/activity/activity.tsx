@@ -14,9 +14,9 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Activity | Conference Hall' }]);
 };
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
+export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
   const authUser = context.get(RequireAuthContext);
-  const page = parseUrlPage(request.url);
+  const page = parseUrlPage(url);
   return SpeakerActivities.for(authUser.id).list(page);
 };
 
