@@ -92,8 +92,8 @@ export class Autocomplete {
   }
 }
 
-export function parseUrlFilters(url: string) {
-  const params = new URL(url).searchParams;
+export function parseUrlFilters(url: URL) {
+  const params = url.searchParams;
   const result = parseWithZod(params, { schema: AutocompleteFilterSchema });
   if (result.status !== 'success') return { kind: [] };
   return result.value;
