@@ -359,49 +359,49 @@ describe('Autocomplete for event management', () => {
 
 describe('parseUrlFilters', () => {
   it('parses valid URL with query and kind parameters', () => {
-    const url = 'https://example.com/search?query=test&kind=proposals&kind=speakers';
+    const url = new URL('https://example.com/search?query=test&kind=proposals&kind=speakers');
     const result = parseUrlFilters(url);
 
     expect(result).toEqual({ query: 'test', kind: ['proposals', 'speakers'] });
   });
 
   it('parses URL with only query parameter', () => {
-    const url = 'https://example.com/search?query=react';
+    const url = new URL('https://example.com/search?query=react');
     const result = parseUrlFilters(url);
 
     expect(result).toEqual({ query: 'react', kind: [] });
   });
 
   it('parses URL with only kind parameter', () => {
-    const url = 'https://example.com/search?kind=speakers';
+    const url = new URL('https://example.com/search?kind=speakers');
     const result = parseUrlFilters(url);
 
     expect(result).toEqual({ kind: ['speakers'] });
   });
 
   it('returns default values for URL without search parameters', () => {
-    const url = 'https://example.com/search';
+    const url = new URL('https://example.com/search');
     const result = parseUrlFilters(url);
 
     expect(result).toEqual({ kind: [] });
   });
 
   it('handles multiple kind parameters', () => {
-    const url = 'https://example.com/search?kind=proposals&kind=speakers&kind=events';
+    const url = new URL('https://example.com/search?kind=proposals&kind=speakers&kind=events');
     const result = parseUrlFilters(url);
 
     expect(result).toEqual({ kind: ['proposals', 'speakers', 'events'] });
   });
 
   it('handles URL encoded parameters', () => {
-    const url = 'https://example.com/search?query=react%20testing&kind=proposals';
+    const url = new URL('https://example.com/search?query=react%20testing&kind=proposals');
     const result = parseUrlFilters(url);
 
     expect(result).toEqual({ query: 'react testing', kind: ['proposals'] });
   });
 
   it('handles empty query parameter', () => {
-    const url = 'https://example.com/search?query=&kind=proposals';
+    const url = new URL('https://example.com/search?query=&kind=proposals');
     const result = parseUrlFilters(url);
 
     expect(result).toEqual({ query: undefined, kind: ['proposals'] });
