@@ -49,7 +49,6 @@ export class Publication {
 
   async publish(proposalId: string, withEmails: boolean) {
     const { event, permissions } = this.authorizedEvent;
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
     if (!permissions.canPublishEventResults) throw new ForbiddenOperationError();
 
     const proposal = await db.proposal.findUnique({
