@@ -169,7 +169,7 @@ export class ConversationService {
         {} as Record<string, EmojiReaction & { minDate: Date }>,
       ),
     )
-      .sort((a, b) => a.minDate.getTime() - b.minDate.getTime())
+      .toSorted((a, b) => a.minDate.getTime() - b.minDate.getTime())
       .map(({ code, reacted, reactedBy }) => ({ code, reacted, reactedBy }));
   }
 }

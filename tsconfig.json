@@ -1,7 +1,7 @@
 {
   "include": ["**/*.ts", "**/*.tsx", ".react-router/types/**/*"],
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "lib": ["DOM", "DOM.Iterable", "ES2024"],
     "types": ["mdx", "@react-router/node", "vitest/globals"],
     "isolatedModules": true,
     "esModuleInterop": true,

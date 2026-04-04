@@ -54,10 +54,10 @@ describe('EventsSearch', () => {
       expect(result.pagination.total).toBe(1);
       expect(result.results.length).toBe(3);
 
-      const names = result.results.map((e) => e.name).sort();
+      const names = result.results.map((e) => e.name).toSorted();
       expect(names).toEqual(['conf-1', 'conf-2', 'conf-3']);
 
-      const cfpStates = result.results.map((e) => e.cfpState).sort();
+      const cfpStates = result.results.map((e) => e.cfpState).toSorted();
       expect(cfpStates).toEqual(['CLOSED', 'OPENED', 'OPENED']);
     });
 

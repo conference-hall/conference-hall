@@ -32,7 +32,7 @@ function BarListInner<T>({
     if (sortOrder === 'none') {
       return data;
     }
-    return [...data].sort((a, b) => {
+    return data.toSorted((a, b) => {
       return sortOrder === 'ascending' ? a.value - b.value : b.value - a.value;
     });
   }, [data, sortOrder]);

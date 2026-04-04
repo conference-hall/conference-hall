@@ -59,7 +59,7 @@ export function ConversationDrawer({ messages, recipients = [], children, canMan
           </SlideOver.Content>
         ) : (
           <SlideOver.Content as="ul" className="flex flex-col-reverse gap-6 border-t border-t-gray-200 pb-6">
-            {[...optimisticMessages].reverse().map((message) => (
+            {optimisticMessages.toReversed().map((message) => (
               <li key={message.id} className="flex gap-4">
                 <Avatar picture={message.sender.picture} name={message.sender.name} size="s" className="mt-1" />
                 <MessageBlock

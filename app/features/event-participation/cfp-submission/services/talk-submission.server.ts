@@ -153,7 +153,7 @@ export class TalkSubmission {
           picture: speaker.picture,
           isCurrentUser: this.userId === speaker.userId,
         }))
-        .sort((a, b) => (a.isCurrentUser ? -1 : 0) - (b.isCurrentUser ? -1 : 0)),
+        .toSorted((a, b) => (a.isCurrentUser ? -1 : 0) - (b.isCurrentUser ? -1 : 0)),
       formats: proposal.formats.map((f) => ({ id: f.id, name: f.name })),
       categories: proposal.categories.map((c) => ({ id: c.id, name: c.name })),
     };

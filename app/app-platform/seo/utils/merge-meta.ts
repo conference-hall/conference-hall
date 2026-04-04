@@ -8,9 +8,8 @@ export function mergeMeta(matches: MetaMatches = [], routeMeta: MetaDescriptor[]
 }
 
 function deduplicateMetaTags(meta: MetaDescriptor[]) {
-  const metaReverse = meta.slice().reverse();
   const seen = new Set();
-  return metaReverse.filter((tag) => {
+  return meta.toReversed().filter((tag) => {
     if (!tag) return false;
 
     let key = null;

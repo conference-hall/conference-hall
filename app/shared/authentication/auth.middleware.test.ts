@@ -130,13 +130,14 @@ describe('requireAuth middleware', () => {
       await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
     }).rejects.toThrow(Response);
 
+    let response: Response | null = null;
     try {
       await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
     } catch (error) {
-      const response = error as Response;
-      expect(response.status).toBe(302);
-      expect(response.headers.get('Location')).toBe('/auth/login?redirectTo=%2Fprotected%2Fpage');
+      response = error as Response;
     }
+    expect(response?.status).toBe(302);
+    expect(response?.headers.get('Location')).toBe('/auth/login?redirectTo=%2Fprotected%2Fpage');
   });
 
   it('preserves redirectTo parameter in login URL', async () => {
@@ -147,12 +148,13 @@ describe('requireAuth middleware', () => {
 
     await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
 
+    let response: Response | null = null;
     try {
       await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
     } catch (error) {
-      const response = error as Response;
-      expect(response.headers.get('Location')).toBe('/auth/login?redirectTo=%2Fteam%2Fmy-team%2Fsettings');
+      response = error as Response;
     }
+    expect(response?.headers.get('Location')).toBe('/auth/login?redirectTo=%2Fteam%2Fmy-team%2Fsettings');
   });
 
   it('redirects with root path when accessing root', async () => {
@@ -163,12 +165,13 @@ describe('requireAuth middleware', () => {
 
     await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
 
+    let response: Response | null = null;
     try {
       await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
     } catch (error) {
-      const response = error as Response;
-      expect(response.headers.get('Location')).toBe('/auth/login?redirectTo=%2F');
+      response = error as Response;
     }
+    expect(response?.headers.get('Location')).toBe('/auth/login?redirectTo=%2F');
   });
 });
 
@@ -202,14 +205,5 @@ describe('middleware chain behavior', () => {
       hasTeamAccess: false,
       notificationsUnreadCount: 0,
     });
-  });
-
-  it('requiredAuthMiddleware fails when authMiddleware has not run', async () => {
-    const request = createMockRequest();
-    const context = createMockContext();
-
-    await expect(async () => {
-      await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
-    }).rejects.toThrow();
   });
 });

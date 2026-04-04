@@ -47,8 +47,8 @@ describe('TalksLibrary', () => {
       expect(result.length).toBe(1);
       expect(result[0].id).toBe(talk.id);
 
-      const speakerIds = result[0].speakers.map(({ userId }) => userId).sort();
-      expect(speakerIds).toEqual([owner.id, cospeakerUser.id].sort());
+      const speakerIds = result[0].speakers.map(({ userId }) => userId).toSorted();
+      expect(speakerIds).toEqual([owner.id, cospeakerUser.id].toSorted());
     });
 
     it('returns archived talks when "archived" filter is set', async () => {
