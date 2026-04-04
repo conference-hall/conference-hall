@@ -10,10 +10,10 @@ export function useScheduleFullscreen() {
 
   const isFullscreen = Boolean(scheduleRoute) && searchParams.get('fullscreen') === 'true';
 
-  const toggle = () => {
+  const toggle = async () => {
     if (!scheduleRoute) return;
     searchParams.set('fullscreen', String(!isFullscreen));
-    navigate({ pathname: location.pathname, search: searchParams.toString() }, { preventScrollReset: true });
+    await navigate({ pathname: location.pathname, search: searchParams.toString() }, { preventScrollReset: true });
   };
 
   return { isFullscreen, toggle };

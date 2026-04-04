@@ -12,7 +12,7 @@ export function getEmailI18n(locale: string) {
   // Build singleton instance on production but recreate it on dev
   if (!instance || NODE_ENV !== 'production') {
     instance = i18next.createInstance();
-    instance.init({ ...i18nConfig, resources: i18nResources });
+    instance.init({ initAsync: false, ...i18nConfig, resources: i18nResources });
   }
 
   return instance.getFixedT(locale, 'email');

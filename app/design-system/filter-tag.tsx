@@ -10,9 +10,9 @@ export function FilterTag({ name, value }: FilterTagProps) {
 
   if (!value) return null;
 
-  const onClick = () => {
+  const onClick = async () => {
     params.delete(name);
-    navigate({ pathname: location.pathname, search: params.toString() });
+    await navigate({ pathname: location.pathname, search: params.toString() });
   };
 
   return (
