@@ -24,7 +24,11 @@ export function CommandPaletteDialog({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        !open ? onOpen() : onClose();
+        if (open) {
+          onClose();
+        } else {
+          onOpen();
+        }
       }
     };
 

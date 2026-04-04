@@ -18,12 +18,12 @@ test('display and search events', async ({ page }) => {
   await homepage.search('devfest');
   await expect(homepage.results).toHaveCount(1);
   await expect(homepage.item('Devfest Nantes')).toBeVisible();
-  await expect(page.url()).toContain('?query=devfest');
+  expect(page.url()).toContain('?query=devfest');
 
   await homepage.search('gdg');
   await expect(homepage.results).toHaveCount(1);
   await expect(homepage.item('GDG Nantes')).toBeVisible();
-  await expect(page.url()).toContain('?query=gdg');
+  expect(page.url()).toContain('?query=gdg');
 
   await homepage.search('nothing');
   await expect(homepage.noResults).toBeVisible();

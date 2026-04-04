@@ -149,7 +149,7 @@ export class EventSpeakers {
             tags: proposal.tags,
           };
         })
-        .sort((a, b) => b.submittedAt.getTime() - a.submittedAt.getTime()),
+        .toSorted((a, b) => b.submittedAt.getTime() - a.submittedAt.getTime()),
     };
   }
 

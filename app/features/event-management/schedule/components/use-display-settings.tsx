@@ -40,10 +40,10 @@ export function useDisplaySettings(settings: ScheduleSettings) {
     );
   };
 
-  const updateDisplayDays = (start: Date, end: Date) => {
+  const updateDisplayDays = async (start: Date, end: Date) => {
     const startIndex = scheduleDays.findIndex((day) => isSameDay(day, start));
     const endIndex = scheduleDays.findIndex((day) => isSameDay(day, end));
-    navigate(`/team/${params.team}/${params.event}/schedule/${startIndex}-${endIndex}?${searchParams}`);
+    await navigate(`/team/${params.team}/${params.event}/schedule/${startIndex}-${endIndex}?${searchParams}`);
   };
 
   return { scheduleDays, displayedDays, displayedTimes, updateDisplayTimes, updateDisplayDays };

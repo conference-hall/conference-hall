@@ -50,7 +50,7 @@ export class SpeakerTalk {
           isOwner: user.id === talk.creatorId,
           isCurrentUser: user.id === this.userId,
         }))
-        .sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
+        .toSorted((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
       submissions: talk.proposals
         .map((proposal) => ({
           slug: proposal.event.slug,
@@ -60,7 +60,7 @@ export class SpeakerTalk {
           proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
           createdAt: proposal.createdAt,
         }))
-        .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
+        .toSorted((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
       invitationLink: talk.invitationLink,
     };
   }

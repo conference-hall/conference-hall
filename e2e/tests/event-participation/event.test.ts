@@ -13,7 +13,7 @@ let eventPast: Event;
 loginWith('clark-kent');
 
 test.beforeEach(async ({ page }) => {
-  userFactory({ traits: ['clark-kent'] });
+  await userFactory({ traits: ['clark-kent'] });
   eventOpen = await eventFactory({
     attributes: {
       name: 'Devfest Nantes',

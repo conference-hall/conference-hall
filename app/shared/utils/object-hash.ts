@@ -10,7 +10,7 @@ function sortObjectKeys(obj: any): any {
 
   if (obj !== null && typeof obj === 'object') {
     return Object.keys(obj)
-      .sort()
+      .toSorted()
       .reduce(
         (result, key) => {
           result[key] = sortObjectKeys(obj[key]);

@@ -99,6 +99,6 @@ describe('getNextProposalNumber', () => {
     const uniqueNumbers = new Set(numbers);
 
     expect(uniqueNumbers.size).toBe(10);
-    expect(numbers.sort()).toEqual([1, 10, 2, 3, 4, 5, 6, 7, 8, 9]);
+    expect(numbers.toSorted()).toEqual([1, 10, 2, 3, 4, 5, 6, 7, 8, 9]);
   });
 });

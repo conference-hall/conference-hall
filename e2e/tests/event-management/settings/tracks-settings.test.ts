@@ -30,8 +30,8 @@ test('adds, edits and removes a format', async ({ page }) => {
   // Edit the track format
   await format.getByRole('button', { name: 'Edit' }).click();
   await tracksPage.formatModal.waitFor();
-  expect(tracksPage.nameInput).toHaveValue('Quickie');
-  expect(tracksPage.descriptionInput).toHaveValue('A short talk');
+  await expect(tracksPage.nameInput).toHaveValue('Quickie');
+  await expect(tracksPage.descriptionInput).toHaveValue('A short talk');
   await tracksPage.fill(tracksPage.nameInput, 'Conference');
   await tracksPage.fill(tracksPage.descriptionInput, 'A long talk');
   await tracksPage.saveFormatButton.click();
@@ -79,8 +79,8 @@ test('adds, edits and removes a category', async ({ page }) => {
   // Edit the track category
   await category.getByRole('button', { name: 'Edit' }).click();
   await tracksPage.categoryModal.waitFor();
-  expect(tracksPage.nameInput).toHaveValue('Beginner');
-  expect(tracksPage.descriptionInput).toHaveValue('For beginners');
+  await expect(tracksPage.nameInput).toHaveValue('Beginner');
+  await expect(tracksPage.descriptionInput).toHaveValue('For beginners');
   await tracksPage.fill(tracksPage.nameInput, 'Intermediate');
   await tracksPage.fill(tracksPage.descriptionInput, 'For intermediates');
   await tracksPage.saveCategoryButton.click();

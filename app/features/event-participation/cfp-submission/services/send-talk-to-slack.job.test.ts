@@ -26,7 +26,7 @@ describe('Job: sendTalkToSlack', () => {
     const format2 = await eventFormatFactory({ event, attributes: { name: 'Format 2' } });
     const category1 = await eventCategoryFactory({ event, attributes: { name: 'Category 1' } });
     const category2 = await eventCategoryFactory({ event, attributes: { name: 'Category 2' } });
-    const speaker1 = await userFactory({ attributes: { name: 'Speaker 1', picture: 'http://photo' } });
+    const speaker1 = await userFactory({ attributes: { name: 'Speaker 1' } });
     const speaker2 = await userFactory({ attributes: { name: 'Speaker 2' } });
 
     const proposal = await proposalFactory({
@@ -48,7 +48,7 @@ describe('Job: sendTalkToSlack', () => {
       title: proposal.title,
       text: proposal.abstract,
       title_link: buildReviewProposalUrl(team.slug, event.slug, proposal.routeId),
-      thumb_url: speaker1.picture,
+      thumb_url: expect.stringMatching(/https:/),
       color: '#ffab00',
       fields: [
         { title: 'Categories', value: 'Category 1 & Category 2', short: true },

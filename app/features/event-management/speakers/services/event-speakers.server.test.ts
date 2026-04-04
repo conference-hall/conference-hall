@@ -234,7 +234,7 @@ describe('EventSpeakers', () => {
           });
 
           expect(result.speakers).toHaveLength(2);
-          expect(result.speakers.map((s) => s.name).sort()).toEqual(['Alice Johnson', 'Peter Parker']);
+          expect(result.speakers.map((s) => s.name).toSorted()).toEqual(['Alice Johnson', 'Peter Parker']);
         });
 
         it('filters speakers with confirmed proposals', async () => {
@@ -279,7 +279,7 @@ describe('EventSpeakers', () => {
           });
 
           expect(result.speakers).toHaveLength(2);
-          expect(result.speakers.map((s) => s.name).sort()).toEqual(['Alice Johnson', 'Peter Parker']);
+          expect(result.speakers.map((s) => s.name).toSorted()).toEqual(['Alice Johnson', 'Peter Parker']);
         });
       });
 
@@ -604,7 +604,7 @@ describe('EventSpeakers', () => {
 
         expect(result?.proposals).toHaveLength(2);
 
-        const proposalTitles = result?.proposals.map((p) => p.title).sort();
+        const proposalTitles = result?.proposals.map((p) => p.title).toSorted();
         expect(proposalTitles).toEqual(['First Talk', 'Second Talk']);
       });
 

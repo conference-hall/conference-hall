@@ -40,8 +40,6 @@ function getClient() {
     .$extends(proposalExtension)
     .$extends(teamExtension);
 
-  client.$connect();
-
   return client;
 }
 

@@ -60,24 +60,24 @@ export function EventCommandPalette({ team, event, closeText, onClose }: Props) 
     return fetcher.load(`${autocompleteRoute}?${searchParams.toString()}`);
   };
 
-  const handleClick = (item: CommandPaletteItemData, query?: string) => {
+  const handleClick = async (item: CommandPaletteItemData, query?: string) => {
     const searchParams = new URLSearchParams();
     if (query) searchParams.append('query', query);
 
     switch (item.section) {
       case t('common.proposals'): {
         if (item.id === 'search-more-proposals') {
-          navigate(`${href('/team/:team/:event/proposals', { team, event })}?${searchParams.toString()}`);
+          await navigate(`${href('/team/:team/:event/proposals', { team, event })}?${searchParams.toString()}`);
         } else {
-          navigate(href('/team/:team/:event/proposals/:proposal', { team, event, proposal: item.id }));
+          await navigate(href('/team/:team/:event/proposals/:proposal', { team, event, proposal: item.id }));
         }
         break;
       }
       case t('common.speakers'): {
         if (item.id === 'search-more-speakers') {
-          navigate(`${href('/team/:team/:event/speakers', { team, event })}?${searchParams.toString()}`);
+          await navigate(`${href('/team/:team/:event/speakers', { team, event })}?${searchParams.toString()}`);
         } else {
-          navigate(href('/team/:team/:event/speakers/:speaker', { team, event, speaker: item.id }));
+          await navigate(href('/team/:team/:event/speakers/:speaker', { team, event, speaker: item.id }));
         }
         break;
       }

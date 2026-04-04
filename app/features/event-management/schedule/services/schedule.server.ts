@@ -31,8 +31,8 @@ export class EventSchedule {
       timezone: schedule.timezone,
       start: schedule.start,
       end: schedule.end,
-      tracks: [...schedule.tracks]
-        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      tracks: schedule.tracks
+        .toSorted((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),
     };
   }
@@ -188,8 +188,8 @@ export class EventSchedule {
       timezone: schedule.timezone,
       displayStartMinutes: schedule.displayStartMinutes,
       displayEndMinutes: schedule.displayEndMinutes,
-      tracks: [...schedule.tracks]
-        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      tracks: schedule.tracks
+        .toSorted((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),
       sessions: sessions.map(({ id, trackId, start, end, name, language, color, emojis, proposal }) => ({
         id: id,

@@ -55,7 +55,7 @@ describe('DetailsSection', () => {
 
     const boldElement = page.getByText('Bold text');
     await expect.element(boldElement).toBeInTheDocument();
-    await expect(boldElement.element().tagName.toLowerCase()).toBe('strong');
+    expect(boldElement.element().tagName.toLowerCase()).toBe('strong');
   });
 
   test('renders location when provided', async () => {
@@ -114,7 +114,7 @@ describe('DetailsSection', () => {
       </I18nextProvider>,
     );
 
-    const link = await page.getByRole('link', { name: 'Website' });
+    const link = page.getByRole('link', { name: 'Website' });
     await expect.element(link).toHaveAttribute('href', 'https://example.com');
   });
 
@@ -125,7 +125,7 @@ describe('DetailsSection', () => {
       </I18nextProvider>,
     );
 
-    const link = await page.getByRole('link', { name: 'Contact' });
+    const link = page.getByRole('link', { name: 'Contact' });
     await expect.element(link).toHaveAttribute('href', 'mailto:contact@example.com');
   });
 
@@ -136,7 +136,7 @@ describe('DetailsSection', () => {
       </I18nextProvider>,
     );
 
-    const link = await page.getByRole('link', { name: 'Code of Conduct' });
+    const link = page.getByRole('link', { name: 'Code of Conduct' });
     await expect.element(link).toHaveAttribute('href', 'https://example.com/coc');
   });
 

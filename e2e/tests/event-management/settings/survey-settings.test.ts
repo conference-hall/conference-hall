@@ -14,7 +14,7 @@ test('updates survey settings', async ({ page }) => {
   const surveyPage = new SurveySettingsPage(page);
   await surveyPage.goto(team.slug, event.slug);
 
-  expect(surveyPage.questionsList).toHaveCount(0);
+  await expect(surveyPage.questionsList).toHaveCount(0);
 
   // Enable survey
   await surveyPage.surveyActivationSwitch.click();

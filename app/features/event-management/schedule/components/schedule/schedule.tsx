@@ -428,7 +428,7 @@ function safeSessionResizeToTimeslot(
 ) {
   const trackSessions = sessions
     .filter((s) => s.trackId === session.trackId && s.id !== session.id)
-    .sort((a, b) => {
+    .toSorted((a, b) => {
       if (isAfterTimeSlot(a.timeslot, b.timeslot)) return 1;
       return -1;
     });
@@ -455,7 +455,7 @@ function safeSessionMoveToTimeslot(
 ) {
   const trackSessions = sessions
     .filter((s) => s.trackId === targetTrackId && s.id !== session.id)
-    .sort((a, b) => {
+    .toSorted((a, b) => {
       if (isAfterTimeSlot(a.timeslot, b.timeslot)) return 1;
       return -1;
     });

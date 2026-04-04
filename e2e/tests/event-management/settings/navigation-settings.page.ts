@@ -65,7 +65,7 @@ export class NavigationSettingsPage extends PageObject {
       case 'Web API':
         return new WebApiSettingsPage(this.page);
       default:
-        throw new Error(`Unknown setting: ${name}`);
+        throw new Error('Unknown setting');
     }
   }
 }
