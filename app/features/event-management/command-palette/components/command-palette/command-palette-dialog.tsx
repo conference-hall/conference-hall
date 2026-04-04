@@ -25,9 +25,9 @@ export function CommandPaletteDialog({
       if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
         if (open) {
-          onOpen();
-        } else {
           onClose();
+        } else {
+          onOpen();
         }
       }
     };
