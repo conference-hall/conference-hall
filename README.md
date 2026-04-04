@@ -62,9 +62,13 @@ Start Docker image for Postgres DB, Firebase emulators and Mailpit:
 docker compose up
 ```
 
-If you start **Conference Hall** for the first time, you need to setup the database with the following command :
+If you start **Conference Hall** for the first time, you need to run :
 
-```shell
+```sh
+# Install pre-commit hook to ensure linting
+npx lefthook install
+
+# Setup and seed local DB
 npm run db:reset
 ```
 
@@ -75,6 +79,14 @@ npm run dev
 ```
 
 ### Useful commands
+
+#### Generate Prisma client code
+
+Need to be done when DB schema has changed
+
+```sh
+npm run db:reset
+```
 
 #### Reset and seed local DB
 

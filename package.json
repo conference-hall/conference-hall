@@ -10,9 +10,9 @@
     "dev:web": "tsx ./servers/web.dev.ts",
     "dev:job": "tsx watch ./servers/jobs.ts",
     "start": "node ./build/server/index.js",
-    "build": "react-router build",
+    "build": "prisma generate && react-router build",
     "jobs:start": "tsx ./servers/jobs.ts",
-    "jobs:build": "echo 'no build needed'",
+    "jobs:build": "prisma generate",
     "test": "npm run test:db && npm run test:unit",
     "test:db": "NODE_ENV=test prisma db push --accept-data-loss",
     "test:unit": "vitest --browser.headless",
@@ -21,13 +21,12 @@
     "test:e2e:ui": "playwright test --ui --ui-host=localhost",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
-    "db:reset": "prisma migrate reset -f && prisma db seed",
+    "db:reset": "prisma migrate reset -f && prisma generate && prisma db seed",
     "lint": "oxlint",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "tsc": "react-router typegen && tsc -b",
-    "knip": "knip",
-    "postinstall": "prisma generate"
+    "knip": "knip"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1019.0",
