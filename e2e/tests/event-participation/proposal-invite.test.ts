@@ -25,7 +25,7 @@ test('accepts invite to a proposal', async ({ page }) => {
   const proposalPage = await proposalInvitePage.clickOnAcceptInvite();
   await proposalPage.waitFor();
 
-  expect(await proposalPage.speakers).toHaveCount(3);
+  await expect(proposalPage.speakers).toHaveCount(3);
   await expect(proposalPage.speaker('Clark Kent')).toBeVisible();
   await expect(proposalPage.speaker('Bruce Wayne')).toBeVisible();
 });

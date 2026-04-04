@@ -11,9 +11,9 @@ export function CopyInput({ id, type = 'text', value, className, ...rest }: Prop
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!value) return;
-    navigator.clipboard.writeText(String(value)).then(() => setCopied(true));
+    await navigator.clipboard.writeText(String(value)).then(() => setCopied(true));
   };
 
   return (

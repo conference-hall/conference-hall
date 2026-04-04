@@ -27,5 +27,5 @@ test('updates event logo', async ({ page }) => {
 
   await expect(customizePage.toast).toHaveText('Logo updated.');
   const logoSrc = await customizePage.logoImage.getAttribute('src');
-  await expect(logoSrc).toContain('.png');
+  expect(logoSrc).toContain('.png');
 });

@@ -32,7 +32,7 @@ export function NestedErrorBoundary() {
   return <UnexpectedError error={getError(error)} />;
 }
 
-function getError(error: unknown | undefined) {
+function getError(error: unknown) {
   if (error && error instanceof Error) return error;
 
   if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {

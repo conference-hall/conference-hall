@@ -10,7 +10,7 @@ type Props = {
    * as the client rendered children. This will avoid content layout
    * shift which is disgusting
    */
-  children(): ReactNode;
+  children: () => ReactNode;
   fallback?: ReactNode;
 };
 

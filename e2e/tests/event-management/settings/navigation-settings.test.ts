@@ -62,7 +62,7 @@ test.describe('As a reviewer', () => {
     const team = await teamFactory({ reviewers: [user] });
     const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
-    await page.goto(`/team/${team}/${event}/settings`);
+    await page.goto(`/team/${team.slug}/${event.slug}/settings`);
 
     const settingsPage = new NavigationSettingsPage(page);
     await settingsPage.forbiddenPage.waitFor();

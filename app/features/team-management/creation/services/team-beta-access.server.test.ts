@@ -15,21 +15,21 @@ describe('TeamBetaAccess', () => {
     it('hasAccess if user belongs to an team', async () => {
       const user = { organizerKey: '123' };
       const teamsCount = 2;
-      const hasAccess = await TeamBetaAccess.hasAccess(user, teamsCount);
+      const hasAccess = TeamBetaAccess.hasAccess(user, teamsCount);
       expect(hasAccess).toBe(true);
     });
 
     it('is not allowed if user does not have organizer key or teams', async () => {
       const user = { organizerKey: null };
       const teamsCount = 0;
-      const hasAccess = await TeamBetaAccess.hasAccess(user, teamsCount);
+      const hasAccess = TeamBetaAccess.hasAccess(user, teamsCount);
       expect(hasAccess).toBe(false);
     });
 
     it('is not allowed when user is not found', async () => {
       const user = null;
       const teamsCount = 2;
-      const hasAccess = await TeamBetaAccess.hasAccess(user, teamsCount);
+      const hasAccess = TeamBetaAccess.hasAccess(user, teamsCount);
       expect(hasAccess).toBe(false);
     });
   });

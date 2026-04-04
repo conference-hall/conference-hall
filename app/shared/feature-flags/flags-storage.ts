@@ -34,6 +34,6 @@ export class FlagsStorage {
   }
 
   async clear() {
-    this.cache.clear();
+    await this.cache.clear();
   }
 }
