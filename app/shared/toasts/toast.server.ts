@@ -34,10 +34,6 @@ export async function toast(type: ToastType, title: string) {
   return data(null, { headers: await toastHeaders(type, title) });
 }
 
-export async function dataWithToast<T>(result: T, type: ToastType, title: string) {
-  return data(result, { headers: await toastHeaders(type, title) });
-}
-
 export async function getToast(request: Request) {
   const session = await toastSessionStorage.getSession(request.headers.get('cookie'));
   const result = ToastSchema.safeParse(session.get(toastKey));

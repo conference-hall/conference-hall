@@ -1,16 +1,14 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
 import { flags } from '~/shared/feature-flags/flags.server.ts';
-import { expect, loginWith, test } from '../../../fixtures.ts';
+import { expect, test } from '../../../fixtures.ts';
+import { userLoggedFactory } from '../../../helpers.ts';
 import { ReviewsSettingsPage } from './reviews-settings.page.ts';
 
-loginWith('clark-kent');
-
-test('updates reviews settings', async ({ page }) => {
+test('updates reviews settings', async ({ context, page }) => {
   await flags.set('speakersCommunication', true);
 
-  const user = await userFactory({ traits: ['clark-kent'] });
+  const user = await userLoggedFactory(context);
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 

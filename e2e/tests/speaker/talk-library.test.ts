@@ -1,24 +1,21 @@
 import { talkFactory } from 'tests/factories/talks.ts';
-import { userFactory } from 'tests/factories/users.ts';
 import type { Talk, User } from '../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { TalkLibraryPage } from './talk-library.page.ts';
 
-let user1: User;
+let user: User;
 let talk1: Talk;
 let talk2: Talk;
 let talk3: Talk;
 
-test.beforeEach(async () => {
-  await userFactory({ traits: ['bruce-wayne'] });
-  user1 = await userFactory({ traits: ['clark-kent'] });
-  talk1 = await talkFactory({ speakers: [user1], attributes: { title: 'My talk 1' } });
-  talk2 = await talkFactory({ speakers: [user1], attributes: { title: 'My talk 2' } });
-  talk3 = await talkFactory({ speakers: [user1], attributes: { title: 'My talk 3' }, traits: ['archived'] });
-});
-
 test.describe('when user has talks in their library', () => {
-  loginWith('clark-kent');
+  test.beforeEach(async ({ context }) => {
+    user = await userLoggedFactory(context);
+    talk1 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 1' } });
+    talk2 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 2' } });
+    talk3 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 3' }, traits: ['archived'] });
+  });
 
   test('displays the talks', async ({ page }) => {
     const talkLibraryPage = new TalkLibraryPage(page);
@@ -50,7 +47,9 @@ test.describe('when user has talks in their library', () => {
 });
 
 test.describe('when user has no talks in their library', () => {
-  loginWith('bruce-wayne');
+  test.beforeEach(async ({ context }) => {
+    await userLoggedFactory(context);
+  });
 
   test('displays a message', async ({ page }) => {
     const talkLibraryPage = new TalkLibraryPage(page);

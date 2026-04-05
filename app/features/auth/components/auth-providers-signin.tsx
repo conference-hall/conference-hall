@@ -1,43 +1,16 @@
-import * as Firebase from 'firebase/auth';
-import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { href } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
-import { useHydrated } from '~/design-system/utils/use-hydrated.ts';
-import { getClientAuth, PROVIDERS, type ProviderId } from '~/shared/authentication/firebase.ts';
+import { authClient, PROVIDERS, type ProviderId } from '~/shared/better-auth/auth-client.ts';
 
 type AuthProvidersSigninProps = { redirectTo: string };
 
 export function AuthProvidersSignin({ redirectTo }: AuthProvidersSigninProps) {
   const { t } = useTranslation();
-  const hydrated = useHydrated();
 
-  const signIn = useCallback(
-    (provider: ProviderId) => {
-      // Set "from" in url to set loading state when redirected back from auth
-      if (hydrated) {
-        const { protocol, host } = window.location;
-        const newurl = `${protocol}//${host}/auth/login?redirectTo=${redirectTo}&from=${provider}`;
-        window.history.pushState({ path: newurl }, '', newurl);
-      }
-
-      if (provider === 'google.com') {
-        const authProvider = new Firebase.GoogleAuthProvider();
-        authProvider.setCustomParameters({ prompt: 'select_account' });
-        return Firebase.signInWithRedirect(getClientAuth(), authProvider);
-      }
-
-      if (provider === 'github.com') {
-        const authProvider = new Firebase.GithubAuthProvider();
-        return Firebase.signInWithRedirect(getClientAuth(), authProvider);
-      }
-
-      if (provider === 'twitter.com') {
-        const authProvider = new Firebase.TwitterAuthProvider();
-        return Firebase.signInWithRedirect(getClientAuth(), authProvider);
-      }
-    },
-    [hydrated, redirectTo],
-  );
+  const signIn = async (provider: ProviderId) => {
+    await authClient.signIn.social({ provider, callbackURL: redirectTo, errorCallbackURL: href('/auth/error') });
+  };
 
   return (
     <div className="flex flex-col gap-4">

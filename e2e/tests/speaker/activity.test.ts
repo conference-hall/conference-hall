@@ -1,20 +1,18 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
-import { userFactory } from 'tests/factories/users.ts';
 import type { Event, Proposal, User } from '../../../prisma/generated/client.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { ActivityPage } from './activity.page.ts';
-
-loginWith('clark-kent');
 
 let user: User;
 let event1: Event;
 let event2: Event;
 let proposal: Proposal;
 
-test.beforeEach(async () => {
-  user = await userFactory({ traits: ['clark-kent'] });
+test.beforeEach(async ({ context }) => {
+  user = await userLoggedFactory(context);
   const talk1 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 1' } });
   const talk2 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 2' } });
   const talk3 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 3' } });

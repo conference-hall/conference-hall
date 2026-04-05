@@ -7,25 +7,27 @@ import { Link } from '~/design-system/links.tsx';
 import { Label, Subtitle } from '~/design-system/typography.tsx';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 
-type PasswordInputProps = {
+type InputPasswordProps = {
   label?: string;
   name?: string;
   value: string;
   error?: SubmissionError;
   forgotPasswordPath?: string;
   isNewPassword?: boolean;
+  disabled?: boolean;
   onChange: (password: string) => void;
 };
 
-export function PasswordInput({
+export function InputPassword({
   label,
   name,
   value,
   error,
   forgotPasswordPath,
   isNewPassword,
+  disabled,
   onChange,
-}: PasswordInputProps) {
+}: InputPasswordProps) {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const ToggleIcon = showPassword ? EyeSlashIcon : EyeIcon;
@@ -50,6 +52,7 @@ export function PasswordInput({
         autoComplete={isNewPassword ? 'new-password' : 'current-password'}
         description={isNewPassword ? t('common.password.description') : undefined}
         error={error}
+        disabled={disabled}
         required
       >
         <button

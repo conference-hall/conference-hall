@@ -28,3 +28,11 @@ export const [i18nextMiddleware, getLocale, getI18n] = createI18nextMiddleware({
 export async function setLocaleCookie(locale: string) {
   return { 'set-cookie': await localeCookie.serialize(locale, { maxAge: MAX_AGE_SEC }) };
 }
+
+export async function getLocaleFromRequest(request?: Request): Promise<string> {
+  if (!request) return FALLBACK_LANGUAGE;
+  const headers = request.headers;
+  const cookieHeader = headers.get('cookie');
+  const cookieValue = await localeCookie.parse(cookieHeader);
+  return cookieValue || FALLBACK_LANGUAGE;
+}

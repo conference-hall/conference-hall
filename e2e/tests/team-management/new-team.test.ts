@@ -1,12 +1,10 @@
 import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { NewTeamPage } from './new-team.page.ts';
 
-loginWith('clark-kent');
-
-test('creates a new team', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+test('creates a new team', async ({ context, page }) => {
+  const user = await userLoggedFactory(context);
   await teamFactory({ owners: [user], attributes: { slug: 'team-1' } });
 
   const newTeamPage = new NewTeamPage(page);

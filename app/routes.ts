@@ -5,13 +5,13 @@ export default [
   index('./features/event-search/event-search.tsx'),
 
   // Authentication pages
+  route('api/auth/*', './features/auth/api.ts'),
   route('auth/login', './features/auth/signin.tsx'),
-  route('auth/logout', './features/auth/signout.tsx'),
   route('auth/signup', './features/auth/signup.tsx'),
   route('auth/reset-password', './features/auth/reset-password.tsx'),
   route('auth/forgot-password', './features/auth/forgot-password.tsx'),
-  route('auth/email-verification', './features/auth/email-verification-sent.tsx'),
-  route('auth/verify-email', './features/auth/email-verification-link.tsx'),
+  route('auth/email-verification', './features/auth/email-verification.tsx'),
+  route('auth/error', './features/auth/error.tsx'),
 
   // Event pages
   route(':event', './features/event-participation/layout.tsx', { id: 'event-page' }, [

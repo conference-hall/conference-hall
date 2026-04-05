@@ -1,16 +1,11 @@
 import type { createContext } from 'react-router';
 import { userFactory } from 'tests/factories/users.ts';
-import type { Mock } from 'vitest';
 import { OptionalAuthContext, optionalAuth, RequireAuthContext, requireAuth } from './auth.middleware.ts';
-import { destroySession, getSessionUid } from './session.ts';
 
-vi.mock('./session.ts', () => ({
-  getSessionUid: vi.fn(),
-  destroySession: vi.fn(),
-}));
-
-const getSessionUidMock = getSessionUid as Mock;
-const destroySessionMock = destroySession as Mock;
+vi.mock('../../auth.server.ts', () => ({ auth: { api: { getSession: vi.fn(), signOut: vi.fn() } } }));
+const { auth } = await import('../../auth.server.ts');
+const getSessionMock = auth.api.getSession as unknown as ReturnType<typeof vi.fn>;
+const signOutMock = auth.api.signOut as unknown as ReturnType<typeof vi.fn>;
 
 function createMockContext() {
   const store = new Map();
@@ -30,13 +25,13 @@ const mockNext = vi.fn(async () => new Response());
 describe('optionalAuth middleware', () => {
   it('sets authenticated user in context when session is valid', async () => {
     const user = await userFactory({ traits: ['clark-kent'] });
-    getSessionUidMock.mockResolvedValue(user.uid);
     const request = createMockRequest();
     const context = createMockContext();
+    getSessionMock.mockResolvedValue({ user: { id: user.id } });
 
     await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
 
-    expect(getSessionUidMock).toHaveBeenCalledWith(request);
+    expect(getSessionMock).toHaveBeenCalledWith({ headers: request.headers });
     expect(context.get(OptionalAuthContext)).toEqual({
       id: user.id,
       uid: user.uid,
@@ -47,59 +42,50 @@ describe('optionalAuth middleware', () => {
       hasTeamAccess: false,
       notificationsUnreadCount: 0,
     });
-    expect(destroySessionMock).not.toHaveBeenCalled();
+    expect(signOutMock).not.toHaveBeenCalled();
   });
 
   it('sets null in context when session is null', async () => {
-    getSessionUidMock.mockResolvedValue(null);
+    getSessionMock.mockResolvedValue(null);
     const request = createMockRequest();
     const context = createMockContext();
 
     await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
 
-    expect(getSessionUidMock).toHaveBeenCalledWith(request);
+    expect(getSessionMock).toHaveBeenCalledWith({ headers: request.headers });
     expect(context.get(OptionalAuthContext)).toBeNull();
-    expect(destroySessionMock).not.toHaveBeenCalled();
+    expect(signOutMock).not.toHaveBeenCalled();
   });
 
-  it('sets null in context when user is not found', async () => {
-    getSessionUidMock.mockResolvedValue(null);
+  it('signs out and sets null when session exists but user is not found in database', async () => {
+    getSessionMock.mockResolvedValue({ user: { id: 'non-existent-user-id' } });
+    signOutMock.mockResolvedValue(new Response());
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
+    await expect(
+      optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext),
+    ).rejects.toBeInstanceOf(Response);
 
-    expect(getSessionUidMock).toHaveBeenCalledWith(request);
-    expect(context.get(OptionalAuthContext)).toBeNull();
-    expect(destroySessionMock).not.toHaveBeenCalled();
+    expect(signOutMock).toHaveBeenCalledWith({ headers: request.headers, returnHeaders: true });
   });
 
-  it('destroys session when uid exists but user is not found', async () => {
-    getSessionUidMock.mockResolvedValue('uid-123');
-    const request = createMockRequest();
-    const context = createMockContext();
-
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
-
-    expect(destroySessionMock).toHaveBeenCalledWith(request);
-  });
-
-  it('sets null in context when session has no uid', async () => {
-    getSessionUidMock.mockResolvedValue(null);
+  it('sets null in context when session has no user id', async () => {
+    getSessionMock.mockResolvedValue({ user: { id: undefined } });
     const request = createMockRequest();
     const context = createMockContext();
 
     await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
 
     expect(context.get(OptionalAuthContext)).toBeNull();
-    expect(destroySessionMock).not.toHaveBeenCalled();
+    expect(signOutMock).not.toHaveBeenCalled();
   });
 });
 
 describe('requireAuth middleware', () => {
   it('sets user in protected context when authenticated', async () => {
     const user = await userFactory({ traits: ['clark-kent'] });
-    getSessionUidMock.mockResolvedValue(user.uid);
+    getSessionMock.mockResolvedValue({ user: { id: user.id } });
     const request = createMockRequest();
     const context = createMockContext();
 
@@ -119,7 +105,7 @@ describe('requireAuth middleware', () => {
   });
 
   it('redirects to login when user is not authenticated', async () => {
-    getSessionUidMock.mockResolvedValue(null);
+    getSessionMock.mockResolvedValue(null);
     const url = new URL('https://example.com/protected/page');
     const request = createMockRequest(url);
     const context = createMockContext();
@@ -141,7 +127,7 @@ describe('requireAuth middleware', () => {
   });
 
   it('preserves redirectTo parameter in login URL', async () => {
-    getSessionUidMock.mockResolvedValue(null);
+    getSessionMock.mockResolvedValue(null);
     const url = new URL('https://example.com/team/my-team/settings');
     const request = createMockRequest(url);
     const context = createMockContext();
@@ -158,7 +144,7 @@ describe('requireAuth middleware', () => {
   });
 
   it('redirects with root path when accessing root', async () => {
-    getSessionUidMock.mockResolvedValue(null);
+    getSessionMock.mockResolvedValue(null);
     const url = new URL('https://example.com/');
     const request = createMockRequest(url);
     const context = createMockContext();
@@ -178,7 +164,7 @@ describe('requireAuth middleware', () => {
 describe('middleware chain behavior', () => {
   it('works correctly when both middlewares run in sequence', async () => {
     const user = await userFactory({ traits: ['clark-kent'] });
-    getSessionUidMock.mockResolvedValue(user.uid);
+    getSessionMock.mockResolvedValue({ user: { id: user.id } });
     const request = createMockRequest();
     const context = createMockContext();
 

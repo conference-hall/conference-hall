@@ -68,8 +68,8 @@ jobs:
       - name: Setup Playwright
         uses: ./.github/actions/setup-playwright
 
-      - name: Start database and firebase emulators
-        run: docker compose -f compose.yml -f ./docker/compose-ci.yml up -d
+      - name: Start database
+        run: docker compose up -d
 
       - name: Wait for database start...
         run: ./docker/wait-for-db.sh
@@ -77,7 +77,7 @@ jobs:
       - name: Execute tests
         run: npm test
 
-      - name: Stop database and firebase emulators
+      - name: Stop database
         if: always()
         run: docker compose down
 
@@ -106,8 +106,8 @@ jobs:
       - name: Setup Playwright
         uses: ./.github/actions/setup-playwright
 
-      - name: Start database and firebase emulators
-        run: docker compose -f compose.yml -f ./docker/compose-ci.yml up -d
+      - name: Start database
+        run: docker compose up -d
 
       - name: Wait for database start...
         run: ./docker/wait-for-db.sh
@@ -118,6 +118,6 @@ jobs:
       - name: Run e2e tests
         run: npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
-      - name: Stop database and firebase emulators
+      - name: Stop database
         if: always()
         run: docker compose down

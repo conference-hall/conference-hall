@@ -1,11 +1,9 @@
-import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
+import { userLoggedFactory } from '../../helpers.ts';
 import { SettingsProfilePage } from './settings-profile.page.ts';
 
-loginWith('clark-kent');
-
-test('display speaker profile', async ({ page }) => {
-  await userFactory({ traits: ['clark-kent'] });
+test('display speaker profile', async ({ page, context }) => {
+  await userLoggedFactory(context);
 
   const profilePage = new SettingsProfilePage(page);
   await profilePage.goto();

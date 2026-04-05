@@ -1,13 +1,11 @@
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
-import { userFactory } from 'tests/factories/users.ts';
-import { expect, loginWith, test } from '../../../fixtures.ts';
+import { expect, test } from '../../../fixtures.ts';
+import { userLoggedFactory } from '../../../helpers.ts';
 import { WebApiSettingsPage } from './web-api-settings.page.ts';
 
-loginWith('clark-kent');
-
-test('updates web api settings', async ({ page }) => {
-  const user = await userFactory({ traits: ['clark-kent'] });
+test('updates web api settings', async ({ context, page }) => {
+  const user = await userLoggedFactory(context);
   const team = await teamFactory({ owners: [user] });
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
