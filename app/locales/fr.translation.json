@@ -314,6 +314,7 @@
   "error.auth.account_already_linked_to_different_user": "Impossible de lier ce compte. Il est déjà associé à un autre utilisateur. Veuillez utiliser un compte différent.",
   "error.auth.EMAIL_ALREADY_VERIFIED": "L'e-mail est déjà vérifié.",
   "error.auth.EMAIL_NOT_VERIFIED": "L'e-mail n'est pas vérifié.",
+  "error.auth.INVALID_CAPTCHA": "La vérification de sécurité a échoué. Veuillez actualiser la page et réessayer.",
   "error.auth.INVALID_EMAIL": "E-mail invalide.",
   "error.auth.INVALID_EMAIL_OR_PASSWORD": "E-mail ou mot de passe invalide.",
   "error.auth.INVALID_PASSWORD": "Mot de passe invalide.",
