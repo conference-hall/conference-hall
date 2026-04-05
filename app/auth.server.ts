@@ -59,12 +59,6 @@ export const auth = betterAuth({
       clientId: webEnv.GITHUB_CLIENT_ID!,
       clientSecret: webEnv.GITHUB_CLIENT_SECRET!,
     },
-    twitter: {
-      prompt: 'select_account',
-      clientId: webEnv.TWITTER_CLIENT_ID!,
-      clientSecret: webEnv.TWITTER_CLIENT_SECRET!,
-      scope: ['users.email'],
-    },
   },
   user: {
     changeEmail: { enabled: true },
@@ -76,7 +70,7 @@ export const auth = betterAuth({
   account: {
     accountLinking: {
       allowDifferentEmails: true,
-      trustedProviders: ['google', 'github', 'twitter', 'email-password'],
+      trustedProviders: ['google', 'github', 'email-password'],
     },
   },
   session: {
