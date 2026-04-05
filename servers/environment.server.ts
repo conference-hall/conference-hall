@@ -31,8 +31,6 @@ const WebServerSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   GITHUB_CLIENT_ID: z.string().optional(),
   GITHUB_CLIENT_SECRET: z.string().optional(),
-  TWITTER_CLIENT_ID: z.string().optional(),
-  TWITTER_CLIENT_SECRET: z.string().optional(),
   FIREBASE_SCRYPT_SIGNER_KEY: z.string().optional(),
   FIREBASE_SCRYPT_SALT_SEPARATOR: z.string().optional(),
   FIREBASE_SCRYPT_ROUNDS: z.coerce.number().optional(),

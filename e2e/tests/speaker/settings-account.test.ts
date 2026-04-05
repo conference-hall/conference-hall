@@ -28,7 +28,6 @@ test('display settings page', async ({ page, context }) => {
   // check authentication methods
   await expect(accountPage.linkButton('Google')).toBeVisible();
   await expect(accountPage.linkButton('Github')).toBeVisible();
-  await expect(accountPage.linkButton('X.com')).toBeVisible();
 });
 
 test('change email', async ({ page, context }) => {

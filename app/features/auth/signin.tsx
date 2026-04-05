@@ -57,7 +57,7 @@ export default function Signin({ loaderData }: Route.ComponentProps) {
 
         <DividerWithLabel label={t('common.or')} />
 
-        <AuthProvidersSignin redirectTo={redirectTo} />
+        <AuthProvidersSignin redirectTo={redirectTo} showDeprecated />
       </Card>
 
       <footer className="my-8 flex justify-center gap-2">

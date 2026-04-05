@@ -2,18 +2,16 @@ import { createAuthClient } from 'better-auth/react';
 import type { ParseKeys } from 'i18next';
 import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
 import { GoogleIcon } from '~/design-system/icons/google-icon.tsx';
-import { XIcon } from '~/design-system/icons/x-icon.tsx';
 
 export const authClient = createAuthClient();
 
-export type ProviderId = 'google' | 'github' | 'twitter';
+export type ProviderId = 'google' | 'github';
 
 type ProviderInfo = { id: ProviderId; label: string; icon: React.ComponentType<{ className?: string }> };
 
 export const PROVIDERS: Array<ProviderInfo> = [
   { id: 'google', label: 'Google', icon: GoogleIcon },
   { id: 'github', label: 'GitHub', icon: GitHubIcon },
-  { id: 'twitter', label: 'X.com', icon: XIcon },
 ];
 
 const oAuthErrors: Record<string, ParseKeys> = {
