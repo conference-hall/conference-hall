@@ -1,6 +1,6 @@
-import { Turnstile } from '@marsidev/react-turnstile';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import type { ParseKeys } from 'i18next';
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
@@ -28,7 +28,9 @@ export function SignupForm({ defaultEmail, captchaSiteKey, onSuccess }: SignupFo
   const [error, setError] = useState<ParseKeys | null>(null);
   const [fieldErrors, setFieldErrors] = useState<I18nSubmissionErrors>(null);
   const [loading, setLoading] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string>('');
+
+  const captchaRef = useRef<TurnstileInstance | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const signUp = async (event: FormEvent) => {
     event.preventDefault();
@@ -37,13 +39,22 @@ export function SignupForm({ defaultEmail, captchaSiteKey, onSuccess }: SignupFo
     const fieldErrors = validateEmailAndPassword(email, password);
     if (fieldErrors) return setFieldErrors(fieldErrors);
 
+    let headers: Record<string, string> = {};
+    if (captchaSiteKey) {
+      if (!captchaToken) return setError(getAuthError({ code: 'INVALID_CAPTCHA' }));
+      headers['x-captcha-response'] = captchaToken;
+    }
+
     await authClient.signUp.email(
       { email, password, name },
       {
-        headers: captchaSiteKey ? { 'x-captcha-response': captchaToken } : undefined,
+        headers,
         onRequest: () => setLoading(true),
         onSuccess,
-        onError: (ctx) => setError(getAuthError(ctx.error)),
+        onError: (ctx) => {
+          captchaRef.current?.reset();
+          setError(getAuthError(ctx.error));
+        },
       },
     );
     setLoading(false);
@@ -79,10 +90,11 @@ export function SignupForm({ defaultEmail, captchaSiteKey, onSuccess }: SignupFo
 
       {captchaSiteKey && (
         <Turnstile
+          ref={captchaRef}
           siteKey={captchaSiteKey}
           onSuccess={setCaptchaToken}
-          onError={() => setCaptchaToken('')}
-          onExpire={() => setCaptchaToken('')}
+          onError={() => setCaptchaToken(null)}
+          onExpire={() => setCaptchaToken(null)}
           options={{ theme: 'light', size: 'invisible' }}
           scriptOptions={{ nonce }}
           className="hidden"

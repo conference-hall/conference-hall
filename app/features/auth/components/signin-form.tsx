@@ -1,6 +1,6 @@
-import { Turnstile } from '@marsidev/react-turnstile';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import type { ParseKeys } from 'i18next';
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
@@ -35,7 +35,9 @@ export function SigninForm({
   const [error, setError] = useState<ParseKeys | null>(null);
   const [fieldErrors, setFieldErrors] = useState<I18nSubmissionErrors>(null);
   const [loading, setLoading] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string>('');
+
+  const captchaRef = useRef<TurnstileInstance | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const signIn = async (event: FormEvent) => {
     event.preventDefault();
@@ -44,13 +46,20 @@ export function SigninForm({
     const fieldErrors = validateRequiredEmailAndPassword(email, password);
     if (fieldErrors) return setFieldErrors(fieldErrors);
 
+    let headers: Record<string, string> = {};
+    if (captchaSiteKey) {
+      if (!captchaToken) return setError(getAuthError({ code: 'INVALID_CAPTCHA' }));
+      headers['x-captcha-response'] = captchaToken;
+    }
+
     await authClient.signIn.email(
       { email, password },
       {
-        headers: captchaSiteKey ? { 'x-captcha-response': captchaToken } : undefined,
+        headers,
         onRequest: () => setLoading(true),
         onSuccess,
         onError: async (ctx) => {
+          captchaRef.current?.reset();
           setLoading(false);
           if (ctx.error.code === 'EMAIL_NOT_VERIFIED') {
             onEmailNotVerified();
@@ -84,10 +93,11 @@ export function SigninForm({
 
       {captchaSiteKey && (
         <Turnstile
+          ref={captchaRef}
           siteKey={captchaSiteKey}
           onSuccess={setCaptchaToken}
-          onError={() => setCaptchaToken('')}
-          onExpire={() => setCaptchaToken('')}
+          onError={() => setCaptchaToken(null)}
+          onExpire={() => setCaptchaToken(null)}
           options={{ theme: 'light', size: 'invisible' }}
           scriptOptions={{ nonce }}
           className="hidden"

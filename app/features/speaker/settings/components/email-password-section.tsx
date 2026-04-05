@@ -1,6 +1,6 @@
 import { EnvelopeIcon, KeyIcon } from '@heroicons/react/24/outline';
-import { Turnstile } from '@marsidev/react-turnstile';
-import { useId, useState, type FormEvent } from 'react';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
+import { useId, useRef, useState, type FormEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { toast } from 'sonner';
@@ -132,22 +132,30 @@ type AddPasswordModalProps = { email: string; open: boolean; captchaSiteKey?: st
 
 function AddPasswordModal({ email, captchaSiteKey, open, onClose }: AddPasswordModalProps) {
   const { t } = useTranslation();
-
-  const [captchaToken, setCaptchaToken] = useState<string>('');
   const nonce = useNonce();
 
-  const isLoading = Boolean(captchaSiteKey && !captchaToken);
+  const captchaRef = useRef<TurnstileInstance | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const isLoadingCaptcha = Boolean(captchaSiteKey && !captchaToken);
 
   const onAddPassword = async (event: FormEvent) => {
     event.preventDefault();
-    const { error } = await authClient.requestPasswordReset(
-      { email, redirectTo: '/auth/reset-password' },
-      { headers: captchaSiteKey ? { 'x-captcha-response': captchaToken } : undefined },
-    );
+
+    let headers: Record<string, string> = {};
+    if (captchaSiteKey) {
+      if (!captchaToken) {
+        toast.error(getAuthError({ code: 'INVALID_CAPTCHA' }));
+        return;
+      }
+      headers['x-captcha-response'] = captchaToken;
+    }
+
+    const { error } = await authClient.requestPasswordReset({ email, redirectTo: '/auth/reset-password' }, { headers });
     if (!error) {
       toast.success(t('settings.account.feedbacks.email-link-sent', { email }));
       onClose();
     } else {
+      captchaRef.current?.reset();
       toast.error(t(getAuthError(error)));
     }
   };
@@ -164,10 +172,11 @@ function AddPasswordModal({ email, captchaSiteKey, open, onClose }: AddPasswordM
         </Text>
         {captchaSiteKey && (
           <Turnstile
+            ref={captchaRef}
             siteKey={captchaSiteKey}
             onSuccess={setCaptchaToken}
-            onError={() => setCaptchaToken('')}
-            onExpire={() => setCaptchaToken('')}
+            onError={() => setCaptchaToken(null)}
+            onExpire={() => setCaptchaToken(null)}
             options={{ theme: 'light', size: 'invisible' }}
             scriptOptions={{ nonce }}
             className="hidden"
@@ -179,7 +188,13 @@ function AddPasswordModal({ email, captchaSiteKey, open, onClose }: AddPasswordM
         <Button type="button" variant="secondary" onClick={onClose}>
           {t('common.cancel')}
         </Button>
-        <Button type="button" variant="primary" onClick={onAddPassword} disabled={isLoading} loading={isLoading}>
+        <Button
+          type="button"
+          variant="primary"
+          onClick={onAddPassword}
+          disabled={isLoadingCaptcha}
+          loading={isLoadingCaptcha}
+        >
           {t('settings.account.email.set-password.send-link')}
         </Button>
       </Modal.Actions>

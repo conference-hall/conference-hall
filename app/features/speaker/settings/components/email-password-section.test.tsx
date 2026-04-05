@@ -159,7 +159,7 @@ describe('EmailPasswordSection', () => {
 
       expect(authClient.requestPasswordReset).toHaveBeenCalledWith(
         { email: 'user@example.com', redirectTo: '/auth/reset-password' },
-        { headers: undefined },
+        { headers: {} },
       );
     });
   });

@@ -314,6 +314,7 @@
   "error.auth.account_already_linked_to_different_user": "Unable to link this account. It is already associated with another user. Please use a different account.",
   "error.auth.EMAIL_ALREADY_VERIFIED": "Email is already verified.",
   "error.auth.EMAIL_NOT_VERIFIED": "Email not verified.",
+  "error.auth.INVALID_CAPTCHA": "Security check failed. Please refresh and try again.",
   "error.auth.INVALID_EMAIL": "Invalid email.",
   "error.auth.INVALID_EMAIL_OR_PASSWORD": "Invalid email or password.",
   "error.auth.INVALID_PASSWORD": "Invalid password.",
