@@ -50,83 +50,89 @@ React / React router v7 / Typescript / Tailwind / HeadlessUI / Conform / Zod / P
 
 ### Getting started
 
-Install dependencies:
+Install dependencies.
 
 ```sh
 npm install
 ```
 
-Start Docker image for Postgres DB, S3 Storage and Mailpit:
+Start Docker containers for databases, S3 storage and email testing tool.
 
 ```sh
 docker compose up
 ```
 
-If you start **Conference Hall** for the first time, you need to run :
+If you start the app for the first time, you need to run.
 
 ```sh
-# Install pre-commit hook to ensure linting
+# Install pre-commit hook to ensure linting (optional)
 npx lefthook install
 
 # Setup and seed local DB
 npm run db:reset
 ```
 
-Start the development server:
+Start the development server.
 
 ```sh
 npm run dev
 ```
 
-You can connect with test users :
+Application URLs:
 
-- `superman@example.net` / `password`
-- `batman@example.net` / `password`
+- Webapp: http://localhost:3000
+- Mailpit: http://localhost:8025
+- S3 storage: http://localhost:9000 (minioadmin/minioadmin)
+
+You can connect the webapp with test users:
+
+- `superman@example.com` / `password`
+- `batman@example.com` / `password`
 
 ### Useful commands
 
-#### Generate Prisma client code
+Generate Prisma client code.
 
 ```sh
 # Need to be done when DB schema has changed
 npx prisma generate
 ```
 
-#### Reset and seed local DB
+Reset and seed local DB.
 
 ```sh
 npm run db:reset
 ```
 
-#### Execute tests
+### Execute tests and lint
 
-The docker image with Postgres DB, Redis and S3 Storage MUST be running.
+Docker containers MUST be running.
 
-Install Playwright browser for components and e2e tests:
+Install Playwright browser for components and e2e tests.
 
 ```sh
 npx playwright install --with-deps chromium
 ```
 
-Execute unit and integration tests:
+Execute unit and integration tests.
 
 ```sh
 npm run test
 ```
 
-Execute end-to-end tests:
+Execute end-to-end tests.
 
 ```sh
 npm run test:e2e
 ```
 
-#### Execute linting
+Execute linting.
 
 ```sh
 npm run lint
 ```
 
-#### Execute typecript check
+Execute typecript check.
 
 ```sh
 npm run tsc

@@ -29,9 +29,12 @@ export class ProposalsExport {
   }
 
   async toJson(filters: ProposalsFilters) {
-    const search = new ProposalSearchBuilder(this.event.id, this.userId, filters);
+    const search = new ProposalSearchBuilder(this.event.id, this.userId, filters, {
+      withSpeakers: true,
+      withReviews: true,
+    });
 
-    const proposals = await search.proposals({ reviews: true });
+    const proposals = await search.proposals();
 
     let speakerSurveys: Record<string, Array<SurveyDetailedAnswer>> = {};
     const { isActiveForEvent } = new SurveyConfig(this.event.surveyConfig);
@@ -108,7 +111,7 @@ export class ProposalsExport {
       withReviews: true,
     });
 
-    const proposals = await search.proposals({ reviews: true });
+    const proposals = await search.proposals();
 
     return proposals.map((proposal) => {
       const reviews = new ReviewDetails(proposal.reviews);
