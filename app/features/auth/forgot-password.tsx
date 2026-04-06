@@ -5,6 +5,7 @@ import { redirect, useSearchParams } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
 import { OptionalAuthContext } from '~/shared/authentication/auth.middleware.ts';
@@ -61,6 +62,12 @@ export default function ForgotPasswordSent({ loaderData }: Route.ComponentProps)
           />
         </Card>
       )}
+
+      <footer className="my-8 text-center">
+        <Link to="/auth/login" weight="semibold">
+          {t('auth.common.go-back-login')}
+        </Link>
+      </footer>
     </Page>
   );
 }
