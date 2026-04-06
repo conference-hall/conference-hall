@@ -1,6 +1,6 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
-import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
 import { authClient } from '~/shared/better-auth/auth-client.ts';
 import { ForgotPasswordForm } from './forgot-password-form.tsx';

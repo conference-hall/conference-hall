@@ -3,8 +3,8 @@ import { EventSpeakerForProposal } from '~/features/event-participation/speaker-
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
 import { getNextProposalNumber } from '~/shared/counters/proposal-counter.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
-import OrganizerProposalSubmittedEmail from '~/shared/emails/templates/organizers/proposal-submitted.tsx';
-import SpeakerProposalSubmittedEmail from '~/shared/emails/templates/speakers/proposal-submitted.tsx';
+import OrganizerProposalSubmittedEmail from '~/shared/emails/templates/organizers/proposal-submitted.email.tsx';
+import SpeakerProposalSubmittedEmail from '~/shared/emails/templates/speakers/proposal-submitted.email.tsx';
 import {
   CfpNotOpenError,
   EventNotFoundError,

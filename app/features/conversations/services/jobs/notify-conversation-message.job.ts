@@ -1,5 +1,5 @@
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
-import ConversationMessageEmail from '~/shared/emails/templates/speakers/conversation-message.tsx';
+import ConversationMessageEmail from '~/shared/emails/templates/speakers/conversation-message.email.tsx';
 import { job } from '~/shared/jobs/job.ts';
 import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import type { MessageRole } from '~/shared/types/conversation.types.ts';

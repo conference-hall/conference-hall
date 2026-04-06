@@ -1,8 +1,8 @@
 import z from 'zod';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
-import ProposalAcceptedEmail from '~/shared/emails/templates/speakers/proposal-accepted.tsx';
-import ProposalRejectedEmail from '~/shared/emails/templates/speakers/proposal-rejected.tsx';
+import ProposalAcceptedEmail from '~/shared/emails/templates/speakers/proposal-accepted.email.tsx';
+import ProposalRejectedEmail from '~/shared/emails/templates/speakers/proposal-rejected.email.tsx';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 

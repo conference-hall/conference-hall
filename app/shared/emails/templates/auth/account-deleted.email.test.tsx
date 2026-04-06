@@ -1,12 +1,5 @@
 import { render } from '@react-email/components';
-import AccountDeletedEmail from './account-deleted.tsx';
-
-vi.mock('../../../servers/environment.server.ts', () => ({
-  getSharedServerEnv: () => ({
-    APP_URL: 'http://localhost:3000',
-  }),
-  initEnv: vi.fn(),
-}));
+import AccountDeletedEmail from './account-deleted.email.tsx';
 
 describe('Account Deleted Email', () => {
   describe('buildPayload', () => {

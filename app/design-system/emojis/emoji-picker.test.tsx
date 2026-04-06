@@ -1,6 +1,6 @@
 import { FaceSmileIcon } from '@heroicons/react/24/outline';
 import { I18nextProvider } from 'react-i18next';
-import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
 import type { Emoji } from '~/shared/types/emojis.types.ts';
 import { EmojiPicker } from './emoji-picker.tsx';

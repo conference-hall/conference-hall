@@ -1,7 +1,7 @@
 import { Notifications } from '~/features/notifications/services/notifications.server.ts';
 import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
-import AccountDeletedEmail from '~/shared/emails/templates/auth/account-deleted.tsx';
+import AccountDeletedEmail from '~/shared/emails/templates/auth/account-deleted.email.tsx';
 import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { db } from '../../../prisma/db.server.ts';
 import { UserNotFoundError } from '../errors.server.ts';

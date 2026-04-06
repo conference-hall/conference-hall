@@ -1,14 +1,6 @@
 import { render } from '@react-email/components';
-import type { TemplateData } from './proposal-confirmed.tsx';
-import ProposalConfirmedEmail from './proposal-confirmed.tsx';
-
-// Mock any server-side modules that use process.env
-vi.mock('../../../../servers/environment.server.ts', () => ({
-  getSharedServerEnv: () => ({
-    APP_URL: 'http://localhost:3000',
-  }),
-  initEnv: vi.fn(),
-}));
+import type { TemplateData } from './proposal-confirmed.email.tsx';
+import ProposalConfirmedEmail from './proposal-confirmed.email.tsx';
 
 describe('Proposal Confirmed', () => {
   describe('Special Characters Handling', () => {
