@@ -56,13 +56,13 @@ Install dependencies:
 npm install
 ```
 
-Start Docker image for Postgres DB, S3 Storage and Mailpit:
+Start Docker image for databases, S3 storage and email testing tool:
 
 ```sh
 docker compose up
 ```
 
-If you start **Conference Hall** for the first time, you need to run :
+If you start the app for the first time, you need to run :
 
 ```sh
 # Install pre-commit hook to ensure linting
@@ -80,8 +80,8 @@ npm run dev
 
 You can connect with test users :
 
-- `superman@example.net` / `password`
-- `batman@example.net` / `password`
+- `superman@example.com` / `password`
+- `batman@example.com` / `password`
 
 ### Useful commands
 
