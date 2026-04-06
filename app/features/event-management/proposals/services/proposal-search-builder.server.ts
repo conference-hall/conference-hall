@@ -38,9 +38,7 @@ export class ProposalSearchBuilder {
       include: {
         speakers: this.options.withSpeakers,
         reviews: this.options.withReviews,
-        _count: {
-          select: { comments: true },
-        },
+        _count: { select: { comments: true } },
         tags: true,
       },
       where: this.whereClause(),
@@ -50,11 +48,11 @@ export class ProposalSearchBuilder {
     });
   }
 
-  async proposals(select: { reviews: boolean } = { reviews: true }) {
+  async proposals() {
     return db.proposal.findMany({
       include: {
         speakers: this.options.withSpeakers,
-        reviews: select.reviews,
+        reviews: this.options.withReviews,
         formats: true,
         categories: true,
         tags: true,
