@@ -1,16 +1,16 @@
 import type { CustomTemplateName } from '../email.types.ts';
-import AuthAccountDeleted from './auth/account-deleted.tsx';
-import AuthEmailVerification from './auth/email-verification.tsx';
-import AuthResetPassword from './auth/reset-password.tsx';
-import BaseEmail from './base-email.tsx';
-import BaseEventEmail from './base-event-email.tsx';
-import OrganizersProposalConfirmed from './organizers/proposal-confirmed.tsx';
-import OrganizersProposalDeclined from './organizers/proposal-declined.tsx';
-import OrganizersProposalSubmitted from './organizers/proposal-submitted.tsx';
-import SpeakersConversationMessage from './speakers/conversation-message.tsx';
-import SpeakersProposalAccepted from './speakers/proposal-accepted.tsx';
-import SpeakersProposalRejected from './speakers/proposal-rejected.tsx';
-import SpeakersProposalSubmitted from './speakers/proposal-submitted.tsx';
+import AuthAccountDeleted from './auth/account-deleted.email.tsx';
+import AuthEmailVerification from './auth/email-verification.email.tsx';
+import AuthResetPassword from './auth/reset-password.email.tsx';
+import BaseEventEmail from './base-event.email.tsx';
+import BaseEmail from './base.email.tsx';
+import OrganizersProposalConfirmed from './organizers/proposal-confirmed.email.tsx';
+import OrganizersProposalDeclined from './organizers/proposal-declined.email.tsx';
+import OrganizersProposalSubmitted from './organizers/proposal-submitted.email.tsx';
+import SpeakersConversationMessage from './speakers/conversation-message.email.tsx';
+import SpeakersProposalAccepted from './speakers/proposal-accepted.email.tsx';
+import SpeakersProposalRejected from './speakers/proposal-rejected.email.tsx';
+import SpeakersProposalSubmitted from './speakers/proposal-submitted.email.tsx';
 
 const EMAIL_TEMPLATES = {
   'base-email': BaseEmail,

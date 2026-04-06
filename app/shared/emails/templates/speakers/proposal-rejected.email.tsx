@@ -1,12 +1,11 @@
-import { Button, Heading, Section, Text } from '@react-email/components';
+import { Heading, Text } from '@react-email/components';
 import type { CustomEmailData, LocaleEmailData } from '~/shared/emails/email.types.ts';
 import type { EmailPayload } from '~/shared/emails/send-email.job.ts';
 import { EmailMarkdown } from '~/shared/emails/utils/email-markdown.tsx';
-import { buildSpeakerProfileUrl } from '~/shared/emails/utils/urls.ts';
 import { getEmailI18n } from '~/shared/i18n/i18n.emails.ts';
 import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
-import { styles } from '../base-email.tsx';
-import BaseEventEmail from '../base-event-email.tsx';
+import BaseEventEmail from '../base-event.email.tsx';
+import { styles } from '../base.email.tsx';
 
 export type TemplateData = {
   event: { id: string; name: string; logo: string | null };
@@ -15,48 +14,43 @@ export type TemplateData = {
 
 type EmailProps = TemplateData & LocaleEmailData & CustomEmailData;
 
-export default function ProposalSubmittedEmail({ event, proposal, locale, customization, preview }: EmailProps) {
+export default function ProposalRejectedEmail({ event, proposal, locale, customization }: EmailProps) {
   const t = getEmailI18n(locale);
 
   return (
     <BaseEventEmail locale={locale} logoUrl={resolveStorageUrl(event.logo)}>
-      <Heading className={styles.h1}>{t('speakers.proposal-submitted.body.title')}</Heading>
+      <Heading className={styles.h1}>{t('speakers.proposal-rejected.body.title')}</Heading>
 
       {customization?.content ? (
         <EmailMarkdown variables={{ proposal: proposal.title }}>{customization.content}</EmailMarkdown>
       ) : (
         <>
           <Text>
-            {t('speakers.proposal-submitted.body.text1', {
-              proposal: proposal.title,
+            {t('speakers.proposal-rejected.body.text1', {
               event: event.name,
+              proposal: proposal.title,
               interpolation: { escapeValue: false },
             })}
           </Text>
 
-          <Text>{t('speakers.proposal-submitted.body.text2')}</Text>
+          <Text>{t('speakers.proposal-rejected.body.text2')}</Text>
+
+          <Text>{t('speakers.proposal-rejected.body.text3')}</Text>
+
+          <Text>{t('speakers.proposal-rejected.body.text4')}</Text>
         </>
       )}
-
-      <Section className="my-8 text-center">
-        <Button href={!preview ? buildSpeakerProfileUrl() : '#'} className={styles.button}>
-          {t('speakers.proposal-submitted.body.cta')}
-        </Button>
-      </Section>
     </BaseEventEmail>
   );
 }
 
-ProposalSubmittedEmail.buildPayload = (data: TemplateData, localeOverride?: string): EmailPayload => {
+ProposalRejectedEmail.buildPayload = (data: TemplateData, localeOverride?: string): EmailPayload => {
   const locale = localeOverride || data.proposal.speakers[0]?.locale || 'en';
   const t = getEmailI18n(locale);
 
   return {
-    template: 'speakers-proposal-submitted',
-    subject: t('speakers.proposal-submitted.subject', {
-      event: data.event.name,
-      interpolation: { escapeValue: false },
-    }),
+    template: 'speakers-proposal-rejected',
+    subject: t('speakers.proposal-rejected.subject', { event: data.event.name, interpolation: { escapeValue: false } }),
     from: t('common.email.from.event', { event: data.event.name, interpolation: { escapeValue: false } }),
     to: data.proposal.speakers.map((speaker) => speaker.email),
     data,
@@ -65,7 +59,7 @@ ProposalSubmittedEmail.buildPayload = (data: TemplateData, localeOverride?: stri
   };
 };
 
-ProposalSubmittedEmail.PreviewProps = {
+ProposalRejectedEmail.PreviewProps = {
   event: { name: 'Awesome event', logo: 'seed/123/128.png' },
   proposal: { title: 'My awesome proposal', speakers: [{ email: 'john@email.com', locale: 'en' }] },
 } as EmailProps;

@@ -2,7 +2,7 @@ import { HomeIcon } from '@heroicons/react/20/solid';
 import type { JSX } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
-import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
 import { BackButton, useBackNavigation } from './back-button.tsx';
 

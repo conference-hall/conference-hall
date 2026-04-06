@@ -1,5 +1,5 @@
 import { I18nextProvider } from 'react-i18next';
-import { i18nTest } from 'tests/i18n-helpers.tsx';
+import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page, userEvent } from 'vitest/browser';
 import MultiSelect from './multi-select.tsx';
 

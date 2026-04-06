@@ -5,8 +5,8 @@ import { EmailMarkdown } from '~/shared/emails/utils/email-markdown.tsx';
 import { buildSpeakerProposalUrl } from '~/shared/emails/utils/urls.ts';
 import { getEmailI18n } from '~/shared/i18n/i18n.emails.ts';
 import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
-import { styles } from '../base-email.tsx';
-import BaseEventEmail from '../base-event-email.tsx';
+import BaseEventEmail from '../base-event.email.tsx';
+import { styles } from '../base.email.tsx';
 
 export type TemplateData = {
   event: { id: string; slug: string; name: string; logo: string | null };

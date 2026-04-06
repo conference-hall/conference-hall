@@ -1,7 +1,7 @@
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
-import ProposalConfirmedEmail from '~/shared/emails/templates/organizers/proposal-confirmed.tsx';
-import ProposalDeclinedEmail from '~/shared/emails/templates/organizers/proposal-declined.tsx';
+import ProposalConfirmedEmail from '~/shared/emails/templates/organizers/proposal-confirmed.email.tsx';
+import ProposalDeclinedEmail from '~/shared/emails/templates/organizers/proposal-declined.email.tsx';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
