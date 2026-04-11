@@ -3,14 +3,14 @@
 
 import tailwindcss from '@tailwindcss/vite';
 import { playwright } from '@vitest/browser-playwright';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 import { loadEnvironment } from './servers/environment.server.ts';
 
 const env = loadEnvironment();
 
 export default defineConfig({
-  plugins: [tailwindcss(), tsconfigPaths()],
+  plugins: [tailwindcss()],
+  resolve: { tsconfigPaths: true },
   server: { watch: { ignored: ['.*\\/node_modules\\/.*', '.*\\/build\\/.*'] } },
   test: {
     env,
