@@ -6,7 +6,6 @@ export const FALLBACK_LANGUAGE = 'en';
 export const i18nConfig: InitOptions = {
   supportedLngs: [...SUPPORTED_LANGUAGES],
   fallbackLng: FALLBACK_LANGUAGE,
-  showSupportNotice: false,
 };
 
 type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
