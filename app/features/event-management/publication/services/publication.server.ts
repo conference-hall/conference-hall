@@ -1,8 +1,6 @@
 import z from 'zod';
+import { processNotification } from '~/features/notifications/services/jobs/process-notification.job.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
-import { sendEmail } from '~/shared/emails/send-email.job.ts';
-import ProposalAcceptedEmail from '~/shared/emails/templates/speakers/proposal-accepted.email.tsx';
-import ProposalRejectedEmail from '~/shared/emails/templates/speakers/proposal-rejected.email.tsx';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 
@@ -34,15 +32,13 @@ export class Publication {
       data: { publicationStatus: 'PUBLISHED', confirmationStatus: status === 'ACCEPTED' ? 'PENDING' : null },
     });
 
-    if (withEmails && status === 'ACCEPTED') {
+    // todo(notif): do we really need to ask to send email?
+    if (withEmails) {
+      const eventType = status === 'ACCEPTED' ? 'proposal.accepted' : 'proposal.rejected';
       await Promise.all(
-        proposals.map((proposal) => sendEmail.trigger(ProposalAcceptedEmail.buildPayload({ event, proposal }))),
-      );
-    }
-
-    if (withEmails && status === 'REJECTED') {
-      await Promise.all(
-        proposals.map((proposal) => sendEmail.trigger(ProposalRejectedEmail.buildPayload({ event, proposal }))),
+        proposals.map((proposal) =>
+          processNotification.trigger({ type: eventType, eventId: event.id, proposalId: proposal.id }),
+        ),
       );
     }
   }
@@ -71,12 +67,14 @@ export class Publication {
       },
     });
 
-    if (withEmails && proposal.deliberationStatus === 'ACCEPTED') {
-      await sendEmail.trigger(ProposalAcceptedEmail.buildPayload({ event, proposal }));
-    }
-
-    if (withEmails && proposal.deliberationStatus === 'REJECTED') {
-      await sendEmail.trigger(ProposalRejectedEmail.buildPayload({ event, proposal }));
+    // todo(notif): do we really need to ask to send email?
+    if (withEmails) {
+      const eventType = proposal.deliberationStatus === 'ACCEPTED' ? 'proposal.accepted' : 'proposal.rejected';
+      await processNotification.trigger({
+        type: eventType,
+        eventId: event.id,
+        proposalId: proposal.id,
+      });
     }
   }
 

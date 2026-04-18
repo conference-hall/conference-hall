@@ -1,10 +1,10 @@
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
+import { processNotification } from '~/features/notifications/services/jobs/process-notification.job.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
 import { getNextProposalNumber } from '~/shared/counters/proposal-counter.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import OrganizerProposalSubmittedEmail from '~/shared/emails/templates/organizers/proposal-submitted.email.tsx';
-import SpeakerProposalSubmittedEmail from '~/shared/emails/templates/speakers/proposal-submitted.email.tsx';
 import {
   CfpNotOpenError,
   EventNotFoundError,
@@ -111,8 +111,8 @@ export class TalkSubmission {
       });
     });
 
-    // send speaker email
-    await sendEmail.trigger(SpeakerProposalSubmittedEmail.buildPayload({ event, proposal }));
+    // notify speakers (in-app + email via notification router)
+    await processNotification.trigger({ type: 'proposal.submitted', eventId: event.id, proposalId: proposal.id });
 
     // send organizer email
     const emailNotifications = event.emailNotifications as EventEmailNotificationsKeys;
