@@ -3,8 +3,8 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { processNotification } from '~/features/notifications/services/jobs/process-notification.job.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
-import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { Event, Proposal, Team, User } from '../../../../../prisma/generated/client.ts';
@@ -131,20 +131,9 @@ describe('Publication', () => {
       const countAccepted = await Publication.for(authorizedEvent).statistics();
       expect(countAccepted.accepted).toEqual({ published: 5, notPublished: 0 });
 
-      expect(sendEmail.trigger).toHaveBeenNthCalledWith(
-        1,
-        expect.objectContaining({
-          template: 'speakers-proposal-accepted',
-          to: expect.arrayContaining([speaker1.email, speaker2.email]),
-        }),
-      );
-
-      expect(sendEmail.trigger).toHaveBeenNthCalledWith(
-        2,
-        expect.objectContaining({
-          template: 'speakers-proposal-accepted',
-          to: expect.arrayContaining([speaker1.email, speaker2.email]),
-        }),
+      expect(processNotification.trigger).toHaveBeenCalledTimes(2);
+      expect(processNotification.trigger).toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'proposal.accepted', eventId: event.id }),
       );
     });
 
@@ -160,11 +149,8 @@ describe('Publication', () => {
       const countRejected = await Publication.for(authorizedEvent).statistics();
       expect(countRejected.rejected).toEqual({ published: 1, notPublished: 0 });
 
-      expect(sendEmail.trigger).toHaveBeenCalledWith(
-        expect.objectContaining({
-          template: 'speakers-proposal-rejected',
-          to: [speaker1.email],
-        }),
+      expect(processNotification.trigger).toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'proposal.rejected', eventId: event.id, proposalId: rejectedProposal.id }),
       );
     });
 
@@ -185,8 +171,8 @@ describe('Publication', () => {
 
       const updated = await db.proposal.findUnique({ where: { id: archivedProposal.id } });
       expect(updated?.publicationStatus).toBe('NOT_PUBLISHED');
-      expect(sendEmail.trigger).not.toHaveBeenCalledWith(
-        expect.objectContaining({ to: expect.arrayContaining([uniqueSpeaker.email]) }),
+      expect(processNotification.trigger).not.toHaveBeenCalledWith(
+        expect.objectContaining({ proposalId: archivedProposal.id }),
       );
     });
 
@@ -230,12 +216,11 @@ describe('Publication', () => {
       const countAccepted = await Publication.for(authorizedEvent).statistics();
       expect(countAccepted.accepted).toEqual({ published: 4, notPublished: 1 });
 
-      expect(sendEmail.trigger).toHaveBeenCalledWith(
-        expect.objectContaining({
-          template: 'speakers-proposal-accepted',
-          to: expect.arrayContaining([speaker1.email, speaker2.email]),
-        }),
-      );
+      expect(processNotification.trigger).toHaveBeenCalledWith({
+        type: 'proposal.accepted',
+        eventId: event.id,
+        proposalId: proposal.id,
+      });
     });
 
     it('publish result a rejected proposal', async () => {
@@ -250,12 +235,11 @@ describe('Publication', () => {
       const countRejected = await Publication.for(authorizedEvent).statistics();
       expect(countRejected.rejected).toEqual({ published: 1, notPublished: 0 });
 
-      expect(sendEmail.trigger).toHaveBeenCalledWith(
-        expect.objectContaining({
-          template: 'speakers-proposal-rejected',
-          to: [speaker1.email],
-        }),
-      );
+      expect(processNotification.trigger).toHaveBeenCalledWith({
+        type: 'proposal.rejected',
+        eventId: event.id,
+        proposalId: rejectedProposal.id,
+      });
     });
 
     it('can be sent by team members', async () => {

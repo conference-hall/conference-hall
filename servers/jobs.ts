@@ -1,15 +1,25 @@
 import { notifyConversationMessage } from '~/features/conversations/services/jobs/notify-conversation-message.job.ts';
 import { exportToOpenPlanner } from '~/features/event-management/proposals-export/services/jobs/export-to-open-planner.job.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
+import { cleanNotifications } from '~/features/notifications/services/jobs/clean-notifications.job.ts';
+import { processNotification } from '~/features/notifications/services/jobs/process-notification.job.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { createJobWorkers } from '~/shared/jobs/worker.ts';
 import { testJob } from '../app/features/admin/debug/services/jobs/test.job.ts';
 import { logger } from '../app/shared/logger/logger.server.ts';
 import { db } from '../prisma/db.server.ts';
 
-const jobs = [sendEmail, exportToOpenPlanner, sendTalkToSlack, notifyConversationMessage, testJob];
+const jobs = [
+  sendEmail,
+  exportToOpenPlanner,
+  sendTalkToSlack,
+  notifyConversationMessage,
+  processNotification,
+  cleanNotifications,
+  testJob,
+];
 
-const workers = createJobWorkers(jobs);
+const workers = await createJobWorkers(jobs);
 
 process.on('uncaughtException', (error) => {
   logger.error('Uncaught exception', { error });

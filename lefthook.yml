@@ -3,7 +3,7 @@ output: false
 pre-commit:
   commands:
     formatter:
-      run: npm run format -- {staged_files}
+      run: npm run format -- {staged_files} --no-error-on-unmatched-pattern
       stage_fixed: true
     linter:
       run: npm run lint -- {staged_files}

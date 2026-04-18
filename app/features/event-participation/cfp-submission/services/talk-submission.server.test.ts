@@ -5,6 +5,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
+import { processNotification } from '~/features/notifications/services/jobs/process-notification.job.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import {
   CfpNotOpenError,
@@ -238,16 +239,13 @@ describe('TalkSubmission', () => {
       expect(result?.isDraft).toEqual(false);
       expect(result?.deliberationStatus).toEqual('PENDING');
 
-      expect(sendEmail.trigger).toHaveBeenNthCalledWith(
-        1,
-        expect.objectContaining({
-          template: 'speakers-proposal-submitted',
-          to: [speaker.email],
-        }),
-      );
+      expect(processNotification.trigger).toHaveBeenCalledWith({
+        type: 'proposal.submitted',
+        eventId: event.id,
+        proposalId: proposal.id,
+      });
 
-      expect(sendEmail.trigger).toHaveBeenNthCalledWith(
-        2,
+      expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
           template: 'organizers-proposal-submitted',
           to: [event.emailOrganizer],
