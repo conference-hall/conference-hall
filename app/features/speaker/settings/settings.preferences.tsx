@@ -21,6 +21,7 @@ export const meta = (args: Route.MetaArgs) => {
 export const action = async ({ request, context }: Route.ActionArgs) => {
   const authUser = context.get(RequireAuthContext);
   const form = await request.formData();
+
   const locale = form.get('locale') as string;
   await UserAccount.for(authUser.id).changeLocale(locale);
 

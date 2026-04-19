@@ -13,7 +13,36 @@ export type Job<Payload> = {
   trigger: (payload?: Payload, options?: JobsOptions) => Promise<void>;
 };
 
+type CronJobConfig = {
+  name: string;
+  queue?: string;
+  cron: string;
+  run: () => Promise<void>;
+};
+
+export type CronJob = {
+  config: CronJobConfig;
+  schedule: () => Promise<void>;
+};
+
 const queues = new Map<string, Queue<unknown>>();
+
+function getOrCreateQueue(queueName: string): Queue<unknown> {
+  if (!queues.has(queueName)) {
+    const connection = getRedisClient();
+    queues.set(
+      queueName,
+      new Queue(queueName, {
+        connection,
+        defaultJobOptions: {
+          attempts: 5,
+          backoff: { type: 'exponential', delay: 3000 },
+        },
+      }),
+    );
+  }
+  return queues.get(queueName)!;
+}
 
 export function job<Payload>(config: JobConfig<Payload>): Job<Payload> {
   const { name, queue = DEFAULT_QUEUE } = config;
@@ -21,26 +50,24 @@ export function job<Payload>(config: JobConfig<Payload>): Job<Payload> {
   return {
     config,
     trigger: async (payload?: Payload, options?: JobsOptions) => {
-      if (!queues.has(queue)) {
-        const connection = getRedisClient();
-
-        queues.set(
-          queue,
-          new Queue(queue, {
-            connection,
-            defaultJobOptions: {
-              attempts: 5,
-              backoff: { type: 'exponential', delay: 3000 },
-            },
-          }),
-        );
-      }
-
-      await queues.get(queue)?.add(name, payload, {
+      const q = getOrCreateQueue(queue);
+      await q.add(name, payload, {
         ...options,
         removeOnComplete: true,
         removeOnFail: false,
       });
+    },
+  };
+}
+
+export function cronJob(config: CronJobConfig): CronJob {
+  const { name, queue = DEFAULT_QUEUE, cron } = config;
+
+  return {
+    config,
+    schedule: async () => {
+      const q = getOrCreateQueue(queue);
+      await q.upsertJobScheduler(name, { pattern: cron }, { name });
     },
   };
 }

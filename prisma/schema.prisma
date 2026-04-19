@@ -41,10 +41,31 @@ model User {
   conversationParticipants ConversationParticipant[]
   conversationReactions    ConversationReaction[]
   accounts                 Account[]
+  notifications            Notification[]
 
   @@unique([email])
   @@index([uid])
   @@map("users")
+}
+
+enum NotificationType {
+  PROPOSAL_SUBMITTED
+  PROPOSAL_ACCEPTED
+  PROPOSAL_REJECTED
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  data      Json
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@index([userId, read])
+  @@index([userId, createdAt])
+  @@map("notifications")
 }
 
 model Account {
