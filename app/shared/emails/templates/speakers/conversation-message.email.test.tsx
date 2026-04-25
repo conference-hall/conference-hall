@@ -1,4 +1,4 @@
-import { render } from '@react-email/components';
+import { render } from 'react-email';
 import type { TemplateData } from './conversation-message.email.tsx';
 import ConversationMessageEmail from './conversation-message.email.tsx';
 

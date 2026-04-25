@@ -1,9 +1,9 @@
 // Mock @react-email/components render function
-vi.mock('@react-email/components', () => ({
+vi.mock('react-email', () => ({
   render: vi.fn(),
 }));
 
-import { render } from '@react-email/components';
+import { render } from 'react-email';
 import { renderEmail } from './email.renderer.tsx';
 import { getEmailTemplate } from './templates/templates.ts';
 

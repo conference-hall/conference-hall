@@ -1,5 +1,4 @@
 import { useFetchers, useSubmit } from 'react-router';
-import { v4 as uuid } from 'uuid';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import { areTimeSlotsOverlapping } from '~/shared/datetimes/timeslots.ts';
 import { timezoneToUtc, utcToTimezone } from '~/shared/datetimes/timezone.ts';
@@ -15,7 +14,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     const conflicting = sessions.some((s) => s.trackId === trackId && areTimeSlotsOverlapping(timeslot, s.timeslot));
     if (conflicting) return;
 
-    const id = uuid();
+    const id = crypto.randomUUID();
     await submit(
       {
         intent: 'add-session',

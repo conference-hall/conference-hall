@@ -3,7 +3,6 @@ import { TrashIcon } from '@heroicons/react/24/outline';
 import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { v4 as uuid } from 'uuid';
 import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
@@ -91,7 +90,7 @@ function SurveyQuestionModalContent({ initialValues, open, onClose }: SurveyQues
             {t('event-management.settings.survey.question.required')}
           </Checkbox>
 
-          <input type="hidden" name="id" value={isCreateMode ? uuid() : initialValues?.id} />
+          <input type="hidden" name="id" value={isCreateMode ? crypto.randomUUID() : initialValues?.id} />
         </Form>
       </Modal.Content>
 
@@ -165,7 +164,7 @@ function NewOptionInput({ setOptions }: NewOptionInputProps) {
 
   const handleAddOption = () => {
     if (!label) return;
-    const id = uuid();
+    const id = crypto.randomUUID();
     if (!id) return;
     setOptions((options) => [...options, { id, label: label }]);
     setLabel('');

@@ -1,5 +1,5 @@
+import { randomUUID } from 'node:crypto';
 import { useLoaderData } from 'react-router';
-import { v4 as uuid } from 'uuid';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
@@ -25,7 +25,7 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
       break;
     }
     case 'generate-api-key': {
-      await event.update({ apiKey: uuid() });
+      await event.update({ apiKey: randomUUID() });
       break;
     }
   }

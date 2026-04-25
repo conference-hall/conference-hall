@@ -1,4 +1,4 @@
-import { render } from '@react-email/components';
+import { render } from 'react-email';
 import xss from 'xss';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import type {
