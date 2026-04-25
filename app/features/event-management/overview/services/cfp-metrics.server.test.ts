@@ -110,6 +110,45 @@ describe('CfpMetrics', () => {
       expect(metrics.byDays).toEqual([]);
     });
 
+    it('does not count draft proposals in formats and categories', async () => {
+      const talk = await talkFactory({ speakers: [owner] });
+      await proposalFactory({ event, talk, formats: [format], categories: [category], traits: ['draft'] });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const metrics = await CfpMetrics.for(authorizedEvent).get();
+
+      expect(metrics.byFormats).toEqual(
+        expect.arrayContaining([
+          { id: format.id, name: format.name, value: 2 },
+          { id: format2.id, name: format2.name, value: 1 },
+        ]),
+      );
+      expect(metrics.byCategories).toEqual(
+        expect.arrayContaining([
+          { id: category.id, name: category.name, value: 1 },
+          { id: category2.id, name: category2.name, value: 1 },
+        ]),
+      );
+    });
+
+    it('returns formats and categories with zero proposals when not all are used', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const unusedFormat = await eventFormatFactory({ event });
+      const unusedCategory = await eventCategoryFactory({ event });
+
+      const metrics = await CfpMetrics.for(authorizedEvent).get();
+
+      expect(metrics.byFormats).toEqual(
+        expect.arrayContaining([{ id: unusedFormat.id, name: unusedFormat.name, value: 0 }]),
+      );
+      expect(metrics.byCategories).toEqual(
+        expect.arrayContaining([{ id: unusedCategory.id, name: unusedCategory.name, value: 0 }]),
+      );
+    });
+
     it('returns metrics for an event with proposals but without tracks', async () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
