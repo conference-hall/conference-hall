@@ -32,10 +32,16 @@ export default function CFPTabRoute({ loaderData: { metrics } }: Route.Component
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-6">
         {metrics.byFormats && (
-          <BarListCard label={t('event-management.overview.proposals-by-formats')} data={metrics.byFormats} />
+          <BarListCard
+            label={t('event-management.overview.proposals-by-formats')}
+            data={metrics.byFormats.map((f) => ({ ...f, to: `../proposals?formats=${f.id}` }))}
+          />
         )}
         {metrics.byCategories && (
-          <BarListCard label={t('event-management.overview.proposals-by-categories')} data={metrics.byCategories} />
+          <BarListCard
+            label={t('event-management.overview.proposals-by-categories')}
+            data={metrics.byCategories.map((c) => ({ ...c, to: `../proposals?categories=${c.id}` }))}
+          />
         )}
       </div>
     </div>
