@@ -1,5 +1,5 @@
+import { randomUUID } from 'node:crypto';
 import { createCookieSessionStorage, data } from 'react-router';
-import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
 import { getWebServerEnv } from '../../../servers/environment.server.ts';
 
@@ -10,7 +10,7 @@ const toastKey = 'toast';
 const TypeSchema = z.enum(['message', 'success', 'error']);
 
 const ToastSchema = z.object({
-  id: z.string().default(() => uuid()),
+  id: z.string().default(() => randomUUID()),
   title: z.string().optional(),
   type: TypeSchema.default('message'),
 });
