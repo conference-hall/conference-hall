@@ -66,7 +66,6 @@ export class CfpMetrics {
       id: item.id,
       name: item.name,
       value: Number(item.value),
-      to: `../proposals?formats=${item.id}`,
     }));
   }
 
@@ -89,7 +88,6 @@ export class CfpMetrics {
       id: item.id,
       name: item.name,
       value: Number(item.value),
-      to: `../proposals?categories=${item.id}`,
     }));
   }
 
