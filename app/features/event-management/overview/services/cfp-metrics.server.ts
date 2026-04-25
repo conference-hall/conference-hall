@@ -1,9 +1,6 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import { Prisma } from '../../../../../prisma/generated/client.ts';
-import { EventFetcher } from '../../services/event-fetcher.server.ts';
-
-type TrackType = { id: string; name: string };
 
 export class CfpMetrics {
   constructor(private authorizedEvent: AuthorizedEvent) {}
@@ -14,29 +11,27 @@ export class CfpMetrics {
 
   async get() {
     const { userId } = this.authorizedEvent;
+    const eventId = this.authorizedEvent.event.id;
 
-    const eventFetcher = EventFetcher.for(this.authorizedEvent);
-    const { id, formats, categories } = await eventFetcher.get();
-
-    const proposalsCount = await this.proposalsCount(id);
+    const proposalsCount = await this.proposalsCount(eventId);
     if (proposalsCount === 0) {
       return {
         proposalsCount: 0,
         speakersCount: 0,
         reviewsCount: 0,
-        byFormats: formats.length !== 0 ? [] : null,
-        byCategories: categories.length !== 0 ? [] : null,
+        byFormats: null,
+        byCategories: null,
         byDays: [],
       };
     }
 
     return {
       proposalsCount,
-      speakersCount: await this.speakersCount(id),
-      reviewsCount: await this.reviewsCount(id, userId),
-      byFormats: await this.proposalsByFormats(id, formats),
-      byCategories: await this.proposalsByCategories(id, categories),
-      byDays: await this.proposalsByDays(id),
+      speakersCount: await this.speakersCount(eventId),
+      reviewsCount: await this.reviewsCount(eventId, userId),
+      byFormats: await this.proposalsByFormats(eventId),
+      byCategories: await this.proposalsByCategories(eventId),
+      byDays: await this.proposalsByDays(eventId),
     };
   }
 
@@ -52,54 +47,50 @@ export class CfpMetrics {
     return db.user.count({ where: { eventsSpeaker: { some: { eventId } } } });
   }
 
-  private async proposalsByFormats(eventId: string, formats: Array<TrackType>) {
-    if (formats.length === 0) return null;
-
-    const byFormats = await db.$queryRaw<Array<{ id: string; value: bigint }>>(
+  private async proposalsByFormats(eventId: string) {
+    const byFormats = await db.$queryRaw<Array<{ id: string; name: string; value: bigint }>>(
       Prisma.sql`
-        SELECT _proposals_formats."A" AS id, count(proposals.id) AS value
-        FROM _proposals_formats
-        JOIN proposals ON proposals.id = _proposals_formats."B"
-        WHERE proposals."isDraft" IS FALSE
-        AND proposals."eventId" = ${eventId}
-        GROUP BY _proposals_formats."A"
+        SELECT ef.id, ef.name, count(pf."B") AS value
+        FROM event_formats ef
+        LEFT JOIN _proposals_formats pf ON pf."A" = ef.id
+        LEFT JOIN proposals p ON p.id = pf."B" AND p."isDraft" IS FALSE AND p."eventId" = ${eventId}
+        WHERE ef."eventId" = ${eventId}
+        GROUP BY ef.id, ef.name
+        ORDER BY ef."order" ASC
       `,
     );
 
-    return byFormats.map((item) => {
-      const format = formats.find((f) => f.id === item.id);
-      return {
-        id: item.id,
-        name: format?.name || 'unknown',
-        value: Number(item.value),
-        to: `../proposals?formats=${item.id}`,
-      };
-    });
+    if (byFormats.length === 0) return null;
+
+    return byFormats.map((item) => ({
+      id: item.id,
+      name: item.name,
+      value: Number(item.value),
+      to: `../proposals?formats=${item.id}`,
+    }));
   }
 
-  private async proposalsByCategories(eventId: string, categories: Array<TrackType>) {
-    if (categories.length === 0) return null;
-
-    const byCategories = await db.$queryRaw<Array<{ id: string; value: bigint }>>(
+  private async proposalsByCategories(eventId: string) {
+    const byCategories = await db.$queryRaw<Array<{ id: string; name: string; value: bigint }>>(
       Prisma.sql`
-        SELECT _proposals_categories."A" AS id, count(proposals.id) AS value
-        FROM _proposals_categories
-        JOIN proposals ON proposals.id = _proposals_categories."B"
-        WHERE proposals."isDraft" IS FALSE
-        AND proposals."eventId" = ${eventId}
-        GROUP BY _proposals_categories."A"
+        SELECT ec.id, ec.name, count(pc."B") AS value
+        FROM event_categories ec
+        LEFT JOIN _proposals_categories pc ON pc."A" = ec.id
+        LEFT JOIN proposals p ON p.id = pc."B" AND p."isDraft" IS FALSE AND p."eventId" = ${eventId}
+        WHERE ec."eventId" = ${eventId}
+        GROUP BY ec.id, ec.name
+        ORDER BY ec."order" ASC
       `,
     );
 
-    return byCategories.map((item) => {
-      const category = categories.find((f) => f.id === item.id);
-      return {
-        id: item.id,
-        name: category?.name || 'unknown',
-        value: Number(item.value),
-        to: `../proposals?categories=${item.id}`,
-      };
-    });
+    if (byCategories.length === 0) return null;
+
+    return byCategories.map((item) => ({
+      id: item.id,
+      name: item.name,
+      value: Number(item.value),
+      to: `../proposals?categories=${item.id}`,
+    }));
   }
 
   private async proposalsByDays(eventId: string) {
