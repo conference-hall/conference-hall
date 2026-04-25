@@ -31,6 +31,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1037.0",
     "@conform-to/zod": "^1.19.0",
+    "@date-fns/tz": "^1.4.1",
     "@dnd-kit/abstract": "^0.4.0",
     "@dnd-kit/dom": "^0.4.0",
     "@dnd-kit/geometry": "^0.4.0",
@@ -50,7 +51,6 @@
     "class-variance-authority": "^0.7.1",
     "compression": "^1.8.1",
     "date-fns": "^4.1.0",
-    "date-fns-tz": "^3.2.0",
     "express": "^5.2.1",
     "express-rate-limit": "^8.4.1",
     "firebase-scrypt": "^2.2.0",

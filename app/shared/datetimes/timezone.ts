@@ -1,14 +1,26 @@
+import { TZDate } from '@date-fns/tz';
 import { endOfDay, parse, startOfDay } from 'date-fns';
-import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 
 /** Convert UTC date to a specific timezone */
-export function utcToTimezone(date: Date | string, timezone: string) {
-  return toZonedTime(date, timezone);
+export function utcToTimezone(date: Date | string, timezone: string): Date {
+  if (typeof date === 'string') return new TZDate(date, timezone);
+  return new TZDate(date, timezone);
 }
 
 /** Convert a date in a specific timezone to UTC */
-export function timezoneToUtc(date: Date | string, timezone: string) {
-  return fromZonedTime(date, timezone);
+export function timezoneToUtc(date: Date | string, timezone: string): Date {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  const tzDate = new TZDate(
+    d.getFullYear(),
+    d.getMonth(),
+    d.getDate(),
+    d.getHours(),
+    d.getMinutes(),
+    d.getSeconds(),
+    d.getMilliseconds(),
+    timezone,
+  );
+  return new Date(tzDate.getTime());
 }
 
 /** Get user timezone */
@@ -52,15 +64,15 @@ export function getGMTOffset(timezone: string, locale: string) {
 }
 
 /** Parse a string date from a timezone and convert it to start of the day and UTC */
-export function parseToUtcStartOfDay(date: string, timezone: string) {
-  const refDate = utcToTimezone(new Date(), timezone);
+export function parseToUtcStartOfDay(date: string, timezone: string): Date {
+  const refDate = new TZDate(new Date(), timezone);
   const parsedDate = parse(date, 'yyyy-MM-dd', refDate);
-  return timezoneToUtc(startOfDay(parsedDate), timezone);
+  return new Date(startOfDay(parsedDate).getTime());
 }
 
 /** Parse a string date from a timezone and convert it to end of the day and UTC */
-export function parseToUtcEndOfDay(date: string, timezone: string) {
-  const refDate = utcToTimezone(new Date(), timezone);
+export function parseToUtcEndOfDay(date: string, timezone: string): Date {
+  const refDate = new TZDate(new Date(), timezone);
   const parsedDate = parse(date, 'yyyy-MM-dd', refDate);
-  return timezoneToUtc(endOfDay(parsedDate), timezone);
+  return new Date(endOfDay(parsedDate).getTime());
 }
