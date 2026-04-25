@@ -5,6 +5,7 @@ import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
+import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import type { EventType } from '~/shared/types/events.types.ts';
 
@@ -44,9 +45,16 @@ export function EventDetailsForm({
     <Form id={formId} method="POST" className="space-y-4 lg:space-y-6">
       {type === 'CONFERENCE' && (
         <DateRangeInput
-          start={{ name: 'conferenceStart', label: t('event-management.fields.start-date'), value: conferenceStart }}
-          end={{ name: 'conferenceEnd', label: t('event-management.fields.end-date'), value: conferenceEnd }}
-          timezone={timezone}
+          start={{
+            name: 'conferenceStart',
+            label: t('event-management.fields.start-date'),
+            value: conferenceStart ? utcToTimezone(conferenceStart, timezone) : null,
+          }}
+          end={{
+            name: 'conferenceEnd',
+            label: t('event-management.fields.end-date'),
+            value: conferenceEnd ? utcToTimezone(conferenceEnd, timezone) : null,
+          }}
           error={errors?.conferenceStart}
         />
       )}

@@ -11,6 +11,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { ScheduleCreateSchema } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
+import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import { useCurrentEventTeam } from '../event-team-context.tsx';
 import type { Route } from './+types/new.ts';
 import { EventSchedule } from './services/schedule.server.ts';
@@ -56,9 +57,16 @@ export default function ScheduleRoute({ actionData: errors }: Route.ComponentPro
             />
             <InputTimezone name="timezone" label={t('common.timezone')} defaultValue={event.timezone} />
             <DateRangeInput
-              start={{ name: 'start', label: t('common.start-date'), value: event.conferenceStart }}
-              end={{ name: 'end', label: t('common.end-date'), value: event.conferenceEnd }}
-              timezone={event.timezone}
+              start={{
+                name: 'start',
+                label: t('common.start-date'),
+                value: event.conferenceStart ? utcToTimezone(event.conferenceStart, event.timezone) : null,
+              }}
+              end={{
+                name: 'end',
+                label: t('common.end-date'),
+                value: event.conferenceEnd ? utcToTimezone(event.conferenceEnd, event.timezone) : null,
+              }}
               error={errors?.start}
             />
           </Form>
