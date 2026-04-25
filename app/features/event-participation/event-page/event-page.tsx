@@ -18,7 +18,6 @@ export default function EventRoute() {
         cfpState={currentEvent.cfpState}
         cfpStart={currentEvent.cfpStart}
         cfpEnd={currentEvent.cfpEnd}
-        timezone={currentEvent.timezone}
       />
 
       <DetailsSection

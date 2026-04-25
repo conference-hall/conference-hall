@@ -26,7 +26,6 @@ export default function OverviewRoute({ params }: Route.ComponentProps) {
             cfpState={event.cfpState}
             cfpStart={event.cfpStart}
             cfpEnd={event.cfpEnd}
-            timezone={event.timezone}
             showActions={canEditEvent}
           />
 

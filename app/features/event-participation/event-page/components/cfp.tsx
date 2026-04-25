@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { formatDatetime, formatDistance } from '~/shared/datetimes/datetimes.ts';
-import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import type { CfpState } from '~/shared/types/events.types.ts';
 
 const STATUSES = { OPENED: 'success', CLOSED: 'warning', FINISHED: 'error' } as const;
@@ -55,34 +54,31 @@ type CallForPaperDateLabelProps = {
   state: CfpState;
   start: Date | null;
   end: Date | null;
-  timezone: string;
   format?: 'short' | 'long';
 };
 
-export function CallForPaperDateLabel({ state, start, end, timezone, format }: CallForPaperDateLabelProps) {
+export function CallForPaperDateLabel({ state, start, end, format }: CallForPaperDateLabelProps) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
 
   if (!start || !end) return null;
 
-  const startDate = utcToTimezone(start, timezone);
-  const endDate = utcToTimezone(end, timezone);
-  const options = { format: format ?? 'long', locale, timezone };
+  const options = { format: format ?? 'long', locale };
 
   switch (state) {
     case 'CLOSED':
       return t('common.cfp.date-label.CLOSED', {
-        date: formatDatetime(startDate, options),
+        date: formatDatetime(start, options),
         interpolation: { escapeValue: false },
       });
     case 'OPENED':
       return t('common.cfp.date-label.OPENED', {
-        date: formatDatetime(endDate, options),
+        date: formatDatetime(end, options),
         interpolation: { escapeValue: false },
       });
     case 'FINISHED':
       return t('common.cfp.date-label.FINISHED', {
-        date: formatDatetime(endDate, options),
+        date: formatDatetime(end, options),
         interpolation: { escapeValue: false },
       });
   }
