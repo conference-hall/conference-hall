@@ -1,4 +1,5 @@
 import { page } from 'vitest/browser';
+import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import { DateRangeInput } from './date-range-input.tsx';
 
 describe('DateRangeInput', () => {
@@ -14,7 +15,6 @@ describe('DateRangeInput', () => {
   const defaultProps = {
     start: { name: 'start-date', label: 'Start Date', value: null },
     end: { name: 'end-date', label: 'End Date', value: null },
-    timezone: 'UTC',
   };
 
   it('renders start and end date inputs', async () => {
@@ -32,7 +32,6 @@ describe('DateRangeInput', () => {
       <DateRangeInput
         start={{ name: 'start-date', label: 'Start Date', value: startDate }}
         end={{ name: 'end-date', label: 'End Date', value: endDate }}
-        timezone="UTC"
       />,
     );
 
@@ -43,15 +42,14 @@ describe('DateRangeInput', () => {
     await expect.element(endInput).toHaveValue('2023-01-20');
   });
 
-  it('initializes with provided date values and specific timezone', async () => {
-    const startDate = new Date('2023-01-15');
-    const endDate = new Date('2023-01-20');
+  it('initializes with pre-converted timezone values', async () => {
+    const startDate = utcToTimezone(new Date('2023-01-15'), 'America/New_York');
+    const endDate = utcToTimezone(new Date('2023-01-20'), 'America/New_York');
 
     await page.render(
       <DateRangeInput
         start={{ name: 'start-date', label: 'Start Date', value: startDate }}
         end={{ name: 'end-date', label: 'End Date', value: endDate }}
-        timezone="America/New_York"
       />,
     );
 
@@ -100,5 +98,25 @@ describe('DateRangeInput', () => {
     await expect.element(startInput).toHaveAttribute('min', '2023-01-05');
     await expect.element(startInput).toHaveAttribute('max', '2023-01-25');
     await expect.element(endInput).toHaveAttribute('max', '2023-01-25');
+  });
+
+  it('does not shift dates when selecting with a far timezone', async () => {
+    const startDate = utcToTimezone(new Date('2023-03-27T00:00:00Z'), 'America/Phoenix');
+    const endDate = utcToTimezone(new Date('2023-03-28T00:00:00Z'), 'America/Phoenix');
+    const mockOnChange = vi.fn();
+
+    await page.render(
+      <DateRangeInput
+        start={{ name: 'start-date', label: 'Start Date', value: startDate }}
+        end={{ name: 'end-date', label: 'End Date', value: endDate }}
+        onChange={mockOnChange}
+      />,
+    );
+
+    const startInput = page.getByLabelText('Start Date');
+
+    // User selects March 29 — should stay March 29, not shift
+    await startInput.fill('2023-03-29');
+    expect(mockOnChange).toHaveBeenCalledWith(new Date('2023-03-29'), new Date('2023-03-29'));
   });
 });

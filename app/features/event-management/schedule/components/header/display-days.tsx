@@ -12,11 +12,10 @@ const PREVIOUS = -1;
 type Props = {
   scheduleDays: Array<Date>;
   displayedDays: Array<Date>;
-  timezone: string;
   onChangeDisplayDays: (start: Date, end: Date) => void;
 };
 
-export function DisplayDays({ scheduleDays, displayedDays, timezone, onChangeDisplayDays }: Props) {
+export function DisplayDays({ scheduleDays, displayedDays, onChangeDisplayDays }: Props) {
   const { t, i18n } = useTranslation();
   const scheduleStartDay = scheduleDays.at(0)!;
   const scheduleEndDay = scheduleDays.at(-1)!;
@@ -71,7 +70,6 @@ export function DisplayDays({ scheduleDays, displayedDays, timezone, onChangeDis
               end={{ name: 'end', label: t('common.end-date'), value: displayedEndDay }}
               min={scheduleStartDay}
               max={scheduleEndDay}
-              timezone={timezone}
               onChange={handeDaysSelect}
             />
           </div>

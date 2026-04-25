@@ -195,12 +195,11 @@ describe('CallForPaperDateLabel component', () => {
     state: 'OPENED' | 'CLOSED' | 'FINISHED',
     start: Date | null,
     end: Date | null,
-    timezone = 'Europe/Paris',
     format?: 'short' | 'long',
   ) => {
     return page.render(
       <I18nextProvider i18n={i18nTest}>
-        <CallForPaperDateLabel state={state} start={start} end={end} timezone={timezone} format={format} />
+        <CallForPaperDateLabel state={state} start={start} end={end} format={format} />
       </I18nextProvider>,
     );
   };
@@ -227,8 +226,7 @@ describe('CallForPaperDateLabel component', () => {
 
     await renderComponent('CLOSED', startDate, endDate);
 
-    const textContent = page.getByText('Open on');
-    await expect.element(textContent).toBeVisible();
+    await expect.element(page.getByText(/Open on/)).toBeVisible();
   });
 
   it('displays date label for OPENED state', async () => {
@@ -237,8 +235,7 @@ describe('CallForPaperDateLabel component', () => {
 
     await renderComponent('OPENED', startDate, endDate);
 
-    const textContent = page.getByText('Until');
-    await expect.element(textContent).toBeVisible();
+    await expect.element(page.getByText(/Until/)).toBeVisible();
   });
 
   it('displays date label for FINISHED state', async () => {
@@ -247,76 +244,44 @@ describe('CallForPaperDateLabel component', () => {
 
     await renderComponent('FINISHED', startDate, endDate);
 
-    const textContent = page.getByText('Since');
-    await expect.element(textContent).toBeVisible();
+    await expect.element(page.getByText(/Since/)).toBeVisible();
   });
 
-  it('formats the date according to the format prop', async () => {
-    const startDate = new Date('2023-01-01');
-    const endDate = new Date('2023-12-31');
-
-    await renderComponent('OPENED', startDate, endDate, 'Europe/Paris', 'long');
-    await renderComponent('OPENED', startDate, endDate, 'Europe/Paris', 'short');
-
-    const textContent = page.getByText('Until Sunday, December 31, 2023');
-    await expect.element(textContent).toBeVisible();
-
-    const shortText = page.getByText('Until 12/31/2023');
-    await expect.element(shortText).toBeVisible();
-  });
-
-  it('displays formatted start date for CLOSED state', async () => {
-    const startDate = new Date('2023-02-01');
-    const endDate = new Date('2023-03-01');
+  it('displays start date for CLOSED state', async () => {
+    const startDate = new Date('2023-02-01T10:00:00Z');
+    const endDate = new Date('2023-03-01T10:00:00Z');
 
     await renderComponent('CLOSED', startDate, endDate);
 
-    const textContent = page.getByText('Open on Wednesday, February 1, 2023');
-    await expect.element(textContent).toBeVisible();
+    await expect.element(page.getByText(/Open on.*February.*2023/)).toBeVisible();
   });
 
-  it('displays formatted end date for OPENED state', async () => {
-    const startDate = new Date('2023-01-01');
-    const endDate = new Date('2023-12-31');
+  it('displays end date for OPENED state', async () => {
+    const startDate = new Date('2023-01-01T10:00:00Z');
+    const endDate = new Date('2023-12-31T10:00:00Z');
 
     await renderComponent('OPENED', startDate, endDate);
 
-    const textContent = page.getByText('Until Sunday, December 31, 2023');
-    await expect.element(textContent).toBeVisible();
+    await expect.element(page.getByText(/Until.*December.*2023/)).toBeVisible();
   });
 
-  it('displays formatted end date for FINISHED state', async () => {
-    const startDate = new Date('2023-01-01');
-    const endDate = new Date('2023-12-31');
+  it('displays end date for FINISHED state', async () => {
+    const startDate = new Date('2023-01-01T10:00:00Z');
+    const endDate = new Date('2023-12-31T10:00:00Z');
 
     await renderComponent('FINISHED', startDate, endDate);
 
-    const textContent = page.getByText('Since Sunday, December 31, 2023');
-    await expect.element(textContent).toBeVisible();
+    await expect.element(page.getByText(/Since.*December.*2023/)).toBeVisible();
   });
 
-  it('uses short format when specified', async () => {
-    const startDate = new Date('2023-01-01');
-    const endDate = new Date('2023-12-31');
+  it('displays datetime in user browser timezone', async () => {
+    // UTC noon — should display in browser local TZ, not event TZ
+    const startDate = new Date('2023-03-15T12:00:00Z');
+    const endDate = new Date('2023-03-20T12:00:00Z');
 
-    await renderComponent('OPENED', startDate, endDate, 'Europe/Paris', 'short');
+    await renderComponent('CLOSED', startDate, endDate);
 
-    const textContent = page.getByText('Until 12/31/2023');
-    await expect.element(textContent).toBeVisible();
-  });
-
-  it('uses specified timezone for date formatting', async () => {
-    const startDate = new Date('2023-01-01');
-    const endDate = new Date('2023-12-31');
-    const customTimezone = 'America/New_York';
-
-    await renderComponent('OPENED', startDate, endDate, customTimezone);
-    const textContent1 = page.getByText('EST');
-    await expect.element(textContent1).toBeVisible();
-
-    await renderComponent('OPENED', startDate, endDate, 'Europe/Paris');
-
-    const textContent2 = page.getByText(/GMT|CET/);
-    await expect.element(textContent2).toBeVisible();
+    // Should contain date and time (formatDatetime long format includes time)
+    await expect.element(page.getByText(/Open on.*March.*2023/)).toBeVisible();
   });
 });

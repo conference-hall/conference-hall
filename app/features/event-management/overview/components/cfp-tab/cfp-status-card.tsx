@@ -17,11 +17,10 @@ type Props = {
   cfpState: CfpState;
   cfpStart: Date | null;
   cfpEnd: Date | null;
-  timezone: string;
   showActions: boolean;
 };
 
-export function CfpStatusCard({ team, event, cfpState, cfpStart, cfpEnd, timezone, showActions }: Props) {
+export function CfpStatusCard({ team, event, cfpState, cfpStart, cfpEnd, showActions }: Props) {
   const { t } = useTranslation();
   return (
     <ClientOnly fallback={<StatusCard.Fallback showActions={showActions} />}>
@@ -29,9 +28,7 @@ export function CfpStatusCard({ team, event, cfpState, cfpStart, cfpEnd, timezon
         <StatusCard
           status={cfpColorStatus(cfpState, cfpStart, cfpEnd)}
           label={<CallForPaperStatusLabel state={cfpState} start={cfpStart} end={cfpEnd} />}
-          subtitle={
-            <CallForPaperDateLabel state={cfpState} start={cfpStart} end={cfpEnd} timezone={timezone} format="short" />
-          }
+          subtitle={<CallForPaperDateLabel state={cfpState} start={cfpStart} end={cfpEnd} format="short" />}
         >
           {showActions ? (
             <Link

@@ -1,14 +1,12 @@
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
 import { toDateInput } from '~/shared/datetimes/datetimes.ts';
-import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { Input } from './input.tsx';
 
 type Props = {
   start: { name: string; label: string; value: Date | null };
   end: { name: string; label: string; value: Date | null };
-  timezone: string;
   min?: Date;
   max?: Date;
   required?: boolean;
@@ -17,18 +15,16 @@ type Props = {
   className?: string;
 };
 
-export function DateRangeInput({ start, end, timezone, min, max, required, error, onChange, className }: Props) {
-  const defaultStart = start.value ? toDateInput(utcToTimezone(start.value, timezone)) : null;
-  const defaultEnd = end.value ? toDateInput(utcToTimezone(end.value, timezone)) : null;
+export function DateRangeInput({ start, end, min, max, required, error, onChange, className }: Props) {
+  const defaultStart = start.value ? toDateInput(start.value) : null;
+  const defaultEnd = end.value ? toDateInput(end.value) : null;
 
   const [startDate, setStartDate] = useState(defaultStart);
   const [endDate, setEndDate] = useState(defaultEnd || defaultStart);
 
   const handleStartDate = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const newStartDate = event.target.valueAsDate
-        ? toDateInput(utcToTimezone(event.target.valueAsDate, timezone))
-        : null;
+      const newStartDate = event.target.value || null;
 
       let newEndDate = endDate;
       if (!newStartDate) {
@@ -43,14 +39,12 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
 
       if (onChange) onChange(newStartDate ? new Date(newStartDate) : null, newEndDate ? new Date(newEndDate) : null);
     },
-    [endDate, timezone, onChange],
+    [endDate, onChange],
   );
 
   const handleEndDate = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const newEndDate = event.target.valueAsDate
-        ? toDateInput(utcToTimezone(event.target.valueAsDate, timezone))
-        : null;
+      const newEndDate = event.target.value || null;
 
       const newStartDate = !startDate ? newEndDate : startDate;
       setStartDate(newStartDate);
@@ -58,7 +52,7 @@ export function DateRangeInput({ start, end, timezone, min, max, required, error
 
       if (onChange) onChange(newStartDate ? new Date(newStartDate) : null, newEndDate ? new Date(newEndDate) : null);
     },
-    [startDate, timezone, onChange],
+    [startDate, onChange],
   );
 
   return (

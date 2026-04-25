@@ -107,6 +107,25 @@ describe('DetailsSection', () => {
     await expect.element(page.getByText('March 15 / March 17, 2023')).toBeInTheDocument();
   });
 
+  test('renders correct conference dates with far timezone', async () => {
+    // Conference: March 15-17 in America/Phoenix (UTC-7)
+    const conferenceStart = new Date('2023-03-15T07:00:00Z');
+    const conferenceEnd = new Date('2023-03-18T06:59:59Z');
+
+    await page.render(
+      <I18nextProvider i18n={i18nTest}>
+        <DetailsSection
+          {...defaultProps}
+          conferenceStart={conferenceStart}
+          conferenceEnd={conferenceEnd}
+          timezone="America/Phoenix"
+        />
+      </I18nextProvider>,
+    );
+
+    await expect.element(page.getByText('March 15 / March 17, 2023')).toBeInTheDocument();
+  });
+
   test('renders website link when provided', async () => {
     await page.render(
       <I18nextProvider i18n={i18nTest}>

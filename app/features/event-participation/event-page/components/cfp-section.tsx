@@ -17,11 +17,10 @@ type Props = {
   cfpState: CfpState;
   cfpStart: Date | null;
   cfpEnd: Date | null;
-  timezone: string;
   className?: string;
 };
 
-export function CfpSection({ slug, cfpState, cfpStart, cfpEnd, timezone }: Props) {
+export function CfpSection({ slug, cfpState, cfpStart, cfpEnd }: Props) {
   const { t } = useTranslation();
 
   return (
@@ -39,7 +38,7 @@ export function CfpSection({ slug, cfpState, cfpStart, cfpEnd, timezone }: Props
                 )}
               </H1>
               <Subtitle>
-                <CallForPaperDateLabel state={cfpState} start={cfpStart} end={cfpEnd} timezone={timezone} />
+                <CallForPaperDateLabel state={cfpState} start={cfpStart} end={cfpEnd} />
               </Subtitle>
             </div>
           )}
