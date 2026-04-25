@@ -1,7 +1,7 @@
 import path from 'node:path';
 import type { BrowserContext } from '@playwright/test';
 import { userFactory, type UserFactoryOptions } from 'tests/factories/users.ts';
-import { auth } from '~/auth.server.ts';
+import { auth } from '~/shared/authentication/auth.server.ts';
 
 // Upload file helpers
 

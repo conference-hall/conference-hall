@@ -1,20 +1,17 @@
-import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { hashPassword, verifyPassword } from 'better-auth/crypto';
+import { betterAuth } from 'better-auth/minimal';
 import { captcha, testUtils } from 'better-auth/plugins';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import VerificationEmail from '~/shared/emails/templates/auth/email-verification.email.tsx';
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.email.tsx';
 import { getLocaleFromRequest } from '~/shared/i18n/i18n.middleware.ts';
-import { db } from '../prisma/db.server.ts';
-import { getSharedServerEnv, getWebServerEnv } from '../servers/environment.server.ts';
-import { EventSpeakers } from './features/event-management/speakers/services/event-speakers.server.ts';
-import {
-  isFirebasePasswordHash,
-  verifyFirebaseScryptPassword,
-} from './shared/authentication/firebase-scrypt.server.ts';
-import { getRedisClient } from './shared/cache/redis.server.ts';
-import { logger } from './shared/logger/logger.server.ts';
+import { db } from '../../../prisma/db.server.ts';
+import { getSharedServerEnv, getWebServerEnv } from '../../../servers/environment.server.ts';
+import { EventSpeakers } from '../../features/event-management/speakers/services/event-speakers.server.ts';
+import { getRedisClient } from '../cache/redis.server.ts';
+import { logger } from '../logger/logger.server.ts';
+import { isFirebasePasswordHash, verifyFirebaseScryptPassword } from './firebase-scrypt.server.ts';
 
 const { NODE_ENV, APP_URL } = getSharedServerEnv();
 const webEnv = getWebServerEnv();

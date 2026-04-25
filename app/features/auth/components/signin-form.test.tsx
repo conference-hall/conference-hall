@@ -2,15 +2,18 @@ import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
-import { authClient } from '~/shared/better-auth/auth-client.ts';
+import { authClient } from '~/shared/authentication/auth-client.ts';
 import { SigninForm } from './signin-form.tsx';
 
 vi.mock('@marsidev/react-turnstile', () => ({
   Turnstile: () => null,
 }));
 
-vi.mock('~/shared/better-auth/auth-client.ts', () => ({
+vi.mock('~/shared/authentication/auth-client.ts', () => ({
   authClient: { signIn: { email: vi.fn() } },
+}));
+
+vi.mock('~/shared/authentication/auth-errors.ts', () => ({
   getAuthError: vi.fn((error: { code?: string }) => `error.auth.${error.code}` as any),
 }));
 

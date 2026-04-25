@@ -1,6 +1,6 @@
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { auth } from '~/auth.server.ts';
+import { auth } from '~/shared/authentication/auth.server.ts';
 import { UserNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { Team, User } from '../../../../../prisma/generated/client.ts';

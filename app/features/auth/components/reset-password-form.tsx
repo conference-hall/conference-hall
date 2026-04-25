@@ -5,7 +5,8 @@ import { Form } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { InputPassword } from '~/design-system/forms/input-password.tsx';
-import { authClient, getAuthError } from '~/shared/better-auth/auth-client.ts';
+import { authClient } from '~/shared/authentication/auth-client.ts';
+import { getAuthError } from '~/shared/authentication/auth-errors.ts';
 import type { I18nSubmissionErrors } from '~/shared/types/errors.types.ts';
 import { validatePassword } from '~/shared/validators/auth.ts';
 

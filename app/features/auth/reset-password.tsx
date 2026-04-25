@@ -7,7 +7,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle } from '~/design-system/typography.tsx';
-import { getAuthError } from '~/shared/better-auth/auth-client.ts';
+import { getAuthError } from '~/shared/authentication/auth-errors.ts';
 import type { Route } from './+types/reset-password.ts';
 import { ResetPasswordForm } from './components/reset-password-form.tsx';
 

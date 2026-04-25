@@ -16,7 +16,7 @@ import { Avatar, AvatarName } from '~/design-system/avatar.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { authClient } from '~/shared/better-auth/auth-client.ts';
+import { authClient } from '~/shared/authentication/auth-client.ts';
 import { LegalLinks } from '../../footer.tsx';
 import { SponsorLink } from '../../sponsor-link.tsx';
 

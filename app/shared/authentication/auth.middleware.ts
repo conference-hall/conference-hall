@@ -1,7 +1,7 @@
 import { createContext, type MiddlewareFunction, redirect } from 'react-router';
-import { auth } from '../../auth.server.ts';
 import type { AuthenticatedUser } from '../types/user.types.ts';
 import { UserAccount } from '../user/user-account.server.ts';
+import { auth } from './auth.server.ts';
 
 export const OptionalAuthContext = createContext<AuthenticatedUser | null>();
 
