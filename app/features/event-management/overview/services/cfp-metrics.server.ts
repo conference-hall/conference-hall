@@ -50,7 +50,7 @@ export class CfpMetrics {
   private async proposalsByFormats(eventId: string) {
     const byFormats = await db.$queryRaw<Array<{ id: string; name: string; value: bigint }>>(
       Prisma.sql`
-        SELECT ef.id, ef.name, count(pf."B") AS value
+        SELECT ef.id, ef.name, count(p.id) AS value
         FROM event_formats ef
         LEFT JOIN _proposals_formats pf ON pf."A" = ef.id
         LEFT JOIN proposals p ON p.id = pf."B" AND p."isDraft" IS FALSE AND p."eventId" = ${eventId}
@@ -72,7 +72,7 @@ export class CfpMetrics {
   private async proposalsByCategories(eventId: string) {
     const byCategories = await db.$queryRaw<Array<{ id: string; name: string; value: bigint }>>(
       Prisma.sql`
-        SELECT ec.id, ec.name, count(pc."B") AS value
+        SELECT ec.id, ec.name, count(p.id) AS value
         FROM event_categories ec
         LEFT JOIN _proposals_categories pc ON pc."A" = ec.id
         LEFT JOIN proposals p ON p.id = pc."B" AND p."isDraft" IS FALSE AND p."eventId" = ${eventId}
