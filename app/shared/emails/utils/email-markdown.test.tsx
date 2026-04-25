@@ -1,4 +1,4 @@
-import { render } from '@react-email/components';
+import { render } from 'react-email';
 import { EmailMarkdown } from './email-markdown.tsx';
 
 describe('EmailMarkdown template interpolation', () => {

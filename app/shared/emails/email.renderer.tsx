@@ -1,4 +1,4 @@
-import { render } from '@react-email/components';
+import { render } from 'react-email';
 import { type EmailTemplateName, getEmailTemplate } from './templates/templates.ts';
 
 export async function renderEmail(

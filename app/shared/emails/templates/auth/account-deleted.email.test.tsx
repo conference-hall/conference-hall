@@ -1,4 +1,4 @@
-import { render } from '@react-email/components';
+import { render } from 'react-email';
 import AccountDeletedEmail from './account-deleted.email.tsx';
 
 describe('Account Deleted Email', () => {

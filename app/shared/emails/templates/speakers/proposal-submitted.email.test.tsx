@@ -1,4 +1,4 @@
-import { render } from '@react-email/components';
+import { render } from 'react-email';
 import type { TemplateData } from './proposal-submitted.email.tsx';
 import ProposalSubmittedEmail from './proposal-submitted.email.tsx';
 

@@ -1,4 +1,4 @@
-import { Button, Heading, Section, Text } from '@react-email/components';
+import { Button, Heading, Section, Text } from 'react-email';
 import type { CustomEmailData, LocaleEmailData } from '~/shared/emails/email.types.ts';
 import type { EmailPayload } from '~/shared/emails/send-email.job.ts';
 import { EmailMarkdown } from '~/shared/emails/utils/email-markdown.tsx';

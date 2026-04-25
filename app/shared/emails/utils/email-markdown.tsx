@@ -1,4 +1,4 @@
-import { Markdown as ReactEmailMarkdown } from '@react-email/components';
+import { Markdown as ReactEmailMarkdown } from 'react-email';
 import xss from 'xss';
 
 const markdownCustomStyles = {

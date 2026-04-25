@@ -1,4 +1,4 @@
-import { Heading, Text } from '@react-email/components';
+import { Heading, Text } from 'react-email';
 import { formatDate } from '~/shared/datetimes/datetimes.ts';
 import type { LocaleEmailData } from '~/shared/emails/email.types.ts';
 import type { EmailPayload } from '~/shared/emails/send-email.job.ts';
