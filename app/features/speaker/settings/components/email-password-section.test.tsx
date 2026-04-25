@@ -2,7 +2,7 @@ import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
-import { authClient } from '~/shared/better-auth/auth-client.ts';
+import { authClient } from '~/shared/authentication/auth-client.ts';
 import { EmailPasswordSection } from './email-password-section.tsx';
 
 vi.mock('@marsidev/react-turnstile', () => ({
@@ -13,12 +13,15 @@ vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() },
 }));
 
-vi.mock('~/shared/better-auth/auth-client.ts', () => ({
+vi.mock('~/shared/authentication/auth-client.ts', () => ({
   authClient: {
     changeEmail: vi.fn(),
     changePassword: vi.fn(),
     requestPasswordReset: vi.fn(),
   },
+}));
+
+vi.mock('~/shared/authentication/auth-errors.ts', () => ({
   getAuthError: vi.fn((error: { code?: string }) => `error.auth.${error.code}` as any),
 }));
 

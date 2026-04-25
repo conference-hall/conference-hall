@@ -6,7 +6,9 @@ import { Button } from '~/design-system/button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
-import { authClient, getAuthError, PROVIDERS } from '~/shared/better-auth/auth-client.ts';
+import { authClient } from '~/shared/authentication/auth-client.ts';
+import { getAuthError } from '~/shared/authentication/auth-errors.ts';
+import { PROVIDERS } from '~/shared/authentication/auth-providers.ts';
 
 type Account = { providerId: string; accountId: string };
 type Props = { accounts: Array<Account> };

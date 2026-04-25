@@ -2,8 +2,8 @@ import type { createContext } from 'react-router';
 import { userFactory } from 'tests/factories/users.ts';
 import { OptionalAuthContext, optionalAuth, RequireAuthContext, requireAuth } from './auth.middleware.ts';
 
-vi.mock('../../auth.server.ts', () => ({ auth: { api: { getSession: vi.fn(), signOut: vi.fn() } } }));
-const { auth } = await import('../../auth.server.ts');
+vi.mock('./auth.server.ts', () => ({ auth: { api: { getSession: vi.fn(), signOut: vi.fn() } } }));
+const { auth } = await import('./auth.server.ts');
 const getSessionMock = auth.api.getSession as unknown as ReturnType<typeof vi.fn>;
 const signOutMock = auth.api.signOut as unknown as ReturnType<typeof vi.fn>;
 

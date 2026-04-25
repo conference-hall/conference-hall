@@ -1,4 +1,4 @@
-import { auth } from '../../auth.server.ts';
+import { auth } from '~/shared/authentication/auth.server.ts';
 import type { Route } from './+types/api.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

@@ -5,7 +5,8 @@ import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { XIcon } from '~/design-system/icons/x-icon.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { authClient, PROVIDERS, type ProviderId } from '~/shared/better-auth/auth-client.ts';
+import { authClient } from '~/shared/authentication/auth-client.ts';
+import { PROVIDERS, type ProviderId } from '~/shared/authentication/auth-providers.ts';
 
 type AuthProvidersSigninProps = { redirectTo: string; showDeprecated?: boolean };
 

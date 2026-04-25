@@ -7,7 +7,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { getAuthError } from '~/shared/better-auth/auth-client.ts';
+import { getAuthError } from '~/shared/authentication/auth-errors.ts';
 import type { Route } from './+types/error.ts';
 
 export const meta = (args: Route.MetaArgs) => {
