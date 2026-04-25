@@ -33,16 +33,7 @@ export function InputPassword({
   const ToggleIcon = showPassword ? EyeSlashIcon : EyeIcon;
 
   return (
-    <div>
-      <div className="mb-1 flex justify-between">
-        <Label htmlFor={name || 'password'}>{label || t('common.password.label')}</Label>
-        {forgotPasswordPath ? (
-          <Link to={forgotPasswordPath} weight="semibold">
-            {t('common.password.forgot')}
-          </Link>
-        ) : null}
-      </div>
-
+    <div className="flex flex-col">
       <Input
         name={name || 'password'}
         placeholder={t('common.password.placeholder')}
@@ -54,6 +45,7 @@ export function InputPassword({
         error={error}
         disabled={disabled}
         required
+        className="order-2"
       >
         <button
           type="button"
@@ -65,7 +57,20 @@ export function InputPassword({
         </button>
       </Input>
 
-      {isNewPassword ? <StrengthMeter password={value} /> : null}
+      <div className="order-1 mb-1 flex justify-between">
+        <Label htmlFor={name || 'password'}>{label || t('common.password.label')}</Label>
+        {forgotPasswordPath ? (
+          <Link to={forgotPasswordPath} weight="semibold">
+            {t('common.password.forgot')}
+          </Link>
+        ) : null}
+      </div>
+
+      {isNewPassword ? (
+        <div className="order-3">
+          <StrengthMeter password={value} />
+        </div>
+      ) : null}
     </div>
   );
 }
