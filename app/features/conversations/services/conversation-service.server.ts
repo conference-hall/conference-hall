@@ -13,6 +13,7 @@ type ConversationServiceContext = {
   role: 'ORGANIZER' | 'SPEAKER';
   contextType: ConversationContextType;
   proposalId?: string;
+  skipNotification?: boolean;
 };
 
 export class ConversationService {
@@ -57,6 +58,8 @@ export class ConversationService {
         await tx.conversationMessage.create({
           data: { conversationId: conversation.id, senderId: userId, content: message, type: 'TEXT' },
         });
+
+        if (this.context.skipNotification) return;
 
         // Trigger email notification job with debounce per conversation
         // This ensures that only one notification is sent even if multiple messages are created in succession
