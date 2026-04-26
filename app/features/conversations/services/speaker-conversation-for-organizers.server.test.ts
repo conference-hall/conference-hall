@@ -10,9 +10,9 @@ import { ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import type { Event, Team, User } from '../../../../prisma/generated/client.ts';
 import { ConversationContextType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
-import { ProposalConversationForOrganizers } from './proposal-conversation-for-organizers.server.ts';
+import { SpeakerConversationForOrganizers } from './speaker-conversation-for-organizers.server.ts';
 
-describe('ProposalConversationForOrganizers', () => {
+describe('SpeakerConversationForOrganizers', () => {
   let owner: User;
   let member: User;
   let speaker: User;
@@ -34,7 +34,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).saveMessage({
+      await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).saveMessage({
         message: 'Hello speaker!',
       });
 
@@ -60,7 +60,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).saveMessage({
+      await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).saveMessage({
         id: message.id,
         message: 'Updated by owner',
       });
@@ -82,7 +82,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const service = ProposalConversationForOrganizers.for(authorizedEvent, proposal.id);
+      const service = SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id);
 
       await service.saveMessage({ id: message.id, message: 'Attempted update' });
 
@@ -104,7 +104,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).reactMessage({
+      await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).reactMessage({
         id: message.id,
         code: 'tada',
       });
@@ -129,7 +129,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).deleteMessage({
+      await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).deleteMessage({
         id: message.id,
       });
 
@@ -149,7 +149,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).deleteMessage({
+      await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).deleteMessage({
         id: message.id,
       });
 
@@ -169,7 +169,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const service = ProposalConversationForOrganizers.for(authorizedEvent, proposal.id);
+      const service = SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id);
       await service.deleteMessage({ id: message.id });
 
       const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
@@ -191,7 +191,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const messages = await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).getConversation();
+      const messages = await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).getConversation();
 
       expect(messages.length).toBe(1);
       expect(messages[0].content).toBe('Message from organizer');
@@ -204,7 +204,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const service = ProposalConversationForOrganizers.for(authorizedEvent, proposal.id);
+      const service = SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id);
 
       await expect(service.getConversation()).rejects.toThrowError(ProposalNotFoundError);
     });

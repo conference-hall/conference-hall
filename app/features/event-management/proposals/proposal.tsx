@@ -16,7 +16,7 @@ import {
   ConversationMessageReactSchema,
   ConversationMessageSaveSchema,
 } from '~/features/conversations/services/conversation.schema.server.ts';
-import { ProposalConversationForOrganizers } from '~/features/conversations/services/proposal-conversation-for-organizers.server.ts';
+import { SpeakerConversationForOrganizers } from '~/features/conversations/services/speaker-conversation-for-organizers.server.ts';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
@@ -66,7 +66,7 @@ export const loader = async ({ params, context, unstable_url: url }: Route.Loade
 
   const proposalReview = ProposalReview.for(authorizedEvent, proposalId);
   const activityFeed = ActivityFeedService.for(authorizedEvent, proposalId);
-  const speakerProposalConversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
+  const speakerProposalConversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
 
   const activityPromise = Promise.all([activityFeed.activity(), speakerProposalConversation.getConversation()]);
   const proposal = await proposalReview.get();
@@ -113,21 +113,21 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       break;
     }
     case 'save-message': {
-      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
+      const conversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
       const result = parseWithZod(form, { schema: ConversationMessageSaveSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.saveMessage(result.value);
       break;
     }
     case 'react-message': {
-      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
+      const conversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
       const result = parseWithZod(form, { schema: ConversationMessageReactSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.reactMessage(result.value);
       break;
     }
     case 'delete-message': {
-      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
+      const conversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
       const result = parseWithZod(form, { schema: ConversationMessageDeleteSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.deleteMessage(result.value);
