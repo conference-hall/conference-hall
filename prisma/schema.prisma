@@ -379,6 +379,9 @@ enum ReviewFeeling {
   NO_OPINION
 }
 
+// Note: comments and comment_reactions tables still exist in DB as safety net.
+// Models removed from schema — tables will be dropped in a future migration.
+
 model Comment {
   id          String            @id @default(cuid())
   userId      String

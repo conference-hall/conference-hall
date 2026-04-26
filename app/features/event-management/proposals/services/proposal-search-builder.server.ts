@@ -73,7 +73,9 @@ export class ProposalSearchBuilder {
   }
 
   async proposals() {
-    return db.proposal.findMany({
+    const isSortedByComments = this.filters.sort === 'most-comments' || this.filters.sort === 'fewest-comments';
+
+    const proposals = await db.proposal.findMany({
       include: {
         speakers: this.options.withSpeakers,
         reviews: this.options.withReviews,
@@ -82,8 +84,20 @@ export class ProposalSearchBuilder {
         tags: true,
       },
       where: this.whereClause(),
-      orderBy: this.orderByClause(),
+      orderBy: isSortedByComments ? undefined : this.orderByClause(),
     });
+
+    if (isSortedByComments) {
+      const proposalIds = proposals.map((p) => p.id);
+      const reviewCommentCounts = await this.countReviewComments(proposalIds);
+      const direction = this.filters.sort === 'most-comments' ? -1 : 1;
+      return proposals.toSorted((a, b) => {
+        const diff = ((reviewCommentCounts.get(a.id) ?? 0) - (reviewCommentCounts.get(b.id) ?? 0)) * direction;
+        return diff !== 0 ? diff : a.title.localeCompare(b.title);
+      });
+    }
+
+    return proposals;
   }
 
   async proposalIds() {
