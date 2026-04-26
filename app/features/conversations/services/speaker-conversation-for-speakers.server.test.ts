@@ -9,9 +9,9 @@ import { ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import type { Event, User } from '../../../../prisma/generated/client.ts';
 import { ConversationContextType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
-import { ProposalConversationForSpeakers } from './proposal-conversation-for-speakers.server.ts';
+import { SpeakerConversationForSpeakers } from './speaker-conversation-for-speakers.server.ts';
 
-describe('ProposalConversationForSpeakers', () => {
+describe('SpeakerConversationForSpeakers', () => {
   let speaker: User;
   let anotherSpeaker: User;
   let event: Event;
@@ -29,7 +29,7 @@ describe('ProposalConversationForSpeakers', () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
 
-      await ProposalConversationForSpeakers.for(speaker.id, proposal.id).saveMessage({ message: 'Hello!' });
+      await SpeakerConversationForSpeakers.for(speaker.id, proposal.id).saveMessage({ message: 'Hello!' });
 
       const conversation = await db.conversation.findFirst({
         where: { eventId: event.id, contextType: ConversationContextType.PROPOSAL_CONVERSATION },
@@ -44,13 +44,13 @@ describe('ProposalConversationForSpeakers', () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
 
-      const service = ProposalConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
+      const service = SpeakerConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
 
       await expect(service.saveMessage({ message: 'Hello!' })).rejects.toThrowError(ProposalNotFoundError);
     });
 
     it('throws error when proposal does not exist', async () => {
-      const service = ProposalConversationForSpeakers.for(speaker.id, 'non-existent');
+      const service = SpeakerConversationForSpeakers.for(speaker.id, 'non-existent');
 
       await expect(service.saveMessage({ message: 'Hello!' })).rejects.toThrowError(ProposalNotFoundError);
     });
@@ -67,7 +67,7 @@ describe('ProposalConversationForSpeakers', () => {
         role: ConversationParticipantRole.SPEAKER,
       });
 
-      await ProposalConversationForSpeakers.for(speaker.id, proposal.id).reactMessage({
+      await SpeakerConversationForSpeakers.for(speaker.id, proposal.id).reactMessage({
         id: message.id,
         code: 'tada',
       });
@@ -88,7 +88,7 @@ describe('ProposalConversationForSpeakers', () => {
         role: ConversationParticipantRole.SPEAKER,
       });
 
-      const service = ProposalConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
+      const service = SpeakerConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
 
       await expect(service.reactMessage({ id: message.id, code: 'tada' })).rejects.toThrowError(ProposalNotFoundError);
     });
@@ -105,7 +105,7 @@ describe('ProposalConversationForSpeakers', () => {
         role: ConversationParticipantRole.SPEAKER,
       });
 
-      await ProposalConversationForSpeakers.for(speaker.id, proposal.id).deleteMessage({ id: message.id });
+      await SpeakerConversationForSpeakers.for(speaker.id, proposal.id).deleteMessage({ id: message.id });
 
       const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
       expect(deletedMessage).toBeNull();
@@ -121,7 +121,7 @@ describe('ProposalConversationForSpeakers', () => {
         role: ConversationParticipantRole.SPEAKER,
       });
 
-      const service = ProposalConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
+      const service = SpeakerConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
 
       await expect(service.deleteMessage({ id: message.id })).rejects.toThrowError(ProposalNotFoundError);
     });
@@ -139,7 +139,7 @@ describe('ProposalConversationForSpeakers', () => {
         attributes: { content: 'Message from speaker' },
       });
 
-      const messages = await ProposalConversationForSpeakers.for(speaker.id, proposal.id).getConversation();
+      const messages = await SpeakerConversationForSpeakers.for(speaker.id, proposal.id).getConversation();
 
       expect(messages.length).toBe(1);
       expect(messages[0].content).toBe('Message from speaker');
@@ -149,13 +149,13 @@ describe('ProposalConversationForSpeakers', () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
 
-      const service = ProposalConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
+      const service = SpeakerConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
 
       await expect(service.getConversation()).rejects.toThrowError(ProposalNotFoundError);
     });
 
     it('throws error when proposal does not exist', async () => {
-      const service = ProposalConversationForSpeakers.for(speaker.id, 'non-existent');
+      const service = SpeakerConversationForSpeakers.for(speaker.id, 'non-existent');
 
       await expect(service.getConversation()).rejects.toThrowError(ProposalNotFoundError);
     });

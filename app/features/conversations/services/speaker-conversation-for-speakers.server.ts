@@ -7,7 +7,7 @@ import type {
   ConversationMessageSaveData,
 } from './conversation.schema.server.ts';
 
-export class ProposalConversationForSpeakers {
+export class SpeakerConversationForSpeakers {
   private userId: string;
   private proposalId: string;
   private conversation: ConversationService;
@@ -24,7 +24,7 @@ export class ProposalConversationForSpeakers {
   }
 
   static for(userId: string, proposalId: string) {
-    return new ProposalConversationForSpeakers(userId, proposalId);
+    return new SpeakerConversationForSpeakers(userId, proposalId);
   }
 
   async saveMessage(data: ConversationMessageSaveData) {
