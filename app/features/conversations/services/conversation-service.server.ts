@@ -102,7 +102,7 @@ export class ConversationService {
       where: {
         contextType,
         proposalId: proposalId ?? undefined,
-        event: { id: eventId, speakersConversationEnabled: true },
+        event: { id: eventId },
       },
       include: {
         participants: true,

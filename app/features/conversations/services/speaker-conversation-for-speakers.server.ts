@@ -44,6 +44,12 @@ export class SpeakerConversationForSpeakers {
 
   async getConversation() {
     const proposal = await this.checkProposal();
+    const event = await db.event.findUnique({
+      where: { id: proposal.eventId },
+      select: { speakersConversationEnabled: true },
+    });
+    if (!event?.speakersConversationEnabled) return [];
+
     return this.conversation.getConversation(proposal.eventId);
   }
 
