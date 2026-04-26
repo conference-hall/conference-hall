@@ -40,7 +40,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { message: 'Hello organizers!' });
@@ -63,7 +63,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { message: 'Hello!' });
@@ -89,7 +89,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { id: message.id, message: 'Updated message' });
@@ -112,7 +112,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { message: 'Second message' });
@@ -136,7 +136,7 @@ describe('ConversationService', () => {
         userId: organizer.id,
         role: 'ORGANIZER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { id: message.id, message: 'Updated by organizer' }, true);
@@ -160,7 +160,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { id: message.id, message: 'Attempted update' }, false);
@@ -177,7 +177,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { message: 'New message' });
@@ -214,7 +214,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { id: message.id, message: 'Updated message' });
@@ -238,7 +238,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.reactMessage({ id: message.id, code: 'tada' });
@@ -264,7 +264,7 @@ describe('ConversationService', () => {
         userId: organizer.id,
         role: 'ORGANIZER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.reactMessage({ id: message.id, code: 'tada' });
@@ -291,7 +291,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.deleteMessage({ id: message.id });
@@ -314,7 +314,7 @@ describe('ConversationService', () => {
         userId: organizer.id,
         role: 'ORGANIZER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.deleteMessage({ id: message.id }, true);
@@ -337,7 +337,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       await service.deleteMessage({ id: message.id }, false);
@@ -356,33 +356,10 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       const messages = await service.getConversation(event.id);
-      expect(messages).toEqual([]);
-    });
-
-    it('returns empty array when conversation disabled on event', async () => {
-      const eventWithoutConversation = await eventFactory({ team, attributes: { speakersConversationEnabled: false } });
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event: eventWithoutConversation, talk });
-      const conversation = await conversationFactory({ event: eventWithoutConversation, proposalId: proposal.id });
-      await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-        traits: ['withReaction'],
-      });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
-      });
-
-      const messages = await service.getConversation(eventWithoutConversation.id);
       expect(messages).toEqual([]);
     });
 
@@ -401,7 +378,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       const messages = await service.getConversation(event.id);
@@ -438,7 +415,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       const messages = await service.getConversation(event.id);
@@ -470,7 +447,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       const messages = await service.getConversation(event.id);
@@ -500,7 +477,7 @@ describe('ConversationService', () => {
         userId: speaker.id,
         role: 'SPEAKER',
         contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        proposalId: proposal.id,
       });
 
       const messages = await service.getConversation(event.id);

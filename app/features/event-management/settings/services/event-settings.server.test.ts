@@ -1,5 +1,6 @@
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
-import { commentFactory } from 'tests/factories/comments.ts';
+import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
+import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { eventIntegrationFactory } from 'tests/factories/integrations.ts';
@@ -167,7 +168,12 @@ describe('EventSettings', () => {
       const category = await eventCategoryFactory({ event });
       const tag = await eventProposalTagFactory({ event });
       const proposal = await proposalFactory({ event, talk, formats: [format], categories: [category], tags: [tag] });
-      const comment = await commentFactory({ proposal, user: member });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        attributes: { contextType: 'PROPOSAL_REVIEW_COMMENTS' },
+      });
+      const message = await conversationMessageFactory({ conversation, sender: member });
       const review = await reviewFactory({ proposal, user: member });
       const survey = await surveyFactory({ event, user: speaker });
       const schedule = await scheduleFactory({ event });
@@ -183,8 +189,11 @@ describe('EventSettings', () => {
       const deletedProposal = await db.proposal.findUnique({ where: { id: proposal.id } });
       expect(deletedProposal).toBeNull();
 
-      const deletedComment = await db.comment.findUnique({ where: { id: comment.id } });
-      expect(deletedComment).toBeNull();
+      const deletedConversation = await db.conversation.findUnique({ where: { id: conversation.id } });
+      expect(deletedConversation).toBeNull();
+
+      const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+      expect(deletedMessage).toBeNull();
 
       const deletedReview = await db.review.findUnique({ where: { id: review.id } });
       expect(deletedReview).toBeNull();

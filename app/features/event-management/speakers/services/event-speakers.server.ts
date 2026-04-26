@@ -103,7 +103,15 @@ export class EventSpeakers {
       include: {
         proposals: {
           where: { isDraft: false },
-          include: { speakers: true, reviews: true, comments: true, tags: true },
+          include: {
+            speakers: true,
+            reviews: true,
+            tags: true,
+            conversations: {
+              where: { contextType: 'PROPOSAL_REVIEW_COMMENTS' },
+              include: { _count: { select: { messages: true } } },
+            },
+          },
         },
       },
     });
@@ -145,7 +153,9 @@ export class EventSpeakers {
               summary: event.displayProposalsReviews ? reviews.summary() : undefined,
               you: reviews.ofUser(this.authorizedEvent.userId),
             },
-            comments: { count: proposal.comments.length },
+            comments: {
+              count: proposal.conversations.reduce((sum, c) => sum + c._count.messages, 0),
+            },
             tags: proposal.tags,
           };
         })
