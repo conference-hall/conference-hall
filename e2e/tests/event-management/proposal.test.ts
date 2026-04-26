@@ -1,5 +1,4 @@
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
-import { commentFactory } from 'tests/factories/comments.ts';
 import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
 import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
@@ -84,10 +83,15 @@ test.describe('As owner', () => {
     });
 
     await reviewFactory({ proposal, user: reviewer, attributes: { note: 3, feeling: 'NEUTRAL' } });
-    await commentFactory({
-      proposal,
-      user: reviewer,
-      attributes: { channel: 'ORGANIZER', comment: 'Hello world' },
+    const reviewConversation = await conversationFactory({
+      event,
+      proposalId: proposal.id,
+      attributes: { contextType: 'PROPOSAL_REVIEW_COMMENTS' },
+    });
+    await conversationMessageFactory({
+      conversation: reviewConversation,
+      sender: reviewer,
+      attributes: { content: 'Hello world' },
       traits: ['withReaction'],
     });
 

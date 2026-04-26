@@ -1,4 +1,5 @@
-import { commentFactory } from 'tests/factories/comments.ts';
+import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
+import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
@@ -473,7 +474,12 @@ describe('EventSpeakers', () => {
           },
         });
         await reviewFactory({ proposal, user: owner, attributes: { feeling: 'POSITIVE', note: 4 } });
-        await commentFactory({ proposal, user: member });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          attributes: { contextType: 'PROPOSAL_REVIEW_COMMENTS' },
+        });
+        await conversationMessageFactory({ conversation, sender: member });
 
         const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
