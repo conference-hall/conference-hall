@@ -20,7 +20,7 @@ export class ProposalConversationForOrganizers {
       userId: authorizedEvent.userId,
       role: 'ORGANIZER',
       contextType: 'PROPOSAL_CONVERSATION',
-      contextIds: [proposalId],
+      proposalId,
     });
   }
 

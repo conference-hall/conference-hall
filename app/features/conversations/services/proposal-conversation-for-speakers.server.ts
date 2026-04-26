@@ -19,7 +19,7 @@ export class ProposalConversationForSpeakers {
       userId,
       role: 'SPEAKER',
       contextType: 'PROPOSAL_CONVERSATION',
-      contextIds: [proposalId],
+      proposalId,
     });
   }
 

@@ -17,7 +17,7 @@ export const conversationFactory = async (options: FactoryOptions) => {
     contextType: proposalId
       ? ConversationContextType.PROPOSAL_CONVERSATION
       : ConversationContextType.PROPOSAL_REVIEW_COMMENTS,
-    contextIds: proposalId ? [proposalId] : [],
+    proposal: proposalId ? { connect: { id: proposalId } } : undefined,
   };
 
   const data = { ...defaultAttributes, ...attributes };
