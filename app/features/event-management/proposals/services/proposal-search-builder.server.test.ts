@@ -392,16 +392,16 @@ describe('EventProposalsSearch', () => {
       expect(proposals[4].title).toBe(proposal5.title);
     });
 
-    it('sort by lowest reviews', async () => {
+    it('sort by lowest reviews and no reviews last', async () => {
       const filters: ProposalsFilters = { sort: 'lowest' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
-      expect(proposals[0].title).toBe(proposal4.title);
-      expect(proposals[1].title).toBe(proposal5.title);
-      expect(proposals[2].title).toBe(proposal3.title);
-      expect(proposals[3].title).toBe(proposal1.title);
-      expect(proposals[4].title).toBe(proposal2.title);
+      expect(proposals[0].title).toBe(proposal3.title);
+      expect(proposals[1].title).toBe(proposal1.title);
+      expect(proposals[2].title).toBe(proposal2.title);
+      expect(proposals[3].title).toBe(proposal4.title);
+      expect(proposals[4].title).toBe(proposal5.title);
     });
 
     it('sort by most comments', async () => {
@@ -416,16 +416,16 @@ describe('EventProposalsSearch', () => {
       expect(proposals[4].title).toBe(proposal5.title);
     });
 
-    it('sort by fewest comments', async () => {
+    it('sort by fewest comments and no comments last', async () => {
       const filters: ProposalsFilters = { sort: 'fewest-comments' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
-      expect(proposals[0].title).toBe(proposal2.title);
-      expect(proposals[1].title).toBe(proposal4.title);
-      expect(proposals[2].title).toBe(proposal5.title);
-      expect(proposals[3].title).toBe(proposal1.title);
-      expect(proposals[4].title).toBe(proposal3.title);
+      expect(proposals[0].title).toBe(proposal1.title);
+      expect(proposals[1].title).toBe(proposal3.title);
+      expect(proposals[2].title).toBe(proposal2.title);
+      expect(proposals[3].title).toBe(proposal4.title);
+      expect(proposals[4].title).toBe(proposal5.title);
     });
   });
 

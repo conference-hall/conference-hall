@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { z } from 'zod';
-import { ReviewDetails } from '~/features/event-management/proposals/models/review-details.ts';
+import { ProposalSearchBuilder } from '~/features/event-management/proposals/services/proposal-search-builder.server.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ForbiddenOperationError, NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
@@ -96,19 +96,24 @@ export class EventSpeakers {
   }
 
   async getById(speakerId: string) {
-    const { event } = this.authorizedEvent;
+    const { event, userId } = this.authorizedEvent;
 
     const speaker = await db.eventSpeaker.findFirst({
       where: { id: speakerId, eventId: event.id },
-      include: {
-        proposals: {
-          where: { isDraft: false },
-          include: { speakers: true, reviews: true, comments: true, tags: true },
-        },
-      },
     });
 
     if (!speaker) return null;
+
+    const search = new ProposalSearchBuilder(
+      event.id,
+      userId,
+      { speakers: speakerId },
+      {
+        withSpeakers: event.displayProposalsSpeakers,
+        withReviews: true,
+      },
+    );
+    const proposals = await search.proposalsByPage(new Pagination({ page: 1, total: 1000, pageSize: 1000 }));
 
     let answers: Record<string, Array<SurveyDetailedAnswer>> = {};
     if (speaker.userId) {
@@ -128,28 +133,25 @@ export class EventSpeakers {
       socialLinks: speaker.socialLinks as SocialLinks,
       userId: speaker.userId,
       survey: speaker.userId ? answers[speaker.userId] : [],
-      proposals: speaker.proposals
-        .map((proposal) => {
-          const reviews = new ReviewDetails(proposal.reviews);
-          return {
-            id: proposal.id,
-            routeId: proposal.routeId,
-            title: proposal.title,
-            deliberationStatus: proposal.deliberationStatus,
-            publicationStatus: proposal.publicationStatus,
-            confirmationStatus: proposal.confirmationStatus,
-            archivedAt: proposal.archivedAt,
-            submittedAt: proposal.submittedAt,
-            speakers: proposal.speakers.map((speaker) => ({ name: speaker.name })),
-            reviews: {
-              summary: event.displayProposalsReviews ? reviews.summary() : undefined,
-              you: reviews.ofUser(this.authorizedEvent.userId),
-            },
-            comments: { count: proposal.comments.length },
-            tags: proposal.tags,
-          };
-        })
-        .toSorted((a, b) => b.submittedAt.getTime() - a.submittedAt.getTime()),
+      proposals: proposals.map((proposal) => ({
+        id: proposal.id,
+        routeId: proposal.routeId,
+        title: proposal.title,
+        deliberationStatus: proposal.deliberationStatus,
+        publicationStatus: proposal.publicationStatus,
+        confirmationStatus: proposal.confirmationStatus,
+        archivedAt: proposal.archivedAt,
+        submittedAt: proposal.submittedAt,
+        speakers: event.displayProposalsSpeakers
+          ? proposal.speakers.map(({ name, picture }) => ({ name, picture }))
+          : [],
+        tags: proposal.tags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),
+        reviews: {
+          summary: event.displayProposalsReviews ? proposal.reviews.summary : undefined,
+          you: proposal.reviews.you,
+        },
+        comments: proposal.comments,
+      })),
     };
   }
 
