@@ -1,7 +1,5 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
-import { ReviewDetails } from '../models/review-details.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
@@ -27,34 +25,25 @@ export class CfpReviewsSearch {
       filters,
       statistics,
       pagination: { current: pagination.page, total: pagination.pageCount },
-      results: proposals.map((proposal) => {
-        const reviews = new ReviewDetails(proposal.reviews);
-
-        return {
-          id: proposal.id,
-          routeId: proposal.routeId,
-          title: proposal.title,
-          deliberationStatus: proposal.deliberationStatus,
-          publicationStatus: proposal.publicationStatus,
-          confirmationStatus: proposal.confirmationStatus,
-          archivedAt: proposal.archivedAt,
-          submittedAt: proposal.submittedAt,
-          speakers: event.displayProposalsSpeakers
-            ? proposal.speakers.map(({ name, picture }) => ({ name, picture }))
-            : [],
-          tags: sortBy(
-            proposal.tags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),
-            'name',
-          ),
-          reviews: {
-            summary: event.displayProposalsReviews ? reviews.summary() : undefined,
-            you: reviews.ofUser(this.authorizedEvent.userId),
-          },
-          comments: {
-            count: proposal._count.comments,
-          },
-        };
-      }),
+      results: proposals.map((proposal) => ({
+        id: proposal.id,
+        routeId: proposal.routeId,
+        title: proposal.title,
+        deliberationStatus: proposal.deliberationStatus,
+        publicationStatus: proposal.publicationStatus,
+        confirmationStatus: proposal.confirmationStatus,
+        archivedAt: proposal.archivedAt,
+        submittedAt: proposal.submittedAt,
+        speakers: event.displayProposalsSpeakers
+          ? proposal.speakers.map(({ name, picture }) => ({ name, picture }))
+          : [],
+        tags: proposal.tags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),
+        reviews: {
+          summary: event.displayProposalsReviews ? proposal.reviews.summary : undefined,
+          you: proposal.reviews.you,
+        },
+        comments: proposal.comments,
+      })),
     };
   }
 
