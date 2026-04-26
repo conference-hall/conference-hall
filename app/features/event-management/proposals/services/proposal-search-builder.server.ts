@@ -381,8 +381,9 @@ export class ProposalSearchBuilder {
     return Prisma.sql`
       LEFT JOIN LATERAL (
         SELECT COUNT(*) AS count
-        FROM comments
-        WHERE "proposalId" = p.id
+        FROM conversations c
+        INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+        WHERE c."proposalId" = p.id AND c."contextType" = 'PROPOSAL_REVIEW_COMMENTS'
       ) comment_count ON true
     `;
   }
