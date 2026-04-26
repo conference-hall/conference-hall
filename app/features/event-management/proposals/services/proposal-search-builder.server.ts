@@ -1,5 +1,6 @@
 import type { Pagination } from '~/shared/pagination/pagination.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import { Prisma } from '../../../../../prisma/generated/client.ts';
 import type {
   ProposalOrderByWithRelationInput,
   ProposalWhereInput,
@@ -34,18 +35,41 @@ export class ProposalSearchBuilder {
   }
 
   async proposalsByPage(pagination: Pagination) {
-    return db.proposal.findMany({
+    const isSortedByComments = this.filters.sort === 'most-comments' || this.filters.sort === 'fewest-comments';
+
+    const proposals = await db.proposal.findMany({
       include: {
         speakers: this.options.withSpeakers,
         reviews: this.options.withReviews,
-        _count: { select: { comments: true } },
         tags: true,
       },
       where: this.whereClause(),
-      orderBy: this.orderByClause(),
-      skip: pagination.pageIndex * pagination.pageSize,
-      take: pagination.pageSize,
+      orderBy: isSortedByComments ? undefined : this.orderByClause(),
+      skip: isSortedByComments ? undefined : pagination.pageIndex * pagination.pageSize,
+      take: isSortedByComments ? undefined : pagination.pageSize,
     });
+
+    const proposalIds = proposals.map((p) => p.id);
+    const reviewCommentCounts = await this.countReviewComments(proposalIds);
+
+    const results = proposals.map((proposal) => ({
+      ...proposal,
+      _count: { comments: reviewCommentCounts.get(proposal.id) ?? 0 },
+    }));
+
+    if (isSortedByComments) {
+      const direction = this.filters.sort === 'most-comments' ? -1 : 1;
+      results.sort((a, b) => {
+        const diff = (a._count.comments - b._count.comments) * direction;
+        return diff !== 0 ? diff : a.title.localeCompare(b.title);
+      });
+      return results.slice(
+        pagination.pageIndex * pagination.pageSize,
+        (pagination.pageIndex + 1) * pagination.pageSize,
+      );
+    }
+
+    return results;
   }
 
   async proposals() {
@@ -80,7 +104,24 @@ export class ProposalSearchBuilder {
     return proposals.map(({ id, routeId }) => ({ id, routeId }));
   }
 
-  /// Privates methods
+  /// Private methods
+
+  private async countReviewComments(proposalIds: Array<string>): Promise<Map<string, number>> {
+    if (proposalIds.length === 0) return new Map();
+
+    const counts = await db.$queryRaw<Array<{ proposalId: string; count: bigint }>>(
+      Prisma.sql`
+        SELECT c."proposalId", COUNT(cm.id)::bigint AS count
+        FROM conversations c
+        INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+        WHERE c."proposalId" IN (${Prisma.join(proposalIds)})
+          AND c."contextType" = 'PROPOSAL_REVIEW_COMMENTS'
+        GROUP BY c."proposalId"
+      `,
+    );
+
+    return new Map(counts.map((row) => [row.proposalId, Number(row.count)]));
+  }
 
   private count() {
     return db.proposal.count({ where: this.whereClause() });
@@ -167,10 +208,6 @@ export class ProposalSearchBuilder {
         return [{ avgRateForSort: { sort: 'asc', nulls: 'first' } }, { title: 'asc' }];
       case 'oldest':
         return [{ submittedAt: 'asc' }, { title: 'asc' }];
-      case 'most-comments':
-        return [{ comments: { _count: 'desc' } }, { title: 'asc' }];
-      case 'fewest-comments':
-        return [{ comments: { _count: 'asc' } }, { title: 'asc' }];
       default:
         return [{ submittedAt: 'desc' }, { title: 'asc' }];
     }
