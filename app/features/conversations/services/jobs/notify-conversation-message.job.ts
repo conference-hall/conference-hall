@@ -52,9 +52,8 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
     let proposal: (Proposal & { routeId: string; speakers: Array<EventSpeaker> }) | null = null;
     let proposalSpeakers: Array<{ email: string; locale: string; userId: string | null }> = [];
 
-    if (conversation.contextType === 'PROPOSAL_CONVERSATION' && conversation.contextIds.length > 0) {
-      const proposalId = conversation.contextIds[0];
-      proposal = await db.proposal.findUnique({ where: { id: proposalId }, include: { speakers: true } });
+    if (conversation.contextType === 'PROPOSAL_CONVERSATION' && conversation.proposalId) {
+      proposal = await db.proposal.findUnique({ where: { id: conversation.proposalId }, include: { speakers: true } });
 
       if (proposal) {
         proposalSpeakers = proposal.speakers.map((speaker) => ({

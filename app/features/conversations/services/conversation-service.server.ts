@@ -12,7 +12,7 @@ type ConversationServiceContext = {
   userId: string;
   role: 'ORGANIZER' | 'SPEAKER';
   contextType: ConversationContextType;
-  contextIds?: Array<string>;
+  proposalId?: string;
 };
 
 export class ConversationService {
@@ -23,7 +23,7 @@ export class ConversationService {
   }
 
   async saveMessage(eventId: string, { id, message }: ConversationMessageSaveData, canManageConversations?: boolean) {
-    const { userId, role, contextType, contextIds } = this.context;
+    const { userId, role, contextType, proposalId } = this.context;
 
     await db.$transaction(async (tx) => {
       // Create conversation if it doesn't exist
@@ -31,12 +31,12 @@ export class ConversationService {
         where: {
           eventId,
           contextType,
-          contextIds: contextIds ? { hasSome: contextIds } : undefined,
+          proposalId: proposalId ?? undefined,
         },
       });
 
       if (!conversation) {
-        conversation = await tx.conversation.create({ data: { eventId, contextType, contextIds } });
+        conversation = await tx.conversation.create({ data: { eventId, contextType, proposalId } });
       }
 
       // Add participant if not exists
@@ -95,13 +95,13 @@ export class ConversationService {
   }
 
   async getConversation(eventId: string) {
-    const { userId, contextType, contextIds } = this.context;
+    const { userId, contextType, proposalId } = this.context;
 
     // Get conversation
     const conversation = await db.conversation.findFirst({
       where: {
         contextType,
-        contextIds: contextIds ? { hasSome: contextIds } : undefined,
+        proposalId: proposalId ?? undefined,
         event: { id: eventId, speakersConversationEnabled: true },
       },
       include: {

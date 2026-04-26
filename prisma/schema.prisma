@@ -283,6 +283,7 @@ model Proposal {
   updatedAt          DateTime            @updatedAt
   migrationId        String?
   comments           Comment[]
+  conversations      Conversation[]
   ScheduleSession    ScheduleSession[]
 
   @@unique([talkId, eventId])
@@ -481,7 +482,8 @@ model Conversation {
   eventId      String
   event        Event                     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   contextType  ConversationContextType
-  contextIds   String[]
+  proposalId   String?
+  proposal     Proposal?                 @relation(fields: [proposalId], references: [id])
   createdAt    DateTime                  @default(now())
   updatedAt    DateTime                  @updatedAt
   messages     ConversationMessage[]
