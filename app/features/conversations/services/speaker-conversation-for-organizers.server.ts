@@ -48,6 +48,8 @@ export class SpeakerConversationForOrganizers {
     const proposal = await db.proposal.findUnique({ where: { id: this.proposalId, eventId: event.id } });
     if (!proposal) throw new ProposalNotFoundError();
 
+    if (!event.speakersConversationEnabled) return [];
+
     return this.conversation.getConversation(event.id);
   }
 }

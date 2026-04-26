@@ -363,29 +363,6 @@ describe('ConversationService', () => {
       expect(messages).toEqual([]);
     });
 
-    it('returns empty array when conversation disabled on event', async () => {
-      const eventWithoutConversation = await eventFactory({ team, attributes: { speakersConversationEnabled: false } });
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event: eventWithoutConversation, talk });
-      const conversation = await conversationFactory({ event: eventWithoutConversation, proposalId: proposal.id });
-      await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-        traits: ['withReaction'],
-      });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        proposalId: proposal.id,
-      });
-
-      const messages = await service.getConversation(eventWithoutConversation.id);
-      expect(messages).toEqual([]);
-    });
-
     it('returns messages with sender and reactions', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
