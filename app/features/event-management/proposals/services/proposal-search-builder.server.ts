@@ -317,6 +317,7 @@ export class ProposalSearchBuilder {
           COUNT(*) FILTER (WHERE feeling = 'POSITIVE') AS positive_count,
           COUNT(*) FILTER (WHERE feeling = 'NEGATIVE') AS negative_count
         FROM reviews
+        WHERE "proposalId" IN (SELECT id FROM proposals WHERE "eventId" = ${this.eventId})
         GROUP BY "proposalId"
       ) review_agg ON review_agg."proposalId" = p.id
     `;
@@ -334,6 +335,7 @@ export class ProposalSearchBuilder {
       LEFT JOIN (
         SELECT "proposalId", COUNT(*) AS count
         FROM comments
+        WHERE "proposalId" IN (SELECT id FROM proposals WHERE "eventId" = ${this.eventId})
         GROUP BY "proposalId"
       ) comment_count ON comment_count."proposalId" = p.id
     `;

@@ -391,6 +391,7 @@ model Comment {
   updatedAt   DateTime          @updatedAt
   migrationId String?
 
+  @@index([proposalId])
   @@map("comments")
 }
 
