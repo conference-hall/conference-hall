@@ -41,6 +41,7 @@ const TRAITS = {
     publicationStatus: PublicationStatus.PUBLISHED,
     confirmationStatus: ConfirmationStatus.PENDING,
   },
+  archived: { archivedAt: new Date() },
 };
 
 type Trait = keyof typeof TRAITS;

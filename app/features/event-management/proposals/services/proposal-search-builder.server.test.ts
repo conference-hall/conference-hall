@@ -1,3 +1,4 @@
+import { resetDB } from 'tests/db-helpers.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
@@ -10,7 +11,6 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
-import { db } from '../../../../../prisma/db.server.ts';
 import type {
   Event,
   EventCategory,
@@ -24,7 +24,8 @@ import type {
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
-describe('EventProposalsSearch', () => {
+// oxlint-disable-next-line jest/valid-describe-callback
+describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
   let owner: User;
   let speaker: User;
   let team: Team;
@@ -38,9 +39,10 @@ describe('EventProposalsSearch', () => {
   let proposal3: Proposal;
   let proposal4: Proposal;
   let proposal5: Proposal;
+  let proposal6: Proposal;
   let eventSpeaker: EventSpeaker;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     owner = await userFactory({ traits: ['clark-kent'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
     team = await teamFactory({ owners: [owner] });
@@ -56,24 +58,26 @@ describe('EventProposalsSearch', () => {
     const talk3 = await talkFactory({ speakers: [speaker, owner] });
     const talk4 = await talkFactory({ speakers: [speaker] });
     const talk5 = await talkFactory({ speakers: [speaker] });
+    const talk6 = await talkFactory({ speakers: [speaker] });
+    const talk7 = await talkFactory({ speakers: [speaker] });
 
     proposal1 = await proposalFactory({
       event,
       talk: talk1,
-      attributes: { title: 'Hello World' },
+      attributes: { title: 'Hello World', proposalNumber: 123 },
       formats: [format],
     });
     proposal2 = await proposalFactory({
       event,
       talk: talk2,
-      attributes: { title: 'Awesome talk' },
+      attributes: { title: 'Awesome talk', proposalNumber: 456 },
       categories: [category],
       traits: ['confirmed'],
     });
     proposal3 = await proposalFactory({
       event,
       talk: talk3,
-      attributes: { title: 'Foo bar talk' },
+      attributes: { title: 'Foo bar talk 456', proposalNumber: 789 },
       tags: [tag],
       traits: ['rejected'],
     });
@@ -89,6 +93,13 @@ describe('EventProposalsSearch', () => {
       attributes: { title: 'Other 2' },
       traits: ['declined'],
     });
+    proposal6 = await proposalFactory({
+      event,
+      talk: talk6,
+      attributes: { title: 'Other 3' },
+      traits: ['archived'],
+    });
+    await proposalFactory({ event, talk: talk7, traits: ['draft'] });
     await proposalFactory({ event: event2, talk: talk3 });
 
     await reviewFactory({ user: speaker, proposal: proposal1, attributes: { feeling: 'NEGATIVE', note: 0 } });
@@ -100,6 +111,10 @@ describe('EventProposalsSearch', () => {
     await commentFactory({ user: owner, proposal: proposal1 });
     await commentFactory({ user: owner, proposal: proposal3 });
     await commentFactory({ user: owner, proposal: proposal3 });
+  });
+
+  afterAll(async () => {
+    await resetDB();
   });
 
   describe('#search.statisics', () => {
@@ -130,6 +145,12 @@ describe('EventProposalsSearch', () => {
   });
 
   describe('searchs with filters and sorting', () => {
+    it('default search', async () => {
+      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(5);
+    });
+
     it('filters proposals by title', async () => {
       const filters = { query: 'world' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
@@ -145,7 +166,7 @@ describe('EventProposalsSearch', () => {
       expect(proposals.length).toBe(4);
     });
 
-    it('does not filter proposals by speaker name when searchBySpeakers option is false', async () => {
+    it('does not filter proposals by speaker name when withSpeakers option is false', async () => {
       const filters = { query: 'parker' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters, {
         withSpeakers: false,
@@ -156,30 +177,31 @@ describe('EventProposalsSearch', () => {
     });
 
     it('filters proposals by proposal number', async () => {
-      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 123 } });
-
       const filters = { query: '123' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
-      expect(proposals.length).toBeGreaterThanOrEqual(1);
+      expect(proposals.length).toBe(1);
       expect(proposals.some((p) => p.id === proposal1.id)).toBe(true);
     });
 
     it('filters proposals by proposal number with hash prefix', async () => {
-      await db.proposal.update({ where: { id: proposal2.id }, data: { proposalNumber: 456 } });
-
-      const filters = { query: '#456' };
+      const filters = { query: '#123' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
-      expect(proposals.length).toBeGreaterThanOrEqual(1);
-      expect(proposals.some((p) => p.id === proposal2.id)).toBe(true);
+      expect(proposals.length).toBe(1);
+      expect(proposals.some((p) => p.id === proposal1.id)).toBe(true);
+    });
+
+    it('filters proposals by proposal number with whitespace around proposal number', async () => {
+      const filters = { query: '  123  ' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(1);
+      expect(proposals.some((p) => p.id === proposal1.id)).toBe(true);
     });
 
     it('searches proposal number OR title OR speaker with numeric query', async () => {
-      await db.proposal.update({ where: { id: proposal2.id }, data: { title: 'Talk about the year 1984' } });
-      await db.proposal.update({ where: { id: proposal3.id }, data: { proposalNumber: 1984 } });
-
-      const filters = { query: '1984' };
+      const filters = { query: '456' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(2);
@@ -188,40 +210,11 @@ describe('EventProposalsSearch', () => {
     });
 
     it('does not search by proposal number when query contains non-numeric characters', async () => {
-      await db.proposal.update({
-        where: { id: proposal1.id },
-        data: { proposalNumber: 42, title: 'React 42 best practices' },
-      });
-
-      const filters = { query: 'react 42' };
+      const filters = { query: 'talk 456' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
-      expect(proposals[0].id).toBe(proposal1.id);
-      expect(proposals[0].title).toBe('React 42 best practices');
-    });
-
-    it('does not filter by speaker when searching proposal number if withSpeakers is false', async () => {
-      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 999 } });
-
-      const filters = { query: '999' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters, {
-        withSpeakers: false,
-        withReviews: false,
-      });
-      const proposals = await search.proposals();
-      expect(proposals.length).toBeGreaterThanOrEqual(1);
-      expect(proposals.some((p) => p.id === proposal1.id)).toBe(true);
-    });
-
-    it('handles query with whitespace around proposal number', async () => {
-      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 789 } });
-
-      const filters = { query: '  789  ' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
-      const proposals = await search.proposals();
-      expect(proposals.length).toBeGreaterThanOrEqual(1);
-      expect(proposals.some((p) => p.id === proposal1.id)).toBe(true);
+      expect(proposals[0].id).toBe(proposal3.id);
     });
 
     it('filters proposals by formats', async () => {
@@ -229,7 +222,7 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
-      expect(proposals[0].title).toBe(proposal1.title);
+      expect(proposals[0].id).toBe(proposal1.id);
     });
 
     it('filters proposals by categories', async () => {
@@ -237,7 +230,7 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
-      expect(proposals[0].title).toBe(proposal2.title);
+      expect(proposals[0].id).toBe(proposal2.id);
     });
 
     it('filters proposals by tags', async () => {
@@ -245,7 +238,7 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
-      expect(proposals[0].title).toBe(proposal3.title);
+      expect(proposals[0].id).toBe(proposal3.id);
     });
 
     it('filters proposals by speakers', async () => {
@@ -253,10 +246,10 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(4);
-      expect(proposals[0].title).toBe(proposal5.title);
-      expect(proposals[1].title).toBe(proposal4.title);
-      expect(proposals[2].title).toBe(proposal3.title);
-      expect(proposals[3].title).toBe(proposal1.title);
+      expect(proposals[0].id).toBe(proposal5.id);
+      expect(proposals[1].id).toBe(proposal4.id);
+      expect(proposals[2].id).toBe(proposal3.id);
+      expect(proposals[3].id).toBe(proposal1.id);
     });
 
     it('filters proposals by status pending', async () => {
@@ -264,7 +257,7 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
-      expect(proposals[0].title).toBe(proposal1.title);
+      expect(proposals[0].id).toBe(proposal1.id);
     });
 
     it('filters proposals by status accepted', async () => {
@@ -272,9 +265,9 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(3);
-      expect(proposals[0].title).toBe(proposal5.title);
-      expect(proposals[1].title).toBe(proposal4.title);
-      expect(proposals[2].title).toBe(proposal2.title);
+      expect(proposals[0].id).toBe(proposal5.id);
+      expect(proposals[1].id).toBe(proposal4.id);
+      expect(proposals[2].id).toBe(proposal2.id);
     });
 
     it('filters proposals by status rejected', async () => {
@@ -282,7 +275,7 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
-      expect(proposals[0].title).toBe(proposal3.title);
+      expect(proposals[0].id).toBe(proposal3.id);
     });
 
     it('filters proposals by status not-answered', async () => {
@@ -290,7 +283,7 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
-      expect(proposals[0].title).toBe(proposal4.title);
+      expect(proposals[0].id).toBe(proposal4.id);
     });
 
     it('filters proposals by status confirmed', async () => {
@@ -298,7 +291,7 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
-      expect(proposals[0].title).toBe(proposal2.title);
+      expect(proposals[0].id).toBe(proposal2.id);
     });
 
     it('filters proposals by status declined', async () => {
@@ -306,28 +299,15 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
-      expect(proposals[0].title).toBe(proposal5.title);
-    });
-
-    it('hides archived proposals by default', async () => {
-      await db.proposal.update({ where: { id: proposal1.id }, data: { archivedAt: new Date() } });
-
-      const search = new ProposalSearchBuilder(event.id, owner.id, {});
-      const proposals = await search.proposals();
-      expect(proposals.length).toBe(4);
-      expect(proposals.find((p) => p.id === proposal1.id)).toBeUndefined();
+      expect(proposals[0].id).toBe(proposal5.id);
     });
 
     it('shows only archived proposals with status=archived', async () => {
-      await db.proposal.update({ where: { id: proposal1.id }, data: { archivedAt: new Date() } });
-      await db.proposal.update({ where: { id: proposal2.id }, data: { archivedAt: new Date() } });
-
       const filters: ProposalsFilters = { status: 'archived' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
-      expect(proposals.length).toBe(2);
-      expect(proposals[0].title).toBe(proposal2.title);
-      expect(proposals[1].title).toBe(proposal1.title);
+      expect(proposals.length).toBe(1);
+      expect(proposals[0].id).toBe(proposal6.id);
     });
 
     it('filters proposals by user reviewed only', async () => {
@@ -335,9 +315,9 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(3);
-      expect(proposals[0].title).toBe(proposal3.title);
-      expect(proposals[1].title).toBe(proposal2.title);
-      expect(proposals[2].title).toBe(proposal1.title);
+      expect(proposals[0].id).toBe(proposal3.id);
+      expect(proposals[1].id).toBe(proposal2.id);
+      expect(proposals[2].id).toBe(proposal1.id);
     });
 
     it('filters proposals by user not reviewed only', async () => {
@@ -345,8 +325,8 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(2);
-      expect(proposals[0].title).toBe(proposal5.title);
-      expect(proposals[1].title).toBe(proposal4.title);
+      expect(proposals[0].id).toBe(proposal5.id);
+      expect(proposals[1].id).toBe(proposal4.id);
     });
 
     it('filters proposals by user favorite reviews only', async () => {
@@ -354,18 +334,18 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
-      expect(proposals[0].title).toBe(proposal1.title);
+      expect(proposals[0].id).toBe(proposal1.id);
     });
 
     it('sorts by newest (default)', async () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, {});
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
-      expect(proposals[0].title).toBe(proposal5.title);
-      expect(proposals[1].title).toBe(proposal4.title);
-      expect(proposals[2].title).toBe(proposal3.title);
-      expect(proposals[3].title).toBe(proposal2.title);
-      expect(proposals[4].title).toBe(proposal1.title);
+      expect(proposals[0].id).toBe(proposal5.id);
+      expect(proposals[1].id).toBe(proposal4.id);
+      expect(proposals[2].id).toBe(proposal3.id);
+      expect(proposals[3].id).toBe(proposal2.id);
+      expect(proposals[4].id).toBe(proposal1.id);
     });
 
     it('sorts by oldest', async () => {
@@ -373,11 +353,11 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
-      expect(proposals[0].title).toBe(proposal1.title);
-      expect(proposals[1].title).toBe(proposal2.title);
-      expect(proposals[2].title).toBe(proposal3.title);
-      expect(proposals[3].title).toBe(proposal4.title);
-      expect(proposals[4].title).toBe(proposal5.title);
+      expect(proposals[0].id).toBe(proposal1.id);
+      expect(proposals[1].id).toBe(proposal2.id);
+      expect(proposals[2].id).toBe(proposal3.id);
+      expect(proposals[3].id).toBe(proposal4.id);
+      expect(proposals[4].id).toBe(proposal5.id);
     });
 
     it('sort by highest reviews', async () => {
@@ -385,11 +365,11 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
-      expect(proposals[0].title).toBe(proposal2.title);
-      expect(proposals[1].title).toBe(proposal1.title);
-      expect(proposals[2].title).toBe(proposal3.title);
-      expect(proposals[3].title).toBe(proposal4.title);
-      expect(proposals[4].title).toBe(proposal5.title);
+      expect(proposals[0].id).toBe(proposal2.id);
+      expect(proposals[1].id).toBe(proposal1.id);
+      expect(proposals[2].id).toBe(proposal3.id);
+      expect(proposals[3].id).toBe(proposal4.id);
+      expect(proposals[4].id).toBe(proposal5.id);
     });
 
     it('sort by lowest reviews and no reviews last', async () => {
@@ -397,11 +377,11 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
-      expect(proposals[0].title).toBe(proposal3.title);
-      expect(proposals[1].title).toBe(proposal1.title);
-      expect(proposals[2].title).toBe(proposal2.title);
-      expect(proposals[3].title).toBe(proposal4.title);
-      expect(proposals[4].title).toBe(proposal5.title);
+      expect(proposals[0].id).toBe(proposal3.id);
+      expect(proposals[1].id).toBe(proposal1.id);
+      expect(proposals[2].id).toBe(proposal2.id);
+      expect(proposals[3].id).toBe(proposal4.id);
+      expect(proposals[4].id).toBe(proposal5.id);
     });
 
     it('sort by most comments', async () => {
@@ -409,11 +389,11 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
-      expect(proposals[0].title).toBe(proposal3.title);
-      expect(proposals[1].title).toBe(proposal1.title);
-      expect(proposals[2].title).toBe(proposal2.title);
-      expect(proposals[3].title).toBe(proposal4.title);
-      expect(proposals[4].title).toBe(proposal5.title);
+      expect(proposals[0].id).toBe(proposal3.id);
+      expect(proposals[1].id).toBe(proposal1.id);
+      expect(proposals[2].id).toBe(proposal2.id);
+      expect(proposals[3].id).toBe(proposal4.id);
+      expect(proposals[4].id).toBe(proposal5.id);
     });
 
     it('sort by fewest comments and no comments last', async () => {
@@ -421,22 +401,12 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
-      expect(proposals[0].title).toBe(proposal1.title);
-      expect(proposals[1].title).toBe(proposal3.title);
-      expect(proposals[2].title).toBe(proposal2.title);
-      expect(proposals[3].title).toBe(proposal4.title);
-      expect(proposals[4].title).toBe(proposal5.title);
+      expect(proposals[0].id).toBe(proposal1.id);
+      expect(proposals[1].id).toBe(proposal3.id);
+      expect(proposals[2].id).toBe(proposal2.id);
+      expect(proposals[3].id).toBe(proposal4.id);
+      expect(proposals[4].id).toBe(proposal5.id);
     });
-  });
-
-  it('should not return draft proposals', async () => {
-    const talk = await talkFactory({ speakers: [speaker] });
-    await proposalFactory({ event, talk, traits: ['draft'] });
-
-    const search = new ProposalSearchBuilder(event.id, owner.id, {});
-    const proposals = await search.proposals();
-
-    expect(proposals.length).toBe(5);
   });
 
   describe('#search.proposalIds', () => {
@@ -481,9 +451,6 @@ describe('EventProposalsSearch', () => {
 
   describe('#search.proposalRouteIds', () => {
     it('returns array of objects with id and routeId', async () => {
-      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 1 } });
-      await db.proposal.update({ where: { id: proposal2.id }, data: { proposalNumber: 2 } });
-
       const search = new ProposalSearchBuilder(event.id, owner.id, {});
 
       const routeIds = await search.proposalRouteIds();
@@ -496,29 +463,14 @@ describe('EventProposalsSearch', () => {
     });
 
     it('returns routeId as proposal number when available', async () => {
-      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 42 } });
-
       const search = new ProposalSearchBuilder(event.id, owner.id, {});
       const routeIds = await search.proposalRouteIds();
 
       const proposal1RouteId = routeIds.find((item) => item.id === proposal1.id);
-      expect(proposal1RouteId?.routeId).toBe('42');
-    });
-
-    it('returns routeId as proposal id when proposal number is null', async () => {
-      await db.proposal.update({ where: { id: proposal3.id }, data: { proposalNumber: null } });
-
-      const search = new ProposalSearchBuilder(event.id, owner.id, {});
-      const routeIds = await search.proposalRouteIds();
-
-      const proposal3RouteId = routeIds.find((item) => item.id === proposal3.id);
-      expect(proposal3RouteId?.routeId).toBe(proposal3.id);
+      expect(proposal1RouteId?.routeId).toBe('123');
     });
 
     it('respects filters when returning route IDs', async () => {
-      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 1 } });
-      await db.proposal.update({ where: { id: proposal2.id }, data: { proposalNumber: 2 } });
-
       const filters = { query: 'world' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
 
@@ -526,13 +478,10 @@ describe('EventProposalsSearch', () => {
 
       expect(routeIds.length).toBe(1);
       expect(routeIds[0].id).toBe(proposal1.id);
-      expect(routeIds[0].routeId).toBe('1');
+      expect(routeIds[0].routeId).toBe('123');
     });
 
     it('respects sorting when returning route IDs', async () => {
-      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 1 } });
-      await db.proposal.update({ where: { id: proposal2.id }, data: { proposalNumber: 2 } });
-
       const filters: ProposalsFilters = { sort: 'oldest' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
 

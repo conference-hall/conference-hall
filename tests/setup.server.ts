@@ -7,7 +7,8 @@ beforeAll(() => {
   vi.restoreAllMocks();
 });
 
-afterEach(async () => {
+afterEach(async (ctx) => {
+  if (ctx.task.tags?.includes('no-teardown')) return;
   await resetDB();
   await resetRedis();
   await flags.resetDefaults();
