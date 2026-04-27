@@ -46,7 +46,7 @@ export function ProposalItem({
     deliberationStatus,
     tags,
     speakers,
-    comments,
+    commentCount,
   } = proposal;
 
   const pathname = href('/team/:team/:event/proposals/:proposal', {
@@ -101,7 +101,7 @@ export function ProposalItem({
         </div>
 
         <div className="hidden sm:flex sm:items-center sm:gap-2 sm:*:w-14">
-          <ReviewComments count={comments.count} />
+          <ReviewComments count={commentCount} />
           <UserReviewNote feeling={you.feeling} note={you.note} />
           {summary && <GlobalReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty />}
         </div>

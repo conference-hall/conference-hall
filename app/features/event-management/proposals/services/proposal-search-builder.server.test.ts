@@ -24,7 +24,8 @@ import type {
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
-// oxlint-disable-next-line jest/valid-describe-callback
+// Global afterEach is disabled  with 'no-teardown' tag to improve test performances
+// It creates data once for all tests
 describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
   let owner: User;
   let speaker: User;

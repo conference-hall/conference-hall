@@ -489,7 +489,7 @@ describe('EventSpeakers', () => {
           confirmationStatus: 'CONFIRMED',
           submittedAt: proposal.submittedAt,
           speakers: [{ name: 'Peter Parker' }],
-          comments: { count: 1 },
+          commentCount: 1,
           tags: [{ id: tag.id, name: tag.name, color: tag.color }],
         });
         expect(result?.proposals[0].reviews.you).toMatchObject({ feeling: 'POSITIVE', note: 4 });

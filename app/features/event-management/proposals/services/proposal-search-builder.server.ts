@@ -439,7 +439,7 @@ export class ProposalSearchBuilder {
           ? { note: row.userReviewNote, feeling: row.userReviewFeeling }
           : { note: null, feeling: null },
       },
-      comments: { count: row.commentCount },
+      commentCount: row.commentCount,
     };
   }
 }

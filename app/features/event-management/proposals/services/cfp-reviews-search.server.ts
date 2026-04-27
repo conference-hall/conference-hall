@@ -42,7 +42,7 @@ export class CfpReviewsSearch {
           summary: event.displayProposalsReviews ? proposal.reviews.summary : undefined,
           you: proposal.reviews.you,
         },
-        comments: proposal.comments,
+        commentCount: proposal.commentCount,
       })),
     };
   }

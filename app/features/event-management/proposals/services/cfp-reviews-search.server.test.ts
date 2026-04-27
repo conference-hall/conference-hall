@@ -51,7 +51,7 @@ describe('CfpReviewsSearch', () => {
             summary: { negatives: 0, positives: 0, average: null },
             you: { note: null, feeling: null },
           },
-          comments: { count: 1 },
+          commentCount: 1,
         },
       ]);
 
