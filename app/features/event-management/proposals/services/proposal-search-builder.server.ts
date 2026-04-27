@@ -141,10 +141,10 @@ export class ProposalSearchBuilder {
     const conditions = this.buildWhereConditions();
     const orderBy = this.buildOrderByClause();
 
-    const needsReviewAgg =
-      this.options.withReviews || this.filters.sort === 'highest' || this.filters.sort === 'lowest';
+    const needsReviewAgg = this.options.withReviews || this.filters.sort === 'reviews';
+    const needsUserReview = this.options.withReviews || this.filters.sort === 'my-review';
     const reviewAggJoin = needsReviewAgg ? this.buildReviewAggJoin() : Prisma.empty;
-    const userReviewJoin = this.options.withReviews ? this.buildUserReviewJoin() : Prisma.empty;
+    const userReviewJoin = needsUserReview ? this.buildUserReviewJoin() : Prisma.empty;
     const commentCountJoin = this.buildCommentCountJoin();
     const reviewSelect = this.buildReviewSelectColumns();
 
@@ -308,19 +308,42 @@ export class ProposalSearchBuilder {
   }
 
   private buildOrderByClause(): Prisma.Sql {
+    const order = this.filters.order ?? 'desc';
     switch (this.filters.sort) {
-      case 'highest':
-        return Prisma.sql`review_agg.avg_rating DESC NULLS LAST, p.title ASC`;
-      case 'lowest':
-        return Prisma.sql`review_agg.avg_rating ASC NULLS LAST, p.title ASC`;
-      case 'oldest':
-        return Prisma.sql`p."submittedAt" ASC, p.title ASC`;
-      case 'most-comments':
-        return Prisma.sql`comment_count.count DESC, p.title ASC`;
-      case 'fewest-comments':
-        return Prisma.sql`comment_count.count ASC, p.title ASC`;
+      case 'reviews':
+        return order === 'asc'
+          ? Prisma.sql`review_agg.avg_rating ASC NULLS LAST, p.title ASC`
+          : Prisma.sql`review_agg.avg_rating DESC NULLS LAST, p.title ASC`;
+      case 'comments':
+        return order === 'asc'
+          ? Prisma.sql`comment_count.count ASC, p.title ASC`
+          : Prisma.sql`comment_count.count DESC, p.title ASC`;
+      case 'my-review':
+        return order === 'asc'
+          ? Prisma.sql`
+              CASE user_review.feeling
+                WHEN 'POSITIVE' THEN 3
+                WHEN 'NEUTRAL' THEN 2
+                WHEN 'NEGATIVE' THEN 1
+                WHEN 'NO_OPINION' THEN 0
+                ELSE 4
+              END ASC,
+              COALESCE(user_review.note, 6) ASC,
+              p.title ASC`
+          : Prisma.sql`
+              CASE user_review.feeling
+                WHEN 'POSITIVE' THEN 3
+                WHEN 'NEUTRAL' THEN 2
+                WHEN 'NEGATIVE' THEN 1
+                WHEN 'NO_OPINION' THEN 0
+                ELSE -1
+              END DESC,
+              COALESCE(user_review.note, -1) DESC,
+              p.title ASC`;
       default:
-        return Prisma.sql`p."submittedAt" DESC, p.title ASC`;
+        return order === 'asc'
+          ? Prisma.sql`p."submittedAt" ASC, p.title ASC`
+          : Prisma.sql`p."submittedAt" DESC, p.title ASC`;
     }
   }
 
@@ -358,11 +381,14 @@ export class ProposalSearchBuilder {
     const sort = this.filters.sort;
     const parts: Prisma.Sql[] = [];
 
-    if (sort === 'highest' || sort === 'lowest') {
+    if (sort === 'reviews') {
       parts.push(this.buildReviewAggJoin());
     }
-    if (sort === 'most-comments' || sort === 'fewest-comments') {
+    if (sort === 'comments') {
       parts.push(this.buildCommentCountJoin());
+    }
+    if (sort === 'my-review') {
+      parts.push(this.buildUserReviewJoin());
     }
 
     if (parts.length === 0) return Prisma.empty;

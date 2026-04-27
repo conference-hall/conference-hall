@@ -372,7 +372,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     });
 
     it('sorts by oldest', async () => {
-      const filters: ProposalsFilters = { sort: 'oldest' };
+      const filters: ProposalsFilters = { sort: 'date', order: 'asc' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
@@ -384,7 +384,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     });
 
     it('sort by highest reviews', async () => {
-      const filters: ProposalsFilters = { sort: 'highest' };
+      const filters: ProposalsFilters = { sort: 'reviews', order: 'desc' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
@@ -396,7 +396,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     });
 
     it('sort by lowest reviews and no reviews last', async () => {
-      const filters: ProposalsFilters = { sort: 'lowest' };
+      const filters: ProposalsFilters = { sort: 'reviews', order: 'asc' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
@@ -408,7 +408,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     });
 
     it('sort by most comments', async () => {
-      const filters: ProposalsFilters = { sort: 'most-comments' };
+      const filters: ProposalsFilters = { sort: 'comments', order: 'desc' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
@@ -420,7 +420,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     });
 
     it('sort by fewest comments and no comments last', async () => {
-      const filters: ProposalsFilters = { sort: 'fewest-comments' };
+      const filters: ProposalsFilters = { sort: 'comments', order: 'asc' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
@@ -429,6 +429,30 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
       expect(proposals[2].id).toBe(proposal5.id);
       expect(proposals[3].id).toBe(proposal1.id);
       expect(proposals[4].id).toBe(proposal3.id);
+    });
+
+    it('sort by my best review first, not reviewed last', async () => {
+      const filters: ProposalsFilters = { sort: 'my-review', order: 'desc' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(5);
+      expect(proposals[0].id).toBe(proposal1.id); // POSITIVE, note 5
+      expect(proposals[1].id).toBe(proposal2.id); // NEUTRAL, note 5
+      expect(proposals[2].id).toBe(proposal3.id); // NEUTRAL, note 1
+      expect(proposals[3].id).toBe(proposal4.id); // not reviewed
+      expect(proposals[4].id).toBe(proposal5.id); // not reviewed
+    });
+
+    it('sort by my worst review first, not reviewed last', async () => {
+      const filters: ProposalsFilters = { sort: 'my-review', order: 'asc' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(5);
+      expect(proposals[0].id).toBe(proposal3.id); // NEUTRAL, note 1
+      expect(proposals[1].id).toBe(proposal2.id); // NEUTRAL, note 5
+      expect(proposals[2].id).toBe(proposal1.id); // POSITIVE, note 5
+      expect(proposals[3].id).toBe(proposal4.id); // not reviewed
+      expect(proposals[4].id).toBe(proposal5.id); // not reviewed
     });
   });
 
@@ -453,7 +477,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     });
 
     it('respects sorting when returning proposal IDs', async () => {
-      const filters: ProposalsFilters = { sort: 'oldest' };
+      const filters: ProposalsFilters = { sort: 'date', order: 'asc' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
 
       const ids = await search.proposalIds();
@@ -505,7 +529,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     });
 
     it('respects sorting when returning route IDs', async () => {
-      const filters: ProposalsFilters = { sort: 'oldest' };
+      const filters: ProposalsFilters = { sort: 'date', order: 'asc' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
 
       const routeIds = await search.proposalRouteIds();
