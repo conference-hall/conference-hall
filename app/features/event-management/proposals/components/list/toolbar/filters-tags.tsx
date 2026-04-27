@@ -9,12 +9,10 @@ type FiltersBadgesProps = { filters: ProposalsFilters };
 export function FiltersTags({ filters }: FiltersBadgesProps) {
   const { t } = useTranslation();
   const { event } = useCurrentEventTeam();
-  const { formats, categories, tags } = event;
 
-  const hasFilters = Boolean(
-    filters.query || filters.reviews || filters.status || filters.formats || filters.categories || filters.tags,
-  );
+  const { query, reviews, status, confirmation, formats, categories, tags } = filters;
 
+  const hasFilters = Boolean(query || reviews || status || confirmation || formats || categories || tags);
   if (!hasFilters) return null;
 
   return (
@@ -22,12 +20,13 @@ export function FiltersTags({ filters }: FiltersBadgesProps) {
       <Text variant="secondary" weight="medium">
         {t('event-management.proposals.filters.badges')}
       </Text>
-      <FilterTag name="query" value={filters.query} />
-      <FilterTag name="reviews" value={filters.reviews ? t(`common.review.status.${filters.reviews}`) : undefined} />
-      <FilterTag name="status" value={filters.status ? t(`common.proposals.status.${filters.status}`) : undefined} />
-      <FilterTag name="formats" value={formats.find((format) => format.id === filters.formats)?.name} />
-      <FilterTag name="categories" value={categories.find((category) => category.id === filters.categories)?.name} />
-      <FilterTag name="tags" value={tags.find((tag) => tag.id === filters.tags)?.name} />
+      <FilterTag name="query" value={query} />
+      <FilterTag name="reviews" value={reviews ? t(`common.review.status.${reviews}`) : undefined} />
+      <FilterTag name="status" value={status ? t(`common.proposals.status.${status}`) : undefined} />
+      <FilterTag name="confirmation" value={confirmation ? t(`common.proposals.status.${confirmation}`) : undefined} />
+      <FilterTag name="formats" value={event.formats.find((format) => format.id === formats)?.name} />
+      <FilterTag name="categories" value={event.categories.find((category) => category.id === categories)?.name} />
+      <FilterTag name="tags" value={event.tags.find((tag) => tag.id === tags)?.name} />
     </div>
   );
 }

@@ -9,7 +9,12 @@ import {
   ReviewFeeling,
   TalkLevel,
 } from '../../../../../prisma/generated/client.ts';
-import type { ProposalsFilters, ReviewsFilter, StatusFilter } from './proposal-search-builder.schema.server.ts';
+import type {
+  ConfirmationFilter,
+  StatusFilter,
+  ProposalsFilters,
+  ReviewsFilter,
+} from './proposal-search-builder.schema.server.ts';
 
 type SearchOptions = { withSpeakers: boolean; withReviews: boolean };
 
@@ -177,7 +182,7 @@ export class ProposalSearchBuilder {
   }
 
   private buildWhereConditions(): Prisma.Sql[] {
-    const { query, reviews, formats, categories, tags, speakers, status } = this.filters;
+    const { query, reviews, formats, categories, tags, speakers, status, confirmation } = this.filters;
     const conditions: Prisma.Sql[] = [];
 
     conditions.push(Prisma.sql`p."eventId" = ${this.eventId}`);
@@ -191,6 +196,9 @@ export class ProposalSearchBuilder {
 
     const statusCondition = this.buildStatusCondition(status);
     if (statusCondition) conditions.push(statusCondition);
+
+    const confirmationCondition = this.buildConfirmationCondition(confirmation);
+    if (confirmationCondition) conditions.push(confirmationCondition);
 
     const searchCondition = this.buildSearchCondition(query);
     if (searchCondition) conditions.push(searchCondition);
@@ -230,6 +238,13 @@ export class ProposalSearchBuilder {
         return Prisma.sql`p."deliberationStatus" = 'ACCEPTED'`;
       case 'rejected':
         return Prisma.sql`p."deliberationStatus" = 'REJECTED'`;
+      default:
+        return null;
+    }
+  }
+
+  private buildConfirmationCondition(confirmation?: ConfirmationFilter): Prisma.Sql | null {
+    switch (confirmation) {
       case 'not-answered':
         return Prisma.sql`(p."deliberationStatus" = 'ACCEPTED' AND p."confirmationStatus" = 'PENDING')`;
       case 'confirmed':
