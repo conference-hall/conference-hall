@@ -3,15 +3,16 @@ import { z } from 'zod';
 
 const ReviewsFiltersSchema = z.enum(['reviewed', 'not-reviewed', 'my-favorites']).optional();
 
-const StatusFilterSchema = z
-  .enum(['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined', 'archived'])
-  .optional();
+const StatusFilterSchema = z.enum(['pending', 'accepted', 'rejected', 'archived']).optional();
+
+const ConfirmationFilterSchema = z.enum(['not-answered', 'confirmed', 'declined']).optional();
 
 const ProposalsFiltersSchema = z.object({
   query: z.string().trim().optional(),
   sort: z.enum(['newest', 'oldest', 'highest', 'lowest', 'most-comments', 'fewest-comments']).optional(),
   reviews: ReviewsFiltersSchema,
   status: StatusFilterSchema,
+  confirmation: ConfirmationFilterSchema,
   formats: z.string().optional(),
   categories: z.string().optional(),
   tags: z.string().optional(),
@@ -21,6 +22,8 @@ const ProposalsFiltersSchema = z.object({
 export type ReviewsFilter = z.infer<typeof ReviewsFiltersSchema>;
 
 export type StatusFilter = z.infer<typeof StatusFilterSchema>;
+
+export type ConfirmationFilter = z.infer<typeof ConfirmationFilterSchema>;
 
 export type ProposalsFilters = z.infer<typeof ProposalsFiltersSchema>;
 

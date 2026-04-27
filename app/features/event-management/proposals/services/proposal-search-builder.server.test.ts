@@ -293,24 +293,24 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
       expect(proposals[0].id).toBe(proposal3.id);
     });
 
-    it('filters proposals by status not-answered', async () => {
-      const filters: ProposalsFilters = { status: 'not-answered' };
+    it('filters proposals by confirmation not-answered', async () => {
+      const filters: ProposalsFilters = { confirmation: 'not-answered' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal4.id);
     });
 
-    it('filters proposals by status confirmed', async () => {
-      const filters: ProposalsFilters = { status: 'confirmed' };
+    it('filters proposals by confirmation confirmed', async () => {
+      const filters: ProposalsFilters = { confirmation: 'confirmed' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal2.id);
     });
 
-    it('filters proposals by status declined', async () => {
-      const filters: ProposalsFilters = { status: 'declined' };
+    it('filters proposals by confirmation declined', async () => {
+      const filters: ProposalsFilters = { confirmation: 'declined' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
@@ -323,6 +323,14 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal6.id);
+    });
+
+    it('combines status and confirmation filters with AND logic', async () => {
+      const filters: ProposalsFilters = { status: 'accepted', confirmation: 'confirmed' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(1);
+      expect(proposals[0].id).toBe(proposal2.id);
     });
 
     it('filters proposals by user reviewed only', async () => {

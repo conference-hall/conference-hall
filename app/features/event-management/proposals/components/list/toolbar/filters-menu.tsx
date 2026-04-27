@@ -20,7 +20,8 @@ import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 
 const reviewOptions = ['reviewed', 'not-reviewed', 'my-favorites'] as const;
-const statusOptions = ['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined', 'archived'] as const;
+const statusOptions = ['pending', 'accepted', 'rejected', 'archived'] as const;
+const confirmationOptions = ['not-answered', 'confirmed', 'declined'] as const;
 
 export function FiltersMenu() {
   const { t } = useTranslation();
@@ -88,28 +89,34 @@ function FiltersContent({ close }: FiltersContentProps) {
           value,
           name: t(`common.review.status.${value}`),
         }))}
-        className="px-4 py-3"
+        className="px-4 py-2"
       />
 
       {permissions.canChangeProposalStatus && (
-        <FiltersRadio
-          label={t('common.proposals')}
-          name="status"
-          defaultValue={params.get('status')}
-          options={statusOptions.map((value) => ({
-            value,
-            name: t(`common.proposals.status.${value}`),
-          }))}
-          className="px-4 py-3"
-        />
+        <>
+          <FiltersRadio
+            label={t('common.proposals.status')}
+            name="status"
+            defaultValue={params.get('status')}
+            options={statusOptions.map((value) => ({ value, name: t(`common.proposals.status.${value}`) }))}
+            className="px-4 py-2"
+          />
+          <FiltersRadio
+            label={t('common.proposals.confirmation')}
+            name="confirmation"
+            defaultValue={params.get('confirmation')}
+            options={confirmationOptions.map((value) => ({ value, name: t(`common.proposals.status.${value}.short`) }))}
+            className="px-4 py-2"
+          />
+        </>
       )}
 
       {hasTracks && (
-        <div className="space-y-2 px-4 py-3">
-          <Text variant="secondary" weight="medium" size="s">
+        <div className="space-y-1 px-4 py-2">
+          <Text variant="secondary" weight="semibold" size="xs">
             {t('common.tracks')}
           </Text>
-          <div className="space-y-2">
+          <div className="space-y-1">
             {formats.length > 0 && (
               <Select
                 name="formats"
@@ -139,8 +146,8 @@ function FiltersContent({ close }: FiltersContentProps) {
       )}
 
       {tags.length > 0 && (
-        <div className="space-y-2 px-4 py-3">
-          <Text variant="secondary" weight="medium" size="s">
+        <div className="space-y-1 px-4 py-2">
+          <Text variant="secondary" weight="semibold" size="xs">
             {t('common.tags')}
           </Text>
           <Select
@@ -155,7 +162,7 @@ function FiltersContent({ close }: FiltersContentProps) {
           />
         </div>
       )}
-      <div className="mt-2 flex justify-between border-t border-t-gray-200 px-4 py-3 sm:rounded-b-md">
+      <div className="mt-2 flex justify-between border-t border-t-gray-200 px-4 py-2 sm:rounded-b-md">
         <Button to={location.pathname} variant="secondary" onClick={close}>
           {t('common.reset')}
         </Button>
@@ -176,7 +183,9 @@ type FiltersRadioProps = {
 function FiltersRadio({ label, name, defaultValue, options, className }: FiltersRadioProps) {
   return (
     <Fieldset className={className}>
-      <Legend className="text-sm font-medium text-gray-600">{label}</Legend>
+      <Text as={Legend} variant="secondary" weight="semibold" size="xs">
+        {label}
+      </Text>
       <RadioGroup name={name} defaultValue={defaultValue}>
         <div className="mt-1 flex flex-wrap gap-2">
           {options.map((option) => (
