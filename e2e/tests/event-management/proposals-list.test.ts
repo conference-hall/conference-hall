@@ -139,7 +139,7 @@ test.describe('As owner', () => {
     await expect(proposalsPage.proposalCount(3)).toBeVisible();
 
     // sort by oldest
-    await proposalsPage.clickOnSortBy('Oldest');
+    await proposalsPage.clickOnSortBy('Date');
     await expect(proposalsPage.proposals).toHaveCount(3);
 
     // open a proposal
