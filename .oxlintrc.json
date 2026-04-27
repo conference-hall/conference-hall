@@ -18,6 +18,7 @@
     "import/no-cycle": "error",
     "import/no-duplicates": "error",
     "vitest/require-mock-type-parameters": "off",
+    "jest/valid-describe-callback": "off",
     "prefer-tag-over-role": "off",
     "mouse-events-have-key-events": "off",
     "no-autofocus": "off"

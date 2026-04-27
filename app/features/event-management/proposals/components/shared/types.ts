@@ -18,6 +18,6 @@ export type ProposalData = {
   submittedAt: Date;
   speakers: Array<{ name: string | null }>;
   reviews: { summary?: GlobalReview; you: UserReview };
-  comments: { count: number };
+  commentCount: number;
   tags: Array<Tag>;
 };

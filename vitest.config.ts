@@ -50,5 +50,6 @@ export default defineConfig({
         },
       },
     ],
+    tags: [{ name: 'no-teardown', description: 'Skip global afterEach teardown for test optimization' }],
   },
 });
