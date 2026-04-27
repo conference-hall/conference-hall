@@ -416,11 +416,11 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
-      expect(proposals[0].id).toBe(proposal1.id);
-      expect(proposals[1].id).toBe(proposal3.id);
-      expect(proposals[2].id).toBe(proposal2.id);
-      expect(proposals[3].id).toBe(proposal4.id);
-      expect(proposals[4].id).toBe(proposal5.id);
+      expect(proposals[0].id).toBe(proposal2.id);
+      expect(proposals[1].id).toBe(proposal4.id);
+      expect(proposals[2].id).toBe(proposal5.id);
+      expect(proposals[3].id).toBe(proposal1.id);
+      expect(proposals[4].id).toBe(proposal3.id);
     });
   });
 

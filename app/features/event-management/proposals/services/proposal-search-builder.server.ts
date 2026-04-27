@@ -301,9 +301,9 @@ export class ProposalSearchBuilder {
       case 'oldest':
         return Prisma.sql`p."submittedAt" ASC, p.title ASC`;
       case 'most-comments':
-        return Prisma.sql`comment_count.count DESC NULLS LAST, p.title ASC`;
+        return Prisma.sql`comment_count.count DESC, p.title ASC`;
       case 'fewest-comments':
-        return Prisma.sql`comment_count.count ASC NULLS LAST, p.title ASC`;
+        return Prisma.sql`comment_count.count ASC, p.title ASC`;
       default:
         return Prisma.sql`p."submittedAt" DESC, p.title ASC`;
     }
@@ -311,15 +311,14 @@ export class ProposalSearchBuilder {
 
   private buildReviewAggJoin(): Prisma.Sql {
     return Prisma.sql`
-      LEFT JOIN (
-        SELECT "proposalId",
+      LEFT JOIN LATERAL (
+        SELECT
           (AVG(note) FILTER (WHERE feeling != 'NO_OPINION'))::DOUBLE PRECISION AS avg_rating,
           COUNT(*) FILTER (WHERE feeling = 'POSITIVE') AS positive_count,
           COUNT(*) FILTER (WHERE feeling = 'NEGATIVE') AS negative_count
         FROM reviews
-        WHERE "proposalId" IN (SELECT id FROM proposals WHERE "eventId" = ${this.eventId})
-        GROUP BY "proposalId"
-      ) review_agg ON review_agg."proposalId" = p.id
+        WHERE "proposalId" = p.id
+      ) review_agg ON true
     `;
   }
 
@@ -332,12 +331,11 @@ export class ProposalSearchBuilder {
 
   private buildCommentCountJoin(): Prisma.Sql {
     return Prisma.sql`
-      LEFT JOIN (
-        SELECT "proposalId", COUNT(*) AS count
+      LEFT JOIN LATERAL (
+        SELECT COUNT(*) AS count
         FROM comments
-        WHERE "proposalId" IN (SELECT id FROM proposals WHERE "eventId" = ${this.eventId})
-        GROUP BY "proposalId"
-      ) comment_count ON comment_count."proposalId" = p.id
+        WHERE "proposalId" = p.id
+      ) comment_count ON true
     `;
   }
 
