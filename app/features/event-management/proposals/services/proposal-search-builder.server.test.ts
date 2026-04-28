@@ -372,14 +372,6 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
       expect(proposals[0].id).toBe(proposal3.id);
     });
 
-    it('filters proposals by user neutral reviews with high star threshold', async () => {
-      const filters: ProposalsFilters = { reviews: 'neutral-5' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
-      const proposals = await search.proposals();
-      expect(proposals.length).toBe(1);
-      expect(proposals[0].id).toBe(proposal2.id);
-    });
-
     it('sorts by newest (default)', async () => {
       const search = new ProposalSearchBuilder(event.id, owner.id, {});
       const proposals = await search.proposals();

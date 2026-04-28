@@ -299,9 +299,9 @@ export class ProposalSearchBuilder {
       case 'not-reviewed':
         return Prisma.sql`NOT EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId})`;
       case 'no-opinion':
-        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.note IS NULL)`;
+        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.feeling = 'NO_OPINION' AND r.note IS NULL)`;
       case 'negative':
-        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.note = 0)`;
+        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.feeling = 'NEGATIVE' AND r.note = 0)`;
       case 'neutral-1':
       case 'neutral-2':
       case 'neutral-3':
