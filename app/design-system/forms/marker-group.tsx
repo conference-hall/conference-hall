@@ -11,11 +11,11 @@ export type MarkerOption = {
   cumulative?: boolean;
 };
 
-const markerButtonStyles = cva('flex cursor-pointer items-center justify-center', {
+const markerButtonStyles = cva('flex cursor-pointer items-center justify-center transition-colors duration-150', {
   variants: {
     variant: {
       outline: 'shadow-xs ring-1 ring-inset',
-      ghost: '',
+      ghost: 'rounded-lg',
     },
     size: {
       sm: 'h-7 px-1.5',
@@ -29,8 +29,10 @@ const markerButtonStyles = cva('flex cursor-pointer items-center justify-center'
     { variant: 'outline', first: true, className: 'rounded-l-md' },
     { variant: 'outline', last: true, className: 'rounded-r-md' },
     { variant: 'outline', first: false, className: '-ml-px' },
-    { variant: 'outline', active: true, className: 'bg-indigo-100 ring-indigo-200' },
-    { variant: 'outline', active: false, className: 'bg-white ring-gray-300' },
+    { variant: 'outline', active: true, className: 'bg-indigo-100 ring-indigo-200 hover:bg-indigo-200' },
+    { variant: 'outline', active: false, className: 'bg-white ring-gray-300 hover:bg-gray-50' },
+    { variant: 'ghost', active: true, className: 'hover:bg-gray-100' },
+    { variant: 'ghost', active: false, className: 'hover:bg-gray-100' },
   ],
   defaultVariants: { variant: 'outline', size: 'sm', active: false, first: false, last: false },
 });
