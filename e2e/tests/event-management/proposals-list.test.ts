@@ -88,14 +88,6 @@ test.describe('As owner', () => {
     await proposalsPage.clickOnClearFilters();
     await expect(proposalsPage.proposalCount(3)).toBeVisible();
 
-    // filter by "reviewed" proposals
-    await proposalsPage.clickOnReviewFilter('Reviewed');
-    await expect(proposalsPage.proposalCount(2)).toBeVisible();
-    await expect(proposalsPage.proposal(proposal1.title)).toBeVisible();
-    await expect(proposalsPage.proposal(proposal2.title)).toBeVisible();
-    await proposalsPage.clickOnClearFilters();
-    await expect(proposalsPage.proposalCount(3)).toBeVisible();
-
     // filter by "not reviewed" proposals
     await proposalsPage.clickOnReviewFilter('Not reviewed');
     await expect(proposalsPage.proposalCount(1)).toBeVisible();
@@ -103,8 +95,8 @@ test.describe('As owner', () => {
     await proposalsPage.clickOnClearFilters();
     await expect(proposalsPage.proposalCount(3)).toBeVisible();
 
-    // filter by "my favorites" proposals
-    await proposalsPage.clickOnReviewFilter('My favorites');
+    // filter by "positive" (favorite) proposals
+    await proposalsPage.clickOnReviewFilter('Favorite', 'button');
     await expect(proposalsPage.proposalCount(1)).toBeVisible();
     await expect(proposalsPage.proposal(proposal1.title)).toBeVisible();
     await proposalsPage.clickOnClearFilters();

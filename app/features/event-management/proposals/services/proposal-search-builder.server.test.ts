@@ -333,16 +333,6 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
       expect(proposals[0].id).toBe(proposal2.id);
     });
 
-    it('filters proposals by user reviewed only', async () => {
-      const filters: ProposalsFilters = { reviews: 'reviewed' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
-      const proposals = await search.proposals();
-      expect(proposals.length).toBe(3);
-      expect(proposals[0].id).toBe(proposal3.id);
-      expect(proposals[1].id).toBe(proposal2.id);
-      expect(proposals[2].id).toBe(proposal1.id);
-    });
-
     it('filters proposals by user not reviewed only', async () => {
       const filters: ProposalsFilters = { reviews: 'not-reviewed' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
@@ -352,12 +342,42 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
       expect(proposals[1].id).toBe(proposal4.id);
     });
 
-    it('filters proposals by user favorite reviews only', async () => {
-      const filters: ProposalsFilters = { reviews: 'my-favorites' };
+    it('filters proposals by user positive reviews only', async () => {
+      const filters: ProposalsFilters = { reviews: 'positive' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal1.id);
+    });
+
+    it('filters proposals by user negative reviews only', async () => {
+      const filters: ProposalsFilters = { reviews: 'negative' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(0);
+    });
+
+    it('filters proposals by user no-opinion reviews only', async () => {
+      const filters: ProposalsFilters = { reviews: 'no-opinion' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(0);
+    });
+
+    it('filters proposals by user neutral reviews with exact star match', async () => {
+      const filters: ProposalsFilters = { reviews: 'neutral-1' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(1);
+      expect(proposals[0].id).toBe(proposal3.id);
+    });
+
+    it('filters proposals by user neutral reviews with high star threshold', async () => {
+      const filters: ProposalsFilters = { reviews: 'neutral-5' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(1);
+      expect(proposals[0].id).toBe(proposal2.id);
     });
 
     it('sorts by newest (default)', async () => {

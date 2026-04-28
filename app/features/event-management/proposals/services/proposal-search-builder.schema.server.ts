@@ -1,7 +1,19 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { z } from 'zod';
 
-const ReviewsFiltersSchema = z.enum(['reviewed', 'not-reviewed', 'my-favorites']).optional();
+const ReviewsFiltersSchema = z
+  .enum([
+    'not-reviewed',
+    'no-opinion',
+    'negative',
+    'neutral-1',
+    'neutral-2',
+    'neutral-3',
+    'neutral-4',
+    'neutral-5',
+    'positive',
+  ])
+  .optional();
 
 const StatusFilterSchema = z.enum(['pending', 'accepted', 'rejected', 'archived']).optional();
 
