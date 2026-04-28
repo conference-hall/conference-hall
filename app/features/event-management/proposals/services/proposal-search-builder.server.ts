@@ -296,11 +296,21 @@ export class ProposalSearchBuilder {
   private buildReviewFilterCondition(reviews?: ReviewsFilter): Prisma.Sql | null {
     if (!reviews) return null;
     switch (reviews) {
-      case 'reviewed':
-        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId})`;
       case 'not-reviewed':
         return Prisma.sql`NOT EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId})`;
-      case 'my-favorites':
+      case 'no-opinion':
+        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.feeling = 'NO_OPINION' AND r.note IS NULL)`;
+      case 'negative':
+        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.feeling = 'NEGATIVE' AND r.note = 0)`;
+      case 'neutral-1':
+      case 'neutral-2':
+      case 'neutral-3':
+      case 'neutral-4':
+      case 'neutral-5': {
+        const note = Number(reviews.split('-')[1]);
+        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.feeling = 'NEUTRAL' AND r.note = ${note})`;
+      }
+      case 'positive':
         return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.feeling = 'POSITIVE')`;
       default:
         return null;

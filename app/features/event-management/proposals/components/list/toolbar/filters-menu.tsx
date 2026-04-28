@@ -11,15 +11,19 @@ import {
 } from '@headlessui/react';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useLocation, useSearchParams } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button, buttonStyles } from '~/design-system/button.tsx';
+import { MarkerGroup } from '~/design-system/forms/marker-group.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
+import { getReviewMarkerOptions } from '~/features/event-management/proposals/components/review-markers.config.ts';
 
-const reviewOptions = ['reviewed', 'not-reviewed', 'my-favorites'] as const;
+const reviewStatusOptions = ['not-reviewed'] as const;
+
 const statusOptions = ['pending', 'accepted', 'rejected', 'archived'] as const;
 const confirmationOptions = ['not-answered', 'confirmed', 'declined'] as const;
 
@@ -81,16 +85,7 @@ function FiltersContent({ close }: FiltersContentProps) {
       {params.get('query') && <input type="hidden" name="query" value={params.get('query') || ''} />}
       {params.get('sort') && <input type="hidden" name="sort" value={params.get('sort') || ''} />}
 
-      <FiltersRadio
-        label={t('common.reviews')}
-        name="reviews"
-        defaultValue={params.get('reviews')}
-        options={reviewOptions.map((value) => ({
-          value,
-          name: t(`common.review.status.${value}`),
-        }))}
-        className="px-4 py-2"
-      />
+      <FiltersReviewMarkers defaultValue={params.get('reviews')} />
 
       {permissions.canChangeProposalStatus && (
         <>
@@ -203,6 +198,50 @@ function FiltersRadio({ label, name, defaultValue, options, className }: Filters
           ))}
         </div>
       </RadioGroup>
+    </Fieldset>
+  );
+}
+
+type FiltersReviewMarkersProps = { defaultValue: string | null };
+
+function FiltersReviewMarkers({ defaultValue }: FiltersReviewMarkersProps) {
+  const { t } = useTranslation();
+  const [selected, setSelected] = useState<string | null>(defaultValue);
+
+  const markerOptions = getReviewMarkerOptions(t);
+  const isMarker = selected !== null && selected !== 'not-reviewed';
+
+  const handleStatusChange = (value: string) => {
+    setSelected(value);
+  };
+
+  return (
+    <Fieldset className="px-4 py-2">
+      <Text as={Legend} variant="secondary" weight="semibold" size="xs">
+        {t('common.my-reviews')}
+      </Text>
+
+      <input type="hidden" name="reviews" value={selected ?? ''} />
+
+      <div className="mt-1 flex flex-wrap items-center gap-2">
+        <MarkerGroup options={markerOptions} value={isMarker ? selected : null} onChange={setSelected} />
+
+        <RadioGroup value={isMarker ? '' : (selected ?? '')} onChange={handleStatusChange} className="flex gap-2">
+          {reviewStatusOptions.map((value) => (
+            <Radio
+              key={value}
+              value={value}
+              className={({ checked }) =>
+                cx('cursor-pointer', buttonStyles({ variant: 'secondary', size: 'sm' }), {
+                  'bg-indigo-100! text-indigo-700 ring-indigo-200 hover:bg-indigo-100': checked,
+                })
+              }
+            >
+              <Label>{t(`common.review.status.${value}`)}</Label>
+            </Radio>
+          ))}
+        </RadioGroup>
+      </div>
     </Fieldset>
   );
 }

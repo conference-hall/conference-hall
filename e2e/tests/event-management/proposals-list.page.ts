@@ -51,9 +51,9 @@ export class ProposalsListPage extends PageObject {
     await this.page.getByRole('checkbox', { name: `Select proposal "${name}"` }).click();
   }
 
-  async clickOnReviewFilter(name: string) {
+  async clickOnReviewFilter(name: string, role: 'button' | 'radio' = 'radio') {
     await this.page.getByRole('button', { name: 'Filters' }).click();
-    await this.page.getByRole('radio', { name, exact: true }).click();
+    await this.page.getByRole(role, { name, exact: true }).click();
     await this.page.getByRole('button', { name: 'Apply now' }).click();
   }
 
