@@ -127,7 +127,7 @@ test.describe('As owner', () => {
 
     // Review proposal
     await expect(page.getByLabel('Review: 3 (Score)')).toBeVisible();
-    await page.getByRole('radio', { name: 'Favorite' }).click();
+    await page.getByRole('button', { name: 'Favorite' }).click();
     await expect(page.getByLabel('Review: 4 (Score)')).toBeVisible();
 
     // Check activity feed
