@@ -8,7 +8,7 @@ import { userFactory } from 'tests/factories/users.ts';
 import { ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import type { Event, User } from '../../../../prisma/generated/client.ts';
-import { ConversationContextType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
+import { ConversationType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
 import { SpeakerConversationForSpeakers } from './speaker-conversation-for-speakers.server.ts';
 
 describe('SpeakerConversationForSpeakers', () => {
@@ -32,7 +32,7 @@ describe('SpeakerConversationForSpeakers', () => {
       await SpeakerConversationForSpeakers.for(speaker.id, proposal.id).saveMessage({ message: 'Hello!' });
 
       const conversation = await db.conversation.findFirst({
-        where: { eventId: event.id, contextType: ConversationContextType.PROPOSAL_CONVERSATION },
+        where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
         include: { messages: true },
       });
 

@@ -9,7 +9,7 @@ import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/au
 import { ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import type { Event, Team, User } from '../../../../prisma/generated/client.ts';
-import { ConversationContextType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
+import { ConversationType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
 import { ProposalReviewComments } from './proposal-review-comments.server.ts';
 
 describe('ProposalReviewComments', () => {
@@ -39,7 +39,7 @@ describe('ProposalReviewComments', () => {
       });
 
       const conversation = await db.conversation.findFirst({
-        where: { eventId: event.id, contextType: ConversationContextType.PROPOSAL_REVIEW_COMMENTS },
+        where: { eventId: event.id, type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
         include: { messages: true },
       });
 
@@ -53,7 +53,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { contextType: ConversationContextType.PROPOSAL_REVIEW_COMMENTS },
+        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -79,7 +79,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { contextType: ConversationContextType.PROPOSAL_REVIEW_COMMENTS },
+        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -119,7 +119,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { contextType: ConversationContextType.PROPOSAL_REVIEW_COMMENTS },
+        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -148,7 +148,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { contextType: ConversationContextType.PROPOSAL_REVIEW_COMMENTS },
+        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -170,7 +170,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { contextType: ConversationContextType.PROPOSAL_REVIEW_COMMENTS },
+        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -192,7 +192,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { contextType: ConversationContextType.PROPOSAL_REVIEW_COMMENTS },
+        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -216,7 +216,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { contextType: ConversationContextType.PROPOSAL_REVIEW_COMMENTS },
+        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
       });
       await conversationMessageFactory({
         conversation,

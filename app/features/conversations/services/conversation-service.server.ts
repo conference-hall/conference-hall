@@ -1,6 +1,6 @@
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { db } from '../../../../prisma/db.server.ts';
-import type { ConversationContextType, ConversationReaction, User } from '../../../../prisma/generated/client.ts';
+import type { ConversationType, ConversationReaction, User } from '../../../../prisma/generated/client.ts';
 import type {
   ConversationMessageDeleteData,
   ConversationMessageReactData,
@@ -11,7 +11,7 @@ import { NOTIFICATION_DELAY, notifyConversationMessage } from './jobs/notify-con
 type ConversationServiceContext = {
   userId: string;
   role: 'ORGANIZER' | 'SPEAKER';
-  contextType: ConversationContextType;
+  type: ConversationType;
   proposalId?: string;
   skipNotification?: boolean;
 };
@@ -24,20 +24,20 @@ export class ConversationService {
   }
 
   async saveMessage(eventId: string, { id, message }: ConversationMessageSaveData, canManageConversations?: boolean) {
-    const { userId, role, contextType, proposalId } = this.context;
+    const { userId, role, type, proposalId } = this.context;
 
     await db.$transaction(async (tx) => {
       // Create conversation if it doesn't exist
       let conversation = await tx.conversation.findFirst({
         where: {
           eventId,
-          contextType,
+          type,
           proposalId: proposalId ?? undefined,
         },
       });
 
       if (!conversation) {
-        conversation = await tx.conversation.create({ data: { eventId, contextType, proposalId } });
+        conversation = await tx.conversation.create({ data: { eventId, type, proposalId } });
       }
 
       // Add participant if not exists
@@ -98,12 +98,12 @@ export class ConversationService {
   }
 
   async getConversation(eventId: string) {
-    const { userId, contextType, proposalId } = this.context;
+    const { userId, type, proposalId } = this.context;
 
     // Get conversation
     const conversation = await db.conversation.findFirst({
       where: {
-        contextType,
+        type,
         proposalId: proposalId ?? undefined,
         event: { id: eventId },
       },

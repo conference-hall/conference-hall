@@ -54,7 +54,7 @@ export class ActivityFeed {
             SELECT cm.id, 'comment' AS type, cm."createdAt" AS timestamp, cm."senderId" AS "userId", NULL as "feeling", NULL as "note", cm."content" AS comment
             FROM conversation_messages cm
             INNER JOIN conversations c ON c.id = cm."conversationId"
-            WHERE c."proposalId" = ${this.proposalId} AND c."contextType" = 'PROPOSAL_REVIEW_COMMENTS'
+            WHERE c."proposalId" = ${this.proposalId} AND c."type" = 'PROPOSAL_REVIEW_COMMENTS'
           )
           ORDER BY timestamp ASC
         `,
@@ -65,7 +65,7 @@ export class ActivityFeed {
           SELECT cm.id, 'comment' AS type, cm."createdAt" AS timestamp, cm."senderId" AS "userId", NULL as "feeling", NULL as "note", cm."content" AS comment
           FROM conversation_messages cm
           INNER JOIN conversations c ON c.id = cm."conversationId"
-          WHERE c."proposalId" = ${this.proposalId} AND c."contextType" = 'PROPOSAL_REVIEW_COMMENTS'
+          WHERE c."proposalId" = ${this.proposalId} AND c."type" = 'PROPOSAL_REVIEW_COMMENTS'
           ORDER BY timestamp ASC
         `,
       );

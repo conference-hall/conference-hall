@@ -7,7 +7,7 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import type { Event, Team, User } from '../../../../prisma/generated/client.ts';
-import { ConversationContextType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
+import { ConversationType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
 import { ConversationService } from './conversation-service.server.ts';
 import { notifyConversationMessage } from './jobs/notify-conversation-message.job.ts';
 
@@ -39,14 +39,14 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { message: 'Hello organizers!' });
 
       const conversation = await db.conversation.findFirst({
-        where: { eventId: event.id, contextType: ConversationContextType.PROPOSAL_CONVERSATION },
+        where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
         include: { messages: true },
       });
 
@@ -62,7 +62,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -88,7 +88,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -111,7 +111,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -135,7 +135,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: organizer.id,
         role: 'ORGANIZER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -159,7 +159,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -176,14 +176,14 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { message: 'New message' });
 
       const conversation = await db.conversation.findFirst({
-        where: { eventId: event.id, contextType: ConversationContextType.PROPOSAL_CONVERSATION },
+        where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
       });
 
       expect(notifyConversationMessage.trigger).toHaveBeenCalledWith(
@@ -213,7 +213,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -237,7 +237,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -263,7 +263,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: organizer.id,
         role: 'ORGANIZER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -290,7 +290,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -313,7 +313,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: organizer.id,
         role: 'ORGANIZER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -336,7 +336,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -355,7 +355,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -377,7 +377,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -414,7 +414,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -446,7 +446,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 
@@ -476,7 +476,7 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
         proposalId: proposal.id,
       });
 

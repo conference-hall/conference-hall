@@ -171,7 +171,7 @@ describe('EventSettings', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { contextType: 'PROPOSAL_REVIEW_COMMENTS' },
+        attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
       });
       const message = await conversationMessageFactory({ conversation, sender: member });
       const review = await reviewFactory({ proposal, user: member });

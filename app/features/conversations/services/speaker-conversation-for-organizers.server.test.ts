@@ -9,7 +9,7 @@ import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/au
 import { ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import type { Event, Team, User } from '../../../../prisma/generated/client.ts';
-import { ConversationContextType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
+import { ConversationType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
 import { SpeakerConversationForOrganizers } from './speaker-conversation-for-organizers.server.ts';
 
 describe('SpeakerConversationForOrganizers', () => {
@@ -39,7 +39,7 @@ describe('SpeakerConversationForOrganizers', () => {
       });
 
       const conversation = await db.conversation.findFirst({
-        where: { eventId: event.id, contextType: ConversationContextType.PROPOSAL_CONVERSATION },
+        where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
         include: { messages: true },
       });
 

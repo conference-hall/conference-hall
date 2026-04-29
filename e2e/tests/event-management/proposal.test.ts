@@ -86,7 +86,7 @@ test.describe('As owner', () => {
     const reviewConversation = await conversationFactory({
       event,
       proposalId: proposal.id,
-      attributes: { contextType: 'PROPOSAL_REVIEW_COMMENTS' },
+      attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
     });
     await conversationMessageFactory({
       conversation: reviewConversation,

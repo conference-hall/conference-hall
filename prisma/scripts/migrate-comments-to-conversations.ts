@@ -98,7 +98,7 @@ async function migrate() {
 
         // Check if conversation already exists (idempotency)
         const existing = await tx.conversation.findFirst({
-          where: { proposalId, contextType: 'PROPOSAL_REVIEW_COMMENTS' },
+          where: { proposalId, type: 'PROPOSAL_REVIEW_COMMENTS' },
         });
         if (existing) {
           logger.info(`Skipping proposal ${proposalId}, conversation already exists`);
@@ -110,7 +110,7 @@ async function migrate() {
           data: {
             eventId,
             proposalId,
-            contextType: 'PROPOSAL_REVIEW_COMMENTS',
+            type: 'PROPOSAL_REVIEW_COMMENTS',
           },
         });
         conversationsCreated++;
@@ -177,10 +177,10 @@ async function migrate() {
 
   // 5. Verification
   const newMessageCount = await db.conversationMessage.count({
-    where: { conversation: { contextType: 'PROPOSAL_REVIEW_COMMENTS' } },
+    where: { conversation: { type: 'PROPOSAL_REVIEW_COMMENTS' } },
   });
   const newReactionCount = await db.conversationReaction.count({
-    where: { message: { conversation: { contextType: 'PROPOSAL_REVIEW_COMMENTS' } } },
+    where: { message: { conversation: { type: 'PROPOSAL_REVIEW_COMMENTS' } } },
   });
 
   logger.info('Verification', {

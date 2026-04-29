@@ -383,7 +383,7 @@ export class ProposalSearchBuilder {
         SELECT COUNT(*) AS count
         FROM conversations c
         INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
-        WHERE c."proposalId" = p.id AND c."contextType" = 'PROPOSAL_REVIEW_COMMENTS'
+        WHERE c."proposalId" = p.id AND c."type" = 'PROPOSAL_REVIEW_COMMENTS'
       ) comment_count ON true
     `;
   }

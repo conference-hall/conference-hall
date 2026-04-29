@@ -32,7 +32,7 @@ describe('ActivityFeed', () => {
       const reviewConversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { contextType: 'PROPOSAL_REVIEW_COMMENTS' },
+        attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
       });
       const message1 = await conversationMessageFactory({
         conversation: reviewConversation,
@@ -106,7 +106,7 @@ describe('ActivityFeed', () => {
       const reviewConversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { contextType: 'PROPOSAL_REVIEW_COMMENTS' },
+        attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
       });
       const message = await conversationMessageFactory({ conversation: reviewConversation, sender: owner });
       await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });

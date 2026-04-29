@@ -19,7 +19,7 @@ export class SpeakerConversationForOrganizers {
     this.conversation = new ConversationService({
       userId: authorizedEvent.userId,
       role: 'ORGANIZER',
-      contextType: 'PROPOSAL_CONVERSATION',
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
       proposalId,
     });
   }

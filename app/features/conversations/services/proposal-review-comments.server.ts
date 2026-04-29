@@ -19,7 +19,7 @@ export class ProposalReviewComments {
     this.conversation = new ConversationService({
       userId: authorizedEvent.userId,
       role: 'ORGANIZER',
-      contextType: 'PROPOSAL_REVIEW_COMMENTS',
+      type: 'PROPOSAL_REVIEW_COMMENTS',
       proposalId,
       skipNotification: true,
     });
