@@ -483,7 +483,7 @@ model Conversation {
   id           String                    @id @default(cuid())
   eventId      String
   event        Event                     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  contextType  ConversationContextType
+  type         ConversationType
   proposalId   String?
   proposal     Proposal?                 @relation(fields: [proposalId], references: [id])
   createdAt    DateTime                  @default(now())
@@ -495,9 +495,8 @@ model Conversation {
   @@map("conversations")
 }
 
-enum ConversationContextType {
-  EVENT_CONVERSATION
-  PROPOSAL_CONVERSATION
+enum ConversationType {
+  PROPOSAL_SPEAKER_CONVERSATION
   PROPOSAL_REVIEW_COMMENTS
 }
 
