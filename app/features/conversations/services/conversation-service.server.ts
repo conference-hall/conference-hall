@@ -28,13 +28,7 @@ export class ConversationService {
 
     await db.$transaction(async (tx) => {
       // Create conversation if it doesn't exist
-      let conversation = await tx.conversation.findFirst({
-        where: {
-          eventId,
-          type,
-          proposalId,
-        },
-      });
+      let conversation = await tx.conversation.findFirst({ where: { eventId, type, proposalId } });
 
       if (!conversation) {
         conversation = await tx.conversation.create({ data: { eventId, type, proposalId } });
@@ -102,11 +96,7 @@ export class ConversationService {
 
     // Get conversation
     const conversation = await db.conversation.findFirst({
-      where: {
-        type,
-        proposalId,
-        event: { id: eventId },
-      },
+      where: { type, proposalId, event: { id: eventId } },
       include: {
         participants: true,
         messages: {
