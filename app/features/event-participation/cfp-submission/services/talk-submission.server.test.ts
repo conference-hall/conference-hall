@@ -104,7 +104,7 @@ describe('TalkSubmission', () => {
       };
 
       const submission = TalkSubmission.for(speaker.id, event.slug);
-      await expect(submission.saveDraft('XXX', data)).rejects.toThrowError(TalkNotFoundError);
+      await expect(submission.saveDraft('XXX', data)).rejects.toThrow(TalkNotFoundError);
     });
 
     it('throws an error when talk not belong to the user', async () => {
@@ -122,7 +122,7 @@ describe('TalkSubmission', () => {
 
       const user = await userFactory();
       const submission = TalkSubmission.for(user.id, event.slug);
-      await expect(submission.saveDraft(talk.id, data)).rejects.toThrowError(TalkNotFoundError);
+      await expect(submission.saveDraft(talk.id, data)).rejects.toThrow(TalkNotFoundError);
     });
 
     it('throws an error when CFP is not open', async () => {
@@ -137,7 +137,7 @@ describe('TalkSubmission', () => {
       };
 
       const submission = TalkSubmission.for(speaker.id, event.slug);
-      await expect(submission.saveDraft('new', data)).rejects.toThrowError(CfpNotOpenError);
+      await expect(submission.saveDraft('new', data)).rejects.toThrow(CfpNotOpenError);
     });
 
     it('throws an error when event not found', async () => {
@@ -151,7 +151,7 @@ describe('TalkSubmission', () => {
       };
 
       const submission = TalkSubmission.for(speaker.id, 'XXX');
-      await expect(submission.saveDraft('new', data)).rejects.toThrowError(EventNotFoundError);
+      await expect(submission.saveDraft('new', data)).rejects.toThrow(EventNotFoundError);
     });
   });
 
@@ -213,7 +213,7 @@ describe('TalkSubmission', () => {
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
       const submission = TalkSubmission.for(speaker.id, event.slug);
-      await expect(submission.saveTracks('XXX', { formats: [], categories: [] })).rejects.toThrowError(
+      await expect(submission.saveTracks('XXX', { formats: [], categories: [] })).rejects.toThrow(
         ProposalNotFoundError,
       );
     });
@@ -295,7 +295,7 @@ describe('TalkSubmission', () => {
       await proposalFactory({ event, talk: talk2, traits: ['draft'] });
 
       const submission = TalkSubmission.for(speaker.id, event.slug);
-      await expect(submission.submit(talk2.id)).rejects.toThrowError(MaxSubmittedProposalsReachedError);
+      await expect(submission.submit(talk2.id)).rejects.toThrow(MaxSubmittedProposalsReachedError);
     });
 
     it('throws an error when talk not belong to the user', async () => {
@@ -306,7 +306,7 @@ describe('TalkSubmission', () => {
 
       const user = await userFactory();
       const submission = TalkSubmission.for(user.id, event.slug);
-      await expect(submission.submit(talk.id)).rejects.toThrowError(ProposalNotFoundError);
+      await expect(submission.submit(talk.id)).rejects.toThrow(ProposalNotFoundError);
     });
 
     it('throws an error when CFP is not open', async () => {
@@ -315,7 +315,7 @@ describe('TalkSubmission', () => {
       const talk = await talkFactory({ speakers: [speaker] });
 
       const submission = TalkSubmission.for(speaker.id, event.slug);
-      await expect(submission.submit(talk.id)).rejects.toThrowError(CfpNotOpenError);
+      await expect(submission.submit(talk.id)).rejects.toThrow(CfpNotOpenError);
     });
 
     it('throws an error when event not found', async () => {
@@ -323,7 +323,7 @@ describe('TalkSubmission', () => {
       const talk = await talkFactory({ speakers: [speaker] });
 
       const submission = TalkSubmission.for(speaker.id, 'XXX');
-      await expect(submission.submit(talk.id)).rejects.toThrowError(EventNotFoundError);
+      await expect(submission.submit(talk.id)).rejects.toThrow(EventNotFoundError);
     });
   });
 
@@ -369,7 +369,7 @@ describe('TalkSubmission', () => {
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
 
-      await expect(TalkSubmission.for(speaker.id, event.slug).get(talk.id)).rejects.toThrowError(ProposalNotFoundError);
+      await expect(TalkSubmission.for(speaker.id, event.slug).get(talk.id)).rejects.toThrow(ProposalNotFoundError);
     });
 
     it('throws an error if proposal does not belong to user', async () => {
@@ -379,7 +379,7 @@ describe('TalkSubmission', () => {
       await proposalFactory({ event, talk });
 
       const user = await userFactory();
-      await expect(TalkSubmission.for(user.id, event.slug).get(talk.id)).rejects.toThrowError(ProposalNotFoundError);
+      await expect(TalkSubmission.for(user.id, event.slug).get(talk.id)).rejects.toThrow(ProposalNotFoundError);
     });
   });
 
@@ -411,9 +411,9 @@ describe('TalkSubmission', () => {
       await proposalFactory({ event, talk });
 
       const updater = await userFactory();
-      await expect(
-        TalkSubmission.for(updater.id, event.slug).removeCoSpeaker(talk.id, cospeaker.id),
-      ).rejects.toThrowError(ProposalNotFoundError);
+      await expect(TalkSubmission.for(updater.id, event.slug).removeCoSpeaker(talk.id, cospeaker.id)).rejects.toThrow(
+        ProposalNotFoundError,
+      );
     });
 
     it('throws an error when talk not found', async () => {
@@ -421,9 +421,9 @@ describe('TalkSubmission', () => {
       const speaker = await userFactory();
 
       const cospeaker = await userFactory();
-      await expect(
-        TalkSubmission.for(speaker.id, event.slug).removeCoSpeaker('XXX', cospeaker.id),
-      ).rejects.toThrowError(ProposalNotFoundError);
+      await expect(TalkSubmission.for(speaker.id, event.slug).removeCoSpeaker('XXX', cospeaker.id)).rejects.toThrow(
+        ProposalNotFoundError,
+      );
     });
   });
 });

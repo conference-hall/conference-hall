@@ -43,7 +43,7 @@ describe('EventScheduleExport', () => {
       const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      expect(() => EventScheduleExport.forUser(authorizedEvent)).toThrowError(ForbiddenOperationError);
+      expect(() => EventScheduleExport.forUser(authorizedEvent)).toThrow(ForbiddenOperationError);
     });
 
     it('throws forbidden error for meetups', async () => {
@@ -51,7 +51,7 @@ describe('EventScheduleExport', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
 
-      expect(() => EventScheduleExport.forUser(authorizedEvent)).toThrowError(ForbiddenOperationError);
+      expect(() => EventScheduleExport.forUser(authorizedEvent)).toThrow(ForbiddenOperationError);
     });
   });
 
@@ -63,7 +63,7 @@ describe('EventScheduleExport', () => {
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      expect(() => EventScheduleExport.forApi({ event: meetup })).toThrowError(ForbiddenOperationError);
+      expect(() => EventScheduleExport.forApi({ event: meetup })).toThrow(ForbiddenOperationError);
     });
   });
 

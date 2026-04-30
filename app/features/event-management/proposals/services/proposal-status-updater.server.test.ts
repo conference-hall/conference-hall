@@ -108,9 +108,7 @@ describe('ProposalStatusUpdater', () => {
       const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const deliberate = ProposalStatusUpdater.for(authorizedEvent);
-      await expect(deliberate.update([], { deliberationStatus: 'ACCEPTED' })).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      await expect(deliberate.update([], { deliberationStatus: 'ACCEPTED' })).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -120,7 +118,7 @@ describe('ProposalStatusUpdater', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const deliberate = ProposalStatusUpdater.for(authorizedEvent);
         await deliberate.update([], { deliberationStatus: 'ACCEPTED' });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('updates the proposal confirmation status', async () => {
@@ -347,7 +345,7 @@ describe('ProposalStatusUpdater', () => {
       const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
-      await expect(proposalStatus.archive([proposal.id])).rejects.toThrowError(ForbiddenOperationError);
+      await expect(proposalStatus.archive([proposal.id])).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -358,7 +356,7 @@ describe('ProposalStatusUpdater', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
         await proposalStatus.archive([proposal.id]);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -404,7 +402,7 @@ describe('ProposalStatusUpdater', () => {
       const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
-      await expect(proposalStatus.restore([proposal.id])).rejects.toThrowError(ForbiddenOperationError);
+      await expect(proposalStatus.restore([proposal.id])).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -419,7 +417,7 @@ describe('ProposalStatusUpdater', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
         await proposalStatus.restore([proposal.id]);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -568,7 +566,7 @@ describe('ProposalStatusUpdater', () => {
       const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const deliberate = ProposalStatusUpdater.for(authorizedEvent);
-      await expect(deliberate.updateAll({}, 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);
+      await expect(deliberate.updateAll({}, 'ACCEPTED')).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -578,7 +576,7 @@ describe('ProposalStatusUpdater', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const deliberate = ProposalStatusUpdater.for(authorizedEvent);
         await deliberate.updateAll({}, 'ACCEPTED');
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 });

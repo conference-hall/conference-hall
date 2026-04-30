@@ -106,7 +106,7 @@ describe('Publication', () => {
       const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await expect(Publication.for(authorizedEvent).statistics()).rejects.toThrowError(ForbiddenOperationError);
+      await expect(Publication.for(authorizedEvent).statistics()).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('cannot be see for meetup event', async () => {
@@ -114,7 +114,7 @@ describe('Publication', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
 
-      await expect(Publication.for(authorizedEvent).statistics()).rejects.toThrowError(ForbiddenOperationError);
+      await expect(Publication.for(authorizedEvent).statistics()).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -203,7 +203,7 @@ describe('Publication', () => {
       const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await expect(Publication.for(authorizedEvent).publishAll('ACCEPTED', false)).rejects.toThrowError(
+      await expect(Publication.for(authorizedEvent).publishAll('ACCEPTED', false)).rejects.toThrow(
         ForbiddenOperationError,
       );
     });
@@ -213,7 +213,7 @@ describe('Publication', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, meetup.slug);
 
-      await expect(Publication.for(authorizedEvent).statistics()).rejects.toThrowError(ForbiddenOperationError);
+      await expect(Publication.for(authorizedEvent).statistics()).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -271,7 +271,7 @@ describe('Publication', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await expect(Publication.for(authorizedEvent).publish(proposalSubmitted.id, false)).rejects.toThrowError(
+      await expect(Publication.for(authorizedEvent).publish(proposalSubmitted.id, false)).rejects.toThrow(
         ProposalNotFoundError,
       );
     });
@@ -288,7 +288,7 @@ describe('Publication', () => {
 
       await ProposalStatusUpdater.for(authorizedEvent).archive([archivedProposal.id]);
 
-      await expect(Publication.for(authorizedEvent).publish(archivedProposal.id, true)).rejects.toThrowError(
+      await expect(Publication.for(authorizedEvent).publish(archivedProposal.id, true)).rejects.toThrow(
         ProposalNotFoundError,
       );
     });
@@ -297,7 +297,7 @@ describe('Publication', () => {
       const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await expect(Publication.for(authorizedEvent).publish(proposal.id, false)).rejects.toThrowError(
+      await expect(Publication.for(authorizedEvent).publish(proposal.id, false)).rejects.toThrow(
         ForbiddenOperationError,
       );
     });

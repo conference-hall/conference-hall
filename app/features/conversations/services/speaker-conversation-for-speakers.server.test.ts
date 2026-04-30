@@ -46,13 +46,13 @@ describe('SpeakerConversationForSpeakers', () => {
 
       const service = SpeakerConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
 
-      await expect(service.saveMessage({ message: 'Hello!' })).rejects.toThrowError(ProposalNotFoundError);
+      await expect(service.saveMessage({ message: 'Hello!' })).rejects.toThrow(ProposalNotFoundError);
     });
 
     it('throws error when proposal does not exist', async () => {
       const service = SpeakerConversationForSpeakers.for(speaker.id, 'non-existent');
 
-      await expect(service.saveMessage({ message: 'Hello!' })).rejects.toThrowError(ProposalNotFoundError);
+      await expect(service.saveMessage({ message: 'Hello!' })).rejects.toThrow(ProposalNotFoundError);
     });
   });
 
@@ -98,7 +98,7 @@ describe('SpeakerConversationForSpeakers', () => {
 
       const service = SpeakerConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
 
-      await expect(service.reactMessage({ id: message.id, code: 'tada' })).rejects.toThrowError(ProposalNotFoundError);
+      await expect(service.reactMessage({ id: message.id, code: 'tada' })).rejects.toThrow(ProposalNotFoundError);
     });
   });
 
@@ -139,7 +139,7 @@ describe('SpeakerConversationForSpeakers', () => {
 
       const service = SpeakerConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
 
-      await expect(service.deleteMessage({ id: message.id })).rejects.toThrowError(ProposalNotFoundError);
+      await expect(service.deleteMessage({ id: message.id })).rejects.toThrow(ProposalNotFoundError);
     });
   });
 
@@ -171,13 +171,13 @@ describe('SpeakerConversationForSpeakers', () => {
 
       const service = SpeakerConversationForSpeakers.for(anotherSpeaker.id, proposal.id);
 
-      await expect(service.getConversation()).rejects.toThrowError(ProposalNotFoundError);
+      await expect(service.getConversation()).rejects.toThrow(ProposalNotFoundError);
     });
 
     it('throws error when proposal does not exist', async () => {
       const service = SpeakerConversationForSpeakers.for(speaker.id, 'non-existent');
 
-      await expect(service.getConversation()).rejects.toThrowError(ProposalNotFoundError);
+      await expect(service.getConversation()).rejects.toThrow(ProposalNotFoundError);
     });
   });
 });

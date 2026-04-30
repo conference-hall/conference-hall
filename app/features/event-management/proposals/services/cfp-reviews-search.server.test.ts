@@ -111,7 +111,7 @@ describe('CfpReviewsSearch', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const reviewsSearch = CfpReviewsSearch.for(authorizedEvent);
         await reviewsSearch.search({});
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -152,7 +152,7 @@ describe('CfpReviewsSearch', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const reviewsSearch = CfpReviewsSearch.for(authorizedEvent);
         await reviewsSearch.autocomplete({});
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 });

@@ -76,7 +76,7 @@ describe('EventSurveySettings', () => {
 
       await expect(async () => {
         await EventSurveySettings.for(authorizedEvent).getConfig();
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -95,7 +95,7 @@ describe('EventSurveySettings', () => {
 
       await expect(async () => {
         await EventSurveySettings.for(authorizedEvent).toggleSurvey();
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -125,7 +125,7 @@ describe('EventSurveySettings', () => {
 
       await expect(async () => {
         await EventSurveySettings.for(authorizedEvent).addQuestion(newQuestion);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -154,7 +154,7 @@ describe('EventSurveySettings', () => {
 
       await expect(async () => {
         await EventSurveySettings.for(authorizedEvent).updateQuestion(updatedQuestion);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -179,7 +179,7 @@ describe('EventSurveySettings', () => {
 
       await expect(async () => {
         await EventSurveySettings.for(authorizedEvent).removeQuestion(questionId);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -232,7 +232,7 @@ describe('EventSurveySettings', () => {
 
       await expect(async () => {
         await EventSurveySettings.for(authorizedEvent).moveQuestion(moveParams);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 });

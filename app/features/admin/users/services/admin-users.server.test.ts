@@ -124,7 +124,7 @@ describe('AdminUsers', () => {
     it('throws an error when user is not found', async () => {
       const adminUsers = AdminUsers.for(admin);
 
-      await expect(adminUsers.getUserInfo('xxx')).rejects.toThrowError(UserNotFoundError);
+      await expect(adminUsers.getUserInfo('xxx')).rejects.toThrow(UserNotFoundError);
     });
   });
 
@@ -146,7 +146,7 @@ describe('AdminUsers', () => {
     it('throws an error when target user is not found', async () => {
       const adminUsers = AdminUsers.for(admin);
 
-      await expect(adminUsers.deleteUser('xxx')).rejects.toThrowError(UserNotFoundError);
+      await expect(adminUsers.deleteUser('xxx')).rejects.toThrow(UserNotFoundError);
     });
   });
 });

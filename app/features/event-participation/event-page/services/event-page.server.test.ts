@@ -63,7 +63,7 @@ describe('EventPage', () => {
     });
 
     it('throws an error when event not found', async () => {
-      await expect(EventPage.of('XXX').get()).rejects.toThrowError(EventNotFoundError);
+      await expect(EventPage.of('XXX').get()).rejects.toThrow(EventNotFoundError);
     });
   });
 
@@ -134,7 +134,7 @@ describe('EventPage', () => {
     });
 
     it('throws an error when event not found', async () => {
-      await expect(EventPage.getByLegacyId('unknown-event-id')).rejects.toThrowError(EventNotFoundError);
+      await expect(EventPage.getByLegacyId('unknown-event-id')).rejects.toThrow(EventNotFoundError);
     });
   });
 });

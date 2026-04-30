@@ -88,7 +88,7 @@ describe('EventTracksSettings', () => {
           name: 'Hello world',
           description: 'Hello world',
         });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -100,7 +100,7 @@ describe('EventTracksSettings', () => {
           name: 'Hello world',
           description: 'Hello world',
         });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -143,7 +143,7 @@ describe('EventTracksSettings', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
         await settings.saveCategory({ name: 'Hello world', description: 'Hello world' });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -153,7 +153,7 @@ describe('EventTracksSettings', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
         await settings.saveCategory({ name: 'Hello world', description: 'Hello world' });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -200,7 +200,7 @@ describe('EventTracksSettings', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
         await settings.deleteFormat(format.id);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -210,7 +210,7 @@ describe('EventTracksSettings', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
         await settings.deleteFormat(format.id);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -257,7 +257,7 @@ describe('EventTracksSettings', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
         await settings.deleteCategory(category.id);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -267,7 +267,7 @@ describe('EventTracksSettings', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
         await settings.deleteCategory(category.id);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -365,7 +365,7 @@ describe('EventTracksSettings', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
         await settings.reorderFormat(format.id, 'up');
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -463,7 +463,7 @@ describe('EventTracksSettings', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
         await settings.reorderCategory(category.id, 'up');
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 });

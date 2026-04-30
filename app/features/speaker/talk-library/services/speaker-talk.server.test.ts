@@ -114,7 +114,7 @@ describe('SpeakerTalk', () => {
 
     it('throws an error when talk not found', async () => {
       const speaker = await userFactory();
-      await expect(SpeakerTalk.for(speaker.id, 'XXX').get()).rejects.toThrowError(TalkNotFoundError);
+      await expect(SpeakerTalk.for(speaker.id, 'XXX').get()).rejects.toThrow(TalkNotFoundError);
     });
   });
 
@@ -160,7 +160,7 @@ describe('SpeakerTalk', () => {
           languages: ['fr'],
           level: 'ADVANCED',
         }),
-      ).rejects.toThrowError(TalkNotFoundError);
+      ).rejects.toThrow(TalkNotFoundError);
     });
 
     it('throws an error when talk not found', async () => {
@@ -173,7 +173,7 @@ describe('SpeakerTalk', () => {
           languages: ['fr'],
           level: 'ADVANCED',
         }),
-      ).rejects.toThrowError(TalkNotFoundError);
+      ).rejects.toThrow(TalkNotFoundError);
     });
   });
 
@@ -191,11 +191,11 @@ describe('SpeakerTalk', () => {
       const talk = await talkFactory({ speakers: [speakerUser] });
       const updater = await userFactory();
 
-      await expect(SpeakerTalk.for(updater.id, talk.id).archive()).rejects.toThrowError(TalkNotFoundError);
+      await expect(SpeakerTalk.for(updater.id, talk.id).archive()).rejects.toThrow(TalkNotFoundError);
     });
 
     it('throws an error when talk not found', async () => {
-      await expect(SpeakerTalk.for(speakerUser.id, 'XXX').archive()).rejects.toThrowError(TalkNotFoundError);
+      await expect(SpeakerTalk.for(speakerUser.id, 'XXX').archive()).rejects.toThrow(TalkNotFoundError);
     });
   });
 
@@ -219,11 +219,11 @@ describe('SpeakerTalk', () => {
       });
       const updater = await userFactory();
 
-      await expect(SpeakerTalk.for(updater.id, talk.id).restore()).rejects.toThrowError(TalkNotFoundError);
+      await expect(SpeakerTalk.for(updater.id, talk.id).restore()).rejects.toThrow(TalkNotFoundError);
     });
 
     it('throws an error when talk not found', async () => {
-      await expect(SpeakerTalk.for(speakerUser.id, 'XXX').restore()).rejects.toThrowError(TalkNotFoundError);
+      await expect(SpeakerTalk.for(speakerUser.id, 'XXX').restore()).rejects.toThrow(TalkNotFoundError);
     });
   });
 
@@ -249,14 +249,14 @@ describe('SpeakerTalk', () => {
       const talk = await talkFactory({ speakers: [speakerUser, cospeaker] });
 
       const updater = await userFactory();
-      await expect(SpeakerTalk.for(updater.id, talk.id).removeCoSpeaker(cospeaker.id)).rejects.toThrowError(
+      await expect(SpeakerTalk.for(updater.id, talk.id).removeCoSpeaker(cospeaker.id)).rejects.toThrow(
         TalkNotFoundError,
       );
     });
 
     it('throws an error when talk not found', async () => {
       const cospeaker = await userFactory();
-      await expect(SpeakerTalk.for(speakerUser.id, 'XXX').removeCoSpeaker(cospeaker.id)).rejects.toThrowError(
+      await expect(SpeakerTalk.for(speakerUser.id, 'XXX').removeCoSpeaker(cospeaker.id)).rejects.toThrow(
         TalkNotFoundError,
       );
     });

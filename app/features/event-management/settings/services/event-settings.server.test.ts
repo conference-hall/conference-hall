@@ -77,7 +77,7 @@ describe('EventSettings', () => {
         const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         await EventSettings.for(authorizedEvent).update({ name: 'Hello world' });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -86,7 +86,7 @@ describe('EventSettings', () => {
         const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         await EventSettings.for(authorizedEvent).update({ name: 'Hello world' });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -144,7 +144,7 @@ describe('EventSettings', () => {
         const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         await EventSettings.for(authorizedEvent).updateLogo('events/abc/logo.webp');
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -222,7 +222,7 @@ describe('EventSettings', () => {
         const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         await EventSettings.for(authorizedEvent).delete();
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -231,7 +231,7 @@ describe('EventSettings', () => {
         const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         await EventSettings.for(authorizedEvent).delete();
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 

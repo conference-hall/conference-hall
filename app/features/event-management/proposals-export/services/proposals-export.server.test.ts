@@ -56,7 +56,7 @@ describe('ProposalsExport', () => {
       const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      expect(() => ProposalsExport.forUser(authorizedEvent)).toThrowError(ForbiddenOperationError);
+      expect(() => ProposalsExport.forUser(authorizedEvent)).toThrow(ForbiddenOperationError);
     });
   });
 

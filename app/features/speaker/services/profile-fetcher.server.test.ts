@@ -19,7 +19,7 @@ describe('ProfileFetcher', () => {
     });
 
     it('throws an error when profile not found', async () => {
-      await expect(ProfileFetcher.for('XXX').get()).rejects.toThrowError(ProfileNotFoundError);
+      await expect(ProfileFetcher.for('XXX').get()).rejects.toThrow(ProfileNotFoundError);
     });
   });
 });

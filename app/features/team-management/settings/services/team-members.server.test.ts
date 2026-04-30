@@ -70,7 +70,7 @@ describe('TeamMembers', () => {
       const team = await teamFactory({ owners: [owner] });
 
       const authorizedOwner = await getAuthorizedTeam(owner.id, team.slug);
-      await expect(TeamMembers.for(authorizedOwner).leave()).rejects.toThrowError(ForbiddenOperationError);
+      await expect(TeamMembers.for(authorizedOwner).leave()).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -92,7 +92,7 @@ describe('TeamMembers', () => {
       const team = await teamFactory({ owners: [owner] });
 
       const authorizedOwner = await getAuthorizedTeam(owner.id, team.slug);
-      await expect(TeamMembers.for(authorizedOwner).remove(owner.id)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(TeamMembers.for(authorizedOwner).remove(owner.id)).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -114,7 +114,7 @@ describe('TeamMembers', () => {
       const team = await teamFactory({ owners: [owner] });
 
       const authorizedOwner = await getAuthorizedTeam(owner.id, team.slug);
-      await expect(TeamMembers.for(authorizedOwner).changeRole(owner.id, 'REVIEWER')).rejects.toThrowError(
+      await expect(TeamMembers.for(authorizedOwner).changeRole(owner.id, 'REVIEWER')).rejects.toThrow(
         ForbiddenOperationError,
       );
     });
