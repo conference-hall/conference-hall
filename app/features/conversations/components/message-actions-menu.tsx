@@ -10,24 +10,23 @@ import type { Message } from '~/shared/types/conversation.types.ts';
 
 type Props = {
   message: Message;
-  intentSuffix: string;
+  channel: string;
   onEdit: VoidFunction;
   onDelete?: (id: string) => void;
   canManageConversations: boolean;
 };
 
-export function MessageActionsMenu({ message, intentSuffix, onEdit, onDelete, canManageConversations }: Props) {
+export function MessageActionsMenu({ message, channel, onEdit, onDelete, canManageConversations }: Props) {
   const { t } = useTranslation();
   const currentUser = useUser();
-  const intent = `delete-${intentSuffix}`;
 
-  const deleteFetcher = useFetcher({ key: `${intent}:${message.id}` });
+  const deleteFetcher = useFetcher({ key: `delete-message:${message.id}` });
 
   const handleDelete = async () => {
     if (!confirm(t('common.confirmation.delete'))) return;
     onDelete?.(message.id);
     await deleteFetcher.submit(
-      { intent, id: message.id },
+      { intent: 'delete-message', channel, id: message.id },
       { method: 'POST', preventScrollReset: true, flushSync: true },
     );
   };

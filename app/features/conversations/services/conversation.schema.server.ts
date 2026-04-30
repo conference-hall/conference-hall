@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+const ConversationChannelSchema = z.enum(['comment', 'speaker']);
+
 export const ConversationMessageSaveSchema = z.object({
   id: z.string().optional(),
   message: z.string().min(1, 'A message is required').max(500),
@@ -12,6 +14,18 @@ export const ConversationMessageReactSchema = z.object({
 
 export const ConversationMessageDeleteSchema = z.object({
   id: z.string(),
+});
+
+export const ConversationMessageSaveWithChannelSchema = ConversationMessageSaveSchema.extend({
+  channel: ConversationChannelSchema,
+});
+
+export const ConversationMessageReactWithChannelSchema = ConversationMessageReactSchema.extend({
+  channel: ConversationChannelSchema,
+});
+
+export const ConversationMessageDeleteWithChannelSchema = ConversationMessageDeleteSchema.extend({
+  channel: ConversationChannelSchema,
 });
 
 export type ConversationMessageSaveData = z.infer<typeof ConversationMessageSaveSchema>;

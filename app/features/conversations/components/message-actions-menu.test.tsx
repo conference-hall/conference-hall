@@ -36,7 +36,7 @@ describe('MessageActionsMenu component', () => {
             <I18nextProvider i18n={i18nTest}>
               <MessageActionsMenu
                 message={message}
-                intentSuffix="message"
+                channel="speaker"
                 canManageConversations={false}
                 onEdit={vi.fn()}
                 {...props}

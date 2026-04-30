@@ -43,7 +43,7 @@ describe('MessageBlock component', () => {
         Component: () => (
           <UserProvider user={user}>
             <I18nextProvider i18n={i18nTest}>
-              <MessageBlock message={message} intentSuffix="message" {...props} />
+              <MessageBlock message={message} channel="speaker" {...props} />
             </I18nextProvider>
           </UserProvider>
         ),

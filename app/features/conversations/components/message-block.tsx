@@ -16,7 +16,7 @@ import { useOptimisticReactions } from './use-optimistic-reactions.ts';
 
 type Props = {
   message: Message;
-  intentSuffix: string;
+  channel: string;
   onOptimisticSave?: (data: { id?: string; content: string }) => void;
   onOptimisticDelete?: (id: string) => void;
   canManageConversations?: boolean;
@@ -25,7 +25,7 @@ type Props = {
 
 export function MessageBlock({
   message,
-  intentSuffix,
+  channel,
   onOptimisticSave,
   onOptimisticDelete,
   canManageConversations = false,
@@ -35,7 +35,7 @@ export function MessageBlock({
   const currentUser = useUser();
 
   const [isEditing, setEditing] = useState(false);
-  const { reactions, onChangeReaction } = useOptimisticReactions(message, intentSuffix);
+  const { reactions, onChangeReaction } = useOptimisticReactions(message, channel);
 
   return (
     <div
@@ -48,7 +48,7 @@ export function MessageBlock({
       <div className="absolute top-0 right-0 flex gap-x-1 p-2 text-gray-500">
         <MessageActionsMenu
           message={message}
-          intentSuffix={intentSuffix}
+          channel={channel}
           onEdit={() => setEditing(!isEditing)}
           onDelete={onOptimisticDelete}
           canManageConversations={canManageConversations}
@@ -73,7 +73,7 @@ export function MessageBlock({
       {isEditing ? (
         <MessageInputForm
           message={message}
-          intent={`save-${intentSuffix}`}
+          channel={channel}
           inputLabel={t('common.conversation.edit.label')}
           onOptimisticSave={onOptimisticSave}
           onClose={() => setEditing(false)}

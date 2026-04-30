@@ -132,7 +132,6 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
   const { t } = useTranslation();
   const user = useUser();
 
-  const intentSuffix = 'message';
   const { optimisticMessages, onOptimisticSaveMessage, onOptimisticDeleteMessage } = useOptimisticMessages(
     messages,
     'SPEAKER',
@@ -149,7 +148,7 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
           withLine
         >
           <MessageBlock
-            intentSuffix={intentSuffix}
+            channel="speaker"
             message={message}
             onOptimisticSave={onOptimisticSaveMessage}
             onOptimisticDelete={onOptimisticDeleteMessage}
@@ -159,7 +158,7 @@ export function ProposalConversationFeed({ messages }: ProposalConversationFeedP
 
       <ActivityFeed.Entry marker={<Avatar picture={user?.picture} name={user?.name} />}>
         <MessageInputForm
-          intent={`save-${intentSuffix}`}
+          channel="speaker"
           buttonLabel={t('common.send')}
           inputLabel={t('common.conversation.send.label')}
           placeholder={t('event.proposal.conversation.placeholder', { event: '' })}

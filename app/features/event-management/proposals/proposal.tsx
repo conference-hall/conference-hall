@@ -12,9 +12,9 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ConversationDrawer } from '~/features/conversations/components/conversation-drawer.tsx';
 import {
-  ConversationMessageDeleteSchema,
-  ConversationMessageReactSchema,
-  ConversationMessageSaveSchema,
+  ConversationMessageDeleteWithChannelSchema,
+  ConversationMessageReactWithChannelSchema,
+  ConversationMessageSaveWithChannelSchema,
 } from '~/features/conversations/services/conversation.schema.server.ts';
 import { ProposalReviewComments } from '~/features/conversations/services/proposal-review-comments.server.ts';
 import { SpeakerConversationForOrganizers } from '~/features/conversations/services/speaker-conversation-for-organizers.server.ts';
@@ -91,46 +91,37 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       await review.addReview(result.value);
       break;
     }
-    case 'save-comment': {
-      const reviewComments = ProposalReviewComments.for(authorizedEvent, proposalId);
-      const result = parseWithZod(form, { schema: ConversationMessageSaveSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await reviewComments.saveMessage(result.value);
-      break;
-    }
-    case 'delete-comment': {
-      const reviewComments = ProposalReviewComments.for(authorizedEvent, proposalId);
-      const result = parseWithZod(form, { schema: ConversationMessageDeleteSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await reviewComments.deleteMessage(result.value);
-      break;
-    }
-    case 'react-comment': {
-      const reviewComments = ProposalReviewComments.for(authorizedEvent, proposalId);
-      const result = parseWithZod(form, { schema: ConversationMessageReactSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await reviewComments.reactMessage(result.value);
-      break;
-    }
     case 'save-message': {
-      const conversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
-      const result = parseWithZod(form, { schema: ConversationMessageSaveSchema });
+      const result = parseWithZod(form, { schema: ConversationMessageSaveWithChannelSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await conversation.saveMessage(result.value);
-      break;
-    }
-    case 'react-message': {
-      const conversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
-      const result = parseWithZod(form, { schema: ConversationMessageReactSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await conversation.reactMessage(result.value);
+      const { channel, ...data } = result.value;
+      const service =
+        channel === 'comment'
+          ? ProposalReviewComments.for(authorizedEvent, proposalId)
+          : SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+      await service.saveMessage(data);
       break;
     }
     case 'delete-message': {
-      const conversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
-      const result = parseWithZod(form, { schema: ConversationMessageDeleteSchema });
+      const result = parseWithZod(form, { schema: ConversationMessageDeleteWithChannelSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await conversation.deleteMessage(result.value);
+      const { channel, ...data } = result.value;
+      const service =
+        channel === 'comment'
+          ? ProposalReviewComments.for(authorizedEvent, proposalId)
+          : SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+      await service.deleteMessage(data);
+      break;
+    }
+    case 'react-message': {
+      const result = parseWithZod(form, { schema: ConversationMessageReactWithChannelSchema });
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      const { channel, ...data } = result.value;
+      const service =
+        channel === 'comment'
+          ? ProposalReviewComments.for(authorizedEvent, proposalId)
+          : SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+      await service.reactMessage(data);
       break;
     }
     case 'change-proposal-status': {
