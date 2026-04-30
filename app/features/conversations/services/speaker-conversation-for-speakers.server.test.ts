@@ -60,7 +60,11 @@ describe('SpeakerConversationForSpeakers', () => {
     it('reacts to message in proposal conversation', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -81,7 +85,11 @@ describe('SpeakerConversationForSpeakers', () => {
     it('throws error when speaker does not belong to proposal', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -98,7 +106,11 @@ describe('SpeakerConversationForSpeakers', () => {
     it('deletes message from proposal conversation', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -114,7 +126,11 @@ describe('SpeakerConversationForSpeakers', () => {
     it('throws error when speaker does not belong to proposal', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -131,7 +147,11 @@ describe('SpeakerConversationForSpeakers', () => {
     it('returns conversation messages for proposal', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       await conversationMessageFactory({
         conversation,
         sender: speaker,

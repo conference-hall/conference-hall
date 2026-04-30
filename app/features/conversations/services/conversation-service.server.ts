@@ -12,7 +12,7 @@ type ConversationServiceContext = {
   userId: string;
   role: 'ORGANIZER' | 'SPEAKER';
   type: ConversationType;
-  proposalId?: string;
+  proposalId: string;
   skipNotification?: boolean;
 };
 
@@ -32,7 +32,7 @@ export class ConversationService {
         where: {
           eventId,
           type,
-          proposalId: proposalId ?? undefined,
+          proposalId,
         },
       });
 
@@ -104,7 +104,7 @@ export class ConversationService {
     const conversation = await db.conversation.findFirst({
       where: {
         type,
-        proposalId: proposalId ?? undefined,
+        proposalId,
         event: { id: eventId },
       },
       include: {

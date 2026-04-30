@@ -28,7 +28,11 @@ describe('notifyConversationMessage job', () => {
 
     const talk = await talkFactory({ speakers: [speaker1, speaker2] });
     const proposal = await proposalFactory({ event, talk });
-    const conversation = await conversationFactory({ event, proposalId: proposal.id });
+    const conversation = await conversationFactory({
+      event,
+      proposalId: proposal.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
 
     await db.conversationParticipant.createMany({
       data: [
@@ -81,7 +85,11 @@ describe('notifyConversationMessage job', () => {
 
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk });
-    const conversation = await conversationFactory({ event, proposalId: proposal.id });
+    const conversation = await conversationFactory({
+      event,
+      proposalId: proposal.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
 
     await db.conversationParticipant.create({
       data: { conversationId: conversation.id, userId: organizer.id, role: ConversationParticipantRole.ORGANIZER },
@@ -116,7 +124,11 @@ describe('notifyConversationMessage job', () => {
 
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk });
-    const conversation = await conversationFactory({ event, proposalId: proposal.id });
+    const conversation = await conversationFactory({
+      event,
+      proposalId: proposal.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
 
     await db.conversationParticipant.create({
       data: { conversationId: conversation.id, userId: organizer.id, role: ConversationParticipantRole.ORGANIZER },
@@ -164,7 +176,11 @@ describe('notifyConversationMessage job', () => {
 
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk });
-    const conversation = await conversationFactory({ event, proposalId: proposal.id });
+    const conversation = await conversationFactory({
+      event,
+      proposalId: proposal.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
 
     await db.conversationParticipant.create({
       data: { conversationId: conversation.id, userId: organizer.id, role: ConversationParticipantRole.ORGANIZER },
@@ -189,7 +205,11 @@ describe('notifyConversationMessage job', () => {
 
     const talk = await talkFactory({ speakers: [speaker1, speaker2] });
     const proposal = await proposalFactory({ event, talk });
-    const conversation = await conversationFactory({ event, proposalId: proposal.id });
+    const conversation = await conversationFactory({
+      event,
+      proposalId: proposal.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
 
     await db.conversationParticipant.create({
       data: { conversationId: conversation.id, userId: organizer.id, role: ConversationParticipantRole.ORGANIZER },
@@ -230,7 +250,11 @@ describe('notifyConversationMessage job', () => {
 
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk });
-    const conversation = await conversationFactory({ event, proposalId: proposal.id });
+    const conversation = await conversationFactory({
+      event,
+      proposalId: proposal.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
 
     await conversationMessageFactory({
       conversation,
@@ -250,7 +274,11 @@ describe('notifyConversationMessage job', () => {
 
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk });
-    const conversation = await conversationFactory({ event, proposalId: proposal.id });
+    const conversation = await conversationFactory({
+      event,
+      proposalId: proposal.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
 
     await db.conversationMessage.create({
       data: {
@@ -274,7 +302,11 @@ describe('notifyConversationMessage job', () => {
 
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk });
-    const conversation = await conversationFactory({ event, proposalId: proposal.id });
+    const conversation = await conversationFactory({
+      event,
+      proposalId: proposal.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
 
     await db.conversationParticipant.createMany({
       data: [

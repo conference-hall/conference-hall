@@ -50,7 +50,11 @@ describe('SpeakerConversationForOrganizers', () => {
     it('allows owner to update any message', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: member,
@@ -72,7 +76,11 @@ describe('SpeakerConversationForOrganizers', () => {
     it('prevents member from updating other member messages', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: owner,
@@ -95,7 +103,11 @@ describe('SpeakerConversationForOrganizers', () => {
     it('reacts to message in proposal conversation', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -120,7 +132,11 @@ describe('SpeakerConversationForOrganizers', () => {
     it('deletes message from proposal conversation', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: owner,
@@ -140,7 +156,11 @@ describe('SpeakerConversationForOrganizers', () => {
     it('allows owner to delete any message', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: member,
@@ -160,7 +180,11 @@ describe('SpeakerConversationForOrganizers', () => {
     it('prevents member from deleting other member messages', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: owner,
@@ -181,7 +205,11 @@ describe('SpeakerConversationForOrganizers', () => {
     it('returns conversation messages for proposal', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       await conversationMessageFactory({
         conversation,
         sender: owner,

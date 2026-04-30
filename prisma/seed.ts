@@ -244,7 +244,7 @@ async function seed() {
   const conversation1 = await conversationFactory({
     event,
     proposalId: proposal1.id,
-    attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
+    type: 'PROPOSAL_REVIEW_COMMENTS',
   });
   await conversationMessageFactory({
     conversation: conversation1,
@@ -303,7 +303,7 @@ async function seed() {
   const conversation2 = await conversationFactory({
     event,
     proposalId: proposal2.id,
-    attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
+    type: 'PROPOSAL_REVIEW_COMMENTS',
   });
   await conversationMessageFactory({
     conversation: conversation2,

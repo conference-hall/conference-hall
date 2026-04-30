@@ -113,13 +113,13 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     const conversation1 = await conversationFactory({
       event,
       proposalId: proposal1.id,
-      attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
+      type: 'PROPOSAL_REVIEW_COMMENTS',
     });
     await conversationMessageFactory({ conversation: conversation1, sender: owner });
     const conversation3 = await conversationFactory({
       event,
       proposalId: proposal3.id,
-      attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
+      type: 'PROPOSAL_REVIEW_COMMENTS',
     });
     await conversationMessageFactory({ conversation: conversation3, sender: owner });
     await conversationMessageFactory({ conversation: conversation3, sender: owner });

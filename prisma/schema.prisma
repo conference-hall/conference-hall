@@ -484,14 +484,14 @@ model Conversation {
   eventId      String
   event        Event                     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   type         ConversationType
-  proposalId   String?
-  proposal     Proposal?                 @relation(fields: [proposalId], references: [id])
+  proposalId   String
+  proposal     Proposal                  @relation(fields: [proposalId], references: [id])
   createdAt    DateTime                  @default(now())
   updatedAt    DateTime                  @updatedAt
   messages     ConversationMessage[]
   participants ConversationParticipant[]
 
-  @@index([eventId])
+  @@unique([proposalId, type])
   @@map("conversations")
 }
 
@@ -512,6 +512,7 @@ model ConversationMessage {
   updatedAt      DateTime                @updatedAt
   reactions      ConversationReaction[]
 
+  @@index([conversationId, createdAt])
   @@map("conversation_messages")
 }
 

@@ -163,7 +163,11 @@ test('manages conversation with organizers', async ({ page }) => {
   await flags.set('speakersCommunication', true);
 
   const proposalPage = new ProposalPage(page);
-  const conversation = await conversationFactory({ event, proposalId: proposal1.id });
+  const conversation = await conversationFactory({
+    event,
+    proposalId: proposal1.id,
+    type: 'PROPOSAL_SPEAKER_CONVERSATION',
+  });
   await conversationMessageFactory({
     conversation,
     sender: organizer,

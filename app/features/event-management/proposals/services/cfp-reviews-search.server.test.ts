@@ -34,7 +34,7 @@ describe('CfpReviewsSearch', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
+        type: 'PROPOSAL_REVIEW_COMMENTS',
       });
       await conversationMessageFactory({ conversation, sender: owner });
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);

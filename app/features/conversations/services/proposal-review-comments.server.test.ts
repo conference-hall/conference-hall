@@ -53,7 +53,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
+        type: 'PROPOSAL_REVIEW_COMMENTS',
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -79,7 +79,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
+        type: 'PROPOSAL_REVIEW_COMMENTS',
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -119,7 +119,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
+        type: 'PROPOSAL_REVIEW_COMMENTS',
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -148,7 +148,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
+        type: 'PROPOSAL_REVIEW_COMMENTS',
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -170,7 +170,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
+        type: 'PROPOSAL_REVIEW_COMMENTS',
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -192,7 +192,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
+        type: 'PROPOSAL_REVIEW_COMMENTS',
       });
       const message = await conversationMessageFactory({
         conversation,
@@ -216,7 +216,7 @@ describe('ProposalReviewComments', () => {
       const conversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
+        type: 'PROPOSAL_REVIEW_COMMENTS',
       });
       await conversationMessageFactory({
         conversation,

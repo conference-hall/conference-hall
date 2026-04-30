@@ -86,7 +86,7 @@ test.describe('As owner', () => {
     const reviewConversation = await conversationFactory({
       event,
       proposalId: proposal.id,
-      attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
+      type: 'PROPOSAL_REVIEW_COMMENTS',
     });
     await conversationMessageFactory({
       conversation: reviewConversation,
@@ -401,7 +401,11 @@ test.describe('As owner', () => {
     await flags.set('speakersCommunication', true);
 
     const proposalPage = new ProposalPage(page);
-    const conversation = await conversationFactory({ event, proposalId: proposal.id });
+    const conversation = await conversationFactory({
+      event,
+      proposalId: proposal.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
     await conversationMessageFactory({
       conversation,
       sender: speaker1,

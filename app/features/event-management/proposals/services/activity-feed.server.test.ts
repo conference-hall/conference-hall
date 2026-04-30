@@ -32,7 +32,7 @@ describe('ActivityFeed', () => {
       const reviewConversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
+        type: 'PROPOSAL_REVIEW_COMMENTS',
       });
       const message1 = await conversationMessageFactory({
         conversation: reviewConversation,
@@ -43,7 +43,11 @@ describe('ActivityFeed', () => {
       const message2 = await conversationMessageFactory({ conversation: reviewConversation, sender: member1 });
       const review2 = await reviewFactory({ proposal, user: member1, attributes: { feeling: 'POSITIVE', note: 4 } });
 
-      const speakerConversation = await conversationFactory({ event, proposalId: proposal.id });
+      const speakerConversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       await conversationMessageFactory({ conversation: speakerConversation, sender: member1 });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
@@ -106,7 +110,7 @@ describe('ActivityFeed', () => {
       const reviewConversation = await conversationFactory({
         event,
         proposalId: proposal.id,
-        attributes: { type: 'PROPOSAL_REVIEW_COMMENTS' },
+        type: 'PROPOSAL_REVIEW_COMMENTS',
       });
       const message = await conversationMessageFactory({ conversation: reviewConversation, sender: owner });
       await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
