@@ -3,12 +3,10 @@ import { useUser } from '~/app-platform/components/user-context.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import type { Emoji } from '~/shared/types/emojis.types.ts';
 
-export function useOptimisticReactions(message: Message, intentSuffix: string) {
+export function useOptimisticReactions(message: Message, channel: string) {
   const currentUser = useUser();
 
-  const fetcher = useFetcher({ key: `react-${intentSuffix}-${message.id}` });
-
-  const intent = `react-${intentSuffix}`;
+  const fetcher = useFetcher({ key: `react-message-${message.id}` });
 
   // Form submission
   const onChangeReaction = async ({ code }: Emoji) => {
@@ -35,7 +33,7 @@ export function useOptimisticReactions(message: Message, intentSuffix: string) {
       message.reactions.splice(index, 1);
     }
 
-    await fetcher.submit({ intent, id: message.id, code }, { method: 'POST' });
+    await fetcher.submit({ intent: 'react-message', channel, id: message.id, code }, { method: 'POST' });
   };
 
   return { reactions: message.reactions, onChangeReaction };

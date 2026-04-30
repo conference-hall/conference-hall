@@ -7,7 +7,8 @@ import { StorageService } from '~/shared/storage/storage.server.ts';
 import { disconnectRedis } from '../app/shared/cache/redis.server.ts';
 import { db } from '../prisma/db.server.ts';
 import { eventCategoryFactory } from '../tests/factories/categories.ts';
-import { commentFactory } from '../tests/factories/comments.ts';
+import { conversationMessageFactory } from '../tests/factories/conversation-messages.ts';
+import { conversationFactory } from '../tests/factories/conversations.ts';
 import { eventFactory } from '../tests/factories/events.ts';
 import { eventFormatFactory } from '../tests/factories/formats.ts';
 import { organizerKeyFactory } from '../tests/factories/organizer-key.ts';
@@ -240,11 +241,16 @@ async function seed() {
       note: 5,
     },
   });
-  await commentFactory({
-    user: user,
-    proposal: proposal1,
+  const conversation1 = await conversationFactory({
+    event,
+    proposalId: proposal1.id,
+    type: 'PROPOSAL_REVIEW_COMMENTS',
+  });
+  await conversationMessageFactory({
+    conversation: conversation1,
+    sender: user,
     attributes: {
-      comment:
+      content:
         'Excellent proposal! React Server Components is a hot topic and the speaker demonstrates solid expertise. The abstract is clear and the talk would be perfect for developers looking to understand this new paradigm. Great for our frontend track.',
     },
   });
@@ -256,11 +262,11 @@ async function seed() {
       note: 0,
     },
   });
-  await commentFactory({
-    user: user2,
-    proposal: proposal1,
+  await conversationMessageFactory({
+    conversation: conversation1,
+    sender: user2,
     attributes: {
-      comment:
+      content:
         "While the topic is relevant, I feel this content might be too basic for our audience. The abstract lacks depth and doesn't show how this differs from existing SSR solutions. Would prefer a more advanced take on the subject.",
     },
   });
@@ -294,11 +300,16 @@ async function seed() {
       note: null,
     },
   });
-  await commentFactory({
-    user: user,
-    proposal: proposal2,
+  const conversation2 = await conversationFactory({
+    event,
+    proposalId: proposal2.id,
+    type: 'PROPOSAL_REVIEW_COMMENTS',
+  });
+  await conversationMessageFactory({
+    conversation: conversation2,
+    sender: user,
     attributes: {
-      comment:
+      content:
         'Not my area of expertise, but the proposal seems well-structured. The speakers appear qualified and the topic is relevant for backend developers. Would defer to infrastructure track reviewers for final assessment.',
     },
   });
@@ -310,11 +321,11 @@ async function seed() {
       note: 3,
     },
   });
-  await commentFactory({
-    user: user2,
-    proposal: proposal2,
+  await conversationMessageFactory({
+    conversation: conversation2,
+    sender: user2,
     attributes: {
-      comment:
+      content:
         'Solid technical content and experienced speakers. However, microservices and Kubernetes topics are quite common at conferences these days. The proposal would benefit from highlighting unique insights or novel approaches to stand out from similar talks.',
     },
   });

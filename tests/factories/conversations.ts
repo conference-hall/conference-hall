@@ -1,23 +1,21 @@
 import { db } from '../../prisma/db.server.ts';
-import type { Event } from '../../prisma/generated/client.ts';
-import { ConversationContextType } from '../../prisma/generated/client.ts';
+import type { ConversationType, Event } from '../../prisma/generated/client.ts';
 import type { ConversationCreateInput } from '../../prisma/generated/models.ts';
 
 type FactoryOptions = {
   event: Event;
-  proposalId?: string;
-  attributes?: Partial<ConversationCreateInput>;
+  proposalId: string;
+  type: ConversationType;
+  attributes?: Partial<Omit<ConversationCreateInput, 'type'>>;
 };
 
 export const conversationFactory = async (options: FactoryOptions) => {
-  const { event, proposalId, attributes = {} } = options;
+  const { event, proposalId, type, attributes = {} } = options;
 
   const defaultAttributes: ConversationCreateInput = {
     event: { connect: { id: event.id } },
-    contextType: proposalId
-      ? ConversationContextType.PROPOSAL_CONVERSATION
-      : ConversationContextType.PROPOSAL_REVIEW_COMMENTS,
-    contextIds: proposalId ? [proposalId] : [],
+    type,
+    proposal: { connect: { id: proposalId } },
   };
 
   const data = { ...defaultAttributes, ...attributes };

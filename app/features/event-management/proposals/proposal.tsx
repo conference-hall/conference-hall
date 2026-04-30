@@ -12,11 +12,12 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ConversationDrawer } from '~/features/conversations/components/conversation-drawer.tsx';
 import {
-  ConversationMessageDeleteSchema,
-  ConversationMessageReactSchema,
-  ConversationMessageSaveSchema,
+  ConversationMessageDeleteWithChannelSchema,
+  ConversationMessageReactWithChannelSchema,
+  ConversationMessageSaveWithChannelSchema,
 } from '~/features/conversations/services/conversation.schema.server.ts';
-import { ProposalConversationForOrganizers } from '~/features/conversations/services/proposal-conversation-for-organizers.server.ts';
+import { ProposalReviewComments } from '~/features/conversations/services/proposal-review-comments.server.ts';
+import { SpeakerConversationForOrganizers } from '~/features/conversations/services/speaker-conversation-for-organizers.server.ts';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
@@ -36,8 +37,6 @@ import { OtherProposalsDisclosure } from './components/detail/other-proposals-di
 import { ProposalActionsMenu } from './components/detail/proposal-actions-menu.tsx';
 import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
 import { ActivityFeed as ActivityFeedService } from './services/activity-feed.server.ts';
-import { CommentReactionSchema, CommentSaveSchema } from './services/comments.schema.server.ts';
-import { Comments } from './services/comments.server.ts';
 import { resolveProposalId } from './services/proposal-id-resolver.server.ts';
 import {
   ProposalSaveCategoriesSchema,
@@ -66,7 +65,7 @@ export const loader = async ({ params, context, unstable_url: url }: Route.Loade
 
   const proposalReview = ProposalReview.for(authorizedEvent, proposalId);
   const activityFeed = ActivityFeedService.for(authorizedEvent, proposalId);
-  const speakerProposalConversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
+  const speakerProposalConversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
 
   const activityPromise = Promise.all([activityFeed.activity(), speakerProposalConversation.getConversation()]);
   const proposal = await proposalReview.get();
@@ -92,45 +91,37 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       await review.addReview(result.value);
       break;
     }
-    case 'save-comment': {
-      const discussions = Comments.for(authorizedEvent, proposalId);
-      const result = parseWithZod(form, { schema: CommentSaveSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await discussions.save(result.value);
-      break;
-    }
-    case 'delete-comment': {
-      const discussions = Comments.for(authorizedEvent, proposalId);
-      const commentId = form.get('id');
-      if (commentId) await discussions.remove(commentId.toString());
-      break;
-    }
-    case 'react-comment': {
-      const discussions = Comments.for(authorizedEvent, proposalId);
-      const result = parseWithZod(form, { schema: CommentReactionSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await discussions.reactToComment(result.value);
-      break;
-    }
     case 'save-message': {
-      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
-      const result = parseWithZod(form, { schema: ConversationMessageSaveSchema });
+      const result = parseWithZod(form, { schema: ConversationMessageSaveWithChannelSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await conversation.saveMessage(result.value);
-      break;
-    }
-    case 'react-message': {
-      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
-      const result = parseWithZod(form, { schema: ConversationMessageReactSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await conversation.reactMessage(result.value);
+      const { channel, ...data } = result.value;
+      const service =
+        channel === 'comment'
+          ? ProposalReviewComments.for(authorizedEvent, proposalId)
+          : SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+      await service.saveMessage(data);
       break;
     }
     case 'delete-message': {
-      const conversation = ProposalConversationForOrganizers.for(authorizedEvent, proposalId);
-      const result = parseWithZod(form, { schema: ConversationMessageDeleteSchema });
+      const result = parseWithZod(form, { schema: ConversationMessageDeleteWithChannelSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await conversation.deleteMessage(result.value);
+      const { channel, ...data } = result.value;
+      const service =
+        channel === 'comment'
+          ? ProposalReviewComments.for(authorizedEvent, proposalId)
+          : SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+      await service.deleteMessage(data);
+      break;
+    }
+    case 'react-message': {
+      const result = parseWithZod(form, { schema: ConversationMessageReactWithChannelSchema });
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      const { channel, ...data } = result.value;
+      const service =
+        channel === 'comment'
+          ? ProposalReviewComments.for(authorizedEvent, proposalId)
+          : SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+      await service.reactMessage(data);
       break;
     }
     case 'change-proposal-status': {

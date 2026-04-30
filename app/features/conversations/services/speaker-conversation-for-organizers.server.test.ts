@@ -9,10 +9,10 @@ import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/au
 import { ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import type { Event, Team, User } from '../../../../prisma/generated/client.ts';
-import { ConversationContextType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
-import { ProposalConversationForOrganizers } from './proposal-conversation-for-organizers.server.ts';
+import { ConversationType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
+import { SpeakerConversationForOrganizers } from './speaker-conversation-for-organizers.server.ts';
 
-describe('ProposalConversationForOrganizers', () => {
+describe('SpeakerConversationForOrganizers', () => {
   let owner: User;
   let member: User;
   let speaker: User;
@@ -34,12 +34,12 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).saveMessage({
+      await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).saveMessage({
         message: 'Hello speaker!',
       });
 
       const conversation = await db.conversation.findFirst({
-        where: { eventId: event.id, contextType: ConversationContextType.PROPOSAL_CONVERSATION },
+        where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
         include: { messages: true },
       });
 
@@ -50,7 +50,11 @@ describe('ProposalConversationForOrganizers', () => {
     it('allows owner to update any message', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: member,
@@ -60,7 +64,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).saveMessage({
+      await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).saveMessage({
         id: message.id,
         message: 'Updated by owner',
       });
@@ -72,7 +76,11 @@ describe('ProposalConversationForOrganizers', () => {
     it('prevents member from updating other member messages', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: owner,
@@ -82,7 +90,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const service = ProposalConversationForOrganizers.for(authorizedEvent, proposal.id);
+      const service = SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id);
 
       await service.saveMessage({ id: message.id, message: 'Attempted update' });
 
@@ -95,7 +103,11 @@ describe('ProposalConversationForOrganizers', () => {
     it('reacts to message in proposal conversation', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -104,7 +116,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).reactMessage({
+      await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).reactMessage({
         id: message.id,
         code: 'tada',
       });
@@ -120,7 +132,11 @@ describe('ProposalConversationForOrganizers', () => {
     it('deletes message from proposal conversation', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: owner,
@@ -129,7 +145,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).deleteMessage({
+      await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).deleteMessage({
         id: message.id,
       });
 
@@ -140,7 +156,11 @@ describe('ProposalConversationForOrganizers', () => {
     it('allows owner to delete any message', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: member,
@@ -149,7 +169,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).deleteMessage({
+      await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).deleteMessage({
         id: message.id,
       });
 
@@ -160,7 +180,11 @@ describe('ProposalConversationForOrganizers', () => {
     it('prevents member from deleting other member messages', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: owner,
@@ -169,7 +193,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const service = ProposalConversationForOrganizers.for(authorizedEvent, proposal.id);
+      const service = SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id);
       await service.deleteMessage({ id: message.id });
 
       const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
@@ -181,7 +205,11 @@ describe('ProposalConversationForOrganizers', () => {
     it('returns conversation messages for proposal', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       await conversationMessageFactory({
         conversation,
         sender: owner,
@@ -191,7 +219,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const messages = await ProposalConversationForOrganizers.for(authorizedEvent, proposal.id).getConversation();
+      const messages = await SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id).getConversation();
 
       expect(messages.length).toBe(1);
       expect(messages[0].content).toBe('Message from organizer');
@@ -204,7 +232,7 @@ describe('ProposalConversationForOrganizers', () => {
       const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      const service = ProposalConversationForOrganizers.for(authorizedEvent, proposal.id);
+      const service = SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id);
 
       await expect(service.getConversation()).rejects.toThrowError(ProposalNotFoundError);
     });

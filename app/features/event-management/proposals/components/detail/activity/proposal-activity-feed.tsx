@@ -44,7 +44,7 @@ export function ProposalActivityFeed({ activity, speakersConversation, speakers,
 
       <ActivityFeed.Entry marker={<Avatar picture={user?.picture} name={user?.name} />}>
         <MessageInputForm
-          intent="save-comment"
+          channel="comment"
           inputLabel={t('event-management.proposal-page.comment.label')}
           buttonLabel={t('event-management.proposal-page.comment.submit')}
           placeholder={t('event-management.proposal-page.comment.placeholder')}

@@ -1,6 +1,7 @@
 import { resetDB } from 'tests/db-helpers.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
-import { commentFactory } from 'tests/factories/comments.ts';
+import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
+import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
@@ -109,9 +110,19 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     await reviewFactory({ user: owner, proposal: proposal2, attributes: { feeling: 'NEUTRAL', note: 5 } });
     await reviewFactory({ user: owner, proposal: proposal3, attributes: { feeling: 'NEUTRAL', note: 1 } });
 
-    await commentFactory({ user: owner, proposal: proposal1 });
-    await commentFactory({ user: owner, proposal: proposal3 });
-    await commentFactory({ user: owner, proposal: proposal3 });
+    const conversation1 = await conversationFactory({
+      event,
+      proposalId: proposal1.id,
+      type: 'PROPOSAL_REVIEW_COMMENTS',
+    });
+    await conversationMessageFactory({ conversation: conversation1, sender: owner });
+    const conversation3 = await conversationFactory({
+      event,
+      proposalId: proposal3.id,
+      type: 'PROPOSAL_REVIEW_COMMENTS',
+    });
+    await conversationMessageFactory({ conversation: conversation3, sender: owner });
+    await conversationMessageFactory({ conversation: conversation3, sender: owner });
   });
 
   afterAll(async () => {

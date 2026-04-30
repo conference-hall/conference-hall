@@ -7,7 +7,7 @@ import type {
   ConversationMessageSaveData,
 } from './conversation.schema.server.ts';
 
-export class ProposalConversationForSpeakers {
+export class SpeakerConversationForSpeakers {
   private userId: string;
   private proposalId: string;
   private conversation: ConversationService;
@@ -18,13 +18,13 @@ export class ProposalConversationForSpeakers {
     this.conversation = new ConversationService({
       userId,
       role: 'SPEAKER',
-      contextType: 'PROPOSAL_CONVERSATION',
-      contextIds: [proposalId],
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      proposalId,
     });
   }
 
   static for(userId: string, proposalId: string) {
-    return new ProposalConversationForSpeakers(userId, proposalId);
+    return new SpeakerConversationForSpeakers(userId, proposalId);
   }
 
   async saveMessage(data: ConversationMessageSaveData) {
@@ -44,6 +44,12 @@ export class ProposalConversationForSpeakers {
 
   async getConversation() {
     const proposal = await this.checkProposal();
+    const event = await db.event.findUnique({
+      where: { id: proposal.eventId },
+      select: { speakersConversationEnabled: true },
+    });
+    if (!event?.speakersConversationEnabled) return [];
+
     return this.conversation.getConversation(proposal.eventId);
   }
 

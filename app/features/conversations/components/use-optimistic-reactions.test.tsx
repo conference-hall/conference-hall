@@ -53,7 +53,7 @@ describe('useOptimisticReactions hook', () => {
   });
 
   it('returns original reactions', async () => {
-    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'speaker'));
 
     expect(result.current.reactions.length).toBe(2);
     expect(result.current.reactions[0].code).toBe('tada');
@@ -63,7 +63,7 @@ describe('useOptimisticReactions hook', () => {
   });
 
   it('adds new reaction and submits', async () => {
-    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'speaker'));
 
     await result.current.onChangeReaction({ code: 'thumbsup', skin: '', name: 'thumbsup' });
 
@@ -74,13 +74,13 @@ describe('useOptimisticReactions hook', () => {
     expect(message.reactions[2].reactedBy[0].userId).toBe('user-1');
 
     expect(mockFetcherSubmit).toHaveBeenCalledWith(
-      { intent: 'react-message', id: 'msg-1', code: 'thumbsup' },
+      { intent: 'react-message', channel: 'speaker', id: 'msg-1', code: 'thumbsup' },
       { method: 'POST' },
     );
   });
 
   it('increments existing reaction when current user reacts', async () => {
-    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'speaker'));
 
     await result.current.onChangeReaction({ code: 'heart', skin: '', name: 'heart' });
 
@@ -91,7 +91,7 @@ describe('useOptimisticReactions hook', () => {
     expect(heartReaction?.reactedBy[1].userId).toBe('user-1');
 
     expect(mockFetcherSubmit).toHaveBeenCalledWith(
-      { intent: 'react-message', id: 'msg-1', code: 'heart' },
+      { intent: 'react-message', channel: 'speaker', id: 'msg-1', code: 'heart' },
       { method: 'POST' },
     );
   });
@@ -111,7 +111,7 @@ describe('useOptimisticReactions hook', () => {
       ],
     };
 
-    const { result } = await renderHook(() => useOptimisticReactions(messageWithMultipleReactions, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(messageWithMultipleReactions, 'speaker'));
 
     await result.current.onChangeReaction({ code: 'tada', skin: '', name: 'tada' });
 
@@ -122,13 +122,13 @@ describe('useOptimisticReactions hook', () => {
     expect(messageWithMultipleReactions.reactions[0].reactedBy[0].userId).toBe('user-2');
 
     expect(mockFetcherSubmit).toHaveBeenCalledWith(
-      { intent: 'react-message', id: 'msg-1', code: 'tada' },
+      { intent: 'react-message', channel: 'speaker', id: 'msg-1', code: 'tada' },
       { method: 'POST' },
     );
   });
 
   it('removes reaction when current user is the only one who reacted', async () => {
-    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'speaker'));
 
     await result.current.onChangeReaction({ code: 'tada', skin: '', name: 'tada' });
 
@@ -136,7 +136,7 @@ describe('useOptimisticReactions hook', () => {
     expect(message.reactions[0].code).toBe('heart');
 
     expect(mockFetcherSubmit).toHaveBeenCalledWith(
-      { intent: 'react-message', id: 'msg-1', code: 'tada' },
+      { intent: 'react-message', channel: 'speaker', id: 'msg-1', code: 'tada' },
       { method: 'POST' },
     );
   });
@@ -144,7 +144,7 @@ describe('useOptimisticReactions hook', () => {
   it('does not mutate or submit when user is not logged in', async () => {
     vi.mocked(useUser).mockReturnValue(null);
 
-    const { result } = await renderHook(() => useOptimisticReactions(message, 'message'));
+    const { result } = await renderHook(() => useOptimisticReactions(message, 'speaker'));
 
     await result.current.onChangeReaction({ code: 'thumbsup', skin: '', name: 'thumbsup' });
 

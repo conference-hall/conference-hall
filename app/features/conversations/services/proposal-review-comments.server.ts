@@ -8,7 +8,7 @@ import type {
   ConversationMessageSaveData,
 } from './conversation.schema.server.ts';
 
-export class ProposalConversationForOrganizers {
+export class ProposalReviewComments {
   private conversation: ConversationService;
   private authorizedEvent: AuthorizedEvent;
   private proposalId: string;
@@ -19,17 +19,19 @@ export class ProposalConversationForOrganizers {
     this.conversation = new ConversationService({
       userId: authorizedEvent.userId,
       role: 'ORGANIZER',
-      contextType: 'PROPOSAL_CONVERSATION',
-      contextIds: [proposalId],
+      type: 'PROPOSAL_REVIEW_COMMENTS',
+      proposalId,
+      skipNotification: true,
     });
   }
 
   static for(authorizedEvent: AuthorizedEvent, proposalId: string) {
-    return new ProposalConversationForOrganizers(authorizedEvent, proposalId);
+    return new ProposalReviewComments(authorizedEvent, proposalId);
   }
 
   async saveMessage(data: ConversationMessageSaveData) {
     const { event, permissions } = this.authorizedEvent;
+    await this.checkProposal();
     return this.conversation.saveMessage(event.id, data, permissions?.canManageConversations);
   }
 
@@ -44,10 +46,13 @@ export class ProposalConversationForOrganizers {
 
   async getConversation() {
     const { event } = this.authorizedEvent;
+    await this.checkProposal();
+    return this.conversation.getConversation(event.id);
+  }
 
+  private async checkProposal() {
+    const { event } = this.authorizedEvent;
     const proposal = await db.proposal.findUnique({ where: { id: this.proposalId, eventId: event.id } });
     if (!proposal) throw new ProposalNotFoundError();
-
-    return this.conversation.getConversation(event.id);
   }
 }

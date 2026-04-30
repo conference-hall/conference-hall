@@ -1,4 +1,5 @@
-import { commentFactory } from 'tests/factories/comments.ts';
+import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
+import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
@@ -30,7 +31,12 @@ describe('CfpReviewsSearch', () => {
     it('returns event proposals info', async () => {
       const tag = await eventProposalTagFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), tags: [tag] });
-      await commentFactory({ proposal: proposal, user: owner });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_REVIEW_COMMENTS',
+      });
+      await conversationMessageFactory({ conversation, sender: owner });
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const proposals = await CfpReviewsSearch.for(authorizedEvent).search({ status: 'pending' });

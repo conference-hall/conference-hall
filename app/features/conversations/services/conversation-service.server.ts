@@ -1,6 +1,6 @@
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { db } from '../../../../prisma/db.server.ts';
-import type { ConversationContextType, ConversationReaction, User } from '../../../../prisma/generated/client.ts';
+import type { ConversationType, ConversationReaction, User } from '../../../../prisma/generated/client.ts';
 import type {
   ConversationMessageDeleteData,
   ConversationMessageReactData,
@@ -11,8 +11,9 @@ import { NOTIFICATION_DELAY, notifyConversationMessage } from './jobs/notify-con
 type ConversationServiceContext = {
   userId: string;
   role: 'ORGANIZER' | 'SPEAKER';
-  contextType: ConversationContextType;
-  contextIds?: Array<string>;
+  type: ConversationType;
+  proposalId: string;
+  skipNotification?: boolean;
 };
 
 export class ConversationService {
@@ -23,20 +24,14 @@ export class ConversationService {
   }
 
   async saveMessage(eventId: string, { id, message }: ConversationMessageSaveData, canManageConversations?: boolean) {
-    const { userId, role, contextType, contextIds } = this.context;
+    const { userId, role, type, proposalId } = this.context;
 
     await db.$transaction(async (tx) => {
       // Create conversation if it doesn't exist
-      let conversation = await tx.conversation.findFirst({
-        where: {
-          eventId,
-          contextType,
-          contextIds: contextIds ? { hasSome: contextIds } : undefined,
-        },
-      });
+      let conversation = await tx.conversation.findFirst({ where: { eventId, type, proposalId } });
 
       if (!conversation) {
-        conversation = await tx.conversation.create({ data: { eventId, contextType, contextIds } });
+        conversation = await tx.conversation.create({ data: { eventId, type, proposalId } });
       }
 
       // Add participant if not exists
@@ -57,6 +52,8 @@ export class ConversationService {
         await tx.conversationMessage.create({
           data: { conversationId: conversation.id, senderId: userId, content: message, type: 'TEXT' },
         });
+
+        if (this.context.skipNotification) return;
 
         // Trigger email notification job with debounce per conversation
         // This ensures that only one notification is sent even if multiple messages are created in succession
@@ -95,15 +92,11 @@ export class ConversationService {
   }
 
   async getConversation(eventId: string) {
-    const { userId, contextType, contextIds } = this.context;
+    const { userId, type, proposalId } = this.context;
 
     // Get conversation
     const conversation = await db.conversation.findFirst({
-      where: {
-        contextType,
-        contextIds: contextIds ? { hasSome: contextIds } : undefined,
-        event: { id: eventId, speakersConversationEnabled: true },
-      },
+      where: { type, proposalId, event: { id: eventId } },
       include: {
         participants: true,
         messages: {

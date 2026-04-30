@@ -21,7 +21,6 @@ export function ConversationDrawer({ messages, recipients = [], children, canMan
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
-  const intentSuffix = 'message';
   const { optimisticMessages, onOptimisticSaveMessage, onOptimisticDeleteMessage } = useOptimisticMessages(
     messages,
     'ORGANIZER',
@@ -63,7 +62,7 @@ export function ConversationDrawer({ messages, recipients = [], children, canMan
               <li key={message.id} className="flex gap-4">
                 <Avatar picture={message.sender.picture} name={message.sender.name} size="s" className="mt-1" />
                 <MessageBlock
-                  intentSuffix={intentSuffix}
+                  channel="speaker"
                   message={message}
                   canManageConversations={canManageConversations}
                   onOptimisticSave={onOptimisticSaveMessage}
@@ -76,7 +75,7 @@ export function ConversationDrawer({ messages, recipients = [], children, canMan
 
         <SlideOver.Actions className="pt-0">
           <MessageInputForm
-            intent={`save-${intentSuffix}`}
+            channel="speaker"
             buttonLabel={t('common.send')}
             inputLabel={sendMessageLabel}
             placeholder={sendMessageLabel}

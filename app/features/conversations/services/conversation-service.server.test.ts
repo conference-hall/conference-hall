@@ -7,7 +7,7 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import type { Event, Team, User } from '../../../../prisma/generated/client.ts';
-import { ConversationContextType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
+import { ConversationType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
 import { ConversationService } from './conversation-service.server.ts';
 import { notifyConversationMessage } from './jobs/notify-conversation-message.job.ts';
 
@@ -39,14 +39,14 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { message: 'Hello organizers!' });
 
       const conversation = await db.conversation.findFirst({
-        where: { eventId: event.id, contextType: ConversationContextType.PROPOSAL_CONVERSATION },
+        where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
         include: { messages: true },
       });
 
@@ -62,8 +62,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { message: 'Hello!' });
@@ -78,7 +78,11 @@ describe('ConversationService', () => {
     it('updates existing message when id is provided', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -88,8 +92,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { id: message.id, message: 'Updated message' });
@@ -101,7 +105,11 @@ describe('ConversationService', () => {
     it('adds message to existing conversation', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       await conversationMessageFactory({
         conversation,
         sender: organizer,
@@ -111,8 +119,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { message: 'Second message' });
@@ -124,7 +132,11 @@ describe('ConversationService', () => {
     it('allows user with canManageConversations to update any message', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -135,8 +147,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: organizer.id,
         role: 'ORGANIZER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { id: message.id, message: 'Updated by organizer' }, true);
@@ -148,7 +160,11 @@ describe('ConversationService', () => {
     it('prevents user without canManageConversations from updating other user messages', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: organizer,
@@ -159,8 +175,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { id: message.id, message: 'Attempted update' }, false);
@@ -176,14 +192,14 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { message: 'New message' });
 
       const conversation = await db.conversation.findFirst({
-        where: { eventId: event.id, contextType: ConversationContextType.PROPOSAL_CONVERSATION },
+        where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
       });
 
       expect(notifyConversationMessage.trigger).toHaveBeenCalledWith(
@@ -203,7 +219,11 @@ describe('ConversationService', () => {
     it('does not trigger notification job when updating an existing message', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -213,8 +233,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.saveMessage(event.id, { id: message.id, message: 'Updated message' });
@@ -227,7 +247,11 @@ describe('ConversationService', () => {
     it('creates reaction on message', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: organizer,
@@ -237,8 +261,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.reactMessage({ id: message.id, code: 'tada' });
@@ -252,7 +276,11 @@ describe('ConversationService', () => {
     it('deletes reaction when reaction already exists', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: organizer,
@@ -263,8 +291,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: organizer.id,
         role: 'ORGANIZER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.reactMessage({ id: message.id, code: 'tada' });
@@ -280,7 +308,11 @@ describe('ConversationService', () => {
     it('deletes message', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -290,8 +322,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.deleteMessage({ id: message.id });
@@ -303,7 +335,11 @@ describe('ConversationService', () => {
     it('allows user with canManageConversations to delete any message', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -313,8 +349,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: organizer.id,
         role: 'ORGANIZER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.deleteMessage({ id: message.id }, true);
@@ -326,7 +362,11 @@ describe('ConversationService', () => {
     it('prevents user without canManageConversations from deleting other user messages', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: organizer,
@@ -336,8 +376,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       await service.deleteMessage({ id: message.id }, false);
@@ -355,41 +395,22 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       const messages = await service.getConversation(event.id);
       expect(messages).toEqual([]);
     });
 
-    it('returns empty array when conversation disabled on event', async () => {
-      const eventWithoutConversation = await eventFactory({ team, attributes: { speakersConversationEnabled: false } });
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event: eventWithoutConversation, talk });
-      const conversation = await conversationFactory({ event: eventWithoutConversation, proposalId: proposal.id });
-      await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-        traits: ['withReaction'],
-      });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
-      });
-
-      const messages = await service.getConversation(eventWithoutConversation.id);
-      expect(messages).toEqual([]);
-    });
-
     it('returns messages with sender and reactions', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -400,8 +421,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       const messages = await service.getConversation(event.id);
@@ -418,7 +439,11 @@ describe('ConversationService', () => {
     it('returns messages ordered by creation date descending', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
 
       await conversationMessageFactory({
         conversation,
@@ -437,8 +462,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       const messages = await service.getConversation(event.id);
@@ -452,7 +477,11 @@ describe('ConversationService', () => {
       const otherUser = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -469,8 +498,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       const messages = await service.getConversation(event.id);
@@ -482,7 +511,11 @@ describe('ConversationService', () => {
     it('sorts reactions by earliest reaction date', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({ event, proposalId: proposal.id });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
       const message = await conversationMessageFactory({
         conversation,
         sender: speaker,
@@ -499,8 +532,8 @@ describe('ConversationService', () => {
       const service = new ConversationService({
         userId: speaker.id,
         role: 'SPEAKER',
-        contextType: ConversationContextType.PROPOSAL_CONVERSATION,
-        contextIds: [proposal.id],
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
       });
 
       const messages = await service.getConversation(event.id);

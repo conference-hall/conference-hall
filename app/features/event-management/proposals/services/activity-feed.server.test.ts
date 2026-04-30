@@ -1,4 +1,5 @@
-import { commentFactory } from 'tests/factories/comments.ts';
+import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
+import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { reviewFactory } from 'tests/factories/reviews.ts';
@@ -7,7 +8,6 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import type { Team, User } from '../../../../../prisma/generated/client.ts';
-import { CommentChannel } from '../../../../../prisma/generated/client.ts';
 import { ActivityFeed } from './activity-feed.server.ts';
 
 describe('ActivityFeed', () => {
@@ -29,12 +29,26 @@ describe('ActivityFeed', () => {
     it('retrieve all proposals reviews and comments', async () => {
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const message1 = await commentFactory({ proposal, user: owner, traits: ['withReaction'] });
+      const reviewConversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_REVIEW_COMMENTS',
+      });
+      const message1 = await conversationMessageFactory({
+        conversation: reviewConversation,
+        sender: owner,
+        traits: ['withReaction'],
+      });
       const review1 = await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
-      const message2 = await commentFactory({ proposal, user: member1 });
+      const message2 = await conversationMessageFactory({ conversation: reviewConversation, sender: member1 });
       const review2 = await reviewFactory({ proposal, user: member1, attributes: { feeling: 'POSITIVE', note: 4 } });
 
-      await commentFactory({ proposal, user: member1, attributes: { channel: CommentChannel.SPEAKER } });
+      const speakerConversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+      await conversationMessageFactory({ conversation: speakerConversation, sender: member1 });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
@@ -46,7 +60,7 @@ describe('ActivityFeed', () => {
           type: 'comment',
           userId: owner.id,
           timestamp: message1.updatedAt,
-          comment: message1.comment,
+          comment: message1.content,
           feeling: null,
           note: null,
           user: owner.name,
@@ -69,7 +83,7 @@ describe('ActivityFeed', () => {
           type: 'comment',
           userId: member1.id,
           timestamp: message2.updatedAt,
-          comment: message2.comment,
+          comment: message2.content,
           feeling: null,
           note: null,
           user: member1.name,
@@ -93,7 +107,12 @@ describe('ActivityFeed', () => {
     it('retrieves only comments when reviews display is disabled', async () => {
       const event = await eventFactory({ team, attributes: { displayProposalsReviews: false } });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const message = await commentFactory({ proposal, user: owner });
+      const reviewConversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_REVIEW_COMMENTS',
+      });
+      const message = await conversationMessageFactory({ conversation: reviewConversation, sender: owner });
       await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
@@ -106,7 +125,7 @@ describe('ActivityFeed', () => {
           type: 'comment',
           userId: owner.id,
           timestamp: message.updatedAt,
-          comment: message.comment,
+          comment: message.content,
           feeling: null,
           note: null,
           user: owner.name,

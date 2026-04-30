@@ -13,12 +13,7 @@ describe('MessageInputForm component', () => {
         action: async () => null,
         Component: () => (
           <I18nextProvider i18n={i18nTest}>
-            <MessageInputForm
-              intent="save-message"
-              placeholder="Type a message..."
-              inputLabel="Message input"
-              {...props}
-            />
+            <MessageInputForm channel="speaker" placeholder="Type a message..." inputLabel="Message input" {...props} />
           </I18nextProvider>
         ),
       },

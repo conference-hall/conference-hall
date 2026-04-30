@@ -10,7 +10,7 @@ export function CommentEntry({ item, canManageConversations }: { item: FeedItem;
   return (
     <ActivityFeed.Entry marker={<Avatar picture={item.picture} name={item.user} />} withLine>
       <MessageBlock
-        intentSuffix="comment"
+        channel="comment"
         message={{
           id: item.id,
           content: item.comment,

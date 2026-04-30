@@ -3,7 +3,6 @@ import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import { Prisma } from '../../../../../prisma/generated/client.ts';
-import { Comments } from './comments.server.ts';
 
 type ReviewFeed = {
   id: string;
@@ -52,9 +51,10 @@ export class ActivityFeed {
           )
           UNION ALL
           (
-            SELECT id, 'comment' AS type, comments."createdAt" AS timestamp, comments."userId", NULL as "feeling", NULL as "note", comments."comment" AS comment
-            FROM comments
-            WHERE comments."proposalId" = ${this.proposalId} AND comments."channel" = 'ORGANIZER'
+            SELECT cm.id, 'comment' AS type, cm."createdAt" AS timestamp, cm."senderId" AS "userId", NULL as "feeling", NULL as "note", cm."content" AS comment
+            FROM conversation_messages cm
+            INNER JOIN conversations c ON c.id = cm."conversationId"
+            WHERE c."proposalId" = ${this.proposalId} AND c."type" = 'PROPOSAL_REVIEW_COMMENTS'
           )
           ORDER BY timestamp ASC
         `,
@@ -62,9 +62,10 @@ export class ActivityFeed {
     } else {
       results = await db.$queryRaw<Array<CommentFeed>>(
         Prisma.sql`
-          SELECT id, 'comment' AS type, comments."createdAt" AS timestamp, comments."userId", NULL as "feeling", NULL as "note", comments."comment" AS comment
-          FROM comments
-          WHERE comments."proposalId" = ${this.proposalId} AND comments."channel" = 'ORGANIZER'
+          SELECT cm.id, 'comment' AS type, cm."createdAt" AS timestamp, cm."senderId" AS "userId", NULL as "feeling", NULL as "note", cm."content" AS comment
+          FROM conversation_messages cm
+          INNER JOIN conversations c ON c.id = cm."conversationId"
+          WHERE c."proposalId" = ${this.proposalId} AND c."type" = 'PROPOSAL_REVIEW_COMMENTS'
           ORDER BY timestamp ASC
         `,
       );
@@ -76,7 +77,7 @@ export class ActivityFeed {
 
     // Get comments reactions
     const commentIds = results.filter((result) => result.type === 'comment').map((result) => result.id);
-    const reactions = await Comments.listReactions(commentIds, this.authorizedEvent.userId);
+    const reactions = await ActivityFeed.listReactions(commentIds, this.authorizedEvent.userId);
 
     return results.map((result) => {
       const user = users.find((user) => user.id === result.userId);
@@ -92,5 +93,38 @@ export class ActivityFeed {
         picture: user?.picture ?? null,
       };
     });
+  }
+
+  private static async listReactions(messageIds: Array<string>, currentUserId: string) {
+    if (messageIds.length === 0) return {};
+
+    const reactions = await db.conversationReaction.findMany({
+      where: { messageId: { in: messageIds } },
+      include: { reactedBy: true },
+    });
+
+    return messageIds.reduce<Record<string, Array<EmojiReaction>>>((byMessage, messageId) => {
+      const messageReactions = reactions.filter((reaction) => reaction.messageId === messageId);
+
+      byMessage[messageId] = messageReactions.reduce<Array<EmojiReaction>>((byCode, reaction) => {
+        const reacted = reaction.userId === currentUserId;
+        const reactedByName = reaction.reactedBy.name;
+
+        const existing = byCode.find((r) => r.code === reaction.code);
+        if (!existing) {
+          byCode.push({
+            code: reaction.code,
+            reacted,
+            reactedBy: [{ userId: reaction.userId, name: reactedByName }],
+          });
+        } else {
+          existing.reacted = existing.reacted || reacted;
+          existing.reactedBy.push({ userId: reaction.userId, name: reactedByName });
+        }
+        return byCode;
+      }, []);
+
+      return byMessage;
+    }, {});
   }
 }

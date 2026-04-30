@@ -283,6 +283,7 @@ model Proposal {
   updatedAt          DateTime            @updatedAt
   migrationId        String?
   comments           Comment[]
+  conversations      Conversation[]
   ScheduleSession    ScheduleSession[]
 
   @@unique([talkId, eventId])
@@ -482,20 +483,20 @@ model Conversation {
   id           String                    @id @default(cuid())
   eventId      String
   event        Event                     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  contextType  ConversationContextType
-  contextIds   String[]
+  type         ConversationType
+  proposalId   String
+  proposal     Proposal                  @relation(fields: [proposalId], references: [id])
   createdAt    DateTime                  @default(now())
   updatedAt    DateTime                  @updatedAt
   messages     ConversationMessage[]
   participants ConversationParticipant[]
 
-  @@index([eventId])
+  @@unique([proposalId, type])
   @@map("conversations")
 }
 
-enum ConversationContextType {
-  EVENT_CONVERSATION
-  PROPOSAL_CONVERSATION
+enum ConversationType {
+  PROPOSAL_SPEAKER_CONVERSATION
   PROPOSAL_REVIEW_COMMENTS
 }
 
@@ -511,6 +512,7 @@ model ConversationMessage {
   updatedAt      DateTime                @updatedAt
   reactions      ConversationReaction[]
 
+  @@index([conversationId, createdAt])
   @@map("conversation_messages")
 }
 

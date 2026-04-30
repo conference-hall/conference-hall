@@ -6,7 +6,7 @@ import { Label } from '~/design-system/typography.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 
 type Props = {
-  intent: string;
+  channel: string;
   inputLabel: string;
   placeholder?: string;
   buttonLabel?: string;
@@ -17,7 +17,7 @@ type Props = {
 };
 
 export function MessageInputForm({
-  intent,
+  channel,
   inputLabel,
   onOptimisticSave,
   placeholder,
@@ -28,7 +28,7 @@ export function MessageInputForm({
 }: Props) {
   const { t } = useTranslation();
   const inputId = useId();
-  const fetcherKey = message?.id ? `${intent}:${message.id}` : `${intent}:new`;
+  const fetcherKey = message?.id ? `save-message:${message.id}` : 'save-message:new';
   const fetcher = useFetcher({ key: fetcherKey });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -50,7 +50,8 @@ export function MessageInputForm({
         {inputLabel}
       </Label>
 
-      <input type="hidden" name="intent" value={intent} />
+      <input type="hidden" name="intent" value="save-message" />
+      <input type="hidden" name="channel" value={channel} />
       {message ? <input type="hidden" name="id" value={message.id} /> : null}
 
       <div className="overflow-hidden rounded-lg bg-white pb-12 shadow-xs ring-1 ring-gray-200 ring-inset focus-within:ring-2 focus-within:ring-indigo-600">
