@@ -34,8 +34,6 @@ model User {
   surveys                  Survey[]
   createdTalks             Talk[]
   createdEvents            Event[]
-  comments                 Comment[]
-  commentReactions         CommentReaction[]
   eventsSpeaker            EventSpeaker[]
   conversationMessages     ConversationMessage[]
   conversationParticipants ConversationParticipant[]
@@ -282,7 +280,6 @@ model Proposal {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   migrationId        String?
-  comments           Comment[]
   conversations      Conversation[]
   ScheduleSession    ScheduleSession[]
 
@@ -378,40 +375,6 @@ enum ReviewFeeling {
   NEGATIVE
   NEUTRAL
   NO_OPINION
-}
-
-model Comment {
-  id          String            @id @default(cuid())
-  userId      String
-  user        User              @relation(fields: [userId], references: [id])
-  proposalId  String
-  proposal    Proposal          @relation(fields: [proposalId], references: [id], onDelete: Cascade)
-  comment     String
-  channel     CommentChannel
-  reactions   CommentReaction[]
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  migrationId String?
-
-  @@index([proposalId])
-  @@map("comments")
-}
-
-enum CommentChannel {
-  ORGANIZER
-  SPEAKER
-}
-
-model CommentReaction {
-  id        String  @id @default(cuid())
-  code      String
-  commentId String
-  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  userId    String
-  reactedBy User    @relation(fields: [userId], references: [id])
-
-  @@unique([userId, commentId, code])
-  @@map("comment_reactions")
 }
 
 model Schedule {
