@@ -91,79 +91,82 @@ async function migrate() {
   for (let i = 0; i < proposalEvents.length; i += BATCH_SIZE) {
     const batch = proposalEvents.slice(i, i + BATCH_SIZE);
 
-    await db.$transaction(async (tx) => {
-      for (const { proposalId, eventId } of batch) {
-        const proposalComments = commentsByProposal.get(proposalId) ?? [];
-        if (proposalComments.length === 0) continue;
+    await db.$transaction(
+      async (tx) => {
+        for (const { proposalId, eventId } of batch) {
+          const proposalComments = commentsByProposal.get(proposalId) ?? [];
+          if (proposalComments.length === 0) continue;
 
-        // Check if conversation already exists (idempotency)
-        const existing = await tx.conversation.findFirst({
-          where: { proposalId, type: 'PROPOSAL_REVIEW_COMMENTS' },
-        });
-        if (existing) {
-          logger.info(`Skipping proposal ${proposalId}, conversation already exists`);
-          continue;
-        }
+          // Check if conversation already exists (idempotency)
+          const existing = await tx.conversation.findFirst({
+            where: { proposalId, type: 'PROPOSAL_REVIEW_COMMENTS' },
+          });
+          if (existing) {
+            logger.info(`Skipping proposal ${proposalId}, conversation already exists`);
+            continue;
+          }
 
-        // Create conversation
-        const conversation = await tx.conversation.create({
-          data: {
-            eventId,
-            proposalId,
-            type: 'PROPOSAL_REVIEW_COMMENTS',
-          },
-        });
-        conversationsCreated++;
-
-        // Create messages
-        const senderIds = new Set<string>();
-        for (const comment of proposalComments) {
-          const message = await tx.conversationMessage.create({
+          // Create conversation
+          const conversation = await tx.conversation.create({
             data: {
-              conversationId: conversation.id,
-              senderId: comment.userId,
-              content: comment.comment,
-              type: 'TEXT',
-              createdAt: comment.createdAt,
-              updatedAt: comment.updatedAt,
+              eventId,
+              proposalId,
+              type: 'PROPOSAL_REVIEW_COMMENTS',
             },
           });
-          commentIdToMessageId.set(comment.id, message.id);
-          messagesCreated++;
-          senderIds.add(comment.userId);
-        }
+          conversationsCreated++;
 
-        // Create participants
-        for (const senderId of senderIds) {
-          await tx.conversationParticipant.create({
-            data: {
-              conversationId: conversation.id,
-              userId: senderId,
-              role: 'ORGANIZER',
-            },
-          });
-          participantsCreated++;
-        }
-
-        // Create reactions for this proposal's comments
-        for (const comment of proposalComments) {
-          const commentReactions = reactionsByComment.get(comment.id) ?? [];
-          const messageId = commentIdToMessageId.get(comment.id);
-          if (!messageId) continue;
-
-          for (const reaction of commentReactions) {
-            await tx.conversationReaction.create({
+          // Create messages
+          const senderIds = new Set<string>();
+          for (const comment of proposalComments) {
+            const message = await tx.conversationMessage.create({
               data: {
-                code: reaction.code,
-                messageId,
-                userId: reaction.userId,
+                conversationId: conversation.id,
+                senderId: comment.userId,
+                content: comment.comment,
+                type: 'TEXT',
+                createdAt: comment.createdAt,
+                updatedAt: comment.updatedAt,
               },
             });
-            reactionsCreated++;
+            commentIdToMessageId.set(comment.id, message.id);
+            messagesCreated++;
+            senderIds.add(comment.userId);
+          }
+
+          // Create participants
+          for (const senderId of senderIds) {
+            await tx.conversationParticipant.create({
+              data: {
+                conversationId: conversation.id,
+                userId: senderId,
+                role: 'ORGANIZER',
+              },
+            });
+            participantsCreated++;
+          }
+
+          // Create reactions for this proposal's comments
+          for (const comment of proposalComments) {
+            const commentReactions = reactionsByComment.get(comment.id) ?? [];
+            const messageId = commentIdToMessageId.get(comment.id);
+            if (!messageId) continue;
+
+            for (const reaction of commentReactions) {
+              await tx.conversationReaction.create({
+                data: {
+                  code: reaction.code,
+                  messageId,
+                  userId: reaction.userId,
+                },
+              });
+              reactionsCreated++;
+            }
           }
         }
-      }
-    });
+      },
+      { timeout: 3600000 },
+    );
 
     logger.info(`Processed ${Math.min(i + BATCH_SIZE, proposalEvents.length)}/${proposalEvents.length} proposals`);
   }
