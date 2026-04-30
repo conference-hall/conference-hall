@@ -78,7 +78,7 @@ describe('EventIntegrations', () => {
           name: 'OPEN_PLANNER',
           configuration: { eventId: 'eventId!', apiKey: 'apiKey!' },
         });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -91,7 +91,7 @@ describe('EventIntegrations', () => {
           name: 'OPEN_PLANNER',
           configuration: { eventId: 'eventId!', apiKey: 'apiKey!' },
         });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -114,7 +114,7 @@ describe('EventIntegrations', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const eventIntegrations = EventIntegrations.for(authorizedEvent);
         await eventIntegrations.delete(integration.id);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -125,7 +125,7 @@ describe('EventIntegrations', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const eventIntegrations = EventIntegrations.for(authorizedEvent);
         await eventIntegrations.delete(integration.id);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -170,7 +170,7 @@ describe('EventIntegrations', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const eventIntegrations = EventIntegrations.for(authorizedEvent);
         await eventIntegrations.getConfigurations();
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -180,7 +180,7 @@ describe('EventIntegrations', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const eventIntegrations = EventIntegrations.for(authorizedEvent);
         await eventIntegrations.getConfigurations();
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 });

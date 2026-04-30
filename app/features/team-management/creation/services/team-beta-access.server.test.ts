@@ -45,7 +45,7 @@ describe('TeamBetaAccess', () => {
 
     it('return an error when key does not exist', async () => {
       const user = await userFactory();
-      await expect(TeamBetaAccess.for(user.id).validateAccessKey('xxx')).rejects.toThrowError(InvalidAccessKeyError);
+      await expect(TeamBetaAccess.for(user.id).validateAccessKey('xxx')).rejects.toThrow(InvalidAccessKeyError);
       const after = await db.user.findUnique({ where: { id: user.id } });
       expect(after?.organizerKey).toBeNull();
     });
@@ -53,7 +53,7 @@ describe('TeamBetaAccess', () => {
     it('throw an error when key is revoked', async () => {
       const user = await userFactory();
       const key = await organizerKeyFactory({ attributes: { revokedAt: new Date() } });
-      await expect(TeamBetaAccess.for(user.id).validateAccessKey(key.id)).rejects.toThrowError(InvalidAccessKeyError);
+      await expect(TeamBetaAccess.for(user.id).validateAccessKey(key.id)).rejects.toThrow(InvalidAccessKeyError);
       const after = await db.user.findUnique({ where: { id: user.id } });
       expect(after?.organizerKey).toBeNull();
     });

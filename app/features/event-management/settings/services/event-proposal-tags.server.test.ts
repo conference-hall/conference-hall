@@ -82,7 +82,7 @@ describe('EventProposalTags', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const eventProposalTag = EventProposalTags.for(authorizedEvent);
         await eventProposalTag.list({});
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -92,7 +92,7 @@ describe('EventProposalTags', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const eventProposalTag = EventProposalTags.for(authorizedEvent);
         await eventProposalTag.list({});
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -131,7 +131,7 @@ describe('EventProposalTags', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const eventProposalTag = EventProposalTags.for(authorizedEvent);
         await eventProposalTag.save({ name: 'X', color: 'X' });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -141,7 +141,7 @@ describe('EventProposalTags', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const eventProposalTag = EventProposalTags.for(authorizedEvent);
         await eventProposalTag.save({ name: 'X', color: 'X' });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -167,7 +167,7 @@ describe('EventProposalTags', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const eventProposalTag = EventProposalTags.for(authorizedEvent);
         await eventProposalTag.delete(tag.id);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -177,7 +177,7 @@ describe('EventProposalTags', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const eventProposalTag = EventProposalTags.for(authorizedEvent);
         await eventProposalTag.delete(tag.id);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 });

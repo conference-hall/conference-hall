@@ -31,7 +31,7 @@ describe('TeamCreation', () => {
 
     it('throws an error if user does not have organizer access', async () => {
       const user = await userFactory();
-      await expect(TeamCreation.for(user.id).create({ name: 'Hello world', slug: 'hello-world' })).rejects.toThrowError(
+      await expect(TeamCreation.for(user.id).create({ name: 'Hello world', slug: 'hello-world' })).rejects.toThrow(
         ForbiddenOperationError,
       );
     });

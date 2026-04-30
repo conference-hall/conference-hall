@@ -57,7 +57,7 @@ describe('SpeakerProposal', () => {
       const speaker = await userFactory();
 
       const speakerProposal = SpeakerProposal.for(speaker.id, 'XXX');
-      await expect(speakerProposal.get()).rejects.toThrowError(ProposalNotFoundError);
+      await expect(speakerProposal.get()).rejects.toThrow(ProposalNotFoundError);
     });
 
     it('throws an error when the proposal does not belong to the user', async () => {
@@ -68,7 +68,7 @@ describe('SpeakerProposal', () => {
       const proposal = await proposalFactory({ event, talk });
 
       const speakerProposal = SpeakerProposal.for(speaker.id, proposal.id);
-      await expect(speakerProposal.get()).rejects.toThrowError(ProposalNotFoundError);
+      await expect(speakerProposal.get()).rejects.toThrow(ProposalNotFoundError);
     });
   });
 
@@ -119,7 +119,7 @@ describe('SpeakerProposal', () => {
           formats: [],
           categories: [],
         }),
-      ).rejects.toThrowError(CfpNotOpenError);
+      ).rejects.toThrow(CfpNotOpenError);
     });
 
     it('throws an error when proposal not found', async () => {
@@ -135,7 +135,7 @@ describe('SpeakerProposal', () => {
           formats: [],
           categories: [],
         }),
-      ).rejects.toThrowError(ProposalNotFoundError);
+      ).rejects.toThrow(ProposalNotFoundError);
     });
 
     it('throws an error when proposal does not belong to user', async () => {
@@ -155,7 +155,7 @@ describe('SpeakerProposal', () => {
           formats: [],
           categories: [],
         }),
-      ).rejects.toThrowError(ProposalNotFoundError);
+      ).rejects.toThrow(ProposalNotFoundError);
     });
   });
 
@@ -187,7 +187,7 @@ describe('SpeakerProposal', () => {
       const proposal = await proposalFactory({ event, talk });
 
       const updater = await userFactory();
-      await expect(SpeakerProposal.for(updater.id, proposal.id).removeCoSpeaker(cospeaker.id)).rejects.toThrowError(
+      await expect(SpeakerProposal.for(updater.id, proposal.id).removeCoSpeaker(cospeaker.id)).rejects.toThrow(
         ProposalNotFoundError,
       );
     });
@@ -195,7 +195,7 @@ describe('SpeakerProposal', () => {
     it('throws an error when proposal not found', async () => {
       const speaker = await userFactory();
       const cospeaker = await userFactory();
-      await expect(SpeakerProposal.for(speaker.id, 'XXX').removeCoSpeaker(cospeaker.id)).rejects.toThrowError(
+      await expect(SpeakerProposal.for(speaker.id, 'XXX').removeCoSpeaker(cospeaker.id)).rejects.toThrow(
         ProposalNotFoundError,
       );
     });
@@ -311,9 +311,7 @@ describe('SpeakerProposal', () => {
 
     it('throws an error when proposal not found', async () => {
       const speaker = await userFactory();
-      await expect(SpeakerProposal.for(speaker.id, 'XXX').confirm('CONFIRMED')).rejects.toThrowError(
-        ProposalNotFoundError,
-      );
+      await expect(SpeakerProposal.for(speaker.id, 'XXX').confirm('CONFIRMED')).rejects.toThrow(ProposalNotFoundError);
     });
   });
 });

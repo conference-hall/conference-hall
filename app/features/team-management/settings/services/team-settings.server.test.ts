@@ -38,7 +38,7 @@ describe('TeamSettings', () => {
     it('throws an error if user is not owner', async () => {
       const team = await teamFactory({ members: [user] });
       const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
-      await expect(TeamSettings.for(authorizedTeam).delete()).rejects.toThrowError(ForbiddenOperationError);
+      await expect(TeamSettings.for(authorizedTeam).delete()).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -64,9 +64,9 @@ describe('TeamSettings', () => {
       const team = await teamFactory({ members: [user] });
 
       const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
-      await expect(
-        TeamSettings.for(authorizedTeam).updateSettings({ name: 'name', slug: 'slug' }),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(TeamSettings.for(authorizedTeam).updateSettings({ name: 'name', slug: 'slug' })).rejects.toThrow(
+        ForbiddenOperationError,
+      );
     });
   });
 

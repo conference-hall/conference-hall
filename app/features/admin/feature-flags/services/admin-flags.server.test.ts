@@ -55,7 +55,7 @@ describe('AdminFlags', () => {
       const nonExistentFlagKey = 'nonExistentFlag';
       const newValue = 'true';
 
-      await expect(adminFlags.update(nonExistentFlagKey, newValue)).rejects.toThrowError(NotFoundError);
+      await expect(adminFlags.update(nonExistentFlagKey, newValue)).rejects.toThrow(NotFoundError);
     });
   });
 });

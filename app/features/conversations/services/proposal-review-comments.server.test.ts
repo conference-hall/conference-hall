@@ -108,7 +108,7 @@ describe('ProposalReviewComments', () => {
 
       const service = ProposalReviewComments.for(authorizedEvent, proposal.id);
 
-      await expect(service.saveMessage({ message: 'Should fail' })).rejects.toThrowError(ProposalNotFoundError);
+      await expect(service.saveMessage({ message: 'Should fail' })).rejects.toThrow(ProposalNotFoundError);
     });
   });
 
@@ -242,7 +242,7 @@ describe('ProposalReviewComments', () => {
 
       const service = ProposalReviewComments.for(authorizedEvent, proposal.id);
 
-      await expect(service.getConversation()).rejects.toThrowError(ProposalNotFoundError);
+      await expect(service.getConversation()).rejects.toThrow(ProposalNotFoundError);
     });
   });
 });

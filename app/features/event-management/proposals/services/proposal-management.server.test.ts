@@ -124,7 +124,7 @@ describe('ProposalManagement', () => {
           references: null,
           languages: [],
         });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -144,7 +144,7 @@ describe('ProposalManagement', () => {
           references: null,
           languages: [],
         });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -223,7 +223,7 @@ describe('ProposalManagement', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
         await proposalManagement.saveTags({ tags: [] });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -238,7 +238,7 @@ describe('ProposalManagement', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
         await proposalManagement.saveTags({ tags: [] });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -365,7 +365,7 @@ describe('ProposalManagement', () => {
         const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
 
         await proposalManagement.saveSpeakers({ speakers: [] });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -383,7 +383,7 @@ describe('ProposalManagement', () => {
         const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
 
         await proposalManagement.saveSpeakers({ speakers: [] });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -533,7 +533,7 @@ describe('ProposalManagement', () => {
         const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
 
         await proposalManagement.saveFormats({ formats: [] });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -551,7 +551,7 @@ describe('ProposalManagement', () => {
         const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
 
         await proposalManagement.saveFormats({ formats: [] });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -703,7 +703,7 @@ describe('ProposalManagement', () => {
         const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
 
         await proposalManagement.saveCategories({ categories: [] });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -721,7 +721,7 @@ describe('ProposalManagement', () => {
         const proposalManagement = ProposalManagement.for(authorizedEvent, proposal.id);
 
         await proposalManagement.saveCategories({ categories: [] });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 });

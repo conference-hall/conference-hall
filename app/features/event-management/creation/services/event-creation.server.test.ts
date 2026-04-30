@@ -72,7 +72,7 @@ describe('EventCreation', () => {
       const teamWithReviewer = await teamFactory({ owners: [owner], reviewers: [reviewer] });
 
       const authorizedTeam = await getAuthorizedTeam(reviewer.id, teamWithReviewer.slug);
-      await expect(EventCreation.for(authorizedTeam).findTemplateEvents('CONFERENCE')).rejects.toThrowError(
+      await expect(EventCreation.for(authorizedTeam).findTemplateEvents('CONFERENCE')).rejects.toThrow(
         ForbiddenOperationError,
       );
     });
@@ -120,7 +120,7 @@ describe('EventCreation', () => {
           visibility: 'PUBLIC',
           timezone: 'Europe/Paris',
         }),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      ).rejects.toThrow(ForbiddenOperationError);
     });
 
     it('creates event with template settings', async () => {

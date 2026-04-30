@@ -44,11 +44,11 @@ describe('SpeakerSurvey', () => {
     it('throws an error when survey is not enabled', async () => {
       const event = await eventFactory();
 
-      await expect(SpeakerSurvey.for(event.slug).getQuestions()).rejects.toThrowError(SurveyNotEnabledError);
+      await expect(SpeakerSurvey.for(event.slug).getQuestions()).rejects.toThrow(SurveyNotEnabledError);
     });
 
     it('throws an EventNotFoundError when event does not exist', async () => {
-      await expect(SpeakerSurvey.for('non-existent-event').getQuestions()).rejects.toThrowError(EventNotFoundError);
+      await expect(SpeakerSurvey.for('non-existent-event').getQuestions()).rejects.toThrow(EventNotFoundError);
     });
   });
 
@@ -94,12 +94,12 @@ describe('SpeakerSurvey', () => {
       const schema = await survey.buildSurveySchema();
 
       const invalidData = { name: '' };
-      expect(() => schema.parse(invalidData)).toThrowError('Required');
+      expect(() => schema.parse(invalidData)).toThrow('Required');
     });
 
     it('throws an error when event does not exist', async () => {
       const survey = SpeakerSurvey.for('non-existent-event');
-      await expect(survey.buildSurveySchema()).rejects.toThrowError(EventNotFoundError);
+      await expect(survey.buildSurveySchema()).rejects.toThrow(EventNotFoundError);
     });
   });
 
@@ -179,7 +179,7 @@ describe('SpeakerSurvey', () => {
           diet: ['vegetarian'],
           info: 'World',
         }),
-      ).rejects.toThrowError(EventNotFoundError);
+      ).rejects.toThrow(EventNotFoundError);
     });
   });
 

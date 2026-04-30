@@ -21,7 +21,7 @@ describe('CoSpeakerTalkInvite', () => {
     });
 
     it('returns throws an error when invitation code not found', async () => {
-      await expect(CoSpeakerTalkInvite.with('XXX').check()).rejects.toThrowError(InvitationNotFoundError);
+      await expect(CoSpeakerTalkInvite.with('XXX').check()).rejects.toThrow(InvitationNotFoundError);
     });
   });
 
@@ -45,9 +45,7 @@ describe('CoSpeakerTalkInvite', () => {
 
     it('returns throws an error when invitation code not found', async () => {
       const speaker = await userFactory();
-      await expect(CoSpeakerTalkInvite.with('XXX').addCoSpeaker(speaker.id)).rejects.toThrowError(
-        InvitationNotFoundError,
-      );
+      await expect(CoSpeakerTalkInvite.with('XXX').addCoSpeaker(speaker.id)).rejects.toThrow(InvitationNotFoundError);
     });
   });
 });

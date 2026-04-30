@@ -16,7 +16,7 @@ describe('TeamMemberInvite', () => {
     });
 
     it('returns throws an error when invitation code does not exist', async () => {
-      await expect(TeamMemberInvite.with('XXX').check()).rejects.toThrowError(InvitationNotFoundError);
+      await expect(TeamMemberInvite.with('XXX').check()).rejects.toThrow(InvitationNotFoundError);
     });
   });
 
@@ -38,7 +38,7 @@ describe('TeamMemberInvite', () => {
 
     it('returns throws an error when invitation code does not exist', async () => {
       const user = await userFactory();
-      await expect(TeamMemberInvite.with('XXX').addMember(user.id)).rejects.toThrowError(InvitationNotFoundError);
+      await expect(TeamMemberInvite.with('XXX').addMember(user.id)).rejects.toThrow(InvitationNotFoundError);
     });
   });
 });

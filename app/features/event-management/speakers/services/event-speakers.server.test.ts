@@ -896,7 +896,7 @@ describe('EventSpeakers', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
         const eventSpeakers = EventSpeakers.for(authorizedEvent);
-        await expect(eventSpeakers.update('non-existent-speaker-id', updateData)).rejects.toThrowError(NotFoundError);
+        await expect(eventSpeakers.update('non-existent-speaker-id', updateData)).rejects.toThrow(NotFoundError);
       });
 
       it('throws an error if speaker belongs to different event', async () => {
@@ -918,7 +918,7 @@ describe('EventSpeakers', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
         const eventSpeakers = EventSpeakers.for(authorizedEvent);
-        await expect(eventSpeakers.update(otherEventSpeaker.id, updateData)).rejects.toThrowError(NotFoundError);
+        await expect(eventSpeakers.update(otherEventSpeaker.id, updateData)).rejects.toThrow(NotFoundError);
       });
     });
 

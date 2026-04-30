@@ -234,7 +234,7 @@ describe('SpeakerConversationForOrganizers', () => {
 
       const service = SpeakerConversationForOrganizers.for(authorizedEvent, proposal.id);
 
-      await expect(service.getConversation()).rejects.toThrowError(ProposalNotFoundError);
+      await expect(service.getConversation()).rejects.toThrow(ProposalNotFoundError);
     });
   });
 });

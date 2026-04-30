@@ -80,7 +80,7 @@ describe('EventSpeakerForProposal', () => {
       const proposal = await proposalFactory({ event, talk });
 
       const eventSpeaker = EventSpeakerForProposal.for(event.id);
-      await expect(eventSpeaker.addSpeakerToProposal(proposal.id, 'non-existent-user-id')).rejects.toThrowError(
+      await expect(eventSpeaker.addSpeakerToProposal(proposal.id, 'non-existent-user-id')).rejects.toThrow(
         UserNotFoundError,
       );
     });

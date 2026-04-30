@@ -149,7 +149,7 @@ describe('ProposalReview', () => {
         const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         await ProposalReview.for(authorizedEvent, proposal.id).get();
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -231,7 +231,7 @@ describe('ProposalReview', () => {
         const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         await ProposalReview.for(authorizedEvent, proposal.id).getOtherProposals([]);
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -309,7 +309,7 @@ describe('ProposalReview', () => {
         const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         await ProposalReview.for(authorizedEvent, proposal.id).getPreviousAndNextReviews({});
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 
@@ -368,7 +368,7 @@ describe('ProposalReview', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const review = ProposalReview.for(authorizedEvent, proposal.id);
-      await expect(review.addReview({ feeling: 'NEUTRAL', note: 2 })).rejects.toThrowError(ReviewDisabledError);
+      await expect(review.addReview({ feeling: 'NEUTRAL', note: 2 })).rejects.toThrow(ReviewDisabledError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -380,7 +380,7 @@ describe('ProposalReview', () => {
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const review = ProposalReview.for(authorizedEvent, proposal.id);
         await review.addReview({ feeling: 'NEUTRAL', note: 2 });
-      }).rejects.toThrowError(ForbiddenOperationError);
+      }).rejects.toThrow(ForbiddenOperationError);
     });
   });
 });

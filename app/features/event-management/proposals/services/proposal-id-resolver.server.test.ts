@@ -74,7 +74,7 @@ describe('resolveProposalId', () => {
 
   describe('error handling', () => {
     it('throws ProposalNotFoundError when proposal number does not exist for event', async () => {
-      await expect(resolveProposalId(authorizedEvent, '999')).rejects.toThrowError(ProposalNotFoundError);
+      await expect(resolveProposalId(authorizedEvent, '999')).rejects.toThrow(ProposalNotFoundError);
     });
 
     it('throws ProposalNotFoundError when proposal number belongs to different event', async () => {
@@ -82,11 +82,11 @@ describe('resolveProposalId', () => {
       const proposal = await proposalFactory({ event: event2, talk });
       await db.proposal.update({ where: { id: proposal.id }, data: { proposalNumber: 456 } });
 
-      await expect(resolveProposalId(authorizedEvent, '456')).rejects.toThrowError(ProposalNotFoundError);
+      await expect(resolveProposalId(authorizedEvent, '456')).rejects.toThrow(ProposalNotFoundError);
     });
 
     it('throws ProposalNotFoundError for negative numbers', async () => {
-      await expect(resolveProposalId(authorizedEvent, '-1')).rejects.toThrowError(ProposalNotFoundError);
+      await expect(resolveProposalId(authorizedEvent, '-1')).rejects.toThrow(ProposalNotFoundError);
     });
   });
 
