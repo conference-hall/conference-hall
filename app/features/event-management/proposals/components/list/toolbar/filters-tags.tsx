@@ -21,7 +21,9 @@ export function FiltersTags({ filters }: FiltersBadgesProps) {
         {t('event-management.proposals.filters.badges')}
       </Text>
       <FilterTag name="query" value={query} />
-      <FilterTag name="reviews" value={reviews ? t(`common.review.status.${reviews}`) : undefined} />
+      {reviews?.toSorted().map((review) => (
+        <FilterTag key={review} name="reviews" value={t(`common.review.status.${review}`)} specificValue={review} />
+      ))}
       <FilterTag name="status" value={status ? t(`common.proposals.status.${status}`) : undefined} />
       <FilterTag name="confirmation" value={confirmation ? t(`common.proposals.status.${confirmation}`) : undefined} />
       <FilterTag name="formats" value={event.formats.find((format) => format.id === formats)?.name} />

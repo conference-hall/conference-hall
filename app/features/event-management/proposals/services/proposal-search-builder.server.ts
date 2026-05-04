@@ -294,8 +294,16 @@ export class ProposalSearchBuilder {
   }
 
   private buildReviewFilterCondition(reviews?: ReviewsFilter): Prisma.Sql | null {
-    if (!reviews) return null;
-    switch (reviews) {
+    if (!reviews || reviews.length === 0) return null;
+
+    const conditions = reviews.map((review) => this.buildSingleReviewCondition(review)).filter((c) => c !== null);
+    if (conditions.length === 0) return null;
+    if (conditions.length === 1) return conditions[0];
+    return Prisma.sql`(${Prisma.join(conditions, ' OR ')})`;
+  }
+
+  private buildSingleReviewCondition(review: string): Prisma.Sql | null {
+    switch (review) {
       case 'not-reviewed':
         return Prisma.sql`NOT EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId})`;
       case 'no-opinion':
@@ -307,7 +315,7 @@ export class ProposalSearchBuilder {
       case 'neutral-3':
       case 'neutral-4':
       case 'neutral-5': {
-        const note = Number(reviews.split('-')[1]);
+        const note = Number(review.split('-')[1]);
         return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.feeling = 'NEUTRAL' AND r.note = ${note})`;
       }
       case 'positive':
