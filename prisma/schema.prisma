@@ -1,7 +1,6 @@
 generator client {
-  provider        = "prisma-client"
-  output          = "./generated"
-  previewFeatures = ["partialIndexes"]
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 datasource db {
@@ -286,8 +285,7 @@ model Proposal {
 
   @@unique([talkId, eventId])
   @@unique([proposalNumber, eventId])
-  @@index([eventId, submittedAt(sort: Desc)], where: { isDraft: false, archivedAt: null })
-  @@index([eventId])
+  @@index([eventId, submittedAt(sort: Desc)])
   @@map("proposals")
 }
 
