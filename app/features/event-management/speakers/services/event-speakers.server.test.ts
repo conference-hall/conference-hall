@@ -173,9 +173,7 @@ describe('EventSpeakers', () => {
           const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
           const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-          const result = await EventSpeakers.for(authorizedEvent).search({
-            sort: 'name-asc',
-          });
+          const result = await EventSpeakers.for(authorizedEvent).search({ sort: 'name', order: 'asc' });
 
           expect(result.speakers.map((s) => s.name)).toEqual(['Alice Johnson', 'Bob Wilson', 'Peter Parker']);
         });
@@ -184,9 +182,7 @@ describe('EventSpeakers', () => {
           const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
           const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-          const result = await EventSpeakers.for(authorizedEvent).search({
-            sort: 'name-desc',
-          });
+          const result = await EventSpeakers.for(authorizedEvent).search({ sort: 'name', order: 'desc' });
 
           expect(result.speakers.map((s) => s.name)).toEqual(['Peter Parker', 'Bob Wilson', 'Alice Johnson']);
         });

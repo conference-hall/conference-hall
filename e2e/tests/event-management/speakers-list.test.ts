@@ -148,14 +148,14 @@ test('sorts speakers by name', async ({ page }) => {
   await expect(speakersPage.speakers.nth(1)).toContainText('Bob Wilson');
   await expect(speakersPage.speakers.nth(2)).toContainText('Charlie Brown');
 
-  // Sort by name Z-A
-  await speakersPage.clickOnSortBy('Name Z-A');
+  // Sort by name desc
+  await speakersPage.clickOnSortBy('Name');
   await expect(speakersPage.speakers.nth(0)).toContainText('Charlie Brown');
   await expect(speakersPage.speakers.nth(1)).toContainText('Bob Wilson');
   await expect(speakersPage.speakers.nth(2)).toContainText('Alice Johnson');
 
-  // Sort back to A-Z
-  await speakersPage.clickOnSortBy('Name A-Z');
+  // Sort by name asc
+  await speakersPage.clickOnSortBy('Name');
   await expect(speakersPage.speakers.nth(0)).toContainText('Alice Johnson');
   await expect(speakersPage.speakers.nth(1)).toContainText('Bob Wilson');
   await expect(speakersPage.speakers.nth(2)).toContainText('Charlie Brown');

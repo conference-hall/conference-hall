@@ -13,7 +13,8 @@ import type { EventSpeakerWhereInput } from '../../../../../prisma/generated/mod
 const SpeakerSearchFiltersSchema = z.object({
   query: z.string().trim().optional(),
   proposalStatus: z.enum(['accepted', 'confirmed', 'declined']).optional(),
-  sort: z.enum(['name-asc', 'name-desc']).optional(),
+  sort: z.enum(['name']).optional(),
+  order: z.enum(['asc', 'desc']).optional(),
 });
 
 type SpeakerSearchFilters = z.infer<typeof SpeakerSearchFiltersSchema>;
@@ -37,7 +38,7 @@ export class EventSpeakers {
       };
     }
 
-    const { query, proposalStatus, sort = 'name-asc' } = filters;
+    const { query, proposalStatus, order = 'asc' } = filters;
 
     const whereClause: EventSpeakerWhereInput = { eventId: event.id };
 
@@ -69,7 +70,7 @@ export class EventSpeakers {
     const speakers = await db.eventSpeaker.findMany({
       where: whereClause,
       include: { proposals: true },
-      orderBy: { name: sort === 'name-desc' ? 'desc' : 'asc' },
+      orderBy: { name: order },
       skip: pagination.pageIndex * pagination.pageSize,
       take: pagination.pageSize,
     });
