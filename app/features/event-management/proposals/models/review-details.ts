@@ -1,4 +1,3 @@
-import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import type { Review, User } from '../../../../../prisma/generated/client.ts';
 
 type ReviewData = Review & { user?: Partial<User> };
@@ -25,16 +24,16 @@ export class ReviewDetails {
   }
 
   ofMembers() {
-    return sortBy(
-      this.reviews.map((review) => ({
+    return this.reviews
+      .map((review) => ({
         id: review.user?.id,
         name: review.user?.name,
         picture: review.user?.picture,
         note: review.note,
         feeling: review.feeling,
-      })),
-      'name',
-    );
+        updatedAt: review.updatedAt,
+      }))
+      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
   }
 
   private negatives() {
