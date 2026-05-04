@@ -6,13 +6,15 @@ type Props = { placeholder: string; ariaLabel: string };
 
 export function SearchInput({ placeholder, ariaLabel }: Props) {
   const [params] = useSearchParams();
-  const { query, ...filters } = Object.fromEntries(params.entries());
+  const query = params.get('query') ?? undefined;
 
   return (
     <Form method="GET" className="grow">
-      {Object.keys(filters).map((key) => (
-        <input key={key} type="hidden" name={key} value={filters[key]} />
-      ))}
+      {[...params.entries()]
+        .filter(([key]) => key !== 'query')
+        .map(([key, value], i) => (
+          <input key={`${key}-${i}`} type="hidden" name={key} value={value} />
+        ))}
       <Input
         name="query"
         key={query}

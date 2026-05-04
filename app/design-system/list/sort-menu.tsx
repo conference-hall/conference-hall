@@ -17,7 +17,8 @@ export function SortMenu({ options, defaultSort, defaultOrder }: SortMenuProps) 
   const { t } = useTranslation();
   const location = useLocation();
   const [params] = useSearchParams();
-  const { sort = defaultSort, order = defaultOrder, ...others } = Object.fromEntries(params.entries());
+  const sort = params.get('sort') ?? defaultSort;
+  const order = params.get('order') ?? defaultOrder;
 
   return (
     <Menu>
@@ -30,7 +31,9 @@ export function SortMenu({ options, defaultSort, defaultOrder }: SortMenuProps) 
           {options.map(({ name, value }) => {
             const selected = value === sort;
             const orderValue = selected && order === 'desc' ? 'asc' : 'desc';
-            const search = new URLSearchParams({ ...others, sort: value, order: orderValue });
+            const search = new URLSearchParams(params);
+            search.set('sort', value);
+            search.set('order', orderValue);
 
             return (
               <MenuItem
