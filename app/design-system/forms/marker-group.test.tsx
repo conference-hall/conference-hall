@@ -18,6 +18,11 @@ function MarkerGroupWrapper(props: { initialValue?: string | null }) {
   return <MarkerGroup options={options} value={value} onChange={setValue} />;
 }
 
+function MultiMarkerGroupWrapper(props: { initialValue?: string[] }) {
+  const [value, setValue] = useState<string[]>(props.initialValue ?? []);
+  return <MarkerGroup multiple options={options} value={value} onChange={setValue} />;
+}
+
 describe('MarkerGroup component', () => {
   it('renders all marker buttons', async () => {
     await page.render(<MarkerGroupWrapper />);
@@ -79,5 +84,37 @@ describe('MarkerGroup component', () => {
     const container = page.getByRole('button', { name: 'No opinion' }).element().parentElement!;
     const input = container.querySelector('input[name="review"]') as HTMLInputElement;
     expect(input.value).toBe('');
+  });
+});
+
+describe('MarkerGroup multiple mode', () => {
+  it('selects multiple markers independently', async () => {
+    await page.render(<MultiMarkerGroupWrapper />);
+
+    await page.getByRole('button', { name: 'Negative' }).click();
+    await page.getByRole('button', { name: 'Positive' }).click();
+
+    await expect.element(page.getByRole('button', { name: 'Negative' })).toHaveClass(/bg-indigo-100/);
+    await expect.element(page.getByRole('button', { name: 'Positive' })).toHaveClass(/bg-indigo-100/);
+    await expect.element(page.getByRole('button', { name: 'No opinion' })).not.toHaveClass(/bg-indigo-100/);
+  });
+
+  it('deselects a marker when clicking it again', async () => {
+    await page.render(<MultiMarkerGroupWrapper initialValue={['negative', 'positive']} />);
+
+    await page.getByRole('button', { name: 'Negative' }).click();
+
+    await expect.element(page.getByRole('button', { name: 'Negative' })).not.toHaveClass(/bg-indigo-100/);
+    await expect.element(page.getByRole('button', { name: 'Positive' })).toHaveClass(/bg-indigo-100/);
+  });
+
+  it('does not activate cumulative markers for adjacent stars', async () => {
+    await page.render(<MultiMarkerGroupWrapper />);
+
+    await page.getByRole('button', { name: 'Star 3' }).click();
+
+    await expect.element(page.getByRole('button', { name: 'Star 1' })).not.toHaveClass(/bg-indigo-100/);
+    await expect.element(page.getByRole('button', { name: 'Star 2' })).not.toHaveClass(/bg-indigo-100/);
+    await expect.element(page.getByRole('button', { name: 'Star 3' })).toHaveClass(/bg-indigo-100/);
   });
 });

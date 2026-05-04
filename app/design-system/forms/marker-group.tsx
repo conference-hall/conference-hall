@@ -44,36 +44,60 @@ const markerIconStyles = cva('', {
   defaultVariants: { size: 'sm' },
 });
 
-type MarkerGroupProps = {
+type BaseMarkerGroupProps = {
   name?: string;
   options: MarkerOption[];
-  value: string | null;
-  onChange: (value: string | null) => void;
   withTooltip?: boolean;
 } & Pick<VariantProps<typeof markerButtonStyles>, 'size' | 'variant'>;
 
-export function MarkerGroup({ name, options, value, onChange, size, variant, withTooltip = false }: MarkerGroupProps) {
+type SingleSelectMarkerGroupProps = BaseMarkerGroupProps & {
+  multiple?: false;
+  value: string | null;
+  onChange: (value: string | null) => void;
+};
+
+type MultiSelectMarkerGroupProps = BaseMarkerGroupProps & {
+  multiple: true;
+  value: string[];
+  onChange: (value: string[]) => void;
+};
+
+type MarkerGroupProps = SingleSelectMarkerGroupProps | MultiSelectMarkerGroupProps;
+
+export function MarkerGroup(props: MarkerGroupProps) {
+  const { name, options, size, variant, withTooltip = false } = props;
+
   const handleClick = (markerValue: string) => {
-    onChange(value === markerValue ? null : markerValue);
+    if (props.multiple) {
+      const next = props.value.includes(markerValue)
+        ? props.value.filter((v) => v !== markerValue)
+        : [...props.value, markerValue];
+      props.onChange(next);
+    } else {
+      props.onChange(props.value === markerValue ? null : markerValue);
+    }
   };
 
   const isActive = (option: MarkerOption, index: number): boolean => {
-    if (!value) return false;
-    const selectedIndex = options.findIndex((o) => o.value === value);
+    if (props.multiple) {
+      return props.value.includes(option.value);
+    }
+    if (!props.value) return false;
+    const selectedIndex = options.findIndex((o) => o.value === props.value);
     if (selectedIndex === -1) return false;
 
     if (option.cumulative && options[selectedIndex]?.cumulative) {
       return index <= selectedIndex;
     }
-    if (option.cumulative && value === 'positive') {
+    if (option.cumulative && props.value === 'positive') {
       return true;
     }
-    return value === option.value;
+    return props.value === option.value;
   };
 
   return (
     <div className="inline-flex">
-      {name && <input type="hidden" name={name} value={value ?? ''} />}
+      {name && !props.multiple && <input type="hidden" name={name} value={props.value ?? ''} />}
       {options.map((option, index) => {
         const active = isActive(option, index);
         const isFirst = index === 0;

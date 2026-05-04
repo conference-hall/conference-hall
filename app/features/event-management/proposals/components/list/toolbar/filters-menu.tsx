@@ -22,8 +22,6 @@ import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { getReviewMarkerOptions } from '~/features/event-management/proposals/components/review-markers.config.ts';
 
-const reviewStatusOptions = ['not-reviewed'] as const;
-
 const statusOptions = ['pending', 'accepted', 'rejected', 'archived'] as const;
 const confirmationOptions = ['not-answered', 'confirmed', 'declined'] as const;
 
@@ -85,7 +83,7 @@ function FiltersContent({ close }: FiltersContentProps) {
       {params.get('query') && <input type="hidden" name="query" value={params.get('query') || ''} />}
       {params.get('sort') && <input type="hidden" name="sort" value={params.get('sort') || ''} />}
 
-      <FiltersReviewMarkers defaultValue={params.get('reviews')} />
+      <FiltersReviewMarkers defaultValue={params.getAll('reviews')} />
 
       {permissions.canChangeProposalStatus && (
         <>
@@ -202,17 +200,22 @@ function FiltersRadio({ label, name, defaultValue, options, className }: Filters
   );
 }
 
-type FiltersReviewMarkersProps = { defaultValue: string | null };
+type FiltersReviewMarkersProps = { defaultValue: string[] };
 
 function FiltersReviewMarkers({ defaultValue }: FiltersReviewMarkersProps) {
   const { t } = useTranslation();
-  const [selected, setSelected] = useState<string | null>(defaultValue);
+  const [selected, setSelected] = useState<string[]>(defaultValue);
 
   const markerOptions = getReviewMarkerOptions(t);
-  const isMarker = selected !== null && selected !== 'not-reviewed';
+  const markerValues = selected.filter((v) => v !== 'not-reviewed');
+  const isNotReviewed = selected.includes('not-reviewed');
 
-  const handleStatusChange = (value: string) => {
-    setSelected(value);
+  const handleMarkersChange = (values: string[]) => {
+    setSelected(values);
+  };
+
+  const handleNotReviewedToggle = () => {
+    setSelected(isNotReviewed ? [] : ['not-reviewed']);
   };
 
   return (
@@ -221,26 +224,22 @@ function FiltersReviewMarkers({ defaultValue }: FiltersReviewMarkersProps) {
         {t('common.my-reviews')}
       </Text>
 
-      <input type="hidden" name="reviews" value={selected ?? ''} />
+      {selected.map((v) => (
+        <input key={v} type="hidden" name="reviews" value={v} />
+      ))}
 
       <div className="mt-1 flex flex-wrap items-center gap-2">
-        <MarkerGroup options={markerOptions} value={isMarker ? selected : null} onChange={setSelected} />
+        <MarkerGroup multiple options={markerOptions} value={markerValues} onChange={handleMarkersChange} />
 
-        <RadioGroup value={isMarker ? '' : (selected ?? '')} onChange={handleStatusChange} className="flex gap-2">
-          {reviewStatusOptions.map((value) => (
-            <Radio
-              key={value}
-              value={value}
-              className={({ checked }) =>
-                cx('cursor-pointer', buttonStyles({ variant: 'secondary', size: 'sm' }), {
-                  'bg-indigo-100! text-indigo-700 ring-indigo-200 hover:bg-indigo-100': checked,
-                })
-              }
-            >
-              <Label>{t(`common.review.status.${value}`)}</Label>
-            </Radio>
-          ))}
-        </RadioGroup>
+        <button
+          type="button"
+          onClick={handleNotReviewedToggle}
+          className={cx('cursor-pointer', buttonStyles({ variant: 'secondary', size: 'sm' }), {
+            'bg-indigo-100! text-indigo-700 ring-indigo-200 hover:bg-indigo-100': isNotReviewed,
+          })}
+        >
+          {t('common.review.status.not-reviewed')}
+        </button>
       </div>
     </Fieldset>
   );

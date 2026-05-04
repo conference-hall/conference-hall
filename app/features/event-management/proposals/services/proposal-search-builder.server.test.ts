@@ -345,7 +345,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     });
 
     it('filters proposals by user not reviewed only', async () => {
-      const filters: ProposalsFilters = { reviews: 'not-reviewed' };
+      const filters: ProposalsFilters = { reviews: ['not-reviewed'] };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(2);
@@ -354,7 +354,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     });
 
     it('filters proposals by user positive reviews only', async () => {
-      const filters: ProposalsFilters = { reviews: 'positive' };
+      const filters: ProposalsFilters = { reviews: ['positive'] };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
@@ -362,21 +362,21 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     });
 
     it('filters proposals by user negative reviews only', async () => {
-      const filters: ProposalsFilters = { reviews: 'negative' };
+      const filters: ProposalsFilters = { reviews: ['negative'] };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(0);
     });
 
     it('filters proposals by user no-opinion reviews only', async () => {
-      const filters: ProposalsFilters = { reviews: 'no-opinion' };
+      const filters: ProposalsFilters = { reviews: ['no-opinion'] };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(0);
     });
 
     it('filters proposals by user neutral reviews with exact star match', async () => {
-      const filters: ProposalsFilters = { reviews: 'neutral-1' };
+      const filters: ProposalsFilters = { reviews: ['neutral-1'] };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);

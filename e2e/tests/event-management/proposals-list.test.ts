@@ -89,7 +89,7 @@ test.describe('As owner', () => {
     await expect(proposalsPage.proposalCount(3)).toBeVisible();
 
     // filter by "not reviewed" proposals
-    await proposalsPage.clickOnReviewFilter('Not reviewed');
+    await proposalsPage.clickOnReviewFilter('Not reviewed', 'button');
     await expect(proposalsPage.proposalCount(1)).toBeVisible();
     await expect(proposalsPage.proposal(proposal3.title)).toBeVisible();
     await proposalsPage.clickOnClearFilters();
