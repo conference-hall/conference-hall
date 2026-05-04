@@ -29,7 +29,7 @@ export function SortMenu({ options, defaultSort, defaultOrder }: SortMenuProps) 
         <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()}>
           {options.map(({ name, value }) => {
             const selected = value === sort;
-            const orderValue = selected && order === 'asc' ? 'desc' : 'asc';
+            const orderValue = selected && order === 'desc' ? 'asc' : 'desc';
             const search = new URLSearchParams({ ...others, sort: value, order: orderValue });
 
             return (
@@ -41,9 +41,9 @@ export function SortMenu({ options, defaultSort, defaultOrder }: SortMenuProps) 
               >
                 {name}
                 {selected && order === 'asc' ? (
-                  <ArrowDownIcon className={menuItemIcon()} aria-label="Ascending sort" />
+                  <ArrowUpIcon className={menuItemIcon()} aria-label="Ascending sort" />
                 ) : selected && order === 'desc' ? (
-                  <ArrowUpIcon className={menuItemIcon()} aria-label="Descending sort" />
+                  <ArrowDownIcon className={menuItemIcon()} aria-label="Descending sort" />
                 ) : null}
               </MenuItem>
             );
