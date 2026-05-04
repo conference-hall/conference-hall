@@ -1,46 +1,10 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { ArrowsUpDownIcon, CheckIcon } from '@heroicons/react/16/solid';
-import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation, useSearchParams } from 'react-router';
-import { Button } from '~/design-system/button.tsx';
-import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.styles.ts';
-import { MenuTransition } from '~/design-system/transitions.tsx';
-
-const sortOptions = ['name-asc', 'name-desc'] as const;
+import { SortMenu as SortMenuBase } from '~/design-system/list/sort-menu.tsx';
 
 export function SortMenu() {
   const { t } = useTranslation();
-  const location = useLocation();
-  const [params] = useSearchParams();
-  const { sort = 'name-asc', ...filters } = Object.fromEntries(params.entries());
 
-  return (
-    <Menu>
-      <MenuButton as={Button} variant="secondary" iconLeft={ArrowsUpDownIcon} block>
-        {t('common.sort')}
-      </MenuButton>
+  const options = [{ value: 'name', name: t('common.sort.name') }];
 
-      <MenuTransition>
-        <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()}>
-          {sortOptions.map((value) => {
-            const selected = value === sort;
-            const search = new URLSearchParams({ ...filters, sort: value });
-
-            return (
-              <MenuItem
-                key={value}
-                as={Link}
-                to={{ pathname: location.pathname, search: search.toString() }}
-                className={cx('flex items-center justify-between', menuItem(), { 'font-semibold': selected })}
-              >
-                {t(`common.sort.${value}`)}
-                {selected ? <CheckIcon className={menuItemIcon()} aria-hidden="true" /> : null}
-              </MenuItem>
-            );
-          })}
-        </MenuItems>
-      </MenuTransition>
-    </Menu>
-  );
+  return <SortMenuBase options={options} defaultSort="name" defaultOrder="asc" />;
 }
