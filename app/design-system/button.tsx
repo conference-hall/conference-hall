@@ -141,7 +141,7 @@ export function Button(props: ButtonProps) {
   if (href !== undefined) {
     const anchorProps = otherProps as Omit<AnchorProps, keyof CommonProps>;
     return (
-      // oxlint-disable-next-line eslint-plugin-jsx-a11y(click-events-have-key-events),eslint-plugin-jsx-a11y(no-static-element-interactions)
+      // oxlint-disable-next-line click-events-have-key-events,no-static-element-interactions
       <a
         className={buttonClassName}
         aria-disabled={isDisabled ? 'true' : undefined}
