@@ -13,7 +13,7 @@ import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import type { Route } from './+types/teams.ts';
 import { AdminTeams, TeamsSearchFiltersSchema } from './services/admin-teams.server.ts';
 
-export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
+export const loader = async ({ context, url }: Route.LoaderArgs) => {
   const admin = context.get(AuthorizedAdminContext);
   const adminTeams = AdminTeams.for(admin);
   const { searchParams } = url;

@@ -29,7 +29,7 @@ describe('optionalAuth middleware', () => {
     const context = createMockContext();
     getSessionMock.mockResolvedValue({ user: { id: user.id } });
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
+    await optionalAuth({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext);
 
     expect(getSessionMock).toHaveBeenCalledWith({ headers: request.headers });
     expect(context.get(OptionalAuthContext)).toEqual({
@@ -50,7 +50,7 @@ describe('optionalAuth middleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
+    await optionalAuth({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext);
 
     expect(getSessionMock).toHaveBeenCalledWith({ headers: request.headers });
     expect(context.get(OptionalAuthContext)).toBeNull();
@@ -64,7 +64,7 @@ describe('optionalAuth middleware', () => {
     const context = createMockContext();
 
     await expect(
-      optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext),
+      optionalAuth({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext),
     ).rejects.toBeInstanceOf(Response);
 
     expect(signOutMock).toHaveBeenCalledWith({ headers: request.headers, returnHeaders: true });
@@ -75,7 +75,7 @@ describe('optionalAuth middleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
+    await optionalAuth({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext);
 
     expect(context.get(OptionalAuthContext)).toBeNull();
     expect(signOutMock).not.toHaveBeenCalled();
@@ -89,8 +89,8 @@ describe('requireAuth middleware', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
-    await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
+    await optionalAuth({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext);
+    await requireAuth({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext);
 
     expect(context.get(RequireAuthContext)).toEqual({
       id: user.id,
@@ -110,15 +110,15 @@ describe('requireAuth middleware', () => {
     const request = createMockRequest(url);
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
+    await optionalAuth({ request, context, params: {}, pattern: '', url }, mockNext);
 
     await expect(async () => {
-      await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
+      await requireAuth({ request, context, params: {}, pattern: '', url }, mockNext);
     }).rejects.toThrow(Response);
 
     let response: Response | null = null;
     try {
-      await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
+      await requireAuth({ request, context, params: {}, pattern: '', url }, mockNext);
     } catch (error) {
       response = error as Response;
     }
@@ -132,11 +132,11 @@ describe('requireAuth middleware', () => {
     const request = createMockRequest(url);
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
+    await optionalAuth({ request, context, params: {}, pattern: '', url }, mockNext);
 
     let response: Response | null = null;
     try {
-      await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
+      await requireAuth({ request, context, params: {}, pattern: '', url }, mockNext);
     } catch (error) {
       response = error as Response;
     }
@@ -149,11 +149,11 @@ describe('requireAuth middleware', () => {
     const request = createMockRequest(url);
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
+    await optionalAuth({ request, context, params: {}, pattern: '', url }, mockNext);
 
     let response: Response | null = null;
     try {
-      await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: url }, mockNext);
+      await requireAuth({ request, context, params: {}, pattern: '', url }, mockNext);
     } catch (error) {
       response = error as Response;
     }
@@ -168,8 +168,8 @@ describe('middleware chain behavior', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    await optionalAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
-    await requireAuth({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
+    await optionalAuth({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext);
+    await requireAuth({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext);
 
     expect(context.get(OptionalAuthContext)).toEqual({
       id: user.id,

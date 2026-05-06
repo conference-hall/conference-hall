@@ -56,12 +56,7 @@ export const requireAuthorizedEvent: MiddlewareFunction<Response> = async ({ par
 // Web API Event authorizations
 export const AuthorizedApiEventContext = createContext<AuthorizedApiEvent>();
 
-export const requireAuthorizedApiEvent: MiddlewareFunction<Response> = async ({
-  request,
-  params,
-  context,
-  unstable_url: url,
-}) => {
+export const requireAuthorizedApiEvent: MiddlewareFunction<Response> = async ({ request, params, context, url }) => {
   const disableQueryParams = await flags.get('disableApiKeyInQueryParams');
 
   let apiKey: string | null = null;

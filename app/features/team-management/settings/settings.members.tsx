@@ -18,7 +18,7 @@ import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components
 import { MemberFilters } from './components/member-filters.tsx';
 import { parseUrlFilters, TeamMembers } from './services/team-members.server.ts';
 
-export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
+export const loader = async ({ context, url }: Route.LoaderArgs) => {
   const filters = parseUrlFilters(url);
   const page = parseUrlPage(url);
 

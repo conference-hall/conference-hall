@@ -12,7 +12,7 @@ import { ProposalsExport } from './services/proposals-export.server.ts';
 
 export const middleware = [requireAuth, requireAuthorizedTeam, requireAuthorizedEvent];
 
-export const action = async ({ context, unstable_url: url }: Route.ActionArgs) => {
+export const action = async ({ context, url }: Route.ActionArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
   const i18n = getI18n(context);
   const filters = parseUrlFilters(url);

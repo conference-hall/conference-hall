@@ -5,7 +5,7 @@ import { auth } from './auth.server.ts';
 
 export const OptionalAuthContext = createContext<AuthenticatedUser | null>();
 
-export const optionalAuth: MiddlewareFunction<Response> = async ({ request, context, unstable_url: url }) => {
+export const optionalAuth: MiddlewareFunction<Response> = async ({ request, context, url }) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   const userId = session?.user.id;
@@ -25,7 +25,7 @@ export const optionalAuth: MiddlewareFunction<Response> = async ({ request, cont
 
 export const RequireAuthContext = createContext<AuthenticatedUser>();
 
-export const requireAuth: MiddlewareFunction<Response> = async ({ context, unstable_url: url }) => {
+export const requireAuth: MiddlewareFunction<Response> = async ({ context, url }) => {
   const user = context.get(OptionalAuthContext);
 
   if (!user) {
