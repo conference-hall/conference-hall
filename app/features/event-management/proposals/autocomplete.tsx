@@ -3,7 +3,7 @@ import { AuthorizedEventContext } from '~/shared/authorization/authorization.mid
 import type { Route } from './+types/autocomplete.ts';
 import { CfpReviewsSearch } from './services/cfp-reviews-search.server.ts';
 
-export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
+export const loader = async ({ context, url }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
   const filters = parseUrlFilters(url);
   return CfpReviewsSearch.for(authorizedEvent).autocomplete(filters);

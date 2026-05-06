@@ -11,7 +11,7 @@ import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import type { Route } from './+types/users.ts';
 import { AdminUsers, UsersSearchFiltersSchema } from './services/admin-users.server.ts';
 
-export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
+export const loader = async ({ context, url }: Route.LoaderArgs) => {
   const { searchParams } = url;
   const result = parseWithZod(searchParams, { schema: UsersSearchFiltersSchema });
   const filters = result.status === 'success' ? result.value : {};

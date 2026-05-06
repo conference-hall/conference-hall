@@ -20,7 +20,7 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'My talks library | Conference Hall' }]);
 };
 
-export const loader = async ({ context, unstable_url: url }: Route.LoaderArgs) => {
+export const loader = async ({ context, url }: Route.LoaderArgs) => {
   const authUser = context.get(RequireAuthContext);
   const { searchParams } = url;
   const filter = TalksListFilterSchema.safeParse(searchParams.get('filter'));

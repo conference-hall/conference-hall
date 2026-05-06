@@ -70,7 +70,7 @@ describe('requireAdmin', () => {
       notificationsUnreadCount: 0,
     });
 
-    await requireAdmin({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
+    await requireAdmin({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext);
 
     expect(context.get(AuthorizedAdminContext)).toBeDefined();
   });
@@ -82,7 +82,7 @@ describe('requireAdmin', () => {
     context.set(RequireAuthContext, null);
 
     await expect(
-      requireAdmin({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext),
+      requireAdmin({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext),
     ).rejects.toThrow(BadRequestError);
   });
 
@@ -103,7 +103,7 @@ describe('requireAdmin', () => {
     });
 
     await expect(async () => {
-      await requireAdmin({ request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL }, mockNext);
+      await requireAdmin({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext);
     }).rejects.toThrow(NotFoundError);
   });
 });
@@ -155,7 +155,7 @@ describe('requireAuthorizedTeam', () => {
     getAuthorizedTeamMock.mockResolvedValue(authorizedTeam);
 
     await requireAuthorizedTeam(
-      { request, context, params: { team: team.slug }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+      { request, context, params: { team: team.slug }, pattern: '', url: DEFAULT_URL },
       mockNext,
     );
 
@@ -171,7 +171,7 @@ describe('requireAuthorizedTeam', () => {
 
     await expect(
       requireAuthorizedTeam(
-        { request, context, params: { team: 'test-team' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+        { request, context, params: { team: 'test-team' }, pattern: '', url: DEFAULT_URL },
         mockNext,
       ),
     ).rejects.toThrow(BadRequestError);
@@ -194,10 +194,7 @@ describe('requireAuthorizedTeam', () => {
     });
 
     await expect(
-      requireAuthorizedTeam(
-        { request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL },
-        mockNext,
-      ),
+      requireAuthorizedTeam({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext),
     ).rejects.toThrow(BadRequestError);
   });
 
@@ -220,7 +217,7 @@ describe('requireAuthorizedTeam', () => {
 
     await expect(async () => {
       await requireAuthorizedTeam(
-        { request, context, params: { team: 'unauthorized-team' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+        { request, context, params: { team: 'unauthorized-team' }, pattern: '', url: DEFAULT_URL },
         mockNext,
       );
     }).rejects.toThrow(ForbiddenOperationError);
@@ -267,7 +264,7 @@ describe('requireAuthorizedEvent', () => {
     getAuthorizedEventMock.mockResolvedValue(authorizedEvent);
 
     await requireAuthorizedEvent(
-      { request, context, params: { event: event.slug }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+      { request, context, params: { event: event.slug }, pattern: '', url: DEFAULT_URL },
       mockNext,
     );
 
@@ -281,7 +278,7 @@ describe('requireAuthorizedEvent', () => {
 
     await expect(
       requireAuthorizedEvent(
-        { request, context, params: { event: 'test-event' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+        { request, context, params: { event: 'test-event' }, pattern: '', url: DEFAULT_URL },
         mockNext,
       ),
     ).rejects.toThrow(BadRequestError);
@@ -322,10 +319,7 @@ describe('requireAuthorizedEvent', () => {
     context.set(AuthorizedTeamContext, authorizedTeam);
 
     await expect(
-      requireAuthorizedEvent(
-        { request, context, params: {}, unstable_pattern: '', unstable_url: DEFAULT_URL },
-        mockNext,
-      ),
+      requireAuthorizedEvent({ request, context, params: {}, pattern: '', url: DEFAULT_URL }, mockNext),
     ).rejects.toThrow(BadRequestError);
   });
 
@@ -366,7 +360,7 @@ describe('requireAuthorizedEvent', () => {
 
     await expect(async () => {
       await requireAuthorizedEvent(
-        { request, context, params: { event: 'unauthorized-event' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+        { request, context, params: { event: 'unauthorized-event' }, pattern: '', url: DEFAULT_URL },
         mockNext,
       );
     }).rejects.toThrow(ForbiddenOperationError);
@@ -409,7 +403,7 @@ describe('requireAuthorizedEvent', () => {
 
     await expect(async () => {
       await requireAuthorizedEvent(
-        { request, context, params: { event: 'non-existent-event' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+        { request, context, params: { event: 'non-existent-event' }, pattern: '', url: DEFAULT_URL },
         mockNext,
       );
     }).rejects.toThrow(EventNotFoundError);
@@ -466,11 +460,11 @@ describe('middleware chain behavior', () => {
     getAuthorizedEventMock.mockResolvedValue(authorizedEvent);
 
     await requireAuthorizedTeam(
-      { request, context, params: { team: team.slug }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+      { request, context, params: { team: team.slug }, pattern: '', url: DEFAULT_URL },
       mockNext,
     );
     await requireAuthorizedEvent(
-      { request, context, params: { event: event.slug }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+      { request, context, params: { event: event.slug }, pattern: '', url: DEFAULT_URL },
       mockNext,
     );
 
@@ -484,7 +478,7 @@ describe('middleware chain behavior', () => {
 
     await expect(async () => {
       await requireAuthorizedEvent(
-        { request, context, params: { event: 'test-event' }, unstable_pattern: '', unstable_url: DEFAULT_URL },
+        { request, context, params: { event: 'test-event' }, pattern: '', url: DEFAULT_URL },
         mockNext,
       );
     }).rejects.toThrow(BadRequestError);
@@ -500,7 +494,7 @@ describe('requireAuthorizedApiEvent', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext);
+      await requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext);
 
       const contextEvent = context.get(AuthorizedApiEventContext);
       expect(contextEvent?.event.id).toBe(event.id);
@@ -515,9 +509,9 @@ describe('requireAuthorizedApiEvent', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
-      ).rejects.toThrow(ApiKeyInvalidError);
+      await expect(requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext)).rejects.toThrow(
+        ApiKeyInvalidError,
+      );
     });
 
     it('prefers header API key over query params', async () => {
@@ -527,7 +521,7 @@ describe('requireAuthorizedApiEvent', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext);
+      await requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext);
 
       const contextEvent = context.get(AuthorizedApiEventContext);
       expect(contextEvent?.event.id).toBe(event.id);
@@ -542,7 +536,7 @@ describe('requireAuthorizedApiEvent', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext);
+      await requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext);
 
       const contextEvent = context.get(AuthorizedApiEventContext);
       expect(contextEvent?.event.id).toBe(event.id);
@@ -557,7 +551,7 @@ describe('requireAuthorizedApiEvent', () => {
       const context = createMockContext();
       const params = { event: 'my-event' };
 
-      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext);
+      await requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext);
 
       const contextEvent = context.get(AuthorizedApiEventContext);
       expect(contextEvent?.event.slug).toBe('my-event');
@@ -571,9 +565,9 @@ describe('requireAuthorizedApiEvent', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
-      ).rejects.toThrow(ApiKeyQueryParamsDeprecatedError);
+      await expect(requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext)).rejects.toThrow(
+        ApiKeyQueryParamsDeprecatedError,
+      );
 
       await flags.set('disableApiKeyInQueryParams', false);
     });
@@ -586,7 +580,7 @@ describe('requireAuthorizedApiEvent', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext);
+      await requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext);
 
       const contextEvent = context.get(AuthorizedApiEventContext);
       expect(contextEvent?.event.id).toBe(event.id);
@@ -602,9 +596,9 @@ describe('requireAuthorizedApiEvent', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
-      ).rejects.toThrow(ForbiddenError);
+      await expect(requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext)).rejects.toThrow(
+        ForbiddenError,
+      );
     });
 
     it('throws EventNotFoundError when event slug is not in params', async () => {
@@ -613,9 +607,9 @@ describe('requireAuthorizedApiEvent', () => {
       const context = createMockContext();
       const params = {};
 
-      await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
-      ).rejects.toThrow(EventNotFoundError);
+      await expect(requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext)).rejects.toThrow(
+        EventNotFoundError,
+      );
     });
 
     it('throws EventNotFoundError when event does not exist', async () => {
@@ -624,9 +618,9 @@ describe('requireAuthorizedApiEvent', () => {
       const context = createMockContext();
       const params = { event: 'non-existent-event' };
 
-      await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
-      ).rejects.toThrow(EventNotFoundError);
+      await expect(requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext)).rejects.toThrow(
+        EventNotFoundError,
+      );
     });
 
     it('throws ApiKeyInvalidError when API key does not match', async () => {
@@ -636,9 +630,9 @@ describe('requireAuthorizedApiEvent', () => {
       const context = createMockContext();
       const params = { event: 'test-event' };
 
-      await expect(
-        requireAuthorizedApiEvent({ request, context, params, unstable_pattern: '', unstable_url: url }, mockNext),
-      ).rejects.toThrow(ApiKeyInvalidError);
+      await expect(requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext)).rejects.toThrow(
+        ApiKeyInvalidError,
+      );
     });
   });
 });

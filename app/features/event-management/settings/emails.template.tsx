@@ -20,7 +20,7 @@ import { EmailCustomBadge } from './components/email-custom-badge.tsx';
 import { EmailPreview } from './components/email-preview.tsx';
 import { EventEmailCustomizations } from './services/event-email-customizations.server.tsx';
 
-export const loader = async ({ params, context, unstable_url: url }: Route.LoaderArgs) => {
+export const loader = async ({ params, context, url }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
   const locale = url.searchParams.get('locale') || 'en';
   if (!isSupportedLanguage(locale)) throw new Response('Not Found', { status: 404 });

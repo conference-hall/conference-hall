@@ -57,7 +57,7 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Review proposal | Conference Hall' }]);
 };
 
-export const loader = async ({ params, context, unstable_url: url }: Route.LoaderArgs) => {
+export const loader = async ({ params, context, url }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
   const filters = parseUrlFilters(url);
 
