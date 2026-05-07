@@ -55,7 +55,7 @@ export default function AdminRequestsRoute({ loaderData }: Route.ComponentProps)
           {requests.map((req) => (
             <List.Row key={req.id} className="flex items-center justify-between gap-4 p-4">
               <div className="min-w-0 flex-1">
-                <Text size="s" weight="medium" truncate>
+                <Text size="xs" weight="medium" truncate>
                   {req.eventName}
                 </Text>
                 <Text size="xs" variant="secondary">
@@ -68,13 +68,13 @@ export default function AdminRequestsRoute({ loaderData }: Route.ComponentProps)
               <div className="flex gap-2">
                 <Form method="POST">
                   <input type="hidden" name="id" value={req.id} />
-                  <Button type="submit" name="intent" value="accept" variant="secondary" size="s" iconLeft={CheckIcon}>
+                  <Button type="submit" name="intent" value="accept" variant="secondary" size="xs" iconLeft={CheckIcon}>
                     {t('admin.requests.accept')}
                   </Button>
                 </Form>
                 <Form method="POST">
                   <input type="hidden" name="id" value={req.id} />
-                  <Button type="submit" name="intent" value="deny" variant="secondary" size="s" iconLeft={XMarkIcon}>
+                  <Button type="submit" name="intent" value="deny" variant="secondary" size="xs" iconLeft={XMarkIcon}>
                     {t('admin.requests.deny')}
                   </Button>
                 </Form>
