@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
 import { db } from '../../../../../prisma/db.server.ts';
@@ -11,15 +10,27 @@ export class TeamCreation {
     return new TeamCreation(userId);
   }
 
-  async create(data: z.infer<typeof TeamCreateSchema>) {
-    const user = await db.user.findFirst({ select: { organizerKey: true, teams: true }, where: { id: this.userId } });
+  async create(data: z.infer<typeof TeamCreateSchema>, token?: string) {
+    const user = await db.user.findFirst({ select: { teams: true }, where: { id: this.userId } });
+    const hasTeams = (user?.teams?.length ?? 0) > 0;
 
-    const hasBetaAccess = TeamBetaAccess.hasAccess(user, user?.teams?.length);
-    if (!hasBetaAccess) throw new ForbiddenOperationError();
+    if (!hasTeams) {
+      if (!token) throw new ForbiddenOperationError();
+      await this.consumeToken(token);
+    }
 
     const team = await db.team.create({ data });
     await db.teamMember.create({ data: { memberId: this.userId, teamId: team.id, role: 'OWNER' } });
     return team;
+  }
+
+  private async consumeToken(token: string) {
+    const result = await db.teamAccessRequest.updateMany({
+      where: { token, status: 'ACCEPTED' },
+      data: { status: 'COMPLETED' },
+    });
+
+    if (result.count === 0) throw new ForbiddenOperationError();
   }
 
   static async isSlugValid(slug: string) {

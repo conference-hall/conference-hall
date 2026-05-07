@@ -12,19 +12,27 @@ import { TeamForm } from './components/team-form.tsx';
 
 export const middleware = [requireAuth];
 
+export const loader = ({ url }: Route.LoaderArgs) => {
+  const token = url.searchParams.get('token');
+  return { token };
+};
+
 export const action = async ({ request, context }: Route.ActionArgs) => {
   const authUser = context.get(RequireAuthContext);
   const form = await request.formData();
   const result = await parseWithZod(form, { schema: TeamCreateSchema, async: true });
   if (result.status !== 'success') return result.error;
 
-  const team = await TeamCreation.for(authUser.id).create(result.value);
+  const token = form.get('token') as string | null;
+  const team = await TeamCreation.for(authUser.id).create(result.value, token || undefined);
   return redirect(`/team/${team.slug}`);
 };
 
-export default function NewTeamRoute({ actionData: errors }: Route.ComponentProps) {
+export default function NewTeamRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
   const formId = useId();
+  const { token } = loaderData;
+
   return (
     <FullscreenPage>
       <FullscreenPage.Title title={t('team.new.heading')} subtitle={t('team.new.description')} />
@@ -32,6 +40,7 @@ export default function NewTeamRoute({ actionData: errors }: Route.ComponentProp
       <Card>
         <Card.Content>
           <Form id={formId} method="POST" className="space-y-8">
+            {token ? <input type="hidden" name="token" value={token} /> : null}
             <TeamForm errors={errors} />
           </Form>
         </Card.Content>
