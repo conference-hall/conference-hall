@@ -32,7 +32,7 @@ const strongRateLimit = rateLimit({
   max: 10 * maxMultiple,
 });
 
-const securedPaths = [href('/speaker/settings'), href('/admin')];
+const securedPaths = [href('/speaker/settings'), href('/admin'), href('/team/request')];
 
 export function applyRateLimits(app: express.Application) {
   app.use((req, res, next) => {
