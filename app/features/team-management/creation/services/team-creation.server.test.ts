@@ -1,37 +1,61 @@
+import { teamAccessRequestFactory } from 'tests/factories/team-access-request.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { z } from 'zod';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
-import type { User } from '../../../../../prisma/generated/client.ts';
 import { TeamCreateSchema, TeamCreation } from './team-creation.server.ts';
 
 describe('TeamCreation', () => {
-  let user: User;
-
-  beforeEach(async () => {
-    user = await userFactory({ isOrganizer: true });
-  });
-
   describe('create', () => {
-    it('creates the team and add the user as owner', async () => {
-      const result = await TeamCreation.for(user.id).create({ name: 'Hello world', slug: 'hello-world' });
-
-      const team = await db.team.findUnique({ where: { slug: result.slug } });
-      expect(team?.name).toBe('Hello world');
-      expect(team?.slug).toBe('hello-world');
-
-      if (!team) throw new Error('Team not found');
-
-      const orgaMember = await db.teamMember.findUnique({
-        where: { memberId_teamId: { memberId: user.id, teamId: team.id } },
+    it('creates a team with valid accepted token for user without teams', async () => {
+      const user = await userFactory();
+      const request = await teamAccessRequestFactory({
+        attributes: { status: 'ACCEPTED', token: 'valid-token' },
       });
-      expect(orgaMember?.role).toBe('OWNER');
+
+      const team = await TeamCreation.for(user.id).create({ name: 'My Team', slug: 'my-team' }, 'valid-token');
+
+      expect(team.name).toBe('My Team');
+      const member = await db.teamMember.findFirst({ where: { memberId: user.id, teamId: team.id } });
+      expect(member?.role).toBe('OWNER');
+
+      const updated = await db.teamAccessRequest.findUnique({ where: { id: request.id } });
+      expect(updated?.status).toBe('COMPLETED');
     });
 
-    it('throws an error if user does not have organizer access', async () => {
+    it('allows team creation without token for user with existing teams', async () => {
       const user = await userFactory();
-      await expect(TeamCreation.for(user.id).create({ name: 'Hello world', slug: 'hello-world' })).rejects.toThrow(
+      await teamFactory({ owners: [user] });
+
+      const team = await TeamCreation.for(user.id).create({ name: 'Second Team', slug: 'second-team' });
+
+      expect(team.name).toBe('Second Team');
+    });
+
+    it('throws when user has no teams and no token provided', async () => {
+      const user = await userFactory();
+
+      await expect(TeamCreation.for(user.id).create({ name: 'Team', slug: 'team' })).rejects.toThrow(
+        ForbiddenOperationError,
+      );
+    });
+
+    it('throws when token is invalid', async () => {
+      const user = await userFactory();
+
+      await expect(TeamCreation.for(user.id).create({ name: 'Team', slug: 'team' }, 'invalid')).rejects.toThrow(
+        ForbiddenOperationError,
+      );
+    });
+
+    it('throws when token is already consumed', async () => {
+      const user = await userFactory();
+      await teamAccessRequestFactory({
+        attributes: { status: 'COMPLETED', token: 'used-token' },
+      });
+
+      await expect(TeamCreation.for(user.id).create({ name: 'Team', slug: 'team' }, 'used-token')).rejects.toThrow(
         ForbiddenOperationError,
       );
     });
