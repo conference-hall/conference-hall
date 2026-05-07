@@ -33,7 +33,7 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
 };
 
 export default function AdminRequestsRoute({ loaderData }: Route.ComponentProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { requests } = loaderData;
 
   return (
@@ -62,7 +62,7 @@ export default function AdminRequestsRoute({ loaderData }: Route.ComponentProps)
                   {req.email}
                 </Text>
                 <Text size="xs" variant="secondary">
-                  {formatDate(req.createdAt, { format: 'medium' })}
+                  {formatDate(req.createdAt, { format: 'medium', locale: i18n.language })}
                 </Text>
               </div>
               <div className="flex gap-2">
