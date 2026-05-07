@@ -1,17 +1,16 @@
 import type { Locator, Page } from '@playwright/test';
 import { PageObject } from '../../page-object.ts';
-import { NewTeamPage } from './new-team.page.ts';
 
 export class TeamAccessPage extends PageObject {
   readonly heading: Locator;
-  readonly formLink: Locator;
-  readonly keyInput: Locator;
+  readonly eventNameInput: Locator;
+  readonly emailInput: Locator;
 
   constructor(page: Page) {
     super(page);
     this.heading = page.getByRole('heading', { name: 'Become event organizer.' });
-    this.formLink = page.getByRole('link', { name: 'Request a beta access key' });
-    this.keyInput = page.getByLabel('Beta access key');
+    this.eventNameInput = page.getByLabel('Event name');
+    this.emailInput = page.getByLabel('Email');
   }
 
   async goto() {
@@ -20,8 +19,7 @@ export class TeamAccessPage extends PageObject {
     await this.heading.waitFor();
   }
 
-  async clickOnGetAccess() {
-    await this.page.getByRole('button', { name: 'Get access' }).click();
-    return new NewTeamPage(this.page);
+  async submitRequest() {
+    await this.page.getByRole('button', { name: 'Submit request' }).click();
   }
 }

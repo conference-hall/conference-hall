@@ -43,7 +43,7 @@ describe('UserAccount', () => {
       expect(result).toBeNull();
     });
 
-    it('returns hasTeamAccess false when user has no teams and no organizer key', async () => {
+    it('returns hasTeamAccess false when user has no teams', async () => {
       const user = await userFactory();
 
       const result = await UserAccount.for(user.id).get();

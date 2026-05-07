@@ -34,7 +34,7 @@ export async function resetDB() {
     db.event.deleteMany(),
     db.teamMember.deleteMany(),
     db.team.deleteMany(),
-    db.organizerKeyAccess.deleteMany(),
+    db.teamAccessRequest.deleteMany(),
     db.user.deleteMany(),
   ]);
 

@@ -11,7 +11,6 @@ import { conversationMessageFactory } from '../tests/factories/conversation-mess
 import { conversationFactory } from '../tests/factories/conversations.ts';
 import { eventFactory } from '../tests/factories/events.ts';
 import { eventFormatFactory } from '../tests/factories/formats.ts';
-import { organizerKeyFactory } from '../tests/factories/organizer-key.ts';
 import { proposalFactory } from '../tests/factories/proposals.ts';
 import { reviewFactory } from '../tests/factories/reviews.ts';
 import { talkFactory } from '../tests/factories/talks.ts';
@@ -353,8 +352,6 @@ async function seed() {
   for (const _value of Array.from({ length: 26 })) {
     await eventFactory({ traits: ['meetup-cfp-open'] });
   }
-
-  await organizerKeyFactory({ attributes: { id: '123456' } });
 
   await seedEventLogos();
 }
