@@ -427,6 +427,25 @@ model ScheduleSession {
   @@map("schedule_sessions")
 }
 
+enum TeamAccessRequestStatus {
+  PENDING
+  ACCEPTED
+  COMPLETED
+}
+
+model TeamAccessRequest {
+  id         String                  @id @default(dbgenerated("gen_random_uuid()"))
+  eventName  String
+  email      String
+  token      String?
+  status     TeamAccessRequestStatus @default(PENDING)
+  createdAt  DateTime                @default(now())
+  acceptedAt DateTime?
+
+  @@index([status])
+  @@map("team_access_requests")
+}
+
 model EventEmailCustomization {
   id        String   @id @default(cuid())
   eventId   String
