@@ -3,15 +3,17 @@ import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Turnstile } from '@marsidev/react-turnstile';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { ConferenceHallLogo } from '~/design-system/logo.tsx';
+import { Subtitle, Text } from '~/design-system/typography.tsx';
 import { TeamAccessRequestSchema } from '~/features/team-management/creation/services/team-access-request.schema.server.ts';
 import { TeamAccessRequest } from '~/features/team-management/creation/services/team-access-request.server.ts';
 import { verifyCaptcha } from '~/shared/captcha/verify-captcha.server.ts';
+import { useNonce } from '~/shared/nonce/use-nonce.ts';
 import { getWebServerEnv } from '../../../../servers/environment.server.ts';
 import type { Route } from './+types/request-access.ts';
 
@@ -39,14 +41,20 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
 export default function RequestAccessRoute({ loaderData, actionData }: Route.ComponentProps) {
   const { t } = useTranslation();
+  const nonce = useNonce();
   const { captchaSiteKey } = loaderData;
 
   if (actionData?.success) {
     return (
-      <FullscreenPage>
-        <FullscreenPage.Title title={t('team.request.heading')} />
+      <Page>
+        <header className="flex flex-col items-center pt-8 sm:mx-auto sm:w-full sm:max-w-md sm:pt-16">
+          <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
+          <h2 className="mt-6 text-center text-2xl leading-9 font-bold tracking-tight text-gray-900">
+            {t('team.request.heading')}
+          </h2>
+        </header>
 
-        <Card className="p-8 md:p-12">
+        <Card className="mt-10 p-6 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12">
           <div className="flex flex-col items-center gap-4 text-center">
             <CheckCircleIcon className="size-12 text-green-500" />
             <Text size="l" weight="medium">
@@ -55,15 +63,21 @@ export default function RequestAccessRoute({ loaderData, actionData }: Route.Com
             <Text variant="secondary">{t('team.request.success.description')}</Text>
           </div>
         </Card>
-      </FullscreenPage>
+      </Page>
     );
   }
 
   return (
-    <FullscreenPage>
-      <FullscreenPage.Title title={t('team.request.heading')} subtitle={t('team.request.description')} />
+    <Page>
+      <header className="flex flex-col items-center pt-8 sm:mx-auto sm:w-full sm:max-w-md sm:pt-16">
+        <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
+        <h2 className="mt-6 text-center text-2xl leading-9 font-bold tracking-tight text-gray-900">
+          {t('team.request.heading')}
+        </h2>
+        <Subtitle className="mt-2 text-center">{t('team.request.description')}</Subtitle>
+      </header>
 
-      <Card className="p-8 md:p-12">
+      <Card className="mt-10 space-y-4 p-6 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12">
         <Form method="POST" className="space-y-4">
           <Input
             name="eventName"
@@ -79,11 +93,21 @@ export default function RequestAccessRoute({ loaderData, actionData }: Route.Com
             error={actionData?.errors?.email}
           />
 
-          {captchaSiteKey ? <Turnstile siteKey={captchaSiteKey} /> : null}
+          {captchaSiteKey && (
+            <Turnstile
+              siteKey={captchaSiteKey}
+              options={{ theme: 'light', size: 'invisible' }}
+              scriptOptions={{ nonce }}
+              className="hidden"
+              aria-hidden
+            />
+          )}
 
-          <Button type="submit">{t('team.request.form.submit')}</Button>
+          <Button type="submit" className="mt-2 w-full">
+            {t('team.request.form.submit')}
+          </Button>
         </Form>
       </Card>
-    </FullscreenPage>
+    </Page>
   );
 }
