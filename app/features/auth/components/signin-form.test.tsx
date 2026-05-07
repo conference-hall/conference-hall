@@ -25,6 +25,7 @@ const defaultProps = {
   defaultEmail: '',
   captchaSiteKey: undefined,
   forgotPasswordPath: '/auth/forgot-password',
+  redirectTo: '/',
   onSuccess: vi.fn(),
   onEmailNotVerified: vi.fn(),
 };
@@ -80,7 +81,7 @@ describe('SigninForm', () => {
 
     expect(defaultProps.onSuccess).toHaveBeenCalled();
     expect(authClient.signIn.email).toHaveBeenCalledWith(
-      { email: 'user@example.com', password: 'secret' },
+      { email: 'user@example.com', password: 'secret', callbackURL: '/' },
       expect.objectContaining({ onSuccess: expect.any(Function) }),
     );
   });

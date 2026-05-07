@@ -1,6 +1,6 @@
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { href } from 'react-router';
+import { href, useSearchParams } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -15,6 +15,8 @@ export const meta = (args: Route.MetaArgs) => {
 
 export default function EmailVerificationSent() {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirectTo');
   return (
     <Page>
       <header className="flex flex-col items-center pt-8 sm:mx-auto sm:w-full sm:max-w-md sm:pt-16">
@@ -36,7 +38,10 @@ export default function EmailVerificationSent() {
 
       <footer className="my-8 flex justify-center gap-1">
         <Subtitle>{t('auth.common.go-back')}</Subtitle>
-        <Link to={href('/auth/login')} weight="semibold">
+        <Link
+          to={redirectTo ? `${href('/auth/login')}?redirectTo=${encodeURIComponent(redirectTo)}` : href('/auth/login')}
+          weight="semibold"
+        >
           {t('auth.common.sign-in')}
         </Link>
       </footer>

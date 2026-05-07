@@ -24,6 +24,7 @@ vi.mock('~/shared/nonce/use-nonce.ts', () => ({
 const defaultProps = {
   defaultEmail: '',
   captchaSiteKey: undefined,
+  redirectTo: '/',
   onSuccess: vi.fn(),
 };
 
@@ -92,7 +93,7 @@ describe('SignupForm', () => {
 
     expect(defaultProps.onSuccess).toHaveBeenCalled();
     expect(authClient.signUp.email).toHaveBeenCalledWith(
-      { email: 'user@example.com', password: 'Password1', name: 'John Doe' },
+      { email: 'user@example.com', password: 'Password1', name: 'John Doe', callbackURL: '/' },
       expect.objectContaining({ onSuccess: expect.any(Function) }),
     );
   });

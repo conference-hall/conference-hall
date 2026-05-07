@@ -46,7 +46,8 @@ export default function Signup({ loaderData }: Route.ComponentProps) {
         <SignupForm
           defaultEmail={defaultEmail}
           captchaSiteKey={captchaSiteKey}
-          onSuccess={() => navigate('/auth/email-verification')}
+          redirectTo={redirectTo}
+          onSuccess={() => navigate(`/auth/email-verification?redirectTo=${encodeURIComponent(redirectTo)}`)}
         />
 
         <DividerWithLabel label={t('common.or')} />

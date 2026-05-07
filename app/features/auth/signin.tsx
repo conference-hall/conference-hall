@@ -51,8 +51,9 @@ export default function Signin({ loaderData }: Route.ComponentProps) {
           defaultEmail={defaultEmail}
           captchaSiteKey={captchaSiteKey}
           forgotPasswordPath={forgotPasswordPath}
+          redirectTo={redirectTo}
           onSuccess={() => navigate(redirectTo, { replace: true })}
-          onEmailNotVerified={() => navigate('/auth/email-verification')}
+          onEmailNotVerified={() => navigate(`/auth/email-verification?redirectTo=${encodeURIComponent(redirectTo)}`)}
         />
 
         <DividerWithLabel label={t('common.or')} />

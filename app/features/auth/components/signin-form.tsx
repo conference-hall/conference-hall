@@ -17,6 +17,7 @@ type SigninFormProps = {
   defaultEmail: string;
   captchaSiteKey: string | undefined;
   forgotPasswordPath: string;
+  redirectTo: string;
   onSuccess: () => void;
   onEmailNotVerified: () => void;
 };
@@ -25,6 +26,7 @@ export function SigninForm({
   defaultEmail,
   captchaSiteKey,
   forgotPasswordPath,
+  redirectTo,
   onSuccess,
   onEmailNotVerified,
 }: SigninFormProps) {
@@ -54,7 +56,7 @@ export function SigninForm({
     }
 
     await authClient.signIn.email(
-      { email, password },
+      { email, password, callbackURL: redirectTo },
       {
         headers,
         onRequest: () => setLoading(true),
