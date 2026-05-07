@@ -1,13 +1,15 @@
 import { parseWithZod } from '@conform-to/zod/v4';
+import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Turnstile } from '@marsidev/react-turnstile';
 import { useTranslation } from 'react-i18next';
-import { Form } from 'react-router';
+import { Form, href } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
 import { TeamAccessRequestSchema } from '~/features/team-management/creation/services/team-access-request.schema.server.ts';
@@ -63,6 +65,12 @@ export default function RequestAccessRoute({ loaderData, actionData }: Route.Com
             <Text variant="secondary">{t('team.request.success.description')}</Text>
           </div>
         </Card>
+
+        <footer className="my-8 flex justify-center">
+          <Link to={href('/')} weight="semibold" iconLeft={ArrowLeftIcon}>
+            {t('team.request.back')}
+          </Link>
+        </footer>
       </Page>
     );
   }
@@ -82,6 +90,7 @@ export default function RequestAccessRoute({ loaderData, actionData }: Route.Com
           <Input
             name="eventName"
             label={t('team.request.form.event-name')}
+            placeholder={t('team.request.form.event-name.placeholder')}
             required
             error={actionData?.errors?.eventName}
           />
@@ -89,6 +98,7 @@ export default function RequestAccessRoute({ loaderData, actionData }: Route.Com
             name="email"
             type="email"
             label={t('team.request.form.email')}
+            placeholder={t('team.request.form.email.placeholder')}
             required
             error={actionData?.errors?.email}
           />
@@ -108,6 +118,12 @@ export default function RequestAccessRoute({ loaderData, actionData }: Route.Com
           </Button>
         </Form>
       </Card>
+
+      <footer className="my-8 flex justify-center">
+        <Link to={href('/')} weight="semibold" iconLeft={ArrowLeftIcon}>
+          {t('team.request.back')}
+        </Link>
+      </footer>
     </Page>
   );
 }
