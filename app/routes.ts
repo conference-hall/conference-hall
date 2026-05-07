@@ -137,6 +137,7 @@ export default [
     route('users', './features/admin/users/users.tsx'),
     route('users/:user', './features/admin/users/user.tsx'),
     route('teams', './features/admin/teams/teams.tsx'),
+    route('requests', './features/admin/requests/requests.tsx'),
     route('flags', './features/admin/feature-flags/feature-flags.tsx'),
     route('debug', './features/admin/debug/debug.tsx'),
     route('debug/heap-snapshot', './features/admin/debug/heap-snapshot.tsx'),
