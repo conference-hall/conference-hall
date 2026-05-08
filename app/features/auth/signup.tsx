@@ -45,6 +45,7 @@ export default function Signup({ loaderData }: Route.ComponentProps) {
       <Card className="mt-10 space-y-8 p-6 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12">
         <SignupForm
           defaultEmail={defaultEmail}
+          redirectTo={redirectTo}
           captchaSiteKey={captchaSiteKey}
           onSuccess={() => navigate('/auth/email-verification')}
         />
