@@ -4,8 +4,9 @@ import { StarIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
-import { AvatarGroup, AvatarName } from '~/design-system/avatar.tsx';
+import { Avatar, AvatarGroup } from '~/design-system/avatar.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import { TimeDistance } from '~/design-system/utils/time-distance.tsx';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
 import { feelingAndNoteToMarker, getReviewMarkerOptions } from '../../review-markers.config.ts';
 
@@ -69,7 +70,13 @@ export function ReviewsGroupEntry({ reviews }: Props) {
 
             return (
               <div key={review.id} className="flex items-center gap-2">
-                <AvatarName picture={review.picture} name={review.name} size="xs" truncate />
+                <Avatar picture={review.picture} name={review.name} size="xs" aria-hidden />
+                <div className="flex min-w-0 items-baseline gap-1">
+                  <Text size="xs" weight="semibold" truncate>
+                    {review.name}
+                  </Text>
+                  <TimeDistance date={review.updatedAt} className="shrink-0 text-xs text-gray-500" />
+                </div>
                 {option && (
                   <div className="ml-auto flex shrink-0 items-center gap-1">
                     {review.note !== null && (

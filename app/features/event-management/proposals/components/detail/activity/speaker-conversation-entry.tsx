@@ -20,12 +20,12 @@ export function SpeakerConversationEntry({ messages, speakers, canManageConversa
     <ActivityFeed.Entry
       withLine
       marker={
-        <div className="relative flex h-8 w-8 flex-none items-center justify-center rounded-full border border-blue-100 bg-indigo-50">
+        <div className="relative flex h-8 w-8 flex-none items-center justify-center rounded-full border border-gray-200 bg-white">
           <ChatBubbleLeftRightIcon className="h-4 w-4 text-gray-600" aria-hidden />
         </div>
       }
     >
-      <div className="flex flex-col justify-between gap-2 rounded-md bg-indigo-50/50 p-3 ring-1 ring-blue-100 ring-inset sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-2 rounded-md bg-blue-50/50 p-3 ring-1 ring-blue-200 ring-inset sm:flex-row sm:items-center">
         <div className="flex flex-col truncate sm:flex-row sm:items-center sm:gap-1">
           <AvatarGroup avatars={speakers} size="xs" className="hidden pr-2 sm:flex" />
           <Text size="s" weight="semibold">
