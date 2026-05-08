@@ -31,7 +31,7 @@ export class ProposalReview {
         speakers: event.displayProposalsSpeakers,
         formats: true,
         categories: true,
-        reviews: true,
+        reviews: { include: { user: true } },
         tags: true,
       },
       where: { id: this.proposalId },
@@ -65,6 +65,7 @@ export class ProposalReview {
       reviews: {
         you: reviews.ofUser(this.authorizedEvent.userId),
         summary: event.displayProposalsReviews ? reviews.summary() : null,
+        members: event.displayProposalsReviews ? reviews.ofMembers() : null,
       },
       speakers:
         proposal.speakers?.map((speaker) => ({

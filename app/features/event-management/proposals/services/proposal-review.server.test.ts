@@ -96,6 +96,7 @@ describe('ProposalReview', () => {
         ],
         reviews: {
           summary: { average: null, negatives: 0, positives: 0 },
+          members: [],
           you: { feeling: null, note: null },
         },
       });
@@ -122,6 +123,10 @@ describe('ProposalReview', () => {
 
       expect(review.reviews).toEqual({
         summary: { average: 2.5, positives: 1, negatives: 1 },
+        members: expect.arrayContaining([
+          expect.objectContaining({ name: owner.name, feeling: 'NEGATIVE', note: 0 }),
+          expect.objectContaining({ name: member.name, feeling: 'POSITIVE', note: 5 }),
+        ]),
         you: { note: 0, feeling: 'NEGATIVE' },
       });
     });
@@ -137,6 +142,7 @@ describe('ProposalReview', () => {
 
       expect(review.reviews).toEqual({
         summary: null,
+        members: null,
         you: { note: 0, feeling: 'NEGATIVE' },
       });
     });

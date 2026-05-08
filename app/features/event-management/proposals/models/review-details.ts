@@ -32,8 +32,9 @@ export class ReviewDetails {
         picture: review.user?.picture,
         note: review.note,
         feeling: review.feeling,
+        updatedAt: review.updatedAt,
       })),
-      'name',
+      'updatedAt',
     );
   }
 
