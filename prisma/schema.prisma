@@ -74,6 +74,25 @@ model OrganizerKeyAccess {
   @@map("organizer_key_access")
 }
 
+enum TeamAccessRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model TeamAccessRequest {
+  id        String                  @id @default(cuid())
+  eventName String
+  email     String
+  status    TeamAccessRequestStatus @default(PENDING)
+  token     String?                 @unique
+  usedAt    DateTime?
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+
+  @@map("team_access_requests")
+}
+
 model Talk {
   id             String     @id @default(cuid())
   title          String
