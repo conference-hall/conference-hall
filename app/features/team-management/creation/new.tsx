@@ -9,8 +9,16 @@ import { TeamCreateSchema, TeamCreation } from '~/features/team-management/creat
 import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/new.ts';
 import { TeamForm } from './components/team-form.tsx';
+import { hasTeamAccess } from './services/has-team-access.server.ts';
 
 export const middleware = [requireAuth];
+
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const authUser = context.get(RequireAuthContext);
+  const hasAccess = await hasTeamAccess(authUser.id);
+  if (!hasAccess) throw redirect('/team/request');
+  return null;
+};
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
   const authUser = context.get(RequireAuthContext);

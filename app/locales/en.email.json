@@ -51,5 +51,19 @@
   "speakers.proposal-submitted.body.text1": "We've successfully received \"{{proposal}}\" for {{event}}.",
   "speakers.proposal-submitted.body.text2": "To help organizers with the selection process, please complete your speaker profile.",
   "speakers.proposal-submitted.body.title": "Thank you for your proposal!",
-  "speakers.proposal-submitted.subject": "[{{event}}] Submission confirmed"
+  "speakers.proposal-submitted.subject": "[{{event}}] Submission confirmed",
+  "organizers.team-access-approved.subject": "Welcome to Conference Hall!",
+  "organizers.team-access-approved.body.title": "Welcome to Conference Hall!",
+  "organizers.team-access-approved.body.greeting": "Hi,",
+  "organizers.team-access-approved.body.text1": "Your request to manage \"{{eventName}}\" on Conference Hall has been approved!",
+  "organizers.team-access-approved.body.features-intro": "With Conference Hall, you can:",
+  "organizers.team-access-approved.body.feature1": "Create your organizer team",
+  "organizers.team-access-approved.body.feature2": "Set up a Call for Papers",
+  "organizers.team-access-approved.body.feature3": "Review and manage proposals",
+  "organizers.team-access-approved.body.feature4": "Build your event schedule",
+  "organizers.team-access-approved.body.cta": "Create your team",
+  "admin.new-team-request.subject": "New team access request",
+  "admin.new-team-request.body.title": "New team access request",
+  "admin.new-team-request.body.text1": "{{email}} has requested access to manage \"{{eventName}}\" on Conference Hall.",
+  "admin.new-team-request.body.cta": "Review in admin panel"
 }

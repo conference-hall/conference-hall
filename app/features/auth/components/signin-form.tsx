@@ -15,6 +15,7 @@ import { validateRequiredEmailAndPassword } from '~/shared/validators/auth.ts';
 
 type SigninFormProps = {
   defaultEmail: string;
+  redirectTo: string;
   captchaSiteKey: string | undefined;
   forgotPasswordPath: string;
   onSuccess: () => void;
@@ -23,6 +24,7 @@ type SigninFormProps = {
 
 export function SigninForm({
   defaultEmail,
+  redirectTo,
   captchaSiteKey,
   forgotPasswordPath,
   onSuccess,
@@ -54,7 +56,7 @@ export function SigninForm({
     }
 
     await authClient.signIn.email(
-      { email, password },
+      { email, password, callbackURL: redirectTo },
       {
         headers,
         onRequest: () => setLoading(true),

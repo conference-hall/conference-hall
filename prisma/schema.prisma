@@ -27,7 +27,6 @@ model User {
   deletedAt                DateTime?
   migrationId              String?
   organizerKey             String?
-  organizerKeyAccess       OrganizerKeyAccess?       @relation(fields: [organizerKey], references: [id])
   talks                    Talk[]                    @relation("speakers_talks")
   teams                    TeamMember[]
   reviews                  Review[]
@@ -65,13 +64,23 @@ model Account {
   @@map("accounts")
 }
 
-model OrganizerKeyAccess {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  revokedAt DateTime?
-  users     User[]
+enum TeamAccessRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
 
-  @@map("organizer_key_access")
+model TeamAccessRequest {
+  id        String                  @id @default(cuid())
+  eventName String
+  email     String
+  status    TeamAccessRequestStatus @default(PENDING)
+  token     String?                 @unique
+  usedAt    DateTime?
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+
+  @@map("team_access_requests")
 }
 
 model Talk {

@@ -14,6 +14,7 @@ export async function resetDB() {
   }
 
   await db.$transaction([
+    db.teamAccessRequest.deleteMany(),
     db.survey.deleteMany(),
     db.review.deleteMany(),
     db.conversationReaction.deleteMany(),
@@ -34,7 +35,6 @@ export async function resetDB() {
     db.event.deleteMany(),
     db.teamMember.deleteMany(),
     db.team.deleteMany(),
-    db.organizerKeyAccess.deleteMany(),
     db.user.deleteMany(),
   ]);
 

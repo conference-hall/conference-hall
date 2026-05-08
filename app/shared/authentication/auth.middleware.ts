@@ -29,7 +29,7 @@ export const requireAuth: MiddlewareFunction<Response> = async ({ context, url }
   const user = context.get(OptionalAuthContext);
 
   if (!user) {
-    const redirectTo = url.pathname;
+    const redirectTo = url.search ? `${url.pathname}${url.search}` : url.pathname;
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
     throw redirect(`/auth/login?${searchParams}`);
   }

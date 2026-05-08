@@ -22,6 +22,7 @@ export default function AdminLayoutRoute() {
           </NavTab>
           <NavTab to={href('/admin/users')}>{t('admin.nav.users')}</NavTab>
           <NavTab to={href('/admin/teams')}>{t('admin.nav.teams')}</NavTab>
+          <NavTab to={href('/admin/requests')}>{t('admin.nav.requests')}</NavTab>
           <NavTab to={href('/admin/flags')}>{t('admin.nav.flags')}</NavTab>
           <NavTab to={href('/admin/debug')}>{t('admin.nav.debug')}</NavTab>
         </NavTabs>

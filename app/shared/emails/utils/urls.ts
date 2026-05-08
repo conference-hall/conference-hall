@@ -14,3 +14,7 @@ export function buildSpeakerProposalUrl(event: string, proposal: string) {
 export function buildReviewProposalUrl(team: string, event: string, proposal: string) {
   return `${APP_URL}${href('/team/:team/:event/proposals/:proposal', { team, event, proposal })}`;
 }
+
+export function buildAdminRequestsUrl() {
+  return `${APP_URL}${href('/admin/requests')}`;
+}

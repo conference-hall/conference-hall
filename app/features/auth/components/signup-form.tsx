@@ -15,11 +15,12 @@ import { validateEmailAndPassword } from '~/shared/validators/auth.ts';
 
 type SignupFormProps = {
   defaultEmail: string;
+  redirectTo: string;
   captchaSiteKey: string | undefined;
   onSuccess: () => void;
 };
 
-export function SignupForm({ defaultEmail, captchaSiteKey, onSuccess }: SignupFormProps) {
+export function SignupForm({ defaultEmail, redirectTo, captchaSiteKey, onSuccess }: SignupFormProps) {
   const { t } = useTranslation();
   const nonce = useNonce();
 
@@ -47,7 +48,7 @@ export function SignupForm({ defaultEmail, captchaSiteKey, onSuccess }: SignupFo
     }
 
     await authClient.signUp.email(
-      { email, password, name },
+      { email, password, name, callbackURL: redirectTo },
       {
         headers,
         onRequest: () => setLoading(true),

@@ -51,5 +51,19 @@
   "speakers.proposal-submitted.body.text1": "Nous avons bien reçu \"{{proposal}}\" pour {{event}}.",
   "speakers.proposal-submitted.body.text2": "Pour aider les organisateurs dans le processus de sélection, veuillez compléter votre profil de speaker.",
   "speakers.proposal-submitted.body.title": "Merci pour votre proposition !",
-  "speakers.proposal-submitted.subject": "[{{event}}] Soumission confirmée"
+  "speakers.proposal-submitted.subject": "[{{event}}] Soumission confirmée",
+  "organizers.team-access-approved.subject": "Bienvenue sur Conference Hall !",
+  "organizers.team-access-approved.body.title": "Bienvenue sur Conference Hall !",
+  "organizers.team-access-approved.body.greeting": "Bonjour,",
+  "organizers.team-access-approved.body.text1": "Votre demande pour gérer « {{eventName}} » sur Conference Hall a été approuvée !",
+  "organizers.team-access-approved.body.features-intro": "Avec Conference Hall, vous pouvez :",
+  "organizers.team-access-approved.body.feature1": "Créer votre équipe d'organisateurs",
+  "organizers.team-access-approved.body.feature2": "Mettre en place un appel à propositions",
+  "organizers.team-access-approved.body.feature3": "Examiner et gérer les propositions",
+  "organizers.team-access-approved.body.feature4": "Construire le programme de votre événement",
+  "organizers.team-access-approved.body.cta": "Créer votre équipe",
+  "admin.new-team-request.subject": "Nouvelle demande d'accès équipe",
+  "admin.new-team-request.body.title": "Nouvelle demande d'accès équipe",
+  "admin.new-team-request.body.text1": "{{email}} a demandé l'accès pour gérer « {{eventName}} » sur Conference Hall.",
+  "admin.new-team-request.body.cta": "Examiner dans le panneau d'administration"
 }
