@@ -17,15 +17,18 @@ export class UserAccount {
   }
 
   async get(): Promise<AuthenticatedUser | null> {
-    const user = await db.user.findUnique({ where: { id: this.userId } });
+    const user = await db.user.findUnique({
+      select: { uid: true, name: true, email: true, picture: true, organizerKey: true },
+      where: { id: this.userId },
+    });
     if (!user) return null;
 
     const teams = await this.teams();
     const hasTeamAccess = teams.length > 0 || Boolean(user.organizerKey);
-    const notificationsUnreadCount = await Notifications.for(user.id).unreadCount();
+    const notificationsUnreadCount = await Notifications.for(this.userId).unreadCount();
 
     return {
-      id: user.id,
+      id: this.userId,
       uid: user.uid,
       name: user.name,
       email: user.email,

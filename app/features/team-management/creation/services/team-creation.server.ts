@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { SlugSchema } from '~/shared/validators/slug.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import { hasTeamAccess } from './has-team-access.server.ts';
 
 export class TeamCreation {
   constructor(private userId: string) {}
@@ -11,9 +12,7 @@ export class TeamCreation {
   }
 
   async create(data: z.infer<typeof TeamCreateSchema>) {
-    const user = await db.user.findFirst({ select: { organizerKey: true, teams: true }, where: { id: this.userId } });
-
-    const hasAccess = (user?.teams?.length ?? 0) > 0 || Boolean(user?.organizerKey);
+    const hasAccess = await hasTeamAccess(this.userId);
     if (!hasAccess) throw new ForbiddenOperationError();
 
     const team = await db.team.create({ data });
