@@ -66,5 +66,5 @@
   "admin.new-team-request.subject": "New team access request",
   "admin.new-team-request.body.title": "New team access request",
   "admin.new-team-request.body.text1": "{{email}} has requested access to manage \"{{eventName}}\" on Conference Hall.",
-  "admin.new-team-request.body.text2": "Review this request in the admin panel."
+  "admin.new-team-request.body.cta": "Review in admin panel"
 }

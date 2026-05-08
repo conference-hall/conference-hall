@@ -66,5 +66,5 @@
   "admin.new-team-request.subject": "Nouvelle demande d'accès équipe",
   "admin.new-team-request.body.title": "Nouvelle demande d'accès équipe",
   "admin.new-team-request.body.text1": "{{email}} a demandé l'accès pour gérer « {{eventName}} » sur Conference Hall.",
-  "admin.new-team-request.body.text2": "Examinez cette demande dans le panneau d'administration."
+  "admin.new-team-request.body.cta": "Examiner dans le panneau d'administration"
 }

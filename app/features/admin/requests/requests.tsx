@@ -1,13 +1,13 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
-import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { TeamAccessRequests } from '~/features/team-management/creation/services/team-access-request.server.ts';
 import { AuthorizedAdminContext } from '~/shared/authorization/authorization.middleware.ts';
+import { formatDatetime } from '~/shared/datetimes/datetimes.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -48,12 +48,6 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   }
 };
 
-const statusColors = {
-  PENDING: 'yellow' as const,
-  ACCEPTED: 'green' as const,
-  REJECTED: 'red' as const,
-};
-
 export default function AdminRequestsRoute({ loaderData }: Route.ComponentProps) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
@@ -79,13 +73,11 @@ export default function AdminRequestsRoute({ loaderData }: Route.ComponentProps)
                   {req.email}
                 </Text>
                 <Text size="xs" variant="secondary">
-                  {new Date(req.createdAt).toLocaleDateString(locale)}
+                  {formatDatetime(new Date(req.createdAt), { format: 'short', locale })}
                 </Text>
               </div>
 
               <div className="flex items-center gap-3">
-                <Badge color={statusColors[req.status]}>{req.status}</Badge>
-
                 {req.status === 'PENDING' && (
                   <div className="flex gap-2">
                     <Form method="POST">

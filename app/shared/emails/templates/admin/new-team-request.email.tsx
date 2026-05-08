@@ -1,6 +1,7 @@
-import { Heading, Text } from 'react-email';
+import { Button, Heading, Section, Text } from 'react-email';
 import type { LocaleEmailData } from '~/shared/emails/email.types.ts';
 import type { EmailPayload } from '~/shared/emails/send-email.job.ts';
+import { buildAdminRequestsUrl } from '~/shared/emails/utils/urls.ts';
 import { getEmailI18n } from '~/shared/i18n/i18n.emails.ts';
 import BaseEmail, { styles } from '../base.email.tsx';
 
@@ -16,7 +17,12 @@ export default function NewTeamRequestEmail({ eventName, email, locale }: EmailP
       <Heading className={styles.h1}>{t('admin.new-team-request.body.title')}</Heading>
 
       <Text>{t('admin.new-team-request.body.text1', { email, eventName })}</Text>
-      <Text>{t('admin.new-team-request.body.text2')}</Text>
+
+      <Section className="my-8 text-center">
+        <Button href={buildAdminRequestsUrl()} className={styles.button}>
+          {t('admin.new-team-request.body.cta')}
+        </Button>
+      </Section>
 
       <Text>{t('common.email.signature')}</Text>
     </BaseEmail>

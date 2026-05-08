@@ -19,19 +19,12 @@ export default function TeamAccessApprovedEmail({ eventName, activateUrl, locale
       <Text>{t('organizers.team-access-approved.body.text1', { eventName })}</Text>
 
       <Text>{t('organizers.team-access-approved.body.features-intro')}</Text>
-      <Text>
-        {'• '}
-        {t('organizers.team-access-approved.body.feature1')}
-        {'\n'}
-        {'• '}
-        {t('organizers.team-access-approved.body.feature2')}
-        {'\n'}
-        {'• '}
-        {t('organizers.team-access-approved.body.feature3')}
-        {'\n'}
-        {'• '}
-        {t('organizers.team-access-approved.body.feature4')}
-      </Text>
+      <ul style={{ paddingLeft: '20px', margin: '0 0 16px 0' }}>
+        <li>{t('organizers.team-access-approved.body.feature1')}</li>
+        <li>{t('organizers.team-access-approved.body.feature2')}</li>
+        <li>{t('organizers.team-access-approved.body.feature3')}</li>
+        <li>{t('organizers.team-access-approved.body.feature4')}</li>
+      </ul>
 
       <Section className="my-8 text-center">
         <Button href={activateUrl} className={styles.button}>

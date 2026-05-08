@@ -1,8 +1,9 @@
 import { parseWithZod } from '@conform-to/zod/v4';
+import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Turnstile } from '@marsidev/react-turnstile';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form, useNavigation } from 'react-router';
+import { Form, Link, useNavigation } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -57,7 +58,7 @@ export default function RequestAccessRoute({ loaderData, actionData }: Route.Com
     return (
       <Page>
         <div className="flex flex-col items-center pt-8 sm:mx-auto sm:w-full sm:max-w-md sm:pt-16">
-          <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
+          <CheckCircleIcon className="h-12 w-12 text-green-500" aria-hidden />
           <h2 className="mt-6 text-center text-2xl leading-9 font-bold tracking-tight text-gray-900">
             {t('team.request.success.heading')}
           </h2>
@@ -65,6 +66,11 @@ export default function RequestAccessRoute({ loaderData, actionData }: Route.Com
         <Card className="mt-10 p-6 sm:mx-auto sm:w-full sm:max-w-lg sm:p-12">
           <Text>{t('team.request.success.message')}</Text>
         </Card>
+        <div className="mt-6 text-center sm:mx-auto sm:w-full sm:max-w-lg">
+          <Link to="/" className="text-sm text-indigo-600 hover:text-indigo-500">
+            {t('team.request.back')}
+          </Link>
+        </div>
       </Page>
     );
   }
@@ -117,6 +123,11 @@ export default function RequestAccessRoute({ loaderData, actionData }: Route.Com
           </Button>
         </Form>
       </Card>
+      <div className="mt-6 text-center sm:mx-auto sm:w-full sm:max-w-lg">
+        <Link to="/" className="text-sm text-indigo-600 hover:text-indigo-500">
+          {t('team.request.back')}
+        </Link>
+      </div>
     </Page>
   );
 }
