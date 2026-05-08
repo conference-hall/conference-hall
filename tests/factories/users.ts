@@ -3,7 +3,6 @@ import { hashPassword } from 'better-auth/crypto';
 import { db } from '../../prisma/db.server.ts';
 import type { UserCreateInput } from '../../prisma/generated/models.ts';
 import { applyTraits } from './helpers/traits.ts';
-import { organizerKeyFactory } from './organizer-key.ts';
 
 const TRAITS = {
   'clark-kent': {
@@ -54,8 +53,7 @@ export const userFactory = async (options: UserFactoryOptions = {}) => {
   };
 
   if (isOrganizer) {
-    const key = await organizerKeyFactory();
-    defaultAttributes.organizerKeyAccess = { connect: { id: key.id } };
+    defaultAttributes.organizerKey = 'organizer-access';
   }
 
   const data = {

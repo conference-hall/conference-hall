@@ -116,12 +116,6 @@ export class ApiKeyQueryParamsDeprecatedError extends BadRequestError {
   }
 }
 
-export class InvalidAccessKeyError extends BadRequestError {
-  constructor() {
-    super('Invalid access key.');
-  }
-}
-
 export class TalkAlreadySubmittedError extends BadRequestError {
   constructor() {
     super('Talk already submitted');

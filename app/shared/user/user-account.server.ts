@@ -1,5 +1,4 @@
 import { Notifications } from '~/features/notifications/services/notifications.server.ts';
-import { TeamBetaAccess } from '~/features/team-management/creation/services/team-beta-access.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import AccountDeletedEmail from '~/shared/emails/templates/auth/account-deleted.email.tsx';
 import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
@@ -22,7 +21,7 @@ export class UserAccount {
     if (!user) return null;
 
     const teams = await this.teams();
-    const hasTeamAccess = TeamBetaAccess.hasAccess(user, teams.length);
+    const hasTeamAccess = teams.length > 0 || Boolean(user.organizerKey);
     const notificationsUnreadCount = await Notifications.for(user.id).unreadCount();
 
     return {

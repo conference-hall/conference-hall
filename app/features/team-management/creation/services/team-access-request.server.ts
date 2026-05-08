@@ -36,11 +36,9 @@ export class TeamAccessRequests {
         data: { usedAt: new Date() },
       });
 
-      const accessKey = await tx.organizerKeyAccess.create({ data: {} });
-
       await tx.user.update({
         where: { id: userId },
-        data: { organizerKey: accessKey.id },
+        data: { organizerKey: request.id },
       });
     });
   }
