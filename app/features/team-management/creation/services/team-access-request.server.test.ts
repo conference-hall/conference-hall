@@ -46,10 +46,19 @@ describe('TeamAccessRequests', () => {
       await expect(TeamAccessRequests.activate('nonexistent', user.id)).rejects.toThrow(ForbiddenOperationError);
     });
 
-    it('throws when token is already used', async () => {
+    it('succeeds idempotently when token already used by same user', async () => {
+      const token = randomUUID();
+      const request = await teamAccessRequestFactory({ attributes: { status: 'ACCEPTED', token, usedAt: new Date() } });
+      const user = await userFactory({ attributes: { organizerKey: request.id } });
+
+      await expect(TeamAccessRequests.activate(token, user.id)).resolves.toBeUndefined();
+    });
+
+    it('throws when token is already used by another user', async () => {
       const user = await userFactory();
       const token = randomUUID();
-      await teamAccessRequestFactory({ attributes: { status: 'ACCEPTED', token, usedAt: new Date() } });
+      const request = await teamAccessRequestFactory({ attributes: { status: 'ACCEPTED', token, usedAt: new Date() } });
+      await userFactory({ attributes: { organizerKey: request.id } });
 
       await expect(TeamAccessRequests.activate(token, user.id)).rejects.toThrow(ForbiddenOperationError);
     });

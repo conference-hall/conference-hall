@@ -1,7 +1,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { Form, useSearchParams } from 'react-router';
-import { Badge } from '~/design-system/badges.tsx';
+import { BadgeDot } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -102,17 +102,14 @@ export default function AdminRequestsRoute({ loaderData }: Route.ComponentProps)
                 </Text>
                 <div className="flex items-center gap-2">
                   <Text size="xs" variant="secondary">
-                    {req.email}
+                    {req.email} •
                   </Text>
                   <Text size="xs" variant="secondary">
-                    ·
+                    <ClientOnly>{() => formatDatetime(req.createdAt, { format: 'short', locale })}</ClientOnly> •
                   </Text>
-                  <Text size="xs" variant="secondary">
-                    <ClientOnly>{() => formatDatetime(req.createdAt, { format: 'short', locale })}</ClientOnly>
-                  </Text>
-                  <Badge color={STATUS_BADGE_COLORS[req.status]} compact pill>
+                  <BadgeDot color={STATUS_BADGE_COLORS[req.status]} compact pill>
                     {t(STATUS_I18N_KEYS[req.status])}
-                  </Badge>
+                  </BadgeDot>
                 </div>
               </div>
 

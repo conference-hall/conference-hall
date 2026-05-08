@@ -19,7 +19,7 @@ export default function TeamAccessApprovedEmail({ eventName, activateUrl, locale
       <Text>{t('organizers.team-access-approved.body.text1', { eventName })}</Text>
 
       <Text>{t('organizers.team-access-approved.body.features-intro')}</Text>
-      <ul style={{ paddingLeft: '20px', margin: '0 0 16px 0' }}>
+      <ul className="m-0 mb-4 pl-5 text-sm">
         <li>{t('organizers.team-access-approved.body.feature1')}</li>
         <li>{t('organizers.team-access-approved.body.feature2')}</li>
         <li>{t('organizers.team-access-approved.body.feature3')}</li>
@@ -32,7 +32,6 @@ export default function TeamAccessApprovedEmail({ eventName, activateUrl, locale
         </Button>
       </Section>
 
-      <Text>{t('organizers.team-access-approved.body.text2')}</Text>
       <Text>{t('common.email.signature')}</Text>
     </BaseEmail>
   );

@@ -62,7 +62,6 @@
   "organizers.team-access-approved.body.feature3": "Review and manage proposals",
   "organizers.team-access-approved.body.feature4": "Build your event schedule",
   "organizers.team-access-approved.body.cta": "Create your team",
-  "organizers.team-access-approved.body.text2": "This link can only be used once.",
   "admin.new-team-request.subject": "New team access request",
   "admin.new-team-request.body.title": "New team access request",
   "admin.new-team-request.body.text1": "{{email}} has requested access to manage \"{{eventName}}\" on Conference Hall.",

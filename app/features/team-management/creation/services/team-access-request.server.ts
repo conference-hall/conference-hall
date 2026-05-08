@@ -53,7 +53,13 @@ export class TeamAccessRequests {
   static async activate(token: string, userId: string): Promise<void> {
     const request = await db.teamAccessRequest.findUnique({ where: { token } });
 
-    if (!request || request.usedAt) {
+    if (!request) {
+      throw new ForbiddenOperationError();
+    }
+
+    if (request.usedAt) {
+      const user = await db.user.findUnique({ where: { id: userId }, select: { organizerKey: true } });
+      if (user?.organizerKey === request.id) return;
       throw new ForbiddenOperationError();
     }
 

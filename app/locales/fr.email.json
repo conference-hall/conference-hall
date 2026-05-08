@@ -62,7 +62,6 @@
   "organizers.team-access-approved.body.feature3": "Examiner et gérer les propositions",
   "organizers.team-access-approved.body.feature4": "Construire le programme de votre événement",
   "organizers.team-access-approved.body.cta": "Créer votre équipe",
-  "organizers.team-access-approved.body.text2": "Ce lien ne peut être utilisé qu'une seule fois.",
   "admin.new-team-request.subject": "Nouvelle demande d'accès équipe",
   "admin.new-team-request.body.title": "Nouvelle demande d'accès équipe",
   "admin.new-team-request.body.text1": "{{email}} a demandé l'accès pour gérer « {{eventName}} » sur Conference Hall.",
