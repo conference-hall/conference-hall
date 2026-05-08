@@ -1,4 +1,4 @@
-import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { HeartIcon, MinusCircleIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import type { TFunction } from 'i18next';
 import type { MarkerOption } from '~/design-system/forms/marker-group.tsx';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
@@ -21,14 +21,14 @@ type MarkerConfig = {
 };
 
 const markerConfigs: MarkerConfig[] = [
-  { value: 'no-opinion', icon: NoSymbolIcon, fill: 'fill-red-100' },
-  { value: 'negative', icon: XCircleIcon, fill: 'fill-gray-300' },
-  { value: 'neutral-1', icon: StarIcon, fill: 'fill-yellow-400', cumulative: true },
-  { value: 'neutral-2', icon: StarIcon, fill: 'fill-yellow-400', cumulative: true },
-  { value: 'neutral-3', icon: StarIcon, fill: 'fill-yellow-400', cumulative: true },
-  { value: 'neutral-4', icon: StarIcon, fill: 'fill-yellow-400', cumulative: true },
-  { value: 'neutral-5', icon: StarIcon, fill: 'fill-yellow-400', cumulative: true },
-  { value: 'positive', icon: HeartIcon, fill: 'fill-red-400' },
+  { value: 'no-opinion', icon: MinusCircleIcon, fill: 'fill-gray-400 stroke-white' },
+  { value: 'negative', icon: XCircleIcon, fill: 'fill-red-400 stroke-white' },
+  { value: 'neutral-1', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
+  { value: 'neutral-2', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
+  { value: 'neutral-3', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
+  { value: 'neutral-4', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
+  { value: 'neutral-5', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
+  { value: 'positive', icon: HeartIcon, fill: 'fill-red-400 stroke-red-400' },
 ];
 
 export function getReviewMarkerOptions(t: TFunction): MarkerOption[] {
