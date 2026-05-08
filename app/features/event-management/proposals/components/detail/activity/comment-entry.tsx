@@ -1,25 +1,18 @@
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { MessageBlock } from '~/features/conversations/components/message-block.tsx';
-import type { FeedItem } from '~/features/event-management/proposals/services/activity-feed.server.ts';
+import type { Message } from '~/shared/types/conversation.types.ts';
 
-// todo(comments): FeedItem type should be shared (not on server)
-export function CommentEntry({ item, canManageConversations }: { item: FeedItem; canManageConversations: boolean }) {
-  if (item.type !== 'comment') return null;
-
+export function CommentEntry({
+  message,
+  canManageConversations,
+}: {
+  message: Message;
+  canManageConversations: boolean;
+}) {
   return (
-    <ActivityFeed.Entry marker={<Avatar picture={item.picture} name={item.user} />} withLine>
-      <MessageBlock
-        channel="comment"
-        message={{
-          id: item.id,
-          content: item.comment,
-          sender: { userId: item.userId, name: item.user, picture: item.picture },
-          reactions: item.reactions,
-          sentAt: item.timestamp,
-        }}
-        canManageConversations={canManageConversations}
-      />
+    <ActivityFeed.Entry marker={<Avatar picture={message.sender.picture} name={message.sender.name} />} withLine>
+      <MessageBlock channel="comment" message={message} canManageConversations={canManageConversations} />
     </ActivityFeed.Entry>
   );
 }
