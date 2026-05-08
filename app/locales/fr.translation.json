@@ -1017,6 +1017,7 @@
   "team.request.form.email": "Email",
   "team.request.form.event-name.placeholder": "ex. Ma Super Conf",
   "team.request.form.event-name": "Nom de l'événement",
+  "team.request.form.captcha-error": "La vérification du captcha a échoué. Veuillez réessayer.",
   "team.request.form.submit": "Demander l'accès",
   "team.request.form.submitting": "Envoi en cours...",
   "team.request.heading": "Demander un accès organisateur",

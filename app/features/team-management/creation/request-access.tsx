@@ -38,7 +38,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const turnstileToken = result.value['cf-turnstile-response'];
   const isValid = await verifyTurnstile(turnstileToken);
   if (!isValid) {
-    return { success: false, errors: { 'cf-turnstile-response': ['Captcha verification failed'] } };
+    return { success: false, errors: { captcha: ['captcha-failed'] } };
   }
 
   await TeamAccessRequests.submit({ eventName: result.value.eventName, email: result.value.email });
@@ -104,6 +104,8 @@ export default function RequestAccessRoute({ loaderData, actionData }: Route.Com
             required
             error={actionData?.errors?.email}
           />
+
+          {actionData?.errors?.captcha && <Text variant="error">{t('team.request.form.captcha-error')}</Text>}
 
           {captchaSiteKey && (
             <Turnstile

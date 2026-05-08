@@ -1017,6 +1017,7 @@
   "team.request.form.email": "Email",
   "team.request.form.event-name.placeholder": "e.g. My Awesome Conf",
   "team.request.form.event-name": "Event name",
+  "team.request.form.captcha-error": "Captcha verification failed. Please try again.",
   "team.request.form.submit": "Request access",
   "team.request.form.submitting": "Submitting...",
   "team.request.heading": "Request organizer access",

@@ -53,7 +53,7 @@ export class TeamAccessRequests {
   static async activate(token: string, userId: string): Promise<void> {
     const request = await db.teamAccessRequest.findUnique({ where: { token } });
 
-    if (!request) {
+    if (!request || request.status !== 'ACCEPTED') {
       throw new ForbiddenOperationError();
     }
 
