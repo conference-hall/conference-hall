@@ -58,6 +58,7 @@ export default [
   // Team creation pages
   route('team/new', './features/team-management/creation/new.tsx'),
   route('team/request', './features/team-management/creation/request-access.tsx'),
+  route('team/activate', './features/team-management/creation/activate-access.tsx'),
 
   // Team management pages
   route('team/:team', './features/team-management/layout.tsx', { id: 'team-management' }, [
@@ -137,6 +138,7 @@ export default [
     route('users', './features/admin/users/users.tsx'),
     route('users/:user', './features/admin/users/user.tsx'),
     route('teams', './features/admin/teams/teams.tsx'),
+    route('requests', './features/admin/requests/requests.tsx'),
     route('flags', './features/admin/feature-flags/feature-flags.tsx'),
     route('debug', './features/admin/debug/debug.tsx'),
     route('debug/heap-snapshot', './features/admin/debug/heap-snapshot.tsx'),

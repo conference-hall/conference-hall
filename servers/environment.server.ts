@@ -40,6 +40,7 @@ const WebServerSchema = z.object({
   S3_ACCESS_KEY_ID: z.string(),
   S3_SECRET_ACCESS_KEY: z.string(),
   S3_REGION: z.string().optional().default('auto'),
+  ADMIN_NOTIFICATION_EMAIL: z.string().optional(),
 });
 
 const JobServerSchema = z.object({

@@ -32,6 +32,12 @@ const strongRateLimit = rateLimit({
   max: 10 * maxMultiple,
 });
 
+const teamRequestRateLimit = rateLimit({
+  ...defaultRateLimit,
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5 * maxMultiple,
+});
+
 const securedPaths = [href('/speaker/settings'), href('/admin')];
 
 export function applyRateLimits(app: express.Application) {
@@ -39,6 +45,10 @@ export function applyRateLimits(app: express.Application) {
     // Rate limit for GET /api/v1/
     if (req.path.startsWith('/api/v1/')) {
       return apiRateLimit(req, res, next);
+    }
+    // Rate limit for public team request form
+    if (req.method === 'POST' && req.path === href('/team/request')) {
+      return teamRequestRateLimit(req, res, next);
     }
     // Rate limit for secured paths
     if (req.method !== 'GET' && req.method !== 'HEAD' && securedPaths.some((p) => req.path.includes(p))) {
