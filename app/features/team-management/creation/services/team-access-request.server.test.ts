@@ -30,9 +30,7 @@ describe('TeamAccessRequests', () => {
     it('marks token as used and grants organizer access', async () => {
       const user = await userFactory();
       const token = randomUUID();
-      const request = await teamAccessRequestFactory({
-        attributes: { status: 'ACCEPTED', token },
-      });
+      const request = await teamAccessRequestFactory({ attributes: { status: 'ACCEPTED', token } });
 
       await TeamAccessRequests.activate(token, user.id);
 
@@ -51,9 +49,7 @@ describe('TeamAccessRequests', () => {
     it('throws when token is already used', async () => {
       const user = await userFactory();
       const token = randomUUID();
-      await teamAccessRequestFactory({
-        attributes: { status: 'ACCEPTED', token, usedAt: new Date() },
-      });
+      await teamAccessRequestFactory({ attributes: { status: 'ACCEPTED', token, usedAt: new Date() } });
 
       await expect(TeamAccessRequests.activate(token, user.id)).rejects.toThrow(ForbiddenOperationError);
     });

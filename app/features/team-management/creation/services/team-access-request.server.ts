@@ -8,14 +8,10 @@ import { getWebServerEnv } from '../../../../../servers/environment.server.ts';
 
 export class TeamAccessRequests {
   static async submit(data: { eventName: string; email: string }): Promise<void> {
-    const existing = await db.teamAccessRequest.findFirst({
-      where: { email: data.email, status: 'PENDING' },
-    });
+    const existing = await db.teamAccessRequest.findFirst({ where: { email: data.email, status: 'PENDING' } });
     if (existing) return;
 
-    await db.teamAccessRequest.create({
-      data: { eventName: data.eventName, email: data.email },
-    });
+    await db.teamAccessRequest.create({ data: { eventName: data.eventName, email: data.email } });
 
     const { ADMIN_NOTIFICATION_EMAIL } = getWebServerEnv();
     if (ADMIN_NOTIFICATION_EMAIL) {
@@ -31,15 +27,8 @@ export class TeamAccessRequests {
     }
 
     await db.$transaction(async (tx) => {
-      await tx.teamAccessRequest.update({
-        where: { id: request.id },
-        data: { usedAt: new Date() },
-      });
-
-      await tx.user.update({
-        where: { id: userId },
-        data: { organizerKey: request.id },
-      });
+      await tx.teamAccessRequest.update({ where: { id: request.id }, data: { usedAt: new Date() } });
+      await tx.user.update({ where: { id: userId }, data: { organizerKey: request.id } });
     });
   }
 
@@ -62,9 +51,6 @@ export class TeamAccessRequests {
   }
 
   static async reject(requestId: string): Promise<void> {
-    await db.teamAccessRequest.update({
-      where: { id: requestId },
-      data: { status: 'REJECTED' },
-    });
+    await db.teamAccessRequest.update({ where: { id: requestId }, data: { status: 'REJECTED' } });
   }
 }

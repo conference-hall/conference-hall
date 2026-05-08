@@ -8,6 +8,7 @@ import { H1, Text } from '~/design-system/typography.tsx';
 import { TeamAccessRequests } from '~/features/team-management/creation/services/team-access-request.server.ts';
 import { AuthorizedAdminContext } from '~/shared/authorization/authorization.middleware.ts';
 import { formatDatetime } from '~/shared/datetimes/datetimes.ts';
+import { NotAuthorizedError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { parseUrlPage } from '~/shared/pagination/pagination.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
@@ -25,7 +26,7 @@ export const loader = async ({ context, url }: Route.LoaderArgs) => {
 
 export const action = async ({ request, context }: Route.ActionArgs) => {
   const admin = context.get(AuthorizedAdminContext);
-  AdminRequests.for(admin);
+  if (!admin) throw new NotAuthorizedError();
 
   const i18n = getI18n(context);
   const form = await request.formData();
@@ -73,7 +74,7 @@ export default function AdminRequestsRoute({ loaderData }: Route.ComponentProps)
                   {req.email}
                 </Text>
                 <Text size="xs" variant="secondary">
-                  {formatDatetime(new Date(req.createdAt), { format: 'short', locale })}
+                  {formatDatetime(req.createdAt, { format: 'short', locale })}
                 </Text>
               </div>
 
