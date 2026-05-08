@@ -3,20 +3,27 @@ import { useUser } from '~/app-platform/components/user-context.tsx';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { MessageInputForm } from '~/features/conversations/components/message-input-form.tsx';
-import type { Feed } from '~/features/event-management/proposals/services/activity-feed.server.ts';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { CommentEntry } from './comment-entry.tsx';
-import { ReviewEntry } from './review-entry.tsx';
+import type { ReviewMember } from './reviews-group-entry.tsx';
+import { ReviewsGroupEntry } from './reviews-group-entry.tsx';
 import { SpeakerConversationEntry } from './speaker-conversation-entry.tsx';
 
 type Props = {
-  activity: Feed;
+  comments: Array<Message>;
+  reviews: Array<ReviewMember> | null;
   speakersConversation: Array<Message>;
   speakers: Array<{ id: string; name: string; picture: string | null }>;
   canManageConversations: boolean;
 };
 
-export function ProposalActivityFeed({ activity, speakersConversation, speakers, canManageConversations }: Props) {
+export function ProposalActivityFeed({
+  comments,
+  reviews,
+  speakersConversation,
+  speakers,
+  canManageConversations,
+}: Props) {
   const user = useUser();
   const { t } = useTranslation();
 
@@ -32,15 +39,11 @@ export function ProposalActivityFeed({ activity, speakersConversation, speakers,
         />
       ) : null}
 
-      {activity.map((item) => {
-        if (item.type === 'comment') {
-          return <CommentEntry key={item.id} item={item} canManageConversations={canManageConversations} />;
-        } else if (item.type === 'review') {
-          return <ReviewEntry key={item.id} item={item} />;
-        } else {
-          return null;
-        }
-      })}
+      {reviews && reviews.length > 0 ? <ReviewsGroupEntry reviews={reviews} /> : null}
+
+      {comments.map((message) => (
+        <CommentEntry key={message.id} message={message} canManageConversations={canManageConversations} />
+      ))}
 
       <ActivityFeed.Entry marker={<Avatar picture={user?.picture} name={user?.name} />}>
         <MessageInputForm
