@@ -5,7 +5,7 @@ import { hasTeamAccess } from './has-team-access.server.ts';
 
 describe('hasTeamAccess', () => {
   it('returns true when user has an organizer key', async () => {
-    const user = await userFactory({ isOrganizer: true });
+    const user = await userFactory({ traits: ['withOrganizerKey'] });
     expect(await hasTeamAccess(user.id)).toBe(true);
   });
 

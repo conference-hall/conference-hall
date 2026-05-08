@@ -20,9 +20,8 @@ const TRAITS = {
     email: 'spiderman@example.com',
     picture: 'https://i.pravatar.cc/150?img=8',
   },
-  admin: {
-    admin: true,
-  },
+  admin: { admin: true },
+  withOrganizerKey: { organizerKey: 'organizer-access' },
 };
 
 type Trait = keyof typeof TRAITS;
@@ -32,13 +31,12 @@ export const DEFAULT_PASSWORD = 'password';
 export type UserFactoryOptions = {
   attributes?: Partial<UserCreateInput>;
   traits?: Trait[];
-  isOrganizer?: boolean;
   withPasswordAccount?: boolean;
   withSocialAccount?: boolean;
 };
 
 export const userFactory = async (options: UserFactoryOptions = {}) => {
-  const { attributes = {}, traits = [], isOrganizer, withPasswordAccount, withSocialAccount } = options;
+  const { attributes = {}, traits = [], withPasswordAccount, withSocialAccount } = options;
 
   const defaultAttributes: UserCreateInput = {
     name: randFullName(),
@@ -51,10 +49,6 @@ export const userFactory = async (options: UserFactoryOptions = {}) => {
     socialLinks: [randUrl(), randUrl()],
     emailVerified: true,
   };
-
-  if (isOrganizer) {
-    defaultAttributes.organizerKey = 'organizer-access';
-  }
 
   const data = {
     ...defaultAttributes,

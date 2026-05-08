@@ -10,7 +10,7 @@ describe('TeamCreation', () => {
   let user: User;
 
   beforeEach(async () => {
-    user = await userFactory({ isOrganizer: true });
+    user = await userFactory({ traits: ['withOrganizerKey'] });
   });
 
   describe('create', () => {

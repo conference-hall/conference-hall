@@ -15,7 +15,8 @@ export const middleware = [requireAuth];
 
 export const loader = async ({ context }: Route.LoaderArgs) => {
   const authUser = context.get(RequireAuthContext);
-  if (!(await hasTeamAccess(authUser.id))) throw redirect('/team/request');
+  const hasAccess = await hasTeamAccess(authUser.id);
+  if (!hasAccess) throw redirect('/team/request');
   return null;
 };
 
