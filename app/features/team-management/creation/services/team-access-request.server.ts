@@ -3,10 +3,41 @@ import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import NewTeamRequestEmail from '~/shared/emails/templates/admin/new-team-request.email.tsx';
 import TeamAccessApprovedEmail from '~/shared/emails/templates/organizers/team-access-approved.email.tsx';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
+import { Pagination } from '~/shared/pagination/pagination.ts';
 import { db } from '../../../../../prisma/db.server.ts';
-import { getWebServerEnv } from '../../../../../servers/environment.server.ts';
+import { getSharedServerEnv, getWebServerEnv } from '../../../../../servers/environment.server.ts';
+
+const STATUSES = ['PENDING', 'ACCEPTED', 'REJECTED'] as const;
+type Status = (typeof STATUSES)[number];
 
 export class TeamAccessRequests {
+  static async listRequests(status: Status, page: number) {
+    const where = { status };
+
+    const total = await db.teamAccessRequest.count({ where });
+    const pagination = new Pagination({ page, total });
+
+    const requests = await db.teamAccessRequest.findMany({
+      where,
+      skip: pagination.pageIndex * pagination.pageSize,
+      take: pagination.pageSize,
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return {
+      filters: { status },
+      pagination: { current: pagination.page, pages: pagination.pageCount },
+      statistics: { total },
+      results: requests.map((r) => ({
+        id: r.id,
+        eventName: r.eventName,
+        email: r.email,
+        status: r.status,
+        createdAt: r.createdAt,
+      })),
+    };
+  }
+
   static async submit(data: { eventName: string; email: string }): Promise<void> {
     const existing = await db.teamAccessRequest.findFirst({ where: { email: data.email, status: 'PENDING' } });
     if (existing) return;
@@ -32,7 +63,7 @@ export class TeamAccessRequests {
     });
   }
 
-  static async accept(requestId: string, appUrl: string): Promise<void> {
+  static async accept(requestId: string): Promise<void> {
     const token = randomUUID();
 
     const request = await db.teamAccessRequest.update({
@@ -40,7 +71,8 @@ export class TeamAccessRequests {
       data: { status: 'ACCEPTED', token },
     });
 
-    const activateUrl = `${appUrl}/team/activate?token=${token}`;
+    const { APP_URL } = getSharedServerEnv();
+    const activateUrl = `${APP_URL}/team/activate?token=${token}`;
 
     await sendEmail.trigger(
       TeamAccessApprovedEmail.buildPayload(request.email, 'en', {

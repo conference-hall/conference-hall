@@ -59,7 +59,7 @@ describe('TeamAccessRequests', () => {
     it('sets status to ACCEPTED and generates token', async () => {
       const request = await teamAccessRequestFactory();
 
-      await TeamAccessRequests.accept(request.id, 'http://localhost:3000');
+      await TeamAccessRequests.accept(request.id);
 
       const updated = await db.teamAccessRequest.findUnique({ where: { id: request.id } });
       expect(updated?.status).toBe('ACCEPTED');
