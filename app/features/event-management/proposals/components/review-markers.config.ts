@@ -1,4 +1,4 @@
-import { HeartIcon, MinusCircleIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import type { TFunction } from 'i18next';
 import type { MarkerOption } from '~/design-system/forms/marker-group.tsx';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
@@ -21,8 +21,8 @@ type MarkerConfig = {
 };
 
 const markerConfigs: MarkerConfig[] = [
-  { value: 'no-opinion', icon: MinusCircleIcon, fill: 'fill-gray-400 stroke-white' },
-  { value: 'negative', icon: XCircleIcon, fill: 'fill-red-400 stroke-white' },
+  { value: 'no-opinion', icon: NoSymbolIcon, fill: 'stroke-gray-400' },
+  { value: 'negative', icon: XCircleIcon, fill: 'stroke-red-500' },
   { value: 'neutral-1', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
   { value: 'neutral-2', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
   { value: 'neutral-3', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
@@ -63,4 +63,18 @@ export function feelingAndNoteToMarker(feeling: ReviewFeeling | null, note: numb
   if (!feeling) return null;
   const match = reviewToMarker.find((r) => r.feeling === feeling && r.note === note);
   return match?.marker ?? null;
+}
+
+export function getMarkerOptionForFeeling(feeling: ReviewFeeling, t: TFunction): MarkerOption | undefined {
+  const match = reviewToMarker.find((r) => r.feeling === feeling);
+  if (!match) return undefined;
+  const config = markerConfigs.find((c) => c.value === match.marker);
+  if (!config) return undefined;
+  return {
+    value: config.value,
+    icon: config.icon,
+    fill: config.fill,
+    label: t(`common.review.status.${config.value}`),
+    cumulative: config.cumulative,
+  };
 }

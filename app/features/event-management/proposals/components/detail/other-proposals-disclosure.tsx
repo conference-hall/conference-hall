@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { href, Link } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { GlobalReviewNote } from '../shared/review-note.tsx';
+import { ReviewNote } from '../shared/review-note.tsx';
 
 type OtherProposalsDisclosureProps = {
   team: string;
@@ -41,7 +41,7 @@ export function OtherProposalsDisclosure({ team, event, proposals }: OtherPropos
                 {t('common.by', { names: proposal.speakers })}
               </Text>
             </span>
-            <GlobalReviewNote feeling="NEUTRAL" note={proposal.review} hideEmpty />
+            <ReviewNote feeling="NEUTRAL" note={proposal.review} hideEmpty />
           </Link>
         </li>
       ))}

@@ -5,10 +5,7 @@ import { ProgressBar } from '~/design-system/charts/progress-bar.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Tooltip } from '~/design-system/tooltip.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import {
-  GlobalReviewNote,
-  UserReviewNote,
-} from '~/features/event-management/proposals/components/shared/review-note.tsx';
+import { ReviewNote } from '~/features/event-management/proposals/components/shared/review-note.tsx';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import type { Route } from './+types/overview.reviewers.ts';
 import { ReviewersMetrics } from './services/reviewers-metrics.server.ts';
@@ -61,13 +58,13 @@ export default function ReviewersTabRoute({ loaderData: { metrics } }: Route.Com
 
             <div className="flex gap-8 sm:grid sm:w-48 sm:grid-cols-3 sm:gap-4">
               <Tooltip text={t('event-management.overview.reviewers.negatives-count')}>
-                <UserReviewNote feeling="NEGATIVE" note={reviewer.negativeCount} />
+                <ReviewNote feeling="NEGATIVE" note={reviewer.negativeCount} raw />
               </Tooltip>
               <Tooltip text={t('event-management.overview.reviewers.favorites-count')}>
-                <UserReviewNote feeling="POSITIVE" note={reviewer.positiveCount} />
+                <ReviewNote feeling="POSITIVE" note={reviewer.positiveCount} raw />
               </Tooltip>
               <Tooltip text={t('event-management.overview.reviewers.average-reviews')}>
-                <GlobalReviewNote feeling="NEUTRAL" note={reviewer.averageNote} />
+                <ReviewNote feeling="NEUTRAL" note={reviewer.averageNote} raw />
               </Tooltip>
             </div>
           </li>

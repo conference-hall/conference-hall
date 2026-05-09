@@ -1,28 +1,39 @@
-import { HeartIcon, NoSymbolIcon, StarIcon, UserCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
+import type { MarkerOption } from '~/design-system/forms/marker-group.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatReviewNote } from '~/shared/formatters/reviews.ts';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
+import { feelingAndNoteToMarker, getMarkerOptionForFeeling, getReviewMarkerOptions } from '../review-markers.config.ts';
 
-const REVIEWS = {
-  NO_OPINION: { icon: NoSymbolIcon, color: '', stroke: '' },
-  NEUTRAL: { icon: StarIcon, color: 'fill-yellow-400', stroke: 'text-yellow-400' },
-  NEGATIVE: { icon: XCircleIcon, color: '', stroke: '' },
-  POSITIVE: { icon: HeartIcon, color: 'fill-red-400', stroke: 'text-red-400' },
+type ReviewNoteProps = {
+  feeling: ReviewFeeling | null;
+  note: number | null;
+  variant?: 'global' | 'user';
+  hideEmpty?: boolean;
+  raw?: boolean;
 };
 
-type Props = { feeling: ReviewFeeling | null; note: number | null; hideEmpty?: boolean };
-
-export function GlobalReviewNote({ feeling, note, hideEmpty }: Props) {
+export function ReviewNote({ feeling, note, variant = 'global', hideEmpty, raw }: ReviewNoteProps) {
   const { t } = useTranslation();
-  const reviewType = feeling || 'NEUTRAL';
-  const { icon: Icon, color, stroke } = REVIEWS[reviewType];
-  const formattedNote = formatReviewNote(note);
-  const label = t(`common.review.type.${reviewType}`);
+  const reviewFeeling = feeling || 'NEUTRAL';
+
+  let option: MarkerOption | undefined;
+  const marker = feelingAndNoteToMarker(reviewFeeling, note);
+  if (!raw && marker) {
+    option = getReviewMarkerOptions(t).find((o) => o.value === marker);
+  } else {
+    option = getMarkerOptionForFeeling(reviewFeeling, t);
+  }
 
   if (note === null && feeling !== 'NO_OPINION') return <div />;
+
+  const formattedNote = formatReviewNote(note);
+  const isUserNeutral = variant === 'user' && reviewFeeling === 'NEUTRAL';
+  const Icon = isUserNeutral ? UserCircleIcon : option?.icon;
+  const iconClass = isUserNeutral ? 'size-5 shrink-0 text-gray-700' : cx('size-5 shrink-0', option?.fill);
 
   return (
     <div className={cx('flex items-center justify-end gap-1', { invisible: note === null && hideEmpty })}>
@@ -32,45 +43,7 @@ export function GlobalReviewNote({ feeling, note, hideEmpty }: Props) {
             <Text weight="semibold" variant="secondary">
               {formattedNote}
             </Text>
-            <Icon
-              className={cx('size-5 shrink-0', color, stroke)}
-              aria-label={t('common.review.detail', { note: formattedNote, label })}
-            />
-          </>
-        )}
-      </ClientOnly>
-    </div>
-  );
-}
-
-export function UserReviewNote({ feeling, note }: Props) {
-  const { t } = useTranslation();
-  const reviewType = feeling || 'NEUTRAL';
-  const { icon: Icon, color, stroke } = REVIEWS[reviewType];
-  const formattedNote = formatReviewNote(note);
-  const label = t(`common.review.type.${reviewType}`);
-
-  if (note === null && feeling !== 'NO_OPINION') return <div />;
-
-  return (
-    <div className="flex items-center justify-end gap-1">
-      <ClientOnly>
-        {() => (
-          <>
-            <Text weight="semibold" variant="secondary">
-              {formattedNote}
-            </Text>
-            {feeling === 'NEUTRAL' ? (
-              <UserCircleIcon
-                className="size-5 shrink-0 text-gray-700"
-                aria-label={t('common.review.user', { note: formattedNote })}
-              />
-            ) : (
-              <Icon
-                className={cx('size-5 shrink-0', color, stroke)}
-                aria-label={t('common.review.detail', { note: formattedNote, label })}
-              />
-            )}
+            {Icon && <Icon className={iconClass} aria-label={option?.label ?? ''} />}
           </>
         )}
       </ClientOnly>

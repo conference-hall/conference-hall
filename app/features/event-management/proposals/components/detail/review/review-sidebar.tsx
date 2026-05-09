@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import type { ProposalData } from '../../../proposal.tsx';
-import { GlobalReviewNote } from '../../shared/review-note.tsx';
+import { ReviewNote } from '../../shared/review-note.tsx';
 import { ProposalStatusSelect } from './proposal-status-select.tsx';
 import { ReviewForm } from './review-form.tsx';
 
@@ -23,7 +23,7 @@ export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate }: Props)
           {!reviewEnabled ? (
             <div className="flex items-center justify-between gap-4">
               <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
-              <GlobalReviewNote feeling={you.feeling} note={you.note} />
+              <ReviewNote feeling={you.feeling} note={you.note} />
             </div>
           ) : null}
 
@@ -31,7 +31,7 @@ export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate }: Props)
             <div className="flex items-center justify-between gap-4">
               <H2 size="s">{t('event-management.proposal-page.reviews.global')}</H2>
               {summary?.average !== null ? (
-                <GlobalReviewNote feeling="NEUTRAL" note={summary?.average} />
+                <ReviewNote feeling="NEUTRAL" note={summary?.average} />
               ) : (
                 <MinusIcon className="h-4 w-4" aria-hidden />
               )}

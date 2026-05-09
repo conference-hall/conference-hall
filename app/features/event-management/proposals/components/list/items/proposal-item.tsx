@@ -8,7 +8,7 @@ import { Tag } from '~/design-system/tag.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDate } from '~/shared/datetimes/datetimes.ts';
-import { GlobalReviewNote, UserReviewNote } from '../../shared/review-note.tsx';
+import { ReviewNote } from '../../shared/review-note.tsx';
 import type { ProposalData } from '../../shared/types.ts';
 import { ReviewComments } from './review-comments.tsx';
 
@@ -102,8 +102,8 @@ export function ProposalItem({
 
         <div className="hidden sm:flex sm:items-center sm:gap-2 sm:*:w-14">
           <ReviewComments count={commentCount} />
-          <UserReviewNote feeling={you.feeling} note={you.note} />
-          {summary && <GlobalReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty />}
+          <ReviewNote feeling={you.feeling} note={you.note} variant="user" />
+          {summary && <ReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty />}
         </div>
       </Link>
     </>
