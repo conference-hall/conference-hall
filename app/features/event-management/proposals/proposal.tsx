@@ -232,6 +232,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                 <ProposalActivityFeed
                   comments={comments}
                   reviews={proposal.reviews.members}
+                  reviewsSummary={proposal.reviews.summary}
                   speakerConversation={speakerConversation}
                   speakers={proposal.speakers}
                   canManageConversations={permissions.canManageConversations}

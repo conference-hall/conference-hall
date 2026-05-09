@@ -9,9 +9,16 @@ import type { ReviewMember } from './reviews-group-entry.tsx';
 import { ReviewsGroupEntry } from './reviews-group-entry.tsx';
 import { SpeakerConversationEntry } from './speaker-conversation-entry.tsx';
 
+type ReviewSummary = {
+  average: number | null;
+  positives: number;
+  negatives: number;
+};
+
 type Props = {
   comments: Array<Message>;
   reviews: Array<ReviewMember> | null;
+  reviewsSummary: ReviewSummary | null;
   speakerConversation: Array<Message>;
   speakers: Array<{ id: string; name: string; picture: string | null }>;
   canManageConversations: boolean;
@@ -20,6 +27,7 @@ type Props = {
 export function ProposalActivityFeed({
   comments,
   reviews,
+  reviewsSummary,
   speakerConversation,
   speakers,
   canManageConversations,
@@ -39,7 +47,7 @@ export function ProposalActivityFeed({
         />
       ) : null}
 
-      {reviews && reviews.length > 0 ? <ReviewsGroupEntry reviews={reviews} /> : null}
+      {reviews && reviews.length > 0 ? <ReviewsGroupEntry reviews={reviews} summary={reviewsSummary ?? null} /> : null}
 
       {comments.map((message) => (
         <ActivityFeed.Entry

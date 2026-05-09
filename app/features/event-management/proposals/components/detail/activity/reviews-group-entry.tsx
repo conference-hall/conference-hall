@@ -1,5 +1,5 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { ChevronDownIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 import { StarIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import { Text } from '~/design-system/typography.tsx';
 import { TimeDistance } from '~/design-system/utils/time-distance.tsx';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
 import { feelingAndNoteToMarker, getReviewMarkerOptions } from '../../review-markers.config.ts';
+import { GlobalReviewNote } from '../../shared/review-note.tsx';
 
 const MAX_AVATARS = 3;
 
@@ -21,12 +22,18 @@ export type ReviewMember = {
   updatedAt: Date;
 };
 
-type Props = {
-  reviews: Array<ReviewMember>;
+type ReviewSummary = {
+  average: number | null;
+  positives: number;
+  negatives: number;
 };
 
-// todo(reviews): add a total review at the end of the list
-export function ReviewsGroupEntry({ reviews }: Props) {
+type Props = {
+  reviews: Array<ReviewMember>;
+  summary: ReviewSummary | null;
+};
+
+export function ReviewsGroupEntry({ reviews, summary }: Props) {
   const { t } = useTranslation();
 
   const avatars = reviews.slice(0, MAX_AVATARS);
@@ -64,33 +71,48 @@ export function ReviewsGroupEntry({ reviews }: Props) {
           <ChevronDownIcon className="h-5 w-5 shrink-0 text-gray-500 group-data-open:rotate-180" />
         </DisclosureButton>
 
-        <DisclosurePanel className="space-y-2 rounded-b-md border-t border-gray-200 bg-white p-3">
-          {reviews.map((review) => {
-            const marker = feelingAndNoteToMarker(review.feeling, review.note);
-            const option = markerOptions.find((o) => o.value === marker);
+        <DisclosurePanel className="rounded-b-md border-t border-gray-200 bg-white">
+          <div className="space-y-2 p-3">
+            {reviews.map((review) => {
+              const marker = feelingAndNoteToMarker(review.feeling, review.note);
+              const option = markerOptions.find((o) => o.value === marker);
 
-            return (
-              <div key={review.id} className="flex items-center gap-2">
-                <Avatar picture={review.picture} name={review.name} size="xs" aria-hidden />
-                <div className="flex min-w-0 items-baseline gap-1">
-                  <Text size="xs" weight="semibold" truncate>
-                    {review.name}
-                  </Text>
-                  <TimeDistance date={review.updatedAt} className="shrink-0 text-xs text-gray-500" />
-                </div>
-                {option && (
-                  <div className="ml-auto flex shrink-0 items-center gap-1">
-                    {review.note !== null && (
-                      <Text size="s" weight="medium">
-                        {review.note}
-                      </Text>
-                    )}
-                    <option.icon className={cx('h-5 w-5', option.fill)} aria-hidden="true" />
+              return (
+                <div key={review.id} className="flex items-center gap-2">
+                  <Avatar picture={review.picture} name={review.name} size="xs" aria-hidden />
+                  <div className="flex min-w-0 items-baseline gap-1">
+                    <Text size="xs" weight="semibold" truncate>
+                      {review.name}
+                    </Text>
+                    <TimeDistance date={review.updatedAt} className="shrink-0 text-xs text-gray-500" />
                   </div>
-                )}
+                  {option && (
+                    <div className="ml-auto flex shrink-0 items-center gap-1">
+                      {review.note !== null && (
+                        <Text size="s" weight="medium">
+                          {review.note}
+                        </Text>
+                      )}
+                      <option.icon className={cx('h-5 w-5', option.fill)} aria-hidden="true" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          {summary?.average !== null && (
+            <div className="flex items-center gap-2 border-t border-gray-200 px-3 py-2">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white">
+                <UserGroupIcon className="h-5 w-5 text-gray-500" aria-hidden />
               </div>
-            );
-          })}
+              <Text size="xs" weight="semibold">
+                {t('event-management.proposal-page.reviews.global')}
+              </Text>
+              <div className="ml-auto">
+                <GlobalReviewNote feeling="NEUTRAL" note={summary?.average ?? null} />
+              </div>
+            </div>
+          )}
         </DisclosurePanel>
       </Disclosure>
     </ActivityFeed.Entry>
