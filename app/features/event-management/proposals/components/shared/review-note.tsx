@@ -6,7 +6,7 @@ import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatReviewNote } from '~/shared/formatters/reviews.ts';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
-import { feelingAndNoteToMarker, getMarkerOptionForFeeling, getReviewMarkerOptions } from '../review-markers.config.ts';
+import { feelingAndNoteToMarker, getMarkerOptionForFeeling, getReviewMarkerOptions } from './review-markers.config.ts';
 
 type ReviewNoteProps = {
   feeling: ReviewFeeling | null;
