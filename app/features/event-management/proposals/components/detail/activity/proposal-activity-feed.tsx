@@ -55,7 +55,12 @@ export function ProposalActivityFeed({
           marker={<Avatar picture={message.sender.picture} name={message.sender.name} />}
           withLine
         >
-          <MessageBlock channel="comment" message={message} canManageConversations={canManageConversations} />
+          <MessageBlock
+            channel="comment"
+            message={message}
+            canManageConversations={canManageConversations}
+            showRoleBadge={false}
+          />
         </ActivityFeed.Entry>
       ))}
 
