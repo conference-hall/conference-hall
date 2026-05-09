@@ -13,9 +13,9 @@ import { feelingAndNoteToMarker, getReviewMarkerOptions } from '../../review-mar
 const MAX_AVATARS = 3;
 
 export type ReviewMember = {
-  id: string | undefined;
-  name: string | undefined;
-  picture: string | null | undefined;
+  id: string;
+  name: string;
+  picture: string | null;
   note: number | null;
   feeling: ReviewFeeling;
   updatedAt: Date;
@@ -25,6 +25,7 @@ type Props = {
   reviews: Array<ReviewMember>;
 };
 
+// todo(reviews): add a total review at the end of the list
 export function ReviewsGroupEntry({ reviews }: Props) {
   const { t } = useTranslation();
 

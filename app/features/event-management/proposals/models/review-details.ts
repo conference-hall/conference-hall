@@ -1,7 +1,8 @@
+import { randomUUID } from 'node:crypto';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import type { Review, User } from '../../../../../prisma/generated/client.ts';
 
-type ReviewData = Review & { user?: Partial<User> };
+type ReviewData = Review & { user?: Pick<User, 'id' | 'name' | 'picture'> };
 
 export class ReviewDetails {
   reviews: Array<ReviewData>;
@@ -27,9 +28,9 @@ export class ReviewDetails {
   ofMembers() {
     return sortBy(
       this.reviews.map((review) => ({
-        id: review.user?.id,
-        name: review.user?.name,
-        picture: review.user?.picture,
+        id: review.user?.id ?? randomUUID(),
+        name: review.user?.name ?? 'unknown',
+        picture: review.user?.picture ?? null,
         note: review.note,
         feeling: review.feeling,
         updatedAt: review.updatedAt,

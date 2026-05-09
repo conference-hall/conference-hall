@@ -64,12 +64,9 @@ export const loader = async ({ params, context, url }: Route.LoaderArgs) => {
 
   const proposalReview = ProposalReview.for(authorizedEvent, proposalId);
   const reviewComments = ProposalReviewComments.for(authorizedEvent, proposalId);
-  const speakerProposalConversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+  const speakerConversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
 
-  const activityPromise = Promise.all([
-    reviewComments.getConversation(),
-    speakerProposalConversation.getConversation(),
-  ]);
+  const activityPromise = Promise.all([reviewComments.getConversation(), speakerConversation.getConversation()]);
   const proposal = await proposalReview.get();
   const otherProposalsPromise = proposalReview.getOtherProposals(proposal.speakers.map((s) => s.id));
   const pagination = await proposalReview.getPreviousAndNextReviews(filters);
@@ -231,11 +228,11 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
 
           <Suspense fallback={<ActivityFeed.Loading className="pl-4" />}>
             <Await resolve={activityPromise}>
-              {([comments, speakersConversation]) => (
+              {([comments, speakerConversation]) => (
                 <ProposalActivityFeed
                   comments={comments}
                   reviews={proposal.reviews.members}
-                  speakersConversation={speakersConversation}
+                  speakerConversation={speakerConversation}
                   speakers={proposal.speakers}
                   canManageConversations={permissions.canManageConversations}
                 />

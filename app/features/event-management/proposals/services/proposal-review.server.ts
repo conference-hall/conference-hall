@@ -24,7 +24,7 @@ export class ProposalReview {
   }
 
   async get() {
-    const { event } = this.authorizedEvent;
+    const { userId, event } = this.authorizedEvent;
 
     const proposal = await db.proposal.findFirst({
       include: {
@@ -63,7 +63,7 @@ export class ProposalReview {
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
       reviews: {
-        you: reviews.ofUser(this.authorizedEvent.userId),
+        you: reviews.ofUser(userId),
         summary: event.displayProposalsReviews ? reviews.summary() : null,
         members: event.displayProposalsReviews ? reviews.ofMembers() : null,
       },
