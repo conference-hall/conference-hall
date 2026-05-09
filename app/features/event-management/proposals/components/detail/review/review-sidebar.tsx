@@ -23,7 +23,11 @@ export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate }: Props)
           {!reviewEnabled ? (
             <div className="flex items-center justify-between gap-4">
               <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
-              <ReviewNote feeling={you.feeling} note={you.note} />
+              <ReviewNote
+                feeling={you.feeling}
+                note={you.note}
+                label={t('event-management.proposal-page.your-review')}
+              />
             </div>
           ) : null}
 
@@ -31,7 +35,11 @@ export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate }: Props)
             <div className="flex items-center justify-between gap-4">
               <H2 size="s">{t('event-management.proposal-page.reviews.global')}</H2>
               {summary?.average !== null ? (
-                <ReviewNote feeling="NEUTRAL" note={summary?.average} />
+                <ReviewNote
+                  feeling="NEUTRAL"
+                  note={summary?.average}
+                  label={t('event-management.proposal-page.reviews.global')}
+                />
               ) : (
                 <MinusIcon className="h-4 w-4" aria-hidden />
               )}

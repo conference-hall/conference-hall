@@ -94,7 +94,11 @@ export function ReviewsGroupEntry({ reviews, summary }: Props) {
                 {t('event-management.proposal-page.reviews.global')}
               </Text>
               <div className="ml-auto">
-                <ReviewNote feeling="NEUTRAL" note={summary?.average ?? null} />
+                <ReviewNote
+                  feeling="NEUTRAL"
+                  note={summary?.average ?? null}
+                  label={t('event-management.proposal-page.reviews.global')}
+                />
               </div>
             </div>
           )}

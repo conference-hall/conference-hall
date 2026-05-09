@@ -130,9 +130,9 @@ test.describe('As owner', () => {
     await expect(page.getByText('Talk 2')).toBeVisible();
 
     // Review proposal
-    await expect(page.getByLabel('Review: 3 (Score)')).toBeVisible();
+    await expect(page.getByLabel('Global review = 3')).toBeVisible();
     await page.getByRole('button', { name: 'Favorite' }).click();
-    await expect(page.getByLabel('Review: 4 (Score)')).toBeVisible();
+    await expect(page.getByLabel('Global review = 4')).toBeVisible();
 
     // Check activity feed
     await expect(proposalPage.activityFeed).toHaveCount(4);

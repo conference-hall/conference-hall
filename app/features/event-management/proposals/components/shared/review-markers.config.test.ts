@@ -9,7 +9,7 @@ describe('review-markers.config', () => {
       expect(options).toHaveLength(8);
       expect(options[0]).toMatchObject({
         value: 'no-opinion',
-        fill: 'fill-gray-400 stroke-white',
+        fill: 'stroke-gray-400',
         label: 'common.review.status.no-opinion',
       });
       expect(options[0]?.icon).toBeDefined();

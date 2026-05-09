@@ -12,11 +12,12 @@ type ReviewNoteProps = {
   feeling: ReviewFeeling | null;
   note: number | null;
   variant?: 'global' | 'user';
+  label?: string;
   hideEmpty?: boolean;
   raw?: boolean;
 };
 
-export function ReviewNote({ feeling, note, variant = 'global', hideEmpty, raw }: ReviewNoteProps) {
+export function ReviewNote({ feeling, note, variant = 'global', label, hideEmpty, raw }: ReviewNoteProps) {
   const { t } = useTranslation();
   const reviewFeeling = feeling || 'NEUTRAL';
 
@@ -34,19 +35,21 @@ export function ReviewNote({ feeling, note, variant = 'global', hideEmpty, raw }
   const isUserNeutral = variant === 'user' && reviewFeeling === 'NEUTRAL';
   const Icon = isUserNeutral ? UserCircleIcon : option?.icon;
   const iconClass = isUserNeutral ? 'size-5 shrink-0 text-gray-700' : cx('size-5 shrink-0', option?.fill);
+  const ariaLabel = label ? `${label} = ${formattedNote}` : (option?.label ?? '');
 
   return (
-    <div className={cx('flex items-center justify-end gap-1', { invisible: note === null && hideEmpty })}>
-      <ClientOnly>
-        {() => (
-          <>
-            <Text weight="semibold" variant="secondary">
-              {formattedNote}
-            </Text>
-            {Icon && <Icon className={iconClass} aria-label={option?.label ?? ''} />}
-          </>
-        )}
-      </ClientOnly>
-    </div>
+    <ClientOnly fallback={<div />}>
+      {() => (
+        <div
+          className={cx('flex items-center justify-end gap-1', { invisible: note === null && hideEmpty })}
+          aria-label={ariaLabel}
+        >
+          <Text weight="semibold" variant="secondary">
+            {formattedNote}
+          </Text>
+          {Icon && <Icon className={iconClass} aria-hidden />}
+        </div>
+      )}
+    </ClientOnly>
   );
 }
