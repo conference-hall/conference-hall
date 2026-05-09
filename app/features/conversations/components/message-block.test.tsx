@@ -60,6 +60,13 @@ describe('MessageBlock component', () => {
     await expect.element(page.getByText('SPEAKER')).toBeInTheDocument();
   });
 
+  it('hides role badge when showRoleBadge is false', async () => {
+    await renderComponent({ showRoleBadge: false });
+
+    await expect.element(page.getByText('John Doe')).toBeInTheDocument();
+    await expect.element(page.getByText('SPEAKER')).not.toBeInTheDocument();
+  });
+
   it('renders message with reactions', async () => {
     const messageWithReactions: Message = {
       ...message,

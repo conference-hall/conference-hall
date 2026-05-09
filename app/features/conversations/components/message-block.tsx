@@ -20,6 +20,7 @@ type Props = {
   onOptimisticSave?: (data: { id?: string; content: string }) => void;
   onOptimisticDelete?: (id: string) => void;
   canManageConversations?: boolean;
+  showRoleBadge?: boolean;
   className?: string;
 };
 
@@ -29,6 +30,7 @@ export function MessageBlock({
   onOptimisticSave,
   onOptimisticDelete,
   canManageConversations = false,
+  showRoleBadge = true,
   className,
 }: Props) {
   const { t } = useTranslation();
@@ -67,7 +69,7 @@ export function MessageBlock({
         <a href={`#${message.id}`} className={cx(typography({ size: 'xs', variant: 'secondary' }), 'hover:underline')}>
           <TimeDistance date={message.sentAt} />
         </a>
-        {message.sender.role ? <Badge compact>{message.sender.role}</Badge> : null}
+        {showRoleBadge && message.sender.role ? <Badge compact>{message.sender.role}</Badge> : null}
       </div>
 
       {isEditing ? (
