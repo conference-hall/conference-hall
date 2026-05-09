@@ -57,11 +57,11 @@ export function ReviewsGroupEntry({ reviews, summary }: Props) {
                 </div>
               )}
             </div>
-            <Text size="s" weight="semibold">
+            <Text size="s" weight="semibold" align="left">
               {t('event-management.proposal-page.activity-feed.reviews.title')}
               <span className="hidden sm:inline"> ⋅ </span>
             </Text>
-            <Text size="s" variant="secondary">
+            <Text size="s" variant="secondary" align="left">
               {t('event-management.proposal-page.activity-feed.reviews.count', { count: reviews.length })}
             </Text>
           </div>
