@@ -21,14 +21,14 @@ type MarkerConfig = {
 };
 
 const markerConfigs: MarkerConfig[] = [
-  { value: 'no-opinion', icon: NoSymbolIcon, fill: 'fill-red-100' },
-  { value: 'negative', icon: XCircleIcon, fill: 'fill-gray-300' },
-  { value: 'neutral-1', icon: StarIcon, fill: 'fill-yellow-400', cumulative: true },
-  { value: 'neutral-2', icon: StarIcon, fill: 'fill-yellow-400', cumulative: true },
-  { value: 'neutral-3', icon: StarIcon, fill: 'fill-yellow-400', cumulative: true },
-  { value: 'neutral-4', icon: StarIcon, fill: 'fill-yellow-400', cumulative: true },
-  { value: 'neutral-5', icon: StarIcon, fill: 'fill-yellow-400', cumulative: true },
-  { value: 'positive', icon: HeartIcon, fill: 'fill-red-400' },
+  { value: 'no-opinion', icon: NoSymbolIcon, fill: 'stroke-gray-400' },
+  { value: 'negative', icon: XCircleIcon, fill: 'stroke-red-500' },
+  { value: 'neutral-1', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
+  { value: 'neutral-2', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
+  { value: 'neutral-3', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
+  { value: 'neutral-4', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
+  { value: 'neutral-5', icon: StarIcon, fill: 'fill-yellow-400 stroke-yellow-400', cumulative: true },
+  { value: 'positive', icon: HeartIcon, fill: 'fill-red-400 stroke-red-400' },
 ];
 
 export function getReviewMarkerOptions(t: TFunction): MarkerOption[] {
@@ -63,4 +63,18 @@ export function feelingAndNoteToMarker(feeling: ReviewFeeling | null, note: numb
   if (!feeling) return null;
   const match = reviewToMarker.find((r) => r.feeling === feeling && r.note === note);
   return match?.marker ?? null;
+}
+
+export function getMarkerOptionForFeeling(feeling: ReviewFeeling, t: TFunction): MarkerOption | undefined {
+  const match = reviewToMarker.find((r) => r.feeling === feeling);
+  if (!match) return undefined;
+  const config = markerConfigs.find((c) => c.value === match.marker);
+  if (!config) return undefined;
+  return {
+    value: config.value,
+    icon: config.icon,
+    fill: config.fill,
+    label: t(`common.review.status.${config.value}`),
+    cumulative: config.cumulative,
+  };
 }

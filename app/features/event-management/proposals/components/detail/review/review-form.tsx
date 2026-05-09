@@ -6,7 +6,7 @@ import {
   feelingAndNoteToMarker,
   getReviewMarkerOptions,
   markerToFeelingAndNote,
-} from '~/features/event-management/proposals/components/review-markers.config.ts';
+} from '~/features/event-management/proposals/components/shared/review-markers.config.ts';
 import type { ReviewFeeling, UserReview } from '~/shared/types/proposals.types.ts';
 
 type Props = { initialValues: UserReview };

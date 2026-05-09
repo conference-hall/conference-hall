@@ -36,7 +36,6 @@ import { NavigationHeader } from './components/detail/navigation-header.tsx';
 import { OtherProposalsDisclosure } from './components/detail/other-proposals-disclosure.tsx';
 import { ProposalActionsMenu } from './components/detail/proposal-actions-menu.tsx';
 import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
-import { ActivityFeed as ActivityFeedService } from './services/activity-feed.server.ts';
 import { resolveProposalId } from './services/proposal-id-resolver.server.ts';
 import {
   ProposalSaveCategoriesSchema,
@@ -64,10 +63,10 @@ export const loader = async ({ params, context, url }: Route.LoaderArgs) => {
   const proposalId = await resolveProposalId(authorizedEvent, params.proposal);
 
   const proposalReview = ProposalReview.for(authorizedEvent, proposalId);
-  const activityFeed = ActivityFeedService.for(authorizedEvent, proposalId);
-  const speakerProposalConversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+  const reviewComments = ProposalReviewComments.for(authorizedEvent, proposalId);
+  const speakerConversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
 
-  const activityPromise = Promise.all([activityFeed.activity(), speakerProposalConversation.getConversation()]);
+  const activityPromise = Promise.all([reviewComments.getConversation(), speakerConversation.getConversation()]);
   const proposal = await proposalReview.get();
   const otherProposalsPromise = proposalReview.getOtherProposals(proposal.speakers.map((s) => s.id));
   const pagination = await proposalReview.getPreviousAndNextReviews(filters);
@@ -229,10 +228,12 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
 
           <Suspense fallback={<ActivityFeed.Loading className="pl-4" />}>
             <Await resolve={activityPromise}>
-              {([activity, speakersConversation]) => (
+              {([comments, speakerConversation]) => (
                 <ProposalActivityFeed
-                  activity={activity}
-                  speakersConversation={speakersConversation}
+                  comments={comments}
+                  reviews={proposal.reviews.members}
+                  reviewsSummary={proposal.reviews.summary}
+                  speakerConversation={speakerConversation}
                   speakers={proposal.speakers}
                   canManageConversations={permissions.canManageConversations}
                 />

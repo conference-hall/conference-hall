@@ -9,12 +9,12 @@ describe('review-markers.config', () => {
       expect(options).toHaveLength(8);
       expect(options[0]).toMatchObject({
         value: 'no-opinion',
-        fill: 'fill-red-100',
+        fill: 'stroke-gray-400',
         label: 'common.review.status.no-opinion',
       });
       expect(options[0]?.icon).toBeDefined();
       expect(options[2]).toMatchObject({ value: 'neutral-1', cumulative: true });
-      expect(options[7]).toMatchObject({ value: 'positive', fill: 'fill-red-400' });
+      expect(options[7]).toMatchObject({ value: 'positive', fill: 'fill-red-400 stroke-red-400' });
     });
   });
 

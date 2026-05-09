@@ -130,37 +130,39 @@ test.describe('As owner', () => {
     await expect(page.getByText('Talk 2')).toBeVisible();
 
     // Review proposal
-    await expect(page.getByLabel('Review: 3 (Score)')).toBeVisible();
+    await expect(page.getByLabel('Global review = 3')).toBeVisible();
     await page.getByRole('button', { name: 'Favorite' }).click();
-    await expect(page.getByLabel('Review: 4 (Score)')).toBeVisible();
+    await expect(page.getByLabel('Global review = 4')).toBeVisible();
 
     // Check activity feed
-    await expect(proposalPage.activityFeed).toHaveCount(5);
-    const first = proposalPage.activityFeed.nth(1);
-    const second = proposalPage.activityFeed.nth(2);
-    const third = proposalPage.activityFeed.nth(3);
-    await expect(first).toContainText('Bruce Wayne reviewed the proposal with 3 stars');
-    await expect(second).toContainText('Bruce Wayne');
-    await expect(second).toContainText('Hello world');
-    await expect(third).toContainText('Clark Kent reviewed the proposal with 5 stars');
+    await expect(proposalPage.activityFeed).toHaveCount(4);
+    const reviewsGroup = proposalPage.activityFeed.nth(1);
+    const commentEntry = proposalPage.activityFeed.nth(2);
+    await expect(reviewsGroup).toContainText('Organizer reviews');
+    await expect(reviewsGroup).toContainText('2 reviews');
+    await reviewsGroup.getByRole('button', { name: /Organizer reviews/ }).click();
+    await expect(reviewsGroup).toContainText('Bruce Wayne');
+    await expect(reviewsGroup).toContainText('Clark Kent');
+    await expect(commentEntry).toContainText('Bruce Wayne');
+    await expect(commentEntry).toContainText('Hello world');
 
     // Add a reaction on comment
-    await second.getByRole('button', { name: 'Select a reaction' }).click();
+    await commentEntry.getByRole('button', { name: 'Select a reaction' }).click();
     await page.getByRole('button', { name: 'Thumbs up' }).click();
-    await expect(second.getByRole('button', { name: 'Thumbs up' })).toBeVisible();
+    await expect(commentEntry.getByRole('button', { name: 'Thumbs up' })).toBeVisible();
 
     // Add a comment
     await proposalPage.fill(proposalPage.commentInput, 'This is a new comment');
     await proposalPage.commentButton.click();
-    await expect(proposalPage.activityFeed).toHaveCount(6);
-    const fourth = proposalPage.activityFeed.nth(4);
-    await expect(fourth).toContainText('Clark Kent');
-    await expect(fourth).toContainText('This is a new comment');
+    await expect(proposalPage.activityFeed).toHaveCount(5);
+    const newComment = proposalPage.activityFeed.nth(3);
+    await expect(newComment).toContainText('Clark Kent');
+    await expect(newComment).toContainText('This is a new comment');
 
     // Delete a comment
-    const comment = new MessageBlockComponent(fourth, page);
+    const comment = new MessageBlockComponent(newComment, page);
     await comment.clickDelete();
-    await expect(proposalPage.activityFeed).toHaveCount(5);
+    await expect(proposalPage.activityFeed).toHaveCount(4);
 
     // Check speaker profile
     const speakerDrawer = await proposalPage.clickOnSpeaker('Marie Jane');

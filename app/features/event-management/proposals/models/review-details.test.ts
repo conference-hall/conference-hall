@@ -16,9 +16,16 @@ describe('#ReviewsDetails', () => {
     expect(reviews.summary()).toEqual({ average: 2.5, positives: 1, negatives: 1 });
     expect(reviews.ofUser('uid1')).toEqual({ note: review1.note, feeling: review1.feeling });
     expect(reviews.ofMembers()).toEqual([
-      { id: 'uid3', name: 'Bob doe', picture: 'b.png', note: 0, feeling: 'NEGATIVE' },
-      { id: 'uid2', name: 'Jane doe', picture: 'd.png', note: null, feeling: 'NO_OPINION' },
-      { id: 'uid1', name: 'John doe', picture: 'j.png', note: 5, feeling: 'POSITIVE' },
+      { id: 'uid1', name: 'John doe', picture: 'j.png', note: 5, feeling: 'POSITIVE', updatedAt: common.updatedAt },
+      {
+        id: 'uid2',
+        name: 'Jane doe',
+        picture: 'd.png',
+        note: null,
+        feeling: 'NO_OPINION',
+        updatedAt: common.updatedAt,
+      },
+      { id: 'uid3', name: 'Bob doe', picture: 'b.png', note: 0, feeling: 'NEGATIVE', updatedAt: common.updatedAt },
     ]);
   });
 

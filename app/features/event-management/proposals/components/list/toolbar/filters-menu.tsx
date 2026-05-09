@@ -20,7 +20,7 @@ import { MarkerGroup } from '~/design-system/forms/marker-group.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
-import { getReviewMarkerOptions } from '~/features/event-management/proposals/components/review-markers.config.ts';
+import { getReviewMarkerOptions } from '~/features/event-management/proposals/components/shared/review-markers.config.ts';
 
 const statusOptions = ['pending', 'accepted', 'rejected', 'archived'] as const;
 const confirmationOptions = ['not-answered', 'confirmed', 'declined'] as const;
