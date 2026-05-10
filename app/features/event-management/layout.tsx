@@ -7,7 +7,6 @@ import {
   QueueListIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import { HotkeysProvider } from '@tanstack/react-hotkeys';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet, redirect, useMatch, useSearchParams } from 'react-router';
 import { NavbarTeam } from '~/app-platform/components/navbar/navbar-team.tsx';
@@ -54,18 +53,16 @@ export const loader = async ({ params, context, url }: Route.LoaderArgs) => {
 export default function EventLayoutRoute({ loaderData }: Route.ComponentProps) {
   const { isFullscreen } = useScheduleFullscreen();
   return (
-    <HotkeysProvider>
-      <CurrentEventTeamProvider value={loaderData}>
-        {!isFullscreen ? (
-          <>
-            <NavbarTeam />
-            <EventTabs />
-          </>
-        ) : null}
+    <CurrentEventTeamProvider value={loaderData}>
+      {!isFullscreen ? (
+        <>
+          <NavbarTeam />
+          <EventTabs />
+        </>
+      ) : null}
 
-        <Outlet />
-      </CurrentEventTeamProvider>
-    </HotkeysProvider>
+      <Outlet />
+    </CurrentEventTeamProvider>
   );
 }
 

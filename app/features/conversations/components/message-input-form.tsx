@@ -1,3 +1,4 @@
+import { formatForDisplay, useHotkey } from '@tanstack/react-hotkeys';
 import { useId, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from 'react-router';
@@ -29,10 +30,11 @@ export function MessageInputForm({
   const { t } = useTranslation();
   const inputId = useId();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const fetcherKey = message?.id ? `save-message:${message.id}` : 'save-message:new';
   const fetcher = useFetcher({ key: fetcherKey });
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
@@ -45,8 +47,11 @@ export function MessageInputForm({
 
   const isLoading = fetcher.state === 'submitting';
 
+  useHotkey('Mod+Enter', () => formRef.current?.requestSubmit(), { target: textareaRef });
+  useHotkey('Escape', () => onClose?.(), { target: textareaRef, enabled: !!onClose });
+
   return (
-    <Form className="relative w-full" key={fetcher.state} navigate={false} onSubmit={handleSubmit}>
+    <Form ref={formRef} className="relative w-full" key={fetcher.state} navigate={false} onSubmit={handleSubmit}>
       <Label htmlFor={inputId} className="sr-only">
         {inputLabel}
       </Label>
@@ -90,6 +95,10 @@ export function MessageInputForm({
             {t('common.cancel')}
           </Button>
         ) : null}
+
+        <p className="mr-auto hidden self-end text-xs text-gray-500 sm:block">
+          <kbd>{formatForDisplay('Mod+Enter', { useSymbols: false })}</kbd> {t('common.shortcut-to-send')}
+        </p>
       </div>
     </Form>
   );
