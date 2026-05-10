@@ -145,13 +145,5 @@ export class ProposalReview {
       create: { userId: this.authorizedEvent.userId, proposalId: this.proposalId, ...data },
       update: data,
     });
-
-    const reviews = await db.review.findMany({
-      where: { proposalId: this.proposalId, feeling: { not: 'NO_OPINION' } },
-    });
-
-    const reviewsDetails = new ReviewDetails(reviews);
-    const average = reviewsDetails.summary().average ?? null;
-    await db.proposal.update({ where: { id: this.proposalId }, data: { avgRateForSort: average } });
   }
 }

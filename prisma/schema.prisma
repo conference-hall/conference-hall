@@ -277,7 +277,6 @@ model Proposal {
   categories         EventCategory[]     @relation("proposals_categories")
   tags               EventProposalTag[]  @relation("proposal_to_event_proposal_tags")
   reviews            Review[]
-  avgRateForSort     Float?
   isDraft            Boolean             @default(true)
   submittedAt        DateTime            @default(now())
   deliberationStatus DeliberationStatus  @default(PENDING)
