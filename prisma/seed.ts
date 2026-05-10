@@ -4,7 +4,7 @@ import { generateImagePlaceholder } from 'tests/img-placeholder.ts';
 import { getRandomColor } from '~/shared/colors/colors.ts';
 import { logger } from '~/shared/logger/logger.server.ts';
 import { StorageService } from '~/shared/storage/storage.server.ts';
-import { disconnectRedis } from '../app/shared/cache/redis.server.ts';
+import { disconnectRedis, resetRedis } from '../app/shared/cache/redis.server.ts';
 import { db } from '../prisma/db.server.ts';
 import { eventCategoryFactory } from '../tests/factories/categories.ts';
 import { conversationMessageFactory } from '../tests/factories/conversation-messages.ts';
@@ -19,6 +19,7 @@ import { userFactory } from '../tests/factories/users.ts';
 
 async function seed() {
   await StorageService.clearBucket();
+  await resetRedis();
 
   const user = await userFactory({
     traits: ['clark-kent', 'admin'],
