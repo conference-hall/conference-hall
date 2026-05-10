@@ -19,6 +19,6 @@ export async function disconnectRedis() {
 }
 
 export async function resetRedis() {
-  if (!redis) return;
-  await redis.flushdb();
+  const client = getRedisClient();
+  await client.flushdb();
 }
