@@ -1,12 +1,13 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
-import { Suspense } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Suspense, useRef } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Await } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Divider } from '~/design-system/divider.tsx';
+import { Kbd } from '~/design-system/kbd.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -189,6 +190,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
   const { event } = useCurrentEventTeam();
   const permissions = useUserTeamPermissions();
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
+  const pageRef = useRef<HTMLElement>(null);
 
   const hasSpeakers = proposal.speakers.length > 0;
   const hasFormats = event.formats && event.formats.length > 0;
@@ -199,8 +201,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
     useFlag('speakersCommunication') && event.speakersConversationEnabled && speakersWithAccount.length > 0;
 
   return (
-    <Page>
-      <NavigationHeader team={params.team} event={params.event} {...pagination} />
+    <Page ref={pageRef}>
+      <NavigationHeader team={params.team} event={params.event} {...pagination} pageRef={pageRef} />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <div className="lg:col-span-8">
@@ -338,6 +340,13 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
               className="space-y-3 p-4 pb-6 lg:px-6"
             />
           </Card>
+
+          <footer className="hidden gap-1 text-xs text-gray-500 lg:flex lg:items-center lg:justify-center lg:pb-4">
+            <Trans
+              i18nKey="event-management.proposal-page.keyboard-shortcuts.hint"
+              components={[<Kbd key="0">n</Kbd>, <Kbd key="1">p</Kbd>]}
+            />
+          </footer>
         </div>
       </div>
     </Page>

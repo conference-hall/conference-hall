@@ -1,40 +1,22 @@
 import { Dialog, DialogPanel } from '@headlessui/react';
-import { useEffect } from 'react';
+import { useHotkey } from '@tanstack/react-hotkeys';
 
 type CommandPaletteDialogProps = {
   label: string;
   open: boolean;
   onClose: VoidFunction;
   onOpen: VoidFunction;
-  withOpenKey?: boolean;
   children: React.ReactNode;
 };
 
-export function CommandPaletteDialog({
-  label,
-  open,
-  onClose,
-  onOpen,
-  withOpenKey,
-  children,
-}: CommandPaletteDialogProps) {
-  useEffect(() => {
-    if (!withOpenKey) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        if (open) {
-          onClose();
-        } else {
-          onOpen();
-        }
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [open, withOpenKey, onClose, onOpen]);
+export function CommandPaletteDialog({ label, open, onClose, onOpen, children }: CommandPaletteDialogProps) {
+  useHotkey('Mod+K', () => {
+    if (open) {
+      onClose();
+    } else {
+      onOpen();
+    }
+  });
 
   return (
     <Dialog open={open} onClose={onClose} aria-label={label} className="relative z-50">
