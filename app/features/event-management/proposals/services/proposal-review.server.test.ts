@@ -338,7 +338,6 @@ describe('ProposalReview', () => {
       const review = reviews1[0];
       expect(review.feeling).toBe('NEUTRAL');
       expect(review.note).toBe(2);
-      expect(review.proposal.avgRateForSort).toBe(2);
 
       // Update first review
       await ProposalReview.for(authorizedEvent, proposal.id).addReview({
@@ -352,7 +351,6 @@ describe('ProposalReview', () => {
       const updatedReview = reviews2[0];
       expect(updatedReview.feeling).toBe('POSITIVE');
       expect(updatedReview.note).toBe(5);
-      expect(updatedReview.proposal.avgRateForSort).toBe(5);
 
       // Second review
       const authorizedTeamMember = await getAuthorizedTeam(member.id, team.slug);
@@ -364,7 +362,6 @@ describe('ProposalReview', () => {
 
       const reviews3 = await db.review.findMany({ where: { proposalId: proposal.id }, include: { proposal: true } });
       expect(reviews3.length).toBe(2);
-      expect(reviews3[0].proposal.avgRateForSort).toBe(2.5);
     });
 
     it('throws an error if event deliberation is disabled', async () => {

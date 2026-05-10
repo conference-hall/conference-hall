@@ -1,7 +1,5 @@
-import { ReviewDetails } from '../../app/features/event-management/proposals/models/review-details.ts';
 import { db } from '../../prisma/db.server.ts';
 import type { Proposal, User } from '../../prisma/generated/client.ts';
-import { ReviewFeeling } from '../../prisma/generated/client.ts';
 import type { ReviewCreateInput } from '../../prisma/generated/models.ts';
 
 type FactoryOptions = {
@@ -22,15 +20,5 @@ export const reviewFactory = async (options: FactoryOptions) => {
 
   const data = { ...defaultAttributes, ...attributes };
 
-  const review = await db.review.create({ data });
-
-  // compute review average on proposal
-  const reviews = await db.review.findMany({
-    where: { proposalId: proposal.id, feeling: { not: ReviewFeeling.NO_OPINION } },
-  });
-  const reviewsDetails = new ReviewDetails(reviews);
-  const average = reviewsDetails.summary().average ?? undefined;
-  await db.proposal.update({ where: { id: proposal.id }, data: { avgRateForSort: average } });
-
-  return review;
+  return db.review.create({ data });
 };
