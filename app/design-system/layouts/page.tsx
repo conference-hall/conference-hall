@@ -1,13 +1,14 @@
 import { cx } from 'class-variance-authority';
+import type React from 'react';
 import type { ReactNode } from 'react';
 import { H1, Subtitle } from '../typography.tsx';
 import { Container } from './container.tsx';
 
-type Props = { children: React.ReactNode; className?: string };
+type Props = { children: React.ReactNode; className?: string; ref?: React.Ref<HTMLElement> };
 
-export function Page({ children, className }: Props) {
+export function Page({ children, className, ref }: Props) {
   return (
-    <Container as="main" className={cx('my-4 gap-4 lg:my-8 lg:gap-8', className)}>
+    <Container as="main" className={cx('my-4 gap-4 lg:my-8 lg:gap-8', className)} ref={ref}>
       {children}
     </Container>
   );

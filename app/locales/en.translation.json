@@ -450,6 +450,7 @@
   "event-management.proposal-page.feedbacks.saved": "Proposal saved.",
   "event-management.proposal-page.feedbacks.archived": "Proposal archived.",
   "event-management.proposal-page.feedbacks.restored": "Proposal restored.",
+  "event-management.proposal-page.keyboard-shortcuts.hint": "Hint: <0/> for next, <1/> for previous",
   "event-management.proposal-page.next": "Next proposal",
   "event-management.proposal-page.other-proposals": "Other proposals by speakers ({{count}})",
   "event-management.proposal-page.previous": "Previous proposal",
