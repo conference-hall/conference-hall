@@ -46,6 +46,7 @@
     "@react-router/node": "~7.15.0",
     "@remix-run/form-data-parser": "^0.17.0",
     "@sindresorhus/slugify": "^3.0.0",
+    "@tanstack/react-hotkeys": "^0.10.0",
     "better-auth": "^1.6.9",
     "bullmq": "^5.76.6",
     "class-variance-authority": "^0.7.1",
