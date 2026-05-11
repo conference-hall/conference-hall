@@ -3,6 +3,7 @@ import { conversationFactory } from 'tests/factories/conversations.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
+import { reviewFactory } from 'tests/factories/reviews.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
@@ -11,6 +12,7 @@ import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { Event, Team, User } from '../../../../../prisma/generated/client.ts';
 import { CfpReviewsSearch } from './cfp-reviews-search.server.ts';
+import { ProposalReview } from './proposal-review.server.ts';
 
 describe('CfpReviewsSearch', () => {
   let owner: User;
@@ -99,6 +101,49 @@ describe('CfpReviewsSearch', () => {
       expect(proposals.filters).toEqual({});
       expect(proposals.statistics).toEqual({ reviewed: 0, total: 0 });
       expect(proposals.pagination).toEqual({ current: 1, total: 0 });
+    });
+
+    it('excludes dismissed reviews from search result averages and user review', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
+      await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5 } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await ProposalReview.for(authorizedEvent, proposal.id).dismissReview();
+
+      const proposals = await CfpReviewsSearch.for(authorizedEvent).search({ status: 'pending' });
+      const result = proposals.results[0];
+      expect(result.reviews.you).toEqual({ note: null, feeling: null });
+      expect(result.reviews.summary).toEqual({ average: 5, positives: 1, negatives: 0 });
+    });
+
+    it('includes proposals with dismissed reviews in "not reviewed" filter', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await ProposalReview.for(authorizedEvent, proposal.id).dismissReview();
+
+      const proposals = await CfpReviewsSearch.for(authorizedEvent).search({ reviews: ['not-reviewed'] });
+      expect(proposals.results).toHaveLength(1);
+      expect(proposals.results[0].id).toBe(proposal.id);
+    });
+
+    it('excludes dismissed reviews from statistics reviewed count', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await ProposalReview.for(authorizedEvent, proposal.id).dismissReview();
+
+      const proposals = await CfpReviewsSearch.for(authorizedEvent).search({ status: 'pending' });
+      expect(proposals.statistics).toEqual({ reviewed: 0, total: 1 });
     });
 
     it('throws an error if user does not belong to event team', async () => {

@@ -39,7 +39,7 @@ export class ReviewersMetrics {
       FROM reviews
       JOIN users ON reviews."userId" = users.id
       JOIN proposals ON reviews."proposalId" = proposals.id
-      WHERE proposals."eventId" = ${event.id}
+      WHERE proposals."eventId" = ${event.id} AND reviews."dismissedAt" IS NULL
       GROUP BY 1, 2, 3
       ORDER BY "reviewsCount" DESC
     `);

@@ -171,6 +171,29 @@ describe('ReviewsMetrics', () => {
       });
     });
 
+    it('excludes dismissed reviews from metrics', async () => {
+      const talk = await talkFactory({ speakers: [member] });
+      const proposal = await proposalFactory({ event, talk });
+
+      await reviewFactory({
+        user: member,
+        proposal,
+        attributes: { note: 5, feeling: 'POSITIVE' },
+        traits: ['self-dismissed'],
+      });
+      await reviewFactory({ user: owner, proposal, attributes: { note: 3, feeling: 'NEUTRAL' } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const metrics = await ReviewsMetrics.for(authorizedEvent).get();
+
+      expect(metrics.totalProposals).toBe(1);
+      expect(metrics.reviewedProposals).toBe(1);
+      expect(metrics.averageNote).toBe(3);
+      expect(metrics.positiveReviews).toBe(0);
+    });
+
     it('excludes draft proposals from metrics', async () => {
       const talk1 = await talkFactory({ speakers: [member] });
       const talk2 = await talkFactory({ speakers: [owner] });

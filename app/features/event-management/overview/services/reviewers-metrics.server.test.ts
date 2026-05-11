@@ -68,6 +68,28 @@ describe('ReviewersMetrics', () => {
       });
     });
 
+    it('excludes dismissed reviews from reviewer metrics', async () => {
+      const newTeam = await teamFactory({ owners: [owner] });
+      const newEvent = await eventFactory({ team: newTeam });
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event: newEvent, talk });
+
+      await reviewFactory({ user: owner, proposal, attributes: { note: 5, feeling: 'POSITIVE' } });
+      await reviewFactory({
+        user: speaker,
+        proposal,
+        attributes: { note: 0, feeling: 'NEGATIVE' },
+        traits: ['self-dismissed'],
+      });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, newTeam.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, newEvent.slug);
+      const metrics = await ReviewersMetrics.for(authorizedEvent).get();
+
+      expect(metrics.reviewersMetrics).toHaveLength(1);
+      expect(metrics.reviewersMetrics[0]).toMatchObject({ id: owner.id, reviewsCount: 1, positiveCount: 1 });
+    });
+
     it('returns reviewers metrics for an event without reviews', async () => {
       const team = await teamFactory({ owners: [owner] });
       const event = await eventFactory({ team });
