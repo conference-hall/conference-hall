@@ -13,27 +13,16 @@ type Props = { initialValues: UserReview };
 
 export function ReviewForm({ initialValues }: Props) {
   const { t } = useTranslation();
-  const { optimisticMarker, handleSubmit, handleDismiss } = useOptimisticReview(initialValues);
+  const { optimisticMarker, handleChange } = useOptimisticReview(initialValues);
   const markerOptions = getReviewMarkerOptions(t);
 
   return (
     <div className="space-y-2 p-4 lg:px-6 lg:py-4">
-      <div className="flex items-center justify-between">
-        <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
-        {optimisticMarker ? (
-          <button
-            type="button"
-            onClick={handleDismiss}
-            className="cursor-pointer text-xs text-gray-500 hover:text-gray-700"
-          >
-            {t('event-management.proposal-page.clear-review')}
-          </button>
-        ) : null}
-      </div>
+      <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
       <MarkerGroup
         options={markerOptions}
         value={optimisticMarker}
-        onChange={handleSubmit}
+        onChange={handleChange}
         size="md"
         variant="ghost"
         withTooltip
@@ -45,6 +34,7 @@ export function ReviewForm({ initialValues }: Props) {
 function useOptimisticReview(initialValues: UserReview) {
   const params = useParams();
   const fetcher = useFetcher({ key: `review:${params.proposal}` });
+  const action = `/team/${params.team}/${params.event}/proposals/${params.proposal}`;
 
   let optimisticMarker = feelingAndNoteToMarker(initialValues.feeling ?? null, initialValues.note ?? null);
 
@@ -58,21 +48,14 @@ function useOptimisticReview(initialValues: UserReview) {
     optimisticMarker = null;
   }
 
-  const handleSubmit = (marker: string | null) => {
-    if (!marker) return;
-    const { feeling, note } = markerToFeelingAndNote(marker);
-    fetcher.submit(
-      { intent: 'add-review', feeling, note: note === null ? '' : note },
-      { method: 'POST', action: `/team/${params.team}/${params.event}/proposals/${params.proposal}` },
-    );
+  const handleChange = (marker: string | null) => {
+    if (marker) {
+      const { feeling, note } = markerToFeelingAndNote(marker);
+      fetcher.submit({ intent: 'add-review', feeling, note: note === null ? '' : note }, { method: 'POST', action });
+    } else {
+      fetcher.submit({ intent: 'dismiss-review' }, { method: 'POST', action });
+    }
   };
 
-  const handleDismiss = () => {
-    fetcher.submit(
-      { intent: 'dismiss-review' },
-      { method: 'POST', action: `/team/${params.team}/${params.event}/proposals/${params.proposal}` },
-    );
-  };
-
-  return { optimisticMarker, handleSubmit, handleDismiss };
+  return { optimisticMarker, handleChange };
 }
