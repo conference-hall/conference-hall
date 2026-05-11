@@ -385,5 +385,72 @@ describe('ProposalReview', () => {
         await review.addReview({ feeling: 'NEUTRAL', note: 2 });
       }).rejects.toThrow(ForbiddenOperationError);
     });
+
+    it('clears dismissedAt and dismissedBy when re-reviewing a dismissed review', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalReview = ProposalReview.for(authorizedEvent, proposal.id);
+
+      await proposalReview.addReview({ feeling: 'NEUTRAL', note: 3 });
+      await proposalReview.dismissReview();
+
+      const dismissed = await db.review.findFirst({ where: { userId: owner.id, proposalId: proposal.id } });
+      expect(dismissed?.dismissedAt).not.toBeNull();
+
+      await proposalReview.addReview({ feeling: 'POSITIVE', note: 5 });
+
+      const rereviewed = await db.review.findFirst({ where: { userId: owner.id, proposalId: proposal.id } });
+      expect(rereviewed?.dismissedAt).toBeNull();
+      expect(rereviewed?.dismissedBy).toBeNull();
+      expect(rereviewed?.feeling).toBe('POSITIVE');
+      expect(rereviewed?.note).toBe(5);
+    });
+  });
+
+  describe('#dismissReview', () => {
+    it('sets dismissedAt and dismissedBy on the review', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await ProposalReview.for(authorizedEvent, proposal.id).dismissReview();
+
+      const review = await db.review.findFirst({ where: { userId: owner.id, proposalId: proposal.id } });
+      expect(review?.dismissedAt).toBeInstanceOf(Date);
+      expect(review?.dismissedBy).toBe(owner.id);
+      expect(review?.feeling).toBe('NEUTRAL');
+      expect(review?.note).toBe(3);
+    });
+
+    it('excludes dismissed review from get() response', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
+      await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5 } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await ProposalReview.for(authorizedEvent, proposal.id).dismissReview();
+
+      const result = await ProposalReview.for(authorizedEvent, proposal.id).get();
+      expect(result.reviews.you).toEqual({ note: null, feeling: null });
+      expect(result.reviews.summary).toEqual({ average: 5, positives: 1, negatives: 0 });
+      expect(result.reviews.members).toHaveLength(1);
+      expect(result.reviews.members?.[0]).toMatchObject({ name: member.name });
+    });
+
+    it('throws ReviewDisabledError when reviews are disabled', async () => {
+      await db.event.update({ data: { reviewEnabled: false }, where: { id: event.id } });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await reviewFactory({ proposal, user: owner });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await expect(ProposalReview.for(authorizedEvent, proposal.id).dismissReview()).rejects.toThrow(
+        ReviewDisabledError,
+      );
+    });
   });
 });

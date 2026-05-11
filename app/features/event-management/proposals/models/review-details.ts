@@ -5,10 +5,10 @@ import type { Review, User } from '../../../../../prisma/generated/client.ts';
 type ReviewData = Review & { user?: Pick<User, 'id' | 'name' | 'picture'> };
 
 export class ReviewDetails {
-  reviews: Array<ReviewData>;
+  private activeReviews: Array<ReviewData>;
 
   constructor(reviews: Array<ReviewData>) {
-    this.reviews = reviews;
+    this.activeReviews = reviews.filter((r) => r.dismissedAt === null);
   }
 
   summary() {
@@ -20,14 +20,14 @@ export class ReviewDetails {
   }
 
   ofUser(userId: string) {
-    const user = this.reviews.find((r) => r.userId === userId);
+    const user = this.activeReviews.find((r) => r.userId === userId);
     if (!user) return { note: null, feeling: null };
     return { note: user.note, feeling: user.feeling };
   }
 
   ofMembers() {
     return sortBy(
-      this.reviews.map((review) => ({
+      this.activeReviews.map((review) => ({
         id: review.user?.id ?? randomUUID(),
         name: review.user?.name ?? 'unknown',
         picture: review.user?.picture ?? null,
@@ -40,15 +40,15 @@ export class ReviewDetails {
   }
 
   private negatives() {
-    return this.reviews.filter((r) => r.feeling === 'NEGATIVE').length;
+    return this.activeReviews.filter((r) => r.feeling === 'NEGATIVE').length;
   }
 
   private positives() {
-    return this.reviews.filter((r) => r.feeling === 'POSITIVE').length;
+    return this.activeReviews.filter((r) => r.feeling === 'POSITIVE').length;
   }
 
   private average() {
-    const rates = this.reviews
+    const rates = this.activeReviews
       .filter((r) => r.feeling !== 'NO_OPINION' && r.note !== null)
       .map((r) => r.note || 0)
       .filter((r) => r !== null);

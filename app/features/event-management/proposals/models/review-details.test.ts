@@ -3,7 +3,15 @@ import { ReviewDetails } from './review-details.ts';
 
 describe('#ReviewsDetails', () => {
   it('computes reviews info from user reviews', () => {
-    const common = { id: '1', proposalId: 'p1', createdAt: new Date(), updatedAt: new Date(), migrationId: null };
+    const common = {
+      id: '1',
+      proposalId: 'p1',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      migrationId: null,
+      dismissedAt: null,
+      dismissedBy: null,
+    };
     const user1 = { id: 'uid1', name: 'John doe', picture: 'j.png' };
     const review1 = { userId: 'uid1', feeling: ReviewFeeling.POSITIVE, note: 5, user: user1, ...common };
     const user2 = { id: 'uid2', name: 'Jane doe', picture: 'd.png' };
@@ -35,5 +43,43 @@ describe('#ReviewsDetails', () => {
     expect(reviews.summary()).toEqual({ average: null, positives: 0, negatives: 0 });
     expect(reviews.ofUser('uid1')).toEqual({ note: null, feeling: null });
     expect(reviews.ofMembers()).toEqual([]);
+  });
+
+  it('excludes dismissed reviews from summary, ofUser, and ofMembers', () => {
+    const common = {
+      id: '1',
+      proposalId: 'p1',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      migrationId: null,
+    };
+    const user1 = { id: 'uid1', name: 'John doe', picture: 'j.png' };
+    const review1 = {
+      userId: 'uid1',
+      feeling: ReviewFeeling.POSITIVE,
+      note: 5,
+      user: user1,
+      dismissedAt: null,
+      dismissedBy: null,
+      ...common,
+    };
+    const user2 = { id: 'uid2', name: 'Jane doe', picture: 'd.png' };
+    const review2 = {
+      userId: 'uid2',
+      feeling: ReviewFeeling.NEGATIVE,
+      note: 0,
+      user: user2,
+      dismissedAt: new Date(),
+      dismissedBy: 'uid2',
+      ...common,
+    };
+
+    const reviews = new ReviewDetails([review1, review2]);
+
+    expect(reviews.summary()).toEqual({ average: 5, positives: 1, negatives: 0 });
+    expect(reviews.ofUser('uid2')).toEqual({ note: null, feeling: null });
+    expect(reviews.ofUser('uid1')).toEqual({ note: 5, feeling: ReviewFeeling.POSITIVE });
+    expect(reviews.ofMembers()).toHaveLength(1);
+    expect(reviews.ofMembers()[0]).toMatchObject({ id: 'uid1', name: 'John doe' });
   });
 });
