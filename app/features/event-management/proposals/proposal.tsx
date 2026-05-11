@@ -91,6 +91,11 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       await review.addReview(result.value);
       break;
     }
+    case 'dismiss-review': {
+      const review = ProposalReview.for(authorizedEvent, proposalId);
+      await review.dismissReview();
+      break;
+    }
     case 'save-message': {
       const result = parseWithZod(form, { schema: ConversationMessageSaveWithChannelSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));

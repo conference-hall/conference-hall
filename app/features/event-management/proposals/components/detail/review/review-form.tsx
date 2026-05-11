@@ -13,12 +13,23 @@ type Props = { initialValues: UserReview };
 
 export function ReviewForm({ initialValues }: Props) {
   const { t } = useTranslation();
-  const { optimisticMarker, handleSubmit } = useOptimisticReview(initialValues);
+  const { optimisticMarker, handleSubmit, handleDismiss } = useOptimisticReview(initialValues);
   const markerOptions = getReviewMarkerOptions(t);
 
   return (
     <div className="space-y-2 p-4 lg:px-6 lg:py-4">
-      <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
+      <div className="flex items-center justify-between">
+        <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
+        {optimisticMarker ? (
+          <button
+            type="button"
+            onClick={handleDismiss}
+            className="cursor-pointer text-xs text-gray-500 hover:text-gray-700"
+          >
+            {t('event-management.proposal-page.clear-review')}
+          </button>
+        ) : null}
+      </div>
       <MarkerGroup
         options={markerOptions}
         value={optimisticMarker}
@@ -33,7 +44,7 @@ export function ReviewForm({ initialValues }: Props) {
 
 function useOptimisticReview(initialValues: UserReview) {
   const params = useParams();
-  const fetcher = useFetcher({ key: `add-review:${params.proposal}` });
+  const fetcher = useFetcher({ key: `review:${params.proposal}` });
 
   let optimisticMarker = feelingAndNoteToMarker(initialValues.feeling ?? null, initialValues.note ?? null);
 
@@ -43,6 +54,8 @@ function useOptimisticReview(initialValues: UserReview) {
     const noteValue = formData.get('note');
     const note = noteValue === '' ? null : Number(noteValue);
     optimisticMarker = feelingAndNoteToMarker(feeling, note);
+  } else if (fetcher.formData?.get('intent') === 'dismiss-review') {
+    optimisticMarker = null;
   }
 
   const handleSubmit = (marker: string | null) => {
@@ -54,5 +67,12 @@ function useOptimisticReview(initialValues: UserReview) {
     );
   };
 
-  return { optimisticMarker, handleSubmit };
+  const handleDismiss = () => {
+    fetcher.submit(
+      { intent: 'dismiss-review' },
+      { method: 'POST', action: `/team/${params.team}/${params.event}/proposals/${params.proposal}` },
+    );
+  };
+
+  return { optimisticMarker, handleSubmit, handleDismiss };
 }

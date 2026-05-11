@@ -466,6 +466,7 @@
   "event-management.proposal-page.share-modal.speaker-link-description": "Partagez ce lien avec les speakers pour consulter leur proposition.",
   "event-management.proposal-page.share-modal.speaker-link-title": "Lien speaker",
   "event-management.proposal-page.share-modal.title": "Partager la proposition",
+  "event-management.proposal-page.clear-review": "effacer",
   "event-management.proposal-page.your-review": "Votre évaluation",
   "event-management.proposals.deliberate.modal.description": "Si vous modifiez le statut des propositions publiées, elles seront dépubliées. Vous devrez les republier pour les rendre à nouveau visibles aux speakers.",
   "event-management.proposals.deliberate.modal.submit": "Marquer comme {{label}}",

@@ -30,6 +30,7 @@ model User {
   talks                    Talk[]                    @relation("speakers_talks")
   teams                    TeamMember[]
   reviews                  Review[]
+  dismissedReviews         Review[]                  @relation("dismissedReviews")
   surveys                  Survey[]
   createdTalks             Talk[]
   createdEvents            Event[]
@@ -367,11 +368,14 @@ model Review {
   user        User          @relation(fields: [userId], references: [id])
   proposalId  String
   proposal    Proposal      @relation(fields: [proposalId], references: [id], onDelete: Cascade)
-  feeling     ReviewFeeling @default(NEUTRAL)
-  note        Int?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  migrationId String?
+  feeling       ReviewFeeling @default(NEUTRAL)
+  note          Int?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  dismissedAt   DateTime?
+  dismissedBy   String?
+  dismissedUser User?         @relation("dismissedReviews", fields: [dismissedBy], references: [id])
+  migrationId   String?
 
   @@unique([userId, proposalId])
   @@index([proposalId, feeling, note])

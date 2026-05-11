@@ -31,7 +31,7 @@ export class ProposalReview {
         speakers: event.displayProposalsSpeakers,
         formats: true,
         categories: true,
-        reviews: { include: { user: true } },
+        reviews: { where: { dismissedAt: null }, include: { user: true } },
         tags: true,
       },
       where: { id: this.proposalId },
@@ -95,7 +95,7 @@ export class ProposalReview {
     if (!event.displayProposalsSpeakers) return [];
 
     const proposals = await db.proposal.findMany({
-      include: { reviews: true, speakers: true },
+      include: { reviews: { where: { dismissedAt: null } }, speakers: true },
       where: {
         id: { not: this.proposalId },
         speakers: { some: { id: { in: speakerIds } } },
@@ -143,7 +143,17 @@ export class ProposalReview {
     await db.review.upsert({
       where: { userId_proposalId: { userId: this.authorizedEvent.userId, proposalId: this.proposalId } },
       create: { userId: this.authorizedEvent.userId, proposalId: this.proposalId, ...data },
-      update: data,
+      update: { ...data, dismissedAt: null, dismissedBy: null },
+    });
+  }
+
+  async dismissReview() {
+    const { event, userId } = this.authorizedEvent;
+    if (!event.reviewEnabled) throw new ReviewDisabledError();
+
+    await db.review.update({
+      where: { userId_proposalId: { userId, proposalId: this.proposalId } },
+      data: { dismissedAt: new Date(), dismissedBy: userId },
     });
   }
 }
