@@ -40,7 +40,7 @@ export class CfpMetrics {
   }
 
   private async reviewsCount(eventId: string, userId: string) {
-    return db.review.count({ where: { proposal: { eventId, isDraft: false }, userId } });
+    return db.review.count({ where: { proposal: { eventId, isDraft: false }, userId, dismissedAt: null } });
   }
 
   private async speakersCount(eventId: string) {

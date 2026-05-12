@@ -66,7 +66,7 @@ export class ProposalSearchBuilder {
       Prisma.sql`
         SELECT COUNT(*) AS total, COUNT(r.id) AS reviewed
         FROM proposals p
-        LEFT JOIN reviews r ON r."proposalId" = p.id AND r."userId" = ${this.userId}
+        LEFT JOIN reviews r ON r."proposalId" = p.id AND r."userId" = ${this.userId} AND r."dismissedAt" IS NULL
         WHERE ${Prisma.join(conditions, ' AND ')}
       `,
     );
@@ -305,21 +305,21 @@ export class ProposalSearchBuilder {
   private buildSingleReviewCondition(review: string): Prisma.Sql | null {
     switch (review) {
       case 'not-reviewed':
-        return Prisma.sql`NOT EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId})`;
+        return Prisma.sql`NOT EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r."dismissedAt" IS NULL)`;
       case 'no-opinion':
-        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.feeling = 'NO_OPINION' AND r.note IS NULL)`;
+        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r."dismissedAt" IS NULL AND r.feeling = 'NO_OPINION' AND r.note IS NULL)`;
       case 'negative':
-        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.feeling = 'NEGATIVE' AND r.note = 0)`;
+        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r."dismissedAt" IS NULL AND r.feeling = 'NEGATIVE' AND r.note = 0)`;
       case 'neutral-1':
       case 'neutral-2':
       case 'neutral-3':
       case 'neutral-4':
       case 'neutral-5': {
         const note = Number(review.split('-')[1]);
-        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.feeling = 'NEUTRAL' AND r.note = ${note})`;
+        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r."dismissedAt" IS NULL AND r.feeling = 'NEUTRAL' AND r.note = ${note})`;
       }
       case 'positive':
-        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r.feeling = 'POSITIVE')`;
+        return Prisma.sql`EXISTS (SELECT 1 FROM reviews r WHERE r."proposalId" = p.id AND r."userId" = ${this.userId} AND r."dismissedAt" IS NULL AND r.feeling = 'POSITIVE')`;
       default:
         return null;
     }
@@ -373,7 +373,7 @@ export class ProposalSearchBuilder {
           COUNT(*) FILTER (WHERE feeling = 'POSITIVE') AS positive_count,
           COUNT(*) FILTER (WHERE feeling = 'NEGATIVE') AS negative_count
         FROM reviews
-        WHERE "proposalId" = p.id
+        WHERE "proposalId" = p.id AND "dismissedAt" IS NULL
       ) review_agg ON true
     `;
   }
@@ -381,7 +381,7 @@ export class ProposalSearchBuilder {
   private buildUserReviewJoin(): Prisma.Sql {
     return Prisma.sql`
       LEFT JOIN reviews user_review
-        ON user_review."proposalId" = p.id AND user_review."userId" = ${this.userId}
+        ON user_review."proposalId" = p.id AND user_review."userId" = ${this.userId} AND user_review."dismissedAt" IS NULL
     `;
   }
 

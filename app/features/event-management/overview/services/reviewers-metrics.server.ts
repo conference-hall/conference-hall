@@ -27,15 +27,16 @@ export class ReviewersMetrics {
       return { proposalsCount: 0, reviewersMetrics: [] };
     }
 
-    const reviewersMetrics = await db.$queryRaw<Array<ReviewerMetricsInfo>>(Prisma.sql`
+    const reviewersMetrics = await db.$queryRaw<Array<ReviewerMetricsInfo & { allDismissed: boolean }>>(Prisma.sql`
       SELECT
         users."id",
         users."name",
         users."picture",
-        COUNT(reviews."id") as "reviewsCount",
-        AVG(reviews."note") as "averageNote",
-        COUNT(reviews."feeling") FILTER (WHERE reviews."feeling" = 'POSITIVE') as "positiveCount",
-        COUNT(reviews."feeling") FILTER (WHERE reviews."feeling" = 'NEGATIVE') as "negativeCount"
+        COUNT(reviews."id") FILTER (WHERE reviews."dismissedAt" IS NULL) as "reviewsCount",
+        AVG(reviews."note") FILTER (WHERE reviews."dismissedAt" IS NULL) as "averageNote",
+        COUNT(reviews."feeling") FILTER (WHERE reviews."feeling" = 'POSITIVE' AND reviews."dismissedAt" IS NULL) as "positiveCount",
+        COUNT(reviews."feeling") FILTER (WHERE reviews."feeling" = 'NEGATIVE' AND reviews."dismissedAt" IS NULL) as "negativeCount",
+        COUNT(reviews."id") FILTER (WHERE reviews."dismissedAt" IS NULL) = 0 AND COUNT(reviews."id") > 0 as "allDismissed"
       FROM reviews
       JOIN users ON reviews."userId" = users.id
       JOIN proposals ON reviews."proposalId" = proposals.id
@@ -54,6 +55,7 @@ export class ReviewersMetrics {
         averageNote: reviewer.averageNote?.toNumber() ?? 0,
         positiveCount: Number(reviewer.positiveCount ?? 0),
         negativeCount: Number(reviewer.negativeCount ?? 0),
+        allDismissed: Boolean(reviewer.allDismissed),
       })),
     };
   }
