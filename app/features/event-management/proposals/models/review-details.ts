@@ -20,7 +20,7 @@ export class ReviewDetails {
   }
 
   ofUser(userId: string) {
-    const user = this.reviews.find((r) => r.userId === userId);
+    const user = this.activeReviews.find((r) => r.userId === userId);
     if (!user) return { note: null, feeling: null };
     return { note: user.note, feeling: user.feeling };
   }
@@ -28,27 +28,33 @@ export class ReviewDetails {
   ofMembers() {
     return sortBy(
       this.reviews.map((review) => ({
-        id: review.user?.id ?? randomUUID(),
+        id: review.id,
+        userId: review.user?.id ?? randomUUID(),
         name: review.user?.name ?? 'unknown',
         picture: review.user?.picture ?? null,
         note: review.note,
         feeling: review.feeling,
+        dismissedAt: review.dismissedAt,
         updatedAt: review.updatedAt,
       })),
       'updatedAt',
     );
   }
 
+  private get activeReviews() {
+    return this.reviews.filter((r) => r.dismissedAt === null);
+  }
+
   private negatives() {
-    return this.reviews.filter((r) => r.feeling === 'NEGATIVE').length;
+    return this.activeReviews.filter((r) => r.feeling === 'NEGATIVE').length;
   }
 
   private positives() {
-    return this.reviews.filter((r) => r.feeling === 'POSITIVE').length;
+    return this.activeReviews.filter((r) => r.feeling === 'POSITIVE').length;
   }
 
   private average() {
-    const rates = this.reviews
+    const rates = this.activeReviews
       .filter((r) => r.feeling !== 'NO_OPINION' && r.note !== null)
       .map((r) => r.note || 0)
       .filter((r) => r !== null);
