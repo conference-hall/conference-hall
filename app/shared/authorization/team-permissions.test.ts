@@ -25,6 +25,7 @@ describe('UserTeamPermissions', () => {
         canChangeProposalStatus: true,
         canPublishEventResults: true,
         canEditEventSchedule: true,
+        canDismissReviews: true,
       });
     });
 
@@ -50,6 +51,7 @@ describe('UserTeamPermissions', () => {
         canChangeProposalStatus: true,
         canPublishEventResults: true,
         canEditEventSchedule: true,
+        canDismissReviews: false,
       });
     });
 
@@ -75,6 +77,7 @@ describe('UserTeamPermissions', () => {
         canChangeProposalStatus: false,
         canPublishEventResults: false,
         canEditEventSchedule: false,
+        canDismissReviews: false,
       });
     });
   });

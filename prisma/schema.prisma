@@ -369,6 +369,7 @@ model Review {
   proposal    Proposal      @relation(fields: [proposalId], references: [id], onDelete: Cascade)
   feeling     ReviewFeeling @default(NEUTRAL)
   note        Int?
+  dismissedAt DateTime?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   migrationId String?

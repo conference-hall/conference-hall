@@ -23,6 +23,7 @@ export type TeamPermissions = {
   readonly canChangeProposalStatus: boolean;
   readonly canPublishEventResults: boolean;
   readonly canEditEventSchedule: boolean;
+  readonly canDismissReviews: boolean;
 };
 
 export type TeamPermission = keyof TeamPermissions;

@@ -149,6 +149,7 @@ describe('requireAuthorizedTeam', () => {
         canChangeProposalStatus: true,
         canPublishEventResults: true,
         canEditEventSchedule: true,
+        canDismissReviews: true,
       },
     };
 
@@ -255,6 +256,7 @@ describe('requireAuthorizedEvent', () => {
         canChangeProposalStatus: true,
         canPublishEventResults: true,
         canEditEventSchedule: true,
+        canDismissReviews: true,
       },
     };
 
@@ -313,6 +315,7 @@ describe('requireAuthorizedEvent', () => {
         canChangeProposalStatus: true,
         canPublishEventResults: true,
         canEditEventSchedule: true,
+        canDismissReviews: true,
       },
     };
 
@@ -352,6 +355,7 @@ describe('requireAuthorizedEvent', () => {
         canChangeProposalStatus: true,
         canPublishEventResults: true,
         canEditEventSchedule: true,
+        canDismissReviews: true,
       },
     };
 
@@ -395,6 +399,7 @@ describe('requireAuthorizedEvent', () => {
         canChangeProposalStatus: true,
         canPublishEventResults: true,
         canEditEventSchedule: true,
+        canDismissReviews: true,
       },
     };
 
@@ -441,6 +446,7 @@ describe('middleware chain behavior', () => {
         canChangeProposalStatus: true,
         canPublishEventResults: true,
         canEditEventSchedule: true,
+        canDismissReviews: true,
       },
     };
 

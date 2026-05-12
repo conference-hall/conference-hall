@@ -19,6 +19,7 @@ const TEAM_OWNER_PERMISSIONS: TeamPermissions = {
   canChangeProposalStatus: true,
   canPublishEventResults: true,
   canEditEventSchedule: true,
+  canDismissReviews: true,
 };
 
 const TEAM_MEMBER_PERMISSIONS: TeamPermissions = {
@@ -40,6 +41,7 @@ const TEAM_MEMBER_PERMISSIONS: TeamPermissions = {
   canChangeProposalStatus: true,
   canPublishEventResults: true,
   canEditEventSchedule: true,
+  canDismissReviews: false,
 };
 
 const TEAM_REVIEWER_PERMISSIONS: TeamPermissions = {
@@ -61,6 +63,7 @@ const TEAM_REVIEWER_PERMISSIONS: TeamPermissions = {
   canChangeProposalStatus: false,
   canPublishEventResults: false,
   canEditEventSchedule: false,
+  canDismissReviews: false,
 };
 
 const NO_PERMISSIONS: TeamPermissions = {
@@ -82,6 +85,7 @@ const NO_PERMISSIONS: TeamPermissions = {
   canChangeProposalStatus: false,
   canPublishEventResults: false,
   canEditEventSchedule: false,
+  canDismissReviews: false,
 };
 
 function getPermissions(teamRole?: TeamRole) {
