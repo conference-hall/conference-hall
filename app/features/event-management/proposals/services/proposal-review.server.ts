@@ -146,4 +146,13 @@ export class ProposalReview {
       update: data,
     });
   }
+
+  async clearReview() {
+    const { event } = this.authorizedEvent;
+    if (!event.reviewEnabled) throw new ReviewDisabledError();
+
+    await db.review.deleteMany({
+      where: { userId: this.authorizedEvent.userId, proposalId: this.proposalId },
+    });
+  }
 }

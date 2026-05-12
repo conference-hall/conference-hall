@@ -319,6 +319,52 @@ describe('ProposalReview', () => {
     });
   });
 
+  describe('#clearReview', () => {
+    it('deletes an existing review for a proposal', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await ProposalReview.for(authorizedEvent, proposal.id).clearReview();
+
+      const reviews = await db.review.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
+      expect(reviews.length).toBe(0);
+    });
+
+    it('does not throw when no review exists', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(ProposalReview.for(authorizedEvent, proposal.id).clearReview()).resolves.not.toThrow();
+    });
+
+    it('does not delete other users reviews', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
+      await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5 } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await ProposalReview.for(authorizedEvent, proposal.id).clearReview();
+
+      const reviews = await db.review.findMany({ where: { proposalId: proposal.id } });
+      expect(reviews.length).toBe(1);
+      expect(reviews[0].userId).toBe(member.id);
+    });
+
+    it('throws an error if reviews are disabled', async () => {
+      await db.event.update({ data: { reviewEnabled: false }, where: { id: event.id } });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await expect(ProposalReview.for(authorizedEvent, proposal.id).clearReview()).rejects.toThrow(ReviewDisabledError);
+    });
+  });
+
   describe('#addReview', () => {
     it('adds then updates a review for a proposal', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
