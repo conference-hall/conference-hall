@@ -5,11 +5,12 @@ import { useRef, useState } from 'react';
 interface TooltipProps {
   text: string | React.ReactNode;
   placement?: Placement;
+  hideArrow?: boolean;
   as?: React.ElementType;
   children: React.ReactNode;
 }
 
-export function Tooltip({ text, placement = 'top', as: Tag = 'div', children }: TooltipProps) {
+export function Tooltip({ text, placement = 'top', as: Tag = 'div', hideArrow, children }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   const arrowRef = useRef(null);
@@ -29,10 +30,10 @@ export function Tooltip({ text, placement = 'top', as: Tag = 'div', children }: 
         <div
           ref={refs.setFloating}
           style={floatingStyles}
-          className="z-50 max-w-sm rounded-sm bg-gray-800 p-3 py-2 text-xs font-medium text-white"
+          className="z-50 max-w-sm rounded-lg bg-gray-800 px-2 py-1 text-xs font-medium text-white"
         >
           {text}
-          <FloatingArrow ref={arrowRef} context={context} fill="#1F2937" />
+          {!hideArrow ? <FloatingArrow ref={arrowRef} context={context} fill="#1F2937" /> : null}
         </div>
       )}
     </Tag>

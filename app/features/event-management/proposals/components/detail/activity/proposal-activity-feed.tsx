@@ -22,6 +22,7 @@ type Props = {
   speakerConversation: Array<Message>;
   speakers: Array<{ id: string; name: string; picture: string | null }>;
   canManageConversations: boolean;
+  canDismissReviews: boolean;
 };
 
 export function ProposalActivityFeed({
@@ -31,6 +32,7 @@ export function ProposalActivityFeed({
   speakerConversation,
   speakers,
   canManageConversations,
+  canDismissReviews,
 }: Props) {
   const user = useUser();
   const { t } = useTranslation();
@@ -47,7 +49,9 @@ export function ProposalActivityFeed({
         />
       ) : null}
 
-      {reviews && reviews.length > 0 ? <ReviewsGroupEntry reviews={reviews} summary={reviewsSummary ?? null} /> : null}
+      {reviews && reviews.length > 0 ? (
+        <ReviewsGroupEntry reviews={reviews} summary={reviewsSummary ?? null} canDismissReviews={canDismissReviews} />
+      ) : null}
 
       {comments.map((message) => (
         <ActivityFeed.Entry

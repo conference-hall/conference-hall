@@ -102,8 +102,8 @@ export function ProposalItem({
 
         <div className="hidden sm:flex sm:items-center sm:gap-2 sm:*:w-14">
           <ReviewComments count={commentCount} />
-          <ReviewNote feeling={you.feeling} note={you.note} variant="user" />
-          {summary && <ReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty />}
+          <ReviewNote feeling={you.feeling} note={you.note} variant="user" className="justify-end" />
+          {summary && <ReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty className="justify-end" />}
         </div>
       </Link>
     </>
