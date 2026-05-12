@@ -134,6 +134,14 @@ test.describe('As owner', () => {
     await page.getByRole('button', { name: 'Favorite' }).click();
     await expect(page.getByLabel('Global review = 4')).toBeVisible();
 
+    // Clear review by clicking active marker again
+    await page.getByRole('button', { name: 'Favorite' }).click();
+    await expect(page.getByLabel('Global review = 3')).toBeVisible();
+
+    // Re-review after clearing
+    await page.getByRole('button', { name: 'Favorite' }).click();
+    await expect(page.getByLabel('Global review = 4')).toBeVisible();
+
     // Check activity feed
     await expect(proposalPage.activityFeed).toHaveCount(4);
     const reviewsGroup = proposalPage.activityFeed.nth(1);

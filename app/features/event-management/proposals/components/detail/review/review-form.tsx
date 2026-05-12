@@ -33,7 +33,7 @@ export function ReviewForm({ initialValues }: Props) {
 
 function useOptimisticReview(initialValues: UserReview) {
   const params = useParams();
-  const fetcher = useFetcher({ key: `add-review:${params.proposal}` });
+  const fetcher = useFetcher({ key: `review:${params.proposal}` });
 
   let optimisticMarker = feelingAndNoteToMarker(initialValues.feeling ?? null, initialValues.note ?? null);
 
@@ -43,15 +43,18 @@ function useOptimisticReview(initialValues: UserReview) {
     const noteValue = formData.get('note');
     const note = noteValue === '' ? null : Number(noteValue);
     optimisticMarker = feelingAndNoteToMarker(feeling, note);
+  } else if (fetcher.formData?.get('intent') === 'clear-review') {
+    optimisticMarker = null;
   }
 
   const handleSubmit = (marker: string | null) => {
-    if (!marker) return;
+    const action = `/team/${params.team}/${params.event}/proposals/${params.proposal}`;
+    if (!marker) {
+      fetcher.submit({ intent: 'clear-review' }, { method: 'POST', action });
+      return;
+    }
     const { feeling, note } = markerToFeelingAndNote(marker);
-    fetcher.submit(
-      { intent: 'add-review', feeling, note: note === null ? '' : note },
-      { method: 'POST', action: `/team/${params.team}/${params.event}/proposals/${params.proposal}` },
-    );
+    fetcher.submit({ intent: 'add-review', feeling, note: note === null ? '' : note }, { method: 'POST', action });
   };
 
   return { optimisticMarker, handleSubmit };
