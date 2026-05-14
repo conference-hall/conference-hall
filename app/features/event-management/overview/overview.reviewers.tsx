@@ -87,7 +87,6 @@ export default function ReviewersTabRoute({ loaderData: { metrics } }: Route.Com
                 <CategoryBar
                   values={[reviewedReviews, dismissedReviews, remainingReviews]}
                   colors={['bg-blue-400', 'bg-gray-400', 'bg-gray-400/20']}
-                  showLabels={false}
                 />
               </div>
 
