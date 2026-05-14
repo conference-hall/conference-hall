@@ -73,5 +73,13 @@ describe('ReviewerActions', () => {
       const reviews = await db.review.findMany({ where: { userId: member.id, proposal: { eventId: event.id } } });
       expect(reviews.every((r) => r.dismissedAt === null)).toBe(true);
     });
+
+    it('throws if user lacks canDismissReviews', async () => {
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await expect(ReviewerActions.for(authorizedEvent).restoreReviewsByUser(owner.id)).rejects.toThrow(
+        ForbiddenOperationError,
+      );
+    });
   });
 });

@@ -400,6 +400,7 @@
   "event-management.overview.review.success.description": "All team members can review proposals.",
   "event-management.overview.review.success.heading": "Reviews are enabled",
   "event-management.overview.reviewed-by-you": "Proposals reviewed by you.",
+  "event-management.overview.reviewers.actions": "Reviewer actions menu",
   "event-management.overview.reviewers.average-reviews": "Average reviews",
   "event-management.overview.reviewers.dismiss": "Dismiss all reviews",
   "event-management.overview.reviewers.dismissed": "{{percentage}}% dismissed",

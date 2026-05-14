@@ -34,7 +34,7 @@ export class ProposalReview {
         reviews: { include: { user: true } },
         tags: true,
       },
-      where: { id: this.proposalId },
+      where: { id: this.proposalId, eventId: event.id },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
@@ -136,9 +136,18 @@ export class ProposalReview {
     };
   }
 
+  async existsProposal() {
+    const { event } = this.authorizedEvent;
+    const proposalCount = await db.proposal.count({ where: { id: this.proposalId, eventId: event.id } });
+    return proposalCount === 1;
+  }
+
   async addReview(data: ReviewUpdateData) {
     const { event } = this.authorizedEvent;
     if (!event.reviewEnabled) throw new ReviewDisabledError();
+
+    const exists = await this.existsProposal();
+    if (!exists) throw new ProposalNotFoundError();
 
     await db.review.upsert({
       where: { userId_proposalId: { userId: this.authorizedEvent.userId, proposalId: this.proposalId } },
@@ -151,6 +160,9 @@ export class ProposalReview {
     const { event } = this.authorizedEvent;
     if (!event.reviewEnabled) throw new ReviewDisabledError();
 
+    const exists = await this.existsProposal();
+    if (!exists) throw new ProposalNotFoundError();
+
     await db.review.deleteMany({
       where: { userId: this.authorizedEvent.userId, proposalId: this.proposalId },
     });
@@ -159,6 +171,9 @@ export class ProposalReview {
   async dismissReview(reviewId: string) {
     const { permissions } = this.authorizedEvent;
     if (!permissions.canDismissReviews) throw new ForbiddenOperationError();
+
+    const exists = await this.existsProposal();
+    if (!exists) throw new ProposalNotFoundError();
 
     const review = await db.review.findUnique({ where: { id: reviewId } });
     await db.review.update({
@@ -170,6 +185,9 @@ export class ProposalReview {
   async restoreReview(reviewId: string) {
     const { permissions } = this.authorizedEvent;
     if (!permissions.canDismissReviews) throw new ForbiddenOperationError();
+
+    const exists = await this.existsProposal();
+    if (!exists) throw new ProposalNotFoundError();
 
     const review = await db.review.findUnique({ where: { id: reviewId } });
     await db.review.update({

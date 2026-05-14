@@ -158,7 +158,13 @@ function ReviewerActionMenu({ reviewerId, hasActive, hasDismissed }: ReviewerAct
 
   return (
     <Menu>
-      <MenuButton as={Button} icon={EllipsisHorizontalIcon} variant="tertiary" size="xs" />
+      <MenuButton
+        as={Button}
+        icon={EllipsisHorizontalIcon}
+        label={t('event-management.overview.reviewers.actions')}
+        variant="tertiary"
+        size="xs"
+      />
 
       <MenuTransition>
         <MenuItems anchor={{ to: 'bottom end', gap: '8px' }} className={menuItems()} modal={false}>

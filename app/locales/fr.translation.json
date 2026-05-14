@@ -400,6 +400,7 @@
   "event-management.overview.review.success.description": "Tous les membres de l'équipe peuvent évaluer les propositions.",
   "event-management.overview.review.success.heading": "Les évaluations sont activées",
   "event-management.overview.reviewed-by-you": "Propositions évaluées par vous.",
+  "event-management.overview.reviewers.actions": "Menu d'action sur l'évaluateur",
   "event-management.overview.reviewers.average-reviews": "Moyenne des évaluations",
   "event-management.overview.reviewers.dismiss": "Annuler les évaluations",
   "event-management.overview.reviewers.dismissed": "{{percentage}}% annulées",
