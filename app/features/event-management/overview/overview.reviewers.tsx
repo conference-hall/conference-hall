@@ -13,10 +13,10 @@ import { menuItem, menuItemIcon, menuItems } from '~/design-system/styles/menu.s
 import { Tooltip } from '~/design-system/tooltip.tsx';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { ProposalReview } from '~/features/event-management/proposals/services/proposal-review.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { ReviewNote } from '../proposals/components/shared/review-note.tsx';
 import type { Route } from './+types/overview.reviewers.ts';
+import { ReviewerActions } from './services/reviewer-actions.server.ts';
 import { ReviewersMetrics } from './services/reviewers-metrics.server.ts';
 
 export const loader = async ({ context }: Route.LoaderArgs) => {
@@ -33,11 +33,11 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
 
   switch (intent) {
     case 'dismiss-reviewer-reviews': {
-      await ProposalReview.for(authorizedEvent, '').dismissReviewsByUser(userId);
+      await ReviewerActions.for(authorizedEvent).dismissReviewsByUser(userId);
       break;
     }
     case 'restore-reviewer-reviews': {
-      await ProposalReview.for(authorizedEvent, '').restoreReviewsByUser(userId);
+      await ReviewerActions.for(authorizedEvent).restoreReviewsByUser(userId);
       break;
     }
   }

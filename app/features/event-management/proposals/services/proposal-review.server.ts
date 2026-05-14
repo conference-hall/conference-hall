@@ -177,24 +177,4 @@ export class ProposalReview {
       data: { dismissedAt: null, updatedAt: review?.updatedAt },
     });
   }
-
-  async dismissReviewsByUser(userId: string) {
-    const { permissions, event } = this.authorizedEvent;
-    if (!permissions.canDismissReviews) throw new ForbiddenOperationError();
-
-    await db.review.updateMany({
-      where: { userId, proposal: { eventId: event.id }, dismissedAt: null },
-      data: { dismissedAt: new Date() },
-    });
-  }
-
-  async restoreReviewsByUser(userId: string) {
-    const { permissions, event } = this.authorizedEvent;
-    if (!permissions.canDismissReviews) throw new ForbiddenOperationError();
-
-    await db.review.updateMany({
-      where: { userId, proposal: { eventId: event.id }, dismissedAt: { not: null } },
-      data: { dismissedAt: null },
-    });
-  }
 }
