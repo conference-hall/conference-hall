@@ -1,6 +1,6 @@
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
-import { ProposalNotFoundError, ReviewDisabledError } from '~/shared/errors.server.ts';
+import { ForbiddenOperationError, ProposalNotFoundError, ReviewDisabledError } from '~/shared/errors.server.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { SocialLinks } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
@@ -34,7 +34,7 @@ export class ProposalReview {
         reviews: { include: { user: true } },
         tags: true,
       },
-      where: { id: this.proposalId },
+      where: { id: this.proposalId, eventId: event.id },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
@@ -95,7 +95,7 @@ export class ProposalReview {
     if (!event.displayProposalsSpeakers) return [];
 
     const proposals = await db.proposal.findMany({
-      include: { reviews: true, speakers: true },
+      include: { reviews: { where: { dismissedAt: null } }, speakers: true },
       where: {
         id: { not: this.proposalId },
         speakers: { some: { id: { in: speakerIds } } },
@@ -136,14 +136,23 @@ export class ProposalReview {
     };
   }
 
+  async existsProposal() {
+    const { event } = this.authorizedEvent;
+    const proposalCount = await db.proposal.count({ where: { id: this.proposalId, eventId: event.id } });
+    return proposalCount === 1;
+  }
+
   async addReview(data: ReviewUpdateData) {
     const { event } = this.authorizedEvent;
     if (!event.reviewEnabled) throw new ReviewDisabledError();
 
+    const exists = await this.existsProposal();
+    if (!exists) throw new ProposalNotFoundError();
+
     await db.review.upsert({
       where: { userId_proposalId: { userId: this.authorizedEvent.userId, proposalId: this.proposalId } },
       create: { userId: this.authorizedEvent.userId, proposalId: this.proposalId, ...data },
-      update: data,
+      update: { ...data, dismissedAt: null },
     });
   }
 
@@ -151,8 +160,39 @@ export class ProposalReview {
     const { event } = this.authorizedEvent;
     if (!event.reviewEnabled) throw new ReviewDisabledError();
 
+    const exists = await this.existsProposal();
+    if (!exists) throw new ProposalNotFoundError();
+
     await db.review.deleteMany({
       where: { userId: this.authorizedEvent.userId, proposalId: this.proposalId },
+    });
+  }
+
+  async dismissReview(reviewId: string) {
+    const { permissions } = this.authorizedEvent;
+    if (!permissions.canDismissReviews) throw new ForbiddenOperationError();
+
+    const exists = await this.existsProposal();
+    if (!exists) throw new ProposalNotFoundError();
+
+    const review = await db.review.findUnique({ where: { id: reviewId } });
+    await db.review.update({
+      where: { id: reviewId, proposalId: this.proposalId },
+      data: { dismissedAt: new Date(), updatedAt: review?.updatedAt },
+    });
+  }
+
+  async restoreReview(reviewId: string) {
+    const { permissions } = this.authorizedEvent;
+    if (!permissions.canDismissReviews) throw new ForbiddenOperationError();
+
+    const exists = await this.existsProposal();
+    if (!exists) throw new ProposalNotFoundError();
+
+    const review = await db.review.findUnique({ where: { id: reviewId } });
+    await db.review.update({
+      where: { id: reviewId, proposalId: this.proposalId },
+      data: { dismissedAt: null, updatedAt: review?.updatedAt },
     });
   }
 }

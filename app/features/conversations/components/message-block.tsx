@@ -67,7 +67,7 @@ export function MessageBlock({
           {t('common.conversation.message.sent')}
         </Text>
         <a href={`#${message.id}`} className={cx(typography({ size: 'xs', variant: 'secondary' }), 'hover:underline')}>
-          <TimeDistance date={message.sentAt} />
+          <TimeDistance date={message.sentAt} tooltip="right" />
         </a>
         {showRoleBadge && message.sender.role ? <Badge compact>{message.sender.role}</Badge> : null}
       </div>

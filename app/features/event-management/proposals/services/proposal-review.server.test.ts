@@ -112,6 +112,30 @@ describe('ProposalReview', () => {
       expect(review.speakers).toEqual([]);
     });
 
+    it('excludes dismissed reviews from summary aggregates', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
+      await reviewFactory({
+        proposal,
+        user: member,
+        attributes: { feeling: 'POSITIVE', note: 5 },
+        traits: ['dismissed'],
+      });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const review = await ProposalReview.for(authorizedEvent, proposal.id).get();
+
+      expect(review.reviews.summary).toEqual({ average: 0, positives: 0, negatives: 1 });
+      expect(review.reviews.members).toHaveLength(2);
+      expect(review.reviews.members).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ name: owner.name, dismissedAt: null }),
+          expect.objectContaining({ name: member.name, dismissedAt: expect.any(Date) }),
+        ]),
+      );
+    });
+
     it('returns teams reviews', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
@@ -124,8 +148,8 @@ describe('ProposalReview', () => {
       expect(review.reviews).toEqual({
         summary: { average: 2.5, positives: 1, negatives: 1 },
         members: expect.arrayContaining([
-          expect.objectContaining({ name: owner.name, feeling: 'NEGATIVE', note: 0 }),
-          expect.objectContaining({ name: member.name, feeling: 'POSITIVE', note: 5 }),
+          expect.objectContaining({ name: owner.name, feeling: 'NEGATIVE', note: 0, dismissedAt: null }),
+          expect.objectContaining({ name: member.name, feeling: 'POSITIVE', note: 5, dismissedAt: null }),
         ]),
         you: { note: 0, feeling: 'NEGATIVE' },
       });
@@ -410,6 +434,25 @@ describe('ProposalReview', () => {
       expect(reviews3.length).toBe(2);
     });
 
+    it('clears dismissedAt when re-submitting a dismissed review', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await reviewFactory({
+        proposal,
+        user: member,
+        attributes: { feeling: 'NEUTRAL', note: 2 },
+        traits: ['dismissed'],
+      });
+
+      const authorizedTeamMember = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEventMember = await getAuthorizedEvent(authorizedTeamMember, event.slug);
+      await ProposalReview.for(authorizedEventMember, proposal.id).addReview({ feeling: 'POSITIVE', note: 5 });
+
+      const review = await db.review.findFirst({ where: { userId: member.id, proposalId: proposal.id } });
+      expect(review?.dismissedAt).toBeNull();
+      expect(review?.feeling).toBe('POSITIVE');
+      expect(review?.note).toBe(5);
+    });
+
     it('throws an error if event deliberation is disabled', async () => {
       await db.event.update({ data: { reviewEnabled: false }, where: { id: event.id } });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
@@ -430,6 +473,61 @@ describe('ProposalReview', () => {
         const review = ProposalReview.for(authorizedEvent, proposal.id);
         await review.addReview({ feeling: 'NEUTRAL', note: 2 });
       }).rejects.toThrow(ForbiddenOperationError);
+    });
+  });
+
+  describe('#dismissReview', () => {
+    it('sets dismissedAt on the target review', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const review = await reviewFactory({ proposal, user: member, attributes: { feeling: 'NEUTRAL', note: 3 } });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await ProposalReview.for(authorizedEvent, proposal.id).dismissReview(review.id);
+
+      const updated = await db.review.findUnique({ where: { id: review.id } });
+      expect(updated?.dismissedAt).not.toBeNull();
+    });
+
+    it('throws if user lacks canDismissReviews', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const review = await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
+
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await expect(ProposalReview.for(authorizedEvent, proposal.id).dismissReview(review.id)).rejects.toThrow(
+        ForbiddenOperationError,
+      );
+    });
+  });
+
+  describe('#restoreReview', () => {
+    it('clears dismissedAt on the target review', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const review = await reviewFactory({
+        proposal,
+        user: member,
+        attributes: { feeling: 'NEUTRAL', note: 3 },
+        traits: ['dismissed'],
+      });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await ProposalReview.for(authorizedEvent, proposal.id).restoreReview(review.id);
+
+      const updated = await db.review.findUnique({ where: { id: review.id } });
+      expect(updated?.dismissedAt).toBeNull();
+    });
+
+    it('throws if user lacks canDismissReviews', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const review = await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
+
+      const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await expect(ProposalReview.for(authorizedEvent, proposal.id).restoreReview(review.id)).rejects.toThrow(
+        ForbiddenOperationError,
+      );
     });
   });
 });

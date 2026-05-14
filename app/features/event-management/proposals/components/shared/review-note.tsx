@@ -15,9 +15,10 @@ type ReviewNoteProps = {
   label?: string;
   hideEmpty?: boolean;
   raw?: boolean;
+  className?: string;
 };
 
-export function ReviewNote({ feeling, note, variant = 'global', label, hideEmpty, raw }: ReviewNoteProps) {
+export function ReviewNote({ feeling, note, variant = 'global', label, hideEmpty, raw, className }: ReviewNoteProps) {
   const { t } = useTranslation();
   const reviewFeeling = feeling || 'NEUTRAL';
 
@@ -41,7 +42,7 @@ export function ReviewNote({ feeling, note, variant = 'global', label, hideEmpty
     <ClientOnly fallback={<div />}>
       {() => (
         <div
-          className={cx('flex items-center justify-end gap-1', { invisible: note === null && hideEmpty })}
+          className={cx('flex items-center gap-1', { invisible: note === null && hideEmpty }, className)}
           aria-label={ariaLabel}
         >
           <Text weight="semibold" variant="secondary">

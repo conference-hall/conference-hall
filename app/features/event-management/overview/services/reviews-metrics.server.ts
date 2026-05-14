@@ -79,7 +79,7 @@ export class ReviewsMetrics {
         AVG(reviews.note) as "averageNote",
         COUNT(reviews.feeling) FILTER (WHERE reviews.feeling = 'POSITIVE') as "positiveReviews"
       FROM proposals
-      LEFT JOIN reviews ON reviews."proposalId" = proposals.id
+      LEFT JOIN reviews ON reviews."proposalId" = proposals.id AND reviews."dismissedAt" IS NULL
       WHERE proposals."eventId" = ${eventId} AND proposals."isDraft" = false
     `);
 
@@ -92,7 +92,7 @@ export class ReviewsMetrics {
         proposals.id as "proposalId",
         COUNT(reviews.id) as "reviewCount"
       FROM proposals
-      LEFT JOIN reviews ON reviews."proposalId" = proposals.id
+      LEFT JOIN reviews ON reviews."proposalId" = proposals.id AND reviews."dismissedAt" IS NULL
       WHERE proposals."eventId" = ${eventId} AND proposals."isDraft" = false
       GROUP BY proposals.id
       ORDER BY "reviewCount" DESC
@@ -141,7 +141,7 @@ export class ReviewsMetrics {
           proposals.id,
           AVG(reviews.note) as proposal_avg
         FROM proposals
-        INNER JOIN reviews ON reviews."proposalId" = proposals.id AND reviews.note IS NOT NULL
+        INNER JOIN reviews ON reviews."proposalId" = proposals.id AND reviews.note IS NOT NULL AND reviews."dismissedAt" IS NULL
         WHERE proposals."eventId" = ${eventId} AND proposals."isDraft" = false
         GROUP BY proposals.id
         HAVING COUNT(reviews.id) > 0

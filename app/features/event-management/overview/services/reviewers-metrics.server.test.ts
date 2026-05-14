@@ -54,6 +54,7 @@ describe('ReviewersMetrics', () => {
             averageNote: 0.5,
             positiveCount: 0,
             negativeCount: 1,
+            dismissedCount: 0,
           },
           {
             id: speaker.id,
@@ -63,9 +64,37 @@ describe('ReviewersMetrics', () => {
             averageNote: 5,
             positiveCount: 1,
             negativeCount: 0,
+            dismissedCount: 0,
           },
         ],
       });
+    });
+
+    it('returns dismissed reviews in reviewer stats', async () => {
+      const dismissedTeam = await teamFactory({ owners: [owner] });
+      const dismissedEvent = await eventFactory({ team: dismissedTeam });
+
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event: dismissedEvent, talk });
+      await reviewFactory({ user: owner, proposal, attributes: { feeling: 'NEUTRAL', note: 3 } });
+      await reviewFactory({
+        user: speaker,
+        proposal,
+        attributes: { feeling: 'POSITIVE', note: 5 },
+        traits: ['dismissed'],
+      });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, dismissedTeam.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, dismissedEvent.slug);
+
+      const metrics = await ReviewersMetrics.for(authorizedEvent).get();
+
+      expect(metrics.reviewersMetrics).toHaveLength(2);
+      const ownerMetrics = metrics.reviewersMetrics.find((r) => r.id === owner.id);
+      const speakerMetrics = metrics.reviewersMetrics.find((r) => r.id === speaker.id);
+
+      expect(ownerMetrics).toEqual(expect.objectContaining({ reviewsCount: 1, dismissedCount: 0 }));
+      expect(speakerMetrics).toEqual(expect.objectContaining({ reviewsCount: 1, dismissedCount: 1 }));
     });
 
     it('returns reviewers metrics for an event without reviews', async () => {

@@ -10,6 +10,7 @@ type ReviewerMetricsInfo = {
   averageNote: Prisma.Decimal;
   positiveCount: number;
   negativeCount: number;
+  dismissedCount: number;
 };
 
 export class ReviewersMetrics {
@@ -35,7 +36,8 @@ export class ReviewersMetrics {
         COUNT(reviews."id") as "reviewsCount",
         AVG(reviews."note") as "averageNote",
         COUNT(reviews."feeling") FILTER (WHERE reviews."feeling" = 'POSITIVE') as "positiveCount",
-        COUNT(reviews."feeling") FILTER (WHERE reviews."feeling" = 'NEGATIVE') as "negativeCount"
+        COUNT(reviews."feeling") FILTER (WHERE reviews."feeling" = 'NEGATIVE') as "negativeCount",
+        COUNT(reviews."id") FILTER (WHERE reviews."dismissedAt" IS NOT NULL) as "dismissedCount"
       FROM reviews
       JOIN users ON reviews."userId" = users.id
       JOIN proposals ON reviews."proposalId" = proposals.id
@@ -54,6 +56,7 @@ export class ReviewersMetrics {
         averageNote: reviewer.averageNote?.toNumber() ?? 0,
         positiveCount: Number(reviewer.positiveCount ?? 0),
         negativeCount: Number(reviewer.negativeCount ?? 0),
+        dismissedCount: Number(reviewer.dismissedCount ?? 0),
       })),
     };
   }

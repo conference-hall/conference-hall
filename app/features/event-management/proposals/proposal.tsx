@@ -96,6 +96,16 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       await review.clearReview();
       break;
     }
+    case 'dismiss-review': {
+      const reviewId = String(form.get('reviewId'));
+      await ProposalReview.for(authorizedEvent, proposalId).dismissReview(reviewId);
+      break;
+    }
+    case 'restore-review': {
+      const reviewId = String(form.get('reviewId'));
+      await ProposalReview.for(authorizedEvent, proposalId).restoreReview(reviewId);
+      break;
+    }
     case 'save-message': {
       const result = parseWithZod(form, { schema: ConversationMessageSaveWithChannelSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
@@ -243,6 +253,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   speakerConversation={speakerConversation}
                   speakers={proposal.speakers}
                   canManageConversations={permissions.canManageConversations}
+                  canDismissReviews={permissions.canDismissReviews}
                 />
               )}
             </Await>
