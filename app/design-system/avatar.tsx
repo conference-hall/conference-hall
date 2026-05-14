@@ -1,4 +1,4 @@
-import { cx } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import { generateGradientColor } from '~/shared/colors/colors.ts';
 import { Tooltip } from './tooltip.tsx';
 import { Text } from './typography.tsx';
@@ -13,47 +13,76 @@ const sizes = {
   '4xl': '128px',
 };
 
-const sizes_tw = {
-  xs: 'h-6 w-6',
-  s: 'h-8 w-8',
-  m: 'h-10 w-10',
-  l: 'h-12 w-12',
-  xl: 'h-16 w-16',
-  '2xl': 'h-20 w-20',
-  '4xl': 'h-32 w-32',
-};
+const avatarStyles = cva('shrink-0 bg-white', {
+  variants: {
+    size: {
+      xs: 'h-6 w-6',
+      s: 'h-8 w-8',
+      m: 'h-10 w-10',
+      l: 'h-12 w-12',
+      xl: 'h-16 w-16',
+      '2xl': 'h-20 w-20',
+      '4xl': 'h-32 w-32',
+    },
+    square: {
+      true: '',
+      false: 'rounded-full',
+    },
+    ring: {
+      true: '',
+      false: '',
+    },
+    ringColor: {
+      white: '',
+      primary: '',
+    },
+  },
+  compoundVariants: [
+    { square: true, size: 'xs', className: 'rounded-sm' },
+    { square: true, size: 's', className: 'rounded-sm' },
+    { square: true, size: 'm', className: 'rounded-sm' },
+    { square: true, size: 'l', className: 'rounded-md' },
+    { square: true, size: 'xl', className: 'rounded-md' },
+    { square: true, size: '2xl', className: 'rounded-md' },
+    { square: true, size: '4xl', className: 'rounded-md' },
+    { ring: true, size: ['xs', 's', 'm', 'l', 'xl'], className: 'ring-2' },
+    { ring: true, size: '2xl', className: 'ring-3' },
+    { ring: true, size: '4xl', className: 'ring-4' },
+    { ring: true, ringColor: 'white', className: 'ring-white' },
+    { ring: true, ringColor: 'primary', className: 'ring-indigo-500' },
+  ],
+  defaultVariants: {
+    size: 's',
+    square: false,
+    ring: false,
+    ringColor: 'primary',
+  },
+});
 
-const text_sizes = {
-  xs: 'text-sm',
-  s: 'text-lg',
-  m: 'text-xl',
-  l: 'text-3xl',
-  xl: 'text-4xl',
-  '2xl': 'text-5xl',
-  '4xl': 'text-6xl',
-};
+const initialStyles = cva('', {
+  variants: {
+    size: {
+      xs: 'text-sm',
+      s: 'text-lg',
+      m: 'text-xl',
+      l: 'text-3xl',
+      xl: 'text-4xl',
+      '2xl': 'text-5xl',
+      '4xl': 'text-6xl',
+    },
+  },
+  defaultVariants: { size: 's' },
+});
 
-const square_sizes = {
-  xs: 'rounded-sm',
-  s: 'rounded-sm',
-  m: 'rounded-sm',
-  l: 'rounded-md',
-  xl: 'rounded-md',
-  '2xl': 'rounded-md',
-  '4xl': 'rounded-md',
-};
-
-const rings = { xs: 'ring-2', s: 'ring-2', m: 'ring-2', l: 'ring-2', xl: 'ring-2', '2xl': 'ring-3', '4xl': 'ring-4' };
-
-const ringsColor = { white: 'ring-white', primary: 'ring-indigo-500' };
+type AvatarSize = keyof typeof sizes;
 
 type AvatarProps = {
   picture?: string | null;
   name?: string | null;
-  size?: keyof typeof sizes;
+  size?: AvatarSize;
   square?: boolean;
   ring?: boolean;
-  ringColor?: keyof typeof ringsColor;
+  ringColor?: 'white' | 'primary';
   'aria-hidden'?: boolean;
   className?: string;
 };
@@ -68,14 +97,7 @@ export function Avatar({
   'aria-hidden': ariaHidden,
   className,
 }: AvatarProps) {
-  const styles = cx(
-    'shrink-0 bg-white',
-    sizes_tw[size],
-    ring ? rings[size] : null,
-    ring ? ringsColor[ringColor] : null,
-    square ? square_sizes[size] : 'rounded-full',
-    className,
-  );
+  const styles = avatarStyles({ size, square, ring, ringColor, className });
 
   if (picture) {
     return <AvatarImage name={name} picture={picture} className={styles} size={size} aria-hidden={ariaHidden} />;
@@ -110,7 +132,7 @@ type AvatarImageProps = {
   picture: string;
   name?: string | null;
   'aria-hidden'?: boolean;
-  size: keyof typeof sizes;
+  size: AvatarSize;
   className: string;
 };
 
@@ -128,22 +150,18 @@ function AvatarImage({ picture, name, 'aria-hidden': ariaHidden, size, className
   );
 }
 
-function AvatarColor({
-  name,
-  size,
-  className,
-}: {
-  name?: string | null;
-  size: keyof typeof text_sizes;
-  className: string;
-}) {
+function AvatarColor({ name, size, className }: { name?: string | null; size: AvatarSize; className: string }) {
   const avatarName = name || 'Unknown';
   const gradient = generateGradientColor(avatarName);
   const initial = avatarName.charAt(0).toUpperCase();
 
   return (
     <div
-      className={cx('flex items-center justify-center font-medium text-gray-900/70', className, text_sizes[size])}
+      className={cx(
+        'flex items-center justify-center font-medium text-gray-900/70',
+        className,
+        initialStyles({ size }),
+      )}
       style={{ height: sizes[size], width: sizes[size], background: gradient }}
     >
       {initial}
@@ -151,20 +169,43 @@ function AvatarColor({
   );
 }
 
+const overflowBadgeStyles = cva(
+  'flex items-center justify-center rounded-full bg-gray-200 font-medium text-gray-600 ring-2 ring-white',
+  {
+    variants: {
+      size: {
+        xs: 'h-6 w-6 text-xs',
+        s: 'h-8 w-8 text-xs',
+        m: 'h-10 w-10 text-sm',
+        l: 'h-12 w-12 text-sm',
+        xl: 'h-16 w-16 text-base',
+        '2xl': 'h-20 w-20 text-lg',
+        '4xl': 'h-32 w-32 text-2xl',
+      },
+    },
+    defaultVariants: { size: 's' },
+  },
+);
+
 type AvatarGroupProps = {
   avatars: Array<{ picture?: string | null; name?: string | null }>;
-  size?: keyof typeof sizes;
+  size?: AvatarSize;
+  max?: number;
   className?: string;
 };
 
-export function AvatarGroup({ avatars, size, className }: AvatarGroupProps) {
+export function AvatarGroup({ avatars, size, max, className }: AvatarGroupProps) {
+  const visible = max !== undefined ? avatars.slice(0, max) : avatars;
+  const overflow = max !== undefined ? avatars.length - max : 0;
+
   return (
     <div className={cx('flex shrink-0 flex-nowrap -space-x-1 overflow-hidden', className)}>
-      {avatars.map((avatar, index) => (
+      {visible.map((avatar, index) => (
         <Tooltip key={index} text={avatar.name}>
           <Avatar name={avatar.name} picture={avatar.picture} size={size} className="ring-2 ring-white" />
         </Tooltip>
       ))}
+      {overflow > 0 && <div className={overflowBadgeStyles({ size })}>+{overflow}</div>}
     </div>
   );
 }

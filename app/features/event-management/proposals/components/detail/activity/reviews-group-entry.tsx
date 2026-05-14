@@ -14,8 +14,6 @@ import { TimeDistance } from '~/design-system/utils/time-distance.tsx';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
 import { ReviewNote } from '../../shared/review-note.tsx';
 
-const MAX_AVATARS = 3;
-
 export type ReviewMember = {
   id: string;
   userId: string;
@@ -43,8 +41,6 @@ export function ReviewsGroupEntry({ reviews, summary, canDismissReviews }: Props
   const { t } = useTranslation();
 
   const activeReviews = reviews.filter((r) => r.dismissedAt === null);
-  const avatars = activeReviews.slice(0, MAX_AVATARS);
-  const overflow = activeReviews.length - MAX_AVATARS;
 
   return (
     <ActivityFeed.Entry
@@ -58,15 +54,8 @@ export function ReviewsGroupEntry({ reviews, summary, canDismissReviews }: Props
       <Disclosure as="div" className="rounded-md bg-white ring-1 ring-gray-200">
         <DisclosureButton className="group flex w-full cursor-pointer items-center justify-between gap-2 rounded-t-md p-3 not-data-open:rounded-b-md hover:bg-gray-50">
           <div className="flex flex-col truncate sm:flex-row sm:items-center sm:gap-1">
-            {avatars.length > 0 ? (
-              <div className="hidden items-center pr-2 sm:flex">
-                <AvatarGroup avatars={avatars} size="xs" />
-                {overflow > 0 && (
-                  <div className="-ml-1 flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-xs font-medium text-gray-600 ring-2 ring-white">
-                    +{overflow}
-                  </div>
-                )}
-              </div>
+            {activeReviews.length > 0 ? (
+              <AvatarGroup avatars={activeReviews} size="xs" max={2} className="hidden pr-2 sm:flex" />
             ) : null}
             <Text size="s" weight="semibold" align="left">
               {t('event-management.proposal-page.activity-feed.reviews.title')}
@@ -122,7 +111,7 @@ function ReviewRow({ review, canDismissReviews }: ReviewRowProps) {
         <Text size="xs" weight="semibold" truncate>
           {review.name}
         </Text>
-        <TimeDistance date={review.updatedAt} className="shrink-0 text-xs text-gray-500" />
+        <TimeDistance date={review.updatedAt} className="shrink-0 text-xs text-gray-500" tooltip="right" />
       </div>
       <div className="flex grow items-center justify-end gap-2">
         <ReviewNote feeling={review.feeling} note={review.note} className={dismissedStyle} />
