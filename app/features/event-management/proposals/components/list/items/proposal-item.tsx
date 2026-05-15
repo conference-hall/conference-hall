@@ -1,5 +1,5 @@
 import type { ChangeEvent } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { href, Link, useSearchParams } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Badge, BadgeDot } from '~/design-system/badges.tsx';
@@ -93,10 +93,15 @@ export function ProposalItem({
 
           <Text size="xs" variant="secondary" className="space-x-1">
             <span>#{routeId}</span>
-            {speakers.length ? <span>{t('common.proposed-by', { names: speakers.map((a) => a.name) })}</span> : null}
-            <ClientOnly>
-              {() => <span>{` - ${formatDate(submittedAt, { format: 'medium', locale })}`}</span>}
-            </ClientOnly>
+            {speakers.length ? (
+              <Trans
+                as="span"
+                i18nKey="common.proposed-by"
+                values={{ names: speakers.map((a) => a.name) }}
+                components={[<span key="0" className="text-gray-800" />]}
+              />
+            ) : null}
+            <ClientOnly>{() => <span>{`· ${formatDate(submittedAt, { format: 'medium', locale })}`}</span>}</ClientOnly>
           </Text>
         </div>
 

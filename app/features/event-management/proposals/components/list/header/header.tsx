@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -20,16 +20,28 @@ export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, s
   const permissions = useUserTeamPermissions();
 
   return (
-    <List.Header className="sm:h-16">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center">
+    <List.Header className="py-2">
+      <div className="flex flex-col gap-4 sm:h-7 md:flex-row md:items-center">
         {permissions.canChangeProposalStatus ? (
           <Checkbox aria-label={t('event-management.proposals.list.check-item')} ref={checkboxRef}>
-            {totalSelected === 0
-              ? t('event-management.proposals.list.items', { count: total })
-              : t('event-management.proposals.list.selected', { count: totalSelected })}
+            {totalSelected === 0 ? (
+              <Trans
+                i18nKey="event-management.proposals.list.items"
+                values={{ count: total }}
+                components={[<span key="0" className="font-semibold" />]}
+              />
+            ) : (
+              t('event-management.proposals.list.selected', { count: totalSelected })
+            )}
           </Checkbox>
         ) : (
-          <Text weight="medium">{t('event-management.proposals.list.items', { count: total })}</Text>
+          <Text>
+            <Trans
+              i18nKey="event-management.proposals.list.items"
+              values={{ count: total }}
+              components={[<span key="0" className="font-semibold" />]}
+            />
+          </Text>
         )}
 
         {totalSelected !== 0 && (
