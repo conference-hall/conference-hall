@@ -517,11 +517,8 @@ describe('EventSpeakers', () => {
       });
 
       it('includes review summary when event.displayProposalsReviews is enabled', async () => {
-        // Enable proposal reviews display
         const talk = await talkFactory({ speakers: [speaker1] });
         const proposal = await proposalFactory({ event, talk });
-
-        // Add multiple reviews to generate summary
         await reviewFactory({ proposal, user: owner, attributes: { feeling: 'POSITIVE', note: 4 } });
         await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5 } });
 
@@ -534,17 +531,11 @@ describe('EventSpeakers', () => {
         expect(result?.proposals[0].reviews.summary?.average).toBeDefined();
       });
 
-      it('excludes review summary when event.displayProposalsReviews is disabled', async () => {
-        // Disable proposal reviews display
-        await db.event.update({ where: { id: event.id }, data: { displayProposalsReviews: false } });
-        const talk = await talkFactory({ speakers: [speaker1] });
-        const proposal = await proposalFactory({ event, talk });
+      it('excludes review summary when displayProposalsReviews is disabled', async () => {
+        const event = await eventFactory({ team, attributes: { displayProposalsReviews: false } });
+        const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }) });
+        await reviewFactory({ proposal, user: owner, attributes: { feeling: 'POSITIVE', note: 4 } });
 
-        await reviewFactory({
-          proposal,
-          user: owner,
-          attributes: { feeling: 'POSITIVE', note: 4 },
-        });
         const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 

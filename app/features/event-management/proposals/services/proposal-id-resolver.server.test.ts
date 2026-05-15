@@ -6,7 +6,6 @@ import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ProposalNotFoundError } from '~/shared/errors.server.ts';
-import { db } from '../../../../../prisma/db.server.ts';
 import type { Event, Team, User } from '../../../../../prisma/generated/client.ts';
 import { resolveProposalId } from './proposal-id-resolver.server.ts';
 
@@ -41,8 +40,7 @@ describe('resolveProposalId', () => {
 
     it('returns proposal Id even when proposal number exists', async () => {
       const talk = await talkFactory({ speakers: [user] });
-      const proposal = await proposalFactory({ event, talk });
-      await db.proposal.update({ where: { id: proposal.id }, data: { proposalNumber: 42 } });
+      const proposal = await proposalFactory({ event, talk, attributes: { proposalNumber: 42 } });
 
       const result = await resolveProposalId(authorizedEvent, proposal.id);
 
@@ -53,8 +51,7 @@ describe('resolveProposalId', () => {
   describe('when param is a proposal number', () => {
     it('resolves proposal number to proposal Id when param is numeric', async () => {
       const talk = await talkFactory({ speakers: [user] });
-      const proposal = await proposalFactory({ event, talk });
-      await db.proposal.update({ where: { id: proposal.id }, data: { proposalNumber: 123 } });
+      const proposal = await proposalFactory({ event, talk, attributes: { proposalNumber: 123 } });
 
       const result = await resolveProposalId(authorizedEvent, '123');
 
@@ -63,8 +60,7 @@ describe('resolveProposalId', () => {
 
     it('coerces numeric strings with leading zeros', async () => {
       const talk = await talkFactory({ speakers: [user] });
-      const proposal = await proposalFactory({ event, talk });
-      await db.proposal.update({ where: { id: proposal.id }, data: { proposalNumber: 42 } });
+      const proposal = await proposalFactory({ event, talk, attributes: { proposalNumber: 42 } });
 
       const result = await resolveProposalId(authorizedEvent, '042');
 
@@ -79,8 +75,7 @@ describe('resolveProposalId', () => {
 
     it('throws ProposalNotFoundError when proposal number belongs to different event', async () => {
       const talk = await talkFactory({ speakers: [user] });
-      const proposal = await proposalFactory({ event: event2, talk });
-      await db.proposal.update({ where: { id: proposal.id }, data: { proposalNumber: 456 } });
+      await proposalFactory({ event: event2, talk, attributes: { proposalNumber: 456 } });
 
       await expect(resolveProposalId(authorizedEvent, '456')).rejects.toThrow(ProposalNotFoundError);
     });
@@ -96,13 +91,9 @@ describe('resolveProposalId', () => {
       const talk2 = await talkFactory({ speakers: [user] });
       const talk3 = await talkFactory({ speakers: [user] });
 
-      const proposal1 = await proposalFactory({ event, talk: talk1 });
-      const proposal2 = await proposalFactory({ event, talk: talk2 });
-      const proposal3 = await proposalFactory({ event, talk: talk3 });
-
-      await db.proposal.update({ where: { id: proposal1.id }, data: { proposalNumber: 1 } });
-      await db.proposal.update({ where: { id: proposal2.id }, data: { proposalNumber: 2 } });
-      await db.proposal.update({ where: { id: proposal3.id }, data: { proposalNumber: 3 } });
+      const proposal1 = await proposalFactory({ event, talk: talk1, attributes: { proposalNumber: 1 } });
+      const proposal2 = await proposalFactory({ event, talk: talk2, attributes: { proposalNumber: 2 } });
+      const proposal3 = await proposalFactory({ event, talk: talk3, attributes: { proposalNumber: 3 } });
 
       const result1 = await resolveProposalId(authorizedEvent, '1');
       const result2 = await resolveProposalId(authorizedEvent, '2');
@@ -117,11 +108,8 @@ describe('resolveProposalId', () => {
       const talk1 = await talkFactory({ speakers: [user] });
       const talk2 = await talkFactory({ speakers: [user] });
 
-      const proposalEvent1 = await proposalFactory({ event, talk: talk1 });
-      const proposalEvent2 = await proposalFactory({ event: event2, talk: talk2 });
-
-      await db.proposal.update({ where: { id: proposalEvent1.id }, data: { proposalNumber: 100 } });
-      await db.proposal.update({ where: { id: proposalEvent2.id }, data: { proposalNumber: 100 } });
+      const proposalEvent1 = await proposalFactory({ event, talk: talk1, attributes: { proposalNumber: 100 } });
+      const proposalEvent2 = await proposalFactory({ event: event2, talk: talk2, attributes: { proposalNumber: 100 } });
 
       const resultEvent1 = await resolveProposalId(authorizedEvent, '100');
       const resultEvent2 = await resolveProposalId(authorizedEvent2, '100');

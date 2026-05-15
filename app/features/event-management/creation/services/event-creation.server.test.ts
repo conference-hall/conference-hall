@@ -19,8 +19,8 @@ describe('EventCreation', () => {
     });
 
     it('returns existing events of same type', async () => {
-      await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Conference 1' } });
-      await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Conference 2' } });
+      await eventFactory({ team, creator: owner, attributes: { name: 'Conference 1' } });
+      await eventFactory({ team, creator: owner, attributes: { name: 'Conference 2' } });
       await eventFactory({ team, creator: owner, attributes: { type: 'MEETUP', name: 'Meetup 1' } });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
@@ -32,12 +32,8 @@ describe('EventCreation', () => {
     });
 
     it('excludes archived events', async () => {
-      await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Active' } });
-      await eventFactory({
-        team,
-        creator: owner,
-        attributes: { type: 'CONFERENCE', name: 'Archived', archived: true },
-      });
+      await eventFactory({ team, creator: owner, attributes: { name: 'Active' } });
+      await eventFactory({ team, creator: owner, attributes: { name: 'Archived', archived: true } });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const events = await EventCreation.for(authorizedTeam).findTemplateEvents('CONFERENCE');
@@ -47,11 +43,8 @@ describe('EventCreation', () => {
     });
 
     it('returns events ordered by creation date descending', async () => {
-      const event1 = await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'First' } });
-      await db.event.update({ where: { id: event1.id }, data: { createdAt: new Date('2023-01-01') } });
-
-      const event2 = await eventFactory({ team, creator: owner, attributes: { type: 'CONFERENCE', name: 'Second' } });
-      await db.event.update({ where: { id: event2.id }, data: { createdAt: new Date('2023-06-01') } });
+      await eventFactory({ team, creator: owner, attributes: { name: 'First', createdAt: new Date('2023-01-01') } });
+      await eventFactory({ team, creator: owner, attributes: { name: 'Second', createdAt: new Date('2023-06-01') } });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const events = await EventCreation.for(authorizedTeam).findTemplateEvents('CONFERENCE');
