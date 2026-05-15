@@ -1,4 +1,3 @@
-import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import type { MarkerOption } from '~/design-system/forms/marker-group.tsx';
@@ -11,14 +10,13 @@ import { feelingAndNoteToMarker, getMarkerOptionForFeeling, getReviewMarkerOptio
 type ReviewNoteProps = {
   feeling: ReviewFeeling | null;
   note: number | null;
-  variant?: 'global' | 'user';
+  size?: 'base' | 'xs';
   label?: string;
-  hideEmpty?: boolean;
   raw?: boolean;
   className?: string;
 };
 
-export function ReviewNote({ feeling, note, variant = 'global', label, hideEmpty, raw, className }: ReviewNoteProps) {
+export function ReviewNote({ feeling, note, size = 'base', label, raw, className }: ReviewNoteProps) {
   const { t } = useTranslation();
   const reviewFeeling = feeling || 'NEUTRAL';
 
@@ -30,25 +28,29 @@ export function ReviewNote({ feeling, note, variant = 'global', label, hideEmpty
     option = getMarkerOptionForFeeling(reviewFeeling, t);
   }
 
-  if (note === null && feeling !== 'NO_OPINION') return <div />;
+  const isScored = (!raw && note !== null) || (raw && note !== 0);
+  const hideScore = !raw && feeling === 'NO_OPINION';
 
   const formattedNote = formatReviewNote(note);
-  const isUserNeutral = variant === 'user' && reviewFeeling === 'NEUTRAL';
-  const Icon = isUserNeutral ? UserCircleIcon : option?.icon;
-  const iconClass = isUserNeutral ? 'size-5 shrink-0 text-gray-700' : cx('size-5 shrink-0', option?.fill);
+  const Icon = option?.icon;
+  const iconClass = cx('shrink-0', {
+    [option?.fill ?? '']: isScored,
+    'fill-white stroke-gray-300': !isScored,
+    'size-5': size === 'base',
+    'size-4': size === 'xs',
+  });
   const ariaLabel = label ? `${label} = ${formattedNote}` : (option?.label ?? '');
 
   return (
     <ClientOnly fallback={<div />}>
       {() => (
-        <div
-          className={cx('flex items-center gap-1', { invisible: note === null && hideEmpty }, className)}
-          aria-label={ariaLabel}
-        >
-          <Text weight="semibold" variant="secondary">
-            {formattedNote}
-          </Text>
+        <div className={cx('flex items-center gap-1', className)} aria-label={ariaLabel}>
           {Icon && <Icon className={iconClass} aria-hidden />}
+          {!hideScore ? (
+            <Text weight="semibold" variant={isScored ? 'primary' : 'secondary-light'}>
+              {formattedNote ?? '–'}
+            </Text>
+          ) : null}
         </div>
       )}
     </ClientOnly>

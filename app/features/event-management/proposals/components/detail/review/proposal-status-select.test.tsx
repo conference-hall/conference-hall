@@ -62,7 +62,7 @@ describe('ProposalStatusSelect component', () => {
         confirmationStatus: 'PENDING',
       });
 
-      await expect.element(page.getByText('Waiting for speaker confirmation')).toBeInTheDocument();
+      await expect.element(page.getByText('Waiting for confirmation')).toBeInTheDocument();
     });
 
     it('renders with confirmed status', async () => {
@@ -100,7 +100,7 @@ describe('ProposalStatusSelect component', () => {
       // Confirmation status options should be hidden - let's check they're not in the DOM
       const allOptions = page.getByRole('option').all();
       const optionTexts = allOptions.map((option) => option.element().textContent);
-      expect(optionTexts).not.toContain('Waiting for speaker confirmation');
+      expect(optionTexts).not.toContain('Waiting for confirmation');
       expect(optionTexts).not.toContain('Confirmed by speaker');
       expect(optionTexts).not.toContain('Declined by speaker');
     });
@@ -112,10 +112,10 @@ describe('ProposalStatusSelect component', () => {
         confirmationStatus: 'PENDING',
       });
 
-      const selectButton = page.getByRole('button', { name: /waiting for speaker confirmation/i });
+      const selectButton = page.getByRole('button', { name: /waiting for confirmation/i });
       await selectButton.click();
 
-      await expect.element(page.getByRole('option', { name: /Waiting for speaker confirmation/ })).toBeInTheDocument();
+      await expect.element(page.getByRole('option', { name: /Waiting for confirmation/ })).toBeInTheDocument();
       await expect.element(page.getByRole('option', { name: /Confirmed by speaker/ })).toBeInTheDocument();
       await expect.element(page.getByRole('option', { name: /Declined by speaker/ })).toBeInTheDocument();
 

@@ -18,7 +18,7 @@ export class ProposalPage extends PageObject {
   readonly deliberationStatus = this.page.getByLabel('Change proposal status');
   readonly publicationStatus = this.page.getByRole('heading', { name: 'Publication' });
   readonly publishButton = this.page.getByRole('button', { name: 'Publish result to speakers' });
-  readonly waitingConfirmation = this.page.getByText('Waiting for speaker confirmation');
+  readonly waitingConfirmation = this.page.getByText('Waiting for confirmation');
   readonly resultPublished = this.page.getByText('Result published to speakers');
 
   readonly speakerPanel = new SpeakerPanelComponent(this.page);

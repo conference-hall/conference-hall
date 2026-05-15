@@ -234,7 +234,7 @@ test.describe('As owner', () => {
     // Publish accepted result
     await proposalPage.publishButton.click();
     await page.getByRole('dialog').getByRole('button', { name: 'Publish result to speakers' }).click();
-    await expect(proposalPage.deliberationStatus).toContainText('Waiting for speaker confirmation');
+    await expect(proposalPage.deliberationStatus).toContainText('Waiting for confirmation');
 
     // Deliberate as rejected - handle confirmation dialog for published proposals
     page.on('dialog', (dialog) => dialog.accept());

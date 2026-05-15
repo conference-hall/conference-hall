@@ -41,7 +41,7 @@ export function OtherProposalsDisclosure({ team, event, proposals }: OtherPropos
                 {t('common.by', { names: proposal.speakers })}
               </Text>
             </span>
-            <ReviewNote feeling="NEUTRAL" note={proposal.review} hideEmpty />
+            <ReviewNote feeling="NEUTRAL" note={proposal.review} />
           </Link>
         </li>
       ))}

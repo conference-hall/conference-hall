@@ -42,23 +42,28 @@ describe('ReviewNote component', () => {
     await expect.element(page.getByText('3.5')).toBeInTheDocument();
   });
 
-  it('hides content with invisible class when note is null and hideEmpty is true', async () => {
-    await renderComponent({ feeling: 'NO_OPINION', note: null, hideEmpty: true });
-
-    const element = page.getByLabelText('No opinion');
-    await expect.element(element).toHaveClass('invisible');
-  });
-
-  it('shows content when note is present and hideEmpty is true', async () => {
-    await renderComponent({ feeling: 'NEUTRAL', note: 3, hideEmpty: true });
-
-    const element = page.getByText('3');
-    await expect.element(element).toBeInTheDocument();
-  });
-
   it('uses label in aria-label when provided', async () => {
     await renderComponent({ feeling: 'NEUTRAL', note: 3, label: 'Average' });
 
     await expect.element(page.getByLabelText('Average = 3')).toBeInTheDocument();
+  });
+
+  it('raw mode shows note for decimal average', async () => {
+    await renderComponent({ feeling: 'NEUTRAL', note: 3.5, raw: true });
+
+    await expect.element(page.getByText('3.5')).toBeInTheDocument();
+  });
+
+  it('raw mode with note=0 treats it as not scored', async () => {
+    await renderComponent({ feeling: 'NEUTRAL', note: 0, raw: true });
+
+    const element = page.getByText('0');
+    await expect.element(element).toBeInTheDocument();
+  });
+
+  it('raw mode with NO_OPINION shows dash for null note', async () => {
+    await renderComponent({ feeling: 'NO_OPINION', note: null, raw: true });
+
+    await expect.element(page.getByText('–')).toBeInTheDocument();
   });
 });

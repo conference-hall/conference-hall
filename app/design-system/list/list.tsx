@@ -4,6 +4,7 @@ import { Trans } from 'react-i18next';
 import type { LinkProps } from 'react-router';
 import { Link } from 'react-router';
 import { Pagination, PaginationMobile } from '~/design-system/list/pagination.tsx';
+import { Text } from '../typography.tsx';
 
 // <List /> component
 export function List({ children }: { children: ReactNode }) {
@@ -22,7 +23,7 @@ List.Header = Header;
 // <List.Content /> component
 function Content({ children, ...rest }: { children: ReactNode }) {
   return (
-    <ul className="divide-y divide-gray-200" {...rest}>
+    <ul className="divide-y divide-gray-100" {...rest}>
       {children}
     </ul>
   );
@@ -70,17 +71,17 @@ function PaginationFooter({ current, pages, total }: { current: number; pages: n
       <PaginationMobile current={current} total={total} />
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm text-gray-700">
+          <Text>
             <Trans
               i18nKey="pagination.list"
               values={{ current, pages, total }}
               components={[
-                <span key="1" className="font-medium" />,
-                <span key="2" className="font-medium" />,
-                <span key="3" className="font-medium" />,
+                <span key="1" className="font-semibold text-gray-800" />,
+                <span key="2" className="font-semibold text-gray-800" />,
+                <span key="3" className="font-semibold text-gray-800" />,
               ]}
             />
-          </p>
+          </Text>
         </div>
         <div>
           <Pagination current={current} total={pages} />
