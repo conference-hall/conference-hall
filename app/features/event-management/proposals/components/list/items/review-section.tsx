@@ -25,7 +25,7 @@ export function ReviewSection({ reviews, commentCount }: ReviewSectionProps) {
         {summary ? (
           <div className="flex items-center gap-2.5 px-2.5">
             <span className="text-[10px] font-semibold text-gray-400 uppercase">{t('common.team')}</span>
-            <ReviewNote feeling="POSITIVE" note={summary.positives} size="xs" raw />
+            {summary.positives > 0 ? <ReviewNote feeling="POSITIVE" note={summary.positives} size="xs" raw /> : null}
             <ReviewNote feeling="NEUTRAL" note={summary.average} size="xs" />
           </div>
         ) : null}
