@@ -16,7 +16,10 @@ export const ProgressBar = ({ value = 0, max = 100, label, className, ref, ...pr
 
   return (
     <div ref={ref} className={cx('flex w-full items-center', className)}>
-      <div className={cx('relative flex h-1.5 w-full items-center rounded-full', background)} {...props}>
+      <div
+        className={cx('relative flex h-1.5 w-full items-center overflow-hidden rounded-full', background)}
+        {...props}
+      >
         <div
           className={cx('h-full flex-col rounded-l-full', bar)}
           style={{
