@@ -8,8 +8,7 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
-import { db } from '../../../../../prisma/db.server.ts';
-import type { Event, Team, User } from '../../../../../prisma/generated/client.ts';
+import type { Team, User } from '../../../../../prisma/generated/client.ts';
 import { CfpReviewsSearch } from './cfp-reviews-search.server.ts';
 
 describe('CfpReviewsSearch', () => {
@@ -17,18 +16,17 @@ describe('CfpReviewsSearch', () => {
   let member: User;
   let speaker: User;
   let team: Team;
-  let event: Event;
 
   beforeEach(async () => {
     owner = await userFactory({ traits: ['clark-kent'] });
     member = await userFactory({ traits: ['bruce-wayne'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
     team = await teamFactory({ owners: [owner], members: [member] });
-    event = await eventFactory({ team });
   });
 
   describe('#search', () => {
     it('returns event proposals info', async () => {
+      const event = await eventFactory({ team });
       const tag = await eventProposalTagFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), tags: [tag] });
       const conversation = await conversationFactory({
@@ -67,7 +65,7 @@ describe('CfpReviewsSearch', () => {
     });
 
     it('does not return speakers when display proposal speakers is false', async () => {
-      await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
+      const event = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
       await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
@@ -81,7 +79,7 @@ describe('CfpReviewsSearch', () => {
     });
 
     it('does not return reviews when display proposal reviews is false', async () => {
-      await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
+      const event = await eventFactory({ team, attributes: { displayProposalsReviews: false } });
       await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
@@ -91,6 +89,7 @@ describe('CfpReviewsSearch', () => {
     });
 
     it('returns empty results of an event without proposals', async () => {
+      const event = await eventFactory({ team });
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const proposals = await CfpReviewsSearch.for(authorizedEvent).search({});
@@ -117,6 +116,7 @@ describe('CfpReviewsSearch', () => {
 
   describe('#autocomplete', () => {
     it('returns event proposals info', async () => {
+      const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
@@ -135,6 +135,7 @@ describe('CfpReviewsSearch', () => {
     });
 
     it('returns empty results of an event without proposals', async () => {
+      const event = await eventFactory({ team });
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const proposals = await CfpReviewsSearch.for(authorizedEvent).autocomplete({});

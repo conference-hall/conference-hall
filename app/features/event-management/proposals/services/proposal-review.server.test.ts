@@ -103,7 +103,7 @@ describe('ProposalReview', () => {
     });
 
     it('does not returns speakers when display proposals speaker setting is false', async () => {
-      await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
+      const event = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
@@ -156,7 +156,7 @@ describe('ProposalReview', () => {
     });
 
     it('does not returns reviews summary when display proposals reviews setting is false', async () => {
-      await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
+      const event = await eventFactory({ team, attributes: { displayProposalsReviews: false } });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
       await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
 
@@ -380,7 +380,7 @@ describe('ProposalReview', () => {
     });
 
     it('throws an error if reviews are disabled', async () => {
-      await db.event.update({ data: { reviewEnabled: false }, where: { id: event.id } });
+      const event = await eventFactory({ team, attributes: { reviewEnabled: false } });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
@@ -453,8 +453,8 @@ describe('ProposalReview', () => {
       expect(review?.note).toBe(5);
     });
 
-    it('throws an error if event deliberation is disabled', async () => {
-      await db.event.update({ data: { reviewEnabled: false }, where: { id: event.id } });
+    it('throws an error if reviews are disabled', async () => {
+      const event = await eventFactory({ team, attributes: { reviewEnabled: false } });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);

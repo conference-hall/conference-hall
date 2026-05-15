@@ -1,4 +1,4 @@
-import { rand, randAnimal, randEmail, randFullAddress, randParagraph, randText, randUrl } from '@ngneat/falso';
+import { randAnimal, randEmail, randFullAddress, randParagraph, randText, randUrl } from '@ngneat/falso';
 import { slugifyWithCounter } from '@sindresorhus/slugify';
 import { db } from '../../prisma/db.server.ts';
 import type { Team, User } from '../../prisma/generated/client.ts';
@@ -137,7 +137,7 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
     websiteUrl: randUrl(),
     contactEmail: randEmail(),
     codeOfConductUrl: randUrl(),
-    type: rand([EventType.CONFERENCE, EventType.MEETUP]),
+    type: EventType.CONFERENCE,
     visibility: EventVisibility.PUBLIC,
     creator: { connect: { id: creator.id } },
     team: { connect: { id: options.team?.id } },

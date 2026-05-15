@@ -40,7 +40,7 @@ describe('EventSettings', () => {
     it('updates an event', async () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-      const created = await EventSettings.for(authorizedEvent).update({
+      const updated = await EventSettings.for(authorizedEvent).update({
         name: 'Updated',
         slug: 'updated',
         visibility: 'PUBLIC',
@@ -55,21 +55,21 @@ describe('EventSettings', () => {
         apiKey: 'apiKey',
       });
 
-      expect(created.slug).toBe('updated');
+      expect(updated.slug).toBe('updated');
 
-      const updated = await db.event.findUnique({ where: { slug: created.slug } });
-      expect(updated?.name).toBe('Updated');
-      expect(updated?.slug).toBe('updated');
-      expect(updated?.visibility).toBe('PUBLIC');
-      expect(updated?.timezone).toBe('Europe/Oslo');
-      expect(updated?.location).toBe('Location');
-      expect(updated?.categoriesRequired).toBe(true);
-      expect(updated?.formatsRequired).toBe(true);
-      expect(updated?.description).toBe('Updated');
-      expect(updated?.logo).toBe('logoUrl');
-      expect(updated?.codeOfConductUrl).toBe('codeOfConductUrl');
-      expect(updated?.emailNotifications).toEqual(['submitted']);
-      expect(updated?.apiKey).toBe('apiKey');
+      const result = await db.event.findUnique({ where: { slug: updated.slug } });
+      expect(result?.name).toBe('Updated');
+      expect(result?.slug).toBe('updated');
+      expect(result?.visibility).toBe('PUBLIC');
+      expect(result?.timezone).toBe('Europe/Oslo');
+      expect(result?.location).toBe('Location');
+      expect(result?.categoriesRequired).toBe(true);
+      expect(result?.formatsRequired).toBe(true);
+      expect(result?.description).toBe('Updated');
+      expect(result?.logo).toBe('logoUrl');
+      expect(result?.codeOfConductUrl).toBe('codeOfConductUrl');
+      expect(result?.emailNotifications).toEqual(['submitted']);
+      expect(result?.apiKey).toBe('apiKey');
     });
 
     it('throws an error if user is not owner', async () => {
@@ -116,8 +116,7 @@ describe('EventSettings', () => {
     it('deletes the previous logo from storage when replacing', async () => {
       const mockDeleteQuietly = vi.fn();
       vi.mocked(StorageService.create).mockReturnValue({ deleteQuietly: mockDeleteQuietly } as never);
-
-      await db.event.update({ where: { id: event.id }, data: { logo: 'events/abc/old-logo.webp' } });
+      const event = await eventFactory({ team, attributes: { logo: 'events/abc/old-logo.webp' } });
 
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
