@@ -10,9 +10,9 @@ paths:
 
 ## General
 
-- Unit/integration tests: Vitest — `npm run test` runs `test:db` (push schema) then `test:unit` (Vitest)
-- Single test file: `npm run test:unit -- run "<file path>"`
-- E2E: Playwright (`npm run test:e2e`), requires Docker running
+- Unit/integration tests: Vitest — `pnpm test` runs `test:db` (push schema) then `test:unit` (Vitest)
+- Single test file: `pnpm test run "<file path>"`
+- E2E: Playwright (`pnpm test:e2e`), requires Docker running
 - All Vitest functions (`describe`, `it`, `expect`, `vi`, `beforeEach`, etc.) globally available — do not import them
 - Test names start with verbs, not "should" (e.g., `it('returns the profile')`)
 - No comments in tests — write clean, self-documenting code
@@ -28,7 +28,7 @@ paths:
 - Mock modules: `vi.mock('~/path/to/module.ts', () => ({ ... }))`
 - Jobs globally mocked in `tests/setup.server.ts` — no per-test mocking needed
 - Async error assertions: `rejects.toThrowError(ErrorClass)`
-- After creating test, ALWAYS execute: `npm run test:unit -- run "<file path>"`
+- After creating test, ALWAYS execute: `pnpm test run "<file path>"`
 
 ## Component Tests (`.test.tsx`)
 
@@ -40,7 +40,7 @@ paths:
 - Semantic queries: `page.getByRole()`, `page.getByLabel()`, `page.getByText()`, `page.getByPlaceholder()`
 - Element assertions: `await expect.element(locator)` (not `expect(locator)`)
 - Interactions: `userEvent` from `vitest/browser`: `await userEvent.click()`, `await userEvent.type()`
-- After creating test, ALWAYS execute: `npm run test:unit -- run "<file path>"`
+- After creating test, ALWAYS execute: `pnpm test run "<file path>"`
 
 ## Factories
 
@@ -58,7 +58,7 @@ paths:
 - Page objects extend `PageObject` base class from `e2e/page-object.ts`
 - Each page MUST have page object for locators, actions (never expectations)
 - New page element selectors → create locator or function in page object
-- After creating test, ALWAYS execute: `npm run test:e2e -- "<file path>"`
+- After creating test, ALWAYS execute: `pnpm test:e2e "<file path>"`
 
 ### Page Object Structure
 

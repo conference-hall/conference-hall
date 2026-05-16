@@ -32,8 +32,8 @@ paths:
 
 ## Migrations
 
-- All schema changes require migration: `npm run db:migrate:dev -- --name="descriptive_name"`
-- After schema changes, run `npx prisma generate` to update Prisma Client
+- All schema changes require migration: `pnpm db:migrate:dev --name="descriptive_name"`
+- After schema changes, run `pnpm exec prisma generate` to update Prisma Client
 - One feature or change per migration
 
 ## Query Patterns

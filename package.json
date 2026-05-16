@@ -6,14 +6,14 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "dev": "concurrently -k -c 'yellow,blue' 'npm:dev:*'",
+    "dev": "concurrently -k -c 'yellow,blue' 'pnpm:dev:*'",
     "dev:web": "tsx ./servers/web.dev.ts",
     "dev:job": "tsx watch ./servers/jobs.ts",
     "start": "node ./build/server/index.js",
     "build": "prisma generate && react-router build",
     "jobs:start": "tsx ./servers/jobs.ts",
     "jobs:build": "prisma generate",
-    "test": "npm run test:db && npm run test:unit",
+    "test": "pnpm test:db && pnpm test:unit",
     "test:db": "NODE_ENV=test prisma db push --accept-data-loss",
     "test:unit": "vitest --browser.headless",
     "test:ui": "vitest --project browser",
@@ -88,6 +88,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.3.0",
     "@types/compression": "^1.8.1",
+    "@types/express": "^5.0.6",
     "@types/mdx": "^2.0.13",
     "@types/node": "^24.12.4",
     "@types/nodemailer": "^8.0.0",
@@ -106,5 +107,6 @@
     "vite": "^8.0.13",
     "vitest": "^4.1.6",
     "vitest-browser-react": "^2.2.0"
-  }
+  },
+  "packageManager": "pnpm@11.1.2"
 }
