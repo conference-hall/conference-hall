@@ -430,6 +430,30 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
       expect(proposals[4].id).toBe(proposal5.id);
     });
 
+    it('sort by most favorites', async () => {
+      const filters: ProposalsFilters = { sort: 'favorites', order: 'desc' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(5);
+      expect(proposals[0].id).toBe(proposal2.id); // 1 favorite
+      expect(proposals[1].id).toBe(proposal1.id); // 1 favorite
+      expect(proposals[2].id).toBe(proposal3.id); // 0 favorites
+      expect(proposals[3].id).toBe(proposal4.id); // 0 favorites
+      expect(proposals[4].id).toBe(proposal5.id); // 0 favorites
+    });
+
+    it('sort by fewest favorites', async () => {
+      const filters: ProposalsFilters = { sort: 'favorites', order: 'asc' };
+      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(5);
+      expect(proposals[0].id).toBe(proposal3.id); // 0 favorites
+      expect(proposals[1].id).toBe(proposal4.id); // 0 favorites
+      expect(proposals[2].id).toBe(proposal5.id); // 0 favorites
+      expect(proposals[3].id).toBe(proposal2.id); // 1 favorite
+      expect(proposals[4].id).toBe(proposal1.id); // 1 favorite
+    });
+
     it('sort by most comments', async () => {
       const filters: ProposalsFilters = { sort: 'comments', order: 'desc' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters);
