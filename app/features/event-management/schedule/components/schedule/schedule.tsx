@@ -141,7 +141,7 @@ function ScheduleDay({
           {displayMultipleDays && (
             <tr className="h-8">
               {/* gutter */}
-              {dayIndex === 0 && <th className="w-12 border-b" />}
+              {dayIndex === 0 && <th className="w-12 border-b" aria-hidden />}
               {/* day */}
               <th className="border-b text-sm font-semibold" colSpan={tracks.length}>
                 {formatDate(day, { format: 'long', locale })}
@@ -170,9 +170,9 @@ function ScheduleDay({
         <tbody>
           {/* empty line */}
           <tr className="divide-x">
-            {dayIndex === 0 && <td className="h-6 w-12" />}
+            {dayIndex === 0 && <td className="h-6 w-12" aria-hidden />}
             {tracks.map((track) => (
-              <td key={track.id} className="h-6" />
+              <td key={track.id} className="h-6" aria-label={track.name} />
             ))}
           </tr>
 
