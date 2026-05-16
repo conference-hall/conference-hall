@@ -263,7 +263,7 @@
   "common.proposals.status.declined.short": "Declined",
   "common.proposals.status.not-answered": "Waiting for confirmation",
   "common.proposals.status.not-answered.short": "Waiting",
-  "common.proposals.status.pending": "Not deliberated",
+  "common.proposals.status.pending": "Pending",
   "common.proposals.status.rejected": "Rejected",
   "common.proposals.confirmation": "Speaker answer",
   "common.proposals.status": "Proposal status",
