@@ -334,8 +334,8 @@ export class ProposalSearchBuilder {
           : Prisma.sql`review_agg.avg_rating DESC NULLS LAST, p.title ASC`;
       case 'favorites':
         return order === 'asc'
-          ? Prisma.sql`review_agg.positive_count ASC NULLS LAST, p.title ASC`
-          : Prisma.sql`review_agg.positive_count DESC NULLS LAST, p.title ASC`;
+          ? Prisma.sql`review_agg.positive_count ASC NULLS LAST, review_agg.avg_rating ASC NULLS LAST, p.title ASC`
+          : Prisma.sql`review_agg.positive_count DESC NULLS LAST, review_agg.avg_rating DESC NULLS LAST, p.title ASC`;
       case 'comments':
         return order === 'asc'
           ? Prisma.sql`comment_count.count ASC, p.title ASC`

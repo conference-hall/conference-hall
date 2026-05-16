@@ -450,8 +450,8 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
       expect(proposals[0].id).toBe(proposal3.id); // 0 favorites
       expect(proposals[1].id).toBe(proposal4.id); // 0 favorites
       expect(proposals[2].id).toBe(proposal5.id); // 0 favorites
-      expect(proposals[3].id).toBe(proposal2.id); // 1 favorite
-      expect(proposals[4].id).toBe(proposal1.id); // 1 favorite
+      expect(proposals[3].id).toBe(proposal1.id); // 1 favorite
+      expect(proposals[4].id).toBe(proposal2.id); // 1 favorite
     });
 
     it('sort by most comments', async () => {
