@@ -1,0 +1,7 @@
+allowBuilds:
+  '@prisma/engines': false
+  core-js: false
+  esbuild: false
+  lefthook: false
+  msgpackr-extract: false
+  prisma: false

@@ -18,4 +18,4 @@ runs:
     - name: Install Playwright browsers
       shell: bash
       if: steps.playwright-cache.outputs.cache-hit != 'true'
-      run: npx playwright install --with-deps --only-shell chromium
+      run: pnpm exec playwright install --with-deps --only-shell chromium

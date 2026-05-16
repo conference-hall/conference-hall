@@ -1,7 +1,7 @@
 [
   {
     "label": "Run Tests",
-    "command": "npm run test:unit -- --run",
+    "command": "pnpm test:unit --run",
     "args": ["\"$ZED_RELATIVE_FILE\" -t=\"$ZED_SYMBOL\" --hideSkippedTests"],
     "show_summary": false,
     "show_command": false,
@@ -9,7 +9,7 @@
   },
   {
     "label": "Watch Tests",
-    "command": "npm run test:unit --",
+    "command": "pnpm test:unit",
     "args": ["\"$ZED_RELATIVE_FILE\" -t=\"$ZED_SYMBOL\" --hideSkippedTests"],
     "show_summary": false,
     "show_command": false,
@@ -17,7 +17,7 @@
   },
   {
     "label": "Run e2e Tests",
-    "command": "npm run test:e2e --",
+    "command": "pnpm test:e2e",
     "args": ["\"$ZED_RELATIVE_FILE\" -g \"$ZED_SYMBOL\""],
     "show_summary": false,
     "show_command": false,

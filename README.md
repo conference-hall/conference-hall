@@ -47,13 +47,14 @@ React / React router v7 / Typescript / Tailwind / HeadlessUI / Conform / Zod / P
 
 - Docker
 - Node 24+
+- pnpm
 
 ### Getting started
 
 Install dependencies.
 
 ```sh
-npm install
+pnpm install
 ```
 
 Start Docker containers for databases, S3 storage and email testing tool.
@@ -66,16 +67,16 @@ If you start the app for the first time, you need to run.
 
 ```sh
 # Install pre-commit hook to ensure linting (optional)
-npx lefthook install
+pnpm exec lefthook install
 
 # Setup and seed local DB
-npm run db:reset
+pnpm db:reset
 ```
 
 Start the development server.
 
 ```sh
-npm run dev
+pnpm dev
 ```
 
 Application URLs:
@@ -95,13 +96,13 @@ Generate Prisma client code.
 
 ```sh
 # Need to be done when DB schema has changed
-npx prisma generate
+pnpm exec prisma generate
 ```
 
 Reset and seed local DB.
 
 ```sh
-npm run db:reset
+pnpm db:reset
 ```
 
 ### Execute tests and lint
@@ -111,29 +112,29 @@ Docker containers MUST be running.
 Install Playwright browser for components and e2e tests.
 
 ```sh
-npx playwright install --with-deps chromium
+pnpm exec playwright install --with-deps chromium
 ```
 
 Execute unit and integration tests.
 
 ```sh
-npm run test
+pnpm test
 ```
 
 Execute end-to-end tests.
 
 ```sh
-npm run test:e2e
+pnpm test:e2e
 ```
 
 Execute linting.
 
 ```sh
-npm run lint
+pnpm lint
 ```
 
 Execute typecript check.
 
 ```sh
-npm run tsc
+pnpm tsc
 ```

@@ -14,7 +14,7 @@ paths:
 - Parameters use colon notation: `route(':event', './features/event-participation/layout.tsx')`
 - Assign route IDs for programmatic access: `{ id: 'event-page' }`
 - Nested routes as child arrays in route config
-- After adding/changing routes, run `npm run tsc` to generate route types
+- After adding/changing routes, run `pnpm tsc` to generate route types
 
 ## Route File Structure
 

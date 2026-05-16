@@ -16,9 +16,9 @@ export default defineConfig({
   projects: [{ name: 'browser', use: { ...devices['Desktop Chrome'] } }],
 
   webServer: [
-    { command: 'npm run jobs:start' },
+    { command: 'pnpm jobs:start' },
     {
-      command: CI ? 'npm run db:migrate:deploy && npm run start' : 'npm run test:db && npm run dev',
+      command: CI ? 'pnpm db:migrate:deploy && pnpm start' : 'pnpm test:db && pnpm dev',
       url: APP_URL,
       stderr: CI ? 'ignore' : 'pipe',
       // stdout: 'ignore',

@@ -18,28 +18,30 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - uses: pnpm/action-setup@v6
+
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma client
-        run: npx prisma generate
+        run: pnpm exec prisma generate
 
       - name: Format
-        run: npm run format:check
+        run: pnpm format:check
 
       - name: Lint
-        run: npm run lint
+        run: pnpm lint
 
       - name: Typescript checking
-        run: npm run tsc
+        run: pnpm tsc
 
       - name: Knip checking
-        run: npm run knip
+        run: pnpm knip
 
       - name: Check i18n key orphans
         run: ./tests/tools/check-i18n-key-orphans.sh app/locales app
@@ -54,16 +56,18 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - uses: pnpm/action-setup@v6
+
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma client
-        run: npx prisma generate
+        run: pnpm exec prisma generate
 
       - name: Setup Playwright
         uses: ./.github/actions/setup-playwright
@@ -75,7 +79,7 @@ jobs:
         run: ./docker/wait-for-db.sh
 
       - name: Execute tests
-        run: npm test
+        run: pnpm test
 
       - name: Stop database
         if: always()
@@ -95,13 +99,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - uses: pnpm/action-setup@v6
+
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Setup Playwright
         uses: ./.github/actions/setup-playwright
@@ -113,10 +119,10 @@ jobs:
         run: ./docker/wait-for-db.sh
 
       - name: Build the app
-        run: npm run build
+        run: pnpm build
 
       - name: Run e2e tests
-        run: npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: pnpm test:e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
       - name: Stop database
         if: always()
