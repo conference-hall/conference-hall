@@ -60,7 +60,7 @@ export function ProposalItem({
       <Link
         to={{ pathname, search: queryParams || currentQueryParams.toString() }}
         aria-label={t('event-management.proposals.list.open', { title })}
-        className="flex min-w-0 grow items-center justify-between gap-4 py-3 hover:text-indigo-700"
+        className="flex min-w-0 grow flex-col gap-4 py-3 hover:text-indigo-700 md:flex-row md:items-center md:justify-between"
       >
         <div className="min-w-0 space-y-2 md:space-y-1">
           <div className="flex flex-wrap items-center gap-x-2">

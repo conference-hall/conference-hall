@@ -21,7 +21,7 @@ const ConfirmationFilterSchema = z.enum(['not-answered', 'confirmed', 'declined'
 
 const ProposalsFiltersSchema = z.object({
   query: z.string().trim().optional(),
-  sort: z.enum(['date', 'reviews', 'my-review', 'comments']).optional(),
+  sort: z.enum(['date', 'reviews', 'favorites', 'my-review', 'comments']).optional(),
   order: z.enum(['asc', 'desc']).optional(),
   reviews: ReviewsFiltersSchema,
   status: StatusFilterSchema,

@@ -222,7 +222,7 @@ test.describe('As owner', () => {
     await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
     // Default deliberation status
-    await expect(proposalPage.deliberationStatus).toContainText('Not deliberated');
+    await expect(proposalPage.deliberationStatus).toContainText('Pending');
     await expect(proposalPage.publishButton).not.toBeVisible();
 
     // Deliberate as accepted

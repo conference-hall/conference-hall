@@ -155,7 +155,7 @@ test.describe('As owner', () => {
     await proposalsPage.goto(team.slug, event.slug);
     await proposalsPage.clickOnProposalCheckbox(proposal2.title);
     await expect(proposalsPage.proposalSelectedCount(1)).toBeVisible();
-    await proposalsPage.clickOnMarkAs('Not deliberated');
+    await proposalsPage.clickOnMarkAs('Pending');
     await expect(proposalsPage.toast).toHaveText('1 proposals marked as "pending".');
 
     // mark as rejected

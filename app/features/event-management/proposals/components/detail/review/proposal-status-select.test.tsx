@@ -40,7 +40,7 @@ describe('ProposalStatusSelect component', () => {
       await renderComponent();
 
       await expect.element(page.getByLabelText('Change proposal status')).toBeInTheDocument();
-      await expect.element(page.getByText('Not deliberated')).toBeInTheDocument();
+      await expect.element(page.getByText('Pending')).toBeInTheDocument();
     });
 
     it('renders with accepted status', async () => {
@@ -90,10 +90,10 @@ describe('ProposalStatusSelect component', () => {
     it('shows all appropriate options when no confirmation status', async () => {
       await renderComponent();
 
-      const selectButton = page.getByRole('button', { name: /not deliberated/i });
+      const selectButton = page.getByRole('button', { name: /Pending/i });
       await selectButton.click();
 
-      await expect.element(page.getByRole('option', { name: /Not deliberated/ })).toBeInTheDocument();
+      await expect.element(page.getByRole('option', { name: /Pending/ })).toBeInTheDocument();
       await expect.element(page.getByRole('option', { name: /Accepted/ })).toBeInTheDocument();
       await expect.element(page.getByRole('option', { name: /Rejected/ })).toBeInTheDocument();
 

@@ -332,6 +332,10 @@ export class ProposalSearchBuilder {
         return order === 'asc'
           ? Prisma.sql`review_agg.avg_rating ASC NULLS LAST, p.title ASC`
           : Prisma.sql`review_agg.avg_rating DESC NULLS LAST, p.title ASC`;
+      case 'favorites':
+        return order === 'asc'
+          ? Prisma.sql`review_agg.positive_count ASC NULLS LAST, p.title ASC`
+          : Prisma.sql`review_agg.positive_count DESC NULLS LAST, p.title ASC`;
       case 'comments':
         return order === 'asc'
           ? Prisma.sql`comment_count.count ASC, p.title ASC`
@@ -400,7 +404,7 @@ export class ProposalSearchBuilder {
     const sort = this.filters.sort;
     const parts: Prisma.Sql[] = [];
 
-    if (sort === 'reviews') {
+    if (sort === 'reviews' || sort === 'favorites') {
       parts.push(this.buildReviewAggJoin());
     }
     if (sort === 'comments') {

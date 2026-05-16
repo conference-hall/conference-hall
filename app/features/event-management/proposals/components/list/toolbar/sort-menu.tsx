@@ -8,8 +8,13 @@ export function SortMenu() {
 
   const options = [
     { value: 'date', name: t('common.sort.date') },
-    ...(event.displayProposalsReviews ? [{ value: 'reviews', name: t('common.sort.reviews') }] : []),
     { value: 'my-review', name: t('common.sort.my-review') },
+    ...(event.displayProposalsReviews
+      ? [
+          { value: 'reviews', name: t('common.sort.reviews') },
+          { value: 'favorites', name: t('common.sort.favorites') },
+        ]
+      : []),
     { value: 'comments', name: t('common.sort.comments') },
   ];
 

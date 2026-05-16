@@ -94,7 +94,7 @@ export class ProposalsListPage extends PageObject {
     await this.page.getByRole('menuitem', { name }).click();
   }
 
-  async clickOnMarkAs(name: 'Accepted' | 'Rejected' | 'Not deliberated') {
+  async clickOnMarkAs(name: 'Accepted' | 'Rejected' | 'Pending') {
     await this.page.getByRole('button', { name }).click();
     await this.page.getByText('Are you sure you want to mark').waitFor();
     await this.page.getByRole('button', { name: `Mark as ${name}` }).click();
