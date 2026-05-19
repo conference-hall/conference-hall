@@ -315,6 +315,7 @@
   "common.talk": "Talk",
   "common.team": "Équipe",
   "common.test-connection": "Test de connexion",
+  "common.text-statistics": "Caractères : <0>{{charactersCount}}</0>, Mots : <0>{{wordsCount}}</0>",
   "common.timezone": "Fuseau horaire",
   "common.to": "Au",
   "common.track": "Track",

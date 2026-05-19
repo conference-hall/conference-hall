@@ -1,12 +1,25 @@
 import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
 import { useId, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { Button } from '../button.tsx';
 import { Modal } from '../dialogs/modals.tsx';
 import { Markdown } from '../markdown.tsx';
 import { Label } from '../typography.tsx';
+
+function countWords(markdown: string) {
+  const text = markdown
+    .replace(/```[\s\S]*?```/g, ' ') // code blocks
+    .replace(/`[^`]*`/g, ' ') // inline code
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, ' ') // images
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // links → keep text
+    .replace(/[#>*_~-]+/g, ' ') // markdown symbols
+    .replace(/\|/g, ' '); // table pipes
+
+  const words = text.match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu);
+  return words ? words.length : 0;
+}
 
 type MarkdownTextAreaProps = {
   label: string;
@@ -14,6 +27,7 @@ type MarkdownTextAreaProps = {
   defaultValue?: string | null;
   error?: SubmissionError;
   preview?: boolean;
+  stats?: boolean;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const baseStyles = 'border-gray-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500';
@@ -27,12 +41,13 @@ export function MarkdownTextArea({
   error,
   defaultValue,
   preview = true,
+  stats = false,
   rows,
   ...rest
 }: MarkdownTextAreaProps) {
   const { t } = useTranslation();
   const [isPreviewOpen, setPreviewOpen] = useState(false);
-  const [markdown, setMarkdown] = useState(defaultValue);
+  const [markdown, setMarkdown] = useState(defaultValue ?? '');
   const textareaId = useId();
 
   const handleClosePreview = () => setPreviewOpen(false);
@@ -70,8 +85,17 @@ export function MarkdownTextArea({
         </div>
         <div className="absolute inset-x-px bottom-0 flex h-11 items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
           <p className="text-xs text-gray-500">{t('common.markdown-supported')}</p>
+          {stats ? (
+            <p className="mr-auto text-xs text-gray-500">
+              <Trans
+                i18nKey="common.text-statistics"
+                values={{ charactersCount: [...markdown].length, wordsCount: countWords(markdown) }}
+                components={[<strong key="0" />]}
+              />
+            </p>
+          ) : null}
           {preview ? (
-            <div className="shrink-0">
+            <div className="ml-3 shrink-0">
               <Button type="button" variant="secondary" size="sm" onClick={handleOpenPreview}>
                 {t('common.preview')}
               </Button>
