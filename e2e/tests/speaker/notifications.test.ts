@@ -1,4 +1,5 @@
 import { eventFactory } from 'tests/factories/events.ts';
+import { notificationFactory } from 'tests/factories/notifications.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { expect, test } from '../../fixtures.ts';
@@ -10,7 +11,8 @@ test.describe('When there are notifications', () => {
     const user = await userLoggedFactory(context);
     const talk = await talkFactory({ speakers: [user], attributes: { title: 'My talk 1' } });
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
-    await proposalFactory({ event, talk, traits: ['accepted-published'] });
+    const proposal = await proposalFactory({ event, talk, traits: ['accepted-published'] });
+    await notificationFactory({ user, event, proposal });
   });
 
   test('displays notifications', async ({ page }) => {

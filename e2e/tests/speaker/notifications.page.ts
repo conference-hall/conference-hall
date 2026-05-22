@@ -25,7 +25,7 @@ export class NotificationsPage extends PageObject {
   }
 
   async clickOnNotification(name: string) {
-    await this.notifications.getByRole('link', { name }).click();
+    await this.notifications.filter({ hasText: name }).getByRole('button').click();
     return new ProposalPage(this.page);
   }
 }
