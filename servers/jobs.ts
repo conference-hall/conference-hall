@@ -1,15 +1,26 @@
 import { notifyConversationMessage } from '~/features/conversations/services/jobs/notify-conversation-message.job.ts';
 import { exportToOpenPlanner } from '~/features/event-management/proposals-export/services/jobs/export-to-open-planner.job.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
+import { cleanupNotifications } from '~/features/notifications/services/jobs/cleanup-notifications.job.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { createJobWorkers } from '~/shared/jobs/worker.ts';
 import { testJob } from '../app/features/admin/debug/services/jobs/test.job.ts';
 import { logger } from '../app/shared/logger/logger.server.ts';
 import { db } from '../prisma/db.server.ts';
 
-const jobs = [sendEmail, exportToOpenPlanner, sendTalkToSlack, notifyConversationMessage, testJob];
+const jobs = [
+  sendEmail,
+  exportToOpenPlanner,
+  sendTalkToSlack,
+  notifyConversationMessage,
+  cleanupNotifications,
+  testJob,
+];
 
 const workers = createJobWorkers(jobs);
+
+// Schedule recurring jobs
+cleanupNotifications.trigger(undefined, { repeat: { pattern: '0 3 * * *' } });
 
 process.on('uncaughtException', (error) => {
   logger.error('Uncaught exception', { error });
