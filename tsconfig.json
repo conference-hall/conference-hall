@@ -3,6 +3,7 @@
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2024"],
     "types": ["mdx", "@react-router/node", "vitest/globals"],
+    "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo",
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
