@@ -457,7 +457,7 @@ model Conversation {
   event        Event                     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   type         ConversationType
   proposalId   String
-  proposal     Proposal                  @relation(fields: [proposalId], references: [id])
+  proposal     Proposal                  @relation(fields: [proposalId], references: [id], onDelete: Cascade)
   createdAt    DateTime                  @default(now())
   updatedAt    DateTime                  @updatedAt
   messages     ConversationMessage[]
