@@ -67,7 +67,7 @@ function stats(source: string | null) {
   const rawText = text.trim();
   return {
     chars: [...rawText].length,
-    words: rawText.split(/\s+/).filter(Boolean).length,
+    words: rawText.split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length,
   };
 }
 

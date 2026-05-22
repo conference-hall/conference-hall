@@ -80,7 +80,11 @@ describe('#MarkdownParser.stats', () => {
   });
 
   it('handles multi-byte unicode characters correctly', () => {
-    expect(MarkdownParser.stats('Hello 🌍')).toEqual({ chars: 7, words: 2 });
+    expect(MarkdownParser.stats('Hello 🌍')).toEqual({ chars: 7, words: 1 });
+  });
+
+  it('counts non-ASCII words', () => {
+    expect(MarkdownParser.stats('日本語 café')).toEqual({ chars: 8, words: 2 });
   });
 
   it('counts across multiple paragraphs', () => {

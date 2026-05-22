@@ -75,7 +75,7 @@ export function MarkdownTextArea({
           <MardownToolbar markdown={markdown} stats={stats} />
 
           {preview ? (
-            <div className="ml-3 shrink-0">
+            <div className="shrink-0">
               <Button type="button" variant="secondary" size="sm" onClick={handleOpenPreview}>
                 {t('common.preview')}
               </Button>
@@ -99,7 +99,7 @@ export function MarkdownTextArea({
 
 type MardownPreviewModalProps = {
   label: string;
-  markdown?: string | null;
+  markdown: string;
   isOpen: boolean;
   onClose: VoidFunction;
 };
@@ -115,7 +115,12 @@ function MardownPreviewModal({ label, markdown, isOpen, onClose }: MardownPrevie
   );
 }
 
-function MardownToolbar({ markdown, stats }: { markdown: string | null; stats: boolean }) {
+type MardownToolbarProps = {
+  markdown: string;
+  stats: boolean;
+};
+
+function MardownToolbar({ markdown, stats }: MardownToolbarProps) {
   const { t } = useTranslation();
   const markdownStats = stats ? MarkdownParser.stats(markdown) : null;
   return (
