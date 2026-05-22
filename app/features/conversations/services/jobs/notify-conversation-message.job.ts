@@ -91,6 +91,50 @@ export const notifyConversationMessage = job<NotifyConversationMessagePayload>({
 
     if (recipientsMap.size === 0) return;
 
+    // Collect recipient user IDs for in-app notifications
+    const recipientUserIds = new Set<string>();
+    for (const participant of conversation.participants) {
+      if (participant.userId !== senderId) {
+        recipientUserIds.add(participant.userId);
+      }
+    }
+    for (const speaker of proposalSpeakers) {
+      if (speaker.userId && speaker.userId !== senderId) {
+        recipientUserIds.add(speaker.userId);
+      }
+    }
+
+    // Create in-app notifications (upsert: update if unread exists, create otherwise)
+    await Promise.all(
+      Array.from(recipientUserIds).map(async (userId) => {
+        const existing = await db.notification.findFirst({
+          where: {
+            type: 'PROPOSAL_MESSAGE_RECEIVED',
+            userId,
+            proposalId: conversation.proposalId,
+            read: false,
+          },
+        });
+
+        if (existing) {
+          await db.notification.update({
+            where: { id: existing.id },
+            data: { messageId: lastMessage.id, createdAt: new Date() },
+          });
+        } else {
+          await db.notification.create({
+            data: {
+              type: 'PROPOSAL_MESSAGE_RECEIVED',
+              userId,
+              eventId: conversation.eventId,
+              proposalId: conversation.proposalId,
+              messageId: lastMessage.id,
+            },
+          });
+        }
+      }),
+    );
+
     // Send email to each recipient with their locale
     await Promise.all(
       Array.from(recipientsMap.values()).map(async (recipient) => {

@@ -330,4 +330,170 @@ describe('notifyConversationMessage job', () => {
       }),
     );
   });
+
+  describe('in-app notifications', () => {
+    it('creates a PROPOSAL_MESSAGE_RECEIVED notification for each recipient', async () => {
+      const event = await eventFactory({ attributes: { speakersConversationEnabled: true } });
+      const organizer = await userFactory({ attributes: { email: 'organizer@test.com' } });
+      const speaker = await userFactory({ attributes: { email: 'speaker@test.com' } });
+
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+
+      await db.conversationParticipant.create({
+        data: { conversationId: conversation.id, userId: organizer.id, role: ConversationParticipantRole.ORGANIZER },
+      });
+
+      const message = await conversationMessageFactory({
+        conversation,
+        sender: organizer,
+        role: ConversationParticipantRole.ORGANIZER,
+        attributes: { content: 'Hello!', createdAt: new Date('2023-01-01T10:00:00Z') },
+      });
+
+      await notifyConversationMessage.config.run({ conversationId: conversation.id });
+
+      const notifications = await db.notification.findMany({
+        where: { type: 'PROPOSAL_MESSAGE_RECEIVED', proposalId: proposal.id },
+      });
+
+      expect(notifications).toHaveLength(1);
+      expect(notifications[0].userId).toBe(speaker.id);
+      expect(notifications[0].messageId).toBe(message.id);
+      expect(notifications[0].read).toBe(false);
+    });
+
+    it('does not create a notification for the sender', async () => {
+      const event = await eventFactory({ attributes: { speakersConversationEnabled: true } });
+      const organizer = await userFactory({ attributes: { email: 'organizer@test.com' } });
+      const speaker = await userFactory({ attributes: { email: 'speaker@test.com' } });
+
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+
+      await db.conversationParticipant.createMany({
+        data: [
+          { conversationId: conversation.id, userId: organizer.id, role: ConversationParticipantRole.ORGANIZER },
+          { conversationId: conversation.id, userId: speaker.id, role: ConversationParticipantRole.SPEAKER },
+        ],
+      });
+
+      await conversationMessageFactory({
+        conversation,
+        sender: organizer,
+        role: ConversationParticipantRole.ORGANIZER,
+        attributes: { content: 'Hello!', createdAt: new Date('2023-01-01T10:00:00Z') },
+      });
+
+      await notifyConversationMessage.config.run({ conversationId: conversation.id });
+
+      const senderNotifications = await db.notification.findMany({
+        where: { userId: organizer.id, type: 'PROPOSAL_MESSAGE_RECEIVED' },
+      });
+      expect(senderNotifications).toHaveLength(0);
+    });
+
+    it('upserts if an unread notification already exists for the same conversation', async () => {
+      const event = await eventFactory({ attributes: { speakersConversationEnabled: true } });
+      const organizer = await userFactory({ attributes: { email: 'organizer@test.com' } });
+      const speaker = await userFactory({ attributes: { email: 'speaker@test.com' } });
+
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+
+      await db.conversationParticipant.create({
+        data: { conversationId: conversation.id, userId: organizer.id, role: ConversationParticipantRole.ORGANIZER },
+      });
+
+      // Create an existing unread notification
+      const existingNotif = await db.notification.create({
+        data: {
+          type: 'PROPOSAL_MESSAGE_RECEIVED',
+          userId: speaker.id,
+          eventId: event.id,
+          proposalId: proposal.id,
+          createdAt: new Date('2023-01-01T08:00:00Z'),
+        },
+      });
+
+      const newMessage = await conversationMessageFactory({
+        conversation,
+        sender: organizer,
+        role: ConversationParticipantRole.ORGANIZER,
+        attributes: { content: 'Follow up!', createdAt: new Date('2023-01-01T10:00:00Z') },
+      });
+
+      await notifyConversationMessage.config.run({ conversationId: conversation.id });
+
+      const notifications = await db.notification.findMany({
+        where: { userId: speaker.id, type: 'PROPOSAL_MESSAGE_RECEIVED', proposalId: proposal.id },
+      });
+
+      // Should still be 1 notification (upserted, not duplicated)
+      expect(notifications).toHaveLength(1);
+      expect(notifications[0].id).toBe(existingNotif.id);
+      expect(notifications[0].messageId).toBe(newMessage.id);
+    });
+
+    it('creates a new notification if the existing one was already read', async () => {
+      const event = await eventFactory({ attributes: { speakersConversationEnabled: true } });
+      const organizer = await userFactory({ attributes: { email: 'organizer@test.com' } });
+      const speaker = await userFactory({ attributes: { email: 'speaker@test.com' } });
+
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+
+      await db.conversationParticipant.create({
+        data: { conversationId: conversation.id, userId: organizer.id, role: ConversationParticipantRole.ORGANIZER },
+      });
+
+      // Create an already-read notification
+      await db.notification.create({
+        data: {
+          type: 'PROPOSAL_MESSAGE_RECEIVED',
+          userId: speaker.id,
+          eventId: event.id,
+          proposalId: proposal.id,
+          read: true,
+        },
+      });
+
+      await conversationMessageFactory({
+        conversation,
+        sender: organizer,
+        role: ConversationParticipantRole.ORGANIZER,
+        attributes: { content: 'New message!', createdAt: new Date('2023-01-01T10:00:00Z') },
+      });
+
+      await notifyConversationMessage.config.run({ conversationId: conversation.id });
+
+      const notifications = await db.notification.findMany({
+        where: { userId: speaker.id, type: 'PROPOSAL_MESSAGE_RECEIVED', proposalId: proposal.id },
+      });
+
+      // Should have 2: the read one and the new unread one
+      expect(notifications).toHaveLength(2);
+      expect(notifications.filter((n) => n.read === false)).toHaveLength(1);
+    });
+  });
 });
