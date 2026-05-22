@@ -52,3 +52,39 @@ describe('#MarkdownParser.parse', () => {
     });
   });
 });
+
+describe('#MarkdownParser.stats', () => {
+  it('returns zero counts for null or empty source', () => {
+    expect(MarkdownParser.stats(null)).toEqual({ chars: 0, words: 0 });
+    expect(MarkdownParser.stats('')).toEqual({ chars: 0, words: 0 });
+  });
+
+  it('counts characters and words from plain text', () => {
+    expect(MarkdownParser.stats('Hello world')).toEqual({ chars: 11, words: 2 });
+  });
+
+  it('strips markdown formatting from counts', () => {
+    expect(MarkdownParser.stats('**bold** and _italic_')).toEqual({ chars: 15, words: 3 });
+  });
+
+  it('counts inline code content', () => {
+    expect(MarkdownParser.stats('Use `console.log` here')).toEqual({ chars: 20, words: 3 });
+  });
+
+  it('counts text inside headings', () => {
+    expect(MarkdownParser.stats('# My Title')).toEqual({ chars: 8, words: 2 });
+  });
+
+  it('counts text inside links', () => {
+    expect(MarkdownParser.stats('[click here](https://example.com)')).toEqual({ chars: 10, words: 2 });
+  });
+
+  it('handles multi-byte unicode characters correctly', () => {
+    expect(MarkdownParser.stats('Hello 🌍')).toEqual({ chars: 7, words: 2 });
+  });
+
+  it('counts across multiple paragraphs', () => {
+    const markdown = 'First paragraph\n\nSecond paragraph';
+    expect(MarkdownParser.stats(markdown)).toEqual({ chars: 32, words: 4 });
+  });
+});
