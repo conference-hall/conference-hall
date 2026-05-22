@@ -6,7 +6,7 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "dev": "concurrently -k -c 'yellow,blue' 'pnpm:dev:*'",
+    "dev": "pnpm --reporter=append-only run /^dev:/",
     "dev:web": "tsx ./servers/web.dev.ts",
     "dev:job": "tsx watch ./servers/jobs.ts",
     "start": "node ./build/server/index.js",
@@ -95,7 +95,6 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitest/browser-playwright": "^4.1.6",
-    "concurrently": "^9.2.1",
     "knip": "^6.14.1",
     "lefthook": "^2.1.8",
     "oxfmt": "^0.51.0",
