@@ -5,6 +5,7 @@ import ProposalAcceptedEmail from '~/shared/emails/templates/speakers/proposal-a
 import ProposalRejectedEmail from '~/shared/emails/templates/speakers/proposal-rejected.email.tsx';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import type { NotificationType } from '../../../../../prisma/generated/client.ts';
 
 export const PublishResultFormSchema = z.object({
   type: z.enum(['ACCEPTED', 'REJECTED']),
@@ -29,11 +30,29 @@ export class Publication {
     });
     if (!proposals.length) throw new ForbiddenOperationError();
 
+    // update proposal statuses
     await db.proposal.updateMany({
       where: { id: { in: proposals.map(({ id }) => id) } },
       data: { publicationStatus: 'PUBLISHED', confirmationStatus: status === 'ACCEPTED' ? 'PENDING' : null },
     });
 
+    // add in-app notifications
+    const notificationType: NotificationType = status === 'ACCEPTED' ? 'PROPOSAL_ACCEPTED' : 'PROPOSAL_REJECTED';
+    const notifications = proposals.flatMap((proposal) =>
+      proposal.speakers
+        .filter((s) => s.userId)
+        .map((speaker) => ({
+          type: notificationType,
+          userId: speaker.userId!,
+          eventId: event.id,
+          proposalId: proposal.id,
+        })),
+    );
+    if (notifications.length > 0) {
+      await db.notification.createMany({ data: notifications });
+    }
+
+    // send emails
     if (withEmails && status === 'ACCEPTED') {
       await Promise.all(
         proposals.map((proposal) => sendEmail.trigger(ProposalAcceptedEmail.buildPayload({ event, proposal }))),
@@ -63,6 +82,7 @@ export class Publication {
     });
     if (!proposal) throw new ProposalNotFoundError();
 
+    // update proposal statuses
     await db.proposal.update({
       where: { id: proposal.id },
       data: {
@@ -71,6 +91,22 @@ export class Publication {
       },
     });
 
+    // add in-app notifications
+    const notificationType: NotificationType =
+      proposal.deliberationStatus === 'ACCEPTED' ? 'PROPOSAL_ACCEPTED' : 'PROPOSAL_REJECTED';
+    const speakerNotifications = proposal.speakers
+      .filter((s) => s.userId)
+      .map((speaker) => ({
+        type: notificationType,
+        userId: speaker.userId!,
+        eventId: event.id,
+        proposalId: proposal.id,
+      }));
+    if (speakerNotifications.length > 0) {
+      await db.notification.createMany({ data: speakerNotifications });
+    }
+
+    // send emails
     if (withEmails && proposal.deliberationStatus === 'ACCEPTED') {
       await sendEmail.trigger(ProposalAcceptedEmail.buildPayload({ event, proposal }));
     }

@@ -148,6 +148,38 @@ describe('Publication', () => {
       );
     });
 
+    it('creates PROPOSAL_ACCEPTED notifications for all speakers when publishing accepted proposals', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await Publication.for(authorizedEvent).publishAll('ACCEPTED', false);
+
+      const speaker1Notifications = await db.notification.findMany({
+        where: { userId: speaker1.id, type: 'PROPOSAL_ACCEPTED' },
+      });
+      const speaker2Notifications = await db.notification.findMany({
+        where: { userId: speaker2.id, type: 'PROPOSAL_ACCEPTED' },
+      });
+
+      // Both speakers are on 2 accepted not-yet-published proposals
+      expect(speaker1Notifications).toHaveLength(2);
+      expect(speaker2Notifications).toHaveLength(2);
+    });
+
+    it('creates PROPOSAL_REJECTED notifications when publishing rejected proposals', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await Publication.for(authorizedEvent).publishAll('REJECTED', false);
+
+      const notifications = await db.notification.findMany({
+        where: { userId: speaker1.id, type: 'PROPOSAL_REJECTED' },
+      });
+
+      expect(notifications).toHaveLength(1);
+      expect(notifications[0].proposalId).toBe(rejectedProposal.id);
+    });
+
     it('publish for the even all results for rejected proposals not already announced', async () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
@@ -236,6 +268,34 @@ describe('Publication', () => {
           to: expect.arrayContaining([speaker1.email, speaker2.email]),
         }),
       );
+    });
+
+    it('creates PROPOSAL_ACCEPTED notifications for each speaker on the proposal', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await Publication.for(authorizedEvent).publish(proposal.id, false);
+
+      const notifications = await db.notification.findMany({
+        where: { proposalId: proposal.id, type: 'PROPOSAL_ACCEPTED' },
+      });
+
+      expect(notifications).toHaveLength(2);
+      expect(notifications.map((n) => n.userId).sort()).toEqual([speaker1.id, speaker2.id].sort());
+    });
+
+    it('creates PROPOSAL_REJECTED notification when publishing a rejected proposal', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await Publication.for(authorizedEvent).publish(rejectedProposal.id, false);
+
+      const notifications = await db.notification.findMany({
+        where: { proposalId: rejectedProposal.id, type: 'PROPOSAL_REJECTED' },
+      });
+
+      expect(notifications).toHaveLength(1);
+      expect(notifications[0].userId).toBe(speaker1.id);
     });
 
     it('publish result a rejected proposal', async () => {
