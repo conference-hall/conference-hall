@@ -72,7 +72,7 @@ export function MarkdownTextArea({
           </div>
         </div>
         <div className="absolute inset-x-px bottom-0 flex h-11 items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
-          <MardownToolbar markdown={markdown} stats={stats} />
+          <MardownInfo markdown={markdown} stats={stats} />
 
           {preview ? (
             <div className="shrink-0">
@@ -115,12 +115,12 @@ function MardownPreviewModal({ label, markdown, isOpen, onClose }: MardownPrevie
   );
 }
 
-type MardownToolbarProps = {
+type MardownInfoProps = {
   markdown: string;
   stats: boolean;
 };
 
-function MardownToolbar({ markdown, stats }: MardownToolbarProps) {
+function MardownInfo({ markdown, stats }: MardownInfoProps) {
   const { t } = useTranslation();
   const markdownStats = stats ? MarkdownParser.stats(markdown) : null;
   return (
