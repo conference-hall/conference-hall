@@ -15,6 +15,7 @@ describe('SpeakerActivities', () => {
     let event: Event;
     let event2: Event;
     let proposal: Proposal;
+    let proposal2: Proposal;
     let proposalEvent2: Proposal;
 
     beforeEach(async () => {
@@ -26,8 +27,8 @@ describe('SpeakerActivities', () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const archivedTalk = await talkFactory({ speakers: [speaker], traits: ['archived'] });
 
-      await proposalFactory({ event, talk: archivedTalk });
       proposal = await proposalFactory({ event, talk });
+      proposal2 = await proposalFactory({ event, talk: archivedTalk });
       proposalEvent2 = await proposalFactory({ event: event2, talk: talk });
     });
 
@@ -58,6 +59,12 @@ describe('SpeakerActivities', () => {
             logoUrl: resolveStorageUrl(event.logo),
             cfpState: 'OPENED',
             submissions: [
+              {
+                id: proposal2.id,
+                title: proposal2.title,
+                status: SpeakerProposalStatus.Submitted,
+                speakers: [{ name: speaker.name, picture: speaker.picture }],
+              },
               {
                 id: proposal.id,
                 title: proposal.title,

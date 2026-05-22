@@ -24,7 +24,8 @@ export class SpeakerActivities {
         team: true,
         proposals: {
           where: { speakers: { some: { userId: this.userId } } },
-          include: { speakers: true, talk: true },
+          include: { speakers: true },
+          orderBy: { createdAt: 'desc' },
         },
       },
     });
@@ -40,7 +41,7 @@ export class SpeakerActivities {
           logoUrl: resolveStorageUrl(event.logo),
           cfpState: event.cfpState,
           submissions: event.proposals
-            .filter((proposal) => proposal.talk && !proposal.talk.archived)
+            .filter((proposal) => proposal.talkId)
             .map((proposal) => ({
               id: proposal.id,
               title: proposal.title,
