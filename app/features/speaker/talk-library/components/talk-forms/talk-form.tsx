@@ -69,6 +69,7 @@ export function TalkForm({
         className="field-sizing-content min-h-32"
         defaultValue={initialValues?.abstract}
         error={errors?.abstract}
+        stats
       />
 
       <FieldsetGroup legend={t('talk.level')} inline>

@@ -2,11 +2,12 @@ import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MarkdownParser } from '~/shared/markdown/markdown-parser.ts';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import { Button } from '../button.tsx';
 import { Modal } from '../dialogs/modals.tsx';
 import { Markdown } from '../markdown.tsx';
-import { Label } from '../typography.tsx';
+import { Label, Subtitle } from '../typography.tsx';
 
 type MarkdownTextAreaProps = {
   label: string;
@@ -14,6 +15,7 @@ type MarkdownTextAreaProps = {
   defaultValue?: string | null;
   error?: SubmissionError;
   preview?: boolean;
+  stats?: boolean;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const baseStyles = 'border-gray-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500';
@@ -27,12 +29,13 @@ export function MarkdownTextArea({
   error,
   defaultValue,
   preview = true,
+  stats = false,
   rows,
   ...rest
 }: MarkdownTextAreaProps) {
   const { t } = useTranslation();
   const [isPreviewOpen, setPreviewOpen] = useState(false);
-  const [markdown, setMarkdown] = useState(defaultValue);
+  const [markdown, setMarkdown] = useState(defaultValue ?? '');
   const textareaId = useId();
 
   const handleClosePreview = () => setPreviewOpen(false);
@@ -69,7 +72,8 @@ export function MarkdownTextArea({
           </div>
         </div>
         <div className="absolute inset-x-px bottom-0 flex h-11 items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
-          <p className="text-xs text-gray-500">{t('common.markdown-supported')}</p>
+          <MardownInfo markdown={markdown} stats={stats} />
+
           {preview ? (
             <div className="shrink-0">
               <Button type="button" variant="secondary" size="sm" onClick={handleOpenPreview}>
@@ -95,7 +99,7 @@ export function MarkdownTextArea({
 
 type MardownPreviewModalProps = {
   label: string;
-  markdown?: string | null;
+  markdown: string;
   isOpen: boolean;
   onClose: VoidFunction;
 };
@@ -108,5 +112,30 @@ function MardownPreviewModal({ label, markdown, isOpen, onClose }: MardownPrevie
         {markdown ? <Markdown>{markdown}</Markdown> : <p>{t('common.no-preview')}</p>}
       </Modal.Content>
     </Modal>
+  );
+}
+
+type MardownInfoProps = {
+  markdown: string;
+  stats: boolean;
+};
+
+function MardownInfo({ markdown, stats }: MardownInfoProps) {
+  const { t } = useTranslation();
+  const markdownStats = stats ? MarkdownParser.stats(markdown) : null;
+  return (
+    <div className="flex gap-1">
+      <Subtitle size="xs">{t('common.markdown-supported')}</Subtitle>
+      {markdownStats ? (
+        <>
+          <Subtitle size="xs" className="hidden sm:inline">
+            · {t('common.count.character', { count: markdownStats.chars })}
+          </Subtitle>
+          <Subtitle size="xs" className="hidden sm:inline">
+            · {t('common.count.word', { count: markdownStats.words })}
+          </Subtitle>
+        </>
+      ) : null}
+    </div>
   );
 }

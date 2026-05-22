@@ -33,18 +33,42 @@ const appRenderer: RendererObject = {
 
 type ParserOptions = { withAppRenderer?: boolean } | undefined;
 
-function parse(source: string | null, options: ParserOptions = {}) {
-  if (!source) return '';
-
-  const marked = new Marked({
+function getMarked(options: ParserOptions = {}) {
+  return new Marked({
     gfm: true,
     breaks: true,
     renderer: options.withAppRenderer ? appRenderer : defaultRenderer,
   });
+}
 
+function parse(source: string | null, options: ParserOptions = {}) {
+  if (!source) return '';
+
+  const marked = getMarked(options);
   const html = marked.parse(source, { async: false }) as string;
 
   return xss(html, xssOptions);
 }
 
-export const MarkdownParser = { parse };
+function stats(source: string | null) {
+  if (!source) return { chars: 0, words: 0 };
+
+  const marked = getMarked();
+  let text = '';
+  marked.use({
+    walkTokens(token) {
+      if ((token.type === 'text' && !token.tokens) || token.type === 'codespan' || token.type === 'code') {
+        text += token.text?.trim() + ' ';
+      }
+    },
+  });
+  marked.parse(source);
+
+  const rawText = text.trim();
+  return {
+    chars: [...rawText].length,
+    words: rawText.split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length,
+  };
+}
+
+export const MarkdownParser = { parse, stats };
