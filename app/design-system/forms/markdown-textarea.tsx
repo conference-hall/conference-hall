@@ -72,14 +72,14 @@ export function MarkdownTextArea({
           </div>
         </div>
         <div className="absolute inset-x-px bottom-0 flex h-11 items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
-          <MardownInfo markdown={markdown} stats={stats} />
+          <MarkdownInfo markdown={markdown} stats={stats} />
 
           {preview ? (
             <div className="shrink-0">
               <Button type="button" variant="secondary" size="sm" onClick={handleOpenPreview}>
                 {t('common.preview')}
               </Button>
-              <MardownPreviewModal
+              <MarkdownPreviewModal
                 label={label}
                 markdown={markdown}
                 isOpen={isPreviewOpen}
@@ -97,14 +97,14 @@ export function MarkdownTextArea({
   );
 }
 
-type MardownPreviewModalProps = {
+type MarkdownPreviewModalProps = {
   label: string;
   markdown: string;
   isOpen: boolean;
   onClose: VoidFunction;
 };
 
-function MardownPreviewModal({ label, markdown, isOpen, onClose }: MardownPreviewModalProps) {
+function MarkdownPreviewModal({ label, markdown, isOpen, onClose }: MarkdownPreviewModalProps) {
   const { t } = useTranslation();
   return (
     <Modal title={label} size="full" open={isOpen} onClose={onClose}>
@@ -115,12 +115,12 @@ function MardownPreviewModal({ label, markdown, isOpen, onClose }: MardownPrevie
   );
 }
 
-type MardownInfoProps = {
+type MarkdownInfoProps = {
   markdown: string;
   stats: boolean;
 };
 
-function MardownInfo({ markdown, stats }: MardownInfoProps) {
+function MarkdownInfo({ markdown, stats }: MarkdownInfoProps) {
   const { t } = useTranslation();
   const markdownStats = stats ? MarkdownParser.stats(markdown) : null;
   return (
