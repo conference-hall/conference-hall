@@ -29,21 +29,3 @@ ALTER TABLE "notifications" ADD CONSTRAINT "notifications_proposalId_fkey" FOREI
 
 -- AddForeignKey
 ALTER TABLE "notifications" ADD CONSTRAINT "notifications_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "conversation_messages"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- Data migration: backfill notifications for existing accepted/published/pending proposals
-INSERT INTO "notifications" ("id", "type", "userId", "eventId", "proposalId", "read", "createdAt")
-SELECT
-    gen_random_uuid(),
-    'PROPOSAL_ACCEPTED'::"NotificationType",
-    es."userId",
-    p."eventId",
-    p."id",
-    false,
-    p."updatedAt"
-FROM "proposals" p
-JOIN "_proposals_speakers" ps ON ps."B" = p."id"
-JOIN "event_speakers" es ON es."id" = ps."A"
-WHERE p."deliberationStatus" = 'ACCEPTED'
-  AND p."publicationStatus" = 'PUBLISHED'
-  AND p."confirmationStatus" = 'PENDING'
-  AND es."userId" IS NOT NULL;
