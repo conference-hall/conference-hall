@@ -123,8 +123,12 @@ function MardownToolbar({ markdown, stats }: { markdown: string | null; stats: b
       <Subtitle size="xs">{t('common.markdown-supported')}</Subtitle>
       {markdownStats ? (
         <>
-          <Subtitle size="xs"> · {t('common.count.character', { count: markdownStats.chars })}</Subtitle>
-          <Subtitle size="xs"> · {t('common.count.word', { count: markdownStats.words })}</Subtitle>
+          <Subtitle size="xs" className="hidden sm:inline">
+            · {t('common.count.character', { count: markdownStats.chars })}
+          </Subtitle>
+          <Subtitle size="xs" className="hidden sm:inline">
+            · {t('common.count.word', { count: markdownStats.words })}
+          </Subtitle>
         </>
       ) : null}
     </div>
