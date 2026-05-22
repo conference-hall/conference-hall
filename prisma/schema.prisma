@@ -38,6 +38,7 @@ model User {
   conversationParticipants ConversationParticipant[]
   conversationReactions    ConversationReaction[]
   accounts                 Account[]
+  notifications            Notification[]
 
   @@unique([email])
   @@index([uid])
@@ -162,6 +163,7 @@ model Event {
   emailCustomizations         EventEmailCustomization[]
   conversations               Conversation[]
   proposalCounter             EventProposalCounter?
+  notifications               Notification[]
 
   @@map("events")
 }
@@ -290,6 +292,7 @@ model Proposal {
   migrationId        String?
   conversations      Conversation[]
   ScheduleSession    ScheduleSession[]
+  notifications      Notification[]
 
   @@unique([talkId, eventId])
   @@unique([proposalNumber, eventId])
@@ -483,6 +486,7 @@ model ConversationMessage {
   createdAt      DateTime                @default(now())
   updatedAt      DateTime                @updatedAt
   reactions      ConversationReaction[]
+  notifications  Notification[]
 
   @@index([conversationId, createdAt])
   @@map("conversation_messages")
@@ -522,4 +526,28 @@ model ConversationReaction {
 
   @@unique([messageId, userId, code])
   @@map("conversation_reactions")
+}
+
+enum NotificationType {
+  PROPOSAL_ACCEPTED
+  PROPOSAL_REJECTED
+  PROPOSAL_MESSAGE_RECEIVED
+}
+
+model Notification {
+  id         String              @id @default(cuid())
+  type       NotificationType
+  userId     String
+  user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventId    String
+  event      Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  proposalId String
+  proposal   Proposal            @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  messageId  String?
+  message    ConversationMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  read       Boolean             @default(false)
+  createdAt  DateTime            @default(now())
+
+  @@index([userId, read, createdAt])
+  @@map("notifications")
 }

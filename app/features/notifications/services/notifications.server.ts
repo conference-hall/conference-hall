@@ -7,40 +7,34 @@ export class Notifications {
     return new Notifications(userId);
   }
 
-  async unreadCount() {
-    return db.proposal.count({
-      where: {
-        deliberationStatus: 'ACCEPTED',
-        confirmationStatus: 'PENDING',
-        publicationStatus: 'PUBLISHED',
-        speakers: { some: { userId: this.userId } },
-      },
+  async unreadCount(): Promise<number> {
+    return db.notification.count({
+      where: { userId: this.userId, read: false },
     });
   }
 
   async list() {
-    const acceptedProposals = await db.proposal.findMany({
-      include: { event: true },
-      where: {
-        deliberationStatus: 'ACCEPTED',
-        confirmationStatus: 'PENDING',
-        publicationStatus: 'PUBLISHED',
-        speakers: { some: { userId: this.userId } },
+    return db.notification.findMany({
+      where: { userId: this.userId },
+      include: {
+        event: { select: { slug: true, name: true } },
+        proposal: { select: { id: true, title: true } },
       },
-      orderBy: { updatedAt: 'desc' },
+      orderBy: { createdAt: 'desc' },
     });
+  }
 
-    return acceptedProposals.map((proposal) => ({
-      type: 'ACCEPTED_PROPOSAL',
-      proposal: {
-        id: proposal.id,
-        title: proposal.title,
-      },
-      event: {
-        slug: proposal.event.slug,
-        name: proposal.event.name,
-      },
-      date: proposal.updatedAt,
-    }));
+  async markAsRead(notificationId: string): Promise<void> {
+    await db.notification.updateMany({
+      where: { id: notificationId, userId: this.userId },
+      data: { read: true },
+    });
+  }
+
+  async markAllAsRead(): Promise<void> {
+    await db.notification.updateMany({
+      where: { userId: this.userId, read: false },
+      data: { read: true },
+    });
   }
 }
