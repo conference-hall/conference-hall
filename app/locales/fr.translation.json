@@ -503,6 +503,7 @@
   "event-management.proposals.list.items_one": "<0>1</0> proposition",
   "event-management.proposals.list.items_zero": "Aucune proposition",
   "event-management.proposals.list.items": "<0>{{count}}</0> propositions",
+  "event-management.proposals.list.new-messages": "Nouveaux messages",
   "event-management.proposals.list.open": "Ouvrir la proposition \"{{title}}\"",
   "event-management.proposals.list.select-item": "Sélectionner la proposition \"{{title}}\"",
   "event-management.proposals.list.selected": "Marquer les {{count}} sélectionnées comme :",

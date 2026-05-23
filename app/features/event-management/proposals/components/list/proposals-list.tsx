@@ -13,7 +13,7 @@ type Props = {
   event: string;
   proposals: Array<ProposalData>;
   pagination: { current: number; total: number };
-  statistics: { total: number; reviewed: number };
+  statistics: { total: number; reviewed: number; hasNewMessages: boolean };
   filtersHash: string;
 };
 
@@ -29,6 +29,7 @@ export function ProposalsList({ team, event, proposals, pagination, statistics, 
         checkboxRef={selector.ref}
         total={statistics.total}
         totalReviewed={statistics.reviewed}
+        hasNewMessages={statistics.hasNewMessages}
         totalSelected={selector.totalSelected}
         selection={selector.selection}
         isAllPagesSelected={selector.isAllPagesSelected}

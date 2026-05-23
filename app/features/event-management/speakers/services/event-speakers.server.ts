@@ -112,6 +112,7 @@ export class EventSpeakers {
       {
         withSpeakers: event.displayProposalsSpeakers,
         withReviews: true,
+        withMessages: true,
       },
     );
     const proposals = await search.proposalsByPage(new Pagination({ page: 1, total: 1000, pageSize: 1000 }));
@@ -152,6 +153,7 @@ export class EventSpeakers {
           you: proposal.reviews.you,
         },
         commentCount: proposal.commentCount,
+        hasNewMessages: proposal.hasNewMessages,
       })),
     };
   }

@@ -56,11 +56,12 @@ describe('CfpReviewsSearch', () => {
             you: { note: null, feeling: null },
           },
           commentCount: 1,
+          hasNewMessages: true,
         },
       ]);
 
       expect(proposals.filters).toEqual({ status: 'pending' });
-      expect(proposals.statistics).toEqual({ reviewed: 0, total: 1 });
+      expect(proposals.statistics).toEqual({ reviewed: 0, total: 1, hasNewMessages: true });
       expect(proposals.pagination).toEqual({ current: 1, total: 1 });
     });
 
@@ -96,7 +97,7 @@ describe('CfpReviewsSearch', () => {
 
       expect(proposals.results).toEqual([]);
       expect(proposals.filters).toEqual({});
-      expect(proposals.statistics).toEqual({ reviewed: 0, total: 0 });
+      expect(proposals.statistics).toEqual({ reviewed: 0, total: 0, hasNewMessages: false });
       expect(proposals.pagination).toEqual({ current: 1, total: 0 });
     });
 

@@ -1,4 +1,5 @@
 import { Trans, useTranslation } from 'react-i18next';
+import { Link, useSearchParams } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -11,11 +12,20 @@ type Props = {
   total: number;
   totalSelected: number;
   totalReviewed: number;
+  hasNewMessages: boolean;
   selection: string[];
   isAllPagesSelected: boolean;
 };
 
-export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, selection, isAllPagesSelected }: Props) {
+export function ListHeader({
+  checkboxRef,
+  total,
+  totalSelected,
+  totalReviewed,
+  hasNewMessages,
+  selection,
+  isAllPagesSelected,
+}: Props) {
   const { t } = useTranslation();
   const permissions = useUserTeamPermissions();
 
@@ -67,7 +77,32 @@ export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, s
           </div>
         )}
       </div>
-      <ReviewsProgress reviewed={totalReviewed} total={total} />
+      <div className="flex items-center gap-4">
+        {hasNewMessages && <NewMessagesPill />}
+        <ReviewsProgress reviewed={totalReviewed} total={total} />
+      </div>
     </List.Header>
+  );
+}
+
+function NewMessagesPill() {
+  const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+
+  const params = new URLSearchParams(searchParams);
+  params.set('messages', 'new');
+  params.delete('page');
+
+  return (
+    <Link
+      to={{ search: params.toString() }}
+      className="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:underline"
+    >
+      <span className="relative flex size-2">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
+        <span className="relative inline-flex size-2 rounded-full bg-blue-500" />
+      </span>
+      <span>{t('event-management.proposals.list.new-messages')}</span>
+    </Link>
   );
 }

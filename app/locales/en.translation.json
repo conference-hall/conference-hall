@@ -503,6 +503,7 @@
   "event-management.proposals.list.items_one": "<0>1</0> proposal",
   "event-management.proposals.list.items_zero": "No proposals",
   "event-management.proposals.list.items": "<0>{{count}}</0> proposals",
+  "event-management.proposals.list.new-messages": "New messages",
   "event-management.proposals.list.open": "Open proposal \"{{title}}\"",
   "event-management.proposals.list.select-item": "Select proposal \"{{title}}\"",
   "event-management.proposals.list.selected": "Mark {{count}} selected as:",

@@ -403,6 +403,70 @@ describe('ConversationService', () => {
       expect(messages).toEqual([]);
     });
 
+    it('creates a participant with lastSeenAt on first open', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+      await conversationMessageFactory({
+        conversation,
+        sender: organizer,
+        role: ConversationParticipantRole.ORGANIZER,
+      });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
+      });
+
+      await service.getConversation(event.id);
+
+      const participant = await db.conversationParticipant.findUnique({
+        where: { conversationId_userId: { conversationId: conversation.id, userId: speaker.id } },
+      });
+      expect(participant?.role).toBe(ConversationParticipantRole.SPEAKER);
+      expect(participant?.lastSeenAt).toEqual(new Date('2023-01-01'));
+    });
+
+    it('updates lastSeenAt on subsequent opens', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+      await conversationMessageFactory({
+        conversation,
+        sender: speaker,
+        role: ConversationParticipantRole.SPEAKER,
+      });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
+      });
+
+      // First open
+      await service.getConversation(event.id);
+
+      // Advance time and open again
+      vi.setSystemTime(new Date('2023-06-01'));
+      await service.getConversation(event.id);
+
+      const participant = await db.conversationParticipant.findUnique({
+        where: { conversationId_userId: { conversationId: conversation.id, userId: speaker.id } },
+      });
+      expect(participant?.lastSeenAt).toEqual(new Date('2023-06-01'));
+    });
+
     it('returns messages with sender and reactions', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });

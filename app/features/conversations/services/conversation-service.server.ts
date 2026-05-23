@@ -92,7 +92,7 @@ export class ConversationService {
   }
 
   async getConversation(eventId: string) {
-    const { userId, type, proposalId } = this.context;
+    const { userId, role, type, proposalId } = this.context;
 
     // Get conversation
     const conversation = await db.conversation.findFirst({
@@ -107,6 +107,13 @@ export class ConversationService {
     });
 
     if (!conversation) return [];
+
+    // Track read state: upsert participant with lastSeenAt
+    await db.conversationParticipant.upsert({
+      where: { conversationId_userId: { conversationId: conversation.id, userId } },
+      create: { conversationId: conversation.id, userId, role, lastSeenAt: new Date() },
+      update: { lastSeenAt: new Date() },
+    });
 
     const users = await db.user.findMany({ where: { id: { in: conversation.participants.map((p) => p.userId) } } });
 

@@ -16,7 +16,7 @@ import type {
   ReviewsFilter,
 } from './proposal-search-builder.schema.server.ts';
 
-type SearchOptions = { withSpeakers: boolean; withReviews: boolean };
+type SearchOptions = { withSpeakers: boolean; withReviews: boolean; withMessages?: boolean };
 
 type QueryParseResult =
   | { type: 'proposal-number'; number: number }
@@ -43,6 +43,7 @@ type ProposalRow = {
   userReviewNote: number | null;
   userReviewFeeling: ReviewFeeling | null;
   commentCount: number;
+  hasNewMessages: boolean;
 };
 
 type StatisticsRow = { total: bigint; reviewed: bigint };
@@ -146,6 +147,7 @@ export class ProposalSearchBuilder {
     const reviewAggJoin = needsReviewAgg ? this.buildReviewAggJoin() : Prisma.empty;
     const userReviewJoin = needsUserReview ? this.buildUserReviewJoin() : Prisma.empty;
     const commentCountJoin = this.buildCommentCountJoin();
+    const newMessagesJoin = this.options.withMessages ? this.buildNewMessagesJoin() : Prisma.empty;
     const reviewSelect = this.buildReviewSelectColumns();
 
     const limitOffset = pagination
@@ -169,11 +171,13 @@ export class ProposalSearchBuilder {
           p."archivedAt",
           p."submittedAt",
           ${reviewSelect},
-          COALESCE(comment_count.count, 0)::INTEGER AS "commentCount"
+          COALESCE(comment_count.count, 0)::INTEGER AS "commentCount",
+          ${this.options.withMessages ? Prisma.sql`COALESCE(new_messages.has_new, false)` : Prisma.sql`false`} AS "hasNewMessages"
         FROM proposals p
         ${reviewAggJoin}
         ${userReviewJoin}
         ${commentCountJoin}
+        ${newMessagesJoin}
         WHERE ${Prisma.join(conditions, ' AND ')}
         ORDER BY ${orderBy}
         ${limitOffset}
@@ -227,6 +231,9 @@ export class ProposalSearchBuilder {
     const reviewCondition = this.buildReviewFilterCondition(reviews);
     if (reviewCondition) conditions.push(reviewCondition);
 
+    const messagesCondition = this.buildMessagesCondition();
+    if (messagesCondition) conditions.push(messagesCondition);
+
     return conditions;
   }
 
@@ -254,6 +261,18 @@ export class ProposalSearchBuilder {
       default:
         return null;
     }
+  }
+
+  private buildMessagesCondition(): Prisma.Sql | null {
+    if (this.filters.messages !== 'new') return null;
+    return Prisma.sql`EXISTS (
+      SELECT 1
+      FROM conversations c
+      INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+      LEFT JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${this.userId}
+      WHERE c."proposalId" = p.id
+        AND (cp.id IS NULL OR cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+    )`;
   }
 
   private parseSearchQuery(query?: string): QueryParseResult {
@@ -400,6 +419,22 @@ export class ProposalSearchBuilder {
     `;
   }
 
+  private buildNewMessagesJoin(): Prisma.Sql {
+    return Prisma.sql`
+      LEFT JOIN LATERAL (
+        SELECT
+          CASE WHEN EXISTS (
+            SELECT 1
+            FROM conversations c
+            INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+            LEFT JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${this.userId}
+            WHERE c."proposalId" = p.id
+              AND (cp.id IS NULL OR cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+          ) THEN true ELSE false END AS has_new
+      ) new_messages ON true
+    `;
+  }
+
   private buildSortJoins(): Prisma.Sql {
     const sort = this.filters.sort;
     const parts: Prisma.Sql[] = [];
@@ -505,6 +540,7 @@ export class ProposalSearchBuilder {
           : { note: null, feeling: null },
       },
       commentCount: row.commentCount,
+      hasNewMessages: row.hasNewMessages,
     };
   }
 }

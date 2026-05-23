@@ -501,6 +501,7 @@ model ConversationParticipant {
   user           User                        @relation(fields: [userId], references: [id])
   role           ConversationParticipantRole
   joinedAt       DateTime                    @default(now())
+  lastSeenAt     DateTime?
 
   @@unique([conversationId, userId])
   @@map("conversation_participants")

@@ -5,6 +5,7 @@ import { useUserTeamPermissions } from '~/app-platform/components/user-context.t
 import { Badge, BadgeDot } from '~/design-system/badges.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { Tag } from '~/design-system/tag.tsx';
+import { Tooltip } from '~/design-system/tooltip.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDate } from '~/shared/datetimes/datetimes.ts';
@@ -35,8 +36,19 @@ export function ProposalItem({
   const [currentQueryParams] = useSearchParams();
   const { canChangeProposalStatus } = useUserTeamPermissions();
 
-  const { id, routeId, title, reviews, archivedAt, submittedAt, deliberationStatus, tags, speakers, commentCount } =
-    proposal;
+  const {
+    id,
+    routeId,
+    title,
+    reviews,
+    archivedAt,
+    submittedAt,
+    deliberationStatus,
+    tags,
+    speakers,
+    commentCount,
+    hasNewMessages,
+  } = proposal;
 
   const pathname = href('/team/:team/:event/proposals/:proposal', {
     team,
@@ -80,18 +92,23 @@ export function ProposalItem({
             ))}
           </div>
 
-          <Text size="xs" variant="secondary" className="space-x-1">
-            <span>#{routeId}</span>
-            {speakers.length ? (
-              <Trans
-                as="span"
-                i18nKey="common.proposed-by"
-                values={{ names: speakers.map((a) => a.name) }}
-                components={[<span key="0" className="text-gray-800" />]}
-              />
-            ) : null}
-            <ClientOnly>{() => <span>{`· ${formatDate(submittedAt, { format: 'medium', locale })}`}</span>}</ClientOnly>
-          </Text>
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
+            <Text size="xs" variant="secondary" className="space-x-1">
+              <span>#{routeId}</span>
+              {speakers.length ? (
+                <Trans
+                  as="span"
+                  i18nKey="common.proposed-by"
+                  values={{ names: speakers.map((a) => a.name) }}
+                  components={[<span key="0" className="text-gray-800" />]}
+                />
+              ) : null}
+              <ClientOnly>
+                {() => <span>{`· ${formatDate(submittedAt, { format: 'medium', locale })}`}</span>}
+              </ClientOnly>
+            </Text>
+            {hasNewMessages ? <NewMessagesIndicator /> : null}
+          </div>
         </div>
 
         <ReviewSection reviews={reviews} commentCount={commentCount} />
@@ -121,6 +138,21 @@ function DeliberationBadge({ deliberationStatus, confirmationStatus }: ProposalD
     case 'PENDING':
       return null;
   }
+}
+
+function NewMessagesIndicator() {
+  const { t } = useTranslation();
+
+  const label = t('event-management.proposals.list.new-messages');
+
+  return (
+    <Tooltip text={label} as="span" placement="right" hideArrow>
+      <span aria-label={label} className="relative flex size-2">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
+        <span className="relative inline-flex size-2 rounded-full bg-blue-500" />
+      </span>
+    </Tooltip>
+  );
 }
 
 function PublicationBadge({ deliberationStatus, publicationStatus, confirmationStatus }: ProposalData) {

@@ -12,6 +12,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import type {
   Event,
   EventCategory,
@@ -594,5 +595,174 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
       expect(routeIds).toEqual([]);
     });
+  });
+});
+
+describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () => {
+  let organizer: User;
+  let speaker: User;
+  let team: Team;
+  let event: Event;
+  let proposalNoConversation: Proposal;
+  let proposalWithConversationNoMessages: Proposal;
+  let proposalWithUnseenMessages: Proposal;
+  let proposalWithSeenMessages: Proposal;
+  let proposalOrganizerNeverJoined: Proposal;
+
+  beforeAll(async () => {
+    organizer = await userFactory();
+    speaker = await userFactory();
+    team = await teamFactory({ owners: [organizer] });
+    event = await eventFactory({ team });
+
+    // Proposal with no speaker conversation
+    const talk1 = await talkFactory({ speakers: [speaker] });
+    proposalNoConversation = await proposalFactory({ event, talk: talk1 });
+
+    // Proposal with speaker conversation but no messages
+    const talk2 = await talkFactory({ speakers: [speaker] });
+    proposalWithConversationNoMessages = await proposalFactory({ event, talk: talk2 });
+    await conversationFactory({
+      event,
+      proposalId: proposalWithConversationNoMessages.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
+
+    // Proposal with messages newer than organizer's lastSeenAt
+    const talk3 = await talkFactory({ speakers: [speaker] });
+    proposalWithUnseenMessages = await proposalFactory({ event, talk: talk3 });
+    const conv3 = await conversationFactory({
+      event,
+      proposalId: proposalWithUnseenMessages.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
+    const pastDate = new Date('2020-01-01');
+    await db.conversationParticipant.create({
+      data: { conversationId: conv3.id, userId: organizer.id, role: 'ORGANIZER', lastSeenAt: pastDate },
+    });
+    await conversationMessageFactory({ conversation: conv3, sender: speaker, role: 'SPEAKER' });
+
+    // Proposal where organizer has seen all messages
+    const talk4 = await talkFactory({ speakers: [speaker] });
+    proposalWithSeenMessages = await proposalFactory({ event, talk: talk4 });
+    const conv4 = await conversationFactory({
+      event,
+      proposalId: proposalWithSeenMessages.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
+    await conversationMessageFactory({ conversation: conv4, sender: speaker, role: 'SPEAKER' });
+    const futureDate = new Date('2099-01-01');
+    await db.conversationParticipant.create({
+      data: { conversationId: conv4.id, userId: organizer.id, role: 'ORGANIZER', lastSeenAt: futureDate },
+    });
+
+    // Proposal where organizer has no participant record (never joined)
+    const talk5 = await talkFactory({ speakers: [speaker] });
+    proposalOrganizerNeverJoined = await proposalFactory({ event, talk: talk5 });
+    const conv5 = await conversationFactory({
+      event,
+      proposalId: proposalOrganizerNeverJoined.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
+    await conversationMessageFactory({ conversation: conv5, sender: speaker, role: 'SPEAKER' });
+
+    // Proposal with only PROPOSAL_REVIEW_COMMENTS conversation (should trigger hasNewMessages)
+    const talk6 = await talkFactory({ speakers: [speaker] });
+    await proposalFactory({ event, talk: talk6 });
+    // Add a review conversation with messages to proposalNoConversation
+    const reviewConv = await conversationFactory({
+      event,
+      proposalId: proposalNoConversation.id,
+      type: 'PROPOSAL_REVIEW_COMMENTS',
+    });
+    await conversationMessageFactory({ conversation: reviewConv, sender: organizer });
+  });
+
+  afterAll(async () => {
+    await resetDB();
+  });
+
+  it('returns hasNewMessages=true when proposal has unseen review comments', async () => {
+    const search = new ProposalSearchBuilder(
+      event.id,
+      organizer.id,
+      { query: proposalNoConversation.title },
+      { withSpeakers: true, withReviews: true, withMessages: true },
+    );
+    const proposals = await search.proposals();
+    expect(proposals.length).toBe(1);
+    expect(proposals[0].hasNewMessages).toBe(true);
+  });
+
+  it('returns hasNewMessages=true when messages are newer than organizer lastSeenAt', async () => {
+    const search = new ProposalSearchBuilder(
+      event.id,
+      organizer.id,
+      { query: proposalWithUnseenMessages.title },
+      { withSpeakers: true, withReviews: true, withMessages: true },
+    );
+    const proposals = await search.proposals();
+    expect(proposals.length).toBe(1);
+    expect(proposals[0].hasNewMessages).toBe(true);
+  });
+
+  it('returns hasNewMessages=true when organizer has no participant record', async () => {
+    const search = new ProposalSearchBuilder(
+      event.id,
+      organizer.id,
+      { query: proposalOrganizerNeverJoined.title },
+      { withSpeakers: true, withReviews: true, withMessages: true },
+    );
+    const proposals = await search.proposals();
+    expect(proposals.length).toBe(1);
+    expect(proposals[0].hasNewMessages).toBe(true);
+  });
+
+  it('returns hasNewMessages=false when proposal has no messages', async () => {
+    const search = new ProposalSearchBuilder(
+      event.id,
+      organizer.id,
+      { query: proposalWithConversationNoMessages.title },
+      { withSpeakers: true, withReviews: true, withMessages: true },
+    );
+    const proposals = await search.proposals();
+    expect(proposals.length).toBe(1);
+    expect(proposals[0].hasNewMessages).toBe(false);
+  });
+
+  it('returns hasNewMessages=false when organizer lastSeenAt is after the latest message', async () => {
+    const search = new ProposalSearchBuilder(
+      event.id,
+      organizer.id,
+      { query: proposalWithSeenMessages.title },
+      { withSpeakers: true, withReviews: true, withMessages: true },
+    );
+    const proposals = await search.proposals();
+    expect(proposals.length).toBe(1);
+    expect(proposals[0].hasNewMessages).toBe(false);
+  });
+
+  it('returns hasNewMessages=false when withMessages option is not set', async () => {
+    const search = new ProposalSearchBuilder(event.id, organizer.id, { query: proposalWithUnseenMessages.title });
+    const proposals = await search.proposals();
+    expect(proposals.length).toBe(1);
+    expect(proposals[0].hasNewMessages).toBe(false);
+  });
+
+  it('filters only proposals with new messages when messages=new filter is set', async () => {
+    const search = new ProposalSearchBuilder(
+      event.id,
+      organizer.id,
+      { messages: 'new' },
+      { withSpeakers: true, withReviews: true, withMessages: true },
+    );
+    const proposals = await search.proposals();
+    const ids = proposals.map((p) => p.id).sort();
+    const expectedIds = [
+      proposalNoConversation.id,
+      proposalWithUnseenMessages.id,
+      proposalOrganizerNeverJoined.id,
+    ].sort();
+    expect(ids).toEqual(expectedIds);
   });
 });
