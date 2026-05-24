@@ -142,7 +142,7 @@ function DeliberationLabel({ deliberationStatus }: ProposalData) {
       );
     case 'REJECTED':
       return (
-        <Text size="xs" variant="error">
+        <Text size="xs" variant="secondary">
           {t('common.proposals.status.rejected')}
         </Text>
       );
