@@ -1,6 +1,5 @@
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/16/solid';
-import { CheckIcon, ClockIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
+import { QuestionMarkCircleIcon, ClockIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import type { TFunction } from 'i18next';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,40 +42,40 @@ function getOptions(t: TFunction, confirmationStatus: ConfirmationStatus) {
       value: 'PENDING',
       name: t('common.proposals.status.pending'),
       icon: QuestionMarkCircleIcon,
-      iconClassname: 'text-gray-600',
+      iconClassname: 'text-gray-700',
     },
     {
       value: 'ACCEPTED',
       name: t('common.proposals.status.accepted'),
       icon: CheckIcon,
-      iconClassname: 'text-green-600',
+      iconClassname: 'text-green-700',
       hidden: Boolean(confirmationStatus),
     },
     {
       value: 'REJECTED',
       name: t('common.proposals.status.rejected'),
       icon: XMarkIcon,
-      iconClassname: 'text-red-600',
+      iconClassname: 'text-red-700',
     },
     {
       value: 'NOT_ANSWERED',
       name: t('common.proposals.status.not-answered'),
       icon: ClockIcon,
-      iconClassname: 'text-blue-600',
+      iconClassname: 'text-blue-700',
       hidden: !confirmationStatus,
     },
     {
       value: 'CONFIRMED',
       name: t('common.proposals.status.confirmed'),
       icon: CheckCircleIcon,
-      iconClassname: 'text-green-600',
+      iconClassname: 'text-green-700',
       hidden: !confirmationStatus,
     },
     {
       value: 'DECLINED',
       name: t('common.proposals.status.declined'),
       icon: XCircleIcon,
-      iconClassname: 'text-red-600',
+      iconClassname: 'text-red-700',
       hidden: !confirmationStatus,
     },
   ];

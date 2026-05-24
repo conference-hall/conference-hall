@@ -135,17 +135,9 @@ function DeliberationLabel({ deliberationStatus }: ProposalData) {
 
   switch (deliberationStatus) {
     case 'ACCEPTED':
-      return (
-        <Text size="xs" variant="success">
-          {t('common.proposals.status.accepted')}
-        </Text>
-      );
+      return <Text size="xs">{t('common.proposals.status.accepted')}</Text>;
     case 'REJECTED':
-      return (
-        <Text size="xs" variant="secondary">
-          {t('common.proposals.status.rejected')}
-        </Text>
-      );
+      return <Text size="xs">{t('common.proposals.status.rejected')}</Text>;
     default:
       return null;
   }
@@ -155,23 +147,11 @@ function PublicationLabel({ deliberationStatus, confirmationStatus }: ProposalDa
   const { t } = useTranslation();
 
   if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'PENDING') {
-    return (
-      <Text size="xs" variant="info">
-        {t('common.proposals.status.not-answered')}
-      </Text>
-    );
+    return <Text size="xs">{t('common.proposals.status.not-answered')}</Text>;
   } else if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'CONFIRMED') {
-    return (
-      <Text size="xs" variant="success">
-        {t('common.proposals.status.confirmed')}
-      </Text>
-    );
+    return <Text size="xs">{t('common.proposals.status.confirmed')}</Text>;
   } else if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'DECLINED') {
-    return (
-      <Text size="xs" variant="error">
-        {t('common.proposals.status.declined')}
-      </Text>
-    );
+    return <Text size="xs">{t('common.proposals.status.declined')}</Text>;
   }
   return null;
 }

@@ -1,4 +1,4 @@
-import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { useId, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -9,9 +9,9 @@ import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 const statuses = {
-  ACCEPTED: { i18nKey: 'common.proposals.status.accepted', icon: CheckIcon, color: 'text-green-600' },
-  PENDING: { i18nKey: 'common.proposals.status.pending', icon: QuestionMarkCircleIcon, color: 'text-gray-600' },
-  REJECTED: { i18nKey: 'common.proposals.status.rejected', icon: XMarkIcon, color: 'text-red-600' },
+  ACCEPTED: { i18nKey: 'common.proposals.status.accepted', icon: CheckIcon, color: 'text-green-700' },
+  PENDING: { i18nKey: 'common.proposals.status.pending', icon: QuestionMarkCircleIcon, color: 'text-gray-700' },
+  REJECTED: { i18nKey: 'common.proposals.status.rejected', icon: XMarkIcon, color: 'text-red-700' },
 } as const;
 
 type Props = {
