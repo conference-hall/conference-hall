@@ -29,12 +29,18 @@ describe('CfpReviewsSearch', () => {
       const event = await eventFactory({ team });
       const tag = await eventProposalTagFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), tags: [tag] });
-      const conversation = await conversationFactory({
+      const reviewConversation = await conversationFactory({
         event,
         proposalId: proposal.id,
         type: 'PROPOSAL_REVIEW_COMMENTS',
       });
-      await conversationMessageFactory({ conversation, sender: owner });
+      await conversationMessageFactory({ conversation: reviewConversation, sender: owner });
+      const speakerConversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+      await conversationMessageFactory({ conversation: speakerConversation, sender: speaker });
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const proposals = await CfpReviewsSearch.for(authorizedEvent).search({ status: 'pending' });

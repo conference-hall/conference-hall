@@ -147,10 +147,11 @@ function NewMessagesIndicator() {
 
   return (
     <Tooltip text={label} as="span" placement="right" hideArrow>
-      <span aria-label={label} className="relative flex size-2">
+      <span className="relative flex size-2" aria-hidden="true">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
         <span className="relative inline-flex size-2 rounded-full bg-blue-500" />
       </span>
+      <span className="sr-only">{label}</span>
     </Tooltip>
   );
 }
