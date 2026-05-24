@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { href, Link, useSearchParams } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Badge, BadgeDot } from '~/design-system/badges.tsx';
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { Tag } from '~/design-system/tag.tsx';
 import { Tooltip } from '~/design-system/tooltip.tsx';
@@ -147,10 +148,7 @@ function NewMessagesIndicator() {
 
   return (
     <Tooltip text={label} as="span" placement="right" hideArrow>
-      <span className="relative flex size-2" aria-hidden="true">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-        <span className="relative inline-flex size-2 rounded-full bg-blue-500" />
-      </span>
+      <StatusPill status="info" size="sm" ping />
       <span className="sr-only">{label}</span>
     </Tooltip>
   );

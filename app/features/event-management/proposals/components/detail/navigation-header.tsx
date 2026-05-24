@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Await, href, useNavigate, useSearchParams } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { ReviewsProgress } from '../shared/reviews-progress.tsx';
@@ -128,10 +129,7 @@ function NewMessagesPill({ comments, speakerConversation }: NewMessagesPillProps
       onClick={scrollToFirstNew}
       className="inline-flex cursor-pointer items-center gap-1.5 text-xs text-blue-600 hover:underline"
     >
-      <span className="relative flex size-2">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-        <span className="relative inline-flex size-2 rounded-full bg-blue-500" />
-      </span>
+      <StatusPill status="info" size="sm" ping />
       <span>{t('event-management.proposal-page.new-messages', { count: totalNew })}</span>
     </button>
   );

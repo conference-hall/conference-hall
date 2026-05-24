@@ -1,6 +1,7 @@
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -98,10 +99,7 @@ function NewMessagesPill() {
       to={{ search: params.toString() }}
       className="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:underline"
     >
-      <span className="relative flex size-2">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-        <span className="relative inline-flex size-2 rounded-full bg-blue-500" />
-      </span>
+      <StatusPill status="info" size="sm" ping />
       <span>{t('event-management.proposals.list.new-messages')}</span>
     </Link>
   );
