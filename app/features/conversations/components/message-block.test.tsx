@@ -67,6 +67,22 @@ describe('MessageBlock component', () => {
     await expect.element(page.getByText('SPEAKER')).not.toBeInTheDocument();
   });
 
+  it('applies blue ring when isNew is true', async () => {
+    await renderComponent({ isNew: true });
+
+    const messageEl = page.getByText('Test message content').element().closest(`#${message.id}`);
+    expect(messageEl?.className).toContain('ring-blue-400');
+    expect(messageEl?.className).not.toContain('ring-gray-200');
+  });
+
+  it('applies gray ring when isNew is false', async () => {
+    await renderComponent({ isNew: false });
+
+    const messageEl = page.getByText('Test message content').element().closest(`#${message.id}`);
+    expect(messageEl?.className).toContain('ring-gray-200');
+    expect(messageEl?.className).not.toContain('ring-blue-400');
+  });
+
   it('renders message with reactions', async () => {
     const messageWithReactions: Message = {
       ...message,

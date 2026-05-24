@@ -217,7 +217,13 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
 
   return (
     <Page ref={pageRef}>
-      <NavigationHeader team={params.team} event={params.event} {...pagination} pageRef={pageRef} />
+      <NavigationHeader
+        team={params.team}
+        event={params.event}
+        {...pagination}
+        pageRef={pageRef}
+        activityPromise={activityPromise}
+      />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <div className="lg:col-span-8">
