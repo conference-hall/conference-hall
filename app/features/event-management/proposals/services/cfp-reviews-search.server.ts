@@ -61,13 +61,25 @@ export class CfpReviewsSearch {
           WHERE p."eventId" = ${event.id}
             AND p."isDraft" IS FALSE
             AND p."archivedAt" IS NULL
-            AND EXISTS (
-              SELECT 1
-              FROM conversations c
-              INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
-              LEFT JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${userId}
-              WHERE c."proposalId" = p.id
-                AND (cp.id IS NULL OR cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+            AND (
+              EXISTS (
+                SELECT 1
+                FROM conversations c
+                INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+                LEFT JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${userId}
+                WHERE c."proposalId" = p.id
+                  AND c."type" = 'PROPOSAL_SPEAKER_CONVERSATION'
+                  AND (cp.id IS NULL OR cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+              )
+              OR EXISTS (
+                SELECT 1
+                FROM conversations c
+                INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+                INNER JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${userId}
+                WHERE c."proposalId" = p.id
+                  AND c."type" = 'PROPOSAL_REVIEW_COMMENTS'
+                  AND (cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+              )
             )
         ) AS "exists"
       `,

@@ -600,6 +600,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
 describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () => {
   let organizer: User;
+  let otherOrganizer: User;
   let speaker: User;
   let team: Team;
   let event: Event;
@@ -608,11 +609,13 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
   let proposalWithUnseenMessages: Proposal;
   let proposalWithSeenMessages: Proposal;
   let proposalOrganizerNeverJoined: Proposal;
+  let proposalWithUnseenReviewComments: Proposal;
 
   beforeAll(async () => {
     organizer = await userFactory();
+    otherOrganizer = await userFactory();
     speaker = await userFactory();
-    team = await teamFactory({ owners: [organizer] });
+    team = await teamFactory({ owners: [organizer, otherOrganizer] });
     event = await eventFactory({ team });
 
     // Proposal with no speaker conversation
@@ -666,23 +669,38 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
     });
     await conversationMessageFactory({ conversation: conv5, sender: speaker, role: 'SPEAKER' });
 
-    // Proposal with only PROPOSAL_REVIEW_COMMENTS conversation (should trigger hasNewMessages)
-    const talk6 = await talkFactory({ speakers: [speaker] });
-    await proposalFactory({ event, talk: talk6 });
-    // Add a review conversation with messages to proposalNoConversation
+    // Proposal with PROPOSAL_REVIEW_COMMENTS where organizer has no participant record (should NOT trigger hasNewMessages)
     const reviewConv = await conversationFactory({
       event,
       proposalId: proposalNoConversation.id,
       type: 'PROPOSAL_REVIEW_COMMENTS',
     });
-    await conversationMessageFactory({ conversation: reviewConv, sender: organizer });
+    await conversationMessageFactory({ conversation: reviewConv, sender: otherOrganizer });
+
+    // Proposal with PROPOSAL_REVIEW_COMMENTS where organizer IS a participant with unseen messages
+    const talk6 = await talkFactory({ speakers: [speaker] });
+    proposalWithUnseenReviewComments = await proposalFactory({ event, talk: talk6 });
+    const reviewConv2 = await conversationFactory({
+      event,
+      proposalId: proposalWithUnseenReviewComments.id,
+      type: 'PROPOSAL_REVIEW_COMMENTS',
+    });
+    await db.conversationParticipant.create({
+      data: {
+        conversationId: reviewConv2.id,
+        userId: organizer.id,
+        role: 'ORGANIZER',
+        lastSeenAt: new Date('2020-01-01'),
+      },
+    });
+    await conversationMessageFactory({ conversation: reviewConv2, sender: speaker });
   });
 
   afterAll(async () => {
     await resetDB();
   });
 
-  it('returns hasNewMessages=true when proposal has unseen review comments', async () => {
+  it('returns hasNewMessages=false for review comments when organizer has no participant record', async () => {
     const search = new ProposalSearchBuilder(
       event.id,
       organizer.id,
@@ -691,7 +709,7 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
     );
     const proposals = await search.proposals();
     expect(proposals.length).toBe(1);
-    expect(proposals[0].hasNewMessages).toBe(true);
+    expect(proposals[0].hasNewMessages).toBe(false);
   });
 
   it('returns hasNewMessages=true when messages are newer than organizer lastSeenAt', async () => {
@@ -706,7 +724,19 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
     expect(proposals[0].hasNewMessages).toBe(true);
   });
 
-  it('returns hasNewMessages=true when organizer has no participant record', async () => {
+  it('returns hasNewMessages=true for review comments when organizer is a participant with unseen messages', async () => {
+    const search = new ProposalSearchBuilder(
+      event.id,
+      organizer.id,
+      { query: proposalWithUnseenReviewComments.title },
+      { withSpeakers: true, withReviews: true, withMessages: true },
+    );
+    const proposals = await search.proposals();
+    expect(proposals.length).toBe(1);
+    expect(proposals[0].hasNewMessages).toBe(true);
+  });
+
+  it('returns hasNewMessages=true for speaker conversation when organizer has no participant record', async () => {
     const search = new ProposalSearchBuilder(
       event.id,
       organizer.id,
@@ -759,9 +789,9 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
     const proposals = await search.proposals();
     const ids = proposals.map((p) => p.id).sort();
     const expectedIds = [
-      proposalNoConversation.id,
       proposalWithUnseenMessages.id,
       proposalOrganizerNeverJoined.id,
+      proposalWithUnseenReviewComments.id,
     ].sort();
     expect(ids).toEqual(expectedIds);
   });

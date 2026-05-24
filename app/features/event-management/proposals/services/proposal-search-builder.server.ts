@@ -265,13 +265,25 @@ export class ProposalSearchBuilder {
 
   private buildMessagesCondition(): Prisma.Sql | null {
     if (this.filters.messages !== 'new') return null;
-    return Prisma.sql`EXISTS (
-      SELECT 1
-      FROM conversations c
-      INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
-      LEFT JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${this.userId}
-      WHERE c."proposalId" = p.id
-        AND (cp.id IS NULL OR cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+    return Prisma.sql`(
+      EXISTS (
+        SELECT 1
+        FROM conversations c
+        INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+        LEFT JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${this.userId}
+        WHERE c."proposalId" = p.id
+          AND c."type" = 'PROPOSAL_SPEAKER_CONVERSATION'
+          AND (cp.id IS NULL OR cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+      )
+      OR EXISTS (
+        SELECT 1
+        FROM conversations c
+        INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+        INNER JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${this.userId}
+        WHERE c."proposalId" = p.id
+          AND c."type" = 'PROPOSAL_REVIEW_COMMENTS'
+          AND (cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+      )
     )`;
   }
 
@@ -429,7 +441,16 @@ export class ProposalSearchBuilder {
             INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
             LEFT JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${this.userId}
             WHERE c."proposalId" = p.id
+              AND c."type" = 'PROPOSAL_SPEAKER_CONVERSATION'
               AND (cp.id IS NULL OR cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+          ) OR EXISTS (
+            SELECT 1
+            FROM conversations c
+            INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+            INNER JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${this.userId}
+            WHERE c."proposalId" = p.id
+              AND c."type" = 'PROPOSAL_REVIEW_COMMENTS'
+              AND (cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
           ) THEN true ELSE false END AS has_new
       ) new_messages ON true
     `;
