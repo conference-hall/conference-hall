@@ -272,7 +272,7 @@
   "common.proposals.confirmation": "Réponse des speakers",
   "common.proposals.status": "Statut des propositions",
   "common.proposals": "Propositions",
-  "common.proposed-by": "proposé par <0>{{names, list}}</0>",
+  "common.proposed-by": "#{{routeId}} <0>{{names, list}}</0>",
   "common.remove-item": "Supprimer {{item}}",
   "common.remove": "Supprimer",
   "common.required": "(obligatoire)",

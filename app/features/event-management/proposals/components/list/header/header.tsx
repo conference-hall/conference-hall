@@ -97,7 +97,7 @@ function NewMessagesPill() {
   return (
     <Link
       to={{ search: params.toString() }}
-      className="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:underline"
+      className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-500 hover:underline"
     >
       <StatusPill status="info" size="sm" ping />
       <span>{t('event-management.proposals.list.new-messages')}</span>

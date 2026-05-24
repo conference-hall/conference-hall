@@ -127,7 +127,7 @@ function NewMessagesPill({ comments, speakerConversation }: NewMessagesPillProps
     <button
       type="button"
       onClick={scrollToFirstNew}
-      className="inline-flex cursor-pointer items-center gap-1.5 text-xs text-blue-600 hover:underline"
+      className="inline-flex cursor-pointer items-center gap-1.5 text-xs font-medium text-blue-500 hover:underline"
     >
       <StatusPill status="info" size="sm" ping />
       <span>{t('event-management.proposal-page.new-messages', { count: totalNew })}</span>

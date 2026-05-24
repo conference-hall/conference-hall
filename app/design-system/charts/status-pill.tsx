@@ -1,4 +1,4 @@
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
 
 const styles = cva('flex shrink-0 rounded-full', {
   variants: {
@@ -30,16 +30,16 @@ const pingStyles = cva('absolute inline-flex h-full w-full rounded-full opacity-
   defaultVariants: { status: 'info' },
 });
 
-export type StatusPillProps = VariantProps<typeof styles> & { ping?: boolean };
+export type StatusPillProps = VariantProps<typeof styles> & { ping?: boolean; className?: string };
 
-export function StatusPill({ ping, ...props }: StatusPillProps) {
+export function StatusPill({ ping, className, ...props }: StatusPillProps) {
   if (ping) {
     return (
-      <span className="relative flex shrink-0" aria-hidden="true">
+      <span className={cx('relative flex shrink-0', className)} aria-hidden="true">
         <span className={`${pingStyles(props)} animate-ping`} />
         <span className={styles(props)} />
       </span>
     );
   }
-  return <span className={styles(props)} aria-hidden="true" />;
+  return <span className={cx(styles(props), className)} aria-hidden="true" />;
 }
