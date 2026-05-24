@@ -6,7 +6,7 @@ const styles = cva('flex shrink-0 rounded-full', {
       success: 'bg-green-400',
       error: 'bg-red-400',
       warning: 'bg-orange-400',
-      info: 'bg-blue-500',
+      info: 'bg-blue-400',
       disabled: 'bg-gray-400',
     },
     size: {

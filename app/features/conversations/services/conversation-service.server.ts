@@ -126,7 +126,7 @@ export class ConversationService {
           id: message.id,
           sender: {
             userId: participant?.user?.id || '',
-            name: participant?.user?.name || '',
+            name: participant?.user?.name || 'System',
             picture: participant?.user?.picture || null,
             role: participant?.role,
           },

@@ -273,6 +273,7 @@ export class ProposalSearchBuilder {
         LEFT JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${this.userId}
         WHERE c."proposalId" = p.id
           AND c."type" = 'PROPOSAL_SPEAKER_CONVERSATION'
+          AND cm."senderId" != ${this.userId}
           AND (cp.id IS NULL OR cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
       )
       OR EXISTS (
@@ -282,6 +283,7 @@ export class ProposalSearchBuilder {
         INNER JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${this.userId}
         WHERE c."proposalId" = p.id
           AND c."type" = 'PROPOSAL_REVIEW_COMMENTS'
+          AND cm."senderId" != ${this.userId}
           AND (cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
       )
     )`;
