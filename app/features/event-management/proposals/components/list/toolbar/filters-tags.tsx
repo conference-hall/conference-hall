@@ -10,9 +10,9 @@ export function FiltersTags({ filters }: FiltersBadgesProps) {
   const { t } = useTranslation();
   const { event } = useCurrentEventTeam();
 
-  const { query, reviews, status, confirmation, formats, categories, tags } = filters;
+  const { query, reviews, status, confirmation, messages, formats, categories, tags } = filters;
 
-  const hasFilters = Boolean(query || reviews || status || confirmation || formats || categories || tags);
+  const hasFilters = Boolean(query || reviews || status || confirmation || messages || formats || categories || tags);
   if (!hasFilters) return null;
 
   return (
@@ -24,6 +24,7 @@ export function FiltersTags({ filters }: FiltersBadgesProps) {
       {reviews?.toSorted().map((review) => (
         <FilterTag key={review} name="reviews" value={t(`common.review.status.${review}`)} specificValue={review} />
       ))}
+      <FilterTag name="messages" value={messages ? t('event-management.proposals.list.new-messages') : undefined} />
       <FilterTag name="status" value={status ? t(`common.proposals.status.${status}`) : undefined} />
       <FilterTag name="confirmation" value={confirmation ? t(`common.proposals.status.${confirmation}`) : undefined} />
       <FilterTag name="formats" value={event.formats.find((format) => format.id === formats)?.name} />

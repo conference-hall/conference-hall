@@ -1,5 +1,7 @@
 import { Trans, useTranslation } from 'react-i18next';
+import { Link, useSearchParams } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -11,11 +13,20 @@ type Props = {
   total: number;
   totalSelected: number;
   totalReviewed: number;
+  hasNewMessages: boolean;
   selection: string[];
   isAllPagesSelected: boolean;
 };
 
-export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, selection, isAllPagesSelected }: Props) {
+export function ListHeader({
+  checkboxRef,
+  total,
+  totalSelected,
+  totalReviewed,
+  hasNewMessages,
+  selection,
+  isAllPagesSelected,
+}: Props) {
   const { t } = useTranslation();
   const permissions = useUserTeamPermissions();
 
@@ -67,7 +78,29 @@ export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, s
           </div>
         )}
       </div>
-      <ReviewsProgress reviewed={totalReviewed} total={total} />
+      <div className="flex items-center gap-4">
+        {hasNewMessages && <NewMessagesPill />}
+        <ReviewsProgress reviewed={totalReviewed} total={total} />
+      </div>
     </List.Header>
+  );
+}
+
+function NewMessagesPill() {
+  const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+
+  const params = new URLSearchParams(searchParams);
+  params.set('messages', 'new');
+  params.delete('page');
+
+  return (
+    <Link
+      to={{ search: params.toString() }}
+      className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-500 hover:underline"
+    >
+      <StatusPill status="info" size="sm" ping />
+      <span>{t('event-management.proposals.list.new-messages')}</span>
+    </Link>
   );
 }

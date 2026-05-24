@@ -19,6 +19,8 @@ const StatusFilterSchema = z.enum(['pending', 'accepted', 'rejected', 'archived'
 
 const ConfirmationFilterSchema = z.enum(['not-answered', 'confirmed', 'declined']).optional();
 
+const MessagesFilterSchema = z.enum(['new']).optional();
+
 const ProposalsFiltersSchema = z.object({
   query: z.string().trim().optional(),
   sort: z.enum(['date', 'reviews', 'favorites', 'my-review', 'comments']).optional(),
@@ -26,6 +28,7 @@ const ProposalsFiltersSchema = z.object({
   reviews: ReviewsFiltersSchema,
   status: StatusFilterSchema,
   confirmation: ConfirmationFilterSchema,
+  messages: MessagesFilterSchema,
   formats: z.string().optional(),
   categories: z.string().optional(),
   tags: z.string().optional(),

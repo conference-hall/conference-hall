@@ -29,12 +29,18 @@ describe('CfpReviewsSearch', () => {
       const event = await eventFactory({ team });
       const tag = await eventProposalTagFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), tags: [tag] });
-      const conversation = await conversationFactory({
+      const reviewConversation = await conversationFactory({
         event,
         proposalId: proposal.id,
         type: 'PROPOSAL_REVIEW_COMMENTS',
       });
-      await conversationMessageFactory({ conversation, sender: owner });
+      await conversationMessageFactory({ conversation: reviewConversation, sender: owner });
+      const speakerConversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+      await conversationMessageFactory({ conversation: speakerConversation, sender: speaker });
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const proposals = await CfpReviewsSearch.for(authorizedEvent).search({ status: 'pending' });
@@ -56,11 +62,12 @@ describe('CfpReviewsSearch', () => {
             you: { note: null, feeling: null },
           },
           commentCount: 1,
+          hasNewMessages: true,
         },
       ]);
 
       expect(proposals.filters).toEqual({ status: 'pending' });
-      expect(proposals.statistics).toEqual({ reviewed: 0, total: 1 });
+      expect(proposals.statistics).toEqual({ reviewed: 0, total: 1, hasNewMessages: true });
       expect(proposals.pagination).toEqual({ current: 1, total: 1 });
     });
 
@@ -96,7 +103,7 @@ describe('CfpReviewsSearch', () => {
 
       expect(proposals.results).toEqual([]);
       expect(proposals.filters).toEqual({});
-      expect(proposals.statistics).toEqual({ reviewed: 0, total: 0 });
+      expect(proposals.statistics).toEqual({ reviewed: 0, total: 0, hasNewMessages: false });
       expect(proposals.pagination).toEqual({ current: 1, total: 0 });
     });
 

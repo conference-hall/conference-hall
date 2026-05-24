@@ -403,6 +403,70 @@ describe('ConversationService', () => {
       expect(messages).toEqual([]);
     });
 
+    it('creates a participant with lastSeenAt on first open', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+      await conversationMessageFactory({
+        conversation,
+        sender: organizer,
+        role: ConversationParticipantRole.ORGANIZER,
+      });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
+      });
+
+      await service.getConversation(event.id);
+
+      const participant = await db.conversationParticipant.findUnique({
+        where: { conversationId_userId: { conversationId: conversation.id, userId: speaker.id } },
+      });
+      expect(participant?.role).toBe(ConversationParticipantRole.SPEAKER);
+      expect(participant?.lastSeenAt).toEqual(new Date('2023-01-01'));
+    });
+
+    it('updates lastSeenAt on subsequent opens', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+      await conversationMessageFactory({
+        conversation,
+        sender: speaker,
+        role: ConversationParticipantRole.SPEAKER,
+      });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
+      });
+
+      // First open
+      await service.getConversation(event.id);
+
+      // Advance time and open again
+      vi.setSystemTime(new Date('2023-06-01'));
+      await service.getConversation(event.id);
+
+      const participant = await db.conversationParticipant.findUnique({
+        where: { conversationId_userId: { conversationId: conversation.id, userId: speaker.id } },
+      });
+      expect(participant?.lastSeenAt).toEqual(new Date('2023-06-01'));
+    });
+
     it('returns messages with sender and reactions', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
@@ -506,6 +570,141 @@ describe('ConversationService', () => {
 
       expect(messages[0].reactions[0].reacted).toBe(true);
       expect(messages[0].reactions[0].reactedBy.length).toBe(2);
+    });
+
+    it('marks messages from others after lastSeenAt as new', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+
+      // Speaker sends a message before organizer's first visit
+      await conversationMessageFactory({
+        conversation,
+        sender: speaker,
+        role: ConversationParticipantRole.SPEAKER,
+        attributes: { content: 'Old message', createdAt: new Date('2022-12-01') },
+      });
+
+      // Organizer opens the conversation (sets lastSeenAt to 2023-01-01)
+      const service = new ConversationService({
+        userId: organizer.id,
+        role: 'ORGANIZER',
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
+      });
+      await service.getConversation(event.id);
+
+      // Speaker sends a new message after organizer's visit
+      await conversationMessageFactory({
+        conversation,
+        sender: speaker,
+        role: ConversationParticipantRole.SPEAKER,
+        attributes: { content: 'New message', createdAt: new Date('2023-02-01') },
+      });
+
+      // Organizer opens again
+      const messages = await service.getConversation(event.id);
+
+      const oldMessage = messages.find((m) => m.content === 'Old message');
+      const newMessage = messages.find((m) => m.content === 'New message');
+      expect(oldMessage?.isNew).toBe(false);
+      expect(newMessage?.isNew).toBe(true);
+    });
+
+    it('never marks messages from the current user as new', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
+      });
+
+      // First visit sets lastSeenAt
+      await service.getConversation(event.id);
+
+      // Speaker sends a message after their own lastSeenAt
+      await conversationMessageFactory({
+        conversation,
+        sender: speaker,
+        role: ConversationParticipantRole.SPEAKER,
+        attributes: { content: 'My own message', createdAt: new Date('2023-06-01') },
+      });
+
+      vi.setSystemTime(new Date('2023-07-01'));
+      const messages = await service.getConversation(event.id);
+
+      expect(messages[0].isNew).toBe(false);
+    });
+
+    it('marks all messages from others as new on first visit', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+
+      await conversationMessageFactory({
+        conversation,
+        sender: organizer,
+        role: ConversationParticipantRole.ORGANIZER,
+        attributes: { content: 'Welcome!', createdAt: new Date('2022-06-01') },
+      });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
+      });
+
+      const messages = await service.getConversation(event.id);
+      expect(messages[0].isNew).toBe(true);
+    });
+
+    it('marks messages before lastSeenAt as not new', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const conversation = await conversationFactory({
+        event,
+        proposalId: proposal.id,
+        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      });
+
+      await conversationMessageFactory({
+        conversation,
+        sender: organizer,
+        role: ConversationParticipantRole.ORGANIZER,
+        attributes: { content: 'Old message', createdAt: new Date('2022-06-01') },
+      });
+
+      const service = new ConversationService({
+        userId: speaker.id,
+        role: 'SPEAKER',
+        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
+        proposalId: proposal.id,
+      });
+
+      // First visit marks all as seen
+      await service.getConversation(event.id);
+
+      // Second visit - message is now old
+      vi.setSystemTime(new Date('2023-06-01'));
+      const messages = await service.getConversation(event.id);
+      expect(messages[0].isNew).toBe(false);
     });
 
     it('sorts reactions by earliest reaction date', async () => {

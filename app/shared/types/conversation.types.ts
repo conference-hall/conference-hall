@@ -13,4 +13,5 @@ export type Message = {
   content: string;
   reactions: Array<EmojiReaction>;
   sentAt: Date;
+  isNew?: boolean;
 };

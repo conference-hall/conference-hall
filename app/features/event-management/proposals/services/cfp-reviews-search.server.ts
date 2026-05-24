@@ -1,5 +1,7 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
+import { db } from '../../../../../prisma/db.server.ts';
+import { Prisma } from '../../../../../prisma/generated/client.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
 
@@ -16,14 +18,15 @@ export class CfpReviewsSearch {
     const search = new ProposalSearchBuilder(event.id, userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
       withReviews: true,
+      withMessages: true,
     });
-    const statistics = await search.statistics();
+    const [statistics, hasNewMessages] = await Promise.all([search.statistics(), this.hasNewMessages()]);
     const pagination = new Pagination({ page, total: statistics.total });
     const proposals = await search.proposalsByPage(pagination);
 
     return {
       filters,
-      statistics,
+      statistics: { ...statistics, hasNewMessages },
       pagination: { current: pagination.page, total: pagination.pageCount },
       results: proposals.map((proposal) => ({
         id: proposal.id,
@@ -43,8 +46,47 @@ export class CfpReviewsSearch {
           you: proposal.reviews.you,
         },
         commentCount: proposal.commentCount,
+        hasNewMessages: proposal.hasNewMessages,
       })),
     };
+  }
+
+  private async hasNewMessages(): Promise<boolean> {
+    const { event, userId } = this.authorizedEvent;
+    const rows = await db.$queryRaw<Array<{ exists: boolean }>>(
+      Prisma.sql`
+        SELECT EXISTS (
+          SELECT 1
+          FROM proposals p
+          WHERE p."eventId" = ${event.id}
+            AND p."isDraft" IS FALSE
+            AND p."archivedAt" IS NULL
+            AND (
+              EXISTS (
+                SELECT 1
+                FROM conversations c
+                INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+                LEFT JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${userId}
+                WHERE c."proposalId" = p.id
+                  AND c."type" = 'PROPOSAL_SPEAKER_CONVERSATION'
+                  AND cm."senderId" != ${userId}
+                  AND (cp.id IS NULL OR cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+              )
+              OR EXISTS (
+                SELECT 1
+                FROM conversations c
+                INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+                INNER JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${userId}
+                WHERE c."proposalId" = p.id
+                  AND c."type" = 'PROPOSAL_REVIEW_COMMENTS'
+                  AND cm."senderId" != ${userId}
+                  AND (cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+              )
+            )
+        ) AS "exists"
+      `,
+    );
+    return rows[0].exists;
   }
 
   async autocomplete(filters: ProposalsFilters) {

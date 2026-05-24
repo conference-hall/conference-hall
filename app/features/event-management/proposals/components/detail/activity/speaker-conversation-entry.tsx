@@ -25,7 +25,10 @@ export function SpeakerConversationEntry({ messages, speakers, canManageConversa
         </div>
       }
     >
-      <div className="flex flex-col justify-between gap-2 rounded-md bg-blue-50/50 p-3 ring-1 ring-blue-200 ring-inset sm:flex-row sm:items-center">
+      <div
+        id="speaker-conversation-entry"
+        className="flex flex-col justify-between gap-2 rounded-md bg-blue-50/50 p-3 ring-1 ring-blue-200 ring-inset sm:flex-row sm:items-center"
+      >
         <div className="flex flex-col truncate sm:flex-row sm:items-center sm:gap-1">
           <AvatarGroup avatars={speakers} size="xs" className="hidden pr-2 sm:flex" />
           <Text size="s" weight="semibold">

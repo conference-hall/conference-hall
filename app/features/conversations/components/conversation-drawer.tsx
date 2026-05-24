@@ -65,6 +65,7 @@ export function ConversationDrawer({ messages, recipients = [], children, canMan
                   channel="speaker"
                   message={message}
                   canManageConversations={canManageConversations}
+                  isNew={message.isNew}
                   onOptimisticSave={onOptimisticSaveMessage}
                   onOptimisticDelete={onOptimisticDeleteMessage}
                 />

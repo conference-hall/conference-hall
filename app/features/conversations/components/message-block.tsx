@@ -21,6 +21,7 @@ type Props = {
   onOptimisticDelete?: (id: string) => void;
   canManageConversations?: boolean;
   showRoleBadge?: boolean;
+  isNew?: boolean;
   className?: string;
 };
 
@@ -31,6 +32,7 @@ export function MessageBlock({
   onOptimisticDelete,
   canManageConversations = false,
   showRoleBadge = true,
+  isNew = false,
   className,
 }: Props) {
   const { t } = useTranslation();
@@ -43,7 +45,8 @@ export function MessageBlock({
     <div
       id={message.id}
       className={cx(
-        'group relative w-full space-y-1.5 rounded-md bg-white p-4 ring-1 ring-gray-200 ring-inset',
+        'group relative w-full space-y-1.5 rounded-md bg-white p-4 ring-1 ring-inset',
+        isNew ? 'ring-blue-400' : 'ring-gray-200',
         className,
       )}
     >

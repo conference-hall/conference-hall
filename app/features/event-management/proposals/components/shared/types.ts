@@ -19,5 +19,6 @@ export type ProposalData = {
   speakers: Array<{ name: string | null }>;
   reviews: { summary?: GlobalReview; you: UserReview };
   commentCount: number;
+  hasNewMessages: boolean;
   tags: Array<Tag>;
 };

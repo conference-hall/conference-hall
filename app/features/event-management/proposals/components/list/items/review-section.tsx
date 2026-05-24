@@ -15,16 +15,16 @@ export function ReviewSection({ reviews, commentCount }: ReviewSectionProps) {
   const { you, summary } = reviews;
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2">
       {commentCount > 0 ? <ReviewComments count={commentCount} /> : null}
-      <div className="flex items-center divide-x rounded-lg border border-gray-200 bg-white py-1">
+      <div className="flex items-center rounded-lg py-1">
         <div className="flex items-center gap-2 px-2.5">
-          <span className="text-[10px] font-semibold text-gray-400 uppercase">{t('common.you')}</span>
+          <span className="text-[11px] font-semibold text-gray-400 uppercase">{t('common.you')}</span>
           <ReviewNote feeling={you.feeling} note={you.note} size="xs" />
         </div>
         {summary ? (
           <div className="flex items-center gap-2.5 px-2.5">
-            <span className="text-[10px] font-semibold text-gray-400 uppercase">{t('common.team')}</span>
+            <span className="text-[11px] font-semibold text-gray-400 uppercase">{t('common.team')}</span>
             {summary.positives > 0 ? <ReviewNote feeling="POSITIVE" note={summary.positives} size="xs" raw /> : null}
             <ReviewNote feeling="NEUTRAL" note={summary.average} size="xs" />
           </div>

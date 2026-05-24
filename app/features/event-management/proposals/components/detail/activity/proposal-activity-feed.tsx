@@ -64,6 +64,7 @@ export function ProposalActivityFeed({
             message={message}
             canManageConversations={canManageConversations}
             showRoleBadge={false}
+            isNew={message.isNew}
           />
         </ActivityFeed.Entry>
       ))}

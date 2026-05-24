@@ -92,39 +92,48 @@ export class ConversationService {
   }
 
   async getConversation(eventId: string) {
-    const { userId, type, proposalId } = this.context;
+    const { userId, role, type, proposalId } = this.context;
 
     // Get conversation
     const conversation = await db.conversation.findFirst({
       where: { type, proposalId, event: { id: eventId } },
       include: {
-        participants: true,
-        messages: {
-          include: { reactions: true },
-          orderBy: { createdAt: 'asc' },
-        },
+        participants: { include: { user: true } },
+        messages: { include: { reactions: true }, orderBy: { createdAt: 'asc' } },
       },
     });
 
     if (!conversation) return [];
 
-    const users = await db.user.findMany({ where: { id: { in: conversation.participants.map((p) => p.userId) } } });
+    // Read previous lastSeenAt before updating it
+    const currentParticipant = conversation.participants.find((p) => p.userId === userId);
+    const previousLastSeenAt = currentParticipant?.lastSeenAt;
+
+    // Track read state: upsert participant with lastSeenAt
+    await db.conversationParticipant.upsert({
+      where: { conversationId_userId: { conversationId: conversation.id, userId } },
+      create: { conversationId: conversation.id, userId, role, lastSeenAt: new Date() },
+      update: { lastSeenAt: new Date() },
+    });
+
+    const users = conversation.participants.map((participant) => participant.user);
 
     return (
       conversation?.messages.map((message) => {
         const participant = conversation.participants.find((p) => p.userId === message.senderId);
-        const sender = users.find((user) => user.id === participant?.userId);
+        const isNew = !previousLastSeenAt || message.createdAt > previousLastSeenAt;
         return {
           id: message.id,
           sender: {
-            userId: sender?.id || '',
-            name: sender?.name || 'System',
-            picture: sender?.picture || null,
+            userId: participant?.user?.id || '',
+            name: participant?.user?.name || 'System',
+            picture: participant?.user?.picture || null,
             role: participant?.role,
           },
           content: message.content,
           reactions: this.mapReactions(message.reactions, users, userId),
           sentAt: message.createdAt,
+          isNew: isNew && message.senderId !== userId,
         };
       }) || []
     );
