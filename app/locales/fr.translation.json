@@ -75,6 +75,7 @@
   "auth.signin.auth-provider.twitter-deprecated.content": "La connexion via X n'est plus prise en charge. Si vous utilisiez X pour accéder à votre compte, vous pouvez y accéder à nouveau en <0>réinitialisant votre mot de passe avec l'adresse e-mail associée à votre compte X.</0>",
   "auth.signin.auth-provider.twitter-deprecated.action": "Reset my password",
   "auth.signin.heading": "Connectez-vous à votre compte",
+  "auth.signin.last-used": "Dernière connexion utilisée",
   "auth.signin.no-account": "Vous n'avez pas de compte ?",
   "auth.signup.has-account": "Vous avez déjà un compte ?",
   "common.accept-invitation": "Accepter l'invitation",
