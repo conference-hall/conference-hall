@@ -1,3 +1,4 @@
+import { parseCookies } from 'better-auth/cookies';
 import { useTranslation } from 'react-i18next';
 import { href, redirect, useNavigate, useSearchParams } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
@@ -17,16 +18,20 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Login | Conference Hall' }]);
 };
 
-export const loader = async ({ context }: Route.LoaderArgs) => {
+export const loader = async ({ request, context }: Route.LoaderArgs) => {
   const user = context.get(OptionalAuthContext);
   if (user) return redirect('/');
 
   const { CAPTCHA_SITE_KEY } = getWebServerEnv();
-  return { captchaSiteKey: CAPTCHA_SITE_KEY };
+
+  const cookies = parseCookies(request.headers.get('cookie') ?? '');
+  const lastLoginMethod = cookies.get('better-auth.last_used_login_method') ?? null;
+
+  return { captchaSiteKey: CAPTCHA_SITE_KEY, lastLoginMethod };
 };
 
 export default function Signin({ loaderData }: Route.ComponentProps) {
-  const { captchaSiteKey } = loaderData;
+  const { captchaSiteKey, lastLoginMethod } = loaderData;
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -52,13 +57,14 @@ export default function Signin({ loaderData }: Route.ComponentProps) {
           redirectTo={redirectTo}
           captchaSiteKey={captchaSiteKey}
           forgotPasswordPath={forgotPasswordPath}
+          lastLoginMethod={lastLoginMethod}
           onSuccess={() => navigate(redirectTo, { replace: true })}
           onEmailNotVerified={() => navigate('/auth/email-verification')}
         />
 
         <DividerWithLabel label={t('common.or')} />
 
-        <AuthProvidersSignin redirectTo={redirectTo} showDeprecated />
+        <AuthProvidersSignin redirectTo={redirectTo} lastLoginMethod={lastLoginMethod} showDeprecated />
       </Card>
 
       <footer className="my-8 flex justify-center gap-2">

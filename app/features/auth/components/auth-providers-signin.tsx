@@ -7,10 +7,11 @@ import { XIcon } from '~/design-system/icons/x-icon.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { authClient } from '~/shared/authentication/auth-client.ts';
 import { PROVIDERS, type ProviderId } from '~/shared/authentication/auth-providers.ts';
+import { LastSignInUsed } from './last-sign-in-used.tsx';
 
-type AuthProvidersSigninProps = { redirectTo: string; showDeprecated?: boolean };
+type AuthProvidersSigninProps = { redirectTo: string; lastLoginMethod?: string | null; showDeprecated?: boolean };
 
-export function AuthProvidersSignin({ redirectTo, showDeprecated }: AuthProvidersSigninProps) {
+export function AuthProvidersSignin({ redirectTo, lastLoginMethod, showDeprecated }: AuthProvidersSigninProps) {
   const { t } = useTranslation();
 
   const signIn = async (provider: ProviderId) => {
@@ -20,9 +21,12 @@ export function AuthProvidersSignin({ redirectTo, showDeprecated }: AuthProvider
   return (
     <div className="flex flex-col gap-4">
       {PROVIDERS.map(({ id, label, icon: Icon }) => (
-        <Button key={id} type="button" onClick={() => signIn(id)} iconLeft={Icon} variant="secondary">
-          {t('auth.signin.auth-provider', { label })}
-        </Button>
+        <div key={id}>
+          <Button type="button" onClick={() => signIn(id)} iconLeft={Icon} variant="secondary" className="w-full">
+            {t('auth.signin.auth-provider', { label })}
+          </Button>
+          {lastLoginMethod === id && <LastSignInUsed />}
+        </div>
       ))}
       {showDeprecated ? <DeprecatedTwitterProvider /> : null}
     </div>

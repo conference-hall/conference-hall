@@ -12,12 +12,14 @@ import { getAuthError } from '~/shared/authentication/auth-errors.ts';
 import { useNonce } from '~/shared/nonce/use-nonce.ts';
 import type { I18nSubmissionErrors } from '~/shared/types/errors.types.ts';
 import { validateRequiredEmailAndPassword } from '~/shared/validators/auth.ts';
+import { LastSignInUsed } from './last-sign-in-used.tsx';
 
 type SigninFormProps = {
   defaultEmail: string;
   redirectTo: string;
   captchaSiteKey: string | undefined;
   forgotPasswordPath: string;
+  lastLoginMethod?: string | null;
   onSuccess: () => void;
   onEmailNotVerified: () => void;
 };
@@ -27,6 +29,7 @@ export function SigninForm({
   redirectTo,
   captchaSiteKey,
   forgotPasswordPath,
+  lastLoginMethod,
   onSuccess,
   onEmailNotVerified,
 }: SigninFormProps) {
@@ -108,9 +111,12 @@ export function SigninForm({
         />
       )}
 
-      <Button type="submit" variant="primary" loading={loading} className="mt-2 w-full">
-        {t('auth.common.sign-in')}
-      </Button>
+      <div>
+        <Button type="submit" variant="primary" loading={loading} className="w-full">
+          {t('auth.common.sign-in')}
+        </Button>
+        {lastLoginMethod === 'email' && <LastSignInUsed />}
+      </div>
 
       {error ? (
         <Callout variant="error" role="alert">

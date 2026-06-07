@@ -75,6 +75,7 @@
   "auth.signin.auth-provider.twitter-deprecated.content": "We no longer support signing in with X. If you previously used X to access your account, you can still get back in. <0>Just reset your password using the email address associated with your X account.</0>",
   "auth.signin.auth-provider.twitter-deprecated.action": "Reset my password",
   "auth.signin.heading": "Sign in to your account",
+  "auth.signin.last-used": "Last used",
   "auth.signin.no-account": "Don't have an account?",
   "auth.signup.has-account": "Already have an account?",
   "common.accept-invitation": "Accept invitation",

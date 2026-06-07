@@ -1,7 +1,7 @@
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { hashPassword, verifyPassword } from 'better-auth/crypto';
 import { betterAuth } from 'better-auth/minimal';
-import { captcha, testUtils } from 'better-auth/plugins';
+import { captcha, testUtils, lastLoginMethod } from 'better-auth/plugins';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import VerificationEmail from '~/shared/emails/templates/auth/email-verification.email.tsx';
 import ResetPasswordEmail from '~/shared/emails/templates/auth/reset-password.email.tsx';
@@ -124,9 +124,14 @@ function getSecondaryStorage() {
 
 function getPlugins() {
   const plugins = [];
+  // last login method plugin
+  plugins.push(lastLoginMethod({ maxAge: 60 * 60 * 24 * 365 }));
+
+  // captcha plugin
   if (webEnv.CAPTCHA_SECRET_KEY) {
     plugins.push(captcha({ provider: 'cloudflare-turnstile', secretKey: webEnv.CAPTCHA_SECRET_KEY }));
   }
+  // test utils plugin
   if (NODE_ENV === 'test') {
     plugins.push(testUtils());
   }
