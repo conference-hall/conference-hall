@@ -466,6 +466,7 @@ model Conversation {
   participants ConversationParticipant[]
 
   @@unique([proposalId, type])
+  @@index([eventId])
   @@map("conversations")
 }
 
@@ -506,6 +507,7 @@ model ConversationParticipant {
   lastSeenAt     DateTime?
 
   @@unique([conversationId, userId])
+  @@index([userId])
   @@map("conversation_participants")
 }
 

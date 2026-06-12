@@ -57,30 +57,23 @@ export class CfpReviewsSearch {
       Prisma.sql`
         SELECT EXISTS (
           SELECT 1
-          FROM proposals p
-          WHERE p."eventId" = ${event.id}
+          FROM conversations c
+          INNER JOIN proposals p ON p.id = c."proposalId"
             AND p."isDraft" IS FALSE
             AND p."archivedAt" IS NULL
+          INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
+          LEFT JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${userId}
+          WHERE c."eventId" = ${event.id}
+            AND cm."senderId" != ${userId}
             AND (
-              EXISTS (
-                SELECT 1
-                FROM conversations c
-                INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
-                LEFT JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${userId}
-                WHERE c."proposalId" = p.id
-                  AND c."type" = 'PROPOSAL_SPEAKER_CONVERSATION'
-                  AND cm."senderId" != ${userId}
-                  AND (cp.id IS NULL OR cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+              (
+                c."type" = 'PROPOSAL_SPEAKER_CONVERSATION'
+                AND (cp.id IS NULL OR cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
               )
-              OR EXISTS (
-                SELECT 1
-                FROM conversations c
-                INNER JOIN conversation_messages cm ON cm."conversationId" = c.id
-                INNER JOIN conversation_participants cp ON cp."conversationId" = c.id AND cp."userId" = ${userId}
-                WHERE c."proposalId" = p.id
-                  AND c."type" = 'PROPOSAL_REVIEW_COMMENTS'
-                  AND cm."senderId" != ${userId}
-                  AND (cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
+              OR (
+                c."type" = 'PROPOSAL_REVIEW_COMMENTS'
+                AND cp.id IS NOT NULL
+                AND (cp."lastSeenAt" IS NULL OR cm."createdAt" > cp."lastSeenAt")
               )
             )
         ) AS "exists"

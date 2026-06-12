@@ -107,6 +107,133 @@ describe('CfpReviewsSearch', () => {
       expect(proposals.pagination).toEqual({ current: 1, total: 0 });
     });
 
+    describe('statistics.hasNewMessages', () => {
+      it('returns true for a speaker conversation message even when the user is not a participant', async () => {
+        const event = await eventFactory({ team });
+        const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        await conversationMessageFactory({ conversation, sender: speaker });
+
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposals = await CfpReviewsSearch.for(authorizedEvent).search({});
+
+        expect(proposals.statistics.hasNewMessages).toBe(true);
+      });
+
+      it('returns false for a review comments conversation when the user is not a participant', async () => {
+        const event = await eventFactory({ team });
+        const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_REVIEW_COMMENTS',
+        });
+        await conversationMessageFactory({ conversation, sender: member });
+
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposals = await CfpReviewsSearch.for(authorizedEvent).search({});
+
+        expect(proposals.statistics.hasNewMessages).toBe(false);
+      });
+
+      it('returns true for a review comments conversation when the participant user has never seen it', async () => {
+        const event = await eventFactory({ team });
+        const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_REVIEW_COMMENTS',
+          attributes: {
+            participants: { create: { user: { connect: { id: owner.id } }, role: 'ORGANIZER' } },
+          },
+        });
+        await conversationMessageFactory({ conversation, sender: member });
+
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposals = await CfpReviewsSearch.for(authorizedEvent).search({});
+
+        expect(proposals.statistics.hasNewMessages).toBe(true);
+      });
+
+      it('returns false when the user has seen all messages', async () => {
+        const event = await eventFactory({ team });
+        const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_REVIEW_COMMENTS',
+          attributes: {
+            participants: {
+              create: { user: { connect: { id: owner.id } }, role: 'ORGANIZER', lastSeenAt: new Date() },
+            },
+          },
+        });
+        await conversationMessageFactory({
+          conversation,
+          sender: member,
+          attributes: { createdAt: new Date(Date.now() - 60_000) },
+        });
+
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposals = await CfpReviewsSearch.for(authorizedEvent).search({});
+
+        expect(proposals.statistics.hasNewMessages).toBe(false);
+      });
+
+      it('returns false when the only messages are sent by the user', async () => {
+        const event = await eventFactory({ team });
+        const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        await conversationMessageFactory({ conversation, sender: owner });
+
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposals = await CfpReviewsSearch.for(authorizedEvent).search({});
+
+        expect(proposals.statistics.hasNewMessages).toBe(false);
+      });
+
+      it('returns false for unseen messages on draft or archived proposals', async () => {
+        const event = await eventFactory({ team });
+        const draft = await proposalFactory({
+          event,
+          talk: await talkFactory({ speakers: [speaker] }),
+          traits: ['draft'],
+        });
+        const archived = await proposalFactory({
+          event,
+          talk: await talkFactory({ speakers: [speaker] }),
+          traits: ['archived'],
+        });
+        for (const proposal of [draft, archived]) {
+          const conversation = await conversationFactory({
+            event,
+            proposalId: proposal.id,
+            type: 'PROPOSAL_SPEAKER_CONVERSATION',
+          });
+          await conversationMessageFactory({ conversation, sender: speaker });
+        }
+
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposals = await CfpReviewsSearch.for(authorizedEvent).search({});
+
+        expect(proposals.statistics.hasNewMessages).toBe(false);
+      });
+    });
+
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       const event = await eventFactory();
