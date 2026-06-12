@@ -318,7 +318,7 @@ export class ProposalSearchBuilder {
         Prisma.sql`EXISTS (
           SELECT 1 FROM "_proposals_speakers" ps
           JOIN event_speakers es ON es.id = ps."A"
-          WHERE ps."B" = p.id AND es.name ILIKE ${'%' + escapedValue + '%'}
+          WHERE ps."B" = p.id AND es."eventId" = ${this.eventId} AND es.name ILIKE ${'%' + escapedValue + '%'}
         )`,
       );
     }

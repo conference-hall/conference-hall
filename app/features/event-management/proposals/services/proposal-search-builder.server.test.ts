@@ -179,6 +179,13 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
       expect(proposals.length).toBe(4);
     });
 
+    it('filters proposals by speaker name scoped to the event', async () => {
+      const filters = { query: 'parker' };
+      const search = new ProposalSearchBuilder(event2.id, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(1);
+    });
+
     it('does not filter proposals by speaker name when withSpeakers option is false', async () => {
       const filters = { query: 'parker' };
       const search = new ProposalSearchBuilder(event.id, owner.id, filters, {
