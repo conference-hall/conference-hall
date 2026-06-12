@@ -23,9 +23,11 @@ export class UserAccount {
     });
     if (!user) return null;
 
-    const teams = await this.teams();
+    const [teams, notificationsUnreadCount] = await Promise.all([
+      this.teams(),
+      Notifications.for(this.userId).unreadCount(),
+    ]);
     const hasTeamAccess = teams.length > 0 || Boolean(user.organizerKey);
-    const notificationsUnreadCount = await Notifications.for(this.userId).unreadCount();
 
     return {
       id: this.userId,
