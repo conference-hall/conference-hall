@@ -186,6 +186,7 @@ model EventFormat {
   eventId     String
   proposals   Proposal[] @relation("proposals_formats")
 
+  @@index([eventId, order])
   @@map("event_formats")
 }
 
@@ -199,6 +200,7 @@ model EventCategory {
   eventId     String
   proposals   Proposal[] @relation("proposals_categories")
 
+  @@index([eventId, order])
   @@map("event_categories")
 }
 
