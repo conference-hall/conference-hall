@@ -1,5 +1,4 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Background } from '~/design-system/transitions.tsx';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
@@ -23,15 +22,9 @@ export function SessionModal({
   onDeleteSession,
 }: SessionModalProps) {
   const { t } = useTranslation();
-  const [isSearching, setSearching] = useState(false);
-
-  const handleClose = () => {
-    if (isSearching) return setSearching(false);
-    onClose();
-  };
 
   return (
-    <Dialog className="relative z-40" open onClose={handleClose}>
+    <Dialog className="relative z-40" open onClose={onClose}>
       <Background />
 
       <div className="fixed inset-0 z-40 h-full overflow-y-auto">
@@ -46,9 +39,7 @@ export function SessionModal({
               session={session}
               displayedTimes={displayedTimes}
               tracks={tracks}
-              isSearching={isSearching}
-              onFinish={handleClose}
-              onToggleSearch={() => setSearching(!isSearching)}
+              onFinish={onClose}
               onUpdateSession={onUpdateSession}
               onDeleteSession={onDeleteSession}
             />
