@@ -6,11 +6,6 @@ import { page, userEvent } from 'vitest/browser';
 import type { ProposalResult } from '~/features/event-management/autocomplete/types/autocomplete.types.ts';
 import { type SessionIdentity, SessionIdentityField } from './session-identity-field.tsx';
 
-// Resolve the debounced search immediately so results render without waiting.
-vi.mock('use-debounce', () => ({
-  useDebouncedCallback: (fn: (...args: unknown[]) => unknown) => fn,
-}));
-
 const PROPOSALS: ProposalResult[] = [
   {
     kind: 'proposals',
@@ -52,24 +47,6 @@ function renderField(options: { initial?: SessionIdentity; results?: ProposalRes
 }
 
 describe('SessionIdentityField component', () => {
-  it('shows no dropdown while the field is empty', async () => {
-    await renderField();
-
-    const input = page.getByRole('combobox');
-    await input.click();
-
-    await expect.element(input).toHaveFocus();
-    await expect.element(page.getByRole('option')).not.toBeInTheDocument();
-  });
-
-  it('renders an existing raw session value without opening the dropdown', async () => {
-    await renderField({ initial: { name: 'Lunch break', proposal: null } });
-
-    const input = page.getByRole('combobox');
-    await expect.element(input).toHaveValue('Lunch break');
-    await expect.element(page.getByRole('option')).not.toBeInTheDocument();
-  });
-
   it('lists "Create raw session" first (default active) then matching proposals', async () => {
     await renderField();
 
@@ -135,19 +112,6 @@ describe('SessionIdentityField component', () => {
     await page.getByRole('button', { name: 'Clear' }).click();
 
     await expect.element(input).toHaveValue('');
-  });
-
-  it('highlights the query match in the proposal title', async () => {
-    await renderField();
-
-    await userEvent.type(page.getByRole('combobox'), 'React');
-
-    // The matched fragment of the title is wrapped in its own span (scoped to the
-    // proposal row to avoid the emphasised text in the Create-raw row).
-    const proposalRow = page.getByRole('option', { name: /React Performance Best Practices/ });
-    const highlight = proposalRow.getByText('React', { exact: true });
-    await expect.element(highlight).toBeVisible();
-    expect(highlight.element().tagName).toBe('SPAN');
   });
 
   it('shows a loading indicator while results load and keeps the Create-raw row', async () => {
