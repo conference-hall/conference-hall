@@ -21,7 +21,7 @@ export function highlightMatch(text: string, query: string): ReactNode[] {
   while (index !== -1) {
     if (index > cursor) nodes.push(text.slice(cursor, index));
     nodes.push(
-      <span key={key++} className="text-indigo-600">
+      <span key={key++} className="font-bold">
         {text.slice(index, index + needle.length)}
       </span>,
     );

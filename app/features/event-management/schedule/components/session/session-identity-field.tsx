@@ -1,10 +1,12 @@
 import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react';
-import { ArrowTopRightOnSquareIcon, DocumentTextIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ArrowTopRightOnSquareIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
-import { type ChangeEvent, type KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { type ChangeEvent, type KeyboardEvent, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { href, useParams } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
+import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
+import { Subtitle, Text } from '~/design-system/typography.tsx';
 import type { ScheduleProposalData } from '../schedule.types.ts';
 import { highlightMatch } from './highlight-match.tsx';
 import { useProposalSearch } from './use-proposal-search.ts';
@@ -25,27 +27,11 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
 
   const [focused, setFocused] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const pendingFocus = useRef(false);
-
-  // Autofocus only for a brand-new empty session, never when editing an existing one.
-  const [autoFocus] = useState(() => !name.trim() && !proposal);
-  useEffect(() => {
-    if (autoFocus) inputRef.current?.focus();
-  }, [autoFocus]);
-
-  // Refocus the empty input after detaching a proposal (card → input transition).
-  useEffect(() => {
-    if (!proposal && pendingFocus.current) {
-      pendingFocus.current = false;
-      inputRef.current?.focus();
-    }
-  }, [proposal]);
 
   const { results, isSearching, search } = useProposalSearch();
 
   const trimmed = name.trim();
   const isOpen = focused && trimmed.length > 0 && !dismissed;
-  const showCaption = !proposal && trimmed.length > 0 && !isOpen;
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -57,9 +43,7 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
   const handleSelect = (value: OptionValue | null) => {
     if (!value) return;
     if (value.kind === 'raw') {
-      // "Create raw session" only closes the list; the raw session already exists via `name`.
       setDismissed(true);
-      inputRef.current?.focus();
     } else {
       onChange({ name: '', proposal: value.proposal });
     }
@@ -68,9 +52,7 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
   const handleClear = () => {
     setDismissed(false);
     onChange({ name: '', proposal: null });
-    // The input is uncontrolled (synced via displayValue); clear it imperatively.
     if (inputRef.current) inputRef.current.value = '';
-    inputRef.current?.focus();
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -84,7 +66,6 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
   };
 
   const handleDetach = () => {
-    pendingFocus.current = true;
     onChange({ name: '', proposal: null });
   };
 
@@ -140,7 +121,11 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
             aria-label={t('event-management.schedule.edit-session.identity.clear')}
             className="absolute top-2.5 right-2 z-20 flex size-6 items-center justify-center rounded-md text-gray-400 hover:text-gray-600"
           >
-            <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+            {isSearching ? (
+              <LoadingIcon className="h-4 w-4 shrink-0" aria-label={t('common.loading')} />
+            ) : (
+              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+            )}
           </ComboboxButton>
         ) : null}
 
@@ -155,12 +140,8 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
             <ComboboxOption
               value={{ kind: 'raw' }}
               as="li"
-              className="group flex cursor-default items-center gap-3 rounded-md px-3 py-2 select-none data-focus:bg-indigo-600 data-focus:text-white"
+              className="group flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 select-none data-focus:bg-gray-100"
             >
-              <PencilSquareIcon
-                className="h-5 w-5 shrink-0 text-gray-400 group-data-focus:text-white"
-                aria-hidden="true"
-              />
               <span className="truncate">
                 <Trans
                   i18nKey="event-management.schedule.edit-session.identity.create-raw"
@@ -170,53 +151,31 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
               </span>
             </ComboboxOption>
 
-            {isSearching ? (
-              <li className="px-3 py-2 text-xs text-gray-500" role="presentation">
-                {t('event-management.schedule.edit-session.identity.searching')}
-              </li>
-            ) : results.length > 0 ? (
-              <>
-                <li
-                  className="px-3 pt-2 pb-1 text-[11px] font-medium tracking-wide text-gray-400 uppercase"
-                  role="presentation"
-                >
-                  {t('event-management.schedule.edit-session.identity.proposals')} · {results.length}
-                </li>
-                {results.map((result) => (
-                  <ComboboxOption
-                    value={{ kind: 'proposal', proposal: result }}
-                    as="li"
-                    key={result.id}
-                    className="group flex cursor-default items-center gap-3 rounded-md px-3 py-2 select-none data-focus:bg-gray-100"
-                  >
-                    <DocumentTextIcon
-                      className="h-5 w-5 shrink-0 text-gray-400 group-data-focus:text-indigo-600"
-                      aria-hidden="true"
-                    />
-                    <div className="min-w-0 flex-auto">
-                      <p className="truncate font-medium text-gray-900">{highlightMatch(result.title, trimmed)}</p>
-                      <p className="truncate text-xs text-gray-500">
-                        {result.speakers.map((speaker) => speaker.name).join(', ')}
-                      </p>
-                    </div>
-                  </ComboboxOption>
-                ))}
-              </>
-            ) : (
-              <li className="px-3 py-2 text-xs text-gray-500" role="presentation">
-                <Trans
-                  i18nKey="event-management.schedule.edit-session.identity.no-proposal"
-                  values={{ query: trimmed }}
-                />
-              </li>
-            )}
+            {results.map((result) => (
+              <ComboboxOption
+                value={{ kind: 'proposal', proposal: result }}
+                as="li"
+                key={result.id}
+                className="group flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 select-none data-focus:bg-gray-100"
+              >
+                <div className="min-w-0 flex-auto">
+                  <div className="flex gap-1">
+                    <Text weight="medium" variant="secondary">
+                      #{highlightMatch(result.routeId, trimmed)}
+                    </Text>
+                    <Text weight="medium" truncate>
+                      {highlightMatch(result.title, trimmed)}
+                    </Text>
+                  </div>
+                  <Subtitle size="xs" truncate>
+                    {highlightMatch(t('common.by', { names: result.speakers.map((s) => s.name) }), trimmed)}
+                  </Subtitle>
+                </div>
+              </ComboboxOption>
+            ))}
           </ComboboxOptions>
         ) : null}
       </Combobox>
-
-      {showCaption ? (
-        <p className="mt-1 text-xs text-gray-500">{t('event-management.schedule.edit-session.identity.raw-caption')}</p>
-      ) : null}
     </div>
   );
 }
@@ -231,12 +190,21 @@ function LinkedProposalCard({ proposal, onDetach }: LinkedProposalCardProps) {
   const { team, event } = useParams();
 
   return (
-    <div className="flex items-start justify-between gap-4 rounded-md ring-1 ring-gray-300 ring-inset">
-      <div className="min-w-0 px-3 py-2">
-        <p className="font-semibold text-gray-900">{proposal.title}</p>
-        <p className="truncate text-sm text-gray-500">{proposal.speakers.map((s) => s.name).join(', ')}</p>
+    <div className="flex items-start justify-between gap-4 rounded-md p-3 ring-1 ring-gray-300 ring-inset">
+      <div className="min-w-0">
+        <div className="flex gap-1">
+          <Text weight="medium" variant="secondary">
+            #{proposal.routeId}
+          </Text>
+          <Text weight="medium" truncate>
+            {proposal.title}
+          </Text>
+        </div>
+        <Subtitle size="xs" truncate>
+          {t('common.by', { names: proposal.speakers.map((s) => s.name) })}
+        </Subtitle>
       </div>
-      <div className="flex shrink-0 gap-2 p-2">
+      <div className="flex shrink-0 gap-2">
         <Button
           icon={ArrowTopRightOnSquareIcon}
           label={t('event-management.schedule.edit-session.proposal.see')}
@@ -247,6 +215,7 @@ function LinkedProposalCard({ proposal, onDetach }: LinkedProposalCardProps) {
           })}
           variant="secondary"
           target="_blank"
+          size="sm"
         />
         <Button
           icon={XMarkIcon}
@@ -254,6 +223,7 @@ function LinkedProposalCard({ proposal, onDetach }: LinkedProposalCardProps) {
           type="button"
           onClick={onDetach}
           variant="secondary"
+          size="sm"
         />
       </div>
     </div>

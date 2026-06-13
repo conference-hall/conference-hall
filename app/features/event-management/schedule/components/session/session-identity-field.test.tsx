@@ -52,20 +52,22 @@ function renderField(options: { initial?: SessionIdentity; results?: ProposalRes
 }
 
 describe('SessionIdentityField component', () => {
-  it('autofocuses an empty session and shows no dropdown', async () => {
+  it('shows no dropdown while the field is empty', async () => {
     await renderField();
 
     const input = page.getByRole('combobox');
+    await input.click();
+
     await expect.element(input).toHaveFocus();
     await expect.element(page.getByRole('option')).not.toBeInTheDocument();
   });
 
-  it('does not autofocus when editing an existing raw session and shows the caption', async () => {
+  it('renders an existing raw session value without opening the dropdown', async () => {
     await renderField({ initial: { name: 'Lunch break', proposal: null } });
 
     const input = page.getByRole('combobox');
-    await expect.element(input).not.toHaveFocus();
-    await expect.element(page.getByText('Raw session')).toBeVisible();
+    await expect.element(input).toHaveValue('Lunch break');
+    await expect.element(page.getByRole('option')).not.toBeInTheDocument();
   });
 
   it('lists "Create raw session" first (default active) then matching proposals', async () => {
@@ -73,27 +75,26 @@ describe('SessionIdentityField component', () => {
 
     await userEvent.type(page.getByRole('combobox'), 'React');
 
-    const createRaw = page.getByRole('option', { name: /Create raw session/ });
+    const createRaw = page.getByRole('option', { name: /Name session/ });
     await expect.element(createRaw).toBeVisible();
     await expect.element(createRaw).toHaveAttribute('data-focus');
 
     await expect.element(page.getByRole('option', { name: /React Performance Best Practices/ })).toBeVisible();
-    await expect.element(page.getByText('John Doe')).toBeVisible();
+    await expect.element(page.getByText(/John Doe/)).toBeVisible();
   });
 
-  it('commits a raw session with Enter and shows the caption', async () => {
+  it('commits a raw session with Enter and closes the list', async () => {
     await renderField();
 
     const input = page.getByRole('combobox');
     await userEvent.type(input, 'Coffee break');
     await userEvent.keyboard('{Enter}');
 
-    await expect.element(page.getByText('Raw session')).toBeVisible();
     await expect.element(input).toHaveValue('Coffee break');
     await expect.element(page.getByRole('option')).not.toBeInTheDocument();
   });
 
-  it('links a proposal into a card and switches back to an empty field via change', async () => {
+  it('links a proposal into a card and detaches back to an empty field via change', async () => {
     await renderField();
 
     await userEvent.type(page.getByRole('combobox'), 'React');
@@ -108,8 +109,8 @@ describe('SessionIdentityField component', () => {
     await changeButton.click();
 
     const input = page.getByRole('combobox');
+    await expect.element(input).toBeVisible();
     await expect.element(input).toHaveValue('');
-    await expect.element(input).toHaveFocus();
   });
 
   it('keeps the typed text when the list is dismissed with Esc', async () => {
@@ -117,16 +118,15 @@ describe('SessionIdentityField component', () => {
 
     const input = page.getByRole('combobox');
     await userEvent.type(input, 'Keynote');
-    await expect.element(page.getByRole('option', { name: /Create raw session/ })).toBeVisible();
+    await expect.element(page.getByRole('option', { name: /Name session/ })).toBeVisible();
 
     await userEvent.keyboard('{Escape}');
 
     await expect.element(page.getByRole('option')).not.toBeInTheDocument();
     await expect.element(input).toHaveValue('Keynote');
-    await expect.element(page.getByText('Raw session')).toBeVisible();
   });
 
-  it('clears the typed text and keeps focus with the clear control', async () => {
+  it('clears the typed text with the clear control', async () => {
     await renderField();
 
     const input = page.getByRole('combobox');
@@ -135,15 +135,12 @@ describe('SessionIdentityField component', () => {
     await page.getByRole('button', { name: 'Clear' }).click();
 
     await expect.element(input).toHaveValue('');
-    await expect.element(input).toHaveFocus();
   });
 
-  it('shows a section label with the result count and highlights the title match', async () => {
+  it('highlights the query match in the proposal title', async () => {
     await renderField();
 
     await userEvent.type(page.getByRole('combobox'), 'React');
-
-    await expect.element(page.getByText('Proposals · 2')).toBeVisible();
 
     // The matched fragment of the title is wrapped in its own span (scoped to the
     // proposal row to avoid the emphasised text in the Create-raw row).
@@ -153,24 +150,15 @@ describe('SessionIdentityField component', () => {
     expect(highlight.element().tagName).toBe('SPAN');
   });
 
-  it('shows a "Searching…" line while results load and keeps the Create-raw row', async () => {
+  it('shows a loading indicator while results load and keeps the Create-raw row', async () => {
     await renderField({ neverResolves: true });
 
     await userEvent.type(page.getByRole('combobox'), 'React');
 
-    await expect.element(page.getByText('Searching…')).toBeVisible();
-    await expect.element(page.getByRole('option', { name: /Create raw session/ })).toBeVisible();
+    await expect.element(page.getByLabelText('Loading')).toBeVisible();
+    await expect.element(page.getByRole('option', { name: /Name session/ })).toBeVisible();
     await expect
       .element(page.getByRole('option', { name: /React Performance Best Practices/ }))
       .not.toBeInTheDocument();
-  });
-
-  it('shows a "No proposal matches" line when the search returns nothing', async () => {
-    await renderField({ results: [] });
-
-    await userEvent.type(page.getByRole('combobox'), 'Zzz');
-
-    await expect.element(page.getByText(/No proposal matches/)).toBeVisible();
-    await expect.element(page.getByRole('option', { name: /Create raw session/ })).toBeVisible();
   });
 });
