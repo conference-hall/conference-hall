@@ -215,6 +215,7 @@ function LinkedProposalCard({ proposal, onDetach }: LinkedProposalCardProps) {
           })}
           variant="secondary"
           target="_blank"
+          rel="noreferrer"
           size="sm"
         />
         <Button

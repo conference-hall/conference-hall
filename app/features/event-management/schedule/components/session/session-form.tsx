@@ -67,7 +67,7 @@ export function SessionForm({ session, displayedTimes, tracks, onFinish, onUpdat
           name={name}
           proposal={proposal}
           onChange={(identity) => {
-            setName(identity.name);
+            setName(identity.proposal ? identity.proposal.title : identity.name);
             setProposal(identity.proposal);
           }}
         />
