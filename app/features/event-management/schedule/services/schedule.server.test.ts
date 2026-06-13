@@ -200,6 +200,47 @@ describe('EventSchedule', () => {
       expect(session?.proposalId).toBe(null);
     });
 
+    it('adds a session with details', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const session = await EventSchedule.for(authorizedEvent).addSession({
+        trackId: track.id,
+        start: new Date(schedule.start),
+        end: new Date(schedule.end),
+        name: 'My session',
+        color: 'stone',
+        emojis: ['heart'],
+        language: 'fr',
+      });
+
+      expect(session?.name).toBe('My session');
+      expect(session?.color).toBe('stone');
+      expect(session?.emojis).toEqual(['heart']);
+      expect(session?.language).toBe('fr');
+      expect(session?.proposalId).toBe(null);
+    });
+
+    it('adds a session with a proposal and derives its language', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const talk = await talkFactory({ speakers: [owner], attributes: { languages: ['fr'] } });
+      const proposal = await proposalFactory({ event, talk });
+
+      const session = await EventSchedule.for(authorizedEvent).addSession({
+        trackId: track.id,
+        start: new Date(schedule.start),
+        end: new Date(schedule.end),
+        name: 'ignored when proposal set',
+        proposalId: proposal.id,
+      });
+
+      expect(session?.proposalId).toBe(proposal.id);
+      expect(session?.name).toBe(null);
+      expect(session?.language).toBe('fr');
+    });
+
     it('throws not found Error when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
@@ -420,8 +461,8 @@ describe('EventSchedule', () => {
       await EventSchedule.for(authorizedEvent).saveTracks([track, { ...track2, name: 'Room 2 updated' }]);
 
       const actual = await EventSchedule.for(authorizedEvent).get();
-      expect(actual?.tracks[0].name).toBe('Room 1');
-      expect(actual?.tracks[1].name).toBe('Room 2 updated');
+      const trackNames = actual?.tracks.map((t) => t.name).toSorted();
+      expect(trackNames).toEqual(['Room 1', 'Room 2 updated']);
     });
 
     it('deletes a track', async () => {

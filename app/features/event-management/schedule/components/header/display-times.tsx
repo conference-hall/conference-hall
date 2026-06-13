@@ -21,7 +21,7 @@ export function DisplayTimes({ displayedTimes, onChangeDisplayTime }: Props) {
   return (
     <Popover className="hidden sm:block">
       <PopoverButton as={Button} variant="secondary" iconLeft={ClockIcon}>
-        {`${timeStart} to ${timeEnd}`}
+        {`${timeStart} ${t('common.to')} ${timeEnd}`}
       </PopoverButton>
 
       <PopoverPanel

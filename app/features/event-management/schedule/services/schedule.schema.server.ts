@@ -48,15 +48,15 @@ export const ScheduleSessionCreateSchema = z.object({
   trackId: z.string(),
   start: z.coerce.date(),
   end: z.coerce.date(),
+  name: z.string().trim().optional(),
+  color: z.string().optional(),
+  emojis: z.array(z.string()).optional(),
+  language: z.string().trim().optional(),
+  proposalId: z.string().optional(),
 });
 
 export const ScheduleSessionUpdateSchema = ScheduleSessionCreateSchema.extend({
   id: z.string(),
-  name: z.string().trim().optional(),
-  color: z.string(),
-  emojis: z.array(z.string()),
-  language: z.string().trim().optional(),
-  proposalId: z.string().optional(),
 });
 
 export const SchedulSessionIdSchema = z.string();

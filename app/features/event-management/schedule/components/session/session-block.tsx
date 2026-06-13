@@ -15,6 +15,7 @@ type SessionBlockProps = {
   height: number;
   displayedTimes: { start: number; end: number };
   tracks: Array<Track>;
+  scheduleDays: Array<Date>;
   onUpdateSession: (updated: ScheduleSession) => Promise<boolean>;
   onDeleteSession: (session: ScheduleSession) => Promise<void>;
 };
@@ -24,6 +25,7 @@ export function SessionBlock({
   height,
   displayedTimes,
   tracks,
+  scheduleDays,
   onUpdateSession,
   onDeleteSession,
 }: SessionBlockProps) {
@@ -69,11 +71,13 @@ export function SessionBlock({
 
       {edit && (
         <SessionModal
+          mode="edit"
           session={session}
           displayedTimes={displayedTimes}
           tracks={tracks}
-          onUpdateSession={onUpdateSession}
-          onDeleteSession={onDeleteSession}
+          scheduleDays={scheduleDays}
+          onSubmit={onUpdateSession}
+          onDelete={onDeleteSession}
           onClose={() => setEdit(false)}
         />
       )}
