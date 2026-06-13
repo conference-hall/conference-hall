@@ -2,7 +2,9 @@ import { DocumentTextIcon, EllipsisHorizontalIcon, UserIcon } from '@heroicons/r
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, useFetcher, useNavigate } from 'react-router';
-import type { loader as AutocompleteLoader } from '../autocomplete.ts';
+import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
+import type { loader as AutocompleteLoader } from '../../autocomplete/autocomplete.ts';
+import type { ProposalResult, SpeakerResult } from '../../autocomplete/types/autocomplete.types.ts';
 import { CommandPalette, type CommandPaletteItemData } from './command-palette/command-palette.tsx';
 
 type Props = { team: string; event: string; closeText: string; onClose: VoidFunction };
@@ -21,8 +23,16 @@ export function EventCommandPalette({ team, event, closeText, onClose }: Props) 
   const items = useMemo<CommandPaletteItemData[]>(() => {
     const proposals: CommandPaletteItemData[] =
       fetcher.data
-        ?.filter((item) => item.kind === PROPOSALS_KIND)
-        .map((item) => ({ ...item, section: t('common.proposals'), icon: DocumentTextIcon })) ?? [];
+        ?.filter((item): item is ProposalResult => item.kind === PROPOSALS_KIND)
+        .map((item) => ({
+          section: t('common.proposals'),
+          id: item.routeId,
+          label: item.title,
+          description: sortBy(item.speakers, 'name')
+            .map(({ name }) => name)
+            .join(', '),
+          icon: DocumentTextIcon,
+        })) ?? [];
 
     if (proposals.length === 3) {
       proposals.push({
@@ -35,8 +45,15 @@ export function EventCommandPalette({ team, event, closeText, onClose }: Props) 
 
     const speakers: CommandPaletteItemData[] =
       fetcher.data
-        ?.filter((item) => item.kind === SPEAKERS_KIND)
-        .map((item) => ({ ...item, section: t('common.speakers'), icon: UserIcon })) ?? [];
+        ?.filter((item): item is SpeakerResult => item.kind === SPEAKERS_KIND)
+        .map((item) => ({
+          section: t('common.speakers'),
+          id: item.id,
+          label: item.name ?? '',
+          description: item.company,
+          picture: item.picture,
+          icon: UserIcon,
+        })) ?? [];
 
     if (speakers.length === 3) {
       speakers.push({

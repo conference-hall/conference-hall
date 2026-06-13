@@ -90,7 +90,6 @@ export default [
     route('proposals', './features/event-management/proposals/proposals.tsx'),
     route('proposals/new', './features/event-management/proposals/new-proposal.tsx'),
     route('proposals/:proposal', './features/event-management/proposals/proposal.tsx'),
-    route('proposals/autocomplete', './features/event-management/proposals/autocomplete.tsx'),
 
     // Event speakers page
     route('speakers', './features/event-management/speakers/speakers.tsx'),
@@ -122,8 +121,8 @@ export default [
       route('api', './features/event-management/settings/api.tsx'),
     ]),
 
-    // Event autocomplete for command palette
-    route('autocomplete', './features/event-management/command-palette/autocomplete.ts'),
+    // Event autocomplete (command palette, proposal speakers panel, schedule)
+    route('autocomplete', './features/event-management/autocomplete/autocomplete.ts'),
   ]),
 
   // Event reviews export routes

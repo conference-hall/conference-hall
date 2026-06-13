@@ -81,25 +81,4 @@ export class CfpReviewsSearch {
     );
     return rows[0].exists;
   }
-
-  async autocomplete(filters: ProposalsFilters) {
-    const { event, userId } = this.authorizedEvent;
-
-    const search = new ProposalSearchBuilder(event.id, userId, filters, { withSpeakers: true, withReviews: true });
-    const pagination = new Pagination({ page: 1, total: 10, pageSize: 5 });
-    const proposals = await search.proposalsByPage(pagination);
-
-    return proposals.map((proposal) => {
-      return {
-        id: proposal.id,
-        routeId: proposal.routeId,
-        title: proposal.title,
-        deliberationStatus: proposal.deliberationStatus,
-        confirmationStatus: proposal.confirmationStatus,
-        speakers: event.displayProposalsSpeakers
-          ? proposal.speakers.map(({ name, picture }) => ({ name, picture }))
-          : [],
-      };
-    });
-  }
 }

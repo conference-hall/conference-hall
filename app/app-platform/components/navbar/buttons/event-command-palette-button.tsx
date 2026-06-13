@@ -7,7 +7,6 @@ import { CommandPaletteDialog } from '~/features/event-management/command-palett
 import { EventCommandPalette } from '~/features/event-management/command-palette/components/event-command-palette.tsx';
 
 export function EventCommandPaletteButton() {
-  // todo: should be given by the loader ?
   const { team, event } = useParams();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);

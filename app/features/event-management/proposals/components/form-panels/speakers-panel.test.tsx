@@ -8,15 +8,17 @@ import { SpeakersPanel } from './speakers-panel.tsx';
 const mockFetcher = {
   data: [
     {
+      kind: 'speakers',
       id: 'speaker1',
-      label: 'John Doe',
-      description: 'Senior Developer',
+      name: 'John Doe',
+      company: 'Senior Developer',
       picture: 'https://example.com/john.jpg',
     },
     {
+      kind: 'speakers',
       id: 'speaker2',
-      label: 'Jane Smith',
-      description: 'Tech Lead',
+      name: 'Jane Smith',
+      company: 'Tech Lead',
       picture: 'https://example.com/jane.jpg',
     },
   ],

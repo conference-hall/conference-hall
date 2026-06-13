@@ -1,5 +1,5 @@
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
-import type { ConfirmationStatus, DeliberationStatus, Language } from '~/shared/types/proposals.types.ts';
+import type { Language } from '~/shared/types/proposals.types.ts';
 
 export type Track = { id: string; name: string };
 
@@ -32,10 +32,6 @@ export type ScheduleProposalData = {
   id: string;
   routeId: string;
   title: string;
-  deliberationStatus: DeliberationStatus;
-  confirmationStatus: ConfirmationStatus | null;
-  formats?: Array<{ id: string; name: string }>;
-  categories?: Array<{ id: string; name: string }>;
   speakers: Array<{
     name: string | null;
     picture: string | null;
