@@ -5,21 +5,25 @@ import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SessionForm } from './session-form.tsx';
 
 type SessionModalProps = {
+  mode: 'create' | 'edit';
   session: ScheduleSession;
   displayedTimes: { start: number; end: number };
   tracks: Array<Track>;
+  scheduleDays: Array<Date>;
   onClose: VoidFunction;
-  onUpdateSession: (updated: ScheduleSession) => Promise<boolean>;
-  onDeleteSession: (session: ScheduleSession) => Promise<void>;
+  onSubmit: (session: ScheduleSession) => Promise<boolean>;
+  onDelete?: (session: ScheduleSession) => Promise<void>;
 };
 
 export function SessionModal({
+  mode,
   session,
   displayedTimes,
   tracks,
+  scheduleDays,
   onClose,
-  onUpdateSession,
-  onDeleteSession,
+  onSubmit,
+  onDelete,
 }: SessionModalProps) {
   const { t } = useTranslation();
 
@@ -33,15 +37,17 @@ export function SessionModal({
             as="div"
             className="text:left relative w-full max-w-2xl transform overflow-hidden rounded-lg bg-white shadow-xl transition-all"
           >
-            <DialogTitle className="sr-only">{t('event-management.schedule.edit-session.heading')}</DialogTitle>
+            <DialogTitle className="sr-only">{t(`event-management.schedule.${mode}-session.heading`)}</DialogTitle>
 
             <SessionForm
+              mode={mode}
               session={session}
               displayedTimes={displayedTimes}
               tracks={tracks}
+              scheduleDays={scheduleDays}
               onFinish={onClose}
-              onUpdateSession={onUpdateSession}
-              onDeleteSession={onDeleteSession}
+              onSubmit={onSubmit}
+              onDelete={onDelete}
             />
           </DialogPanel>
         </div>

@@ -1,5 +1,4 @@
 import { useFetchers, useSubmit } from 'react-router';
-import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import { areTimeSlotsOverlapping } from '~/shared/datetimes/timeslots.ts';
 import { timezoneToUtc, utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
@@ -10,27 +9,35 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
 
   const submit = useSubmit();
 
-  const onAdd = async (trackId: string, timeslot: TimeSlot) => {
-    const conflicting = sessions.some((s) => s.trackId === trackId && areTimeSlotsOverlapping(timeslot, s.timeslot));
-    if (conflicting) return;
+  const onAdd = async (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => {
+    const conflicting = sessions.some(
+      (s) => s.trackId === session.trackId && areTimeSlotsOverlapping(session.timeslot, s.timeslot),
+    );
+    if (conflicting) return false;
 
     const id = crypto.randomUUID();
-    await submit(
-      {
-        intent: 'add-session',
-        id,
-        trackId: trackId,
-        start: timezoneToUtc(timeslot.start, timezone).toISOString(),
-        end: timezoneToUtc(timeslot.end, timezone).toISOString(),
-      },
-      {
-        method: 'POST',
-        navigate: false,
-        fetcherKey: `session:${id}`,
-        flushSync: true,
-        preventScrollReset: true,
-      },
-    );
+    const formData = new FormData();
+    formData.set('intent', 'add-session');
+    formData.set('id', id);
+    formData.set('trackId', session.trackId);
+    formData.set('start', timezoneToUtc(session.timeslot.start, timezone).toISOString());
+    formData.set('end', timezoneToUtc(session.timeslot.end, timezone).toISOString());
+    formData.set('color', session.color);
+    formData.set('name', session.name ?? '');
+    formData.set('language', session.language ?? '');
+    formData.set('proposalId', session.proposal?.id ?? '');
+    for (const emoji of session.emojis) {
+      formData.append('emojis', emoji);
+    }
+
+    await submit(formData, {
+      method: 'POST',
+      navigate: false,
+      fetcherKey: `session:${id}`,
+      flushSync: true,
+      preventScrollReset: true,
+    });
+    return true;
   };
 
   const update = async (session: ScheduleSession) => {

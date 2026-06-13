@@ -29,7 +29,7 @@ type ScheduleProps = {
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
-  onAddSession: (trackId: string, timeslot: TimeSlot) => Promise<void>;
+  onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<boolean>;
   onUpdateSession: (session: ScheduleSession) => Promise<boolean>;
   onSwitchSessions: (source: ScheduleSession, target: ScheduleSession) => Promise<void>;
   zoomLevel: number;
@@ -102,7 +102,7 @@ type ScheduleDayProps = {
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
-  onAddSession: (trackId: string, timeslot: TimeSlot) => Promise<void>;
+  onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<boolean>;
   zoomLevel: number;
   displayMultipleDays: boolean;
 };
@@ -129,7 +129,7 @@ function ScheduleDay({
   const [newSession, setNewSession] = useState<ScheduleSession | null>(null);
   const handleNewSession = useCallback(async () => {
     if (!newSession) return;
-    await onAddSession(newSession.trackId, newSession.timeslot);
+    await onAddSession(newSession);
     setNewSession(null);
   }, [newSession, onAddSession]);
 

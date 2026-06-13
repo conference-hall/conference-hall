@@ -86,12 +86,18 @@ export class EventSchedule {
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
     if (!schedule) throw new NotFoundError('Schedule not found');
 
+    const language = await this.resolveSessionLanguage(data.language, data.proposalId);
+
     return db.scheduleSession.create({
       data: {
         trackId: data.trackId,
         start: data.start,
         end: data.end,
-        color: 'gray',
+        color: data.color ?? 'gray',
+        name: !data.proposalId ? (data.name ?? null) : null,
+        proposalId: data.proposalId ? data.proposalId : null,
+        emojis: data.emojis ?? [],
+        language,
         scheduleId: schedule.id,
       },
     });
@@ -105,27 +111,32 @@ export class EventSchedule {
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
     if (!schedule) throw new NotFoundError('Schedule not found');
 
-    let language = data.language ?? null;
-    if (!language && data.proposalId) {
-      const proposal = await db.proposal.findUnique({ where: { id: data.proposalId } });
-      if (proposal) {
-        language = (proposal.languages as Languages).at(0) ?? null;
-      }
-    }
+    const language = await this.resolveSessionLanguage(data.language, data.proposalId);
 
     return db.scheduleSession.update({
       data: {
         trackId: data.trackId,
         start: data.start,
         end: data.end,
-        color: data.color,
+        color: data.color ?? 'gray',
         name: !data.proposalId ? (data.name ?? null) : null,
         proposalId: data.proposalId ? data.proposalId : null,
-        emojis: data.emojis,
+        emojis: data.emojis ?? [],
         language,
       },
       where: { id: data.id, scheduleId: schedule.id },
     });
+  }
+
+  private async resolveSessionLanguage(
+    language: string | undefined,
+    proposalId: string | undefined,
+  ): Promise<Language | null> {
+    if (language) return language as Language;
+    if (!proposalId) return null;
+
+    const proposal = await db.proposal.findUnique({ where: { id: proposalId } });
+    return proposal ? ((proposal.languages as Languages).at(0) ?? null) : null;
   }
 
   async deleteSession(sessionId: string) {

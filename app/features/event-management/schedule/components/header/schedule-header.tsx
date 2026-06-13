@@ -1,5 +1,8 @@
+import { PlusIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '~/design-system/button.tsx';
 import { DisplayDays } from './display-days.tsx';
 import { DisplayTimes } from './display-times.tsx';
 import { OptionsMenu } from './options-menu.tsx';
@@ -15,6 +18,7 @@ type Props = {
   zoomHandlers: ZoomHandlers;
   onChangeDisplayDays: (start: Date, end: Date) => void;
   onChangeDisplayTime: (start: number, end: number) => void;
+  onNewSession: VoidFunction;
 };
 
 export function ScheduleHeader({
@@ -25,7 +29,9 @@ export function ScheduleHeader({
   zoomHandlers,
   onChangeDisplayDays,
   onChangeDisplayTime,
+  onNewSession,
 }: Props) {
+  const { t } = useTranslation();
   const [tracksModalOpen, setTracksModalOpen] = useState(false);
   const scheduleFullscreen = useScheduleFullscreen();
 
@@ -46,6 +52,9 @@ export function ScheduleHeader({
       </div>
 
       <div className="flex shrink items-center gap-3">
+        <Button iconLeft={PlusIcon} onClick={onNewSession} disabled={tracks.length === 0}>
+          {t('event-management.schedule.actions.new-session')}
+        </Button>
         <OptionsMenu openTracksModal={() => setTracksModalOpen(true)} zoomHandlers={zoomHandlers} />
       </div>
 
