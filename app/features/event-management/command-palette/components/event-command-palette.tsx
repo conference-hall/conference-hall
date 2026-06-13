@@ -2,7 +2,7 @@ import { DocumentTextIcon, EllipsisHorizontalIcon, UserIcon } from '@heroicons/r
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { href, useFetcher, useNavigate } from 'react-router';
-import type { loader as AutocompleteLoader } from '../autocomplete.ts';
+import type { loader as AutocompleteLoader } from '../../autocomplete/autocomplete.ts';
 import { CommandPalette, type CommandPaletteItemData } from './command-palette/command-palette.tsx';
 
 type Props = { team: string; event: string; closeText: string; onClose: VoidFunction };

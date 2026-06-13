@@ -122,8 +122,8 @@ export default [
       route('api', './features/event-management/settings/api.tsx'),
     ]),
 
-    // Event autocomplete for command palette
-    route('autocomplete', './features/event-management/command-palette/autocomplete.ts'),
+    // Event autocomplete (command palette, proposal speakers panel, schedule)
+    route('autocomplete', './features/event-management/autocomplete/autocomplete.ts'),
   ]),
 
   // Event reviews export routes

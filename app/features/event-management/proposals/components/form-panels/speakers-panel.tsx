@@ -11,7 +11,7 @@ import { SpeakerDrawer } from '~/features/event-management/speakers/components/s
 import { SpeakerRow } from '~/features/event-management/speakers/components/speaker-details/speaker-row.tsx';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import type { SpeakerData } from '~/shared/types/speaker.types.ts';
-import type { loader as AutocompleteLoader } from '../../../command-palette/autocomplete.ts';
+import type { loader as AutocompleteLoader } from '../../../autocomplete/autocomplete.ts';
 import { SpeakerModal } from './speaker-modal.tsx';
 
 type Props = {
