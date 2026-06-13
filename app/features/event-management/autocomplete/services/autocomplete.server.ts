@@ -7,18 +7,32 @@ import { db } from '../../../../../prisma/db.server.ts';
 import type { Event } from '../../../../../prisma/generated/client.ts';
 import { ProposalSearchBuilder } from '../../proposals/services/proposal-search-builder.server.ts';
 
-const AutocompleteFilterSchema = z.object({ query: z.string().optional(), kind: z.array(z.string()) });
+const AutocompleteKindSchema = z.enum(['proposals', 'speakers']);
+
+const AutocompleteFilterSchema = z.object({
+  query: z.string().optional(),
+  kind: z.array(AutocompleteKindSchema),
+});
 
 type AutocompleteFilters = z.infer<typeof AutocompleteFilterSchema>;
 
-// todo(autocomplete): migrate other proposal autocomplete to use this one
-type AutocompleteResult = {
-  kind: string;
-  id: string;
-  label: string;
-  description: string | null;
-  picture?: string | null;
+export type ProposalResult = {
+  kind: 'proposals';
+  id: string; // real proposal id (used by the schedule to persist proposalId)
+  routeId: string; // URL slug (used for navigation / "see proposal" link)
+  title: string;
+  speakers: Array<{ name: string | null; picture: string | null }>;
 };
+
+export type SpeakerResult = {
+  kind: 'speakers';
+  id: string; // real speaker id (used for navigation)
+  name: string | null;
+  company: string | null;
+  picture: string | null;
+};
+
+export type AutocompleteResult = ProposalResult | SpeakerResult;
 
 const pagination = new Pagination({ page: 1, pageSize: 3, total: 3 });
 
@@ -29,46 +43,44 @@ export class Autocomplete {
     return new Autocomplete(authorizedEvent);
   }
 
-  async search(filters: AutocompleteFilters) {
+  async search(filters: AutocompleteFilters): Promise<AutocompleteResult[]> {
     const { event } = this.authorizedEvent;
 
     const { query, kind } = filters;
     if (!query) return [];
 
-    const [proposals, speakers, speakersForProposal] = await Promise.all([
+    const [proposals, speakers] = await Promise.all([
       kind.includes('proposals') ? this.#searchProposals(event, query) : [],
-      kind.includes('speakers') ? this.#searchSpeakers(event, query, false) : [],
-      kind.includes('speakers-for-proposal') ? this.#searchSpeakers(event, query, true) : [],
+      kind.includes('speakers') ? this.#searchSpeakers(event, query) : [],
     ]);
 
-    return [...proposals, ...speakers, ...speakersForProposal];
+    return [...proposals, ...speakers];
   }
 
-  async #searchProposals(event: Event, query: string): Promise<AutocompleteResult[]> {
+  async #searchProposals(event: Event, query: string): Promise<ProposalResult[]> {
     const search = new ProposalSearchBuilder(
       this.authorizedEvent.event.id,
       this.authorizedEvent.userId,
       { query },
+      // Proposal-result speakers stay gated by displayProposalsSpeakers (no permission bypass).
       { withSpeakers: event.displayProposalsSpeakers, withReviews: false },
     );
 
     const proposals = await search.proposalsByPage(pagination);
 
-    return proposals.map((proposal) => {
-      return {
-        kind: 'proposals',
-        id: proposal.routeId,
-        label: proposal.title,
-        description:
-          sortBy(proposal.speakers, 'name')
-            ?.map(({ name }) => name)
-            .join(', ') || '',
-      };
-    });
+    return proposals.map((proposal) => ({
+      kind: 'proposals',
+      id: proposal.id,
+      routeId: proposal.routeId,
+      title: proposal.title,
+      speakers: sortBy(proposal.speakers, 'name').map(({ name, picture }) => ({ name, picture })),
+    }));
   }
 
-  async #searchSpeakers(event: Event, query: string, skipPermission: boolean): Promise<AutocompleteResult[]> {
-    if (!skipPermission && !event.displayProposalsSpeakers) return [];
+  async #searchSpeakers(event: Event, query: string): Promise<SpeakerResult[]> {
+    // Blind-review bypass is decided server-side: edit-capable callers always see speakers.
+    const canEditProposal = this.authorizedEvent.permissions.canEditEventProposal;
+    if (!canEditProposal && !event.displayProposalsSpeakers) return [];
 
     const speakers = await db.eventSpeaker.findMany({
       where: {
@@ -80,15 +92,13 @@ export class Autocomplete {
       take: pagination.pageSize,
     });
 
-    return speakers.map((speaker) => {
-      return {
-        kind: 'speakers',
-        id: speaker.id,
-        label: speaker.name,
-        description: speaker.company,
-        picture: speaker.picture,
-      };
-    });
+    return speakers.map((speaker) => ({
+      kind: 'speakers',
+      id: speaker.id,
+      name: speaker.name,
+      company: speaker.company,
+      picture: speaker.picture,
+    }));
   }
 }
 

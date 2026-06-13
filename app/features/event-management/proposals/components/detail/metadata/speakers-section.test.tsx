@@ -15,9 +15,10 @@ const mockFetcher = {
 const mockAutocompleteFetcher = {
   data: [
     {
+      kind: 'speakers',
       id: 'speaker3',
-      label: 'Alice Johnson',
-      description: 'UX Designer',
+      name: 'Alice Johnson',
+      company: 'UX Designer',
       picture: 'https://example.com/alice.jpg',
     },
   ],
