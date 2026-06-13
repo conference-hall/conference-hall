@@ -86,8 +86,8 @@ type SessionSpeakersProps = { speakers?: Array<{ name: string | null; picture: s
 function SessionSpeakers({ speakers, size }: SessionSpeakersProps) {
   if (!speakers) return null;
   const firstSpeaker = speakers.at(0);
-  const speakersCount = speakers.length;
-  const suffix = speakersCount > 1 ? ` (+${speakersCount})` : '';
+  const speakersCount = speakers.length - 1;
+  const suffix = speakers.length > 1 ? ` (+${speakersCount})` : '';
 
   if (size === 'xs' || size === 'sm') return null;
   return <p className={cx('text-[10px]', { truncate: size !== 'xl' })}>{`${firstSpeaker?.name}${suffix}`}</p>;

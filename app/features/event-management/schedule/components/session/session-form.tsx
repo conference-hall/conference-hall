@@ -1,4 +1,3 @@
-import { ArrowTopRightOnSquareIcon, MagnifyingGlassIcon } from '@heroicons/react/16/solid';
 import {
   ClockIcon,
   FaceSmileIcon,
@@ -8,59 +7,42 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import type { FormEvent } from 'react';
-import { useId, useRef, useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { href, useParams } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { EmojiSelect } from '~/design-system/emojis/emoji-select.tsx';
 import ColorPicker from '~/design-system/forms/color-picker.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
-import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { LANGUAGES } from '~/shared/constants.ts';
 import { getMinutesFromStartOfDay, setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
-import { SearchSessionProposal } from './search-session-proposal.tsx';
+import { SessionIdentityField } from './session-identity-field.tsx';
 
 type Props = {
   session: ScheduleSession;
   displayedTimes: { start: number; end: number };
   tracks: Array<Track>;
-  isSearching: boolean;
   onFinish: VoidFunction;
-  onToggleSearch: VoidFunction;
   onUpdateSession: (updated: ScheduleSession) => Promise<boolean>;
   onDeleteSession: (session: ScheduleSession) => Promise<void>;
 };
 
-export function SessionForm({
-  session,
-  displayedTimes,
-  tracks,
-  isSearching,
-  onFinish,
-  onToggleSearch,
-  onUpdateSession,
-  onDeleteSession,
-}: Props) {
+export function SessionForm({ session, displayedTimes, tracks, onFinish, onUpdateSession, onDeleteSession }: Props) {
   const { t } = useTranslation();
-  const { team, event } = useParams();
 
   const formId = useId();
-  const [name, setName] = useState(session.name);
+  const [name, setName] = useState(session.name ?? '');
   const [color, setColor] = useState(session.color);
   const [trackId, setTrackId] = useState(session.trackId);
   const [language, setLanguage] = useState(session.language);
   const [timeslot, setTimeslot] = useState(session.timeslot);
-  const [proposal, setProposal] = useState(session.proposal);
+  const [proposal, setProposal] = useState(session.proposal ?? null);
   const [emojis, setEmojis] = useState(session.emojis);
   const [error, setError] = useState<string | null>();
-
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -80,56 +62,15 @@ export function SessionForm({
 
   return (
     <>
-      {isSearching && <SearchSessionProposal onChange={setProposal} onClose={onToggleSearch} />}
-
       <form id={formId} className="flex flex-col gap-6 px-6 py-6" onSubmit={handleSubmit}>
-        {proposal ? (
-          <div className="flex items-start justify-between gap-6">
-            <div>
-              <H2 size="l">{proposal.title}</H2>
-              <Subtitle truncate>{proposal.speakers.map((s) => s.name).join(', ')}</Subtitle>
-            </div>
-            <div className="flex shrink-0 gap-2">
-              <Button
-                icon={ArrowTopRightOnSquareIcon}
-                label={t('event-management.schedule.edit-session.proposal.see')}
-                to={href('/team/:team/:event/proposals/:proposal', {
-                  team: team || '',
-                  event: event || '',
-                  proposal: proposal.routeId,
-                })}
-                variant="secondary"
-                target="_blank"
-              />
-              <Button
-                icon={MagnifyingGlassIcon}
-                label={t('event-management.schedule.edit-session.proposal.search')}
-                type="button"
-                onClick={onToggleSearch}
-                variant="secondary"
-              />
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between gap-2">
-            <Input
-              ref={inputRef}
-              name="name"
-              value={name ?? ''}
-              onChange={(e) => setName(e.target.value)}
-              placeholder={t('event-management.schedule.edit-session.name')}
-              aria-label={t('event-management.schedule.edit-session.name')}
-              className="grow"
-            />
-            <Button
-              icon={MagnifyingGlassIcon}
-              label={t('event-management.schedule.edit-session.proposal.search')}
-              type="button"
-              onClick={onToggleSearch}
-              variant="secondary"
-            />
-          </div>
-        )}
+        <SessionIdentityField
+          name={name}
+          proposal={proposal}
+          onChange={(identity) => {
+            setName(identity.proposal ? identity.proposal.title : identity.name);
+            setProposal(identity.proposal);
+          }}
+        />
 
         <div className="flex items-center gap-6">
           <ClockIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
@@ -209,7 +150,7 @@ export function SessionForm({
           <Button variant="secondary" onClick={onFinish}>
             {t('common.cancel')}
           </Button>
-          <Button form={formId} type="submit">
+          <Button form={formId} type="submit" disabled={!(name.trim() || proposal)}>
             {t('event-management.schedule.edit-session.submit')}
           </Button>
         </div>
