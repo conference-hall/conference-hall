@@ -5,8 +5,8 @@ import { type ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFetcher, useParams } from 'react-router';
 import { useDebouncedCallback } from 'use-debounce';
+import type { ProposalResult } from '~/features/event-management/autocomplete/types/autocomplete.types.ts';
 import type { loader as AutocompleteLoader } from '../../../autocomplete/autocomplete.ts';
-import type { ProposalResult } from '../../../autocomplete/services/autocomplete.server.ts';
 import type { ScheduleProposalData } from '../schedule.types.ts';
 
 type SearchSessionProposalProps = {

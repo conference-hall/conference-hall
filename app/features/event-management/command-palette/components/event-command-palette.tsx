@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { href, useFetcher, useNavigate } from 'react-router';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import type { loader as AutocompleteLoader } from '../../autocomplete/autocomplete.ts';
-import type { ProposalResult, SpeakerResult } from '../../autocomplete/services/autocomplete.server.ts';
+import type { ProposalResult, SpeakerResult } from '../../autocomplete/types/autocomplete.types.ts';
 import { CommandPalette, type CommandPaletteItemData } from './command-palette/command-palette.tsx';
 
 type Props = { team: string; event: string; closeText: string; onClose: VoidFunction };

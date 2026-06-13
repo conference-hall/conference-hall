@@ -7,12 +7,12 @@ import { href, useFetcher } from 'react-router';
 import { SelectPanel, type SelectPanelOption } from '~/design-system/forms/select-panel.tsx';
 import { menuItem } from '~/design-system/styles/menu.styles.ts';
 import { H2, Text } from '~/design-system/typography.tsx';
+import type { SpeakerResult } from '~/features/event-management/autocomplete/types/autocomplete.types.ts';
 import { SpeakerDrawer } from '~/features/event-management/speakers/components/speaker-details/speaker-drawer.tsx';
 import { SpeakerRow } from '~/features/event-management/speakers/components/speaker-details/speaker-row.tsx';
 import type { SubmissionError } from '~/shared/types/errors.types.ts';
 import type { SpeakerData } from '~/shared/types/speaker.types.ts';
 import type { loader as AutocompleteLoader } from '../../../autocomplete/autocomplete.ts';
-import type { SpeakerResult } from '../../../autocomplete/services/autocomplete.server.ts';
 import { SpeakerModal } from './speaker-modal.tsx';
 
 type Props = {

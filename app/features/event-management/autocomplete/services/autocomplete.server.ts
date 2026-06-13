@@ -1,38 +1,15 @@
-import { parseWithZod } from '@conform-to/zod/v4';
-import { z } from 'zod';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { Event } from '../../../../../prisma/generated/client.ts';
 import { ProposalSearchBuilder } from '../../proposals/services/proposal-search-builder.server.ts';
-
-const AutocompleteKindSchema = z.enum(['proposals', 'speakers']);
-
-const AutocompleteFilterSchema = z.object({
-  query: z.string().optional(),
-  kind: z.array(AutocompleteKindSchema),
-});
-
-type AutocompleteFilters = z.infer<typeof AutocompleteFilterSchema>;
-
-export type ProposalResult = {
-  kind: 'proposals';
-  id: string; // real proposal id (used by the schedule to persist proposalId)
-  routeId: string; // URL slug (used for navigation / "see proposal" link)
-  title: string;
-  speakers: Array<{ name: string | null; picture: string | null }>;
-};
-
-export type SpeakerResult = {
-  kind: 'speakers';
-  id: string; // real speaker id (used for navigation)
-  name: string | null;
-  company: string | null;
-  picture: string | null;
-};
-
-export type AutocompleteResult = ProposalResult | SpeakerResult;
+import type {
+  AutocompleteFilters,
+  AutocompleteResult,
+  ProposalResult,
+  SpeakerResult,
+} from '../types/autocomplete.types.ts';
 
 const pagination = new Pagination({ page: 1, pageSize: 3, total: 3 });
 
@@ -62,7 +39,6 @@ export class Autocomplete {
       this.authorizedEvent.event.id,
       this.authorizedEvent.userId,
       { query },
-      // Proposal-result speakers stay gated by displayProposalsSpeakers (no permission bypass).
       { withSpeakers: event.displayProposalsSpeakers, withReviews: false },
     );
 
@@ -100,11 +76,4 @@ export class Autocomplete {
       picture: speaker.picture,
     }));
   }
-}
-
-export function parseUrlFilters(url: URL) {
-  const params = url.searchParams;
-  const result = parseWithZod(params, { schema: AutocompleteFilterSchema });
-  if (result.status !== 'success') return { kind: [] };
-  return result.value;
 }
