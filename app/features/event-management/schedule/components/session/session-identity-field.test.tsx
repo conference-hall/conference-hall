@@ -33,7 +33,7 @@ function Harness({ initial }: { initial?: SessionIdentity }) {
   return <SessionIdentityField name={identity.name} proposal={identity.proposal} onChange={setIdentity} />;
 }
 
-function renderField(options: { initial?: SessionIdentity; results?: ProposalResult[] } = {}) {
+function renderField(options: { initial?: SessionIdentity; results?: ProposalResult[]; neverResolves?: boolean } = {}) {
   const RouteStub = createRoutesStub([
     {
       path: '/team/:team/:event/schedule',
@@ -45,7 +45,7 @@ function renderField(options: { initial?: SessionIdentity; results?: ProposalRes
     },
     {
       path: '/team/:team/:event/autocomplete',
-      loader: () => options.results ?? PROPOSALS,
+      loader: () => (options.neverResolves ? new Promise(() => {}) : (options.results ?? PROPOSALS)),
     },
   ]);
   return page.render(<RouteStub initialEntries={['/team/t1/e1/schedule']} />);
@@ -136,5 +136,41 @@ describe('SessionIdentityField component', () => {
 
     await expect.element(input).toHaveValue('');
     await expect.element(input).toHaveFocus();
+  });
+
+  it('shows a section label with the result count and highlights the title match', async () => {
+    await renderField();
+
+    await userEvent.type(page.getByRole('combobox'), 'React');
+
+    await expect.element(page.getByText('Proposals · 2')).toBeVisible();
+
+    // The matched fragment of the title is wrapped in its own span (scoped to the
+    // proposal row to avoid the emphasised text in the Create-raw row).
+    const proposalRow = page.getByRole('option', { name: /React Performance Best Practices/ });
+    const highlight = proposalRow.getByText('React', { exact: true });
+    await expect.element(highlight).toBeVisible();
+    expect(highlight.element().tagName).toBe('SPAN');
+  });
+
+  it('shows a "Searching…" line while results load and keeps the Create-raw row', async () => {
+    await renderField({ neverResolves: true });
+
+    await userEvent.type(page.getByRole('combobox'), 'React');
+
+    await expect.element(page.getByText('Searching…')).toBeVisible();
+    await expect.element(page.getByRole('option', { name: /Create raw session/ })).toBeVisible();
+    await expect
+      .element(page.getByRole('option', { name: /React Performance Best Practices/ }))
+      .not.toBeInTheDocument();
+  });
+
+  it('shows a "No proposal matches" line when the search returns nothing', async () => {
+    await renderField({ results: [] });
+
+    await userEvent.type(page.getByRole('combobox'), 'Zzz');
+
+    await expect.element(page.getByText(/No proposal matches/)).toBeVisible();
+    await expect.element(page.getByRole('option', { name: /Create raw session/ })).toBeVisible();
   });
 });

@@ -3,12 +3,11 @@ import { ArrowTopRightOnSquareIcon, DocumentTextIcon, PencilSquareIcon, XMarkIco
 import { cx } from 'class-variance-authority';
 import { type ChangeEvent, type KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { href, useFetcher, useParams } from 'react-router';
-import { useDebouncedCallback } from 'use-debounce';
+import { href, useParams } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
-import type { ProposalResult } from '~/features/event-management/autocomplete/types/autocomplete.types.ts';
-import type { loader as AutocompleteLoader } from '../../../autocomplete/autocomplete.ts';
 import type { ScheduleProposalData } from '../schedule.types.ts';
+import { highlightMatch } from './highlight-match.tsx';
+import { useProposalSearch } from './use-proposal-search.ts';
 
 export type SessionIdentity = { name: string; proposal: ScheduleProposalData | null };
 
@@ -22,7 +21,6 @@ type Props = {
 
 export function SessionIdentityField({ name, proposal, onChange }: Props) {
   const { t } = useTranslation();
-  const { team, event } = useParams();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [focused, setFocused] = useState(false);
@@ -43,14 +41,7 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
     }
   }, [proposal]);
 
-  const fetcher = useFetcher<typeof AutocompleteLoader>();
-  const results = (fetcher.data ?? []).filter((item): item is ProposalResult => item.kind === 'proposals');
-
-  const search = useDebouncedCallback((query: string) => {
-    const params = new URLSearchParams({ query, kind: 'proposals' });
-    const route = href('/team/:team/:event/autocomplete', { team: team ?? '', event: event ?? '' });
-    fetcher.load(`${route}?${params.toString()}`);
-  }, 300);
+  const { results, isSearching, search } = useProposalSearch();
 
   const trimmed = name.trim();
   const isOpen = focused && trimmed.length > 0 && !dismissed;
@@ -126,6 +117,8 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
           onFocus={() => {
             setFocused(true);
             setDismissed(false);
+            // Reopening an existing raw name should refresh the proposal list.
+            if (trimmed.length > 0) search(trimmed);
           }}
           onBlur={() => setFocused(false)}
           onKeyDown={handleKeyDown}
@@ -177,25 +170,46 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
               </span>
             </ComboboxOption>
 
-            {results.map((result) => (
-              <ComboboxOption
-                value={{ kind: 'proposal', proposal: result }}
-                as="li"
-                key={result.id}
-                className="group flex cursor-default items-center gap-3 rounded-md px-3 py-2 select-none data-focus:bg-gray-100"
-              >
-                <DocumentTextIcon
-                  className="h-5 w-5 shrink-0 text-gray-400 group-data-focus:text-indigo-600"
-                  aria-hidden="true"
+            {isSearching ? (
+              <li className="px-3 py-2 text-xs text-gray-500" role="presentation">
+                {t('event-management.schedule.edit-session.identity.searching')}
+              </li>
+            ) : results.length > 0 ? (
+              <>
+                <li
+                  className="px-3 pt-2 pb-1 text-[11px] font-medium tracking-wide text-gray-400 uppercase"
+                  role="presentation"
+                >
+                  {t('event-management.schedule.edit-session.identity.proposals')} · {results.length}
+                </li>
+                {results.map((result) => (
+                  <ComboboxOption
+                    value={{ kind: 'proposal', proposal: result }}
+                    as="li"
+                    key={result.id}
+                    className="group flex cursor-default items-center gap-3 rounded-md px-3 py-2 select-none data-focus:bg-gray-100"
+                  >
+                    <DocumentTextIcon
+                      className="h-5 w-5 shrink-0 text-gray-400 group-data-focus:text-indigo-600"
+                      aria-hidden="true"
+                    />
+                    <div className="min-w-0 flex-auto">
+                      <p className="truncate font-medium text-gray-900">{highlightMatch(result.title, trimmed)}</p>
+                      <p className="truncate text-xs text-gray-500">
+                        {result.speakers.map((speaker) => speaker.name).join(', ')}
+                      </p>
+                    </div>
+                  </ComboboxOption>
+                ))}
+              </>
+            ) : (
+              <li className="px-3 py-2 text-xs text-gray-500" role="presentation">
+                <Trans
+                  i18nKey="event-management.schedule.edit-session.identity.no-proposal"
+                  values={{ query: trimmed }}
                 />
-                <div className="min-w-0 flex-auto">
-                  <p className="truncate font-medium text-gray-900">{result.title}</p>
-                  <p className="truncate text-xs text-gray-500">
-                    {result.speakers.map((speaker) => speaker.name).join(', ')}
-                  </p>
-                </div>
-              </ComboboxOption>
-            ))}
+              </li>
+            )}
           </ComboboxOptions>
         ) : null}
       </Combobox>
