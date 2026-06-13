@@ -90,7 +90,6 @@ export default [
     route('proposals', './features/event-management/proposals/proposals.tsx'),
     route('proposals/new', './features/event-management/proposals/new-proposal.tsx'),
     route('proposals/:proposal', './features/event-management/proposals/proposal.tsx'),
-    route('proposals/autocomplete', './features/event-management/proposals/autocomplete.tsx'),
 
     // Event speakers page
     route('speakers', './features/event-management/speakers/speakers.tsx'),

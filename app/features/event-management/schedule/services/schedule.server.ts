@@ -178,7 +178,7 @@ export class EventSchedule {
 
     const sessions = await db.scheduleSession.findMany({
       where: { scheduleId: schedule.id },
-      include: { proposal: { include: { speakers: true, formats: true, categories: true } } },
+      include: { proposal: { include: { speakers: true } } },
     });
 
     return {
@@ -205,16 +205,7 @@ export class EventSchedule {
               id: proposal.id,
               routeId: proposal.routeId,
               title: proposal.title,
-              deliberationStatus: proposal.deliberationStatus,
-              confirmationStatus: proposal.confirmationStatus,
-              formats: proposal.formats.map((f) => ({ id: f.id, name: f.name })),
-              categories: proposal.categories.map((c) => ({ id: c.id, name: c.name })),
-              speakers: proposal.speakers.map((s) => ({
-                id: s.id,
-                name: s.name,
-                picture: s.picture,
-                company: s.company,
-              })),
+              speakers: proposal.speakers.map((s) => ({ name: s.name, picture: s.picture })),
             }
           : null,
       })),

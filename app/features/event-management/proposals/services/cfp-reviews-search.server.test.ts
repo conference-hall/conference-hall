@@ -247,47 +247,4 @@ describe('CfpReviewsSearch', () => {
       }).rejects.toThrow(ForbiddenOperationError);
     });
   });
-
-  describe('#autocomplete', () => {
-    it('returns event proposals info', async () => {
-      const event = await eventFactory({ team });
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
-      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-      const proposals = await CfpReviewsSearch.for(authorizedEvent).autocomplete({ status: 'pending' });
-
-      expect(proposals).toEqual([
-        {
-          id: proposal.id,
-          routeId: proposal.routeId,
-          title: proposal.title,
-          deliberationStatus: proposal.deliberationStatus,
-          confirmationStatus: proposal.confirmationStatus,
-          speakers: [{ name: speaker.name, picture: speaker.picture }],
-        },
-      ]);
-    });
-
-    it('returns empty results of an event without proposals', async () => {
-      const event = await eventFactory({ team });
-      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
-      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-      const proposals = await CfpReviewsSearch.for(authorizedEvent).autocomplete({});
-
-      expect(proposals).toEqual([]);
-    });
-
-    it('throws an error if user does not belong to event team', async () => {
-      const user = await userFactory();
-      const event = await eventFactory();
-      await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
-
-      await expect(async () => {
-        const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
-        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-        const reviewsSearch = CfpReviewsSearch.for(authorizedEvent);
-        await reviewsSearch.autocomplete({});
-      }).rejects.toThrow(ForbiddenOperationError);
-    });
-  });
 });

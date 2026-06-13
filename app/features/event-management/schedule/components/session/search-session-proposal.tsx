@@ -5,7 +5,8 @@ import { type ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFetcher, useParams } from 'react-router';
 import { useDebouncedCallback } from 'use-debounce';
-import type { loader as AutocompleteLoader } from '../../../proposals/autocomplete.tsx';
+import type { loader as AutocompleteLoader } from '../../../autocomplete/autocomplete.ts';
+import type { ProposalResult } from '../../../autocomplete/services/autocomplete.server.ts';
 import type { ScheduleProposalData } from '../schedule.types.ts';
 
 type SearchSessionProposalProps = {
@@ -22,10 +23,10 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
 
   const fetcher = useFetcher<typeof AutocompleteLoader>();
   const search = (filters: { query: string }) => {
-    fetcher.submit(filters, { action: `/team/${team}/${event}/proposals/autocomplete`, method: 'GET' });
+    fetcher.submit({ ...filters, kind: 'proposals' }, { action: `/team/${team}/${event}/autocomplete`, method: 'GET' });
   };
 
-  const results = fetcher.data ?? [];
+  const results = (fetcher.data ?? []).filter((item): item is ProposalResult => item.kind === 'proposals');
 
   const debouncedOnChange = useDebouncedCallback(
     (event: ChangeEvent<HTMLInputElement>) => search({ query: event.target.value }),

@@ -514,16 +514,10 @@ describe('EventSchedule', () => {
               id: proposal.id,
               routeId: proposal.routeId,
               title: proposal.title,
-              confirmationStatus: proposal.confirmationStatus,
-              deliberationStatus: proposal.deliberationStatus,
-              categories: [],
-              formats: [],
               speakers: [
                 {
-                  id: proposal.speakers.at(0)?.id,
                   name: proposal.speakers.at(0)?.name,
                   picture: proposal.speakers.at(0)?.picture,
-                  company: proposal.speakers.at(0)?.company,
                 },
               ],
             },
