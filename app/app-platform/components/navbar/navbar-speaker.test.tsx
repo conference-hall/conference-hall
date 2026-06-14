@@ -2,15 +2,17 @@ import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
+import type { AuthenticatedUser } from '~/shared/types/user.types.ts';
 import { UserProvider } from '../user-context.tsx';
 import { NavbarSpeaker } from './navbar-speaker.tsx';
 
-const mockUser = {
+const mockUser: AuthenticatedUser = {
   id: 'user-1',
   uid: 'user-uid-1',
   email: 'test@example.com',
   name: 'Test User',
   picture: 'https://example.com/avatar.jpg',
+  role: 'user',
   teams: [],
   hasTeamAccess: false,
   notificationsUnreadCount: 1,

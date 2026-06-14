@@ -12,6 +12,7 @@ const mockUser: AuthenticatedUser = {
   email: 'test@example.com',
   name: 'Test User',
   picture: 'https://example.com/avatar.jpg',
+  role: 'user',
   teams: [
     {
       slug: 'team-1',

@@ -40,15 +40,7 @@ function DesktopNavbar() {
 
       <div className="flex shrink-0 items-center justify-end gap-4">
         <EventCommandPaletteButton />
-
-        <UserMenuButton
-          name={user.name}
-          email={user.email}
-          picture={user.picture}
-          teams={user.teams}
-          hasTeamAccess={user.hasTeamAccess}
-          notificationsCount={user.notificationsUnreadCount}
-        />
+        <UserMenuButton user={user} />
       </div>
     </div>
   );
@@ -62,15 +54,7 @@ function MobileNavbar() {
   return (
     <div className={cx('flex h-16 items-center justify-between px-4 lg:hidden', BG_COLOR)}>
       <MobileNavigation />
-
-      <UserMenuButton
-        name={user.name}
-        email={user.email}
-        picture={user.picture}
-        teams={user.teams}
-        hasTeamAccess={user.hasTeamAccess}
-        notificationsCount={user.notificationsUnreadCount}
-      />
+      <UserMenuButton user={user} />
     </div>
   );
 }

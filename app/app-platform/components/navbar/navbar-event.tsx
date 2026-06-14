@@ -26,19 +26,7 @@ function DesktopNavbar() {
   return (
     <div className={cx('hidden lg:flex lg:h-16 lg:items-center lg:justify-between lg:px-8', BG_COLOR)}>
       <LogoButton />
-
-      {user ? (
-        <UserMenuButton
-          name={user.name}
-          email={user.email}
-          picture={user.picture}
-          teams={user.teams}
-          hasTeamAccess={user.hasTeamAccess}
-          notificationsCount={user.notificationsUnreadCount}
-        />
-      ) : (
-        <LoginButton />
-      )}
+      {user ? <UserMenuButton user={user} /> : <LoginButton />}
     </div>
   );
 }
@@ -49,19 +37,7 @@ function MobileNavbar() {
   return (
     <div className={cx('flex h-16 items-center justify-between px-4 lg:hidden', BG_COLOR)}>
       <MobileNavigation />
-
-      {user ? (
-        <UserMenuButton
-          name={user.name}
-          email={user.email}
-          picture={user.picture}
-          teams={user.teams}
-          hasTeamAccess={user.hasTeamAccess}
-          notificationsCount={user.notificationsUnreadCount}
-        />
-      ) : (
-        <LoginButton />
-      )}
+      {user ? <UserMenuButton user={user} /> : <LoginButton />}
     </div>
   );
 }

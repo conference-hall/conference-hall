@@ -4,15 +4,17 @@ import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
 import { UserProvider } from '~/app-platform/components/user-context.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
+import type { AuthenticatedUser } from '~/shared/types/user.types.ts';
 import { MessageActionsMenu } from './message-actions-menu.tsx';
 
 describe('MessageActionsMenu component', () => {
-  const mockUser = {
+  const mockUser: AuthenticatedUser = {
     id: 'user-1',
     uid: 'user-uid-1',
     name: 'John Doe',
     email: 'john@example.com',
     picture: null,
+    role: 'user',
     notificationsUnreadCount: 0,
     hasTeamAccess: true,
     teams: [],

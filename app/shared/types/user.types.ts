@@ -8,6 +8,7 @@ export type AuthenticatedUser = {
   picture: string | null;
   notificationsUnreadCount: number;
   hasTeamAccess: boolean;
+  role: 'admin' | 'user';
   teams: Array<{
     slug: string;
     name: string;
