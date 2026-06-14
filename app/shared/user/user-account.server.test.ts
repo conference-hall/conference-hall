@@ -25,6 +25,7 @@ describe('UserAccount', () => {
         picture: user.picture,
         hasTeamAccess: true,
         notificationsUnreadCount: 0,
+        role: 'user',
         teams: [
           {
             slug: team.slug,
@@ -50,6 +51,14 @@ describe('UserAccount', () => {
 
       expect(result?.hasTeamAccess).toBe(false);
       expect(result?.teams).toEqual([]);
+    });
+
+    it('returns admin role when user is admin', async () => {
+      const user = await userFactory({ traits: ['admin'] });
+
+      const result = await UserAccount.for(user.id).get();
+
+      expect(result?.role).toBe('admin');
     });
   });
 

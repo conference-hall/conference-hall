@@ -8,6 +8,7 @@ import {
   MicrophoneIcon,
   PlusIcon,
   Square3Stack3DIcon,
+  WrenchScrewdriverIcon,
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,27 +18,22 @@ import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { authClient } from '~/shared/authentication/auth-client.ts';
+import type { AuthenticatedUser } from '~/shared/types/user.types.ts';
 import { LegalLinks } from '../../footer.tsx';
 import { SponsorLink } from '../../sponsor-link.tsx';
 
-type MenuProps = {
-  email: string | null;
-  name: string | null;
-  picture: string | null;
-  hasTeamAccess?: boolean;
-  teams: Array<{ slug: string; name: string }>;
-  notificationsCount: number;
-};
+type UserMenuButtonProps = { user: AuthenticatedUser };
 
-export function UserMenuButton({ email, name, picture, hasTeamAccess, teams, notificationsCount }: MenuProps) {
+export function UserMenuButton({ user }: UserMenuButtonProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+  const { email, name, picture, hasTeamAccess, teams, notificationsUnreadCount } = user;
 
   return (
     <>
-      <OpenButton name={name} picture={picture} notificationsCount={notificationsCount} onClick={handleOpen} />
+      <OpenButton name={name} picture={picture} notificationsCount={notificationsUnreadCount} onClick={handleOpen} />
 
       <SlideOver
         title={<AvatarName picture={picture} name={name} subtitle={email} size="s" />}
@@ -52,9 +48,19 @@ export function UserMenuButton({ email, name, picture, hasTeamAccess, teams, not
               <MenuLink to={href('/')} icon={MagnifyingGlassIcon} onClick={handleClose}>
                 {t('navbar.user-menu.search')}
               </MenuLink>
-              <MenuLink to={href('/notifications')} icon={BellIcon} count={notificationsCount} onClick={handleClose}>
+              <MenuLink
+                to={href('/notifications')}
+                icon={BellIcon}
+                count={notificationsUnreadCount}
+                onClick={handleClose}
+              >
                 {t('navbar.user-menu.notifications')}
               </MenuLink>
+              {user.role === 'admin' ? (
+                <MenuLink to={href('/admin')} icon={WrenchScrewdriverIcon} onClick={handleClose}>
+                  {t('navbar.user-menu.admin')}
+                </MenuLink>
+              ) : null}
 
               <Divider as="li" className="mt-4 mb-2" />
 

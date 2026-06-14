@@ -18,7 +18,7 @@ export class UserAccount {
 
   async get(): Promise<AuthenticatedUser | null> {
     const user = await db.user.findUnique({
-      select: { uid: true, name: true, email: true, picture: true, organizerKey: true },
+      select: { uid: true, name: true, email: true, picture: true, organizerKey: true, admin: true },
       where: { id: this.userId },
     });
     if (!user) return null;
@@ -35,6 +35,7 @@ export class UserAccount {
       name: user.name,
       email: user.email,
       picture: user.picture,
+      role: user.admin ? 'admin' : 'user',
       notificationsUnreadCount,
       hasTeamAccess,
       teams,

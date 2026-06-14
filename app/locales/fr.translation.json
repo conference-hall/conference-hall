@@ -871,6 +871,7 @@
   "navbar.login": "Connexion",
   "navbar.teams.create": "Nouvelle équipe",
   "navbar.teams": "Mes équipes",
+  "navbar.user-menu.admin": "Admin",
   "navbar.user-menu.create-team": "Nouvelle équipe",
   "navbar.user-menu.notifications": "Notifications",
   "navbar.user-menu.open": "Ouvrir le menu utilisateur",
