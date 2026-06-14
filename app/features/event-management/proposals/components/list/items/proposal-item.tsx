@@ -5,10 +5,11 @@ import { useUserTeamPermissions } from '~/app-platform/components/user-context.t
 import { Badge } from '~/design-system/badges.tsx';
 import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
+import { Join } from '~/design-system/join.tsx';
 import { Tag } from '~/design-system/tag.tsx';
 import { Tooltip } from '~/design-system/tooltip.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
-import { ClientOnly } from '~/design-system/utils/client-only.tsx';
+import { useHydrated } from '~/design-system/utils/use-hydrated.ts';
 import { formatDate } from '~/shared/datetimes/datetimes.ts';
 import type { ProposalData } from '../../shared/types.ts';
 import { ReviewSection } from './review-section.tsx';
@@ -36,21 +37,11 @@ export function ProposalItem({
   const locale = i18n.language;
   const [currentQueryParams] = useSearchParams();
   const { canChangeProposalStatus } = useUserTeamPermissions();
+  const hydrated = useHydrated();
+  const proposalStatus = useProposalStatus(proposal, canChangeProposalStatus);
 
-  const {
-    id,
-    routeId,
-    title,
-    reviews,
-    archivedAt,
-    submittedAt,
-    deliberationStatus,
-    confirmationStatus,
-    tags,
-    speakers,
-    commentCount,
-    hasNewMessages,
-  } = proposal;
+  const { id, routeId, title, reviews, archivedAt, submittedAt, tags, speakers, commentCount, hasNewMessages } =
+    proposal;
 
   const pathname = href('/team/:team/:event/proposals/:proposal', {
     team,
@@ -88,25 +79,23 @@ export function ProposalItem({
           </div>
 
           <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-1">
-            <Text size="xs" variant="secondary" className="space-x-1">
-              {speakers.length ? (
-                <Trans
-                  as="span"
-                  i18nKey="common.proposed-by"
-                  values={{ routeId, names: speakers.map((a) => a.name) }}
-                  components={[<span key="0" className="text-gray-800" />]}
-                />
+            <Join by={<Subtitle className="hidden sm:inline">·</Subtitle>}>
+              {speakers.length > 0 ? (
+                <Text size="xs" variant="secondary">
+                  <Trans
+                    i18nKey="common.proposed-by"
+                    values={{ routeId, names: speakers.map((a) => a.name) }}
+                    components={[<span key="0" className="text-gray-800" />]}
+                  />
+                </Text>
               ) : null}
-              <ClientOnly>
-                {() => <span>{`· ${formatDate(submittedAt, { format: 'medium', locale })}`}</span>}
-              </ClientOnly>
-            </Text>
-            {canChangeProposalStatus && deliberationStatus !== 'PENDING' && (
-              <>
-                <Subtitle className="hidden sm:inline">·</Subtitle>
-                {confirmationStatus ? <PublicationLabel {...proposal} /> : <DeliberationLabel {...proposal} />}
-              </>
-            )}
+              {hydrated ? (
+                <Text size="xs" variant="secondary">
+                  {formatDate(submittedAt, { format: 'medium', locale })}
+                </Text>
+              ) : null}
+              {proposalStatus ? <Text size="xs">{proposalStatus}</Text> : null}
+            </Join>
 
             {hasNewMessages ? <NewMessagesIndicator /> : null}
           </div>
@@ -130,28 +119,27 @@ function NewMessagesIndicator() {
   );
 }
 
-function DeliberationLabel({ deliberationStatus }: ProposalData) {
+function useProposalStatus(proposal: ProposalData, canChangeProposalStatus: boolean): string | null {
   const { t } = useTranslation();
+  const { deliberationStatus, confirmationStatus } = proposal;
 
-  switch (deliberationStatus) {
-    case 'ACCEPTED':
-      return <Text size="xs">{t('common.proposals.status.accepted')}</Text>;
-    case 'REJECTED':
-      return <Text size="xs">{t('common.proposals.status.rejected')}</Text>;
-    default:
-      return null;
+  if (!canChangeProposalStatus) {
+    return null;
   }
-}
-
-function PublicationLabel({ deliberationStatus, confirmationStatus }: ProposalData) {
-  const { t } = useTranslation();
-
   if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'PENDING') {
-    return <Text size="xs">{t('common.proposals.status.not-answered')}</Text>;
-  } else if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'CONFIRMED') {
-    return <Text size="xs">{t('common.proposals.status.confirmed')}</Text>;
-  } else if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'DECLINED') {
-    return <Text size="xs">{t('common.proposals.status.declined')}</Text>;
+    return t('common.proposals.status.not-answered');
+  }
+  if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'CONFIRMED') {
+    return t('common.proposals.status.confirmed');
+  }
+  if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'DECLINED') {
+    return t('common.proposals.status.declined');
+  }
+  if (deliberationStatus === 'ACCEPTED') {
+    return t('common.proposals.status.accepted');
+  }
+  if (deliberationStatus === 'REJECTED') {
+    return t('common.proposals.status.rejected');
   }
   return null;
 }
