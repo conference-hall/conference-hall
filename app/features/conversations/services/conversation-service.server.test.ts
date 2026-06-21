@@ -5,15 +5,18 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
+import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import type { Event, Team, User } from '../../../../prisma/generated/client.ts';
-import { ConversationType, ConversationParticipantRole } from '../../../../prisma/generated/client.ts';
+import { ConversationParticipantRole, ConversationType } from '../../../../prisma/generated/client.ts';
 import { ConversationService } from './conversation-service.server.ts';
-import { notifyConversationMessage } from './jobs/notify-conversation-message.job.ts';
 
 describe('ConversationService', () => {
   let speaker: User;
-  let organizer: User;
+  let owner: User;
+  let member: User;
   let team: Team;
   let event: Event;
 
@@ -22,8 +25,9 @@ describe('ConversationService', () => {
     vi.setSystemTime(new Date('2023-01-01'));
 
     speaker = await userFactory({ traits: ['clark-kent'] });
-    organizer = await userFactory({ traits: ['bruce-wayne'] });
-    team = await teamFactory({ owners: [organizer] });
+    owner = await userFactory({ traits: ['bruce-wayne'] });
+    member = await userFactory();
+    team = await teamFactory({ owners: [owner], members: [member] });
     event = await eventFactory({ team });
   });
 
@@ -31,714 +35,1085 @@ describe('ConversationService', () => {
     vi.useRealTimers();
   });
 
-  describe('#saveMessage', () => {
-    it('creates conversation and message when conversation does not exist', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
+  const authorizeOwner = async (forEvent: Event = event): Promise<AuthorizedEvent> => {
+    const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+    return getAuthorizedEvent(authorizedTeam, forEvent.slug);
+  };
 
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
+  const authorizeMember = async (forEvent: Event = event): Promise<AuthorizedEvent> => {
+    const authorizedTeam = await getAuthorizedTeam(member.id, team.slug);
+    return getAuthorizedEvent(authorizedTeam, forEvent.slug);
+  };
 
-      await service.saveMessage(event.id, { message: 'Hello organizers!' });
+  describe('forSpeaker', () => {
+    let anotherSpeaker: User;
 
-      const conversation = await db.conversation.findFirst({
-        where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
-        include: { messages: true },
-      });
-
-      expect(conversation?.messages.length).toBe(1);
-      expect(conversation?.messages[0].content).toBe('Hello organizers!');
-      expect(conversation?.messages[0].senderId).toBe(speaker.id);
+    beforeEach(async () => {
+      anotherSpeaker = await userFactory();
     });
 
-    it('creates participant when saving message', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
+    describe('#saveMessage', () => {
+      it('saves message to the speaker conversation', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
 
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
+        await ConversationService.forSpeaker(speaker.id, proposal.id).saveMessage({ message: 'Hello organizers!' });
+
+        const conversation = await db.conversation.findFirst({
+          where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
+          include: { messages: true },
+        });
+
+        expect(conversation?.messages.length).toBe(1);
+        expect(conversation?.messages[0].content).toBe('Hello organizers!');
+        expect(conversation?.messages[0].senderId).toBe(speaker.id);
       });
 
-      await service.saveMessage(event.id, { message: 'Hello!' });
+      it('throws when the speaker does not belong to the proposal', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
 
-      const participant = await db.conversationParticipant.findFirst({
-        where: { userId: speaker.id },
+        const service = ConversationService.forSpeaker(anotherSpeaker.id, proposal.id);
+
+        await expect(service.saveMessage({ message: 'Hello!' })).rejects.toThrow(ProposalNotFoundError);
       });
 
-      expect(participant?.role).toBe(ConversationParticipantRole.SPEAKER);
+      it('throws when the proposal does not exist', async () => {
+        const service = ConversationService.forSpeaker(speaker.id, 'non-existent');
+
+        await expect(service.saveMessage({ message: 'Hello!' })).rejects.toThrow(ProposalNotFoundError);
+      });
     });
 
-    it('updates existing message when id is provided', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
+    describe('#reactMessage', () => {
+      it('reacts to a message in the speaker conversation', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
+
+        await ConversationService.forSpeaker(speaker.id, proposal.id).reactMessage({ id: message.id, code: 'tada' });
+
+        const reaction = await db.conversationReaction.findUnique({
+          where: { messageId_userId_code: { messageId: message.id, userId: speaker.id, code: 'tada' } },
+        });
+        expect(reaction).toBeDefined();
       });
 
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
+      it('throws when the speaker does not belong to the proposal', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
+
+        const service = ConversationService.forSpeaker(anotherSpeaker.id, proposal.id);
+
+        await expect(service.reactMessage({ id: message.id, code: 'tada' })).rejects.toThrow(ProposalNotFoundError);
       });
-
-      await service.saveMessage(event.id, { id: message.id, message: 'Updated message' });
-
-      const updatedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
-      expect(updatedMessage?.content).toBe('Updated message');
     });
 
-    it('adds message to existing conversation', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      await conversationMessageFactory({
-        conversation,
-        sender: organizer,
-        role: ConversationParticipantRole.ORGANIZER,
+    describe('#deleteMessage', () => {
+      it('deletes a message from the speaker conversation', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
+
+        await ConversationService.forSpeaker(speaker.id, proposal.id).deleteMessage({ id: message.id });
+
+        const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(deletedMessage).toBeNull();
       });
 
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
+      it('throws when the speaker does not belong to the proposal', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
+
+        const service = ConversationService.forSpeaker(anotherSpeaker.id, proposal.id);
+
+        await expect(service.deleteMessage({ id: message.id })).rejects.toThrow(ProposalNotFoundError);
       });
-
-      await service.saveMessage(event.id, { message: 'Second message' });
-
-      const messages = await db.conversationMessage.findMany({ where: { conversationId: conversation.id } });
-      expect(messages.length).toBe(2);
     });
 
-    it('allows user with canManageConversations to update any message', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-        attributes: { content: 'Original message' },
+    describe('#getConversation', () => {
+      it('returns the conversation messages for the proposal', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+          attributes: { content: 'Message from speaker' },
+        });
+
+        const messages = await ConversationService.forSpeaker(speaker.id, proposal.id).getConversation();
+
+        expect(messages.length).toBe(1);
+        expect(messages[0].content).toBe('Message from speaker');
       });
 
-      const service = new ConversationService({
-        userId: organizer.id,
-        role: 'ORGANIZER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
+      it('throws when the speaker does not belong to the proposal', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+
+        const service = ConversationService.forSpeaker(anotherSpeaker.id, proposal.id);
+
+        await expect(service.getConversation()).rejects.toThrow(ProposalNotFoundError);
       });
 
-      await service.saveMessage(event.id, { id: message.id, message: 'Updated by organizer' }, true);
+      it('throws when the proposal does not exist', async () => {
+        const service = ConversationService.forSpeaker(speaker.id, 'non-existent');
 
-      const updatedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
-      expect(updatedMessage?.content).toBe('Updated by organizer');
+        await expect(service.getConversation()).rejects.toThrow(ProposalNotFoundError);
+      });
     });
 
-    it('prevents user without canManageConversations from updating other user messages', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: organizer,
-        role: ConversationParticipantRole.ORGANIZER,
-        attributes: { content: 'Original message' },
+    describe('availability gate (speakersConversationEnabled)', () => {
+      let disabledEvent: Event;
+
+      beforeEach(async () => {
+        disabledEvent = await eventFactory({ team, attributes: { speakersConversationEnabled: false } });
       });
 
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
+      it('reading returns an empty list when speaker conversations are disabled', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: disabledEvent, talk });
+        const conversation = await conversationFactory({
+          event: disabledEvent,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
+
+        const messages = await ConversationService.forSpeaker(speaker.id, proposal.id).getConversation();
+
+        expect(messages).toEqual([]);
       });
 
-      await service.saveMessage(event.id, { id: message.id, message: 'Attempted update' }, false);
+      it('posting throws when speaker conversations are disabled', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: disabledEvent, talk });
 
-      const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
-      expect(result?.content).toBe('Original message');
-    });
+        const service = ConversationService.forSpeaker(speaker.id, proposal.id);
 
-    it('triggers notification job when creating a new message', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
+        await expect(service.saveMessage({ message: 'Hello!' })).rejects.toThrow(ForbiddenOperationError);
       });
 
-      await service.saveMessage(event.id, { message: 'New message' });
+      it('reacting throws when speaker conversations are disabled', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: disabledEvent, talk });
+        const conversation = await conversationFactory({
+          event: disabledEvent,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
 
-      const conversation = await db.conversation.findFirst({
-        where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
+        const service = ConversationService.forSpeaker(speaker.id, proposal.id);
+
+        await expect(service.reactMessage({ id: message.id, code: 'tada' })).rejects.toThrow(ForbiddenOperationError);
       });
 
-      expect(notifyConversationMessage.trigger).toHaveBeenCalledWith(
-        { conversationId: conversation?.id },
-        expect.objectContaining({
-          delay: expect.any(Number),
-          deduplication: expect.objectContaining({
-            id: conversation?.id,
-            ttl: expect.any(Number),
-            extend: true,
-            replace: true,
-          }),
-        }),
-      );
-    });
+      it('deleting throws when speaker conversations are disabled', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: disabledEvent, talk });
+        const conversation = await conversationFactory({
+          event: disabledEvent,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
 
-    it('does not trigger notification job when updating an existing message', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        const service = ConversationService.forSpeaker(speaker.id, proposal.id);
+
+        await expect(service.deleteMessage({ id: message.id })).rejects.toThrow(ForbiddenOperationError);
       });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-      });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
-
-      await service.saveMessage(event.id, { id: message.id, message: 'Updated message' });
-
-      expect(notifyConversationMessage.trigger).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('#reactMessage', () => {
-    it('creates reaction on message', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: organizer,
-        role: ConversationParticipantRole.ORGANIZER,
-      });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
-
-      await service.reactMessage({ id: message.id, code: 'tada' });
-
-      const reaction = await db.conversationReaction.findUnique({
-        where: { messageId_userId_code: { messageId: message.id, userId: speaker.id, code: 'tada' } },
-      });
-      expect(reaction).toBeDefined();
-    });
-
-    it('deletes reaction when reaction already exists', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: organizer,
-        role: ConversationParticipantRole.ORGANIZER,
-        traits: ['withReaction'],
-      });
-
-      const service = new ConversationService({
-        userId: organizer.id,
-        role: 'ORGANIZER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
-
-      await service.reactMessage({ id: message.id, code: 'tada' });
-
-      const reaction = await db.conversationReaction.findUnique({
-        where: { messageId_userId_code: { messageId: message.id, userId: organizer.id, code: 'tada' } },
-      });
-      expect(reaction).toBeNull();
     });
   });
 
-  describe('#deleteMessage', () => {
-    it('deletes message', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-      });
+  describe('forOrganizer', () => {
+    describe('#saveMessage', () => {
+      it('creates the conversation and message when the conversation does not exist', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const authorizedEvent = await authorizeOwner();
 
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).saveMessage({ message: 'Hello speaker!' });
+
+        const conversation = await db.conversation.findFirst({
+          where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
+          include: { messages: true },
+        });
+
+        expect(conversation?.messages.length).toBe(1);
+        expect(conversation?.messages[0].content).toBe('Hello speaker!');
+        expect(conversation?.messages[0].senderId).toBe(owner.id);
       });
 
-      await service.deleteMessage({ id: message.id });
+      it('creates a participant when saving a message', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const authorizedEvent = await authorizeOwner();
 
-      const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
-      expect(deletedMessage).toBeNull();
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).saveMessage({ message: 'Hello!' });
+
+        const participant = await db.conversationParticipant.findFirst({ where: { userId: owner.id } });
+
+        expect(participant?.role).toBe(ConversationParticipantRole.ORGANIZER);
+      });
+
+      it('updates an existing message when an id is provided', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).saveMessage({
+          id: message.id,
+          message: 'Updated message',
+        });
+
+        const updatedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(updatedMessage?.content).toBe('Updated message');
+      });
+
+      it('adds a message to an existing conversation', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).saveMessage({ message: 'Second message' });
+
+        const messages = await db.conversationMessage.findMany({ where: { conversationId: conversation.id } });
+        expect(messages.length).toBe(2);
+      });
+
+      it('allows an organizer with the manage-conversations permission to update any message', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: member,
+          role: ConversationParticipantRole.ORGANIZER,
+          attributes: { content: 'Original message' },
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).saveMessage({
+          id: message.id,
+          message: 'Updated by owner',
+        });
+
+        const updatedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(updatedMessage?.content).toBe('Updated by owner');
+      });
+
+      it('prevents an organizer without the manage-conversations permission from updating other messages', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+          attributes: { content: 'Original message' },
+        });
+        const authorizedEvent = await authorizeMember();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).saveMessage({
+          id: message.id,
+          message: 'Attempted update',
+        });
+
+        const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(result?.content).toBe('Original message');
+      });
     });
 
-    it('allows user with canManageConversations to delete any message', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
+    describe('#reactMessage', () => {
+      it('creates a reaction on a message', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).reactMessage({
+          id: message.id,
+          code: 'tada',
+        });
+
+        const reaction = await db.conversationReaction.findUnique({
+          where: { messageId_userId_code: { messageId: message.id, userId: owner.id, code: 'tada' } },
+        });
+        expect(reaction).toBeDefined();
       });
 
-      const service = new ConversationService({
-        userId: organizer.id,
-        role: 'ORGANIZER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
+      it('deletes a reaction when it already exists', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+          traits: ['withReaction'],
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).reactMessage({
+          id: message.id,
+          code: 'tada',
+        });
+
+        const reaction = await db.conversationReaction.findUnique({
+          where: { messageId_userId_code: { messageId: message.id, userId: owner.id, code: 'tada' } },
+        });
+        expect(reaction).toBeNull();
       });
-
-      await service.deleteMessage({ id: message.id }, true);
-
-      const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
-      expect(deletedMessage).toBeNull();
     });
 
-    it('prevents user without canManageConversations from deleting other user messages', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: organizer,
-        role: ConversationParticipantRole.ORGANIZER,
+    describe('#deleteMessage', () => {
+      it('deletes the message', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).deleteMessage({ id: message.id });
+
+        const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(deletedMessage).toBeNull();
       });
 
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
+      it('allows an organizer with the manage-conversations permission to delete any message', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: member,
+          role: ConversationParticipantRole.ORGANIZER,
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).deleteMessage({ id: message.id });
+
+        const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(deletedMessage).toBeNull();
       });
 
-      await service.deleteMessage({ id: message.id }, false);
+      it('prevents an organizer without the manage-conversations permission from deleting other messages', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+        });
+        const authorizedEvent = await authorizeMember();
 
-      const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
-      expect(result).toBeDefined();
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).deleteMessage({ id: message.id });
+
+        const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(result).toBeDefined();
+      });
+    });
+
+    describe('#getConversation', () => {
+      it('returns an empty array when the conversation does not exist', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const authorizedEvent = await authorizeOwner();
+
+        const messages = await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+        expect(messages).toEqual([]);
+      });
+
+      it('creates a participant with lastSeenAt on first open', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        const participant = await db.conversationParticipant.findUnique({
+          where: { conversationId_userId: { conversationId: conversation.id, userId: owner.id } },
+        });
+        expect(participant?.role).toBe(ConversationParticipantRole.ORGANIZER);
+        expect(participant?.lastSeenAt).toEqual(new Date('2023-01-01'));
+      });
+
+      it('updates lastSeenAt on subsequent opens', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        vi.setSystemTime(new Date('2023-06-01'));
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        const participant = await db.conversationParticipant.findUnique({
+          where: { conversationId_userId: { conversationId: conversation.id, userId: owner.id } },
+        });
+        expect(participant?.lastSeenAt).toEqual(new Date('2023-06-01'));
+      });
+
+      it('returns messages with sender and reactions', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+          traits: ['withReaction'],
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        const messages = await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        expect(messages.length).toBe(1);
+        expect(messages[0].id).toBe(message.id);
+        expect(messages[0].sender.name).toBe('Bruce Wayne');
+        expect(messages[0].sender.role).toBe(ConversationParticipantRole.ORGANIZER);
+        expect(messages[0].reactions).toEqual([
+          { code: 'tada', reacted: true, reactedBy: [{ userId: owner.id, name: 'Bruce Wayne' }] },
+        ]);
+      });
+
+      it('returns messages ordered by creation date ascending', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+
+        await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+          attributes: { content: 'First message', createdAt: new Date('2023-01-01T10:00:00Z') },
+        });
+
+        await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+          attributes: { content: 'Second message', createdAt: new Date('2023-01-01T11:00:00Z') },
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        const messages = await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        expect(messages.length).toBe(2);
+        expect(messages[0].content).toBe('First message');
+        expect(messages[1].content).toBe('Second message');
+      });
+
+      it('marks reactions as reacted for the current user', async () => {
+        const otherUser = await userFactory();
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
+
+        await db.conversationReaction.createMany({
+          data: [
+            { messageId: message.id, userId: owner.id, code: 'tada' },
+            { messageId: message.id, userId: otherUser.id, code: 'tada' },
+          ],
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        const messages = await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        expect(messages[0].reactions[0].reacted).toBe(true);
+        expect(messages[0].reactions[0].reactedBy.length).toBe(2);
+      });
+
+      it('marks messages from others after lastSeenAt as new', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+
+        await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+          attributes: { content: 'Old message', createdAt: new Date('2022-12-01') },
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+          attributes: { content: 'New message', createdAt: new Date('2023-02-01') },
+        });
+
+        const messages = await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        const oldMessage = messages.find((m) => m.content === 'Old message');
+        const newMessage = messages.find((m) => m.content === 'New message');
+        expect(oldMessage?.isNew).toBe(false);
+        expect(newMessage?.isNew).toBe(true);
+      });
+
+      it('never marks messages from the current user as new', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+          attributes: { content: 'My own message', createdAt: new Date('2023-06-01') },
+        });
+
+        vi.setSystemTime(new Date('2023-07-01'));
+        const messages = await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        expect(messages[0].isNew).toBe(false);
+      });
+
+      it('marks all messages from others as new on first visit', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+
+        await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+          attributes: { content: 'Welcome!', createdAt: new Date('2022-06-01') },
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        const messages = await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+        expect(messages[0].isNew).toBe(true);
+      });
+
+      it('marks messages before lastSeenAt as not new', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+
+        await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+          attributes: { content: 'Old message', createdAt: new Date('2022-06-01') },
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        vi.setSystemTime(new Date('2023-06-01'));
+        const messages = await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+        expect(messages[0].isNew).toBe(false);
+      });
+
+      it('sorts reactions by earliest reaction date', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: speaker,
+          role: ConversationParticipantRole.SPEAKER,
+        });
+
+        await db.conversationReaction.createMany({
+          data: [
+            { messageId: message.id, userId: owner.id, code: 'heart', reactedAt: new Date('2023-01-01T12:00:00Z') },
+            { messageId: message.id, userId: owner.id, code: 'tada', reactedAt: new Date('2023-01-01T10:00:00Z') },
+          ],
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        const messages = await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        expect(messages[0].reactions[0].code).toBe('tada');
+        expect(messages[0].reactions[1].code).toBe('heart');
+      });
+    });
+
+    describe('proposal access', () => {
+      it('rejects reading a proposal outside the organizer event', async () => {
+        const otherEvent = await eventFactory({ team });
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: otherEvent, talk });
+        const authorizedEvent = await authorizeOwner();
+
+        const service = ConversationService.forOrganizer(authorizedEvent, proposal.id);
+
+        await expect(service.getConversation()).rejects.toThrow(ProposalNotFoundError);
+      });
+
+      it('rejects posting to a proposal outside the organizer event', async () => {
+        const otherEvent = await eventFactory({ team });
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: otherEvent, talk });
+        const authorizedEvent = await authorizeOwner();
+
+        const service = ConversationService.forOrganizer(authorizedEvent, proposal.id);
+
+        await expect(service.saveMessage({ message: 'Should fail' })).rejects.toThrow(ProposalNotFoundError);
+      });
+
+      it('rejects deleting in a proposal outside the organizer event', async () => {
+        const otherEvent = await eventFactory({ team });
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: otherEvent, talk });
+        const authorizedEvent = await authorizeOwner();
+
+        const service = ConversationService.forOrganizer(authorizedEvent, proposal.id);
+
+        await expect(service.deleteMessage({ id: 'whatever' })).rejects.toThrow(ProposalNotFoundError);
+      });
+    });
+
+    describe('availability gate (speakersConversationEnabled)', () => {
+      let disabledEvent: Event;
+
+      beforeEach(async () => {
+        disabledEvent = await eventFactory({ team, attributes: { speakersConversationEnabled: false } });
+      });
+
+      it('reading returns an empty list when speaker conversations are disabled', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: disabledEvent, talk });
+        const conversation = await conversationFactory({
+          event: disabledEvent,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        });
+        await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+        });
+        const authorizedEvent = await authorizeOwner(disabledEvent);
+
+        const messages = await ConversationService.forOrganizer(authorizedEvent, proposal.id).getConversation();
+
+        expect(messages).toEqual([]);
+      });
+
+      it('posting throws when speaker conversations are disabled', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: disabledEvent, talk });
+        const authorizedEvent = await authorizeOwner(disabledEvent);
+
+        const service = ConversationService.forOrganizer(authorizedEvent, proposal.id);
+
+        await expect(service.saveMessage({ message: 'Hello!' })).rejects.toThrow(ForbiddenOperationError);
+      });
     });
   });
 
-  describe('#getConversation', () => {
-    it('returns empty array when conversation does not exist', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
+  describe('forReviewComments', () => {
+    describe('#saveMessage', () => {
+      it('saves a message to the review-comments conversation', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const authorizedEvent = await authorizeOwner();
 
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
+        await ConversationService.forReviewComments(authorizedEvent, proposal.id).saveMessage({
+          message: 'Review comment!',
+        });
+
+        const conversation = await db.conversation.findFirst({
+          where: { eventId: event.id, type: ConversationType.PROPOSAL_REVIEW_COMMENTS },
+          include: { messages: true },
+        });
+
+        expect(conversation?.messages.length).toBe(1);
+        expect(conversation?.messages[0].content).toBe('Review comment!');
       });
 
-      const messages = await service.getConversation(event.id);
-      expect(messages).toEqual([]);
+      it('allows an organizer with the manage-conversations permission to update any message', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_REVIEW_COMMENTS',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: member,
+          role: ConversationParticipantRole.ORGANIZER,
+          attributes: { content: 'Original message' },
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forReviewComments(authorizedEvent, proposal.id).saveMessage({
+          id: message.id,
+          message: 'Updated by owner',
+        });
+
+        const updatedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(updatedMessage?.content).toBe('Updated by owner');
+      });
+
+      it('prevents an organizer without the manage-conversations permission from updating other messages', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_REVIEW_COMMENTS',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+          attributes: { content: 'Original message' },
+        });
+        const authorizedEvent = await authorizeMember();
+
+        await ConversationService.forReviewComments(authorizedEvent, proposal.id).saveMessage({
+          id: message.id,
+          message: 'Attempted update',
+        });
+
+        const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(result?.content).toBe('Original message');
+      });
+
+      it('throws when the proposal does not belong to the event', async () => {
+        const otherEvent = await eventFactory({ team });
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: otherEvent, talk });
+        const authorizedEvent = await authorizeOwner();
+
+        const service = ConversationService.forReviewComments(authorizedEvent, proposal.id);
+
+        await expect(service.saveMessage({ message: 'Should fail' })).rejects.toThrow(ProposalNotFoundError);
+      });
     });
 
-    it('creates a participant with lastSeenAt on first open', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      await conversationMessageFactory({
-        conversation,
-        sender: organizer,
-        role: ConversationParticipantRole.ORGANIZER,
-      });
+    describe('#reactMessage', () => {
+      it('reacts to a message in the review-comments conversation', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_REVIEW_COMMENTS',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: member,
+          role: ConversationParticipantRole.ORGANIZER,
+        });
+        const authorizedEvent = await authorizeOwner();
 
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
+        await ConversationService.forReviewComments(authorizedEvent, proposal.id).reactMessage({
+          id: message.id,
+          code: 'tada',
+        });
 
-      await service.getConversation(event.id);
-
-      const participant = await db.conversationParticipant.findUnique({
-        where: { conversationId_userId: { conversationId: conversation.id, userId: speaker.id } },
+        const reaction = await db.conversationReaction.findUnique({
+          where: { messageId_userId_code: { messageId: message.id, userId: owner.id, code: 'tada' } },
+        });
+        expect(reaction).toBeDefined();
       });
-      expect(participant?.role).toBe(ConversationParticipantRole.SPEAKER);
-      expect(participant?.lastSeenAt).toEqual(new Date('2023-01-01'));
     });
 
-    it('updates lastSeenAt on subsequent opens', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
+    describe('#deleteMessage', () => {
+      it('deletes own message', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_REVIEW_COMMENTS',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forReviewComments(authorizedEvent, proposal.id).deleteMessage({ id: message.id });
+
+        const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(deletedMessage).toBeNull();
       });
 
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
+      it('allows an organizer with the manage-conversations permission to delete any message', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_REVIEW_COMMENTS',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: member,
+          role: ConversationParticipantRole.ORGANIZER,
+        });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forReviewComments(authorizedEvent, proposal.id).deleteMessage({ id: message.id });
+
+        const deletedMessage = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(deletedMessage).toBeNull();
       });
 
-      // First open
-      await service.getConversation(event.id);
+      it('prevents an organizer without the manage-conversations permission from deleting other messages', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_REVIEW_COMMENTS',
+        });
+        const message = await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+        });
+        const authorizedEvent = await authorizeMember();
 
-      // Advance time and open again
-      vi.setSystemTime(new Date('2023-06-01'));
-      await service.getConversation(event.id);
+        await ConversationService.forReviewComments(authorizedEvent, proposal.id).deleteMessage({ id: message.id });
 
-      const participant = await db.conversationParticipant.findUnique({
-        where: { conversationId_userId: { conversationId: conversation.id, userId: speaker.id } },
+        const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
+        expect(result).toBeDefined();
       });
-      expect(participant?.lastSeenAt).toEqual(new Date('2023-06-01'));
     });
 
-    it('returns messages with sender and reactions', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-        traits: ['withReaction'],
-      });
+    describe('#getConversation', () => {
+      it('returns the conversation messages for the proposal', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const conversation = await conversationFactory({
+          event,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_REVIEW_COMMENTS',
+        });
+        await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+          attributes: { content: 'Review note' },
+        });
+        const authorizedEvent = await authorizeMember();
 
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
+        const messages = await ConversationService.forReviewComments(authorizedEvent, proposal.id).getConversation();
 
-      const messages = await service.getConversation(event.id);
-
-      expect(messages.length).toBe(1);
-      expect(messages[0].id).toBe(message.id);
-      expect(messages[0].sender.name).toBe('Clark Kent');
-      expect(messages[0].sender.role).toBe(ConversationParticipantRole.SPEAKER);
-      expect(messages[0].reactions).toEqual([
-        { code: 'tada', reacted: true, reactedBy: [{ userId: speaker.id, name: 'Clark Kent' }] },
-      ]);
-    });
-
-    it('returns messages ordered by creation date descending', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
+        expect(messages.length).toBe(1);
+        expect(messages[0].content).toBe('Review note');
       });
 
-      await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-        attributes: { content: 'First message', createdAt: new Date('2023-01-01T10:00:00Z') },
+      it('throws when the proposal does not belong to the event', async () => {
+        const otherEvent = await eventFactory({ team });
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: otherEvent, talk });
+        const authorizedEvent = await authorizeMember();
+
+        const service = ConversationService.forReviewComments(authorizedEvent, proposal.id);
+
+        await expect(service.getConversation()).rejects.toThrow(ProposalNotFoundError);
       });
 
-      await conversationMessageFactory({
-        conversation,
-        sender: organizer,
-        role: ConversationParticipantRole.ORGANIZER,
-        attributes: { content: 'Second message', createdAt: new Date('2023-01-01T11:00:00Z') },
+      it('stays available regardless of the speakers-conversation toggle', async () => {
+        const disabledEvent = await eventFactory({ team, attributes: { speakersConversationEnabled: false } });
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event: disabledEvent, talk });
+        const conversation = await conversationFactory({
+          event: disabledEvent,
+          proposalId: proposal.id,
+          type: 'PROPOSAL_REVIEW_COMMENTS',
+        });
+        await conversationMessageFactory({
+          conversation,
+          sender: owner,
+          role: ConversationParticipantRole.ORGANIZER,
+          attributes: { content: 'Internal note' },
+        });
+        const authorizedEvent = await authorizeOwner(disabledEvent);
+
+        const messages = await ConversationService.forReviewComments(authorizedEvent, proposal.id).getConversation();
+
+        expect(messages.length).toBe(1);
+        expect(messages[0].content).toBe('Internal note');
       });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
-
-      const messages = await service.getConversation(event.id);
-
-      expect(messages.length).toBe(2);
-      expect(messages[0].content).toBe('First message');
-      expect(messages[1].content).toBe('Second message');
-    });
-
-    it('marks reactions as reacted for current user', async () => {
-      const otherUser = await userFactory();
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-      });
-
-      await db.conversationReaction.createMany({
-        data: [
-          { messageId: message.id, userId: speaker.id, code: 'tada' },
-          { messageId: message.id, userId: otherUser.id, code: 'tada' },
-        ],
-      });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
-
-      const messages = await service.getConversation(event.id);
-
-      expect(messages[0].reactions[0].reacted).toBe(true);
-      expect(messages[0].reactions[0].reactedBy.length).toBe(2);
-    });
-
-    it('marks messages from others after lastSeenAt as new', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-
-      // Speaker sends a message before organizer's first visit
-      await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-        attributes: { content: 'Old message', createdAt: new Date('2022-12-01') },
-      });
-
-      // Organizer opens the conversation (sets lastSeenAt to 2023-01-01)
-      const service = new ConversationService({
-        userId: organizer.id,
-        role: 'ORGANIZER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
-      await service.getConversation(event.id);
-
-      // Speaker sends a new message after organizer's visit
-      await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-        attributes: { content: 'New message', createdAt: new Date('2023-02-01') },
-      });
-
-      // Organizer opens again
-      const messages = await service.getConversation(event.id);
-
-      const oldMessage = messages.find((m) => m.content === 'Old message');
-      const newMessage = messages.find((m) => m.content === 'New message');
-      expect(oldMessage?.isNew).toBe(false);
-      expect(newMessage?.isNew).toBe(true);
-    });
-
-    it('never marks messages from the current user as new', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
-
-      // First visit sets lastSeenAt
-      await service.getConversation(event.id);
-
-      // Speaker sends a message after their own lastSeenAt
-      await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-        attributes: { content: 'My own message', createdAt: new Date('2023-06-01') },
-      });
-
-      vi.setSystemTime(new Date('2023-07-01'));
-      const messages = await service.getConversation(event.id);
-
-      expect(messages[0].isNew).toBe(false);
-    });
-
-    it('marks all messages from others as new on first visit', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-
-      await conversationMessageFactory({
-        conversation,
-        sender: organizer,
-        role: ConversationParticipantRole.ORGANIZER,
-        attributes: { content: 'Welcome!', createdAt: new Date('2022-06-01') },
-      });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
-
-      const messages = await service.getConversation(event.id);
-      expect(messages[0].isNew).toBe(true);
-    });
-
-    it('marks messages before lastSeenAt as not new', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-
-      await conversationMessageFactory({
-        conversation,
-        sender: organizer,
-        role: ConversationParticipantRole.ORGANIZER,
-        attributes: { content: 'Old message', createdAt: new Date('2022-06-01') },
-      });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
-
-      // First visit marks all as seen
-      await service.getConversation(event.id);
-
-      // Second visit - message is now old
-      vi.setSystemTime(new Date('2023-06-01'));
-      const messages = await service.getConversation(event.id);
-      expect(messages[0].isNew).toBe(false);
-    });
-
-    it('sorts reactions by earliest reaction date', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const conversation = await conversationFactory({
-        event,
-        proposalId: proposal.id,
-        type: 'PROPOSAL_SPEAKER_CONVERSATION',
-      });
-      const message = await conversationMessageFactory({
-        conversation,
-        sender: speaker,
-        role: ConversationParticipantRole.SPEAKER,
-      });
-
-      await db.conversationReaction.createMany({
-        data: [
-          { messageId: message.id, userId: speaker.id, code: 'heart', reactedAt: new Date('2023-01-01T12:00:00Z') },
-          { messageId: message.id, userId: speaker.id, code: 'tada', reactedAt: new Date('2023-01-01T10:00:00Z') },
-        ],
-      });
-
-      const service = new ConversationService({
-        userId: speaker.id,
-        role: 'SPEAKER',
-        type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION,
-        proposalId: proposal.id,
-      });
-
-      const messages = await service.getConversation(event.id);
-
-      expect(messages[0].reactions[0].code).toBe('tada');
-      expect(messages[0].reactions[1].code).toBe('heart');
     });
   });
 });

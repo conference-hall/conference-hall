@@ -9,12 +9,12 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { MessageBlock } from '~/features/conversations/components/message-block.tsx';
 import { MessageInputForm } from '~/features/conversations/components/message-input-form.tsx';
 import { useOptimisticMessages } from '~/features/conversations/components/use-optimistic-messages.ts';
+import { ConversationService } from '~/features/conversations/services/conversation-service.server.ts';
 import {
   ConversationMessageDeleteSchema,
   ConversationMessageReactSchema,
   ConversationMessageSaveSchema,
 } from '~/features/conversations/services/conversation.schema.server.ts';
-import { SpeakerConversationForSpeakers } from '~/features/conversations/services/speaker-conversation-for-speakers.server.ts';
 import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
@@ -35,7 +35,7 @@ export const middleware = [requireAuth];
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
   const authUser = context.get(RequireAuthContext);
   const proposal = await SpeakerProposal.for(authUser.id, params.proposal).get();
-  const conversation = await SpeakerConversationForSpeakers.for(authUser.id, params.proposal).getConversation();
+  const conversation = await ConversationService.forSpeaker(authUser.id, params.proposal).getConversation();
   return { proposal, conversation };
 };
 
@@ -73,21 +73,21 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       return toast('success', i18n.t('event.proposal.feedbacks.saved'));
     }
     case 'save-message': {
-      const conversation = SpeakerConversationForSpeakers.for(authUser.id, params.proposal);
+      const conversation = ConversationService.forSpeaker(authUser.id, params.proposal);
       const result = parseWithZod(form, { schema: ConversationMessageSaveSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.saveMessage(result.value);
       break;
     }
     case 'react-message': {
-      const conversation = SpeakerConversationForSpeakers.for(authUser.id, params.proposal);
+      const conversation = ConversationService.forSpeaker(authUser.id, params.proposal);
       const result = parseWithZod(form, { schema: ConversationMessageReactSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.reactMessage(result.value);
       break;
     }
     case 'delete-message': {
-      const conversation = SpeakerConversationForSpeakers.for(authUser.id, params.proposal);
+      const conversation = ConversationService.forSpeaker(authUser.id, params.proposal);
       const result = parseWithZod(form, { schema: ConversationMessageDeleteSchema });
       if (result.status !== 'success') return toast('error', i18n.t('error.global'));
       await conversation.deleteMessage(result.value);

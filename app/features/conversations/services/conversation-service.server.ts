@@ -1,3 +1,5 @@
+import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
+import { ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import type { EmojiReaction } from '~/shared/types/emojis.types.ts';
 import { db } from '../../../../prisma/db.server.ts';
 import type { ConversationType, ConversationReaction, User } from '../../../../prisma/generated/client.ts';
@@ -6,25 +8,79 @@ import type {
   ConversationMessageReactData,
   ConversationMessageSaveData,
 } from './conversation.schema.server.ts';
-import { NOTIFICATION_DELAY, notifyConversationMessage } from './jobs/notify-conversation-message.job.ts';
 
-type ConversationServiceContext = {
+// The access strategy decides who may reach the proposal a conversation hangs off of.
+// SPEAKER_OWNS_PROPOSAL: the actor must be one of the proposal's speakers.
+// PROPOSAL_IN_EVENT: the proposal must belong to the actor's authorized event.
+type AccessStrategy = 'SPEAKER_OWNS_PROPOSAL' | 'PROPOSAL_IN_EVENT';
+
+// One policy descriptor per conversation context, resolved by a factory. It captures the axes
+// that vary between contexts so the public methods stay context-agnostic.
+type ConversationPolicy = {
   userId: string;
   role: 'ORGANIZER' | 'SPEAKER';
   type: ConversationType;
   proposalId: string;
-  skipNotification?: boolean;
+  eventId: string | null; // known up-front for organizers, resolved from the proposal for speakers
+  accessStrategy: AccessStrategy;
+  availabilityGated: boolean; // whether the speakers-conversation toggle gates this context
+  canManageConversations: boolean;
 };
 
 export class ConversationService {
-  private context: ConversationServiceContext;
+  private policy: ConversationPolicy;
 
-  constructor(context: ConversationServiceContext) {
-    this.context = context;
+  private constructor(policy: ConversationPolicy) {
+    this.policy = policy;
   }
 
-  async saveMessage(eventId: string, { id, message }: ConversationMessageSaveData, canManageConversations?: boolean) {
-    const { userId, role, type, proposalId } = this.context;
+  // Speaker viewing the speaker↔organizer thread on their own proposal.
+  static forSpeaker(userId: string, proposalId: string) {
+    return new ConversationService({
+      userId,
+      role: 'SPEAKER',
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      proposalId,
+      eventId: null,
+      accessStrategy: 'SPEAKER_OWNS_PROPOSAL',
+      availabilityGated: true,
+      canManageConversations: false,
+    });
+  }
+
+  // Organizer viewing the speaker↔organizer thread on a proposal of their event.
+  static forOrganizer(authorizedEvent: AuthorizedEvent, proposalId: string) {
+    return new ConversationService({
+      userId: authorizedEvent.userId,
+      role: 'ORGANIZER',
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+      proposalId,
+      eventId: authorizedEvent.event.id,
+      accessStrategy: 'PROPOSAL_IN_EVENT',
+      availabilityGated: true,
+      canManageConversations: authorizedEvent.permissions.canManageConversations,
+    });
+  }
+
+  // Organizer-internal review-comments thread: never gated, never notifies the speaker.
+  static forReviewComments(authorizedEvent: AuthorizedEvent, proposalId: string) {
+    return new ConversationService({
+      userId: authorizedEvent.userId,
+      role: 'ORGANIZER',
+      type: 'PROPOSAL_REVIEW_COMMENTS',
+      proposalId,
+      eventId: authorizedEvent.event.id,
+      accessStrategy: 'PROPOSAL_IN_EVENT',
+      availabilityGated: false,
+      canManageConversations: authorizedEvent.permissions.canManageConversations,
+    });
+  }
+
+  async saveMessage({ id, message }: ConversationMessageSaveData) {
+    const { eventId, speakersConversationEnabled } = await this.resolveProposal();
+    this.assertWritable(speakersConversationEnabled);
+
+    const { userId, role, type, proposalId, canManageConversations } = this.policy;
 
     await db.$transaction(async (tx) => {
       // Create conversation if it doesn't exist
@@ -52,24 +108,15 @@ export class ConversationService {
         await tx.conversationMessage.create({
           data: { conversationId: conversation.id, senderId: userId, content: message, type: 'TEXT' },
         });
-
-        if (this.context.skipNotification) return;
-
-        // Trigger email notification job with debounce per conversation
-        // This ensures that only one notification is sent even if multiple messages are created in succession
-        await notifyConversationMessage.trigger(
-          { conversationId: conversation.id },
-          {
-            deduplication: { id: conversation.id, ttl: NOTIFICATION_DELAY, extend: true, replace: true },
-            delay: NOTIFICATION_DELAY,
-          },
-        );
       }
     });
   }
 
   async reactMessage({ id, code }: ConversationMessageReactData) {
-    const { userId } = this.context;
+    const { speakersConversationEnabled } = await this.resolveProposal();
+    this.assertWritable(speakersConversationEnabled);
+
+    const { userId } = this.policy;
 
     const existingReaction = await db.conversationReaction.findUnique({
       where: { messageId_userId_code: { userId, messageId: id, code } },
@@ -86,13 +133,19 @@ export class ConversationService {
     return db.conversationReaction.create({ data: { userId, messageId: id, code } });
   }
 
-  async deleteMessage({ id }: ConversationMessageDeleteData, canManageConversations?: boolean) {
-    const { userId } = this.context;
+  async deleteMessage({ id }: ConversationMessageDeleteData) {
+    const { speakersConversationEnabled } = await this.resolveProposal();
+    this.assertWritable(speakersConversationEnabled);
+
+    const { userId, canManageConversations } = this.policy;
     await db.conversationMessage.deleteMany({ where: { id, senderId: canManageConversations ? undefined : userId } });
   }
 
-  async getConversation(eventId: string) {
-    const { userId, role, type, proposalId } = this.context;
+  async getConversation() {
+    const { eventId, speakersConversationEnabled } = await this.resolveProposal();
+    if (this.policy.availabilityGated && !speakersConversationEnabled) return [];
+
+    const { userId, role, type, proposalId } = this.policy;
 
     // Get conversation
     const conversation = await db.conversation.findFirst({
@@ -137,6 +190,33 @@ export class ConversationService {
         };
       }) || []
     );
+  }
+
+  // The single access step: guards (throws when the actor may not reach the proposal) and resolves
+  // the proposal's event id and speaker-conversation availability flag, shared by every method.
+  private async resolveProposal() {
+    const { proposalId, accessStrategy, userId, eventId } = this.policy;
+
+    const where =
+      accessStrategy === 'SPEAKER_OWNS_PROPOSAL'
+        ? { id: proposalId, speakers: { some: { userId } } }
+        : { id: proposalId, eventId: eventId ?? undefined };
+
+    const proposal = await db.proposal.findFirst({
+      where,
+      select: { eventId: true, event: { select: { speakersConversationEnabled: true } } },
+    });
+
+    if (!proposal) throw new ProposalNotFoundError();
+
+    return { eventId: proposal.eventId, speakersConversationEnabled: proposal.event.speakersConversationEnabled };
+  }
+
+  // Writes to a gated context are rejected when the event has speaker conversations disabled.
+  private assertWritable(speakersConversationEnabled: boolean) {
+    if (this.policy.availabilityGated && !speakersConversationEnabled) {
+      throw new ForbiddenOperationError();
+    }
   }
 
   private mapReactions(

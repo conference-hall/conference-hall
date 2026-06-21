@@ -1,6 +1,6 @@
 import type { EmojiReaction } from './emojis.types.ts';
 
-export type MessageRole = 'SPEAKER' | 'ORGANIZER';
+type MessageRole = 'SPEAKER' | 'ORGANIZER';
 
 export type Message = {
   id: string;
