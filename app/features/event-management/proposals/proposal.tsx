@@ -12,13 +12,12 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ConversationDrawer } from '~/features/conversations/components/conversation-drawer.tsx';
+import { ConversationService } from '~/features/conversations/services/conversation-service.server.ts';
 import {
   ConversationMessageDeleteWithChannelSchema,
   ConversationMessageReactWithChannelSchema,
   ConversationMessageSaveWithChannelSchema,
 } from '~/features/conversations/services/conversation.schema.server.ts';
-import { ProposalReviewComments } from '~/features/conversations/services/proposal-review-comments.server.ts';
-import { SpeakerConversationForOrganizers } from '~/features/conversations/services/speaker-conversation-for-organizers.server.ts';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import { parseUrlFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
@@ -64,8 +63,8 @@ export const loader = async ({ params, context, url }: Route.LoaderArgs) => {
   const proposalId = await resolveProposalId(authorizedEvent, params.proposal);
 
   const proposalReview = ProposalReview.for(authorizedEvent, proposalId);
-  const reviewComments = ProposalReviewComments.for(authorizedEvent, proposalId);
-  const speakerConversation = SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+  const reviewComments = ConversationService.forReviewComments(authorizedEvent, proposalId);
+  const speakerConversation = ConversationService.forOrganizer(authorizedEvent, proposalId);
 
   const activityPromise = Promise.all([reviewComments.getConversation(), speakerConversation.getConversation()]);
   const proposal = await proposalReview.get();
@@ -112,8 +111,8 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       const { channel, ...data } = result.value;
       const service =
         channel === 'comment'
-          ? ProposalReviewComments.for(authorizedEvent, proposalId)
-          : SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+          ? ConversationService.forReviewComments(authorizedEvent, proposalId)
+          : ConversationService.forOrganizer(authorizedEvent, proposalId);
       await service.saveMessage(data);
       break;
     }
@@ -123,8 +122,8 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       const { channel, ...data } = result.value;
       const service =
         channel === 'comment'
-          ? ProposalReviewComments.for(authorizedEvent, proposalId)
-          : SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+          ? ConversationService.forReviewComments(authorizedEvent, proposalId)
+          : ConversationService.forOrganizer(authorizedEvent, proposalId);
       await service.deleteMessage(data);
       break;
     }
@@ -134,8 +133,8 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
       const { channel, ...data } = result.value;
       const service =
         channel === 'comment'
-          ? ProposalReviewComments.for(authorizedEvent, proposalId)
-          : SpeakerConversationForOrganizers.for(authorizedEvent, proposalId);
+          ? ConversationService.forReviewComments(authorizedEvent, proposalId)
+          : ConversationService.forOrganizer(authorizedEvent, proposalId);
       await service.reactMessage(data);
       break;
     }
