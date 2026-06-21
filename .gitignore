@@ -26,5 +26,6 @@ e2e/results
 .DS_Store
 
 # ai
+.scratch
 .claude
 CLAUDE.md
