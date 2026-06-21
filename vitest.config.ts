@@ -13,7 +13,7 @@ export default defineConfig({
   resolve: { tsconfigPaths: true },
   server: { watch: { ignored: ['.*\\/node_modules\\/.*', '.*\\/build\\/.*'] } },
   test: {
-    env,
+    env: { ...env, TZ: 'UTC' },
     globals: true,
     mockReset: true,
     reporters: env.CI ? ['default', 'junit'] : 'default',
