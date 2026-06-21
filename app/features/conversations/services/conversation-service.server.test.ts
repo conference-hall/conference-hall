@@ -12,7 +12,6 @@ import { db } from '../../../../prisma/db.server.ts';
 import type { Event, Team, User } from '../../../../prisma/generated/client.ts';
 import { ConversationParticipantRole, ConversationType } from '../../../../prisma/generated/client.ts';
 import { ConversationService } from './conversation-service.server.ts';
-import { notifyConversationMessage } from './jobs/notify-conversation-message.job.ts';
 
 describe('ConversationService', () => {
   let speaker: User;
@@ -407,54 +406,6 @@ describe('ConversationService', () => {
 
         const result = await db.conversationMessage.findUnique({ where: { id: message.id } });
         expect(result?.content).toBe('Original message');
-      });
-
-      it('triggers the notification job when creating a new message', async () => {
-        const talk = await talkFactory({ speakers: [speaker] });
-        const proposal = await proposalFactory({ event, talk });
-        const authorizedEvent = await authorizeOwner();
-
-        await ConversationService.forOrganizer(authorizedEvent, proposal.id).saveMessage({ message: 'New message' });
-
-        const conversation = await db.conversation.findFirst({
-          where: { eventId: event.id, type: ConversationType.PROPOSAL_SPEAKER_CONVERSATION },
-        });
-
-        expect(notifyConversationMessage.trigger).toHaveBeenCalledWith(
-          { conversationId: conversation?.id },
-          expect.objectContaining({
-            delay: expect.any(Number),
-            deduplication: expect.objectContaining({
-              id: conversation?.id,
-              ttl: expect.any(Number),
-              extend: true,
-              replace: true,
-            }),
-          }),
-        );
-      });
-
-      it('does not trigger the notification job when updating an existing message', async () => {
-        const talk = await talkFactory({ speakers: [speaker] });
-        const proposal = await proposalFactory({ event, talk });
-        const conversation = await conversationFactory({
-          event,
-          proposalId: proposal.id,
-          type: 'PROPOSAL_SPEAKER_CONVERSATION',
-        });
-        const message = await conversationMessageFactory({
-          conversation,
-          sender: owner,
-          role: ConversationParticipantRole.ORGANIZER,
-        });
-        const authorizedEvent = await authorizeOwner();
-
-        await ConversationService.forOrganizer(authorizedEvent, proposal.id).saveMessage({
-          id: message.id,
-          message: 'Updated message',
-        });
-
-        expect(notifyConversationMessage.trigger).not.toHaveBeenCalled();
       });
     });
 
@@ -1011,18 +962,6 @@ describe('ConversationService', () => {
         const service = ConversationService.forReviewComments(authorizedEvent, proposal.id);
 
         await expect(service.saveMessage({ message: 'Should fail' })).rejects.toThrow(ProposalNotFoundError);
-      });
-
-      it('never triggers a speaker-facing notification', async () => {
-        const talk = await talkFactory({ speakers: [speaker] });
-        const proposal = await proposalFactory({ event, talk });
-        const authorizedEvent = await authorizeOwner();
-
-        await ConversationService.forReviewComments(authorizedEvent, proposal.id).saveMessage({
-          message: 'Internal note',
-        });
-
-        expect(notifyConversationMessage.trigger).not.toHaveBeenCalled();
       });
     });
 

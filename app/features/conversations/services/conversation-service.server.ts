@@ -8,7 +8,6 @@ import type {
   ConversationMessageReactData,
   ConversationMessageSaveData,
 } from './conversation.schema.server.ts';
-import { NOTIFICATION_DELAY, notifyConversationMessage } from './jobs/notify-conversation-message.job.ts';
 
 // The access strategy decides who may reach the proposal a conversation hangs off of.
 // SPEAKER_OWNS_PROPOSAL: the actor must be one of the proposal's speakers.
@@ -26,7 +25,6 @@ type ConversationPolicy = {
   accessStrategy: AccessStrategy;
   availabilityGated: boolean; // whether the speakers-conversation toggle gates this context
   canManageConversations: boolean;
-  skipNotification: boolean;
 };
 
 export class ConversationService {
@@ -47,7 +45,6 @@ export class ConversationService {
       accessStrategy: 'SPEAKER_OWNS_PROPOSAL',
       availabilityGated: true,
       canManageConversations: false,
-      skipNotification: false,
     });
   }
 
@@ -62,7 +59,6 @@ export class ConversationService {
       accessStrategy: 'PROPOSAL_IN_EVENT',
       availabilityGated: true,
       canManageConversations: authorizedEvent.permissions.canManageConversations,
-      skipNotification: false,
     });
   }
 
@@ -77,7 +73,6 @@ export class ConversationService {
       accessStrategy: 'PROPOSAL_IN_EVENT',
       availabilityGated: false,
       canManageConversations: authorizedEvent.permissions.canManageConversations,
-      skipNotification: true,
     });
   }
 
@@ -85,7 +80,7 @@ export class ConversationService {
     const { eventId, speakersConversationEnabled } = await this.resolveProposal();
     this.assertWritable(speakersConversationEnabled);
 
-    const { userId, role, type, proposalId, canManageConversations, skipNotification } = this.policy;
+    const { userId, role, type, proposalId, canManageConversations } = this.policy;
 
     await db.$transaction(async (tx) => {
       // Create conversation if it doesn't exist
@@ -113,18 +108,6 @@ export class ConversationService {
         await tx.conversationMessage.create({
           data: { conversationId: conversation.id, senderId: userId, content: message, type: 'TEXT' },
         });
-
-        if (skipNotification) return;
-
-        // Trigger email notification job with debounce per conversation
-        // This ensures that only one notification is sent even if multiple messages are created in succession
-        await notifyConversationMessage.trigger(
-          { conversationId: conversation.id },
-          {
-            deduplication: { id: conversation.id, ttl: NOTIFICATION_DELAY, extend: true, replace: true },
-            delay: NOTIFICATION_DELAY,
-          },
-        );
       }
     });
   }
