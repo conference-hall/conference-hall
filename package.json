@@ -7,7 +7,7 @@
   "sideEffects": false,
   "scripts": {
     "dev": "pnpm --reporter=append-only run /^dev:/",
-    "dev:web": "tsx ./servers/web.dev.ts",
+    "dev:web": "tsx --conditions=development ./servers/web.dev.ts",
     "dev:job": "tsx watch ./servers/jobs.ts",
     "start": "node ./build/server/index.js",
     "build": "prisma generate && react-router build",
