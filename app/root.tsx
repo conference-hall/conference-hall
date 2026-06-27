@@ -80,7 +80,7 @@ function Document({ nonce, toast, children }: DocumentProps) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
-        <Links />
+        <Links nonce={nonce} />
       </head>
       <body className="overflow-x-hidden bg-slate-50 font-sans text-gray-900 antialiased">
         <GlobalLoading />
