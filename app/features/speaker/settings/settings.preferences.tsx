@@ -1,12 +1,14 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
-import { data, Form } from 'react-router';
+import { data, Form, useFetcher } from 'react-router';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/button.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
+import { useFlag } from '~/shared/feature-flags/flags-context.tsx';
 import { getI18n, setLocaleCookie } from '~/shared/i18n/i18n.middleware.ts';
 import { SUPPORTED_LANGUAGES } from '~/shared/i18n/i18n.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -18,9 +20,23 @@ export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [{ title: 'Preferences | Conference Hall' }]);
 };
 
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const authUser = context.get(RequireAuthContext);
+  const preferences = await UserAccount.for(authUser.id).getPreferences();
+  return { conversationDigestEnabled: preferences?.conversationDigestEnabled ?? true };
+};
+
 export const action = async ({ request, context }: Route.ActionArgs) => {
   const authUser = context.get(RequireAuthContext);
   const form = await request.formData();
+  const intent = form.get('intent') as string;
+
+  if (intent === 'conversation-digest') {
+    const enabled = form.get('conversationDigestEnabled') === 'true';
+    await UserAccount.for(authUser.id).setConversationDigestEnabled(enabled);
+    return data(null);
+  }
+
   const locale = form.get('locale') as string;
   await UserAccount.for(authUser.id).changeLocale(locale);
 
@@ -34,10 +50,12 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   });
 };
 
-export default function PreferencesRoute() {
+export default function PreferencesRoute({ loaderData }: Route.ComponentProps) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const formId = useId();
+  const isConversationDigestEnabled = useFlag('conversationDigest');
+  const digestFetcher = useFetcher();
 
   const locales = SUPPORTED_LANGUAGES.map((locale) => ({
     name: t(`settings.preferences.language.${locale}`),
@@ -56,6 +74,7 @@ export default function PreferencesRoute() {
 
         <Card.Content>
           <Form method="POST" id={formId} aria-labelledby="language" preventScrollReset>
+            <input type="hidden" name="intent" value="locale" />
             <SelectNative
               name="locale"
               label={t('settings.preferences.language')}
@@ -71,6 +90,29 @@ export default function PreferencesRoute() {
           </Button>
         </Card.Actions>
       </Card>
+
+      {isConversationDigestEnabled ? (
+        <Card as="section">
+          <Card.Title>
+            <H2>{t('settings.preferences.conversation-digest')}</H2>
+            <Subtitle>{t('settings.preferences.conversation-digest.subtitle')}</Subtitle>
+          </Card.Title>
+
+          <Card.Content>
+            <ToggleGroup
+              label={t('settings.preferences.conversation-digest.toggle.label')}
+              description={t('settings.preferences.conversation-digest.toggle.description')}
+              value={loaderData.conversationDigestEnabled}
+              onChange={(checked) =>
+                digestFetcher.submit(
+                  { intent: 'conversation-digest', conversationDigestEnabled: String(checked) },
+                  { method: 'POST', preventScrollReset: true },
+                )
+              }
+            />
+          </Card.Content>
+        </Card>
+      ) : null}
     </div>
   );
 }

@@ -77,6 +77,18 @@ export class UserAccount {
     return user;
   }
 
+  async getPreferences() {
+    const user = await db.user.findUnique({
+      where: { id: this.userId },
+      select: { locale: true, conversationDigestEnabled: true },
+    });
+    return user;
+  }
+
+  async setConversationDigestEnabled(enabled: boolean) {
+    return db.user.update({ where: { id: this.userId }, data: { conversationDigestEnabled: enabled } });
+  }
+
   async deleteAccount(options?: DeleteAccountOptions) {
     const user = await db.user.findUnique({ where: { id: this.userId } });
     if (!user) throw new UserNotFoundError();
