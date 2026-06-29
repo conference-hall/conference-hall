@@ -2,7 +2,6 @@ import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Fetch from 'i18next-fetch-backend';
 import { initReactI18next } from 'react-i18next';
-import { getInitialNamespaces } from 'remix-i18next/client';
 import { i18nConfig } from './i18n.ts';
 
 export async function initializeI18n() {
@@ -12,7 +11,6 @@ export async function initializeI18n() {
     .use(LanguageDetector)
     .init({
       ...i18nConfig,
-      ns: getInitialNamespaces(), // Detects the namespaces your routes rendered while SSR use
       backend: { loadPath: '/locales/{{lng}}/{{ns}}' },
       detection: {
         // Here only enable htmlTag detection, we'll detect the language only

@@ -1,5 +1,5 @@
 import { createCookie } from 'react-router';
-import { createI18nextMiddleware } from 'remix-i18next/middleware';
+import { createI18nextMiddleware } from 'remix-i18next';
 import { getWebServerEnv } from '../../../servers/environment.server.ts';
 import { i18nResources } from './i18n.resources.ts';
 import { FALLBACK_LANGUAGE, i18nConfig, SUPPORTED_LANGUAGES } from './i18n.ts';

@@ -5,10 +5,5 @@ export default {
   serverBuildFile: '[name].js',
   future: {
     unstable_optimizeDeps: true,
-    v8_passThroughRequests: false,
-    v8_middleware: true,
-    v8_splitRouteModules: true,
-    v8_viteEnvironmentApi: true,
-    v8_trailingSlashAwareDataRequests: true,
   },
 } satisfies Config;
