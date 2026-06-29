@@ -1,14 +1,19 @@
+import { conversationDigest } from '~/features/conversations/jobs/conversation-digest.job.ts';
 import { exportToOpenPlanner } from '~/features/event-management/proposals-export/services/jobs/export-to-open-planner.job.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
+import { registerJobSchedulers } from '~/shared/jobs/job.ts';
 import { createJobWorkers } from '~/shared/jobs/worker.ts';
 import { testJob } from '../app/features/admin/debug/services/jobs/test.job.ts';
 import { logger } from '../app/shared/logger/logger.server.ts';
 import { db } from '../prisma/db.server.ts';
 
-const jobs = [sendEmail, exportToOpenPlanner, sendTalkToSlack, testJob];
+const jobs = [sendEmail, exportToOpenPlanner, sendTalkToSlack, conversationDigest, testJob];
 
 const workers = createJobWorkers(jobs);
+
+// Register recurring schedules (e.g. the daily conversation digest). Idempotent across restarts.
+await registerJobSchedulers(jobs);
 
 process.on('uncaughtException', (error) => {
   logger.error('Uncaught exception', { error });

@@ -928,6 +928,10 @@
   "settings.preferences.language.subtitle": "Select the language for the user interface",
   "settings.preferences.language": "Language",
   "settings.preferences.saved": "Preferences saved successfully",
+  "settings.preferences.conversation-digest": "Conversation digest",
+  "settings.preferences.conversation-digest.subtitle": "Get a daily email recap of unread messages on your proposals.",
+  "settings.preferences.conversation-digest.toggle.description": "Receive a daily email summarizing unread messages across your conversations.",
+  "settings.preferences.conversation-digest.toggle.label": "Daily conversation digest",
   "settings.preferences": "Preferences",
   "settings.profile.feebacks.updated": "Profile updated.",
   "settings.profile.heading": "Profile",
@@ -1081,5 +1085,8 @@
   "team.settings.nav.members": "Members",
   "team.settings.team-edit.description": "Change team name and URL.",
   "team.settings.team-edit.form.submit": "Save",
-  "team.settings.team-edit.heading": "General"
+  "team.settings.team-edit.heading": "General",
+  "unsubscribe.back-home": "Back to Conference Hall",
+  "unsubscribe.conversation-digest.error": "This unsubscribe link is invalid or has expired.",
+  "unsubscribe.conversation-digest.success": "You have been unsubscribed from conversation digest emails."
 }

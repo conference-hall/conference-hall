@@ -22,6 +22,7 @@ model User {
   termsAccepted            Boolean                   @default(false)
   locale                   String                    @default("en")
   admin                    Boolean                   @default(false)
+  conversationDigestEnabled Boolean                  @default(true)
   createdAt                DateTime                  @default(now())
   updatedAt                DateTime                  @updatedAt
   deletedAt                DateTime?
@@ -505,6 +506,7 @@ model ConversationParticipant {
   role           ConversationParticipantRole
   joinedAt       DateTime                    @default(now())
   lastSeenAt     DateTime?
+  lastDigestedAt DateTime?
 
   @@unique([conversationId, userId])
   @@index([userId])

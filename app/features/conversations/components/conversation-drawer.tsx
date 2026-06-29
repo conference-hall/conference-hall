@@ -1,6 +1,7 @@
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router';
 import { Avatar, AvatarGroup } from '~/design-system/avatar.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
@@ -15,11 +16,23 @@ type Props = {
   children: ReactNode;
   canManageConversations: boolean;
   className?: string;
+  // When set, the drawer auto-opens on mount if the `?conversation=` deep-link param matches this
+  // thread (e.g. from a conversation digest "Open" link). Omitted ⇒ the drawer stays closed by default.
+  conversationType?: 'speaker' | 'review';
 };
 
-export function ConversationDrawer({ messages, recipients = [], children, canManageConversations, className }: Props) {
+export function ConversationDrawer({
+  messages,
+  recipients = [],
+  children,
+  canManageConversations,
+  className,
+  conversationType,
+}: Props) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+  const autoOpen = conversationType != null && searchParams.get('conversation') === conversationType;
+  const [open, setOpen] = useState(autoOpen);
 
   const { optimisticMessages, onOptimisticSaveMessage, onOptimisticDeleteMessage } = useOptimisticMessages(
     messages,

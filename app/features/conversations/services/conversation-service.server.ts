@@ -97,6 +97,25 @@ export class ConversationService {
         update: {},
       });
 
+      // Seed the proposal's speakers (those with a linked user) as participants of the speaker thread,
+      // so a speaker who never opened the conversation is still a digest recipient. Forward-only and
+      // read-state-neutral: no `lastSeenAt` is set, so seeded speakers stay "unseen" in-app. Review
+      // threads are never seeded — they stay "engaged organizers only".
+      if (type === 'PROPOSAL_SPEAKER_CONVERSATION') {
+        const speakers = await tx.eventSpeaker.findMany({
+          where: { userId: { not: null }, proposals: { some: { id: proposalId } } },
+          select: { userId: true },
+        });
+        for (const speaker of speakers) {
+          if (!speaker.userId) continue;
+          await tx.conversationParticipant.upsert({
+            where: { conversationId_userId: { conversationId: conversation.id, userId: speaker.userId } },
+            create: { conversationId: conversation.id, userId: speaker.userId, role: 'SPEAKER' },
+            update: {},
+          });
+        }
+      }
+
       if (id) {
         // Update message
         await tx.conversationMessage.updateMany({

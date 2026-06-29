@@ -19,12 +19,18 @@ export class MailgunProvider implements EmailProvider {
     if (recipientEmails.length === 0) return;
 
     try {
+      // Mailgun exposes custom headers via `h:`-prefixed keys.
+      const customHeaders = Object.fromEntries(
+        Object.entries(email.headers ?? {}).map(([key, value]) => [`h:${key}`, value]),
+      );
+
       await this.client.messages.create(this.domain, {
         from: email.from,
         to: recipientEmails,
         subject: email.subject,
         html: email.html,
         text: email.text,
+        ...customHeaders,
       });
     } catch (error) {
       logger.error('Error sending email', { error });

@@ -21,6 +21,7 @@ export class MailpitProvider implements EmailProvider {
         subject: email.subject,
         html: email.html,
         text: email.text,
+        headers: email.headers,
       });
     } catch (error) {
       logger.error('Error sending email', { error });
