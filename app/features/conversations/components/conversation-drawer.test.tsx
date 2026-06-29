@@ -37,7 +37,7 @@ describe('ConversationDrawer component', () => {
     },
   ];
 
-  const renderComponent = (props = {}, user = mockUser) => {
+  const renderComponent = (props = {}, user = mockUser, initialEntries = ['/']) => {
     const RouteStub = createRoutesStub([
       {
         path: '/',
@@ -53,7 +53,7 @@ describe('ConversationDrawer component', () => {
         ),
       },
     ]);
-    return page.render(<RouteStub initialEntries={['/']} />);
+    return page.render(<RouteStub initialEntries={initialEntries} />);
   };
 
   it('opens drawer when clicking trigger button', async () => {
@@ -65,6 +65,31 @@ describe('ConversationDrawer component', () => {
     await expect.element(page.getByText('First message')).toBeInTheDocument();
     await expect.element(page.getByText('Second message')).toBeInTheDocument();
     await expect.element(page.getByRole('button', { name: 'Send' })).toBeInTheDocument();
+  });
+
+  it('auto-opens when the conversation deep-link param matches its thread', async () => {
+    await renderComponent({ messages, conversationType: 'speaker' }, mockUser, ['/?conversation=speaker']);
+
+    await expect.element(page.getByText('First message')).toBeInTheDocument();
+    await expect.element(page.getByText('Second message')).toBeInTheDocument();
+  });
+
+  it('stays closed when the deep-link param targets a different thread', async () => {
+    await renderComponent({ messages, conversationType: 'speaker' }, mockUser, ['/?conversation=review']);
+
+    await expect.element(page.getByText('First message')).not.toBeInTheDocument();
+  });
+
+  it('stays closed when there is no deep-link param', async () => {
+    await renderComponent({ messages, conversationType: 'speaker' }, mockUser, ['/']);
+
+    await expect.element(page.getByText('First message')).not.toBeInTheDocument();
+  });
+
+  it('ignores the deep-link param when no conversationType is configured', async () => {
+    await renderComponent({ messages }, mockUser, ['/?conversation=speaker']);
+
+    await expect.element(page.getByText('First message')).not.toBeInTheDocument();
   });
 
   it('displays empty state when no messages', async () => {

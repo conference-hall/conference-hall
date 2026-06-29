@@ -928,6 +928,10 @@
   "settings.preferences.language.subtitle": "Sélectionner la langue de l'interface utilisateur",
   "settings.preferences.language": "Langue",
   "settings.preferences.saved": "Les préférences ont été sauvegardées avec succès",
+  "settings.preferences.conversation-digest": "Résumé des conversations",
+  "settings.preferences.conversation-digest.subtitle": "Recevez un email quotidien récapitulant les messages non lus sur vos propositions.",
+  "settings.preferences.conversation-digest.toggle.description": "Recevez un email quotidien résumant les messages non lus de vos conversations.",
+  "settings.preferences.conversation-digest.toggle.label": "Résumé quotidien des conversations",
   "settings.preferences": "Préférences",
   "settings.profile.feebacks.updated": "Profil mis à jour.",
   "settings.profile.heading": "Profil",
@@ -1081,5 +1085,8 @@
   "team.settings.nav.members": "Membres",
   "team.settings.team-edit.description": "Modifier le nom et l'URL de l'équipe.",
   "team.settings.team-edit.form.submit": "Enregistrer",
-  "team.settings.team-edit.heading": "Général"
+  "team.settings.team-edit.heading": "Général",
+  "unsubscribe.back-home": "Retour à Conference Hall",
+  "unsubscribe.conversation-digest.error": "Ce lien de désabonnement est invalide ou a expiré.",
+  "unsubscribe.conversation-digest.success": "Vous avez été désabonné des emails de résumé des conversations."
 }
