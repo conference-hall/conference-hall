@@ -56,7 +56,6 @@ describe('url cleaning', { tags: ['no-teardown'] }, () => {
     expect(response.statusCode).toBe(301);
     expect(response.headers['ratelimit-remaining']).toBeUndefined();
 
-    // The redirected request did not consume a token: the full quota is still available
     const followed = await app.inject({ method: 'GET', url: '/api/v1/event/my-event' });
     expect(followed.statusCode).toBe(200);
     expect(followed.headers['ratelimit-remaining']).toBe('59');

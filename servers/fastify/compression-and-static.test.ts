@@ -102,7 +102,6 @@ describe('static assets', { tags: ['no-teardown'] }, () => {
   it('lets locale requests reach the React Router handler instead of a static mount', async () => {
     const response = await app.inject({ method: 'GET', url: '/locales/en/translation.json' });
 
-    // The catch-all route answers (short-circuited to 'ok' in tests), not @fastify/static
     expect(response.statusCode).toBe(200);
     expect(response.body).toBe('ok');
     expect(response.headers['cache-control']).toBeUndefined();

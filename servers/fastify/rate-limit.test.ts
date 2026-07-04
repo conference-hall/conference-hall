@@ -51,14 +51,12 @@ describe('rate limits', { tags: ['no-teardown'] }, () => {
     });
 
     it('keeps independent counters across the three buckets', async () => {
-      // Exhaust the team request bucket
       for (let i = 0; i < 6; i++) {
         await app.inject({ method: 'POST', url: '/team/request' });
       }
       const teamRequest = await app.inject({ method: 'POST', url: '/team/request' });
       expect(teamRequest.statusCode).toBe(429);
 
-      // The API and secured-path buckets are unaffected
       const api = await app.inject({ method: 'GET', url: '/api/v1/event/my-event' });
       expect(api.statusCode).toBe(200);
       expect(api.headers['ratelimit-remaining']).toBe('59');
@@ -76,7 +74,6 @@ describe('rate limits', { tags: ['no-teardown'] }, () => {
     });
 
     it('keys the limit on cf-connecting-ip over the socket address', async () => {
-      // Exhaust the bucket for a first client behind Cloudflare
       for (let i = 0; i < 6; i++) {
         await app.inject({ method: 'POST', url: '/team/request', headers: { 'cf-connecting-ip': '203.0.113.1' } });
       }
@@ -87,7 +84,6 @@ describe('rate limits', { tags: ['no-teardown'] }, () => {
       });
       expect(sameClient.statusCode).toBe(429);
 
-      // Another client behind the same proxy (same socket address) is not throttled
       const otherClient = await app.inject({
         method: 'POST',
         url: '/team/request',
