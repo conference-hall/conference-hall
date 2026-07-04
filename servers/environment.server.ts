@@ -21,7 +21,7 @@ const SharedServerSchema = z.object({
 });
 
 const WebServerSchema = z.object({
-  HOST: z.string().optional().default('localhost'),
+  HOST: z.string().optional().default('0.0.0.0'),
   PORT: z.coerce.number().optional().default(3000),
   MAINTENANCE_ENABLED: z.stringbool().optional().default(false),
   COOKIE_SIGNED_SECRET: z.string(),
