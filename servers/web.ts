@@ -1,4 +1,5 @@
 import { pathToFileURL } from 'node:url';
+import fastifyCompress from '@fastify/compress';
 import { type FastifyReactRouterOptions, fastifyReactRouter } from '@mcansh/react-router-fastify';
 import { type FastifyError, fastify } from 'fastify';
 import { RouterContextProvider } from 'react-router';
@@ -9,6 +10,7 @@ import { getWebServerEnv } from './environment.server.ts';
 import { applyRequestAbortLogging, createFastifyLogger } from './fastify/logging.ts';
 import { type RateLimitsOptions, applyRateLimits } from './fastify/rate-limit.ts';
 import { applySecurity } from './fastify/security.ts';
+import { staticCacheHeaders } from './fastify/static.ts';
 
 const { HOST, PORT } = getWebServerEnv();
 
@@ -26,6 +28,9 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
   // Log aborted requests, which Fastify does not log natively
   applyRequestAbortLogging(app);
 
+  // Response compression: Brotli preferred, gzip/deflate fallback
+  await app.register(fastifyCompress);
+
   // Security (helmet, CSP nonces...)
   await applySecurity(app);
 
@@ -42,7 +47,9 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
     return reply.status(statusCode).send(error);
   });
 
-  // React Router request handler
+  // React Router request handler, serving the client build statically in production.
+  // Translations are served by the locales resource route, not a static mount.
+  const clientBuildDirectory = options.reactRouter?.clientBuildDirectory ?? 'build/client';
   await app.register(fastifyReactRouter, {
     devServer: vite,
     getLoadContext(_request, reply) {
@@ -50,6 +57,7 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
       context.set(nonceContext, { nonce: reply.cspNonce.script });
       return context;
     },
+    staticOptions: staticCacheHeaders(clientBuildDirectory),
     ...options.reactRouter,
   });
 
