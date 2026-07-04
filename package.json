@@ -5,6 +5,9 @@
   "license": "AGPL-3.0",
   "type": "module",
   "sideEffects": false,
+  "imports": {
+    "#nonce": "./app/shared/nonce/nonce.server.ts"
+  },
   "scripts": {
     "dev": "pnpm --reporter=append-only run /^dev:/",
     "dev:web": "tsx --conditions=development ./servers/web.dev.ts",

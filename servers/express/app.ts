@@ -1,7 +1,7 @@
 import { createRequestHandler } from '@react-router/express';
 import express from 'express';
 import { RouterContextProvider } from 'react-router';
-import { nonceContext } from '~/shared/nonce/nonce.server.ts';
+import { nonceContext } from '#nonce';
 
 export const app = express();
 
