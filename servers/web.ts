@@ -6,6 +6,7 @@ import type { ViteDevServer } from 'vite';
 import { nonceContext } from '#nonce';
 import { logger } from '../app/shared/logger/logger.server.ts';
 import { getWebServerEnv } from './environment.server.ts';
+import { applyRequestAbortLogging, createFastifyLogger } from './fastify/logging.ts';
 import { type RateLimitsOptions, applyRateLimits } from './fastify/rate-limit.ts';
 import { applySecurity } from './fastify/security.ts';
 
@@ -19,7 +20,11 @@ type CreateServerOptions = {
 };
 
 export async function createServer(vite?: ViteDevServer, options: CreateServerOptions = {}) {
-  const app = fastify();
+  // Native request logging (incoming/completed lines) flows through the shared logger
+  const app = fastify({ loggerInstance: createFastifyLogger() });
+
+  // Log aborted requests, which Fastify does not log natively
+  applyRequestAbortLogging(app);
 
   // Security (helmet, CSP nonces...)
   await applySecurity(app);
