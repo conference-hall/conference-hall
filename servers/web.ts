@@ -6,6 +6,7 @@ import type { ViteDevServer } from 'vite';
 import { nonceContext } from '#nonce';
 import { logger } from '../app/shared/logger/logger.server.ts';
 import { getWebServerEnv } from './environment.server.ts';
+import { type RateLimitsOptions, applyRateLimits } from './fastify/rate-limit.ts';
 import { applySecurity } from './fastify/security.ts';
 
 const { HOST, PORT } = getWebServerEnv();
@@ -13,6 +14,8 @@ const { HOST, PORT } = getWebServerEnv();
 type CreateServerOptions = {
   // React Router adapter overrides, used by tests to point at fixtures instead of the real build
   reactRouter?: Partial<FastifyReactRouterOptions>;
+  // Rate limits overrides, used by tests to re-enable throttling
+  rateLimits?: RateLimitsOptions;
 };
 
 export async function createServer(vite?: ViteDevServer, options: CreateServerOptions = {}) {
@@ -20,6 +23,9 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
 
   // Security (helmet, CSP nonces...)
   await applySecurity(app);
+
+  // Rate limits
+  await applyRateLimits(app, options.rateLimits);
 
   // Log hook and server-level errors, answer 500. Client errors keep their status code.
   app.setErrorHandler((error: FastifyError, _request, reply) => {

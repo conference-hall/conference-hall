@@ -40,6 +40,7 @@
     "@dnd-kit/geometry": "^0.5.0",
     "@dnd-kit/react": "^0.5.0",
     "@fastify/helmet": "^13.0.2",
+    "@fastify/rate-limit": "^11.1.0",
     "@floating-ui/react": "^0.27.19",
     "@headlessui/react": "^2.2.10",
     "@heroicons/react": "^2.2.0",

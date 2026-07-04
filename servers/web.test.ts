@@ -4,9 +4,11 @@ import { createTestServer } from './fastify/test-helpers.ts';
 describe('web server', { tags: ['no-teardown'] }, () => {
   it('logs errors thrown in hooks and answers 500', async () => {
     const app = await createTestServer({
-      routeOptions: {
-        preHandler: () => {
-          throw new Error('boom');
+      reactRouter: {
+        routeOptions: {
+          preHandler: () => {
+            throw new Error('boom');
+          },
         },
       },
     });
@@ -23,11 +25,13 @@ describe('web server', { tags: ['no-teardown'] }, () => {
 
   it('keeps client error status codes untouched', async () => {
     const app = await createTestServer({
-      routeOptions: {
-        preHandler: () => {
-          const error = new Error('Teapot') as Error & { statusCode: number };
-          error.statusCode = 418;
-          throw error;
+      reactRouter: {
+        routeOptions: {
+          preHandler: () => {
+            const error = new Error('Teapot') as Error & { statusCode: number };
+            error.statusCode = 418;
+            throw error;
+          },
         },
       },
     });
