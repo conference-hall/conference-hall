@@ -1,5 +1,7 @@
 import type { EmojiReaction } from './emojis.types.ts';
 
+export const MESSAGE_MAX_LENGTH = 2000;
+
 type MessageRole = 'SPEAKER' | 'ORGANIZER';
 
 export type Message = {

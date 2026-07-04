@@ -2,7 +2,7 @@ import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
-import type { Message } from '~/shared/types/conversation.types.ts';
+import { MESSAGE_MAX_LENGTH, type Message } from '~/shared/types/conversation.types.ts';
 import { MessageInputForm } from './message-input-form.tsx';
 
 describe('MessageInputForm component', () => {
@@ -41,6 +41,36 @@ describe('MessageInputForm component', () => {
 
     const textarea = page.getByRole('textbox', { name: 'Message input' });
     expect(textarea).toHaveValue('Existing message');
+  });
+
+  it('caps the textarea to the maximum message length', async () => {
+    await renderComponent();
+
+    const textarea = page.getByRole('textbox', { name: 'Message input' });
+    expect(textarea.element()).toHaveAttribute('maxlength', String(MESSAGE_MAX_LENGTH));
+  });
+
+  it('renders a live character counter that updates while typing', async () => {
+    await renderComponent();
+
+    await expect.element(page.getByText(`0 / ${MESSAGE_MAX_LENGTH}`)).toBeInTheDocument();
+
+    await page.getByRole('textbox', { name: 'Message input' }).fill('hello');
+    await expect.element(page.getByText(`5 / ${MESSAGE_MAX_LENGTH}`)).toBeInTheDocument();
+  });
+
+  it('initializes the character counter from an existing message', async () => {
+    const message: Message = {
+      id: 'msg-1',
+      sender: { userId: 'user-1', name: 'John Doe', picture: null },
+      content: 'Existing message',
+      reactions: [],
+      sentAt: new Date(),
+    };
+
+    await renderComponent({ message });
+
+    await expect.element(page.getByText(`16 / ${MESSAGE_MAX_LENGTH}`)).toBeInTheDocument();
   });
 
   it('renders cancel button when onClose is provided', async () => {

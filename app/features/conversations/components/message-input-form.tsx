@@ -1,10 +1,11 @@
 import { formatForDisplay, useHotkey } from '@tanstack/react-hotkeys';
-import { useId, useRef } from 'react';
+import { cx } from 'class-variance-authority';
+import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
-import { Label } from '~/design-system/typography.tsx';
-import type { Message } from '~/shared/types/conversation.types.ts';
+import { Label, Subtitle } from '~/design-system/typography.tsx';
+import { MESSAGE_MAX_LENGTH, type Message } from '~/shared/types/conversation.types.ts';
 
 type Props = {
   channel: string;
@@ -33,6 +34,7 @@ export function MessageInputForm({
   const formRef = useRef<HTMLFormElement>(null);
   const fetcherKey = message?.id ? `save-message:${message.id}` : 'save-message:new';
   const fetcher = useFetcher({ key: fetcherKey });
+  const [charCount, setCharCount] = useState(message?.content?.length ?? 0);
 
   const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,6 +46,7 @@ export function MessageInputForm({
 
     await fetcher.submit(formData, { method: 'POST', preventScrollReset: true, flushSync: true });
     formRef.current?.reset();
+    setCharCount(message?.content?.length ?? 0);
   };
 
   const isLoading = fetcher.state === 'submitting';
@@ -65,7 +68,9 @@ export function MessageInputForm({
           id={inputId}
           name="message"
           required
+          maxLength={MESSAGE_MAX_LENGTH}
           defaultValue={message?.content}
+          onChange={(event) => setCharCount(event.target.value.length)}
           aria-label={inputLabel}
           placeholder={placeholder}
           autoComplete="off"
@@ -89,6 +94,14 @@ export function MessageInputForm({
           disabled={isLoading}
         >
           {buttonLabel || t('common.save')}
+          <kbd
+            className={cx('ml-2 hidden font-sans font-normal sm:inline', {
+              'text-white': Boolean(onClose),
+              'text-gray-500': !onClose,
+            })}
+          >
+            {formatForDisplay('Mod+Enter')}
+          </kbd>
         </Button>
 
         {onClose ? (
@@ -97,9 +110,11 @@ export function MessageInputForm({
           </Button>
         ) : null}
 
-        <p className="mr-auto hidden self-end text-xs text-gray-500 sm:block">
-          <kbd>{formatForDisplay('Mod+Enter', { useSymbols: false })}</kbd> {t('common.shortcut-to-send')}
-        </p>
+        <div className="mr-auto self-end">
+          <Subtitle size="xs" variant={charCount >= MESSAGE_MAX_LENGTH ? 'error' : 'secondary'}>
+            {charCount} / {MESSAGE_MAX_LENGTH}
+          </Subtitle>
+        </div>
       </div>
     </Form>
   );
