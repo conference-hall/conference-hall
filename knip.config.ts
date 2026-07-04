@@ -1,7 +1,7 @@
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
-  entry: ['servers/*.ts', 'servers/express/app.ts'],
+  entry: ['servers/*.ts'],
   ignore: ['tests/fixtures/**'],
 };
 

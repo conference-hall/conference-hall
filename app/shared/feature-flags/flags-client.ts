@@ -11,10 +11,15 @@ import type {
 } from './types.ts';
 
 export class FlagsClient<C extends FlagsConfig> {
-  constructor(
-    private config: C,
-    private storage: FlagsStorage,
-  ) {}
+  // No parameter properties: the web server entry runs this file through Node's
+  // strip-only TypeScript mode, which only supports erasable syntax
+  private config: C;
+  private storage: FlagsStorage;
+
+  constructor(config: C, storage: FlagsStorage) {
+    this.config = config;
+    this.storage = storage;
+  }
 
   getConfig(): C {
     return this.config;
