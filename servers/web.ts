@@ -10,7 +10,9 @@ import { getWebServerEnv } from './environment.server.ts';
 import { applyRequestAbortLogging, createFastifyLogger } from './fastify/logging.ts';
 import { type RateLimitsOptions, applyRateLimits } from './fastify/rate-limit.ts';
 import { applySecurity } from './fastify/security.ts';
+import { applySeoHeader } from './fastify/seo.ts';
 import { staticCacheHeaders } from './fastify/static.ts';
+import { applyUrlCleaning } from './fastify/url-cleaning.ts';
 
 const { HOST, PORT } = getWebServerEnv();
 
@@ -28,6 +30,9 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
   // Log aborted requests, which Fastify does not log natively
   applyRequestAbortLogging(app);
 
+  // Request URL cleaning
+  applyUrlCleaning(app);
+
   // Response compression: Brotli preferred, gzip/deflate fallback
   await app.register(fastifyCompress);
 
@@ -36,6 +41,9 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
 
   // Rate limits
   await applyRateLimits(app, options.rateLimits);
+
+  // Seo header
+  await applySeoHeader(app);
 
   // Log hook and server-level errors, answer 500. Client errors keep their status code.
   app.setErrorHandler((error: FastifyError, _request, reply) => {
