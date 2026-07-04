@@ -11,8 +11,6 @@ import type {
 } from './types.ts';
 
 export class FlagsClient<C extends FlagsConfig> {
-  // No parameter properties: the web server entry runs this file through Node's
-  // strip-only TypeScript mode, which only supports erasable syntax
   private config: C;
   private storage: FlagsStorage;
 
