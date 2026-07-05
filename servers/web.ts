@@ -7,7 +7,6 @@ import type { ViteDevServer } from 'vite';
 import { nonceContext } from '#nonce';
 import { logger } from '../app/shared/logger/logger.server.ts';
 import { getWebServerEnv } from './environment.server.ts';
-import { createFastifyLogger } from './fastify/logging.ts';
 import { type RateLimitsOptions, applyRateLimits } from './fastify/rate-limit.ts';
 import { applySecurity } from './fastify/security.ts';
 import { applySeoHeader } from './fastify/seo.ts';
@@ -23,7 +22,7 @@ type CreateServerOptions = {
 
 export async function createServer(vite?: ViteDevServer, options: CreateServerOptions = {}) {
   // Native request logging (incoming/completed lines) flows through the shared logger
-  const app = fastify({ loggerInstance: createFastifyLogger() });
+  const app = fastify();
 
   // Request URL cleaning
   applyUrlCleaning(app);
