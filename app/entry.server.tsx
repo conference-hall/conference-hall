@@ -71,7 +71,7 @@ export default async function handleRequest(
         },
         onError(error: unknown) {
           responseStatusCode = 500;
-          if (shellRendered) logger.error('Shell render error', { status: 500, error });
+          if (shellRendered) logger.error({ status: 500, error }, 'Shell render error');
         },
         nonce,
       },
@@ -85,10 +85,10 @@ export default async function handleRequest(
 export function handleError(error: unknown, { request }: LoaderFunctionArgs | ActionFunctionArgs) {
   if (request.signal.aborted) return;
   if (error instanceof Error) {
-    logger.error(error.message, { error });
+    logger.error({ error }, error.message);
   } else {
     const errorResponse = error as Record<string, unknown>;
     const errorMessage = typeof errorResponse?.data === 'string' ? errorResponse?.data : 'Server error';
-    logger.error(errorMessage, errorResponse);
+    logger.error(errorResponse, errorMessage);
   }
 }

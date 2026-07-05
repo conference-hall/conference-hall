@@ -1,9 +1,38 @@
-import { logger } from '../app/shared/logger/logger.server.ts';
+import { createLogCapture } from '../tests/logger-helpers.ts';
 import { createTestServer } from '../tests/server-helpers.ts';
 
 describe('web server', { tags: ['no-teardown'] }, () => {
+  it('logs a single request completed line with request details', async () => {
+    const { lines, loggerInstance } = createLogCapture();
+    const app = await createTestServer({ loggerInstance });
+
+    const response = await app.inject({
+      method: 'GET',
+      url: '/speaker/talks',
+      headers: { cookie: 'session=secret', authorization: 'Bearer token' },
+    });
+
+    expect(response.statusCode).toBe(200);
+    const requestLogs = lines.filter((line) => line.msg?.includes('request'));
+    expect(requestLogs).toHaveLength(1);
+    expect(requestLogs[0]).toMatchObject({
+      msg: 'request completed',
+      method: 'GET',
+      url: '/speaker/talks',
+      status: 200,
+    });
+    expect(requestLogs[0].reqId).toBeDefined();
+    expect(requestLogs[0].duration).toBeTypeOf('number');
+    expect(requestLogs[0].headers.cookie).toBe('[redacted]');
+    expect(requestLogs[0].headers.authorization).toBe('[redacted]');
+
+    await app.close();
+  });
+
   it('logs errors thrown in hooks and answers 500', async () => {
+    const { lines, loggerInstance } = createLogCapture();
     const app = await createTestServer({
+      loggerInstance,
       reactRouter: {
         routeOptions: {
           preHandler: () => {
@@ -12,19 +41,23 @@ describe('web server', { tags: ['no-teardown'] }, () => {
         },
       },
     });
-    const errorSpy = vi.spyOn(logger, 'error');
 
     const response = await app.inject({ method: 'GET', url: '/' });
 
     expect(response.statusCode).toBe(500);
     expect(response.json()).toEqual({ message: 'Internal Server Error' });
-    expect(errorSpy).toHaveBeenCalledWith('Web server error', { error: expect.objectContaining({ message: 'boom' }) });
+    const errorLogs = lines.filter((line) => line.msg === 'Web server error');
+    expect(errorLogs).toHaveLength(1);
+    expect(errorLogs[0].error.message).toBe('boom');
+    expect(errorLogs[0].reqId).toBeDefined();
 
     await app.close();
   });
 
   it('keeps client error status codes untouched', async () => {
+    const { lines, loggerInstance } = createLogCapture();
     const app = await createTestServer({
+      loggerInstance,
       reactRouter: {
         routeOptions: {
           preHandler: () => {
@@ -35,12 +68,11 @@ describe('web server', { tags: ['no-teardown'] }, () => {
         },
       },
     });
-    const errorSpy = vi.spyOn(logger, 'error');
 
     const response = await app.inject({ method: 'GET', url: '/' });
 
     expect(response.statusCode).toBe(418);
-    expect(errorSpy).not.toHaveBeenCalled();
+    expect(lines.filter((line) => line.msg === 'Web server error')).toHaveLength(0);
 
     await app.close();
   });

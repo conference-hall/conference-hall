@@ -1,42 +1,70 @@
-import { describe, expect, it, vi } from 'vitest';
-import { logger } from './logger.server.ts';
+import { describe, expect, it } from 'vitest';
+import { createLogCapture } from '../../../tests/logger-helpers.ts';
+import { createLogger, logger, runWithLogger } from './logger.server.ts';
 
-describe('logger', () => {
-  it('logs error messages (LOG_LEVEL=error in test env)', () => {
-    logger.error('Something happened');
+describe('createLogger', () => {
+  it('is silent by default in test environment', () => {
+    const testLogger = createLogger();
 
-    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Something happened'));
+    expect(testLogger.level).toBe('silent');
   });
 
-  it('logs error objects separately from pretty message', () => {
-    const spy = vi.spyOn(console, 'error');
-    const error = new Error('Boom');
+  it('serializes errors with message, stack and cause under the "error" key', () => {
+    const { lines, loggerInstance } = createLogCapture();
+    const error = new Error('boom', { cause: new Error('root cause') });
 
-    logger.error('Something happened', { error });
+    loggerInstance.error({ error }, 'Operation failed');
 
-    expect(spy).toHaveBeenCalledTimes(2);
-
-    const [firstCallArgs, secondCallArgs] = spy.mock.calls;
-
-    const [firstArg] = firstCallArgs ?? [];
-    expect(typeof firstArg).toBe('string');
-    expect(firstArg).toEqual(expect.stringContaining('Something happened'));
-
-    const [secondArg] = secondCallArgs ?? [];
-    expect(secondArg).toBe(error);
+    expect(lines[0].msg).toBe('Operation failed');
+    expect(lines[0].error.message).toBe('boom');
+    expect(lines[0].error.stack).toContain('boom');
+    expect(lines[0].error.cause.message).toBe('root cause');
   });
 
-  it('does not log info messages when LOG_LEVEL=warn', () => {
-    logger.info('Should be filtered');
+  it('redacts cookie and authorization request headers', () => {
+    const { lines, loggerInstance } = createLogCapture();
 
-    expect(console.info).not.toHaveBeenCalled();
+    loggerInstance.info(
+      { headers: { cookie: 'session=secret', authorization: 'Bearer token', accept: 'text/html' } },
+      'request completed',
+    );
+
+    expect(lines[0].headers.cookie).toBe('[redacted]');
+    expect(lines[0].headers.authorization).toBe('[redacted]');
+    expect(lines[0].headers.accept).toBe('text/html');
+  });
+});
+
+describe('logger context', () => {
+  it('delegates to the context logger inside runWithLogger', () => {
+    const { lines, loggerInstance } = createLogCapture();
+    const contextLogger = loggerInstance.child({ reqId: 'req-123' });
+
+    runWithLogger(contextLogger, () => logger.info('inside context'));
+
+    expect(lines[0]).toMatchObject({ reqId: 'req-123', msg: 'inside context' });
   });
 
-  it('does not log debug messages when LOG_LEVEL=warn', () => {
-    const spy = vi.spyOn(console, 'debug');
-    logger.debug('Should be filtered');
+  it('keeps the context across async boundaries', async () => {
+    const { lines, loggerInstance } = createLogCapture();
+    const contextLogger = loggerInstance.child({ reqId: 'req-456' });
 
-    expect(spy).not.toHaveBeenCalled();
-    spy.mockRestore();
+    await runWithLogger(contextLogger, async () => {
+      await Promise.resolve();
+      logger.info('after await');
+    });
+
+    expect(lines[0]).toMatchObject({ reqId: 'req-456', msg: 'after await' });
+  });
+
+  it('falls back to the base logger outside a context', () => {
+    const { lines, loggerInstance } = createLogCapture();
+    const contextLogger = loggerInstance.child({ reqId: 'req-789' });
+
+    runWithLogger(contextLogger, () => logger.info('inside'));
+    logger.info('outside');
+
+    expect(lines).toHaveLength(1);
+    expect(lines[0].msg).toBe('inside');
   });
 });

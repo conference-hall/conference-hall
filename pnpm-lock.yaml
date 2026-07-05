@@ -116,9 +116,9 @@ importers:
       nodemailer:
         specifier: ^9.0.3
         version: 9.0.3
-      picocolors:
-        specifier: ^1.1.1
-        version: 1.1.1
+      pino:
+        specifier: ^10.3.1
+        version: 10.3.1
       react:
         specifier: ^19.2.7
         version: 19.2.7

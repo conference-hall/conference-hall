@@ -94,7 +94,7 @@ export class StorageService {
     try {
       await this.delete(key);
     } catch (error) {
-      logger.warn('Failed to delete file from storage', { key, error });
+      logger.warn({ key, error }, 'Failed to delete file from storage');
     }
   }
 }

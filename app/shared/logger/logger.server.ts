@@ -1,79 +1,52 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
+import { type DestinationStream, type Logger, type LoggerOptions, pino, stdSerializers } from 'pino';
 import { getSharedServerEnv } from '../../../servers/environment.server.ts';
-import { type LogFormatter, jsonFormatter, prettyFormatter } from './formatters.server.ts';
 
-type LogLevel = 'debug' | 'info' | 'warn' | 'error';
-type LogData = Record<string, unknown>;
-
-const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = { debug: 0, info: 1, warn: 2, error: 3 };
-
-const CONSOLE_METHOD: Record<LogLevel, 'debug' | 'info' | 'warn' | 'error'> = {
-  debug: 'debug',
-  info: 'info',
-  warn: 'warn',
-  error: 'error',
+type CreateLoggerOptions = {
+  level?: string;
+  destination?: DestinationStream;
 };
 
-interface Logger {
-  debug(message: string, data?: LogData): void;
-  info(message: string, data?: LogData): void;
-  warn(message: string, data?: LogData): void;
-  error(message: string, data?: LogData): void;
-}
-
-function createLogger(): Logger {
+export function createLogger({ level, destination }: CreateLoggerOptions = {}): Logger {
   const { NODE_ENV, LOG_LEVEL } = getSharedServerEnv();
-  const minPriority = LOG_LEVEL_PRIORITY[LOG_LEVEL];
-  const formatter: LogFormatter = NODE_ENV === 'production' ? jsonFormatter : prettyFormatter;
 
-  function log(level: LogLevel, message: string, data?: LogData): void {
-    if (LOG_LEVEL_PRIORITY[level] < minPriority) return;
-
-    const serialized = data ? serializeData(data) : undefined;
-    console[CONSOLE_METHOD[level]](formatter(level, message, serialized));
-
-    if (NODE_ENV !== 'production' && data?.error) {
-      console.error(data.error);
-    }
-  }
-
-  return {
-    debug: (message, data) => log('debug', message, data),
-    info: (message, data) => log('info', message, data),
-    warn: (message, data) => log('warn', message, data),
-    error: (message, data) => log('error', message, data),
+  const options: LoggerOptions = {
+    level: level ?? LOG_LEVEL ?? (NODE_ENV === 'test' ? 'silent' : 'info'),
+    errorKey: 'error',
+    serializers: {
+      error: stdSerializers.errWithCause,
+      err: stdSerializers.errWithCause,
+    },
+    redact: { paths: ['headers.cookie', 'headers.authorization'], censor: '[redacted]' },
   };
+
+  if (NODE_ENV === 'development' && !destination) {
+    options.transport = {
+      target: 'pino-pretty',
+      options: {
+        translateTime: 'HH:MM:ss',
+        ignore: 'pid,hostname,reqId,method,url,status,duration,headers',
+        messageFormat: '{msg}{if method} {method} {url} {status} {duration}ms{end}',
+      },
+    };
+  }
+
+  return destination ? pino(options, destination) : pino(options);
 }
 
-function serializeData(data: LogData): LogData {
-  const serialized: LogData = {};
+export const baseLogger = createLogger();
+const loggerStorage = new AsyncLocalStorage<Logger>();
 
-  for (const [key, value] of Object.entries(data)) {
-    if (value instanceof Error) {
-      serialized[key] = serializeError(value);
-    } else {
-      serialized[key] = value;
-    }
-  }
-
-  return serialized;
+// Runs `fn` with `contextLogger` as the ambient logger: every `logger` call made
+// during its (sync or async) execution is routed to it instead of the base logger.
+export function runWithLogger<T>(contextLogger: Logger, fn: () => T): T {
+  return loggerStorage.run(contextLogger, fn);
 }
 
-function serializeError(error: unknown): LogData {
-  if (!(error instanceof Error)) {
-    return { message: String(error) };
-  }
-
-  const serialized: LogData = { message: error.message };
-
-  if (error.stack) {
-    serialized.stack = error.stack;
-  }
-
-  if (error.cause) {
-    serialized.cause = serializeError(error.cause);
-  }
-
-  return serialized;
-}
-
-export const logger: Logger = createLogger();
+export const logger: Logger = new Proxy(baseLogger, {
+  get(target, property) {
+    const currentLogger = loggerStorage.getStore() ?? target;
+    const value = Reflect.get(currentLogger, property, currentLogger);
+    return typeof value === 'function' ? value.bind(currentLogger) : value;
+  },
+});

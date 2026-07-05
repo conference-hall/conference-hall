@@ -373,7 +373,7 @@ async function seedEventLogos() {
 try {
   await seed();
 } catch (error) {
-  logger.error('Error seeding database', { error });
+  logger.error({ error }, 'Error seeding database');
   process.exit(1);
 } finally {
   await disconnectDB();

@@ -11,11 +11,11 @@ const jobs = [sendEmail, exportToOpenPlanner, sendTalkToSlack, testJob];
 const workers = createJobWorkers(jobs);
 
 process.on('uncaughtException', (error) => {
-  logger.error('Uncaught exception', { error });
+  logger.error({ error }, 'Uncaught exception');
 });
 
 process.on('unhandledRejection', (error) => {
-  logger.error('Unhandled Rejection', { error });
+  logger.error({ error }, 'Unhandled Rejection');
 });
 
 // Setup graceful shutdown
@@ -39,7 +39,7 @@ const gracefulShutdown = async (signal: string) => {
     clearTimeout(timeout);
     process.exit(0);
   } catch (error) {
-    logger.error('Error during graceful shutdown', { error });
+    logger.error({ error }, 'Error during graceful shutdown');
     clearTimeout(timeout);
     process.exit(1);
   }
