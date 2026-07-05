@@ -1,6 +1,6 @@
 import type { FastifyReactRouterOptions } from '@mcansh/react-router-fastify';
-import { createServer } from '../web.ts';
-import type { RateLimitsOptions } from './rate-limit.ts';
+import type { RateLimitsOptions } from '../servers/fastify/rate-limit.ts';
+import { createServer } from '../servers/web.ts';
 
 type TestServerOptions = {
   reactRouter?: Partial<FastifyReactRouterOptions>;

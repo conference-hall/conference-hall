@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { createTestServer } from './test-helpers.ts';
+import { createTestServer } from 'tests/server-helpers.ts';
 
 describe('url cleaning', { tags: ['no-teardown'] }, () => {
   let app: FastifyInstance;

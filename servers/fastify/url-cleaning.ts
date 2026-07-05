@@ -1,7 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
 // /clean-urls/ -> /clean-urls
-// Registered before rate limiting, so a redirected request does not consume a rate-limit token.
 export function applyUrlCleaning(app: FastifyInstance) {
   app.addHook('onRequest', async (request, reply) => {
     const path = request.url.split('?')[0];

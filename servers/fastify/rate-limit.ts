@@ -6,21 +6,10 @@ import { getSharedServerEnv } from '../environment.server.ts';
 
 const { NODE_ENV } = getSharedServerEnv();
 
+export type RateLimitsOptions = { maxMultiple?: number };
+
 // Disable rate limiting on dev and test environments
 const defaultMaxMultiple = NODE_ENV === 'production' ? 1 : 10_000;
-
-export type RateLimitsOptions = {
-  // Multiplier applied to every bucket max, used by tests to re-enable throttling
-  maxMultiple?: number;
-};
-
-const keyGenerator = (request: FastifyRequest) => {
-  // Malicious users can spoof their IP address which means we should not default
-  // to trusting request.ip. However, users cannot spoof Cloudflare cf-connecting-ip
-  const header = request.headers['cf-connecting-ip'];
-  const ip = (Array.isArray(header) ? header[0] : header) ?? request.ip;
-  return ipKeyGenerator(ip);
-};
 
 const securedPaths = [href('/speaker/settings'), href('/admin')];
 
@@ -29,7 +18,7 @@ export async function applyRateLimits(app: FastifyInstance, options: RateLimitsO
 
   await app.register(fastifyRateLimit, { global: false, enableDraftSpec: true });
 
-  // Each limiter gets its own store (`store.child()`), so the three buckets keep independent counters
+  // Each limiter gets its own store, so keep independent counters
   const apiRateLimit = app.rateLimit({
     timeWindow: 60 * 60 * 1000, // 1 hour
     max: 60 * maxMultiple,
@@ -66,6 +55,12 @@ export async function applyRateLimits(app: FastifyInstance, options: RateLimitsO
   });
 }
 
+const keyGenerator = (request: FastifyRequest) => {
+  const header = request.headers['cf-connecting-ip'];
+  const ip = (Array.isArray(header) ? header[0] : header) ?? request.ip;
+  return ipKeyGenerator(ip);
+};
+
 // Normalizes IPv6 addresses to their /56 subnet so a single user cannot evade
 // limits by rotating addresses within their allocation (equivalent to
 // express-rate-limit's ipKeyGenerator). IPv4 addresses are used as-is.
@@ -94,8 +89,6 @@ function ipv6ToBigInt(ip: string): bigint {
   return groups.reduce((accumulator, group) => (accumulator << 16n) | BigInt(Number.parseInt(group, 16)), 0n);
 }
 
-// An IPv6 address can end with an embedded IPv4 address (e.g. ::ffff:127.0.0.1),
-// which counts as two 16-bit groups
 function expandEmbeddedIpv4(groups: string[]): string[] {
   return groups.flatMap((group) => {
     if (!isIPv4(group)) return [group];

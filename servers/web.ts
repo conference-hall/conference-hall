@@ -1,13 +1,13 @@
 import { pathToFileURL } from 'node:url';
 import fastifyCompress from '@fastify/compress';
 import { type FastifyReactRouterOptions, fastifyReactRouter } from '@mcansh/react-router-fastify';
-import { type FastifyError, fastify } from 'fastify';
+import { fastify } from 'fastify';
 import { RouterContextProvider } from 'react-router';
 import type { ViteDevServer } from 'vite';
 import { nonceContext } from '#nonce';
 import { logger } from '../app/shared/logger/logger.server.ts';
 import { getWebServerEnv } from './environment.server.ts';
-import { applyRequestAbortLogging, createFastifyLogger } from './fastify/logging.ts';
+import { createFastifyLogger } from './fastify/logging.ts';
 import { type RateLimitsOptions, applyRateLimits } from './fastify/rate-limit.ts';
 import { applySecurity } from './fastify/security.ts';
 import { applySeoHeader } from './fastify/seo.ts';
@@ -17,9 +17,7 @@ import { applyUrlCleaning } from './fastify/url-cleaning.ts';
 const { HOST, PORT } = getWebServerEnv();
 
 type CreateServerOptions = {
-  // React Router adapter overrides, used by tests to point at fixtures instead of the real build
   reactRouter?: Partial<FastifyReactRouterOptions>;
-  // Rate limits overrides, used by tests to re-enable throttling
   rateLimits?: RateLimitsOptions;
 };
 
@@ -27,16 +25,13 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
   // Native request logging (incoming/completed lines) flows through the shared logger
   const app = fastify({ loggerInstance: createFastifyLogger() });
 
-  // Log aborted requests, which Fastify does not log natively
-  applyRequestAbortLogging(app);
-
   // Request URL cleaning
   applyUrlCleaning(app);
 
-  // Response compression: Brotli preferred, gzip/deflate fallback
+  // Response compression
   await app.register(fastifyCompress);
 
-  // Security (helmet, CSP nonces...)
+  // Security
   await applySecurity(app);
 
   // Rate limits
@@ -44,16 +39,6 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
 
   // Seo header
   await applySeoHeader(app);
-
-  // Log hook and server-level errors, answer 500. Client errors keep their status code.
-  app.setErrorHandler((error: FastifyError, _request, reply) => {
-    const statusCode = error.statusCode ?? 500;
-    if (statusCode >= 500) {
-      logger.error('Web server error', { error });
-      return reply.status(500).send({ message: 'Internal Server Error' });
-    }
-    return reply.status(statusCode).send(error);
-  });
 
   // React Router request handler, serving the client build statically in production.
   // Translations are served by the locales resource route, not a static mount.

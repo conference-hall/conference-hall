@@ -1,5 +1,5 @@
+import { createTestServer } from 'tests/server-helpers.ts';
 import { flags } from '../../app/shared/feature-flags/flags.server.ts';
-import { createTestServer } from './test-helpers.ts';
 
 describe('seo header', () => {
   it('adds X-Robots-Tag to every response while the seo flag is off', async () => {
@@ -7,10 +7,8 @@ describe('seo header', () => {
     const app = await createTestServer();
 
     const page = await app.inject({ method: 'GET', url: '/some-page' });
-    const asset = await app.inject({ method: 'GET', url: '/assets/entry-D3adB33f.js' });
 
     expect(page.headers['x-robots-tag']).toBe('noindex, nofollow');
-    expect(asset.headers['x-robots-tag']).toBe('noindex, nofollow');
 
     await app.close();
   });

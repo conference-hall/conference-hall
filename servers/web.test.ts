@@ -1,5 +1,5 @@
 import { logger } from '../app/shared/logger/logger.server.ts';
-import { createTestServer } from './fastify/test-helpers.ts';
+import { createTestServer } from '../tests/server-helpers.ts';
 
 describe('web server', { tags: ['no-teardown'] }, () => {
   it('logs errors thrown in hooks and answers 500', async () => {

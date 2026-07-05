@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
+import { createTestServer } from '../../tests/server-helpers.ts';
 import { ipKeyGenerator } from './rate-limit.ts';
-import { createTestServer } from './test-helpers.ts';
 
 describe('rate limits', { tags: ['no-teardown'] }, () => {
   describe('with production limits', () => {
