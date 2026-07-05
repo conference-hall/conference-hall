@@ -1,5 +1,6 @@
 import type { FastifyReactRouterOptions } from '@mcansh/react-router-fastify';
 import type { Logger } from 'pino';
+import { createLogger } from '~/shared/logger/logger.server.ts';
 import type { RateLimitsOptions } from '../servers/fastify/rate-limit.ts';
 import { createServer } from '../servers/web.ts';
 
@@ -9,9 +10,7 @@ type TestServerOptions = {
   loggerInstance?: Logger;
 };
 
-// Exercises the real `createServer()` factory without the React Router build:
-// static files come from a fixture directory, and a `preHandler` on the catch-all
-// route answers before the handler would import the server build.
+// `createServer()` factory without the React Router build:
 export async function createTestServer({ reactRouter, rateLimits, loggerInstance }: TestServerOptions = {}) {
   return createServer(undefined, {
     loggerInstance,
@@ -26,4 +25,13 @@ export async function createTestServer({ reactRouter, rateLimits, loggerInstance
     },
     rateLimits,
   });
+}
+
+// Captures logs as parsed JSON lines instead of spying on the shared logger,
+// which is a Proxy and cannot be spied on reliably.
+export function createLogCapture() {
+  const lines: Array<Record<string, any>> = [];
+  const destination = { write: (chunk: string) => void lines.push(JSON.parse(chunk)) };
+  const loggerInstance = createLogger({ level: 'info', destination });
+  return { lines, loggerInstance };
 }

@@ -15,23 +15,13 @@ export async function getAuthorizedTeam(userId: string, teamSlug: string): Promi
     const permissions = UserTeamPermissions.getPermissions(member.role);
     if (!permissions.canAccessTeam) {
       logger.warn(
-        {
-          userId,
-          teamSlug,
-          teamId: member.teamId,
-          role: member.role,
-        },
+        { userId, teamSlug, teamId: member.teamId, role: member.role },
         'Authorization failed: User role lacks canAccessTeam permission',
       );
       throw new ForbiddenOperationError();
     }
 
-    return {
-      userId,
-      teamId: member.teamId,
-      role: member.role,
-      permissions,
-    };
+    return { userId, teamId: member.teamId, role: member.role, permissions };
   } catch (error) {
     if (error instanceof ForbiddenOperationError) throw error;
     logger.error({ userId, teamSlug, error }, 'Database error in getAuthorizedTeam:');
@@ -42,12 +32,7 @@ export async function getAuthorizedTeam(userId: string, teamSlug: string): Promi
 export async function getAuthorizedEvent(authorizedTeam: AuthorizedTeam, eventSlug: string): Promise<AuthorizedEvent> {
   if (!authorizedTeam.permissions.canAccessEvent) {
     logger.warn(
-      {
-        userId: authorizedTeam.userId,
-        teamId: authorizedTeam.teamId,
-        eventSlug,
-        role: authorizedTeam.role,
-      },
+      { userId: authorizedTeam.userId, teamId: authorizedTeam.teamId, eventSlug, role: authorizedTeam.role },
       'Authorization failed: User lacks canAccessEvent permission',
     );
     throw new ForbiddenOperationError();
@@ -58,11 +43,7 @@ export async function getAuthorizedEvent(authorizedTeam: AuthorizedTeam, eventSl
 
     if (!event) {
       logger.warn(
-        {
-          userId: authorizedTeam.userId,
-          teamId: authorizedTeam.teamId,
-          eventSlug,
-        },
+        { userId: authorizedTeam.userId, teamId: authorizedTeam.teamId, eventSlug },
         'Event not found or does not belong to team',
       );
       throw new EventNotFoundError();
@@ -72,12 +53,7 @@ export async function getAuthorizedEvent(authorizedTeam: AuthorizedTeam, eventSl
   } catch (error) {
     if (error instanceof EventNotFoundError) throw error;
     logger.error(
-      {
-        userId: authorizedTeam.userId,
-        teamId: authorizedTeam.teamId,
-        eventSlug,
-        error,
-      },
+      { userId: authorizedTeam.userId, teamId: authorizedTeam.teamId, eventSlug, error },
       'Database error in getAuthorizedEvent:',
     );
     throw error;

@@ -18,7 +18,6 @@ process.on('unhandledRejection', (error) => {
   logger.error({ error }, 'Unhandled Rejection');
 });
 
-// Setup graceful shutdown
 let isShuttingDown = false;
 
 const gracefulShutdown = async (signal: string) => {

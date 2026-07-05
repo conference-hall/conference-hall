@@ -73,7 +73,6 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
   await applySeoHeader(app);
 
   // React Router request handler, serving the client build statically in production.
-  // Translations are served by the locales resource route, not a static mount.
   const clientBuildDirectory = options.reactRouter?.clientBuildDirectory ?? 'build/client';
   await app.register(fastifyReactRouter, {
     devServer: vite,
@@ -94,7 +93,6 @@ const isMain = process.argv[1] != null && import.meta.url === pathToFileURL(proc
 if (isMain) {
   const app = await createServer();
 
-  // Avoid server crash due to unhandled promise rejections
   const processEvents = process.eventNames();
   if (!processEvents.includes('unhandledRejection')) {
     process.on('unhandledRejection', (error) => {
@@ -102,8 +100,6 @@ if (isMain) {
     });
   }
 
-  // Graceful shutdown: drain in-flight requests, then exit. The process exit tears down
-  // database and Redis sockets, so no explicit disconnects are needed here.
   let isShuttingDown = false;
 
   const gracefulShutdown = async (signal: string) => {

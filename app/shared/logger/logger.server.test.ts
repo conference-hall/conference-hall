@@ -1,5 +1,5 @@
+import { createLogCapture } from 'tests/server-helpers.ts';
 import { describe, expect, it } from 'vitest';
-import { createLogCapture } from '../../../tests/logger-helpers.ts';
 import { createLogger, logger, runWithLogger } from './logger.server.ts';
 
 describe('createLogger', () => {

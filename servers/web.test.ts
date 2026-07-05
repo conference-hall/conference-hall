@@ -1,5 +1,4 @@
-import { createLogCapture } from '../tests/logger-helpers.ts';
-import { createTestServer } from '../tests/server-helpers.ts';
+import { createLogCapture, createTestServer } from '../tests/server-helpers.ts';
 
 describe('web server', { tags: ['no-teardown'] }, () => {
   it('logs a single request line with request details', async () => {
