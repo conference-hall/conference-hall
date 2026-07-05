@@ -11,10 +11,13 @@ import type {
 } from './types.ts';
 
 export class FlagsClient<C extends FlagsConfig> {
-  constructor(
-    private config: C,
-    private storage: FlagsStorage,
-  ) {}
+  private config: C;
+  private storage: FlagsStorage;
+
+  constructor(config: C, storage: FlagsStorage) {
+    this.config = config;
+    this.storage = storage;
+  }
 
   getConfig(): C {
     return this.config;

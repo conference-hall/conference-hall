@@ -5,9 +5,9 @@ import { type RenderToPipeableStreamOptions, renderToPipeableStream } from 'reac
 import { I18nextProvider } from 'react-i18next';
 import type { ActionFunctionArgs, EntryContext, LoaderFunctionArgs, RouterContextProvider } from 'react-router';
 import { ServerRouter } from 'react-router';
+import { nonceContext } from '#nonce';
 import { getI18n } from './shared/i18n/i18n.middleware.ts';
 import { logger } from './shared/logger/logger.server.ts';
-import { nonceContext } from './shared/nonce/nonce.server.ts';
 import { Nonce } from './shared/nonce/use-nonce.ts';
 
 export const streamTimeout = 5_000;
@@ -71,7 +71,7 @@ export default async function handleRequest(
         },
         onError(error: unknown) {
           responseStatusCode = 500;
-          if (shellRendered) logger.error('Shell render error', { status: 500, error });
+          if (shellRendered) logger.error({ status: 500, error }, 'Shell render error');
         },
         nonce,
       },
@@ -85,10 +85,10 @@ export default async function handleRequest(
 export function handleError(error: unknown, { request }: LoaderFunctionArgs | ActionFunctionArgs) {
   if (request.signal.aborted) return;
   if (error instanceof Error) {
-    logger.error(error.message, { error });
+    logger.error({ error }, error.message);
   } else {
     const errorResponse = error as Record<string, unknown>;
     const errorMessage = typeof errorResponse?.data === 'string' ? errorResponse?.data : 'Server error';
-    logger.error(errorMessage, errorResponse);
+    logger.error(errorResponse, errorMessage);
   }
 }

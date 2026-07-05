@@ -1,5 +1,5 @@
 import { Worker } from 'bullmq';
-import { logger } from '~/shared/logger/logger.server.ts';
+import { logger, runWithLogger } from '~/shared/logger/logger.server.ts';
 import { getRedisClient } from '../cache/redis.server.ts';
 import type { Job } from './job.ts';
 
@@ -29,14 +29,17 @@ export function createJobWorkers(jobs: Array<Job<any>>): Array<JobWorker> {
 function createJobWorker(queue: string, jobs: Array<Job<any>>): JobWorker {
   const connection = getRedisClient();
 
+  const jobLogContext = (job?: { id?: string; name?: string }) => ({ jobId: job?.id, jobName: job?.name, queue });
+
   const worker = new Worker(
     queue,
-    async ({ name, data }) => {
+    async ({ id, name, data }) => {
       const job = jobs.find((job) => job.config.name === name);
 
       if (!job) throw new Error(`Job not found: "${name}"`);
 
-      await job.config.run(data);
+      const jobLogger = logger.child(jobLogContext({ id, name }));
+      await runWithLogger(jobLogger, () => job.config.run(data));
     },
     {
       connection,
@@ -47,18 +50,15 @@ function createJobWorker(queue: string, jobs: Array<Job<any>>): JobWorker {
   );
 
   worker.on('ready', () => {
-    logger.info(`🚀 Jobs worker is ready for "${queue}" queue:`);
-    for (const job of jobs) {
-      logger.info(` - "${job.config.name}" job.`);
-    }
+    logger.info({ queue, jobs: jobs.map((job) => job.config.name) }, '🚀 Jobs worker is ready');
   });
 
   worker.on('completed', (job) => {
-    logger.info(`Completed job "${job.name}". Job ID: ${job.id}`);
+    logger.info(jobLogContext(job), 'Job completed');
   });
 
-  worker.on('failed', (job, err) => {
-    logger.error(`Failed job "${job?.name}". Job ID: ${job?.id}. ${err}`);
+  worker.on('failed', (job, error) => {
+    logger.error({ error, ...jobLogContext(job) }, 'Job failed');
   });
 
   return {

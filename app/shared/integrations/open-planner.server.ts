@@ -47,7 +47,7 @@ async function postSessionsAndSpeakers(eventId: string, apiKey: string, payload:
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   }).catch((error) => {
-    logger.error('Open planner error', { error });
+    logger.error({ error }, 'Open planner error');
   });
 }
 

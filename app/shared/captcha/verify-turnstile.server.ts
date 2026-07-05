@@ -17,7 +17,7 @@ export async function verifyTurnstile(token: string): Promise<boolean> {
     const result = await response.json();
     return result.success === true;
   } catch (error) {
-    logger.error('Error verifying captcha token', { error });
+    logger.error({ error }, 'Error verifying captcha token');
     return false;
   }
 }

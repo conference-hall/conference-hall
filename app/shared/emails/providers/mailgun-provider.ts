@@ -27,7 +27,7 @@ export class MailgunProvider implements EmailProvider {
         text: email.text,
       });
     } catch (error) {
-      logger.error('Error sending email', { error });
+      logger.error({ error }, 'Error sending email');
     }
   }
 }

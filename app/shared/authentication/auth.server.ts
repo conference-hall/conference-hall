@@ -24,7 +24,11 @@ export const auth = betterAuth({
   plugins: getPlugins(),
   logger: {
     log: (level, message, ...metadata) => {
-      logger[level](message, metadata.length > 0 ? { metadata } : undefined);
+      if (metadata.length > 0) {
+        logger[level]({ metadata }, message);
+      } else {
+        logger[level](message);
+      }
     },
   },
   emailAndPassword: {

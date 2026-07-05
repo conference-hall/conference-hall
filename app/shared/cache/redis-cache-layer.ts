@@ -40,7 +40,7 @@ export class RedisCacheLayer implements CacheLayer {
       }
       return null;
     } catch (error) {
-      logger.error(`Failed to get key ${prefixedKey} from Redis`, { error });
+      logger.error({ error }, `Failed to get key ${prefixedKey} from Redis`);
       return null;
     }
   }
@@ -54,7 +54,7 @@ export class RedisCacheLayer implements CacheLayer {
         await this.client.set(prefixedKey, JSON.stringify(value), 'EX', this.ttl);
       }
     } catch (error) {
-      logger.error(`Failed to set key ${prefixedKey} in Redis`, { error });
+      logger.error({ error }, `Failed to set key ${prefixedKey} in Redis`);
     }
   }
 
@@ -63,7 +63,7 @@ export class RedisCacheLayer implements CacheLayer {
     try {
       await this.client.del(prefixedKey);
     } catch (error) {
-      logger.error(`Failed to delete key ${prefixedKey} from Redis`, { error });
+      logger.error({ error }, `Failed to delete key ${prefixedKey} from Redis`);
     }
   }
 
@@ -73,7 +73,7 @@ export class RedisCacheLayer implements CacheLayer {
       const keys = await this.client.keys(prefixedPattern);
       return keys.map((key) => key.replace(this.prefix, ''));
     } catch (error) {
-      logger.error(`Failed to get keys with pattern ${prefixedPattern} from Redis`, { error });
+      logger.error({ error }, `Failed to get keys with pattern ${prefixedPattern} from Redis`);
       return [];
     }
   }
@@ -85,7 +85,7 @@ export class RedisCacheLayer implements CacheLayer {
         await this.client.del(keys.map((key) => this.getPrefixedKey(key)));
       }
     } catch (error) {
-      logger.error('Failed to clear Redis cache', { error });
+      logger.error({ error }, 'Failed to clear Redis cache');
     }
   }
 

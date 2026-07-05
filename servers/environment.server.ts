@@ -11,7 +11,7 @@ const __projectRoot = findProjectRoot(__dirname);
 
 const SharedServerSchema = z.object({
   NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
-  LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).optional().default('info'),
+  LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error', 'silent']).optional(),
   TZ: z.string(),
   CI: z.stringbool().optional().default(false),
   VITEST: z.stringbool().optional().default(false),
@@ -21,7 +21,7 @@ const SharedServerSchema = z.object({
 });
 
 const WebServerSchema = z.object({
-  HOST: z.string().optional().default('localhost'),
+  HOST: z.string().optional().default('0.0.0.0'),
   PORT: z.coerce.number().optional().default(3000),
   MAINTENANCE_ENABLED: z.stringbool().optional().default(false),
   COOKIE_SIGNED_SECRET: z.string(),
