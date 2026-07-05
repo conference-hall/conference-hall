@@ -18,6 +18,9 @@ export function createLogger({ level, destination }: CreateLoggerOptions = {}): 
       error: stdSerializers.errWithCause,
       err: stdSerializers.errWithCause,
     },
+    formatters: {
+      level: (label) => ({ level: label }),
+    },
     redact: { paths: ['headers.cookie', 'headers.authorization'], censor: '[redacted]' },
   };
 
