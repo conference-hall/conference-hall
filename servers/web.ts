@@ -23,32 +23,31 @@ type CreateServerOptions = {
 };
 
 export async function createServer(vite?: ViteDevServer, options: CreateServerOptions = {}) {
-  // Native request logging is disabled: a single "request completed" line is
-  // emitted by the `onResponse` hook below instead of the incoming/completed pair.
   const app = fastify({
     loggerInstance: (options.loggerInstance ?? baseLogger) as FastifyBaseLogger,
     disableRequestLogging: true,
   });
 
-  // Make the request logger (carrying the reqId) the ambient logger for the whole request
+  // Make the request logger with request id
   app.addHook('onRequest', (request, _reply, done) => {
     runWithLogger(request.log as Logger, done);
   });
 
+  // Log the response
   app.addHook('onResponse', (request, reply, done) => {
-    request.log.info(
-      {
-        method: request.method,
-        url: request.url,
-        status: reply.statusCode,
-        duration: Math.round(reply.elapsedTime),
-        headers: request.headers,
-      },
-      'request completed',
-    );
+    const status = reply.statusCode;
+    const level = status >= 500 ? 'error' : status >= 400 ? 'warn' : 'info';
+    request.log[level]({
+      method: request.method,
+      url: request.url,
+      status,
+      duration: Math.round(reply.elapsedTime),
+      headers: request.headers,
+    });
     done();
   });
 
+  // Log errors
   app.setErrorHandler((error: FastifyError, request, reply) => {
     const statusCode = error.statusCode ?? 500;
     if (statusCode >= 500) {

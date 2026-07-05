@@ -1,5 +1,7 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
+import pc from 'picocolors';
 import { type DestinationStream, type Logger, type LoggerOptions, pino, stdSerializers } from 'pino';
+import pinoPretty from 'pino-pretty';
 import { getSharedServerEnv } from '../../../servers/environment.server.ts';
 
 type CreateLoggerOptions = {
@@ -21,17 +23,35 @@ export function createLogger({ level, destination }: CreateLoggerOptions = {}): 
   };
 
   if (NODE_ENV === 'development' && !destination) {
-    options.transport = {
-      target: 'pino-pretty',
-      options: {
-        translateTime: 'HH:MM:ss',
-        ignore: 'pid,hostname,reqId,method,url,status,duration,headers',
-        messageFormat: '{msg}{if method} {method} {url} {status} {duration}ms{end}',
-      },
-    };
+    return pino(options, createPrettyStream());
   }
 
   return destination ? pino(options, destination) : pino(options);
+}
+
+function createPrettyStream(): DestinationStream {
+  return pinoPretty({
+    translateTime: 'HH:MM:ss',
+    ignore: 'pid,hostname,reqId,method,url,status,duration,headers',
+    messageFormat: (log, messageKey) => {
+      if (isHttpLog(log)) return formatHttpLine(log);
+      return String(log[messageKey] ?? '');
+    },
+  });
+}
+
+type HttpLog = { method: string; url: string; status: number; duration?: number };
+
+function isHttpLog(log: Record<string, unknown>): log is Record<string, unknown> & HttpLog {
+  return typeof log.method === 'string' && typeof log.url === 'string' && typeof log.status === 'number';
+}
+
+function formatHttpLine(log: HttpLog): string {
+  const request = pc.blueBright(`${log.method} ${log.url}`);
+  const statusColor = log.status >= 500 ? pc.red : log.status >= 400 ? pc.yellow : pc.green;
+  const status = statusColor(String(log.status));
+  const duration = pc.gray(`${log.duration ?? 0}ms`);
+  return `${request} ${status} ${duration}`;
 }
 
 export const baseLogger = createLogger();

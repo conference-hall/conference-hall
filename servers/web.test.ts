@@ -2,7 +2,7 @@ import { createLogCapture } from '../tests/logger-helpers.ts';
 import { createTestServer } from '../tests/server-helpers.ts';
 
 describe('web server', { tags: ['no-teardown'] }, () => {
-  it('logs a single request completed line with request details', async () => {
+  it('logs a single request line with request details', async () => {
     const { lines, loggerInstance } = createLogCapture();
     const app = await createTestServer({ loggerInstance });
 
@@ -13,14 +13,15 @@ describe('web server', { tags: ['no-teardown'] }, () => {
     });
 
     expect(response.statusCode).toBe(200);
-    const requestLogs = lines.filter((line) => line.msg?.includes('request'));
+    const requestLogs = lines.filter((line) => line.method);
     expect(requestLogs).toHaveLength(1);
     expect(requestLogs[0]).toMatchObject({
-      msg: 'request completed',
+      level: 30,
       method: 'GET',
       url: '/speaker/talks',
       status: 200,
     });
+    expect(requestLogs[0].msg).toBeUndefined();
     expect(requestLogs[0].reqId).toBeDefined();
     expect(requestLogs[0].duration).toBeTypeOf('number');
     expect(requestLogs[0].headers.cookie).toBe('[redacted]');
@@ -50,6 +51,7 @@ describe('web server', { tags: ['no-teardown'] }, () => {
     expect(errorLogs).toHaveLength(1);
     expect(errorLogs[0].error.message).toBe('boom');
     expect(errorLogs[0].reqId).toBeDefined();
+    expect(lines.find((line) => line.method)?.level).toBe(50);
 
     await app.close();
   });
@@ -73,6 +75,7 @@ describe('web server', { tags: ['no-teardown'] }, () => {
 
     expect(response.statusCode).toBe(418);
     expect(lines.filter((line) => line.msg === 'Web server error')).toHaveLength(0);
+    expect(lines.find((line) => line.method)?.level).toBe(40);
 
     await app.close();
   });

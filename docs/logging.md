@@ -25,7 +25,7 @@ The API is pino-native: the merging object comes **first**, the message second.
 
 ## Request and Job Context
 
-The exported `logger` is context-aware (see `docs/adr/0001-shared-pino-logger-via-als.md`):
+The exported `logger` is context-aware:
 
 - During an HTTP request, every log automatically carries the Fastify `reqId`.
 - During a job execution, every log automatically carries `jobId`, `jobName` and `queue`.
@@ -59,16 +59,18 @@ errors under it — application code always uses `error`.
 
 ## HTTP Request Logging
 
-Fastify's native request logging is disabled. A single `request completed` line is emitted per
-request by an `onResponse` hook in `servers/web.ts`, with `method`, `url`, `status`,
-`duration` (ms) and the request `headers`. The `cookie` and `authorization` headers are
-redacted by the base logger configuration.
+Fastify's native request logging is disabled. A single line (no message, only fields) is
+emitted per request by an `onResponse` hook in `servers/web.ts`, with `method`, `url`,
+`status`, `duration` (ms) and the request `headers`. The `cookie` and `authorization` headers
+are redacted by the base logger configuration.
+
+The line's level follows the response status: `info` below 400, `warn` for 4xx, `error` for 5xx.
 
 ## Output Formats
 
 - **Production**: pino JSON to stdout (one line per entry, numeric `level`, epoch `time`, `msg`)
-- **Development**: `pino-pretty` transport with a compact colored format; HTTP lines render as
-  `request completed GET /url 200 12ms`
+- **Development**: `pino-pretty` as a synchronous stream with a compact colored format; HTTP
+  lines render as `GET /url 200 12ms` (method+url, status colored by range, duration)
 - **Test**: silent by default (override with `LOG_LEVEL` when debugging a test)
 
 ## Architecture
