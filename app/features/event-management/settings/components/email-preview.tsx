@@ -15,19 +15,11 @@ export function EmailPreview({ from, subject, preview }: Props) {
   useLayoutEffect(() => {
     if (!containerRef.current) return;
 
-    // Create or reuse shadow root
     const shadowRoot = containerRef.current.shadowRoot || containerRef.current.attachShadow({ mode: 'open' });
-
-    // Inject preview HTML
-    shadowRoot.innerHTML = `
-      <style>
-        :host {
-          all: initial;
-          font-family: system-ui, sans-serif;
-        }
-      </style>
-      ${preview}
-    `;
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(':host { all: initial; font-family: system-ui, sans-serif; }');
+    shadowRoot.adoptedStyleSheets = [sheet];
+    shadowRoot.innerHTML = preview;
   }, [preview]);
 
   return (
