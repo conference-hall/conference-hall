@@ -30,8 +30,8 @@ export function createLogger({ level, destination }: CreateLoggerOptions = {}): 
 
 function createPrettyStream(): DestinationStream {
   return pinoPretty({
-    translateTime: 'HH:MM:ss',
-    ignore: 'pid,hostname,reqId,method,url,status,duration,headers',
+    singleLine: true,
+    ignore: 'time,pid,hostname,reqId,method,url,status,duration,headers',
     messageFormat: (log, messageKey, _level, { colors }) => {
       if (isHttpLog(log)) {
         const request = colors.blueBright(`${log.method} ${log.url}`);
