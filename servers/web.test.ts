@@ -15,12 +15,12 @@ describe('web server', { tags: ['no-teardown'] }, () => {
     const requestLogs = lines.filter((line) => line.method);
     expect(requestLogs).toHaveLength(1);
     expect(requestLogs[0]).toMatchObject({
-      level: 30,
+      level: 'info',
       method: 'GET',
       url: '/speaker/talks',
       status: 200,
     });
-    expect(requestLogs[0].msg).toBeUndefined();
+    expect(requestLogs[0].msg).toBe('GET /speaker/talks 200');
     expect(requestLogs[0].reqId).toBeDefined();
     expect(requestLogs[0].duration).toBeTypeOf('number');
     expect(requestLogs[0].headers.cookie).toBe('[redacted]');
@@ -50,7 +50,7 @@ describe('web server', { tags: ['no-teardown'] }, () => {
     expect(errorLogs).toHaveLength(1);
     expect(errorLogs[0].error.message).toBe('boom');
     expect(errorLogs[0].reqId).toBeDefined();
-    expect(lines.find((line) => line.method)?.level).toBe(50);
+    expect(lines.find((line) => line.method)?.level).toBe('error');
 
     await app.close();
   });
@@ -74,7 +74,7 @@ describe('web server', { tags: ['no-teardown'] }, () => {
 
     expect(response.statusCode).toBe(418);
     expect(lines.filter((line) => line.msg === 'Web server error')).toHaveLength(0);
-    expect(lines.find((line) => line.method)?.level).toBe(40);
+    expect(lines.find((line) => line.method)?.level).toBe('warn');
 
     await app.close();
   });
