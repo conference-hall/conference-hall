@@ -91,6 +91,48 @@ describe('rate limits', { tags: ['no-teardown'] }, () => {
       });
       expect(otherClient.statusCode).toBe(200);
     });
+
+    it('falls back to x-real-ip when cf-connecting-ip is absent', async () => {
+      for (let i = 0; i < 6; i++) {
+        await app.inject({ method: 'POST', url: '/team/request', headers: { 'x-real-ip': '203.0.113.10' } });
+      }
+      const sameClient = await app.inject({
+        method: 'POST',
+        url: '/team/request',
+        headers: { 'x-real-ip': '203.0.113.10' },
+      });
+      expect(sameClient.statusCode).toBe(429);
+
+      const otherClient = await app.inject({
+        method: 'POST',
+        url: '/team/request',
+        headers: { 'x-real-ip': '203.0.113.11' },
+      });
+      expect(otherClient.statusCode).toBe(200);
+    });
+
+    it('prefers cf-connecting-ip over x-real-ip when both are present', async () => {
+      for (let i = 0; i < 6; i++) {
+        await app.inject({
+          method: 'POST',
+          url: '/team/request',
+          headers: { 'cf-connecting-ip': '203.0.113.20', 'x-real-ip': '203.0.113.99' },
+        });
+      }
+      const sameCfClient = await app.inject({
+        method: 'POST',
+        url: '/team/request',
+        headers: { 'cf-connecting-ip': '203.0.113.20', 'x-real-ip': '198.51.100.1' },
+      });
+      expect(sameCfClient.statusCode).toBe(429);
+
+      const otherCfClient = await app.inject({
+        method: 'POST',
+        url: '/team/request',
+        headers: { 'cf-connecting-ip': '203.0.113.21', 'x-real-ip': '203.0.113.99' },
+      });
+      expect(otherCfClient.statusCode).toBe(200);
+    });
   });
 
   it('multiplies limits by 10,000 outside production', async () => {

@@ -56,10 +56,12 @@ export async function applyRateLimits(app: FastifyInstance, options: RateLimitsO
 }
 
 const keyGenerator = (request: FastifyRequest) => {
-  const header = request.headers['cf-connecting-ip'];
-  const ip = (Array.isArray(header) ? header[0] : header) ?? request.ip;
-  return ipKeyGenerator(ip);
+  const cfIp = firstHeader(request.headers['cf-connecting-ip']);
+  const realIp = firstHeader(request.headers['x-real-ip']);
+  return ipKeyGenerator(cfIp ?? realIp ?? request.ip);
 };
+
+const firstHeader = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value);
 
 // Normalizes IPv6 addresses to their /56 subnet so a single user cannot evade
 // limits by rotating addresses within their allocation (equivalent to

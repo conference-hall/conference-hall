@@ -37,13 +37,16 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
   app.addHook('onResponse', (request, reply, done) => {
     const status = reply.statusCode;
     const level = status >= 500 ? 'error' : status >= 400 ? 'warn' : 'info';
-    request.log[level]({
-      method: request.method,
-      url: request.url,
-      status,
-      duration: Math.round(reply.elapsedTime),
-      headers: request.headers,
-    });
+    request.log[level](
+      {
+        method: request.method,
+        url: request.url,
+        status,
+        duration: Math.round(reply.elapsedTime),
+        headers: request.headers,
+      },
+      `${request.method} ${request.url} ${status}`,
+    );
     done();
   });
 
