@@ -105,7 +105,7 @@ export const auth = betterAuth({
   advanced: {
     // ip address check for rate limit
     ipAddress: {
-      ipAddressHeaders: ['cf-connecting-ip', 'X-Forwarded-For'],
+      ipAddressHeaders: ['cf-connecting-ip', 'x-real-ip'],
     },
   },
 });
@@ -122,6 +122,11 @@ function getSecondaryStorage() {
     },
     delete: async (key: string) => {
       await redis.del(`auth:${key}`);
+    },
+    increment: async (key: string, ttl: number) => {
+      const count = await redis.incr(`auth:${key}`);
+      if (count === 1 && ttl) await redis.expire(`auth:${key}`, ttl);
+      return count;
     },
   };
 }
