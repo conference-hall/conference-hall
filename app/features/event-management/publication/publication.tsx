@@ -130,21 +130,21 @@ export default function PublicationRoute({ loaderData: statistics }: Route.Compo
                 amount: statistics.confirmations.confirmed,
                 colorChart: 'green',
                 colorLegend: 'bg-green-500',
-                to: '../proposals?status=confirmed',
+                to: '../proposals?confirmation=confirmed',
               },
               {
                 name: t('common.proposals.status.declined'),
                 amount: statistics.confirmations.declined,
                 colorChart: 'red',
                 colorLegend: 'bg-red-500',
-                to: '../proposals?status=declined',
+                to: '../proposals?confirmation=declined',
               },
               {
                 name: t('common.proposals.status.not-answered'),
                 amount: statistics.confirmations.pending,
                 colorChart: 'blue',
                 colorLegend: 'bg-blue-500',
-                to: '../proposals?status=not-answered',
+                to: '../proposals?confirmation=not-answered',
               },
             ]}
           >

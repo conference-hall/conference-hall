@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { PageObject } from '../../page-object.ts';
+import { ProposalsListPage } from './proposals-list.page.ts';
 
 export class PublicationPage extends PageObject {
   readonly heading: Locator;
@@ -28,6 +29,13 @@ export class PublicationPage extends PageObject {
       .getByRole('button', { name: `Publish all "${type}"` })
       .click();
     return new PublicationModal(this.page);
+  }
+
+  async clickOnChartLink(name: string) {
+    await this.page.getByRole('link', { name, exact: true }).click();
+    const proposalsPage = new ProposalsListPage(this.page);
+    await proposalsPage.waitFor();
+    return proposalsPage;
   }
 }
 

@@ -43,6 +43,45 @@ test('displays publication page', async ({ page, context }) => {
   await expect(publicationPage.dashboardCard('Rejected proposals to publish').getByText('0')).toBeVisible();
 });
 
+test('filters proposals from the speaker confirmations chart links', async ({ page, context }) => {
+  const user = await userLoggedFactory(context);
+  const team = await teamFactory({ owners: [user] });
+  const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
+
+  const speaker = await userFactory();
+  await proposalFactory({
+    event,
+    traits: ['confirmed'],
+    talk: await talkFactory({ speakers: [speaker], attributes: { title: 'Confirmed talk' } }),
+  });
+  await proposalFactory({
+    event,
+    traits: ['declined'],
+    talk: await talkFactory({ speakers: [speaker], attributes: { title: 'Declined talk' } }),
+  });
+  await proposalFactory({
+    event,
+    traits: ['accepted-published'],
+    talk: await talkFactory({ speakers: [speaker], attributes: { title: 'Waiting talk' } }),
+  });
+
+  const publicationPage = new PublicationPage(page);
+
+  const chartLinks = [
+    { link: 'Confirmed by speaker', confirmation: 'confirmed', talk: 'Confirmed talk' },
+    { link: 'Declined by speaker', confirmation: 'declined', talk: 'Declined talk' },
+    { link: 'Waiting for confirmation', confirmation: 'not-answered', talk: 'Waiting talk' },
+  ];
+
+  for (const { link, confirmation, talk } of chartLinks) {
+    await publicationPage.goto(team.slug, event.slug);
+    const proposalsPage = await publicationPage.clickOnChartLink(link);
+    await expect(page).toHaveURL(new RegExp(`/proposals\\?confirmation=${confirmation}`));
+    await expect(proposalsPage.proposalCount(1)).toBeVisible();
+    await expect(proposalsPage.proposal(talk)).toBeVisible();
+  }
+});
+
 test.describe('as a team reviewer', () => {
   test('does not have access to publication', async ({ page, context }) => {
     const user = await userLoggedFactory(context);
