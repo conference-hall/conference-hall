@@ -13,27 +13,30 @@ const ReviewValueSchema = z.enum([
   'positive',
 ]);
 
-const ReviewsFiltersSchema = z.array(ReviewValueSchema).optional();
+// Invalid or empty values fall back to undefined so a bad URL param only drops that filter.
+// The catch must sit inside .optional(): conform's coercion unwraps ZodOptional but not ZodCatch.
+const dropInvalid = <T extends z.ZodType>(schema: T) => schema.catch(undefined as never).optional();
 
-const StatusFilterSchema = z.enum(['pending', 'accepted', 'rejected', 'archived']).optional();
+const ReviewsFiltersSchema = dropInvalid(z.array(ReviewValueSchema));
 
-const ConfirmationFilterSchema = z.enum(['not-answered', 'confirmed', 'declined']).optional();
+const StatusFilterSchema = dropInvalid(z.enum(['pending', 'accepted', 'rejected', 'archived']));
 
-const MessagesFilterSchema = z.enum(['new']).optional();
+const ConfirmationFilterSchema = dropInvalid(z.enum(['not-answered', 'confirmed', 'declined']));
 
-// Each field falls back to undefined on invalid input so a bad URL param only drops that filter
+const MessagesFilterSchema = dropInvalid(z.enum(['new']));
+
 const ProposalsFiltersSchema = z.object({
-  query: z.string().trim().optional().catch(undefined),
-  sort: z.enum(['date', 'reviews', 'favorites', 'my-review', 'comments']).optional().catch(undefined),
-  order: z.enum(['asc', 'desc']).optional().catch(undefined),
-  reviews: ReviewsFiltersSchema.catch(undefined),
-  status: StatusFilterSchema.catch(undefined),
-  confirmation: ConfirmationFilterSchema.catch(undefined),
-  messages: MessagesFilterSchema.catch(undefined),
-  formats: z.string().optional().catch(undefined),
-  categories: z.string().optional().catch(undefined),
-  tags: z.string().optional().catch(undefined),
-  speakers: z.string().optional().catch(undefined),
+  query: dropInvalid(z.string().trim()),
+  sort: dropInvalid(z.enum(['date', 'reviews', 'favorites', 'my-review', 'comments'])),
+  order: dropInvalid(z.enum(['asc', 'desc'])),
+  reviews: ReviewsFiltersSchema,
+  status: StatusFilterSchema,
+  confirmation: ConfirmationFilterSchema,
+  messages: MessagesFilterSchema,
+  formats: dropInvalid(z.string()),
+  categories: dropInvalid(z.string()),
+  tags: dropInvalid(z.string()),
+  speakers: dropInvalid(z.string()),
 });
 
 export type ReviewsFilter = z.infer<typeof ReviewsFiltersSchema>;

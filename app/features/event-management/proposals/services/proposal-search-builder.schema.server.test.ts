@@ -36,6 +36,13 @@ describe('parseUrlFilters', () => {
     expect(result).toEqual({ status: 'accepted' });
   });
 
+  it('drops an empty attributes but keeps the other valid filters', () => {
+    const url = new URL('https://example.com/proposals?status=accepted&confirmation=&tags=');
+    const result = parseUrlFilters(url);
+
+    expect(result).toEqual({ status: 'accepted' });
+  });
+
   it('drops the reviews filter when one of its values is invalid', () => {
     const url = new URL('https://example.com/proposals?reviews=positive&reviews=invalid&status=pending');
     const result = parseUrlFilters(url);
