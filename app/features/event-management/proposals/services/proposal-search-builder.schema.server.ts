@@ -13,30 +13,26 @@ const ReviewValueSchema = z.enum([
   'positive',
 ]);
 
-// Invalid or empty values fall back to undefined so a bad URL param only drops that filter.
-// The catch must sit inside .optional(): conform's coercion unwraps ZodOptional but not ZodCatch.
-const dropInvalid = <T extends z.ZodType>(schema: T) => schema.catch(undefined as never).optional();
+const ReviewsFiltersSchema = z.array(ReviewValueSchema).optional();
 
-const ReviewsFiltersSchema = dropInvalid(z.array(ReviewValueSchema));
+const StatusFilterSchema = z.enum(['pending', 'accepted', 'rejected', 'archived']).optional();
 
-const StatusFilterSchema = dropInvalid(z.enum(['pending', 'accepted', 'rejected', 'archived']));
+const ConfirmationFilterSchema = z.enum(['not-answered', 'confirmed', 'declined']).optional();
 
-const ConfirmationFilterSchema = dropInvalid(z.enum(['not-answered', 'confirmed', 'declined']));
-
-const MessagesFilterSchema = dropInvalid(z.enum(['new']));
+const MessagesFilterSchema = z.enum(['new']).optional();
 
 const ProposalsFiltersSchema = z.object({
-  query: dropInvalid(z.string().trim()),
-  sort: dropInvalid(z.enum(['date', 'reviews', 'favorites', 'my-review', 'comments'])),
-  order: dropInvalid(z.enum(['asc', 'desc'])),
+  query: z.string().trim().optional(),
+  sort: z.enum(['date', 'reviews', 'favorites', 'my-review', 'comments']).optional(),
+  order: z.enum(['asc', 'desc']).optional(),
   reviews: ReviewsFiltersSchema,
   status: StatusFilterSchema,
   confirmation: ConfirmationFilterSchema,
   messages: MessagesFilterSchema,
-  formats: dropInvalid(z.string()),
-  categories: dropInvalid(z.string()),
-  tags: dropInvalid(z.string()),
-  speakers: dropInvalid(z.string()),
+  formats: z.string().optional(),
+  categories: z.string().optional(),
+  tags: z.string().optional(),
+  speakers: z.string().optional(),
 });
 
 export type ReviewsFilter = z.infer<typeof ReviewsFiltersSchema>;
@@ -47,9 +43,16 @@ export type ConfirmationFilter = z.infer<typeof ConfirmationFilterSchema>;
 
 export type ProposalsFilters = z.infer<typeof ProposalsFiltersSchema>;
 
+// Invalid params only drop the offending filters: on error, remove them and parse again
 export function parseUrlFilters(url: URL) {
-  const params = url.searchParams;
-  const result = parseWithZod(params, { schema: ProposalsFiltersSchema });
+  const params = new URLSearchParams(url.searchParams);
+  let result = parseWithZod(params, { schema: ProposalsFiltersSchema });
+  if (result.status === 'error') {
+    for (const field of Object.keys(result.error ?? {})) {
+      params.delete(field.split('[')[0]);
+    }
+    result = parseWithZod(params, { schema: ProposalsFiltersSchema });
+  }
   if (result.status !== 'success') return {};
   return result.value;
 }
