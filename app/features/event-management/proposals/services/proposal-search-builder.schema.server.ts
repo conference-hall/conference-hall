@@ -21,18 +21,19 @@ const ConfirmationFilterSchema = z.enum(['not-answered', 'confirmed', 'declined'
 
 const MessagesFilterSchema = z.enum(['new']).optional();
 
+// Each field falls back to undefined on invalid input so a bad URL param only drops that filter
 const ProposalsFiltersSchema = z.object({
-  query: z.string().trim().optional(),
-  sort: z.enum(['date', 'reviews', 'favorites', 'my-review', 'comments']).optional(),
-  order: z.enum(['asc', 'desc']).optional(),
-  reviews: ReviewsFiltersSchema,
-  status: StatusFilterSchema,
-  confirmation: ConfirmationFilterSchema,
-  messages: MessagesFilterSchema,
-  formats: z.string().optional(),
-  categories: z.string().optional(),
-  tags: z.string().optional(),
-  speakers: z.string().optional(),
+  query: z.string().trim().optional().catch(undefined),
+  sort: z.enum(['date', 'reviews', 'favorites', 'my-review', 'comments']).optional().catch(undefined),
+  order: z.enum(['asc', 'desc']).optional().catch(undefined),
+  reviews: ReviewsFiltersSchema.catch(undefined),
+  status: StatusFilterSchema.catch(undefined),
+  confirmation: ConfirmationFilterSchema.catch(undefined),
+  messages: MessagesFilterSchema.catch(undefined),
+  formats: z.string().optional().catch(undefined),
+  categories: z.string().optional().catch(undefined),
+  tags: z.string().optional().catch(undefined),
+  speakers: z.string().optional().catch(undefined),
 });
 
 export type ReviewsFilter = z.infer<typeof ReviewsFiltersSchema>;
