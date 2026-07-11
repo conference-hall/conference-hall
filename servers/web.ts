@@ -1,7 +1,7 @@
 import { pathToFileURL } from 'node:url';
 import fastifyCompress from '@fastify/compress';
 import { type FastifyReactRouterOptions, fastifyReactRouter } from '@mcansh/react-router-fastify';
-import { type FastifyBaseLogger, type FastifyError, fastify } from 'fastify';
+import { type FastifyBaseLogger, type FastifyError, LogController, fastify } from 'fastify';
 import type { Logger } from 'pino';
 import { RouterContextProvider } from 'react-router';
 import type { ViteDevServer } from 'vite';
@@ -25,7 +25,7 @@ type CreateServerOptions = {
 export async function createServer(vite?: ViteDevServer, options: CreateServerOptions = {}) {
   const app = fastify({
     loggerInstance: (options.loggerInstance ?? baseLogger) as FastifyBaseLogger,
-    disableRequestLogging: true,
+    logController: new LogController({ disableRequestLogging: true }),
   });
 
   // Make the request logger with request id
