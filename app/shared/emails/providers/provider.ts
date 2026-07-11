@@ -11,6 +11,7 @@ export type Email = {
   subject: string;
   html: string;
   text: string;
+  headers?: Record<string, string>;
 };
 
 export interface EmailProvider {

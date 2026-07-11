@@ -121,6 +121,20 @@ describe('UserAccount', () => {
     });
   });
 
+  describe('conversation digest preference', () => {
+    it('defaults to enabled and can be toggled off and on', async () => {
+      const user = await userFactory();
+
+      expect((await UserAccount.for(user.id).getPreferences())?.conversationDigestEnabled).toBe(true);
+
+      await UserAccount.for(user.id).setConversationDigestEnabled(false);
+      expect((await UserAccount.for(user.id).getPreferences())?.conversationDigestEnabled).toBe(false);
+
+      await UserAccount.for(user.id).setConversationDigestEnabled(true);
+      expect((await UserAccount.for(user.id).getPreferences())?.conversationDigestEnabled).toBe(true);
+    });
+  });
+
   describe('deleteAccount', () => {
     it('anonymizes user data', async () => {
       const user = await userFactory({
