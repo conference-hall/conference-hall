@@ -1,13 +1,5 @@
-// Mock @react-email/components render function
-vi.mock('react-email', () => ({
-  render: vi.fn(),
-}));
-
-import { render } from 'react-email';
 import { renderEmail } from './email.renderer.tsx';
 import { getEmailTemplate } from './templates/templates.ts';
-
-const mockRender = vi.mocked(render);
 
 describe('Email Renderer', () => {
   describe('getEmailTemplateComponent', () => {
@@ -41,39 +33,20 @@ describe('Email Renderer', () => {
   });
 
   describe('renderEmail', () => {
-    beforeEach(() => {
-      mockRender.mockClear();
-    });
-
     it('renders existing email template with HTML and text versions', async () => {
-      mockRender.mockResolvedValueOnce('<html>Welcome HTML</html>').mockResolvedValueOnce('Welcome Text');
-
       const result = await renderEmail('base-email', { name: 'John' }, 'en', { color: 'blue' });
 
-      expect(result).toEqual({ html: '<html>Welcome HTML</html>', text: 'Welcome Text' });
+      expect(result?.html).toContain('<html dir="ltr" lang="en">');
+      expect(result?.html).toContain('Powered by Conference Hall');
 
-      expect(mockRender).toHaveBeenCalledTimes(2);
-      // First call for HTML
-      expect(mockRender).toHaveBeenNthCalledWith(1, expect.anything());
-      // Second call for text with plainText option
-      expect(mockRender).toHaveBeenNthCalledWith(2, expect.anything(), { plainText: true });
+      expect(result?.text).not.toContain('<html dir="ltr" lang="en">');
+      expect(result?.text).toContain('Powered by Conference Hall');
     });
 
     it('replaces http://www.w3.org with https://www.w3.org in HTML', async () => {
-      mockRender.mockResolvedValueOnce('<html>http://www.w3.org/test</html>');
-
       const result = await renderEmail('base-email', {}, 'en', null);
 
-      expect(result?.html).toBe('<html>https://www.w3.org/test</html>');
-    });
-
-    it('handles null customization parameter', async () => {
-      mockRender.mockResolvedValueOnce('<html>Test</html>').mockResolvedValueOnce('Test');
-
-      const result = await renderEmail('base-email', { test: 'data' }, 'en', null);
-
-      expect(result).toEqual({ html: '<html>Test</html>', text: 'Test' });
-      expect(mockRender).toHaveBeenCalledTimes(2);
+      expect(result?.html).toContain('https://www.w3.org');
     });
   });
 });

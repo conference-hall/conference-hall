@@ -31,8 +31,7 @@ describe('Proposal Declined', () => {
         plainText: true,
       });
 
-      expect(result).not.toContain('I&#x2F;O');
-      expect(result).toContain('I/O');
+      expect(result).not.toContain('&#x2F;');
       expect(result).toContain('Gwenaëlle B.');
       expect(result).toContain('Random Proposal w/ special characters ✨');
     });

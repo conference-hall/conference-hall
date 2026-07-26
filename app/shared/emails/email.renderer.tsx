@@ -1,4 +1,4 @@
-import { render } from 'react-email';
+import { render, toPlainText } from 'react-email';
 import { type EmailTemplateName, getEmailTemplate } from './templates/templates.ts';
 
 export async function renderEmail(
@@ -14,9 +14,7 @@ export async function renderEmail(
     }
 
     const html = await render(<EmailTemplate locale={locale} {...data} customization={customization} />);
-    const text = await render(<EmailTemplate locale={locale} {...data} customization={customization} />, {
-      plainText: true,
-    });
+    const text = toPlainText(html);
 
     return { html: html.replaceAll('http://www.w3.org', 'https://www.w3.org'), text };
   } catch (err) {

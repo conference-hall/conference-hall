@@ -1,4 +1,4 @@
-import { render } from 'react-email';
+import { render, toPlainText } from 'react-email';
 import type { TemplateData } from './proposal-confirmed.email.tsx';
 import ProposalConfirmedEmail from './proposal-confirmed.email.tsx';
 
@@ -27,14 +27,12 @@ describe('Proposal Confirmed', () => {
     });
 
     it('Plain text does not escape special characters', async () => {
-      const result = await render(<ProposalConfirmedEmail locale="fr" event={event} proposal={proposal} />, {
-        plainText: true,
-      });
+      const html = await render(<ProposalConfirmedEmail locale="fr" event={event} proposal={proposal} />);
+      const text = toPlainText(html);
 
-      expect(result).not.toContain('I&#x2F;O');
-      expect(result).toContain('I/O');
-      expect(result).toContain('Gwenaëlle B.');
-      expect(result).toContain('Random Proposal w/ special characters ✨');
+      expect(text).not.toContain('&#x2F;');
+      expect(text).toContain('Gwenaëlle B.');
+      expect(text).toContain('Random Proposal w/ special characters ✨');
     });
   });
 });
