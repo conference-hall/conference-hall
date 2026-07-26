@@ -97,7 +97,14 @@ function SelectPanelContent({
   const hasNoResults = displayedOptions.length === 0 && query && !isLoading;
 
   return (
-    <Combobox value={comboboxValue} onChange={handleComboboxChange} multiple={multiple} by="value" as="div" immediate>
+    <Combobox<SelectPanelOption, boolean, 'div'>
+      value={comboboxValue}
+      onChange={handleComboboxChange}
+      multiple={multiple}
+      by="value"
+      as="div"
+      immediate
+    >
       <ComboboxInput as={Fragment} onChange={handleQueryChange} displayValue={() => query}>
         <Input
           type="text"

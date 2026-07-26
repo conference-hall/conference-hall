@@ -104,7 +104,7 @@
     "prisma": "^7.9.0",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.1",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vite": "^8.1.5",
     "vitest": "^4.1.10",
     "vitest-browser-react": "^2.2.0"
