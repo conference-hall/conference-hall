@@ -46,8 +46,8 @@ React / React router v7 / Typescript / Tailwind / HeadlessUI / Conform / Zod / P
 ### Prerequisites
 
 - Docker
-- Node 24+
-- pnpm
+- Node 26+
+- pnpm 11+
 
 ### Getting started
 
