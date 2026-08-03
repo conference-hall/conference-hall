@@ -31,7 +31,7 @@ export function ListHeader({
   const permissions = useUserTeamPermissions();
 
   return (
-    <List.Header className="py-2">
+    <List.Header className="bg-gray-50">
       <div className="flex flex-col gap-4 sm:h-7 md:flex-row md:items-center">
         {permissions.canChangeProposalStatus ? (
           <Checkbox aria-label={t('event-management.proposals.list.check-item')} ref={checkboxRef}>
