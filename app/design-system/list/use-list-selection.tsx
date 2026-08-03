@@ -1,8 +1,9 @@
 import type { ChangeEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+export type SelectAllState = 'none' | 'partial' | 'page' | 'all';
+
 export const useListSelection = (ids: Array<string>, total: number, hash: string) => {
-  const ref = useRef<HTMLInputElement>(null);
   const lastHash = useRef<string>(null);
   const [selection, setSelection] = useState<Array<string>>([]);
   const [allPagesSelected, setAllPagesSelected] = useState(false);
@@ -55,31 +56,27 @@ export const useListSelection = (ids: Array<string>, total: number, hash: string
     lastHash.current = hash;
   }, [hash, reset]);
 
-  useEffect(() => {
-    if (!ref.current) return;
-    ref.current.disabled = total === 0;
-    ref.current.checked = (total !== 0 && selection.length === total) || allPagesSelected;
-    ref.current.indeterminate = selection.length > 0 && selection.length < total;
-    ref.current.onchange = toggleAll;
-  }, [selection, ids, toggleAll, total, allPagesSelected]);
+  const selectAllState: SelectAllState = useMemo(() => {
+    if (allPagesSelected) return 'all';
+    if (selection.length === 0) return 'none';
+    if (ids.length > 0 && selection.length === ids.length) return 'page';
+    return 'partial';
+  }, [selection, ids, allPagesSelected]);
 
   return useMemo(
     () => ({
-      ref,
+      selectAllState,
+      selectAllDisabled: total === 0,
       selection,
       totalSelected: allPagesSelected ? total : selection.length,
       reset,
       isSelected,
-      isCurrentPageSelected: arraysEqual(selection, ids) && selection.length !== total,
+      isCurrentPageSelected: selectAllState === 'page',
       isAllPagesSelected: allPagesSelected,
       toggle,
+      toggleAll,
       toggleAllPages,
     }),
-    [ref, reset, isSelected, toggle, toggleAllPages, allPagesSelected, selection, ids, total],
+    [selectAllState, reset, isSelected, toggle, toggleAll, toggleAllPages, allPagesSelected, selection, total],
   );
 };
-
-function arraysEqual(a: Array<string>, b: Array<string>) {
-  if (a.length !== b.length) return false;
-  return a.every((item) => b.includes(item));
-}

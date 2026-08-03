@@ -26,7 +26,11 @@ export function ProposalsList({ team, event, proposals, pagination, statistics, 
   return (
     <List>
       <ListHeader
-        checkboxRef={selector.ref}
+        selectAll={{
+          state: selector.selectAllState,
+          disabled: selector.selectAllDisabled,
+          onChange: selector.toggleAll,
+        }}
         total={statistics.total}
         totalReviewed={statistics.reviewed}
         hasNewMessages={statistics.hasNewMessages}

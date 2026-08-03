@@ -2,14 +2,14 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { StatusPill } from '~/design-system/charts/status-pill.tsx';
-import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ReviewsProgress } from '../../shared/reviews-progress.tsx';
 import { DeliberationButton } from './deliberation-button.tsx';
+import { SelectAllCheckbox, type SelectAllProps } from './select-all-checkbox.tsx';
 
 type Props = {
-  checkboxRef: React.RefObject<HTMLInputElement | null>;
+  selectAll: SelectAllProps;
   total: number;
   totalSelected: number;
   totalReviewed: number;
@@ -19,7 +19,7 @@ type Props = {
 };
 
 export function ListHeader({
-  checkboxRef,
+  selectAll,
   total,
   totalSelected,
   totalReviewed,
@@ -34,7 +34,7 @@ export function ListHeader({
     <List.Header className="bg-gray-50">
       <div className="flex flex-col gap-4 sm:h-7 md:flex-row md:items-center">
         {permissions.canChangeProposalStatus ? (
-          <Checkbox aria-label={t('event-management.proposals.list.check-item')} ref={checkboxRef}>
+          <SelectAllCheckbox {...selectAll} aria-label={t('event-management.proposals.list.check-item')}>
             {totalSelected === 0 ? (
               <Trans
                 i18nKey="event-management.proposals.list.items"
@@ -44,7 +44,7 @@ export function ListHeader({
             ) : (
               t('event-management.proposals.list.selected', { count: totalSelected })
             )}
-          </Checkbox>
+          </SelectAllCheckbox>
         ) : (
           <Text>
             <Trans
