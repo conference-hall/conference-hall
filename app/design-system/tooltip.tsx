@@ -1,3 +1,6 @@
+// `useFloating` exposes callback refs (`refs.setReference`, `refs.setFloating`) and takes `arrowRef` as an option,
+// none of which read `.current` during render.
+// oxlint-disable react/refs
 import { arrow, FloatingArrow, flip, offset, type Placement, shift, useFloating } from '@floating-ui/react';
 import type React from 'react';
 import { useRef, useState } from 'react';

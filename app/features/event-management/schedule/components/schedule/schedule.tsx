@@ -1,3 +1,6 @@
+// `useDroppable` and `useDraggable` expose callback refs (`droppable.ref`, `movable.ref`) alongside plain state
+// (`isDropTarget`, `isDragging`), none of which read `.current` during render.
+// oxlint-disable react/refs
 import { RestrictToWindow } from '@dnd-kit/dom/modifiers';
 import { DragDropProvider, PointerSensor, useDragDropMonitor, useDraggable, useDroppable } from '@dnd-kit/react';
 import { cx } from 'class-variance-authority';

@@ -42,6 +42,8 @@ export function SpeakerModal({ team, event, onSpeakerCreated, children }: Speake
         picture: speaker.picture,
         data: { description: speaker.company },
       });
+      // `fetcher.submit` resolves with `void`, so the created speaker can only be read from a later render
+      // oxlint-disable-next-line react/set-state-in-effect
       setModalOpen(false);
     }
   }, [fetcher.data?.speaker, errors, isModalOpen, onSpeakerCreated]);
