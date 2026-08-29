@@ -54,7 +54,7 @@
     "@sindresorhus/slugify": "^3.0.0",
     "@tanstack/react-hotkeys": "^0.10.0",
     "better-auth": "~1.6.30",
-    "bullmq": "^5.81.3",
+    "bullmq": "^6.2.2",
     "class-variance-authority": "^0.7.1",
     "date-fns": "^4.4.0",
     "fastify": "^5.12.1",
