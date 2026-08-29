@@ -9,7 +9,7 @@ import {
   PopoverPanel,
 } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedCallback } from 'use-debounce';
 import { Avatar } from '../avatar.tsx';
@@ -239,12 +239,6 @@ export function SelectPanel({
   }, [options]);
 
   const [selected, setSelected] = useState<Array<SelectPanelOption>>(getSelectedFromValues(values));
-
-  // Update selected state when values changes
-  useEffect(() => {
-    const newSelected = getSelectedFromValues(values);
-    setSelected(newSelected);
-  }, [values, getSelectedFromValues]);
 
   const handleSelectionChange = (selectedOptions: Array<SelectPanelOption>) => {
     if (values === undefined) {

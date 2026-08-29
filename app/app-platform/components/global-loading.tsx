@@ -10,10 +10,16 @@ function GlobalLoadingComponent() {
 
   const ref = React.useRef<HTMLDivElement>(null);
   const [animationComplete, setAnimationComplete] = React.useState(true);
+  const [wasActive, setWasActive] = React.useState(false);
+
+  // A starting navigation resets the completion flag during render, so no effect has to trigger a second render
+  if (wasActive !== active) {
+    setWasActive(active);
+    if (active) setAnimationComplete(false);
+  }
 
   React.useEffect(() => {
     if (!ref.current) return;
-    if (active) setAnimationComplete(false);
 
     Promise.allSettled(ref.current.getAnimations().map(({ finished }) => finished)).then(
       () => !active && setAnimationComplete(true),

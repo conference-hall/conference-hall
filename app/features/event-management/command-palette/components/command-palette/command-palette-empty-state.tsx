@@ -1,6 +1,6 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { CommandLineIcon } from '@heroicons/react/24/outline';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Kbd } from '~/design-system/kbd.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -9,15 +9,14 @@ type Props = { title: string; description: string; hasQuery: boolean; loading: b
 
 export function CommandPaletteEmptyState({ title, description, hasQuery, loading }: Props) {
   const { t } = useTranslation();
+  // Latched during render so the "no results" state never flashes back to the initial state while searching again
   const [wasNoResults, setWasNoResults] = useState(false);
 
-  useEffect(() => {
-    if (!wasNoResults && hasQuery && !loading) {
-      setWasNoResults(true);
-    } else if (!hasQuery) {
-      setWasNoResults(false);
-    }
-  }, [hasQuery, loading, wasNoResults]);
+  if (!wasNoResults && hasQuery && !loading) {
+    setWasNoResults(true);
+  } else if (wasNoResults && !hasQuery) {
+    setWasNoResults(false);
+  }
 
   if (hasQuery && wasNoResults) {
     return (
