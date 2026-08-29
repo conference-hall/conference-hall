@@ -290,7 +290,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   {speakersConversationEnabled ? (
                     <Suspense fallback={null}>
                       <Await resolve={activityPromise}>
-                        {([_, speakersConversation]) => (
+                        {([, speakersConversation]) => (
                           <ConversationDrawer
                             messages={speakersConversation}
                             recipients={speakersWithAccount}
