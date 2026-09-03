@@ -132,6 +132,16 @@ term as defined here and don't drift to synonyms.
   or ORGANIZER), messages (type TEXT or SYSTEM, the latter machine-generated), and
   emoji reactions on messages.
 
+- **Unread message** — For a Participant, a Message authored by someone else whose
+  `createdAt` is later than the Participant's `lastSeenAt` (never-seen ⇒ all are
+  unread). This is the same "new" set surfaced in-app; the digest reuses it.
+
+- **Conversation digest** — A periodic email summarizing a recipient's unread
+  messages, batched across all their conversations into a single message. It is a
+  _catch-up_ notification (here's what you missed), not a per-message alert. Sending a
+  digest does **not** mark messages read in-app; what's already been _digested_ is
+  tracked separately from what's been _seen_.
+
 ## Schedule
 
 - **Schedule** — An event's timetable, with its own timezone and display bounds.

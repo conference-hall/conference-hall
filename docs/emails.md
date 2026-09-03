@@ -68,7 +68,6 @@ MyEmail.buildPayload = (data: TemplateData): EmailPayload => {
 
 ## Sending Emails
 
-- **Speaker notifications**: Emit domain events via `notifyDomainEvent.trigger()` — the notification router handles email dispatch per speaker with correct locale. See `notifications.md` rule.
 - **Organizer emails**: Use `sendEmail.trigger(TemplateEmail.buildPayload(data))` directly
 - Bulk: `Promise.all(items.map(item => sendEmail.trigger(Template.buildPayload(item))))`
 - Fire-and-forget: `void sendEmail.trigger(...)` when no need to await

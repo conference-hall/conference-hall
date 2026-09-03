@@ -1,5 +1,6 @@
 import { conversationMessageFactory } from 'tests/factories/conversation-messages.ts';
 import { conversationFactory } from 'tests/factories/conversations.ts';
+import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
@@ -311,6 +312,31 @@ describe('ConversationService', () => {
         const participant = await db.conversationParticipant.findFirst({ where: { userId: owner.id } });
 
         expect(participant?.role).toBe(ConversationParticipantRole.ORGANIZER);
+      });
+
+      it('seeds the proposal speakers (with a linked user) as participants, without marking them seen', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).saveMessage({ message: 'Hello speaker!' });
+
+        const speakerParticipant = await db.conversationParticipant.findFirst({ where: { userId: speaker.id } });
+        expect(speakerParticipant?.role).toBe(ConversationParticipantRole.SPEAKER);
+        expect(speakerParticipant?.lastSeenAt).toBeNull();
+      });
+
+      it('does not seed co-speakers without a linked user', async () => {
+        const linked = await eventSpeakerFactory({ event, user: speaker });
+        const unlinked = await eventSpeakerFactory({ event });
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk, speakers: [linked, unlinked] });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forOrganizer(authorizedEvent, proposal.id).saveMessage({ message: 'Hello!' });
+
+        const participants = await db.conversationParticipant.findMany();
+        expect(participants.map((p) => p.userId).toSorted()).toEqual([owner.id, speaker.id].toSorted());
       });
 
       it('updates an existing message when an id is provided', async () => {
@@ -901,6 +927,19 @@ describe('ConversationService', () => {
 
         expect(conversation?.messages.length).toBe(1);
         expect(conversation?.messages[0].content).toBe('Review comment!');
+      });
+
+      it('does not seed proposal speakers — only the sender becomes a participant', async () => {
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk });
+        const authorizedEvent = await authorizeOwner();
+
+        await ConversationService.forReviewComments(authorizedEvent, proposal.id).saveMessage({
+          message: 'Internal note',
+        });
+
+        const participants = await db.conversationParticipant.findMany();
+        expect(participants.map((p) => p.userId)).toEqual([owner.id]);
       });
 
       it('allows an organizer with the manage-conversations permission to update any message', async () => {

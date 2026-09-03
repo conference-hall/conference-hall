@@ -13,6 +13,12 @@ export default defineFlagsConfig({
     defaultValue: false,
     tags: ['frontend'] as const,
   },
+  conversationDigest: {
+    description: 'Enables the daily conversation digest email for unread messages.',
+    type: 'boolean',
+    defaultValue: false,
+    tags: ['frontend'] as const,
+  },
   disableApiKeyInQueryParams: {
     description: 'Disables API key authentication via query parameters (forces header-based authentication).',
     type: 'boolean',

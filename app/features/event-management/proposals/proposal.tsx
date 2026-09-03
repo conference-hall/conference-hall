@@ -295,6 +295,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                             messages={speakersConversation}
                             recipients={speakersWithAccount}
                             canManageConversations={permissions.canManageConversations}
+                            conversationType="speaker"
                             className="flex cursor-pointer gap-2 px-4 hover:underline lg:px-6"
                           >
                             <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />

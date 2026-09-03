@@ -42,6 +42,9 @@ export default [
   // Notifications pages
   route('notifications', './features/notifications/notifications.tsx'),
 
+  // Conversation digest one-click unsubscribe (unauthenticated, token-based)
+  route('unsubscribe', './features/conversations/unsubscribe.tsx'),
+
   // Speaker pages
   route('speaker', './features/speaker/layout.tsx', [
     index('./features/speaker/activity/activity.tsx'),

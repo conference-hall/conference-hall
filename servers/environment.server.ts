@@ -18,6 +18,9 @@ const SharedServerSchema = z.object({
   APP_URL: z.url(),
   DATABASE_URL: z.url(),
   REDIS_URL: z.url(),
+  // App secret used for stateless signing shared across the web and job processes (e.g. the digest
+  // one-click unsubscribe HMAC token). Also consumed by the web server for signed cookies.
+  COOKIE_SIGNED_SECRET: z.string(),
 });
 
 const WebServerSchema = z.object({

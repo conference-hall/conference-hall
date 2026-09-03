@@ -13,6 +13,7 @@ export type EmailPayload = {
   data: Record<string, any>;
   customEventId?: string;
   locale: string;
+  headers?: Record<string, string>;
 };
 
 export const sendEmail = job<EmailPayload>({
@@ -46,6 +47,7 @@ export const sendEmail = job<EmailPayload>({
       subject,
       html,
       text,
+      headers: payload.headers,
     });
   },
 });

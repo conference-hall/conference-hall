@@ -9,6 +9,7 @@ import OrganizersProposalConfirmed from './organizers/proposal-confirmed.email.t
 import OrganizersProposalDeclined from './organizers/proposal-declined.email.tsx';
 import OrganizersProposalSubmitted from './organizers/proposal-submitted.email.tsx';
 import OrganizersTeamAccessApproved from './organizers/team-access-approved.email.tsx';
+import SpeakersConversationDigest from './speakers/conversation-digest.email.tsx';
 import SpeakersProposalAccepted from './speakers/proposal-accepted.email.tsx';
 import SpeakersProposalRejected from './speakers/proposal-rejected.email.tsx';
 import SpeakersProposalSubmitted from './speakers/proposal-submitted.email.tsx';
@@ -24,6 +25,7 @@ const EMAIL_TEMPLATES = {
   'organizers-proposal-declined': OrganizersProposalDeclined,
   'organizers-proposal-submitted': OrganizersProposalSubmitted,
   'organizers-team-access-approved': OrganizersTeamAccessApproved,
+  'speakers-conversation-digest': SpeakersConversationDigest,
   'speakers-proposal-accepted': SpeakersProposalAccepted,
   'speakers-proposal-rejected': SpeakersProposalRejected,
   'speakers-proposal-submitted': SpeakersProposalSubmitted,
