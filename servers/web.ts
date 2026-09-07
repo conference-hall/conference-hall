@@ -26,6 +26,7 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
   const app = fastify({
     loggerInstance: (options.loggerInstance ?? baseLogger) as FastifyBaseLogger,
     logController: new LogController({ disableRequestLogging: true }),
+    trustProxy: true,
   });
 
   // Make the request logger with request id
