@@ -29,6 +29,26 @@ describe('web server', { tags: ['no-teardown'] }, () => {
     await app.close();
   });
 
+  it('rebuilds the request URL from the proxy forwarded headers', async () => {
+    const app = await createTestServer({
+      reactRouter: {
+        routeOptions: {
+          preHandler: async (request, reply) => reply.send(`${request.protocol}://${request.host}`),
+        },
+      },
+    });
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/',
+      headers: { host: 'internal:3000', 'x-forwarded-proto': 'https', 'x-forwarded-host': 'conference-hall.io' },
+    });
+
+    expect(response.body).toBe('https://conference-hall.io');
+
+    await app.close();
+  });
+
   it('logs errors thrown in hooks and answers 500', async () => {
     const { lines, loggerInstance } = createLogCapture();
     const app = await createTestServer({
