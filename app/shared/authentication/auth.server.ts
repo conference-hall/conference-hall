@@ -19,7 +19,6 @@ const webEnv = getWebServerEnv();
 export const auth = betterAuth({
   baseURL: APP_URL,
   database: prismaAdapter(db, { provider: 'postgresql' }),
-  experimental: { joins: true },
   secondaryStorage: getSecondaryStorage(),
   plugins: getPlugins(),
   logger: {
@@ -103,6 +102,7 @@ export const auth = betterAuth({
     storage: 'secondary-storage',
   },
   advanced: {
+    database: { joins: true },
     // ip address check for rate limit
     ipAddress: {
       ipAddressHeaders: ['cf-connecting-ip', 'x-real-ip'],
@@ -122,6 +122,9 @@ function getSecondaryStorage() {
     },
     delete: async (key: string) => {
       await redis.del(`auth:${key}`);
+    },
+    getAndDelete: async (key: string) => {
+      return await redis.getdel(`auth:${key}`);
     },
     increment: async (key: string, ttl: number) => {
       const count = await redis.incr(`auth:${key}`);
