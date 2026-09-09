@@ -1,9 +1,5 @@
 minimumReleaseAge: 4320
 
-minimumReleaseAgeExclude:
-  - better-auth
-  - '@better-auth/*'
-
 allowBuilds:
   '@prisma/engines': false
   core-js: false
