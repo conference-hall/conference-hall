@@ -60,7 +60,7 @@ describe('ResetPasswordForm', () => {
     await page.getByLabelText('Password').fill('short');
     await page.getByRole('button', { name: 'Change your password' }).click();
 
-    await expect.element(page.getByText('Minimum 8 characters.')).toBeVisible();
+    await expect.element(page.getByText('Minimum 8 characters.', { exact: false })).toBeVisible();
     expect(authClient.resetPassword).not.toHaveBeenCalled();
   });
 

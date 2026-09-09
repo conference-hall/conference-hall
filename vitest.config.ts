@@ -41,7 +41,6 @@ export default defineConfig({
             instances: [{ browser: 'chromium' }],
             viewport: { width: 1920, height: 1080 },
             screenshotFailures: false,
-            locators: { exact: false },
           },
           sequence: { groupOrder: 2 },
         },

@@ -52,7 +52,7 @@ describe('InputPassword component', () => {
       await expect.element(passwordInput).toHaveAttribute('autoComplete', 'new-password');
       await expect.element(page.getByText('Too weak')).toBeVisible();
 
-      await passwordInput.fill('aB');
+      await passwordInput.fill('aBcDeF');
       await expect.element(page.getByText('Weak')).toBeVisible();
 
       await passwordInput.fill('aBcDeF1!');

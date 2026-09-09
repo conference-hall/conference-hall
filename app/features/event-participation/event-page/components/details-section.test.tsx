@@ -76,7 +76,7 @@ describe('DetailsSection', () => {
       </I18nextProvider>,
     );
 
-    const onlineText = page.getByText('Online');
+    const onlineText = page.getByText('The event is online');
     await expect.element(onlineText).toBeInTheDocument();
   });
 
@@ -144,7 +144,7 @@ describe('DetailsSection', () => {
       </I18nextProvider>,
     );
 
-    const link = page.getByRole('link', { name: 'Contact' });
+    const link = page.getByRole('link', { name: 'Contacts' });
     await expect.element(link).toHaveAttribute('href', 'mailto:contact@example.com');
   });
 
@@ -155,7 +155,7 @@ describe('DetailsSection', () => {
       </I18nextProvider>,
     );
 
-    const link = page.getByRole('link', { name: 'Code of Conduct' });
+    const link = page.getByRole('link', { name: 'Code of conduct' });
     await expect.element(link).toHaveAttribute('href', 'https://example.com/coc');
   });
 
@@ -172,7 +172,7 @@ describe('DetailsSection', () => {
     );
 
     await expect.element(page.getByRole('link', { name: 'Website' })).toBeInTheDocument();
-    await expect.element(page.getByRole('link', { name: 'Contact' })).toBeInTheDocument();
-    await expect.element(page.getByRole('link', { name: 'Code of Conduct' })).toBeInTheDocument();
+    await expect.element(page.getByRole('link', { name: 'Contacts' })).toBeInTheDocument();
+    await expect.element(page.getByRole('link', { name: 'Code of conduct' })).toBeInTheDocument();
   });
 });

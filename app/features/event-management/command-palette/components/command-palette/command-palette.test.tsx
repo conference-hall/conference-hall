@@ -236,7 +236,7 @@ describe('CommandPalette integration tests', () => {
     });
 
     // Empty state should be visible with the query
-    const emptyStateTitle = page.getByText('Search');
+    const emptyStateTitle = page.getByText('No results found');
     await expect.element(emptyStateTitle).toBeVisible();
   });
 
@@ -260,7 +260,7 @@ describe('CommandPalette integration tests', () => {
       </I18nextProvider>,
     );
 
-    const closeText = page.getByText('Custom close');
+    const closeText = page.getByText('Custom close', { exact: false });
     await expect.element(closeText).toBeVisible();
   });
 

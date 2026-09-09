@@ -44,7 +44,7 @@ describe('NavbarSpeaker component', () => {
     await expect.element(logo).toBeInTheDocument();
     await expect.element(logo).toHaveAttribute('href', '/');
 
-    const userMenuButton = page.getByRole('button', { name: 'Open user menu' });
+    const userMenuButton = page.getByRole('button', { name: 'Open user menu', exact: false });
     await expect.element(userMenuButton).toBeInTheDocument();
   });
 
@@ -58,7 +58,7 @@ describe('NavbarSpeaker component', () => {
   it('opens user menu when clicked', async () => {
     await renderComponent(mockUser);
 
-    const userMenuButton = page.getByRole('button', { name: 'Open user menu' });
+    const userMenuButton = page.getByRole('button', { name: 'Open user menu', exact: false });
     await userMenuButton.click();
 
     await expect.element(page.getByRole('link', { name: 'Activity' })).toBeInTheDocument();
