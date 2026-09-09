@@ -1,10 +1,10 @@
-import nodemailer from 'nodemailer';
+import nodemailer, { type Transporter } from 'nodemailer';
 import { logger } from '~/shared/logger/logger.server.ts';
 import { isValidEmail } from '../utils/email.ts';
 import type { Email, EmailProvider } from './provider.ts';
 
 export class MailpitProvider implements EmailProvider {
-  transporter: nodemailer.Transporter;
+  transporter: Transporter;
 
   constructor(host: string, port: number) {
     this.transporter = nodemailer.createTransport({ host, port });
