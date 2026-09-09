@@ -53,7 +53,7 @@
     "@remix-run/form-data-parser": "^0.17.5",
     "@sindresorhus/slugify": "^3.0.1",
     "@tanstack/react-hotkeys": "^0.10.0",
-    "better-auth": "~1.6.30",
+    "better-auth": "~1.7.3",
     "bullmq": "^6.3.4",
     "class-variance-authority": "^0.7.1",
     "date-fns": "^4.4.0",

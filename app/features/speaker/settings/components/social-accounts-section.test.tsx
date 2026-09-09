@@ -29,7 +29,7 @@ vi.mock('~/shared/authentication/auth-providers.ts', () => ({
 }));
 
 const renderComponent = (props = {}) => {
-  const defaultProps = { accounts: [] as Array<{ providerId: string; accountId: string }> };
+  const defaultProps = { accounts: [] as Array<{ id: string; providerId: string; accountId: string }> };
   const RouteStub = createRoutesStub([
     {
       path: '/speaker/settings',
@@ -78,8 +78,8 @@ describe('SocialAccountsSection', () => {
 
     await renderComponent({
       accounts: [
-        { providerId: 'google', accountId: 'g-123' },
-        { providerId: 'github', accountId: 'gh-456' },
+        { id: 'acc-google', providerId: 'google', accountId: 'g-123' },
+        { id: 'acc-github', providerId: 'github', accountId: 'gh-456' },
       ],
     });
 
@@ -91,7 +91,7 @@ describe('SocialAccountsSection', () => {
     vi.mocked(authClient.accountInfo).mockResolvedValue({ data: { user: { email: '' } }, error: null } as any);
 
     await renderComponent({
-      accounts: [{ providerId: 'google', accountId: 'g-123' }],
+      accounts: [{ id: 'acc-google', providerId: 'google', accountId: 'g-123' }],
     });
 
     await expect.element(page.getByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
@@ -104,15 +104,15 @@ describe('SocialAccountsSection', () => {
 
     await renderComponent({
       accounts: [
-        { providerId: 'google', accountId: 'g-123' },
-        { providerId: 'github', accountId: 'gh-456' },
+        { id: 'acc-google', providerId: 'google', accountId: 'g-123' },
+        { id: 'acc-github', providerId: 'github', accountId: 'gh-456' },
       ],
     });
 
     await page.getByRole('button', { name: 'Delete' }).first().click();
 
     expect(window.confirm).toHaveBeenCalled();
-    expect(authClient.unlinkAccount).toHaveBeenCalledWith({ providerId: 'google', accountId: 'g-123' });
+    expect(authClient.unlinkAccount).toHaveBeenCalledWith({ accountId: 'acc-google' });
   });
 
   it('does not unlink when confirm is cancelled', async () => {
@@ -121,8 +121,8 @@ describe('SocialAccountsSection', () => {
 
     await renderComponent({
       accounts: [
-        { providerId: 'google', accountId: 'g-123' },
-        { providerId: 'github', accountId: 'gh-456' },
+        { id: 'acc-google', providerId: 'google', accountId: 'g-123' },
+        { id: 'acc-github', providerId: 'github', accountId: 'gh-456' },
       ],
     });
 

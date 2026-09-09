@@ -44,7 +44,11 @@ export class UserAccount {
 
   async getAccounts() {
     const accounts = await db.account.findMany({ where: { userId: this.userId } });
-    return accounts.map((account) => ({ providerId: account.providerId, accountId: account.accountId }));
+    return accounts.map((account) => ({
+      id: account.id,
+      providerId: account.providerId,
+      accountId: account.accountId,
+    }));
   }
 
   async teams() {

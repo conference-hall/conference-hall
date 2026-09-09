@@ -10,7 +10,7 @@ import { authClient } from '~/shared/authentication/auth-client.ts';
 import { getAuthError } from '~/shared/authentication/auth-errors.ts';
 import { PROVIDERS } from '~/shared/authentication/auth-providers.ts';
 
-type Account = { providerId: string; accountId: string };
+type Account = { id: string; providerId: string; accountId: string };
 type Props = { accounts: Array<Account> };
 
 export function SocialAccountsSection({ accounts }: Props) {
@@ -100,7 +100,7 @@ function UnlinkProvider({ account }: UnlinkProviderProps) {
     if (!confirm) return;
 
     setLoading(true);
-    const { error } = await authClient.unlinkAccount(account);
+    const { error } = await authClient.unlinkAccount({ accountId: account.id });
     if (error) {
       toast.error(t(getAuthError(error)));
       setLoading(false);
@@ -122,11 +122,11 @@ function UserInfo({ account }: UserInfoProps) {
   const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    authClient.accountInfo({ query: { accountId: account.accountId } }).then(({ data, error }) => {
+    authClient.accountInfo({ query: { accountId: account.id } }).then(({ data, error }) => {
       if (error) return;
       setEmail(data.user.email || null);
     });
-  }, [account.accountId]);
+  }, [account.id]);
 
   if (!email) return null;
 

@@ -68,7 +68,7 @@ describe('UserAccount', () => {
 
       const accounts = await UserAccount.for(user.id).getAccounts();
 
-      expect(accounts).toEqual([{ providerId: 'credential', accountId: user.id }]);
+      expect(accounts).toEqual([{ id: expect.any(String), providerId: 'credential', accountId: user.id }]);
     });
 
     it('returns empty array when user has no accounts', async () => {
