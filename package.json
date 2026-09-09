@@ -19,7 +19,7 @@
     "test": "pnpm test:db && pnpm test:unit",
     "test:db": "NODE_ENV=test prisma db push --accept-data-loss",
     "test:unit": "vitest --browser.headless",
-    "test:ui": "vitest --project browser",
+    "test:browser": "vitest --project browser",
     "test:e2e": "NODE_ENV=test playwright test",
     "test:e2e:ui": "NODE_ENV=test playwright test --ui --ui-host=localhost",
     "db:migrate:dev": "prisma migrate dev",
@@ -96,7 +96,7 @@
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
-    "@vitest/browser-playwright": "^4.1.11",
+    "@vitest/browser-playwright": "^5.0.0",
     "knip": "^6.34.0",
     "lefthook": "^2.1.12",
     "oxfmt": "^0.66.0",
@@ -106,7 +106,7 @@
     "tsx": "^4.23.13",
     "typescript": "^7.0.2",
     "vite": "^8.2.2",
-    "vitest": "^4.1.11",
+    "vitest": "^5.0.0",
     "vitest-browser-react": "^2.3.0"
   },
   "packageManager": "pnpm@11.25.0"

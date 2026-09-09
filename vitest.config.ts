@@ -16,11 +16,8 @@ export default defineConfig({
     env: { ...env, TZ: 'UTC' },
     globals: true,
     mockReset: true,
-    reporters: env.CI ? ['default', 'junit'] : 'default',
-    outputFile: './test-results/unit.xml',
     projects: [
       {
-        extends: true,
         test: {
           name: 'server',
           include: ['./**/*.test.ts', './**/*.email.test.tsx', '!./e2e/**/*'],
@@ -32,7 +29,6 @@ export default defineConfig({
         },
       },
       {
-        extends: true,
         test: {
           name: 'browser',
           include: ['./**/*.test.tsx', '!./**/*.email.test.tsx'],
@@ -45,6 +41,7 @@ export default defineConfig({
             instances: [{ browser: 'chromium' }],
             viewport: { width: 1920, height: 1080 },
             screenshotFailures: false,
+            locators: { exact: false },
           },
           sequence: { groupOrder: 2 },
         },
