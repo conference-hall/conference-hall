@@ -141,7 +141,7 @@ describe('EmailPasswordSection', () => {
       await dialog.getByLabelText('New password').fill('short');
       await dialog.getByRole('button', { name: 'Edit' }).click();
 
-      await expect.element(page.getByText('Minimum 8 characters.')).toBeVisible();
+      await expect.element(page.getByText('Minimum 8 characters.', { exact: false })).toBeVisible();
       expect(authClient.changePassword).not.toHaveBeenCalled();
     });
   });

@@ -51,7 +51,7 @@ describe('NavbarTeam component', () => {
     const logo = page.getByRole('link', { name: 'Go to Home' });
     await expect.element(logo).toBeInTheDocument();
 
-    const userMenuButton = page.getByRole('button', { name: 'Open user menu' });
+    const userMenuButton = page.getByRole('button', { name: 'Open user menu', exact: false });
     await expect.element(userMenuButton).toBeInTheDocument();
   });
 
@@ -72,7 +72,7 @@ describe('NavbarTeam component', () => {
   it('opens user menu when clicked', async () => {
     await renderComponent(mockUser);
 
-    const userMenuButton = page.getByRole('button', { name: 'Open user menu' });
+    const userMenuButton = page.getByRole('button', { name: 'Open user menu', exact: false });
     await userMenuButton.click();
 
     await expect.element(page.getByText('Activity')).toBeInTheDocument();

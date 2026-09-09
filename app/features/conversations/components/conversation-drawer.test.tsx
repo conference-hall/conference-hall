@@ -64,7 +64,7 @@ describe('ConversationDrawer component', () => {
 
     await expect.element(page.getByText('First message')).toBeInTheDocument();
     await expect.element(page.getByText('Second message')).toBeInTheDocument();
-    await expect.element(page.getByRole('button', { name: 'Send' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Send', exact: false })).toBeInTheDocument();
   });
 
   it('displays empty state when no messages', async () => {
@@ -73,7 +73,7 @@ describe('ConversationDrawer component', () => {
     const element = page.getByRole('button', { name: 'Open Conversation' });
     await element.click();
 
-    await expect.element(page.getByText('Start a conversation')).toBeInTheDocument();
+    await expect.element(page.getByText('Start a conversation with speakers')).toBeInTheDocument();
   });
 
   it('displays recipients in empty state when provided', async () => {

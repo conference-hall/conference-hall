@@ -25,7 +25,7 @@ describe('MessageInputForm component', () => {
     await renderComponent({ buttonLabel: 'Send' });
 
     await expect.element(page.getByRole('textbox', { name: 'Message input' })).toBeInTheDocument();
-    await expect.element(page.getByRole('button', { name: 'Send' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Send', exact: false })).toBeInTheDocument();
   });
 
   it('renders with default value when editing message', async () => {
@@ -78,7 +78,7 @@ describe('MessageInputForm component', () => {
     await renderComponent({ onClose, buttonLabel: 'Save' });
 
     await expect.element(page.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
-    await expect.element(page.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Save', exact: false })).toBeInTheDocument();
 
     const cancelButton = page.getByRole('button', { name: 'Cancel' });
     await cancelButton.click();

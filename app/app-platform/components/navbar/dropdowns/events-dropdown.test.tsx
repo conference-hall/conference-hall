@@ -41,7 +41,7 @@ describe('EventsDropdown component', () => {
     await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-1']);
 
     const dropdownButton = page.getByRole('button');
-    await expect.element(dropdownButton).toHaveTextContent('Event 1');
+    await expect.element(dropdownButton).toMatchTextContent('Event 1');
   });
 
   it('opens dropdown menu and generates correct navigation links for events', async () => {
@@ -77,7 +77,7 @@ describe('EventsDropdown component', () => {
       await renderComponent(<EventsDropdown teams={mockTeams} />, ['/team/team-1/event-3']);
 
       const dropdownButton = page.getByRole('button');
-      await expect.element(dropdownButton).toHaveTextContent('Event 3');
+      await expect.element(dropdownButton).toMatchTextContent('Event 3');
       await dropdownButton.click();
 
       const archivedCurrentEvent = page.getByRole('menuitem', { name: /Event 3/ });

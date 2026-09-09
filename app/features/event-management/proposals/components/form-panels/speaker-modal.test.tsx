@@ -50,8 +50,8 @@ describe('SpeakerModal component', () => {
     await element.click();
 
     await expect.element(page.getByRole('button', { name: 'Create speaker' })).toBeInTheDocument();
-    await expect.element(page.getByLabelText('Email')).toBeInTheDocument();
-    await expect.element(page.getByLabelText('Full Name')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Email address')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Full name')).toBeInTheDocument();
     await expect.element(page.getByLabelText('Company')).toBeInTheDocument();
     await expect.element(page.getByLabelText('Biography')).toBeInTheDocument();
   });
@@ -62,8 +62,8 @@ describe('SpeakerModal component', () => {
     const element = page.getByRole('button', { name: 'Open Modal' });
     await element.click();
 
-    const emailInput = page.getByLabelText('Email');
-    const nameInput = page.getByLabelText('Full Name');
+    const emailInput = page.getByLabelText('Email address');
+    const nameInput = page.getByLabelText('Full name');
 
     await expect.element(emailInput).toBeRequired();
     await expect.element(nameInput).toBeRequired();
@@ -75,7 +75,7 @@ describe('SpeakerModal component', () => {
     const element = page.getByRole('button', { name: 'Open Modal' });
     await element.click();
 
-    const emailInput = page.getByLabelText('Email');
+    const emailInput = page.getByLabelText('Email address');
     await expect.element(emailInput).toHaveAttribute('type', 'email');
   });
 });

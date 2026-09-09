@@ -50,7 +50,7 @@ describe('CodeBlock component', () => {
     const copyButton = page.getByRole('button', { name: 'Copy' });
     await copyButton.click();
 
-    await expect.element(page.getByRole('button', { name: 'Copied' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Copied!' })).toBeInTheDocument();
     expect(writeTextSpy).toHaveBeenCalledWith(testCode);
     expect(writeTextSpy).toHaveBeenCalledTimes(1);
   });

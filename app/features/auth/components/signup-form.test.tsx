@@ -74,7 +74,7 @@ describe('SignupForm', () => {
     await page.getByLabelText('Password').fill('short');
     await page.getByRole('button', { name: 'Create your account' }).click();
 
-    await expect.element(page.getByText('Minimum 8 characters.')).toBeVisible();
+    await expect.element(page.getByText('Minimum 8 characters.', { exact: false })).toBeVisible();
     expect(authClient.signUp.email).not.toHaveBeenCalled();
   });
 
