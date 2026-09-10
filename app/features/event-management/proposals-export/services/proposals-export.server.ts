@@ -5,7 +5,13 @@ import type { AuthorizedApiEvent, AuthorizedEvent } from '~/shared/authorization
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
-import type { Event } from '../../../../../prisma/generated/client.ts';
+import {
+  ConfirmationStatus,
+  DeliberationStatus,
+  type Event,
+  PublicationStatus,
+  TalkLevel,
+} from '../../../../../prisma/generated/client.ts';
 import { SurveyConfig } from '../../settings/models/survey-config.ts';
 import { exportToOpenPlanner } from './jobs/export-to-open-planner.job.ts';
 
@@ -123,4 +129,47 @@ export class ProposalsExport {
   async toOpenPlanner(filters: ProposalsFilters) {
     await exportToOpenPlanner.trigger({ userId: this.userId, eventId: this.event.id, filters });
   }
+
+  static sampleJson(): ProposalsExportJson {
+    return {
+      name: 'My Conference',
+      startDate: new Date('2026-06-01T08:00:00.000Z'),
+      endDate: new Date('2026-06-02T18:00:00.000Z'),
+      proposals: [
+        {
+          id: 'prop_1a2b3c',
+          proposalNumber: 42,
+          title: 'Building resilient APIs with TypeScript',
+          abstract: 'A deep dive into designing robust, type-safe HTTP APIs that scale.',
+          submittedAt: new Date('2026-01-15T10:30:00.000Z'),
+          deliberationStatus: DeliberationStatus.ACCEPTED,
+          confirmationStatus: ConfirmationStatus.CONFIRMED,
+          publicationStatus: PublicationStatus.PUBLISHED,
+          level: TalkLevel.INTERMEDIATE,
+          references: 'https://github.com/jane-doe/talks',
+          formats: ['Conference talk'],
+          categories: ['Backend'],
+          tags: ['typescript', 'api'],
+          languages: ['en'],
+          speakers: [
+            {
+              id: 'spk_9z8y7x',
+              name: 'Jane Doe',
+              bio: 'Senior software engineer focused on developer experience.',
+              company: 'Acme Corp',
+              references: 'Previously spoke at DevConf and NodeSummit.',
+              picture: 'https://example.com/speakers/jane-doe.jpg',
+              location: 'Paris, France',
+              email: 'jane.doe@example.com',
+              socialLinks: ['https://twitter.com/jane_doe', 'https://github.com/jane-doe'],
+              survey: [],
+            },
+          ],
+          review: { average: 4.2, positives: 3, negatives: 0 },
+        },
+      ],
+    };
+  }
 }
+
+export type ProposalsExportJson = Awaited<ReturnType<ProposalsExport['toJson']>>;

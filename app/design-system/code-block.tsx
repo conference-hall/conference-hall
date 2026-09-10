@@ -27,7 +27,7 @@ export function CodeBlock({ code, label }: Props) {
     <div className="space-y-1">
       {label ? <div className="text-sm font-medium">{label}</div> : null}
       <div className="relative">
-        <code className="block overflow-x-auto rounded-md bg-gray-100 p-4 pr-16 text-xs">{code}</code>
+        <code className="block overflow-x-auto rounded-md bg-gray-100 p-4 pr-16 text-xs whitespace-pre">{code}</code>
         <Button
           icon={copied ? CheckIcon : ClipboardDocumentIcon}
           iconClassName={copied ? 'text-green-500' : undefined}

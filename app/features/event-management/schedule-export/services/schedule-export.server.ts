@@ -3,7 +3,7 @@ import { getDatesRange } from '~/shared/datetimes/datetimes.ts';
 import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
-import type { Event } from '../../../../../prisma/generated/client.ts';
+import { type Event, TalkLevel } from '../../../../../prisma/generated/client.ts';
 
 export class EventScheduleExport {
   private constructor(private event: Event) {}
@@ -64,4 +64,43 @@ export class EventScheduleExport {
       })),
     };
   }
+
+  // Representative example used to document the API response when an event has no schedule yet.
+  static sampleJson(): EventScheduleExportJson {
+    return {
+      name: 'Main schedule',
+      days: ['2026-06-01T00:00:00.000+02:00'],
+      timeZone: 'Europe/Paris',
+      sessions: [
+        {
+          id: 'ses_1a2b3c',
+          start: '2026-06-01T09:00:00.000+02:00',
+          end: '2026-06-01T10:00:00.000+02:00',
+          track: 'Main Track',
+          title: 'Building resilient APIs with TypeScript',
+          language: 'en',
+          proposal: {
+            id: 'prop_1a2b3c',
+            proposalNumber: 42,
+            abstract: 'A deep dive into designing robust, type-safe HTTP APIs that scale.',
+            level: TalkLevel.INTERMEDIATE,
+            formats: ['Conference talk'],
+            categories: ['Backend'],
+            speakers: [
+              {
+                id: 'spk_9z8y7x',
+                name: 'Jane Doe',
+                bio: 'Senior software engineer focused on developer experience.',
+                company: 'Acme Corp',
+                picture: 'https://example.com/speakers/jane-doe.jpg',
+                socialLinks: ['https://twitter.com/jane_doe'],
+              },
+            ],
+          },
+        },
+      ],
+    };
+  }
 }
+
+export type EventScheduleExportJson = NonNullable<Awaited<ReturnType<EventScheduleExport['toJson']>>>;
