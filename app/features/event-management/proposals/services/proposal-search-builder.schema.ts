@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const ReviewValueSchema = z.enum([
+const ReviewValueSchema = z.enum([
   'not-reviewed',
   'no-opinion',
   'negative',
@@ -16,13 +16,13 @@ export const StatusFilterSchema = z.enum(['pending', 'accepted', 'rejected', 'ar
 
 export const ConfirmationFilterSchema = z.enum(['not-answered', 'confirmed', 'declined']);
 
-export const MessagesFilterSchema = z.enum(['new']);
-
 export const SortFilterSchema = z.enum(['date', 'reviews', 'favorites', 'my-review', 'comments']);
 
 export const OrderFilterSchema = z.enum(['asc', 'desc']);
 
-export const ReviewsFiltersSchema = z.array(ReviewValueSchema).optional();
+const MessagesFilterSchema = z.enum(['new']);
+
+const ReviewsFiltersSchema = z.array(ReviewValueSchema).optional();
 
 export const ProposalsFiltersSchema = z.object({
   query: z.string().trim().optional(),

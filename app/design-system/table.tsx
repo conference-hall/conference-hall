@@ -6,7 +6,7 @@ type TableProps = TableHTMLAttributes<HTMLTableElement> & {
   containerClassName?: string;
 };
 
-export type TableBuilderCell = {
+type TableBuilderCell = {
   value: ReactNode;
   className?: string;
 };

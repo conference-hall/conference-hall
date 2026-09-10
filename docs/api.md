@@ -36,26 +36,14 @@ the real API.
 Every request requires an event **API key**.
 
 - **Generate / revoke** the key from the event settings: **Event → Settings → Web API**
-  (`app/features/event-management/settings/api.tsx`). The key is a UUID stored on
-  `Event.apiKey` and can be regenerated or revoked at any time.
-- **Send** the key in the `X-API-Key` header (preferred):
+- **Send** the key in the `X-API-Key` header:
 
   ```sh
-  curl -H "X-API-Key: <your-api-key>" \
-    "https://conference-hall.io/api/v1/event/<event-slug>"
+  curl -H "X-API-Key: <your-api-key>" "https://conference-hall.io/api/v1/event/<event-slug>"
   ```
 
-- A **deprecated** fallback accepts the key as a `key` query parameter. It can be
-  disabled per environment via the `disableApiKeyInQueryParams` feature flag and
-  should not be used for new integrations:
-
-  ```sh
-  curl "https://conference-hall.io/api/v1/event/<event-slug>?key=<your-api-key>"
-  ```
-
-Authentication is handled by the `requireAuthorizedApiEvent` middleware
-(`app/shared/authorization/authorization.middleware.ts`). There is no user or team
-session for API requests — the key alone grants read access to that single event.
+Authentication is handled by the `requireAuthorizedApiEvent` middleware. There is no user or team
+session for API requests. The key alone grants read access to that single event.
 
 ## Available endpoints
 
@@ -70,8 +58,7 @@ endpoint.
 
 ## Rate limiting
 
-API requests are limited to **60 requests per hour**, keyed per client IP
-(`servers/fastify/rate-limit.ts`). Responses include draft-spec rate-limit headers:
+API requests are limited to **60 requests per hour**, keyed per client IP. Responses include draft-spec rate-limit headers:
 
 | Header                | Meaning                                  |
 | --------------------- | ---------------------------------------- |
@@ -84,19 +71,12 @@ When the limit is exceeded the API responds with `429 Too Many Requests` and a
 
 ## Errors
 
-| Situation                            | Status | Message                                                      |
-| ------------------------------------ | ------ | ------------------------------------------------------------ |
-| Missing API key                      | 403    | `API key is required`                                        |
-| Unknown event slug                   | 404    | Event not found                                              |
-| API key does not match the event     | 400    | `API key is invalid`                                         |
-| Query-param auth used while disabled | 400    | Deprecation message — use the `X-API-Key` header instead     |
-| Schedule requested on a MEETUP event | 403    | Forbidden — schedule is only available for CONFERENCE events |
-| No schedule created for the event    | 404    | `No schedule found for event "<slug>"`                       |
-| Rate limit exceeded                  | 429    | Too Many Requests                                            |
-
-## Implementation notes
-
-- Proposals endpoint: `app/features/event-management/proposals-export/api.tsx`
-- Schedule endpoint: `app/features/event-management/schedule-export/api.tsx`
-- Authorization middleware: `app/shared/authorization/authorization.middleware.ts`
-- Rate limiting: `servers/fastify/rate-limit.ts`
+| Situation                            | Status | Message                                                     |
+| ------------------------------------ | ------ | ----------------------------------------------------------- |
+| Missing API key                      | 403    | `API key is required`                                       |
+| Unknown event slug                   | 404    | Event not found                                             |
+| API key does not match the event     | 400    | `API key is invalid`                                        |
+| Query-param auth used while disabled | 400    | Deprecation message, use the `X-API-Key` header instead     |
+| Schedule requested on a MEETUP event | 403    | Forbidden, schedule is only available for CONFERENCE events |
+| No schedule created for the event    | 404    | `No schedule found for event "<slug>"`                      |
+| Rate limit exceeded                  | 429    | Too Many Requests                                           |

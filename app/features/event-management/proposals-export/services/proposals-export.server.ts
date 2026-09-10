@@ -130,7 +130,6 @@ export class ProposalsExport {
     await exportToOpenPlanner.trigger({ userId: this.userId, eventId: this.event.id, filters });
   }
 
-  // Representative example used to document the API response when an event has no proposals yet.
   static sampleJson(): ProposalsExportJson {
     return {
       name: 'My Conference',

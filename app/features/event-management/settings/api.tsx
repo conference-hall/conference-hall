@@ -5,20 +5,16 @@ import { ProposalsExport } from '~/features/event-management/proposals-export/se
 import { EventScheduleExport } from '~/features/event-management/schedule-export/services/schedule-export.server.ts';
 import { EventSettings } from '~/features/event-management/settings/services/event-settings.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
-import { EventType } from '../../../../prisma/generated/client.ts';
 import { getSharedServerEnv } from '../../../../servers/environment.server.ts';
 import type { Route } from './+types/api.ts';
 import { ApiKeySection } from './components/api-key-section.tsx';
 import { EventProposalApiTryout, EventScheduleApiTryout } from './components/api-tryout-section.tsx';
 
-export const loader = ({ context }: Route.LoaderArgs) => {
+export const loader = () => {
   const { APP_URL } = getSharedServerEnv();
-  const { event } = context.get(AuthorizedEventContext);
 
-  // Response samples come from the export services (the API code path) so they stay in sync with the real shape.
   const proposalsResponse = JSON.stringify(ProposalsExport.sampleJson(), null, 2);
-  const scheduleResponse =
-    event.type === EventType.CONFERENCE ? JSON.stringify(EventScheduleExport.sampleJson(), null, 2) : null;
+  const scheduleResponse = JSON.stringify(EventScheduleExport.sampleJson(), null, 2);
 
   return { appUrl: APP_URL, proposalsResponse, scheduleResponse };
 };
@@ -62,6 +58,7 @@ export default function EventApiSettingsRoute() {
             tags={tags}
             responseExample={proposalsResponse}
           />
+
           {type === 'CONFERENCE' ? (
             <EventScheduleApiTryout slug={slug} apiKey={apiKey} appUrl={appUrl} responseExample={scheduleResponse} />
           ) : null}

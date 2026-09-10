@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '~/design-system/badges.tsx';
-import { Callout } from '~/design-system/callout.tsx';
 import { CodeBlock } from '~/design-system/code-block.tsx';
 import { CodeExamples } from '~/design-system/code-examples.tsx';
+import { Divider } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { TableBuilder, type TableBuilderRow } from '~/design-system/table.tsx';
-import { H2, Subtitle } from '~/design-system/typography.tsx';
+import { H2, H3, Subtitle } from '~/design-system/typography.tsx';
 import {
   ConfirmationFilterSchema,
   OrderFilterSchema,
@@ -25,10 +25,10 @@ type ProposalsProps = {
   formats: Array<Track>;
   categories: Array<Track>;
   tags: Array<Track>;
-  responseExample?: string | null;
+  responseExample: string;
 };
 
-type ScheduleProps = { slug: string; apiKey: string; appUrl: string; responseExample?: string | null };
+type ScheduleProps = { slug: string; apiKey: string; appUrl: string; responseExample: string };
 
 type ParameterRow = { name: string; values: string; description: string };
 type StatusRow = { code: string; description: string };
@@ -104,136 +104,107 @@ export function EventProposalApiTryout({
   ];
 
   return (
-    <section className="space-y-4">
-      <div className="space-y-2">
+    <Card as="section">
+      <Card.Title>
         <H2>{t('event-management.settings.web-api.tryout.proposals.heading')}</H2>
         <Subtitle>{t('event-management.settings.web-api.tryout.proposals.description')}</Subtitle>
+      </Card.Title>
+
+      <Card.Content>
         <EndpointHeader path={`/api/v1/event/${slug}`} />
-      </div>
+        <ParametersTable rows={parameters} />
+        <HttpStatusTable rows={statusRows} />
+      </Card.Content>
 
-      <Card as="section">
-        <Card.Title>
-          <H2>{t('event-management.settings.web-api.tryout.filters.heading')}</H2>
-        </Card.Title>
-        <Card.Content>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Input
-              name="query"
-              label={t('event-management.settings.web-api.tryout.proposals.query.label')}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t('event-management.settings.web-api.tryout.proposals.query.placeholder')}
-              className="sm:col-span-2"
-            />
+      <Divider className="my-2" />
+      <Card.Content>
+        <H3>{t('event-management.settings.web-api.examples.heading')}</H3>
+        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Input
+            name="query"
+            label={t('event-management.settings.web-api.tryout.proposals.query.label')}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t('event-management.settings.web-api.tryout.proposals.query.placeholder')}
+            className="sm:col-span-2"
+          />
+          <Select
+            name="status"
+            label={t('event-management.settings.web-api.tryout.proposals.status.label')}
+            value={status}
+            onChange={(_, value) => setStatus(value)}
+            options={[
+              allOption,
+              ...StatusFilterSchema.options.map((value) => ({
+                value,
+                name: t(`common.proposals.status.${value}`),
+              })),
+            ]}
+          />
+          <Select
+            name="confirmation"
+            label={t('event-management.settings.web-api.tryout.proposals.confirmation.label')}
+            value={confirmation}
+            onChange={(_, value) => setConfirmation(value)}
+            options={[
+              allOption,
+              ...ConfirmationFilterSchema.options.map((value) => ({
+                value,
+                name: t(`common.proposals.status.${value}.short`),
+              })),
+            ]}
+          />
+          {formats.length > 0 ? (
             <Select
-              name="status"
-              label={t('event-management.settings.web-api.tryout.proposals.status.label')}
-              value={status}
-              onChange={(_, value) => setStatus(value)}
-              options={[
-                allOption,
-                ...StatusFilterSchema.options.map((value) => ({
-                  value,
-                  name: t(`common.proposals.status.${value}`),
-                })),
-              ]}
+              name="formats"
+              label={t('event-management.settings.web-api.tryout.proposals.format.label')}
+              value={format}
+              onChange={(_, value) => setFormat(value)}
+              options={[allOption, ...formats.map((f) => ({ value: f.id, name: f.name }))]}
             />
+          ) : null}
+          {categories.length > 0 ? (
             <Select
-              name="confirmation"
-              label={t('event-management.settings.web-api.tryout.proposals.confirmation.label')}
-              value={confirmation}
-              onChange={(_, value) => setConfirmation(value)}
-              options={[
-                allOption,
-                ...ConfirmationFilterSchema.options.map((value) => ({
-                  value,
-                  name: t(`common.proposals.status.${value}.short`),
-                })),
-              ]}
+              name="categories"
+              label={t('event-management.settings.web-api.tryout.proposals.category.label')}
+              value={category}
+              onChange={(_, value) => setCategory(value)}
+              options={[allOption, ...categories.map((c) => ({ value: c.id, name: c.name }))]}
             />
-            {formats.length > 0 ? (
-              <Select
-                name="formats"
-                label={t('event-management.settings.web-api.tryout.proposals.format.label')}
-                value={format}
-                onChange={(_, value) => setFormat(value)}
-                options={[allOption, ...formats.map((f) => ({ value: f.id, name: f.name }))]}
-              />
-            ) : null}
-            {categories.length > 0 ? (
-              <Select
-                name="categories"
-                label={t('event-management.settings.web-api.tryout.proposals.category.label')}
-                value={category}
-                onChange={(_, value) => setCategory(value)}
-                options={[allOption, ...categories.map((c) => ({ value: c.id, name: c.name }))]}
-              />
-            ) : null}
-            {tags.length > 0 ? (
-              <Select
-                name="tags"
-                label={t('event-management.settings.web-api.tryout.proposals.tag.label')}
-                value={tag}
-                onChange={(_, value) => setTag(value)}
-                options={[allOption, ...tags.map((tg) => ({ value: tg.id, name: tg.name }))]}
-              />
-            ) : null}
+          ) : null}
+          {tags.length > 0 ? (
             <Select
-              name="sort"
-              label={t('event-management.settings.web-api.tryout.proposals.sort.label')}
-              value={sort}
-              onChange={(_, value) => setSort(value)}
-              options={[allOption, ...SortFilterSchema.options.map((value) => ({ value, name: value }))]}
+              name="tags"
+              label={t('event-management.settings.web-api.tryout.proposals.tag.label')}
+              value={tag}
+              onChange={(_, value) => setTag(value)}
+              options={[allOption, ...tags.map((tg) => ({ value: tg.id, name: tg.name }))]}
             />
-            <Select
-              name="order"
-              label={t('event-management.settings.web-api.tryout.proposals.order.label')}
-              value={order}
-              onChange={(_, value) => setOrder(value)}
-              options={[allOption, ...OrderFilterSchema.options.map((value) => ({ value, name: value }))]}
-            />
-          </div>
-        </Card.Content>
-      </Card>
+          ) : null}
+          <Select
+            name="sort"
+            label={t('event-management.settings.web-api.tryout.proposals.sort.label')}
+            value={sort}
+            onChange={(_, value) => setSort(value)}
+            options={[allOption, ...SortFilterSchema.options.map((value) => ({ value, name: value }))]}
+          />
+          <Select
+            name="order"
+            label={t('event-management.settings.web-api.tryout.proposals.order.label')}
+            value={order}
+            onChange={(_, value) => setOrder(value)}
+            options={[allOption, ...OrderFilterSchema.options.map((value) => ({ value, name: value }))]}
+          />
+        </div>
+        <ApiCodeExamples url={url.toString()} apiKey={apiKey} />
+      </Card.Content>
 
-      <Card as="section">
-        <Card.Title>
-          <H2>{t('event-management.settings.web-api.examples.heading')}</H2>
-        </Card.Title>
-        <Card.Content>
-          <ApiCodeExamples url={url.toString()} apiKey={apiKey} />
-        </Card.Content>
-      </Card>
-
-      <Card as="section">
-        <Card.Title>
-          <H2>{t('event-management.settings.web-api.reference.heading')}</H2>
-        </Card.Title>
-        <Card.Content>
-          <ParametersTable rows={parameters} />
-        </Card.Content>
-      </Card>
-
-      <Card as="section">
-        <Card.Title>
-          <H2>{t('event-management.settings.web-api.status.heading')}</H2>
-        </Card.Title>
-        <Card.Content>
-          <HttpStatusTable rows={statusRows} />
-        </Card.Content>
-      </Card>
-
-      {responseExample ? (
-        <Card as="section">
-          <Card.Title>
-            <H2>{t('event-management.settings.web-api.reference.response')}</H2>
-          </Card.Title>
-          <Card.Content>
-            <CodeBlock code={responseExample} />
-          </Card.Content>
-        </Card>
-      ) : null}
-    </section>
+      <Divider className="my-2" />
+      <Card.Content>
+        <H3>{t('event-management.settings.web-api.reference.response')}</H3>
+        <CodeBlock code={responseExample} />
+      </Card.Content>
+    </Card>
   );
 }
 
@@ -249,44 +220,29 @@ export function EventScheduleApiTryout({ slug, apiKey, appUrl, responseExample }
   ];
 
   return (
-    <section className="space-y-4">
-      <div className="space-y-2">
+    <Card as="section">
+      <Card.Title>
         <H2>{t('event-management.settings.web-api.tryout.schedule.heading')}</H2>
         <Subtitle>{t('event-management.settings.web-api.tryout.schedule.description')}</Subtitle>
+      </Card.Title>
+
+      <Card.Content>
         <EndpointHeader path={`/api/v1/event/${slug}/schedule`} />
-      </div>
+        <HttpStatusTable rows={statusRows} />
+      </Card.Content>
 
-      <Callout>{t('event-management.settings.web-api.tryout.schedule.availability')}</Callout>
+      <Divider className="my-2" />
+      <Card.Content>
+        <H3>{t('event-management.settings.web-api.examples.heading')}</H3>
+        <ApiCodeExamples url={url.toString()} apiKey={apiKey} />
+      </Card.Content>
 
-      <Card as="section">
-        <Card.Title>
-          <H2>{t('event-management.settings.web-api.examples.heading')}</H2>
-        </Card.Title>
-        <Card.Content>
-          <ApiCodeExamples url={url.toString()} apiKey={apiKey} />
-        </Card.Content>
-      </Card>
-
-      <Card as="section">
-        <Card.Title>
-          <H2>{t('event-management.settings.web-api.status.heading')}</H2>
-        </Card.Title>
-        <Card.Content>
-          <HttpStatusTable rows={statusRows} />
-        </Card.Content>
-      </Card>
-
-      {responseExample ? (
-        <Card as="section">
-          <Card.Title>
-            <H2>{t('event-management.settings.web-api.reference.response')}</H2>
-          </Card.Title>
-          <Card.Content>
-            <CodeBlock code={responseExample} />
-          </Card.Content>
-        </Card>
-      ) : null}
-    </section>
+      <Divider className="my-2" />
+      <Card.Content>
+        <H3>{t('event-management.settings.web-api.reference.response')}</H3>
+        <CodeBlock code={responseExample} />
+      </Card.Content>
+    </Card>
   );
 }
 
