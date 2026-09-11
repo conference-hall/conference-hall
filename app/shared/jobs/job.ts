@@ -1,5 +1,5 @@
 import { type JobsOptions, Queue } from 'bullmq';
-import { getRedisClient } from '../cache/redis.server.ts';
+import { getJobsConnection } from './connection.ts';
 import { DEFAULT_QUEUE } from './worker.ts';
 
 type JobConfig<Payload> = {
@@ -22,7 +22,7 @@ export function job<Payload>(config: JobConfig<Payload>): Job<Payload> {
     config,
     trigger: async (payload?: Payload, options?: JobsOptions) => {
       if (!queues.has(queue)) {
-        const connection = getRedisClient();
+        const connection = getJobsConnection();
 
         queues.set(
           queue,

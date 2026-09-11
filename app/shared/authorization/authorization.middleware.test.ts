@@ -574,8 +574,6 @@ describe('requireAuthorizedApiEvent', () => {
       await expect(requireAuthorizedApiEvent({ request, context, params, pattern: '', url }, mockNext)).rejects.toThrow(
         ApiKeyQueryParamsDeprecatedError,
       );
-
-      await flags.set('disableApiKeyInQueryParams', false);
     });
 
     it('allows header authentication when query params are disabled', async () => {
@@ -590,8 +588,6 @@ describe('requireAuthorizedApiEvent', () => {
 
       const contextEvent = context.get(AuthorizedApiEventContext);
       expect(contextEvent?.event.id).toBe(event.id);
-
-      await flags.set('disableApiKeyInQueryParams', false);
     });
   });
 

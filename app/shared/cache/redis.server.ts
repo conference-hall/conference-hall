@@ -1,24 +1,32 @@
-import { Redis } from 'ioredis';
+import { createClient } from 'redis';
 import { getSharedServerEnv } from '../../../servers/environment.server.ts';
+import { logger } from '../logger/logger.server.ts';
 
 const { REDIS_URL } = getSharedServerEnv();
 
-let redis: Redis | null = null;
+const redis = createClient({
+  url: REDIS_URL,
+  commandOptions: { timeout: undefined }, // Keep commands queued during a reconnect.
+  maintNotifications: 'disabled',
+});
 
-export const getRedisClient = () => {
-  if (!redis) {
-    redis = new Redis(REDIS_URL, { maxRetriesPerRequest: null });
-  }
-  return redis;
-};
+redis.on('error', (error) => {
+  logger.error({ error }, 'Redis client error');
+});
+
+// Not awaited on purpose. Commands queue until ready and the server boots with Redis down.
+// Awaiting here blocks boot forever instead.
+redis.connect().catch((error) => {
+  logger.error({ error }, 'Redis initial connection failed');
+});
+
+export const getRedisClient = () => redis;
 
 export async function disconnectRedis() {
-  if (!redis) return;
-  await redis.quit();
-  redis = null;
+  if (!redis.isOpen) return;
+  await redis.close();
 }
 
 export async function resetRedis() {
-  const client = getRedisClient();
-  await client.flushdb();
+  await redis.flushDb();
 }

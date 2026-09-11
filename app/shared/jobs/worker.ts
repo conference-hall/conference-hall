@@ -1,6 +1,6 @@
 import { Worker } from 'bullmq';
 import { logger, runWithLogger } from '~/shared/logger/logger.server.ts';
-import { getRedisClient } from '../cache/redis.server.ts';
+import { getJobsConnection } from './connection.ts';
 import type { Job } from './job.ts';
 
 export const DEFAULT_QUEUE = 'default';
@@ -27,7 +27,7 @@ export function createJobWorkers(jobs: Array<Job<any>>): Array<JobWorker> {
 }
 
 function createJobWorker(queue: string, jobs: Array<Job<any>>): JobWorker {
-  const connection = getRedisClient();
+  const connection = getJobsConnection();
 
   const jobLogContext = (job?: { id?: string; name?: string }) => ({ jobId: job?.id, jobName: job?.name, queue });
 
@@ -65,7 +65,6 @@ function createJobWorker(queue: string, jobs: Array<Job<any>>): JobWorker {
     queue,
     close: async () => {
       await worker.close();
-      await worker.disconnect();
     },
   };
 }

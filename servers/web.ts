@@ -6,6 +6,7 @@ import type { Logger } from 'pino';
 import { RouterContextProvider } from 'react-router';
 import type { ViteDevServer } from 'vite';
 import { nonceContext } from '#nonce';
+import { disconnectRedis } from '../app/shared/cache/redis.server.ts';
 import { baseLogger, logger, runWithLogger } from '../app/shared/logger/logger.server.ts';
 import { getWebServerEnv } from './environment.server.ts';
 import { type RateLimitsOptions, applyRateLimits } from './fastify/rate-limit.ts';
@@ -118,6 +119,7 @@ if (isMain) {
     logger.info(`🔥 Shutting down web server (${signal})`);
     try {
       await app.close();
+      await disconnectRedis();
       clearTimeout(timeout);
       process.exit(0);
     } catch (error) {
