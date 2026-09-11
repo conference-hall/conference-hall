@@ -1,7 +1,8 @@
-import type { Redis } from 'ioredis';
 import { logger } from '../logger/logger.server.ts';
 import type { CacheLayer } from './cache-layer.ts';
 import { getRedisClient } from './redis.server.ts';
+
+type RedisClient = ReturnType<typeof getRedisClient>;
 
 const ONE_WEEK_IN_SECONDS = 7 * 24 * 60 * 60;
 
@@ -9,11 +10,11 @@ interface RedisCacheOptions {
   prefix?: string;
   ttl?: number;
   persistent?: boolean;
-  client?: Redis;
+  client?: RedisClient;
 }
 
 export class RedisCacheLayer implements CacheLayer {
-  private client: Redis;
+  private client: RedisClient;
   private prefix: string;
   private ttl: number;
   private persistent: boolean;
@@ -51,7 +52,7 @@ export class RedisCacheLayer implements CacheLayer {
       if (this.persistent) {
         await this.client.set(prefixedKey, JSON.stringify(value));
       } else {
-        await this.client.set(prefixedKey, JSON.stringify(value), 'EX', this.ttl);
+        await this.client.set(prefixedKey, JSON.stringify(value), { expiration: { type: 'EX', value: this.ttl } });
       }
     } catch (error) {
       logger.error({ error }, `Failed to set key ${prefixedKey} in Redis`);

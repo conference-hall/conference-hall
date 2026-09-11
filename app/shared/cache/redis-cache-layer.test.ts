@@ -1,5 +1,5 @@
-import type { Redis } from 'ioredis';
 import { RedisCacheLayer } from './redis-cache-layer.ts';
+import type { getRedisClient } from './redis.server.ts';
 
 describe('RedisCacheLayer', () => {
   let cache: RedisCacheLayer;
@@ -12,7 +12,7 @@ describe('RedisCacheLayer', () => {
   };
 
   beforeEach(() => {
-    cache = new RedisCacheLayer({ prefix: 'test:', client: redisMock as unknown as Redis });
+    cache = new RedisCacheLayer({ prefix: 'test:', client: redisMock as unknown as ReturnType<typeof getRedisClient> });
   });
 
   it('gets a value from cache', async () => {
@@ -34,7 +34,9 @@ describe('RedisCacheLayer', () => {
 
     expect(redisMock.get).toHaveBeenCalledWith('test:key');
     expect(fetchCallback).toHaveBeenCalled();
-    expect(redisMock.set).toHaveBeenCalledWith('test:key', JSON.stringify(value), 'EX', 604800);
+    expect(redisMock.set).toHaveBeenCalledWith('test:key', JSON.stringify(value), {
+      expiration: { type: 'EX', value: 604800 },
+    });
     expect(result).toEqual(value);
   });
 
@@ -43,22 +45,34 @@ describe('RedisCacheLayer', () => {
 
     await cache.set('key', value);
 
-    expect(redisMock.set).toHaveBeenCalledWith('test:key', JSON.stringify(value), 'EX', 604800);
+    expect(redisMock.set).toHaveBeenCalledWith('test:key', JSON.stringify(value), {
+      expiration: { type: 'EX', value: 604800 },
+    });
   });
 
   it('sets a value in cache with custom TTL', async () => {
     const value = { foo: 'bar' };
     const ttl = 3600; // 1 hour
-    cache = new RedisCacheLayer({ prefix: 'test:', ttl, client: redisMock as unknown as Redis });
+    cache = new RedisCacheLayer({
+      prefix: 'test:',
+      ttl,
+      client: redisMock as unknown as ReturnType<typeof getRedisClient>,
+    });
 
     await cache.set('key', value);
 
-    expect(redisMock.set).toHaveBeenCalledWith('test:key', JSON.stringify(value), 'EX', ttl);
+    expect(redisMock.set).toHaveBeenCalledWith('test:key', JSON.stringify(value), {
+      expiration: { type: 'EX', value: ttl },
+    });
   });
 
   it('sets a value in cache with persistent option', async () => {
     const value = { foo: 'bar' };
-    cache = new RedisCacheLayer({ prefix: 'test:', persistent: true, client: redisMock as unknown as Redis });
+    cache = new RedisCacheLayer({
+      prefix: 'test:',
+      persistent: true,
+      client: redisMock as unknown as ReturnType<typeof getRedisClient>,
+    });
 
     await cache.set('key', value);
 

@@ -117,19 +117,18 @@ function getSecondaryStorage() {
       return await redis.get(`auth:${key}`);
     },
     set: async (key: string, value: string, ttl?: number | undefined) => {
-      if (ttl) await redis.set(`auth:${key}`, value, 'EX', ttl);
+      if (ttl) await redis.set(`auth:${key}`, value, { expiration: { type: 'EX', value: ttl } });
       else await redis.set(`auth:${key}`, value);
     },
     delete: async (key: string) => {
       await redis.del(`auth:${key}`);
     },
     getAndDelete: async (key: string) => {
-      return await redis.getdel(`auth:${key}`);
+      return await redis.getDel(`auth:${key}`);
     },
     increment: async (key: string, ttl: number) => {
-      const count = await redis.incr(`auth:${key}`);
-      if (count === 1 && ttl) await redis.expire(`auth:${key}`, ttl);
-      return count;
+      const [count] = await redis.multi().incr(`auth:${key}`).expire(`auth:${key}`, ttl, 'NX').exec();
+      return Number(count);
     },
   };
 }

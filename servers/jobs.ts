@@ -1,5 +1,6 @@
 import { exportToOpenPlanner } from '~/features/event-management/proposals-export/services/jobs/export-to-open-planner.job.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
+import { disconnectRedis } from '~/shared/cache/redis.server.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import { createJobWorkers } from '~/shared/jobs/worker.ts';
 import { testJob } from '../app/features/admin/debug/services/jobs/test.job.ts';
@@ -35,6 +36,7 @@ const gracefulShutdown = async (signal: string) => {
       await worker.close();
     }
     await db.$disconnect();
+    await disconnectRedis();
     clearTimeout(timeout);
     process.exit(0);
   } catch (error) {
