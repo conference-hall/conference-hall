@@ -12,20 +12,25 @@ paths:
 
 - Single process-wide client in `app/shared/cache/redis.server.ts`, created from `REDIS_URL`
 - Shared by all consumers, including BullMQ via `app/shared/jobs/connection.ts`
+- BullMQ workers duplicate that client for their blocking connection, so the jobs process holds two connections
 - `connect()` is not awaited so boot never blocks when Redis is down
 - `commandOptions.timeout` is explicitly `undefined`: commands stay queued during a reconnect instead of failing
 - node-redis v6 defaults to RESP3, no explicit `RESP` option is set
 
 ## What Redis Stores
 
-| Prefix           | Purpose                                                                                             | TTL                         |
-| ---------------- | --------------------------------------------------------------------------------------------------- | --------------------------- |
-| `auth:*`         | Sessions, verification tokens, auth rate limit counters (see [authentication](./authentication.md)) | yes, except session indexes |
-| `bull:default:*` | BullMQ job queue (see [jobs](./jobs.md))                                                            | no                          |
-| `flag:*`         | Feature flag values (see [flags](./flags.md))                                                       | no                          |
-| `seo:*`          | Sitemap cache                                                                                       | 7 days                      |
+| Prefix           | Purpose                                                                                             | TTL                                                                         |
+| ---------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `auth:*`         | Sessions, verification tokens, auth rate limit counters (see [authentication](./authentication.md)) | per key, and a `0` or absent ttl writes no expiry at all (`auth.server.ts`) |
+| `bull:default:*` | BullMQ job queue (see [jobs](./jobs.md))                                                            | no                                                                          |
+| `flag:*`         | Feature flag values (see [flags](./flags.md))                                                       | no                                                                          |
+| `seo:*`          | Sitemap cache                                                                                       | 7 days                                                                      |
 
-Only `flag:*` and `bull:default:*` hold data that does not rebuild itself. Flags fall back to the `defaultValue` declared in `flags.config.ts` when a key is missing, so a flushed Redis silently resets enabled flags to their defaults.
+Only `seo:*` rebuilds on its own. Everything else is lost for good when Redis is flushed:
+
+- Sessions live **only** in Redis. `secondaryStorage` is set without `session.storeSessionInDatabase`, so nothing is mirrored to Postgres and a flush signs every user out.
+- Queued jobs are dropped outright.
+- Flags fall back to the `defaultValue` declared in `flags.config.ts` when a key is missing, so a flush silently resets enabled flags to their defaults.
 
 ## Version Requirements
 
@@ -37,7 +42,9 @@ Minimum server version is **7.0**. Current target is **8.2**.
 
 ## Eviction Policy
 
-`maxmemory-policy` must stay `noeviction`. Any other policy drops sessions and queued jobs without error. This is the Redis default only while `maxmemory` is unset, so setting `maxmemory` requires setting the policy explicitly too.
+`maxmemory-policy` must stay `noeviction`. Any other policy drops sessions and queued jobs without error.
+
+`noeviction` is the Redis default, and setting `maxmemory` does not change it, it only makes the policy take effect. Managed providers may ship a different default, so check the policy rather than assume it.
 
 ## Local and Test Setup
 
