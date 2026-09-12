@@ -1,15 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Callout } from '~/design-system/callout.tsx';
-import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
-import { Radio } from '~/design-system/forms/input-radio.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import MultiSelect from '~/design-system/forms/multi-select.tsx';
-import { LANGUAGES, TALK_LEVELS } from '~/shared/constants.ts';
+import { LANGUAGES } from '~/shared/constants.ts';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { CategoriesForm } from './categories-form.tsx';
 import { FormatsForm } from './formats-form.tsx';
+import { LevelForm } from './level-form.tsx';
 import { ReferencesForm } from './references-form.tsx';
 
 type Props = {
@@ -75,17 +74,12 @@ export function TalkForm({
         stats
       />
 
-      <FieldsetGroup legend={t('talk.level')} inline>
-        {TALK_LEVELS.map((level) => (
-          <Radio name="level" key={level} value={level} defaultChecked={initialValues?.level === level}>
-            {t(`common.level.${level}`)}
-          </Radio>
-        ))}
-      </FieldsetGroup>
+      <LevelForm initialValue={initialValues?.level} />
 
       <MultiSelect
         name="languages"
         label={t('talk.languages')}
+        hint={t('common.optional')}
         placeholder={t('talk.languages.placeholder')}
         options={LANGUAGES.map((lang) => ({
           value: lang,

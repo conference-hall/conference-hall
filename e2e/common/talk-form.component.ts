@@ -45,7 +45,7 @@ export class TalkFormComponent extends PageObject {
   ) {
     await this.titleInput.fill(title);
     await this.abstractInput.fill(abstract);
-    if (level) await this.radioInput(level).click();
+    if (level) await this.checkRadio(level, { force: true });
     if (language) await this.languageSelect.select([language]);
     if (references || slidesUrl || videoUrl) await this.expandReferences();
     if (references) await this.referencesInput.fill(references);
