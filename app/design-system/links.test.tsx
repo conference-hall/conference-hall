@@ -1,6 +1,6 @@
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.ts';
-import { page } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { ExternalLink } from './links.tsx';
 
 describe('ExternalLink component', () => {
@@ -33,6 +33,24 @@ describe('ExternalLink component', () => {
     await expect
       .element(dialog.getByRole('link', { name: 'Open the link' }))
       .toHaveAttribute('href', 'https://unknown.example.com/deck');
+  });
+
+  it('asks for a confirmation on ctrl/cmd+click too', async () => {
+    await renderComponent(true);
+
+    await userEvent.click(page.getByRole('link', { name: 'Slides' }).element(), { modifiers: ['Meta'] });
+
+    const dialog = page.getByRole('dialog', { name: 'Open an external link' });
+    await expect.element(dialog.getByText('https://unknown.example.com/deck')).toBeVisible();
+  });
+
+  it('asks for a confirmation on middle click too', async () => {
+    await renderComponent(true);
+
+    await userEvent.click(page.getByRole('link', { name: 'Slides' }).element(), { button: 'middle' });
+
+    const dialog = page.getByRole('dialog', { name: 'Open an external link' });
+    await expect.element(dialog.getByText('https://unknown.example.com/deck')).toBeVisible();
   });
 
   it('closes the confirmation without opening the link', async () => {

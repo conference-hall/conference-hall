@@ -78,20 +78,20 @@ export function ExternalLink({
   const defaultStyle = typography({ size, mb, align, weight, truncate, className });
   const linkStyle = link({ variant });
 
+  // Left click and ctrl/cmd+click go through `onClick`, middle click through `onAuxClick`.
+  const askConfirmation = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setConfirmOpen(true);
+  };
+
   const anchor = (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
       className={cx(defaultStyle, linkStyle)}
-      onClick={
-        untrusted && href
-          ? (event) => {
-              event.preventDefault();
-              setConfirmOpen(true);
-            }
-          : onClick
-      }
+      onClick={untrusted && href ? askConfirmation : onClick}
+      onAuxClick={untrusted && href ? askConfirmation : undefined}
       {...rest}
     >
       {IconLeft && <IconLeft className="mr-2 size-4 shrink-0 opacity-75" aria-hidden="true" />}
