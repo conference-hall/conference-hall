@@ -33,7 +33,10 @@ export function InputLink({ name, label, placeholder, description, icon, default
       error={error}
     >
       {httpsUrl && (
-        <ExternalLink href={httpsUrl} className="px-3 text-gray-400 hover:text-gray-600">
+        <ExternalLink
+          href={httpsUrl}
+          className="rounded-md px-3 text-gray-400 outline-0 focus-within:bg-indigo-50 focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-inset hover:text-gray-600"
+        >
           <ArrowTopRightOnSquareIcon className="size-4" aria-hidden="true" />
           <span className="sr-only">{t('common.opens-new-tab')}</span>
         </ExternalLink>

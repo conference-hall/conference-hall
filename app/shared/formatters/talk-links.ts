@@ -8,12 +8,12 @@ const SLIDES_PROVIDERS: Record<string, string> = {
   'google.com': 'Google',
   'canva.com': 'Canva',
   'pitch.com': 'Pitch',
+  'github.com': 'GitHub',
 };
 
 const VIDEO_PROVIDERS: Record<string, string> = {
   'youtube.com': 'YouTube',
   'youtu.be': 'YouTube',
-  'youtube-nocookie.com': 'YouTube',
   'vimeo.com': 'Vimeo',
   'dailymotion.com': 'Dailymotion',
   'dai.ly': 'Dailymotion',

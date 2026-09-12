@@ -18,7 +18,7 @@ type MarkdownTextAreaProps = {
   stats?: boolean;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
-const baseStyles = 'border-gray-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500';
+const baseStyles = 'border-gray-300 focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600';
 const errorStyles = 'border-red-300 focus:outline-hidden focus:ring-red-500 focus:border-red-500';
 
 export function MarkdownTextArea({

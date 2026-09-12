@@ -32,7 +32,7 @@ const renderComponent = (props = {}) => {
 };
 
 const expandReferences = () =>
-  userEvent.click(page.getByRole('button', { name: /add slides, videos and other references/i }));
+  userEvent.click(page.getByRole('button', { name: /add slides, videos and references/i }));
 
 describe('TalkForm', () => {
   it('renders all form fields', async () => {
@@ -50,7 +50,7 @@ describe('TalkForm', () => {
 
     await expect.element(page.getByLabelText('Slides link (Slideshare, Google Slides, etc.)')).toBeInTheDocument();
     await expect.element(page.getByLabelText('Video link (Youtube, Vimeo, etc.)')).toBeInTheDocument();
-    await expect.element(page.getByLabelText('Other references')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('References')).toBeInTheDocument();
   });
 
   it('displays a link to open a filled link in a new tab', async () => {
@@ -108,7 +108,7 @@ describe('TalkForm', () => {
 
     const titleInput = page.getByLabelText(/title/i);
     const abstractTextarea = page.getByLabelText(/abstract/i);
-    const referencesTextarea = page.getByLabelText('Other references');
+    const referencesTextarea = page.getByLabelText('References');
 
     await expect.element(titleInput).toHaveValue('Test Talk Title');
     await expect.element(abstractTextarea).toHaveValue('Test abstract content');
@@ -119,7 +119,7 @@ describe('TalkForm', () => {
   it('collapses the references section when no value is filled', async () => {
     await renderComponent();
 
-    await expect.element(page.getByLabelText('Other references')).not.toBeVisible();
+    await expect.element(page.getByLabelText('References')).not.toBeVisible();
   });
 
   it('expands the references section when a value is filled', async () => {
@@ -148,12 +148,12 @@ describe('TalkForm', () => {
     await renderComponent();
 
     await expandReferences();
-    await userEvent.fill(page.getByLabelText('Other references'), 'Test references');
+    await userEvent.fill(page.getByLabelText('References'), 'Test references');
 
     await expandReferences();
 
-    await expect.element(page.getByLabelText('Other references')).not.toBeVisible();
-    await expect.element(page.getByLabelText('Other references')).toHaveValue('Test references');
+    await expect.element(page.getByLabelText('References')).not.toBeVisible();
+    await expect.element(page.getByLabelText('References')).toHaveValue('Test references');
   });
 
   it('displays validation errors', async () => {

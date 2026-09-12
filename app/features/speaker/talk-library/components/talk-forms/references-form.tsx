@@ -30,7 +30,7 @@ export function ReferencesForm({ slidesUrl, videoUrl, references, errors }: Prop
         onClick={() => setToggled(!expanded)}
         aria-expanded={expanded}
         aria-controls={panelId}
-        className="flex w-full cursor-pointer items-center gap-3 p-4 text-left"
+        className="flex w-full cursor-pointer items-center gap-3 rounded-md p-4 text-left outline-indigo-600 hover:bg-gray-50"
       >
         <PaperClipIcon className="size-5 shrink-0 text-gray-400" aria-hidden="true" />
         <div className="grow">
@@ -66,7 +66,7 @@ export function ReferencesForm({ slidesUrl, videoUrl, references, errors }: Prop
 
         <MarkdownTextArea
           name="references"
-          label={t('talk.references.other')}
+          label={t('talk.references')}
           description={t('talk.references.description')}
           rows={5}
           className="field-sizing-content min-h-32"

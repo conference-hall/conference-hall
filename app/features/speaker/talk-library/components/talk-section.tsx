@@ -203,7 +203,7 @@ function TalkLinkCard({ link }: { link: TalkLink }) {
       href={link.url}
       untrusted={link.provider === null}
       variant="secondary"
-      className="flex min-w-0 flex-1 items-center gap-3 rounded-md border border-gray-200 p-3 no-underline hover:border-indigo-300 hover:bg-gray-50"
+      className="flex min-w-0 flex-1 items-center gap-3 rounded-md border border-gray-200 p-3 no-underline outline-0 focus-within:ring-2 focus-within:ring-indigo-600 hover:bg-gray-50"
     >
       <Icon className="size-5 shrink-0 text-gray-400" aria-hidden="true" />
 

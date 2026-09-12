@@ -20,8 +20,8 @@ export class TalkFormComponent extends PageObject {
     const parent = isEdit ? page.getByRole('dialog') : page;
     this.titleInput = parent.getByLabel('Title');
     this.abstractInput = parent.getByLabel('Abstract');
-    this.referencesToggle = parent.getByRole('button', { name: 'Add slides, videos and other references' });
-    this.referencesInput = parent.getByLabel('Other references');
+    this.referencesToggle = parent.getByRole('button', { name: 'Add slides, videos and references' });
+    this.referencesInput = parent.getByLabel('References');
     this.slidesUrlInput = parent.getByLabel('Slides link');
     this.videoUrlInput = parent.getByLabel('Video link');
     this.languageSelect = this.multiSelectInput('Languages');
