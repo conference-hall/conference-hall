@@ -30,7 +30,15 @@ test('submits a new talk for a conference (full funnel)', async ({ page, context
 
   // Step: talk creation
   await submissionPage.proposalStep.waitFor();
-  await submissionPage.fillTalkForm('New title', 'New abstract', 'Beginner', 'French', 'New references');
+  await submissionPage.fillTalkForm(
+    'New title',
+    'New abstract',
+    'Beginner',
+    'French',
+    'New references',
+    'https://speakerdeck.com/jane/talk',
+    'https://youtube.com/watch?v=abc',
+  );
   await submissionPage.clickOnContinue();
 
   // Step: speaker
@@ -55,6 +63,8 @@ test('submits a new talk for a conference (full funnel)', async ({ page, context
 
   // Step: confirmation
   await submissionPage.waitFor('New title');
+  await expect(page.getByText('Slides · Speaker Deck')).toBeVisible();
+  await expect(page.getByText('Video · YouTube')).toBeVisible();
   await submissionPage.checkboxInput('Please agree with the code of conduct of the event.').check();
   await submissionPage.clickOnSubmit();
   await expect(submissionPage.toast).toHaveText('Congratulation! Proposal submitted!');

@@ -1,7 +1,9 @@
+import { PresentationChartBarIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Callout } from '~/design-system/callout.tsx';
 import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
+import { InputLink } from '~/design-system/forms/input-link.tsx';
 import { Radio } from '~/design-system/forms/input-radio.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
@@ -17,6 +19,8 @@ type Props = {
     title: string;
     abstract: string;
     references: string | null;
+    slidesUrl?: string | null;
+    videoUrl?: string | null;
     languages: string[];
     level: string | null;
     formats?: Array<{ id: string }>;
@@ -110,6 +114,24 @@ export function TalkForm({
         />
       )}
       {hasCategories && errors?.categories && <Callout title={t('talk.errors.categories.required')} variant="error" />}
+
+      <InputLink
+        name="slidesUrl"
+        label={t('talk.slides-url')}
+        placeholder="https://speakerdeck.com/..."
+        icon={PresentationChartBarIcon}
+        defaultValue={initialValues?.slidesUrl ?? ''}
+        error={errors?.slidesUrl}
+      />
+
+      <InputLink
+        name="videoUrl"
+        label={t('talk.video-url')}
+        placeholder="https://youtube.com/watch?v=..."
+        icon={VideoCameraIcon}
+        defaultValue={initialValues?.videoUrl ?? ''}
+        error={errors?.videoUrl}
+      />
 
       <MarkdownTextArea
         name="references"

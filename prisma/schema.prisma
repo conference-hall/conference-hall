@@ -90,6 +90,8 @@ model Talk {
   level          TalkLevel?
   languages      Json       @default("[]")
   references     String?
+  slidesUrl      String?
+  videoUrl       String?
   creatorId      String
   creator        User       @relation(fields: [creatorId], references: [id])
   archived       Boolean    @default(false)
@@ -274,6 +276,8 @@ model Proposal {
   level              TalkLevel?
   languages          Json                @default("[]")
   references         String?
+  slidesUrl          String?
+  videoUrl           String?
   speakers           EventSpeaker[]      @relation("proposals_speakers")
   formats            EventFormat[]       @relation("proposals_formats")
   categories         EventCategory[]     @relation("proposals_categories")

@@ -68,6 +68,8 @@ export const proposalFactory = async (options: FactoryOptions) => {
     references: talk?.references || randParagraph(),
     languages: talk?.languages || ['en'],
     level: talk?.level || TalkLevel.INTERMEDIATE,
+    slidesUrl: talk?.slidesUrl || null,
+    videoUrl: talk?.videoUrl || null,
     talk: { connect: { id: talk.id } },
     speakers: { connect: proposalSpeakers.map(({ id }) => ({ id })) },
     event: { connect: { id: event.id } },

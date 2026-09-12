@@ -224,6 +224,7 @@ async function seed() {
       languages: ['fr'],
     },
     speakers: [user3],
+    traits: ['with-links'],
   });
 
   const proposal1 = await proposalFactory({

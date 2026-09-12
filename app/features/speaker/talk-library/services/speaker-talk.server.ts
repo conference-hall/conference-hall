@@ -37,6 +37,8 @@ export class SpeakerTalk {
       level: talk.level,
       languages: (talk.languages || []) as Languages,
       references: talk.references,
+      slidesUrl: talk.slidesUrl,
+      videoUrl: talk.videoUrl,
       archived: talk.archived,
       createdAt: talk.createdAt,
       isOwner: this.userId === talk.creatorId,

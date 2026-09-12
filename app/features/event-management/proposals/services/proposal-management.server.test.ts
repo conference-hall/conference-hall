@@ -27,6 +27,8 @@ describe('ProposalManagement', () => {
         abstract: 'This is a test talk abstract',
         speakers: [eventSpeaker.id],
         references: 'Test references',
+        slidesUrl: 'https://speakerdeck.com/jane/talk',
+        videoUrl: 'https://youtube.com/watch?v=abc',
         languages: ['en'],
         level: 'INTERMEDIATE',
       };
@@ -44,6 +46,8 @@ describe('ProposalManagement', () => {
       expect(proposal?.title).toBe('Test Talk');
       expect(proposal?.abstract).toBe('This is a test talk abstract');
       expect(proposal?.level).toBe('INTERMEDIATE');
+      expect(proposal?.slidesUrl).toBe('https://speakerdeck.com/jane/talk');
+      expect(proposal?.videoUrl).toBe('https://youtube.com/watch?v=abc');
       expect(proposal?.eventId).toBe(event.id);
       expect(proposal?.talkId).toBeNull();
       expect(proposal?.speakers).toHaveLength(1);
@@ -63,6 +67,8 @@ describe('ProposalManagement', () => {
         title: 'Test Talk with Format',
         abstract: 'This is a test talk abstract',
         speakers: [eventSpeaker.id],
+        slidesUrl: null,
+        videoUrl: null,
         languages: ['en'],
         level: 'ADVANCED',
         formats: [format.id],
@@ -99,6 +105,8 @@ describe('ProposalManagement', () => {
         abstract: 'Updated',
         level: 'ADVANCED',
         references: 'Updated',
+        slidesUrl: 'https://noti.st/jane/deck',
+        videoUrl: null,
         languages: [],
       });
 
@@ -106,6 +114,8 @@ describe('ProposalManagement', () => {
       expect(updated.abstract).toBe('Updated');
       expect(updated.level).toBe('ADVANCED');
       expect(updated.references).toBe('Updated');
+      expect(updated.slidesUrl).toBe('https://noti.st/jane/deck');
+      expect(updated.videoUrl).toBeNull();
     });
 
     it('throws an error if user has not a owner or member role in the team', async () => {
@@ -122,6 +132,8 @@ describe('ProposalManagement', () => {
           abstract: 'Updated',
           level: null,
           references: null,
+          slidesUrl: null,
+          videoUrl: null,
           languages: [],
         });
       }).rejects.toThrow(ForbiddenOperationError);
@@ -142,6 +154,8 @@ describe('ProposalManagement', () => {
           abstract: 'Updated',
           level: null,
           references: null,
+          slidesUrl: null,
+          videoUrl: null,
           languages: [],
         });
       }).rejects.toThrow(ForbiddenOperationError);

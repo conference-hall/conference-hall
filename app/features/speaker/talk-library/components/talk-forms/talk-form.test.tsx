@@ -1,7 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
-import { page } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { TalkForm } from './talk-form.tsx';
 
 const formats = [
@@ -42,7 +42,29 @@ describe('TalkForm', () => {
     await expect.element(page.getByRole('radio', { name: /intermediate/i })).toBeInTheDocument();
     await expect.element(page.getByRole('radio', { name: /advanced/i })).toBeInTheDocument();
     await expect.element(page.getByLabelText(/languages/i)).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Slides link (Slideshare, Google Slides, etc.)')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Video link (Youtube, Vimeo, etc.)')).toBeInTheDocument();
     await expect.element(page.getByLabelText(/references/i)).toBeInTheDocument();
+  });
+
+  it('displays a link to open a filled link in a new tab', async () => {
+    await renderComponent();
+
+    await expect.element(page.getByRole('link', { name: /opens in a new tab/i })).not.toBeInTheDocument();
+
+    await userEvent.fill(page.getByLabelText('Video link (Youtube, Vimeo, etc.)'), 'https://youtube.com/watch?v=abc');
+
+    await expect
+      .element(page.getByRole('link', { name: /opens in a new tab/i }))
+      .toHaveAttribute('href', 'https://youtube.com/watch?v=abc');
+  });
+
+  it('does not offer to open a link that is not https', async () => {
+    await renderComponent();
+
+    await userEvent.fill(page.getByLabelText('Slides link (Slideshare, Google Slides, etc.)'), 'javascript:alert(1)');
+
+    await expect.element(page.getByRole('link', { name: /opens in a new tab/i })).not.toBeInTheDocument();
   });
 
   it('renders formats section when formats provided', async () => {

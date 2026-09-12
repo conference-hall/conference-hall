@@ -32,6 +32,8 @@ describe('SpeakerProposal', () => {
         title: proposal.title,
         abstract: proposal.abstract,
         references: proposal.references,
+        slidesUrl: proposal.slidesUrl,
+        videoUrl: proposal.videoUrl,
         level: proposal.level,
         submittedAt: proposal.submittedAt,
         languages: proposal.languages,
@@ -88,6 +90,8 @@ describe('SpeakerProposal', () => {
         level: 'INTERMEDIATE',
         languages: ['be'],
         references: 'Reference changed',
+        slidesUrl: 'https://noti.st/jane/deck',
+        videoUrl: null,
         formats: [format.id],
         categories: [category.id],
       });
@@ -99,6 +103,8 @@ describe('SpeakerProposal', () => {
       expect(result.level).toEqual('INTERMEDIATE');
       expect(result.languages).toEqual(['be']);
       expect(result.references).toEqual('Reference changed');
+      expect(result.slidesUrl).toEqual('https://noti.st/jane/deck');
+      expect(result.videoUrl).toBeNull();
       expect(result.formats[0].id).toEqual(format.id);
       expect(result.categories[0].id).toEqual(category.id);
     });
@@ -116,6 +122,8 @@ describe('SpeakerProposal', () => {
           level: null,
           languages: ['fr'],
           references: '',
+          slidesUrl: null,
+          videoUrl: null,
           formats: [],
           categories: [],
         }),
@@ -132,6 +140,8 @@ describe('SpeakerProposal', () => {
           level: null,
           languages: ['fr'],
           references: '',
+          slidesUrl: null,
+          videoUrl: null,
           formats: [],
           categories: [],
         }),
@@ -152,6 +162,8 @@ describe('SpeakerProposal', () => {
           level: null,
           languages: ['fr'],
           references: '',
+          slidesUrl: null,
+          videoUrl: null,
           formats: [],
           categories: [],
         }),

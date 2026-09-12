@@ -52,7 +52,7 @@ describe('ProposalReview', () => {
         formats: [format],
         categories: [category],
         tags: [tag],
-        talk: await talkFactory({ speakers: [speaker] }),
+        talk: await talkFactory({ speakers: [speaker], traits: ['with-links'] }),
       });
       await surveyFactory({ event, user: speaker, attributes: { answers: { info: 'Hello world' } } });
 
@@ -66,6 +66,8 @@ describe('ProposalReview', () => {
         title: proposal.title,
         abstract: proposal.abstract,
         references: proposal.references,
+        slidesUrl: proposal.slidesUrl,
+        videoUrl: proposal.videoUrl,
         level: proposal.level,
         deliberationStatus: proposal.deliberationStatus,
         publicationStatus: proposal.publicationStatus,
