@@ -9,6 +9,7 @@ import { ExternalLink } from '~/design-system/links.tsx';
 import { TalkSubmission } from '~/features/event-participation/cfp-submission/services/talk-submission.server.ts';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { TalkSection } from '~/features/speaker/talk-library/components/talk-section.tsx';
+import { TracksSection } from '~/features/speaker/talk-library/components/tracks-section.tsx';
 import { RequireAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toastHeaders } from '~/shared/toasts/toast.server.ts';
@@ -41,7 +42,14 @@ export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.Co
 
   return (
     <Page className="space-y-4">
-      <TalkSection talk={proposal} showSpeakers showFormats showCategories />
+      <TalkSection talk={proposal} showSpeakers />
+
+      <TracksSection
+        formats={proposal.formats}
+        categories={proposal.categories}
+        hasFormats={currentEvent.formats.length > 0}
+        hasCategories={currentEvent.categories.length > 0}
+      />
 
       <Card>
         <Card.Content>

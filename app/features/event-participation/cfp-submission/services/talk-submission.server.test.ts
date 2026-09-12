@@ -405,8 +405,8 @@ describe('TalkSubmission', () => {
             isCurrentUser: false,
           },
         ],
-        formats: [{ id: format.id, name: format.name }],
-        categories: [{ id: category.id, name: category.name }],
+        formats: [{ id: format.id, name: format.name, description: format.description }],
+        categories: [{ id: category.id, name: category.name, description: category.description }],
       });
     });
 

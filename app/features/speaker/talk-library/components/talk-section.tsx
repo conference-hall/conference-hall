@@ -31,8 +31,6 @@ type Props = {
     invitationLink?: string;
     archived?: boolean;
     archivedAt?: Date | null;
-    formats?: Array<{ id: string; name: string }>;
-    categories?: Array<{ id: string; name: string }>;
     createdAt?: Date;
     submittedAt?: Date;
   };
@@ -41,8 +39,6 @@ type Props = {
   children?: ReactNode;
   canEditSpeakers?: boolean;
   showSpeakers?: boolean;
-  showFormats?: boolean;
-  showCategories?: boolean;
   referencesOpen?: boolean;
 };
 
@@ -53,8 +49,6 @@ export function TalkSection({
   actions,
   canEditSpeakers = false,
   showSpeakers = false,
-  showFormats = false,
-  showCategories = false,
   referencesOpen = false,
 }: Props) {
   const { t, i18n } = useTranslation();
@@ -144,28 +138,6 @@ export function TalkSection({
             {talk.abstract}
           </Markdown>
         </div>
-
-        {showFormats && talk.formats && talk.formats?.length > 0 && (
-          <div>
-            <dt className="text-sm leading-6 font-medium text-gray-900">{t('common.formats')}</dt>
-            <dd className="text-sm leading-6 text-gray-700">
-              {talk.formats?.map(({ id, name }) => (
-                <p key={id}>{name}</p>
-              ))}
-            </dd>
-          </div>
-        )}
-
-        {showCategories && talk.categories && talk.categories?.length > 0 && (
-          <div>
-            <dt className="text-sm leading-6 font-medium text-gray-900">{t('common.categories')}</dt>
-            <dd className="text-sm leading-6 text-gray-700">
-              {talk.categories?.map(({ id, name }) => (
-                <p key={id}>{name}</p>
-              ))}
-            </dd>
-          </div>
-        )}
 
         {links.length > 0 && (
           <div className="flex flex-col gap-2 sm:flex-row">

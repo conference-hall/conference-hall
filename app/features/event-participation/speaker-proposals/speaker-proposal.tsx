@@ -26,6 +26,7 @@ import type { Message } from '~/shared/types/conversation.types.ts';
 import { ProposalParticipationSchema, TalkSaveSchema } from '~/shared/types/speaker-talk.types.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { TalkSection } from '../../speaker/talk-library/components/talk-section.tsx';
+import { TracksSection } from '../../speaker/talk-library/components/tracks-section.tsx';
 import { useCurrentEvent } from '../event-page-context.tsx';
 import type { Route } from './+types/speaker-proposal.ts';
 import { ProposalStatusSection } from './components/proposal-status-section.tsx';
@@ -116,8 +117,13 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
           canEditSpeakers={canEdit}
           action={canEdit ? <TalkEditButton initialValues={proposal} event={currentEvent} errors={errors} /> : null}
           showSpeakers
-          showFormats
-          showCategories
+        />
+
+        <TracksSection
+          formats={proposal.formats}
+          categories={proposal.categories}
+          hasFormats={currentEvent.formats.length > 0}
+          hasCategories={currentEvent.categories.length > 0}
         />
       </div>
 
