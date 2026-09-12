@@ -9,7 +9,7 @@ paths:
 
 ## Architecture
 
-- **S3-compatible storage**: MinIO locally
+- **S3-compatible storage**: Garage locally
 - **Client singleton**: `app/shared/storage/s3-client.server.ts` — single `S3Client` with `forcePathStyle: true`
 - **Service**: `app/shared/storage/storage.server.ts` — `StorageService` class with `upload`, `getObject`, `delete`, `deleteQuietly`
 - **URL resolution**: `app/shared/storage/storage-utils.ts` — `resolveStorageUrl()` converts bucket keys to proxy URLs
@@ -48,13 +48,13 @@ if (current.logo) await storage.deleteQuietly(current.logo);
 ## Environment Variables
 
 ```env
-S3_ENDPOINT=http://127.0.0.1:9000   # MinIO locally, Railway Storage URL in prod
+S3_ENDPOINT=http://127.0.0.1:3900   # Garage locally, Railway Storage URL in prod
 S3_BUCKET=conference-hall
-S3_ACCESS_KEY_ID=minioadmin
-S3_SECRET_ACCESS_KEY=minioadmin
+S3_ACCESS_KEY_ID=conferencehall
+S3_SECRET_ACCESS_KEY=conferencehallsecret
 S3_REGION=auto
 ```
 
 ## Local Development
 
-MinIO via `docker compose up`. Console UI at `http://localhost:9001` (minioadmin/minioadmin). `minio-setup` service auto-creates `conference-hall` bucket.
+Garage via `docker compose up`. No admin UI, use an S3 CLI against `http://localhost:3900`. Config in `docker/garage/garage.toml`, `garage-setup` service auto-creates `conference-hall` and `conference-hall-test` buckets.

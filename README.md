@@ -83,7 +83,6 @@ Application URLs:
 
 - Webapp: http://localhost:3000
 - Mailpit: http://localhost:8025
-- S3 storage: http://localhost:9000 (minioadmin/minioadmin)
 
 You can connect the webapp with test users:
 
