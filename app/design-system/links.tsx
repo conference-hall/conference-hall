@@ -78,7 +78,6 @@ export function ExternalLink({
   const defaultStyle = typography({ size, mb, align, weight, truncate, className });
   const linkStyle = link({ variant });
 
-  // Left click and ctrl/cmd+click go through `onClick`, middle click through `onAuxClick`.
   const askConfirmation = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     setConfirmOpen(true);

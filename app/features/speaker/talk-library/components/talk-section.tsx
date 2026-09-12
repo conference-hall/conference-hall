@@ -1,4 +1,5 @@
-import { ArrowTopRightOnSquareIcon, PlayCircleIcon, PresentationChartBarIcon } from '@heroicons/react/16/solid';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/16/solid';
+import { VideoCameraIcon, PresentationChartBarIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -195,7 +196,7 @@ export function TalkSection({
 
 function TalkLinkCard({ link }: { link: TalkLink }) {
   const { t } = useTranslation();
-  const Icon = link.kind === 'slides' ? PresentationChartBarIcon : PlayCircleIcon;
+  const Icon = link.kind === 'slides' ? PresentationChartBarIcon : VideoCameraIcon;
 
   return (
     <ExternalLink

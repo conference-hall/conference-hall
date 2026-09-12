@@ -5,6 +5,7 @@ import type { MultiSelectComponent } from './multi-select.component.ts';
 export class TalkFormComponent extends PageObject {
   readonly titleInput: Locator;
   readonly abstractInput: Locator;
+  readonly referencesToggle: Locator;
   readonly referencesInput: Locator;
   readonly slidesUrlInput: Locator;
   readonly videoUrlInput: Locator;
@@ -19,7 +20,8 @@ export class TalkFormComponent extends PageObject {
     const parent = isEdit ? page.getByRole('dialog') : page;
     this.titleInput = parent.getByLabel('Title');
     this.abstractInput = parent.getByLabel('Abstract');
-    this.referencesInput = parent.getByLabel('References');
+    this.referencesToggle = parent.getByRole('button', { name: 'Add slides, videos and other references' });
+    this.referencesInput = parent.getByLabel('Other references');
     this.slidesUrlInput = parent.getByLabel('Slides link');
     this.videoUrlInput = parent.getByLabel('Video link');
     this.languageSelect = this.multiSelectInput('Languages');
@@ -45,9 +47,16 @@ export class TalkFormComponent extends PageObject {
     await this.abstractInput.fill(abstract);
     if (level) await this.radioInput(level).click();
     if (language) await this.languageSelect.select([language]);
+    if (references || slidesUrl || videoUrl) await this.expandReferences();
     if (references) await this.referencesInput.fill(references);
     if (slidesUrl) await this.slidesUrlInput.fill(slidesUrl);
     if (videoUrl) await this.videoUrlInput.fill(videoUrl);
+  }
+
+  async expandReferences() {
+    await this.referencesToggle.waitFor();
+    if (await this.referencesInput.isVisible()) return;
+    await this.referencesToggle.click();
   }
 
   formatCheckbox(name: string) {

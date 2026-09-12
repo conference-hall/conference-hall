@@ -1,9 +1,7 @@
-import { PresentationChartBarIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Callout } from '~/design-system/callout.tsx';
 import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
-import { InputLink } from '~/design-system/forms/input-link.tsx';
 import { Radio } from '~/design-system/forms/input-radio.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
@@ -12,6 +10,7 @@ import { LANGUAGES, TALK_LEVELS } from '~/shared/constants.ts';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { CategoriesForm } from './categories-form.tsx';
 import { FormatsForm } from './formats-form.tsx';
+import { ReferencesForm } from './references-form.tsx';
 
 type Props = {
   id: string;
@@ -115,32 +114,11 @@ export function TalkForm({
       )}
       {hasCategories && errors?.categories && <Callout title={t('talk.errors.categories.required')} variant="error" />}
 
-      <InputLink
-        name="slidesUrl"
-        label={t('talk.slides-url')}
-        placeholder="https://speakerdeck.com/..."
-        icon={PresentationChartBarIcon}
-        defaultValue={initialValues?.slidesUrl ?? ''}
-        error={errors?.slidesUrl}
-      />
-
-      <InputLink
-        name="videoUrl"
-        label={t('talk.video-url')}
-        placeholder="https://youtube.com/watch?v=..."
-        icon={VideoCameraIcon}
-        defaultValue={initialValues?.videoUrl ?? ''}
-        error={errors?.videoUrl}
-      />
-
-      <MarkdownTextArea
-        name="references"
-        label={t('talk.references')}
-        description={t('talk.references.description')}
-        rows={2}
-        className="field-sizing-content min-h-16"
-        defaultValue={initialValues?.references ?? ''}
-        error={errors?.references}
+      <ReferencesForm
+        slidesUrl={initialValues?.slidesUrl ?? ''}
+        videoUrl={initialValues?.videoUrl ?? ''}
+        references={initialValues?.references ?? ''}
+        errors={errors}
       />
     </Form>
   );
