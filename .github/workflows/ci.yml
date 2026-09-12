@@ -73,10 +73,10 @@ jobs:
         uses: ./.github/actions/setup-playwright
 
       - name: Start database
-        run: docker compose up -d
+        run: docker compose up -d --wait postgres redis garage mailpit
 
-      - name: Wait for database start...
-        run: ./docker/wait-for-db.sh
+      - name: Setup storage buckets
+        run: docker compose run --rm garage-setup
 
       - name: Execute tests
         run: pnpm test
@@ -113,10 +113,10 @@ jobs:
         uses: ./.github/actions/setup-playwright
 
       - name: Start database
-        run: docker compose up -d
+        run: docker compose up -d --wait postgres redis garage mailpit
 
-      - name: Wait for database start...
-        run: ./docker/wait-for-db.sh
+      - name: Setup storage buckets
+        run: docker compose run --rm garage-setup
 
       - name: Build the app
         run: pnpm build

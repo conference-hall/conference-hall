@@ -1,7 +1,7 @@
 services:
   postgres:
     container_name: ch_postgres
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     volumes:
       - ./docker/postgres:/docker-entrypoint-initdb.d
     ports:
@@ -9,6 +9,11 @@ services:
     environment:
       POSTGRES_MULTIPLE_DATABASES: '"conference-hall","conference-hall-test"'
       POSTGRES_HOST_AUTH_METHOD: trust
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      interval: 2s
+      timeout: 5s
+      retries: 30
 
   redis:
     container_name: ch_redis
@@ -16,32 +21,42 @@ services:
     command: redis-server --save 20 1 --loglevel warning --maxmemory-policy noeviction
     ports:
       - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 2s
+      timeout: 5s
+      retries: 30
 
-  minio:
-    container_name: ch_minio
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
+  garage:
+    container_name: ch_garage
+    image: dxflrs/garage:v2.4.1
+    command: ['/garage', 'server', '--single-node', '--default-access-key']
+    volumes:
+      - ./docker/garage/garage.toml:/etc/garage.toml:ro
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      - '3900:3900'
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      GARAGE_DEFAULT_ACCESS_KEY: conferencehall
+      GARAGE_DEFAULT_SECRET_KEY: conferencehallsecret
+      RUST_LOG: warn
+    healthcheck:
+      test: ['CMD', '/garage', 'health']
+      interval: 2s
+      timeout: 5s
+      retries: 30
 
-  minio-setup:
-    container_name: ch_minio_setup
-    image: minio/mc:latest
+  garage-setup:
+    container_name: ch_garage_setup
+    image: curlimages/curl:latest
     depends_on:
-      - minio
-    entrypoint: >
-      /bin/sh -c "
-      until mc alias set local http://minio:9000 minioadmin minioadmin 2>/dev/null; do
-        echo 'Waiting for MinIO...'; sleep 1;
-      done;
-      mc mb --ignore-existing local/conference-hall;
-      mc mb --ignore-existing local/conference-hall-test;
-      exit 0;
-      "
+      garage:
+        condition: service_healthy
+    volumes:
+      - ./docker/garage/setup.sh:/setup.sh:ro
+    environment:
+      GARAGE_ADMIN_TOKEN: conference-hall-local-admin-token
+      GARAGE_ACCESS_KEY_ID: conferencehall
+    entrypoint: ['sh', '/setup.sh']
 
   mailpit:
     container_name: ch_mailpit
@@ -49,3 +64,8 @@ services:
     ports:
       - 1025:1025
       - 8025:8025
+    healthcheck:
+      test: ['CMD', '/mailpit', 'readyz']
+      interval: 2s
+      timeout: 5s
+      retries: 30
