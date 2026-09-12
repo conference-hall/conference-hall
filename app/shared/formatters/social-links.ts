@@ -1,3 +1,5 @@
+import { extractMainDomain } from '../utils/url.ts';
+
 export type SocialName =
   | 'link'
   | 'github'
@@ -42,9 +44,4 @@ export function extractSocialProfile(url: string): { name: SocialName; profile: 
   } catch {
     return { name: 'link', profile: null, url };
   }
-}
-
-function extractMainDomain(hostname: string) {
-  const match = hostname.match(/([a-zA-Z0-9-]+\.[a-zA-Z]{2,})$/);
-  return match ? match[0] : '';
 }

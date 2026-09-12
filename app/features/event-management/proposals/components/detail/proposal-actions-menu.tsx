@@ -26,6 +26,8 @@ type ProposalActionsMenuProps = {
     title: string;
     abstract: string;
     references: string | null;
+    slidesUrl?: string | null;
+    videoUrl?: string | null;
     languages: string[];
     level: string | null;
     archivedAt: Date | null;

@@ -1,7 +1,7 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
-import { page } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { TalkForm } from './talk-form.tsx';
 
 const formats = [
@@ -31,6 +31,9 @@ const renderComponent = (props = {}) => {
   return page.render(<RouteStub />);
 };
 
+const expandReferences = () =>
+  userEvent.click(page.getByRole('button', { name: /add slides, videos and references/i }));
+
 describe('TalkForm', () => {
   it('renders all form fields', async () => {
     await renderComponent();
@@ -42,7 +45,36 @@ describe('TalkForm', () => {
     await expect.element(page.getByRole('radio', { name: /intermediate/i })).toBeInTheDocument();
     await expect.element(page.getByRole('radio', { name: /advanced/i })).toBeInTheDocument();
     await expect.element(page.getByLabelText(/languages/i)).toBeInTheDocument();
-    await expect.element(page.getByLabelText(/references/i)).toBeInTheDocument();
+
+    await expandReferences();
+
+    await expect.element(page.getByLabelText('Slides link (Slideshare, Google Slides, etc.)')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Video link (Youtube, Vimeo, etc.)')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('References')).toBeInTheDocument();
+  });
+
+  it('displays a link to open a filled link in a new tab', async () => {
+    await renderComponent();
+
+    await expandReferences();
+
+    await expect.element(page.getByRole('link', { name: /opens in a new tab/i })).not.toBeInTheDocument();
+
+    await userEvent.fill(page.getByLabelText('Video link (Youtube, Vimeo, etc.)'), 'https://youtube.com/watch?v=abc');
+
+    await expect
+      .element(page.getByRole('link', { name: /opens in a new tab/i }))
+      .toHaveAttribute('href', 'https://youtube.com/watch?v=abc');
+  });
+
+  it('does not offer to open a link that is not https', async () => {
+    await renderComponent();
+
+    await expandReferences();
+
+    await userEvent.fill(page.getByLabelText('Slides link (Slideshare, Google Slides, etc.)'), 'javascript:alert(1)');
+
+    await expect.element(page.getByRole('link', { name: /opens in a new tab/i })).not.toBeInTheDocument();
   });
 
   it('renders formats section when formats provided', async () => {
@@ -76,12 +108,52 @@ describe('TalkForm', () => {
 
     const titleInput = page.getByLabelText(/title/i);
     const abstractTextarea = page.getByLabelText(/abstract/i);
-    const referencesTextarea = page.getByLabelText(/references/i);
+    const referencesTextarea = page.getByLabelText('References');
 
     await expect.element(titleInput).toHaveValue('Test Talk Title');
     await expect.element(abstractTextarea).toHaveValue('Test abstract content');
     await expect.element(referencesTextarea).toHaveValue('Test references');
     await expect.element(page.getByRole('radio', { name: /intermediate/i })).toBeChecked();
+  });
+
+  it('collapses the references section when no value is filled', async () => {
+    await renderComponent();
+
+    await expect.element(page.getByLabelText('References')).not.toBeVisible();
+  });
+
+  it('expands the references section when a value is filled', async () => {
+    await renderComponent({
+      initialValues: {
+        title: 'Test Talk Title',
+        abstract: 'Test abstract content',
+        references: null,
+        slidesUrl: 'https://speakerdeck.com/talk',
+        languages: ['en'],
+        level: null,
+      },
+    });
+
+    await expect.element(page.getByLabelText('Slides link (Slideshare, Google Slides, etc.)')).toBeVisible();
+  });
+
+  it('expands the references section when an error occurs', async () => {
+    await renderComponent({ errors: { slidesUrl: 'Invalid slides link' } });
+
+    await expect.element(page.getByLabelText('Slides link (Slideshare, Google Slides, etc.)')).toBeVisible();
+    await expect.element(page.getByText('Invalid slides link')).toBeInTheDocument();
+  });
+
+  it('keeps the references values when the section is collapsed', async () => {
+    await renderComponent();
+
+    await expandReferences();
+    await userEvent.fill(page.getByLabelText('References'), 'Test references');
+
+    await expandReferences();
+
+    await expect.element(page.getByLabelText('References')).not.toBeVisible();
+    await expect.element(page.getByLabelText('References')).toHaveValue('Test references');
   });
 
   it('displays validation errors', async () => {

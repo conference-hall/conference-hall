@@ -9,6 +9,10 @@ const TRAITS = {
   archived: {
     archived: true,
   },
+  'with-links': {
+    slidesUrl: 'https://speakerdeck.com/jane/talk',
+    videoUrl: 'https://youtube.com/watch?v=abc',
+  },
 };
 
 type Trait = keyof typeof TRAITS;

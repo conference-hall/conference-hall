@@ -21,7 +21,7 @@ describe('SpeakerTalk', () => {
 
   describe('#get', () => {
     it('returns speaker talk', async () => {
-      const talk = await talkFactory({ speakers: [speakerUser] });
+      const talk = await talkFactory({ speakers: [speakerUser], traits: ['with-links'] });
 
       const result = await SpeakerTalk.for(speakerUser.id, talk.id).get();
 
@@ -32,6 +32,8 @@ describe('SpeakerTalk', () => {
         level: talk.level,
         languages: talk.languages,
         references: talk.references,
+        slidesUrl: talk.slidesUrl,
+        videoUrl: talk.videoUrl,
         archived: talk.archived,
         createdAt: talk.createdAt,
         invitationLink: `${APP_URL}/invite/talk/${talk.invitationCode}`,
@@ -136,6 +138,8 @@ describe('SpeakerTalk', () => {
         title: 'Talk title updated',
         abstract: 'Talk abstract updated',
         references: 'Talk references updated',
+        slidesUrl: 'https://noti.st/jane/deck',
+        videoUrl: null,
         languages: ['fr', 'en'],
         level: 'BEGINNER',
       });
@@ -143,6 +147,8 @@ describe('SpeakerTalk', () => {
       expect(talk?.title).toBe('Talk title updated');
       expect(talk?.abstract).toBe('Talk abstract updated');
       expect(talk?.references).toBe('Talk references updated');
+      expect(talk?.slidesUrl).toBe('https://noti.st/jane/deck');
+      expect(talk?.videoUrl).toBeNull();
       expect(talk?.languages).toEqual(['fr', 'en']);
       expect(talk?.level).toEqual('BEGINNER');
     });
@@ -157,6 +163,8 @@ describe('SpeakerTalk', () => {
           title: 'Talk title',
           abstract: 'Talk abstract',
           references: 'Talk references',
+          slidesUrl: null,
+          videoUrl: null,
           languages: ['fr'],
           level: 'ADVANCED',
         }),
@@ -170,6 +178,8 @@ describe('SpeakerTalk', () => {
           title: 'Talk title',
           abstract: 'Talk abstract',
           references: 'Talk references',
+          slidesUrl: null,
+          videoUrl: null,
           languages: ['fr'],
           level: 'ADVANCED',
         }),

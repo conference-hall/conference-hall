@@ -69,9 +69,17 @@ export class SubmissionPage extends PageObject {
     await this.page.getByRole('button', { name: 'Continue' }).click();
   }
 
-  async fillTalkForm(title: string, abstract: string, level: string, language: string, references: string) {
+  async fillTalkForm(
+    title: string,
+    abstract: string,
+    level: string,
+    language: string,
+    references: string,
+    slidesUrl?: string,
+    videoUrl?: string,
+  ) {
     const talkForm = new TalkFormComponent(this.page);
-    return talkForm.fillForm(title, abstract, level, language, references);
+    return talkForm.fillForm(title, abstract, level, language, references, slidesUrl, videoUrl);
   }
 
   async fillSpeakerForm(bio: string) {

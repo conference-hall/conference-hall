@@ -1,9 +1,12 @@
 import { z } from 'zod';
+import { TalkUrlSchema } from '~/shared/types/speaker-talk.types.ts';
 
 export const ProposalCreationSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100),
   abstract: z.string().min(1, 'Abstract is required').max(5000),
   references: z.string().optional(),
+  slidesUrl: TalkUrlSchema,
+  videoUrl: TalkUrlSchema,
   languages: z.array(z.string()).optional(),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).optional(),
   speakers: z.array(z.string()).min(1, 'At least one speaker is required'),
@@ -18,6 +21,8 @@ export const ProposalUpdateSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100),
   abstract: z.string().min(1, 'Abstract is required').max(5000),
   references: z.string().nullable().default(null),
+  slidesUrl: TalkUrlSchema,
+  videoUrl: TalkUrlSchema,
   languages: z.array(z.string()).optional(),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable().default(null),
 });

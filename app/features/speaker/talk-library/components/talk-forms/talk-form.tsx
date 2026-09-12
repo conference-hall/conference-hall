@@ -10,6 +10,7 @@ import { LANGUAGES, TALK_LEVELS } from '~/shared/constants.ts';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 import { CategoriesForm } from './categories-form.tsx';
 import { FormatsForm } from './formats-form.tsx';
+import { ReferencesForm } from './references-form.tsx';
 
 type Props = {
   id: string;
@@ -17,6 +18,8 @@ type Props = {
     title: string;
     abstract: string;
     references: string | null;
+    slidesUrl?: string | null;
+    videoUrl?: string | null;
     languages: string[];
     level: string | null;
     formats?: Array<{ id: string }>;
@@ -111,14 +114,11 @@ export function TalkForm({
       )}
       {hasCategories && errors?.categories && <Callout title={t('talk.errors.categories.required')} variant="error" />}
 
-      <MarkdownTextArea
-        name="references"
-        label={t('talk.references')}
-        description={t('talk.references.description')}
-        rows={2}
-        className="field-sizing-content min-h-16"
-        defaultValue={initialValues?.references ?? ''}
-        error={errors?.references}
+      <ReferencesForm
+        slidesUrl={initialValues?.slidesUrl ?? ''}
+        videoUrl={initialValues?.videoUrl ?? ''}
+        references={initialValues?.references ?? ''}
+        errors={errors}
       />
     </Form>
   );

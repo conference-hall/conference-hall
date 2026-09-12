@@ -5,7 +5,10 @@ import type { MultiSelectComponent } from './multi-select.component.ts';
 export class TalkFormComponent extends PageObject {
   readonly titleInput: Locator;
   readonly abstractInput: Locator;
+  readonly referencesToggle: Locator;
   readonly referencesInput: Locator;
+  readonly slidesUrlInput: Locator;
+  readonly videoUrlInput: Locator;
   readonly languageSelect: MultiSelectComponent;
   readonly beginnerRadio: Locator;
   readonly intermediateRadio: Locator;
@@ -17,7 +20,10 @@ export class TalkFormComponent extends PageObject {
     const parent = isEdit ? page.getByRole('dialog') : page;
     this.titleInput = parent.getByLabel('Title');
     this.abstractInput = parent.getByLabel('Abstract');
+    this.referencesToggle = parent.getByRole('button', { name: 'Add slides, videos and references' });
     this.referencesInput = parent.getByLabel('References');
+    this.slidesUrlInput = parent.getByLabel('Slides link');
+    this.videoUrlInput = parent.getByLabel('Video link');
     this.languageSelect = this.multiSelectInput('Languages');
     this.beginnerRadio = parent.getByRole('radio', { name: /beginner/i });
     this.intermediateRadio = parent.getByRole('radio', { name: /intermediate/i });
@@ -28,12 +34,29 @@ export class TalkFormComponent extends PageObject {
     await this.titleInput.waitFor();
   }
 
-  async fillForm(title: string, abstract: string, level?: string, language?: string, references?: string) {
+  async fillForm(
+    title: string,
+    abstract: string,
+    level?: string,
+    language?: string,
+    references?: string,
+    slidesUrl?: string,
+    videoUrl?: string,
+  ) {
     await this.titleInput.fill(title);
     await this.abstractInput.fill(abstract);
     if (level) await this.radioInput(level).click();
     if (language) await this.languageSelect.select([language]);
+    if (references || slidesUrl || videoUrl) await this.expandReferences();
     if (references) await this.referencesInput.fill(references);
+    if (slidesUrl) await this.slidesUrlInput.fill(slidesUrl);
+    if (videoUrl) await this.videoUrlInput.fill(videoUrl);
+  }
+
+  async expandReferences() {
+    await this.referencesToggle.waitFor();
+    if (await this.referencesInput.isVisible()) return;
+    await this.referencesToggle.click();
   }
 
   formatCheckbox(name: string) {

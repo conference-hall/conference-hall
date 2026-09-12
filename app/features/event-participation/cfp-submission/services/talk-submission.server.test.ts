@@ -30,6 +30,8 @@ describe('TalkSubmission', () => {
         title: 'New title',
         abstract: 'New abstract',
         references: 'New reference',
+        slidesUrl: 'https://speakerdeck.com/jane/talk',
+        videoUrl: 'https://youtube.com/watch?v=abc',
         languages: ['en'],
         level: TalkLevel.ADVANCED,
       };
@@ -40,6 +42,8 @@ describe('TalkSubmission', () => {
       expect(talk?.title).toEqual(data.title);
       expect(talk?.abstract).toEqual(data.abstract);
       expect(talk?.references).toEqual(data.references);
+      expect(talk?.slidesUrl).toEqual(data.slidesUrl);
+      expect(talk?.videoUrl).toEqual(data.videoUrl);
       expect(talk?.languages).toEqual(data.languages);
       expect(talk?.level).toEqual(data.level);
       expect(talk?.speakers[0].id).toEqual(speaker.id);
@@ -49,6 +53,8 @@ describe('TalkSubmission', () => {
       expect(proposal?.title).toEqual(data.title);
       expect(proposal?.abstract).toEqual(data.abstract);
       expect(proposal?.references).toEqual(data.references);
+      expect(proposal?.slidesUrl).toEqual(data.slidesUrl);
+      expect(proposal?.videoUrl).toEqual(data.videoUrl);
       expect(proposal?.isDraft).toEqual(true);
       expect(proposal?.eventId).toEqual(event.id);
       expect(proposal?.languages).toEqual(data.languages);
@@ -66,6 +72,8 @@ describe('TalkSubmission', () => {
         title: 'New title',
         abstract: 'New abstract',
         references: 'New reference',
+        slidesUrl: null,
+        videoUrl: null,
         languages: ['de'],
         level: TalkLevel.ADVANCED,
       };
@@ -92,6 +100,29 @@ describe('TalkSubmission', () => {
       expect(proposal?.speakers.map((s) => s.userId)).toEqual(expect.arrayContaining([speaker.id, speaker2.id]));
     });
 
+    it('updates the slides and video links of an existing draft proposal', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'] });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker], traits: ['with-links'] });
+      await proposalFactory({ event, talk, traits: ['draft'] });
+
+      const data = {
+        title: talk.title,
+        abstract: talk.abstract,
+        references: talk.references,
+        slidesUrl: 'https://noti.st/jane/deck',
+        videoUrl: null,
+        languages: ['en'],
+        level: talk.level,
+      };
+
+      await TalkSubmission.for(speaker.id, event.slug).saveDraft(talk.id, data);
+
+      const proposal = await db.proposal.findFirst({ where: { talkId: talk.id } });
+      expect(proposal?.slidesUrl).toEqual('https://noti.st/jane/deck');
+      expect(proposal?.videoUrl).toBeNull();
+    });
+
     it('throws an error when talk not found', async () => {
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
@@ -99,6 +130,8 @@ describe('TalkSubmission', () => {
         title: 'New title',
         abstract: 'New abstract',
         references: 'New reference',
+        slidesUrl: null,
+        videoUrl: null,
         languages: ['en'],
         level: TalkLevel.ADVANCED,
       };
@@ -116,6 +149,8 @@ describe('TalkSubmission', () => {
         title: 'New title',
         abstract: 'New abstract',
         references: 'New reference',
+        slidesUrl: null,
+        videoUrl: null,
         languages: ['en'],
         level: TalkLevel.ADVANCED,
       };
@@ -132,6 +167,8 @@ describe('TalkSubmission', () => {
         title: 'New title',
         abstract: 'New abstract',
         references: 'New reference',
+        slidesUrl: null,
+        videoUrl: null,
         languages: ['en'],
         level: TalkLevel.ADVANCED,
       };
@@ -146,6 +183,8 @@ describe('TalkSubmission', () => {
         title: 'New title',
         abstract: 'New abstract',
         references: 'New reference',
+        slidesUrl: null,
+        videoUrl: null,
         languages: ['en'],
         level: TalkLevel.ADVANCED,
       };
@@ -334,8 +373,13 @@ describe('TalkSubmission', () => {
       const category = await eventCategoryFactory({ event });
       const speaker = await userFactory();
       const speaker2 = await userFactory();
-      const talk = await talkFactory({ speakers: [speaker, speaker2] });
-      const proposal = await proposalFactory({ event, talk, formats: [format], categories: [category] });
+      const talk = await talkFactory({ speakers: [speaker, speaker2], traits: ['with-links'] });
+      const proposal = await proposalFactory({
+        event,
+        talk,
+        formats: [format],
+        categories: [category],
+      });
 
       const result = await TalkSubmission.for(speaker.id, event.slug).get(talk.id);
 
@@ -346,6 +390,8 @@ describe('TalkSubmission', () => {
         languages: proposal.languages,
         level: proposal.level,
         references: proposal.references,
+        slidesUrl: proposal.slidesUrl,
+        videoUrl: proposal.videoUrl,
         invitationLink: `${APP_URL}/invite/proposal/${proposal.invitationCode}`,
         createdAt: proposal.createdAt,
         isOwner: true,

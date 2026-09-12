@@ -53,6 +53,8 @@ export class ProposalReview {
       title: proposal.title,
       abstract: proposal.abstract,
       references: proposal.references,
+      slidesUrl: proposal.slidesUrl,
+      videoUrl: proposal.videoUrl,
       level: proposal.level,
       deliberationStatus: proposal.deliberationStatus,
       publicationStatus: proposal.publicationStatus,

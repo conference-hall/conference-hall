@@ -58,6 +58,8 @@ export class ProposalManagement {
           title: data.title,
           abstract: data.abstract,
           references: data.references,
+          slidesUrl: data.slidesUrl,
+          videoUrl: data.videoUrl,
           languages: data.languages,
           level: data.level,
           event: { connect: { id: event.id } },

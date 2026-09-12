@@ -39,6 +39,8 @@ export class SpeakerProposal {
       abstract: proposal.abstract,
       level: proposal.level,
       references: proposal.references,
+      slidesUrl: proposal.slidesUrl,
+      videoUrl: proposal.videoUrl,
       status: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
       submittedAt: proposal.submittedAt,
       languages: proposal.languages as Languages,

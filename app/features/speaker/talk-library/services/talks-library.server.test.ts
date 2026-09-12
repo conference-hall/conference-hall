@@ -112,6 +112,8 @@ describe('TalksLibrary', () => {
         title: 'Talk title',
         abstract: 'Talk abstract',
         references: 'Talk references',
+        slidesUrl: 'https://speakerdeck.com/jane/talk',
+        videoUrl: 'https://youtube.com/watch?v=abc',
         languages: ['fr'],
         level: 'ADVANCED',
       });
@@ -119,6 +121,8 @@ describe('TalksLibrary', () => {
       expect(talk?.title).toBe('Talk title');
       expect(talk?.abstract).toBe('Talk abstract');
       expect(talk?.references).toBe('Talk references');
+      expect(talk?.slidesUrl).toBe('https://speakerdeck.com/jane/talk');
+      expect(talk?.videoUrl).toBe('https://youtube.com/watch?v=abc');
       expect(talk?.languages).toEqual(['fr']);
       expect(talk?.level).toBe('ADVANCED');
       expect(talk?.creatorId).toBe(speakerUser.id);
@@ -133,6 +137,8 @@ describe('TalksLibrary types', () => {
       title: 'Hello world',
       abstract: 'Welcome to the world!',
       references: 'This is my world.',
+      slidesUrl: 'https://speakerdeck.com/jane/talk',
+      videoUrl: 'https://youtube.com/watch?v=abc',
       languages: ['en', 'fr'],
       level: 'ADVANCED',
     });
@@ -141,6 +147,8 @@ describe('TalksLibrary types', () => {
       title: 'Hello world',
       abstract: 'Welcome to the world!',
       references: 'This is my world.',
+      slidesUrl: 'https://speakerdeck.com/jane/talk',
+      videoUrl: 'https://youtube.com/watch?v=abc',
       languages: ['en', 'fr'],
       level: 'ADVANCED',
     });

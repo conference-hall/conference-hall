@@ -4,11 +4,21 @@ import { z } from 'zod';
 export const TalksListFilterSchema = z.enum(['all', 'archived', 'active']).optional();
 export type TalksListFilter = z.infer<typeof TalksListFilterSchema>;
 
+// Talk links
+export const TalkUrlSchema = z
+  .url({ protocol: /^https$/, error: 'Enter a valid link starting with https://' })
+  .trim()
+  .max(500, 'Link is too long (500 characters max).')
+  .nullable()
+  .default(null);
+
 // Talk
 export const TalkSaveSchema = z.object({
   title: z.string().trim().min(1),
   abstract: z.string().trim().min(1),
   references: z.string().nullable().default(null),
+  slidesUrl: TalkUrlSchema,
+  videoUrl: TalkUrlSchema,
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable().default(null),
   languages: z.array(z.string()),
 });

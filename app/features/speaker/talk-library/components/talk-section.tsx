@@ -1,12 +1,16 @@
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/16/solid';
+import { VideoCameraIcon, PresentationChartBarIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '~/design-system/badges.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
+import { ExternalLink } from '~/design-system/links.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H1, Subtitle, Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/design-system/utils/client-only.tsx';
 import { formatDatetime } from '~/shared/datetimes/datetimes.ts';
+import { parseTalkLinks, type TalkLink } from '~/shared/formatters/talk-links.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { TalkLevel } from '../../../../../prisma/generated/client.ts';
 import type { SpeakerProps } from './speakers.tsx';
@@ -18,6 +22,8 @@ type Props = {
     title: string;
     abstract: string;
     references: string | null;
+    slidesUrl: string | null;
+    videoUrl: string | null;
     level: TalkLevel | null;
     languages: Languages;
     routeId?: string;
@@ -53,6 +59,7 @@ export function TalkSection({
 }: Props) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
+  const links = parseTalkLinks(talk);
 
   return (
     <Card as="section">
@@ -160,6 +167,14 @@ export function TalkSection({
           </div>
         )}
 
+        {links.length > 0 && (
+          <div className="flex flex-col gap-2 sm:flex-row">
+            {links.map((link) => (
+              <TalkLinkCard key={link.kind} link={link} />
+            ))}
+          </div>
+        )}
+
         <div className="flex flex-wrap gap-2">
           {talk.level && <Badge color="indigo">{t(`common.level.${talk.level}`)}</Badge>}
           {talk.languages.map((lang) => (
@@ -176,5 +191,28 @@ export function TalkSection({
 
       {children}
     </Card>
+  );
+}
+
+function TalkLinkCard({ link }: { link: TalkLink }) {
+  const { t } = useTranslation();
+  const Icon = link.kind === 'slides' ? PresentationChartBarIcon : VideoCameraIcon;
+
+  return (
+    <ExternalLink
+      href={link.url}
+      untrusted={link.provider === null}
+      variant="secondary"
+      className="flex min-w-0 flex-1 items-center gap-3 rounded-md border border-gray-200 p-3 no-underline outline-0 focus-within:ring-2 focus-within:ring-indigo-600 hover:bg-gray-50"
+    >
+      <Icon className="size-5 shrink-0 text-gray-400" aria-hidden="true" />
+
+      <Text as="span" size="s" weight="medium">
+        {`${t(`talk.links.${link.kind}.label`)} · ${link.provider ?? link.host}`}
+      </Text>
+
+      <ArrowTopRightOnSquareIcon className="ml-auto size-4 shrink-0 text-gray-400" aria-hidden="true" />
+      <span className="sr-only">{t('common.opens-new-tab')}</span>
+    </ExternalLink>
   );
 }
