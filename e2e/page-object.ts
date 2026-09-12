@@ -41,6 +41,10 @@ export class PageObject {
     return this.page.getByRole('radio', { name });
   }
 
+  async checkRadio(name: string, options?: { force?: boolean }) {
+    await this.radioInput(name).check(options);
+  }
+
   checkboxInput(name: string) {
     return this.page.getByRole('checkbox', { name });
   }

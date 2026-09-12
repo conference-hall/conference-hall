@@ -18,13 +18,14 @@ type Option = { value: string; label: string };
 type Props = {
   name: string;
   label: string;
+  hint?: string;
   placeholder: string;
   options: Array<Option>;
   defaultValues: string[];
   className?: string;
 };
 
-export default function MultiSelect({ name, label, placeholder, options, defaultValues, className }: Props) {
+export default function MultiSelect({ name, label, hint, placeholder, options, defaultValues, className }: Props) {
   const { t } = useTranslation();
   const [selected, setSelected] = useState<string[]>(defaultValues);
   const [searchTerm, setSearchTerm] = useState('');
@@ -43,7 +44,11 @@ export default function MultiSelect({ name, label, placeholder, options, default
 
   return (
     <Field className={className}>
-      <Label className="block text-sm leading-6 font-medium text-gray-900">{label}</Label>
+      <Label className="block text-sm leading-6 font-medium text-gray-900">
+        {label}
+
+        {hint && <span className="ml-1 text-sm font-normal text-gray-500">{hint}</span>}
+      </Label>
 
       <Combobox name={name} value={selected} onChange={handleSelect} multiple immediate>
         <div className="relative mt-2">

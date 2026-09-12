@@ -25,7 +25,7 @@ export function FieldsetGroup({ legend, hint, inline, className, children, error
 
           {hint && (
             <Text as="span" size="s" weight="normal" variant="secondary" className="ml-1">
-              – {hint}
+              {hint}
             </Text>
           )}
         </Text>

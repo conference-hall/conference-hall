@@ -44,8 +44,8 @@ export class SpeakerProposal {
       status: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
       submittedAt: proposal.submittedAt,
       languages: proposal.languages as Languages,
-      formats: proposal.formats.map(({ id, name }) => ({ id, name })),
-      categories: proposal.categories.map(({ id, name }) => ({ id, name })),
+      formats: proposal.formats.map(({ id, name, description }) => ({ id, name, description })),
+      categories: proposal.categories.map(({ id, name, description }) => ({ id, name, description })),
       invitationLink: proposal.invitationLink,
       isOwner: this.userId === proposal?.talk?.creatorId,
       speakers: proposal.speakers.map((speaker) => ({

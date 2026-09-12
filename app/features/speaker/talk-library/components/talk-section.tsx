@@ -31,8 +31,6 @@ type Props = {
     invitationLink?: string;
     archived?: boolean;
     archivedAt?: Date | null;
-    formats?: Array<{ id: string; name: string }>;
-    categories?: Array<{ id: string; name: string }>;
     createdAt?: Date;
     submittedAt?: Date;
   };
@@ -41,8 +39,6 @@ type Props = {
   children?: ReactNode;
   canEditSpeakers?: boolean;
   showSpeakers?: boolean;
-  showFormats?: boolean;
-  showCategories?: boolean;
   referencesOpen?: boolean;
 };
 
@@ -53,8 +49,6 @@ export function TalkSection({
   actions,
   canEditSpeakers = false,
   showSpeakers = false,
-  showFormats = false,
-  showCategories = false,
   referencesOpen = false,
 }: Props) {
   const { t, i18n } = useTranslation();
@@ -145,32 +139,10 @@ export function TalkSection({
           </Markdown>
         </div>
 
-        {showFormats && talk.formats && talk.formats?.length > 0 && (
-          <div>
-            <dt className="text-sm leading-6 font-medium text-gray-900">{t('common.formats')}</dt>
-            <dd className="text-sm leading-6 text-gray-700">
-              {talk.formats?.map(({ id, name }) => (
-                <p key={id}>{name}</p>
-              ))}
-            </dd>
-          </div>
-        )}
-
-        {showCategories && talk.categories && talk.categories?.length > 0 && (
-          <div>
-            <dt className="text-sm leading-6 font-medium text-gray-900">{t('common.categories')}</dt>
-            <dd className="text-sm leading-6 text-gray-700">
-              {talk.categories?.map(({ id, name }) => (
-                <p key={id}>{name}</p>
-              ))}
-            </dd>
-          </div>
-        )}
-
         {links.length > 0 && (
-          <div className="flex flex-col gap-2 sm:flex-row">
+          <div className="flex flex-wrap gap-2">
             {links.map((link) => (
-              <TalkLinkCard key={link.kind} link={link} />
+              <TalkLinkChip key={link.kind} link={link} />
             ))}
           </div>
         )}
@@ -194,7 +166,7 @@ export function TalkSection({
   );
 }
 
-function TalkLinkCard({ link }: { link: TalkLink }) {
+function TalkLinkChip({ link }: { link: TalkLink }) {
   const { t } = useTranslation();
   const Icon = link.kind === 'slides' ? PresentationChartBarIcon : VideoCameraIcon;
 
@@ -203,15 +175,15 @@ function TalkLinkCard({ link }: { link: TalkLink }) {
       href={link.url}
       untrusted={link.provider === null}
       variant="secondary"
-      className="flex min-w-0 flex-1 items-center gap-3 rounded-md border border-gray-200 p-3 no-underline outline-0 focus-within:ring-2 focus-within:ring-indigo-600 hover:bg-gray-50"
+      className="flex min-w-0 items-center gap-2 rounded-md border border-gray-200 px-2.5 py-1.5 no-underline outline-0 focus-within:ring-2 focus-within:ring-indigo-600 hover:bg-gray-50"
     >
-      <Icon className="size-5 shrink-0 text-gray-400" aria-hidden="true" />
+      <Icon className="size-4 shrink-0 text-gray-400" aria-hidden="true" />
 
-      <Text as="span" size="s" weight="medium">
+      <Text as="span" size="xs" weight="medium" truncate>
         {`${t(`talk.links.${link.kind}.label`)} · ${link.provider ?? link.host}`}
       </Text>
 
-      <ArrowTopRightOnSquareIcon className="ml-auto size-4 shrink-0 text-gray-400" aria-hidden="true" />
+      <ArrowTopRightOnSquareIcon className="size-4 shrink-0 text-gray-400" aria-hidden="true" />
       <span className="sr-only">{t('common.opens-new-tab')}</span>
     </ExternalLink>
   );
