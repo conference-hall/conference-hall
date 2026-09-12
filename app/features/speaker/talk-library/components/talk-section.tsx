@@ -200,6 +200,7 @@ function TalkLinkCard({ link }: { link: TalkLink }) {
   return (
     <ExternalLink
       href={link.url}
+      untrusted={link.provider === null}
       variant="secondary"
       className="flex min-w-0 flex-1 items-center gap-3 rounded-md border border-gray-200 p-3 no-underline hover:border-indigo-300 hover:bg-gray-50"
     >
