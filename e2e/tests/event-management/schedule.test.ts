@@ -33,6 +33,15 @@ test('displays event schedule', async ({ page, context }) => {
   await expect(page.getByText('09:00 to 18:00')).toBeVisible();
   await expect(page.getByText('Main stage')).toBeVisible();
 
+  // Create a session on the main stage
+  await schedulePage.submitNewSession('Opening keynote');
+  await expect(schedulePage.session('Opening keynote')).toBeVisible();
+
+  // A session placed on the same track and time slot is refused
+  await schedulePage.submitNewSession('Second keynote');
+  await expect(schedulePage.sessionConflictError).toBeVisible();
+  await schedulePage.clickOnCancelSession();
+
   // Go to the next day
   await schedulePage.clickOnNextDay();
   await expect(page.getByRole('button', { name: 'January 2, 2022' })).toBeVisible();

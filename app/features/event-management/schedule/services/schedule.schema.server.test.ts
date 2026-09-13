@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { ScheduleCreateSchema, ScheduleDisplayTimesUpdateSchema } from './schedule.schema.server.ts';
+import {
+  ScheduleCreateSchema,
+  ScheduleDisplayTimesUpdateSchema,
+  ScheduleSessionCreateSchema,
+  ScheduleSessionUpdateSchema,
+} from './schedule.schema.server.ts';
 
 describe('EventSchedule types', () => {
   describe('#ScheduleCreateSchema', () => {
@@ -94,6 +99,74 @@ describe('EventSchedule types', () => {
       expect(result.success).toBe(false);
       expect(z.flattenError(result.error!).fieldErrors).toEqual({
         displayStartMinutes: ['Displayed start in minutes must be before end in minutes.'],
+      });
+    });
+  });
+
+  describe('#ScheduleSessionCreateSchema', () => {
+    it('validates a session time slot', async () => {
+      const result = ScheduleSessionCreateSchema.safeParse({
+        trackId: 'track-1',
+        start: '2024-01-01T09:00:00.000Z',
+        end: '2024-01-01T10:00:00.000Z',
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.data?.start).toEqual(new Date('2024-01-01T09:00:00.000Z'));
+      expect(result.data?.end).toEqual(new Date('2024-01-01T10:00:00.000Z'));
+    });
+
+    it('returns error when end is before start', async () => {
+      const result = ScheduleSessionCreateSchema.safeParse({
+        trackId: 'track-1',
+        start: '2024-01-01T10:00:00.000Z',
+        end: '2024-01-01T09:00:00.000Z',
+      });
+
+      expect(result.success).toBe(false);
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
+        start: ['Session start must be before the end.'],
+      });
+    });
+
+    it('returns error when end equals start', async () => {
+      const result = ScheduleSessionCreateSchema.safeParse({
+        trackId: 'track-1',
+        start: '2024-01-01T09:00:00.000Z',
+        end: '2024-01-01T09:00:00.000Z',
+      });
+
+      expect(result.success).toBe(false);
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
+        start: ['Session start must be before the end.'],
+      });
+    });
+  });
+
+  describe('#ScheduleSessionUpdateSchema', () => {
+    it('validates a session time slot', async () => {
+      const result = ScheduleSessionUpdateSchema.safeParse({
+        id: 'session-1',
+        trackId: 'track-1',
+        start: '2024-01-01T09:00:00.000Z',
+        end: '2024-01-01T10:00:00.000Z',
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.data?.id).toBe('session-1');
+    });
+
+    it('returns error when end equals start', async () => {
+      const result = ScheduleSessionUpdateSchema.safeParse({
+        id: 'session-1',
+        trackId: 'track-1',
+        start: '2024-01-01T09:00:00.000Z',
+        end: '2024-01-01T09:00:00.000Z',
+      });
+
+      expect(result.success).toBe(false);
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
+        start: ['Session start must be before the end.'],
       });
     });
   });

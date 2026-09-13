@@ -1,19 +1,19 @@
 import { useFetchers, useSubmit } from 'react-router';
-import { areTimeSlotsOverlapping } from '~/shared/datetimes/timeslots.ts';
+import { moveTimeSlotStart } from '~/shared/datetimes/timeslots.ts';
 import { timezoneToUtc, utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
+import { SessionPlacement } from '../models/session-placement.ts';
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
 export function useSessions(initialSessions: Array<SessionData>, timezone: string) {
   const sessions = useOptimisticSessions(initialSessions, timezone);
+  const placement = new SessionPlacement(sessions);
 
   const submit = useSubmit();
 
   const onAdd = async (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => {
-    const conflicting = sessions.some(
-      (s) => s.trackId === session.trackId && areTimeSlotsOverlapping(session.timeslot, s.timeslot),
-    );
-    if (conflicting) return false;
+    const outcome = placement.place({ trackId: session.trackId, timeslot: session.timeslot });
+    if (outcome.status === 'conflict') return false;
 
     const id = crypto.randomUUID();
     const formData = new FormData();
@@ -65,21 +65,31 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
   };
 
   const onUpdate = async (updatedSession: ScheduleSession) => {
-    const conflicting = sessions.some(
-      (s) =>
-        s.id !== updatedSession.id &&
-        s.trackId === updatedSession.trackId &&
-        areTimeSlotsOverlapping(updatedSession.timeslot, s.timeslot),
+    const outcome = placement.place(
+      { trackId: updatedSession.trackId, timeslot: updatedSession.timeslot },
+      updatedSession.id,
     );
-    if (conflicting) return false;
+    if (outcome.status === 'conflict') return false;
 
     await update(updatedSession);
     return true;
   };
 
   const onSwitch = async (source: ScheduleSession, target: ScheduleSession) => {
-    await update({ ...source, trackId: target.trackId, timeslot: target.timeslot });
-    await update({ ...target, trackId: source.trackId, timeslot: source.timeslot });
+    const outcome = placement.swap(source, target);
+    if (outcome.status === 'conflict') return false;
+
+    await submit(
+      { intent: 'switch-sessions', sourceId: source.id, targetId: target.id },
+      {
+        method: 'POST',
+        navigate: false,
+        fetcherKey: `session:${source.id}`,
+        flushSync: true,
+        preventScrollReset: true,
+      },
+    );
+    return true;
   };
 
   const onDelete = async (session: ScheduleSession) => {
@@ -145,6 +155,29 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
   for (const session of pendingSessions) {
     const current = sessionsById.get(session.id);
     sessionsById.set(session.id, { ...session, proposal: current?.proposal });
+  }
+
+  // Pending switch
+  const switchFetchers = fetchers.filter((fetcher): fetcher is PendingSession => {
+    if (!fetcher.formData) return false;
+    return fetcher.formData.get('intent') === 'switch-sessions';
+  });
+
+  for (const fetcher of switchFetchers) {
+    const source = sessionsById.get(String(fetcher.formData.get('sourceId')));
+    const target = sessionsById.get(String(fetcher.formData.get('targetId')));
+    if (!source || !target) continue;
+
+    sessionsById.set(source.id, {
+      ...source,
+      trackId: target.trackId,
+      timeslot: moveTimeSlotStart(source.timeslot, target.timeslot.start),
+    });
+    sessionsById.set(target.id, {
+      ...target,
+      trackId: source.trackId,
+      timeslot: moveTimeSlotStart(target.timeslot, source.timeslot.start),
+    });
   }
 
   // Pending delete

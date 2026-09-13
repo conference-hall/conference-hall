@@ -22,13 +22,15 @@ export class EventScheduleExport {
   }
 
   async toJson() {
-    const schedule = await db.schedule.findFirst({ where: { eventId: this.event.id }, include: { sessions: true } });
-    if (!schedule) return null;
-
-    const sessions = await db.scheduleSession.findMany({
-      where: { scheduleId: schedule.id },
-      include: { proposal: { include: { speakers: true, formats: true, categories: true } }, track: true },
+    const schedule = await db.schedule.findFirst({
+      where: { eventId: this.event.id },
+      include: {
+        sessions: {
+          include: { proposal: { include: { speakers: true, formats: true, categories: true } }, track: true },
+        },
+      },
     });
+    if (!schedule) return null;
 
     const days = getDatesRange(schedule.start, schedule.end);
 
@@ -36,7 +38,7 @@ export class EventScheduleExport {
       name: schedule.name,
       days: days.map((day) => utcToTimezone(day, schedule.timezone).toISOString()),
       timeZone: schedule.timezone,
-      sessions: sessions.map(({ proposal, track, ...session }) => ({
+      sessions: schedule.sessions.map(({ proposal, track, ...session }) => ({
         id: session.id,
         start: utcToTimezone(session.start, schedule.timezone).toISOString(),
         end: utcToTimezone(session.end, schedule.timezone).toISOString(),

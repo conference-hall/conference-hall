@@ -37,7 +37,9 @@ export class TalksLibrary {
 
 ## Constructor Injection
 
-- Accept authorization context (`AuthorizedTeam` or `AuthorizedEvent`) or scalar IDs as constructor params
+- Accept authorization context (`AuthorizedTeam` or `AuthorizedEvent`), scalar IDs, or the values the factory
+  already narrowed the context down to (`Event`, `userId`)
+- Make the constructor `private` when the factory checks permissions, so an unauthorized instance cannot be built
 - Store as `private` fields
 - Never inject DB — use `db` singleton directly
 
@@ -53,7 +55,29 @@ Use Prisma methods directly — no repository abstraction layer.
 
 ## Permission Checks
 
-Check permissions at start of service methods by destructuring from authorization context:
+Check permissions either in the static factory or at the start of each method, never in both.
+
+**In the factory** when every operation of the class needs the same permissions. The constructor is `private`, so
+the operations are guaranteed to be authorized without repeating the check:
+
+```typescript
+export class EventSchedule {
+  private constructor(private event: Event) {}
+
+  static for(authorizedEvent: AuthorizedEvent) {
+    const { event, permissions } = authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
+    return new EventSchedule(event);
+  }
+}
+```
+
+The factory throws synchronously, so the error surfaces when the service is built, not when an operation is
+awaited. Tests assert it with `expect(() => Service.for(ctx)).toThrow(ErrorClass)`.
+
+**At the start of each method** when operations need different permissions, by destructuring from the
+authorization context:
 
 ```typescript
 async create(data: EventCreateData) {

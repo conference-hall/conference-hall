@@ -63,7 +63,7 @@ export function SessionForm({
       setError(null);
       onFinish();
     } else {
-      setError(t('event-management.schedule.edit-session.errors.overlap'));
+      setError(t('event-management.schedule.errors.session-conflict'));
     }
   };
 

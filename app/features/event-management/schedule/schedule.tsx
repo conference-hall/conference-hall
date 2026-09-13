@@ -9,12 +9,14 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import {
   ScheduleDisplayTimesUpdateSchema,
   ScheduleSessionCreateSchema,
+  ScheduleSessionsSwitchSchema,
   ScheduleSessionUpdateSchema,
   ScheduleTracksSaveSchema,
   SchedulSessionIdSchema,
 } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
+import { SessionConflictError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/schedule.ts';
@@ -47,41 +49,54 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   const form = await request.formData();
   const intent = form.get('intent');
 
-  switch (intent) {
-    case 'add-session': {
-      const result = parseWithZod(form, { schema: ScheduleSessionCreateSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await eventSchedule.addSession(result.value);
-      break;
+  try {
+    switch (intent) {
+      case 'add-session': {
+        const result = parseWithZod(form, { schema: ScheduleSessionCreateSchema });
+        if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+        await eventSchedule.addSession(result.value);
+        break;
+      }
+      case 'update-session': {
+        const result = parseWithZod(form, { schema: ScheduleSessionUpdateSchema });
+        if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+        await eventSchedule.updateSession(result.value);
+        break;
+      }
+      case 'switch-sessions': {
+        const result = parseWithZod(form, { schema: ScheduleSessionsSwitchSchema });
+        if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+        await eventSchedule.switchSessions(result.value.sourceId, result.value.targetId);
+        break;
+      }
+      case 'delete-session': {
+        const result = SchedulSessionIdSchema.safeParse(form.get('id'));
+        if (!result.success) return toast('error', i18n.t('error.global'));
+        await eventSchedule.deleteSession(result.data);
+        break;
+      }
+      case 'update-display-times': {
+        const result = parseWithZod(form, { schema: ScheduleDisplayTimesUpdateSchema });
+        if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+        await eventSchedule.update(result.value);
+        break;
+      }
+      case 'save-tracks': {
+        const result = parseWithZod(form, { schema: ScheduleTracksSaveSchema });
+        if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+        await eventSchedule.saveTracks(result.value.tracks);
+        break;
+      }
+      case 'delete-schedule': {
+        await eventSchedule.delete();
+        break;
+      }
     }
-    case 'update-session': {
-      const result = parseWithZod(form, { schema: ScheduleSessionUpdateSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await eventSchedule.updateSession(result.value);
-      break;
+  } catch (error) {
+    if (error instanceof SessionConflictError) {
+      return toast('error', i18n.t('event-management.schedule.errors.session-conflict'));
     }
-    case 'delete-session': {
-      const result = SchedulSessionIdSchema.safeParse(form.get('id'));
-      if (!result.success) return toast('error', i18n.t('error.global'));
-      await eventSchedule.deleteSession(result.data);
-      break;
-    }
-    case 'update-display-times': {
-      const result = parseWithZod(form, { schema: ScheduleDisplayTimesUpdateSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await eventSchedule.update(result.value);
-      break;
-    }
-    case 'save-tracks': {
-      const result = parseWithZod(form, { schema: ScheduleTracksSaveSchema });
-      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
-      await eventSchedule.saveTracks(result.value.tracks);
-      break;
-    }
-    case 'delete-schedule': {
-      await eventSchedule.delete();
-      break;
-    }
+    throw error;
   }
   return null;
 };

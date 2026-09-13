@@ -8,18 +8,18 @@ import { addMinutes } from 'date-fns';
 import type { ReactNode } from 'react';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { formatDate, formatTime, toDateInput } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import {
   getDailyTimeSlots,
   haveSameStartDate,
-  isAfterTimeSlot,
   isNextTimeslotInWindow,
   isTimeSlotIncluded,
-  moveTimeSlotStart,
 } from '~/shared/datetimes/timeslots.ts';
 import { getGMTOffset } from '~/shared/datetimes/timezone.ts';
 import { deepEqual } from '~/shared/utils/deep-equal.ts';
+import { type PlacementOutcome, SessionPlacement } from '../../models/session-placement.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { HOUR_INTERVAL, SLOT_INTERVAL } from './config.ts';
 import { getSessionHeight, getTimeslotHeight, topInsideDroppable } from './helpers.ts';
@@ -34,7 +34,7 @@ type ScheduleProps = {
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
   onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<boolean>;
   onUpdateSession: (session: ScheduleSession) => Promise<boolean>;
-  onSwitchSessions: (source: ScheduleSession, target: ScheduleSession) => Promise<void>;
+  onSwitchSessions: (source: ScheduleSession, target: ScheduleSession) => Promise<boolean>;
   zoomLevel: number;
 };
 
@@ -50,6 +50,21 @@ export default function Schedule({
   onSwitchSessions,
   zoomLevel,
 }: ScheduleProps) {
+  const { t } = useTranslation();
+  const placement = new SessionPlacement(sessions);
+
+  const reportConflict = () => toast.error(t('event-management.schedule.errors.session-conflict'));
+
+  const applyOutcome = async (session: ScheduleSession, outcome: PlacementOutcome) => {
+    if (outcome.status === 'conflict') return reportConflict();
+    const applied = await onUpdateSession({
+      ...session,
+      trackId: outcome.placement.trackId,
+      timeslot: outcome.placement.timeslot,
+    });
+    if (!applied) reportConflict();
+  };
+
   return (
     <DragDropProvider
       sensors={[PointerSensor]}
@@ -64,15 +79,14 @@ export default function Schedule({
 
         if (source.type === 'resize-session' && target.type === 'timeslot-drop') {
           const { timeslot: targetTimeslot } = target.data || {};
-          const updatedSession = safeSessionResizeToTimeslot(session, targetTimeslot, sessions);
-          await onUpdateSession(updatedSession);
+          await applyOutcome(session, placement.resize(session, targetTimeslot.end));
         } else if (source.type === 'move-session' && target.type === 'timeslot-drop') {
           const { trackId, timeslot: targetTimeslot } = target.data || {};
-          const updatedSession = safeSessionMoveToTimeslot(session, trackId, targetTimeslot, sessions);
-          await onUpdateSession(updatedSession);
+          await applyOutcome(session, placement.move(session, { trackId, start: targetTimeslot.start }));
         } else if (source.type === 'move-session' && target.type === 'session-drop') {
           const { session: sessionTarget } = target.data || {};
-          await onSwitchSessions(session, sessionTarget);
+          const switched = await onSwitchSessions(session, sessionTarget);
+          if (!switched) reportConflict();
         }
       }}
     >
@@ -128,6 +142,7 @@ function ScheduleDay({
   const startTime = addMinutes(day, displayedTimes.start);
   const endTime = addMinutes(day, displayedTimes.end);
   const hours = getDailyTimeSlots(startTime, endTime, HOUR_INTERVAL, true);
+  const placement = new SessionPlacement(sessions);
 
   const [newSession, setNewSession] = useState<ScheduleSession | null>(null);
   const handleNewSession = useCallback(async () => {
@@ -205,11 +220,11 @@ function ScheduleDay({
                         (s) => s.trackId === track.id && isTimeSlotIncluded(timeslot, s.timeslot),
                       );
 
-                      // Check if the timeslot is allowed for a new session
+                      // Check if the timeslot is allowed for a new session: within the drawing window and free
                       const canCreateSession =
-                        !session &&
                         newSession?.trackId === track.id &&
-                        isNextTimeslotInWindow(newSession.timeslot, timeslot, SLOT_INTERVAL);
+                        isNextTimeslotInWindow(newSession.timeslot, timeslot, SLOT_INTERVAL) &&
+                        placement.place({ trackId: track.id, timeslot }).status === 'placed';
 
                       return (
                         <MemoizedTimeslot
@@ -421,53 +436,4 @@ function SessionWrapper({ session, renderSession, interval, zoomLevel }: Session
       />
     </>
   );
-}
-
-// Return a valid resized session according given target timeslot
-function safeSessionResizeToTimeslot(
-  session: ScheduleSession,
-  targetTimeslot: TimeSlot,
-  sessions: Array<ScheduleSession>,
-) {
-  const trackSessions = sessions
-    .filter((s) => s.trackId === session.trackId && s.id !== session.id)
-    .toSorted((a, b) => {
-      if (isAfterTimeSlot(a.timeslot, b.timeslot)) return 1;
-      return -1;
-    });
-
-  const sessionAfter = trackSessions.filter((s) => isAfterTimeSlot(s.timeslot, session.timeslot)).at(0);
-  let { start, end } = session.timeslot;
-
-  if (sessionAfter && targetTimeslot.end > sessionAfter.timeslot.start) {
-    end = sessionAfter.timeslot.start; // end cannot be after the next session
-  } else if (targetTimeslot.end <= start) {
-    end = addMinutes(start, SLOT_INTERVAL); // end cannot be before the start
-  } else {
-    end = targetTimeslot.end;
-  }
-  return { ...session, timeslot: { start, end } };
-}
-
-// Return a valid moved session according given target trackId and timeslot
-function safeSessionMoveToTimeslot(
-  session: ScheduleSession,
-  targetTrackId: string,
-  targetTimeslot: TimeSlot,
-  sessions: Array<ScheduleSession>,
-) {
-  const trackSessions = sessions
-    .filter((s) => s.trackId === targetTrackId && s.id !== session.id)
-    .toSorted((a, b) => {
-      if (isAfterTimeSlot(a.timeslot, b.timeslot)) return 1;
-      return -1;
-    });
-
-  let { start, end } = moveTimeSlotStart(session.timeslot, targetTimeslot.start);
-  const sessionAfter = trackSessions.filter((s) => isAfterTimeSlot(s.timeslot, { start, end })).at(0);
-
-  if (sessionAfter && end > sessionAfter.timeslot.start) {
-    end = sessionAfter.timeslot.start; // end cannot be after the next session
-  }
-  return { ...session, trackId: targetTrackId, timeslot: { start, end } };
 }
