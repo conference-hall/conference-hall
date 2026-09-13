@@ -1,9 +1,8 @@
 import type { AuthorizedApiEvent, AuthorizedEvent } from '~/shared/authorization/types.ts';
-import { getDatesRange } from '~/shared/datetimes/datetimes.ts';
-import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import { type Event, TalkLevel } from '../../../../../prisma/generated/client.ts';
+import { ScheduleTime } from '../../schedule/models/schedule-time.ts';
 
 export class EventScheduleExport {
   private constructor(private event: Event) {}
@@ -32,16 +31,16 @@ export class EventScheduleExport {
     });
     if (!schedule) return null;
 
-    const days = getDatesRange(schedule.start, schedule.end);
+    const scheduleTime = new ScheduleTime(schedule.timezone);
 
     return {
       name: schedule.name,
-      days: days.map((day) => utcToTimezone(day, schedule.timezone).toISOString()),
+      days: scheduleTime.days(schedule.start, schedule.end).map((day) => day.toISOString()),
       timeZone: schedule.timezone,
       sessions: schedule.sessions.map(({ proposal, track, ...session }) => ({
         id: session.id,
-        start: utcToTimezone(session.start, schedule.timezone).toISOString(),
-        end: utcToTimezone(session.end, schedule.timezone).toISOString(),
+        start: scheduleTime.fromUtc(session.start).toISOString(),
+        end: scheduleTime.fromUtc(session.end).toISOString(),
         track: track.name,
         title: proposal ? proposal.title : session.name,
         language: session.language || null,

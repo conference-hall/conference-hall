@@ -28,7 +28,7 @@ export default defineConfig({
   use: {
     baseURL: APP_URL,
     locale: 'en-GB',
-    timezoneId: 'Europe/Paris',
+    timezoneId: 'America/New_York',
     trace: 'on-first-retry',
     contextOptions: {
       reducedMotion: 'reduce',

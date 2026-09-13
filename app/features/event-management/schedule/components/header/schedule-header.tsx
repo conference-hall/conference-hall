@@ -3,6 +3,7 @@ import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/button.tsx';
+import type { ScheduleTime } from '../../models/schedule-time.ts';
 import { DisplayDays } from './display-days.tsx';
 import { DisplayTimes } from './display-times.tsx';
 import { OptionsMenu } from './options-menu.tsx';
@@ -11,6 +12,7 @@ import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 
 type Props = {
+  scheduleTime: ScheduleTime;
   scheduleDays: Array<Date>;
   displayedDays: Array<Date>;
   displayedTimes: { start: number; end: number };
@@ -22,6 +24,7 @@ type Props = {
 };
 
 export function ScheduleHeader({
+  scheduleTime,
   scheduleDays,
   displayedDays,
   displayedTimes,
@@ -44,6 +47,7 @@ export function ScheduleHeader({
     >
       <div className="flex shrink items-center gap-3">
         <DisplayDays
+          scheduleTime={scheduleTime}
           scheduleDays={scheduleDays}
           displayedDays={displayedDays}
           onChangeDisplayDays={onChangeDisplayDays}

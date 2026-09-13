@@ -36,6 +36,7 @@ test('displays event schedule', async ({ page, context }) => {
   // Create a session on the main stage
   await schedulePage.submitNewSession('Opening keynote');
   await expect(schedulePage.session('Opening keynote')).toBeVisible();
+  await expect(schedulePage.sessionBlock('Opening keynote')).toContainText('09:00');
 
   // A session placed on the same track and time slot is refused
   await schedulePage.submitNewSession('Second keynote');

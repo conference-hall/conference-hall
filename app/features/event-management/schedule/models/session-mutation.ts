@@ -1,7 +1,7 @@
 import { moveTimeSlotStart } from '~/shared/datetimes/timeslots.ts';
-import { timezoneToUtc, utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
-import type { ScheduleSession, SessionData } from '../components/schedule.types.ts';
+import type { ScheduleSession } from '../components/schedule.types.ts';
+import type { ScheduleTime } from './schedule-time.ts';
 
 // Owns the wire format of a Session mutation: for optimistic updates.
 // Time reference contract: sessions are given and returned in the Schedule timezone, the wire carries UTC.
@@ -19,12 +19,8 @@ type SessionIntent = (typeof SESSION_INTENTS)[keyof typeof SESSION_INTENTS];
 
 type PendingFetcher = { formData?: FormData };
 
-export function toScheduleSession({ start, end, ...session }: SessionData, timezone: string): ScheduleSession {
-  return { ...session, timeslot: { start: utcToTimezone(start, timezone), end: utcToTimezone(end, timezone) } };
-}
-
 export class SessionMutations {
-  constructor(private timezone: string) {}
+  constructor(private scheduleTime: ScheduleTime) {}
 
   add(session: Omit<ScheduleSession, 'id' | 'isCreating'>): SessionMutation {
     return this.sessionMutation(SESSION_INTENTS.add, { ...session, id: crypto.randomUUID() });
@@ -96,8 +92,8 @@ export class SessionMutations {
     formData.set('intent', intent);
     formData.set('id', session.id);
     formData.set('trackId', session.trackId);
-    formData.set('start', timezoneToUtc(session.timeslot.start, this.timezone).toISOString());
-    formData.set('end', timezoneToUtc(session.timeslot.end, this.timezone).toISOString());
+    formData.set('start', this.scheduleTime.toUtc(session.timeslot.start).toISOString());
+    formData.set('end', this.scheduleTime.toUtc(session.timeslot.end).toISOString());
     formData.set('color', session.color);
     formData.set('name', session.name ?? '');
     formData.set('language', session.language ?? '');
@@ -117,8 +113,8 @@ export class SessionMutations {
       id: String(formData.get('id')),
       trackId: String(formData.get('trackId')),
       timeslot: {
-        start: utcToTimezone(String(formData.get('start')), this.timezone),
-        end: utcToTimezone(String(formData.get('end')), this.timezone),
+        start: this.scheduleTime.fromUtc(new Date(String(formData.get('start')))),
+        end: this.scheduleTime.fromUtc(new Date(String(formData.get('end')))),
       },
       color: String(formData.get('color') ?? 'gray'),
       name: String(formData.get('name') ?? '') || null,

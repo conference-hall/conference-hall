@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
@@ -29,6 +29,7 @@ import { SessionBlock } from './components/session/session-block.tsx';
 import { SessionModal } from './components/session/session-modal.tsx';
 import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
+import { ScheduleTime } from './models/schedule-time.ts';
 import { SESSION_INTENTS } from './models/session-mutation.ts';
 import { EventSchedule } from './services/schedule.server.ts';
 
@@ -104,8 +105,9 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
 
 export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const sessions = useSessions(schedule.sessions, schedule.timezone);
-  const settings = useDisplaySettings(schedule);
+  const scheduleTime = useMemo(() => new ScheduleTime(schedule.timezone), [schedule.timezone]);
+  const sessions = useSessions(schedule.sessions, scheduleTime);
+  const settings = useDisplaySettings(schedule, scheduleTime);
   const { isFullscreen } = useScheduleFullscreen();
   const zoomHandlers = useZoomHandlers();
   const [newSession, setNewSession] = useState<ScheduleSession | null>(null);
@@ -149,6 +151,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
 
       <div className={cx({ 'rounded-t-lg border border-gray-200': !isFullscreen })}>
         <ScheduleHeader
+          scheduleTime={scheduleTime}
           scheduleDays={settings.scheduleDays}
           displayedDays={settings.displayedDays}
           displayedTimes={settings.displayedTimes}
@@ -162,7 +165,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
         <Schedule
           displayedDays={settings.displayedDays}
           displayedTimes={settings.displayedTimes}
-          timezone={schedule.timezone}
+          scheduleTime={scheduleTime}
           tracks={schedule.tracks}
           sessions={sessions.data}
           zoomLevel={zoomHandlers.level}
@@ -174,6 +177,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
             <SessionBlock
               session={session}
               height={height}
+              scheduleTime={scheduleTime}
               displayedTimes={settings.displayedTimes}
               tracks={schedule.tracks}
               scheduleDays={settings.scheduleDays}

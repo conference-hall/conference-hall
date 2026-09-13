@@ -1,14 +1,15 @@
 import { useFetchers, useSubmit } from 'react-router';
-import { type SessionMutation, SessionMutations, toScheduleSession } from '../models/session-mutation.ts';
+import type { ScheduleTime } from '../models/schedule-time.ts';
+import { type SessionMutation, SessionMutations } from '../models/session-mutation.ts';
 import type { PlacementOutcome, SwapOutcome } from '../models/session-placement.ts';
 import { SessionPlacement } from '../models/session-placement.ts';
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
-export function useSessions(initialSessions: Array<SessionData>, timezone: string) {
-  const mutations = new SessionMutations(timezone);
+export function useSessions(initialSessions: Array<SessionData>, scheduleTime: ScheduleTime) {
+  const mutations = new SessionMutations(scheduleTime);
   const fetchers = useFetchers();
   const sessions = mutations.applyPending(
-    initialSessions.map((session) => toScheduleSession(session, timezone)),
+    initialSessions.map((session) => scheduleTime.session(session)),
     fetchers,
   );
   const placement = new SessionPlacement(sessions);

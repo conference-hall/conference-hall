@@ -1,11 +1,11 @@
-import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import type { ScheduleSession } from '../components/schedule.types.ts';
-import { SESSION_INTENTS, SessionMutations, toScheduleSession } from './session-mutation.ts';
+import { ScheduleTime } from './schedule-time.ts';
+import { SESSION_INTENTS, SessionMutations } from './session-mutation.ts';
 
-const TIMEZONE = 'Europe/Paris';
+const scheduleTime = new ScheduleTime('Europe/Paris');
 
 const utc = (hours: number) => new Date(`2024-10-05T${String(hours).padStart(2, '0')}:00:00.000Z`);
-const local = (hours: number) => utcToTimezone(utc(hours), TIMEZONE);
+const local = (hours: number) => scheduleTime.fromUtc(utc(hours));
 
 const session = (overrides: Partial<ScheduleSession> = {}): ScheduleSession => ({
   id: 'session-1',
@@ -25,39 +25,7 @@ const times = (sessions: Array<ScheduleSession>) =>
   sessions.map((s) => [s.id, s.trackId, s.timeslot.start.getTime(), s.timeslot.end.getTime()]);
 
 describe('SessionMutations', () => {
-  const mutations = new SessionMutations(TIMEZONE);
-
-  describe('toScheduleSession', () => {
-    it('converts the schedule dates into the schedule timezone', () => {
-      const { timeslot, ...rest } = toScheduleSession(
-        {
-          id: 'session-1',
-          trackId: 'track-1',
-          start: utc(9),
-          end: utc(10),
-          name: null,
-          language: null,
-          color: 'gray',
-          emojis: [],
-          proposal,
-        },
-        TIMEZONE,
-      );
-
-      expect(rest).toEqual({
-        id: 'session-1',
-        trackId: 'track-1',
-        name: null,
-        language: null,
-        color: 'gray',
-        emojis: [],
-        proposal,
-      });
-      expect(timeslot.start.getTime()).toBe(utc(9).getTime());
-      expect(timeslot.start.getHours()).toBe(11);
-      expect(timeslot.end.getHours()).toBe(12);
-    });
-  });
+  const mutations = new SessionMutations(scheduleTime);
 
   describe('#add', () => {
     it('encodes the session with a generated id, in UTC', () => {

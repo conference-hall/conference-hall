@@ -25,8 +25,8 @@ describe('DateRangeInput', () => {
   });
 
   it('initializes with provided date values', async () => {
-    const startDate = new Date('2023-01-15');
-    const endDate = new Date('2023-01-20');
+    const startDate = new Date(2023, 0, 15);
+    const endDate = new Date(2023, 0, 20);
 
     await page.render(
       <DateRangeInput
@@ -87,8 +87,8 @@ describe('DateRangeInput', () => {
   });
 
   it('respects min and max date constraints', async () => {
-    const minDate = new Date('2023-01-05');
-    const maxDate = new Date('2023-01-25');
+    const minDate = new Date(2023, 0, 5);
+    const maxDate = new Date(2023, 0, 25);
 
     await page.render(<DateRangeInput {...defaultProps} min={minDate} max={maxDate} />);
 

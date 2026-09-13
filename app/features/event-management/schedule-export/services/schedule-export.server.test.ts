@@ -125,5 +125,21 @@ describe('EventScheduleExport', () => {
         ],
       });
     });
+
+    it('exports the days at midnight in the schedule timezone across a daylight saving change', async () => {
+      const dstEvent = await eventFactory({ team, traits: ['conference'] });
+      await scheduleFactory({
+        event: dstEvent,
+        attributes: { start: '2024-03-29T23:00:00.000Z', end: '2024-03-31T22:00:00.000Z' },
+      });
+
+      const json = await EventScheduleExport.forApi({ event: dstEvent }).toJson();
+
+      expect(json?.days).toEqual([
+        '2024-03-30T00:00:00.000+01:00',
+        '2024-03-31T00:00:00.000+01:00',
+        '2024-04-01T00:00:00.000+02:00',
+      ]);
+    });
   });
 });
