@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react';
 import { useFetchers, useSubmit } from 'react-router';
 import type { ScheduleTime } from '../models/schedule-time.ts';
 import { pendingSessions, type SessionMutation, SessionMutations } from '../models/session-mutation.ts';
@@ -7,11 +8,15 @@ export function useSessions(initialSessions: Array<SessionData>, scheduleTime: S
   const fetchers = useFetchers();
   const submit = useSubmit();
 
-  const sessions = pendingSessions(initialSessions, fetchers, scheduleTime);
+  // Every reference is kept between two renders without change: the grid model and the memoized slots downstream
+  // are rebuilt on a Session change, never on a render of the route.
+  const sessions = useMemo(
+    () => pendingSessions(initialSessions, fetchers, scheduleTime),
+    [initialSessions, fetchers, scheduleTime],
+  );
 
-  const mutations = new SessionMutations(sessions, {
-    scheduleTime,
-    submit: async ({ key, formData }: SessionMutation) => {
+  const submitSession = useCallback(
+    async ({ key, formData }: SessionMutation) => {
       await submit(formData, {
         method: 'POST',
         navigate: false,
@@ -20,15 +25,24 @@ export function useSessions(initialSessions: Array<SessionData>, scheduleTime: S
         preventScrollReset: true,
       });
     },
-  });
+    [submit],
+  );
 
-  return {
-    add: mutations.add,
-    update: mutations.update,
-    move: mutations.move,
-    resize: mutations.resize,
-    swap: mutations.swap,
-    delete: mutations.delete,
-    data: sessions,
-  };
+  const mutations = useMemo(
+    () => new SessionMutations(sessions, { scheduleTime, submit: submitSession }),
+    [sessions, scheduleTime, submitSession],
+  );
+
+  return useMemo(
+    () => ({
+      add: mutations.add,
+      update: mutations.update,
+      move: mutations.move,
+      resize: mutations.resize,
+      swap: mutations.swap,
+      delete: mutations.delete,
+      data: sessions,
+    }),
+    [mutations, sessions],
+  );
 }
