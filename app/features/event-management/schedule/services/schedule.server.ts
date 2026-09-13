@@ -10,6 +10,7 @@ import {
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
 import { db, type DbTransaction } from '../../../../../prisma/db.server.ts';
 import type { Event, Proposal, ScheduleSession } from '../../../../../prisma/generated/client.ts';
+import { DEFAULT_SESSION_COLOR } from '../components/session/constants.ts';
 import { SessionPlacement } from '../models/session-placement.ts';
 import type {
   ScheduleCreateData,
@@ -109,7 +110,7 @@ export class EventSchedule {
           trackId: outcome.placement.trackId,
           start: outcome.placement.timeslot.start,
           end: outcome.placement.timeslot.end,
-          color: data.color ?? 'gray',
+          color: data.color ?? DEFAULT_SESSION_COLOR,
           name: !data.proposalId ? (data.name ?? null) : null,
           proposalId: data.proposalId ? data.proposalId : null,
           emojis: data.emojis ?? [],
@@ -139,7 +140,7 @@ export class EventSchedule {
           trackId: outcome.placement.trackId,
           start: outcome.placement.timeslot.start,
           end: outcome.placement.timeslot.end,
-          color: data.color ?? 'gray',
+          color: data.color ?? DEFAULT_SESSION_COLOR,
           name: !data.proposalId ? (data.name ?? null) : null,
           proposalId: data.proposalId ? data.proposalId : null,
           emojis: data.emojis ?? [],

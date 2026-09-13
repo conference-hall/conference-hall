@@ -171,6 +171,19 @@ describe('EventSchedule', () => {
       expect(session?.proposalId).toBe(null);
     });
 
+    it('adds a session with the default palette color when none is given', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      const session = await EventSchedule.for(authorizedEvent).addSession({
+        trackId: track.id,
+        start: at(9),
+        end: at(10),
+      });
+
+      expect(session?.color).toBe('stone');
+    });
+
     it('adds a session with details', async () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
@@ -284,7 +297,7 @@ describe('EventSchedule', () => {
       const actual = await EventSchedule.for(authorizedEvent).updateSession({
         id: session.id,
         trackId: track2.id,
-        color: 'gray',
+        color: 'stone',
         language: 'fr',
         emojis: ['heart'],
         start: new Date(schedule.end),
@@ -313,7 +326,7 @@ describe('EventSchedule', () => {
       const actual = await EventSchedule.for(authorizedEvent).updateSession({
         id: session.id,
         trackId: track.id,
-        color: 'gray',
+        color: 'stone',
         language: 'fr',
         emojis: ['heart'],
         start: new Date(schedule.end),
@@ -325,6 +338,22 @@ describe('EventSchedule', () => {
       expect(actual?.end).toEqual(schedule.end);
       expect(actual?.language).toEqual('fr');
       expect(actual?.emojis).toEqual(['heart']);
+    });
+
+    it('updates a session with the default palette color when none is given', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const eventSchedule = EventSchedule.for(authorizedEvent);
+      const session = await eventSchedule.addSession({ trackId: track.id, start: at(9), end: at(10), color: 'pink' });
+
+      const actual = await eventSchedule.updateSession({
+        id: session.id,
+        trackId: track.id,
+        start: at(9),
+        end: at(10),
+      });
+
+      expect(actual?.color).toBe('stone');
     });
 
     it('throws schedule track not found Error when the track belongs to another schedule', async () => {
@@ -341,7 +370,7 @@ describe('EventSchedule', () => {
         eventSchedule.updateSession({
           id: session.id,
           trackId: otherTrack.id,
-          color: 'gray',
+          color: 'stone',
           emojis: [],
           start: at(9),
           end: at(10),
@@ -363,7 +392,7 @@ describe('EventSchedule', () => {
         eventSchedule.updateSession({
           id: session.id,
           trackId: track.id,
-          color: 'gray',
+          color: 'stone',
           emojis: [],
           start: at(9),
           end: at(10),
@@ -384,7 +413,7 @@ describe('EventSchedule', () => {
         eventSchedule.updateSession({
           id: session.id,
           trackId: track.id,
-          color: 'gray',
+          color: 'stone',
           emojis: [],
           start: at(10),
           end: at(12),
@@ -401,7 +430,7 @@ describe('EventSchedule', () => {
         EventSchedule.for(authorizedEvent).updateSession({
           id: 'id',
           trackId: 'track',
-          color: 'gray',
+          color: 'stone',
           emojis: [],
           start: new Date(schedule.end),
           end: new Date(schedule.end),
@@ -600,7 +629,7 @@ describe('EventSchedule', () => {
       await EventSchedule.for(authorizedEvent).updateSession({
         id: session.id,
         trackId: track.id,
-        color: 'gray',
+        color: 'stone',
         emojis: ['heart'],
         start: new Date(schedule.start),
         end: new Date(schedule.start),
@@ -628,7 +657,7 @@ describe('EventSchedule', () => {
             name: null,
             language: 'en',
             emojis: ['heart'],
-            color: 'gray',
+            color: 'stone',
             proposal: {
               id: proposal.id,
               routeId: proposal.routeId,

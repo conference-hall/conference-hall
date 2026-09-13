@@ -31,7 +31,7 @@ describe('ScheduleTime', () => {
         end: new Date('2024-10-05T08:00:00.000Z'),
         name: null,
         language: null,
-        color: 'gray',
+        color: 'stone',
         emojis: [],
         proposal,
       });
@@ -41,7 +41,7 @@ describe('ScheduleTime', () => {
         trackId: 'track-1',
         name: null,
         language: null,
-        color: 'gray',
+        color: 'stone',
         emojis: [],
         proposal,
       });

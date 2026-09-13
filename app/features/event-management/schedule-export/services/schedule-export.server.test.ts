@@ -82,7 +82,7 @@ describe('EventScheduleExport', () => {
       await EventSchedule.for(authorizedEvent).updateSession({
         id: session.id,
         trackId: track.id,
-        color: 'gray',
+        color: 'stone',
         emojis: [],
         start: new Date(schedule.start),
         end: new Date(schedule.start),

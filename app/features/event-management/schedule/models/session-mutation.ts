@@ -1,6 +1,7 @@
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
 import type { ScheduleSession, SessionData } from '../components/schedule.types.ts';
+import { DEFAULT_SESSION_COLOR } from '../components/session/constants.ts';
 import type { ScheduleTime } from './schedule-time.ts';
 import { type PlacementOutcome, SessionPlacement, type SwapOutcome } from './session-placement.ts';
 
@@ -73,7 +74,16 @@ export class SessionMutations {
   }
 
   static blank({ trackId, timeslot }: { trackId: string; timeslot: TimeSlot }): ScheduleSession {
-    return { id: 'new', trackId, timeslot, name: '', language: null, color: 'stone', emojis: [], proposal: null };
+    return {
+      id: 'new',
+      trackId,
+      timeslot,
+      name: '',
+      language: null,
+      color: DEFAULT_SESSION_COLOR,
+      emojis: [],
+      proposal: null,
+    };
   }
 
   add = async (session: Omit<ScheduleSession, 'id' | 'isCreating'>): Promise<PlacementOutcome> => {
