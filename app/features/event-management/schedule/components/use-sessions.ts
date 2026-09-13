@@ -9,7 +9,6 @@ export function useSessions(initialSessions: Array<SessionData>, scheduleTime: S
 
   const sessions = pendingSessions(initialSessions, fetchers, scheduleTime);
 
-  // A keyed mutation is rendered at once through its own fetcher, so a gesture never flickers.
   const mutations = new SessionMutations(sessions, {
     scheduleTime,
     submit: async ({ key, formData }: SessionMutation) => {

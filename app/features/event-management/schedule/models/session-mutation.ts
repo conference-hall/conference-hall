@@ -72,7 +72,6 @@ export class SessionMutations {
     this.placement = new SessionPlacement(sessions);
   }
 
-  // A Session before an organizer fills it in.
   static blank({ trackId, timeslot }: { trackId: string; timeslot: TimeSlot }): ScheduleSession {
     return { id: 'new', trackId, timeslot, name: '', language: null, color: 'stone', emojis: [], proposal: null };
   }
@@ -118,7 +117,6 @@ export class SessionMutations {
     await this.deps.submit({ formData });
   };
 
-  // Submits a Session at the placement returned by the rule, so an adjusted gesture is shown adjusted.
   private async submitPlacement(session: ScheduleSession, outcome: PlacementOutcome): Promise<PlacementOutcome> {
     if (outcome.status === 'conflict') return outcome;
 
@@ -137,7 +135,6 @@ export class SessionMutations {
     formData.set('name', session.name ?? '');
     formData.set('language', session.language ?? '');
     formData.set('proposalId', session.proposal?.id ?? '');
-    // Snapshot for the pending render only, ignored by the server.
     formData.set('proposalTitle', session.proposal?.title ?? '');
     formData.set('proposalRouteId', session.proposal?.routeId ?? '');
     for (const emoji of session.emojis) {
