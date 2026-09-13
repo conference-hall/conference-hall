@@ -142,5 +142,12 @@ term as defined here and don't drift to synonyms.
   talk) or be a non-talk slot (break, keynote) with just a name/color.
 
 - **Session conflict**: Two Sessions of the same Track whose time slots overlap. A
-  Schedule never holds a conflict: placing or moving a Session that would create one
-  is refused.
+  Schedule never holds a conflict. Placing a new Session and swapping two Sessions are
+  refused when they would create one. Moving a Session and resizing a Session are
+  adjusted instead, and are refused only when the requested start leaves no room for a
+  Session of minimum length.
+
+- **Placement**: The result of positioning a Session in a Track. One of three: the
+  Session is _placed_ where it was asked to go, it is _adjusted_, meaning placed with
+  its end clamped to the start of the next Session in the Track or to a minimum length,
+  or it is _refused_ because of a Session conflict.

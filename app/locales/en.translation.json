@@ -566,7 +566,6 @@
   "event-management.schedule.create-session.submit": "Create session",
   "event-management.schedule.description": "Create a schedule to plan your conference sessions.",
   "event-management.schedule.edit-session.color": "Choose a label color",
-  "event-management.schedule.edit-session.errors.overlap": "This session overlaps with an existing session. Please choose a different time slot.",
   "event-management.schedule.edit-session.heading": "Edit session",
   "event-management.schedule.edit-session.identity.change": "Change proposal",
   "event-management.schedule.edit-session.identity.clear": "Clear",

@@ -566,7 +566,6 @@
   "event-management.schedule.create-session.submit": "Créer la session",
   "event-management.schedule.description": "Créez un programme pour planifier vos sessions de conférence.",
   "event-management.schedule.edit-session.color": "Choisir une couleur",
-  "event-management.schedule.edit-session.errors.overlap": "Cette session chevauche une session existante. Veuillez choisir un autre créneau horaire.",
   "event-management.schedule.edit-session.heading": "Modifier la session",
   "event-management.schedule.edit-session.identity.change": "Changer de proposition",
   "event-management.schedule.edit-session.identity.clear": "Effacer",

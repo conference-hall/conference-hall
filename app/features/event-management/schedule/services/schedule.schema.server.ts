@@ -73,6 +73,7 @@ export const ScheduleSessionsSwitchSchema = z.object({
 export const SchedulSessionIdSchema = z.string();
 
 export type ScheduleCreateData = z.infer<typeof ScheduleCreateSchema>;
+export type ScheduleDisplayTimesUpdateData = z.infer<typeof ScheduleDisplayTimesUpdateSchema>;
 export type ScheduleTracksSaveData = z.infer<typeof ScheduleTracksSaveSchema>;
 export type ScheduleSessionCreateData = z.infer<typeof ScheduleSessionCreateSchema>;
 export type ScheduleSessionUpdateData = z.infer<typeof ScheduleSessionUpdateSchema>;

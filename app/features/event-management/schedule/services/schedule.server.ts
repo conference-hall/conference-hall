@@ -8,11 +8,12 @@ import {
   SessionConflictError,
 } from '~/shared/errors.server.ts';
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
-import { db } from '../../../../../prisma/db.server.ts';
-import type { Event, Proposal } from '../../../../../prisma/generated/client.ts';
-import type { ScheduleCreateInput } from '../../../../../prisma/generated/models.ts';
+import { db, type DbTransaction } from '../../../../../prisma/db.server.ts';
+import type { Event, Proposal, ScheduleSession } from '../../../../../prisma/generated/client.ts';
+import { SessionPlacement } from '../models/session-placement.ts';
 import type {
   ScheduleCreateData,
+  ScheduleDisplayTimesUpdateData,
   ScheduleSessionCreateData,
   ScheduleSessionUpdateData,
   ScheduleTracksSaveData,
@@ -28,8 +29,11 @@ export class EventSchedule {
     return new EventSchedule(event);
   }
 
-  private async schedule() {
-    const schedule = await db.schedule.findFirst({ where: { eventId: this.event.id }, include: { tracks: true } });
+  private async schedule(client: DbTransaction = db) {
+    const schedule = await client.schedule.findFirst({
+      where: { eventId: this.event.id },
+      include: { tracks: true, sessions: true },
+    });
     if (!schedule) throw new NotFoundError('Schedule not found');
     return schedule;
   }
@@ -65,7 +69,7 @@ export class EventSchedule {
     });
   }
 
-  async update(data: Partial<ScheduleCreateInput>) {
+  async update(data: ScheduleDisplayTimesUpdateData) {
     const schedule = await this.schedule();
 
     await db.schedule.update({ data, where: { id: schedule.id } });
@@ -78,92 +82,99 @@ export class EventSchedule {
   }
 
   async addSession(data: ScheduleSessionCreateData) {
-    const schedule = await this.schedule();
+    return db.$transaction(async (trx) => {
+      const schedule = await this.schedule(trx);
 
-    if (!schedule.tracks.some((track) => track.id === data.trackId)) throw new ScheduleTrackNotFoundError();
+      if (!schedule.tracks.some((track) => track.id === data.trackId)) throw new ScheduleTrackNotFoundError();
 
-    const proposal = data.proposalId ? await this.eventProposal(data.proposalId) : null;
+      const proposal = data.proposalId ? await this.eventProposal(data.proposalId, trx) : null;
 
-    await this.assertNoSessionConflict(data.trackId, data.start, data.end);
-
-    return db.scheduleSession.create({
-      data: {
+      const outcome = placementFor(schedule.sessions).place({
         trackId: data.trackId,
-        start: data.start,
-        end: data.end,
-        color: data.color ?? 'gray',
-        name: !data.proposalId ? (data.name ?? null) : null,
-        proposalId: data.proposalId ? data.proposalId : null,
-        emojis: data.emojis ?? [],
-        language: sessionLanguage(data.language, proposal),
-        scheduleId: schedule.id,
-      },
+        timeslot: { start: data.start, end: data.end },
+      });
+      if (outcome.status === 'conflict') throw new SessionConflictError();
+
+      return trx.scheduleSession.create({
+        data: {
+          trackId: outcome.placement.trackId,
+          start: outcome.placement.timeslot.start,
+          end: outcome.placement.timeslot.end,
+          color: data.color ?? 'gray',
+          name: !data.proposalId ? (data.name ?? null) : null,
+          proposalId: data.proposalId ? data.proposalId : null,
+          emojis: data.emojis ?? [],
+          language: sessionLanguage(data.language, proposal),
+          scheduleId: schedule.id,
+        },
+      });
     });
   }
 
   async updateSession(data: ScheduleSessionUpdateData) {
-    const schedule = await this.schedule();
+    return db.$transaction(async (trx) => {
+      const schedule = await this.schedule(trx);
 
-    if (!schedule.tracks.some((track) => track.id === data.trackId)) throw new ScheduleTrackNotFoundError();
+      if (!schedule.tracks.some((track) => track.id === data.trackId)) throw new ScheduleTrackNotFoundError();
 
-    const proposal = data.proposalId ? await this.eventProposal(data.proposalId) : null;
+      const proposal = data.proposalId ? await this.eventProposal(data.proposalId, trx) : null;
 
-    await this.assertNoSessionConflict(data.trackId, data.start, data.end, data.id);
+      const outcome = placementFor(schedule.sessions).place(
+        { trackId: data.trackId, timeslot: { start: data.start, end: data.end } },
+        data.id,
+      );
+      if (outcome.status === 'conflict') throw new SessionConflictError();
 
-    return db.scheduleSession.update({
-      data: {
-        trackId: data.trackId,
-        start: data.start,
-        end: data.end,
-        color: data.color ?? 'gray',
-        name: !data.proposalId ? (data.name ?? null) : null,
-        proposalId: data.proposalId ? data.proposalId : null,
-        emojis: data.emojis ?? [],
-        language: sessionLanguage(data.language, proposal),
-      },
-      where: { id: data.id, scheduleId: schedule.id },
+      return trx.scheduleSession.update({
+        data: {
+          trackId: outcome.placement.trackId,
+          start: outcome.placement.timeslot.start,
+          end: outcome.placement.timeslot.end,
+          color: data.color ?? 'gray',
+          name: !data.proposalId ? (data.name ?? null) : null,
+          proposalId: data.proposalId ? data.proposalId : null,
+          emojis: data.emojis ?? [],
+          language: sessionLanguage(data.language, proposal),
+        },
+        where: { id: data.id, scheduleId: schedule.id },
+      });
     });
   }
 
   async switchSessions(sourceId: string, targetId: string) {
-    const schedule = await this.schedule();
+    await db.$transaction(async (trx) => {
+      const schedule = await this.schedule(trx);
 
-    const sessions = await db.scheduleSession.findMany({
-      where: { id: { in: [sourceId, targetId] }, scheduleId: schedule.id },
-    });
-    const source = sessions.find((session) => session.id === sourceId);
-    const target = sessions.find((session) => session.id === targetId);
-    if (!source || !target) throw new NotFoundError('Schedule session not found');
+      const source = schedule.sessions.find((session) => session.id === sourceId);
+      const target = schedule.sessions.find((session) => session.id === targetId);
+      if (!source || !target) throw new NotFoundError('Schedule session not found');
 
-    await db.$transaction([
-      db.scheduleSession.update({
-        data: { trackId: target.trackId, start: target.start, end: target.end },
+      const outcome = placementFor(schedule.sessions).swap(toPlacedSession(source), toPlacedSession(target));
+      if (outcome.status === 'conflict') throw new SessionConflictError();
+
+      await trx.scheduleSession.update({
+        data: {
+          trackId: outcome.source.trackId,
+          start: outcome.source.timeslot.start,
+          end: outcome.source.timeslot.end,
+        },
         where: { id: source.id },
-      }),
-      db.scheduleSession.update({
-        data: { trackId: source.trackId, start: source.start, end: source.end },
+      });
+      await trx.scheduleSession.update({
+        data: {
+          trackId: outcome.target.trackId,
+          start: outcome.target.timeslot.start,
+          end: outcome.target.timeslot.end,
+        },
         where: { id: target.id },
-      }),
-    ]);
+      });
+    });
   }
 
-  private async eventProposal(proposalId: string) {
-    const proposal = await db.proposal.findFirst({ where: { id: proposalId, eventId: this.event.id } });
+  private async eventProposal(proposalId: string, client: DbTransaction) {
+    const proposal = await client.proposal.findFirst({ where: { id: proposalId, eventId: this.event.id } });
     if (!proposal) throw new ProposalNotFoundError();
     return proposal;
-  }
-
-  // A Session conflict is another Session of the same Track whose time slot overlaps the given one.
-  private async assertNoSessionConflict(trackId: string, start: Date, end: Date, sessionId?: string) {
-    const conflict = await db.scheduleSession.findFirst({
-      where: {
-        trackId,
-        start: { lt: end },
-        end: { gt: start },
-        ...(sessionId ? { id: { not: sessionId } } : {}),
-      },
-    });
-    if (conflict) throw new SessionConflictError();
   }
 
   async deleteSession(sessionId: string) {
@@ -235,6 +246,14 @@ export class EventSchedule {
       })),
     };
   }
+}
+
+function toPlacedSession({ id, trackId, start, end }: ScheduleSession) {
+  return { id, trackId, timeslot: { start, end } };
+}
+
+function placementFor(sessions: Array<ScheduleSession>) {
+  return new SessionPlacement(sessions.map(toPlacedSession));
 }
 
 function sessionLanguage(language: string | undefined, proposal: Proposal | null): Language | null {

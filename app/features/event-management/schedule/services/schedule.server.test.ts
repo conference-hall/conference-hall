@@ -112,18 +112,17 @@ describe('EventSchedule', () => {
   });
 
   describe('#update', () => {
-    const expected = { name: 'My schedule', start: new Date(), end: new Date() };
+    const expected = { displayStartMinutes: 8 * 60, displayEndMinutes: 20 * 60 };
 
-    it('updates schedule settings', async () => {
+    it('updates the schedule display times', async () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
       await EventSchedule.for(authorizedEvent).update(expected);
 
-      const actual = await EventSchedule.for(authorizedEvent).get();
-      expect(actual?.name).toEqual(expected.name);
-      expect(actual?.start).toEqual(expected.start);
-      expect(actual?.end).toEqual(expected.end);
+      const actual = await EventSchedule.for(authorizedEvent).getScheduleSessions();
+      expect(actual?.displayStartMinutes).toEqual(expected.displayStartMinutes);
+      expect(actual?.displayEndMinutes).toEqual(expected.displayEndMinutes);
     });
 
     it('throws not found Error when no schedule defined for the event', async () => {
@@ -211,29 +210,6 @@ describe('EventSchedule', () => {
       expect(session?.proposalId).toBe(proposal.id);
       expect(session?.name).toBe(null);
       expect(session?.language).toBe('fr');
-    });
-
-    it('adds a session adjacent to another session of the same track', async () => {
-      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
-      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-      const eventSchedule = EventSchedule.for(authorizedEvent);
-
-      await eventSchedule.addSession({ trackId: track.id, start: at(9), end: at(10) });
-      const session = await eventSchedule.addSession({ trackId: track.id, start: at(10), end: at(11) });
-
-      expect(session?.start).toEqual(at(10));
-      expect(session?.end).toEqual(at(11));
-    });
-
-    it('adds a session overlapping another session of a different track', async () => {
-      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
-      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-      const eventSchedule = EventSchedule.for(authorizedEvent);
-
-      await eventSchedule.addSession({ trackId: track.id, start: at(9), end: at(11) });
-      const session = await eventSchedule.addSession({ trackId: track2.id, start: at(10), end: at(12) });
-
-      expect(session?.trackId).toBe(track2.id);
     });
 
     it('throws schedule track not found Error when the track belongs to another schedule', async () => {
@@ -351,47 +327,6 @@ describe('EventSchedule', () => {
       expect(actual?.emojis).toEqual(['heart']);
     });
 
-    it('updates a session keeping its own time slot', async () => {
-      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
-      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-      const eventSchedule = EventSchedule.for(authorizedEvent);
-
-      const session = await eventSchedule.addSession({ trackId: track.id, start: at(9), end: at(11) });
-
-      const actual = await eventSchedule.updateSession({
-        id: session.id,
-        trackId: track.id,
-        color: 'gray',
-        emojis: [],
-        name: 'Renamed',
-        start: at(9),
-        end: at(11),
-      });
-
-      expect(actual?.name).toBe('Renamed');
-    });
-
-    it('updates a session to a slot adjacent to another session of the same track', async () => {
-      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
-      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-      const eventSchedule = EventSchedule.for(authorizedEvent);
-
-      await eventSchedule.addSession({ trackId: track.id, start: at(9), end: at(10) });
-      const session = await eventSchedule.addSession({ trackId: track2.id, start: at(14), end: at(15) });
-
-      const actual = await eventSchedule.updateSession({
-        id: session.id,
-        trackId: track.id,
-        color: 'gray',
-        emojis: [],
-        start: at(10),
-        end: at(11),
-      });
-
-      expect(actual?.trackId).toBe(track.id);
-      expect(actual?.start).toEqual(at(10));
-    });
-
     it('throws schedule track not found Error when the track belongs to another schedule', async () => {
       const otherEvent = await eventFactory({ team, traits: ['conference'] });
       const otherSchedule = await scheduleFactory({ event: otherEvent });
@@ -477,7 +412,7 @@ describe('EventSchedule', () => {
   });
 
   describe('#switchSessions', () => {
-    it('exchanges the track and time slot of two sessions', async () => {
+    it('exchanges the track and start time of two sessions, keeping their durations', async () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const eventSchedule = EventSchedule.for(authorizedEvent);
@@ -491,13 +426,29 @@ describe('EventSchedule', () => {
       expect(actual?.sessions.find((s) => s.id === source.id)).toMatchObject({
         trackId: track2.id,
         start: at(14),
-        end: at(16),
+        end: at(15),
       });
       expect(actual?.sessions.find((s) => s.id === target.id)).toMatchObject({
         trackId: track.id,
         start: at(9),
-        end: at(10),
+        end: at(11),
       });
+    });
+
+    it('throws session conflict Error when the swap would overlap another session', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const eventSchedule = EventSchedule.for(authorizedEvent);
+
+      const source = await eventSchedule.addSession({ trackId: track.id, start: at(9), end: at(10) });
+      const target = await eventSchedule.addSession({ trackId: track2.id, start: at(14), end: at(16) });
+      await eventSchedule.addSession({ trackId: track.id, start: at(10), end: at(12) });
+
+      await expect(eventSchedule.switchSessions(source.id, target.id)).rejects.toThrow(SessionConflictError);
+
+      const actual = await eventSchedule.getScheduleSessions();
+      expect(actual?.sessions.find((s) => s.id === source.id)).toMatchObject({ trackId: track.id, start: at(9) });
+      expect(actual?.sessions.find((s) => s.id === target.id)).toMatchObject({ trackId: track2.id, start: at(14) });
     });
 
     it('throws not found Error when a session belongs to another schedule', async () => {
