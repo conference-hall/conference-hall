@@ -4,8 +4,8 @@
 import { RestrictToWindow } from '@dnd-kit/dom/modifiers';
 import { DragDropProvider, PointerSensor, useDragDropMonitor, useDraggable, useDroppable } from '@dnd-kit/react';
 import { cx } from 'class-variance-authority';
-import type { ReactNode } from 'react';
-import React, { useCallback, useMemo, useState } from 'react';
+import type { ReactNode, RefObject } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { formatDate, formatTime, toDateInput } from '~/shared/datetimes/datetimes.ts';
@@ -145,6 +145,13 @@ function ScheduleDay({
     [day, displayedTimes, tracks, sessions],
   );
 
+  // Slots read the model from a ref, and only in drag callbacks: a Session mutation rebuilds the model, and
+  // comparing it in the memo would re-render every slot of the day on every mutation.
+  const gridRef = useRef(grid);
+  useEffect(() => {
+    gridRef.current = grid;
+  }, [grid]);
+
   const [draft, setDraft] = useState<SessionDraft | null>(null);
   const draftWindow = draft ? grid.draftWindow(draft) : null;
 
@@ -230,11 +237,11 @@ function ScheduleDay({
                       return (
                         <MemoizedTimeslot
                           key={`${track.id}-${timeslot.start.toISOString()}`}
-                          grid={grid}
+                          gridRef={gridRef}
                           trackId={track.id}
                           timeslot={timeslot}
-                          session={session}
-                          isSessionStart={grid.isSessionStart(target)}
+                          isOccupied={session !== undefined}
+                          sessionBlock={session && grid.isSessionStart(target) ? session : undefined}
                           zoomLevel={zoomLevel}
                           isFirstTimeslot={index === 0}
                           isDrawing={draft !== null}
@@ -263,14 +270,13 @@ function ScheduleDay({
   );
 }
 
-// Memoized Timeslot component: during a drawing, only the slots whose state changed re-render.
+// Memoized Timeslot component: only the slots whose own state changed re-render, on a drawing as on a mutation.
 const MemoizedTimeslot = React.memo(Timeslot, (prevProps, nextProps) => {
   return (
-    prevProps.grid === nextProps.grid &&
     prevProps.trackId === nextProps.trackId &&
-    prevProps.timeslot === nextProps.timeslot &&
-    prevProps.session === nextProps.session &&
-    prevProps.isSessionStart === nextProps.isSessionStart &&
+    prevProps.timeslot.start.getTime() === nextProps.timeslot.start.getTime() &&
+    prevProps.isOccupied === nextProps.isOccupied &&
+    prevProps.sessionBlock === nextProps.sessionBlock &&
     prevProps.zoomLevel === nextProps.zoomLevel &&
     prevProps.isFirstTimeslot === nextProps.isFirstTimeslot &&
     prevProps.isDrawing === nextProps.isDrawing &&
@@ -281,11 +287,11 @@ const MemoizedTimeslot = React.memo(Timeslot, (prevProps, nextProps) => {
 });
 
 type TimeslotProps = {
-  grid: ScheduleGrid;
+  gridRef: RefObject<ScheduleGrid>;
   trackId: string;
   timeslot: TimeSlot;
-  session?: ScheduleSession;
-  isSessionStart: boolean;
+  isOccupied: boolean;
+  sessionBlock?: ScheduleSession;
   zoomLevel: number;
   isFirstTimeslot: boolean;
   isDrawing: boolean;
@@ -299,11 +305,11 @@ type TimeslotProps = {
 };
 
 function Timeslot({
-  grid,
+  gridRef,
   trackId,
   timeslot,
-  session,
-  isSessionStart,
+  isOccupied,
+  sessionBlock,
   zoomLevel,
   isFirstTimeslot,
   isDrawing,
@@ -323,12 +329,12 @@ function Timeslot({
     id: `${trackId}-${timeslot.start.toISOString()}`,
     type: DROP_TARGETS.timeslot,
     data: { trackId, timeslot } satisfies GridTarget,
-    accept: (source) => grid.acceptsDropOnSlot({ trackId, timeslot }, readDragSource(source)),
+    accept: (source) => gridRef.current.acceptsDropOnSlot({ trackId, timeslot }, readDragSource(source)),
     collisionDetector: topInsideDroppable,
   });
 
   // a drawing starts on a free slot, and only when none is already in progress
-  const canStartDraft = !session && !isDrawing;
+  const canStartDraft = !isOccupied && !isDrawing;
 
   return (
     <div
@@ -341,7 +347,7 @@ function Timeslot({
       onMouseUp={canExtendDraft ? onCreateDraft : undefined}
       style={{ height: `${getTimeslotHeight(zoomLevel)}px` }}
       className={cx('relative', {
-        'z-10': !session,
+        'z-10': !isOccupied,
         'bg-blue-200': droppable.isDropTarget,
         'hover:bg-gray-50': canStartDraft,
         "before:absolute before:top-0 before:right-0 before:left-0 before:border-t before:content-['']":
@@ -351,12 +357,12 @@ function Timeslot({
       {/* invisible span to have content for the table */}
       <span className="invisible">{`Timeslot ${formatTime(timeslot.start, { format: 'short', locale })}`}</span>
 
-      {session && isSessionStart ? (
+      {sessionBlock ? (
         // displayed session block
         <SessionWrapper
-          key={`${session.id}-${session.timeslot.start.toISOString()}-${session.timeslot.end.toISOString()}-${zoomLevel}`}
-          grid={grid}
-          session={session}
+          key={`${sessionBlock.id}-${sessionBlock.timeslot.start.toISOString()}-${sessionBlock.timeslot.end.toISOString()}-${zoomLevel}`}
+          gridRef={gridRef}
+          session={sessionBlock}
           renderSession={renderSession}
           zoomLevel={zoomLevel}
         />
@@ -364,7 +370,7 @@ function Timeslot({
         // session draft being drawn
         <SessionWrapper
           key={`draft-${draftSession.timeslot.end.toISOString()}`}
-          grid={grid}
+          gridRef={gridRef}
           session={draftSession}
           renderSession={renderSession}
           zoomLevel={zoomLevel}
@@ -375,13 +381,13 @@ function Timeslot({
 }
 
 type SessionWrapperProps = {
-  grid: ScheduleGrid;
+  gridRef: RefObject<ScheduleGrid>;
   session: ScheduleSession;
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
   zoomLevel: number;
 };
 
-function SessionWrapper({ grid, session, renderSession, zoomLevel }: SessionWrapperProps) {
+function SessionWrapper({ gridRef, session, renderSession, zoomLevel }: SessionWrapperProps) {
   // Compute session height
   const defaultHeight = getSessionHeight(session, SLOT_INTERVAL, zoomLevel);
   const [height, setHeight] = useState(defaultHeight);
@@ -395,7 +401,7 @@ function SessionWrapper({ grid, session, renderSession, zoomLevel }: SessionWrap
       const target = readTimeslotTarget(operation.target);
       if (!target) return;
 
-      const preview = grid.resizePreview(session, target);
+      const preview = gridRef.current.resizePreview(session, target);
       if (!preview) return;
 
       setHeight(getSessionHeight({ ...session, timeslot: preview }, SLOT_INTERVAL, zoomLevel));
@@ -423,7 +429,7 @@ function SessionWrapper({ grid, session, renderSession, zoomLevel }: SessionWrap
     id: `drop:${session.id}`,
     type: DROP_TARGETS.session,
     data: { session } satisfies SessionPayload,
-    accept: (source) => grid.acceptsDropOnSession(session, readDragSource(source)),
+    accept: (source) => gridRef.current.acceptsDropOnSession(session, readDragSource(source)),
     collisionDetector: topInsideDroppable,
   });
 
