@@ -9,13 +9,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { toDateInput } from '~/shared/datetimes/datetimes.ts';
-import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
-import { haveSameStartDate } from '~/shared/datetimes/timeslots.ts';
-import type { GridTarget, SessionDraft, SessionPayload } from '../../models/schedule-grid.ts';
+import type { GridTarget, SessionDraft, SessionPayload, SlotView } from '../../models/schedule-grid.ts';
 import {
   decodeGesture,
   DRAG_SOURCES,
   DROP_TARGETS,
+  isSameSlotView,
   readDragSource,
   readTimeslotTarget,
   ScheduleGrid,
@@ -108,6 +107,10 @@ function useConflictReport() {
   );
 }
 
+// The phases of a drawing gesture, all served by one stable callback.
+type DraftPhase = 'start' | 'extend' | 'end';
+type DraftHandler = (target: GridTarget, phase: DraftPhase) => void;
+
 type ScheduleDayProps = {
   day: Date;
   dayIndex: number;
@@ -150,16 +153,32 @@ function ScheduleDay({
   }, [grid]);
 
   const [draft, setDraft] = useState<SessionDraft | null>(null);
-  const draftWindow = draft ? grid.draftWindow(draft) : null;
 
-  // The released slot carries the end of the Session: a slot skipped by a fast pointer move holds an older draft.
-  const handleCreateDraft = useCallback(
-    async (end: Date) => {
-      if (!draft) return;
+  // The draft is also held in a ref: the single draft callback stays stable across renders and reads the draft
+  // drawn so far at the moment of the gesture, never through a closure a memoized slot could keep stale.
+  const draftRef = useRef<SessionDraft | null>(null);
+
+  const handleDraft = useCallback(
+    async (target: GridTarget, phase: DraftPhase) => {
+      if (phase === 'start') {
+        draftRef.current = target;
+        return setDraft(target);
+      }
+
+      const current = draftRef.current;
+      if (!current) return;
+      const drawn = { ...current, timeslot: { ...current.timeslot, end: target.timeslot.end } };
+
+      if (phase === 'extend') {
+        draftRef.current = drawn;
+        return setDraft(drawn);
+      }
+
+      draftRef.current = null;
       setDraft(null);
-      reportConflict(await onAddSession(SessionMutations.blank({ ...draft, timeslot: { ...draft.timeslot, end } })));
+      reportConflict(await onAddSession(SessionMutations.blank(drawn)));
     },
-    [draft, onAddSession, reportConflict],
+    [onAddSession, reportConflict],
   );
 
   return (
@@ -224,35 +243,18 @@ function ScheduleDay({
                 {/* rows by track */}
                 {grid.tracks.map((track) => (
                   <td key={track.id} className="p-0">
-                    {slots.map((timeslot, index) => {
+                    {slots.map((timeslot) => {
                       const target = { trackId: track.id, timeslot };
-                      const session = grid.sessionAt(target);
-                      const canExtendDraft = draftWindow !== null && grid.canExtendDraft(draftWindow, target);
-                      const isDraftStart =
-                        draft !== null && draft.trackId === track.id && haveSameStartDate(timeslot, draft.timeslot);
 
                       return (
                         <MemoizedTimeslot
                           key={`${track.id}-${timeslot.start.toISOString()}`}
                           gridRef={gridRef}
                           scheduleTime={scheduleTime}
-                          trackId={track.id}
-                          timeslot={timeslot}
-                          isOccupied={session !== undefined}
-                          sessionBlock={session && grid.isSessionStart(target) ? session : undefined}
+                          target={target}
+                          view={grid.slotView(target, draft)}
                           zoomLevel={zoomLevel}
-                          isFirstTimeslot={index === 0}
-                          isDrawing={draft !== null}
-                          isInsideDraft={draft !== null && grid.isInsideDraft(draft, target)}
-                          canExtendDraft={canExtendDraft}
-                          draftSession={isDraftStart ? SessionMutations.blank(draft) : undefined}
-                          onStartDraft={() => setDraft({ trackId: track.id, timeslot })}
-                          onExtendDraft={
-                            draft
-                              ? () => setDraft({ ...draft, timeslot: { ...draft.timeslot, end: timeslot.end } })
-                              : undefined
-                          }
-                          onCreateDraft={() => handleCreateDraft(timeslot.end)}
+                          onDraft={handleDraft}
                           onOpenSession={onOpenSession}
                         />
                       );
@@ -268,73 +270,44 @@ function ScheduleDay({
   );
 }
 
-// Memoized Timeslot component: only the slots whose own state changed re-render, on a drawing as on a mutation.
+// Memoized Timeslot component: only the slots whose own view changed re-render, on a drawing as on a mutation.
 const MemoizedTimeslot = React.memo(Timeslot, (prevProps, nextProps) => {
   return (
-    prevProps.trackId === nextProps.trackId &&
-    prevProps.timeslot.start.getTime() === nextProps.timeslot.start.getTime() &&
-    prevProps.isOccupied === nextProps.isOccupied &&
-    prevProps.sessionBlock === nextProps.sessionBlock &&
+    prevProps.target.trackId === nextProps.target.trackId &&
+    prevProps.target.timeslot.start.getTime() === nextProps.target.timeslot.start.getTime() &&
     prevProps.zoomLevel === nextProps.zoomLevel &&
-    prevProps.isFirstTimeslot === nextProps.isFirstTimeslot &&
-    prevProps.isDrawing === nextProps.isDrawing &&
-    prevProps.isInsideDraft === nextProps.isInsideDraft &&
-    prevProps.canExtendDraft === nextProps.canExtendDraft &&
-    prevProps.draftSession === nextProps.draftSession
+    prevProps.onDraft === nextProps.onDraft &&
+    isSameSlotView(prevProps.view, nextProps.view)
   );
 });
 
 type TimeslotProps = {
   gridRef: RefObject<ScheduleGrid>;
   scheduleTime: ScheduleTime;
-  trackId: string;
-  timeslot: TimeSlot;
-  isOccupied: boolean;
-  sessionBlock?: ScheduleSession;
+  target: GridTarget;
+  view: SlotView;
   zoomLevel: number;
-  isFirstTimeslot: boolean;
-  isDrawing: boolean;
-  isInsideDraft: boolean;
-  canExtendDraft: boolean;
-  draftSession?: ScheduleSession;
-  onStartDraft: () => void;
-  onExtendDraft?: () => void;
-  onCreateDraft: () => void;
+  onDraft: DraftHandler;
   onOpenSession: (session: ScheduleSession) => void;
 };
 
-function Timeslot({
-  gridRef,
-  scheduleTime,
-  trackId,
-  timeslot,
-  isOccupied,
-  sessionBlock,
-  zoomLevel,
-  isFirstTimeslot,
-  isDrawing,
-  isInsideDraft,
-  canExtendDraft,
-  draftSession,
-  onStartDraft,
-  onExtendDraft,
-  onCreateDraft,
-  onOpenSession,
-}: TimeslotProps) {
+function Timeslot({ gridRef, scheduleTime, target, view, zoomLevel, onDraft, onOpenSession }: TimeslotProps) {
   const { i18n } = useTranslation();
+  const { trackId, timeslot } = target;
+  const { isOccupied, isHourStart, sessionBlock, canStartDraft, draftRelation, draftBlock } = view;
   const label = `Timeslot ${scheduleTime.formatTime(timeslot.start, i18n.language)}`;
 
   // droppable timeslot
   const droppable = useDroppable({
     id: `${trackId}-${timeslot.start.toISOString()}`,
     type: DROP_TARGETS.timeslot,
-    data: { trackId, timeslot } satisfies GridTarget,
-    accept: (source) => gridRef.current.acceptsDropOnSlot({ trackId, timeslot }, readDragSource(source)),
+    data: target satisfies GridTarget,
+    accept: (source) => gridRef.current.acceptsDropOnSlot(target, readDragSource(source)),
     collisionDetector: topInsideDroppable,
   });
 
-  // a drawing starts on a free slot, and only when none is already in progress
-  const canStartDraft = !isOccupied && !isDrawing;
+  const extendsDraft = draftRelation !== 'none';
+  const isInsideDraft = draftRelation === 'inside' || draftRelation === 'start';
 
   return (
     <div
@@ -342,16 +315,16 @@ function Timeslot({
       role="button"
       tabIndex={0}
       aria-label={label}
-      onMouseDown={canStartDraft ? onStartDraft : undefined}
-      onMouseEnter={canExtendDraft ? onExtendDraft : undefined}
-      onMouseUp={canExtendDraft ? onCreateDraft : undefined}
+      onMouseDown={canStartDraft ? () => onDraft(target, 'start') : undefined}
+      onMouseEnter={extendsDraft ? () => onDraft(target, 'extend') : undefined}
+      onMouseUp={extendsDraft ? () => onDraft(target, 'end') : undefined}
       style={{ height: `${getTimeslotHeight(zoomLevel)}px` }}
       className={cx('relative', {
         'z-10': !isOccupied,
         'bg-blue-200': droppable.isDropTarget,
         'hover:bg-gray-50': canStartDraft,
         "before:absolute before:top-0 before:right-0 before:left-0 before:border-t before:content-['']":
-          isFirstTimeslot && !droppable.isDropTarget && !isInsideDraft,
+          isHourStart && !droppable.isDropTarget && !isInsideDraft,
       })}
     >
       {/* invisible span to have content for the table */}
@@ -366,12 +339,12 @@ function Timeslot({
           onOpenSession={onOpenSession}
           zoomLevel={zoomLevel}
         />
-      ) : draftSession ? (
+      ) : draftBlock ? (
         // session draft being drawn
         <SessionWrapper
-          key={`draft-${draftSession.timeslot.end.toISOString()}`}
+          key={`draft-${draftBlock.timeslot.end.toISOString()}`}
           gridRef={gridRef}
-          session={draftSession}
+          session={draftBlock}
           onOpenSession={onOpenSession}
           zoomLevel={zoomLevel}
         />
