@@ -1,10 +1,10 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import {
-  ForbiddenError,
   ForbiddenOperationError,
   NotFoundError,
   ProposalNotFoundError,
   ScheduleTrackNotFoundError,
+  ScheduleTrackRequiredError,
   SessionConflictError,
 } from '~/shared/errors.server.ts';
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
@@ -30,8 +30,8 @@ export class EventSchedule {
     return new EventSchedule(event);
   }
 
-  private async schedule() {
-    const schedule = await db.schedule.findFirst({
+  private async schedule(client: DbTransaction = db) {
+    const schedule = await client.schedule.findFirst({
       where: { eventId: this.event.id },
       include: { tracks: true },
     });
@@ -176,28 +176,35 @@ export class EventSchedule {
     await db.scheduleSession.deleteMany({ where: { id: sessionId, scheduleId: schedule.id } });
   }
 
+  // Owns the rule for a valid Tracks save: a Track without id is new, every given id belongs to the Schedule,
+  // and the Schedule keeps at least one Track. All or nothing.
   async saveTracks(tracks: ScheduleTracksSaveData['tracks']) {
-    const schedule = await this.schedule();
+    await db.$transaction(async (trx) => {
+      const schedule = await this.schedule(trx);
 
-    const existingTracks = tracks.filter((t) => !t.id.startsWith('NEW'));
-    if (existingTracks.some((t) => !schedule.tracks.some((st) => st.id === t.id))) {
-      throw new ScheduleTrackNotFoundError();
-    }
-
-    if (tracks.length === 0) throw new ForbiddenError('You must have at least one track defined');
-
-    const deletedTracks = schedule.tracks.filter((t) => !tracks.find((ut) => ut.id === t.id));
-    if (deletedTracks.length > 0) {
-      await db.scheduleTrack.deleteMany({ where: { id: { in: deletedTracks.map((t) => t.id) } } });
-    }
-
-    for (const track of tracks) {
-      if (track.id.startsWith('NEW')) {
-        await db.scheduleTrack.create({ data: { name: track.name, schedule: { connect: { id: schedule.id } } } });
-      } else {
-        await db.scheduleTrack.update({ where: { id: track.id }, data: { name: track.name } });
+      const keptIds = tracks.map((track) => track.id).filter((id) => id !== undefined);
+      if (keptIds.some((id) => !schedule.tracks.some((track) => track.id === id))) {
+        throw new ScheduleTrackNotFoundError();
       }
-    }
+
+      if (tracks.length === 0) throw new ScheduleTrackRequiredError();
+
+      const deletedIds = schedule.tracks.filter((track) => !keptIds.includes(track.id)).map((track) => track.id);
+      if (deletedIds.length > 0) {
+        await trx.scheduleTrack.deleteMany({ where: { id: { in: deletedIds }, scheduleId: schedule.id } });
+      }
+
+      for (const track of tracks) {
+        if (track.id) {
+          await trx.scheduleTrack.updateMany({
+            where: { id: track.id, scheduleId: schedule.id },
+            data: { name: track.name },
+          });
+        } else {
+          await trx.scheduleTrack.create({ data: { name: track.name, scheduleId: schedule.id } });
+        }
+      }
+    });
   }
 
   async getScheduleSessions() {

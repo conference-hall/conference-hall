@@ -1,6 +1,5 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
-import slugify from '@sindresorhus/slugify';
 import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
@@ -15,10 +14,15 @@ type TracksModalProps = {
   onClose: VoidFunction;
 };
 
+// A row key is local to the modal and never sent: a new row has no Track id, an existing one carries its own.
+type TrackRow = { key: string; id?: string; name: string };
+
 export function TracksModal({ initialValues, open, onClose }: TracksModalProps) {
   const { t } = useTranslation();
   const formId = useId();
-  const [tracks, setTracks] = useState(initialValues);
+  const [tracks, setTracks] = useState<Array<TrackRow>>(() =>
+    initialValues.map((track) => ({ key: track.id, id: track.id, name: track.name })),
+  );
   const [newTrackLabel, setNewTrackLabel] = useState('');
   const newInputRef = useRef<HTMLInputElement>(null);
 
@@ -34,7 +38,7 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
 
   const handleAdd = () => {
     if (!newTrackLabel) return;
-    setTracks([...tracks, { id: `NEW-${slugify(newTrackLabel)}`, name: newTrackLabel }]);
+    setTracks([...tracks, { key: crypto.randomUUID(), name: newTrackLabel }]);
     setNewTrackLabel('');
     newInputRef.current?.focus();
   };
@@ -46,8 +50,8 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
 
         <Form id={formId} method="POST" onSubmit={onClose} className="space-y-4">
           {tracks.map((track, index) => (
-            <div key={track.id} className="flex gap-2">
-              <input type="hidden" name={`tracks[${index}].id`} value={track.id} />
+            <div key={track.key} className="flex gap-2">
+              {track.id ? <input type="hidden" name={`tracks[${index}].id`} value={track.id} /> : null}
               <Input
                 name={`tracks[${index}].name`}
                 aria-label={t('event-management.schedule.tracks.edit-label', { name: index + 1 })}

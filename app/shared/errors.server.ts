@@ -40,6 +40,12 @@ export class SessionConflictError extends BadRequestError {
   }
 }
 
+export class ScheduleTrackRequiredError extends BadRequestError {
+  constructor() {
+    super('Schedule must keep at least one track');
+  }
+}
+
 export class CfpNotOpenError extends BadRequestError {
   constructor() {
     super('CFP not open');

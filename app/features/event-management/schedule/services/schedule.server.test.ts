@@ -7,11 +7,11 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import {
-  ForbiddenError,
   ForbiddenOperationError,
   NotFoundError,
   ProposalNotFoundError,
   ScheduleTrackNotFoundError,
+  ScheduleTrackRequiredError,
   SessionConflictError,
 } from '~/shared/errors.server.ts';
 import type { Event, Schedule, ScheduleTrack, Team, User } from '../../../../../prisma/generated/client.ts';
@@ -541,7 +541,7 @@ describe('EventSchedule', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await EventSchedule.for(authorizedEvent).saveTracks([track, track2, { id: 'NEW-track3', name: 'Room 3' }]);
+      await EventSchedule.for(authorizedEvent).saveTracks([track, track2, { name: 'Room 3' }]);
 
       const actual = await EventSchedule.for(authorizedEvent).get();
       expect(actual?.tracks[0].name).toBe('Room 1');
@@ -558,6 +558,26 @@ describe('EventSchedule', () => {
       const actual = await EventSchedule.for(authorizedEvent).get();
       const trackNames = actual?.tracks.map((t) => t.name).toSorted();
       expect(trackNames).toEqual(['Room 1', 'Room 2 updated']);
+    });
+
+    it('adds, renames and deletes tracks in a single save, in creation order', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await EventSchedule.for(authorizedEvent).saveTracks([{ ...track, name: 'Room 1 renamed' }, { name: 'Room 3' }]);
+
+      const actual = await EventSchedule.for(authorizedEvent).get();
+      expect(actual?.tracks.map((t) => t.name)).toEqual(['Room 1 renamed', 'Room 3']);
+    });
+
+    it('creates both tracks when two new tracks share the same name', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await EventSchedule.for(authorizedEvent).saveTracks([track, track2, { name: 'Room 3' }, { name: 'Room 3' }]);
+
+      const actual = await EventSchedule.for(authorizedEvent).get();
+      expect(actual?.tracks.map((t) => t.name)).toEqual(['Room 1', 'Room 2', 'Room 3', 'Room 3']);
     });
 
     it('deletes a track', async () => {
@@ -579,12 +599,19 @@ describe('EventSchedule', () => {
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
       await expect(
-        EventSchedule.for(authorizedEvent).saveTracks([track, track2, { id: otherTrack.id, name: 'Hijacked' }]),
+        EventSchedule.for(authorizedEvent).saveTracks([
+          { ...track, name: 'Room 1 renamed' },
+          { name: 'Room 3' },
+          { id: otherTrack.id, name: 'Hijacked' },
+        ]),
       ).rejects.toThrow(ScheduleTrackNotFoundError);
 
       const otherAuthorizedEvent = await getAuthorizedEvent(authorizedTeam, otherEvent.slug);
       const actual = await EventSchedule.for(otherAuthorizedEvent).get();
       expect(actual?.tracks).toEqual([{ id: otherTrack.id, name: 'Other room' }]);
+
+      const unchanged = await EventSchedule.for(authorizedEvent).get();
+      expect(unchanged?.tracks.map((t) => t.name)).toEqual(['Room 1', 'Room 2']);
     });
 
     it('replaces the only track with a new one', async () => {
@@ -592,7 +619,7 @@ describe('EventSchedule', () => {
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       await EventSchedule.for(authorizedEvent).saveTracks([track]);
 
-      await EventSchedule.for(authorizedEvent).saveTracks([{ id: 'NEW-track3', name: 'Room 3' }]);
+      await EventSchedule.for(authorizedEvent).saveTracks([{ name: 'Room 3' }]);
 
       const actual = await EventSchedule.for(authorizedEvent).get();
       expect(actual?.tracks.map((t) => t.name)).toEqual(['Room 3']);
@@ -602,7 +629,10 @@ describe('EventSchedule', () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
-      await expect(EventSchedule.for(authorizedEvent).saveTracks([])).rejects.toThrow(ForbiddenError);
+      await expect(EventSchedule.for(authorizedEvent).saveTracks([])).rejects.toThrow(ScheduleTrackRequiredError);
+
+      const actual = await EventSchedule.for(authorizedEvent).get();
+      expect(actual?.tracks.map((t) => t.name)).toEqual(['Room 1', 'Room 2']);
     });
 
     it('throws not found Error when no schedule defined for the event', async () => {

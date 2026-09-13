@@ -4,6 +4,7 @@ import {
   ScheduleDisplayTimesUpdateSchema,
   ScheduleSessionCreateSchema,
   ScheduleSessionUpdateSchema,
+  ScheduleTracksSaveSchema,
 } from './schedule.schema.server.ts';
 
 describe('EventSchedule types', () => {
@@ -112,6 +113,38 @@ describe('EventSchedule types', () => {
       expect(z.flattenError(result.error!).fieldErrors).toEqual({
         displayStartMinutes: ['Displayed start in minutes must be before end in minutes.'],
       });
+    });
+  });
+
+  describe('#ScheduleTracksSaveSchema', () => {
+    it('accepts a track without an id as a new track', async () => {
+      const result = ScheduleTracksSaveSchema.safeParse({ tracks: [{ name: 'Room 1' }] });
+
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual({ tracks: [{ name: 'Room 1' }] });
+    });
+
+    it('accepts a track with an id as an existing track', async () => {
+      const result = ScheduleTracksSaveSchema.safeParse({ tracks: [{ id: 'track-1', name: 'Room 1' }] });
+
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual({ tracks: [{ id: 'track-1', name: 'Room 1' }] });
+    });
+
+    it('returns error when a track has no name', async () => {
+      const result = ScheduleTracksSaveSchema.safeParse({ tracks: [{ id: 'track-1' }] });
+
+      expect(result.success).toBe(false);
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
+        tracks: ['Invalid input: expected string, received undefined'],
+      });
+    });
+
+    it('accepts an empty list of tracks', async () => {
+      const result = ScheduleTracksSaveSchema.safeParse({ tracks: [] });
+
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual({ tracks: [] });
     });
   });
 
