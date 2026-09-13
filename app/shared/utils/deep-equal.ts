@@ -7,6 +7,10 @@ export function deepEqual<T>(a: T, b: T): boolean {
     return false;
   }
 
+  if (a instanceof Date || b instanceof Date) {
+    return a instanceof Date && b instanceof Date && a.getTime() === b.getTime();
+  }
+
   if (Array.isArray(a) !== Array.isArray(b)) {
     return false;
   }

@@ -78,6 +78,24 @@ describe('deepEqual', () => {
     });
   });
 
+  describe('dates', () => {
+    it('compares dates by time', () => {
+      expect(deepEqual(new Date('2024-01-01T10:00:00Z'), new Date('2024-01-01T10:00:00Z'))).toBe(true);
+      expect(deepEqual(new Date('2024-01-01T10:00:00Z'), new Date('2024-01-01T11:00:00Z'))).toBe(false);
+    });
+
+    it('compares dates nested in objects', () => {
+      const start = new Date('2024-01-01T10:00:00Z');
+      expect(deepEqual({ timeslot: { start } }, { timeslot: { start: new Date(start) } })).toBe(true);
+      expect(deepEqual({ timeslot: { start } }, { timeslot: { start: new Date(start.getTime() + 1) } })).toBe(false);
+    });
+
+    it('identifies a date and a plain object as not equal', () => {
+      expect(deepEqual<unknown>(new Date('2024-01-01T10:00:00Z'), {})).toBe(false);
+      expect(deepEqual<unknown>({}, new Date('2024-01-01T10:00:00Z'))).toBe(false);
+    });
+  });
+
   describe('complex nested structures', () => {
     it('compares complex nested structures correctly', () => {
       const obj1 = {
