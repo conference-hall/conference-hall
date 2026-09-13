@@ -16,7 +16,7 @@ import {
 } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
-import { SessionConflictError } from '~/shared/errors.server.ts';
+import { ScheduleTrackRequiredError, SessionConflictError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/schedule.ts';
@@ -97,6 +97,9 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   } catch (error) {
     if (error instanceof SessionConflictError) {
       return toast('error', i18n.t('event-management.schedule.errors.session-conflict'));
+    }
+    if (error instanceof ScheduleTrackRequiredError) {
+      return { errors: { tracks: i18n.t('event-management.schedule.errors.tracks-required') } };
     }
     throw error;
   }
