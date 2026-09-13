@@ -25,7 +25,6 @@ import { useScheduleFullscreen } from './components/header/use-schedule-fullscre
 import { useZoomHandlers } from './components/header/use-zoom-handlers.tsx';
 import type { ScheduleSession } from './components/schedule.types.ts';
 import Schedule from './components/schedule/schedule.tsx';
-import { SessionBlock } from './components/session/session-block.tsx';
 import { SessionModal } from './components/session/session-modal.tsx';
 import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
@@ -35,6 +34,8 @@ import { type CurrentSchedule, ScheduleProvider } from './schedule-context.tsx';
 import { EventSchedule } from './services/schedule.server.ts';
 
 const NEW_SESSION_DURATION = 30; // minutes
+
+type EditedSession = { mode: 'create' | 'edit'; session: ScheduleSession };
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
@@ -114,7 +115,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
   const settings = useDisplaySettings(schedule, scheduleTime);
   const { isFullscreen } = useScheduleFullscreen();
   const zoomHandlers = useZoomHandlers();
-  const [newSession, setNewSession] = useState<ScheduleSession | null>(null);
+  const [editedSession, setEditedSession] = useState<EditedSession | null>(null);
 
   const currentSchedule: CurrentSchedule = {
     scheduleTime,
@@ -133,15 +134,16 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
     if (!day || !trackId) return;
 
     const { start, end } = settings.displayedTimes;
-    setNewSession(
-      SessionMutations.blank({
+    setEditedSession({
+      mode: 'create',
+      session: SessionMutations.blank({
         trackId,
         timeslot: {
           start: setMinutesFromStartOfDay(day, start),
           end: setMinutesFromStartOfDay(day, Math.min(start + NEW_SESSION_DURATION, end)),
         },
       }),
-    );
+    });
   };
 
   if (settings.displayedDays.length === 0) {
@@ -185,13 +187,17 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
             onMoveSession={sessions.move}
             onResizeSession={sessions.resize}
             onSwapSessions={sessions.swap}
-            renderSession={(session, height) => (
-              <SessionBlock session={session} height={height} scheduleTime={scheduleTime} />
-            )}
+            onOpenSession={(session) => setEditedSession({ mode: 'edit', session })}
           />
         </div>
 
-        {newSession && <SessionModal mode="create" session={newSession} onClose={() => setNewSession(null)} />}
+        {editedSession && (
+          <SessionModal
+            mode={editedSession.mode}
+            session={editedSession.session}
+            onClose={() => setEditedSession(null)}
+          />
+        )}
       </main>
     </ScheduleProvider>
   );

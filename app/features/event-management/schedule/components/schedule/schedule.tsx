@@ -4,7 +4,7 @@
 import { RestrictToWindow } from '@dnd-kit/dom/modifiers';
 import { DragDropProvider, PointerSensor, useDragDropMonitor, useDraggable, useDroppable } from '@dnd-kit/react';
 import { cx } from 'class-variance-authority';
-import type { ReactNode, RefObject } from 'react';
+import type { RefObject } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -25,6 +25,7 @@ import type { ScheduleTime } from '../../models/schedule-time.ts';
 import { SessionMutations } from '../../models/session-mutation.ts';
 import type { PlacementOutcome, SwapOutcome } from '../../models/session-placement.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
+import { SessionBlock } from '../session/session-block.tsx';
 import { getSessionHeight, getTimeslotHeight, topInsideDroppable } from './helpers.ts';
 
 type ScheduleProps = {
@@ -33,7 +34,7 @@ type ScheduleProps = {
   scheduleTime: ScheduleTime;
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
-  renderSession: (session: ScheduleSession, height: number) => ReactNode;
+  onOpenSession: (session: ScheduleSession) => void;
   onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<PlacementOutcome>;
   onMoveSession: (session: ScheduleSession, target: { trackId: string; start: Date }) => Promise<PlacementOutcome>;
   onResizeSession: (session: ScheduleSession, end: Date) => Promise<PlacementOutcome>;
@@ -47,7 +48,7 @@ export default function Schedule({
   scheduleTime,
   tracks = [],
   sessions = [],
-  renderSession,
+  onOpenSession,
   onAddSession,
   onMoveSession,
   onResizeSession,
@@ -84,7 +85,7 @@ export default function Schedule({
             scheduleTime={scheduleTime}
             tracks={tracks}
             sessions={sessions}
-            renderSession={renderSession}
+            onOpenSession={onOpenSession}
             onAddSession={onAddSession}
             zoomLevel={zoomLevel}
             displayMultipleDays={displayedDays.length > 1}
@@ -114,7 +115,7 @@ type ScheduleDayProps = {
   displayedTimes: { start: number; end: number };
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
-  renderSession: (session: ScheduleSession, height: number) => ReactNode;
+  onOpenSession: (session: ScheduleSession) => void;
   onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<PlacementOutcome>;
   zoomLevel: number;
   displayMultipleDays: boolean;
@@ -127,7 +128,7 @@ function ScheduleDay({
   displayedTimes,
   tracks,
   sessions,
-  renderSession,
+  onOpenSession,
   onAddSession,
   zoomLevel,
   displayMultipleDays,
@@ -252,7 +253,7 @@ function ScheduleDay({
                               : undefined
                           }
                           onCreateDraft={() => handleCreateDraft(timeslot.end)}
-                          renderSession={renderSession}
+                          onOpenSession={onOpenSession}
                         />
                       );
                     })}
@@ -299,7 +300,7 @@ type TimeslotProps = {
   onStartDraft: () => void;
   onExtendDraft?: () => void;
   onCreateDraft: () => void;
-  renderSession: (session: ScheduleSession, height: number) => ReactNode;
+  onOpenSession: (session: ScheduleSession) => void;
 };
 
 function Timeslot({
@@ -318,7 +319,7 @@ function Timeslot({
   onStartDraft,
   onExtendDraft,
   onCreateDraft,
-  renderSession,
+  onOpenSession,
 }: TimeslotProps) {
   const { i18n } = useTranslation();
   const label = `Timeslot ${scheduleTime.formatTime(timeslot.start, i18n.language)}`;
@@ -362,7 +363,7 @@ function Timeslot({
           key={`${sessionBlock.id}-${sessionBlock.timeslot.start.toISOString()}-${sessionBlock.timeslot.end.toISOString()}-${zoomLevel}`}
           gridRef={gridRef}
           session={sessionBlock}
-          renderSession={renderSession}
+          onOpenSession={onOpenSession}
           zoomLevel={zoomLevel}
         />
       ) : draftSession ? (
@@ -371,7 +372,7 @@ function Timeslot({
           key={`draft-${draftSession.timeslot.end.toISOString()}`}
           gridRef={gridRef}
           session={draftSession}
-          renderSession={renderSession}
+          onOpenSession={onOpenSession}
           zoomLevel={zoomLevel}
         />
       ) : null}
@@ -382,11 +383,11 @@ function Timeslot({
 type SessionWrapperProps = {
   gridRef: RefObject<ScheduleGrid>;
   session: ScheduleSession;
-  renderSession: (session: ScheduleSession, height: number) => ReactNode;
+  onOpenSession: (session: ScheduleSession) => void;
   zoomLevel: number;
 };
 
-function SessionWrapper({ gridRef, session, renderSession, zoomLevel }: SessionWrapperProps) {
+function SessionWrapper({ gridRef, session, onOpenSession, zoomLevel }: SessionWrapperProps) {
   // Compute session height
   const defaultHeight = getSessionHeight(session, SLOT_INTERVAL, zoomLevel);
   const [height, setHeight] = useState(defaultHeight);
@@ -444,7 +445,7 @@ function SessionWrapper({ gridRef, session, renderSession, zoomLevel }: SessionW
         style={{ top: '0px', left: '1px', right: '1px', zIndex: movable.isDragging ? '40' : undefined }}
       >
         <div ref={droppable.ref} style={{ height: `${height}px` }}>
-          {renderSession(session, height)}
+          <SessionBlock session={session} height={height} onOpen={() => onOpenSession(session)} />
         </div>
       </div>
 
