@@ -6,7 +6,6 @@ import { type PlacementOutcome, SessionPlacement, type SwapOutcome } from './ses
 
 // Owns the rule of a Session mutation, from the gesture to what is submitted: placement, adjustment, wire
 // encoding and submission. Also renders the mutations still in flight on top of the Sessions known by the server.
-// Time reference contract: sessions are given and returned in the Schedule timezone, the wire carries UTC.
 
 export const SESSION_INTENTS = {
   add: 'add-session',
