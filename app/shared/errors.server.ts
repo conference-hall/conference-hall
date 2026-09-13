@@ -28,6 +28,18 @@ export class ProposalNotFoundError extends NotFoundError {
   }
 }
 
+export class ScheduleTrackNotFoundError extends NotFoundError {
+  constructor() {
+    super('Schedule track not found');
+  }
+}
+
+export class SessionConflictError extends BadRequestError {
+  constructor() {
+    super('Session conflict');
+  }
+}
+
 export class CfpNotOpenError extends BadRequestError {
   constructor() {
     super('CFP not open');
