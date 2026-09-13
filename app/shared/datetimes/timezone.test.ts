@@ -118,6 +118,11 @@ describe('timezone', () => {
       const offsetLondon = getGMTOffset('Europe/London', 'fr');
       expect(offsetLondon).toMatch(/^UTC(\+0)?$/);
     });
+
+    it('returns the offset of the given date', async () => {
+      const offsetNewYork = getGMTOffset('America/New_York', 'en-US', new Date('2020-07-01T12:00:00.000Z'));
+      expect(offsetNewYork).toBe('EDT');
+    });
   });
 
   describe('#parseToUtcStartOfDay', () => {

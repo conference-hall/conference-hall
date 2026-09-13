@@ -51,8 +51,8 @@ export class ScheduleTime {
     });
   }
 
-  gmtOffset(locale: string): string | null {
-    return getGMTOffset(this.timezone, locale);
+  gmtOffset(day: Date, locale: string): string | null {
+    return getGMTOffset(this.timezone, locale, day);
   }
 }
 

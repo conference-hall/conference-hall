@@ -180,7 +180,7 @@ function ScheduleDay({
             {/* gutter */}
             {dayIndex === 0 && (
               <th className="w-12 bg-white text-center text-xs font-normal text-gray-400">
-                {scheduleTime.gmtOffset(locale)}
+                {scheduleTime.gmtOffset(day, locale)}
               </th>
             )}
             {/* tracks header */}

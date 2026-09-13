@@ -117,4 +117,14 @@ describe('ScheduleTime', () => {
       expect(range).toBe('January 1, 2022');
     });
   });
+
+  describe('#gmtOffset', () => {
+    it('returns the winter offset of a winter day', () => {
+      expect(scheduleTime.gmtOffset(new Date('2024-01-15T12:00:00.000Z'), 'en')).toBe('GMT+1');
+    });
+
+    it('returns the summer offset of a summer day', () => {
+      expect(scheduleTime.gmtOffset(new Date('2024-07-15T12:00:00.000Z'), 'en')).toBe('GMT+2');
+    });
+  });
 });
