@@ -4,7 +4,6 @@ import {
   getDailyTimeSlots,
   haveSameStartDate,
   isAfterTimeSlot,
-  isNextTimeslotInWindow,
   isTimeSlotIncluded,
   mergeTimeslots,
   moveTimeSlotStart,
@@ -206,72 +205,6 @@ describe('timeslots', () => {
       const result = isTimeSlotIncluded(timeslot);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('#isNextTimeslotInWindow', () => {
-    it('returns true when next timeslot is within window', async () => {
-      const startSlot = {
-        start: new Date('2020-02-26T10:00:00.000Z'),
-        end: new Date('2020-02-26T10:30:00.000Z'),
-      };
-
-      const nextSlot = {
-        start: new Date('2020-02-26T11:00:00.000Z'),
-        end: new Date('2020-02-26T11:30:00.000Z'),
-      };
-
-      const result = isNextTimeslotInWindow(startSlot, nextSlot, 30);
-
-      expect(result).toBe(true);
-    });
-
-    it('returns false when next timeslot is outside window', async () => {
-      const startSlot = {
-        start: new Date('2020-02-26T10:00:00.000Z'),
-        end: new Date('2020-02-26T10:30:00.000Z'),
-      };
-
-      const nextSlot = {
-        start: new Date('2020-02-26T22:00:00.000Z'),
-        end: new Date('2020-02-26T22:30:00.000Z'),
-      };
-
-      const result = isNextTimeslotInWindow(startSlot, nextSlot, 30);
-
-      expect(result).toBe(false);
-    });
-
-    it('works with custom window size', async () => {
-      const startSlot = {
-        start: new Date('2020-02-26T10:00:00.000Z'),
-        end: new Date('2020-02-26T10:30:00.000Z'),
-      };
-
-      const nextSlot = {
-        start: new Date('2020-02-26T11:00:00.000Z'),
-        end: new Date('2020-02-26T11:30:00.000Z'),
-      };
-
-      const result = isNextTimeslotInWindow(startSlot, nextSlot, 30, 1);
-
-      expect(result).toBe(false);
-    });
-
-    it('returns true when next timeslot is exactly at window boundary', async () => {
-      const startSlot = {
-        start: new Date('2020-02-26T10:00:00.000Z'),
-        end: new Date('2020-02-26T10:30:00.000Z'),
-      };
-
-      const nextSlot = {
-        start: new Date('2020-02-26T10:30:00.000Z'),
-        end: new Date('2020-02-26T11:00:00.000Z'),
-      };
-
-      const result = isNextTimeslotInWindow(startSlot, nextSlot, 30, 2);
-
-      expect(result).toBe(true);
     });
   });
 });

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { formatTime, formatTimeDifference } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
+import type { PlacementOutcome } from '../../models/session-placement.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 import { SessionModal } from './session-modal.tsx';
@@ -16,7 +17,7 @@ type SessionBlockProps = {
   displayedTimes: { start: number; end: number };
   tracks: Array<Track>;
   scheduleDays: Array<Date>;
-  onUpdateSession: (updated: ScheduleSession) => Promise<boolean>;
+  onUpdateSession: (updated: ScheduleSession) => Promise<PlacementOutcome>;
   onDeleteSession: (session: ScheduleSession) => Promise<void>;
 };
 
@@ -88,7 +89,7 @@ export function SessionBlock({
 type SessionSpeakersProps = { speakers?: Array<{ name: string | null; picture: string | null }>; size: Size };
 
 function SessionSpeakers({ speakers, size }: SessionSpeakersProps) {
-  if (!speakers) return null;
+  if (!speakers?.length) return null;
   const firstSpeaker = speakers.at(0);
   const speakersCount = speakers.length - 1;
   const suffix = speakers.length > 1 ? ` (+${speakersCount})` : '';

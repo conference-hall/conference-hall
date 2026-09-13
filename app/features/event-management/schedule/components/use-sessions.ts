@@ -1,195 +1,81 @@
 import { useFetchers, useSubmit } from 'react-router';
-import { moveTimeSlotStart } from '~/shared/datetimes/timeslots.ts';
-import { timezoneToUtc, utcToTimezone } from '~/shared/datetimes/timezone.ts';
-import type { Language } from '~/shared/types/proposals.types.ts';
+import { type SessionMutation, SessionMutations, toScheduleSession } from '../models/session-mutation.ts';
+import type { PlacementOutcome, SwapOutcome } from '../models/session-placement.ts';
 import { SessionPlacement } from '../models/session-placement.ts';
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
 export function useSessions(initialSessions: Array<SessionData>, timezone: string) {
-  const sessions = useOptimisticSessions(initialSessions, timezone);
+  const mutations = new SessionMutations(timezone);
+  const fetchers = useFetchers();
+  const sessions = mutations.applyPending(
+    initialSessions.map((session) => toScheduleSession(session, timezone)),
+    fetchers,
+  );
   const placement = new SessionPlacement(sessions);
 
   const submit = useSubmit();
 
-  const onAdd = async (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => {
+  const submitMutation = async ({ key, formData }: SessionMutation) => {
+    await submit(formData, {
+      method: 'POST',
+      navigate: false,
+      fetcherKey: key,
+      flushSync: true,
+      preventScrollReset: true,
+    });
+  };
+
+  // Submits a Session at the placement returned by the model, so an adjusted gesture is shown adjusted.
+  const submitPlacement = async (session: ScheduleSession, outcome: PlacementOutcome) => {
+    if (outcome.status === 'conflict') return outcome;
+
+    const { trackId, timeslot } = outcome.placement;
+    await submitMutation(mutations.update({ ...session, trackId, timeslot }));
+    return outcome;
+  };
+
+  const onAdd = async (session: Omit<ScheduleSession, 'id' | 'isCreating'>): Promise<PlacementOutcome> => {
     const outcome = placement.place({ trackId: session.trackId, timeslot: session.timeslot });
-    if (outcome.status === 'conflict') return false;
+    if (outcome.status === 'conflict') return outcome;
 
-    const id = crypto.randomUUID();
-    const formData = new FormData();
-    formData.set('intent', 'add-session');
-    formData.set('id', id);
-    formData.set('trackId', session.trackId);
-    formData.set('start', timezoneToUtc(session.timeslot.start, timezone).toISOString());
-    formData.set('end', timezoneToUtc(session.timeslot.end, timezone).toISOString());
-    formData.set('color', session.color);
-    formData.set('name', session.name ?? '');
-    formData.set('language', session.language ?? '');
-    formData.set('proposalId', session.proposal?.id ?? '');
-    for (const emoji of session.emojis) {
-      formData.append('emojis', emoji);
-    }
-
-    await submit(formData, {
-      method: 'POST',
-      navigate: false,
-      fetcherKey: `session:${id}`,
-      flushSync: true,
-      preventScrollReset: true,
-    });
-    return true;
+    await submitMutation(mutations.add(session));
+    return outcome;
   };
 
-  const update = async (session: ScheduleSession) => {
-    const formData = new FormData();
-    formData.set('intent', 'update-session');
-    formData.set('id', session.id);
-    formData.set('trackId', session.trackId);
-    formData.set('start', timezoneToUtc(session.timeslot.start, timezone).toISOString());
-    formData.set('end', timezoneToUtc(session.timeslot.end, timezone).toISOString());
-    formData.set('color', session.color);
-    formData.set('name', session.name ?? '');
-    formData.set('language', session.language ?? '');
-    formData.set('proposalId', session.proposal?.id ?? '');
-    for (const emoji of session.emojis) {
-      formData.append('emojis', emoji);
-    }
+  const onUpdate = async (session: ScheduleSession): Promise<PlacementOutcome> => {
+    const outcome = placement.place({ trackId: session.trackId, timeslot: session.timeslot }, session.id);
+    if (outcome.status === 'conflict') return outcome;
 
-    await submit(formData, {
-      method: 'POST',
-      navigate: false,
-      fetcherKey: `session:${session.id}`,
-      flushSync: true,
-      preventScrollReset: true,
-    });
+    await submitMutation(mutations.update(session));
+    return outcome;
   };
 
-  const onUpdate = async (updatedSession: ScheduleSession) => {
-    const outcome = placement.place(
-      { trackId: updatedSession.trackId, timeslot: updatedSession.timeslot },
-      updatedSession.id,
-    );
-    if (outcome.status === 'conflict') return false;
+  const onMove = (session: ScheduleSession, target: { trackId: string; start: Date }): Promise<PlacementOutcome> =>
+    submitPlacement(session, placement.move(session, target));
 
-    await update(updatedSession);
-    return true;
-  };
+  const onResize = (session: ScheduleSession, end: Date): Promise<PlacementOutcome> =>
+    submitPlacement(session, placement.resize(session, end));
 
-  const onSwitch = async (source: ScheduleSession, target: ScheduleSession) => {
+  const onSwap = async (source: ScheduleSession, target: ScheduleSession): Promise<SwapOutcome> => {
     const outcome = placement.swap(source, target);
-    if (outcome.status === 'conflict') return false;
+    if (outcome.status === 'conflict') return outcome;
 
-    await submit(
-      { intent: 'switch-sessions', sourceId: source.id, targetId: target.id },
-      {
-        method: 'POST',
-        navigate: false,
-        fetcherKey: `session:${source.id}`,
-        flushSync: true,
-        preventScrollReset: true,
-      },
-    );
-    return true;
+    await submitMutation(mutations.switch(source, target));
+    return outcome;
   };
 
   const onDelete = async (session: ScheduleSession) => {
-    await submit(
-      { intent: 'delete-session', id: session.id },
-      { method: 'POST', navigate: false, preventScrollReset: true },
-    );
+    const { formData } = mutations.delete(session);
+    await submit(formData, { method: 'POST', navigate: false, preventScrollReset: true });
   };
 
   return {
     add: onAdd,
     update: onUpdate,
-    switch: onSwitch,
+    move: onMove,
+    resize: onResize,
+    swap: onSwap,
     delete: onDelete,
     data: sessions,
   };
-}
-
-function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: string) {
-  type PendingSession = ReturnType<typeof useFetchers>[number] & {
-    formData: FormData;
-  };
-
-  const sessionsById = new Map(
-    initialSessions.map(({ id, trackId, start, end, name, language, color, emojis, proposal }) => [
-      id,
-      {
-        id,
-        trackId,
-        timeslot: { start: utcToTimezone(start, timezone), end: utcToTimezone(end, timezone) },
-        name,
-        language,
-        color,
-        emojis,
-        proposal,
-      },
-    ]),
-  );
-
-  const fetchers = useFetchers();
-
-  // Pending add & update
-  const pendingSessions = fetchers
-    .filter((fetcher): fetcher is PendingSession => {
-      if (!fetcher.formData) return false;
-      const intent = fetcher.formData.get('intent');
-      return intent === 'add-session' || intent === 'update-session';
-    })
-    .map((fetcher) => ({
-      id: String(fetcher.formData?.get('id')),
-      trackId: String(fetcher.formData?.get('trackId')),
-      color: String(fetcher.formData?.get('color') ?? 'gray'),
-      name: String(fetcher.formData?.get('name') ?? ''),
-      language: String(fetcher.formData?.get('language') ?? '') as Language | null,
-      emojis: fetcher.formData?.getAll('emojis') as string[],
-      isCreating: fetcher.formData.get('intent') === 'add-session',
-      timeslot: {
-        start: utcToTimezone(String(fetcher.formData?.get('start')), timezone),
-        end: utcToTimezone(String(fetcher.formData?.get('end')), timezone),
-      },
-    }));
-
-  for (const session of pendingSessions) {
-    const current = sessionsById.get(session.id);
-    sessionsById.set(session.id, { ...session, proposal: current?.proposal });
-  }
-
-  // Pending switch
-  const switchFetchers = fetchers.filter((fetcher): fetcher is PendingSession => {
-    if (!fetcher.formData) return false;
-    return fetcher.formData.get('intent') === 'switch-sessions';
-  });
-
-  for (const fetcher of switchFetchers) {
-    const source = sessionsById.get(String(fetcher.formData.get('sourceId')));
-    const target = sessionsById.get(String(fetcher.formData.get('targetId')));
-    if (!source || !target) continue;
-
-    sessionsById.set(source.id, {
-      ...source,
-      trackId: target.trackId,
-      timeslot: moveTimeSlotStart(source.timeslot, target.timeslot.start),
-    });
-    sessionsById.set(target.id, {
-      ...target,
-      trackId: source.trackId,
-      timeslot: moveTimeSlotStart(target.timeslot, source.timeslot.start),
-    });
-  }
-
-  // Pending delete
-  const deleteFetchers = fetchers.filter((fetcher): fetcher is PendingSession => {
-    if (!fetcher.formData) return false;
-    const intent = fetcher.formData.get('intent');
-    return intent === 'delete-session';
-  });
-
-  for (const fetcher of deleteFetchers) {
-    sessionsById.delete(String(fetcher.formData?.get('id')));
-  }
-
-  return Array.from(sessionsById.values());
 }
