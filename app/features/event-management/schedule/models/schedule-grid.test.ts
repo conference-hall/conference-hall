@@ -282,6 +282,84 @@ describe('ScheduleGrid', () => {
       expect(grid().isInsideDraft(draft, { trackId: 'track-2', timeslot: slot(9, 40) })).toBe(false);
     });
   });
+
+  describe('#slotView', () => {
+    const draft = { trackId: 'track-1', timeslot: { start: at(9, 30), end: at(9, 45) } };
+
+    it('shows a free slot ready to start a draft', () => {
+      const view = grid().slotView({ trackId: 'track-1', timeslot: slot(11) }, null);
+
+      expect(view).toEqual({
+        isOccupied: false,
+        isHourStart: true,
+        sessionBlock: undefined,
+        canStartDraft: true,
+        draftRelation: 'none',
+        draftBlock: undefined,
+      });
+    });
+
+    it('shows the session block on the first slot of a session', () => {
+      const talk = session('a', 'track-1', at(9), at(10));
+
+      const view = grid({ sessions: [talk] }).slotView({ trackId: 'track-1', timeslot: slot(9) }, null);
+
+      expect(view.isOccupied).toBe(true);
+      expect(view.sessionBlock).toBe(talk);
+      expect(view.canStartDraft).toBe(false);
+    });
+
+    it('shows no block on a later slot of a session', () => {
+      const talk = session('a', 'track-1', at(9), at(10));
+
+      const view = grid({ sessions: [talk] }).slotView({ trackId: 'track-1', timeslot: slot(9, 30) }, null);
+
+      expect(view.isOccupied).toBe(true);
+      expect(view.sessionBlock).toBeUndefined();
+    });
+
+    it('marks the first slot of an hour, not the following ones', () => {
+      const model = grid();
+
+      expect(model.slotView({ trackId: 'track-1', timeslot: slot(10) }, null).isHourStart).toBe(true);
+      expect(model.slotView({ trackId: 'track-1', timeslot: slot(10, 5) }, null).isHourStart).toBe(false);
+    });
+
+    it('refuses a second draft and stays unrelated to a draft of another track', () => {
+      const view = grid().slotView({ trackId: 'track-2', timeslot: slot(9, 35) }, draft);
+
+      expect(view.canStartDraft).toBe(false);
+      expect(view.draftRelation).toBe('none');
+    });
+
+    it('shows the blank session of the draft on its starting slot', () => {
+      const view = grid().slotView({ trackId: 'track-1', timeslot: slot(9, 30) }, draft);
+
+      expect(view.draftRelation).toBe('start');
+      expect(view.draftBlock).toMatchObject({ trackId: 'track-1', timeslot: draft.timeslot });
+    });
+
+    it('is inside the draft on a slot already drawn', () => {
+      const view = grid().slotView({ trackId: 'track-1', timeslot: slot(9, 40) }, draft);
+
+      expect(view.draftRelation).toBe('inside');
+      expect(view.draftBlock).toBeUndefined();
+    });
+
+    it('is extendable on the free slot just after the draft', () => {
+      const view = grid().slotView({ trackId: 'track-1', timeslot: slot(9, 45) }, draft);
+
+      expect(view.draftRelation).toBe('extendable');
+    });
+
+    it('is unrelated to the draft past the next session of the track', () => {
+      const next = session('a', 'track-1', at(10), at(11));
+
+      const view = grid({ sessions: [next] }).slotView({ trackId: 'track-1', timeslot: slot(10) }, draft);
+
+      expect(view.draftRelation).toBe('none');
+    });
+  });
 });
 
 describe('decodeGesture', () => {

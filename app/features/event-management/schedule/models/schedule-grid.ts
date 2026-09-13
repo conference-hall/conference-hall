@@ -2,11 +2,12 @@ import { addMinutes } from 'date-fns';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import { getDailyTimeSlots, haveSameStartDate, isTimeSlotIncluded } from '~/shared/datetimes/timeslots.ts';
 import type { ScheduleSession, Track } from '../components/schedule.types.ts';
+import { SessionMutations } from './session-mutation.ts';
 import { SessionPlacement } from './session-placement.ts';
 
-// Owns every decision the grid of one displayed day makes: its hour rows and slots, which Session occupies a
-// slot, whether a slot accepts a drag source, what a resize preview shows, and how far a Session draft may be
-// extended. It owns no pixel and never imports the drag-and-drop library.
+// Owns every decision the grid of one displayed day makes: its hour rows and slots, what a slot shows and
+// allows, which Session occupies a slot, whether a slot accepts a drag source, what a resize preview shows,
+// and how far a Session draft may be extended. It owns no pixel and never imports the drag-and-drop library.
 
 const HOUR_INTERVAL = 60; // minutes
 export const SLOT_INTERVAL = 5; // minutes
@@ -42,6 +43,19 @@ export type DraftWindow = { trackId: string; timeslot: TimeSlot };
 
 export type GridRow = { hour: TimeSlot; slots: Array<TimeSlot> };
 
+// How a slot stands to the draft being drawn. A slot 'inside' the draft, and its 'start' slot, also extend it.
+export type DraftRelation = 'none' | 'extendable' | 'inside' | 'start';
+
+// Everything a slot shows and allows, in one value.
+export type SlotView = {
+  isOccupied: boolean;
+  isHourStart: boolean;
+  sessionBlock?: ScheduleSession;
+  canStartDraft: boolean;
+  draftRelation: DraftRelation;
+  draftBlock?: ScheduleSession;
+};
+
 type ScheduleGridInput = {
   day: Date;
   displayedTimes: { start: number; end: number };
@@ -52,6 +66,7 @@ type ScheduleGridInput = {
 export class ScheduleGrid {
   private placement: SessionPlacement;
   private gridRows?: Array<GridRow>;
+  private lastDraftWindow?: { draft: SessionDraft; window: DraftWindow };
 
   constructor(private grid: ScheduleGridInput) {
     this.placement = new SessionPlacement(grid.sessions);
@@ -75,6 +90,21 @@ export class ScheduleGrid {
 
     this.gridRows = hours.map((hour) => ({ hour, slots: getDailyTimeSlots(hour.start, hour.end, SLOT_INTERVAL) }));
     return this.gridRows;
+  }
+
+  // What a slot shows and allows, for a target and the draft being drawn if there is one.
+  slotView(target: GridTarget, draft: SessionDraft | null): SlotView {
+    const session = this.sessionAt(target);
+    const draftRelation = this.draftRelation(target, draft);
+
+    return {
+      isOccupied: session !== undefined,
+      isHourStart: target.timeslot.start.getMinutes() === 0,
+      sessionBlock: this.isSessionStart(target) ? session : undefined,
+      canStartDraft: session === undefined && draft === null,
+      draftRelation,
+      draftBlock: draft && draftRelation === 'start' ? SessionMutations.blank(draft) : undefined,
+    };
   }
 
   // The Session occupying a slot of a Track, if any.
@@ -113,11 +143,17 @@ export class ScheduleGrid {
     return { start: session.timeslot.start, end: target.timeslot.end };
   }
 
-  // The window a draft may be extended into.
+  // The window a draft may be extended into. Kept for the draft it was computed from: every slot of the day
+  // asks for it during a drawing.
   draftWindow(draft: SessionDraft): DraftWindow {
+    if (this.lastDraftWindow?.draft === draft) return this.lastDraftWindow.window;
+
     const outcome = this.placement.resize({ id: DRAFT_SESSION_ID, ...draft }, this.displayedEnd);
-    if (outcome.status === 'conflict') return draft;
-    return { trackId: draft.trackId, timeslot: outcome.placement.timeslot };
+    const window =
+      outcome.status === 'conflict' ? draft : { trackId: draft.trackId, timeslot: outcome.placement.timeslot };
+
+    this.lastDraftWindow = { draft, window };
+    return window;
   }
 
   // Whether a slot extends the draft: same Track, inside the extension window.
@@ -130,6 +166,14 @@ export class ScheduleGrid {
   isInsideDraft(draft: SessionDraft, target: GridTarget): boolean {
     if (target.trackId !== draft.trackId) return false;
     return isTimeSlotIncluded(target.timeslot, draft.timeslot);
+  }
+
+  private draftRelation(target: GridTarget, draft: SessionDraft | null): DraftRelation {
+    if (!draft) return 'none';
+    if (target.trackId === draft.trackId && haveSameStartDate(target.timeslot, draft.timeslot)) return 'start';
+    if (this.isInsideDraft(draft, target)) return 'inside';
+    if (this.canExtendDraft(this.draftWindow(draft), target)) return 'extendable';
+    return 'none';
   }
 
   // The displayed day ends with the last of its hour rows.

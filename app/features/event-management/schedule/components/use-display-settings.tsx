@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useFetcher, useNavigate, useParams, useSearchParams } from 'react-router';
 import type { ScheduleTime } from '../models/schedule-time.ts';
 
@@ -17,16 +18,24 @@ export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: Sch
 
   const { start, end, displayStartMinutes, displayEndMinutes } = settings;
 
-  // compute schedule days
-  const scheduleDays = scheduleTime.days(start, end);
-  const displayedDays = scheduleDays.slice(displayedStart, (displayedEnd || displayedStart) + 1);
-  const displayedTimes = { start: displayStartMinutes, end: displayEndMinutes };
+  // compute schedule days, keeping the same references between two renders without change
+  const scheduleDays = useMemo(() => scheduleTime.days(start, end), [scheduleTime, start, end]);
+
+  const displayedDays = useMemo(
+    () => scheduleDays.slice(displayedStart, (displayedEnd || displayedStart) + 1),
+    [scheduleDays, displayedStart, displayedEnd],
+  );
 
   // optimistic update
-  if (fetcher.formData?.get('intent') === 'update-display-times') {
-    displayedTimes.start = Number(fetcher.formData?.get('displayStartMinutes'));
-    displayedTimes.end = Number(fetcher.formData?.get('displayEndMinutes'));
-  }
+  const pendingTimesForm = fetcher.formData?.get('intent') === 'update-display-times' ? fetcher.formData : null;
+
+  const displayedTimes = useMemo(() => {
+    if (!pendingTimesForm) return { start: displayStartMinutes, end: displayEndMinutes };
+    return {
+      start: Number(pendingTimesForm.get('displayStartMinutes')),
+      end: Number(pendingTimesForm.get('displayEndMinutes')),
+    };
+  }, [pendingTimesForm, displayStartMinutes, displayEndMinutes]);
 
   const updateDisplayTimes = (start: number, end: number) => {
     fetcher.submit(

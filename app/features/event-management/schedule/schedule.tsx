@@ -117,16 +117,28 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
   const zoomHandlers = useZoomHandlers();
   const [editedSession, setEditedSession] = useState<EditedSession | null>(null);
 
-  const currentSchedule: CurrentSchedule = {
-    scheduleTime,
-    tracks: schedule.tracks,
-    scheduleDays: settings.scheduleDays,
-    displayedDays: settings.displayedDays,
-    displayedTimes: settings.displayedTimes,
-    addSession: sessions.add,
-    updateSession: sessions.update,
-    deleteSession: sessions.delete,
-  };
+  const currentSchedule = useMemo<CurrentSchedule>(
+    () => ({
+      scheduleTime,
+      tracks: schedule.tracks,
+      scheduleDays: settings.scheduleDays,
+      displayedDays: settings.displayedDays,
+      displayedTimes: settings.displayedTimes,
+      addSession: sessions.add,
+      updateSession: sessions.update,
+      deleteSession: sessions.delete,
+    }),
+    [
+      scheduleTime,
+      schedule.tracks,
+      settings.scheduleDays,
+      settings.displayedDays,
+      settings.displayedTimes,
+      sessions.add,
+      sessions.update,
+      sessions.delete,
+    ],
+  );
 
   const openNewSession = () => {
     const day = settings.displayedDays.at(0);
