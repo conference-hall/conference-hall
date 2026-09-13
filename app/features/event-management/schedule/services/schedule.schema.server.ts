@@ -39,7 +39,7 @@ export const ScheduleDisplayTimesUpdateSchema = z
       .min(0)
       .max(23 * 60),
   })
-  .refine(({ displayStartMinutes, displayEndMinutes }) => displayStartMinutes <= displayEndMinutes, {
+  .refine(({ displayStartMinutes, displayEndMinutes }) => displayStartMinutes < displayEndMinutes, {
     path: ['displayStartMinutes'],
     error: 'Displayed start in minutes must be before end in minutes.',
   });

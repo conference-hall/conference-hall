@@ -90,6 +90,18 @@ describe('EventSchedule types', () => {
       });
     });
 
+    it('returns error when displayStartMinutes equals displayEndMinutes', async () => {
+      const result = ScheduleDisplayTimesUpdateSchema.safeParse({
+        displayStartMinutes: 10,
+        displayEndMinutes: 10,
+      });
+
+      expect(result.success).toBe(false);
+      expect(z.flattenError(result.error!).fieldErrors).toEqual({
+        displayStartMinutes: ['Displayed start in minutes must be before end in minutes.'],
+      });
+    });
+
     it('returns error when displayStartMinutes after displayEndMinutes', async () => {
       const result = ScheduleDisplayTimesUpdateSchema.safeParse({
         displayStartMinutes: 20,
