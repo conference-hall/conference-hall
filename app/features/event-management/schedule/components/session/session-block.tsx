@@ -88,7 +88,7 @@ export function SessionBlock({
 type SessionSpeakersProps = { speakers?: Array<{ name: string | null; picture: string | null }>; size: Size };
 
 function SessionSpeakers({ speakers, size }: SessionSpeakersProps) {
-  if (!speakers) return null;
+  if (!speakers?.length) return null;
   const firstSpeaker = speakers.at(0);
   const speakersCount = speakers.length - 1;
   const suffix = speakers.length > 1 ? ` (+${speakersCount})` : '';

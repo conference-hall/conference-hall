@@ -88,7 +88,7 @@ export function SessionForm({
           name={name}
           proposal={proposal}
           onChange={(identity) => {
-            setName(identity.proposal ? identity.proposal.title : identity.name);
+            setName(identity.name);
             setProposal(identity.proposal);
           }}
         />

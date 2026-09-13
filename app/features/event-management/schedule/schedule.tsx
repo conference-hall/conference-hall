@@ -29,6 +29,7 @@ import { SessionBlock } from './components/session/session-block.tsx';
 import { SessionModal } from './components/session/session-modal.tsx';
 import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
+import { SESSION_INTENTS } from './models/session-mutation.ts';
 import { EventSchedule } from './services/schedule.server.ts';
 
 const NEW_SESSION_DURATION = 30; // minutes
@@ -51,25 +52,25 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
 
   try {
     switch (intent) {
-      case 'add-session': {
+      case SESSION_INTENTS.add: {
         const result = parseWithZod(form, { schema: ScheduleSessionCreateSchema });
         if (result.status !== 'success') return toast('error', i18n.t('error.global'));
         await eventSchedule.addSession(result.value);
         break;
       }
-      case 'update-session': {
+      case SESSION_INTENTS.update: {
         const result = parseWithZod(form, { schema: ScheduleSessionUpdateSchema });
         if (result.status !== 'success') return toast('error', i18n.t('error.global'));
         await eventSchedule.updateSession(result.value);
         break;
       }
-      case 'switch-sessions': {
+      case SESSION_INTENTS.switch: {
         const result = parseWithZod(form, { schema: ScheduleSessionsSwitchSchema });
         if (result.status !== 'success') return toast('error', i18n.t('error.global'));
         await eventSchedule.switchSessions(result.value.sourceId, result.value.targetId);
         break;
       }
-      case 'delete-session': {
+      case SESSION_INTENTS.delete: {
         const result = SchedulSessionIdSchema.safeParse(form.get('id'));
         if (!result.success) return toast('error', i18n.t('error.global'));
         await eventSchedule.deleteSession(result.data);

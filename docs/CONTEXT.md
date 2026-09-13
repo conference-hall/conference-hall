@@ -151,3 +151,8 @@ term as defined here and don't drift to synonyms.
   Session is _placed_ where it was asked to go, it is _adjusted_, meaning placed with
   its end clamped to the start of the next Session in the Track or to a minimum length,
   or it is _refused_ because of a Session conflict.
+
+- **Session mutation**: A change requested on a Session by an organizer: adding one,
+  updating one, swapping two, or deleting one. A mutation is _pending_ from the moment
+  it is requested until the Schedule confirms it; the Schedule is shown as if pending
+  mutations were already applied.
