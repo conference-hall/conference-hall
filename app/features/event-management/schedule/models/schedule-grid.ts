@@ -19,12 +19,10 @@ const DRAFT_SESSION_ID = 'session-draft';
 export const DRAG_SOURCES = { move: 'move-session', resize: 'resize-session' } as const;
 export const DROP_TARGETS = { timeslot: 'timeslot-drop', session: 'session-drop' } as const;
 
-// Payloads carried by the draggables and droppables of the grid.
-export type SessionSourcePayload = { session: ScheduleSession };
-export type TimeslotTargetPayload = { trackId: string; timeslot: TimeSlot };
-export type SessionTargetPayload = { session: ScheduleSession };
+// Payloads carried by the draggables and droppables of the grid
+export type SessionPayload = { session: ScheduleSession };
+export type GridTarget = { trackId: string; timeslot: TimeSlot };
 
-// Minimal structural view of a draggable, a droppable and a drag end event of the drag-and-drop library.
 type DragEntry = { type?: string | number | symbol | object; data: Record<string, unknown> };
 
 export type DragEndEvent = {
@@ -39,15 +37,11 @@ export type Gesture =
   | { kind: 'resize'; session: ScheduleSession; end: Date }
   | { kind: 'swap'; source: ScheduleSession; target: ScheduleSession };
 
-// A Session being drawn over the free slots of a Track, until the pointer is released.
+// A draft session being drawn over the free slots until the pointer is released.
 export type SessionDraft = { trackId: string; timeslot: TimeSlot };
-
-// The Track and the time span a draft may be extended into.
 export type DraftWindow = { trackId: string; timeslot: TimeSlot };
 
 export type GridRow = { hour: TimeSlot; slots: Array<TimeSlot> };
-
-type GridTarget = { trackId: string; timeslot: TimeSlot };
 
 type ScheduleGridInput = {
   day: Date;
@@ -97,8 +91,7 @@ export class ScheduleGrid {
     return Boolean(session && haveSameStartDate(target.timeslot, session.timeslot));
   }
 
-  // A free slot accepts any source. An occupied slot accepts a resize from any Session, and a move only from
-  // the Session occupying it.
+  // A free slot accepts any source. An occupied slot accepts a resize from any Session, and a move only from the Session occupying it.
   acceptsDropOnSlot(target: GridTarget, source: DragSource | null): boolean {
     if (!source) return false;
 
@@ -114,16 +107,14 @@ export class ScheduleGrid {
     return source.kind === 'move' && source.session.id !== target.id;
   }
 
-  // The time slot a Session shows while its resize pointer is over a slot. Nothing when the slot is occupied by
-  // another Session: the preview then stays put rather than showing a length the Schedule would refuse.
+  // The time slot a Session shows while its resize pointer is over a slot. Nothing when the slot is occupied by another Session.
   resizePreview(session: ScheduleSession, target: GridTarget): TimeSlot | undefined {
     const occupying = this.sessionAt(target);
     if (occupying && occupying.id !== session.id) return undefined;
     return { start: session.timeslot.start, end: target.timeslot.end };
   }
 
-  // The window a draft may be extended into: from its start to the next Session of its Track, bounded by the
-  // end of the displayed day. Computed once per draft, extending a slot is then a containment test on it.
+  // The window a draft may be extended into.
   draftWindow(draft: SessionDraft): DraftWindow {
     const outcome = this.placement.resize({ id: DRAFT_SESSION_ID, ...draft }, this.displayedEnd);
     if (outcome.status === 'conflict') return draft;
@@ -153,7 +144,7 @@ export class ScheduleGrid {
 export function readDragSource(source: DragEntry | null | undefined): DragSource | null {
   if (!source) return null;
 
-  const { session } = source.data as Partial<SessionSourcePayload>;
+  const { session } = source.data as Partial<SessionPayload>;
   if (!session) return null;
 
   if (source.type === DRAG_SOURCES.move) return { kind: 'move', session };
@@ -162,14 +153,14 @@ export function readDragSource(source: DragEntry | null | undefined): DragSource
 }
 
 // Reads the slot a drag is over, or nothing when the drag is not over a slot.
-export function readTimeslotTarget(target: DragEntry | null | undefined): TimeslotTargetPayload | null {
+export function readTimeslotTarget(target: DragEntry | null | undefined): GridTarget | null {
   if (!target || target.type !== DROP_TARGETS.timeslot) return null;
-  return target.data as TimeslotTargetPayload;
+  return target.data as GridTarget;
 }
 
-function readSessionTarget(target: DragEntry | null | undefined): SessionTargetPayload | null {
+function readSessionTarget(target: DragEntry | null | undefined): SessionPayload | null {
   if (!target || target.type !== DROP_TARGETS.session) return null;
-  return target.data as SessionTargetPayload;
+  return target.data as SessionPayload;
 }
 
 // Turns a drag end event into the gesture it asks for, or nothing for a canceled or unmatched drag.

@@ -12,12 +12,7 @@ import { formatDate, formatTime, toDateInput } from '~/shared/datetimes/datetime
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import { haveSameStartDate } from '~/shared/datetimes/timeslots.ts';
 import { getGMTOffset } from '~/shared/datetimes/timezone.ts';
-import type {
-  SessionDraft,
-  SessionSourcePayload,
-  SessionTargetPayload,
-  TimeslotTargetPayload,
-} from '../../models/schedule-grid.ts';
+import type { GridTarget, SessionDraft, SessionPayload } from '../../models/schedule-grid.ts';
 import {
   decodeGesture,
   DRAG_SOURCES,
@@ -153,12 +148,15 @@ function ScheduleDay({
   const [draft, setDraft] = useState<SessionDraft | null>(null);
   const draftWindow = draft ? grid.draftWindow(draft) : null;
 
-  const handleCreateDraft = useCallback(async () => {
-    if (!draft) return;
-    const outcome = await onAddSession(toDraftSession(draft));
-    setDraft(null);
-    reportConflict(outcome);
-  }, [draft, onAddSession, reportConflict]);
+  // The released slot carries the end of the Session: a slot skipped by a fast pointer move holds an older draft.
+  const handleCreateDraft = useCallback(
+    async (end: Date) => {
+      if (!draft) return;
+      setDraft(null);
+      reportConflict(await onAddSession(toDraftSession({ ...draft, timeslot: { ...draft.timeslot, end } })));
+    },
+    [draft, onAddSession, reportConflict],
+  );
 
   return (
     <div className={cx('w-full bg-white', { 'select-none': draft !== null })}>
@@ -249,7 +247,7 @@ function ScheduleDay({
                               ? () => setDraft({ ...draft, timeslot: { ...draft.timeslot, end: timeslot.end } })
                               : undefined
                           }
-                          onCreateDraft={handleCreateDraft}
+                          onCreateDraft={() => handleCreateDraft(timeslot.end)}
                           renderSession={renderSession}
                         />
                       );
@@ -324,7 +322,7 @@ function Timeslot({
   const droppable = useDroppable({
     id: `${trackId}-${timeslot.start.toISOString()}`,
     type: DROP_TARGETS.timeslot,
-    data: { trackId, timeslot } satisfies TimeslotTargetPayload,
+    data: { trackId, timeslot } satisfies GridTarget,
     accept: (source) => grid.acceptsDropOnSlot({ trackId, timeslot }, readDragSource(source)),
     collisionDetector: topInsideDroppable,
   });
@@ -408,7 +406,7 @@ function SessionWrapper({ grid, session, renderSession, zoomLevel }: SessionWrap
   const movable = useDraggable({
     id: `move:${session.id}`,
     type: DRAG_SOURCES.move,
-    data: { session } satisfies SessionSourcePayload,
+    data: { session } satisfies SessionPayload,
     disabled: session.isCreating,
   });
 
@@ -416,7 +414,7 @@ function SessionWrapper({ grid, session, renderSession, zoomLevel }: SessionWrap
   const resizable = useDraggable({
     id: `resize:${session.id}`,
     type: DRAG_SOURCES.resize,
-    data: { session } satisfies SessionSourcePayload,
+    data: { session } satisfies SessionPayload,
     disabled: session.isCreating,
   });
 
@@ -424,7 +422,7 @@ function SessionWrapper({ grid, session, renderSession, zoomLevel }: SessionWrap
   const droppable = useDroppable({
     id: `drop:${session.id}`,
     type: DROP_TARGETS.session,
-    data: { session } satisfies SessionTargetPayload,
+    data: { session } satisfies SessionPayload,
     accept: (source) => grid.acceptsDropOnSession(session, readDragSource(source)),
     collisionDetector: topInsideDroppable,
   });

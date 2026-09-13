@@ -132,8 +132,7 @@ describe('ScheduleGrid', () => {
       );
     });
 
-    // The resize is brought back to the session's own track by the placement rule, not by the grid.
-    it('accepts a resize on an occupied slot from another session', () => {
+    it('accepts a resize on an occupied slot from another session, the placement rule brings it back', () => {
       expect(grid({ sessions: [talk, other] }).acceptsDropOnSlot(occupied, { kind: 'resize', session: other })).toBe(
         true,
       );
