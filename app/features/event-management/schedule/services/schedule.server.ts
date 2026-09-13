@@ -9,7 +9,7 @@ import {
 } from '~/shared/errors.server.ts';
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
 import { db, type DbTransaction } from '../../../../../prisma/db.server.ts';
-import type { Event, Proposal, ScheduleSession } from '../../../../../prisma/generated/client.ts';
+import type { Event, Proposal, ScheduleSession, ScheduleTrack } from '../../../../../prisma/generated/client.ts';
 import { DEFAULT_SESSION_COLOR } from '../components/session/constants.ts';
 import { SessionPlacement } from '../models/session-placement.ts';
 import type {
@@ -58,9 +58,7 @@ export class EventSchedule {
       timezone: schedule.timezone,
       start: schedule.start,
       end: schedule.end,
-      tracks: schedule.tracks
-        .toSorted((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-        .map((t) => ({ id: t.id, name: t.name })),
+      tracks: toScheduleTracks(schedule.tracks),
     };
   }
 
@@ -216,9 +214,7 @@ export class EventSchedule {
       timezone: schedule.timezone,
       displayStartMinutes: schedule.displayStartMinutes,
       displayEndMinutes: schedule.displayEndMinutes,
-      tracks: schedule.tracks
-        .toSorted((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-        .map((t) => ({ id: t.id, name: t.name })),
+      tracks: toScheduleTracks(schedule.tracks),
       sessions: schedule.sessions.map(({ id, trackId, start, end, name, language, color, emojis, proposal }) => ({
         id: id,
         trackId: trackId,
@@ -239,6 +235,12 @@ export class EventSchedule {
       })),
     };
   }
+}
+
+function toScheduleTracks(tracks: Array<ScheduleTrack>) {
+  return tracks
+    .toSorted((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+    .map((t) => ({ id: t.id, name: t.name }));
 }
 
 function toPlacedSession({ id, trackId, start, end }: ScheduleSession) {
