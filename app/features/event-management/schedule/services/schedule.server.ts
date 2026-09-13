@@ -9,7 +9,7 @@ import {
 } from '~/shared/errors.server.ts';
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
 import { db, type DbTransaction } from '../../../../../prisma/db.server.ts';
-import type { Event, Proposal, ScheduleSession } from '../../../../../prisma/generated/client.ts';
+import type { Event, Proposal, ScheduleSession, ScheduleTrack } from '../../../../../prisma/generated/client.ts';
 import { DEFAULT_SESSION_COLOR } from '../components/session/constants.ts';
 import { SessionPlacement } from '../models/session-placement.ts';
 import type {
@@ -58,9 +58,7 @@ export class EventSchedule {
       timezone: schedule.timezone,
       start: schedule.start,
       end: schedule.end,
-      tracks: schedule.tracks
-        .toSorted((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-        .map((t) => ({ id: t.id, name: t.name })),
+      tracks: toScheduleTracks(schedule.tracks),
     };
   }
 
@@ -91,63 +89,47 @@ export class EventSchedule {
     await db.schedule.delete({ where: { id: schedule.id } });
   }
 
+  // Owns the rule for a valid Session: an existing Track, a proposal of the event, and a free slot in the Track.
+  private async prepareSession(data: ScheduleSessionCreateData, client: DbTransaction, placedSessionId?: string) {
+    const schedule = await this.scheduleWithSessions(client);
+
+    if (!schedule.tracks.some((track) => track.id === data.trackId)) throw new ScheduleTrackNotFoundError();
+
+    const proposal = data.proposalId ? await this.eventProposal(data.proposalId, client) : null;
+
+    const outcome = placementFor(schedule.sessions).place(
+      { trackId: data.trackId, timeslot: { start: data.start, end: data.end } },
+      placedSessionId,
+    );
+    if (outcome.status === 'conflict') throw new SessionConflictError();
+
+    const row = {
+      trackId: outcome.placement.trackId,
+      start: outcome.placement.timeslot.start,
+      end: outcome.placement.timeslot.end,
+      color: data.color ?? DEFAULT_SESSION_COLOR,
+      name: !data.proposalId ? (data.name ?? null) : null,
+      proposalId: data.proposalId ? data.proposalId : null,
+      emojis: data.emojis ?? [],
+      language: sessionLanguage(data.language, proposal),
+    };
+
+    return { schedule, row };
+  }
+
   async addSession(data: ScheduleSessionCreateData) {
     return db.$transaction(async (trx) => {
-      const schedule = await this.scheduleWithSessions(trx);
+      const { schedule, row } = await this.prepareSession(data, trx);
 
-      if (!schedule.tracks.some((track) => track.id === data.trackId)) throw new ScheduleTrackNotFoundError();
-
-      const proposal = data.proposalId ? await this.eventProposal(data.proposalId, trx) : null;
-
-      const outcome = placementFor(schedule.sessions).place({
-        trackId: data.trackId,
-        timeslot: { start: data.start, end: data.end },
-      });
-      if (outcome.status === 'conflict') throw new SessionConflictError();
-
-      return trx.scheduleSession.create({
-        data: {
-          trackId: outcome.placement.trackId,
-          start: outcome.placement.timeslot.start,
-          end: outcome.placement.timeslot.end,
-          color: data.color ?? DEFAULT_SESSION_COLOR,
-          name: !data.proposalId ? (data.name ?? null) : null,
-          proposalId: data.proposalId ? data.proposalId : null,
-          emojis: data.emojis ?? [],
-          language: sessionLanguage(data.language, proposal),
-          scheduleId: schedule.id,
-        },
-      });
+      return trx.scheduleSession.create({ data: { ...row, scheduleId: schedule.id } });
     });
   }
 
   async updateSession(data: ScheduleSessionUpdateData) {
     return db.$transaction(async (trx) => {
-      const schedule = await this.scheduleWithSessions(trx);
+      const { schedule, row } = await this.prepareSession(data, trx, data.id);
 
-      if (!schedule.tracks.some((track) => track.id === data.trackId)) throw new ScheduleTrackNotFoundError();
-
-      const proposal = data.proposalId ? await this.eventProposal(data.proposalId, trx) : null;
-
-      const outcome = placementFor(schedule.sessions).place(
-        { trackId: data.trackId, timeslot: { start: data.start, end: data.end } },
-        data.id,
-      );
-      if (outcome.status === 'conflict') throw new SessionConflictError();
-
-      return trx.scheduleSession.update({
-        data: {
-          trackId: outcome.placement.trackId,
-          start: outcome.placement.timeslot.start,
-          end: outcome.placement.timeslot.end,
-          color: data.color ?? DEFAULT_SESSION_COLOR,
-          name: !data.proposalId ? (data.name ?? null) : null,
-          proposalId: data.proposalId ? data.proposalId : null,
-          emojis: data.emojis ?? [],
-          language: sessionLanguage(data.language, proposal),
-        },
-        where: { id: data.id, scheduleId: schedule.id },
-      });
+      return trx.scheduleSession.update({ data: row, where: { id: data.id, scheduleId: schedule.id } });
     });
   }
 
@@ -232,9 +214,7 @@ export class EventSchedule {
       timezone: schedule.timezone,
       displayStartMinutes: schedule.displayStartMinutes,
       displayEndMinutes: schedule.displayEndMinutes,
-      tracks: schedule.tracks
-        .toSorted((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-        .map((t) => ({ id: t.id, name: t.name })),
+      tracks: toScheduleTracks(schedule.tracks),
       sessions: schedule.sessions.map(({ id, trackId, start, end, name, language, color, emojis, proposal }) => ({
         id: id,
         trackId: trackId,
@@ -255,6 +235,12 @@ export class EventSchedule {
       })),
     };
   }
+}
+
+function toScheduleTracks(tracks: Array<ScheduleTrack>) {
+  return tracks
+    .toSorted((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+    .map((t) => ({ id: t.id, name: t.name }));
 }
 
 function toPlacedSession({ id, trackId, start, end }: ScheduleSession) {
