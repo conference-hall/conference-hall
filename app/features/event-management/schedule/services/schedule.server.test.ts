@@ -542,6 +542,22 @@ describe('EventSchedule', () => {
       expect(actual?.tracks[0].name).toBe('Room 1');
     });
 
+    it('throws schedule track not found Error when a track belongs to another schedule', async () => {
+      const otherEvent = await eventFactory({ team, traits: ['conference'] });
+      const otherSchedule = await scheduleFactory({ event: otherEvent });
+      const otherTrack = await scheduleTrackFactory({ name: 'Other room', schedule: otherSchedule });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(
+        EventSchedule.for(authorizedEvent).saveTracks([track, track2, { id: otherTrack.id, name: 'Hijacked' }]),
+      ).rejects.toThrow(ScheduleTrackNotFoundError);
+
+      const otherAuthorizedEvent = await getAuthorizedEvent(authorizedTeam, otherEvent.slug);
+      const actual = await EventSchedule.for(otherAuthorizedEvent).get();
+      expect(actual?.tracks).toEqual([{ id: otherTrack.id, name: 'Other room' }]);
+    });
+
     it('must remain at least one track', async () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);

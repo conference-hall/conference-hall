@@ -196,6 +196,11 @@ export class EventSchedule {
   async saveTracks(tracks: ScheduleTracksSaveData['tracks']) {
     const schedule = await this.schedule();
 
+    const existingTracks = tracks.filter((t) => !t.id.startsWith('NEW'));
+    if (existingTracks.some((t) => !schedule.tracks.some((st) => st.id === t.id))) {
+      throw new ScheduleTrackNotFoundError();
+    }
+
     const deletedTracks = schedule.tracks.filter((t) => !tracks.find((ut) => ut.id === t.id));
 
     if (schedule.tracks.length - deletedTracks.length <= 0) {
