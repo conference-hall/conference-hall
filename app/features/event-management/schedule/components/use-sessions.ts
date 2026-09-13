@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useFetchers, useSubmit } from 'react-router';
 import type { ScheduleTime } from '../models/schedule-time.ts';
 import { pendingSessions, type SessionMutation, SessionMutations } from '../models/session-mutation.ts';
-import type { SessionData } from './schedule.types.ts';
+import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
 export function useSessions(initialSessions: Array<SessionData>, scheduleTime: ScheduleTime) {
   const fetchers = useFetchers();
@@ -14,6 +14,14 @@ export function useSessions(initialSessions: Array<SessionData>, scheduleTime: S
     () => pendingSessions(initialSessions, fetchers, scheduleTime),
     [initialSessions, fetchers, scheduleTime],
   );
+
+  // The mutations read the sessions from a ref: their callbacks keep their reference across a Session change, so
+  // neither the grid nor the Schedule context re-renders on their account. A gesture is placed against the
+  // sessions drawn at that moment.
+  const sessionsRef = useRef(sessions);
+  useEffect(() => {
+    sessionsRef.current = sessions;
+  }, [sessions]);
 
   const submitSession = useCallback(
     async ({ key, formData }: SessionMutation) => {
@@ -28,21 +36,17 @@ export function useSessions(initialSessions: Array<SessionData>, scheduleTime: S
     [submit],
   );
 
-  const mutations = useMemo(
-    () => new SessionMutations(sessions, { scheduleTime, submit: submitSession }),
-    [sessions, scheduleTime, submitSession],
-  );
+  const mutations = useMemo(() => {
+    const current = () => new SessionMutations(sessionsRef.current, { scheduleTime, submit: submitSession });
+    return {
+      add: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => current().add(session),
+      update: (session: ScheduleSession) => current().update(session),
+      move: (session: ScheduleSession, target: { trackId: string; start: Date }) => current().move(session, target),
+      resize: (session: ScheduleSession, end: Date) => current().resize(session, end),
+      swap: (source: ScheduleSession, target: ScheduleSession) => current().swap(source, target),
+      delete: (session: ScheduleSession) => current().delete(session),
+    };
+  }, [scheduleTime, submitSession]);
 
-  return useMemo(
-    () => ({
-      add: mutations.add,
-      update: mutations.update,
-      move: mutations.move,
-      resize: mutations.resize,
-      swap: mutations.swap,
-      delete: mutations.delete,
-      data: sessions,
-    }),
-    [mutations, sessions],
-  );
+  return useMemo(() => ({ ...mutations, data: sessions }), [mutations, sessions]);
 }
