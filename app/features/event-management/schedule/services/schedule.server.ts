@@ -29,7 +29,16 @@ export class EventSchedule {
     return new EventSchedule(event);
   }
 
-  private async schedule(client: DbTransaction = db) {
+  private async schedule() {
+    const schedule = await db.schedule.findFirst({
+      where: { eventId: this.event.id },
+      include: { tracks: true },
+    });
+    if (!schedule) throw new NotFoundError('Schedule not found');
+    return schedule;
+  }
+
+  private async scheduleWithSessions(client: DbTransaction) {
     const schedule = await client.schedule.findFirst({
       where: { eventId: this.event.id },
       include: { tracks: true, sessions: true },
@@ -83,7 +92,7 @@ export class EventSchedule {
 
   async addSession(data: ScheduleSessionCreateData) {
     return db.$transaction(async (trx) => {
-      const schedule = await this.schedule(trx);
+      const schedule = await this.scheduleWithSessions(trx);
 
       if (!schedule.tracks.some((track) => track.id === data.trackId)) throw new ScheduleTrackNotFoundError();
 
@@ -113,7 +122,7 @@ export class EventSchedule {
 
   async updateSession(data: ScheduleSessionUpdateData) {
     return db.$transaction(async (trx) => {
-      const schedule = await this.schedule(trx);
+      const schedule = await this.scheduleWithSessions(trx);
 
       if (!schedule.tracks.some((track) => track.id === data.trackId)) throw new ScheduleTrackNotFoundError();
 
@@ -143,7 +152,7 @@ export class EventSchedule {
 
   async switchSessions(sourceId: string, targetId: string) {
     await db.$transaction(async (trx) => {
-      const schedule = await this.schedule(trx);
+      const schedule = await this.scheduleWithSessions(trx);
 
       const source = schedule.sessions.find((session) => session.id === sourceId);
       const target = schedule.sessions.find((session) => session.id === targetId);
