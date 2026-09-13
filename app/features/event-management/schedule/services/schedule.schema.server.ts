@@ -25,7 +25,7 @@ export const ScheduleCreateSchema = z
   );
 
 export const ScheduleTracksSaveSchema = z.object({
-  tracks: z.array(z.object({ id: z.string().trim(), name: z.string().trim() })),
+  tracks: z.array(z.object({ id: z.string().trim().optional(), name: z.string().trim() })),
 });
 
 export const ScheduleDisplayTimesUpdateSchema = z

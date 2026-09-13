@@ -139,7 +139,8 @@ term as defined here and don't drift to synonyms.
 - **Schedule time**: The wall-clock time of a Schedule in its own timezone. The server
   and the wire speak UTC; everything an organizer sees or drags speaks Schedule time.
 
-- **Track** — A parallel stream within a schedule (e.g. a room or stage).
+- **Track** — A parallel stream within a schedule (e.g. a room or stage). A Schedule
+  always keeps at least one Track: a save that would leave it without one is refused.
 
 - **Session** — A time slot within a track. May be linked to a proposal (a scheduled
   talk) or be a non-talk slot (break, keynote) with just a name/color.
