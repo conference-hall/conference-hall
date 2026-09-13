@@ -22,6 +22,7 @@ import {
   SLOT_INTERVAL,
 } from '../../models/schedule-grid.ts';
 import type { ScheduleTime } from '../../models/schedule-time.ts';
+import { SessionMutations } from '../../models/session-mutation.ts';
 import type { PlacementOutcome, SwapOutcome } from '../../models/session-placement.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { getSessionHeight, getTimeslotHeight, topInsideDroppable } from './helpers.ts';
@@ -106,11 +107,6 @@ function useConflictReport() {
   );
 }
 
-// A draft becomes a Session only to render its block and to add it through the hook.
-function toDraftSession({ trackId, timeslot }: SessionDraft): ScheduleSession {
-  return { id: 'new', trackId, timeslot, color: 'stone', emojis: [], language: null };
-}
-
 type ScheduleDayProps = {
   day: Date;
   dayIndex: number;
@@ -160,7 +156,7 @@ function ScheduleDay({
     async (end: Date) => {
       if (!draft) return;
       setDraft(null);
-      reportConflict(await onAddSession(toDraftSession({ ...draft, timeslot: { ...draft.timeslot, end } })));
+      reportConflict(await onAddSession(SessionMutations.blank({ ...draft, timeslot: { ...draft.timeslot, end } })));
     },
     [draft, onAddSession, reportConflict],
   );
@@ -248,7 +244,7 @@ function ScheduleDay({
                           isDrawing={draft !== null}
                           isInsideDraft={draft !== null && grid.isInsideDraft(draft, target)}
                           canExtendDraft={canExtendDraft}
-                          draftSession={isDraftStart ? toDraftSession(draft) : undefined}
+                          draftSession={isDraftStart ? SessionMutations.blank(draft) : undefined}
                           onStartDraft={() => setDraft({ trackId: track.id, timeslot })}
                           onExtendDraft={
                             draft

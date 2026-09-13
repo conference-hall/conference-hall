@@ -30,7 +30,7 @@ import { SessionModal } from './components/session/session-modal.tsx';
 import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
 import { ScheduleTime } from './models/schedule-time.ts';
-import { SESSION_INTENTS } from './models/session-mutation.ts';
+import { SESSION_INTENTS, SessionMutations } from './models/session-mutation.ts';
 import { EventSchedule } from './services/schedule.server.ts';
 
 const NEW_SESSION_DURATION = 30; // minutes
@@ -118,19 +118,15 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
     if (!day || !trackId) return;
 
     const { start, end } = settings.displayedTimes;
-    setNewSession({
-      id: 'new',
-      trackId,
-      timeslot: {
-        start: setMinutesFromStartOfDay(day, start),
-        end: setMinutesFromStartOfDay(day, Math.min(start + NEW_SESSION_DURATION, end)),
-      },
-      name: '',
-      language: null,
-      color: 'stone',
-      emojis: [],
-      proposal: null,
-    });
+    setNewSession(
+      SessionMutations.blank({
+        trackId,
+        timeslot: {
+          start: setMinutesFromStartOfDay(day, start),
+          end: setMinutesFromStartOfDay(day, Math.min(start + NEW_SESSION_DURATION, end)),
+        },
+      }),
+    );
   };
 
   if (settings.displayedDays.length === 0) {
