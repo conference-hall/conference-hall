@@ -1,4 +1,3 @@
-import { isSameDay } from 'date-fns';
 import { useFetcher, useNavigate, useParams, useSearchParams } from 'react-router';
 import type { ScheduleTime } from '../models/schedule-time.ts';
 
@@ -36,9 +35,7 @@ export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: Sch
     );
   };
 
-  const updateDisplayDays = async (start: Date, end: Date) => {
-    const startIndex = scheduleDays.findIndex((day) => isSameDay(day, start));
-    const endIndex = scheduleDays.findIndex((day) => isSameDay(day, end));
+  const updateDisplayDays = async (startIndex: number, endIndex: number) => {
     await navigate(`/team/${params.team}/${params.event}/schedule/${startIndex}-${endIndex}?${searchParams}`);
   };
 

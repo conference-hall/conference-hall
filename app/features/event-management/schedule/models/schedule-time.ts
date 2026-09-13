@@ -24,6 +24,17 @@ export class ScheduleTime {
     return getDatesRange(this.fromUtc(start), this.fromUtc(end));
   }
 
+  // The index of the Schedule day matching a calendar date received as midnight UTC (what a date input emits),
+  // or null when the date is outside of the Schedule. Compared by calendar key, never through the browser timezone.
+  dayIndex(days: Array<Date>, calendarDate: Date): number | null {
+    const key = calendarKey(calendarDate.getUTCFullYear(), calendarDate.getUTCMonth(), calendarDate.getUTCDate());
+    const index = days.findIndex((day) => {
+      const scheduleDay = this.fromUtc(day);
+      return calendarKey(scheduleDay.getFullYear(), scheduleDay.getMonth(), scheduleDay.getDate()) === key;
+    });
+    return index === -1 ? null : index;
+  }
+
   formatTime(date: Date, locale: string): string {
     return formatTime(date, { format: 'short', locale, timezone: this.timezone });
   }
@@ -43,4 +54,8 @@ export class ScheduleTime {
   gmtOffset(locale: string): string | null {
     return getGMTOffset(this.timezone, locale);
   }
+}
+
+function calendarKey(year: number, month: number, day: number): string {
+  return `${year}-${month}-${day}`;
 }

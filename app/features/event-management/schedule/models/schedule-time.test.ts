@@ -63,6 +63,23 @@ describe('ScheduleTime', () => {
     });
   });
 
+  describe('#dayIndex', () => {
+    const newYorkTime = new ScheduleTime('America/New_York');
+    const days = newYorkTime.days(new Date('2024-10-05T04:00:00.000Z'), new Date('2024-10-07T03:59:59.999Z'));
+
+    it('returns the index of the first schedule day from a calendar date at midnight UTC', () => {
+      expect(newYorkTime.dayIndex(days, new Date('2024-10-05T00:00:00.000Z'))).toBe(0);
+    });
+
+    it('returns the index of the last schedule day from a calendar date at midnight UTC', () => {
+      expect(newYorkTime.dayIndex(days, new Date('2024-10-06T00:00:00.000Z'))).toBe(1);
+    });
+
+    it('returns null for a calendar date outside of the schedule', () => {
+      expect(newYorkTime.dayIndex(days, new Date('2024-10-07T00:00:00.000Z'))).toBeNull();
+    });
+  });
+
   describe('#formatTime', () => {
     it('formats a time in the schedule timezone', () => {
       const time = scheduleTime.formatTime(new Date('2024-10-05T07:00:00.000Z'), 'en');
