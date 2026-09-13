@@ -47,9 +47,8 @@ export function getTimezonesList(locale: string) {
   return timezoneObjects.toSorted((a, b) => a.name.localeCompare(b.name)).map(({ id, name }) => ({ name, value: id }));
 }
 
-/** Get GMT offset from a timezone */
-export function getGMTOffset(timezone: string, locale: string) {
-  const date = new Date();
+/** Get GMT offset from a timezone, at the given date (today by default) */
+export function getGMTOffset(timezone: string, locale: string, date: Date = new Date()) {
   try {
     const formatter = new Intl.DateTimeFormat(locale, { timeZone: timezone, timeZoneName: 'short' });
     const parts = formatter.formatToParts(date);

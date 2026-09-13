@@ -49,6 +49,8 @@ export const SESSION_COLORS = [
   },
 ];
 
+export const DEFAULT_SESSION_COLOR = SESSION_COLORS[0].value;
+
 export const SESSION_EMOJIS = [
   { code: 'book', skin: '📚', name: 'Book' },
   { code: 'clock', skin: '🕒', name: 'Clock' },

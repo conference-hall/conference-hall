@@ -48,7 +48,11 @@ export function SessionBlock({
       role="button"
       tabIndex={0}
       onClick={() => setEdit(true)}
-      onKeyDown={() => {}}
+      onKeyDown={(event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        setEdit(true);
+      }}
       className={cx(
         'flex h-full w-full cursor-pointer flex-col rounded-sm px-1 text-left',
         {

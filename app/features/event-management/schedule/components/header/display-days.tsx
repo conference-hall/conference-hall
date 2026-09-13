@@ -13,7 +13,7 @@ type Props = {
   scheduleTime: ScheduleTime;
   scheduleDays: Array<Date>;
   displayedDays: Array<Date>;
-  onChangeDisplayDays: (start: Date, end: Date) => void;
+  onChangeDisplayDays: (startIndex: number, endIndex: number) => void;
 };
 
 export function DisplayDays({ scheduleTime, scheduleDays, displayedDays, onChangeDisplayDays }: Props) {
@@ -25,7 +25,10 @@ export function DisplayDays({ scheduleTime, scheduleDays, displayedDays, onChang
 
   const handeDaysSelect = (start: Date | null, end: Date | null) => {
     if (!start || !end) return;
-    onChangeDisplayDays(start, end);
+    const startIndex = scheduleTime.dayIndex(scheduleDays, start);
+    const endIndex = scheduleTime.dayIndex(scheduleDays, end);
+    if (startIndex === null || endIndex === null) return;
+    onChangeDisplayDays(startIndex, endIndex);
   };
 
   const handleDaysChange = (direction: number) => {
@@ -37,7 +40,7 @@ export function DisplayDays({ scheduleTime, scheduleDays, displayedDays, onChang
     const endIndex = scheduleDays.findIndex((day) => isSameDay(day, displayedEndDay)) + direction;
     if (endIndex > scheduleDays.length - 1) return;
 
-    onChangeDisplayDays(scheduleDays[startIndex], scheduleDays[endIndex]);
+    onChangeDisplayDays(startIndex, endIndex);
   };
 
   return (

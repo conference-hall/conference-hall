@@ -9,10 +9,10 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import {
   ScheduleDisplayTimesUpdateSchema,
   ScheduleSessionCreateSchema,
+  ScheduleSessionIdSchema,
   ScheduleSessionsSwitchSchema,
   ScheduleSessionUpdateSchema,
   ScheduleTracksSaveSchema,
-  SchedulSessionIdSchema,
 } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
 import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
@@ -72,7 +72,7 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
         break;
       }
       case SESSION_INTENTS.delete: {
-        const result = SchedulSessionIdSchema.safeParse(form.get('id'));
+        const result = ScheduleSessionIdSchema.safeParse(form.get('id'));
         if (!result.success) return toast('error', i18n.t('error.global'));
         await eventSchedule.deleteSession(result.data);
         break;

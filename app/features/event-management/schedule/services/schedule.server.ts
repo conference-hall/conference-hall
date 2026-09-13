@@ -10,6 +10,7 @@ import {
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
 import { db, type DbTransaction } from '../../../../../prisma/db.server.ts';
 import type { Event, Proposal, ScheduleSession } from '../../../../../prisma/generated/client.ts';
+import { DEFAULT_SESSION_COLOR } from '../components/session/constants.ts';
 import { SessionPlacement } from '../models/session-placement.ts';
 import type {
   ScheduleCreateData,
@@ -109,7 +110,7 @@ export class EventSchedule {
           trackId: outcome.placement.trackId,
           start: outcome.placement.timeslot.start,
           end: outcome.placement.timeslot.end,
-          color: data.color ?? 'gray',
+          color: data.color ?? DEFAULT_SESSION_COLOR,
           name: !data.proposalId ? (data.name ?? null) : null,
           proposalId: data.proposalId ? data.proposalId : null,
           emojis: data.emojis ?? [],
@@ -139,7 +140,7 @@ export class EventSchedule {
           trackId: outcome.placement.trackId,
           start: outcome.placement.timeslot.start,
           end: outcome.placement.timeslot.end,
-          color: data.color ?? 'gray',
+          color: data.color ?? DEFAULT_SESSION_COLOR,
           name: !data.proposalId ? (data.name ?? null) : null,
           proposalId: data.proposalId ? data.proposalId : null,
           emojis: data.emojis ?? [],
@@ -196,11 +197,15 @@ export class EventSchedule {
   async saveTracks(tracks: ScheduleTracksSaveData['tracks']) {
     const schedule = await this.schedule();
 
-    const deletedTracks = schedule.tracks.filter((t) => !tracks.find((ut) => ut.id === t.id));
+    const existingTracks = tracks.filter((t) => !t.id.startsWith('NEW'));
+    if (existingTracks.some((t) => !schedule.tracks.some((st) => st.id === t.id))) {
+      throw new ScheduleTrackNotFoundError();
+    }
 
-    if (schedule.tracks.length - deletedTracks.length <= 0) {
-      throw new ForbiddenError('You must have at least one track defined');
-    } else if (deletedTracks.length > 0) {
+    if (tracks.length === 0) throw new ForbiddenError('You must have at least one track defined');
+
+    const deletedTracks = schedule.tracks.filter((t) => !tracks.find((ut) => ut.id === t.id));
+    if (deletedTracks.length > 0) {
       await db.scheduleTrack.deleteMany({ where: { id: { in: deletedTracks.map((t) => t.id) } } });
     }
 

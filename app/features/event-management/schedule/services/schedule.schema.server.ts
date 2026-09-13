@@ -39,7 +39,7 @@ export const ScheduleDisplayTimesUpdateSchema = z
       .min(0)
       .max(23 * 60),
   })
-  .refine(({ displayStartMinutes, displayEndMinutes }) => displayStartMinutes <= displayEndMinutes, {
+  .refine(({ displayStartMinutes, displayEndMinutes }) => displayStartMinutes < displayEndMinutes, {
     path: ['displayStartMinutes'],
     error: 'Displayed start in minutes must be before end in minutes.',
   });
@@ -70,7 +70,7 @@ export const ScheduleSessionsSwitchSchema = z.object({
   targetId: z.string(),
 });
 
-export const SchedulSessionIdSchema = z.string();
+export const ScheduleSessionIdSchema = z.string();
 
 export type ScheduleCreateData = z.infer<typeof ScheduleCreateSchema>;
 export type ScheduleDisplayTimesUpdateData = z.infer<typeof ScheduleDisplayTimesUpdateSchema>;

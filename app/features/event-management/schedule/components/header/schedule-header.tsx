@@ -18,7 +18,7 @@ type Props = {
   displayedTimes: { start: number; end: number };
   tracks: Array<{ id: string; name: string }>;
   zoomHandlers: ZoomHandlers;
-  onChangeDisplayDays: (start: Date, end: Date) => void;
+  onChangeDisplayDays: (startIndex: number, endIndex: number) => void;
   onChangeDisplayTime: (start: number, end: number) => void;
   onNewSession: VoidFunction;
 };

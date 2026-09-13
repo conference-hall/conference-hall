@@ -58,7 +58,7 @@ export function TimeRangeInput({
         name={nameStart}
         label={t('common.from')}
         value={startTime}
-        options={generateTimeOptions(step, min, max, locale).filter((o) => startRelative || Number(o.value) <= endTime)}
+        options={generateTimeOptions(step, min, max, locale).filter((o) => startRelative || Number(o.value) < endTime)}
         onChange={handleSelectChange}
         srOnly={hideFromLabel}
         inline
@@ -68,7 +68,7 @@ export function TimeRangeInput({
         name={nameEnd}
         label={t('common.to')}
         value={endTime}
-        options={generateTimeOptions(step, min, max, locale).filter((o) => Number(o.value) >= startTime)}
+        options={generateTimeOptions(step, min, max, locale).filter((o) => Number(o.value) > startTime)}
         onChange={handleSelectChange}
         srOnly={hideToLabel}
         inline
