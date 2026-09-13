@@ -201,11 +201,10 @@ export class EventSchedule {
       throw new ScheduleTrackNotFoundError();
     }
 
-    const deletedTracks = schedule.tracks.filter((t) => !tracks.find((ut) => ut.id === t.id));
+    if (tracks.length === 0) throw new ForbiddenError('You must have at least one track defined');
 
-    if (schedule.tracks.length - deletedTracks.length <= 0) {
-      throw new ForbiddenError('You must have at least one track defined');
-    } else if (deletedTracks.length > 0) {
+    const deletedTracks = schedule.tracks.filter((t) => !tracks.find((ut) => ut.id === t.id));
+    if (deletedTracks.length > 0) {
       await db.scheduleTrack.deleteMany({ where: { id: { in: deletedTracks.map((t) => t.id) } } });
     }
 

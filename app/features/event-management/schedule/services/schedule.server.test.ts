@@ -558,6 +558,17 @@ describe('EventSchedule', () => {
       expect(actual?.tracks).toEqual([{ id: otherTrack.id, name: 'Other room' }]);
     });
 
+    it('replaces the only track with a new one', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventSchedule.for(authorizedEvent).saveTracks([track]);
+
+      await EventSchedule.for(authorizedEvent).saveTracks([{ id: 'NEW-track3', name: 'Room 3' }]);
+
+      const actual = await EventSchedule.for(authorizedEvent).get();
+      expect(actual?.tracks.map((t) => t.name)).toEqual(['Room 3']);
+    });
+
     it('must remain at least one track', async () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
