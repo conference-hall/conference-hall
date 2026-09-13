@@ -307,7 +307,7 @@ function Timeslot({ gridRef, scheduleTime, target, view, zoomLevel, onDraft, onO
   });
 
   const extendsDraft = draftRelation !== 'none';
-  const isInsideDraft = draftRelation === 'inside' || draftRelation === 'start';
+  const isCoveredByDraft = draftRelation === 'inside' || draftRelation === 'start';
 
   return (
     <div
@@ -324,7 +324,7 @@ function Timeslot({ gridRef, scheduleTime, target, view, zoomLevel, onDraft, onO
         'bg-blue-200': droppable.isDropTarget,
         'hover:bg-gray-50': canStartDraft,
         "before:absolute before:top-0 before:right-0 before:left-0 before:border-t before:content-['']":
-          isHourStart && !droppable.isDropTarget && !isInsideDraft,
+          isHourStart && !droppable.isDropTarget && !isCoveredByDraft,
       })}
     >
       {/* invisible span to have content for the table */}

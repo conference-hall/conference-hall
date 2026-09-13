@@ -27,15 +27,15 @@ export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: Sch
   );
 
   // optimistic update
-  const pendingTimes = fetcher.formData?.get('intent') === 'update-display-times' ? fetcher.formData : null;
+  const pendingTimesForm = fetcher.formData?.get('intent') === 'update-display-times' ? fetcher.formData : null;
 
   const displayedTimes = useMemo(() => {
-    if (!pendingTimes) return { start: displayStartMinutes, end: displayEndMinutes };
+    if (!pendingTimesForm) return { start: displayStartMinutes, end: displayEndMinutes };
     return {
-      start: Number(pendingTimes.get('displayStartMinutes')),
-      end: Number(pendingTimes.get('displayEndMinutes')),
+      start: Number(pendingTimesForm.get('displayStartMinutes')),
+      end: Number(pendingTimesForm.get('displayEndMinutes')),
     };
-  }, [pendingTimes, displayStartMinutes, displayEndMinutes]);
+  }, [pendingTimesForm, displayStartMinutes, displayEndMinutes]);
 
   const updateDisplayTimes = (start: number, end: number) => {
     fetcher.submit(
