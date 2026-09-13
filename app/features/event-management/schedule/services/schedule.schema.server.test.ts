@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod/v4';
 import { z } from 'zod';
 import {
   ScheduleCreateSchema,
@@ -145,6 +146,16 @@ describe('EventSchedule types', () => {
 
       expect(result.success).toBe(true);
       expect(result.data).toEqual({ tracks: [] });
+    });
+
+    it('parses a form with every track removed as an empty list', async () => {
+      const form = new FormData();
+      form.set('intent', 'save-tracks');
+
+      const result = parseWithZod(form, { schema: ScheduleTracksSaveSchema });
+
+      expect(result.status).toBe('success');
+      expect(result.status === 'success' && result.value).toEqual({ tracks: [] });
     });
   });
 

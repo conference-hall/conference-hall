@@ -87,7 +87,7 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
         const result = parseWithZod(form, { schema: ScheduleTracksSaveSchema });
         if (result.status !== 'success') return toast('error', i18n.t('error.global'));
         await eventSchedule.saveTracks(result.value.tracks);
-        break;
+        return { saved: true };
       }
       case 'delete-schedule': {
         await eventSchedule.delete();

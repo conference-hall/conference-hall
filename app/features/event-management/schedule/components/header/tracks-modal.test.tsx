@@ -19,7 +19,7 @@ describe('TracksModal component', () => {
         path: '/',
         action: async ({ request }) => {
           onSubmit(Object.fromEntries(await request.formData()));
-          return options.error ? { errors: { tracks: options.error } } : null;
+          return options.error ? { errors: { tracks: options.error } } : { saved: true };
         },
         Component: () => (
           <I18nextProvider i18n={i18nTest}>
@@ -78,21 +78,17 @@ describe('TracksModal component', () => {
     );
   });
 
-  it('removes the last remaining row', async () => {
-    renderComponent();
+  it('stays open and shows the error when saving a list emptied of its last row', async () => {
+    const { onClose, onSubmit } = renderComponent({ error: 'The schedule must keep at least one track.' });
 
     await userEvent.click(page.getByRole('button', { name: 'Remove track: Room 1' }));
     await userEvent.click(page.getByRole('button', { name: 'Remove track: Room 2' }));
-
     await expect.element(page.getByLabelText('Track 1')).not.toBeInTheDocument();
-  });
-
-  it('stays open and shows the error when the save is refused', async () => {
-    const { onClose } = renderComponent({ error: 'The schedule must keep at least one track.' });
 
     await userEvent.click(page.getByRole('button', { name: 'Save' }));
 
     await expect.element(page.getByText('The schedule must keep at least one track.')).toBeVisible();
+    expect(onSubmit).toHaveBeenCalledWith({ intent: 'save-tracks' });
     expect(onClose).not.toHaveBeenCalled();
   });
 

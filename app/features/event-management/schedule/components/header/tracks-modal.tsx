@@ -15,7 +15,6 @@ type TracksModalProps = {
   onClose: VoidFunction;
 };
 
-// A row key is local to the modal and never sent: a new row has no Track id, an existing one carries its own.
 type TrackRow = { key: string; id?: string; name: string };
 
 export function TracksModal({ initialValues, open, onClose }: TracksModalProps) {
@@ -31,11 +30,11 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
   const isSubmitting = fetcher.state !== 'idle';
   const error = fetcher.data?.errors?.tracks;
 
-  // The modal only closes once the server has answered without refusing the save.
+  // The modal only closes once the server has accepted the save.
   useEffect(() => {
-    if (isSubmitting || fetcher.data === undefined || error) return;
+    if (isSubmitting || !fetcher.data?.saved) return;
     onClose();
-  }, [isSubmitting, fetcher.data, error, onClose]);
+  }, [isSubmitting, fetcher.data, onClose]);
 
   const handleUpdate = (index: number, value: string) => {
     const newOptions = [...tracks];
@@ -107,7 +106,7 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
       </Modal.Content>
 
       <Modal.Actions>
-        <Button type="button" variant="secondary" onClick={onClose} disabled={isSubmitting}>
+        <Button type="button" variant="secondary" onClick={onClose}>
           {t('common.cancel')}
         </Button>
         <Button type="submit" name="intent" value="save-tracks" form={formId} disabled={isSubmitting}>

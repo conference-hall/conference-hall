@@ -89,7 +89,6 @@ export class EventSchedule {
     await db.schedule.delete({ where: { id: schedule.id } });
   }
 
-  // Owns the rule for a valid Session: an existing Track, a proposal of the event, and a free slot in the Track.
   private async prepareSession(data: ScheduleSessionCreateData, client: DbTransaction, placedSessionId?: string) {
     const schedule = await this.scheduleWithSessions(client);
 
@@ -171,13 +170,10 @@ export class EventSchedule {
 
   async deleteSession(sessionId: string) {
     const schedule = await this.schedule();
-
-    if (!sessionId) return; // sessionId checked and deleteMany to avoid "Record to delete does not exist"
+    if (!sessionId) return;
     await db.scheduleSession.deleteMany({ where: { id: sessionId, scheduleId: schedule.id } });
   }
 
-  // Owns the rule for a valid Tracks save: a Track without id is new, every given id belongs to the Schedule,
-  // and the Schedule keeps at least one Track. All or nothing.
   async saveTracks(tracks: ScheduleTracksSaveData['tracks']) {
     await db.$transaction(async (trx) => {
       const schedule = await this.schedule(trx);
