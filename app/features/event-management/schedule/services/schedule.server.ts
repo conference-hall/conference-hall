@@ -207,14 +207,9 @@ export class EventSchedule {
   async getScheduleSessions() {
     const schedule = await db.schedule.findFirst({
       where: { eventId: this.event.id },
-      include: { tracks: true, sessions: true },
+      include: { tracks: true, sessions: { include: { proposal: { include: { speakers: true } } } } },
     });
     if (!schedule) return null;
-
-    const sessions = await db.scheduleSession.findMany({
-      where: { scheduleId: schedule.id },
-      include: { proposal: { include: { speakers: true } } },
-    });
 
     return {
       name: schedule.name,
@@ -226,7 +221,7 @@ export class EventSchedule {
       tracks: schedule.tracks
         .toSorted((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),
-      sessions: sessions.map(({ id, trackId, start, end, name, language, color, emojis, proposal }) => ({
+      sessions: schedule.sessions.map(({ id, trackId, start, end, name, language, color, emojis, proposal }) => ({
         id: id,
         trackId: trackId,
         start: start,
