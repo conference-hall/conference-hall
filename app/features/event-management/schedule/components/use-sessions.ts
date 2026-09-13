@@ -78,8 +78,16 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
   };
 
   const onSwitch = async (source: ScheduleSession, target: ScheduleSession) => {
-    await update({ ...source, trackId: target.trackId, timeslot: target.timeslot });
-    await update({ ...target, trackId: source.trackId, timeslot: source.timeslot });
+    await submit(
+      { intent: 'switch-sessions', sourceId: source.id, targetId: target.id },
+      {
+        method: 'POST',
+        navigate: false,
+        fetcherKey: `session:${source.id}`,
+        flushSync: true,
+        preventScrollReset: true,
+      },
+    );
   };
 
   const onDelete = async (session: ScheduleSession) => {
@@ -145,6 +153,21 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
   for (const session of pendingSessions) {
     const current = sessionsById.get(session.id);
     sessionsById.set(session.id, { ...session, proposal: current?.proposal });
+  }
+
+  // Pending switch
+  const switchFetchers = fetchers.filter((fetcher): fetcher is PendingSession => {
+    if (!fetcher.formData) return false;
+    return fetcher.formData.get('intent') === 'switch-sessions';
+  });
+
+  for (const fetcher of switchFetchers) {
+    const source = sessionsById.get(String(fetcher.formData.get('sourceId')));
+    const target = sessionsById.get(String(fetcher.formData.get('targetId')));
+    if (!source || !target) continue;
+
+    sessionsById.set(source.id, { ...source, trackId: target.trackId, timeslot: target.timeslot });
+    sessionsById.set(target.id, { ...target, trackId: source.trackId, timeslot: source.timeslot });
   }
 
   // Pending delete

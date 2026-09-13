@@ -140,3 +140,7 @@ term as defined here and don't drift to synonyms.
 
 - **Session** — A time slot within a track. May be linked to a proposal (a scheduled
   talk) or be a non-talk slot (break, keynote) with just a name/color.
+
+- **Session conflict**: Two Sessions of the same Track whose time slots overlap. A
+  Schedule never holds a conflict: placing or moving a Session that would create one
+  is refused.

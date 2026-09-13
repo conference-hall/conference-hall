@@ -1,7 +1,15 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
-import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/shared/errors.server.ts';
+import {
+  ForbiddenError,
+  ForbiddenOperationError,
+  NotFoundError,
+  ProposalNotFoundError,
+  ScheduleTrackNotFoundError,
+  SessionConflictError,
+} from '~/shared/errors.server.ts';
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import type { Event, Proposal } from '../../../../../prisma/generated/client.ts';
 import type { ScheduleCreateInput } from '../../../../../prisma/generated/models.ts';
 import type {
   ScheduleCreateData,
@@ -11,18 +19,23 @@ import type {
 } from './schedule.schema.server.ts';
 
 export class EventSchedule {
-  constructor(private authorizedEvent: AuthorizedEvent) {}
+  private constructor(private event: Event) {}
 
   static for(authorizedEvent: AuthorizedEvent) {
-    return new EventSchedule(authorizedEvent);
+    const { event, permissions } = authorizedEvent;
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
+    return new EventSchedule(event);
+  }
+
+  private async schedule() {
+    const schedule = await db.schedule.findFirst({ where: { eventId: this.event.id }, include: { tracks: true } });
+    if (!schedule) throw new NotFoundError('Schedule not found');
+    return schedule;
   }
 
   async get() {
-    const { event, permissions } = this.authorizedEvent;
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id }, include: { tracks: true } });
+    const schedule = await db.schedule.findFirst({ where: { eventId: this.event.id }, include: { tracks: true } });
     if (!schedule) return null;
 
     return {
@@ -38,10 +51,6 @@ export class EventSchedule {
   }
 
   async create(data: ScheduleCreateData) {
-    const { event, permissions } = this.authorizedEvent;
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
-
     await db.schedule.create({
       data: {
         name: data.name,
@@ -51,42 +60,31 @@ export class EventSchedule {
         displayStartMinutes: 9 * 60,
         displayEndMinutes: 18 * 60,
         tracks: { create: { name: 'Main stage' } },
-        event: { connect: { id: event.id } },
+        event: { connect: { id: this.event.id } },
       },
     });
   }
 
   async update(data: Partial<ScheduleCreateInput>) {
-    const { event, permissions } = this.authorizedEvent;
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
+    const schedule = await this.schedule();
 
     await db.schedule.update({ data, where: { id: schedule.id } });
   }
 
   async delete() {
-    const { event, permissions } = this.authorizedEvent;
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
+    const schedule = await this.schedule();
 
     await db.schedule.delete({ where: { id: schedule.id } });
   }
 
   async addSession(data: ScheduleSessionCreateData) {
-    const { event, permissions } = this.authorizedEvent;
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
+    const schedule = await this.schedule();
 
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
+    if (!schedule.tracks.some((track) => track.id === data.trackId)) throw new ScheduleTrackNotFoundError();
 
-    const language = await this.resolveSessionLanguage(data.language, data.proposalId);
+    const proposal = data.proposalId ? await this.eventProposal(data.proposalId) : null;
+
+    await this.assertNoSessionConflict(data.trackId, data.start, data.end);
 
     return db.scheduleSession.create({
       data: {
@@ -97,21 +95,20 @@ export class EventSchedule {
         name: !data.proposalId ? (data.name ?? null) : null,
         proposalId: data.proposalId ? data.proposalId : null,
         emojis: data.emojis ?? [],
-        language,
+        language: sessionLanguage(data.language, proposal),
         scheduleId: schedule.id,
       },
     });
   }
 
   async updateSession(data: ScheduleSessionUpdateData) {
-    const { event, permissions } = this.authorizedEvent;
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
+    const schedule = await this.schedule();
 
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
+    if (!schedule.tracks.some((track) => track.id === data.trackId)) throw new ScheduleTrackNotFoundError();
 
-    const language = await this.resolveSessionLanguage(data.language, data.proposalId);
+    const proposal = data.proposalId ? await this.eventProposal(data.proposalId) : null;
+
+    await this.assertNoSessionConflict(data.trackId, data.start, data.end, data.id);
 
     return db.scheduleSession.update({
       data: {
@@ -122,42 +119,62 @@ export class EventSchedule {
         name: !data.proposalId ? (data.name ?? null) : null,
         proposalId: data.proposalId ? data.proposalId : null,
         emojis: data.emojis ?? [],
-        language,
+        language: sessionLanguage(data.language, proposal),
       },
       where: { id: data.id, scheduleId: schedule.id },
     });
   }
 
-  private async resolveSessionLanguage(
-    language: string | undefined,
-    proposalId: string | undefined,
-  ): Promise<Language | null> {
-    if (language) return language as Language;
-    if (!proposalId) return null;
+  async switchSessions(sourceId: string, targetId: string) {
+    const schedule = await this.schedule();
 
-    const proposal = await db.proposal.findUnique({ where: { id: proposalId } });
-    return proposal ? ((proposal.languages as Languages).at(0) ?? null) : null;
+    const sessions = await db.scheduleSession.findMany({
+      where: { id: { in: [sourceId, targetId] }, scheduleId: schedule.id },
+    });
+    const source = sessions.find((session) => session.id === sourceId);
+    const target = sessions.find((session) => session.id === targetId);
+    if (!source || !target) throw new NotFoundError('Schedule session not found');
+
+    await db.$transaction([
+      db.scheduleSession.update({
+        data: { trackId: target.trackId, start: target.start, end: target.end },
+        where: { id: source.id },
+      }),
+      db.scheduleSession.update({
+        data: { trackId: source.trackId, start: source.start, end: source.end },
+        where: { id: target.id },
+      }),
+    ]);
+  }
+
+  private async eventProposal(proposalId: string) {
+    const proposal = await db.proposal.findFirst({ where: { id: proposalId, eventId: this.event.id } });
+    if (!proposal) throw new ProposalNotFoundError();
+    return proposal;
+  }
+
+  // A Session conflict is another Session of the same Track whose time slot overlaps the given one.
+  private async assertNoSessionConflict(trackId: string, start: Date, end: Date, sessionId?: string) {
+    const conflict = await db.scheduleSession.findFirst({
+      where: {
+        trackId,
+        start: { lt: end },
+        end: { gt: start },
+        ...(sessionId ? { id: { not: sessionId } } : {}),
+      },
+    });
+    if (conflict) throw new SessionConflictError();
   }
 
   async deleteSession(sessionId: string) {
-    const { event, permissions } = this.authorizedEvent;
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
+    const schedule = await this.schedule();
 
     if (!sessionId) return; // sessionId checked and deleteMany to avoid "Record to delete does not exist"
     await db.scheduleSession.deleteMany({ where: { id: sessionId, scheduleId: schedule.id } });
   }
 
   async saveTracks(tracks: ScheduleTracksSaveData['tracks']) {
-    const { event, permissions } = this.authorizedEvent;
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id }, include: { tracks: true } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
+    const schedule = await this.schedule();
 
     const deletedTracks = schedule.tracks.filter((t) => !tracks.find((ut) => ut.id === t.id));
 
@@ -177,12 +194,8 @@ export class EventSchedule {
   }
 
   async getScheduleSessions() {
-    const { event, permissions } = this.authorizedEvent;
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-    if (!permissions.canEditEventSchedule) throw new ForbiddenOperationError();
-
     const schedule = await db.schedule.findFirst({
-      where: { eventId: event.id },
+      where: { eventId: this.event.id },
       include: { tracks: true, sessions: true },
     });
     if (!schedule) return null;
@@ -222,4 +235,10 @@ export class EventSchedule {
       })),
     };
   }
+}
+
+function sessionLanguage(language: string | undefined, proposal: Proposal | null): Language | null {
+  if (language) return language as Language;
+  if (!proposal) return null;
+  return (proposal.languages as Languages).at(0) ?? null;
 }

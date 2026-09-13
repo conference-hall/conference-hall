@@ -576,6 +576,7 @@
   "event-management.schedule.edit-session.proposal.see": "See proposal",
   "event-management.schedule.edit-session.submit": "Save session",
   "event-management.schedule.empty": "No schedule found for the day",
+  "event-management.schedule.errors.session-conflict": "This session overlaps with an existing session on the same track. Please choose a different time slot.",
   "event-management.schedule.go-to": "Go to schedule",
   "event-management.schedule.new.heading": "New schedule",
   "event-management.schedule.new.submit": "New schedule",

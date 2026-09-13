@@ -576,6 +576,7 @@
   "event-management.schedule.edit-session.proposal.see": "Voir la proposition",
   "event-management.schedule.edit-session.submit": "Enregistrer la session",
   "event-management.schedule.empty": "Pas de programme trouvé pour la journée",
+  "event-management.schedule.errors.session-conflict": "Cette session chevauche une session existante sur le même track. Veuillez choisir un autre créneau horaire.",
   "event-management.schedule.go-to": "Retourner au programme",
   "event-management.schedule.new.heading": "Nouveau programme",
   "event-management.schedule.new.submit": "Nouveau programme",

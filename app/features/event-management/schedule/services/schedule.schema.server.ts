@@ -44,7 +44,7 @@ export const ScheduleDisplayTimesUpdateSchema = z
     error: 'Displayed start in minutes must be before end in minutes.',
   });
 
-export const ScheduleSessionCreateSchema = z.object({
+const ScheduleSessionSchema = z.object({
   trackId: z.string(),
   start: z.coerce.date(),
   end: z.coerce.date(),
@@ -55,8 +55,19 @@ export const ScheduleSessionCreateSchema = z.object({
   proposalId: z.string().optional(),
 });
 
-export const ScheduleSessionUpdateSchema = ScheduleSessionCreateSchema.extend({
-  id: z.string(),
+const isTimeSlotOrdered = ({ start, end }: { start: Date; end: Date }) => start < end;
+const timeSlotError = { path: ['start'], error: 'Session start must be before the end.' };
+
+export const ScheduleSessionCreateSchema = ScheduleSessionSchema.refine(isTimeSlotOrdered, timeSlotError);
+
+export const ScheduleSessionUpdateSchema = ScheduleSessionSchema.extend({ id: z.string() }).refine(
+  isTimeSlotOrdered,
+  timeSlotError,
+);
+
+export const ScheduleSessionsSwitchSchema = z.object({
+  sourceId: z.string(),
+  targetId: z.string(),
 });
 
 export const SchedulSessionIdSchema = z.string();
