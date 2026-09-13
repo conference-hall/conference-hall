@@ -183,28 +183,6 @@ export class ScheduleGrid {
   }
 }
 
-// Whether two views show the same thing: the only comparison a memoized slot needs. Scalars by value, the
-// Session by reference, the blank Session of the draft by Track and timeslot since the model rebuilds it.
-export function isSameSlotView(view: SlotView, other: SlotView): boolean {
-  return (
-    view.isOccupied === other.isOccupied &&
-    view.isHourStart === other.isHourStart &&
-    view.sessionBlock === other.sessionBlock &&
-    view.canStartDraft === other.canStartDraft &&
-    view.draftRelation === other.draftRelation &&
-    isSameDraftBlock(view.draftBlock, other.draftBlock)
-  );
-}
-
-function isSameDraftBlock(block?: ScheduleSession, other?: ScheduleSession): boolean {
-  if (!block || !other) return block === other;
-  return (
-    block.trackId === other.trackId &&
-    block.timeslot.start.getTime() === other.timeslot.start.getTime() &&
-    block.timeslot.end.getTime() === other.timeslot.end.getTime()
-  );
-}
-
 // Reads the Session being dragged and the gesture it carries, or nothing for a source the grid does not own.
 export function readDragSource(source: DragEntry | null | undefined): DragSource | null {
   if (!source) return null;

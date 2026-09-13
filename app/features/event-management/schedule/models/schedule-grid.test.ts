@@ -1,6 +1,6 @@
 import { addMinutes } from 'date-fns';
 import type { ScheduleSession } from '../components/schedule.types.ts';
-import { decodeGesture, DRAG_SOURCES, DROP_TARGETS, isSameSlotView, ScheduleGrid } from './schedule-grid.ts';
+import { decodeGesture, DRAG_SOURCES, DROP_TARGETS, ScheduleGrid } from './schedule-grid.ts';
 
 const day = new Date('2024-10-05T00:00:00.000Z');
 
@@ -359,41 +359,6 @@ describe('ScheduleGrid', () => {
 
       expect(view.draftRelation).toBe('none');
     });
-  });
-});
-
-describe('isSameSlotView', () => {
-  const talk = session('a', 'track-1', at(9), at(10));
-  const draft = { trackId: 'track-1', timeslot: { start: at(9, 30), end: at(9, 45) } };
-  const view = () => grid({ sessions: [talk] }).slotView({ trackId: 'track-1', timeslot: slot(9) }, null);
-
-  it('is the same view twice', () => {
-    expect(isSameSlotView(view(), view())).toBe(true);
-  });
-
-  it('is not the same view when a flag differs', () => {
-    expect(isSameSlotView(view(), { ...view(), isHourStart: false })).toBe(false);
-  });
-
-  it('is not the same view when the session block is another reference', () => {
-    const other = session('a', 'track-1', at(9), at(10));
-
-    expect(isSameSlotView(view(), { ...view(), sessionBlock: other })).toBe(false);
-  });
-
-  it('is the same view for two blank draft sessions of the same track and timeslot', () => {
-    const model = grid();
-    const start = { trackId: 'track-1', timeslot: slot(9, 30) };
-
-    expect(isSameSlotView(model.slotView(start, draft), model.slotView(start, draft))).toBe(true);
-  });
-
-  it('is not the same view when the draft is extended', () => {
-    const model = grid();
-    const start = { trackId: 'track-1', timeslot: slot(9, 30) };
-    const extended = { trackId: 'track-1', timeslot: { start: at(9, 30), end: at(9, 50) } };
-
-    expect(isSameSlotView(model.slotView(start, draft), model.slotView(start, extended))).toBe(false);
   });
 });
 

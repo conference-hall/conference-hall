@@ -9,12 +9,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { toDateInput } from '~/shared/datetimes/datetimes.ts';
+import { deepEqual } from '~/shared/utils/deep-equal.ts';
 import type { GridTarget, SessionDraft, SessionPayload, SlotView } from '../../models/schedule-grid.ts';
 import {
   decodeGesture,
   DRAG_SOURCES,
   DROP_TARGETS,
-  isSameSlotView,
   readDragSource,
   readTimeslotTarget,
   ScheduleGrid,
@@ -271,13 +271,14 @@ function ScheduleDay({
 }
 
 // Memoized Timeslot component: only the slots whose own view changed re-render, on a drawing as on a mutation.
+// The view is compared by value: the Sessions are rebuilt on every mutation and on every server response.
 const MemoizedTimeslot = React.memo(Timeslot, (prevProps, nextProps) => {
   return (
     prevProps.target.trackId === nextProps.target.trackId &&
     prevProps.target.timeslot.start.getTime() === nextProps.target.timeslot.start.getTime() &&
     prevProps.zoomLevel === nextProps.zoomLevel &&
     prevProps.onDraft === nextProps.onDraft &&
-    isSameSlotView(prevProps.view, nextProps.view)
+    deepEqual(prevProps.view, nextProps.view)
   );
 });
 
