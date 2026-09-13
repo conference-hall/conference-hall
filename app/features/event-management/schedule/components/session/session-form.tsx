@@ -19,6 +19,7 @@ import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { LANGUAGES } from '~/shared/constants.ts';
 import { getMinutesFromStartOfDay, setMinutesFromStartOfDay, toDateInput } from '~/shared/datetimes/datetimes.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
+import type { PlacementOutcome } from '../../models/session-placement.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 import { SessionIdentityField } from './session-identity-field.tsx';
@@ -30,7 +31,7 @@ type Props = {
   tracks: Array<Track>;
   scheduleDays: Array<Date>;
   onFinish: VoidFunction;
-  onSubmit: (session: ScheduleSession) => Promise<boolean>;
+  onSubmit: (session: ScheduleSession) => Promise<PlacementOutcome>;
   onDelete?: (session: ScheduleSession) => Promise<void>;
 };
 
@@ -58,12 +59,12 @@ export function SessionForm({
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    const success = await onSubmit({ ...session, name, color, language, emojis, trackId, timeslot, proposal });
-    if (success) {
+    const outcome = await onSubmit({ ...session, name, color, language, emojis, trackId, timeslot, proposal });
+    if (outcome.status === 'conflict') {
+      setError(t('event-management.schedule.errors.session-conflict'));
+    } else {
       setError(null);
       onFinish();
-    } else {
-      setError(t('event-management.schedule.errors.session-conflict'));
     }
   };
 

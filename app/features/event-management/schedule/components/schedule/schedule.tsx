@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { formatDate, formatTime, toDateInput } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import {
+  areTimeSlotsOverlapping,
   getDailyTimeSlots,
   haveSameStartDate,
   isNextTimeslotInWindow,
@@ -19,7 +20,7 @@ import {
 } from '~/shared/datetimes/timeslots.ts';
 import { getGMTOffset } from '~/shared/datetimes/timezone.ts';
 import { deepEqual } from '~/shared/utils/deep-equal.ts';
-import { type PlacementOutcome, SessionPlacement } from '../../models/session-placement.ts';
+import type { PlacementOutcome, SwapOutcome } from '../../models/session-placement.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { HOUR_INTERVAL, SLOT_INTERVAL } from './config.ts';
 import { getSessionHeight, getTimeslotHeight, topInsideDroppable } from './helpers.ts';
@@ -28,13 +29,13 @@ type ScheduleProps = {
   displayedDays: Array<Date>;
   displayedTimes: { start: number; end: number };
   timezone: string;
-  interval?: number;
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
-  onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<boolean>;
-  onUpdateSession: (session: ScheduleSession) => Promise<boolean>;
-  onSwitchSessions: (source: ScheduleSession, target: ScheduleSession) => Promise<boolean>;
+  onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<PlacementOutcome>;
+  onMoveSession: (session: ScheduleSession, target: { trackId: string; start: Date }) => Promise<PlacementOutcome>;
+  onResizeSession: (session: ScheduleSession, end: Date) => Promise<PlacementOutcome>;
+  onSwapSessions: (source: ScheduleSession, target: ScheduleSession) => Promise<SwapOutcome>;
   zoomLevel: number;
 };
 
@@ -46,24 +47,12 @@ export default function Schedule({
   sessions = [],
   renderSession,
   onAddSession,
-  onUpdateSession,
-  onSwitchSessions,
+  onMoveSession,
+  onResizeSession,
+  onSwapSessions,
   zoomLevel,
 }: ScheduleProps) {
-  const { t } = useTranslation();
-  const placement = new SessionPlacement(sessions);
-
-  const reportConflict = () => toast.error(t('event-management.schedule.errors.session-conflict'));
-
-  const applyOutcome = async (session: ScheduleSession, outcome: PlacementOutcome) => {
-    if (outcome.status === 'conflict') return reportConflict();
-    const applied = await onUpdateSession({
-      ...session,
-      trackId: outcome.placement.trackId,
-      timeslot: outcome.placement.timeslot,
-    });
-    if (!applied) reportConflict();
-  };
+  const reportConflict = useConflictReport();
 
   return (
     <DragDropProvider
@@ -79,14 +68,13 @@ export default function Schedule({
 
         if (source.type === 'resize-session' && target.type === 'timeslot-drop') {
           const { timeslot: targetTimeslot } = target.data || {};
-          await applyOutcome(session, placement.resize(session, targetTimeslot.end));
+          reportConflict(await onResizeSession(session, targetTimeslot.end));
         } else if (source.type === 'move-session' && target.type === 'timeslot-drop') {
           const { trackId, timeslot: targetTimeslot } = target.data || {};
-          await applyOutcome(session, placement.move(session, { trackId, start: targetTimeslot.start }));
+          reportConflict(await onMoveSession(session, { trackId, start: targetTimeslot.start }));
         } else if (source.type === 'move-session' && target.type === 'session-drop') {
           const { session: sessionTarget } = target.data || {};
-          const switched = await onSwitchSessions(session, sessionTarget);
-          if (!switched) reportConflict();
+          reportConflict(await onSwapSessions(session, sessionTarget));
         }
       }}
     >
@@ -111,6 +99,18 @@ export default function Schedule({
   );
 }
 
+// Shows the Schedule conflict message when a gesture is refused by the placement rule.
+function useConflictReport() {
+  const { t } = useTranslation();
+  return useCallback(
+    (outcome: PlacementOutcome | SwapOutcome) => {
+      if (outcome.status !== 'conflict') return;
+      toast.error(t('event-management.schedule.errors.session-conflict'));
+    },
+    [t],
+  );
+}
+
 type ScheduleDayProps = {
   day: Date;
   dayIndex: number;
@@ -119,7 +119,7 @@ type ScheduleDayProps = {
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
-  onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<boolean>;
+  onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<PlacementOutcome>;
   zoomLevel: number;
   displayMultipleDays: boolean;
 };
@@ -138,18 +138,19 @@ function ScheduleDay({
 }: ScheduleDayProps) {
   const { i18n } = useTranslation();
   const locale = i18n.language;
+  const reportConflict = useConflictReport();
 
   const startTime = addMinutes(day, displayedTimes.start);
   const endTime = addMinutes(day, displayedTimes.end);
   const hours = getDailyTimeSlots(startTime, endTime, HOUR_INTERVAL, true);
-  const placement = new SessionPlacement(sessions);
 
   const [newSession, setNewSession] = useState<ScheduleSession | null>(null);
   const handleNewSession = useCallback(async () => {
     if (!newSession) return;
-    await onAddSession(newSession);
+    const outcome = await onAddSession(newSession);
     setNewSession(null);
-  }, [newSession, onAddSession]);
+    reportConflict(outcome);
+  }, [newSession, onAddSession, reportConflict]);
 
   return (
     <div className={cx('w-full bg-white', { 'select-none': newSession !== null })}>
@@ -224,7 +225,7 @@ function ScheduleDay({
                       const canCreateSession =
                         newSession?.trackId === track.id &&
                         isNextTimeslotInWindow(newSession.timeslot, timeslot, SLOT_INTERVAL) &&
-                        placement.place({ trackId: track.id, timeslot }).status === 'placed';
+                        !sessions.some((s) => s.trackId === track.id && areTimeSlotsOverlapping(timeslot, s.timeslot));
 
                       return (
                         <MemoizedTimeslot

@@ -1,6 +1,7 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { useTranslation } from 'react-i18next';
 import { Background } from '~/design-system/transitions.tsx';
+import type { PlacementOutcome } from '../../models/session-placement.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SessionForm } from './session-form.tsx';
 
@@ -11,7 +12,7 @@ type SessionModalProps = {
   tracks: Array<Track>;
   scheduleDays: Array<Date>;
   onClose: VoidFunction;
-  onSubmit: (session: ScheduleSession) => Promise<boolean>;
+  onSubmit: (session: ScheduleSession) => Promise<PlacementOutcome>;
   onDelete?: (session: ScheduleSession) => Promise<void>;
 };
 

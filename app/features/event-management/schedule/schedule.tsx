@@ -167,8 +167,9 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
           sessions={sessions.data}
           zoomLevel={zoomHandlers.level}
           onAddSession={sessions.add}
-          onUpdateSession={sessions.update}
-          onSwitchSessions={sessions.switch}
+          onMoveSession={sessions.move}
+          onResizeSession={sessions.resize}
+          onSwapSessions={sessions.swap}
           renderSession={(session, height) => (
             <SessionBlock
               session={session}

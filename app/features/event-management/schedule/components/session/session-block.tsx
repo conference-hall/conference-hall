@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { formatTime, formatTimeDifference } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
+import type { PlacementOutcome } from '../../models/session-placement.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 import { SessionModal } from './session-modal.tsx';
@@ -16,7 +17,7 @@ type SessionBlockProps = {
   displayedTimes: { start: number; end: number };
   tracks: Array<Track>;
   scheduleDays: Array<Date>;
-  onUpdateSession: (updated: ScheduleSession) => Promise<boolean>;
+  onUpdateSession: (updated: ScheduleSession) => Promise<PlacementOutcome>;
   onDeleteSession: (session: ScheduleSession) => Promise<void>;
 };
 
