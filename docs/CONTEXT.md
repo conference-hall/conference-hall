@@ -156,3 +156,7 @@ term as defined here and don't drift to synonyms.
   updating one, swapping two, or deleting one. A mutation is _pending_ from the moment
   it is requested until the Schedule confirms it; the Schedule is shown as if pending
   mutations were already applied.
+
+- **Session draft**: A Session being drawn by an organizer over the free slots of a
+  Track, extended slot by slot until the pointer is released, at which point it becomes
+  a Session mutation.

@@ -55,18 +55,6 @@ export const isTimeSlotIncluded = (slot: TimeSlot, inSlot?: TimeSlot): boolean =
   return slot.start >= inSlot.start && slot.end <= inSlot.end;
 };
 
-export const isNextTimeslotInWindow = (
-  startSlot: TimeSlot,
-  nextSlot: TimeSlot,
-  intervalMinutes: number,
-  windowSize = 20,
-): boolean => {
-  const windowStart = startSlot.start;
-  const windowEnd = addMinutes(startSlot.end, intervalMinutes * windowSize);
-  const window = { start: windowStart, end: windowEnd };
-  return isTimeSlotIncluded(nextSlot, window);
-};
-
 export const areTimeSlotsOverlapping = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
   return !(slot1.end <= slot2.start || slot1.start >= slot2.end);
 };
