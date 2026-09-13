@@ -2,7 +2,6 @@ import { addMinutes } from 'date-fns';
 import { areTimeSlotsOverlapping, moveTimeSlotStart, type TimeSlot } from '~/shared/datetimes/timeslots.ts';
 
 // Owns the rule for positioning a Session in a Track: a Session never overlaps another Session of the same Track.
-// Time reference contract: all the dates given to a single call must share the same time reference
 
 // Length given to a Session whose requested end is not after its start.
 const MINIMUM_SESSION_MINUTES = 5;

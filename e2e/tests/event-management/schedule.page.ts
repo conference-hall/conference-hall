@@ -62,4 +62,9 @@ export class SchedulePage extends PageObject {
   session(name: string) {
     return this.page.getByText(name, { exact: true });
   }
+
+  // The drag-and-drop library makes the wrapper of a Session block a button too: the block is the innermost one.
+  sessionBlock(name: string) {
+    return this.page.getByRole('button', { name }).last();
+  }
 }

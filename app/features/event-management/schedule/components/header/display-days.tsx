@@ -4,18 +4,19 @@ import { isSameDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { formatDateRange } from '~/shared/datetimes/datetimes.ts';
+import type { ScheduleTime } from '../../models/schedule-time.ts';
 
 const NEXT = 1;
 const PREVIOUS = -1;
 
 type Props = {
+  scheduleTime: ScheduleTime;
   scheduleDays: Array<Date>;
   displayedDays: Array<Date>;
   onChangeDisplayDays: (start: Date, end: Date) => void;
 };
 
-export function DisplayDays({ scheduleDays, displayedDays, onChangeDisplayDays }: Props) {
+export function DisplayDays({ scheduleTime, scheduleDays, displayedDays, onChangeDisplayDays }: Props) {
   const { t, i18n } = useTranslation();
   const scheduleStartDay = scheduleDays.at(0)!;
   const scheduleEndDay = scheduleDays.at(-1)!;
@@ -53,7 +54,7 @@ export function DisplayDays({ scheduleDays, displayedDays, onChangeDisplayDays }
 
       <Popover>
         <PopoverButton className="hidden h-full cursor-pointer border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 focus:relative md:block">
-          {formatDateRange(displayedStartDay, displayedEndDay, { format: 'medium', locale: i18n.language })}
+          {scheduleTime.formatDateRange(displayedStartDay, displayedEndDay, i18n.language)}
         </PopoverButton>
         <PopoverPanel
           anchor={{ to: 'bottom start', gap: '4px', offset: '-34px' }}

@@ -8,10 +8,9 @@ import type { ReactNode, RefObject } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { formatDate, formatTime, toDateInput } from '~/shared/datetimes/datetimes.ts';
+import { toDateInput } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import { haveSameStartDate } from '~/shared/datetimes/timeslots.ts';
-import { getGMTOffset } from '~/shared/datetimes/timezone.ts';
 import type { GridTarget, SessionDraft, SessionPayload } from '../../models/schedule-grid.ts';
 import {
   decodeGesture,
@@ -22,6 +21,8 @@ import {
   ScheduleGrid,
   SLOT_INTERVAL,
 } from '../../models/schedule-grid.ts';
+import type { ScheduleTime } from '../../models/schedule-time.ts';
+import { SessionMutations } from '../../models/session-mutation.ts';
 import type { PlacementOutcome, SwapOutcome } from '../../models/session-placement.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { getSessionHeight, getTimeslotHeight, topInsideDroppable } from './helpers.ts';
@@ -29,7 +30,7 @@ import { getSessionHeight, getTimeslotHeight, topInsideDroppable } from './helpe
 type ScheduleProps = {
   displayedDays: Array<Date>;
   displayedTimes: { start: number; end: number };
-  timezone: string;
+  scheduleTime: ScheduleTime;
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
   renderSession: (session: ScheduleSession, height: number) => ReactNode;
@@ -43,7 +44,7 @@ type ScheduleProps = {
 export default function Schedule({
   displayedDays,
   displayedTimes,
-  timezone,
+  scheduleTime,
   tracks = [],
   sessions = [],
   renderSession,
@@ -80,7 +81,7 @@ export default function Schedule({
             day={day}
             dayIndex={index}
             displayedTimes={displayedTimes}
-            timezone={timezone}
+            scheduleTime={scheduleTime}
             tracks={tracks}
             sessions={sessions}
             renderSession={renderSession}
@@ -106,15 +107,10 @@ function useConflictReport() {
   );
 }
 
-// A draft becomes a Session only to render its block and to add it through the hook.
-function toDraftSession({ trackId, timeslot }: SessionDraft): ScheduleSession {
-  return { id: 'new', trackId, timeslot, color: 'stone', emojis: [], language: null };
-}
-
 type ScheduleDayProps = {
   day: Date;
   dayIndex: number;
-  timezone: string;
+  scheduleTime: ScheduleTime;
   displayedTimes: { start: number; end: number };
   tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
@@ -127,7 +123,7 @@ type ScheduleDayProps = {
 function ScheduleDay({
   day,
   dayIndex,
-  timezone,
+  scheduleTime,
   displayedTimes,
   tracks,
   sessions,
@@ -160,7 +156,7 @@ function ScheduleDay({
     async (end: Date) => {
       if (!draft) return;
       setDraft(null);
-      reportConflict(await onAddSession(toDraftSession({ ...draft, timeslot: { ...draft.timeslot, end } })));
+      reportConflict(await onAddSession(SessionMutations.blank({ ...draft, timeslot: { ...draft.timeslot, end } })));
     },
     [draft, onAddSession, reportConflict],
   );
@@ -176,7 +172,7 @@ function ScheduleDay({
               {dayIndex === 0 && <th className="w-12 border-b" aria-hidden />}
               {/* day */}
               <th className="border-b text-sm font-semibold" colSpan={grid.tracks.length}>
-                {formatDate(day, { format: 'long', locale })}
+                {scheduleTime.formatDate(day, locale)}
               </th>
             </tr>
           )}
@@ -184,7 +180,7 @@ function ScheduleDay({
             {/* gutter */}
             {dayIndex === 0 && (
               <th className="w-12 bg-white text-center text-xs font-normal text-gray-400">
-                {getGMTOffset(timezone, locale)}
+                {scheduleTime.gmtOffset(locale)}
               </th>
             )}
             {/* tracks header */}
@@ -210,8 +206,8 @@ function ScheduleDay({
 
           {/* rows by hours */}
           {grid.rows.map(({ hour, slots }) => {
-            const startHour = formatTime(hour.start, { format: 'short', locale });
-            const endHour = formatTime(hour.end, { format: 'short', locale });
+            const startHour = scheduleTime.formatTime(hour.start, locale);
+            const endHour = scheduleTime.formatTime(hour.end, locale);
 
             return (
               <tr key={`${startHour}-${endHour}`} className="divide-x">
@@ -238,6 +234,7 @@ function ScheduleDay({
                         <MemoizedTimeslot
                           key={`${track.id}-${timeslot.start.toISOString()}`}
                           gridRef={gridRef}
+                          scheduleTime={scheduleTime}
                           trackId={track.id}
                           timeslot={timeslot}
                           isOccupied={session !== undefined}
@@ -247,7 +244,7 @@ function ScheduleDay({
                           isDrawing={draft !== null}
                           isInsideDraft={draft !== null && grid.isInsideDraft(draft, target)}
                           canExtendDraft={canExtendDraft}
-                          draftSession={isDraftStart ? toDraftSession(draft) : undefined}
+                          draftSession={isDraftStart ? SessionMutations.blank(draft) : undefined}
                           onStartDraft={() => setDraft({ trackId: track.id, timeslot })}
                           onExtendDraft={
                             draft
@@ -288,6 +285,7 @@ const MemoizedTimeslot = React.memo(Timeslot, (prevProps, nextProps) => {
 
 type TimeslotProps = {
   gridRef: RefObject<ScheduleGrid>;
+  scheduleTime: ScheduleTime;
   trackId: string;
   timeslot: TimeSlot;
   isOccupied: boolean;
@@ -306,6 +304,7 @@ type TimeslotProps = {
 
 function Timeslot({
   gridRef,
+  scheduleTime,
   trackId,
   timeslot,
   isOccupied,
@@ -322,7 +321,7 @@ function Timeslot({
   renderSession,
 }: TimeslotProps) {
   const { i18n } = useTranslation();
-  const locale = i18n.language;
+  const label = `Timeslot ${scheduleTime.formatTime(timeslot.start, i18n.language)}`;
 
   // droppable timeslot
   const droppable = useDroppable({
@@ -341,7 +340,7 @@ function Timeslot({
       ref={droppable.ref}
       role="button"
       tabIndex={0}
-      aria-label={`Timeslot ${formatTime(timeslot.start, { format: 'short', locale })}`}
+      aria-label={label}
       onMouseDown={canStartDraft ? onStartDraft : undefined}
       onMouseEnter={canExtendDraft ? onExtendDraft : undefined}
       onMouseUp={canExtendDraft ? onCreateDraft : undefined}
@@ -355,7 +354,7 @@ function Timeslot({
       })}
     >
       {/* invisible span to have content for the table */}
-      <span className="invisible">{`Timeslot ${formatTime(timeslot.start, { format: 'short', locale })}`}</span>
+      <span className="invisible">{label}</span>
 
       {sessionBlock ? (
         // displayed session block

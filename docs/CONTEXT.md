@@ -136,6 +136,9 @@ term as defined here and don't drift to synonyms.
 
 - **Schedule** — An event's timetable, with its own timezone and display bounds.
 
+- **Schedule time**: The wall-clock time of a Schedule in its own timezone. The server
+  and the wire speak UTC; everything an organizer sees or drags speaks Schedule time.
+
 - **Track** — A parallel stream within a schedule (e.g. a room or stage).
 
 - **Session** — A time slot within a track. May be linked to a proposal (a scheduled

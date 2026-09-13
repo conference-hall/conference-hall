@@ -37,7 +37,7 @@ export default defineConfig({
           includeTaskLocation: true,
           browser: {
             enabled: true,
-            provider: playwright({ contextOptions: { reducedMotion: 'reduce' } }),
+            provider: playwright({ contextOptions: { reducedMotion: 'reduce', timezoneId: 'America/New_York' } }),
             instances: [{ browser: 'chromium' }],
             viewport: { width: 1920, height: 1080 },
             screenshotFailures: false,

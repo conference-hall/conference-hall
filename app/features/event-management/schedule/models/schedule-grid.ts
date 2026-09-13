@@ -7,7 +7,6 @@ import { SessionPlacement } from './session-placement.ts';
 // Owns every decision the grid of one displayed day makes: its hour rows and slots, which Session occupies a
 // slot, whether a slot accepts a drag source, what a resize preview shows, and how far a Session draft may be
 // extended. It owns no pixel and never imports the drag-and-drop library.
-// Time reference contract: everything it receives is in the Schedule timezone, it converts nothing.
 
 const HOUR_INTERVAL = 60; // minutes
 export const SLOT_INTERVAL = 5; // minutes

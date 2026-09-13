@@ -1,9 +1,10 @@
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatTime, formatTimeDifference } from '~/shared/datetimes/datetimes.ts';
+import { formatTimeDifference } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
+import type { ScheduleTime } from '../../models/schedule-time.ts';
 import type { PlacementOutcome } from '../../models/session-placement.ts';
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
@@ -14,6 +15,7 @@ type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 type SessionBlockProps = {
   session: ScheduleSession;
   height: number;
+  scheduleTime: ScheduleTime;
   displayedTimes: { start: number; end: number };
   tracks: Array<Track>;
   scheduleDays: Array<Date>;
@@ -24,6 +26,7 @@ type SessionBlockProps = {
 export function SessionBlock({
   session,
   height,
+  scheduleTime,
   displayedTimes,
   tracks,
   scheduleDays,
@@ -65,7 +68,7 @@ export function SessionBlock({
       ) : null}
 
       <div className={cx('flex shrink-0 gap-1', { 'mt-0.5': size === 'md', 'items-end': !title })}>
-        <SessionTime timeslot={timeslot} size={size} />
+        <SessionTime timeslot={timeslot} scheduleTime={scheduleTime} size={size} />
         <SessionEmojis emojis={emojis} size={size} />
         <SessionLanguage language={language} size={size} />
       </div>
@@ -98,14 +101,14 @@ function SessionSpeakers({ speakers, size }: SessionSpeakersProps) {
   return <p className={cx('text-[10px]', { truncate: size !== 'xl' })}>{`${firstSpeaker?.name}${suffix}`}</p>;
 }
 
-type SessionTimeProps = { timeslot: TimeSlot; size: Size };
+type SessionTimeProps = { timeslot: TimeSlot; scheduleTime: ScheduleTime; size: Size };
 
-function SessionTime({ timeslot, size }: SessionTimeProps) {
+function SessionTime({ timeslot, scheduleTime, size }: SessionTimeProps) {
   const { i18n } = useTranslation();
   const locale = i18n.language;
 
-  const start = formatTime(timeslot.start, { format: 'short', locale });
-  const end = formatTime(timeslot.end, { format: 'short', locale });
+  const start = scheduleTime.formatTime(timeslot.start, locale);
+  const end = scheduleTime.formatTime(timeslot.end, locale);
   const minutes = formatTimeDifference(timeslot.start, timeslot.end);
 
   return (

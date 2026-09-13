@@ -1,29 +1,25 @@
 import { isSameDay } from 'date-fns';
 import { useFetcher, useNavigate, useParams, useSearchParams } from 'react-router';
-import { getDatesRange } from '~/shared/datetimes/datetimes.ts';
-import { utcToTimezone } from '~/shared/datetimes/timezone.ts';
+import type { ScheduleTime } from '../models/schedule-time.ts';
 
 type ScheduleSettings = {
   start: Date;
   end: Date;
-  timezone: string;
   displayStartMinutes: number;
   displayEndMinutes: number;
 };
 
-export function useDisplaySettings(settings: ScheduleSettings) {
+export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: ScheduleTime) {
   const navigate = useNavigate();
   const fetcher = useFetcher({ key: 'update-display-times' });
   const params = useParams();
   const [searchParams] = useSearchParams();
   const [displayedStart, displayedEnd] = params.day?.split('-').map(Number) ?? [];
 
-  const { start, end, timezone, displayStartMinutes, displayEndMinutes } = settings;
+  const { start, end, displayStartMinutes, displayEndMinutes } = settings;
 
   // compute schedule days
-  const startTz = utcToTimezone(start, timezone);
-  const endTz = utcToTimezone(end, timezone);
-  const scheduleDays = getDatesRange(startTz, endTz);
+  const scheduleDays = scheduleTime.days(start, end);
   const displayedDays = scheduleDays.slice(displayedStart, (displayedEnd || displayedStart) + 1);
   const displayedTimes = { start: displayStartMinutes, end: displayEndMinutes };
 
