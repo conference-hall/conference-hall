@@ -1,31 +1,16 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { useTranslation } from 'react-i18next';
 import { Background } from '~/design-system/transitions.tsx';
-import type { PlacementOutcome } from '../../models/session-placement.ts';
-import type { ScheduleSession, Track } from '../schedule.types.ts';
+import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionForm } from './session-form.tsx';
 
 type SessionModalProps = {
   mode: 'create' | 'edit';
   session: ScheduleSession;
-  displayedTimes: { start: number; end: number };
-  tracks: Array<Track>;
-  scheduleDays: Array<Date>;
   onClose: VoidFunction;
-  onSubmit: (session: ScheduleSession) => Promise<PlacementOutcome>;
-  onDelete?: (session: ScheduleSession) => Promise<void>;
 };
 
-export function SessionModal({
-  mode,
-  session,
-  displayedTimes,
-  tracks,
-  scheduleDays,
-  onClose,
-  onSubmit,
-  onDelete,
-}: SessionModalProps) {
+export function SessionModal({ mode, session, onClose }: SessionModalProps) {
   const { t } = useTranslation();
 
   return (
@@ -40,16 +25,7 @@ export function SessionModal({
           >
             <DialogTitle className="sr-only">{t(`event-management.schedule.${mode}-session.heading`)}</DialogTitle>
 
-            <SessionForm
-              mode={mode}
-              session={session}
-              displayedTimes={displayedTimes}
-              tracks={tracks}
-              scheduleDays={scheduleDays}
-              onFinish={onClose}
-              onSubmit={onSubmit}
-              onDelete={onDelete}
-            />
+            <SessionForm mode={mode} session={session} onFinish={onClose} />
           </DialogPanel>
         </div>
       </div>

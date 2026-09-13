@@ -1,8 +1,8 @@
 import { I18nextProvider } from 'react-i18next';
-import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page, userEvent } from 'vitest/browser';
 import { ScheduleTime } from '../../models/schedule-time.ts';
+import { type CurrentSchedule, CurrentScheduleProvider } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionBlock } from './session-block.tsx';
 
@@ -20,52 +20,58 @@ const session: ScheduleSession = {
   proposal: null,
 };
 
+const currentSchedule: CurrentSchedule = {
+  scheduleTime,
+  tracks: [{ id: 'track-1', name: 'Room 1' }],
+  scheduleDays: [day],
+  displayedDays: [day],
+  displayedTimes: { start: 9 * 60, end: 18 * 60 },
+  addSession: async () => ({ status: 'placed', placement: { trackId: 'track-1', timeslot: session.timeslot } }),
+  updateSession: async () => ({ status: 'placed', placement: { trackId: 'track-1', timeslot: session.timeslot } }),
+  deleteSession: async () => {},
+};
+
 function renderBlock() {
-  const RouteStub = createRoutesStub([
-    {
-      path: '/team/:team/:event/schedule',
-      Component: () => (
-        <I18nextProvider i18n={i18nTest}>
-          <SessionBlock
-            session={session}
-            height={80}
-            scheduleTime={scheduleTime}
-            displayedTimes={{ start: 9 * 60, end: 18 * 60 }}
-            tracks={[{ id: 'track-1', name: 'Room 1' }]}
-            scheduleDays={[day]}
-            onUpdateSession={async () => ({
-              status: 'placed',
-              placement: { trackId: 'track-1', timeslot: session.timeslot },
-            })}
-            onDeleteSession={async () => {}}
-          />
-        </I18nextProvider>
-      ),
-    },
-  ]);
-  return page.render(<RouteStub initialEntries={['/team/t1/e1/schedule']} />);
+  const onOpen = vi.fn();
+  const rendered = page.render(
+    <I18nextProvider i18n={i18nTest}>
+      <CurrentScheduleProvider value={currentSchedule}>
+        <SessionBlock session={session} height={80} onOpen={onOpen} />
+      </CurrentScheduleProvider>
+    </I18nextProvider>,
+  );
+  return { rendered, onOpen };
 }
 
 describe('SessionBlock component', () => {
-  it('opens the session edition with Enter', async () => {
-    await renderBlock();
+  it('asks to open the session with Enter', async () => {
+    const { rendered, onOpen } = renderBlock();
+    await rendered;
 
     await userEvent.tab();
     await expect.element(page.getByRole('button', { name: /Coffee break/ })).toHaveFocus();
     await userEvent.keyboard('{Enter}');
 
-    const dialog = page.getByRole('dialog', { name: 'Edit session' });
-    await expect.element(dialog.getByRole('button', { name: 'Cancel' })).toBeVisible();
+    expect(onOpen).toHaveBeenCalled();
   });
 
-  it('opens the session edition with Space', async () => {
-    await renderBlock();
+  it('asks to open the session with Space', async () => {
+    const { rendered, onOpen } = renderBlock();
+    await rendered;
 
     await userEvent.tab();
     await expect.element(page.getByRole('button', { name: /Coffee break/ })).toHaveFocus();
     await userEvent.keyboard(' ');
 
-    const dialog = page.getByRole('dialog', { name: 'Edit session' });
-    await expect.element(dialog.getByRole('button', { name: 'Cancel' })).toBeVisible();
+    expect(onOpen).toHaveBeenCalled();
+  });
+
+  it('asks to open the session on click', async () => {
+    const { rendered, onOpen } = renderBlock();
+    await rendered;
+
+    await page.getByRole('button', { name: /Coffee break/ }).click();
+
+    expect(onOpen).toHaveBeenCalled();
   });
 });

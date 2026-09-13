@@ -1,39 +1,23 @@
 import { cx } from 'class-variance-authority';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatTimeDifference } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
 import type { ScheduleTime } from '../../models/schedule-time.ts';
-import type { PlacementOutcome } from '../../models/session-placement.ts';
-import type { ScheduleSession, Track } from '../schedule.types.ts';
+import { useCurrentSchedule } from '../../schedule-context.tsx';
+import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
-import { SessionModal } from './session-modal.tsx';
 
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 type SessionBlockProps = {
   session: ScheduleSession;
   height: number;
-  scheduleTime: ScheduleTime;
-  displayedTimes: { start: number; end: number };
-  tracks: Array<Track>;
-  scheduleDays: Array<Date>;
-  onUpdateSession: (updated: ScheduleSession) => Promise<PlacementOutcome>;
-  onDeleteSession: (session: ScheduleSession) => Promise<void>;
+  onOpen: VoidFunction;
 };
 
-export function SessionBlock({
-  session,
-  height,
-  scheduleTime,
-  displayedTimes,
-  tracks,
-  scheduleDays,
-  onUpdateSession,
-  onDeleteSession,
-}: SessionBlockProps) {
-  const [edit, setEdit] = useState(false);
+export function SessionBlock({ session, height, onOpen }: SessionBlockProps) {
+  const { scheduleTime } = useCurrentSchedule();
   const { timeslot, proposal, language, emojis } = session;
 
   const { block } = SESSION_COLORS.find((c) => c.value === session.color) ?? SESSION_COLORS[0];
@@ -47,11 +31,11 @@ export function SessionBlock({
     <div
       role="button"
       tabIndex={0}
-      onClick={() => setEdit(true)}
+      onClick={onOpen}
       onKeyDown={(event) => {
         if (event.key !== 'Enter' && event.key !== ' ') return;
         event.preventDefault();
-        setEdit(true);
+        onOpen();
       }}
       className={cx(
         'flex h-full w-full cursor-pointer flex-col rounded-sm px-1 text-left',
@@ -76,19 +60,6 @@ export function SessionBlock({
         <SessionEmojis emojis={emojis} size={size} />
         <SessionLanguage language={language} size={size} />
       </div>
-
-      {edit && (
-        <SessionModal
-          mode="edit"
-          session={session}
-          displayedTimes={displayedTimes}
-          tracks={tracks}
-          scheduleDays={scheduleDays}
-          onSubmit={onUpdateSession}
-          onDelete={onDeleteSession}
-          onClose={() => setEdit(false)}
-        />
-      )}
     </div>
   );
 }
