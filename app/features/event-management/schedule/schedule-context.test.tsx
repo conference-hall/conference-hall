@@ -1,7 +1,7 @@
 import { Component, type ReactNode } from 'react';
 import { page } from 'vitest/browser';
 import { ScheduleTime } from './models/schedule-time.ts';
-import { type CurrentSchedule, ScheduleProvider, useCurrentSchedule } from './schedule-context.tsx';
+import { type CurrentSchedule, CurrentScheduleProvider, useCurrentSchedule } from './schedule-context.tsx';
 
 const scheduleTime = new ScheduleTime('Europe/Paris');
 const day = scheduleTime.fromUtc(new Date('2024-10-05T07:00:00.000Z'));
@@ -49,9 +49,9 @@ class ErrorCatcher extends Component<{ children: ReactNode }, { message: string 
 describe('ScheduleContext', () => {
   it('returns the provided schedule', async () => {
     await page.render(
-      <ScheduleProvider value={currentSchedule}>
+      <CurrentScheduleProvider value={currentSchedule}>
         <TestScheduleComponent />
-      </ScheduleProvider>,
+      </CurrentScheduleProvider>,
     );
 
     await expect.element(page.getByText('Tracks: Room 1')).toBeVisible();
@@ -66,6 +66,8 @@ describe('ScheduleContext', () => {
       </ErrorCatcher>,
     );
 
-    await expect.element(page.getByText('useCurrentSchedule must be used within a ScheduleProvider')).toBeVisible();
+    await expect
+      .element(page.getByText('useCurrentSchedule must be used within a CurrentScheduleProvider'))
+      .toBeVisible();
   });
 });

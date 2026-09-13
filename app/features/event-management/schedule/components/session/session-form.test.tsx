@@ -5,7 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
 import { ScheduleTime } from '../../models/schedule-time.ts';
 import type { PlacementOutcome } from '../../models/session-placement.ts';
-import { type CurrentSchedule, ScheduleProvider } from '../../schedule-context.tsx';
+import { type CurrentSchedule, CurrentScheduleProvider } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionForm } from './session-form.tsx';
 
@@ -60,9 +60,9 @@ function renderForm(mode: 'create' | 'edit', overrides: Partial<CurrentSchedule>
       path: '/team/:team/:event/schedule',
       Component: () => (
         <I18nextProvider i18n={i18nTest}>
-          <ScheduleProvider value={currentSchedule}>
+          <CurrentScheduleProvider value={currentSchedule}>
             <SessionForm mode={mode} session={session} onFinish={onFinish} />
-          </ScheduleProvider>
+          </CurrentScheduleProvider>
         </I18nextProvider>
       ),
     },
@@ -85,6 +85,8 @@ describe('SessionForm component', () => {
     await page.getByRole('combobox', { name: 'Session name' }).fill('Keynote');
     await userEvent.keyboard('{Enter}');
     await userEvent.selectOptions(page.getByLabelText('Track'), 'track-2');
+    await page.getByLabelText('Date').fill('2024-10-06');
+    await userEvent.selectOptions(page.getByLabelText('From'), String(11 * 60));
     await userEvent.selectOptions(page.getByLabelText('Language'), 'en');
     await page.getByRole('radio', { name: 'Blue' }).click();
     await page.getByRole('button', { name: 'Choose an emoji' }).click();
@@ -96,6 +98,10 @@ describe('SessionForm component', () => {
       ...session,
       name: 'Keynote',
       trackId: 'track-2',
+      timeslot: {
+        start: setMinutesFromStartOfDay(scheduleDays[1], 11 * 60),
+        end: setMinutesFromStartOfDay(scheduleDays[1], 11 * 60 + 30),
+      },
       language: 'en',
       color: 'blue',
       emojis: ['rocket'],

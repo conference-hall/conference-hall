@@ -2,7 +2,7 @@ import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page, userEvent } from 'vitest/browser';
 import { ScheduleTime } from '../../models/schedule-time.ts';
-import { type CurrentSchedule, ScheduleProvider } from '../../schedule-context.tsx';
+import { type CurrentSchedule, CurrentScheduleProvider } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionBlock } from './session-block.tsx';
 
@@ -35,9 +35,9 @@ function renderBlock() {
   const onOpen = vi.fn();
   const rendered = page.render(
     <I18nextProvider i18n={i18nTest}>
-      <ScheduleProvider value={currentSchedule}>
+      <CurrentScheduleProvider value={currentSchedule}>
         <SessionBlock session={session} height={80} onOpen={onOpen} />
-      </ScheduleProvider>
+      </CurrentScheduleProvider>
     </I18nextProvider>,
   );
   return { rendered, onOpen };

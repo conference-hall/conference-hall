@@ -15,11 +15,11 @@ export type CurrentSchedule = {
   deleteSession: (session: ScheduleSession) => Promise<void>;
 };
 
-type ScheduleProviderProps = { children: ReactNode; value: CurrentSchedule };
+type CurrentScheduleProviderProps = { children: ReactNode; value: CurrentSchedule };
 
 const ScheduleContext = createContext<CurrentSchedule | undefined>(undefined);
 
-export const ScheduleProvider = ({ children, value }: ScheduleProviderProps) => {
+export const CurrentScheduleProvider = ({ children, value }: CurrentScheduleProviderProps) => {
   return <ScheduleContext.Provider value={value}>{children}</ScheduleContext.Provider>;
 };
 
@@ -30,7 +30,7 @@ export const ScheduleProvider = ({ children, value }: ScheduleProviderProps) => 
 export function useCurrentSchedule(): CurrentSchedule {
   const context = useContext(ScheduleContext);
   if (context === undefined) {
-    throw new Error('useCurrentSchedule must be used within a ScheduleProvider');
+    throw new Error('useCurrentSchedule must be used within a CurrentScheduleProvider');
   }
   return context;
 }

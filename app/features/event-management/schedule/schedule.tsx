@@ -30,7 +30,7 @@ import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
 import { ScheduleTime } from './models/schedule-time.ts';
 import { SESSION_INTENTS, SessionMutations } from './models/session-mutation.ts';
-import { type CurrentSchedule, ScheduleProvider } from './schedule-context.tsx';
+import { type CurrentSchedule, CurrentScheduleProvider } from './schedule-context.tsx';
 import { EventSchedule } from './services/schedule.server.ts';
 
 const NEW_SESSION_DURATION = 30; // minutes
@@ -159,7 +159,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
   }
 
   return (
-    <ScheduleProvider value={currentSchedule}>
+    <CurrentScheduleProvider value={currentSchedule}>
       <main className={cx({ 'mx-auto my-8 max-w-7xl px-8': !isFullscreen })}>
         <h1 className="sr-only">{schedule.name}</h1>
 
@@ -199,6 +199,6 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
           />
         )}
       </main>
-    </ScheduleProvider>
+    </CurrentScheduleProvider>
   );
 }
