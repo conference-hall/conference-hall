@@ -3,6 +3,7 @@ import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page, userEvent } from 'vitest/browser';
 import { ScheduleTime } from '../../models/schedule-time.ts';
+import { type CurrentSchedule, ScheduleProvider } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionBlock } from './session-block.tsx';
 
@@ -20,25 +21,26 @@ const session: ScheduleSession = {
   proposal: null,
 };
 
+const currentSchedule: CurrentSchedule = {
+  scheduleTime,
+  tracks: [{ id: 'track-1', name: 'Room 1' }],
+  scheduleDays: [day],
+  displayedDays: [day],
+  displayedTimes: { start: 9 * 60, end: 18 * 60 },
+  addSession: async () => ({ status: 'placed', placement: { trackId: 'track-1', timeslot: session.timeslot } }),
+  updateSession: async () => ({ status: 'placed', placement: { trackId: 'track-1', timeslot: session.timeslot } }),
+  deleteSession: async () => {},
+};
+
 function renderBlock() {
   const RouteStub = createRoutesStub([
     {
       path: '/team/:team/:event/schedule',
       Component: () => (
         <I18nextProvider i18n={i18nTest}>
-          <SessionBlock
-            session={session}
-            height={80}
-            scheduleTime={scheduleTime}
-            displayedTimes={{ start: 9 * 60, end: 18 * 60 }}
-            tracks={[{ id: 'track-1', name: 'Room 1' }]}
-            scheduleDays={[day]}
-            onUpdateSession={async () => ({
-              status: 'placed',
-              placement: { trackId: 'track-1', timeslot: session.timeslot },
-            })}
-            onDeleteSession={async () => {}}
-          />
+          <ScheduleProvider value={currentSchedule}>
+            <SessionBlock session={session} height={80} scheduleTime={scheduleTime} />
+          </ScheduleProvider>
         </I18nextProvider>
       ),
     },

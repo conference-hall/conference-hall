@@ -5,8 +5,7 @@ import { formatTimeDifference } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
 import type { ScheduleTime } from '../../models/schedule-time.ts';
-import type { PlacementOutcome } from '../../models/session-placement.ts';
-import type { ScheduleSession, Track } from '../schedule.types.ts';
+import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 import { SessionModal } from './session-modal.tsx';
 
@@ -16,23 +15,9 @@ type SessionBlockProps = {
   session: ScheduleSession;
   height: number;
   scheduleTime: ScheduleTime;
-  displayedTimes: { start: number; end: number };
-  tracks: Array<Track>;
-  scheduleDays: Array<Date>;
-  onUpdateSession: (updated: ScheduleSession) => Promise<PlacementOutcome>;
-  onDeleteSession: (session: ScheduleSession) => Promise<void>;
 };
 
-export function SessionBlock({
-  session,
-  height,
-  scheduleTime,
-  displayedTimes,
-  tracks,
-  scheduleDays,
-  onUpdateSession,
-  onDeleteSession,
-}: SessionBlockProps) {
+export function SessionBlock({ session, height, scheduleTime }: SessionBlockProps) {
   const [edit, setEdit] = useState(false);
   const { timeslot, proposal, language, emojis } = session;
 
@@ -77,18 +62,7 @@ export function SessionBlock({
         <SessionLanguage language={language} size={size} />
       </div>
 
-      {edit && (
-        <SessionModal
-          mode="edit"
-          session={session}
-          displayedTimes={displayedTimes}
-          tracks={tracks}
-          scheduleDays={scheduleDays}
-          onSubmit={onUpdateSession}
-          onDelete={onDeleteSession}
-          onClose={() => setEdit(false)}
-        />
-      )}
+      {edit && <SessionModal mode="edit" session={session} onClose={() => setEdit(false)} />}
     </div>
   );
 }

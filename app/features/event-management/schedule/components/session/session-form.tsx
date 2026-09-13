@@ -19,33 +19,20 @@ import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { LANGUAGES } from '~/shared/constants.ts';
 import { getMinutesFromStartOfDay, setMinutesFromStartOfDay, toDateInput } from '~/shared/datetimes/datetimes.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
-import type { PlacementOutcome } from '../../models/session-placement.ts';
-import type { ScheduleSession, Track } from '../schedule.types.ts';
+import { useCurrentSchedule } from '../../schedule-context.tsx';
+import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 import { SessionIdentityField } from './session-identity-field.tsx';
 
 type Props = {
   mode: 'create' | 'edit';
   session: ScheduleSession;
-  displayedTimes: { start: number; end: number };
-  tracks: Array<Track>;
-  scheduleDays: Array<Date>;
   onFinish: VoidFunction;
-  onSubmit: (session: ScheduleSession) => Promise<PlacementOutcome>;
-  onDelete?: (session: ScheduleSession) => Promise<void>;
 };
 
-export function SessionForm({
-  mode,
-  session,
-  displayedTimes,
-  tracks,
-  scheduleDays,
-  onFinish,
-  onSubmit,
-  onDelete,
-}: Props) {
+export function SessionForm({ mode, session, onFinish }: Props) {
   const { t } = useTranslation();
+  const { tracks, scheduleDays, displayedTimes, addSession, updateSession, deleteSession } = useCurrentSchedule();
 
   const formId = useId();
   const [name, setName] = useState(session.name ?? '');
@@ -59,7 +46,8 @@ export function SessionForm({
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    const outcome = await onSubmit({ ...session, name, color, language, emojis, trackId, timeslot, proposal });
+    const edited = { ...session, name, color, language, emojis, trackId, timeslot, proposal };
+    const outcome = mode === 'create' ? await addSession(edited) : await updateSession(edited);
     if (outcome.status === 'conflict') {
       setError(t('event-management.schedule.errors.session-conflict'));
     } else {
@@ -69,7 +57,7 @@ export function SessionForm({
   };
 
   const handleDelete = async () => {
-    await onDelete?.(session);
+    await deleteSession(session);
     onFinish();
   };
 

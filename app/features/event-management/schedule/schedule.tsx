@@ -31,6 +31,7 @@ import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
 import { ScheduleTime } from './models/schedule-time.ts';
 import { SESSION_INTENTS, SessionMutations } from './models/session-mutation.ts';
+import { type CurrentSchedule, ScheduleProvider } from './schedule-context.tsx';
 import { EventSchedule } from './services/schedule.server.ts';
 
 const NEW_SESSION_DURATION = 30; // minutes
@@ -115,6 +116,17 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
   const zoomHandlers = useZoomHandlers();
   const [newSession, setNewSession] = useState<ScheduleSession | null>(null);
 
+  const currentSchedule: CurrentSchedule = {
+    scheduleTime,
+    tracks: schedule.tracks,
+    scheduleDays: settings.scheduleDays,
+    displayedDays: settings.displayedDays,
+    displayedTimes: settings.displayedTimes,
+    addSession: sessions.add,
+    updateSession: sessions.update,
+    deleteSession: sessions.delete,
+  };
+
   const openNewSession = () => {
     const day = settings.displayedDays.at(0);
     const trackId = schedule.tracks.at(0)?.id;
@@ -145,59 +157,42 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
   }
 
   return (
-    <main className={cx({ 'mx-auto my-8 max-w-7xl px-8': !isFullscreen })}>
-      <h1 className="sr-only">{schedule.name}</h1>
+    <ScheduleProvider value={currentSchedule}>
+      <main className={cx({ 'mx-auto my-8 max-w-7xl px-8': !isFullscreen })}>
+        <h1 className="sr-only">{schedule.name}</h1>
 
-      <div className={cx({ 'rounded-t-lg border border-gray-200': !isFullscreen })}>
-        <ScheduleHeader
-          scheduleTime={scheduleTime}
-          scheduleDays={settings.scheduleDays}
-          displayedDays={settings.displayedDays}
-          displayedTimes={settings.displayedTimes}
-          tracks={schedule.tracks}
-          zoomHandlers={zoomHandlers}
-          onChangeDisplayDays={settings.updateDisplayDays}
-          onChangeDisplayTime={settings.updateDisplayTimes}
-          onNewSession={openNewSession}
-        />
+        <div className={cx({ 'rounded-t-lg border border-gray-200': !isFullscreen })}>
+          <ScheduleHeader
+            scheduleTime={scheduleTime}
+            scheduleDays={settings.scheduleDays}
+            displayedDays={settings.displayedDays}
+            displayedTimes={settings.displayedTimes}
+            tracks={schedule.tracks}
+            zoomHandlers={zoomHandlers}
+            onChangeDisplayDays={settings.updateDisplayDays}
+            onChangeDisplayTime={settings.updateDisplayTimes}
+            onNewSession={openNewSession}
+          />
 
-        <Schedule
-          displayedDays={settings.displayedDays}
-          displayedTimes={settings.displayedTimes}
-          scheduleTime={scheduleTime}
-          tracks={schedule.tracks}
-          sessions={sessions.data}
-          zoomLevel={zoomHandlers.level}
-          onAddSession={sessions.add}
-          onMoveSession={sessions.move}
-          onResizeSession={sessions.resize}
-          onSwapSessions={sessions.swap}
-          renderSession={(session, height) => (
-            <SessionBlock
-              session={session}
-              height={height}
-              scheduleTime={scheduleTime}
-              displayedTimes={settings.displayedTimes}
-              tracks={schedule.tracks}
-              scheduleDays={settings.scheduleDays}
-              onUpdateSession={sessions.update}
-              onDeleteSession={sessions.delete}
-            />
-          )}
-        />
-      </div>
+          <Schedule
+            displayedDays={settings.displayedDays}
+            displayedTimes={settings.displayedTimes}
+            scheduleTime={scheduleTime}
+            tracks={schedule.tracks}
+            sessions={sessions.data}
+            zoomLevel={zoomHandlers.level}
+            onAddSession={sessions.add}
+            onMoveSession={sessions.move}
+            onResizeSession={sessions.resize}
+            onSwapSessions={sessions.swap}
+            renderSession={(session, height) => (
+              <SessionBlock session={session} height={height} scheduleTime={scheduleTime} />
+            )}
+          />
+        </div>
 
-      {newSession && (
-        <SessionModal
-          mode="create"
-          session={newSession}
-          displayedTimes={settings.displayedTimes}
-          tracks={schedule.tracks}
-          scheduleDays={settings.scheduleDays}
-          onSubmit={sessions.add}
-          onClose={() => setNewSession(null)}
-        />
-      )}
-    </main>
+        {newSession && <SessionModal mode="create" session={newSession} onClose={() => setNewSession(null)} />}
+      </main>
+    </ScheduleProvider>
   );
 }
