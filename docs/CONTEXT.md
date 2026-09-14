@@ -164,3 +164,11 @@ term as defined here and don't drift to synonyms.
 - **Session draft**: A Session being drawn by an organizer over the free slots of a
   Track, extended slot by slot until the pointer is released, at which point it becomes
   a Session mutation.
+
+- **Gesture**: A pointer-driven action of an organizer on the Schedule: moving a
+  Session, resizing one, swapping two, or drawing a Session draft. While it lasts, a
+  gesture points at a _gesture target_: the Track and the Schedule time the gesture
+  designates, which is the top edge of the dragged Session (or of its resize handle)
+  for a move or a resize, and the pointer for a draft. Releasing a move on a target
+  occupied by another Session is a swap; on a free target it is a move. Each gesture
+  ends as a Session mutation, or is refused by the Placement rule.
