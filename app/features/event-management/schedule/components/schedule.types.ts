@@ -28,6 +28,16 @@ export type SessionData = {
   isCreating?: boolean;
 };
 
+export type ScheduleData = {
+  timezone: string;
+  start: Date;
+  end: Date;
+  displayStartMinutes: number;
+  displayEndMinutes: number;
+  tracks: Array<Track>;
+  sessions: Array<SessionData>;
+};
+
 export type ScheduleProposalData = {
   id: string;
   routeId: string;

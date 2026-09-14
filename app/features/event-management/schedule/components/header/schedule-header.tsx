@@ -1,9 +1,11 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/button.tsx';
-import { useCurrentSchedule } from '../../schedule-context.tsx';
+import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
+import { useCurrentSchedule } from '../../context/schedule-context.tsx';
+import { SessionMutations } from '../../models/session-mutation.ts';
 import { DisplayDays } from './display-days.tsx';
 import { DisplayTimes } from './display-times.tsx';
 import { OptionsMenu } from './options-menu.tsx';
@@ -11,33 +13,48 @@ import { TracksModal } from './tracks-modal.tsx';
 import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 
-type Props = {
-  zoomHandlers: ZoomHandlers;
-  onChangeDisplayDays: (startIndex: number, endIndex: number) => void;
-  onChangeDisplayTime: (start: number, end: number) => void;
-  onNewSession: VoidFunction;
-};
+const NEW_SESSION_DURATION = 30; // minutes
 
-export function ScheduleHeader({ zoomHandlers, onChangeDisplayDays, onChangeDisplayTime, onNewSession }: Props) {
-  const { displayedTimes, tracks } = useCurrentSchedule();
+type Props = { zoomHandlers: ZoomHandlers };
+
+export function ScheduleHeader({ zoomHandlers }: Props) {
+  const { displayedDays, displayedTimes, tracks, onChangeDisplayTimes, onOpenSession } = useCurrentSchedule();
   const { t } = useTranslation();
   const [tracksModalOpen, setTracksModalOpen] = useState(false);
   const scheduleFullscreen = useScheduleFullscreen();
 
+  const onOpenNewSession = useCallback(() => {
+    const day = displayedDays.at(0);
+    const trackId = tracks.at(0)?.id;
+    if (!day || !trackId) return;
+
+    const { start, end } = displayedTimes;
+    onOpenSession({
+      mode: 'create',
+      session: SessionMutations.blank({
+        trackId,
+        timeslot: {
+          start: setMinutesFromStartOfDay(day, start),
+          end: setMinutesFromStartOfDay(day, Math.min(start + NEW_SESSION_DURATION, end)),
+        },
+      }),
+    });
+  }, [onOpenSession, displayedDays, displayedTimes, tracks]);
+
   return (
     <header
       className={cx(
-        'sticky top-0 z-30 flex h-[64px] flex-row items-center justify-between gap-4 border-b border-b-gray-200 bg-slate-100 px-6',
+        'sticky top-0 z-30 flex h-16 flex-row items-center justify-between gap-4 border-b border-b-gray-200 bg-slate-100 px-6',
         { 'rounded-t-lg': !scheduleFullscreen.isFullscreen },
       )}
     >
       <div className="flex shrink items-center gap-3">
-        <DisplayDays onChangeDisplayDays={onChangeDisplayDays} />
-        <DisplayTimes displayedTimes={displayedTimes} onChangeDisplayTime={onChangeDisplayTime} />
+        <DisplayDays />
+        <DisplayTimes displayedTimes={displayedTimes} onChangeDisplayTime={onChangeDisplayTimes} />
       </div>
 
       <div className="flex shrink items-center gap-3">
-        <Button iconLeft={PlusIcon} onClick={onNewSession} disabled={tracks.length === 0}>
+        <Button iconLeft={PlusIcon} onClick={onOpenNewSession} disabled={tracks.length === 0}>
           {t('event-management.schedule.actions.new-session')}
         </Button>
         <OptionsMenu openTracksModal={() => setTracksModalOpen(true)} zoomHandlers={zoomHandlers} />

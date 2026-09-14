@@ -1,7 +1,7 @@
 import { useFetchers, useSubmit } from 'react-router';
 import { renderHook } from 'vitest-browser-react';
+import type { SessionData } from '../components/schedule.types.ts';
 import { ScheduleTime } from '../models/schedule-time.ts';
-import type { SessionData } from './schedule.types.ts';
 import { useSessions } from './use-sessions.ts';
 
 vi.mock('react-router', () => ({

@@ -3,10 +3,10 @@ import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page, userEvent } from 'vitest/browser';
 import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
+import { buildCurrentSchedule } from '../../context/schedule-context.test-helpers.ts';
+import { type CurrentSchedule, CurrentScheduleProvider } from '../../context/schedule-context.tsx';
 import { ScheduleTime } from '../../models/schedule-time.ts';
 import type { PlacementOutcome } from '../../models/session-placement.ts';
-import { buildCurrentSchedule } from '../../schedule-context.test-helpers.ts';
-import { type CurrentSchedule, CurrentScheduleProvider } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionForm } from './session-form.tsx';
 

@@ -19,7 +19,7 @@ import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { LANGUAGES } from '~/shared/constants.ts';
 import { getMinutesFromStartOfDay, setMinutesFromStartOfDay, toDateInput } from '~/shared/datetimes/datetimes.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
-import { useCurrentSchedule } from '../../schedule-context.tsx';
+import { useCurrentSchedule } from '../../context/schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 import { SessionIdentityField } from './session-identity-field.tsx';

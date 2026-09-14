@@ -4,17 +4,13 @@ import { isSameDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { useCurrentSchedule } from '../../schedule-context.tsx';
+import { useCurrentSchedule } from '../../context/schedule-context.tsx';
 
 const NEXT = 1;
 const PREVIOUS = -1;
 
-type Props = {
-  onChangeDisplayDays: (startIndex: number, endIndex: number) => void;
-};
-
-export function DisplayDays({ onChangeDisplayDays }: Props) {
-  const { scheduleTime, scheduleDays, displayedDays } = useCurrentSchedule();
+export function DisplayDays() {
+  const { scheduleTime, scheduleDays, displayedDays, onChangeDisplayDays } = useCurrentSchedule();
   const { t, i18n } = useTranslation();
   const scheduleStartDay = scheduleDays.at(0)!;
   const scheduleEndDay = scheduleDays.at(-1)!;

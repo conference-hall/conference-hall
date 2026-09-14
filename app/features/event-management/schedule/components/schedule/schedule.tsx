@@ -1,5 +1,3 @@
-// `useDroppable` and `useDraggable` expose callback refs (`droppable.ref`, `movable.ref`) alongside plain state
-// (`isDropTarget`, `isDragging`), none of which read `.current` during render.
 // oxlint-disable react/refs
 import { RestrictToWindow } from '@dnd-kit/dom/modifiers';
 import { DragDropProvider, PointerSensor, useDragDropMonitor, useDraggable, useDroppable } from '@dnd-kit/react';
@@ -10,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { toDateInput } from '~/shared/datetimes/datetimes.ts';
 import { deepEqual } from '~/shared/utils/deep-equal.ts';
+import { useCurrentSchedule, useScheduleSessions } from '../../context/schedule-context.tsx';
 import type { GridTarget, SessionDraft, SessionPayload, SlotView } from '../../models/schedule-grid.ts';
 import {
   decodeGesture,
@@ -22,29 +21,14 @@ import {
 } from '../../models/schedule-grid.ts';
 import { SessionMutations } from '../../models/session-mutation.ts';
 import type { PlacementOutcome, SwapOutcome } from '../../models/session-placement.ts';
-import { useCurrentSchedule } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionBlock } from '../session/session-block.tsx';
 import { getSessionHeight, getTimeslotHeight, topInsideDroppable } from './helpers.ts';
 
-type ScheduleProps = {
-  sessions: Array<ScheduleSession>;
-  onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<PlacementOutcome>;
-  onMoveSession: (session: ScheduleSession, target: { trackId: string; start: Date }) => Promise<PlacementOutcome>;
-  onResizeSession: (session: ScheduleSession, end: Date) => Promise<PlacementOutcome>;
-  onSwapSessions: (source: ScheduleSession, target: ScheduleSession) => Promise<SwapOutcome>;
-  zoomLevel: number;
-};
+type ScheduleProps = { zoomLevel: number };
 
-export default function Schedule({
-  sessions = [],
-  onAddSession,
-  onMoveSession,
-  onResizeSession,
-  onSwapSessions,
-  zoomLevel,
-}: ScheduleProps) {
-  const { displayedDays } = useCurrentSchedule();
+export default function Schedule({ zoomLevel }: ScheduleProps) {
+  const { displayedDays, moveSession, resizeSession, swapSessions } = useCurrentSchedule();
   const reportConflict = useConflictReport();
 
   return (
@@ -57,11 +41,11 @@ export default function Schedule({
 
         switch (gesture.kind) {
           case 'move':
-            return reportConflict(await onMoveSession(gesture.session, gesture.target));
+            return reportConflict(await moveSession(gesture.session, gesture.target));
           case 'resize':
-            return reportConflict(await onResizeSession(gesture.session, gesture.end));
+            return reportConflict(await resizeSession(gesture.session, gesture.end));
           case 'swap':
-            return reportConflict(await onSwapSessions(gesture.source, gesture.target));
+            return reportConflict(await swapSessions(gesture.source, gesture.target));
         }
       }}
     >
@@ -71,8 +55,6 @@ export default function Schedule({
             key={toDateInput(day)}
             day={day}
             dayIndex={index}
-            sessions={sessions}
-            onAddSession={onAddSession}
             zoomLevel={zoomLevel}
             displayMultipleDays={displayedDays.length > 1}
           />
@@ -101,14 +83,13 @@ type DraftHandler = (target: GridTarget, phase: DraftPhase) => void;
 type ScheduleDayProps = {
   day: Date;
   dayIndex: number;
-  sessions: Array<ScheduleSession>;
-  onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<PlacementOutcome>;
   zoomLevel: number;
   displayMultipleDays: boolean;
 };
 
-function ScheduleDay({ day, dayIndex, sessions, onAddSession, zoomLevel, displayMultipleDays }: ScheduleDayProps) {
-  const { scheduleTime, displayedTimes, tracks } = useCurrentSchedule();
+function ScheduleDay({ day, dayIndex, zoomLevel, displayMultipleDays }: ScheduleDayProps) {
+  const { scheduleTime, displayedTimes, tracks, addSession } = useCurrentSchedule();
+  const sessions = useScheduleSessions();
   const { i18n } = useTranslation();
   const locale = i18n.language;
   const reportConflict = useConflictReport();
@@ -118,8 +99,7 @@ function ScheduleDay({ day, dayIndex, sessions, onAddSession, zoomLevel, display
     [day, displayedTimes, tracks, sessions],
   );
 
-  // Slots read the model from a ref, and only in drag callbacks: a Session mutation rebuilds the model, and
-  // comparing it in the memo would re-render every slot of the day on every mutation.
+  // Avoid re-rendering the grid on every mutation.
   const gridRef = useRef(grid);
   useEffect(() => {
     gridRef.current = grid;
@@ -127,8 +107,6 @@ function ScheduleDay({ day, dayIndex, sessions, onAddSession, zoomLevel, display
 
   const [draft, setDraft] = useState<SessionDraft | null>(null);
 
-  // The draft is also held in a ref: the single draft callback stays stable across renders and reads the draft
-  // drawn so far at the moment of the gesture, never through a closure a memoized slot could keep stale.
   const draftRef = useRef<SessionDraft | null>(null);
 
   const handleDraft = useCallback(
@@ -149,16 +127,16 @@ function ScheduleDay({ day, dayIndex, sessions, onAddSession, zoomLevel, display
 
       draftRef.current = null;
       setDraft(null);
-      reportConflict(await onAddSession(SessionMutations.blank(drawn)));
+      reportConflict(await addSession(SessionMutations.blank(drawn)));
     },
-    [onAddSession, reportConflict],
+    [addSession, reportConflict],
   );
 
   return (
     <div className={cx('w-full bg-white', { 'select-none': draft !== null })}>
       <table className="w-full table-fixed border-separate border-spacing-0">
         {/* header */}
-        <thead className="sticky top-[64px] z-30 bg-white shadow-sm">
+        <thead className="sticky top-16 z-30 bg-white shadow-sm">
           {displayMultipleDays && (
             <tr className="h-8">
               {/* gutter */}
@@ -241,9 +219,7 @@ function ScheduleDay({ day, dayIndex, sessions, onAddSession, zoomLevel, display
   );
 }
 
-// Memoized Timeslot component: only the slots whose own view changed re-render, on a drawing as on a mutation.
-// The view is compared by value: the Sessions are rebuilt on every mutation and on every server response.
-// The Schedule itself is read from the context, so every prop is compared here.
+// Important for performance: only the slots whose own view changed re-render, on a drawing as on a mutation.
 const MemoizedTimeslot = React.memo(Timeslot, (prevProps, nextProps) => {
   return (
     prevProps.gridRef === nextProps.gridRef &&
@@ -332,7 +308,6 @@ type SessionWrapperProps = {
 
 function SessionWrapper({ gridRef, session, zoomLevel }: SessionWrapperProps) {
   const { onOpenSession } = useCurrentSchedule();
-  // Compute session height
   const defaultHeight = getSessionHeight(session, SLOT_INTERVAL, zoomLevel);
   const [height, setHeight] = useState(defaultHeight);
 
@@ -389,7 +364,7 @@ function SessionWrapper({ gridRef, session, zoomLevel }: SessionWrapperProps) {
         style={{ top: '0px', left: '1px', right: '1px', zIndex: movable.isDragging ? '40' : undefined }}
       >
         <div ref={droppable.ref} style={{ height: `${height}px` }}>
-          <SessionBlock session={session} height={height} onOpen={() => onOpenSession(session)} />
+          <SessionBlock session={session} height={height} onOpen={() => onOpenSession({ mode: 'edit', session })} />
         </div>
       </div>
 

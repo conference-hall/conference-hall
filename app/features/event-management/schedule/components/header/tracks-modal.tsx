@@ -1,6 +1,6 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
@@ -29,12 +29,6 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== 'idle';
   const error = fetcher.data?.errors?.tracks;
-
-  // The modal only closes once the server has accepted the save.
-  useEffect(() => {
-    if (isSubmitting || !fetcher.data?.saved) return;
-    onClose();
-  }, [isSubmitting, fetcher.data, onClose]);
 
   const handleUpdate = (index: number, value: string) => {
     const newOptions = [...tracks];
@@ -107,10 +101,10 @@ export function TracksModal({ initialValues, open, onClose }: TracksModalProps) 
 
       <Modal.Actions>
         <Button type="button" variant="secondary" onClick={onClose}>
-          {t('common.cancel')}
+          {t('common.close')}
         </Button>
         <Button type="submit" name="intent" value="save-tracks" form={formId} disabled={isSubmitting}>
-          {t('common.save')}
+          {t('common.apply-now')}
         </Button>
       </Modal.Actions>
     </Modal>
