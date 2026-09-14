@@ -19,6 +19,7 @@ import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
 import { ScheduleTrackRequiredError, SessionConflictError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
+import { useStableValue } from '~/shared/utils/use-stable-value.ts';
 import type { Route } from './+types/schedule.ts';
 import { ScheduleHeader } from './components/header/schedule-header.tsx';
 import { useScheduleFullscreen } from './components/header/use-schedule-fullscreen.tsx';
@@ -111,6 +112,8 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
 export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentProps) {
   const { t } = useTranslation();
   const scheduleTime = useMemo(() => new ScheduleTime(schedule.timezone), [schedule.timezone]);
+  // The loader is revalidated on every Session mutation: the tracks keep their reference unless they change.
+  const tracks = useStableValue(schedule.tracks);
   const sessions = useSessions(schedule.sessions, scheduleTime);
   const settings = useDisplaySettings(schedule, scheduleTime);
   const { isFullscreen } = useScheduleFullscreen();
@@ -122,7 +125,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
   const currentSchedule = useMemo<CurrentSchedule>(
     () => ({
       scheduleTime,
-      tracks: schedule.tracks,
+      tracks,
       scheduleDays: settings.scheduleDays,
       displayedDays: settings.displayedDays,
       displayedTimes: settings.displayedTimes,
@@ -133,7 +136,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
     }),
     [
       scheduleTime,
-      schedule.tracks,
+      tracks,
       settings.scheduleDays,
       settings.displayedDays,
       settings.displayedTimes,
@@ -146,7 +149,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
 
   const openNewSession = () => {
     const day = settings.displayedDays.at(0);
-    const trackId = schedule.tracks.at(0)?.id;
+    const trackId = tracks.at(0)?.id;
     if (!day || !trackId) return;
 
     const { start, end } = settings.displayedTimes;
