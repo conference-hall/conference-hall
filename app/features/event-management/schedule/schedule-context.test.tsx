@@ -1,24 +1,9 @@
 import { Component, type ReactNode } from 'react';
 import { page } from 'vitest/browser';
-import { ScheduleTime } from './models/schedule-time.ts';
-import { type CurrentSchedule, CurrentScheduleProvider, useCurrentSchedule } from './schedule-context.tsx';
+import { buildCurrentSchedule } from './schedule-context.test-helpers.ts';
+import { CurrentScheduleProvider, useCurrentSchedule } from './schedule-context.tsx';
 
-const scheduleTime = new ScheduleTime('Europe/Paris');
-const day = scheduleTime.fromUtc(new Date('2024-10-05T07:00:00.000Z'));
-
-const currentSchedule: CurrentSchedule = {
-  scheduleTime,
-  tracks: [{ id: 'track-1', name: 'Room 1' }],
-  scheduleDays: [day],
-  displayedDays: [day],
-  displayedTimes: { start: 9 * 60, end: 18 * 60 },
-  addSession: async () => ({ status: 'placed', placement: { trackId: 'track-1', timeslot: { start: day, end: day } } }),
-  updateSession: async () => ({
-    status: 'placed',
-    placement: { trackId: 'track-1', timeslot: { start: day, end: day } },
-  }),
-  deleteSession: async () => {},
-};
+const currentSchedule = buildCurrentSchedule();
 
 function TestScheduleComponent() {
   const schedule = useCurrentSchedule();

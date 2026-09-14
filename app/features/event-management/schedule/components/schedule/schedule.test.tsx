@@ -2,6 +2,8 @@ import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
 import { ScheduleTime } from '../../models/schedule-time.ts';
+import { buildCurrentSchedule } from '../../schedule-context.test-helpers.ts';
+import { CurrentScheduleProvider } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import Schedule from './schedule.tsx';
 
@@ -34,24 +36,29 @@ const sessions = () => [session('a', 9), session('b', 10), session('c', 11)];
 
 const noop = vi.fn();
 
+const currentSchedule = buildCurrentSchedule({
+  scheduleTime,
+  scheduleDays: [day],
+  displayedDays: [day],
+  displayedTimes: { start: 9 * 60, end: 12 * 60 },
+  tracks: [
+    { id: 'track-1', name: 'Track 1' },
+    { id: 'track-2', name: 'Track 2' },
+  ],
+});
+
 const schedule = (data: Array<ScheduleSession>) => (
   <I18nextProvider i18n={i18nTest}>
-    <Schedule
-      displayedDays={[day]}
-      displayedTimes={{ start: 9 * 60, end: 12 * 60 }}
-      scheduleTime={scheduleTime}
-      tracks={[
-        { id: 'track-1', name: 'Track 1' },
-        { id: 'track-2', name: 'Track 2' },
-      ]}
-      sessions={data}
-      zoomLevel={1}
-      onOpenSession={noop}
-      onAddSession={noop}
-      onMoveSession={noop}
-      onResizeSession={noop}
-      onSwapSessions={noop}
-    />
+    <CurrentScheduleProvider value={currentSchedule}>
+      <Schedule
+        sessions={data}
+        zoomLevel={1}
+        onAddSession={noop}
+        onMoveSession={noop}
+        onResizeSession={noop}
+        onSwapSessions={noop}
+      />
+    </CurrentScheduleProvider>
   </I18nextProvider>
 );
 

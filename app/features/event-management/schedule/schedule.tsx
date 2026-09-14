@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
@@ -117,6 +117,8 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
   const zoomHandlers = useZoomHandlers();
   const [editedSession, setEditedSession] = useState<EditedSession | null>(null);
 
+  const openSession = useCallback((session: ScheduleSession) => setEditedSession({ mode: 'edit', session }), []);
+
   const currentSchedule = useMemo<CurrentSchedule>(
     () => ({
       scheduleTime,
@@ -127,6 +129,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
       addSession: sessions.add,
       updateSession: sessions.update,
       deleteSession: sessions.delete,
+      onOpenSession: openSession,
     }),
     [
       scheduleTime,
@@ -137,6 +140,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
       sessions.add,
       sessions.update,
       sessions.delete,
+      openSession,
     ],
   );
 
@@ -177,11 +181,6 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
 
         <div className={cx({ 'rounded-t-lg border border-gray-200': !isFullscreen })}>
           <ScheduleHeader
-            scheduleTime={scheduleTime}
-            scheduleDays={settings.scheduleDays}
-            displayedDays={settings.displayedDays}
-            displayedTimes={settings.displayedTimes}
-            tracks={schedule.tracks}
             zoomHandlers={zoomHandlers}
             onChangeDisplayDays={settings.updateDisplayDays}
             onChangeDisplayTime={settings.updateDisplayTimes}
@@ -189,17 +188,12 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
           />
 
           <Schedule
-            displayedDays={settings.displayedDays}
-            displayedTimes={settings.displayedTimes}
-            scheduleTime={scheduleTime}
-            tracks={schedule.tracks}
             sessions={sessions.data}
             zoomLevel={zoomHandlers.level}
             onAddSession={sessions.add}
             onMoveSession={sessions.move}
             onResizeSession={sessions.resize}
             onSwapSessions={sessions.swap}
-            onOpenSession={(session) => setEditedSession({ mode: 'edit', session })}
           />
         </div>
 

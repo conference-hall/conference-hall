@@ -2,7 +2,8 @@ import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page, userEvent } from 'vitest/browser';
 import { ScheduleTime } from '../../models/schedule-time.ts';
-import { type CurrentSchedule, CurrentScheduleProvider } from '../../schedule-context.tsx';
+import { buildCurrentSchedule } from '../../schedule-context.test-helpers.ts';
+import { CurrentScheduleProvider } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionBlock } from './session-block.tsx';
 
@@ -20,16 +21,7 @@ const session: ScheduleSession = {
   proposal: null,
 };
 
-const currentSchedule: CurrentSchedule = {
-  scheduleTime,
-  tracks: [{ id: 'track-1', name: 'Room 1' }],
-  scheduleDays: [day],
-  displayedDays: [day],
-  displayedTimes: { start: 9 * 60, end: 18 * 60 },
-  addSession: async () => ({ status: 'placed', placement: { trackId: 'track-1', timeslot: session.timeslot } }),
-  updateSession: async () => ({ status: 'placed', placement: { trackId: 'track-1', timeslot: session.timeslot } }),
-  deleteSession: async () => {},
-};
+const currentSchedule = buildCurrentSchedule({ scheduleTime, scheduleDays: [day], displayedDays: [day] });
 
 function renderBlock() {
   const onOpen = vi.fn();
