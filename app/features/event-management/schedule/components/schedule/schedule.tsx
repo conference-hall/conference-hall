@@ -363,8 +363,9 @@ function SessionWrapper({ gridRef, session, zoomLevel }: SessionWrapperProps) {
         })}
         style={{ top: '0px', left: '1px', right: '1px', zIndex: movable.isDragging ? '40' : undefined }}
       >
-        <div ref={droppable.ref} style={{ height: `${height}px` }}>
-          <SessionBlock session={session} height={height} onOpen={() => onOpenSession({ mode: 'edit', session })} />
+        {/* the `session` size container the block reads its height from */}
+        <div ref={droppable.ref} style={{ height: `${height}px`, containerName: 'session', containerType: 'size' }}>
+          <SessionBlock session={session} onOpen={() => onOpenSession({ mode: 'edit', session })} />
         </div>
       </div>
 
