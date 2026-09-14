@@ -2,8 +2,7 @@ import type { ReactNode } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page, userEvent } from 'vitest/browser';
-import { buildCurrentSchedule } from '../../context/schedule-context.test-helpers.ts';
-import { CurrentScheduleProvider } from '../../context/schedule-context.tsx';
+import { ScheduleProviders } from '../../context/schedule-context.test-helpers.tsx';
 import { ScheduleTime } from '../../models/schedule-time.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionBlock } from './session-block.tsx';
@@ -37,12 +36,12 @@ const talk: ScheduleSession = {
   },
 };
 
-const currentSchedule = buildCurrentSchedule({ scheduleTime, scheduleDays: [day], displayedDays: [day] });
-
 function renderInSchedule(children: ReactNode) {
   return page.render(
     <I18nextProvider i18n={i18nTest}>
-      <CurrentScheduleProvider value={currentSchedule}>{children}</CurrentScheduleProvider>
+      <ScheduleProviders scheduleTime={scheduleTime} scheduleDays={[day]} displayedDays={[day]}>
+        {children}
+      </ScheduleProviders>
     </I18nextProvider>,
   );
 }

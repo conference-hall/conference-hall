@@ -10,7 +10,7 @@ import { blockOf, type ColumnRect, type DayGrid, dateOfSlot, sessionAt, slotAtY 
 export type DragSource = { kind: 'move' | 'resize'; session: ScheduleSession };
 
 // The (day, Track) column a drag is over.
-export type ColumnTarget = { dayKey: number; trackId: string };
+type ColumnTarget = { dayKey: number; trackId: string };
 
 // The live gesture and its target, as the gesture store holds it. Slots are day-relative.
 export type Gesture =

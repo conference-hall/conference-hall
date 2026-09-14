@@ -18,14 +18,14 @@ import { ScheduleTrackRequiredError, SessionConflictError } from '~/shared/error
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/schedule.ts';
+import { ScheduleGrid } from './components/grid/schedule-grid.tsx';
 import { ScheduleHeader } from './components/header/schedule-header.tsx';
 import { useScheduleFullscreen } from './components/header/use-schedule-fullscreen.tsx';
 import { useZoomHandlers } from './components/header/use-zoom-handlers.tsx';
-import Schedule from './components/schedule/schedule.tsx';
-import { useCurrentSchedule } from './context/schedule-context.tsx';
 import { ScheduleProvider } from './context/schedule-provider.tsx';
 import { SESSION_INTENTS } from './models/session-mutation.ts';
 import { EventSchedule } from './services/schedule.server.ts';
+import { useSettings } from './store/schedule-store.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
@@ -108,7 +108,7 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
 
 function ScheduleView({ name }: { name: string }) {
   const { t } = useTranslation();
-  const { displayedDays } = useCurrentSchedule();
+  const { displayedDays } = useSettings();
   const { isFullscreen } = useScheduleFullscreen();
   const zoomHandlers = useZoomHandlers();
 
@@ -130,7 +130,7 @@ function ScheduleView({ name }: { name: string }) {
 
       <div className={cx({ 'rounded-t-lg border border-gray-200': !isFullscreen })}>
         <ScheduleHeader zoomHandlers={zoomHandlers} />
-        <Schedule zoomLevel={zoomHandlers.level} />
+        <ScheduleGrid zoomLevel={zoomHandlers.level} />
       </div>
     </main>
   );

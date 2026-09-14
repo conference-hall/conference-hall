@@ -1,11 +1,12 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-import { useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/button.tsx';
 import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
-import { useCurrentSchedule } from '../../context/schedule-context.tsx';
+import { useScheduleContext } from '../../context/schedule-context.tsx';
 import { SessionMutations } from '../../models/session-mutation.ts';
+import { useSettings } from '../../store/schedule-store.ts';
 import { DisplayDays } from './display-days.tsx';
 import { DisplayTimes } from './display-times.tsx';
 import { OptionsMenu } from './options-menu.tsx';
@@ -17,8 +18,9 @@ const NEW_SESSION_DURATION = 30; // minutes
 
 type Props = { zoomHandlers: ZoomHandlers };
 
-export function ScheduleHeader({ zoomHandlers }: Props) {
-  const { displayedDays, displayedTimes, tracks, onChangeDisplayTimes, onOpenSession } = useCurrentSchedule();
+export const ScheduleHeader = memo(function ScheduleHeader({ zoomHandlers }: Props) {
+  const { displayedDays, displayedTimes, tracks } = useSettings();
+  const { onChangeDisplayTimes, onOpenSession } = useScheduleContext();
   const { t } = useTranslation();
   const [tracksModalOpen, setTracksModalOpen] = useState(false);
   const scheduleFullscreen = useScheduleFullscreen();
@@ -68,4 +70,4 @@ export function ScheduleHeader({ zoomHandlers }: Props) {
       />
     </header>
   );
-}
+});

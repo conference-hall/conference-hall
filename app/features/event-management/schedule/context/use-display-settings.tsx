@@ -1,7 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { useFetcher, useNavigate, useParams, useSearchParams } from 'react-router';
-import { useStableValue } from '~/shared/utils/use-stable-value.ts';
 import type { ScheduleTime } from '../models/schedule-time.ts';
+
+// What the organizer chose to look at: which days (the `:day` route param) and which hours (the Schedule setting,
+// shown optimistically while its mutation is in flight). Nothing is stabilized here: the values are rebuilt on
+// every render and the schedule store keeps the previous reference when the content did not change.
 
 type ScheduleSettings = {
   start: Date;
@@ -19,7 +22,7 @@ export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: Sch
 
   const { start, end, displayStartMinutes, displayEndMinutes } = settings;
 
-  const scheduleDays = useStableValue(scheduleTime.days(start, end));
+  const scheduleDays = useMemo(() => scheduleTime.days(start, end), [scheduleTime, start, end]);
 
   const displayedDays = useMemo(
     () => scheduleDays.slice(displayedStart, (displayedEnd || displayedStart) + 1),

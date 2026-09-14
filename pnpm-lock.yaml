@@ -124,9 +124,6 @@ importers:
       '@dnd-kit/dom':
         specifier: ^0.5.0
         version: 0.5.0
-      '@dnd-kit/geometry':
-        specifier: ^0.5.0
-        version: 0.5.0
       '@dnd-kit/react':
         specifier: ^0.5.0
         version: 0.5.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)

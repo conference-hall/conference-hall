@@ -7,7 +7,7 @@ import { SessionPlacement } from './session-placement.ts';
 // pixel, where a Session sits, which Session covers a slot, and how far a block may be extended downwards.
 // It owns no pixel besides the slot height table and never imports the drag-and-drop library nor the DOM.
 
-export const SLOT_MINUTES = 5;
+const SLOT_MINUTES = 5;
 export const SLOTS_PER_HOUR = 60 / SLOT_MINUTES;
 
 // Height of one slot in pixels, by zoom level. The grid root turns it into the `--slot-height` custom property.

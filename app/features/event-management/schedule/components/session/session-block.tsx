@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { formatTimeDifference } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
-import { useCurrentSchedule } from '../../context/schedule-context.tsx';
+import { useScheduleContext } from '../../context/schedule-context.tsx';
 import type { ScheduleTime } from '../../models/schedule-time.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
@@ -24,7 +24,7 @@ const TRUNCATED = 'session-xs:truncate session-sm:truncate session-md:truncate s
 const HIDDEN_WHEN_TINY = 'session-xs:hidden';
 
 export function SessionBlock({ session, onOpen }: SessionBlockProps) {
-  const { scheduleTime } = useCurrentSchedule();
+  const { scheduleTime } = useScheduleContext();
   const { timeslot, proposal, language, emojis } = session;
 
   const { block } = SESSION_COLORS.find((c) => c.value === session.color) ?? SESSION_COLORS[0];
