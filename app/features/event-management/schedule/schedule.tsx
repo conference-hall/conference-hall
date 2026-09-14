@@ -22,9 +22,9 @@ import { ScheduleHeader } from './components/header/schedule-header.tsx';
 import { useScheduleFullscreen } from './components/header/use-schedule-fullscreen.tsx';
 import { useZoomHandlers } from './components/header/use-zoom-handlers.tsx';
 import Schedule from './components/schedule/schedule.tsx';
+import { useCurrentSchedule } from './context/schedule-context.tsx';
+import { ScheduleProvider } from './context/schedule-provider.tsx';
 import { SESSION_INTENTS } from './models/session-mutation.ts';
-import { useCurrentSchedule } from './schedule-context.tsx';
-import { ScheduleProvider } from './schedule-provider.tsx';
 import { EventSchedule } from './services/schedule.server.ts';
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {

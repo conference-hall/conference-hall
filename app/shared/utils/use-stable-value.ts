@@ -1,4 +1,3 @@
-// The ref is read during render on purpose: it is the cache of the last value handed out, not a DOM handle.
 // oxlint-disable react/refs
 import { useRef } from 'react';
 import { deepEqual } from './deep-equal.ts';

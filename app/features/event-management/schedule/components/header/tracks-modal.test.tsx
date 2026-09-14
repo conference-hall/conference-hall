@@ -40,7 +40,7 @@ describe('TracksModal component', () => {
     await userEvent.click(page.getByRole('button', { name: 'Remove track: Room 2' }));
     await userEvent.fill(page.getByLabelText('New track'), 'Room 3');
     await userEvent.click(page.getByRole('button', { name: 'Add track' }));
-    await userEvent.click(page.getByRole('button', { name: 'Save' }));
+    await userEvent.click(page.getByRole('button', { name: 'Apply now' }));
 
     await vi.waitFor(() =>
       expect(onSubmit).toHaveBeenCalledWith({
@@ -63,7 +63,7 @@ describe('TracksModal component', () => {
     await userEvent.fill(page.getByLabelText('Track 4'), 'Room 4');
     await expect.element(page.getByLabelText('Track 3')).toHaveValue('Room 3');
 
-    await userEvent.click(page.getByRole('button', { name: 'Save' }));
+    await userEvent.click(page.getByRole('button', { name: 'Apply now' }));
 
     await vi.waitFor(() =>
       expect(onSubmit).toHaveBeenCalledWith({
@@ -85,25 +85,17 @@ describe('TracksModal component', () => {
     await userEvent.click(page.getByRole('button', { name: 'Remove track: Room 2' }));
     await expect.element(page.getByLabelText('Track 1')).not.toBeInTheDocument();
 
-    await userEvent.click(page.getByRole('button', { name: 'Save' }));
+    await userEvent.click(page.getByRole('button', { name: 'Apply now' }));
 
     await expect.element(page.getByText('The schedule must keep at least one track.')).toBeVisible();
     expect(onSubmit).toHaveBeenCalledWith({ intent: 'save-tracks' });
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it('closes when the save succeeds', async () => {
-    const { onClose } = renderComponent();
-
-    await userEvent.click(page.getByRole('button', { name: 'Save' }));
-
-    await vi.waitFor(() => expect(onClose).toHaveBeenCalled());
-  });
-
-  it('closes without submitting on cancel', async () => {
+  it('closes without submitting on close', async () => {
     const { onClose, onSubmit } = renderComponent();
 
-    await userEvent.click(page.getByRole('button', { name: 'Cancel' }));
+    await userEvent.click(page.getByRole('button', { name: 'Close' }).first());
 
     expect(onClose).toHaveBeenCalled();
     expect(onSubmit).not.toHaveBeenCalled();

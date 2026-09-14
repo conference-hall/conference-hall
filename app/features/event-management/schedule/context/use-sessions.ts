@@ -1,23 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useFetchers, useSubmit } from 'react-router';
+import type { ScheduleSession, SessionData } from '../components/schedule.types.ts';
 import type { ScheduleTime } from '../models/schedule-time.ts';
 import { pendingSessions, type SessionMutation, SessionMutations } from '../models/session-mutation.ts';
-import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
 export function useSessions(initialSessions: Array<SessionData>, scheduleTime: ScheduleTime) {
   const fetchers = useFetchers();
   const submit = useSubmit();
 
-  // Every reference is kept between two renders without change: the grid model and the memoized slots downstream
-  // are rebuilt on a Session change, never on a render of the route.
-  const sessions = useMemo(
-    () => pendingSessions(initialSessions, fetchers, scheduleTime),
-    [initialSessions, fetchers, scheduleTime],
-  );
+  const sessions = pendingSessions(initialSessions, fetchers, scheduleTime);
 
-  // The mutations read the sessions from a ref: their callbacks keep their reference across a Session change, so
-  // neither the grid nor the Schedule context re-renders on their account. A gesture is placed against the
-  // sessions drawn at that moment.
+  // Avoid grid re-renders on session changes.
   const sessionsRef = useRef(sessions);
   useEffect(() => {
     sessionsRef.current = sessions;

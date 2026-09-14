@@ -1,9 +1,9 @@
 import { I18nextProvider } from 'react-i18next';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
+import { buildCurrentSchedule } from '../../context/schedule-context.test-helpers.ts';
+import { CurrentScheduleProvider } from '../../context/schedule-context.tsx';
 import { ScheduleTime } from '../../models/schedule-time.ts';
-import { buildCurrentSchedule } from '../../schedule-context.test-helpers.ts';
-import { CurrentScheduleProvider } from '../../schedule-context.tsx';
 import { DisplayDays } from './display-days.tsx';
 
 const scheduleTime = new ScheduleTime('Europe/Paris');

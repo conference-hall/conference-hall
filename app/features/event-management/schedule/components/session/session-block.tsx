@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { formatTimeDifference } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
+import { useCurrentSchedule } from '../../context/schedule-context.tsx';
 import type { ScheduleTime } from '../../models/schedule-time.ts';
-import { useCurrentSchedule } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 

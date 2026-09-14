@@ -19,8 +19,6 @@ export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: Sch
 
   const { start, end, displayStartMinutes, displayEndMinutes } = settings;
 
-  // compute schedule days, keeping the same references between two renders without change: the loader is
-  // revalidated on every Session mutation and hands new Date objects for the same period
   const scheduleDays = useStableValue(scheduleTime.days(start, end));
 
   const displayedDays = useMemo(
@@ -39,7 +37,6 @@ export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: Sch
     };
   }, [pendingTimesForm, displayStartMinutes, displayEndMinutes]);
 
-  // Both changes enter the Schedule context: they keep their reference between two renders without change.
   const { submit } = fetcher;
   const updateDisplayTimes = useCallback(
     (start: number, end: number) => {
