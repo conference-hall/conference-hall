@@ -30,7 +30,6 @@ const schedule: ScheduleData = {
 
 const seamRender = vi.fn();
 
-// Reads the seam only: re-renders when the Schedule changes, never on a Session mutation or a modal opening.
 function SeamSpy() {
   const { displayedTimes, onChangeDisplayTimes } = useCurrentSchedule();
   seamRender();
@@ -46,15 +45,14 @@ function SeamSpy() {
   );
 }
 
-// Reads the drawn Sessions and submits through the seam.
 function SessionsSpy() {
   const sessions = useScheduleSessions();
-  const { deleteSession, onOpenSession } = useCurrentSchedule();
+  const { updateSession, onOpenSession } = useCurrentSchedule();
   return (
     <>
       <p>Sessions: {sessions.map((session) => session.name).join(', ')}</p>
-      <button type="button" onClick={() => deleteSession(sessions[0])}>
-        Delete first
+      <button type="button" onClick={() => updateSession({ ...sessions[0], name: 'Renamed' })}>
+        Rename first
       </button>
       <button type="button" onClick={() => onOpenSession(sessions[0])}>
         Open first
@@ -63,9 +61,7 @@ function SessionsSpy() {
   );
 }
 
-// The route component re-renders on every router state change and would recreate its children: the consumers
-// keep their reference, so only the provider decides whether they re-render.
-const consumers = (
+const stableConsumers = (
   <>
     <SeamSpy />
     <SessionsSpy />
@@ -76,11 +72,10 @@ async function renderProvider() {
   const RouteStub = createRoutesStub([
     {
       path: '/team/:team/:event/schedule/:day',
-      // A pending action: the test observes the Schedule while the mutation is in flight.
       action: () => new Promise(() => {}),
       Component: () => (
         <I18nextProvider i18n={i18nTest}>
-          <ScheduleProvider schedule={schedule}>{consumers}</ScheduleProvider>
+          <ScheduleProvider schedule={schedule}>{stableConsumers}</ScheduleProvider>
         </I18nextProvider>
       ),
     },
@@ -96,9 +91,9 @@ describe('ScheduleProvider', () => {
   it('changes the drawn sessions on a mutation without re-rendering the seam', async () => {
     await renderProvider();
 
-    await page.getByRole('button', { name: 'Delete first' }).click();
+    await page.getByRole('button', { name: 'Rename first' }).click();
 
-    await expect.element(page.getByText('Sessions:', { exact: true })).toBeVisible();
+    await expect.element(page.getByText('Sessions: Renamed')).toBeVisible();
     expect(seamRender).not.toHaveBeenCalled();
   });
 
