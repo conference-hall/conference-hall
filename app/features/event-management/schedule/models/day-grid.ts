@@ -85,10 +85,8 @@ export function blockOf(grid: DayGrid, session: ScheduleSession): Block | null {
   const slot = slotOfDate(grid, session.timeslot.start);
   if (slot < 0 || slot >= grid.slotCount) return null;
 
-  const span = Math.max(
-    1,
-    Math.floor(differenceInMinutes(session.timeslot.end, session.timeslot.start) / SLOT_MINUTES),
-  );
+  const slotIndex = Math.floor(differenceInMinutes(session.timeslot.end, session.timeslot.start) / SLOT_MINUTES);
+  const span = Math.max(1, slotIndex);
   return { slot, span: Math.min(span, grid.slotCount - slot) };
 }
 
@@ -133,10 +131,8 @@ function extensionEnd(
   startSlot: number,
 ): number {
   const start = dateOfSlot(grid, startSlot);
-  const outcome = new SessionPlacement(sessions).resize(
-    { id, trackId, timeslot: { start, end: addMinutes(start, SLOT_MINUTES) } },
-    dateOfSlot(grid, grid.slotCount),
-  );
+  const placedSession = { id, trackId, timeslot: { start, end: addMinutes(start, SLOT_MINUTES) } };
+  const outcome = new SessionPlacement(sessions).resize(placedSession, dateOfSlot(grid, grid.slotCount));
   if (outcome.status === 'conflict') return startSlot + 1;
   return slotOfDate(grid, outcome.placement.timeslot.end);
 }

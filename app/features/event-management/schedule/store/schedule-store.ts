@@ -46,8 +46,9 @@ export class ScheduleStore {
 
   getAll = (): Array<ScheduleSession> => this.all;
 
-  getColumnIds = (dayKey: number, trackId: string): Array<string> =>
-    this.columns.get(columnKey(dayKey, trackId)) ?? EMPTY_COLUMN;
+  getColumnIds = (dayKey: number, trackId: string): Array<string> => {
+    return this.columns.get(columnKey(dayKey, trackId)) ?? EMPTY_COLUMN;
+  };
 
   getSettings = (): ScheduleSettings => this.settings;
 

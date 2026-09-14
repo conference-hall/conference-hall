@@ -14,7 +14,13 @@ type ColumnTarget = { dayKey: number; trackId: string };
 
 // The live gesture and its target, as the gesture store holds it. Slots are day-relative.
 export type Gesture =
-  | { kind: 'move'; sessionId: string; dayKey: number; trackId: string; slot: number }
+  | {
+      kind: 'move';
+      sessionId: string;
+      dayKey: number;
+      trackId: string;
+      slot: number;
+    }
   | {
       kind: 'swap';
       sessionId: string;
@@ -24,8 +30,21 @@ export type Gesture =
       slot: number;
       span: number;
     }
-  | { kind: 'resize'; sessionId: string; dayKey: number; trackId: string; slot: number; endSlot: number }
-  | { kind: 'draft'; dayKey: number; trackId: string; slot: number; endSlot: number };
+  | {
+      kind: 'resize';
+      sessionId: string;
+      dayKey: number;
+      trackId: string;
+      slot: number;
+      endSlot: number;
+    }
+  | {
+      kind: 'draft';
+      dayKey: number;
+      trackId: string;
+      slot: number;
+      endSlot: number;
+    };
 
 type MoveInput = {
   session: ScheduleSession;
@@ -59,7 +78,13 @@ export function resolveMove({ session, column, columnRect, grid, draggedTop, ses
     };
   }
 
-  return { kind: 'move', sessionId: session.id, dayKey: grid.dayKey, trackId: column.trackId, slot };
+  return {
+    kind: 'move',
+    sessionId: session.id,
+    dayKey: grid.dayKey,
+    trackId: column.trackId,
+    slot,
+  };
 }
 
 type ResizeInput = {
