@@ -3,7 +3,7 @@ import type { ScheduleSession, Track } from './components/schedule.types.ts';
 import type { ScheduleTime } from './models/schedule-time.ts';
 import type { PlacementOutcome } from './models/session-placement.ts';
 
-// The seam of the Schedule: what a Session editor needs to know about the Schedule it belongs to.
+// The seam of the Schedule: what any descendant needs to know about the Schedule it is in.
 export type CurrentSchedule = {
   scheduleTime: ScheduleTime;
   tracks: Array<Track>;
@@ -13,6 +13,7 @@ export type CurrentSchedule = {
   addSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<PlacementOutcome>;
   updateSession: (session: ScheduleSession) => Promise<PlacementOutcome>;
   deleteSession: (session: ScheduleSession) => Promise<void>;
+  onOpenSession: (session: ScheduleSession) => void;
 };
 
 type CurrentScheduleProviderProps = { children: ReactNode; value: CurrentSchedule };
@@ -24,7 +25,7 @@ export const CurrentScheduleProvider = ({ children, value }: CurrentScheduleProv
 };
 
 /**
- * Returns the current schedule: its time, tracks, days, displayed times and session mutations.
+ * Returns the current schedule: its time, tracks, days, displayed times, session mutations and session opening.
  * @returns {CurrentSchedule}
  */
 export function useCurrentSchedule(): CurrentSchedule {

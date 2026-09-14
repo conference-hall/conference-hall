@@ -3,7 +3,7 @@ import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/button.tsx';
-import type { ScheduleTime } from '../../models/schedule-time.ts';
+import { useCurrentSchedule } from '../../schedule-context.tsx';
 import { DisplayDays } from './display-days.tsx';
 import { DisplayTimes } from './display-times.tsx';
 import { OptionsMenu } from './options-menu.tsx';
@@ -12,28 +12,14 @@ import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 
 type Props = {
-  scheduleTime: ScheduleTime;
-  scheduleDays: Array<Date>;
-  displayedDays: Array<Date>;
-  displayedTimes: { start: number; end: number };
-  tracks: Array<{ id: string; name: string }>;
   zoomHandlers: ZoomHandlers;
   onChangeDisplayDays: (startIndex: number, endIndex: number) => void;
   onChangeDisplayTime: (start: number, end: number) => void;
   onNewSession: VoidFunction;
 };
 
-export function ScheduleHeader({
-  scheduleTime,
-  scheduleDays,
-  displayedDays,
-  displayedTimes,
-  tracks,
-  zoomHandlers,
-  onChangeDisplayDays,
-  onChangeDisplayTime,
-  onNewSession,
-}: Props) {
+export function ScheduleHeader({ zoomHandlers, onChangeDisplayDays, onChangeDisplayTime, onNewSession }: Props) {
+  const { displayedTimes, tracks } = useCurrentSchedule();
   const { t } = useTranslation();
   const [tracksModalOpen, setTracksModalOpen] = useState(false);
   const scheduleFullscreen = useScheduleFullscreen();
@@ -46,12 +32,7 @@ export function ScheduleHeader({
       )}
     >
       <div className="flex shrink items-center gap-3">
-        <DisplayDays
-          scheduleTime={scheduleTime}
-          scheduleDays={scheduleDays}
-          displayedDays={displayedDays}
-          onChangeDisplayDays={onChangeDisplayDays}
-        />
+        <DisplayDays onChangeDisplayDays={onChangeDisplayDays} />
         <DisplayTimes displayedTimes={displayedTimes} onChangeDisplayTime={onChangeDisplayTime} />
       </div>
 

@@ -4,19 +4,17 @@ import { isSameDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import type { ScheduleTime } from '../../models/schedule-time.ts';
+import { useCurrentSchedule } from '../../schedule-context.tsx';
 
 const NEXT = 1;
 const PREVIOUS = -1;
 
 type Props = {
-  scheduleTime: ScheduleTime;
-  scheduleDays: Array<Date>;
-  displayedDays: Array<Date>;
   onChangeDisplayDays: (startIndex: number, endIndex: number) => void;
 };
 
-export function DisplayDays({ scheduleTime, scheduleDays, displayedDays, onChangeDisplayDays }: Props) {
+export function DisplayDays({ onChangeDisplayDays }: Props) {
+  const { scheduleTime, scheduleDays, displayedDays } = useCurrentSchedule();
   const { t, i18n } = useTranslation();
   const scheduleStartDay = scheduleDays.at(0)!;
   const scheduleEndDay = scheduleDays.at(-1)!;

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useFetcher, useNavigate, useParams, useSearchParams } from 'react-router';
+import { useStableValue } from '~/shared/utils/use-stable-value.ts';
 import type { ScheduleTime } from '../models/schedule-time.ts';
 
 type ScheduleSettings = {
@@ -18,8 +19,9 @@ export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: Sch
 
   const { start, end, displayStartMinutes, displayEndMinutes } = settings;
 
-  // compute schedule days, keeping the same references between two renders without change
-  const scheduleDays = useMemo(() => scheduleTime.days(start, end), [scheduleTime, start, end]);
+  // compute schedule days, keeping the same references between two renders without change: the loader is
+  // revalidated on every Session mutation and hands new Date objects for the same period
+  const scheduleDays = useStableValue(scheduleTime.days(start, end));
 
   const displayedDays = useMemo(
     () => scheduleDays.slice(displayedStart, (displayedEnd || displayedStart) + 1),

@@ -20,20 +20,15 @@ import {
   ScheduleGrid,
   SLOT_INTERVAL,
 } from '../../models/schedule-grid.ts';
-import type { ScheduleTime } from '../../models/schedule-time.ts';
 import { SessionMutations } from '../../models/session-mutation.ts';
 import type { PlacementOutcome, SwapOutcome } from '../../models/session-placement.ts';
-import type { ScheduleSession, Track } from '../schedule.types.ts';
+import { useCurrentSchedule } from '../../schedule-context.tsx';
+import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionBlock } from '../session/session-block.tsx';
 import { getSessionHeight, getTimeslotHeight, topInsideDroppable } from './helpers.ts';
 
 type ScheduleProps = {
-  displayedDays: Array<Date>;
-  displayedTimes: { start: number; end: number };
-  scheduleTime: ScheduleTime;
-  tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
-  onOpenSession: (session: ScheduleSession) => void;
   onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<PlacementOutcome>;
   onMoveSession: (session: ScheduleSession, target: { trackId: string; start: Date }) => Promise<PlacementOutcome>;
   onResizeSession: (session: ScheduleSession, end: Date) => Promise<PlacementOutcome>;
@@ -42,18 +37,14 @@ type ScheduleProps = {
 };
 
 export default function Schedule({
-  displayedDays,
-  displayedTimes,
-  scheduleTime,
-  tracks = [],
   sessions = [],
-  onOpenSession,
   onAddSession,
   onMoveSession,
   onResizeSession,
   onSwapSessions,
   zoomLevel,
 }: ScheduleProps) {
+  const { displayedDays } = useCurrentSchedule();
   const reportConflict = useConflictReport();
 
   return (
@@ -80,11 +71,7 @@ export default function Schedule({
             key={toDateInput(day)}
             day={day}
             dayIndex={index}
-            displayedTimes={displayedTimes}
-            scheduleTime={scheduleTime}
-            tracks={tracks}
             sessions={sessions}
-            onOpenSession={onOpenSession}
             onAddSession={onAddSession}
             zoomLevel={zoomLevel}
             displayMultipleDays={displayedDays.length > 1}
@@ -114,28 +101,14 @@ type DraftHandler = (target: GridTarget, phase: DraftPhase) => void;
 type ScheduleDayProps = {
   day: Date;
   dayIndex: number;
-  scheduleTime: ScheduleTime;
-  displayedTimes: { start: number; end: number };
-  tracks: Array<Track>;
   sessions: Array<ScheduleSession>;
-  onOpenSession: (session: ScheduleSession) => void;
   onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<PlacementOutcome>;
   zoomLevel: number;
   displayMultipleDays: boolean;
 };
 
-function ScheduleDay({
-  day,
-  dayIndex,
-  scheduleTime,
-  displayedTimes,
-  tracks,
-  sessions,
-  onOpenSession,
-  onAddSession,
-  zoomLevel,
-  displayMultipleDays,
-}: ScheduleDayProps) {
+function ScheduleDay({ day, dayIndex, sessions, onAddSession, zoomLevel, displayMultipleDays }: ScheduleDayProps) {
+  const { scheduleTime, displayedTimes, tracks } = useCurrentSchedule();
   const { i18n } = useTranslation();
   const locale = i18n.language;
   const reportConflict = useConflictReport();
@@ -250,12 +223,10 @@ function ScheduleDay({
                         <MemoizedTimeslot
                           key={`${track.id}-${timeslot.start.toISOString()}`}
                           gridRef={gridRef}
-                          scheduleTime={scheduleTime}
                           target={target}
                           view={grid.slotView(target, draft)}
                           zoomLevel={zoomLevel}
                           onDraft={handleDraft}
-                          onOpenSession={onOpenSession}
                         />
                       );
                     })}
@@ -272,8 +243,10 @@ function ScheduleDay({
 
 // Memoized Timeslot component: only the slots whose own view changed re-render, on a drawing as on a mutation.
 // The view is compared by value: the Sessions are rebuilt on every mutation and on every server response.
+// The Schedule itself is read from the context, so every prop is compared here.
 const MemoizedTimeslot = React.memo(Timeslot, (prevProps, nextProps) => {
   return (
+    prevProps.gridRef === nextProps.gridRef &&
     prevProps.target.trackId === nextProps.target.trackId &&
     prevProps.target.timeslot.start.getTime() === nextProps.target.timeslot.start.getTime() &&
     prevProps.zoomLevel === nextProps.zoomLevel &&
@@ -284,15 +257,14 @@ const MemoizedTimeslot = React.memo(Timeslot, (prevProps, nextProps) => {
 
 type TimeslotProps = {
   gridRef: RefObject<ScheduleGrid>;
-  scheduleTime: ScheduleTime;
   target: GridTarget;
   view: SlotView;
   zoomLevel: number;
   onDraft: DraftHandler;
-  onOpenSession: (session: ScheduleSession) => void;
 };
 
-function Timeslot({ gridRef, scheduleTime, target, view, zoomLevel, onDraft, onOpenSession }: TimeslotProps) {
+function Timeslot({ gridRef, target, view, zoomLevel, onDraft }: TimeslotProps) {
+  const { scheduleTime } = useCurrentSchedule();
   const { i18n } = useTranslation();
   const { trackId, timeslot } = target;
   const { isOccupied, isHourStart, sessionBlock, canStartDraft, draftRelation, draftBlock } = view;
@@ -337,7 +309,6 @@ function Timeslot({ gridRef, scheduleTime, target, view, zoomLevel, onDraft, onO
           key={`${sessionBlock.id}-${sessionBlock.timeslot.start.toISOString()}-${sessionBlock.timeslot.end.toISOString()}-${zoomLevel}`}
           gridRef={gridRef}
           session={sessionBlock}
-          onOpenSession={onOpenSession}
           zoomLevel={zoomLevel}
         />
       ) : draftBlock ? (
@@ -346,7 +317,6 @@ function Timeslot({ gridRef, scheduleTime, target, view, zoomLevel, onDraft, onO
           key={`draft-${draftBlock.timeslot.end.toISOString()}`}
           gridRef={gridRef}
           session={draftBlock}
-          onOpenSession={onOpenSession}
           zoomLevel={zoomLevel}
         />
       ) : null}
@@ -357,11 +327,11 @@ function Timeslot({ gridRef, scheduleTime, target, view, zoomLevel, onDraft, onO
 type SessionWrapperProps = {
   gridRef: RefObject<ScheduleGrid>;
   session: ScheduleSession;
-  onOpenSession: (session: ScheduleSession) => void;
   zoomLevel: number;
 };
 
-function SessionWrapper({ gridRef, session, onOpenSession, zoomLevel }: SessionWrapperProps) {
+function SessionWrapper({ gridRef, session, zoomLevel }: SessionWrapperProps) {
+  const { onOpenSession } = useCurrentSchedule();
   // Compute session height
   const defaultHeight = getSessionHeight(session, SLOT_INTERVAL, zoomLevel);
   const [height, setHeight] = useState(defaultHeight);

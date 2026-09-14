@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
 import { ScheduleTime } from '../../models/schedule-time.ts';
 import type { PlacementOutcome } from '../../models/session-placement.ts';
+import { buildCurrentSchedule } from '../../schedule-context.test-helpers.ts';
 import { type CurrentSchedule, CurrentScheduleProvider } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionForm } from './session-form.tsx';
@@ -40,7 +41,7 @@ function renderForm(mode: 'create' | 'edit', overrides: Partial<CurrentSchedule>
   const deleteSession = vi.fn<CurrentSchedule['deleteSession']>(async () => {});
   const onFinish = vi.fn();
 
-  const currentSchedule: CurrentSchedule = {
+  const currentSchedule = buildCurrentSchedule({
     scheduleTime: new ScheduleTime('America/New_York'),
     tracks: [
       { id: 'track-1', name: 'Room 1' },
@@ -53,7 +54,7 @@ function renderForm(mode: 'create' | 'edit', overrides: Partial<CurrentSchedule>
     updateSession,
     deleteSession,
     ...overrides,
-  };
+  });
 
   const RouteStub = createRoutesStub([
     {
