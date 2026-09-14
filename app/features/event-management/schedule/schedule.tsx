@@ -1,7 +1,6 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
-import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
@@ -15,28 +14,18 @@ import {
   ScheduleTracksSaveSchema,
 } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
-import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
 import { ScheduleTrackRequiredError, SessionConflictError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
-import { useStableValue } from '~/shared/utils/use-stable-value.ts';
 import type { Route } from './+types/schedule.ts';
 import { ScheduleHeader } from './components/header/schedule-header.tsx';
 import { useScheduleFullscreen } from './components/header/use-schedule-fullscreen.tsx';
 import { useZoomHandlers } from './components/header/use-zoom-handlers.tsx';
-import type { ScheduleSession } from './components/schedule.types.ts';
 import Schedule from './components/schedule/schedule.tsx';
-import { SessionModal } from './components/session/session-modal.tsx';
-import { useDisplaySettings } from './components/use-display-settings.tsx';
-import { useSessions } from './components/use-sessions.ts';
-import { ScheduleTime } from './models/schedule-time.ts';
-import { SESSION_INTENTS, SessionMutations } from './models/session-mutation.ts';
-import { type CurrentSchedule, CurrentScheduleProvider, ScheduleSessionsProvider } from './schedule-context.tsx';
+import { SESSION_INTENTS } from './models/session-mutation.ts';
+import { useCurrentSchedule } from './schedule-context.tsx';
+import { ScheduleProvider } from './schedule-provider.tsx';
 import { EventSchedule } from './services/schedule.server.ts';
-
-const NEW_SESSION_DURATION = 30; // minutes
-
-type EditedSession = { mode: 'create' | 'edit'; session: ScheduleSession };
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
@@ -110,75 +99,20 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
 };
 
 export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentProps) {
+  return (
+    <ScheduleProvider schedule={schedule}>
+      <ScheduleView name={schedule.name} />
+    </ScheduleProvider>
+  );
+}
+
+function ScheduleView({ name }: { name: string }) {
   const { t } = useTranslation();
-  const scheduleTime = useMemo(() => new ScheduleTime(schedule.timezone), [schedule.timezone]);
-  // The loader is revalidated on every Session mutation: the tracks keep their reference unless they change.
-  const tracks = useStableValue(schedule.tracks);
-  const sessions = useSessions(schedule.sessions, scheduleTime);
-  const settings = useDisplaySettings(schedule, scheduleTime);
+  const { displayedDays } = useCurrentSchedule();
   const { isFullscreen } = useScheduleFullscreen();
   const zoomHandlers = useZoomHandlers();
-  const [editedSession, setEditedSession] = useState<EditedSession | null>(null);
 
-  const openSession = useCallback((session: ScheduleSession) => setEditedSession({ mode: 'edit', session }), []);
-
-  const { displayedDays, displayedTimes } = settings;
-  const openNewSession = useCallback(() => {
-    const day = displayedDays.at(0);
-    const trackId = tracks.at(0)?.id;
-    if (!day || !trackId) return;
-
-    const { start, end } = displayedTimes;
-    setEditedSession({
-      mode: 'create',
-      session: SessionMutations.blank({
-        trackId,
-        timeslot: {
-          start: setMinutesFromStartOfDay(day, start),
-          end: setMinutesFromStartOfDay(day, Math.min(start + NEW_SESSION_DURATION, end)),
-        },
-      }),
-    });
-  }, [displayedDays, displayedTimes, tracks]);
-
-  const currentSchedule = useMemo<CurrentSchedule>(
-    () => ({
-      scheduleTime,
-      tracks,
-      scheduleDays: settings.scheduleDays,
-      displayedDays: settings.displayedDays,
-      displayedTimes: settings.displayedTimes,
-      addSession: sessions.add,
-      updateSession: sessions.update,
-      moveSession: sessions.move,
-      resizeSession: sessions.resize,
-      swapSessions: sessions.swap,
-      deleteSession: sessions.delete,
-      onOpenSession: openSession,
-      onOpenNewSession: openNewSession,
-      onChangeDisplayDays: settings.updateDisplayDays,
-      onChangeDisplayTimes: settings.updateDisplayTimes,
-    }),
-    [
-      scheduleTime,
-      tracks,
-      settings.scheduleDays,
-      settings.displayedDays,
-      settings.displayedTimes,
-      settings.updateDisplayDays,
-      settings.updateDisplayTimes,
-      sessions.add,
-      sessions.update,
-      sessions.move,
-      sessions.resize,
-      sessions.swap,
-      sessions.delete,
-      openSession,
-      openNewSession,
-    ],
-  );
-
-  if (settings.displayedDays.length === 0) {
+  if (displayedDays.length === 0) {
     return (
       <main className="mx-auto my-8 max-w-7xl px-8">
         <EmptyState icon={CalendarDaysIcon} label={t('event-management.schedule.empty')}>
@@ -191,26 +125,13 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
   }
 
   return (
-    <CurrentScheduleProvider value={currentSchedule}>
-      <main className={cx({ 'mx-auto my-8 max-w-7xl px-8': !isFullscreen })}>
-        <h1 className="sr-only">{schedule.name}</h1>
+    <main className={cx({ 'mx-auto my-8 max-w-7xl px-8': !isFullscreen })}>
+      <h1 className="sr-only">{name}</h1>
 
-        <div className={cx({ 'rounded-t-lg border border-gray-200': !isFullscreen })}>
-          <ScheduleHeader zoomHandlers={zoomHandlers} />
-
-          <ScheduleSessionsProvider value={sessions.data}>
-            <Schedule zoomLevel={zoomHandlers.level} />
-          </ScheduleSessionsProvider>
-        </div>
-
-        {editedSession && (
-          <SessionModal
-            mode={editedSession.mode}
-            session={editedSession.session}
-            onClose={() => setEditedSession(null)}
-          />
-        )}
-      </main>
-    </CurrentScheduleProvider>
+      <div className={cx({ 'rounded-t-lg border border-gray-200': !isFullscreen })}>
+        <ScheduleHeader zoomHandlers={zoomHandlers} />
+        <Schedule zoomLevel={zoomHandlers.level} />
+      </div>
+    </main>
   );
 }

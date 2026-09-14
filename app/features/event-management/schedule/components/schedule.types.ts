@@ -28,6 +28,17 @@ export type SessionData = {
   isCreating?: boolean;
 };
 
+// What the Schedule provider expects: the Schedule and its Sessions in the wire format of the route loader.
+export type ScheduleData = {
+  timezone: string;
+  start: Date;
+  end: Date;
+  displayStartMinutes: number;
+  displayEndMinutes: number;
+  tracks: Array<Track>;
+  sessions: Array<SessionData>;
+};
+
 export type ScheduleProposalData = {
   id: string;
   routeId: string;
