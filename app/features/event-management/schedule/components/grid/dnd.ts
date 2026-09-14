@@ -19,7 +19,7 @@ export type ColumnPayload = { dayKey: number; trackId: string };
 export const columnKey = (dayKey: number, trackId: string) => `${dayKey}:${trackId}`;
 
 // The dragged block itself follows the pointer: no clone promoted over the grid, no placeholder left in its row.
-export const MOVE_FEEDBACK = [Feedback.configure({ feedback: 'move' })];
+export const MOVE_FEEDBACK = [Feedback.configure({ feedback: 'move', dropAnimation: null })];
 
 type DragEntry = { type?: string | number | symbol | object; data: Record<string, unknown> };
 
