@@ -22,29 +22,15 @@ import {
 } from '../../models/schedule-grid.ts';
 import { SessionMutations } from '../../models/session-mutation.ts';
 import type { PlacementOutcome, SwapOutcome } from '../../models/session-placement.ts';
-import { useCurrentSchedule } from '../../schedule-context.tsx';
+import { useCurrentSchedule, useScheduleSessions } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionBlock } from '../session/session-block.tsx';
 import { getSessionHeight, getTimeslotHeight, topInsideDroppable } from './helpers.ts';
 
-type ScheduleProps = {
-  sessions: Array<ScheduleSession>;
-  onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<PlacementOutcome>;
-  onMoveSession: (session: ScheduleSession, target: { trackId: string; start: Date }) => Promise<PlacementOutcome>;
-  onResizeSession: (session: ScheduleSession, end: Date) => Promise<PlacementOutcome>;
-  onSwapSessions: (source: ScheduleSession, target: ScheduleSession) => Promise<SwapOutcome>;
-  zoomLevel: number;
-};
+type ScheduleProps = { zoomLevel: number };
 
-export default function Schedule({
-  sessions = [],
-  onAddSession,
-  onMoveSession,
-  onResizeSession,
-  onSwapSessions,
-  zoomLevel,
-}: ScheduleProps) {
-  const { displayedDays } = useCurrentSchedule();
+export default function Schedule({ zoomLevel }: ScheduleProps) {
+  const { displayedDays, moveSession, resizeSession, swapSessions } = useCurrentSchedule();
   const reportConflict = useConflictReport();
 
   return (
@@ -57,11 +43,11 @@ export default function Schedule({
 
         switch (gesture.kind) {
           case 'move':
-            return reportConflict(await onMoveSession(gesture.session, gesture.target));
+            return reportConflict(await moveSession(gesture.session, gesture.target));
           case 'resize':
-            return reportConflict(await onResizeSession(gesture.session, gesture.end));
+            return reportConflict(await resizeSession(gesture.session, gesture.end));
           case 'swap':
-            return reportConflict(await onSwapSessions(gesture.source, gesture.target));
+            return reportConflict(await swapSessions(gesture.source, gesture.target));
         }
       }}
     >
@@ -71,8 +57,6 @@ export default function Schedule({
             key={toDateInput(day)}
             day={day}
             dayIndex={index}
-            sessions={sessions}
-            onAddSession={onAddSession}
             zoomLevel={zoomLevel}
             displayMultipleDays={displayedDays.length > 1}
           />
@@ -101,14 +85,14 @@ type DraftHandler = (target: GridTarget, phase: DraftPhase) => void;
 type ScheduleDayProps = {
   day: Date;
   dayIndex: number;
-  sessions: Array<ScheduleSession>;
-  onAddSession: (session: Omit<ScheduleSession, 'id' | 'isCreating'>) => Promise<PlacementOutcome>;
   zoomLevel: number;
   displayMultipleDays: boolean;
 };
 
-function ScheduleDay({ day, dayIndex, sessions, onAddSession, zoomLevel, displayMultipleDays }: ScheduleDayProps) {
-  const { scheduleTime, displayedTimes, tracks } = useCurrentSchedule();
+function ScheduleDay({ day, dayIndex, zoomLevel, displayMultipleDays }: ScheduleDayProps) {
+  const { scheduleTime, displayedTimes, tracks, addSession } = useCurrentSchedule();
+  // The only reader of the drawn Sessions: the day rebuilds its model on every mutation, nothing above it re-renders.
+  const sessions = useScheduleSessions();
   const { i18n } = useTranslation();
   const locale = i18n.language;
   const reportConflict = useConflictReport();
@@ -149,9 +133,9 @@ function ScheduleDay({ day, dayIndex, sessions, onAddSession, zoomLevel, display
 
       draftRef.current = null;
       setDraft(null);
-      reportConflict(await onAddSession(SessionMutations.blank(drawn)));
+      reportConflict(await addSession(SessionMutations.blank(drawn)));
     },
-    [onAddSession, reportConflict],
+    [addSession, reportConflict],
   );
 
   return (

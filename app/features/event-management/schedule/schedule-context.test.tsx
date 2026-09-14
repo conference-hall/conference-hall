@@ -1,9 +1,16 @@
 import { Component, type ReactNode } from 'react';
 import { page } from 'vitest/browser';
+import { SessionMutations } from './models/session-mutation.ts';
 import { buildCurrentSchedule } from './schedule-context.test-helpers.ts';
-import { CurrentScheduleProvider, useCurrentSchedule } from './schedule-context.tsx';
+import {
+  CurrentScheduleProvider,
+  ScheduleSessionsProvider,
+  useCurrentSchedule,
+  useScheduleSessions,
+} from './schedule-context.tsx';
 
 const currentSchedule = buildCurrentSchedule();
+const day = currentSchedule.scheduleDays[0];
 
 function TestScheduleComponent() {
   const schedule = useCurrentSchedule();
@@ -16,6 +23,11 @@ function TestScheduleComponent() {
       </p>
     </>
   );
+}
+
+function TestSessionsComponent() {
+  const sessions = useScheduleSessions();
+  return <p>Sessions: {sessions.map((session) => session.name).join(', ')}</p>;
 }
 
 class ErrorCatcher extends Component<{ children: ReactNode }, { message: string | null }> {
@@ -53,6 +65,35 @@ describe('ScheduleContext', () => {
 
     await expect
       .element(page.getByText('useCurrentSchedule must be used within a CurrentScheduleProvider'))
+      .toBeVisible();
+  });
+});
+
+describe('ScheduleSessionsContext', () => {
+  it('returns the provided sessions', async () => {
+    const session = {
+      ...SessionMutations.blank({ trackId: 'track-1', timeslot: { start: day, end: day } }),
+      name: 'Break',
+    };
+
+    await page.render(
+      <ScheduleSessionsProvider value={[session]}>
+        <TestSessionsComponent />
+      </ScheduleSessionsProvider>,
+    );
+
+    await expect.element(page.getByText('Sessions: Break')).toBeVisible();
+  });
+
+  it('throws when used outside of the provider', async () => {
+    await page.render(
+      <ErrorCatcher>
+        <TestSessionsComponent />
+      </ErrorCatcher>,
+    );
+
+    await expect
+      .element(page.getByText('useScheduleSessions must be used within a ScheduleSessionsProvider'))
       .toBeVisible();
   });
 });

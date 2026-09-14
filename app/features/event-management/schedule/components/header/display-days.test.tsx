@@ -8,13 +8,19 @@ import { DisplayDays } from './display-days.tsx';
 
 const scheduleTime = new ScheduleTime('Europe/Paris');
 const scheduleDays = scheduleTime.days(new Date('2024-10-04T22:00:00.000Z'), new Date('2024-10-06T21:59:59.999Z'));
-const currentSchedule = buildCurrentSchedule({ scheduleTime, scheduleDays, displayedDays: [scheduleDays[0]] });
 
 function renderDisplayDays(onChangeDisplayDays: (startIndex: number, endIndex: number) => void) {
+  const currentSchedule = buildCurrentSchedule({
+    scheduleTime,
+    scheduleDays,
+    displayedDays: [scheduleDays[0]],
+    onChangeDisplayDays,
+  });
+
   return page.render(
     <I18nextProvider i18n={i18nTest}>
       <CurrentScheduleProvider value={currentSchedule}>
-        <DisplayDays onChangeDisplayDays={onChangeDisplayDays} />
+        <DisplayDays />
       </CurrentScheduleProvider>
     </I18nextProvider>,
   );

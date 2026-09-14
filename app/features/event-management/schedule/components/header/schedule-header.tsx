@@ -11,15 +11,10 @@ import { TracksModal } from './tracks-modal.tsx';
 import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 
-type Props = {
-  zoomHandlers: ZoomHandlers;
-  onChangeDisplayDays: (startIndex: number, endIndex: number) => void;
-  onChangeDisplayTime: (start: number, end: number) => void;
-  onNewSession: VoidFunction;
-};
+type Props = { zoomHandlers: ZoomHandlers };
 
-export function ScheduleHeader({ zoomHandlers, onChangeDisplayDays, onChangeDisplayTime, onNewSession }: Props) {
-  const { displayedTimes, tracks } = useCurrentSchedule();
+export function ScheduleHeader({ zoomHandlers }: Props) {
+  const { displayedTimes, tracks, onChangeDisplayTimes, onOpenNewSession } = useCurrentSchedule();
   const { t } = useTranslation();
   const [tracksModalOpen, setTracksModalOpen] = useState(false);
   const scheduleFullscreen = useScheduleFullscreen();
@@ -32,12 +27,12 @@ export function ScheduleHeader({ zoomHandlers, onChangeDisplayDays, onChangeDisp
       )}
     >
       <div className="flex shrink items-center gap-3">
-        <DisplayDays onChangeDisplayDays={onChangeDisplayDays} />
-        <DisplayTimes displayedTimes={displayedTimes} onChangeDisplayTime={onChangeDisplayTime} />
+        <DisplayDays />
+        <DisplayTimes displayedTimes={displayedTimes} onChangeDisplayTime={onChangeDisplayTimes} />
       </div>
 
       <div className="flex shrink items-center gap-3">
-        <Button iconLeft={PlusIcon} onClick={onNewSession} disabled={tracks.length === 0}>
+        <Button iconLeft={PlusIcon} onClick={onOpenNewSession} disabled={tracks.length === 0}>
           {t('event-management.schedule.actions.new-session')}
         </Button>
         <OptionsMenu openTracksModal={() => setTracksModalOpen(true)} zoomHandlers={zoomHandlers} />

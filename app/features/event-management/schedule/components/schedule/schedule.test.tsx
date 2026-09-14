@@ -3,7 +3,7 @@ import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
 import { ScheduleTime } from '../../models/schedule-time.ts';
 import { buildCurrentSchedule } from '../../schedule-context.test-helpers.ts';
-import { CurrentScheduleProvider } from '../../schedule-context.tsx';
+import { CurrentScheduleProvider, ScheduleSessionsProvider } from '../../schedule-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import Schedule from './schedule.tsx';
 
@@ -34,8 +34,6 @@ const session = (id: string, start: number, overrides: Partial<ScheduleSession> 
 
 const sessions = () => [session('a', 9), session('b', 10), session('c', 11)];
 
-const noop = vi.fn();
-
 const currentSchedule = buildCurrentSchedule({
   scheduleTime,
   scheduleDays: [day],
@@ -50,14 +48,9 @@ const currentSchedule = buildCurrentSchedule({
 const schedule = (data: Array<ScheduleSession>) => (
   <I18nextProvider i18n={i18nTest}>
     <CurrentScheduleProvider value={currentSchedule}>
-      <Schedule
-        sessions={data}
-        zoomLevel={1}
-        onAddSession={noop}
-        onMoveSession={noop}
-        onResizeSession={noop}
-        onSwapSessions={noop}
-      />
+      <ScheduleSessionsProvider value={data}>
+        <Schedule zoomLevel={1} />
+      </ScheduleSessionsProvider>
     </CurrentScheduleProvider>
   </I18nextProvider>
 );

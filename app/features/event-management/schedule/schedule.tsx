@@ -31,7 +31,7 @@ import { useDisplaySettings } from './components/use-display-settings.tsx';
 import { useSessions } from './components/use-sessions.ts';
 import { ScheduleTime } from './models/schedule-time.ts';
 import { SESSION_INTENTS, SessionMutations } from './models/session-mutation.ts';
-import { type CurrentSchedule, CurrentScheduleProvider } from './schedule-context.tsx';
+import { type CurrentSchedule, CurrentScheduleProvider, ScheduleSessionsProvider } from './schedule-context.tsx';
 import { EventSchedule } from './services/schedule.server.ts';
 
 const NEW_SESSION_DURATION = 30; // minutes
@@ -122,37 +122,13 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
 
   const openSession = useCallback((session: ScheduleSession) => setEditedSession({ mode: 'edit', session }), []);
 
-  const currentSchedule = useMemo<CurrentSchedule>(
-    () => ({
-      scheduleTime,
-      tracks,
-      scheduleDays: settings.scheduleDays,
-      displayedDays: settings.displayedDays,
-      displayedTimes: settings.displayedTimes,
-      addSession: sessions.add,
-      updateSession: sessions.update,
-      deleteSession: sessions.delete,
-      onOpenSession: openSession,
-    }),
-    [
-      scheduleTime,
-      tracks,
-      settings.scheduleDays,
-      settings.displayedDays,
-      settings.displayedTimes,
-      sessions.add,
-      sessions.update,
-      sessions.delete,
-      openSession,
-    ],
-  );
-
-  const openNewSession = () => {
-    const day = settings.displayedDays.at(0);
+  const { displayedDays, displayedTimes } = settings;
+  const openNewSession = useCallback(() => {
+    const day = displayedDays.at(0);
     const trackId = tracks.at(0)?.id;
     if (!day || !trackId) return;
 
-    const { start, end } = settings.displayedTimes;
+    const { start, end } = displayedTimes;
     setEditedSession({
       mode: 'create',
       session: SessionMutations.blank({
@@ -163,7 +139,44 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
         },
       }),
     });
-  };
+  }, [displayedDays, displayedTimes, tracks]);
+
+  const currentSchedule = useMemo<CurrentSchedule>(
+    () => ({
+      scheduleTime,
+      tracks,
+      scheduleDays: settings.scheduleDays,
+      displayedDays: settings.displayedDays,
+      displayedTimes: settings.displayedTimes,
+      addSession: sessions.add,
+      updateSession: sessions.update,
+      moveSession: sessions.move,
+      resizeSession: sessions.resize,
+      swapSessions: sessions.swap,
+      deleteSession: sessions.delete,
+      onOpenSession: openSession,
+      onOpenNewSession: openNewSession,
+      onChangeDisplayDays: settings.updateDisplayDays,
+      onChangeDisplayTimes: settings.updateDisplayTimes,
+    }),
+    [
+      scheduleTime,
+      tracks,
+      settings.scheduleDays,
+      settings.displayedDays,
+      settings.displayedTimes,
+      settings.updateDisplayDays,
+      settings.updateDisplayTimes,
+      sessions.add,
+      sessions.update,
+      sessions.move,
+      sessions.resize,
+      sessions.swap,
+      sessions.delete,
+      openSession,
+      openNewSession,
+    ],
+  );
 
   if (settings.displayedDays.length === 0) {
     return (
@@ -183,21 +196,11 @@ export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentP
         <h1 className="sr-only">{schedule.name}</h1>
 
         <div className={cx({ 'rounded-t-lg border border-gray-200': !isFullscreen })}>
-          <ScheduleHeader
-            zoomHandlers={zoomHandlers}
-            onChangeDisplayDays={settings.updateDisplayDays}
-            onChangeDisplayTime={settings.updateDisplayTimes}
-            onNewSession={openNewSession}
-          />
+          <ScheduleHeader zoomHandlers={zoomHandlers} />
 
-          <Schedule
-            sessions={sessions.data}
-            zoomLevel={zoomHandlers.level}
-            onAddSession={sessions.add}
-            onMoveSession={sessions.move}
-            onResizeSession={sessions.resize}
-            onSwapSessions={sessions.swap}
-          />
+          <ScheduleSessionsProvider value={sessions.data}>
+            <Schedule zoomLevel={zoomHandlers.level} />
+          </ScheduleSessionsProvider>
         </div>
 
         {editedSession && (

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useFetcher, useNavigate, useParams, useSearchParams } from 'react-router';
 import { useStableValue } from '~/shared/utils/use-stable-value.ts';
 import type { ScheduleTime } from '../models/schedule-time.ts';
@@ -39,16 +39,25 @@ export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: Sch
     };
   }, [pendingTimesForm, displayStartMinutes, displayEndMinutes]);
 
-  const updateDisplayTimes = (start: number, end: number) => {
-    fetcher.submit(
-      { intent: 'update-display-times', displayStartMinutes: start, displayEndMinutes: end },
-      { method: 'POST', preventScrollReset: true },
-    );
-  };
+  // Both changes enter the Schedule context: they keep their reference between two renders without change.
+  const { submit } = fetcher;
+  const updateDisplayTimes = useCallback(
+    (start: number, end: number) => {
+      submit(
+        { intent: 'update-display-times', displayStartMinutes: start, displayEndMinutes: end },
+        { method: 'POST', preventScrollReset: true },
+      );
+    },
+    [submit],
+  );
 
-  const updateDisplayDays = async (startIndex: number, endIndex: number) => {
-    await navigate(`/team/${params.team}/${params.event}/schedule/${startIndex}-${endIndex}?${searchParams}`);
-  };
+  const { team, event } = params;
+  const updateDisplayDays = useCallback(
+    async (startIndex: number, endIndex: number) => {
+      await navigate(`/team/${team}/${event}/schedule/${startIndex}-${endIndex}?${searchParams}`);
+    },
+    [navigate, team, event, searchParams],
+  );
 
   return { scheduleDays, displayedDays, displayedTimes, updateDisplayTimes, updateDisplayDays };
 }
