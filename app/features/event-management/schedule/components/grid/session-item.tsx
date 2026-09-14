@@ -9,22 +9,24 @@ import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionBlock } from '../session/session-block.tsx';
 import { DRAG_SOURCES, MOVE_FEEDBACK, type SessionPayload } from './dnd.ts';
 
-// Where an item sits in the grid of a displayed day: its Track column and the slots it spans.
-export type DayPlacement = { gutter: boolean; firstSlotRow: number };
+// Where the slots of a displayed day start in its CSS grid: the hour gutter takes a column on the first day, and
+// the header rows push the first slot down.
+export type GridOrigin = { gutter: boolean; firstSlotRow: number };
 
-export function gridPlacement(col: number, slot: number, span: number, day: DayPlacement): CSSProperties {
+// The grid area a Track column, a slot and a span designate in a displayed day.
+export function gridArea(col: number, slot: number, span: number, origin: GridOrigin): CSSProperties {
   return {
-    gridColumn: String(col + (day.gutter ? 2 : 1)),
-    gridRow: `${day.firstSlotRow + slot} / span ${span}`,
+    gridColumn: String(col + (origin.gutter ? 2 : 1)),
+    gridRow: `${origin.firstSlotRow + slot} / span ${span}`,
   };
 }
 
-type SessionItemProps = { id: string; grid: DayGrid; placement: DayPlacement };
+type SessionItemProps = { id: string; grid: DayGrid; origin: GridOrigin };
 
 // One placed Session: its block, its move draggable and its resize handle. It subscribes to its own Session and to
 // its own resize preview, nothing else, so a mutation elsewhere in the Schedule never re-renders it. Its height
 // comes from the rows it spans and the block reads it back as a size container: no pixel goes through React here.
-export const SessionItem = memo(function SessionItem({ id, grid, placement }: SessionItemProps) {
+export const SessionItem = memo(function SessionItem({ id, grid, origin }: SessionItemProps) {
   const session = useSession(id);
   const resizeEnd = useGesture((gesture) =>
     gesture?.kind === 'resize' && gesture.sessionId === id ? gesture.endSlot : null,
@@ -62,20 +64,10 @@ export const SessionItem = memo(function SessionItem({ id, grid, placement }: Se
   return (
     <div
       data-session={id}
-      style={{
-        ...gridPlacement(col, block.slot, span, placement),
-        position: 'relative',
-        marginLeft: '1px',
-        marginRight: '1px',
-        zIndex: isDragging ? 40 : 20,
-      }}
+      className="relative mx-px"
+      style={{ ...gridArea(col, block.slot, span, origin), zIndex: isDragging ? 40 : 20 }}
     >
-      {/* the `session` size container, one pixel shorter than its rows: that pixel is the gap between blocks */}
-      <div
-        ref={moveRef}
-        className={cx('overflow-hidden', { 'shadow-lg': isDragging })}
-        style={{ height: 'calc(100% - 1px)', containerName: 'session', containerType: 'size' }}
-      >
+      <div ref={moveRef} className={cx('session-frame overflow-hidden', { 'shadow-lg': isDragging })}>
         <SessionBlock session={session} onOpen={() => onOpenSession({ mode: 'edit', session })} />
       </div>
 

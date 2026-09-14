@@ -15,8 +15,6 @@ const session = {
   name: 'Break',
 };
 
-// A component of the Schedule reads its display settings and its Sessions from the store, and the Schedule time
-// and the actions from the context. The three providers are nested by the Schedule provider, and by this helper.
 function ScheduleUnderTest() {
   const settings = useSettings();
   const { scheduleTime } = useScheduleContext();

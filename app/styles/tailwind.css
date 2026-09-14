@@ -16,6 +16,14 @@
 @custom-variant session-lg (@container session (height > 40px) and (height <= 56px));
 @custom-variant session-xl (@container session (height > 56px));
 
+/* The frame a Session block is drawn in: the size container the variants above read, one pixel shorter than the
+   slots it spans, that pixel being the gap between two blocks. */
+@utility session-frame {
+  height: calc(100% - 1px);
+  container-name: session;
+  container-type: size;
+}
+
 @layer base {
   *,
   ::after,

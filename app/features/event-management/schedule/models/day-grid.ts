@@ -97,6 +97,12 @@ export function sessionAt(sessions: Array<ScheduleSession>, trackId: string, dat
   return sessions.find((s) => s.trackId === trackId && s.timeslot.start <= date && date < s.timeslot.end);
 }
 
+// Where a block starting at `startSlot` ends once extended down to `slot`: never above its own start, never past
+// the window it was given. Both a Session draft and a resize grow this way.
+export function extendedEndSlot(startSlot: number, windowEnd: number, slot: number): number {
+  return Math.max(startSlot + 1, Math.min(windowEnd, slot + 1));
+}
+
 // The last slot (exclusive) a Session draft started at `startSlot` may be extended to.
 export function draftWindowEnd(
   grid: DayGrid,

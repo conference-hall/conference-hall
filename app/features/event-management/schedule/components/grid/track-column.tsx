@@ -1,18 +1,23 @@
 import { useDroppable } from '@dnd-kit/react';
 import { type CSSProperties, memo, type PointerEvent, useRef } from 'react';
 import { useScheduleContext } from '../../context/schedule-context.tsx';
-import { type DayGrid, dateOfSlot, draftWindowEnd, sessionAt, slotAtY } from '../../models/day-grid.ts';
+import {
+  type DayGrid,
+  dateOfSlot,
+  draftWindowEnd,
+  extendedEndSlot,
+  sessionAt,
+  slotAtY,
+} from '../../models/day-grid.ts';
 import { SessionMutations } from '../../models/session-mutation.ts';
 import { useGestureStore } from '../../store/gesture-store.ts';
 import { useScheduleStore } from '../../store/schedule-store.ts';
 import type { Track } from '../schedule.types.ts';
-import { columnRectOf, COLUMN_TYPE, type ColumnPayload, columnUnderBlock, readDragSource } from './dnd.ts';
+import { columnKey, columnRectOf, COLUMN_TYPE, type ColumnPayload, columnUnderBlock, readDragSource } from './dnd.ts';
 import { useConflictReport } from './use-conflict-report.ts';
 
 // A draft grows downwards only, from one slot to the last one before the next Session of its Track.
 type Draft = { startSlot: number; windowEnd: number };
-
-const extendedTo = (draft: Draft, slot: number) => Math.max(draft.startSlot + 1, Math.min(draft.windowEnd, slot + 1));
 
 type TrackColumnProps = {
   grid: DayGrid;
@@ -31,7 +36,7 @@ export const TrackColumn = memo(function TrackColumn({ grid, track, colIndex, cl
   const reportConflict = useConflictReport();
 
   const { ref: columnRef } = useDroppable({
-    id: `column:${grid.dayKey}:${track.id}`,
+    id: `column:${columnKey(grid.dayKey, track.id)}`,
     type: COLUMN_TYPE,
     data: { dayKey: grid.dayKey, trackId: track.id } satisfies ColumnPayload,
     accept: (source) => readDragSource(source) !== null,
@@ -66,7 +71,7 @@ export const TrackColumn = memo(function TrackColumn({ grid, track, colIndex, cl
       dayKey: grid.dayKey,
       trackId: track.id,
       slot: draft.startSlot,
-      endSlot: extendedTo(draft, slotUnder(event)),
+      endSlot: extendedEndSlot(draft.startSlot, draft.windowEnd, slotUnder(event)),
     });
   };
 
@@ -78,7 +83,7 @@ export const TrackColumn = memo(function TrackColumn({ grid, track, colIndex, cl
     draftRef.current = null;
     event.currentTarget.releasePointerCapture(event.pointerId);
 
-    const endSlot = extendedTo(draft, slotUnder(event));
+    const endSlot = extendedEndSlot(draft.startSlot, draft.windowEnd, slotUnder(event));
     gestureStore.set(null);
 
     const timeslot = { start: dateOfSlot(grid, draft.startSlot), end: dateOfSlot(grid, endSlot) };
@@ -95,8 +100,9 @@ export const TrackColumn = memo(function TrackColumn({ grid, track, colIndex, cl
   return (
     <div
       ref={columnRef}
-      data-column={`${grid.dayKey}:${track.id}`}
+      data-column={columnKey(grid.dayKey, track.id)}
       data-column-index={colIndex}
+      role="group"
       aria-label={track.name}
       className={className}
       style={style}

@@ -20,7 +20,6 @@ const resize = (endSlot: number): Gesture => ({
   endSlot,
 });
 
-// The slices the ghost of a day and the Session being resized subscribe to.
 const daySlice = (gesture: Gesture | null) => (gesture && gesture.dayKey === DAY ? gesture : null);
 const resizeSlice = (gesture: Gesture | null) =>
   gesture?.kind === 'resize' && gesture.sessionId === 's1' ? gesture.endSlot : null;

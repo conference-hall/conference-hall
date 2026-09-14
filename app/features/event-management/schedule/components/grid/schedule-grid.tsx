@@ -16,8 +16,9 @@ import type { Gesture } from '../../models/gesture-resolution.ts';
 import { resolveMove, resolveResize } from '../../models/gesture-resolution.ts';
 import { useGestureStore } from '../../store/gesture-store.ts';
 import { useScheduleStore, useSettings } from '../../store/schedule-store.ts';
+import type { ScheduleSession } from '../schedule.types.ts';
 import { Day } from './day-grid.tsx';
-import { type ColumnPayload, columnRectOf, readDragSource } from './dnd.ts';
+import { type ColumnPayload, columnKey, columnRectOf, readDragSource } from './dnd.ts';
 import { useConflictReport } from './use-conflict-report.ts';
 
 // The grid of the displayed days, and the only place a drag operation is read. It extracts rectangles from the
@@ -54,10 +55,10 @@ export function ScheduleGrid({ zoomLevel }: ScheduleGridProps) {
   const gridsByKey = useMemo(() => new Map(grids.map((grid) => [grid.dayKey, grid])), [grids]);
 
   // A resize stays in the Track and the day of its own Session, and may only reach the next Session of that Track.
-  const startResize = (session: Parameters<typeof blockOf>[1]) => {
+  const startResize = (session: ScheduleSession) => {
     const grid = gridsByKey.get(dayKeyOf(session.timeslot.start));
     const block = grid && blockOf(grid, session);
-    const column = grid && rootRef.current?.querySelector(`[data-column="${grid.dayKey}:${session.trackId}"]`);
+    const column = grid && rootRef.current?.querySelector(`[data-column="${columnKey(grid.dayKey, session.trackId)}"]`);
     if (!grid || !block || !column) return null;
 
     return {

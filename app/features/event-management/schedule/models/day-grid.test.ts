@@ -14,10 +14,8 @@ import {
 } from './day-grid.ts';
 import { ScheduleTime } from './schedule-time.ts';
 
-// The Schedule is in Tokyo, the test process in UTC: every date below is a Schedule time, never a UTC one.
 const scheduleTime = new ScheduleTime('Asia/Tokyo');
 
-// 2025-11-20 at midnight, Schedule time.
 const MIDNIGHT_UTC = Date.parse('2025-11-19T15:00:00.000Z');
 const day = scheduleTime.fromUtc(new Date(MIDNIGHT_UTC));
 
@@ -38,7 +36,6 @@ const session = (id: string, trackId: string, start: Date, end: Date): ScheduleS
   language: null,
 });
 
-// 08:00 to 22:00, the widest window an organizer picks: 15 hour rows, the last one starting at 22:00.
 const grid = makeDayGrid(day, 0, { start: 8 * 60, end: 22 * 60 }, tracks);
 
 describe('DayGrid', () => {

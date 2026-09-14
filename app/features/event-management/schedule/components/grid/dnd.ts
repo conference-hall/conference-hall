@@ -15,6 +15,9 @@ export type SessionPayload = { session: ScheduleSession };
 
 export type ColumnPayload = { dayKey: number; trackId: string };
 
+// How a (day, Track) column is named in the DOM and to the drag and drop library.
+export const columnKey = (dayKey: number, trackId: string) => `${dayKey}:${trackId}`;
+
 // The dragged block itself follows the pointer: no clone promoted over the grid, no placeholder left in its row.
 export const MOVE_FEEDBACK = [Feedback.configure({ feedback: 'move' })];
 

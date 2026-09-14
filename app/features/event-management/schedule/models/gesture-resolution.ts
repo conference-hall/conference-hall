@@ -1,5 +1,5 @@
 import type { ScheduleSession } from '../components/schedule.types.ts';
-import { blockOf, type ColumnRect, type DayGrid, dateOfSlot, sessionAt, slotAtY } from './day-grid.ts';
+import { blockOf, type ColumnRect, type DayGrid, dateOfSlot, extendedEndSlot, sessionAt, slotAtY } from './day-grid.ts';
 
 // Owns what a pointer gesture on the Schedule designates: from the dragged Session, the Track column under it and
 // the top edge of the dragged element, it decides whether the gesture moves a Session, swaps it with the one it
@@ -78,8 +78,7 @@ export function resolveResize({ session, columnRect, grid, draggedTop, windowEnd
   const block = blockOf(grid, session);
   if (!block) return null;
 
-  const slot = slotAtY(grid, columnRect, draggedTop);
-  const endSlot = Math.max(block.slot + 1, Math.min(windowEnd, slot + 1));
+  const endSlot = extendedEndSlot(block.slot, windowEnd, slotAtY(grid, columnRect, draggedTop));
 
   return {
     kind: 'resize',

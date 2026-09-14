@@ -10,7 +10,6 @@ import { Day } from './day-grid.tsx';
 
 const scheduleTime = new ScheduleTime('Europe/Paris');
 
-// 2024-10-05 at midnight, Schedule time.
 const MIDNIGHT_UTC = Date.parse('2024-10-04T22:00:00.000Z');
 const day = scheduleTime.fromUtc(new Date(MIDNIGHT_UTC));
 const at = (hours: number, minutes = 0) =>
@@ -32,7 +31,6 @@ const session = (id: string, name: string, trackId: string, start: Date, end: Da
   proposal: null,
 });
 
-// 09:00 to 18:00 plus the hour row starting at 18:00: 120 slots, the first one on grid row 3.
 const grid = makeDayGrid(day, 0, { start: 9 * 60, end: 18 * 60 }, tracks);
 
 const inside = session('inside', 'Keynote', 'track-1', at(10), at(11));
@@ -59,7 +57,7 @@ function renderDay(sessions: Array<ScheduleSession>) {
   );
 }
 
-const placementOf = (id: string) => {
+const areaOf = (id: string) => {
   const element = document.querySelector(`[data-session="${id}"]`);
   if (!element) return null;
   const style = getComputedStyle(element);
@@ -67,24 +65,22 @@ const placementOf = (id: string) => {
 };
 
 describe('Day grid', () => {
-  it('places a Session on the rows of its slots, in the column of its Track', async () => {
+  it('puts a Session on the twelve rows of its slots, in the column of its Track', async () => {
     await renderDay([inside, truncated, before]);
 
-    // 10:00 is the 12th slot of a day starting at 09:00, and the first slot sits on row 3.
-    expect(placementOf('inside')).toEqual({ column: '2', row: '15', end: 'span 12' });
+    expect(areaOf('inside')).toEqual({ column: '2', row: '15', end: 'span 12' });
   });
 
-  it('truncates a Session ending past the displayed day', async () => {
+  it('truncates a Session ending past the displayed day to the six rows that remain', async () => {
     await renderDay([inside, truncated, before]);
 
-    // 18:30 is the 114th slot; only 6 slots remain before the end of the displayed day.
-    expect(placementOf('truncated')).toEqual({ column: '3', row: '117', end: 'span 6' });
+    expect(areaOf('truncated')).toEqual({ column: '3', row: '117', end: 'span 6' });
   });
 
   it('draws no block for a Session starting before the displayed day', async () => {
     await renderDay([inside, truncated, before]);
 
-    expect(placementOf('before')).toBeNull();
+    expect(areaOf('before')).toBeNull();
   });
 
   it('names each Track column and each Session block', async () => {
@@ -93,8 +89,8 @@ describe('Day grid', () => {
     const columns = Array.from(document.querySelectorAll('[data-column]'));
     expect(columns.map((column) => column.getAttribute('aria-label'))).toEqual(['Room 1', 'Room 2']);
 
-    await expect.element(page.getByRole('button', { name: /Keynote/ })).toBeVisible();
-    await expect.element(page.getByRole('button', { name: /Closing/ })).toBeVisible();
+    await expect.element(page.getByRole('button', { name: /Keynote/ }).last()).toBeVisible();
+    await expect.element(page.getByRole('button', { name: /Closing/ }).last()).toBeVisible();
   });
 
   it('renders no element per slot', async () => {

@@ -123,9 +123,7 @@ describe('ScheduleStore', () => {
     });
   });
 
-  // `useSyncExternalStore` is given the same getter for the client and for the server snapshot: every slice is a
-  // stored reference, stable between two calls, so hydration reads exactly what the server rendered.
-  it('exposes one stable snapshot per slice, on the server as on the client', () => {
+  it('exposes the same stable reference per slice on two calls, as the server and the client snapshots need', () => {
     const scheduleStore = store();
 
     expect(scheduleStore.getSession('s1')).toBe(scheduleStore.getSession('s1'));

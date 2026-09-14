@@ -1,4 +1,4 @@
-import { type ReactNode, useLayoutEffect, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useFetchers } from 'react-router';
 import type { ScheduleData } from '../components/schedule.types.ts';
 import { SessionModal } from '../components/session/session-modal.tsx';
@@ -42,7 +42,18 @@ export function ScheduleProvider({ schedule, children }: ScheduleProviderProps) 
   });
 
   const [editedSession, setEditedSession] = useState<EditedSession | null>(null);
+  const closeSession = useCallback(() => setEditedSession(null), []);
   const mutations = useSessionMutations(stores.schedule, scheduleTime);
+
+  // The modal keeps its element while the edited Session does not change: a mutation in flight elsewhere in the
+  // Schedule re-renders neither the modal nor its form.
+  const modal = useMemo(
+    () =>
+      editedSession && (
+        <SessionModal mode={editedSession.mode} session={editedSession.session} onClose={closeSession} />
+      ),
+    [editedSession, closeSession],
+  );
 
   const { updateDisplayDays, updateDisplayTimes } = display;
   const context = useMemo<ScheduleContextValue>(
@@ -66,14 +77,7 @@ export function ScheduleProvider({ schedule, children }: ScheduleProviderProps) 
       <GestureStoreProvider value={stores.gesture}>
         <ScheduleContextProvider value={context}>
           {children}
-
-          {editedSession && (
-            <SessionModal
-              mode={editedSession.mode}
-              session={editedSession.session}
-              onClose={() => setEditedSession(null)}
-            />
-          )}
+          {modal}
         </ScheduleContextProvider>
       </GestureStoreProvider>
     </ScheduleStoreProvider>

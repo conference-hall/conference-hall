@@ -5,7 +5,6 @@ import { ScheduleTime } from './schedule-time.ts';
 
 const scheduleTime = new ScheduleTime('Asia/Tokyo');
 
-// 2025-11-20 at midnight, Schedule time.
 const MIDNIGHT_UTC = Date.parse('2025-11-19T15:00:00.000Z');
 const day = scheduleTime.fromUtc(new Date(MIDNIGHT_UTC));
 
@@ -26,7 +25,6 @@ const session = (id: string, trackId: string, start: Date, end: Date): ScheduleS
   language: null,
 });
 
-// 08:00 to 22:00: 180 slots. The column is 16 px per slot, its top at the top of the viewport.
 const grid = makeDayGrid(day, 0, { start: 8 * 60, end: 22 * 60 }, tracks);
 const columnRect = { top: 0, height: 180 * 16 };
 const yOfSlot = (slot: number) => slot * 16;
@@ -88,14 +86,13 @@ describe('resolveMove', () => {
     expect(below).toMatchObject({ kind: 'move', slot: 179 });
   });
 
-  it('swaps when the target slot is covered by another Session, on that Session block', () => {
+  it('swaps when the slot under the top edge is covered by another Session, on that Session block', () => {
     const target = session('target', 'track-2', at(14), at(15));
     const gesture = resolveMove({
       session: dragged,
       column: { dayKey: grid.dayKey, trackId: 'track-2' },
       columnRect,
       grid,
-      // 14:30, inside the target Session and after its start
       draggedTop: yOfSlot(78),
       sessions: [dragged, target],
     });

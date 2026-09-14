@@ -46,8 +46,6 @@ function renderInSchedule(children: ReactNode) {
   );
 }
 
-// The block is drawn inside the `session` size container the schedule grid gives it: its height alone decides
-// what it shows.
 function renderInContainer(height: number, children: ReactNode) {
   return renderInSchedule(
     <div style={{ containerName: 'session', containerType: 'size', height: `${height}px`, width: '240px' }}>
