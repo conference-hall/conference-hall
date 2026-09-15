@@ -3,29 +3,33 @@ import { useTranslation } from 'react-i18next';
 import { formatTimeDifference } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
-import { useCurrentSchedule } from '../../context/schedule-context.tsx';
+import { useScheduleContext } from '../../context/schedule-context.tsx';
 import type { ScheduleTime } from '../../models/schedule-time.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
 
-type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+// A Session block shows as much as its height allows. What it shows is decided by CSS: the element wrapping the
+// block is a `session` size container, and the five `session-*` variants of the stylesheet are the five heights
+// the block is drawn at. The block itself renders one DOM at every height and never reads a pixel.
 
 type SessionBlockProps = {
   session: ScheduleSession;
-  height: number;
   onOpen: VoidFunction;
 };
 
-export function SessionBlock({ session, height, onOpen }: SessionBlockProps) {
-  const { scheduleTime } = useCurrentSchedule();
+// Everything but the tallest block truncates its text.
+const TRUNCATED = 'session-xs:truncate session-sm:truncate session-md:truncate session-lg:truncate';
+
+// The shortest block shows its colour and nothing else.
+const HIDDEN_WHEN_TINY = 'session-xs:hidden';
+
+export function SessionBlock({ session, onOpen }: SessionBlockProps) {
+  const { scheduleTime } = useScheduleContext();
   const { timeslot, proposal, language, emojis } = session;
 
   const { block } = SESSION_COLORS.find((c) => c.value === session.color) ?? SESSION_COLORS[0];
 
-  const size = getSize(height);
   const title = proposal ? proposal.title : session.name;
-
-  if (size === 'xs') return <div className={cx('h-full', block)} />;
 
   return (
     <div
@@ -39,46 +43,45 @@ export function SessionBlock({ session, height, onOpen }: SessionBlockProps) {
       }}
       className={cx(
         'flex h-full w-full cursor-pointer flex-col rounded-sm px-1 text-left',
-        {
-          'flex-row items-center gap-1 text-[10px]': size === 'sm',
-          'flex-row items-baseline gap-1 text-[10px] leading-3': size === 'md',
-          'justify-between text-xs leading-3.5': size === 'lg' || size === 'xl',
-          'border-dotted': session.isCreating,
-        },
+        'session-sm:flex-row session-sm:items-center session-sm:gap-1 session-sm:text-[10px]',
+        'session-md:flex-row session-md:items-baseline session-md:gap-1 session-md:text-[10px] session-md:leading-3',
+        'session-lg:justify-between session-lg:text-xs session-lg:leading-3.5',
+        'session-xl:justify-between session-xl:text-xs session-xl:leading-3.5',
+        { 'border-dotted': session.isCreating },
         block,
       )}
     >
       {title ? (
-        <div className={cx({ truncate: size !== 'xl' })}>
-          <p className={cx('line-clamp-3 font-semibold', { truncate: size !== 'xl' })}>{title}</p>
-          <SessionSpeakers speakers={proposal?.speakers} size={size} />
+        <div className={cx(HIDDEN_WHEN_TINY, TRUNCATED)}>
+          <p className={cx('line-clamp-3 font-semibold', TRUNCATED)}>{title}</p>
+          <SessionSpeakers speakers={proposal?.speakers} />
         </div>
       ) : null}
 
-      <div className={cx('flex shrink-0 gap-1', { 'mt-0.5': size === 'md', 'items-end': !title })}>
-        <SessionTime timeslot={timeslot} scheduleTime={scheduleTime} size={size} />
-        <SessionEmojis emojis={emojis} size={size} />
-        <SessionLanguage language={language} size={size} />
+      <div className={cx('flex shrink-0 gap-1 session-md:mt-0.5', HIDDEN_WHEN_TINY, { 'items-end': !title })}>
+        <SessionTime timeslot={timeslot} scheduleTime={scheduleTime} />
+        <SessionEmojis emojis={emojis} />
+        <SessionLanguage language={language} />
       </div>
     </div>
   );
 }
 
-type SessionSpeakersProps = { speakers?: Array<{ name: string | null; picture: string | null }>; size: Size };
+type SessionSpeakersProps = { speakers?: Array<{ name: string | null; picture: string | null }> };
 
-function SessionSpeakers({ speakers, size }: SessionSpeakersProps) {
+function SessionSpeakers({ speakers }: SessionSpeakersProps) {
   if (!speakers?.length) return null;
   const firstSpeaker = speakers.at(0);
   const speakersCount = speakers.length - 1;
   const suffix = speakers.length > 1 ? ` (+${speakersCount})` : '';
 
-  if (size === 'xs' || size === 'sm') return null;
-  return <p className={cx('text-[10px]', { truncate: size !== 'xl' })}>{`${firstSpeaker?.name}${suffix}`}</p>;
+  return <p className={cx('text-[10px] session-sm:hidden', TRUNCATED)}>{`${firstSpeaker?.name}${suffix}`}</p>;
 }
 
-type SessionTimeProps = { timeslot: TimeSlot; scheduleTime: ScheduleTime; size: Size };
+type SessionTimeProps = { timeslot: TimeSlot; scheduleTime: ScheduleTime };
 
-function SessionTime({ timeslot, scheduleTime, size }: SessionTimeProps) {
+// The start time is always there; the end time and the duration only once the block is tall enough for them.
+function SessionTime({ timeslot, scheduleTime }: SessionTimeProps) {
   const { i18n } = useTranslation();
   const locale = i18n.language;
 
@@ -88,57 +91,32 @@ function SessionTime({ timeslot, scheduleTime, size }: SessionTimeProps) {
 
   return (
     <p className="text-[10px]">
-      {size === 'sm' || size === 'md' ? (
-        <time dateTime={start}>{start}</time>
-      ) : (
-        <>
-          <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time> <span>({minutes})</span>
-        </>
-      )}
+      <time dateTime={start}>{start}</time>
+      <span className="session-sm:hidden session-md:hidden">
+        {' - '}
+        <time dateTime={end}>{end}</time> <span>({minutes})</span>
+      </span>
     </p>
   );
 }
 
-type SessionEmojisProps = { emojis: Array<string>; size: Size };
-
-function SessionEmojis({ emojis, size }: SessionEmojisProps) {
+function SessionEmojis({ emojis }: { emojis: Array<string> }) {
   return emojis?.map((code) => {
     const emoji = SESSION_EMOJIS.find((e) => e.code === code);
     return (
-      <p
-        key={code}
-        className={cx({
-          'text-[10px]': size === 'sm' || size === 'md',
-          'text-xs': size === 'lg' || size === 'xl',
-        })}
-      >
+      <p key={code} className="session-sm:text-[10px] session-md:text-[10px] session-lg:text-xs session-xl:text-xs">
         {emoji?.skin}
       </p>
     );
   });
 }
 
-type SessionLanguageProps = { language: Language | null; size: Size };
-
-function SessionLanguage({ language, size }: SessionLanguageProps) {
+function SessionLanguage({ language }: { language: Language | null }) {
   const { t } = useTranslation();
   if (!language) return null;
   return (
-    <p
-      className={cx({
-        'text-[10px]': size === 'sm' || size === 'md',
-        'text-xs': size === 'lg' || size === 'xl',
-      })}
-    >
+    <p className="session-sm:text-[10px] session-md:text-[10px] session-lg:text-xs session-xl:text-xs">
       {t(`common.languages.${language}.flag`)}
     </p>
   );
-}
-
-function getSize(height: number): Size {
-  if (height < 8) return 'xs';
-  if (height < 24) return 'sm';
-  if (height < 40) return 'md';
-  if (height < 56) return 'lg';
-  return 'xl';
 }

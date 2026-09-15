@@ -7,6 +7,23 @@
   --font-sans: 'Inter', 'Inter Fallback';
 }
 
+/* The size of a Session block is CSS-driven: the grid item wrapping it is a `session` size container and the block
+   picks what it shows from the container height, so a zoom change resizes every block without a React render.
+   The five ranges are disjoint and mirror the thresholds the schedule used when the height was a prop. */
+@custom-variant session-xs (@container session (height <= 8px));
+@custom-variant session-sm (@container session (height > 8px) and (height <= 24px));
+@custom-variant session-md (@container session (height > 24px) and (height <= 40px));
+@custom-variant session-lg (@container session (height > 40px) and (height <= 56px));
+@custom-variant session-xl (@container session (height > 56px));
+
+/* The frame a Session block is drawn in: the size container the variants above read, one pixel shorter than the
+   slots it spans, that pixel being the gap between two blocks. */
+@utility session-frame {
+  height: calc(100% - 1px);
+  container-name: session;
+  container-type: size;
+}
+
 @layer base {
   *,
   ::after,

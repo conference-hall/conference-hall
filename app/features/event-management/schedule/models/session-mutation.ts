@@ -5,9 +5,6 @@ import { DEFAULT_SESSION_COLOR } from '../components/session/constants.ts';
 import type { ScheduleTime } from './schedule-time.ts';
 import { type PlacementOutcome, SessionPlacement, type SwapOutcome } from './session-placement.ts';
 
-// Owns the rule of a Session mutation, from the gesture to what is submitted: placement, adjustment, wire
-// encoding and submission. Also renders the mutations still in flight on top of the Sessions known by the server.
-
 export const SESSION_INTENTS = {
   add: 'add-session',
   update: 'update-session',

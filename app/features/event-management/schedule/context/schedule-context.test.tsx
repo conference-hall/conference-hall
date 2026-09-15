@@ -1,63 +1,65 @@
 import { page } from 'vitest/browser';
+import { dayKeyOf } from '../models/day-grid.ts';
 import { SessionMutations } from '../models/session-mutation.ts';
-import { buildCurrentSchedule } from './schedule-context.test-helpers.ts';
-import {
-  CurrentScheduleProvider,
-  ScheduleSessionsProvider,
-  useCurrentSchedule,
-  useScheduleSessions,
-} from './schedule-context.tsx';
+import { useGesture } from '../store/gesture-store.ts';
+import { useColumnIds, useSession, useSettings } from '../store/schedule-store.ts';
+import { buildScheduleSettings, ScheduleProviders } from './schedule-context.test-helpers.tsx';
+import { useScheduleContext } from './schedule-context.tsx';
 
-describe('ScheduleContext', () => {
-  function TestScheduleComponent() {
-    const schedule = useCurrentSchedule();
-    return (
-      <>
-        <p>Tracks: {schedule.tracks.map((track) => track.name).join(', ')}</p>
-        <p>Days: {schedule.scheduleDays.length}</p>
-        <p>
-          Times: {schedule.displayedTimes.start}-{schedule.displayedTimes.end}
-        </p>
-      </>
-    );
-  }
+const { scheduleDays, displayedTimes } = buildScheduleSettings();
+const day = scheduleDays[0];
 
-  it('returns the provided schedule', async () => {
-    const currentSchedule = buildCurrentSchedule();
+function ScheduleUnderTest() {
+  const { tracks, scheduleDays, displayedTimes } = useSettings();
+  const { scheduleTime } = useScheduleContext();
+  const stored = useSession('session-1');
+  const ids = useColumnIds(dayKeyOf(day), 'track-1');
+  const gesture = useGesture((current) => current?.kind ?? 'none');
 
-    await page.render(
-      <CurrentScheduleProvider value={currentSchedule}>
-        <TestScheduleComponent />
-      </CurrentScheduleProvider>,
-    );
+  return (
+    <>
+      <p>Tracks: {tracks.map((track) => track.name).join(', ')}</p>
+      <p>Days: {scheduleDays.length}</p>
+      <p>Times: {`${displayedTimes.start}-${displayedTimes.end}`}</p>
+      <p>Start: {scheduleTime.formatTime(day, 'en')}</p>
+      <p>Session: {stored?.name ?? 'none'}</p>
+      <p>Column: {ids.join(', ') || 'empty'}</p>
+      <p>Gesture: {gesture}</p>
+    </>
+  );
+}
 
-    await expect.element(page.getByText('Tracks: Room 1')).toBeVisible();
-    await expect.element(page.getByText('Days: 1')).toBeVisible();
-    await expect.element(page.getByText('Times: 540-1080')).toBeVisible();
-  });
-});
-
-describe('ScheduleSessionsContext', () => {
-  function TestSessionsComponent() {
-    const sessions = useScheduleSessions();
-    return <p>Sessions: {sessions.map((session) => session.name).join(', ')}</p>;
-  }
-
-  it('returns the provided sessions', async () => {
-    const currentSchedule = buildCurrentSchedule();
-    const day = currentSchedule.scheduleDays[0];
-
+describe('the providers of a Schedule', () => {
+  it('serves the display settings, the Schedule time, the stored Sessions and the live gesture', async () => {
     const session = {
       ...SessionMutations.blank({ trackId: 'track-1', timeslot: { start: day, end: day } }),
+      id: 'session-1',
       name: 'Break',
     };
 
     await page.render(
-      <ScheduleSessionsProvider value={[session]}>
-        <TestSessionsComponent />
-      </ScheduleSessionsProvider>,
+      <ScheduleProviders sessions={[session]}>
+        <ScheduleUnderTest />
+      </ScheduleProviders>,
     );
 
-    await expect.element(page.getByText('Sessions: Break')).toBeVisible();
+    await expect.element(page.getByText('Tracks: Room 1')).toBeVisible();
+    await expect.element(page.getByText('Days: 1')).toBeVisible();
+    await expect.element(page.getByText(`Times: ${displayedTimes.start}-${displayedTimes.end}`)).toBeVisible();
+    await expect.element(page.getByText('Start: 09:00')).toBeVisible();
+    await expect.element(page.getByText('Session: Break')).toBeVisible();
+    await expect.element(page.getByText('Column: session-1')).toBeVisible();
+    await expect.element(page.getByText('Gesture: none')).toBeVisible();
+  });
+
+  it('serves an empty Schedule without a Session', async () => {
+    await page.render(
+      <ScheduleProviders>
+        <ScheduleUnderTest />
+      </ScheduleProviders>,
+    );
+
+    await expect.element(page.getByText('Session: none')).toBeVisible();
+    await expect.element(page.getByText('Column: empty')).toBeVisible();
   });
 });

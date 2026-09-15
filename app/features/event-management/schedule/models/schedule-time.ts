@@ -2,6 +2,8 @@ import { formatDate, formatDateRange, formatTime, getDatesRange } from '~/shared
 import { getGMTOffset, timezoneToUtc, utcToTimezone } from '~/shared/datetimes/timezone.ts';
 import type { ScheduleSession, SessionData } from '../components/schedule.types.ts';
 
+// TODO: Rework as helper function instead of a class.
+
 // Owns the Schedule time of a Schedule: the only passage between UTC and the wall-clock time of the Schedule
 // timezone, and the only formatter bound to that timezone.
 export class ScheduleTime {

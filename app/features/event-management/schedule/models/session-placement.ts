@@ -1,9 +1,6 @@
 import { addMinutes } from 'date-fns';
 import { areTimeSlotsOverlapping, moveTimeSlotStart, type TimeSlot } from '~/shared/datetimes/timeslots.ts';
 
-// Owns the rule for positioning a Session in a Track: a Session never overlaps another Session of the same Track.
-
-// Length given to a Session whose requested end is not after its start.
 const MINIMUM_SESSION_MINUTES = 5;
 
 export type Placement = { trackId: string; timeslot: TimeSlot };
@@ -68,8 +65,7 @@ export class SessionPlacement {
     return { status: 'placed', source: sourcePlacement, target: targetPlacement };
   }
 
-  // Places a Session as close as possible to what was asked: the end is clamped to the next Session of the Track
-  // and to a minimum length, and only a start with no room at all is refused.
+  // Places a Session as close as possible to what was asked.
   private fit(session: PlacedSession, trackId: string, requested: TimeSlot): PlacementOutcome {
     const trackSessions = this.trackSessions(trackId, session.id);
     const { start } = requested;

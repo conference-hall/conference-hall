@@ -1,11 +1,12 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-import { useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/button.tsx';
 import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
-import { useCurrentSchedule } from '../../context/schedule-context.tsx';
+import { useScheduleContext } from '../../context/schedule-context.tsx';
 import { SessionMutations } from '../../models/session-mutation.ts';
+import { useSettings } from '../../store/schedule-store.ts';
 import { DisplayDays } from './display-days.tsx';
 import { DisplayTimes } from './display-times.tsx';
 import { OptionsMenu } from './options-menu.tsx';
@@ -17,11 +18,14 @@ const NEW_SESSION_DURATION = 30; // minutes
 
 type Props = { zoomHandlers: ZoomHandlers };
 
-export function ScheduleHeader({ zoomHandlers }: Props) {
-  const { displayedDays, displayedTimes, tracks, onChangeDisplayTimes, onOpenSession } = useCurrentSchedule();
+export const ScheduleHeader = memo(function ScheduleHeader({ zoomHandlers }: Props) {
   const { t } = useTranslation();
-  const [tracksModalOpen, setTracksModalOpen] = useState(false);
+
+  const { displayedDays, displayedTimes, tracks } = useSettings();
+  const { onOpenSession } = useScheduleContext();
   const scheduleFullscreen = useScheduleFullscreen();
+
+  const [tracksModalOpen, setTracksModalOpen] = useState(false);
 
   const onOpenNewSession = useCallback(() => {
     const day = displayedDays.at(0);
@@ -50,11 +54,11 @@ export function ScheduleHeader({ zoomHandlers }: Props) {
     >
       <div className="flex shrink items-center gap-3">
         <DisplayDays />
-        <DisplayTimes displayedTimes={displayedTimes} onChangeDisplayTime={onChangeDisplayTimes} />
+        <DisplayTimes />
       </div>
 
       <div className="flex shrink items-center gap-3">
-        <Button iconLeft={PlusIcon} onClick={onOpenNewSession} disabled={tracks.length === 0}>
+        <Button iconLeft={PlusIcon} onClick={onOpenNewSession}>
           {t('event-management.schedule.actions.new-session')}
         </Button>
         <OptionsMenu openTracksModal={() => setTracksModalOpen(true)} zoomHandlers={zoomHandlers} />
@@ -68,4 +72,4 @@ export function ScheduleHeader({ zoomHandlers }: Props) {
       />
     </header>
   );
-}
+});

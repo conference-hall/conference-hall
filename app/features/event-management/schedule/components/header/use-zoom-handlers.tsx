@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const ZOOM_LEVEL_DEFAULT = 1;
 const ZOOM_LEVEL_MIN = 0;
@@ -15,13 +15,14 @@ export type ZoomHandlers = {
 export function useZoomHandlers(initialZoom = ZOOM_LEVEL_DEFAULT) {
   const [level, setLevel] = useState(initialZoom);
 
-  const zoomIn = () => setLevel((z) => Math.min(z + 1, ZOOM_LEVEL_MAX));
-
-  const zoomOut = () => setLevel((z) => Math.max(z - 1, ZOOM_LEVEL_MIN));
-
-  const canZoomIn = level < ZOOM_LEVEL_MAX;
-
-  const canZoomOut = level > ZOOM_LEVEL_MIN;
-
-  return { level, zoomIn, zoomOut, canZoomIn, canZoomOut };
+  return useMemo<ZoomHandlers>(
+    () => ({
+      level,
+      zoomIn: () => setLevel((z) => Math.min(z + 1, ZOOM_LEVEL_MAX)),
+      zoomOut: () => setLevel((z) => Math.max(z - 1, ZOOM_LEVEL_MIN)),
+      canZoomIn: level < ZOOM_LEVEL_MAX,
+      canZoomOut: level > ZOOM_LEVEL_MIN,
+    }),
+    [level],
+  );
 }

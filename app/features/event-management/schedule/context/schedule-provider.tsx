@@ -1,72 +1,75 @@
-import { type ReactNode, useMemo, useState } from 'react';
-import { useStableValue } from '~/shared/utils/use-stable-value.ts';
-import type { ScheduleData, ScheduleSession } from '../components/schedule.types.ts';
+import { type ReactNode, useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useFetchers } from 'react-router';
+import type { ScheduleData } from '../components/schedule.types.ts';
 import { SessionModal } from '../components/session/session-modal.tsx';
 import { ScheduleTime } from '../models/schedule-time.ts';
-import { type CurrentSchedule, CurrentScheduleProvider, ScheduleSessionsProvider } from './schedule-context.tsx';
+import { pendingSessions } from '../models/session-mutation.ts';
+import { GestureStore, GestureStoreProvider } from '../store/gesture-store.ts';
+import { ScheduleStore, ScheduleStoreProvider } from '../store/schedule-store.ts';
+import { type EditedSession, type ScheduleContextValue, ScheduleContextProvider } from './schedule-context.tsx';
 import { useDisplaySettings } from './use-display-settings.tsx';
-import { useSessions } from './use-sessions.ts';
-
-type EditedSession = { mode: 'create' | 'edit'; session: ScheduleSession };
+import { useSessionMutations } from './use-session-mutations.ts';
 
 type ScheduleProviderProps = { schedule: ScheduleData; children: ReactNode };
 
 export function ScheduleProvider({ schedule, children }: ScheduleProviderProps) {
   const scheduleTime = useMemo(() => new ScheduleTime(schedule.timezone), [schedule.timezone]);
-  const tracks = useStableValue(schedule.tracks);
-  const sessions = useSessions(schedule.sessions, scheduleTime);
-  const settings = useDisplaySettings(schedule, scheduleTime);
+  const display = useDisplaySettings(schedule, scheduleTime);
+  const fetchers = useFetchers();
+
+  const sessions = pendingSessions(schedule.sessions, fetchers, scheduleTime);
+
+  const settings = {
+    tracks: schedule.tracks,
+    scheduleDays: display.scheduleDays,
+    displayedDays: display.displayedDays,
+    displayedTimes: display.displayedTimes,
+  };
+
+  const [stores] = useState(() => ({
+    schedule: new ScheduleStore({ sessions, settings }),
+    gesture: new GestureStore(),
+  }));
+
+  // Replace only changed sessions and settings.
+  useLayoutEffect(() => {
+    stores.schedule.replace({ sessions, settings });
+  });
 
   const [editedSession, setEditedSession] = useState<EditedSession | null>(null);
+  const closeSession = useCallback(() => setEditedSession(null), []);
+  const mutations = useSessionMutations(stores.schedule, scheduleTime);
 
-  const currentSchedule = useMemo<CurrentSchedule>(
+  const sessionModal = useMemo(() => {
+    if (!editedSession) return null;
+    return <SessionModal mode={editedSession.mode} session={editedSession.session} onClose={closeSession} />;
+  }, [editedSession, closeSession]);
+
+  const { updateDisplayDays, updateDisplayTimes } = display;
+  const context = useMemo<ScheduleContextValue>(
     () => ({
       scheduleTime,
-      tracks,
-      scheduleDays: settings.scheduleDays,
-      displayedDays: settings.displayedDays,
-      displayedTimes: settings.displayedTimes,
-      addSession: sessions.add,
-      updateSession: sessions.update,
-      moveSession: sessions.move,
-      resizeSession: sessions.resize,
-      swapSessions: sessions.swap,
-      deleteSession: sessions.delete,
+      addSession: mutations.add,
+      updateSession: mutations.update,
+      moveSession: mutations.move,
+      resizeSession: mutations.resize,
+      swapSessions: mutations.swap,
+      deleteSession: mutations.delete,
       onOpenSession: setEditedSession,
-      onChangeDisplayDays: settings.updateDisplayDays,
-      onChangeDisplayTimes: settings.updateDisplayTimes,
+      onChangeDisplayDays: updateDisplayDays,
+      onChangeDisplayTimes: updateDisplayTimes,
     }),
-    [
-      scheduleTime,
-      tracks,
-      settings.scheduleDays,
-      settings.displayedDays,
-      settings.displayedTimes,
-      settings.updateDisplayDays,
-      settings.updateDisplayTimes,
-      sessions.add,
-      sessions.update,
-      sessions.move,
-      sessions.resize,
-      sessions.swap,
-      sessions.delete,
-      setEditedSession,
-    ],
+    [scheduleTime, mutations, updateDisplayDays, updateDisplayTimes],
   );
 
   return (
-    <CurrentScheduleProvider value={currentSchedule}>
-      <ScheduleSessionsProvider value={sessions.data}>
-        {children}
-
-        {editedSession && (
-          <SessionModal
-            mode={editedSession.mode}
-            session={editedSession.session}
-            onClose={() => setEditedSession(null)}
-          />
-        )}
-      </ScheduleSessionsProvider>
-    </CurrentScheduleProvider>
+    <ScheduleStoreProvider value={stores.schedule}>
+      <GestureStoreProvider value={stores.gesture}>
+        <ScheduleContextProvider value={context}>
+          {children}
+          {sessionModal}
+        </ScheduleContextProvider>
+      </GestureStoreProvider>
+    </ScheduleStoreProvider>
   );
 }

@@ -3,8 +3,8 @@ import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page, userEvent } from 'vitest/browser';
 import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
-import { buildCurrentSchedule } from '../../context/schedule-context.test-helpers.ts';
-import { type CurrentSchedule, CurrentScheduleProvider } from '../../context/schedule-context.tsx';
+import { ScheduleProviders } from '../../context/schedule-context.test-helpers.tsx';
+import type { ScheduleContextValue } from '../../context/schedule-context.tsx';
 import { ScheduleTime } from '../../models/schedule-time.ts';
 import type { PlacementOutcome } from '../../models/session-placement.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
@@ -35,35 +35,33 @@ const conflict: PlacementOutcome = {
   conflictingSession: { id: 'session-2', trackId: 'track-1', timeslot },
 };
 
-function renderForm(mode: 'create' | 'edit', overrides: Partial<CurrentSchedule> = {}) {
-  const addSession = vi.fn<CurrentSchedule['addSession']>(async () => placed);
-  const updateSession = vi.fn<CurrentSchedule['updateSession']>(async () => placed);
-  const deleteSession = vi.fn<CurrentSchedule['deleteSession']>(async () => {});
+function renderForm(mode: 'create' | 'edit', overrides: Partial<ScheduleContextValue> = {}) {
+  const addSession = vi.fn<ScheduleContextValue['addSession']>(async () => placed);
+  const updateSession = vi.fn<ScheduleContextValue['updateSession']>(async () => placed);
+  const deleteSession = vi.fn<ScheduleContextValue['deleteSession']>(async () => {});
   const onFinish = vi.fn();
-
-  const currentSchedule = buildCurrentSchedule({
-    scheduleTime: new ScheduleTime('America/New_York'),
-    tracks: [
-      { id: 'track-1', name: 'Room 1' },
-      { id: 'track-2', name: 'Room 2' },
-    ],
-    scheduleDays,
-    displayedDays: scheduleDays,
-    displayedTimes,
-    addSession,
-    updateSession,
-    deleteSession,
-    ...overrides,
-  });
 
   const RouteStub = createRoutesStub([
     {
       path: '/team/:team/:event/schedule',
       Component: () => (
         <I18nextProvider i18n={i18nTest}>
-          <CurrentScheduleProvider value={currentSchedule}>
+          <ScheduleProviders
+            scheduleTime={new ScheduleTime('America/New_York')}
+            tracks={[
+              { id: 'track-1', name: 'Room 1' },
+              { id: 'track-2', name: 'Room 2' },
+            ]}
+            scheduleDays={scheduleDays}
+            displayedDays={scheduleDays}
+            displayedTimes={displayedTimes}
+            addSession={addSession}
+            updateSession={updateSession}
+            deleteSession={deleteSession}
+            {...overrides}
+          >
             <SessionForm mode={mode} session={session} onFinish={onFinish} />
-          </CurrentScheduleProvider>
+          </ScheduleProviders>
         </I18nextProvider>
       ),
     },
