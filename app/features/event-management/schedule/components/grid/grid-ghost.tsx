@@ -5,14 +5,11 @@ import { useGesture } from '../../store/gesture-store.ts';
 import { SessionBlock } from '../session/session-block.tsx';
 import { gridArea, type GridOrigin } from './session-item.tsx';
 
-// The one ghost of a displayed day: the drop highlight of a move, the ring over the Session a move would swap
-// with, or the Session draft being drawn. A resize draws nothing here, the resized block grows itself. Re-renders
-// once per pointer event that changes the target, and only in the targeted day.
-
 type GridGhostProps = { grid: DayGrid; origin: GridOrigin };
 
 const noop = () => {};
 
+// Manages the visual ghost of a gesture, including move, swap, and draft sessions.
 export const GridGhost = memo(function GridGhost({ grid, origin }: GridGhostProps) {
   const gesture = useGesture((current) => (current && current.dayKey === grid.dayKey ? current : null));
   if (!gesture) return null;

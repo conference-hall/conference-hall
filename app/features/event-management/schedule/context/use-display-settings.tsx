@@ -2,10 +2,6 @@ import { useCallback, useMemo } from 'react';
 import { useFetcher, useNavigate, useParams, useSearchParams } from 'react-router';
 import type { ScheduleTime } from '../models/schedule-time.ts';
 
-// What the organizer chose to look at: which days (the `:day` route param) and which hours (the Schedule setting,
-// shown optimistically while its mutation is in flight). Nothing is stabilized here: the values are rebuilt on
-// every render and the schedule store keeps the previous reference when the content did not change.
-
 type ScheduleSettings = {
   start: Date;
   end: Date;
@@ -15,11 +11,11 @@ type ScheduleSettings = {
 
 export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: ScheduleTime) {
   const navigate = useNavigate();
-  const fetcher = useFetcher({ key: 'update-display-times' });
-  const params = useParams();
+  const { submit, formData } = useFetcher({ key: 'update-display-times' });
+  const { team, event, day } = useParams();
   const [searchParams] = useSearchParams();
-  const [displayedStart, displayedEnd] = params.day?.split('-').map(Number) ?? [];
 
+  const [displayedStart, displayedEnd] = day?.split('-').map(Number) ?? [];
   const { start, end, displayStartMinutes, displayEndMinutes } = settings;
 
   const scheduleDays = useMemo(() => scheduleTime.days(start, end), [scheduleTime, start, end]);
@@ -30,7 +26,7 @@ export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: Sch
   );
 
   // optimistic update
-  const pendingTimesForm = fetcher.formData?.get('intent') === 'update-display-times' ? fetcher.formData : null;
+  const pendingTimesForm = formData?.get('intent') === 'update-display-times' ? formData : null;
 
   const displayedTimes = useMemo(() => {
     if (!pendingTimesForm) return { start: displayStartMinutes, end: displayEndMinutes };
@@ -40,7 +36,7 @@ export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: Sch
     };
   }, [pendingTimesForm, displayStartMinutes, displayEndMinutes]);
 
-  const { submit } = fetcher;
+  // update display times
   const updateDisplayTimes = useCallback(
     (start: number, end: number) => {
       submit(
@@ -51,7 +47,7 @@ export function useDisplaySettings(settings: ScheduleSettings, scheduleTime: Sch
     [submit],
   );
 
-  const { team, event } = params;
+  // update display days
   const updateDisplayDays = useCallback(
     async (startIndex: number, endIndex: number) => {
       await navigate(`/team/${team}/${event}/schedule/${startIndex}-${endIndex}?${searchParams}`);

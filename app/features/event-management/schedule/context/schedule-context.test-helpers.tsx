@@ -39,7 +39,6 @@ function buildScheduleContext(overrides: Partial<ScheduleContextValue> = {}): Sc
 type ScheduleProvidersProps = Partial<ScheduleSettings> &
   Partial<ScheduleContextValue> & { children: ReactNode; sessions?: Array<ScheduleSession> };
 
-// The three providers a component of the Schedule lives under, around a component under test.
 export function ScheduleProviders({ children, sessions = [], ...overrides }: ScheduleProvidersProps) {
   const { tracks, scheduleDays, displayedDays, displayedTimes, ...actions } = overrides;
   const [stores] = useState(() => ({

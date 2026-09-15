@@ -12,8 +12,6 @@ export type ZoomHandlers = {
   canZoomOut: boolean;
 };
 
-// The handlers keep their identity as long as the zoom level does not change, so the memoized header renders on a
-// zoom and on nothing else.
 export function useZoomHandlers(initialZoom = ZOOM_LEVEL_DEFAULT) {
   const [level, setLevel] = useState(initialZoom);
 

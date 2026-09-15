@@ -3,10 +3,6 @@ import type { ScheduleSession } from '../components/schedule.types.ts';
 import type { ScheduleTime } from '../models/schedule-time.ts';
 import type { PlacementOutcome, SwapOutcome } from '../models/session-placement.ts';
 
-// What a descendant of a Schedule may ask of it. Everything here is stable by construction: the Schedule time, the
-// Session mutations and the callbacks that change what is displayed. The Sessions and the display settings are not
-// here, they live in the schedule store, so that a mutation never re-renders a context reader.
-
 export type EditedSession = { mode: 'create' | 'edit'; session: ScheduleSession };
 
 export type ScheduleContextValue = {

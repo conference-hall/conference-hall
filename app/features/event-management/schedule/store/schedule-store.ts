@@ -3,12 +3,6 @@ import { deepEqual } from '~/shared/utils/deep-equal.ts';
 import type { ScheduleSession, Track } from '../components/schedule.types.ts';
 import { dayKeyOf } from '../models/day-grid.ts';
 
-// The projection of the Schedule the client draws. The router stays the source of truth: the provider pushes the
-// Sessions it derives from the loader data and the in-flight mutations into `replace` after every render, and the
-// store diffs them by content so that an untouched Session, an untouched (day, Track) column and untouched
-// settings keep their reference. Readers subscribe to the slice they draw, so a mutation re-renders only the
-// Sessions it touches and the columns whose content changed. The store holds nothing the router does not know.
-
 type Listener = () => void;
 
 export type ScheduleSettings = {
@@ -41,19 +35,18 @@ export class ScheduleStore {
     };
   };
 
-  // One getter per slice, used as the client snapshot and as the server snapshot alike: the stored reference.
-  getSession = (id: string): ScheduleSession | undefined => this.byId.get(id);
+  getSession = (id: string) => this.byId.get(id);
 
-  getAll = (): Array<ScheduleSession> => this.all;
+  getAll = () => this.all;
 
-  getColumnIds = (dayKey: number, trackId: string): Array<string> => {
+  getColumnIds = (dayKey: number, trackId: string) => {
     return this.columns.get(columnKey(dayKey, trackId)) ?? EMPTY_COLUMN;
   };
 
-  getSettings = (): ScheduleSettings => this.settings;
+  getSettings = () => this.settings;
 
-  // Projects a new state of the router. Notifies only when something the readers draw actually changed.
-  replace({ sessions, settings }: ScheduleSnapshot): void {
+  // Apply only changed sessions and settings.
+  replace({ sessions, settings }: ScheduleSnapshot) {
     const sessionsChanged = this.replaceSessions(sessions);
     const settingsChanged = !deepEqual(this.settings, settings);
     if (settingsChanged) this.settings = settings;
@@ -63,7 +56,7 @@ export class ScheduleStore {
   }
 
   // Keeps the previous object of every Session equal by content, so an untouched Session never re-renders.
-  private replaceSessions(sessions: Array<ScheduleSession>): boolean {
+  private replaceSessions(sessions: Array<ScheduleSession>) {
     const next = new Map<string, ScheduleSession>();
     let changed = sessions.length !== this.byId.size;
 

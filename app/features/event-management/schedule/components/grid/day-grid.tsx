@@ -8,14 +8,9 @@ import { GridGhost } from './grid-ghost.tsx';
 import { gridArea, type GridOrigin, SessionItem } from './session-item.tsx';
 import { TrackColumn } from './track-column.tsx';
 
-// One displayed day, as one CSS grid: header rows, then one implicit row per five-minute slot. The hour lines, the
-// gutter labels, the Track columns, the Session blocks, the free-slot hover and the ghost are all grid items, and
-// there is no element per slot. The day is memoized on stable props and takes no zoom: the row height is the
-// `--slot-height` custom property of the grid root, so zooming re-renders nothing here.
-
 type DayGridProps = { grid: DayGrid; gutter: boolean; multipleDays: boolean };
 
-const HEADER_TOP = '4rem'; // the sticky schedule header height (h-16)
+const HEADER_TOP = '4rem';
 const GUTTER_WIDTH = '3rem';
 
 export const Day = memo(function Day({ grid, gutter, multipleDays }: DayGridProps) {
@@ -25,7 +20,7 @@ export const Day = memo(function Day({ grid, gutter, multipleDays }: DayGridProp
 
   const firstSlotRow = multipleDays ? 4 : 3;
   const origin = useMemo<GridOrigin>(() => ({ gutter, firstSlotRow }), [gutter, firstSlotRow]);
-  const { hoverRef, onPointerMove, onPointerLeave } = useHover(grid, origin);
+  const { hoverRef, onPointerMove, onPointerLeave } = useFreeSlotHover(grid, origin);
 
   const gutterCols = gutter ? 1 : 0;
   const trackHeaderRow = multipleDays ? 2 : 1;
@@ -130,7 +125,7 @@ export const Day = memo(function Day({ grid, gutter, multipleDays }: DayGridProp
 
       {/* sessions */}
       {grid.tracks.map((track) => (
-        <ColumnBlocks key={track.id} grid={grid} trackId={track.id} origin={origin} />
+        <TrackSessions key={track.id} grid={grid} trackId={track.id} origin={origin} />
       ))}
 
       <GridGhost grid={grid} origin={origin} />
@@ -138,18 +133,20 @@ export const Day = memo(function Day({ grid, gutter, multipleDays }: DayGridProp
   );
 });
 
-type ColumnBlocksProps = { grid: DayGrid; trackId: string; origin: GridOrigin };
+// TrackSessions : display sessions for a single track.
+type TrackSessionsProps = { grid: DayGrid; trackId: string; origin: GridOrigin };
 
-// The blocks of one Track column. Subscribes to the ids of the column: a mutation inside the column re-renders
-// only the Session it touches, a mutation elsewhere re-renders nothing here.
-const ColumnBlocks = memo(function ColumnBlocks({ grid, trackId, origin }: ColumnBlocksProps) {
+const TrackSessions = memo(function TrackSessions({ grid, trackId, origin }: TrackSessionsProps) {
   const ids = useColumnIds(grid.dayKey, trackId);
   return ids.map((id) => <SessionItem key={id} id={id} grid={grid} origin={origin} />);
 });
 
-function HourLabel({ grid, hour }: { grid: DayGrid; hour: number }) {
-  const { scheduleTime } = useScheduleContext();
+// HourLabel: displays the time label for a given hour.
+type HourLabelProps = { grid: DayGrid; hour: number };
+
+function HourLabel({ grid, hour }: HourLabelProps) {
   const { i18n } = useTranslation();
+  const { scheduleTime } = useScheduleContext();
   const time = scheduleTime.formatTime(dateOfSlot(grid, hour * SLOTS_PER_HOUR), i18n.language);
   return (
     <time className="absolute -top-2 right-2" dateTime={time}>
@@ -158,9 +155,8 @@ function HourLabel({ grid, hour }: { grid: DayGrid; hour: number }) {
   );
 }
 
-// The free-slot highlight: one element per day, placed by direct DOM mutation from a frame-throttled pointer move,
-// so following the pointer costs no render. It hides over a Session block and for as long as a gesture lasts.
-function useHover(grid: DayGrid, origin: GridOrigin) {
+// useFreeSlotHover: one element per day, placed by direct DOM mutation from a frame-throttled pointer move.
+function useFreeSlotHover(grid: DayGrid, origin: GridOrigin) {
   const gestureStore = useGestureStore();
   const hoverRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef(0);

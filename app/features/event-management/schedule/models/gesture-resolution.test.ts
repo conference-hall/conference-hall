@@ -166,7 +166,7 @@ describe('resolveResize', () => {
 
   it('clamps to the extension window when the handle passes over the next Session', () => {
     const next = session('next', 'track-1', at(11), at(12));
-    const end = resizeWindowEnd(grid, [dragged, next], dragged, 12);
+    const end = resizeWindowEnd(grid, [dragged, next], dragged.id, dragged.trackId, 12);
     const gesture = resolveResize({ session: dragged, columnRect, grid, draggedTop: yOfSlot(60), windowEnd: end });
 
     expect(end).toBe(36);

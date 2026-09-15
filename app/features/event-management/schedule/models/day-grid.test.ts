@@ -3,7 +3,6 @@ import {
   blockOf,
   dateOfSlot,
   dayKeyOf,
-  draftWindowEnd,
   makeDayGrid,
   resizeWindowEnd,
   sessionAt,
@@ -121,37 +120,35 @@ describe('DayGrid', () => {
     });
   });
 
-  describe('draftWindowEnd', () => {
+  describe('resizeWindowEnd', () => {
     it('extends to the end of the displayed day when the Track has no next Session', () => {
-      expect(draftWindowEnd(grid, [], 'track-1', 12)).toBe(180);
+      expect(resizeWindowEnd(grid, [], 'draft-session', 'track-1', 12)).toBe(180);
     });
 
     it('extends to the next Session of the Track', () => {
       const sessions = [session('s1', 'track-1', at(10), at(11))];
-      expect(draftWindowEnd(grid, sessions, 'track-1', 12)).toBe(24);
+      expect(resizeWindowEnd(grid, sessions, 'draft-session', 'track-1', 12)).toBe(24);
     });
 
     it('ignores the Sessions of the other Tracks', () => {
       const sessions = [session('s1', 'track-2', at(10), at(11))];
-      expect(draftWindowEnd(grid, sessions, 'track-1', 12)).toBe(180);
+      expect(resizeWindowEnd(grid, sessions, 'draft-session', 'track-1', 12)).toBe(180);
     });
 
     it('gives one slot when the start slot is already covered', () => {
       const sessions = [session('s1', 'track-1', at(9), at(10))];
-      expect(draftWindowEnd(grid, sessions, 'track-1', 12)).toBe(13);
+      expect(resizeWindowEnd(grid, sessions, 'draft-session', 'track-1', 12)).toBe(13);
     });
-  });
 
-  describe('resizeWindowEnd', () => {
     it('ignores the Session being resized and stops at the next one', () => {
       const resized = session('s1', 'track-1', at(9), at(10));
       const next = session('s2', 'track-1', at(11), at(12));
-      expect(resizeWindowEnd(grid, [resized, next], resized, 12)).toBe(36);
+      expect(resizeWindowEnd(grid, [resized, next], 's1', 'track-1', 12)).toBe(36);
     });
 
     it('extends to the end of the displayed day without a next Session', () => {
       const resized = session('s1', 'track-1', at(9), at(10));
-      expect(resizeWindowEnd(grid, [resized], resized, 12)).toBe(180);
+      expect(resizeWindowEnd(grid, [resized], 's1', 'track-1', 12)).toBe(180);
     });
   });
 

@@ -19,11 +19,13 @@ const NEW_SESSION_DURATION = 30; // minutes
 type Props = { zoomHandlers: ZoomHandlers };
 
 export const ScheduleHeader = memo(function ScheduleHeader({ zoomHandlers }: Props) {
-  const { displayedDays, displayedTimes, tracks } = useSettings();
-  const { onChangeDisplayTimes, onOpenSession } = useScheduleContext();
   const { t } = useTranslation();
-  const [tracksModalOpen, setTracksModalOpen] = useState(false);
+
+  const { displayedDays, displayedTimes, tracks } = useSettings();
+  const { onOpenSession } = useScheduleContext();
   const scheduleFullscreen = useScheduleFullscreen();
+
+  const [tracksModalOpen, setTracksModalOpen] = useState(false);
 
   const onOpenNewSession = useCallback(() => {
     const day = displayedDays.at(0);
@@ -52,11 +54,11 @@ export const ScheduleHeader = memo(function ScheduleHeader({ zoomHandlers }: Pro
     >
       <div className="flex shrink items-center gap-3">
         <DisplayDays />
-        <DisplayTimes displayedTimes={displayedTimes} onChangeDisplayTime={onChangeDisplayTimes} />
+        <DisplayTimes />
       </div>
 
       <div className="flex shrink items-center gap-3">
-        <Button iconLeft={PlusIcon} onClick={onOpenNewSession} disabled={tracks.length === 0}>
+        <Button iconLeft={PlusIcon} onClick={onOpenNewSession}>
           {t('event-management.schedule.actions.new-session')}
         </Button>
         <OptionsMenu openTracksModal={() => setTracksModalOpen(true)} zoomHandlers={zoomHandlers} />

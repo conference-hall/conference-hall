@@ -9,14 +9,8 @@ import { useScheduleContext } from './schedule-context.tsx';
 const { scheduleDays, displayedTimes } = buildScheduleSettings();
 const day = scheduleDays[0];
 
-const session = {
-  ...SessionMutations.blank({ trackId: 'track-1', timeslot: { start: day, end: day } }),
-  id: 'session-1',
-  name: 'Break',
-};
-
 function ScheduleUnderTest() {
-  const settings = useSettings();
+  const { tracks, scheduleDays, displayedTimes } = useSettings();
   const { scheduleTime } = useScheduleContext();
   const stored = useSession('session-1');
   const ids = useColumnIds(dayKeyOf(day), 'track-1');
@@ -24,11 +18,9 @@ function ScheduleUnderTest() {
 
   return (
     <>
-      <p>Tracks: {settings.tracks.map((track) => track.name).join(', ')}</p>
-      <p>Days: {settings.scheduleDays.length}</p>
-      <p>
-        Times: {settings.displayedTimes.start}-{settings.displayedTimes.end}
-      </p>
+      <p>Tracks: {tracks.map((track) => track.name).join(', ')}</p>
+      <p>Days: {scheduleDays.length}</p>
+      <p>Times: {`${displayedTimes.start}-${displayedTimes.end}`}</p>
       <p>Start: {scheduleTime.formatTime(day, 'en')}</p>
       <p>Session: {stored?.name ?? 'none'}</p>
       <p>Column: {ids.join(', ') || 'empty'}</p>
@@ -39,6 +31,12 @@ function ScheduleUnderTest() {
 
 describe('the providers of a Schedule', () => {
   it('serves the display settings, the Schedule time, the stored Sessions and the live gesture', async () => {
+    const session = {
+      ...SessionMutations.blank({ trackId: 'track-1', timeslot: { start: day, end: day } }),
+      id: 'session-1',
+      name: 'Break',
+    };
+
     await page.render(
       <ScheduleProviders sessions={[session]}>
         <ScheduleUnderTest />

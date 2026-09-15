@@ -4,8 +4,8 @@ import { useScheduleContext } from '../../context/schedule-context.tsx';
 import {
   type DayGrid,
   dateOfSlot,
-  draftWindowEnd,
   extendedEndSlot,
+  resizeWindowEnd,
   sessionAt,
   slotAtY,
 } from '../../models/day-grid.ts';
@@ -16,7 +16,6 @@ import type { Track } from '../schedule.types.ts';
 import { columnKey, columnRectOf, COLUMN_TYPE, type ColumnPayload, columnUnderBlock, readDragSource } from './dnd.ts';
 import { useConflictReport } from './use-conflict-report.ts';
 
-// A draft grows downwards only, from one slot to the last one before the next Session of its Track.
 type Draft = { startSlot: number; windowEnd: number };
 
 type TrackColumnProps = {
@@ -27,8 +26,6 @@ type TrackColumnProps = {
   style?: CSSProperties;
 };
 
-// One Track column of one displayed day: the single drop target of the column, whatever the slot, and the surface
-// a Session draft is drawn on. It renders no slot element and subscribes to nothing, so it never re-renders.
 export const TrackColumn = memo(function TrackColumn({ grid, track, colIndex, className, style }: TrackColumnProps) {
   const store = useScheduleStore();
   const gestureStore = useGestureStore();
@@ -48,21 +45,19 @@ export const TrackColumn = memo(function TrackColumn({ grid, track, colIndex, cl
   const slotUnder = (event: PointerEvent<HTMLDivElement>) =>
     slotAtY(grid, columnRectOf(event.currentTarget), event.clientY);
 
-  // A draft starts on a free slot and captures the pointer: it is then extended and released wherever the pointer
-  // goes, and it never leaves its Track.
-  const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+  const handleDraftSessionStart = (event: PointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return;
 
     const slot = slotUnder(event);
     if (sessionAt(store.getAll(), track.id, dateOfSlot(grid, slot))) return;
 
-    const windowEnd = draftWindowEnd(grid, store.getAll(), track.id, slot);
+    const windowEnd = resizeWindowEnd(grid, store.getAll(), 'session-draft', track.id, slot);
     draftRef.current = { startSlot: slot, windowEnd };
     event.currentTarget.setPointerCapture(event.pointerId);
     gestureStore.set({ kind: 'draft', dayKey: grid.dayKey, trackId: track.id, slot, endSlot: slot + 1 });
   };
 
-  const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
+  const handleDraftSessionResize = (event: PointerEvent<HTMLDivElement>) => {
     const draft = draftRef.current;
     if (!draft) return;
 
@@ -75,9 +70,7 @@ export const TrackColumn = memo(function TrackColumn({ grid, track, colIndex, cl
     });
   };
 
-  // The release decides the end of the draft, wherever the pointer is: the browser may have coalesced away the
-  // last moves, and a plain click creates a five-minute Session.
-  const onPointerUp = async (event: PointerEvent<HTMLDivElement>) => {
+  const handleDraftSessionEnd = async (event: PointerEvent<HTMLDivElement>) => {
     const draft = draftRef.current;
     if (!draft) return;
     draftRef.current = null;
@@ -90,7 +83,7 @@ export const TrackColumn = memo(function TrackColumn({ grid, track, colIndex, cl
     reportConflict(await addSession(SessionMutations.blank({ trackId: track.id, timeslot })));
   };
 
-  const onPointerCancel = (event: PointerEvent<HTMLDivElement>) => {
+  const handleDraftSessionCancel = (event: PointerEvent<HTMLDivElement>) => {
     if (!draftRef.current) return;
     draftRef.current = null;
     event.currentTarget.releasePointerCapture(event.pointerId);
@@ -106,10 +99,10 @@ export const TrackColumn = memo(function TrackColumn({ grid, track, colIndex, cl
       aria-label={track.name}
       className={className}
       style={style}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerCancel}
+      onPointerDown={handleDraftSessionStart}
+      onPointerMove={handleDraftSessionResize}
+      onPointerUp={handleDraftSessionEnd}
+      onPointerCancel={handleDraftSessionCancel}
     />
   );
 });

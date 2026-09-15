@@ -20,10 +20,6 @@ const resize = (endSlot: number): Gesture => ({
   endSlot,
 });
 
-const daySlice = (gesture: Gesture | null) => (gesture && gesture.dayKey === DAY ? gesture : null);
-const resizeSlice = (gesture: Gesture | null) =>
-  gesture?.kind === 'resize' && gesture.sessionId === 's1' ? gesture.endSlot : null;
-
 describe('GestureStore', () => {
   it('holds no gesture until one starts, and clears it back', () => {
     const store = new GestureStore();
@@ -54,6 +50,11 @@ describe('GestureStore', () => {
   });
 
   it('keeps the day slice stable while the target does not change', () => {
+    const daySlice = (gesture: Gesture | null) => {
+      if (!gesture || gesture.kind !== 'move') return null;
+      return gesture;
+    };
+
     const store = new GestureStore();
     store.set(move(24));
     const slice = daySlice(store.get());
@@ -65,6 +66,11 @@ describe('GestureStore', () => {
   });
 
   it('keeps the resize slice stable while the end slot does not change, and drops it for another gesture', () => {
+    const resizeSlice = (gesture: Gesture | null) => {
+      if (!gesture || gesture.kind !== 'resize') return null;
+      return gesture.endSlot;
+    };
+
     const store = new GestureStore();
     store.set(resize(30));
 

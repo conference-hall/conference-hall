@@ -12,9 +12,11 @@ const NEXT = 1;
 const PREVIOUS = -1;
 
 export const DisplayDays = memo(function DisplayDays() {
+  const { t, i18n } = useTranslation();
+
   const { scheduleDays, displayedDays } = useSettings();
   const { scheduleTime, onChangeDisplayDays } = useScheduleContext();
-  const { t, i18n } = useTranslation();
+
   const scheduleStartDay = scheduleDays.at(0)!;
   const scheduleEndDay = scheduleDays.at(-1)!;
   const displayedStartDay = displayedDays.at(0)!;

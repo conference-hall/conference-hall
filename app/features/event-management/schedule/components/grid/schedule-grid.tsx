@@ -21,40 +21,34 @@ import { Day } from './day-grid.tsx';
 import { type ColumnPayload, columnKey, columnRectOf, readDragSource } from './dnd.ts';
 import { useConflictReport } from './use-conflict-report.ts';
 
-// The grid of the displayed days, and the only place a drag operation is read. It extracts rectangles from the
-// operation, hands them to the gesture resolution model, publishes the resolved gesture so the ghost and the
-// resized block can draw it, and at the drop turns it into a Session mutation. The zoom is one custom property
-// here: no pixel goes any further down.
-
 type ScheduleGridProps = { zoomLevel: number };
 
-// What the resolution needs from a drag operation of the library.
 type Operation = {
   source: Parameters<typeof readDragSource>[0];
   target: { data: unknown; element?: Element | null } | null;
   shape: { current: { boundingRectangle: { top: number } } } | null;
 };
 
-// The own column and extension window of a resize, measured once when the gesture starts.
 type ResizeStart = { grid: DayGrid; columnRect: ColumnRect; windowEnd: number };
 
 export function ScheduleGrid({ zoomLevel }: ScheduleGridProps) {
-  const { tracks, displayedDays, displayedTimes } = useSettings();
   const store = useScheduleStore();
   const gestureStore = useGestureStore();
+  const { tracks, displayedDays, displayedTimes } = useSettings();
   const { moveSession, resizeSession, swapSessions } = useScheduleContext();
   const reportConflict = useConflictReport();
 
   const rootRef = useRef<HTMLDivElement>(null);
   const resizeRef = useRef<ResizeStart | null>(null);
 
+  // Build the grid for each displayed day.
   const grids = useMemo(
     () => displayedDays.map((day, index) => makeDayGrid(day, index, displayedTimes, tracks)),
     [displayedDays, displayedTimes, tracks],
   );
   const gridsByKey = useMemo(() => new Map(grids.map((grid) => [grid.dayKey, grid])), [grids]);
 
-  // A resize stays in the Track and the day of its own Session, and may only reach the next Session of that Track.
+  // When starting to resize a session, compute the grid, block, and column it belongs to.
   const startResize = (session: ScheduleSession) => {
     const grid = gridsByKey.get(dayKeyOf(session.timeslot.start));
     const block = grid && blockOf(grid, session);
@@ -64,10 +58,11 @@ export function ScheduleGrid({ zoomLevel }: ScheduleGridProps) {
     return {
       grid,
       columnRect: columnRectOf(column),
-      windowEnd: resizeWindowEnd(grid, store.getAll(), session, block.slot),
+      windowEnd: resizeWindowEnd(grid, store.getAll(), session.id, session.trackId, block.slot),
     };
   };
 
+  // Resolve a drag operation into a gesture
   const resolve = (operation: Operation): Gesture | null => {
     const source = readDragSource(operation.source);
     const draggedTop = operation.shape?.current.boundingRectangle.top;
@@ -91,6 +86,7 @@ export function ScheduleGrid({ zoomLevel }: ScheduleGridProps) {
     });
   };
 
+  // Apply and submit the gesture operation to the server.
   const apply = async (gesture: Gesture) => {
     const grid = gridsByKey.get(gesture.dayKey);
     if (!grid || gesture.kind === 'draft') return;

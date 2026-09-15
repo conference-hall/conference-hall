@@ -1,18 +1,20 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { ClockIcon } from '@heroicons/react/24/outline';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/button.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { formatTime } from '~/shared/datetimes/datetimes.ts';
+import { useScheduleContext } from '../../context/schedule-context.tsx';
+import { useSettings } from '../../store/schedule-store.ts';
 
-type Props = {
-  displayedTimes: { start: number; end: number };
-  onChangeDisplayTime: (start: number, end: number) => void;
-};
-
-export function DisplayTimes({ displayedTimes, onChangeDisplayTime }: Props) {
+export const DisplayTimes = memo(function DisplayTimes() {
   const { t, i18n } = useTranslation();
+
+  const { displayedTimes } = useSettings();
+  const { onChangeDisplayTimes } = useScheduleContext();
+
   const { start, end } = displayedTimes;
 
   const timeStart = formatTime(start, { format: 'short', locale: i18n.language });
@@ -34,9 +36,9 @@ export function DisplayTimes({ displayedTimes, onChangeDisplayTime }: Props) {
           </Text>
         </div>
         <div className="p-4">
-          <TimeRangeInput start={start} end={end} step={60} onChange={onChangeDisplayTime} />
+          <TimeRangeInput start={start} end={end} step={60} onChange={onChangeDisplayTimes} />
         </div>
       </PopoverPanel>
     </Popover>
   );
-}
+});

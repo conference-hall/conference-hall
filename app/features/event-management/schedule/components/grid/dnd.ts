@@ -1,11 +1,7 @@
 import { type CollisionDetector, CollisionPriority, CollisionType } from '@dnd-kit/abstract';
-import { Feedback } from '@dnd-kit/dom';
 import type { ColumnRect } from '../../models/day-grid.ts';
 import type { DragSource } from '../../models/gesture-resolution.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
-
-// The vocabulary the grid shares with the drag and drop library, and the only place that vocabulary is named. What
-// a drag means is decided by the gesture resolution model, from the rectangles read here.
 
 export const DRAG_SOURCES = { move: 'move-session', resize: 'resize-session' } as const;
 
@@ -15,11 +11,8 @@ export type SessionPayload = { session: ScheduleSession };
 
 export type ColumnPayload = { dayKey: number; trackId: string };
 
-// How a (day, Track) column is named in the DOM and to the drag and drop library.
+// Generates a unique key for a column in the grid.
 export const columnKey = (dayKey: number, trackId: string) => `${dayKey}:${trackId}`;
-
-// The dragged block itself follows the pointer: no clone promoted over the grid, no placeholder left in its row.
-export const MOVE_FEEDBACK = [Feedback.configure({ feedback: 'move', dropAnimation: null })];
 
 type DragEntry = { type?: string | number | symbol | object; data: Record<string, unknown> };
 
@@ -40,8 +33,7 @@ export function columnRectOf(element: Element): ColumnRect {
   return { top, height };
 }
 
-// The Track column under the horizontal centre of the dragged block. Only `x` is tested: the Schedule time comes
-// from the top edge of the block, resolved against the column rectangle.
+// Detects the Track column under the horizontal centre of the dragged block.
 export const columnUnderBlock: CollisionDetector = ({ dragOperation, droppable }) => {
   const shape = dragOperation.shape?.current;
   if (!shape || !droppable.shape) return null;
