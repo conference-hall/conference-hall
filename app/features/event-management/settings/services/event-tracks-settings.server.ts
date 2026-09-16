@@ -14,13 +14,14 @@ export class EventTracksSettings {
     const { event, permissions } = this.authorizedEvent;
     if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
-    // An empty duration field is stripped by conform, store it as null to reset it
-    const durationInMinutes = data.durationInMinutes ?? null;
-
     if (data.id) {
       return db.eventFormat.update({
         where: { id: data.id },
-        data: { name: data.name, description: data.description, durationInMinutes },
+        data: {
+          name: data.name,
+          description: data.description,
+          durationInMinutes: data.durationInMinutes ?? null,
+        },
       });
     }
 
@@ -29,7 +30,7 @@ export class EventTracksSettings {
       data: {
         name: data.name,
         description: data.description,
-        durationInMinutes,
+        durationInMinutes: data.durationInMinutes ?? null,
         order: formatsCount,
         event: { connect: { id: event.id } },
       },
