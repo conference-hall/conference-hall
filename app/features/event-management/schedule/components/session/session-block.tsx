@@ -1,6 +1,7 @@
 import { cx } from 'class-variance-authority';
+import { differenceInMinutes } from 'date-fns';
 import { useTranslation } from 'react-i18next';
-import { formatTimeDifference } from '~/shared/datetimes/datetimes.ts';
+import { formatDuration } from '~/shared/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
 import { useScheduleContext } from '../../context/schedule-context.tsx';
@@ -87,7 +88,7 @@ function SessionTime({ timeslot, scheduleTime }: SessionTimeProps) {
 
   const start = scheduleTime.formatTime(timeslot.start, locale);
   const end = scheduleTime.formatTime(timeslot.end, locale);
-  const minutes = formatTimeDifference(timeslot.start, timeslot.end);
+  const minutes = formatDuration(differenceInMinutes(timeslot.end, timeslot.start), locale);
 
   return (
     <p className="text-[10px]">

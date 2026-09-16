@@ -4,8 +4,8 @@ import {
   formatDatetime,
   formatDay,
   formatDistance,
+  formatDuration,
   formatTime,
-  formatTimeDifference,
   getDatesRange,
   getMinutesFromStartOfDay,
   setMinutesFromStartOfDay,
@@ -246,33 +246,30 @@ describe('datetimes', () => {
     });
   });
 
-  describe('#formatTimeDifference', () => {
-    it('formats the difference between two dates', async () => {
-      const date1 = new Date('2020-02-26T01:10:00.000Z');
-      const date2 = new Date('2020-02-26T03:20:00.000Z');
-      const formatted = formatTimeDifference(date1, date2);
+  describe('#formatDuration', () => {
+    it('formats a duration in minutes', async () => {
+      const formatted = formatDuration(130, 'en');
       expect(formatted).toEqual('2h 10m');
     });
 
     it('handles zero hours case', async () => {
-      const date1 = new Date('2020-02-26T01:10:00.000Z');
-      const date2 = new Date('2020-02-26T01:20:00.000Z');
-      const formatted = formatTimeDifference(date1, date2);
+      const formatted = formatDuration(10, 'en');
       expect(formatted).toEqual('10m');
     });
 
     it('handles zero minutes case', async () => {
-      const date1 = new Date('2020-02-26T01:00:00.000Z');
-      const date2 = new Date('2020-02-26T03:00:00.000Z');
-      const formatted = formatTimeDifference(date1, date2);
+      const formatted = formatDuration(120, 'en');
       expect(formatted).toEqual('2h');
     });
 
-    it('works with dates in reverse order', async () => {
-      const date1 = new Date('2020-02-26T03:20:00.000Z');
-      const date2 = new Date('2020-02-26T01:10:00.000Z');
-      const formatted = formatTimeDifference(date1, date2);
-      expect(formatted).toEqual('-2h -10m');
+    it('returns an empty string for a zero duration', async () => {
+      const formatted = formatDuration(0, 'en');
+      expect(formatted).toEqual('');
+    });
+
+    it('carries a single minus sign for negative durations', async () => {
+      const formatted = formatDuration(-130, 'en');
+      expect(formatted).toEqual('-2h 10m');
     });
   });
 
