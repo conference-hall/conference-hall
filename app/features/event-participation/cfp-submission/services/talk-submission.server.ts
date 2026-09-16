@@ -160,7 +160,12 @@ export class TalkSubmission {
           isCurrentUser: this.userId === speaker.userId,
         }))
         .toSorted((a, b) => (a.isCurrentUser ? -1 : 0) - (b.isCurrentUser ? -1 : 0)),
-      formats: proposal.formats.map((f) => ({ id: f.id, name: f.name, description: f.description })),
+      formats: proposal.formats.map((f) => ({
+        id: f.id,
+        name: f.name,
+        description: f.description,
+        durationInMinutes: f.durationInMinutes,
+      })),
       categories: proposal.categories.map((c) => ({ id: c.id, name: c.name, description: c.description })),
     };
   }

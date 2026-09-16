@@ -1,7 +1,7 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
-import type { TrackSaveData } from './event-tracks-settings.schema.server.ts';
+import type { CategorySaveData, FormatSaveData } from './event-tracks-settings.schema.server.ts';
 
 export class EventTracksSettings {
   constructor(private authorizedEvent: AuthorizedEvent) {}
@@ -10,14 +10,18 @@ export class EventTracksSettings {
     return new EventTracksSettings(authorizedEvent);
   }
 
-  async saveFormat(data: TrackSaveData) {
+  async saveFormat(data: FormatSaveData) {
     const { event, permissions } = this.authorizedEvent;
     if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
     if (data.id) {
       return db.eventFormat.update({
         where: { id: data.id },
-        data: { name: data.name, description: data.description },
+        data: {
+          name: data.name,
+          description: data.description,
+          durationInMinutes: data.durationInMinutes ?? null,
+        },
       });
     }
 
@@ -26,6 +30,7 @@ export class EventTracksSettings {
       data: {
         name: data.name,
         description: data.description,
+        durationInMinutes: data.durationInMinutes ?? null,
         order: formatsCount,
         event: { connect: { id: event.id } },
       },
@@ -48,7 +53,7 @@ export class EventTracksSettings {
     });
   }
 
-  async saveCategory(data: TrackSaveData) {
+  async saveCategory(data: CategorySaveData) {
     const { event, permissions } = this.authorizedEvent;
     if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 

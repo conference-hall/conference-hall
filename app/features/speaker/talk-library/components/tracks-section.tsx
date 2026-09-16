@@ -2,8 +2,9 @@ import { FolderIcon, RectangleStackIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
+import { formatDuration } from '~/shared/datetimes/datetimes.ts';
 
-type Track = { id: string; name: string; description?: string | null };
+type Track = { id: string; name: string; description?: string | null; durationInMinutes?: number | null };
 
 type Props = {
   formats: Array<Track>;
@@ -52,6 +53,8 @@ type TracksBlockProps = {
 };
 
 function TracksBlock({ icon: Icon, label, emptyLabel, tracks }: TracksBlockProps) {
+  const { i18n } = useTranslation();
+
   return (
     <div>
       <dt className="flex items-center gap-2 text-sm leading-6 font-medium text-gray-900">
@@ -63,10 +66,15 @@ function TracksBlock({ icon: Icon, label, emptyLabel, tracks }: TracksBlockProps
         {tracks.length === 0 ? (
           <Subtitle>{emptyLabel}</Subtitle>
         ) : (
-          tracks.map(({ id, name, description }) => (
+          tracks.map(({ id, name, description, durationInMinutes }) => (
             <div key={id}>
               <Text size="s" weight="medium">
                 {name}
+                {durationInMinutes ? (
+                  <Text as="span" variant="secondary" weight="normal" className="ml-2">
+                    {formatDuration(durationInMinutes, i18n.language)}
+                  </Text>
+                ) : null}
               </Text>
               {description ? <Subtitle>{description}</Subtitle> : null}
             </div>

@@ -17,6 +17,7 @@ test('adds, edits and removes a format', async ({ context, page }) => {
   await tracksPage.formatModal.waitFor();
   await tracksPage.fill(tracksPage.nameInput, 'Quickie');
   await tracksPage.fill(tracksPage.descriptionInput, 'A short talk');
+  await tracksPage.fill(tracksPage.durationInput, '15');
   await tracksPage.saveFormatButton.click();
 
   // Check the new track format
@@ -24,14 +25,17 @@ test('adds, edits and removes a format', async ({ context, page }) => {
   const format = tracksPage.formatsList.first();
   await expect(format).toContainText('Quickie');
   await expect(format).toContainText('A short talk');
+  await expect(format).toContainText('15m');
 
   // Edit the track format
   await format.getByRole('button', { name: 'Edit' }).click();
   await tracksPage.formatModal.waitFor();
   await expect(tracksPage.nameInput).toHaveValue('Quickie');
   await expect(tracksPage.descriptionInput).toHaveValue('A short talk');
+  await expect(tracksPage.durationInput).toHaveValue('15');
   await tracksPage.fill(tracksPage.nameInput, 'Conference');
   await tracksPage.fill(tracksPage.descriptionInput, 'A long talk');
+  await tracksPage.fill(tracksPage.durationInput, '45');
   await tracksPage.saveFormatButton.click();
 
   // Change the format settings
@@ -44,6 +48,7 @@ test('adds, edits and removes a format', async ({ context, page }) => {
   await expect(tracksPage.formatsList).toHaveCount(1);
   await expect(format).toContainText('Conference');
   await expect(format).toContainText('A long talk');
+  await expect(format).toContainText('45m');
   await expect(tracksPage.formatsRequiredSwitch).toBeChecked();
   await expect(tracksPage.formatsAllowMultipleSwitch).toBeChecked();
 

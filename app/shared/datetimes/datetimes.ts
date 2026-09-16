@@ -1,13 +1,4 @@
-import {
-  addDays,
-  addMinutes,
-  differenceInMinutes,
-  formatDuration,
-  intervalToDuration,
-  isSameDay,
-  setMinutes,
-  startOfDay,
-} from 'date-fns';
+import { addDays, addMinutes, differenceInMinutes, isSameDay, setMinutes, startOfDay } from 'date-fns';
 
 type FormatType = 'short' | 'medium' | 'long';
 type FormatOption = { format: FormatType; locale: string; timezone?: string };
@@ -124,32 +115,28 @@ export function formatDistance(date: Date, locale: string, direction: 'from' | '
   return rtf.format(Math.round(duration / 525600), 'year');
 }
 
-// todo(i18n) use Intl.DurationFormat instead of date-fns (needs Node 23+)
 /**
- * Format the difference between two dates to a string like '2h 10m'
+ * Format a duration in minutes to a string like '2h 10m' in english, '2h 10min' in french
  * Note:
- * - Zero values are omitted (e.g. '2h' instead of '2h 0m')
- * - When date1 > date2, negative values are returned (e.g. '-2h -10m')
+ * - Zero values are omitted (e.g. '2h' instead of '2h 0m'), a zero duration returns an empty string
+ * - Negative durations carry a single minus sign (e.g. '-2h 10m')
+ * - Falls back to a non localized format when Intl.DurationFormat is not supported by the browser
  */
-export function formatTimeDifference(date1: Date, date2: Date) {
-  const duration = intervalToDuration({ start: date1, end: date2 });
-  return formatDuration(duration, {
-    format: ['hours', 'minutes'],
-    zero: false, // Don't include zero values
-    delimiter: ' ',
-    locale: {
-      formatDistance: (token, count) => {
-        switch (token) {
-          case 'xHours':
-            return `${count}h`;
-          case 'xMinutes':
-            return `${count}m`;
-          default:
-            return '';
-        }
-      },
-    },
-  });
+export function formatDuration(minutes: number, locale: string): string {
+  const isNegative = minutes < 0;
+  const absoluteMinutes = Math.abs(minutes);
+  const duration = { hours: Math.trunc(absoluteMinutes / 60), minutes: absoluteMinutes % 60 };
+
+  if (typeof Intl.DurationFormat !== 'function') {
+    const parts = [];
+    if (duration.hours) parts.push(`${duration.hours}h`);
+    if (duration.minutes) parts.push(`${duration.minutes}m`);
+    const formatted = parts.join(' ');
+    return formatted && isNegative ? `-${formatted}` : formatted;
+  }
+
+  const signedDuration = isNegative ? { hours: -duration.hours, minutes: -duration.minutes } : duration;
+  return new Intl.DurationFormat(locale, { style: 'narrow' }).format(signedDuration);
 }
 
 /** Returns total of minutes from the start of a day */

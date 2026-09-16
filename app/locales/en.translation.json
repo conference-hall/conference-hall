@@ -789,6 +789,7 @@
   "event-management.settings.tracks.categories.save": "Save category",
   "event-management.settings.tracks.feedbacks.updated": "Track setting updated.",
   "event-management.settings.tracks.formats.description": "Define talk formats available for your event proposals.",
+  "event-management.settings.tracks.formats.duration.label": "Duration (minutes)",
   "event-management.settings.tracks.formats.heading": "Format track",
   "event-management.settings.tracks.formats.multiple.description": "Determines whether the input allows users to select multiple formats.",
   "event-management.settings.tracks.formats.multiple.label": "Allow multiple formats",

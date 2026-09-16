@@ -8,7 +8,7 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
 
 type TrackType = 'formats' | 'categories';
-type TrackData = { id: string; name: string; description?: string | null };
+type TrackData = { id: string; name: string; description?: string | null; durationInMinutes?: number | null };
 type NewTrackButtonProps = { type: TrackType };
 
 export function NewTrackButton({ type }: NewTrackButtonProps) {
@@ -72,6 +72,17 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
             required
             rows={4}
           />
+          {type === 'formats' ? (
+            <Input
+              name="durationInMinutes"
+              label={t('event-management.settings.tracks.formats.duration.label')}
+              type="number"
+              defaultValue={initialValues?.durationInMinutes || ''}
+              min={1}
+              max={1440}
+              autoComplete="off"
+            />
+          ) : null}
           <input type="hidden" name="id" value={initialValues?.id} />
         </Form>
       </Modal.Content>

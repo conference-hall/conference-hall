@@ -83,6 +83,7 @@ export class EventCreation {
         create: eventTemplate.formats.map((item) => ({
           name: item.name,
           description: item.description,
+          durationInMinutes: item.durationInMinutes,
           order: item.order,
         })),
       },

@@ -39,7 +39,14 @@ describe('SpeakerProposal', () => {
         languages: proposal.languages,
         invitationLink: `${APP_URL}/invite/proposal/${proposal.invitationCode}`,
         status: SpeakerProposalStatus.Submitted,
-        formats: [{ id: format.id, name: format.name, description: format.description }],
+        formats: [
+          {
+            id: format.id,
+            name: format.name,
+            description: format.description,
+            durationInMinutes: format.durationInMinutes,
+          },
+        ],
         categories: [{ id: category.id, name: category.name, description: category.description }],
         isOwner: true,
         speakers: [

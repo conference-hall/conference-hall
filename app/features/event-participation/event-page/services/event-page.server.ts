@@ -53,6 +53,7 @@ export class EventPage {
         id: f.id,
         name: f.name,
         description: f.description,
+        durationInMinutes: f.durationInMinutes,
       })),
       formatsRequired: event.formatsRequired,
       formatsAllowMultiple: event.formatsAllowMultiple,
