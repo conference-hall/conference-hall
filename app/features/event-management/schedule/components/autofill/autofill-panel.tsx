@@ -7,7 +7,6 @@ import { Form, useNavigation } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
-import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { formatDate } from '~/shared/datetimes/datetimes.ts';
@@ -20,7 +19,6 @@ import {
   PROPOSAL_STATES,
   autofill,
   isEligibleProposal,
-  vacantSessionCount,
 } from '../../models/autofill.ts';
 
 type Props = { payload: AutofillPayload; report: AutofillReport | null; onClose: VoidFunction };
@@ -36,16 +34,13 @@ export function AutofillPanel({ payload, report, onClose }: Props) {
     reset: false,
   }));
 
-  // The scope that produced the report on screen: touching a filter brings the summary back.
   const [submittedScope, setSubmittedScope] = useState<AutofillScope | null>(null);
   const displayedReport = submittedScope === scope ? report : null;
-
-  // The summary is not a count of sets, it is a dry-run of the very function that will write.
   const summary = useMemo(() => autofill(payload, scope), [payload, scope]);
 
   if (payload.sessions.length === 0) {
     return (
-      <SlideOver open title={t('event-management.schedule.autofill.heading')} size="m" onClose={onClose}>
+      <SlideOver open title={t('event-management.schedule.autofill.heading')} size="l" onClose={onClose}>
         <SlideOver.Content>
           <Text weight="semibold">{t('event-management.schedule.autofill.empty.heading')}</Text>
           <Subtitle>{t('event-management.schedule.autofill.empty.description')}</Subtitle>
@@ -60,7 +55,7 @@ export function AutofillPanel({ payload, report, onClose }: Props) {
   }
 
   return (
-    <SlideOver open title={t('event-management.schedule.autofill.heading')} size="m" onClose={onClose}>
+    <SlideOver open title={t('event-management.schedule.autofill.heading')} size="l" onClose={onClose}>
       <Form method="post" className="flex min-h-0 flex-1 flex-col" onSubmit={() => setSubmittedScope(scope)}>
         {scope.days.map((day) => (
           <input key={day} type="hidden" name="days" value={day} />
@@ -72,13 +67,15 @@ export function AutofillPanel({ payload, report, onClose }: Props) {
         {scope.reset ? <input type="hidden" name="reset" value="on" /> : null}
 
         <SlideOver.Content className="flex flex-col gap-6">
-          <Subtitle>{t('event-management.schedule.autofill.description')}</Subtitle>
-
           <DaysFilter payload={payload} scope={scope} onChange={setScope} />
           <TracksFilter payload={payload} scope={scope} onChange={setScope} />
           <ProposalStatesFilter payload={payload} scope={scope} onChange={setScope} />
           <RulesSection />
-          <ResetToggle scope={scope} onChange={setScope} />
+          <ToggleGroup
+            label={t('event-management.schedule.autofill.reset')}
+            value={scope.reset}
+            onChange={(reset) => setScope({ ...scope, reset })}
+          />
         </SlideOver.Content>
 
         {displayedReport ? (
@@ -108,86 +105,62 @@ const toggle = (values: Array<string>, value: string) =>
 function DaysFilter({ payload, scope, onChange }: FilterProps) {
   const { t, i18n } = useTranslation();
 
-  const allSelected = scope.days.length === payload.days.length;
-
   return (
     <section className="flex flex-col gap-2">
-      <H3>{t('event-management.schedule.autofill.days.heading')}</H3>
+      <H3 weight="medium">{t('event-management.schedule.autofill.days.heading')}</H3>
 
       <div className="flex flex-wrap gap-2">
-        <DayPill selected={allSelected} onClick={() => onChange({ ...scope, days: allSelected ? [] : payload.days })}>
-          {t('event-management.schedule.autofill.days.all')}
-        </DayPill>
-
         {payload.days.map((day) => (
-          <DayPill
+          <SelectionPill
             key={day}
             selected={scope.days.includes(day)}
             onClick={() => onChange({ ...scope, days: toggle(scope.days, day) })}
           >
             {formatDate(new Date(`${day}T00:00:00.000Z`), { format: 'medium', locale: i18n.language, timezone: 'UTC' })}
-          </DayPill>
+          </SelectionPill>
         ))}
       </div>
     </section>
   );
 }
 
-type DayPillProps = { selected: boolean; onClick: VoidFunction; children: React.ReactNode };
+function TracksFilter({ payload, scope, onChange }: FilterProps) {
+  const { t } = useTranslation();
 
-function DayPill({ selected, onClick, children }: DayPillProps) {
+  return (
+    <section className="flex flex-col gap-2">
+      <H3 weight="medium">{t('event-management.schedule.autofill.tracks.heading')}</H3>
+
+      <div className="flex flex-wrap gap-2">
+        {payload.tracks.map((track) => (
+          <SelectionPill
+            key={track.id}
+            selected={scope.trackIds.includes(track.id)}
+            onClick={() => onChange({ ...scope, trackIds: toggle(scope.trackIds, track.id) })}
+          >
+            {track.name}
+          </SelectionPill>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+type SelectionPillProps = { selected: boolean; onClick: VoidFunction; children: React.ReactNode };
+
+function SelectionPill({ selected, onClick, children }: SelectionPillProps) {
   return (
     <button
       type="button"
       aria-pressed={selected}
       onClick={onClick}
       className={cx('cursor-pointer rounded-full px-3 py-1 text-sm font-medium ring-1 ring-inset', {
-        'bg-indigo-600 text-white ring-indigo-600': selected,
+        'bg-slate-200 text-slate-700 ring-slate-200': selected,
         'bg-white text-gray-700 ring-gray-300 hover:bg-gray-50': !selected,
       })}
     >
       {children}
     </button>
-  );
-}
-
-function TracksFilter({ payload, scope, onChange }: FilterProps) {
-  const { t } = useTranslation();
-
-  // What this autofill would fill in that track, whether the track is checked or not.
-  const vacancies = useMemo(
-    () =>
-      new Map(
-        payload.tracks.map((track) => [track.id, vacantSessionCount(payload, { ...scope, trackIds: [track.id] })]),
-      ),
-    [payload, scope],
-  );
-
-  return (
-    <section className="flex flex-col gap-2">
-      <H3>{t('event-management.schedule.autofill.tracks.heading')}</H3>
-
-      <ul className="flex flex-col gap-2">
-        {payload.tracks.map((track) => {
-          const count = vacancies.get(track.id) ?? 0;
-          return (
-            <li key={track.id} className="flex items-center justify-between gap-4">
-              <Checkbox
-                checked={scope.trackIds.includes(track.id)}
-                onChange={() => onChange({ ...scope, trackIds: toggle(scope.trackIds, track.id) })}
-              >
-                {track.name}
-              </Checkbox>
-              <Subtitle size="xs">
-                {count === 0
-                  ? t('event-management.schedule.autofill.tracks.none')
-                  : t('event-management.schedule.autofill.tracks.vacant', { count })}
-              </Subtitle>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
   );
 }
 
@@ -200,23 +173,17 @@ const PROPOSAL_STATE_LABELS = {
 function ProposalStatesFilter({ payload, scope, onChange }: FilterProps) {
   const { t } = useTranslation();
 
-  // How many proposals are in that state, whatever the days, the tracks and what is already scheduled.
-  const counts = useMemo(
-    () =>
-      new Map(
-        PROPOSAL_STATES.map((state) => [
-          state,
-          payload.proposals.filter((proposal) => isEligibleProposal(proposal, state)).length,
-        ]),
-      ),
-    [payload],
+  const counts = new Map(
+    PROPOSAL_STATES.map((state) => [
+      state,
+      payload.proposals.filter((proposal) => isEligibleProposal(proposal, state)).length,
+    ]),
   );
 
-  // Segmented control: the nesting Confirmed ⊆ Accepted ⊆ All is said by the position of the segments.
   return (
     <Fieldset className="flex flex-col gap-2">
       <Legend>
-        <H3>{t('event-management.schedule.autofill.proposal-states.heading')}</H3>
+        <H3 weight="medium">{t('event-management.schedule.autofill.proposal-states.heading')}</H3>
       </Legend>
 
       <RadioGroup
@@ -232,7 +199,7 @@ function ProposalStatesFilter({ payload, scope, onChange }: FilterProps) {
               cx(
                 'flex-1 cursor-pointer px-3 py-1.5 text-center text-sm font-medium ring-1 ring-inset first:rounded-l-md last:rounded-r-md focus:outline-hidden',
                 checked
-                  ? 'bg-indigo-600 text-white ring-indigo-600'
+                  ? 'bg-slate-200 text-slate-700 ring-slate-200'
                   : 'bg-white text-gray-700 ring-gray-300 hover:bg-gray-50',
               )
             }
@@ -245,8 +212,6 @@ function ProposalStatesFilter({ payload, scope, onChange }: FilterProps) {
   );
 }
 
-// Static, non interactive, and deliberately not derived from ASSIGNMENT_RULES: `Single assignment`
-// is structural and would have to be added there as a fake entry, only to be displayed.
 const RULE_LABELS = [
   'event-management.schedule.autofill.rules.single-assignment',
   'event-management.schedule.autofill.rules.speaker-overlap',
@@ -257,32 +222,16 @@ function RulesSection() {
 
   return (
     <section className="flex flex-col gap-2">
-      <H3>{t('event-management.schedule.autofill.rules.heading')}</H3>
+      <H3 weight="medium">{t('event-management.schedule.autofill.rules.heading')}</H3>
 
-      <ul className="flex flex-col gap-1">
+      <ul className="flex flex-col divide-y rounded-md border">
         {RULE_LABELS.map((key) => (
-          <li key={key} className="flex items-center gap-2">
+          <li key={key} className="flex items-center gap-2 p-3">
             <LockClosedIcon className="size-4 shrink-0 text-gray-400" aria-hidden="true" />
             <Subtitle size="xs">{t(key)}</Subtitle>
           </li>
         ))}
       </ul>
-    </section>
-  );
-}
-
-type ResetProps = { scope: AutofillScope; onChange: (scope: AutofillScope) => void };
-
-function ResetToggle({ scope, onChange }: ResetProps) {
-  const { t } = useTranslation();
-
-  return (
-    <section className={cx('rounded-md p-3', { 'ring-1 ring-red-500 ring-inset': scope.reset })}>
-      <ToggleGroup
-        label={t('event-management.schedule.autofill.reset')}
-        value={scope.reset}
-        onChange={(reset) => onChange({ ...scope, reset })}
-      />
     </section>
   );
 }
@@ -301,29 +250,29 @@ function SummaryFooter({ summary, scope, submitting, onCancel }: SummaryFooterPr
   const cleared = summary.sessionsToClear.length;
 
   return (
-    <footer className="flex shrink-0 flex-col gap-4 border-t border-gray-200 p-4">
-      <div>
-        <Subtitle size="xs">{t('event-management.schedule.autofill.summary.label')}</Subtitle>
-        <Text size="2xl" weight="semibold">
-          {t('event-management.schedule.autofill.summary.filled', { count: filled })}
-        </Text>
-        {summary.sessionsLeftVacant.length > 0 ? (
-          <Subtitle size="xs">
-            {t('event-management.schedule.autofill.summary.left-vacant', { count: summary.sessionsLeftVacant.length })}
-          </Subtitle>
-        ) : null}
-        {summary.proposalsLeftUnscheduled.length > 0 ? (
-          <Subtitle size="xs">
-            {t('event-management.schedule.autofill.summary.unplaced', {
-              count: summary.proposalsLeftUnscheduled.length,
-            })}
-          </Subtitle>
-        ) : null}
-      </div>
-
-      {scope.reset && cleared > 0 ? (
-        <Callout variant="error">{t('event-management.schedule.autofill.summary.cleared', { count: cleared })}</Callout>
-      ) : null}
+    <footer className="flex shrink-0 flex-col gap-4 p-4">
+      <Callout title={t('event-management.schedule.autofill.summary.label')}>
+        <ul>
+          <li>{t('event-management.schedule.autofill.summary.filled', { count: filled })}</li>
+          {scope.reset && cleared > 0 ? (
+            <li>{t('event-management.schedule.autofill.summary.cleared', { count: cleared })}</li>
+          ) : null}
+          {summary.sessionsLeftVacant.length > 0 ? (
+            <li>
+              {t('event-management.schedule.autofill.summary.left-vacant', {
+                count: summary.sessionsLeftVacant.length,
+              })}
+            </li>
+          ) : null}
+          {summary.proposalsLeftUnscheduled.length > 0 ? (
+            <li>
+              {t('event-management.schedule.autofill.summary.unplaced', {
+                count: summary.proposalsLeftUnscheduled.length,
+              })}
+            </li>
+          ) : null}
+        </ul>
+      </Callout>
 
       <div className="flex justify-end gap-4">
         <Button type="button" variant="secondary" onClick={onCancel}>
@@ -345,35 +294,29 @@ const REASON_LABELS = {
 function ReportFooter({ report, onClose }: { report: AutofillReport; onClose: VoidFunction }) {
   const { t } = useTranslation();
 
-  // Grouped by reason: a nominative list can run to a hundred entries and helps nobody.
   const byReason = new Map<AutofillReason, number>();
   for (const { reason } of report.proposalsLeftUnscheduled) {
     byReason.set(reason, (byReason.get(reason) ?? 0) + 1);
   }
 
   return (
-    <footer className="flex shrink-0 flex-col gap-4 border-t border-gray-200 p-4">
-      <div>
-        <Subtitle size="xs">{t('event-management.schedule.autofill.report.label')}</Subtitle>
-        <Text size="2xl" weight="semibold">
-          {t('event-management.schedule.autofill.report.filled', { count: report.assignments.length })}
-        </Text>
-        {report.sessionsLeftVacant.length > 0 ? (
-          <Subtitle size="xs">
-            {t('event-management.schedule.autofill.report.left-vacant', { count: report.sessionsLeftVacant.length })}
-          </Subtitle>
-        ) : null}
-        {[...byReason].map(([reason, count]) => (
-          <Subtitle key={reason} size="xs">
-            {t(REASON_LABELS[reason], { count })}
-          </Subtitle>
-        ))}
-        {report.sessionsToClear.length > 0 ? (
-          <Subtitle size="xs">
-            {t('event-management.schedule.autofill.report.cleared', { count: report.sessionsToClear.length })}
-          </Subtitle>
-        ) : null}
-      </div>
+    <footer className="flex shrink-0 flex-col gap-4 p-4">
+      <Callout title={t('event-management.schedule.autofill.report.label')} variant="success">
+        <ul>
+          <li>{t('event-management.schedule.autofill.report.filled', { count: report.assignments.length })}</li>
+          {report.sessionsLeftVacant.length > 0 ? (
+            <li>
+              {t('event-management.schedule.autofill.report.left-vacant', { count: report.sessionsLeftVacant.length })}
+            </li>
+          ) : null}
+          {[...byReason].map(([reason, count]) => (
+            <li key={reason}>{t(REASON_LABELS[reason], { count })}</li>
+          ))}
+          {report.sessionsToClear.length > 0 ? (
+            <li>{t('event-management.schedule.autofill.report.cleared', { count: report.sessionsToClear.length })}</li>
+          ) : null}
+        </ul>
+      </Callout>
 
       <div className="flex justify-end">
         <Button type="button" variant="secondary" onClick={onClose}>

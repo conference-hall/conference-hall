@@ -11,11 +11,6 @@ import {
 const DAY_1 = '2024-10-05';
 const DAY_2 = '2024-10-06';
 
-const TRACKS = [
-  { id: 'track-1', name: 'Room 1' },
-  { id: 'track-2', name: 'Room 2' },
-];
-
 const at = (day: string, hour: number) => new Date(`${day}T${String(hour).padStart(2, '0')}:00:00.000Z`);
 
 type SlotOptions = { day?: string; trackId?: string; hour?: number };
@@ -59,7 +54,15 @@ function proposal(id: string, overrides: Partial<AutofillProposal> = {}): Autofi
 }
 
 function payloadOf(sessions: Array<AutofillSession>, proposals: Array<AutofillProposal> = []): AutofillPayload {
-  return { days: [DAY_1, DAY_2], tracks: TRACKS, sessions, proposals };
+  return {
+    days: [DAY_1, DAY_2],
+    tracks: [
+      { id: 'track-1', name: 'Room 1' },
+      { id: 'track-2', name: 'Room 2' },
+    ],
+    sessions,
+    proposals,
+  };
 }
 
 function scopeOf(overrides: Partial<AutofillScope> = {}): AutofillScope {

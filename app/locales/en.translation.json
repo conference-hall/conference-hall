@@ -565,7 +565,6 @@
   "event-management.schedule.actions.tracks": "Manage tracks",
   "event-management.schedule.autofill.days.all": "All",
   "event-management.schedule.autofill.days.heading": "Days",
-  "event-management.schedule.autofill.description": "Assign proposals to the empty sessions of your schedule.",
   "event-management.schedule.autofill.empty.description": "Define the sessions of your schedule first, the autofill will then assign proposals to them.",
   "event-management.schedule.autofill.empty.heading": "No session in the schedule",
   "event-management.schedule.autofill.heading": "Autofill sessions",

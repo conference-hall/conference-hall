@@ -141,13 +141,10 @@ describe('AutofillPanel component', () => {
   it('opens with every day, every track and the accepted proposals selected', async () => {
     renderPanel();
 
-    await expect
-      .element(page.getByRole('button', { name: 'All', exact: true }))
-      .toHaveAttribute('aria-pressed', 'true');
     await expect.element(page.getByRole('button', { name: 'Oct 5, 2024' })).toHaveAttribute('aria-pressed', 'true');
     await expect.element(page.getByRole('button', { name: 'Oct 6, 2024' })).toHaveAttribute('aria-pressed', 'true');
-    await expect.element(page.getByLabelText('Room 1')).toBeChecked();
-    await expect.element(page.getByLabelText('Room 2')).toBeChecked();
+    await expect.element(page.getByRole('button', { name: 'Room 1' })).toHaveAttribute('aria-pressed', 'true');
+    await expect.element(page.getByRole('button', { name: 'Room 2' })).toHaveAttribute('aria-pressed', 'true');
     await expect.element(page.getByRole('radio', { name: 'Accepted (4)' })).toHaveAttribute('aria-checked', 'true');
   });
 
@@ -188,35 +185,21 @@ describe('AutofillPanel component', () => {
   it('gives a zero summary and disables the submit when no day is selected', async () => {
     renderPanel();
 
-    await userEvent.click(page.getByRole('button', { name: 'All', exact: true }));
+    await userEvent.click(page.getByRole('button', { name: 'Oct 5, 2024' }));
+    await userEvent.click(page.getByRole('button', { name: 'Oct 6, 2024' }));
 
     await expect.element(page.getByText('0 sessions will be filled')).toBeVisible();
     await expect.element(page.getByRole('button', { name: 'Fill the sessions' })).toBeDisabled();
   });
 
-  it('checks every day back with the All shortcut', async () => {
+  it('raises the number of sessions to fill with the reset', async () => {
     renderPanel();
 
-    await userEvent.click(page.getByRole('button', { name: 'Oct 6, 2024' }));
-    await expect
-      .element(page.getByRole('button', { name: 'All', exact: true }))
-      .toHaveAttribute('aria-pressed', 'false');
-
-    await userEvent.click(page.getByRole('button', { name: 'All', exact: true }));
-
-    await expect.element(page.getByRole('button', { name: 'Oct 6, 2024' })).toHaveAttribute('aria-pressed', 'true');
     await expect.element(page.getByText('3 sessions will be filled')).toBeVisible();
-  });
-
-  it('shows how many sessions each track would get, raised by the reset', async () => {
-    renderPanel();
-
-    await expect.element(page.getByText('2 sessions to fill')).toBeVisible();
-    await expect.element(page.getByText('1 session to fill')).toBeVisible();
 
     await userEvent.click(page.getByRole('switch'));
 
-    await expect.element(page.getByText('3 sessions to fill')).toBeVisible();
+    await expect.element(page.getByText('4 sessions will be filled')).toBeVisible();
   });
 
   it('warns with the number of sessions the reset would clear', async () => {
@@ -229,21 +212,21 @@ describe('AutofillPanel component', () => {
     await expect.element(page.getByText('1 filled session will be cleared')).toBeVisible();
   });
 
-  it('keeps a track without any vacant session checkable', async () => {
+  it('unselects a track and selects it back', async () => {
     renderPanel();
 
-    await userEvent.click(page.getByLabelText('Room 2'));
-    await expect.element(page.getByLabelText('Room 2')).not.toBeChecked();
+    await userEvent.click(page.getByRole('button', { name: 'Room 2' }));
+    await expect.element(page.getByRole('button', { name: 'Room 2' })).toHaveAttribute('aria-pressed', 'false');
 
-    await userEvent.click(page.getByLabelText('Room 2'));
-    await expect.element(page.getByLabelText('Room 2')).toBeChecked();
+    await userEvent.click(page.getByRole('button', { name: 'Room 2' }));
+    await expect.element(page.getByRole('button', { name: 'Room 2' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('submits the scope shown on screen', async () => {
     const { onSubmit } = renderPanel();
 
     await userEvent.click(page.getByRole('button', { name: 'Oct 6, 2024' }));
-    await userEvent.click(page.getByLabelText('Room 2'));
+    await userEvent.click(page.getByRole('button', { name: 'Room 2' }));
     await userEvent.click(page.getByRole('radio', { name: 'All (5)' }));
     await userEvent.click(page.getByRole('switch'));
     await userEvent.click(page.getByRole('button', { name: 'Fill the sessions' }));

@@ -73,7 +73,9 @@ describe('ScheduleAutofill', () => {
 
   describe('ScheduleAutofill.for', () => {
     it('returns a ScheduleAutofill instance', async () => {
-      expect(ScheduleAutofill.for(await authorizedEvent())).toBeInstanceOf(ScheduleAutofill);
+      const ctx = await authorizedEvent();
+
+      expect(ScheduleAutofill.for(ctx)).toBeInstanceOf(ScheduleAutofill);
     });
 
     it('throws forbidden error for reviewers', async () => {

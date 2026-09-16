@@ -6,7 +6,6 @@ import type { Event } from '../../../../../prisma/generated/client.ts';
 import { type AutofillPayload, type AutofillReport, type AutofillScope, autofill } from '../models/autofill.ts';
 import { ScheduleTime } from '../models/schedule-time.ts';
 
-// The data this write path manipulates carries neither trackId, start nor end: it cannot move a Session.
 type SessionAssignment = { sessionId: string; proposalId: string; language: Language | null };
 
 export class ScheduleAutofill {
@@ -27,8 +26,6 @@ export class ScheduleAutofill {
     return toPayload(schedule, proposals);
   }
 
-  // Reads, computes and writes in a single transaction: without an unique index on the proposal of a
-  // Session, two concurrent autofills would otherwise schedule the same Proposal twice.
   async run(scope: AutofillScope): Promise<AutofillReport> {
     return db.$transaction(async (trx) => {
       const schedule = await this.scheduleWithSessions(trx);
@@ -72,8 +69,6 @@ export class ScheduleAutofill {
     });
   }
 
-  // Only the hard exclusions live in SQL. Membership to the three Proposal states is the shared
-  // TypeScript predicate, applied by the browser for the summary and by the server on execution.
   private async eligibleProposals(client: DbTransaction) {
     return client.proposal.findMany({
       where: {

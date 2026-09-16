@@ -565,7 +565,6 @@
   "event-management.schedule.actions.tracks": "Gérer les tracks",
   "event-management.schedule.autofill.days.all": "Tous",
   "event-management.schedule.autofill.days.heading": "Jours",
-  "event-management.schedule.autofill.description": "Affectez des propositions aux sessions vides de votre agenda.",
   "event-management.schedule.autofill.empty.description": "Définissez d'abord les sessions de votre agenda, le remplissage automatique y affectera ensuite des propositions.",
   "event-management.schedule.autofill.empty.heading": "Aucune session dans l'agenda",
   "event-management.schedule.autofill.heading": "Remplissage automatique",

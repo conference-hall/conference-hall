@@ -1,6 +1,5 @@
 import { areTimeSlotsOverlapping } from '~/shared/datetimes/timeslots.ts';
 
-// The three nested values of the Proposal state selector: Confirmed ⊆ Accepted ⊆ All.
 export type ProposalState = 'all' | 'accepted' | 'confirmed';
 
 export const PROPOSAL_STATES: Array<ProposalState> = ['all', 'accepted', 'confirmed'];
@@ -35,7 +34,6 @@ export type AutofillPayload = {
   proposals: Array<AutofillProposal>;
 };
 
-// Bounds what the autofill writes, never what an Assignment rule reads.
 export type AutofillScope = {
   days: Array<string>;
   trackIds: Array<string>;
@@ -52,7 +50,6 @@ export type AutofillReport = {
   sessionsToClear: Array<string>;
 };
 
-// What an Assignment rule sees: the strict minimum, never a field loaded for a future rule.
 type RuleProposal = { id: string; number: number | null; speakerIds: Array<string> };
 
 type RuleSession = { id: string; trackId: string; trackOrder: number; start: Date; end: Date };
@@ -67,7 +64,6 @@ type AssignmentRule = {
   evaluate: (proposal: RuleProposal, session: RuleSession, context: RuleContext) => boolean;
 };
 
-// A rejection reason is the id of the blocking rule, so adding a rule adds its reason.
 const NO_VACANT_SESSION = 'no-vacant-session';
 
 const ASSIGNMENT_RULES = [
@@ -83,8 +79,6 @@ const ASSIGNMENT_RULES = [
 
 export type AutofillReason = typeof NO_VACANT_SESSION | (typeof ASSIGNMENT_RULES)[number]['id'];
 
-// A Proposal eligible for the given state. `confirmationStatus` is NULL for every Proposal still in
-// deliberation, so "different from DECLINED" is written as an explicit comparison and never in SQL.
 export function isEligibleProposal(proposal: AutofillProposal, state: ProposalState): boolean {
   if (proposal.isDraft || proposal.archivedAt) return false;
   if (proposal.confirmationStatus === 'DECLINED') return false;
@@ -99,8 +93,6 @@ export function isEligibleProposal(proposal: AutofillProposal, state: ProposalSt
   }
 }
 
-// How many Vacant sessions the scope holds, the Autofill reset included. Shares its derivation with
-// the autofill itself, so the per-track counters of the panel describe the very same operation.
 export function vacantSessionCount(payload: AutofillPayload, scope: AutofillScope): number {
   return workingState(payload, scope).vacantSessions.length;
 }
@@ -109,8 +101,6 @@ export function vacantSessionCount(payload: AutofillPayload, scope: AutofillScop
 export function autofill(payload: AutofillPayload, scope: AutofillScope): AutofillReport {
   const { sessions, vacantSessions, sessionsToClear } = workingState(payload, scope);
 
-  // `Single assignment`, upstream half: a Proposal already scheduled is not a candidate, and does not
-  // show up among the Proposals left unscheduled either.
   const scheduledProposalIds = new Set(sessions.filter((s) => s.proposalId).map((s) => s.proposalId));
 
   const eligibleProposals = payload.proposals
@@ -130,7 +120,6 @@ export function autofill(payload: AutofillPayload, scope: AutofillScope): Autofi
 
   const assignments: Array<AutofillAssignment> = [];
   for (const session of vacantSessions) {
-    // `Single assignment`, downstream half: the Set carried by the context.
     const picked = eligibleProposals.find(
       (proposal) => !context.assignedProposalIds.has(proposal.id) && accepts(proposal, session),
     );
@@ -141,8 +130,6 @@ export function autofill(payload: AutofillPayload, scope: AutofillScope): Autofi
     context.occupancy.push({ speakerIds: picked.speakerIds, start: session.start, end: session.end });
   }
 
-  // The reason is judged on the final state, never per candidate pair: in a greedy pass a rejection
-  // depends on the walking order. A session passing every rule means another Proposal took it.
   const reasonFor = (proposal: AutofillProposal): AutofillReason => {
     if (vacantSessions.some((session) => accepts(proposal, session))) return NO_VACANT_SESSION;
     const blocking = ASSIGNMENT_RULES.find((rule) =>
