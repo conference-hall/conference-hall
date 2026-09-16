@@ -102,7 +102,9 @@ export default [
 
     // Event schedule pages
     route('schedule', './features/event-management/schedule/new.tsx'),
-    route('schedule/:day', './features/event-management/schedule/schedule.tsx'),
+    route('schedule/:day', './features/event-management/schedule/schedule.tsx', [
+      route('autofill', './features/event-management/schedule/autofill.tsx'),
+    ]),
     route('schedule/export/json', './features/event-management/schedule-export/json.tsx'),
 
     // Event settings pages
