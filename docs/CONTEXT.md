@@ -172,3 +172,46 @@ term as defined here and don't drift to synonyms.
   for a move or a resize, and the pointer for a draft. Releasing a move on a target
   occupied by another Session is a swap; on a free target it is a move. Each gesture
   ends as a Session mutation, or is refused by the Placement rule.
+
+## Schedule autofill
+
+- **Autofill**: Filling Sessions of a Schedule with Proposals in one operation,
+  instead of placing them one by one. An Autofill never creates, moves, resizes or
+  deletes a Session: it only links Proposals to Sessions that already exist.
+
+- **Assignment**: The pairing of one Proposal with one Session. Distinct from a
+  Placement: an Assignment says _which talk_ a Session holds, a Placement says _where
+  and when_ that Session sits.
+
+- **Vacant session**: A Session with neither a Proposal nor a name. Only a Vacant
+  session receives an Assignment. A non-talk slot (a break, a named keynote) is never
+  touched by an Autofill, even though it holds no Proposal.
+
+- **Scheduled / unscheduled (a Proposal)**: A Proposal is _scheduled_ when a Session
+  of the Schedule is linked to it, and _unscheduled_ otherwise.
+
+- **Eligible proposal**: A Proposal an Autofill may assign: it is unscheduled and it
+  matches the proposal states of the Autofill scope.
+
+- **Autofill scope**: The organizer's choice of what one Autofill may write: the days,
+  the Tracks, and the proposal states. It yields the two sets the operation works on,
+  the Vacant sessions and the Eligible proposals. The scope bounds what an Autofill
+  writes; it never bounds what an Assignment rule reads.
+
+- **Assignment rule**: A rule that rejects a candidate Assignment. It is evaluated
+  against the whole Schedule, days and Tracks outside the Autofill scope included. A
+  rule is either _fixed_, always applied, or _optional_, enabled by the organizer for
+  that Autofill. Two fixed rules exist:
+  - **Single assignment**: a Proposal holds at most one Assignment in the Schedule.
+  - **Speaker overlap**: one speaker never holds two Sessions whose time slots
+    overlap, across Tracks included. Distinct from a Session conflict, which is about
+    two Sessions of a single Track whoever their speakers are.
+
+- **Autofill reset**: Clearing the Proposal of every filled Session of the Autofill
+  scope before filling, so that the Autofill starts from Vacant sessions only. Without
+  it, an Autofill leaves the Sessions already filled alone. A reset never touches a
+  non-talk slot.
+
+- **Autofill report**: The account of one Autofill: the Assignments written, the Vacant
+  sessions left vacant, and the Eligible proposals left unscheduled. A partial result
+  is the normal case, not a failure.
