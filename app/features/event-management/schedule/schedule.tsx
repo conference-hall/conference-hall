@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
-import { redirect } from 'react-router';
+import { Outlet, redirect } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import {
@@ -132,6 +132,8 @@ function ScheduleView({ name }: { name: string }) {
         <ScheduleHeader zoomHandlers={zoomHandlers} />
         <ScheduleGrid zoomLevel={zoomHandlers.level} />
       </div>
+
+      <Outlet />
     </main>
   );
 }

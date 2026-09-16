@@ -9,9 +9,11 @@ export class SchedulePage extends PageObject {
   readonly endDateInput: Locator;
   readonly sessionNameInput: Locator;
   readonly sessionConflictError: Locator;
+  readonly autofillPanel: Locator;
 
   constructor(page: Page) {
     super(page);
+    this.autofillPanel = page.getByRole('dialog', { name: 'Autofill sessions' });
     this.heading = page.getByRole('heading', { name: 'New schedule', exact: true });
     this.nameInput = page.getByLabel('Name');
     this.timezoneInput = page.getByRole('button', { name: 'Timezone' });
@@ -45,6 +47,19 @@ export class SchedulePage extends PageObject {
 
   async clickOnManageTracksMenu() {
     await this.page.getByRole('menuitem', { name: 'Manage tracks' }).click();
+  }
+
+  async gotoDay(team: string, event: string, day: string) {
+    await this.page.goto(`/team/${team}/${event}/schedule/${day}`);
+    await this.waitForHydration();
+  }
+
+  async clickOnAutofillMenu() {
+    await this.page.getByRole('menuitem', { name: 'Autofill sessions' }).click();
+  }
+
+  async clickOnFillSessions() {
+    await this.autofillPanel.getByRole('button', { name: 'Fill the sessions' }).click();
   }
 
   async submitNewSession(name: string) {

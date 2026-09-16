@@ -26,6 +26,16 @@ export class ScheduleTime {
     return getDatesRange(this.fromUtc(start), this.fromUtc(end));
   }
 
+  // The days of the Schedule as `YYYY-MM-DD` keys.
+  dayKeys(start: Date, end: Date): Array<string> {
+    return this.days(start, end).map(dayKey);
+  }
+
+  // The `YYYY-MM-DD` key of the Schedule day a date falls on.
+  dayKeyOf(date: Date): string {
+    return dayKey(this.fromUtc(date));
+  }
+
   // The index of the Schedule day matching a calendar date received as midnight UTC (what a date input emits),
   // or null when the date is outside of the Schedule. Compared by calendar key, never through the browser timezone.
   dayIndex(days: Array<Date>, calendarDate: Date): number | null {
@@ -56,6 +66,12 @@ export class ScheduleTime {
   gmtOffset(day: Date, locale: string): string | null {
     return getGMTOffset(this.timezone, locale, day);
   }
+}
+
+function dayKey(day: Date): string {
+  const month = String(day.getMonth() + 1).padStart(2, '0');
+  const date = String(day.getDate()).padStart(2, '0');
+  return `${day.getFullYear()}-${month}-${date}`;
 }
 
 function calendarKey(year: number, month: number, day: number): string {

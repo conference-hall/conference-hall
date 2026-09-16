@@ -14,7 +14,7 @@ type Props = {
 
 export function SlideOver({ open, title, size = 'm', withBorder = true, onClose, children }: Props) {
   return (
-    <Dialog className="z-40" open={open} onClose={onClose}>
+    <Dialog className="relative z-40" open={open} onClose={onClose}>
       <Background />
 
       <div className="fixed inset-0 z-40 overflow-hidden">

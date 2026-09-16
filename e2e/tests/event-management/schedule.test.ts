@@ -1,5 +1,11 @@
 import { eventFactory } from 'tests/factories/events.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { scheduleSessionFactory } from 'tests/factories/schedule-session.ts';
+import { scheduleTrackFactory } from 'tests/factories/schedule-track.ts';
+import { scheduleFactory } from 'tests/factories/schedule.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 import { expect, test } from '../../fixtures.ts';
 import { userLoggedFactory } from '../../helpers.ts';
 import { SchedulePage } from './schedule.page.ts';
@@ -53,6 +59,38 @@ test('displays event schedule', async ({ page, context }) => {
   await expect(page.getByRole('heading', { name: 'Schedule tracks configuration' })).toBeVisible();
 
   // TODO: Add more tests on the settings
+});
+
+test('autofills the vacant sessions of the schedule', async ({ page, context }) => {
+  const user = await userLoggedFactory(context);
+  const team = await teamFactory({ owners: [user] });
+  const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
+  const schedule = await scheduleFactory({ event });
+  const track = await scheduleTrackFactory({ name: 'Main stage', schedule });
+
+  const speaker = await userFactory();
+  const talk = await talkFactory({ speakers: [speaker], attributes: { title: 'Autofilled talk' } });
+  await proposalFactory({ event, talk, traits: ['accepted'] });
+
+  await scheduleSessionFactory({
+    schedule,
+    track,
+    start: new Date('2024-10-05T09:00:00.000Z'),
+    end: new Date('2024-10-05T10:00:00.000Z'),
+  });
+
+  const schedulePage = new SchedulePage(page);
+  await schedulePage.gotoDay(team.slug, event.slug, '0');
+
+  await schedulePage.clickOnOptions();
+  await schedulePage.clickOnAutofillMenu();
+  await expect(schedulePage.autofillPanel.getByText('1 session will be filled')).toBeVisible();
+
+  await schedulePage.clickOnFillSessions();
+
+  await expect(schedulePage.autofillPanel.getByText('Autofill result')).toBeVisible();
+  await expect(schedulePage.autofillPanel.getByText('1 session filled')).toBeVisible();
+  await expect(schedulePage.session('Autofilled talk')).toBeVisible();
 });
 
 test.describe('as a team reviewer', () => {

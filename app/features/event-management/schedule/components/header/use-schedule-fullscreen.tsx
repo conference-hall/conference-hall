@@ -1,7 +1,8 @@
 import { useLocation, useMatch, useNavigate, useSearchParams } from 'react-router';
 
 export function useScheduleFullscreen() {
-  const scheduleRoute = useMatch('/team/:team/:event/schedule/:day');
+  // Not exact: a child route of the schedule, such as the autofill panel, stays in fullscreen.
+  const scheduleRoute = useMatch({ path: '/team/:team/:event/schedule/:day', end: false });
 
   const location = useLocation();
   const navigate = useNavigate();

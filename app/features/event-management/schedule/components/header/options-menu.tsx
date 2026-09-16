@@ -6,11 +6,12 @@ import {
   Cog6ToothIcon,
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon,
+  SparklesIcon,
   TrashIcon,
   ViewColumnsIcon,
 } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
-import { useParams, useSubmit } from 'react-router';
+import { Link, useLocation, useParams, useSubmit } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { menuItem, menuItemIcon, menuItems, menuSection, menuSeparator } from '~/design-system/styles/menu.styles.ts';
 import { MenuTransition } from '~/design-system/transitions.tsx';
@@ -23,6 +24,7 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
   const { t } = useTranslation();
   const submit = useSubmit();
   const params = useParams();
+  const location = useLocation();
 
   const scheduleFullscreen = useScheduleFullscreen();
   const FullscreenIcon = scheduleFullscreen.isFullscreen ? ArrowsPointingInIcon : ArrowsPointingOutIcon;
@@ -73,6 +75,11 @@ export function OptionsMenu({ openTracksModal, zoomHandlers }: Props) {
             <MenuItem as="button" onClick={openTracksModal} className={menuItem()}>
               <ViewColumnsIcon className={menuItemIcon()} aria-hidden="true" />
               {t('event-management.schedule.actions.tracks')}
+            </MenuItem>
+            {/* The search is carried over so opening the panel does not leave fullscreen. */}
+            <MenuItem as={Link} to={{ pathname: 'autofill', search: location.search }} className={menuItem()}>
+              <SparklesIcon className={menuItemIcon()} aria-hidden="true" />
+              {t('event-management.schedule.actions.autofill')}
             </MenuItem>
             <MenuItem as="a" href={`/team/${params.team}/${params.event}/schedule/export/json`} className={menuItem()}>
               <ArrowDownTrayIcon className={menuItemIcon()} aria-hidden="true" />
