@@ -7,13 +7,15 @@ import { href, useParams } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
+import type { ProposalResult } from '../../../autocomplete/types/autocomplete.types.ts';
 import type { ScheduleProposalData } from '../schedule.types.ts';
 import { highlightMatch } from './highlight-match.tsx';
 import { useProposalSearch } from './use-proposal-search.ts';
 
-export type SessionIdentity = { name: string; proposal: ScheduleProposalData | null };
+// `categoryIds` only travels on a freshly picked proposal: it feeds the session colour and is not persisted.
+export type SessionIdentity = { name: string; proposal: ScheduleProposalData | null; categoryIds?: Array<string> };
 
-type OptionValue = { kind: 'raw' } | { kind: 'proposal'; proposal: ScheduleProposalData };
+type OptionValue = { kind: 'raw' } | { kind: 'proposal'; proposal: ProposalResult };
 
 type Props = {
   name: string;
@@ -45,7 +47,8 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
     if (value.kind === 'raw') {
       setDismissed(true);
     } else {
-      onChange({ name: '', proposal: value.proposal });
+      const { kind: _kind, categoryIds, ...proposal } = value.proposal;
+      onChange({ name: '', proposal, categoryIds });
     }
   };
 

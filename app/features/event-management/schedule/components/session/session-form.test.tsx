@@ -2,6 +2,7 @@ import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page, userEvent } from 'vitest/browser';
+import type { ProposalResult } from '~/features/event-management/autocomplete/types/autocomplete.types.ts';
 import { setMinutesFromStartOfDay } from '~/shared/datetimes/datetimes.ts';
 import { ScheduleProviders } from '../../context/schedule-context.test-helpers.tsx';
 import type { ScheduleContextValue } from '../../context/schedule-context.tsx';
@@ -24,10 +25,34 @@ const session: ScheduleSession = {
   timeslot,
   name: 'Coffee break',
   language: null,
-  color: 'stone',
+  color: null,
   emojis: [],
   proposal: null,
 };
+
+const categories = [
+  { id: 'cat-1', color: '#123456' },
+  { id: 'cat-2', color: null },
+];
+
+const PROPOSALS: ProposalResult[] = [
+  {
+    kind: 'proposals',
+    id: 'p1',
+    routeId: 'colored-talk',
+    title: 'Colored talk',
+    speakers: [{ name: 'John Doe', picture: null }],
+    categoryIds: ['cat-1'],
+  },
+  {
+    kind: 'proposals',
+    id: 'p2',
+    routeId: 'plain-talk',
+    title: 'Plain talk',
+    speakers: [{ name: 'Jane Smith', picture: null }],
+    categoryIds: ['cat-2'],
+  },
+];
 
 const placed: PlacementOutcome = { status: 'placed', placement: { trackId: 'track-1', timeslot } };
 const conflict: PlacementOutcome = {
@@ -60,12 +85,12 @@ function renderForm(mode: 'create' | 'edit', overrides: Partial<ScheduleContextV
             deleteSession={deleteSession}
             {...overrides}
           >
-            <SessionForm mode={mode} session={session} onFinish={onFinish} />
+            <SessionForm mode={mode} session={session} categories={categories} onFinish={onFinish} />
           </ScheduleProviders>
         </I18nextProvider>
       ),
     },
-    { path: '/team/:team/:event/autocomplete', loader: () => [] },
+    { path: '/team/:team/:event/autocomplete', loader: () => PROPOSALS },
   ]);
 
   const rendered = page.render(<RouteStub initialEntries={['/team/t1/e1/schedule']} />);
@@ -87,7 +112,8 @@ describe('SessionForm component', () => {
     await page.getByLabelText('Date').fill('2024-10-06');
     await userEvent.selectOptions(page.getByLabelText('From'), String(11 * 60));
     await userEvent.selectOptions(page.getByLabelText('Language'), 'en');
-    await page.getByRole('radio', { name: 'Blue' }).click();
+    await page.getByRole('checkbox', { name: 'Set a color' }).click();
+    await page.getByLabelText('Choose a label color').fill('#123456');
     await page.getByRole('button', { name: 'Choose an emoji' }).click();
     await page.getByRole('button', { name: 'Rocket' }).click();
 
@@ -102,10 +128,34 @@ describe('SessionForm component', () => {
         end: setMinutesFromStartOfDay(scheduleDays[1], 11 * 60 + 30),
       },
       language: 'en',
-      color: 'blue',
+      color: '#123456',
       emojis: ['rocket'],
     });
     expect(onFinish).toHaveBeenCalled();
+  });
+
+  it('takes the color of the first category of the proposal it links', async () => {
+    const { rendered, addSession } = renderForm('create');
+    await rendered;
+
+    await page.getByRole('combobox', { name: 'Session name' }).fill('Colored');
+    await page.getByRole('option', { name: /Colored talk/ }).click();
+
+    await page.getByRole('button', { name: 'Create session' }).click();
+
+    expect(addSession).toHaveBeenCalledWith(expect.objectContaining({ color: '#123456' }));
+  });
+
+  it('keeps the session color when the first category of the linked proposal has no color', async () => {
+    const { rendered, addSession } = renderForm('create');
+    await rendered;
+
+    await page.getByRole('combobox', { name: 'Session name' }).fill('Plain');
+    await page.getByRole('option', { name: /Plain talk/ }).click();
+
+    await page.getByRole('button', { name: 'Create session' }).click();
+
+    expect(addSession).toHaveBeenCalledWith(expect.objectContaining({ color: null }));
   });
 
   it('updates a session with the schedule mutation', async () => {
