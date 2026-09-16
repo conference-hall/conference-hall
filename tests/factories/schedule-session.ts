@@ -1,4 +1,3 @@
-import { DEFAULT_SESSION_COLOR } from '~/features/event-management/schedule/components/session/constants.ts';
 import { db } from '../../prisma/db.server.ts';
 import type { Proposal, Schedule, ScheduleTrack } from '../../prisma/generated/client.ts';
 
@@ -8,11 +7,12 @@ type FactoryOptions = {
   start: Date;
   end: Date;
   name?: string;
+  color?: string;
   proposal?: Proposal;
 };
 
 export const scheduleSessionFactory = async (options: FactoryOptions) => {
-  const { schedule, track, start, end, name, proposal } = options;
+  const { schedule, track, start, end, name, color, proposal } = options;
 
   return db.scheduleSession.create({
     data: {
@@ -21,7 +21,7 @@ export const scheduleSessionFactory = async (options: FactoryOptions) => {
       start,
       end,
       name: name ?? null,
-      color: DEFAULT_SESSION_COLOR,
+      color: color ?? null,
       proposalId: proposal?.id ?? null,
     },
   });

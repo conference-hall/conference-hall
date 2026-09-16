@@ -60,7 +60,7 @@ export class EventTracksSettings {
     if (data.id) {
       return db.eventCategory.update({
         where: { id: data.id },
-        data: { name: data.name, description: data.description },
+        data: { name: data.name, description: data.description, color: data.color ?? null },
       });
     }
 
@@ -69,6 +69,7 @@ export class EventTracksSettings {
       data: {
         name: data.name,
         description: data.description,
+        color: data.color ?? null,
         order: categoriesCount,
         event: { connect: { id: event.id } },
       },

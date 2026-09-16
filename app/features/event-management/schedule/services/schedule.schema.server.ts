@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { HEX_COLOR_REGEX } from '~/shared/colors/colors.ts';
 import { parseToUtcEndOfDay, parseToUtcStartOfDay } from '~/shared/datetimes/timezone.ts';
 
 export const ScheduleCreateSchema = z
@@ -49,7 +50,7 @@ const ScheduleSessionSchema = z.object({
   start: z.coerce.date(),
   end: z.coerce.date(),
   name: z.string().trim().optional(),
-  color: z.string().optional(),
+  color: z.string().trim().regex(HEX_COLOR_REGEX).optional(),
   emojis: z.array(z.string()).optional(),
   language: z.string().trim().optional(),
   proposalId: z.string().optional(),

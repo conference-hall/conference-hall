@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { EmojiSelect } from '~/design-system/emojis/emoji-select.tsx';
-import ColorPicker from '~/design-system/forms/color-picker.tsx';
+import { ColorInput } from '~/design-system/forms/color-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
@@ -20,18 +20,21 @@ import { LANGUAGES } from '~/shared/constants.ts';
 import { getMinutesFromStartOfDay, setMinutesFromStartOfDay, toDateInput } from '~/shared/datetimes/datetimes.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
 import { useScheduleContext } from '../../context/schedule-context.tsx';
+import { categoryColor } from '../../models/category-color.ts';
 import { useSettings } from '../../store/schedule-store.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
-import { SESSION_COLORS, SESSION_EMOJIS } from './constants.ts';
+import { SESSION_EMOJIS } from './constants.ts';
 import { SessionIdentityField } from './session-identity-field.tsx';
 
 type Props = {
   mode: 'create' | 'edit';
   session: ScheduleSession;
+  // Event categories, already sorted by `order`: linking a proposal takes the colour of its first one.
+  categories: Array<{ id: string; color: string | null }>;
   onFinish: VoidFunction;
 };
 
-export function SessionForm({ mode, session, onFinish }: Props) {
+export function SessionForm({ mode, session, categories, onFinish }: Props) {
   const { t } = useTranslation();
   const { tracks, scheduleDays, displayedTimes } = useSettings();
   const { addSession, updateSession, deleteSession } = useScheduleContext();
@@ -81,6 +84,11 @@ export function SessionForm({ mode, session, onFinish }: Props) {
           onChange={(identity) => {
             setName(identity.name);
             setProposal(identity.proposal);
+            if (identity.proposal) {
+              const linked = categories.filter((category) => identity.categoryIds?.includes(category.id));
+              const color = categoryColor(linked);
+              if (color) setColor(color);
+            }
           }}
         />
 
@@ -145,12 +153,11 @@ export function SessionForm({ mode, session, onFinish }: Props) {
 
         <div className="flex items-center gap-7">
           <PaintBrushIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-          <ColorPicker
+          <ColorInput
             label={t('event-management.schedule.edit-session.color')}
+            toggleLabel={t('common.color.enable')}
             value={color}
             onChange={setColor}
-            options={SESSION_COLORS}
-            srOnly
           />
         </div>
 

@@ -1,14 +1,19 @@
 import { z } from 'zod';
+import { HEX_COLOR_REGEX } from '~/shared/colors/colors.ts';
 
-export const CategorySaveSchema = z.object({
+const TrackSaveSchema = z.object({
   id: z.string().trim().optional(),
   name: z.string().trim().min(1).max(255),
   description: z.string().trim().min(1).max(255),
 });
 
+export const CategorySaveSchema = TrackSaveSchema.extend({
+  color: z.string().trim().regex(HEX_COLOR_REGEX).optional(),
+});
+
 export type CategorySaveData = z.infer<typeof CategorySaveSchema>;
 
-export const FormatSaveSchema = CategorySaveSchema.extend({
+export const FormatSaveSchema = TrackSaveSchema.extend({
   durationInMinutes: z.coerce.number().int().min(1).max(1440).optional(),
 });
 

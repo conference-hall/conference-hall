@@ -63,7 +63,7 @@ export class ProposalReview {
       submittedAt: proposal.submittedAt,
       languages: proposal.languages as Languages,
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
-      categories: proposal.categories.map(({ id, name }) => ({ id, name })),
+      categories: proposal.categories.map(({ id, name, color }) => ({ id, name, color })),
       reviews: {
         you: reviews.ofUser(userId),
         summary: event.displayProposalsReviews ? reviews.summary() : null,

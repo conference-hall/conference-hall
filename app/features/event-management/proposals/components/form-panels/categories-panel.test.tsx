@@ -41,6 +41,23 @@ describe('CategoriesPanel component', () => {
     await expect.element(page.getByText('Artificial Intelligence')).toBeInTheDocument();
   });
 
+  it('fills the badge of a category holding a color', async () => {
+    await renderComponent({ defaultValue: [{ value: 'web', label: 'Web Development', color: '#ff5f5f' }] });
+
+    const badge = page.getByText('Web Development').element();
+
+    expect(badge.getAttribute('style')).toContain('rgb(255, 95, 95)');
+  });
+
+  it('leaves the badge of a category without color untouched', async () => {
+    await renderComponent({ defaultValue: [{ value: 'web', label: 'Web Development' }] });
+
+    const badge = page.getByText('Web Development').element();
+
+    expect(badge.getAttribute('style')).toBe(null);
+    expect(badge.className).toContain('bg-gray-100');
+  });
+
   it('shows no categories message when none selected', async () => {
     await renderComponent({ defaultValue: [] });
 

@@ -76,7 +76,7 @@ describe('ProposalReview', () => {
         submittedAt: proposal.submittedAt,
         languages: ['en'],
         formats: [{ id: format.id, name: format.name }],
-        categories: [{ id: category.id, name: category.name }],
+        categories: [{ id: category.id, name: category.name, color: category.color }],
         tags: [{ id: tag.id, name: tag.name, color: tag.color }],
         speakers: [
           {

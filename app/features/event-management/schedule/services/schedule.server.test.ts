@@ -14,6 +14,7 @@ import {
   ScheduleTrackRequiredError,
   SessionConflictError,
 } from '~/shared/errors.server.ts';
+import { db } from '../../../../../prisma/db.server.ts';
 import type { Event, Schedule, ScheduleTrack, Team, User } from '../../../../../prisma/generated/client.ts';
 import { EventSchedule } from './schedule.server.ts';
 
@@ -171,7 +172,7 @@ describe('EventSchedule', () => {
       expect(session?.proposalId).toBe(null);
     });
 
-    it('adds a session with the default palette color when none is given', async () => {
+    it('adds a session without color when none is given', async () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
@@ -181,7 +182,7 @@ describe('EventSchedule', () => {
         end: at(10),
       });
 
-      expect(session?.color).toBe('stone');
+      expect(session?.color).toBe(null);
     });
 
     it('adds a session with details', async () => {
@@ -193,13 +194,13 @@ describe('EventSchedule', () => {
         start: new Date(schedule.start),
         end: new Date(schedule.end),
         name: 'My session',
-        color: 'stone',
+        color: '#79716b',
         emojis: ['heart'],
         language: 'fr',
       });
 
       expect(session?.name).toBe('My session');
-      expect(session?.color).toBe('stone');
+      expect(session?.color).toBe('#79716b');
       expect(session?.emojis).toEqual(['heart']);
       expect(session?.language).toBe('fr');
       expect(session?.proposalId).toBe(null);
@@ -297,7 +298,7 @@ describe('EventSchedule', () => {
       const actual = await EventSchedule.for(authorizedEvent).updateSession({
         id: session.id,
         trackId: track2.id,
-        color: 'stone',
+        color: '#79716b',
         language: 'fr',
         emojis: ['heart'],
         start: new Date(schedule.end),
@@ -326,7 +327,7 @@ describe('EventSchedule', () => {
       const actual = await EventSchedule.for(authorizedEvent).updateSession({
         id: session.id,
         trackId: track.id,
-        color: 'stone',
+        color: '#79716b',
         language: 'fr',
         emojis: ['heart'],
         start: new Date(schedule.end),
@@ -340,11 +341,16 @@ describe('EventSchedule', () => {
       expect(actual?.emojis).toEqual(['heart']);
     });
 
-    it('updates a session with the default palette color when none is given', async () => {
+    it('clears the color of a session when none is given', async () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
       const eventSchedule = EventSchedule.for(authorizedEvent);
-      const session = await eventSchedule.addSession({ trackId: track.id, start: at(9), end: at(10), color: 'pink' });
+      const session = await eventSchedule.addSession({
+        trackId: track.id,
+        start: at(9),
+        end: at(10),
+        color: '#f6339a',
+      });
 
       const actual = await eventSchedule.updateSession({
         id: session.id,
@@ -353,7 +359,7 @@ describe('EventSchedule', () => {
         end: at(10),
       });
 
-      expect(actual?.color).toBe('stone');
+      expect(actual?.color).toBe(null);
     });
 
     it('throws schedule track not found Error when the track belongs to another schedule', async () => {
@@ -370,7 +376,7 @@ describe('EventSchedule', () => {
         eventSchedule.updateSession({
           id: session.id,
           trackId: otherTrack.id,
-          color: 'stone',
+          color: '#79716b',
           emojis: [],
           start: at(9),
           end: at(10),
@@ -392,7 +398,7 @@ describe('EventSchedule', () => {
         eventSchedule.updateSession({
           id: session.id,
           trackId: track.id,
-          color: 'stone',
+          color: '#79716b',
           emojis: [],
           start: at(9),
           end: at(10),
@@ -413,7 +419,7 @@ describe('EventSchedule', () => {
         eventSchedule.updateSession({
           id: session.id,
           trackId: track.id,
-          color: 'stone',
+          color: '#79716b',
           emojis: [],
           start: at(10),
           end: at(12),
@@ -430,7 +436,7 @@ describe('EventSchedule', () => {
         EventSchedule.for(authorizedEvent).updateSession({
           id: 'id',
           trackId: 'track',
-          color: 'stone',
+          color: '#79716b',
           emojis: [],
           start: new Date(schedule.end),
           end: new Date(schedule.end),
@@ -645,6 +651,18 @@ describe('EventSchedule', () => {
   });
 
   describe('#getScheduleSessions', () => {
+    it('reads a color the hex backfill has not converted as no color', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const eventSchedule = EventSchedule.for(authorizedEvent);
+      const session = await eventSchedule.addSession({ trackId: track.id, start: at(9), end: at(10) });
+      await db.scheduleSession.update({ where: { id: session.id }, data: { color: 'stone' } });
+
+      const sessions = await eventSchedule.getScheduleSessions();
+
+      expect(sessions?.sessions[0].color).toBe(null);
+    });
+
     it('get schedule data and sessions', async () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
@@ -659,7 +677,7 @@ describe('EventSchedule', () => {
       await EventSchedule.for(authorizedEvent).updateSession({
         id: session.id,
         trackId: track.id,
-        color: 'stone',
+        color: '#79716b',
         emojis: ['heart'],
         start: new Date(schedule.start),
         end: new Date(schedule.start),
@@ -687,7 +705,7 @@ describe('EventSchedule', () => {
             name: null,
             language: 'en',
             emojis: ['heart'],
-            color: 'stone',
+            color: '#79716b',
             proposal: {
               id: proposal.id,
               routeId: proposal.routeId,

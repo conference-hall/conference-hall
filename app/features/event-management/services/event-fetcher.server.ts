@@ -64,7 +64,7 @@ export class EventFetcher {
         description,
         durationInMinutes,
       })),
-      categories: fullEvent.categories.map(({ id, name, description }) => ({ id, name, description })),
+      categories: fullEvent.categories.map(({ id, name, description, color }) => ({ id, name, description, color })),
       integrations: fullEvent.integrations.map((integration) => integration.name),
       archived: fullEvent.archived,
       tags: sortBy(

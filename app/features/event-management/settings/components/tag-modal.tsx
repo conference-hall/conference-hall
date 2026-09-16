@@ -1,13 +1,12 @@
-import { PaintBrushIcon } from '@heroicons/react/24/outline';
 import { type ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
+import { ColorInput } from '~/design-system/forms/color-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Tag } from '~/design-system/tag.tsx';
-import { Tooltip } from '~/design-system/tooltip.tsx';
-import { getContrastColor, getRandomColor } from '~/shared/colors/colors.ts';
+import { getRandomColor } from '~/shared/colors/colors.ts';
 import type { Tag as TagType } from '~/shared/types/tags.types.ts';
 
 type TagModalProps = {
@@ -62,23 +61,12 @@ function TagModalContent({ mode, initialValues, open, onClose }: TagModalContent
           <div className="flex gap-2">
             <input type="hidden" name="id" value={initialValues?.id} />
 
-            <Tooltip text={t('event-management.settings.tags.pick-a-color')} placement="bottom">
-              <div className="group relative h-9 w-12">
-                <input
-                  type="color"
-                  name="color"
-                  aria-label={t('event-management.settings.tags.pick-a-color')}
-                  defaultValue={color}
-                  onChange={(event) => setColor(event.target.value)}
-                  className="h-9 w-12 cursor-pointer bg-white [&::-webkit-color-swatch]:rounded-md [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0"
-                  required
-                />
-                <PaintBrushIcon
-                  className="pointer-events-none absolute top-1.5 left-3 size-6"
-                  style={{ color: getContrastColor(color) }}
-                />
-              </div>
-            </Tooltip>
+            <ColorInput
+              name="color"
+              label={t('event-management.settings.tags.pick-a-color')}
+              value={color}
+              onChange={(value) => value && setColor(value)}
+            />
 
             <Input
               name="name"

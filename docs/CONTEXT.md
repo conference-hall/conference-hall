@@ -51,7 +51,10 @@ term as defined here and don't drift to synonyms.
 
 - **Category** — An organizer-defined **topic/track** for an event (e.g. Backend,
   Mobile, UX) — _what_ it's about. Same optional/multiple rules as Format. Format and
-  Category are parallel but distinct taxonomies; don't conflate them.
+  Category are parallel but distinct taxonomies; don't conflate them. A category may
+  carry an optional free hex `color`, used organizer-side only: it fills the proposal
+  badge, and linking a proposal to a schedule session copies the color of its first
+  category (by `order`) onto that session.
 
 - **Tag** (proposal tag) — An organizer-created, colored label applied to proposals
   for internal organization (e.g. "Keynote", "Needs review"). Per-event.

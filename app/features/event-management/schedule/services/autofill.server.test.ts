@@ -1,3 +1,4 @@
+import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { scheduleTrackFactory } from 'tests/factories/schedule-track.ts';
@@ -180,12 +181,37 @@ describe('ScheduleAutofill', () => {
     it('leaves the name, color and emojis of a filled session untouched', async () => {
       await acceptedProposal();
       const session = await addSession({ trackId: track.id, start: at(9), end: at(10) });
-      await db.scheduleSession.update({ where: { id: session.id }, data: { color: 'pink', emojis: ['fire'] } });
+      await db.scheduleSession.update({ where: { id: session.id }, data: { color: '#f6339a', emojis: ['fire'] } });
 
       await ScheduleAutofill.for(await authorizedEvent()).run(scopeOf());
 
       const saved = await db.scheduleSession.findUnique({ where: { id: session.id } });
-      expect(saved).toMatchObject({ name: null, color: 'pink', emojis: ['fire'] });
+      expect(saved).toMatchObject({ name: null, color: '#f6339a', emojis: ['fire'] });
+    });
+
+    it('applies the color of the first category of the proposal', async () => {
+      const category = await eventCategoryFactory({ event, attributes: { color: '#ff5f5f' } });
+      const proposal = await acceptedProposal();
+      await db.proposal.update({ where: { id: proposal.id }, data: { categories: { connect: { id: category.id } } } });
+      const session = await addSession({ trackId: track.id, start: at(9), end: at(10) });
+
+      await ScheduleAutofill.for(await authorizedEvent()).run(scopeOf());
+
+      const saved = await db.scheduleSession.findUnique({ where: { id: session.id } });
+      expect(saved?.color).toBe('#ff5f5f');
+    });
+
+    it('keeps the session color when the first category of the proposal has no color', async () => {
+      const category = await eventCategoryFactory({ event });
+      const proposal = await acceptedProposal();
+      await db.proposal.update({ where: { id: proposal.id }, data: { categories: { connect: { id: category.id } } } });
+      const session = await addSession({ trackId: track.id, start: at(9), end: at(10) });
+      await db.scheduleSession.update({ where: { id: session.id }, data: { color: '#f6339a' } });
+
+      await ScheduleAutofill.for(await authorizedEvent()).run(scopeOf());
+
+      const saved = await db.scheduleSession.findUnique({ where: { id: session.id } });
+      expect(saved?.color).toBe('#f6339a');
     });
 
     it('skips a session already filled, never overwrites it', async () => {
@@ -251,17 +277,17 @@ describe('ScheduleAutofill', () => {
       expect(report.assignments).toEqual([{ sessionId: session.id, proposalId: proposal.id }]);
     });
 
-    it('clears a session left without a candidate and keeps its name, color and emojis', async () => {
+    it('clears a session left without a candidate, its color included, and keeps its name and emojis', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk, traits: ['accepted'] });
       const session = await addSession({ trackId: track.id, start: at(9), end: at(10), proposalId: proposal.id });
-      await db.scheduleSession.update({ where: { id: session.id }, data: { color: 'pink', emojis: ['fire'] } });
+      await db.scheduleSession.update({ where: { id: session.id }, data: { color: '#f6339a', emojis: ['fire'] } });
       await db.proposal.update({ where: { id: proposal.id }, data: { deliberationStatus: 'REJECTED' } });
 
       await ScheduleAutofill.for(await authorizedEvent()).run(scopeOf({ reset: true }));
 
       const saved = await db.scheduleSession.findUnique({ where: { id: session.id } });
-      expect(saved).toMatchObject({ proposalId: null, language: null, color: 'pink', emojis: ['fire'] });
+      expect(saved).toMatchObject({ proposalId: null, language: null, color: null, emojis: ['fire'] });
     });
 
     it('spares a session outside the scope', async () => {

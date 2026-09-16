@@ -1,9 +1,18 @@
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { VariantProps } from 'class-variance-authority';
-import { cva } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
+import { getContrastColor, isHexColor } from '~/shared/colors/colors.ts';
 
-const defaultBadge = cva('inline-flex items-center gap-1 text-nowrap', {
+const badgeShape = cva('inline-flex items-center gap-1 text-nowrap', {
+  variants: {
+    compact: { true: 'h-5 px-1.5 py-0.5 text-[10px] font-medium', false: 'px-2 py-0.5 text-xs font-medium' },
+    pill: { true: 'rounded-full', false: 'rounded-md' },
+  },
+  defaultVariants: { pill: false, compact: false },
+});
+
+const badgeColor = cva('', {
   variants: {
     color: {
       gray: 'bg-gray-100 text-gray-800 ring-1 ring-gray-500/10 ring-inset',
@@ -15,10 +24,8 @@ const defaultBadge = cva('inline-flex items-center gap-1 text-nowrap', {
       purple: 'bg-purple-50 text-purple-700 ring-1 ring-purple-700/10 ring-inset',
       pink: 'bg-pink-50 text-pink-700 ring-1 ring-pink-700/10 ring-inset',
     },
-    compact: { true: 'h-5 px-1.5 py-0.5 text-[10px] font-medium', false: 'px-2 py-0.5 text-xs font-medium' },
-    pill: { true: 'rounded-full', false: 'rounded-md' },
   },
-  defaultVariants: { color: 'gray', pill: false, compact: false },
+  defaultVariants: { color: 'gray' },
 });
 
 const dotBadge = cva(
@@ -42,13 +49,22 @@ const dotBadge = cva(
   },
 );
 
-type BadgeProps = { children: React.ReactNode; closeLabel?: string; onClose?: () => void } & VariantProps<
-  typeof defaultBadge
->;
+type BadgeProps = {
+  children: React.ReactNode;
+  closeLabel?: string;
+  onClose?: () => void;
+  // Free hex color (`#rrggbb`). Takes over the `color` variant and fills the badge.
+  hexColor?: string | null;
+} & VariantProps<typeof badgeShape> &
+  VariantProps<typeof badgeColor>;
 
-export function Badge({ color, pill, compact, children, closeLabel, onClose }: BadgeProps) {
+export function Badge({ color, pill, compact, hexColor, children, closeLabel, onClose }: BadgeProps) {
+  const filled = isHexColor(hexColor) ? hexColor : null;
   return (
-    <span className={defaultBadge({ color, pill, compact })}>
+    <span
+      className={cx(badgeShape({ pill, compact }), filled ? null : badgeColor({ color }))}
+      style={filled ? { backgroundColor: filled, color: getContrastColor(filled) } : undefined}
+    >
       {children}
       {onClose && closeLabel ? <CloseButton closeLabel={closeLabel} onClose={onClose} /> : null}
     </span>
