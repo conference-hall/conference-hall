@@ -45,6 +45,7 @@ describe('EventPage', () => {
             id: format.id,
             name: format.name,
             description: format.description,
+            durationInMinutes: format.durationInMinutes,
           },
         ],
         formatsRequired: false,

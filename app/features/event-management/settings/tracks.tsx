@@ -12,8 +12,9 @@ import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/tracks.ts';
 import { TrackList } from './components/track-list.tsx';
 import {
+  CategorySaveSchema,
+  FormatSaveSchema,
   TrackReorderSchema,
-  TrackSaveSchema,
   TracksSettingsSchema,
 } from './services/event-tracks-settings.schema.server.ts';
 import { EventTracksSettings } from './services/event-tracks-settings.server.ts';
@@ -37,13 +38,13 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
       break;
     }
     case 'save-formats': {
-      const result = parseWithZod(form, { schema: TrackSaveSchema });
+      const result = parseWithZod(form, { schema: FormatSaveSchema });
       if (result.status !== 'success') return result.error;
       await tracks.saveFormat(result.value);
       break;
     }
     case 'save-categories': {
-      const result = parseWithZod(form, { schema: TrackSaveSchema });
+      const result = parseWithZod(form, { schema: CategorySaveSchema });
       if (result.status !== 'success') return result.error;
       await tracks.saveCategory(result.value);
       break;

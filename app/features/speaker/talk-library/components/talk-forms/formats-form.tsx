@@ -2,9 +2,12 @@ import { useTranslation } from 'react-i18next';
 import { FieldsetGroup } from '~/design-system/forms/fieldset-group.tsx';
 import { Checkbox } from '~/design-system/forms/input-checkbox.tsx';
 import { Radio } from '~/design-system/forms/input-radio.tsx';
+import { formatDuration } from '~/shared/datetimes/datetimes.ts';
+
+type Format = { id: string; name: string; description?: string | null; durationInMinutes?: number | null };
 
 type FormProps = {
-  formats: Array<{ id: string; name: string; description?: string | null }>;
+  formats: Array<Format>;
   required?: boolean;
   initialValues?: string[];
 };
@@ -19,7 +22,7 @@ export function FormatsForm({ formatsAllowMultiple, ...formProps }: Props) {
 }
 
 function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   return (
     <FieldsetGroup
       legend={t('event.submission.tracks.select-formats')}
@@ -33,7 +36,7 @@ function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
           defaultChecked={initialValues?.includes(format.id)}
           description={format.description}
         >
-          {format.name}
+          {formatLabel(format, i18n.language)}
         </Checkbox>
       ))}
     </FieldsetGroup>
@@ -41,7 +44,7 @@ function FormatsCheckboxForm({ formats, required, initialValues }: FormProps) {
 }
 
 function FormatsRadioForm({ formats, required, initialValues }: FormProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   return (
     <FieldsetGroup
       legend={t('event.submission.tracks.select-formats')}
@@ -55,9 +58,14 @@ function FormatsRadioForm({ formats, required, initialValues }: FormProps) {
           defaultChecked={initialValues?.includes(format.id)}
           description={format.description}
         >
-          {format.name}
+          {formatLabel(format, i18n.language)}
         </Radio>
       ))}
     </FieldsetGroup>
   );
+}
+
+function formatLabel(format: Format, locale: string) {
+  if (!format.durationInMinutes) return format.name;
+  return `${format.name} (${formatDuration(format.durationInMinutes, locale)})`;
 }

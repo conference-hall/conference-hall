@@ -45,7 +45,9 @@ term as defined here and don't drift to synonyms.
 
 - **Format** — An organizer-defined **presentation mode** for an event (e.g. Talk,
   Workshop, Lightning, Panel) — _how_ it's delivered. A proposal may require one,
-  allow several, or none (`formatsRequired` / `formatsAllowMultiple`).
+  allow several, or none (`formatsRequired` / `formatsAllowMultiple`). A format may
+  carry an optional `durationInMinutes`, shown to speakers at submission. It is
+  informational: the schedule does not read it.
 
 - **Category** — An organizer-defined **topic/track** for an event (e.g. Backend,
   Mobile, UX) — _what_ it's about. Same optional/multiple rules as Format. Format and

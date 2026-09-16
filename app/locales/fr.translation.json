@@ -789,6 +789,7 @@
   "event-management.settings.tracks.categories.save": "Enregistrer la catégorie",
   "event-management.settings.tracks.feedbacks.updated": "Modification enregistrée.",
   "event-management.settings.tracks.formats.description": "Définir les formats disponibles pour les propositions.",
+  "event-management.settings.tracks.formats.duration.label": "Durée (minutes)",
   "event-management.settings.tracks.formats.heading": "Formats",
   "event-management.settings.tracks.formats.multiple.description": "Détermine si les speakers peuvent sélectionner plusieurs formats.",
   "event-management.settings.tracks.formats.multiple.label": "Autoriser les formats multiples",

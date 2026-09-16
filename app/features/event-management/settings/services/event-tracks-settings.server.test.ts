@@ -38,6 +38,48 @@ describe('EventTracksSettings', () => {
       expect(updated?.formats[0].description).toBe('Format 1');
     });
 
+    it('adds a new format with a duration', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveFormat({
+        name: 'Format 1',
+        description: 'Format 1',
+        durationInMinutes: 45,
+      });
+
+      const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
+
+      expect(updated?.formats[0].durationInMinutes).toBe(45);
+    });
+
+    it('adds a new format without duration', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveFormat({
+        name: 'Format 1',
+        description: 'Format 1',
+      });
+
+      const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
+
+      expect(updated?.formats[0].durationInMinutes).toBe(null);
+    });
+
+    it('removes the duration of a format when not given', async () => {
+      const format = await eventFormatFactory({ event, attributes: { durationInMinutes: 45 } });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveFormat({
+        id: format.id,
+        name: 'Format 1',
+        description: 'Format 1',
+      });
+
+      const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
+
+      expect(updated?.formats[0].durationInMinutes).toBe(null);
+    });
+
     it('adds a new format with correct order at the end', async () => {
       await eventFormatFactory({ event, attributes: { name: 'Format 1' } });
       await eventFormatFactory({ event, attributes: { name: 'Format 2' } });

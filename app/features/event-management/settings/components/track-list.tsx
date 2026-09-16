@@ -4,15 +4,16 @@ import { useFetcher } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
+import { formatDuration } from '~/shared/datetimes/datetimes.ts';
 import { EditTrackButton, NewTrackButton } from './save-track-form.tsx';
 
 type TrackListProps = {
   type: 'formats' | 'categories';
-  tracks: Array<{ id: string; name: string; description: string | null }>;
+  tracks: Array<{ id: string; name: string; description: string | null; durationInMinutes?: number | null }>;
 };
 
 export function TrackList({ type, tracks }: TrackListProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const fetcher = useFetcher({ key: `reorder-${type}` });
 
   const handleReorder = (trackId: string, direction: 'up' | 'down') => {
@@ -34,6 +35,11 @@ export function TrackList({ type, tracks }: TrackListProps) {
             <div className="truncate">
               <Text weight="medium" truncate>
                 {track.name}
+                {track.durationInMinutes ? (
+                  <span className="ml-2 font-normal text-gray-500">
+                    {formatDuration(track.durationInMinutes, i18n.language)}
+                  </span>
+                ) : null}
               </Text>
               <Subtitle truncate>{track.description}</Subtitle>
             </div>

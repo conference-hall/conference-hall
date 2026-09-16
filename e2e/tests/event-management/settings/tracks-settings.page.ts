@@ -4,6 +4,7 @@ export class TracksSettingsPage extends PageObject {
   readonly heading = this.page.getByRole('heading', { name: 'Formats' });
   readonly nameInput = this.page.getByLabel('Name');
   readonly descriptionInput = this.page.getByLabel('Description');
+  readonly durationInput = this.page.getByLabel('Duration (minutes)');
 
   readonly saveFormatButton = this.page.getByRole('button', { name: 'Save format' });
   readonly newFormatButton = this.page.getByRole('button', { name: 'New format' });
