@@ -39,7 +39,7 @@ export class Autocomplete {
       this.authorizedEvent.event.id,
       this.authorizedEvent.userId,
       { query },
-      { withSpeakers: event.displayProposalsSpeakers, withReviews: false },
+      { withSpeakers: event.displayProposalsSpeakers, withReviews: false, withCategories: true },
     );
 
     const proposals = await search.proposalsByPage(pagination);
@@ -50,6 +50,7 @@ export class Autocomplete {
       routeId: proposal.routeId,
       title: proposal.title,
       speakers: sortBy(proposal.speakers, 'name').map(({ name, picture }) => ({ name, picture })),
+      categoryIds: proposal.categories.map((category) => category.id),
     }));
   }
 

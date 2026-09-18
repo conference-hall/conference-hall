@@ -73,6 +73,7 @@ describe('Autocomplete for event management', () => {
               routeId: proposal.routeId,
               title: 'React Best Practices',
               speakers: [{ name: speaker.name, picture: speaker.picture }],
+              categoryIds: [],
             },
           ]);
         });
@@ -291,6 +292,7 @@ describe('Autocomplete for event management', () => {
             routeId: proposal.routeId,
             title: 'React Testing',
             speakers: [{ name: speaker.name, picture: speaker.picture }],
+            categoryIds: [],
           });
 
           const speakerResult = results.find((r) => r.kind === 'speakers');

@@ -13,6 +13,7 @@ const PROPOSALS: ProposalResult[] = [
     routeId: 'react-performance',
     title: 'React Performance Best Practices',
     speakers: [{ name: 'John Doe', picture: null }],
+    categoryIds: [],
   },
   {
     kind: 'proposals',
@@ -20,6 +21,7 @@ const PROPOSALS: ProposalResult[] = [
     routeId: 'vue-patterns',
     title: 'Vue.js Advanced Patterns',
     speakers: [{ name: 'Jane Smith', picture: null }],
+    categoryIds: [],
   },
 ];
 

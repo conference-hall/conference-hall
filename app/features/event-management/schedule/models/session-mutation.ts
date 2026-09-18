@@ -1,7 +1,6 @@
 import type { TimeSlot } from '~/shared/datetimes/timeslots.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
 import type { ScheduleSession, SessionData } from '../components/schedule.types.ts';
-import { DEFAULT_SESSION_COLOR } from '../components/session/constants.ts';
 import type { ScheduleTime } from './schedule-time.ts';
 import { type PlacementOutcome, SessionPlacement, type SwapOutcome } from './session-placement.ts';
 
@@ -77,7 +76,7 @@ export class SessionMutations {
       timeslot,
       name: '',
       language: null,
-      color: DEFAULT_SESSION_COLOR,
+      color: null,
       emojis: [],
       proposal: null,
     };
@@ -138,7 +137,8 @@ export class SessionMutations {
     formData.set('trackId', session.trackId);
     formData.set('start', this.deps.scheduleTime.toUtc(session.timeslot.start).toISOString());
     formData.set('end', this.deps.scheduleTime.toUtc(session.timeslot.end).toISOString());
-    formData.set('color', session.color);
+    // An absent `color` means "no colour": the schema rejects an empty string.
+    if (session.color) formData.set('color', session.color);
     formData.set('name', session.name ?? '');
     formData.set('language', session.language ?? '');
     formData.set('proposalId', session.proposal?.id ?? '');
@@ -160,7 +160,7 @@ function decodeSession(formData: FormData, scheduleTime: ScheduleTime): Schedule
       start: scheduleTime.fromUtc(new Date(String(formData.get('start')))),
       end: scheduleTime.fromUtc(new Date(String(formData.get('end')))),
     },
-    color: String(formData.get('color')),
+    color: String(formData.get('color') ?? '') || null,
     name: String(formData.get('name') ?? '') || null,
     language: (String(formData.get('language') ?? '') || null) as Language | null,
     emojis: formData.getAll('emojis').map(String),

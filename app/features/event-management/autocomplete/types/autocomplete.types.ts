@@ -16,6 +16,7 @@ export type ProposalResult = {
   routeId: string; // URL slug (used for navigation / "see proposal" link)
   title: string;
   speakers: Array<{ name: string | null; picture: string | null }>;
+  categoryIds: Array<string>; // used by the schedule to colour a session from its category
 };
 
 export type SpeakerResult = {

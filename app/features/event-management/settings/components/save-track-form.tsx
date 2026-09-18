@@ -4,11 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
+import { ColorInput } from '~/design-system/forms/color-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
 
 type TrackType = 'formats' | 'categories';
-type TrackData = { id: string; name: string; description?: string | null; durationInMinutes?: number | null };
+type TrackData = {
+  id: string;
+  name: string;
+  description?: string | null;
+  durationInMinutes?: number | null;
+  color?: string | null;
+};
 type NewTrackButtonProps = { type: TrackType };
 
 export function NewTrackButton({ type }: NewTrackButtonProps) {
@@ -21,7 +28,12 @@ export function NewTrackButton({ type }: NewTrackButtonProps) {
           ? t('event-management.settings.tracks.formats.new')
           : t('event-management.settings.tracks.categories.new')}
       </Button>
-      <SaveTrackFormModal type={type} isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
+      <SaveTrackFormModal
+        key={String(isModalOpen)}
+        type={type}
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </>
   );
 }
@@ -37,6 +49,7 @@ export function EditTrackButton({ type, initialValues }: EditTrackButtonProps) {
         {t('common.edit')}
       </Button>
       <SaveTrackFormModal
+        key={String(isModalOpen)}
         type={type}
         initialValues={initialValues}
         isOpen={isModalOpen}
@@ -51,6 +64,7 @@ type SaveTrackFormModalProps = { type: TrackType; initialValues?: TrackData; isO
 function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackFormModalProps) {
   const { t } = useTranslation();
   const formId = useId();
+  const [color, setColor] = useState(initialValues?.color ?? null);
   return (
     <Modal
       title={
@@ -82,7 +96,15 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
               max={1440}
               autoComplete="off"
             />
-          ) : null}
+          ) : (
+            <ColorInput
+              name="color"
+              label={t('common.color.label')}
+              toggleLabel={t('common.color.enable')}
+              value={color}
+              onChange={setColor}
+            />
+          )}
           <input type="hidden" name="id" value={initialValues?.id} />
         </Form>
       </Modal.Content>
