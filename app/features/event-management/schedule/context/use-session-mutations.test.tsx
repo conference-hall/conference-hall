@@ -1,4 +1,4 @@
-import { useSubmit } from 'react-router';
+import type { SubmitFunction } from 'react-router';
 import { renderHook } from 'vitest-browser-react';
 import type { ScheduleSession } from '../components/schedule.types.ts';
 import { ScheduleTime } from '../models/schedule-time.ts';
@@ -6,7 +6,7 @@ import { ScheduleStore } from '../store/schedule-store.ts';
 import { buildScheduleSettings } from './schedule-context.test-helpers.tsx';
 import { useSessionMutations } from './use-session-mutations.ts';
 
-vi.mock('react-router', () => ({ useSubmit: vi.fn() }));
+const submit = vi.fn<SubmitFunction>();
 
 const scheduleTime = new ScheduleTime('Europe/Paris');
 const settings = buildScheduleSettings();
@@ -29,28 +29,22 @@ const morning = session('session-1', 9, 10);
 
 function renderMutations(sessions: Array<ScheduleSession> = [morning]) {
   const store = new ScheduleStore({ sessions, settings });
-  return renderHook(() => useSessionMutations(store, scheduleTime));
+  return renderHook(() => useSessionMutations(store, scheduleTime, submit));
 }
 
-const lastSubmit = (submit: ReturnType<typeof vi.fn>) => {
+const lastSubmit = () => {
   const [formData, options] = submit.mock.calls.at(-1) ?? [];
   return { formData: formData as FormData, options: options as Record<string, unknown> };
 };
 
 describe('useSessionMutations', () => {
-  const submit = vi.fn();
-
-  beforeEach(() => {
-    vi.mocked(useSubmit).mockReturnValue(submit);
-  });
-
   it('submits a move as an update keyed on the Session, flushed synchronously', async () => {
     const { result } = await renderMutations();
 
     const outcome = await result.current.move(morning, { trackId: 'track-1', start: local(11) });
 
     expect(outcome.status).toBe('placed');
-    const { formData, options } = lastSubmit(submit);
+    const { formData, options } = lastSubmit();
     expect(formData.get('intent')).toBe('update-session');
     expect(formData.get('id')).toBe('session-1');
     expect(options).toMatchObject({
@@ -66,7 +60,7 @@ describe('useSessionMutations', () => {
 
     await result.current.resize(morning, local(12));
 
-    const { formData, options } = lastSubmit(submit);
+    const { formData, options } = lastSubmit();
     expect(formData.get('intent')).toBe('update-session');
     expect(options).toMatchObject({ fetcherKey: 'session:session-1', flushSync: true });
   });
@@ -77,7 +71,7 @@ describe('useSessionMutations', () => {
 
     await result.current.swap(morning, other);
 
-    const { formData, options } = lastSubmit(submit);
+    const { formData, options } = lastSubmit();
     expect(formData.get('intent')).toBe('switch-sessions');
     expect(formData.get('sourceId')).toBe('session-1');
     expect(formData.get('targetId')).toBe('session-2');
@@ -89,7 +83,7 @@ describe('useSessionMutations', () => {
 
     await result.current.add({ ...morning, timeslot: { start: local(14), end: local(15) } });
 
-    const { formData, options } = lastSubmit(submit);
+    const { formData, options } = lastSubmit();
     expect(formData.get('intent')).toBe('add-session');
     expect(options.fetcherKey).toBe(`session:${formData.get('id')}`);
     expect(options).toMatchObject({ flushSync: true });
@@ -100,7 +94,7 @@ describe('useSessionMutations', () => {
 
     await result.current.delete(morning);
 
-    const { formData, options } = lastSubmit(submit);
+    const { formData, options } = lastSubmit();
     expect(formData.get('intent')).toBe('delete-session');
     expect(options).toMatchObject({ fetcherKey: undefined, flushSync: false });
   });
@@ -116,7 +110,7 @@ describe('useSessionMutations', () => {
 
   it('places a mutation against the Sessions the store holds now', async () => {
     const store = new ScheduleStore({ sessions: [morning], settings });
-    const { result } = await renderHook(() => useSessionMutations(store, scheduleTime));
+    const { result } = await renderHook(() => useSessionMutations(store, scheduleTime, submit));
 
     store.replace({ sessions: [morning, session('session-2', 11, 12)], settings });
     const outcome = await result.current.resize(morning, local(12));

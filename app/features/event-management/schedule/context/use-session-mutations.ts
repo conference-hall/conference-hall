@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useSubmit } from 'react-router';
+import type { SubmitFunction } from 'react-router';
 import type { ScheduleSession } from '../components/schedule.types.ts';
 import type { ScheduleTime } from '../models/schedule-time.ts';
 import { type SessionMutation, SessionMutations } from '../models/session-mutation.ts';
@@ -14,9 +14,11 @@ export type SessionActions = {
   delete: SessionMutations['delete'];
 };
 
-export function useSessionMutations(store: ScheduleStore, scheduleTime: ScheduleTime): SessionActions {
-  const submit = useSubmit();
-
+export function useSessionMutations(
+  store: ScheduleStore,
+  scheduleTime: ScheduleTime,
+  submit: SubmitFunction,
+): SessionActions {
   const submitSession = useCallback(
     async ({ key, formData }: SessionMutation) => {
       await submit(formData, {
