@@ -1,5 +1,5 @@
 import { type ReactNode, useCallback, useLayoutEffect, useMemo, useState } from 'react';
-import { useFetchers } from 'react-router';
+import { useFetchers, useSubmit } from 'react-router';
 import type { ScheduleData } from '../components/schedule.types.ts';
 import { SessionModal } from '../components/session/session-modal.tsx';
 import { ScheduleTime } from '../models/schedule-time.ts';
@@ -16,6 +16,7 @@ export function ScheduleProvider({ schedule, children }: ScheduleProviderProps) 
   const scheduleTime = useMemo(() => new ScheduleTime(schedule.timezone), [schedule.timezone]);
   const display = useDisplaySettings(schedule, scheduleTime);
   const fetchers = useFetchers();
+  const submit = useSubmit();
 
   const sessions = pendingSessions(schedule.sessions, fetchers, scheduleTime);
 
@@ -38,7 +39,7 @@ export function ScheduleProvider({ schedule, children }: ScheduleProviderProps) 
 
   const [editedSession, setEditedSession] = useState<EditedSession | null>(null);
   const closeSession = useCallback(() => setEditedSession(null), []);
-  const mutations = useSessionMutations(stores.schedule, scheduleTime);
+  const mutations = useSessionMutations(stores.schedule, scheduleTime, submit);
 
   const sessionModal = useMemo(() => {
     if (!editedSession) return null;
