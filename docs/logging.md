@@ -10,7 +10,7 @@ paths:
 
 Use the shared pino logger from `~/shared/logger/logger.server.ts` for all server-side logging.
 Never use `console.log/info/warn/error` directly (except in `servers/environment.server.ts`
-where the logger isn't available yet).
+and `servers/otel.server.ts`, both of which run before the logger is available).
 
 ```typescript
 import { logger } from '~/shared/logger/logger.server.ts';

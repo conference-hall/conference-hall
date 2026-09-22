@@ -1,4 +1,5 @@
 import { type JobsOptions, Queue } from 'bullmq';
+import { jobsTelemetry } from '~/shared/otel/bullmq-otel.server.ts';
 import { getJobsConnection } from './connection.ts';
 import { DEFAULT_QUEUE } from './worker.ts';
 
@@ -28,6 +29,7 @@ export function job<Payload>(config: JobConfig<Payload>): Job<Payload> {
           queue,
           new Queue(queue, {
             connection,
+            telemetry: jobsTelemetry(),
             defaultJobOptions: {
               attempts: 5,
               backoff: { type: 'exponential', delay: 3000 },

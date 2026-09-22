@@ -1,5 +1,6 @@
 import { Worker } from 'bullmq';
 import { logger, runWithLogger } from '~/shared/logger/logger.server.ts';
+import { jobsTelemetry } from '~/shared/otel/bullmq-otel.server.ts';
 import { getJobsConnection } from './connection.ts';
 import type { Job } from './job.ts';
 
@@ -43,6 +44,7 @@ function createJobWorker(queue: string, jobs: Array<Job<any>>): JobWorker {
     },
     {
       connection,
+      telemetry: jobsTelemetry(),
       concurrency: 1,
       removeOnComplete: { count: 1000 },
       removeOnFail: { count: 1000 },

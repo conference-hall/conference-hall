@@ -7,3 +7,4 @@ allowBuilds:
   lefthook: false
   msgpackr-extract: false
   prisma: false
+  protobufjs: false
