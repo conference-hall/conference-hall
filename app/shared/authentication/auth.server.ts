@@ -18,6 +18,7 @@ const webEnv = getWebServerEnv();
 
 export const auth = betterAuth({
   baseURL: APP_URL,
+  experimental: { instrumentation: { enabled: false } },
   database: prismaAdapter(db, { provider: 'postgresql' }),
   secondaryStorage: getSecondaryStorage(),
   plugins: getPlugins(),

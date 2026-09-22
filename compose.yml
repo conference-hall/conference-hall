@@ -58,6 +58,13 @@ services:
       GARAGE_ACCESS_KEY_ID: conferencehall
     entrypoint: ['sh', '/setup.sh']
 
+  jaeger:
+    container_name: ch_jaeger
+    image: jaegertracing/jaeger:2.21.0
+    ports:
+      - '16686:16686'
+      - '4318:4318'
+
   mailpit:
     container_name: ch_mailpit
     image: axllent/mailpit:latest

@@ -12,6 +12,8 @@ import { Nonce } from './shared/nonce/use-nonce.ts';
 
 export const streamTimeout = 5_000;
 
+export { instrumentations } from './shared/otel/react-router-otel.server.ts';
+
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,

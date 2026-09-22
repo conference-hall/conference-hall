@@ -14,6 +14,7 @@ import { applySecurity } from './fastify/security.ts';
 import { applySeoHeader } from './fastify/seo.ts';
 import { staticCacheHeaders } from './fastify/static.ts';
 import { applyUrlCleaning } from './fastify/url-cleaning.ts';
+import { shutdownOtel } from './otel.server.ts';
 
 const { HOST, PORT } = getWebServerEnv();
 
@@ -120,6 +121,7 @@ if (isMain) {
     try {
       await app.close();
       await disconnectRedis();
+      await shutdownOtel();
       clearTimeout(timeout);
       process.exit(0);
     } catch (error) {

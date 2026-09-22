@@ -6,6 +6,7 @@ import { createJobWorkers } from '~/shared/jobs/worker.ts';
 import { testJob } from '../app/features/admin/debug/services/jobs/test.job.ts';
 import { logger } from '../app/shared/logger/logger.server.ts';
 import { db } from '../prisma/db.server.ts';
+import { shutdownOtel } from './otel.server.ts';
 
 const jobs = [sendEmail, exportToOpenPlanner, sendTalkToSlack, testJob];
 
@@ -37,6 +38,7 @@ const gracefulShutdown = async (signal: string) => {
     }
     await db.$disconnect();
     await disconnectRedis();
+    await shutdownOtel();
     clearTimeout(timeout);
     process.exit(0);
   } catch (error) {
