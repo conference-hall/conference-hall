@@ -135,5 +135,4 @@ if (isMain) {
   process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
   await app.listen({ port: PORT, host: HOST });
-  logger.info(`🚀 Server is running on http://${HOST}:${PORT}`);
 }
