@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "pnpm --reporter=append-only run /^dev:/",
-    "dev:web": "NODE_OPTIONS='--import ./servers/otel.web.ts' react-router dev",
+    "dev:web": "NODE_OPTIONS='--conditions=development --import ./servers/otel.web.ts' react-router dev",
     "dev:job": "tsx watch --import ./servers/otel.jobs.ts ./servers/jobs.ts",
     "start": "node --import ./servers/otel.web.ts ./servers/web.ts",
     "build": "prisma generate && react-router build",
