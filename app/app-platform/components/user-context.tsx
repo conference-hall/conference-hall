@@ -1,6 +1,6 @@
 import { createContext, type ReactNode, useContext } from 'react';
 import { useParams } from 'react-router';
-import type { loader } from '~/root.tsx';
+import type { loader } from '~/app-platform/app-layout.tsx';
 import { UserTeamPermissions } from '~/shared/authorization/team-permissions.ts';
 import type { SerializeFrom } from '~/shared/types/react-router.types.ts';
 
@@ -18,7 +18,7 @@ export const UserProvider = ({ children, user }: UserProviderProps) => {
 };
 
 /**
- * Returns the authenticated user under the route "root"
+ * Returns the authenticated user under the route "app"
  */
 export function useUser(): User {
   const context = useContext(UserContext);

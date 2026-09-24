@@ -5,9 +5,7 @@ import { getWebServerEnv } from '../servers/environment.server.ts';
 import type { Route } from './+types/root.ts';
 import { GeneralErrorBoundary } from './app-platform/components/errors/error-boundary.tsx';
 import { GlobalLoading } from './app-platform/components/global-loading.tsx';
-import { UserProvider } from './app-platform/components/user-context.tsx';
 import { ClientOnly } from './design-system/utils/client-only.tsx';
-import { OptionalAuthContext, optionalAuth } from './shared/authentication/auth.middleware.ts';
 import { FlagsProvider } from './shared/feature-flags/flags-context.tsx';
 import { flags } from './shared/feature-flags/flags.server.ts';
 import { getI18n, getLocale, i18nextMiddleware, setLocaleCookie } from './shared/i18n/i18n.middleware.ts';
@@ -46,14 +44,12 @@ export const links: Route.LinksFunction = () => {
   ];
 };
 
-export const middleware = [i18nextMiddleware, optionalAuth];
+export const middleware = [i18nextMiddleware];
 
 export const loader = async ({ request, context }: Route.LoaderArgs) => {
   if (MAINTENANCE_ENABLED) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
-
-  const user = context.get(OptionalAuthContext);
 
   const { toast, toastHeaders } = await getToast(request);
 
@@ -64,7 +60,7 @@ export const loader = async ({ request, context }: Route.LoaderArgs) => {
   const description = i18n.t('app.description');
 
   return data(
-    { title, description, user, locale, toast, flags: frontendFlags },
+    { title, description, locale, toast, flags: frontendFlags },
     { headers: combineHeaders(toastHeaders, await setLocaleCookie(locale)) },
   );
 };
@@ -95,18 +91,16 @@ function Document({ nonce, toast, children }: DocumentProps) {
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  const { locale, user, toast, flags } = loaderData;
+  const { locale, toast, flags } = loaderData;
   const nonce = useNonce();
 
   useChangeLanguage(locale);
 
   return (
     <FlagsProvider flags={flags}>
-      <UserProvider user={user}>
-        <Document toast={toast} nonce={nonce}>
-          <Outlet />
-        </Document>
-      </UserProvider>
+      <Document toast={toast} nonce={nonce}>
+        <Outlet />
+      </Document>
     </FlagsProvider>
   );
 }
