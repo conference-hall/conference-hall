@@ -11,7 +11,7 @@ import type { ServerInstrumentation } from 'react-router';
 
 const TRACER_NAME = 'app/react-router';
 
-const IGNORED_PATH_PREFIXES = ['/assets/', '/favicons/', '/fonts/'];
+const IGNORED_PATH_PREFIXES = ['/assets/', '/favicons/', '/fonts/', '/apple-touch-icon'];
 const IGNORED_PATHS = ['/robots.txt', '/favicon.ico', '/site.webmanifest', '/healthcheck', '/__manifest'];
 
 type ReadonlyHeaders = { get(name: string): string | null };
