@@ -1,4 +1,5 @@
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
+import { isHexColor } from '~/shared/colors/colors.ts';
 import {
   ForbiddenOperationError,
   NotFoundError,
@@ -10,7 +11,6 @@ import {
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
 import { db, type DbTransaction } from '../../../../../prisma/db.server.ts';
 import type { Event, Proposal, ScheduleSession, ScheduleTrack } from '../../../../../prisma/generated/client.ts';
-import { DEFAULT_SESSION_COLOR } from '../components/session/constants.ts';
 import { SessionPlacement } from '../models/session-placement.ts';
 import type {
   ScheduleCreateData,
@@ -106,7 +106,7 @@ export class EventSchedule {
       trackId: outcome.placement.trackId,
       start: outcome.placement.timeslot.start,
       end: outcome.placement.timeslot.end,
-      color: data.color ?? DEFAULT_SESSION_COLOR,
+      color: data.color ?? null,
       name: !data.proposalId ? (data.name ?? null) : null,
       proposalId: data.proposalId ? data.proposalId : null,
       emojis: data.emojis ?? [],
@@ -226,7 +226,9 @@ export class EventSchedule {
         name: name,
         language: language as Language | null,
         emojis: emojis,
-        color: color,
+        // A row the hex backfill has not converted yet reads as "no colour" rather than reaching
+        // the client, where it would fail the hex schema on the next write.
+        color: isHexColor(color) ? color : null,
         proposal: proposal
           ? {
               id: proposal.id,

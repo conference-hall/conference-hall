@@ -97,7 +97,9 @@ function CategoriesList({ categories, error }: { categories: Array<SelectPanelOp
       ) : null}
 
       {categories.map((category) => (
-        <Badge key={category.value}>{category.label}</Badge>
+        <Badge key={category.value} hexColor={category.color}>
+          {category.label}
+        </Badge>
       ))}
     </div>
   );

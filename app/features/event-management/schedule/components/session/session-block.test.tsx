@@ -20,7 +20,7 @@ const session: ScheduleSession = {
   timeslot: { start: day, end: hourLater },
   name: 'Coffee break',
   language: null,
-  color: 'stone',
+  color: null,
   emojis: [],
   proposal: null,
 };
@@ -65,6 +65,34 @@ function renderAtHeight(height: number) {
 }
 
 describe('SessionBlock component', () => {
+  describe('colour', () => {
+    it('mixes the tile from the hex colour of the session', async () => {
+      await renderInContainer(64, <SessionBlock session={{ ...session, color: '#ff5f5f' }} onOpen={() => {}} />);
+
+      const block = page.getByRole('button').element();
+
+      expect(block.getAttribute('style')).toContain('color-mix');
+      expect(block.className).not.toContain('bg-stone-50');
+    });
+
+    it('falls back to the neutral tile without a colour', async () => {
+      await renderInContainer(64, <SessionBlock session={{ ...session, color: null }} onOpen={() => {}} />);
+
+      const block = page.getByRole('button').element();
+
+      expect(block.getAttribute('style')).toBe(null);
+      expect(block.className).toContain('bg-stone-50');
+    });
+
+    it('falls back to the neutral tile on a value that is not a hex colour', async () => {
+      await renderInContainer(64, <SessionBlock session={{ ...session, color: 'stone' }} onOpen={() => {}} />);
+
+      const block = page.getByRole('button').element();
+
+      expect(block.className).toContain('bg-stone-50');
+    });
+  });
+
   describe('what a block shows at each height', () => {
     it('shows nothing but its colour, and stays clickable, under 8 pixels', async () => {
       await renderAtHeight(8);

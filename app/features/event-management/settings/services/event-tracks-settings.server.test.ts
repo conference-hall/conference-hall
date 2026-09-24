@@ -162,6 +162,48 @@ describe('EventTracksSettings', () => {
       expect(updated?.categories[0].description).toBe('Category 1');
     });
 
+    it('adds a new category with a color', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveCategory({
+        name: 'Category 1',
+        description: 'Category 1',
+        color: '#ff5f5f',
+      });
+
+      const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
+
+      expect(updated?.categories[0].color).toBe('#ff5f5f');
+    });
+
+    it('adds a new category without color', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveCategory({
+        name: 'Category 1',
+        description: 'Category 1',
+      });
+
+      const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
+
+      expect(updated?.categories[0].color).toBe(null);
+    });
+
+    it('removes the color of a category when not given', async () => {
+      const category = await eventCategoryFactory({ event, attributes: { color: '#ff5f5f' } });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveCategory({
+        id: category.id,
+        name: 'Category 1',
+        description: 'Category 1',
+      });
+
+      const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
+
+      expect(updated?.categories[0].color).toBe(null);
+    });
+
     it('updates an event category', async () => {
       const category = await eventCategoryFactory({ event, attributes: { name: 'name', description: 'desc' } });
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);

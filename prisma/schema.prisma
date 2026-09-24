@@ -197,6 +197,7 @@ model EventCategory {
   id          String     @id @default(cuid())
   name        String
   description String?
+  color       String?
   order       Int        @default(0)
   migrationId String?
   event       Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
@@ -426,7 +427,7 @@ model ScheduleTrack {
 model ScheduleSession {
   id         String        @id @default(cuid())
   name       String?
-  color      String
+  color      String?
   language   String?
   emojis     String[]      @default([])
   start      DateTime

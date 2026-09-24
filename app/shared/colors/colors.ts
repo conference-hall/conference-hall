@@ -11,6 +11,12 @@ export const COLORS: string[] = [
   '#FF5F99', // Pink
 ];
 
+export const HEX_COLOR_REGEX = /^#[0-9a-f]{6}$/i;
+
+export function isHexColor(color: string | null | undefined): color is string {
+  return typeof color === 'string' && HEX_COLOR_REGEX.test(color);
+}
+
 export function getRandomColor(): string {
   const randomIndex = Math.floor(Math.random() * COLORS.length);
   return COLORS[randomIndex];

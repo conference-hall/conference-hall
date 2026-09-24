@@ -215,7 +215,7 @@ describe('SessionMutations', () => {
   });
 
   describe('.blank', () => {
-    it('builds a stone session with empty fields', () => {
+    it('builds a colorless session with empty fields', () => {
       const timeslot = { start: local(9), end: local(9, 30) };
 
       const blank = SessionMutations.blank({ trackId: 'track-1', timeslot });
@@ -226,7 +226,7 @@ describe('SessionMutations', () => {
         timeslot,
         name: '',
         language: null,
-        color: 'stone',
+        color: null,
         emojis: [],
         proposal: null,
       });

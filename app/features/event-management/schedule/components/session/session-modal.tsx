@@ -1,6 +1,7 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { useTranslation } from 'react-i18next';
 import { Background } from '~/design-system/transitions.tsx';
+import { useCurrentEventTeam } from '../../../event-team-context.tsx';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SessionForm } from './session-form.tsx';
 
@@ -12,6 +13,7 @@ type SessionModalProps = {
 
 export function SessionModal({ mode, session, onClose }: SessionModalProps) {
   const { t } = useTranslation();
+  const { event } = useCurrentEventTeam();
 
   return (
     <Dialog className="relative z-40" open onClose={onClose}>
@@ -25,7 +27,7 @@ export function SessionModal({ mode, session, onClose }: SessionModalProps) {
           >
             <DialogTitle className="sr-only">{t(`event-management.schedule.${mode}-session.heading`)}</DialogTitle>
 
-            <SessionForm mode={mode} session={session} onFinish={onClose} />
+            <SessionForm mode={mode} session={session} categories={event.categories} onFinish={onClose} />
           </DialogPanel>
         </div>
       </div>
