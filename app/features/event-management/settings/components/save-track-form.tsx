@@ -97,13 +97,7 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
               autoComplete="off"
             />
           ) : (
-            <ColorInput
-              name="color"
-              label={t('common.color.label')}
-              toggleLabel={t('common.color.enable')}
-              value={color}
-              onChange={setColor}
-            />
+            <ColorInput name="color" label={t('common.color.label')} nullable value={color} onChange={setColor} />
           )}
           <input type="hidden" name="id" value={initialValues?.id} />
         </Form>

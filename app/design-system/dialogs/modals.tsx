@@ -29,7 +29,7 @@ type Props = {
 export function Modal({ title, children, size, open, onClose }: Props) {
   return (
     <Transition show={open}>
-      <Dialog className="relative z-40" onClose={onClose}>
+      <Dialog className="fixed inset-0 z-40" onClose={onClose}>
         <Background />
 
         <div className="fixed inset-0 z-40 h-full overflow-y-auto">

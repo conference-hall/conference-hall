@@ -19,7 +19,7 @@ describe('isHexColor', () => {
 describe('getRandomColor', () => {
   it('returns a color from the predefined colors array', () => {
     const color = getRandomColor();
-    expect(COLORS).toContain(color);
+    expect(COLORS.map((c) => c.hex)).toContain(color);
   });
 });
 

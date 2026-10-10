@@ -151,17 +151,18 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
           />
         </div>
 
-        <div className="flex items-center gap-7">
+        <div className="flex items-center gap-6">
           <PaintBrushIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
           <ColorInput
             label={t('event-management.schedule.edit-session.color')}
-            toggleLabel={t('common.color.enable')}
+            nullable
+            srOnly
             value={color}
             onChange={setColor}
           />
         </div>
 
-        <div className="flex items-center gap-7">
+        <div className="flex items-center gap-6">
           <FaceSmileIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
           <EmojiSelect emojis={SESSION_EMOJIS} selectedEmojis={emojis} onChangeEmojis={setEmojis} />
         </div>

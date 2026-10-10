@@ -64,6 +64,7 @@ function TagModalContent({ mode, initialValues, open, onClose }: TagModalContent
             <ColorInput
               name="color"
               label={t('event-management.settings.tags.pick-a-color')}
+              srOnly
               value={color}
               onChange={(value) => value && setColor(value)}
             />

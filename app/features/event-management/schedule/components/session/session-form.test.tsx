@@ -112,8 +112,8 @@ describe('SessionForm component', () => {
     await page.getByLabelText('Date').fill('2024-10-06');
     await userEvent.selectOptions(page.getByLabelText('From'), String(11 * 60));
     await userEvent.selectOptions(page.getByLabelText('Language'), 'en');
-    await page.getByRole('checkbox', { name: 'Set a color' }).click();
-    await page.getByLabelText('Choose a label color').fill('#123456');
+    await page.getByRole('button', { name: /Choose a label color/ }).click();
+    await page.getByRole('menuitem', { name: 'Blue', exact: true }).click();
     await page.getByRole('button', { name: 'Choose an emoji' }).click();
     await page.getByRole('button', { name: 'Rocket' }).click();
 
@@ -128,7 +128,7 @@ describe('SessionForm component', () => {
         end: setMinutesFromStartOfDay(scheduleDays[1], 11 * 60 + 30),
       },
       language: 'en',
-      color: '#123456',
+      color: '#3A7FFF',
       emojis: ['rocket'],
     });
     expect(onFinish).toHaveBeenCalled();

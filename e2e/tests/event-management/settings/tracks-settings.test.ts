@@ -71,8 +71,10 @@ test('adds, edits and removes a category', async ({ context, page }) => {
   await tracksPage.categoryModal.waitFor();
   await tracksPage.fill(tracksPage.nameInput, 'Beginner');
   await tracksPage.fill(tracksPage.descriptionInput, 'For beginners');
-  await tracksPage.colorToggle.check();
-  await tracksPage.colorInput.fill('#ff5f5f');
+  await expect(tracksPage.colorButton).toContainText('No color');
+  await tracksPage.colorButton.click();
+  await tracksPage.colorOption('Red').click();
+  await expect(tracksPage.colorButton).toContainText('Red');
   await tracksPage.saveCategoryButton.click();
 
   // Check the new track category
@@ -86,9 +88,10 @@ test('adds, edits and removes a category', async ({ context, page }) => {
   await tracksPage.categoryModal.waitFor();
   await expect(tracksPage.nameInput).toHaveValue('Beginner');
   await expect(tracksPage.descriptionInput).toHaveValue('For beginners');
-  await expect(tracksPage.colorInput).toHaveValue('#ff5f5f');
-  await tracksPage.colorToggle.uncheck();
-  await expect(tracksPage.colorInput).toBeHidden();
+  await expect(tracksPage.colorButton).toContainText('Red');
+  await tracksPage.colorButton.click();
+  await tracksPage.colorOption('No color').click();
+  await expect(tracksPage.colorButton).toContainText('No color');
   await tracksPage.fill(tracksPage.nameInput, 'Intermediate');
   await tracksPage.fill(tracksPage.descriptionInput, 'For intermediates');
   await tracksPage.saveCategoryButton.click();
@@ -109,8 +112,7 @@ test('adds, edits and removes a category', async ({ context, page }) => {
   // A new category does not inherit the color of the previous one
   await tracksPage.newCategoryButton.click();
   await tracksPage.categoryModal.waitFor();
-  await expect(tracksPage.colorToggle).not.toBeChecked();
-  await expect(tracksPage.colorInput).toBeHidden();
+  await expect(tracksPage.colorButton).toContainText('No color');
   await page.getByRole('button', { name: 'Cancel' }).click();
 
   // Delete a category

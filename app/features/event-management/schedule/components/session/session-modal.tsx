@@ -16,7 +16,7 @@ export function SessionModal({ mode, session, onClose }: SessionModalProps) {
   const { event } = useCurrentEventTeam();
 
   return (
-    <Dialog className="relative z-40" open onClose={onClose}>
+    <Dialog className="fixed inset-0 z-40" open onClose={onClose}>
       <Background />
 
       <div className="fixed inset-0 z-40 h-full overflow-y-auto">

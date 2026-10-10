@@ -1,15 +1,15 @@
-export const COLORS: string[] = [
-  '#FF5F5F', // Red
-  '#FF9A3C', // Orange
-  '#FFD93D', // Yellow
-  '#A6E35A', // Green
-  '#53D8B4', // Teal
-  '#3DC3FF', // Light Blue
-  '#3A7FFF', // Blue
-  '#8E5BFF', // Indigo
-  '#D55FFF', // Purple
-  '#FF5F99', // Pink
-];
+export const COLORS = [
+  { hex: '#FF5F5F', name: 'red' },
+  { hex: '#FF9A3C', name: 'orange' },
+  { hex: '#FFD93D', name: 'yellow' },
+  { hex: '#A6E35A', name: 'green' },
+  { hex: '#53D8B4', name: 'teal' },
+  { hex: '#3DC3FF', name: 'light-blue' },
+  { hex: '#3A7FFF', name: 'blue' },
+  { hex: '#8E5BFF', name: 'indigo' },
+  { hex: '#D55FFF', name: 'purple' },
+  { hex: '#FF5F99', name: 'pink' },
+] as const;
 
 export const HEX_COLOR_REGEX = /^#[0-9a-f]{6}$/i;
 
@@ -19,7 +19,7 @@ export function isHexColor(color: string | null | undefined): color is string {
 
 export function getRandomColor(): string {
   const randomIndex = Math.floor(Math.random() * COLORS.length);
-  return COLORS[randomIndex];
+  return COLORS[randomIndex].hex;
 }
 
 export function getContrastColor(hex: string) {
