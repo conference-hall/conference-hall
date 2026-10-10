@@ -2,9 +2,10 @@ import { useTranslation } from 'react-i18next';
 import { href, Link } from 'react-router';
 import { Container } from '~/design-system/layouts/container.tsx';
 
+const year = new Date().getFullYear();
+
 export function Footer() {
   const { t } = useTranslation();
-  const year = new Date().getFullYear();
   return (
     <footer className="hidden py-8 text-sm text-gray-500 lg:block">
       <Container className="flex items-center justify-center gap-4">
