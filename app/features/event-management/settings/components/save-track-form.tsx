@@ -7,6 +7,7 @@ import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { ColorInput } from '~/design-system/forms/color-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
+import { DEFAULT_COLOR } from '~/shared/colors/colors.ts';
 
 type TrackType = 'formats' | 'categories';
 type TrackData = {
@@ -14,7 +15,7 @@ type TrackData = {
   name: string;
   description?: string | null;
   durationInMinutes?: number | null;
-  color?: string | null;
+  color: string;
 };
 type NewTrackButtonProps = { type: TrackType };
 
@@ -64,7 +65,7 @@ type SaveTrackFormModalProps = { type: TrackType; initialValues?: TrackData; isO
 function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackFormModalProps) {
   const { t } = useTranslation();
   const formId = useId();
-  const [color, setColor] = useState(initialValues?.color ?? null);
+  const [color, setColor] = useState<string | null>(initialValues?.color ?? DEFAULT_COLOR);
   return (
     <Modal
       title={
@@ -96,9 +97,8 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
               max={1440}
               autoComplete="off"
             />
-          ) : (
-            <ColorInput name="color" label={t('common.color.label')} nullable value={color} onChange={setColor} />
-          )}
+          ) : null}
+          <ColorInput name="color" label={t('common.color.label')} value={color} onChange={setColor} />
           <input type="hidden" name="id" value={initialValues?.id} />
         </Form>
       </Modal.Content>

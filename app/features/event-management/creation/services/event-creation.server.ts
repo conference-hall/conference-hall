@@ -84,6 +84,7 @@ export class EventCreation {
           name: item.name,
           description: item.description,
           durationInMinutes: item.durationInMinutes,
+          color: item.color,
           order: item.order,
         })),
       },

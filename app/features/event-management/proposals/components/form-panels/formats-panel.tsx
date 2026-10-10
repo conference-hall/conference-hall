@@ -97,7 +97,9 @@ function FormatsList({ formats, error }: { formats: Array<SelectPanelOption>; er
       ) : null}
 
       {formats.map((format) => (
-        <Badge key={format.value}>{format.label}</Badge>
+        <Badge key={format.value} hexColor={format.color}>
+          {format.label}
+        </Badge>
       ))}
     </div>
   );

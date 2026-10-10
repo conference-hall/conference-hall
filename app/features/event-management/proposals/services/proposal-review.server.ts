@@ -62,7 +62,7 @@ export class ProposalReview {
       archivedAt: proposal.archivedAt,
       submittedAt: proposal.submittedAt,
       languages: proposal.languages as Languages,
-      formats: proposal.formats.map(({ id, name }) => ({ id, name })),
+      formats: proposal.formats.map(({ id, name, color }) => ({ id, name, color })),
       categories: proposal.categories.map(({ id, name, color }) => ({ id, name, color })),
       reviews: {
         you: reviews.ofUser(userId),

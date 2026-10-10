@@ -6,8 +6,8 @@ type CategoriesSectionProps = {
   team: string;
   event: string;
   proposalId: string;
-  proposalCategories: Array<{ id: string; name: string; color: string | null }>;
-  eventCategories: Array<{ id: string; name: string; color: string | null }>;
+  proposalCategories: Array<{ id: string; name: string; color: string }>;
+  eventCategories: Array<{ id: string; name: string; color: string }>;
   multiple: boolean;
   canChangeCategory: boolean;
   canCreateCategory: boolean;
@@ -49,8 +49,8 @@ export function CategoriesSection({
       key={proposalId}
       team={team}
       event={event}
-      value={displayed.map((item) => ({ value: item.id, label: item.name, color: item.color ?? undefined }))}
-      options={eventCategories.map((item) => ({ value: item.id, label: item.name, color: item.color ?? undefined }))}
+      value={displayed.map((item) => ({ value: item.id, label: item.name, color: item.color }))}
+      options={eventCategories.map((item) => ({ value: item.id, label: item.name, color: item.color }))}
       onChange={(selected) => update(selected.map((option) => option.value))}
       multiple={multiple}
       readonly={!canChangeCategory}

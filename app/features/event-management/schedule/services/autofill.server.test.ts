@@ -201,10 +201,8 @@ describe('ScheduleAutofill', () => {
       expect(saved?.color).toBe('#ff5f5f');
     });
 
-    it('keeps the session color when the first category of the proposal has no color', async () => {
-      const category = await eventCategoryFactory({ event });
-      const proposal = await acceptedProposal();
-      await db.proposal.update({ where: { id: proposal.id }, data: { categories: { connect: { id: category.id } } } });
+    it('keeps the session color when the proposal has no category', async () => {
+      await acceptedProposal();
       const session = await addSession({ trackId: track.id, start: at(9), end: at(10) });
       await db.scheduleSession.update({ where: { id: session.id }, data: { color: '#f6339a' } });
 

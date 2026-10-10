@@ -1,3 +1,5 @@
+export const DEFAULT_COLOR = '#9CA3AF';
+
 export const COLORS = [
   { hex: '#FF5F5F', name: 'red' },
   { hex: '#FF9A3C', name: 'orange' },
@@ -9,6 +11,7 @@ export const COLORS = [
   { hex: '#8E5BFF', name: 'indigo' },
   { hex: '#D55FFF', name: 'purple' },
   { hex: '#FF5F99', name: 'pink' },
+  { hex: DEFAULT_COLOR, name: 'gray' },
 ] as const;
 
 export const HEX_COLOR_REGEX = /^#[0-9a-f]{6}$/i;

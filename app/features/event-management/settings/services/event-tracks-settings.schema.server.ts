@@ -5,11 +5,10 @@ const TrackSaveSchema = z.object({
   id: z.string().trim().optional(),
   name: z.string().trim().min(1).max(255),
   description: z.string().trim().min(1).max(255),
+  color: z.string().trim().regex(HEX_COLOR_REGEX),
 });
 
-export const CategorySaveSchema = TrackSaveSchema.extend({
-  color: z.string().trim().regex(HEX_COLOR_REGEX).optional(),
-});
+export const CategorySaveSchema = TrackSaveSchema;
 
 export type CategorySaveData = z.infer<typeof CategorySaveSchema>;
 

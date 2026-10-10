@@ -30,7 +30,7 @@ type Props = {
   mode: 'create' | 'edit';
   session: ScheduleSession;
   // Event categories, already sorted by `order`: linking a proposal takes the colour of its first one.
-  categories: Array<{ id: string; color: string | null }>;
+  categories: Array<{ id: string; color: string }>;
   onFinish: VoidFunction;
 };
 

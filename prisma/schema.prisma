@@ -183,6 +183,7 @@ model EventFormat {
   name              String
   description       String?
   durationInMinutes Int?
+  color             String     @default("#9CA3AF")
   order             Int        @default(0)
   migrationId       String?
   event             Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
@@ -197,7 +198,7 @@ model EventCategory {
   id          String     @id @default(cuid())
   name        String
   description String?
-  color       String?
+  color       String     @default("#9CA3AF")
   order       Int        @default(0)
   migrationId String?
   event       Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)

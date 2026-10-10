@@ -30,10 +30,7 @@ const session: ScheduleSession = {
   proposal: null,
 };
 
-const categories = [
-  { id: 'cat-1', color: '#123456' },
-  { id: 'cat-2', color: null },
-];
+const categories = [{ id: 'cat-1', color: '#123456' }];
 
 const PROPOSALS: ProposalResult[] = [
   {
@@ -50,7 +47,7 @@ const PROPOSALS: ProposalResult[] = [
     routeId: 'plain-talk',
     title: 'Plain talk',
     speakers: [{ name: 'Jane Smith', picture: null }],
-    categoryIds: ['cat-2'],
+    categoryIds: [],
   },
 ];
 
@@ -146,7 +143,7 @@ describe('SessionForm component', () => {
     expect(addSession).toHaveBeenCalledWith(expect.objectContaining({ color: '#123456' }));
   });
 
-  it('keeps the session color when the first category of the linked proposal has no color', async () => {
+  it('keeps the session color when the linked proposal has no category', async () => {
     const { rendered, addSession } = renderForm('create');
     await rendered;
 

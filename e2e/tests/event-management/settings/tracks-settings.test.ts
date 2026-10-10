@@ -18,6 +18,10 @@ test('adds, edits and removes a format', async ({ context, page }) => {
   await tracksPage.fill(tracksPage.nameInput, 'Quickie');
   await tracksPage.fill(tracksPage.descriptionInput, 'A short talk');
   await tracksPage.fill(tracksPage.durationInput, '15');
+  await expect(tracksPage.colorButton).toContainText('Gray');
+  await tracksPage.colorButton.click();
+  await tracksPage.colorOption('Red').click();
+  await expect(tracksPage.colorButton).toContainText('Red');
   await tracksPage.saveFormatButton.click();
 
   // Check the new track format
@@ -33,6 +37,10 @@ test('adds, edits and removes a format', async ({ context, page }) => {
   await expect(tracksPage.nameInput).toHaveValue('Quickie');
   await expect(tracksPage.descriptionInput).toHaveValue('A short talk');
   await expect(tracksPage.durationInput).toHaveValue('15');
+  await expect(tracksPage.colorButton).toContainText('Red');
+  await tracksPage.colorButton.click();
+  await tracksPage.colorOption('Blue').click();
+  await expect(tracksPage.colorButton).toContainText('Blue');
   await tracksPage.fill(tracksPage.nameInput, 'Conference');
   await tracksPage.fill(tracksPage.descriptionInput, 'A long talk');
   await tracksPage.fill(tracksPage.durationInput, '45');
@@ -71,7 +79,7 @@ test('adds, edits and removes a category', async ({ context, page }) => {
   await tracksPage.categoryModal.waitFor();
   await tracksPage.fill(tracksPage.nameInput, 'Beginner');
   await tracksPage.fill(tracksPage.descriptionInput, 'For beginners');
-  await expect(tracksPage.colorButton).toContainText('No color');
+  await expect(tracksPage.colorButton).toContainText('Gray');
   await tracksPage.colorButton.click();
   await tracksPage.colorOption('Red').click();
   await expect(tracksPage.colorButton).toContainText('Red');
@@ -90,8 +98,8 @@ test('adds, edits and removes a category', async ({ context, page }) => {
   await expect(tracksPage.descriptionInput).toHaveValue('For beginners');
   await expect(tracksPage.colorButton).toContainText('Red');
   await tracksPage.colorButton.click();
-  await tracksPage.colorOption('No color').click();
-  await expect(tracksPage.colorButton).toContainText('No color');
+  await tracksPage.colorOption('Blue').click();
+  await expect(tracksPage.colorButton).toContainText('Blue');
   await tracksPage.fill(tracksPage.nameInput, 'Intermediate');
   await tracksPage.fill(tracksPage.descriptionInput, 'For intermediates');
   await tracksPage.saveCategoryButton.click();
@@ -112,7 +120,7 @@ test('adds, edits and removes a category', async ({ context, page }) => {
   // A new category does not inherit the color of the previous one
   await tracksPage.newCategoryButton.click();
   await tracksPage.categoryModal.waitFor();
-  await expect(tracksPage.colorButton).toContainText('No color');
+  await expect(tracksPage.colorButton).toContainText('Gray');
   await page.getByRole('button', { name: 'Cancel' }).click();
 
   // Delete a category

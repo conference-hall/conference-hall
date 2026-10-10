@@ -14,7 +14,7 @@ type TrackListProps = {
     name: string;
     description: string | null;
     durationInMinutes?: number | null;
-    color?: string | null;
+    color: string;
   }>;
 };
 
@@ -39,13 +39,11 @@ export function TrackList({ type, tracks }: TrackListProps) {
         {tracks.map((track, index) => (
           <List.Row key={track.id} className="flex items-center justify-between p-4">
             <div className="flex min-w-0 items-center gap-3">
-              {track.color ? (
-                <div
-                  className="h-4 w-4 shrink-0 rounded-full"
-                  style={{ backgroundColor: track.color }}
-                  aria-hidden="true"
-                />
-              ) : null}
+              <div
+                className="h-4 w-4 shrink-0 rounded-full"
+                style={{ backgroundColor: track.color }}
+                aria-hidden="true"
+              />
               <div className="truncate">
                 <Text weight="medium" truncate>
                   {track.name}
