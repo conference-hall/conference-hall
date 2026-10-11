@@ -46,8 +46,9 @@ term as defined here and don't drift to synonyms.
 - **Format** — An organizer-defined **presentation mode** for an event (e.g. Talk,
   Workshop, Lightning, Panel) — _how_ it's delivered. A proposal may require one,
   allow several, or none (`formatsRequired` / `formatsAllowMultiple`). A format may
-  carry an optional `durationInMinutes`, shown to speakers at submission. It is
-  informational: the schedule does not read it. A format always carries a free hex
+  carry an optional `durationInMinutes`, shown to speakers at submission. The Schedule
+  itself never reads it: only the optional **Format duration** rule of an Autofill
+  does. A format always carries a free hex
   `color` (random preset color at creation), used organizer-side only to fill the proposal
   badge.
 
@@ -185,6 +186,10 @@ term as defined here and don't drift to synonyms.
 - **Autofill**: Filling Sessions of a Schedule with Proposals in one operation,
   instead of placing them one by one. An Autofill never creates, moves, resizes or
   deletes a Session: it only links Proposals to Sessions that already exist.
+  Vacant sessions are filled in time order, then Track order. Each one takes, among
+  the Eligible proposals it accepts, the one that fits the fewest Vacant sessions of
+  the scope by Format duration, then the lowest proposal number. Without Format
+  duration, this is plain proposal number order.
 
 - **Assignment**: The pairing of one Proposal with one Session. Distinct from a
   Placement: an Assignment says _which talk_ a Session holds, a Placement says _where
@@ -214,6 +219,15 @@ term as defined here and don't drift to synonyms.
     overlap, across Tracks included. Distinct from a Session conflict, which is about
     two Sessions of a single Track whoever their speakers are.
 
+  Optional rules, disabled by default:
+  - **Format duration**: a Proposal is assigned only to a Session whose duration
+    equals the duration of one of its Formats. A Format with no duration, or a
+    Proposal with no Format, never blocks.
+  - **Speaker rest**: one speaker keeps at least a minimum rest (15, 30, 60 or 120
+    minutes, 30 by default) between the end of one of their Sessions and the start of
+    the next, across Tracks included. It reads the same Sessions as Speaker overlap,
+    which stays fixed: Speaker rest is stricter, never a replacement.
+
 - **Autofill reset**: Clearing the Proposal of every filled Session of the Autofill
   scope before filling, so that the Autofill starts from Vacant sessions only. Without
   it, an Autofill leaves the Sessions already filled alone. A reset never touches a
@@ -222,3 +236,7 @@ term as defined here and don't drift to synonyms.
 - **Autofill report**: The account of one Autofill: the Assignments written, the Vacant
   sessions left vacant, and the Eligible proposals left unscheduled. A partial result
   is the normal case, not a failure.
+  Each Proposal left unscheduled carries one reason: no Vacant session left when one
+  would have accepted it, otherwise the rule that blocks the most Vacant sessions.
+  Each Session counts for its first blocking rule in priority order (Speaker overlap,
+  Format duration, Speaker rest), which also breaks ties.

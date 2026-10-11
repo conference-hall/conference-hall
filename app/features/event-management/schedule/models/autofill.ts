@@ -21,6 +21,7 @@ export type AutofillProposal = {
   id: string;
   number: number | null;
   speakerIds: Array<string>;
+  formatDurations: Array<number | null>;
   deliberationStatus: 'PENDING' | 'ACCEPTED' | 'REJECTED';
   confirmationStatus: 'PENDING' | 'CONFIRMED' | 'DECLINED' | null;
   isDraft: boolean;
@@ -39,8 +40,13 @@ export type AutofillScope = {
   trackIds: Array<string>;
   proposalState: ProposalState;
   reset: boolean;
+  rules: AutofillRules;
 };
 
+export const SPEAKER_REST_MINUTES = [15, 30, 60, 120] as const;
+export type SpeakerRestMinutes = (typeof SPEAKER_REST_MINUTES)[number];
+
+type AutofillRules = { formatDuration: boolean; speakerRest: SpeakerRestMinutes | null };
 type AutofillAssignment = { sessionId: string; proposalId: string };
 
 export type AutofillReport = {
@@ -50,9 +56,9 @@ export type AutofillReport = {
   sessionsToClear: Array<string>;
 };
 
-type RuleProposal = { id: string; number: number | null; speakerIds: Array<string> };
+type RuleProposal = { id: string; speakerIds: Array<string>; formatDurations: Array<number | null> };
 
-type RuleSession = { id: string; trackId: string; trackOrder: number; start: Date; end: Date };
+type RuleSession = { id: string; start: Date; end: Date };
 
 type RuleContext = {
   occupancy: Array<{ speakerIds: Array<string>; start: Date; end: Date }>;
@@ -60,24 +66,55 @@ type RuleContext = {
 };
 
 type AssignmentRule = {
-  id: string;
+  id: 'speaker-overlap' | 'format-duration' | 'speaker-rest';
   evaluate: (proposal: RuleProposal, session: RuleSession, context: RuleContext) => boolean;
 };
 
 const NO_VACANT_SESSION = 'no-vacant-session';
 
-const ASSIGNMENT_RULES = [
-  {
-    id: 'speaker-overlap',
-    evaluate: (proposal, session, context) =>
-      !context.occupancy.some(
-        (busy) =>
-          areTimeSlotsOverlapping(session, busy) && busy.speakerIds.some((id) => proposal.speakerIds.includes(id)),
-      ),
-  },
-] as const satisfies ReadonlyArray<AssignmentRule>;
+const MINUTE = 60_000;
 
-export type AutofillReason = typeof NO_VACANT_SESSION | (typeof ASSIGNMENT_RULES)[number]['id'];
+const sharesSpeaker = (proposal: RuleProposal, busy: { speakerIds: Array<string> }) =>
+  busy.speakerIds.some((id) => proposal.speakerIds.includes(id));
+
+const speakerOverlap: AssignmentRule = {
+  id: 'speaker-overlap',
+  evaluate: (proposal, session, context) =>
+    !context.occupancy.some((busy) => areTimeSlotsOverlapping(session, busy) && sharesSpeaker(proposal, busy)),
+};
+
+const hasUnknownFormatDuration = ({ formatDurations }: RuleProposal) =>
+  formatDurations.length === 0 || formatDurations.some((duration) => duration === null);
+
+const formatDuration: AssignmentRule = {
+  id: 'format-duration',
+  evaluate: (proposal, session) => {
+    const durations = proposal.formatDurations;
+    if (hasUnknownFormatDuration(proposal)) return true;
+    return durations.includes((session.end.getTime() - session.start.getTime()) / MINUTE);
+  },
+};
+
+const speakerRest = (minutes: number): AssignmentRule => ({
+  id: 'speaker-rest',
+  evaluate: (proposal, session, context) =>
+    !context.occupancy.some((busy) => {
+      if (!sharesSpeaker(proposal, busy)) return false;
+      const gap = Math.max(session.start.getTime() - busy.end.getTime(), busy.start.getTime() - session.end.getTime());
+      return gap < minutes * MINUTE;
+    }),
+});
+
+// The order is the priority of the reasons.
+function activeRules(rules: AutofillRules): Array<AssignmentRule> {
+  return [
+    speakerOverlap,
+    ...(rules.formatDuration ? [formatDuration] : []),
+    ...(rules.speakerRest ? [speakerRest(rules.speakerRest)] : []),
+  ];
+}
+
+export type AutofillReason = typeof NO_VACANT_SESSION | AssignmentRule['id'];
 
 export function isEligibleProposal(proposal: AutofillProposal, state: ProposalState): boolean {
   if (proposal.isDraft || proposal.archivedAt) return false;
@@ -91,6 +128,12 @@ export function isEligibleProposal(proposal: AutofillProposal, state: ProposalSt
     case 'all':
       return proposal.deliberationStatus === 'PENDING' || proposal.deliberationStatus === 'ACCEPTED';
   }
+}
+
+export function proposalsWithoutFormatDuration(payload: AutofillPayload, state: ProposalState): number {
+  return payload.proposals.filter(
+    (proposal) => isEligibleProposal(proposal, state) && hasUnknownFormatDuration(proposal),
+  ).length;
 }
 
 export function vacantSessionCount(payload: AutofillPayload, scope: AutofillScope): number {
@@ -115,14 +158,29 @@ export function autofill(payload: AutofillPayload, scope: AutofillScope): Autofi
     assignedProposalIds: new Set<string>(),
   };
 
+  const rules = activeRules(scope.rules);
   const accepts = (proposal: AutofillProposal, session: RuleSession) =>
-    ASSIGNMENT_RULES.every((rule) => rule.evaluate(proposal, session, context));
+    rules.every((rule) => rule.evaluate(proposal, session, context));
+
+  // Vacant sessions a Proposal fits whatever the occupancy: the fewer, the more constrained.
+  const noOccupancy: RuleContext = { occupancy: [], assignedProposalIds: new Set() };
+  const degrees = new Map(
+    eligibleProposals.map((proposal) => [
+      proposal.id,
+      vacantSessions.filter((session) => rules.every((rule) => rule.evaluate(proposal, session, noOccupancy))).length,
+    ]),
+  );
+  const byDegree = (a: AutofillProposal, b: AutofillProposal) =>
+    (degrees.get(a.id) ?? 0) - (degrees.get(b.id) ?? 0) || byProposalOrder(a, b);
 
   const assignments: Array<AutofillAssignment> = [];
   for (const session of vacantSessions) {
-    const picked = eligibleProposals.find(
-      (proposal) => !context.assignedProposalIds.has(proposal.id) && accepts(proposal, session),
-    );
+    const picked = eligibleProposals
+      .filter((proposal) => !context.assignedProposalIds.has(proposal.id) && accepts(proposal, session))
+      .reduce<AutofillProposal | undefined>(
+        (best, proposal) => (best && byDegree(best, proposal) <= 0 ? best : proposal),
+        undefined,
+      );
     if (!picked) continue;
 
     assignments.push({ sessionId: session.id, proposalId: picked.id });
@@ -130,12 +188,21 @@ export function autofill(payload: AutofillPayload, scope: AutofillScope): Autofi
     context.occupancy.push({ speakerIds: picked.speakerIds, start: session.start, end: session.end });
   }
 
+  // Each Vacant session counts for its first blocking rule; the most frequent rule wins, ties go to priority.
   const reasonFor = (proposal: AutofillProposal): AutofillReason => {
-    if (vacantSessions.some((session) => accepts(proposal, session))) return NO_VACANT_SESSION;
-    const blocking = ASSIGNMENT_RULES.find((rule) =>
-      vacantSessions.some((session) => !rule.evaluate(proposal, session, context)),
-    );
-    return blocking ? blocking.id : NO_VACANT_SESSION;
+    const counts = new Map<AutofillReason, number>();
+    for (const session of vacantSessions) {
+      const blocking = rules.find((rule) => !rule.evaluate(proposal, session, context));
+      if (!blocking) return NO_VACANT_SESSION;
+      counts.set(blocking.id, (counts.get(blocking.id) ?? 0) + 1);
+    }
+    let reason: AutofillReason = NO_VACANT_SESSION;
+    let best = 0;
+    for (const rule of rules) {
+      const count = counts.get(rule.id) ?? 0;
+      if (count > best) [reason, best] = [rule.id, count];
+    }
+    return reason;
   };
 
   const proposalsLeftUnscheduled = eligibleProposals
