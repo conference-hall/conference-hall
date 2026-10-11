@@ -45,13 +45,13 @@ export function TrackList({ type, tracks }: TrackListProps) {
                   <Badge hexColor={track.color} pill>
                     <span className="truncate">{track.name}</span>
                   </Badge>
-                  {track.durationInMinutes ? (
-                    <span className="ml-2 font-normal text-gray-500">
-                      {formatDuration(track.durationInMinutes, i18n.language)}
-                    </span>
-                  ) : null}
                 </Text>
                 <Subtitle size="xs" className="mt-1" truncate>
+                  {track.durationInMinutes ? (
+                    <span className="mx-1 font-normal text-gray-500">
+                      {formatDuration(track.durationInMinutes, i18n.language)} –
+                    </span>
+                  ) : null}
                   {track.description}
                 </Subtitle>
               </div>
