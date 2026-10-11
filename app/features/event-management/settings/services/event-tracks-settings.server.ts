@@ -21,6 +21,7 @@ export class EventTracksSettings {
           name: data.name,
           description: data.description,
           durationInMinutes: data.durationInMinutes ?? null,
+          color: data.color,
         },
       });
     }
@@ -31,6 +32,7 @@ export class EventTracksSettings {
         name: data.name,
         description: data.description,
         durationInMinutes: data.durationInMinutes ?? null,
+        color: data.color,
         order: formatsCount,
         event: { connect: { id: event.id } },
       },
@@ -60,7 +62,7 @@ export class EventTracksSettings {
     if (data.id) {
       return db.eventCategory.update({
         where: { id: data.id },
-        data: { name: data.name, description: data.description },
+        data: { name: data.name, description: data.description, color: data.color },
       });
     }
 
@@ -69,6 +71,7 @@ export class EventTracksSettings {
       data: {
         name: data.name,
         description: data.description,
+        color: data.color,
         order: categoriesCount,
         event: { connect: { id: event.id } },
       },

@@ -61,6 +61,7 @@ test('cancels edit template modal', async ({ page }) => {
   await templatePage.goto(team.slug, event.slug, 'speakers-proposal-submitted', 'en');
   await templatePage.clickEditButton();
   await templatePage.fillSubject('Test Subject');
+  await templatePage.cancelChanges();
 
   await expect(templatePage.editModal).not.toBeVisible();
 });

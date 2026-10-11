@@ -137,13 +137,13 @@ describe('EventCreation', () => {
           categoriesAllowMultiple: true,
           formats: {
             create: [
-              { name: 'Talk', description: 'Standard talk', order: 1 },
+              { name: 'Talk', description: 'Standard talk', color: '#ff5f5f', order: 1 },
               { name: 'Workshop', description: 'Hands-on workshop', order: 2 },
             ],
           },
           categories: {
             create: [
-              { name: 'Frontend', description: 'Frontend technologies', order: 1 },
+              { name: 'Frontend', description: 'Frontend technologies', color: '#3a7fff', order: 1 },
               { name: 'Backend', description: 'Backend technologies', order: 2 },
             ],
           },
@@ -190,10 +190,12 @@ describe('EventCreation', () => {
 
       expect(event?.formats).toHaveLength(2);
       expect(event?.formats[0]?.name).toBe('Talk');
+      expect(event?.formats[0]?.color).toBe('#ff5f5f');
       expect(event?.formats[1]?.name).toBe('Workshop');
 
       expect(event?.categories).toHaveLength(2);
       expect(event?.categories[0]?.name).toBe('Frontend');
+      expect(event?.categories[0]?.color).toBe('#3a7fff');
       expect(event?.categories[1]?.name).toBe('Backend');
 
       expect(event?.proposalTags).toHaveLength(2);

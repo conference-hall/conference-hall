@@ -16,7 +16,12 @@ import type {
   ReviewsFilter,
 } from './proposal-search-builder.schema.server.ts';
 
-type SearchOptions = { withSpeakers: boolean; withReviews: boolean; withMessages?: boolean };
+type SearchOptions = {
+  withSpeakers: boolean;
+  withReviews: boolean;
+  withMessages?: boolean;
+  withCategories?: boolean;
+};
 
 type QueryParseResult =
   | { type: 'proposal-number'; number: number }
@@ -80,12 +85,13 @@ export class ProposalSearchBuilder {
     if (rows.length === 0) return [];
 
     const ids = rows.map((r) => r.id);
-    const [speakersMap, tagsMap] = await Promise.all([
+    const [speakersMap, tagsMap, categoriesMap] = await Promise.all([
       this.options.withSpeakers ? this.fetchSpeakers(ids) : new Map(),
       this.fetchTags(ids),
+      this.options.withCategories ? this.fetchCategories(ids) : new Map(),
     ]);
 
-    return rows.map((row) => this.mapProposalRow(row, speakersMap, tagsMap));
+    return rows.map((row) => this.mapProposalRow(row, speakersMap, tagsMap, undefined, categoriesMap));
   }
 
   async proposals() {

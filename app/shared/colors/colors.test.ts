@@ -1,9 +1,31 @@
-import { COLORS, generateGradientColor, getContrastColor, getRandomColor } from './colors.ts';
+import { COLORS, generateGradientColor, getContrastColor, getRandomColor, isHexColor } from './colors.ts';
+
+describe('isHexColor', () => {
+  it('accepts a 6-digit hex color, whatever the case', () => {
+    expect(isHexColor('#ff5f5f')).toBe(true);
+    expect(isHexColor('#FF5F5F')).toBe(true);
+  });
+
+  it('rejects anything else', () => {
+    expect(isHexColor('#fff')).toBe(false);
+    expect(isHexColor('#ZZZZZZ')).toBe(false);
+    expect(isHexColor('stone')).toBe(false);
+    expect(isHexColor('')).toBe(false);
+    expect(isHexColor(null)).toBe(false);
+    expect(isHexColor(undefined)).toBe(false);
+  });
+});
 
 describe('getRandomColor', () => {
   it('returns a color from the predefined colors array', () => {
     const color = getRandomColor();
-    expect(COLORS).toContain(color);
+    expect(COLORS.map((c) => c.hex)).toContain(color);
+  });
+});
+
+describe('COLORS', () => {
+  it('does not offer the neutral gray as a preset', () => {
+    expect(COLORS.map((c) => c.hex)).not.toContain('#F3F4F6');
   });
 });
 

@@ -25,13 +25,13 @@ describe('CategoriesSection component', () => {
     event: 'test-event',
     proposalId: 'proposal-123',
     proposalCategories: [
-      { id: '1', name: 'Web Development' },
-      { id: '2', name: 'AI/ML' },
+      { id: '1', name: 'Web Development', color: '#ff0000' },
+      { id: '2', name: 'AI/ML', color: '#9CA3AF' },
     ],
     eventCategories: [
-      { id: '1', name: 'Web Development' },
-      { id: '2', name: 'AI/ML' },
-      { id: '3', name: 'Mobile Development' },
+      { id: '1', name: 'Web Development', color: '#ff0000' },
+      { id: '2', name: 'AI/ML', color: '#9CA3AF' },
+      { id: '3', name: 'Mobile Development', color: '#9CA3AF' },
     ],
     multiple: true,
     canChangeCategory: true,

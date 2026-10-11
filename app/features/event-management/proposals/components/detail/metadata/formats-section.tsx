@@ -6,8 +6,8 @@ type FormatsSectionProps = {
   team: string;
   event: string;
   proposalId: string;
-  proposalFormats: Array<{ id: string; name: string }>;
-  eventFormats: Array<{ id: string; name: string }>;
+  proposalFormats: Array<{ id: string; name: string; color: string }>;
+  eventFormats: Array<{ id: string; name: string; color: string }>;
   multiple: boolean;
   canChangeFormats: boolean;
   canCreateFormats: boolean;
@@ -49,8 +49,8 @@ export function FormatsSection({
       // key={proposalId}
       team={team}
       event={event}
-      value={displayed.map((item) => ({ value: item.id, label: item.name }))}
-      options={eventFormats.map((item) => ({ value: item.id, label: item.name }))}
+      value={displayed.map((item) => ({ value: item.id, label: item.name, color: item.color }))}
+      options={eventFormats.map((item) => ({ value: item.id, label: item.name, color: item.color }))}
       onChange={(selected) => update(selected.map((option) => option.value))}
       multiple={multiple}
       readonly={!canChangeFormats}

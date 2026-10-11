@@ -58,13 +58,14 @@ export class EventFetcher {
       cfpStart: fullEvent.cfpStart,
       cfpEnd: fullEvent.cfpEnd,
       cfpState: fullEvent.cfpState,
-      formats: fullEvent.formats.map(({ id, name, description, durationInMinutes }) => ({
+      formats: fullEvent.formats.map(({ id, name, description, durationInMinutes, color }) => ({
         id,
         name,
         description,
         durationInMinutes,
+        color,
       })),
-      categories: fullEvent.categories.map(({ id, name, description }) => ({ id, name, description })),
+      categories: fullEvent.categories.map(({ id, name, description, color }) => ({ id, name, description, color })),
       integrations: fullEvent.integrations.map((integration) => integration.name),
       archived: fullEvent.archived,
       tags: sortBy(

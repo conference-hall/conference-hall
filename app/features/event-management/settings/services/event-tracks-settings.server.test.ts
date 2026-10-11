@@ -29,6 +29,7 @@ describe('EventTracksSettings', () => {
       await EventTracksSettings.for(authorizedEvent).saveFormat({
         name: 'Format 1',
         description: 'Format 1',
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
@@ -44,6 +45,7 @@ describe('EventTracksSettings', () => {
       await EventTracksSettings.for(authorizedEvent).saveFormat({
         name: 'Format 1',
         description: 'Format 1',
+        color: '#9CA3AF',
         durationInMinutes: 45,
       });
 
@@ -58,6 +60,7 @@ describe('EventTracksSettings', () => {
       await EventTracksSettings.for(authorizedEvent).saveFormat({
         name: 'Format 1',
         description: 'Format 1',
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
@@ -73,11 +76,42 @@ describe('EventTracksSettings', () => {
         id: format.id,
         name: 'Format 1',
         description: 'Format 1',
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
 
       expect(updated?.formats[0].durationInMinutes).toBe(null);
+    });
+
+    it('adds a new format with a color', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveFormat({
+        name: 'Format 1',
+        description: 'Format 1',
+        color: '#ff5f5f',
+      });
+
+      const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
+
+      expect(updated?.formats[0].color).toBe('#ff5f5f');
+    });
+
+    it('updates the color of a format', async () => {
+      const format = await eventFormatFactory({ event });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveFormat({
+        id: format.id,
+        name: 'Format 1',
+        description: 'Format 1',
+        color: '#ff5f5f',
+      });
+
+      const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
+
+      expect(updated?.formats[0].color).toBe('#ff5f5f');
     });
 
     it('adds a new format with correct order at the end', async () => {
@@ -89,6 +123,7 @@ describe('EventTracksSettings', () => {
       await EventTracksSettings.for(authorizedEvent).saveFormat({
         name: 'Format 3',
         description: 'New format',
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({
@@ -113,6 +148,7 @@ describe('EventTracksSettings', () => {
         id: format.id,
         name: 'Format 1',
         description: 'Format 1',
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
@@ -129,6 +165,7 @@ describe('EventTracksSettings', () => {
         await EventTracksSettings.for(authorizedEvent).saveFormat({
           name: 'Hello world',
           description: 'Hello world',
+          color: '#9CA3AF',
         });
       }).rejects.toThrow(ForbiddenOperationError);
     });
@@ -141,6 +178,7 @@ describe('EventTracksSettings', () => {
         await EventTracksSettings.for(authorizedEvent).saveFormat({
           name: 'Hello world',
           description: 'Hello world',
+          color: '#9CA3AF',
         });
       }).rejects.toThrow(ForbiddenOperationError);
     });
@@ -153,6 +191,7 @@ describe('EventTracksSettings', () => {
       await EventTracksSettings.for(authorizedEvent).saveCategory({
         name: 'Category 1',
         description: 'Category 1',
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
@@ -160,6 +199,36 @@ describe('EventTracksSettings', () => {
       expect(updated?.categories.length).toBe(1);
       expect(updated?.categories[0].name).toBe('Category 1');
       expect(updated?.categories[0].description).toBe('Category 1');
+    });
+
+    it('adds a new category with a color', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveCategory({
+        name: 'Category 1',
+        description: 'Category 1',
+        color: '#ff5f5f',
+      });
+
+      const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
+
+      expect(updated?.categories[0].color).toBe('#ff5f5f');
+    });
+
+    it('updates the color of a category', async () => {
+      const category = await eventCategoryFactory({ event });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      await EventTracksSettings.for(authorizedEvent).saveCategory({
+        id: category.id,
+        name: 'Category 1',
+        description: 'Category 1',
+        color: '#ff5f5f',
+      });
+
+      const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
+
+      expect(updated?.categories[0].color).toBe('#ff5f5f');
     });
 
     it('updates an event category', async () => {
@@ -170,6 +239,7 @@ describe('EventTracksSettings', () => {
         id: category.id,
         name: 'Category 1',
         description: 'Category 1',
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
@@ -184,7 +254,7 @@ describe('EventTracksSettings', () => {
         const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
-        await settings.saveCategory({ name: 'Hello world', description: 'Hello world' });
+        await settings.saveCategory({ name: 'Hello world', description: 'Hello world', color: '#9CA3AF' });
       }).rejects.toThrow(ForbiddenOperationError);
     });
 
@@ -194,7 +264,7 @@ describe('EventTracksSettings', () => {
         const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
-        await settings.saveCategory({ name: 'Hello world', description: 'Hello world' });
+        await settings.saveCategory({ name: 'Hello world', description: 'Hello world', color: '#9CA3AF' });
       }).rejects.toThrow(ForbiddenOperationError);
     });
   });

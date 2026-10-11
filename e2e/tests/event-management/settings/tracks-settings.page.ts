@@ -13,6 +13,9 @@ export class TracksSettingsPage extends PageObject {
   readonly formatsAllowMultipleSwitch = this.page.getByRole('switch', { name: 'Allow multiple formats' });
   readonly formatsList = this.page.getByRole('list', { name: 'formats list' }).locator('>li');
 
+  readonly colorButton = this.page.getByRole('button', { name: /^Color/ });
+  readonly colorOption = (name: string) => this.page.getByRole('menuitem', { name, exact: true });
+
   readonly saveCategoryButton = this.page.getByRole('button', { name: 'Save category' });
   readonly newCategoryButton = this.page.getByRole('button', { name: 'New category' });
   readonly categoryModal = this.page.getByRole('heading', { name: 'Category track' });

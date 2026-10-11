@@ -1,7 +1,6 @@
 import type { JSX } from 'react';
 import { createRoutesStub } from 'react-router';
 import { page } from 'vitest/browser';
-import { getContrastColor } from '~/shared/colors/colors.ts';
 import { Tag } from './tag.tsx';
 
 describe('Tag component', () => {
@@ -25,8 +24,8 @@ describe('Tag component', () => {
   it('applies the correct background color and text color', async () => {
     await renderComponent(<Tag tag={tag} />);
 
-    const linkElement = page.getByRole('link');
-    await expect.element(linkElement).toHaveStyle({ backgroundColor: tag.color, color: getContrastColor(tag.color) });
+    const badge = page.getByText('Sample Tag').element().parentElement as HTMLElement;
+    await expect.element(badge).toHaveStyle({ backgroundColor: 'rgb(255, 0, 0)', color: 'rgb(255, 255, 255)' });
   });
 
   it('creates a link with the correct href', async () => {

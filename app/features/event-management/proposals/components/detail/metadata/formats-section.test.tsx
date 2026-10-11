@@ -25,13 +25,13 @@ describe('FormatsSection component', () => {
     event: 'test-event',
     proposalId: 'proposal-123',
     proposalFormats: [
-      { id: '1', name: 'Lightning Talk (5min)' },
-      { id: '2', name: 'Short Talk (20min)' },
+      { id: '1', name: 'Lightning Talk (5min)', color: '#ff0000' },
+      { id: '2', name: 'Short Talk (20min)', color: '#9CA3AF' },
     ],
     eventFormats: [
-      { id: '1', name: 'Lightning Talk (5min)' },
-      { id: '2', name: 'Short Talk (20min)' },
-      { id: '3', name: 'Long Talk (45min)' },
+      { id: '1', name: 'Lightning Talk (5min)', color: '#ff0000' },
+      { id: '2', name: 'Short Talk (20min)', color: '#9CA3AF' },
+      { id: '3', name: 'Long Talk (45min)', color: '#9CA3AF' },
     ],
     multiple: true,
     canChangeFormats: true,
@@ -62,6 +62,14 @@ describe('FormatsSection component', () => {
 
     await expect.element(page.getByText('Lightning Talk (5min)')).toBeInTheDocument();
     await expect.element(page.getByText('Short Talk (20min)')).toBeInTheDocument();
+  });
+
+  it('fills the pill with the format color', async () => {
+    await renderComponent();
+
+    const badge = page.getByText('Lightning Talk (5min)').element().parentElement as HTMLElement;
+    await expect.element(badge).toHaveStyle({ backgroundColor: 'rgb(255, 0, 0)' });
+    await expect.element(badge).toHaveClass('rounded-full');
   });
 
   it('submits form data when formats are changed', async () => {

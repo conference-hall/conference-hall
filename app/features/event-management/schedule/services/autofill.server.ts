@@ -4,9 +4,15 @@ import type { Language, Languages } from '~/shared/types/proposals.types.ts';
 import { db, type DbTransaction } from '../../../../../prisma/db.server.ts';
 import type { Event } from '../../../../../prisma/generated/client.ts';
 import { type AutofillPayload, type AutofillReport, type AutofillScope, autofill } from '../models/autofill.ts';
+import { categoryColor } from '../models/category-color.ts';
 import { ScheduleTime } from '../models/schedule-time.ts';
 
-type SessionAssignment = { sessionId: string; proposalId: string; language: Language | null };
+type SessionAssignment = {
+  sessionId: string;
+  proposalId: string;
+  language: Language | null;
+  color: string | null;
+};
 
 export class ScheduleAutofill {
   private constructor(private event: Event) {}
@@ -37,21 +43,24 @@ export class ScheduleAutofill {
       if (report.sessionsToClear.length > 0) {
         await trx.scheduleSession.updateMany({
           where: { id: { in: report.sessionsToClear }, scheduleId: schedule.id },
-          data: { proposalId: null, language: null },
+          data: { proposalId: null, language: null, color: null },
         });
       }
 
       const languages = new Map(proposals.map((p) => [p.id, (p.languages as Languages).at(0) ?? null]));
+      const colors = new Map(proposals.map((p) => [p.id, categoryColor(p.categories)]));
       const assignments: Array<SessionAssignment> = report.assignments.map(({ sessionId, proposalId }) => ({
         sessionId,
         proposalId,
         language: languages.get(proposalId) ?? null,
+        color: colors.get(proposalId) ?? null,
       }));
 
-      for (const { sessionId, proposalId, language } of assignments) {
+      for (const { sessionId, proposalId, language, color } of assignments) {
         await trx.scheduleSession.update({
           where: { id: sessionId, scheduleId: schedule.id },
-          data: { proposalId, language },
+          // An uncoloured category leaves the session's own colour alone.
+          data: { proposalId, language, ...(color ? { color } : {}) },
         });
       }
 
@@ -87,6 +96,7 @@ export class ScheduleAutofill {
         isDraft: true,
         archivedAt: true,
         speakers: { select: { id: true } },
+        categories: { select: { color: true }, orderBy: { order: 'asc' }, take: 1 },
       },
     });
   }

@@ -72,6 +72,7 @@ async function seed() {
       location: 'Cité des Congrès de Nantes, 5 Rue de Valmy, 44000 Nantes, France',
       websiteUrl: 'https://devfest.gdgnantes.com',
       contactEmail: 'contact@gdgnantes.com',
+      formatsAllowMultiple: true,
       maxProposals: 3,
       migrationId: '123',
     },
@@ -81,21 +82,24 @@ async function seed() {
     event,
     attributes: {
       name: 'Conference Talk',
-      description: 'Standard conference presentation format (45 minutes including Q&A)',
+      description: 'Standard conference presentation format',
+      durationInMinutes: 45,
     },
   });
   const format2 = await eventFormatFactory({
     event,
     attributes: {
       name: 'Lightning Talk',
-      description: 'Short and impactful presentation (5-10 minutes)',
+      description: 'Short and impactful presentation',
+      durationInMinutes: 10,
     },
   });
   await eventFormatFactory({
     event,
     attributes: {
       name: 'Workshop',
-      description: 'Hands-on interactive session (2-3 hours)',
+      description: 'Hands-on interactive session',
+      durationInMinutes: 120,
     },
   });
 

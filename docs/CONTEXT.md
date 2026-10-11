@@ -47,11 +47,16 @@ term as defined here and don't drift to synonyms.
   Workshop, Lightning, Panel) — _how_ it's delivered. A proposal may require one,
   allow several, or none (`formatsRequired` / `formatsAllowMultiple`). A format may
   carry an optional `durationInMinutes`, shown to speakers at submission. It is
-  informational: the schedule does not read it.
+  informational: the schedule does not read it. A format always carries a free hex
+  `color` (random preset color at creation), used organizer-side only to fill the proposal
+  badge.
 
 - **Category** — An organizer-defined **topic/track** for an event (e.g. Backend,
   Mobile, UX) — _what_ it's about. Same optional/multiple rules as Format. Format and
-  Category are parallel but distinct taxonomies; don't conflate them.
+  Category are parallel but distinct taxonomies; don't conflate them. A category always
+  carries a free hex `color` (random preset color at creation), used organizer-side only: it
+  fills the proposal badge, and linking a proposal to a schedule session copies the
+  color of its first category (by `order`) onto that session.
 
 - **Tag** (proposal tag) — An organizer-created, colored label applied to proposals
   for internal organization (e.g. "Keynote", "Needs review"). Per-event.

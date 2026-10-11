@@ -40,12 +40,18 @@ export class EmailTemplateSettingsPage extends PageObject {
   readonly contentTextarea = this.page.getByLabel('Content');
   readonly saveButton = this.page.getByRole('button', { name: 'Save customization' });
 
+  readonly cancelButton = this.editModal.getByRole('button', { name: 'Cancel' });
+
   async fillSubject(subject: string) {
     await this.fill(this.subjectInput, subject);
   }
 
   async fillContent(content: string) {
     await this.fill(this.contentTextarea, content);
+  }
+
+  async cancelChanges() {
+    await this.cancelButton.click();
   }
 
   async saveChanges() {

@@ -9,7 +9,7 @@ export type ScheduleSession = {
   timeslot: TimeSlot;
   name?: string | null;
   language: Language | null;
-  color: string;
+  color: string | null;
   emojis: string[];
   proposal?: ScheduleProposalData | null;
   isCreating?: boolean;
@@ -22,7 +22,7 @@ export type SessionData = {
   end: Date;
   name?: string | null;
   language: Language | null;
-  color: string;
+  color: string | null;
   emojis: string[];
   proposal?: ScheduleProposalData | null;
   isCreating?: boolean;
