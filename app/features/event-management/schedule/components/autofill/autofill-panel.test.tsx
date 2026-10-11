@@ -46,6 +46,7 @@ const PAYLOAD: AutofillPayload = {
       confirmationStatus: 'PENDING',
       isDraft: false,
       archivedAt: null,
+      formatDurations: [],
     },
     {
       id: 'proposal-2',
@@ -55,6 +56,7 @@ const PAYLOAD: AutofillPayload = {
       confirmationStatus: 'PENDING',
       isDraft: false,
       archivedAt: null,
+      formatDurations: [],
     },
     {
       id: 'proposal-3',
@@ -64,6 +66,7 @@ const PAYLOAD: AutofillPayload = {
       confirmationStatus: 'CONFIRMED',
       isDraft: false,
       archivedAt: null,
+      formatDurations: [],
     },
     {
       id: 'proposal-4',
@@ -73,6 +76,7 @@ const PAYLOAD: AutofillPayload = {
       confirmationStatus: null,
       isDraft: false,
       archivedAt: null,
+      formatDurations: [],
     },
     {
       id: 'proposal-5',
@@ -82,9 +86,12 @@ const PAYLOAD: AutofillPayload = {
       confirmationStatus: 'PENDING',
       isDraft: false,
       archivedAt: null,
+      formatDurations: [],
     },
   ],
 };
+
+const FORMAT_DURATION_RULE = "Session length must equal the proposal's format duration";
 
 const REPORT: AutofillReport = {
   assignments: [
@@ -116,6 +123,7 @@ describe('AutofillPanel component', () => {
             trackIds: form.getAll('trackIds'),
             proposalState: form.get('proposalState'),
             reset: form.get('reset'),
+            formatDuration: form.get('formatDuration'),
           });
           return { report: options.report ?? REPORT };
         },
@@ -197,7 +205,7 @@ describe('AutofillPanel component', () => {
 
     await expect.element(page.getByText('3 sessions will be filled')).toBeVisible();
 
-    await userEvent.click(page.getByRole('switch'));
+    await userEvent.click(page.getByRole('switch', { name: 'Reset the filled sessions' }));
 
     await expect.element(page.getByText('4 sessions will be filled')).toBeVisible();
   });
@@ -207,7 +215,7 @@ describe('AutofillPanel component', () => {
 
     await expect.element(page.getByText('filled session will be cleared')).not.toBeInTheDocument();
 
-    await userEvent.click(page.getByRole('switch'));
+    await userEvent.click(page.getByRole('switch', { name: 'Reset the filled sessions' }));
 
     await expect.element(page.getByText('1 filled session will be cleared')).toBeVisible();
   });
@@ -228,7 +236,7 @@ describe('AutofillPanel component', () => {
     await userEvent.click(page.getByRole('button', { name: 'Oct 6, 2024' }));
     await userEvent.click(page.getByRole('button', { name: 'Room 2' }));
     await userEvent.click(page.getByRole('radio', { name: 'All (5)' }));
-    await userEvent.click(page.getByRole('switch'));
+    await userEvent.click(page.getByRole('switch', { name: 'Reset the filled sessions' }));
     await userEvent.click(page.getByRole('button', { name: 'Fill the sessions' }));
 
     await vi.waitFor(() =>
@@ -237,6 +245,7 @@ describe('AutofillPanel component', () => {
         trackIds: ['track-1'],
         proposalState: 'all',
         reset: 'on',
+        formatDuration: null,
       }),
     );
   });
@@ -249,6 +258,7 @@ describe('AutofillPanel component', () => {
     await expect.element(page.getByText('Autofill result')).toBeVisible();
     await expect.element(page.getByText('3 sessions filled')).toBeVisible();
     await expect.element(page.getByText('1 session left empty')).toBeVisible();
+    await expect.element(page.getByText('3 proposals not placed')).toBeVisible();
     await expect.element(page.getByText('2 proposals set aside: speaker already busy')).toBeVisible();
     await expect.element(page.getByText('1 proposal without a free session')).toBeVisible();
     await expect.element(page.getByRole('button', { name: 'Fill the sessions' })).not.toBeInTheDocument();
@@ -289,6 +299,50 @@ describe('AutofillPanel component', () => {
     await userEvent.click(page.getByRole('button', { name: 'Fill the sessions' }));
 
     await expect.element(page.getByText('2 sessions cleared')).toBeVisible();
+  });
+
+  it('submits the format duration rule once switched on', async () => {
+    const { onSubmit } = renderPanel();
+
+    await userEvent.click(page.getByRole('switch', { name: FORMAT_DURATION_RULE }));
+    await userEvent.click(page.getByRole('button', { name: 'Fill the sessions' }));
+
+    await vi.waitFor(() => expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ formatDuration: 'on' })));
+  });
+
+  it('recomputes the summary with the format duration rule', async () => {
+    const payload: AutofillPayload = {
+      ...PAYLOAD,
+      proposals: PAYLOAD.proposals.map((proposal) => ({ ...proposal, formatDurations: [20] })),
+    };
+    renderPanel({ payload });
+
+    await expect.element(page.getByText('3 sessions will be filled')).toBeVisible();
+
+    await userEvent.click(page.getByRole('switch', { name: FORMAT_DURATION_RULE }));
+
+    await expect.element(page.getByText('0 sessions will be filled')).toBeVisible();
+    await expect.element(page.getByText('4 proposals will not be placed')).toBeVisible();
+    await expect
+      .element(page.getByText('4 proposals set aside: no free session of their format duration'))
+      .toBeVisible();
+  });
+
+  it('tells how many proposals without format duration are never blocked', async () => {
+    const payload: AutofillPayload = {
+      ...PAYLOAD,
+      proposals: PAYLOAD.proposals.map((proposal, index) => ({
+        ...proposal,
+        formatDurations: index === 0 ? [] : index === 1 ? [null] : [60],
+      })),
+    };
+    renderPanel({ payload });
+
+    await expect.element(page.getByText('never blocked')).not.toBeInTheDocument();
+
+    await userEvent.click(page.getByRole('switch', { name: FORMAT_DURATION_RULE }));
+
+    await expect.element(page.getByText('2 proposals without format duration are never blocked')).toBeVisible();
   });
 
   it('invites to create sessions when the schedule has none', async () => {

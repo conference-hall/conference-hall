@@ -7,7 +7,7 @@ import { Form, useNavigation } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
-import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
+import { Toggle, ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { formatDate } from '~/shared/datetimes/datetimes.ts';
 import {
@@ -32,6 +32,7 @@ export function AutofillPanel({ payload, report, onClose }: Props) {
     trackIds: payload.tracks.map((track) => track.id),
     proposalState: 'accepted',
     reset: false,
+    rules: { formatDuration: false, speakerRest: null },
   }));
 
   const [submittedScope, setSubmittedScope] = useState<AutofillScope | null>(null);
@@ -65,12 +66,13 @@ export function AutofillPanel({ payload, report, onClose }: Props) {
         ))}
         <input type="hidden" name="proposalState" value={scope.proposalState} />
         {scope.reset ? <input type="hidden" name="reset" value="on" /> : null}
+        {scope.rules.formatDuration ? <input type="hidden" name="formatDuration" value="on" /> : null}
 
         <SlideOver.Content className="flex flex-col gap-6">
           <DaysFilter payload={payload} scope={scope} onChange={setScope} />
           <TracksFilter payload={payload} scope={scope} onChange={setScope} />
           <ProposalStatesFilter payload={payload} scope={scope} onChange={setScope} />
-          <RulesSection />
+          <RulesSection scope={scope} onChange={setScope} />
           <ToggleGroup
             label={t('event-management.schedule.autofill.reset')}
             value={scope.reset}
@@ -82,6 +84,7 @@ export function AutofillPanel({ payload, report, onClose }: Props) {
           <ReportFooter report={displayedReport} onClose={onClose} />
         ) : (
           <SummaryFooter
+            payload={payload}
             summary={summary}
             scope={scope}
             submitting={navigation.state === 'submitting'}
@@ -212,12 +215,12 @@ function ProposalStatesFilter({ payload, scope, onChange }: FilterProps) {
   );
 }
 
-const RULE_LABELS = [
+const FIXED_RULE_LABELS = [
   'event-management.schedule.autofill.rules.single-assignment',
   'event-management.schedule.autofill.rules.speaker-overlap',
 ] as const;
 
-function RulesSection() {
+function RulesSection({ scope, onChange }: Pick<FilterProps, 'scope' | 'onChange'>) {
   const { t } = useTranslation();
 
   return (
@@ -225,26 +228,43 @@ function RulesSection() {
       <H3 weight="medium">{t('event-management.schedule.autofill.rules.heading')}</H3>
 
       <ul className="flex flex-col divide-y rounded-md border">
-        {RULE_LABELS.map((key) => (
-          <li key={key} className="flex items-center gap-2 p-3">
-            <LockClosedIcon className="size-4 shrink-0 text-gray-400" aria-hidden="true" />
+        {FIXED_RULE_LABELS.map((key) => (
+          <li key={key} className="flex items-center justify-between gap-4 p-3">
             <Subtitle size="xs">{t(key)}</Subtitle>
+            <LockClosedIcon className="size-4 shrink-0 text-gray-400" aria-hidden="true" />
           </li>
         ))}
+        <li className="flex items-center justify-between gap-4 p-3">
+          <Subtitle size="xs">{t('event-management.schedule.autofill.rules.format-duration')}</Subtitle>
+          <Toggle
+            label={t('event-management.schedule.autofill.rules.format-duration')}
+            value={scope.rules.formatDuration}
+            onChange={(formatDuration) => onChange({ ...scope, rules: { ...scope.rules, formatDuration } })}
+          />
+        </li>
       </ul>
     </section>
   );
 }
 
 type SummaryFooterProps = {
+  payload: AutofillPayload;
   summary: AutofillReport;
   scope: AutofillScope;
   submitting: boolean;
   onCancel: VoidFunction;
 };
 
-function SummaryFooter({ summary, scope, submitting, onCancel }: SummaryFooterProps) {
+function SummaryFooter({ payload, summary, scope, submitting, onCancel }: SummaryFooterProps) {
   const { t } = useTranslation();
+
+  const unknownDurations = scope.rules.formatDuration
+    ? payload.proposals.filter(
+        (proposal) =>
+          isEligibleProposal(proposal, scope.proposalState) &&
+          (proposal.formatDurations.length === 0 || proposal.formatDurations.some((duration) => duration === null)),
+      ).length
+    : 0;
 
   const filled = summary.assignments.length;
   const cleared = summary.sessionsToClear.length;
@@ -269,7 +289,11 @@ function SummaryFooter({ summary, scope, submitting, onCancel }: SummaryFooterPr
               {t('event-management.schedule.autofill.summary.unplaced', {
                 count: summary.proposalsLeftUnscheduled.length,
               })}
+              <ReasonList proposals={summary.proposalsLeftUnscheduled} />
             </li>
+          ) : null}
+          {unknownDurations > 0 ? (
+            <li>{t('event-management.schedule.autofill.summary.unknown-durations', { count: unknownDurations })}</li>
           ) : null}
         </ul>
       </Callout>
@@ -289,15 +313,28 @@ function SummaryFooter({ summary, scope, submitting, onCancel }: SummaryFooterPr
 const REASON_LABELS = {
   'no-vacant-session': 'event-management.schedule.autofill.report.reason.no-vacant-session',
   'speaker-overlap': 'event-management.schedule.autofill.report.reason.speaker-overlap',
+  'format-duration': 'event-management.schedule.autofill.report.reason.format-duration',
 } as const satisfies Record<AutofillReason, string>;
 
-function ReportFooter({ report, onClose }: { report: AutofillReport; onClose: VoidFunction }) {
+function ReasonList({ proposals }: { proposals: AutofillReport['proposalsLeftUnscheduled'] }) {
   const { t } = useTranslation();
 
   const byReason = new Map<AutofillReason, number>();
-  for (const { reason } of report.proposalsLeftUnscheduled) {
+  for (const { reason } of proposals) {
     byReason.set(reason, (byReason.get(reason) ?? 0) + 1);
   }
+
+  return (
+    <ul className="ml-4 list-disc">
+      {[...byReason].map(([reason, count]) => (
+        <li key={reason}>{t(REASON_LABELS[reason], { count })}</li>
+      ))}
+    </ul>
+  );
+}
+
+function ReportFooter({ report, onClose }: { report: AutofillReport; onClose: VoidFunction }) {
+  const { t } = useTranslation();
 
   return (
     <footer className="flex shrink-0 flex-col gap-4 p-4">
@@ -309,9 +346,14 @@ function ReportFooter({ report, onClose }: { report: AutofillReport; onClose: Vo
               {t('event-management.schedule.autofill.report.left-vacant', { count: report.sessionsLeftVacant.length })}
             </li>
           ) : null}
-          {[...byReason].map(([reason, count]) => (
-            <li key={reason}>{t(REASON_LABELS[reason], { count })}</li>
-          ))}
+          {report.proposalsLeftUnscheduled.length > 0 ? (
+            <li>
+              {t('event-management.schedule.autofill.report.unplaced', {
+                count: report.proposalsLeftUnscheduled.length,
+              })}
+              <ReasonList proposals={report.proposalsLeftUnscheduled} />
+            </li>
+          ) : null}
           {report.sessionsToClear.length > 0 ? (
             <li>{t('event-management.schedule.autofill.report.cleared', { count: report.sessionsToClear.length })}</li>
           ) : null}

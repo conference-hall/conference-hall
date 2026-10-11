@@ -1,5 +1,7 @@
+import { parseWithZod } from '@conform-to/zod/v4';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
+import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { scheduleTrackFactory } from 'tests/factories/schedule-track.ts';
 import { scheduleFactory } from 'tests/factories/schedule.ts';
@@ -13,6 +15,7 @@ import type { Event, Schedule, ScheduleTrack, Team, User } from '../../../../../
 import { Prisma } from '../../../../../prisma/generated/client.ts';
 import type { AutofillScope } from '../models/autofill.ts';
 import { autofill } from '../models/autofill.ts';
+import { AutofillScopeSchema } from './autofill.schema.server.ts';
 import { ScheduleAutofill } from './autofill.server.ts';
 import { EventSchedule } from './schedule.server.ts';
 
@@ -69,6 +72,7 @@ describe('ScheduleAutofill', () => {
     trackIds: [track.id, track2.id],
     proposalState: 'accepted',
     reset: false,
+    rules: { formatDuration: false, speakerRest: null },
     ...overrides,
   });
 
@@ -138,6 +142,25 @@ describe('ScheduleAutofill', () => {
       const payload = await ScheduleAutofill.for(await authorizedEvent()).get();
 
       expect(payload.sessions.at(0)?.day).toBe(DAY_2);
+    });
+
+    it('returns the durations of the formats of a proposal, null for a format without duration', async () => {
+      const talk = await talkFactory({ speakers: [speaker] });
+      const withDuration = await eventFormatFactory({ event, attributes: { durationInMinutes: 20 } });
+      const withoutDuration = await eventFormatFactory({ event, attributes: { durationInMinutes: null } });
+      const proposal = await proposalFactory({
+        event,
+        talk,
+        traits: ['accepted'],
+        formats: [withDuration, withoutDuration],
+      });
+      const noFormat = await acceptedProposal();
+
+      const payload = await ScheduleAutofill.for(await authorizedEvent()).get();
+
+      const durationsOf = (id: string) => payload.proposals.find((p) => p.id === id)?.formatDurations;
+      expect(durationsOf(proposal.id)?.toSorted()).toEqual([20, null]);
+      expect(durationsOf(noFormat.id)).toEqual([]);
     });
 
     it('excludes rejected, declined, draft and archived proposals', async () => {
@@ -326,5 +349,27 @@ describe('ScheduleAutofill', () => {
       const saved = await db.scheduleSession.findUnique({ where: { id: session.id } });
       expect(saved?.proposalId).toBe(proposal.id);
     });
+  });
+});
+
+describe('AutofillScopeSchema', () => {
+  const parse = (values: Record<string, string | Array<string>>) => {
+    const form = new FormData();
+    for (const [key, value] of Object.entries(values)) {
+      for (const item of Array.isArray(value) ? value : [value]) form.append(key, item);
+    }
+    return parseWithZod(form, { schema: AutofillScopeSchema });
+  };
+
+  it('disables the optional rules when their fields are absent', () => {
+    const result = parse({});
+
+    expect(result.status === 'success' && result.value.rules).toEqual({ formatDuration: false, speakerRest: null });
+  });
+
+  it('enables the format duration rule from a checked box', () => {
+    const result = parse({ formatDuration: 'on' });
+
+    expect(result.status === 'success' && result.value.rules.formatDuration).toBe(true);
   });
 });

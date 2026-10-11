@@ -96,6 +96,7 @@ export class ScheduleAutofill {
         isDraft: true,
         archivedAt: true,
         speakers: { select: { id: true } },
+        formats: { select: { durationInMinutes: true } },
         categories: { select: { color: true }, orderBy: { order: 'asc' }, take: 1 },
       },
     });
@@ -128,6 +129,7 @@ function toPayload(schedule: ScheduleWithSessions, proposals: EligibleProposals)
       id: proposal.id,
       number: proposal.proposalNumber,
       speakerIds: proposal.speakers.map((speaker) => speaker.id),
+      formatDurations: proposal.formats.map((format) => format.durationInMinutes),
       deliberationStatus: proposal.deliberationStatus,
       confirmationStatus: proposal.confirmationStatus,
       isDraft: proposal.isDraft,

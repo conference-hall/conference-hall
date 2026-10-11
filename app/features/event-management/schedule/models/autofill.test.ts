@@ -13,15 +13,18 @@ const DAY_2 = '2024-10-06';
 
 const at = (day: string, hour: number) => new Date(`${day}T${String(hour).padStart(2, '0')}:00:00.000Z`);
 
-type SlotOptions = { day?: string; trackId?: string; hour?: number };
+type SlotOptions = { day?: string; trackId?: string; hour?: number; minutes?: number };
 
-function vacant(id: string, { day = DAY_1, trackId = 'track-1', hour = 9 }: SlotOptions = {}): AutofillSession {
+function vacant(
+  id: string,
+  { day = DAY_1, trackId = 'track-1', hour = 9, minutes = 60 }: SlotOptions = {},
+): AutofillSession {
   return {
     id,
     day,
     trackId,
     start: at(day, hour),
-    end: at(day, hour + 1),
+    end: new Date(at(day, hour).getTime() + minutes * 60_000),
     name: null,
     proposalId: null,
     speakerIds: [],
@@ -49,6 +52,7 @@ function proposal(id: string, overrides: Partial<AutofillProposal> = {}): Autofi
     confirmationStatus: null,
     isDraft: false,
     archivedAt: null,
+    formatDurations: [],
     ...overrides,
   };
 }
@@ -71,6 +75,7 @@ function scopeOf(overrides: Partial<AutofillScope> = {}): AutofillScope {
     trackIds: ['track-1', 'track-2'],
     proposalState: 'accepted',
     reset: false,
+    rules: { formatDuration: false, speakerRest: null },
     ...overrides,
   };
 }
@@ -246,6 +251,94 @@ describe('autofill', () => {
 
       expect(report.assignments).toEqual([{ sessionId: 'session-1', proposalId: 'proposal-1' }]);
       expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-2', reason: 'speaker-overlap' }]);
+    });
+  });
+
+  describe('format duration', () => {
+    const rules = { formatDuration: true, speakerRest: null };
+
+    it('ignores the format durations when the rule is off', () => {
+      const payload = payloadOf(
+        [vacant('session-1', { minutes: 60 })],
+        [proposal('proposal-1', { formatDurations: [20] })],
+      );
+
+      expect(autofill(payload, scopeOf()).assignments).toEqual([{ sessionId: 'session-1', proposalId: 'proposal-1' }]);
+    });
+
+    it('assigns a proposal only to a session of the duration of its format', () => {
+      const payload = payloadOf(
+        [vacant('session-1', { hour: 9, minutes: 60 }), vacant('session-2', { hour: 11, minutes: 20 })],
+        [proposal('proposal-1', { formatDurations: [20] })],
+      );
+
+      const report = autofill(payload, scopeOf({ rules }));
+
+      expect(report.assignments).toEqual([{ sessionId: 'session-2', proposalId: 'proposal-1' }]);
+    });
+
+    it('accepts any of the durations of several formats', () => {
+      const payload = payloadOf(
+        [vacant('session-1', { minutes: 45 })],
+        [proposal('proposal-1', { formatDurations: [20, 45] })],
+      );
+
+      expect(autofill(payload, scopeOf({ rules })).assignments).toHaveLength(1);
+    });
+
+    it('never blocks a proposal without format or with a format without duration', () => {
+      const payload = payloadOf(
+        [vacant('session-1', { hour: 9, minutes: 60 }), vacant('session-2', { hour: 11, minutes: 60 })],
+        [
+          proposal('proposal-1', { number: 1, formatDurations: [] }),
+          proposal('proposal-2', { number: 2, formatDurations: [20, null] }),
+        ],
+      );
+
+      expect(autofill(payload, scopeOf({ rules })).assignments).toHaveLength(2);
+    });
+
+    it('reports format-duration when no vacant session has the right duration', () => {
+      const payload = payloadOf(
+        [vacant('session-1', { minutes: 60 })],
+        [proposal('proposal-1', { formatDurations: [20] })],
+      );
+
+      const report = autofill(payload, scopeOf({ rules }));
+
+      expect(report.assignments).toEqual([]);
+      expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-1', reason: 'format-duration' }]);
+    });
+
+    it('reports the rule that blocks the most vacant sessions', () => {
+      const payload = payloadOf(
+        [
+          filled('session-0', 'proposal-0', { hour: 9, speakerIds: ['alice'] }),
+          vacant('session-1', { hour: 9, trackId: 'track-2', minutes: 60 }),
+          vacant('session-2', { hour: 11, minutes: 60 }),
+          vacant('session-3', { hour: 13, minutes: 60 }),
+        ],
+        [proposal('proposal-1', { speakerIds: ['alice'], formatDurations: [20] })],
+      );
+
+      const report = autofill(payload, scopeOf({ rules }));
+
+      expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-1', reason: 'format-duration' }]);
+    });
+
+    it('breaks a tie by rule priority', () => {
+      const payload = payloadOf(
+        [
+          filled('session-0', 'proposal-0', { hour: 9, speakerIds: ['alice'] }),
+          vacant('session-1', { hour: 9, trackId: 'track-2', minutes: 60 }),
+          vacant('session-2', { hour: 11, minutes: 60 }),
+        ],
+        [proposal('proposal-1', { speakerIds: ['alice'], formatDurations: [20] })],
+      );
+
+      const report = autofill(payload, scopeOf({ rules }));
+
+      expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-1', reason: 'speaker-overlap' }]);
     });
   });
 
