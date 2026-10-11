@@ -207,7 +207,7 @@ describe('SessionForm component', () => {
     const { rendered, setSessionLock, updateSession, onFinish } = renderForm('edit', {}, locked);
     await rendered;
 
-    await expect.element(page.getByText('This session is locked.')).toBeVisible();
+    await expect.element(page.getByText(/This session is locked/)).toBeVisible();
     await expect.element(page.getByLabelText('Language')).toBeDisabled();
     await expect.element(page.getByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
     await expect.element(page.getByRole('button', { name: 'Save session' })).not.toBeInTheDocument();
