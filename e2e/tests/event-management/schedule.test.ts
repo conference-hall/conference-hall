@@ -151,7 +151,7 @@ test('locks a session so the autofill leaves it alone', async ({ page, context }
   await expect(schedulePage.session('Reserved slot')).toBeVisible();
 
   // Unlock from the lock icon of the block
-  await schedulePage.autofillPanel.getByRole('button', { name: 'Close', exact: true }).click();
+  await schedulePage.autofillPanel.getByRole('contentinfo').getByRole('button', { name: 'Close' }).click();
   await unlock.click({ force: true });
   await expect(unlock).toBeHidden();
 });
