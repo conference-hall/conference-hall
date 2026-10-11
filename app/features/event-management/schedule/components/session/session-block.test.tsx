@@ -93,6 +93,45 @@ describe('SessionBlock component', () => {
     });
   });
 
+  describe('empty session', () => {
+    const empty: ScheduleSession = { ...session, name: null };
+
+    it('draws a dashed hatched tile on white when there is no name and no proposal', async () => {
+      await renderInContainer(64, <SessionBlock session={empty} onOpen={() => {}} />);
+
+      const block = page.getByRole('button').element();
+
+      expect(block.className).toContain('border-dashed');
+      expect(block.getAttribute('style')).toContain('repeating-linear-gradient');
+      expect(block.className).not.toContain('bg-stone-50');
+    });
+
+    it('keeps the colour of the session on the hatching', async () => {
+      await renderInContainer(64, <SessionBlock session={{ ...empty, color: '#ff5f5f' }} onOpen={() => {}} />);
+
+      const block = page.getByRole('button').element();
+
+      expect(block.getAttribute('style')).toContain('color-mix');
+    });
+
+    it('keeps the regular tile while the session is being created', async () => {
+      await renderInContainer(64, <SessionBlock session={{ ...empty, isCreating: true }} onOpen={() => {}} />);
+
+      const block = page.getByRole('button').element();
+
+      expect(block.className).not.toContain('border-dashed');
+      expect(block.getAttribute('style')).toBe(null);
+    });
+
+    it('keeps the regular tile when the session has a name', async () => {
+      await renderInContainer(64, <SessionBlock session={session} onOpen={() => {}} />);
+
+      const block = page.getByRole('button').element();
+
+      expect(block.className).not.toContain('border-dashed');
+    });
+  });
+
   describe('what a block shows at each height', () => {
     it('shows nothing but its colour, and stays clickable, under 8 pixels', async () => {
       await renderAtHeight(8);

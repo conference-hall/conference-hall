@@ -1,5 +1,6 @@
 import { cx } from 'class-variance-authority';
 import { differenceInMinutes } from 'date-fns';
+import type { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isHexColor } from '~/shared/colors/colors.ts';
 import { formatDuration } from '~/shared/datetimes/datetimes.ts';
@@ -36,6 +37,7 @@ export function SessionBlock({ session, onOpen }: SessionBlockProps) {
     : undefined;
 
   const title = proposal ? proposal.title : session.name;
+  const emptyStyle = !title && !session.isCreating ? buildEmptyStyle(color ?? '#78716c') : undefined;
 
   return (
     <div
@@ -54,9 +56,9 @@ export function SessionBlock({ session, onOpen }: SessionBlockProps) {
         'session-lg:justify-between session-lg:text-xs session-lg:leading-3.5',
         'session-xl:justify-between session-xl:text-xs session-xl:leading-3.5',
         { 'border-dotted': session.isCreating },
-        color ? null : 'border-stone-300 bg-stone-50 text-stone-600',
+        emptyStyle ? 'border-dashed' : color ? null : 'border-stone-300 bg-stone-50 text-stone-600',
       )}
-      style={colorStyle}
+      style={emptyStyle ?? colorStyle}
     >
       {title ? (
         <div className={cx(HIDDEN_WHEN_TINY, TRUNCATED)}>
@@ -72,6 +74,15 @@ export function SessionBlock({ session, onOpen }: SessionBlockProps) {
       </div>
     </div>
   );
+}
+
+function buildEmptyStyle(color: string): CSSProperties {
+  return {
+    color,
+    backgroundColor: 'white',
+    backgroundImage: `repeating-linear-gradient(135deg, color-mix(in srgb, ${color} 22%, transparent) 0 1px, transparent 1px 7px)`,
+    borderColor: `color-mix(in srgb, ${color} 55%, white)`,
+  };
 }
 
 type SessionSpeakersProps = { speakers?: Array<{ name: string | null; picture: string | null }> };
