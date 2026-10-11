@@ -46,8 +46,7 @@ export type AutofillScope = {
 export const SPEAKER_REST_MINUTES = [15, 30, 60, 120] as const;
 export type SpeakerRestMinutes = (typeof SPEAKER_REST_MINUTES)[number];
 
-export type AutofillRules = { formatDuration: boolean; speakerRest: SpeakerRestMinutes | null };
-
+type AutofillRules = { formatDuration: boolean; speakerRest: SpeakerRestMinutes | null };
 type AutofillAssignment = { sessionId: string; proposalId: string };
 
 export type AutofillReport = {
