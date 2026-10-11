@@ -394,6 +394,141 @@ describe('autofill', () => {
     });
   });
 
+  describe('speaker rest', () => {
+    const rules = { formatDuration: false, speakerRest: 30 as const };
+
+    it('is off by default', () => {
+      const payload = payloadOf(
+        [filled('session-1', 'proposal-9', { hour: 9, speakerIds: ['alice'] }), vacant('session-2', { hour: 10 })],
+        [proposal('proposal-1', { speakerIds: ['alice'] })],
+      );
+
+      expect(autofill(payload, scopeOf()).assignments).toHaveLength(1);
+    });
+
+    it('rejects a session starting less than the rest after a session of the speaker', () => {
+      const payload = payloadOf(
+        [
+          filled('session-1', 'proposal-9', { hour: 9, speakerIds: ['alice'] }),
+          { ...vacant('session-2', { hour: 10 }), start: new Date(at(DAY_1, 10).getTime() + 29 * 60_000) },
+        ],
+        [proposal('proposal-1', { speakerIds: ['alice'] })],
+      );
+
+      const report = autofill(payload, scopeOf({ rules }));
+
+      expect(report.assignments).toEqual([]);
+      expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-1', reason: 'speaker-rest' }]);
+    });
+
+    it('accepts a gap equal to the rest', () => {
+      const payload = payloadOf(
+        [
+          filled('session-1', 'proposal-9', { hour: 9, speakerIds: ['alice'] }),
+          { ...vacant('session-2', { hour: 10 }), start: new Date(at(DAY_1, 10).getTime() + 30 * 60_000) },
+        ],
+        [proposal('proposal-1', { speakerIds: ['alice'] })],
+      );
+
+      expect(autofill(payload, scopeOf({ rules })).assignments).toHaveLength(1);
+    });
+
+    it('rejects a session ending too close before a session of the speaker', () => {
+      const payload = payloadOf(
+        [filled('session-1', 'proposal-9', { hour: 10, speakerIds: ['alice'] }), vacant('session-2', { hour: 9 })],
+        [proposal('proposal-1', { speakerIds: ['alice'] })],
+      );
+
+      const report = autofill(payload, scopeOf({ rules }));
+
+      expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-1', reason: 'speaker-rest' }]);
+    });
+
+    it('applies across tracks and days', () => {
+      const payload = payloadOf(
+        [
+          filled('session-1', 'proposal-9', { day: DAY_1, hour: 23, speakerIds: ['alice'] }),
+          { ...vacant('session-2', { day: DAY_2, trackId: 'track-2', hour: 0 }), start: at(DAY_2, 0) },
+        ],
+        [proposal('proposal-1', { speakerIds: ['alice'] })],
+      );
+
+      const report = autofill(payload, scopeOf({ rules: { formatDuration: false, speakerRest: 15 } }));
+
+      expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-1', reason: 'speaker-rest' }]);
+    });
+
+    it('reads co-speakers and the sessions outside the scope', () => {
+      const payload = payloadOf(
+        [
+          filled('session-1', 'proposal-9', { trackId: 'track-1', hour: 9, speakerIds: ['alice', 'bob'] }),
+          vacant('session-2', { trackId: 'track-2', hour: 10 }),
+        ],
+        [proposal('proposal-1', { speakerIds: ['bob', 'carol'] })],
+      );
+
+      const report = autofill(payload, scopeOf({ trackIds: ['track-2'], rules: { ...rules, speakerRest: 60 } }));
+
+      expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-1', reason: 'speaker-rest' }]);
+    });
+
+    it('ignores a named session without proposal', () => {
+      const payload = payloadOf(
+        [named('session-1', 'Lunch', { hour: 9 }), vacant('session-2', { hour: 10 })],
+        [proposal('proposal-1', { speakerIds: ['alice'] })],
+      );
+
+      expect(autofill(payload, scopeOf({ rules })).assignments).toHaveLength(1);
+    });
+
+    it('keeps the rest between two assignments made in the same pass', () => {
+      const payload = payloadOf(
+        [vacant('session-1', { hour: 9 }), vacant('session-2', { hour: 10 }), vacant('session-3', { hour: 12 })],
+        [
+          proposal('proposal-1', { number: 1, speakerIds: ['alice'] }),
+          proposal('proposal-2', { number: 2, speakerIds: ['alice'] }),
+        ],
+      );
+
+      const report = autofill(payload, scopeOf({ rules: { ...rules, speakerRest: 60 } }));
+
+      expect(report.assignments).toEqual([
+        { sessionId: 'session-1', proposalId: 'proposal-1' },
+        { sessionId: 'session-3', proposalId: 'proposal-2' },
+      ]);
+    });
+
+    it('ranks speaker overlap before speaker rest on a tie', () => {
+      const payload = payloadOf(
+        [
+          filled('session-0', 'proposal-0', { hour: 9, speakerIds: ['alice'] }),
+          vacant('session-1', { trackId: 'track-2', hour: 9 }),
+          vacant('session-2', { hour: 10 }),
+        ],
+        [proposal('proposal-1', { speakerIds: ['alice'] })],
+      );
+
+      const report = autofill(payload, scopeOf({ rules }));
+
+      expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-1', reason: 'speaker-overlap' }]);
+    });
+
+    it('ranks format duration before speaker rest on a tie', () => {
+      const payload = payloadOf(
+        [
+          filled('session-0', 'proposal-0', { hour: 9, speakerIds: ['alice'] }),
+          vacant('session-1', { hour: 12, minutes: 60 }),
+          vacant('session-2', { hour: 10, minutes: 20 }),
+        ],
+        [proposal('proposal-1', { speakerIds: ['alice'], formatDurations: [20] })],
+      );
+
+      const report = autofill(payload, scopeOf({ rules: { formatDuration: true, speakerRest: 60 } }));
+
+      expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-1', reason: 'format-duration' }]);
+    });
+  });
+
   describe('determinism', () => {
     it('returns the same report for two calls on the same inputs', () => {
       const payload = payloadOf(

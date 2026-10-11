@@ -124,6 +124,7 @@ describe('AutofillPanel component', () => {
             proposalState: form.get('proposalState'),
             reset: form.get('reset'),
             formatDuration: form.get('formatDuration'),
+            speakerRest: form.get('speakerRest'),
           });
           return { report: options.report ?? REPORT };
         },
@@ -246,6 +247,7 @@ describe('AutofillPanel component', () => {
         proposalState: 'all',
         reset: 'on',
         formatDuration: null,
+        speakerRest: null,
       }),
     );
   });
@@ -343,6 +345,30 @@ describe('AutofillPanel component', () => {
     await userEvent.click(page.getByRole('switch', { name: FORMAT_DURATION_RULE }));
 
     await expect.element(page.getByText('2 proposals without format duration are never blocked')).toBeVisible();
+  });
+
+  it('keeps the speaker rest select disabled until the rule is switched on', async () => {
+    renderPanel();
+
+    const select = page.getByRole('combobox', { name: 'Speaker rest duration' });
+    await expect.element(select).toBeDisabled();
+    await expect.element(select).toHaveValue('30');
+
+    await userEvent.click(page.getByRole('switch', { name: 'Speaker rest' }));
+
+    await expect.element(select).toBeEnabled();
+  });
+
+  it('submits the chosen speaker rest and keeps it when the rule is toggled', async () => {
+    const { onSubmit } = renderPanel();
+
+    await userEvent.click(page.getByRole('switch', { name: 'Speaker rest' }));
+    await userEvent.selectOptions(page.getByRole('combobox', { name: 'Speaker rest duration' }), '120');
+    await userEvent.click(page.getByRole('switch', { name: 'Speaker rest' }));
+    await userEvent.click(page.getByRole('switch', { name: 'Speaker rest' }));
+    await userEvent.click(page.getByRole('button', { name: 'Fill the sessions' }));
+
+    await vi.waitFor(() => expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ speakerRest: '120' })));
   });
 
   it('invites to create sessions when the schedule has none', async () => {

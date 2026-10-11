@@ -64,7 +64,7 @@ type RuleContext = {
 };
 
 type AssignmentRule = {
-  id: 'speaker-overlap' | 'format-duration';
+  id: 'speaker-overlap' | 'format-duration' | 'speaker-rest';
   evaluate: (proposal: RuleProposal, session: RuleSession, context: RuleContext) => boolean;
 };
 
@@ -90,9 +90,23 @@ const formatDuration: AssignmentRule = {
   },
 };
 
+const speakerRest = (minutes: number): AssignmentRule => ({
+  id: 'speaker-rest',
+  evaluate: (proposal, session, context) =>
+    !context.occupancy.some((busy) => {
+      if (!busy.speakerIds.some((id) => proposal.speakerIds.includes(id))) return false;
+      const gap = Math.max(session.start.getTime() - busy.end.getTime(), busy.start.getTime() - session.end.getTime());
+      return gap < minutes * MINUTE;
+    }),
+});
+
 // The order is the priority of the reasons.
 function activeRules(rules: AutofillRules): Array<AssignmentRule> {
-  return [speakerOverlap, ...(rules.formatDuration ? [formatDuration] : [])];
+  return [
+    speakerOverlap,
+    ...(rules.formatDuration ? [formatDuration] : []),
+    ...(rules.speakerRest ? [speakerRest(rules.speakerRest)] : []),
+  ];
 }
 
 export type AutofillReason = typeof NO_VACANT_SESSION | AssignmentRule['id'];

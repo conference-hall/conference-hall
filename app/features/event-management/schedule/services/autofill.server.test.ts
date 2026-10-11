@@ -372,4 +372,14 @@ describe('AutofillScopeSchema', () => {
 
     expect(result.status === 'success' && result.value.rules.formatDuration).toBe(true);
   });
+
+  it('reads the speaker rest in minutes', () => {
+    const result = parse({ speakerRest: '60' });
+
+    expect(result.status === 'success' && result.value.rules.speakerRest).toBe(60);
+  });
+
+  it('rejects a speaker rest out of the allowed values', () => {
+    expect(parse({ speakerRest: '45' }).status).toBe('error');
+  });
 });

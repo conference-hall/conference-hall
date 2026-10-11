@@ -13,6 +13,7 @@ import { formatDate } from '~/shared/datetimes/datetimes.ts';
 import {
   type AutofillPayload,
   type AutofillReason,
+  type AutofillRules,
   type AutofillReport,
   type AutofillScope,
   type ProposalState,
@@ -67,6 +68,7 @@ export function AutofillPanel({ payload, report, onClose }: Props) {
         <input type="hidden" name="proposalState" value={scope.proposalState} />
         {scope.reset ? <input type="hidden" name="reset" value="on" /> : null}
         {scope.rules.formatDuration ? <input type="hidden" name="formatDuration" value="on" /> : null}
+        {scope.rules.speakerRest ? <input type="hidden" name="speakerRest" value={scope.rules.speakerRest} /> : null}
 
         <SlideOver.Content className="flex flex-col gap-6">
           <DaysFilter payload={payload} scope={scope} onChange={setScope} />
@@ -220,8 +222,15 @@ const FIXED_RULE_LABELS = [
   'event-management.schedule.autofill.rules.speaker-overlap',
 ] as const;
 
+const SPEAKER_REST_MINUTES = [15, 30, 60, 120] as const;
+const DEFAULT_SPEAKER_REST = 30;
+
+const formatMinutes = (minutes: number) => (minutes < 60 ? `${minutes} min` : `${minutes / 60} h`);
+
 function RulesSection({ scope, onChange }: Pick<FilterProps, 'scope' | 'onChange'>) {
   const { t } = useTranslation();
+  const [speakerRest, setSpeakerRest] = useState<NonNullable<AutofillRules['speakerRest']>>(DEFAULT_SPEAKER_REST);
+  const speakerRestEnabled = scope.rules.speakerRest !== null;
 
   return (
     <section className="flex flex-col gap-2">
@@ -240,6 +249,34 @@ function RulesSection({ scope, onChange }: Pick<FilterProps, 'scope' | 'onChange
             label={t('event-management.schedule.autofill.rules.format-duration')}
             value={scope.rules.formatDuration}
             onChange={(formatDuration) => onChange({ ...scope, rules: { ...scope.rules, formatDuration } })}
+          />
+        </li>
+        <li className="flex items-center justify-between gap-4 p-3">
+          <span className={cx('flex flex-wrap items-center gap-1.5', { 'text-gray-400': !speakerRestEnabled })}>
+            <Subtitle size="xs">{t('event-management.schedule.autofill.rules.speaker-rest.before')}</Subtitle>
+            <select
+              aria-label={t('event-management.schedule.autofill.rules.speaker-rest.duration')}
+              value={speakerRest}
+              disabled={!speakerRestEnabled}
+              onChange={(event) => {
+                const minutes = Number(event.target.value) as typeof speakerRest;
+                setSpeakerRest(minutes);
+                onChange({ ...scope, rules: { ...scope.rules, speakerRest: minutes } });
+              }}
+              className="rounded-md border-0 py-0.5 pr-8 pl-2 text-sm ring-1 ring-gray-300 ring-inset disabled:bg-gray-50"
+            >
+              {SPEAKER_REST_MINUTES.map((minutes) => (
+                <option key={minutes} value={minutes}>
+                  {formatMinutes(minutes)}
+                </option>
+              ))}
+            </select>
+            <Subtitle size="xs">{t('event-management.schedule.autofill.rules.speaker-rest.after')}</Subtitle>
+          </span>
+          <Toggle
+            label={t('event-management.schedule.autofill.rules.speaker-rest.label')}
+            value={speakerRestEnabled}
+            onChange={(on) => onChange({ ...scope, rules: { ...scope.rules, speakerRest: on ? speakerRest : null } })}
           />
         </li>
       </ul>
@@ -314,6 +351,7 @@ const REASON_LABELS = {
   'no-vacant-session': 'event-management.schedule.autofill.report.reason.no-vacant-session',
   'speaker-overlap': 'event-management.schedule.autofill.report.reason.speaker-overlap',
   'format-duration': 'event-management.schedule.autofill.report.reason.format-duration',
+  'speaker-rest': 'event-management.schedule.autofill.report.reason.speaker-rest',
 } as const satisfies Record<AutofillReason, string>;
 
 function ReasonList({ proposals }: { proposals: AutofillReport['proposalsLeftUnscheduled'] }) {
