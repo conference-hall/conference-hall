@@ -1,6 +1,7 @@
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from 'react-router';
+import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
@@ -39,21 +40,20 @@ export function TrackList({ type, tracks }: TrackListProps) {
         {tracks.map((track, index) => (
           <List.Row key={track.id} className="flex items-center justify-between p-4">
             <div className="flex min-w-0 items-center gap-3">
-              <div
-                className="h-4 w-4 shrink-0 rounded-full"
-                style={{ backgroundColor: track.color }}
-                aria-hidden="true"
-              />
               <div className="truncate">
                 <Text weight="medium" truncate>
-                  {track.name}
+                  <Badge hexColor={track.color} pill>
+                    <span className="truncate">{track.name}</span>
+                  </Badge>
                   {track.durationInMinutes ? (
                     <span className="ml-2 font-normal text-gray-500">
                       {formatDuration(track.durationInMinutes, i18n.language)}
                     </span>
                   ) : null}
                 </Text>
-                <Subtitle truncate>{track.description}</Subtitle>
+                <Subtitle size="xs" className="mt-1" truncate>
+                  {track.description}
+                </Subtitle>
               </div>
             </div>
             <div className="ml-4 flex shrink-0 gap-2">
