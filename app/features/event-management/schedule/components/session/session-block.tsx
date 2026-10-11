@@ -20,6 +20,10 @@ type SessionBlockProps = {
   onOpen: VoidFunction;
 };
 
+const TEXT_COLOR = '#1c1917';
+
+const borderOf = (color: string) => `color-mix(in srgb, ${color} 55%, black 15%)`;
+
 const TRUNCATED = 'session-xs:truncate session-sm:truncate session-md:truncate session-lg:truncate';
 const HIDDEN_WHEN_TINY = 'session-xs:hidden';
 
@@ -30,9 +34,9 @@ export function SessionBlock({ session, onOpen }: SessionBlockProps) {
   const color = isHexColor(session.color) ? session.color : null;
   const colorStyle = color
     ? {
-        color,
+        color: TEXT_COLOR,
         backgroundColor: `color-mix(in srgb, ${color} 12%, white)`,
-        borderColor: `color-mix(in srgb, ${color} 40%, white)`,
+        borderColor: borderOf(color),
       }
     : undefined;
 
@@ -78,10 +82,10 @@ export function SessionBlock({ session, onOpen }: SessionBlockProps) {
 
 function buildEmptyStyle(color: string): CSSProperties {
   return {
-    color,
+    color: TEXT_COLOR,
     backgroundColor: 'white',
-    backgroundImage: `repeating-linear-gradient(135deg, color-mix(in srgb, ${color} 22%, transparent) 0 1px, transparent 1px 7px)`,
-    borderColor: `color-mix(in srgb, ${color} 55%, white)`,
+    backgroundImage: `repeating-linear-gradient(135deg, color-mix(in srgb, ${color} 45%, transparent) 0 1px, transparent 1px 7px)`,
+    borderColor: borderOf(color),
   };
 }
 
