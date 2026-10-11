@@ -64,10 +64,12 @@ describe('FormatsSection component', () => {
     await expect.element(page.getByText('Short Talk (20min)')).toBeInTheDocument();
   });
 
-  it('fills the badge with the format color', async () => {
+  it('fills the pill with the format color', async () => {
     await renderComponent();
 
-    await expect.element(page.getByText('Lightning Talk (5min)')).toHaveStyle({ backgroundColor: 'rgb(255, 0, 0)' });
+    const badge = page.getByText('Lightning Talk (5min)').element().parentElement as HTMLElement;
+    await expect.element(badge).toHaveStyle({ backgroundColor: 'rgb(255, 0, 0)' });
+    await expect.element(badge).toHaveClass('rounded-full');
   });
 
   it('submits form data when formats are changed', async () => {

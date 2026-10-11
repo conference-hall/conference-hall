@@ -4,7 +4,6 @@ import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
-import { DEFAULT_COLOR } from '~/shared/colors/colors.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { Event, EventCategory, EventFormat, Team, User } from '../../../../../prisma/generated/client.ts';
@@ -30,7 +29,7 @@ describe('EventTracksSettings', () => {
       await EventTracksSettings.for(authorizedEvent).saveFormat({
         name: 'Format 1',
         description: 'Format 1',
-        color: DEFAULT_COLOR,
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
@@ -46,7 +45,7 @@ describe('EventTracksSettings', () => {
       await EventTracksSettings.for(authorizedEvent).saveFormat({
         name: 'Format 1',
         description: 'Format 1',
-        color: DEFAULT_COLOR,
+        color: '#9CA3AF',
         durationInMinutes: 45,
       });
 
@@ -61,7 +60,7 @@ describe('EventTracksSettings', () => {
       await EventTracksSettings.for(authorizedEvent).saveFormat({
         name: 'Format 1',
         description: 'Format 1',
-        color: DEFAULT_COLOR,
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
@@ -77,7 +76,7 @@ describe('EventTracksSettings', () => {
         id: format.id,
         name: 'Format 1',
         description: 'Format 1',
-        color: DEFAULT_COLOR,
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
@@ -124,7 +123,7 @@ describe('EventTracksSettings', () => {
       await EventTracksSettings.for(authorizedEvent).saveFormat({
         name: 'Format 3',
         description: 'New format',
-        color: DEFAULT_COLOR,
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({
@@ -149,7 +148,7 @@ describe('EventTracksSettings', () => {
         id: format.id,
         name: 'Format 1',
         description: 'Format 1',
-        color: DEFAULT_COLOR,
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
@@ -166,7 +165,7 @@ describe('EventTracksSettings', () => {
         await EventTracksSettings.for(authorizedEvent).saveFormat({
           name: 'Hello world',
           description: 'Hello world',
-          color: DEFAULT_COLOR,
+          color: '#9CA3AF',
         });
       }).rejects.toThrow(ForbiddenOperationError);
     });
@@ -179,7 +178,7 @@ describe('EventTracksSettings', () => {
         await EventTracksSettings.for(authorizedEvent).saveFormat({
           name: 'Hello world',
           description: 'Hello world',
-          color: DEFAULT_COLOR,
+          color: '#9CA3AF',
         });
       }).rejects.toThrow(ForbiddenOperationError);
     });
@@ -192,7 +191,7 @@ describe('EventTracksSettings', () => {
       await EventTracksSettings.for(authorizedEvent).saveCategory({
         name: 'Category 1',
         description: 'Category 1',
-        color: DEFAULT_COLOR,
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
@@ -240,7 +239,7 @@ describe('EventTracksSettings', () => {
         id: category.id,
         name: 'Category 1',
         description: 'Category 1',
-        color: DEFAULT_COLOR,
+        color: '#9CA3AF',
       });
 
       const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
@@ -255,7 +254,7 @@ describe('EventTracksSettings', () => {
         const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
-        await settings.saveCategory({ name: 'Hello world', description: 'Hello world', color: DEFAULT_COLOR });
+        await settings.saveCategory({ name: 'Hello world', description: 'Hello world', color: '#9CA3AF' });
       }).rejects.toThrow(ForbiddenOperationError);
     });
 
@@ -265,7 +264,7 @@ describe('EventTracksSettings', () => {
         const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
         const settings = EventTracksSettings.for(authorizedEvent);
-        await settings.saveCategory({ name: 'Hello world', description: 'Hello world', color: DEFAULT_COLOR });
+        await settings.saveCategory({ name: 'Hello world', description: 'Hello world', color: '#9CA3AF' });
       }).rejects.toThrow(ForbiddenOperationError);
     });
   });

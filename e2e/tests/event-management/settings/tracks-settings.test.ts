@@ -4,6 +4,8 @@ import { expect, test } from '../../../fixtures.ts';
 import { userLoggedFactory } from '../../../helpers.ts';
 import { TracksSettingsPage } from './tracks-settings.page.ts';
 
+const PRESET_COLOR_NAME = /^Color: (Red|Orange|Yellow|Green|Teal|Light blue|Blue|Indigo|Purple|Pink)$/;
+
 test('adds, edits and removes a format', async ({ context, page }) => {
   const user = await userLoggedFactory(context);
   const team = await teamFactory({ owners: [user] });
@@ -18,7 +20,7 @@ test('adds, edits and removes a format', async ({ context, page }) => {
   await tracksPage.fill(tracksPage.nameInput, 'Quickie');
   await tracksPage.fill(tracksPage.descriptionInput, 'A short talk');
   await tracksPage.fill(tracksPage.durationInput, '15');
-  await expect(tracksPage.colorButton).toHaveAccessibleName('Color: Gray');
+  await expect(tracksPage.colorButton).toHaveAccessibleName(PRESET_COLOR_NAME);
   await tracksPage.colorButton.click();
   await tracksPage.colorOption('Red').click();
   await expect(tracksPage.colorButton).toHaveAccessibleName('Color: Red');
@@ -79,7 +81,7 @@ test('adds, edits and removes a category', async ({ context, page }) => {
   await tracksPage.categoryModal.waitFor();
   await tracksPage.fill(tracksPage.nameInput, 'Beginner');
   await tracksPage.fill(tracksPage.descriptionInput, 'For beginners');
-  await expect(tracksPage.colorButton).toHaveAccessibleName('Color: Gray');
+  await expect(tracksPage.colorButton).toHaveAccessibleName(PRESET_COLOR_NAME);
   await tracksPage.colorButton.click();
   await tracksPage.colorOption('Red').click();
   await expect(tracksPage.colorButton).toHaveAccessibleName('Color: Red');
@@ -116,12 +118,6 @@ test('adds, edits and removes a category', async ({ context, page }) => {
   await expect(category).toContainText('For intermediates');
   await expect(tracksPage.categoriesRequiredSwitch).toBeChecked();
   await expect(tracksPage.categoriesAllowMultipleSwitch).toBeChecked();
-
-  // A new category does not inherit the color of the previous one
-  await tracksPage.newCategoryButton.click();
-  await tracksPage.categoryModal.waitFor();
-  await expect(tracksPage.colorButton).toHaveAccessibleName('Color: Gray');
-  await page.getByRole('button', { name: 'Cancel' }).click();
 
   // Delete a category
   await category.getByRole('button', { name: 'Delete' }).click();

@@ -4,9 +4,9 @@ import { cva, cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { getContrastColor, isHexColor } from '~/shared/colors/colors.ts';
 
-const badgeShape = cva('inline-flex items-center gap-1 text-nowrap', {
+const badgeShape = cva('inline-flex max-w-full items-center gap-1 text-nowrap', {
   variants: {
-    compact: { true: 'h-5 px-1.5 py-0.5 text-[10px] font-medium', false: 'px-2 py-0.5 text-xs font-medium' },
+    compact: { true: 'h-5 px-1.5 py-0.5 text-[10px]', false: 'px-2 py-0.5 text-xs' },
     pill: { true: 'rounded-full', false: 'rounded-md' },
   },
   defaultVariants: { pill: false, compact: false },
@@ -53,7 +53,6 @@ type BadgeProps = {
   children: React.ReactNode;
   closeLabel?: string;
   onClose?: () => void;
-  // Free hex color (`#rrggbb`). Takes over the `color` variant and fills the badge.
   hexColor?: string | null;
 } & VariantProps<typeof badgeShape> &
   VariantProps<typeof badgeColor>;
@@ -62,7 +61,7 @@ export function Badge({ color, pill, compact, hexColor, children, closeLabel, on
   const filled = isHexColor(hexColor) ? hexColor : null;
   return (
     <span
-      className={cx(badgeShape({ pill, compact }), filled ? null : badgeColor({ color }))}
+      className={cx('font-medium', badgeShape({ pill, compact }), badgeColor({ color }))}
       style={filled ? { backgroundColor: filled, color: getContrastColor(filled) } : undefined}
     >
       {children}

@@ -1,21 +1,22 @@
 import { Link, useParams, useSearchParams } from 'react-router';
-import { getContrastColor } from '~/shared/colors/colors.ts';
 import type { Tag as TagType } from '~/shared/types/tags.types.ts';
+import { Badge } from './badges.tsx';
 
 type TagProps = { tag: TagType; isSearchLink?: boolean };
-
-const styles =
-  'inline-flex items-center text-nowrap px-2 py-0.5 text-xs font-semibold rounded-full text-white max-w-full focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600';
 
 export function Tag({ tag, isSearchLink = true }: TagProps) {
   if (isSearchLink) {
     return <TagLink tag={tag} />;
   }
 
+  return <TagBadge tag={tag} />;
+}
+
+function TagBadge({ tag }: { tag: TagType }) {
   return (
-    <div style={{ backgroundColor: tag.color, color: getContrastColor(tag.color) }} className={styles}>
+    <Badge hexColor={tag.color} pill>
       <span className="truncate">{tag.name}</span>
-    </div>
+    </Badge>
   );
 }
 
@@ -28,10 +29,9 @@ function TagLink({ tag }: TagProps) {
   return (
     <Link
       to={{ pathname: `/team/${params.team}/${params.event}/proposals`, search: newSearchParams.toString() }}
-      style={{ backgroundColor: tag.color, color: getContrastColor(tag.color) }}
-      className={styles}
+      className="inline-flex max-w-full rounded-full focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600"
     >
-      <span className="truncate">{tag.name}</span>
+      <TagBadge tag={tag} />
     </Link>
   );
 }

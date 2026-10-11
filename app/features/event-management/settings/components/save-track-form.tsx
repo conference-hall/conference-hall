@@ -7,7 +7,7 @@ import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { ColorInput } from '~/design-system/forms/color-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
-import { DEFAULT_COLOR } from '~/shared/colors/colors.ts';
+import { getRandomColor } from '~/shared/colors/colors.ts';
 
 type TrackType = 'formats' | 'categories';
 type TrackData = {
@@ -65,7 +65,7 @@ type SaveTrackFormModalProps = { type: TrackType; initialValues?: TrackData; isO
 function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackFormModalProps) {
   const { t } = useTranslation();
   const formId = useId();
-  const [color, setColor] = useState<string | null>(initialValues?.color ?? DEFAULT_COLOR);
+  const [color, setColor] = useState<string | null>(initialValues?.color ?? getRandomColor());
   return (
     <Modal
       title={
