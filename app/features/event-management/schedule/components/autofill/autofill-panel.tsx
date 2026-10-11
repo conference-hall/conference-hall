@@ -9,7 +9,7 @@ import { Callout } from '~/design-system/callout.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Toggle, ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { H3, Subtitle, Text } from '~/design-system/typography.tsx';
-import { formatDate } from '~/shared/datetimes/datetimes.ts';
+import { formatDate, formatDuration } from '~/shared/datetimes/datetimes.ts';
 import {
   type AutofillPayload,
   type AutofillReason,
@@ -228,10 +228,8 @@ const FIXED_RULE_LABELS = [
 
 const DEFAULT_SPEAKER_REST = 30;
 
-const formatMinutes = (minutes: number) => (minutes < 60 ? `${minutes} min` : `${minutes / 60} h`);
-
 function RulesSection({ scope, onChange }: Pick<FilterProps, 'scope' | 'onChange'>) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [speakerRest, setSpeakerRest] = useState<SpeakerRestMinutes>(DEFAULT_SPEAKER_REST);
   const speakerRestEnabled = scope.rules.speakerRest !== null;
 
@@ -271,7 +269,7 @@ function RulesSection({ scope, onChange }: Pick<FilterProps, 'scope' | 'onChange
             >
               {SPEAKER_REST_MINUTES.map((minutes) => (
                 <option key={minutes} value={minutes}>
-                  {formatMinutes(minutes)}
+                  {formatDuration(minutes, i18n.language)}
                 </option>
               ))}
             </select>
