@@ -58,6 +58,14 @@ export class SchedulePage extends PageObject {
     await this.page.getByRole('menuitem', { name: 'Autofill sessions' }).click();
   }
 
+  async clickOnLockSession() {
+    await this.page.getByRole('button', { name: 'Lock session' }).click();
+  }
+
+  async clickOnUnlockSession() {
+    await this.page.getByRole('button', { name: 'Unlock session' }).click();
+  }
+
   async clickOnFillSessions() {
     await this.autofillPanel.getByRole('button', { name: 'Fill the sessions' }).click();
   }
@@ -68,6 +76,10 @@ export class SchedulePage extends PageObject {
     // Blur the name field to close its proposal suggestions, which inert the footer while open.
     await this.sessionNameInput.press('Tab');
     await this.page.getByRole('button', { name: 'Create session' }).click();
+  }
+
+  async clickOnCloseSession() {
+    await this.page.getByRole('button', { name: 'Close' }).click();
   }
 
   async clickOnCancelSession() {

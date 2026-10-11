@@ -28,6 +28,7 @@ const session = (id: string, name: string, trackId: string, start: Date, end: Da
   language: null,
   color: 'stone',
   emojis: [],
+  locked: false,
   proposal: null,
 });
 

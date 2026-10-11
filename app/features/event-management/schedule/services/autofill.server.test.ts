@@ -130,6 +130,7 @@ describe('ScheduleAutofill', () => {
           start: at(9),
           end: at(10),
           name: null,
+          locked: false,
           proposalId: proposal.id,
           speakerIds: speakers.map((s) => s.id),
         },
@@ -264,6 +265,18 @@ describe('ScheduleAutofill', () => {
       expect(saved?.name).toBe('Lunch break');
     });
 
+    it('never fills a locked session', async () => {
+      await acceptedProposal();
+      const session = await addSession({ trackId: track.id, start: at(9), end: at(10) });
+      await db.scheduleSession.update({ where: { id: session.id }, data: { locked: true } });
+
+      const report = await ScheduleAutofill.for(await authorizedEvent()).run(scopeOf());
+
+      const saved = await db.scheduleSession.findUnique({ where: { id: session.id } });
+      expect(saved?.proposalId).toBe(null);
+      expect(report.sessionsLocked).toBe(1);
+    });
+
     it('never schedules a proposal declined by its speaker', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       await proposalFactory({ event, talk, traits: ['declined'] });
@@ -311,6 +324,18 @@ describe('ScheduleAutofill', () => {
       expect(saved).toMatchObject({ proposalId: null, language: null, color: null, emojis: ['fire'] });
     });
 
+    it('spares a locked session', async () => {
+      const proposal = await acceptedProposal();
+      const session = await addSession({ trackId: track.id, start: at(9), end: at(10), proposalId: proposal.id });
+      await db.scheduleSession.update({ where: { id: session.id }, data: { locked: true } });
+
+      const report = await ScheduleAutofill.for(await authorizedEvent()).run(scopeOf({ reset: true }));
+
+      expect(report.sessionsToClear).toEqual([]);
+      const saved = await db.scheduleSession.findUnique({ where: { id: session.id } });
+      expect(saved?.proposalId).toBe(proposal.id);
+    });
+
     it('spares a session outside the scope', async () => {
       const proposal = await acceptedProposal();
       const session = await addSession({ trackId: track2.id, start: at(9), end: at(10), proposalId: proposal.id });
@@ -340,6 +365,7 @@ describe('ScheduleAutofill', () => {
         sessionsLeftVacant: [],
         proposalsLeftUnscheduled: [],
         sessionsToClear: [session.id],
+        sessionsLocked: 0,
       });
 
       await expect(ScheduleAutofill.for(await authorizedEvent()).run(scopeOf({ reset: true }))).rejects.toThrow(

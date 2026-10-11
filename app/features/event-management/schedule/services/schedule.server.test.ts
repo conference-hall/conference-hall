@@ -13,6 +13,7 @@ import {
   ScheduleTrackNotFoundError,
   ScheduleTrackRequiredError,
   SessionConflictError,
+  SessionLockedError,
 } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { Event, Schedule, ScheduleTrack, Team, User } from '../../../../../prisma/generated/client.ts';
@@ -542,6 +543,92 @@ describe('EventSchedule', () => {
     });
   });
 
+  describe('#setSessionLock', () => {
+    it('locks and unlocks a session', async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const eventSchedule = EventSchedule.for(authorizedEvent);
+      const session = await eventSchedule.addSession({ trackId: track.id, start: at(9), end: at(10) });
+
+      await eventSchedule.setSessionLock(session.id, true);
+      expect((await eventSchedule.getScheduleSessions())?.sessions[0].locked).toBe(true);
+
+      await eventSchedule.setSessionLock(session.id, false);
+      expect((await eventSchedule.getScheduleSessions())?.sessions[0].locked).toBe(false);
+    });
+
+    it('throws not found Error when the session belongs to another schedule', async () => {
+      const otherEvent = await eventFactory({ team, traits: ['conference'] });
+      const otherSchedule = await scheduleFactory({ event: otherEvent });
+      const otherTrack = await scheduleTrackFactory({ name: 'Other room', schedule: otherSchedule });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const otherAuthorizedEvent = await getAuthorizedEvent(authorizedTeam, otherEvent.slug);
+      const otherSession = await EventSchedule.for(otherAuthorizedEvent).addSession({
+        trackId: otherTrack.id,
+        start: at(9),
+        end: at(10),
+      });
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).setSessionLock(otherSession.id, true)).rejects.toThrow(
+        NotFoundError,
+      );
+    });
+
+    it('throws not found Error when no schedule defined for the event', async () => {
+      const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, eventWithoutSchedule.slug);
+
+      await expect(EventSchedule.for(authorizedEvent).setSessionLock('sessionId', true)).rejects.toThrow(NotFoundError);
+    });
+  });
+
+  describe('locked sessions', () => {
+    let eventSchedule: EventSchedule;
+    let locked: { id: string };
+
+    beforeEach(async () => {
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      eventSchedule = EventSchedule.for(authorizedEvent);
+      locked = await eventSchedule.addSession({ trackId: track.id, start: at(9), end: at(10), name: 'Keynote' });
+      await eventSchedule.setSessionLock(locked.id, true);
+    });
+
+    it('rejects an update', async () => {
+      await expect(
+        eventSchedule.updateSession({ id: locked.id, trackId: track.id, start: at(11), end: at(12), name: 'Other' }),
+      ).rejects.toThrow(SessionLockedError);
+
+      const actual = await eventSchedule.getScheduleSessions();
+      expect(actual?.sessions[0]).toMatchObject({ name: 'Keynote', start: at(9) });
+    });
+
+    it('rejects a deletion', async () => {
+      await expect(eventSchedule.deleteSession(locked.id)).rejects.toThrow(SessionLockedError);
+
+      expect((await eventSchedule.getScheduleSessions())?.sessions).toHaveLength(1);
+    });
+
+    it('rejects a switch, whether the locked session is the source or the target', async () => {
+      const other = await eventSchedule.addSession({ trackId: track2.id, start: at(14), end: at(15) });
+
+      await expect(eventSchedule.switchSessions(locked.id, other.id)).rejects.toThrow(SessionLockedError);
+      await expect(eventSchedule.switchSessions(other.id, locked.id)).rejects.toThrow(SessionLockedError);
+
+      const actual = await eventSchedule.getScheduleSessions();
+      expect(actual?.sessions.find((s) => s.id === locked.id)).toMatchObject({ trackId: track.id, start: at(9) });
+      expect(actual?.sessions.find((s) => s.id === other.id)).toMatchObject({ trackId: track2.id, start: at(14) });
+    });
+
+    it('still conflicts with a session placed over it', async () => {
+      await expect(eventSchedule.addSession({ trackId: track.id, start: at(9), end: at(10) })).rejects.toThrow(
+        SessionConflictError,
+      );
+    });
+  });
+
   describe('#saveTracks', () => {
     it('adds a new track', async () => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
@@ -706,6 +793,7 @@ describe('EventSchedule', () => {
             language: 'en',
             emojis: ['heart'],
             color: '#79716b',
+            locked: false,
             proposal: {
               id: proposal.id,
               routeId: proposal.routeId,

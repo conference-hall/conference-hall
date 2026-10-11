@@ -14,6 +14,7 @@ const session = (id: string, trackId: string, start: Date, end: Date): ScheduleS
   name: null,
   color: 'stone',
   emojis: [],
+  locked: false,
   language: null,
   proposal: null,
 });

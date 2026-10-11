@@ -56,6 +56,7 @@ export function ScheduleProvider({ schedule, children }: ScheduleProviderProps) 
       resizeSession: mutations.resize,
       swapSessions: mutations.swap,
       deleteSession: mutations.delete,
+      setSessionLock: mutations.setLock,
       onOpenSession: setEditedSession,
       onChangeDisplayDays: updateDisplayDays,
       onChangeDisplayTimes: updateDisplayTimes,

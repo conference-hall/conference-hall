@@ -40,6 +40,12 @@ export class SessionConflictError extends BadRequestError {
   }
 }
 
+export class SessionLockedError extends BadRequestError {
+  constructor() {
+    super('Session locked');
+  }
+}
+
 export class ScheduleTrackRequiredError extends BadRequestError {
   constructor() {
     super('Schedule must keep at least one track');

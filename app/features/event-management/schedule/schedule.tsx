@@ -9,12 +9,13 @@ import {
   ScheduleDisplayTimesUpdateSchema,
   ScheduleSessionCreateSchema,
   ScheduleSessionIdSchema,
+  ScheduleSessionLockSchema,
   ScheduleSessionsSwitchSchema,
   ScheduleSessionUpdateSchema,
   ScheduleTracksSaveSchema,
 } from '~/features/event-management/schedule/services/schedule.schema.server.ts';
 import { AuthorizedEventContext } from '~/shared/authorization/authorization.middleware.ts';
-import { ScheduleTrackRequiredError, SessionConflictError } from '~/shared/errors.server.ts';
+import { ScheduleTrackRequiredError, SessionConflictError, SessionLockedError } from '~/shared/errors.server.ts';
 import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import type { Route } from './+types/schedule.ts';
@@ -69,6 +70,12 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
         await eventSchedule.deleteSession(result.data);
         break;
       }
+      case SESSION_INTENTS.lock: {
+        const result = ScheduleSessionLockSchema.safeParse(Object.fromEntries(form));
+        if (!result.success) return toast('error', i18n.t('error.global'));
+        await eventSchedule.setSessionLock(result.data.id, result.data.locked);
+        break;
+      }
       case 'update-display-times': {
         const result = parseWithZod(form, { schema: ScheduleDisplayTimesUpdateSchema });
         if (result.status !== 'success') return toast('error', i18n.t('error.global'));
@@ -89,6 +96,9 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   } catch (error) {
     if (error instanceof SessionConflictError) {
       return toast('error', i18n.t('event-management.schedule.errors.session-conflict'));
+    }
+    if (error instanceof SessionLockedError) {
+      return toast('error', i18n.t('event-management.schedule.errors.session-locked'));
     }
     if (error instanceof ScheduleTrackRequiredError) {
       return { errors: { tracks: i18n.t('event-management.schedule.errors.tracks-required') } };

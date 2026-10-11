@@ -28,7 +28,7 @@ export const SessionItem = memo(function SessionItem({ id, grid, origin }: Sessi
   );
   const { onOpenSession } = useScheduleContext();
 
-  const disabled = !session || Boolean(session.isCreating);
+  const disabled = !session || Boolean(session.isCreating) || session.locked;
   const payload = { session: session as ScheduleSession } satisfies SessionPayload;
 
   const { ref: moveRef, isDragging } = useDraggable({
@@ -66,7 +66,11 @@ export const SessionItem = memo(function SessionItem({ id, grid, origin }: Sessi
       </div>
 
       {/* resize handle, on the bottom edge of the block */}
-      <div ref={resizeRef} className="absolute z-40 h-1 w-full cursor-ns-resize" style={{ top: 'calc(100% - 1px)' }} />
+      <div
+        ref={resizeRef}
+        className={cx('absolute z-40 h-1 w-full', { 'cursor-ns-resize': !session.locked })}
+        style={{ top: 'calc(100% - 1px)' }}
+      />
     </div>
   );
 });

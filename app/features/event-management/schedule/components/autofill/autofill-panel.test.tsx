@@ -22,6 +22,7 @@ const session = (
   name,
   proposalId,
   speakerIds: proposalId ? ['zoe'] : [],
+  locked: false,
 });
 
 const PAYLOAD: AutofillPayload = {
@@ -106,6 +107,7 @@ const REPORT: AutofillReport = {
     { proposalId: 'proposal-9', reason: 'no-vacant-session' },
   ],
   sessionsToClear: [],
+  sessionsLocked: 0,
 };
 
 describe('AutofillPanel component', () => {
@@ -298,6 +300,7 @@ describe('AutofillPanel component', () => {
       sessionsLeftVacant: ['session-1'],
       proposalsLeftUnscheduled: [{ proposalId: 'proposal-1', reason: 'no-vacant-session' }],
       sessionsToClear: [],
+      sessionsLocked: 0,
     };
     renderPanel({ report });
 

@@ -2,6 +2,8 @@ import {
   ClockIcon,
   FaceSmileIcon,
   LanguageIcon,
+  LockClosedIcon,
+  LockOpenIcon,
   MapPinIcon,
   PaintBrushIcon,
   TrashIcon,
@@ -36,7 +38,7 @@ type Props = {
 export function SessionForm({ mode, session, categories, onFinish }: Props) {
   const { t } = useTranslation();
   const { tracks, scheduleDays, displayedTimes } = useSettings();
-  const { addSession, updateSession, deleteSession } = useScheduleContext();
+  const { addSession, updateSession, deleteSession, setSessionLock } = useScheduleContext();
 
   const formId = useId();
   const [name, setName] = useState(session.name ?? '');
@@ -60,6 +62,11 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
     }
   };
 
+  const handleLock = async (locked: boolean) => {
+    await setSessionLock(session, locked);
+    onFinish();
+  };
+
   const handleDelete = async () => {
     await deleteSession(session);
     onFinish();
@@ -76,118 +83,139 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
 
   return (
     <>
-      <form id={formId} className="flex flex-col gap-6 px-6 py-6" onSubmit={handleSubmit}>
-        <SessionIdentityField
-          name={name}
-          proposal={proposal}
-          onChange={(identity) => {
-            setName(identity.name);
-            setProposal(identity.proposal);
-            if (identity.proposal) {
-              const linked = categories.filter((category) => identity.categoryIds?.includes(category.id));
-              const color = categoryColor(linked);
-              if (color) setColor(color);
-            }
-          }}
-        />
+      <form id={formId} className="px-6 py-6" onSubmit={handleSubmit}>
+        <fieldset disabled={session.locked} className="flex min-w-0 flex-col gap-6">
+          {session.locked ? (
+            <Callout icon={LockClosedIcon} variant="warning">
+              {t('event-management.schedule.edit-session.locked')}
+            </Callout>
+          ) : null}
 
-        <div className="flex items-center gap-6">
-          <ClockIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-          <div className="flex w-full items-center gap-2">
-            <Input
-              type="date"
-              name="date"
-              aria-label={t('common.date')}
-              value={toDateInput(timeslot.start) ?? ''}
-              min={toDateInput(scheduleDays.at(0)) ?? ''}
-              max={toDateInput(scheduleDays.at(-1)) ?? ''}
-              onChange={handleDateChange}
-              className="shrink-0"
-              suppressHydrationWarning
-            />
-            <TimeRangeInput
-              nameStart="start-local"
-              nameEnd="end-local"
-              start={getMinutesFromStartOfDay(timeslot.start)}
-              end={getMinutesFromStartOfDay(timeslot.end)}
-              min={displayedTimes.start}
-              max={displayedTimes.end + 59}
-              step={5}
-              startRelative
-              hideFromLabel
-              onChange={(start, end) => {
-                setTimeslot({
-                  start: setMinutesFromStartOfDay(timeslot.start, start),
-                  end: setMinutesFromStartOfDay(timeslot.start, end),
-                });
-              }}
+          <SessionIdentityField
+            name={name}
+            proposal={proposal}
+            onChange={(identity) => {
+              setName(identity.name);
+              setProposal(identity.proposal);
+              if (identity.proposal) {
+                const linked = categories.filter((category) => identity.categoryIds?.includes(category.id));
+                const color = categoryColor(linked);
+                if (color) setColor(color);
+              }
+            }}
+          />
+
+          <div className="flex items-center gap-6">
+            <ClockIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+            <div className="flex w-full items-center gap-2">
+              <Input
+                type="date"
+                name="date"
+                aria-label={t('common.date')}
+                value={toDateInput(timeslot.start) ?? ''}
+                min={toDateInput(scheduleDays.at(0)) ?? ''}
+                max={toDateInput(scheduleDays.at(-1)) ?? ''}
+                onChange={handleDateChange}
+                className="shrink-0"
+                suppressHydrationWarning
+              />
+              <TimeRangeInput
+                nameStart="start-local"
+                nameEnd="end-local"
+                start={getMinutesFromStartOfDay(timeslot.start)}
+                end={getMinutesFromStartOfDay(timeslot.end)}
+                min={displayedTimes.start}
+                max={displayedTimes.end + 59}
+                step={5}
+                startRelative
+                hideFromLabel
+                onChange={(start, end) => {
+                  setTimeslot({
+                    start: setMinutesFromStartOfDay(timeslot.start, start),
+                    end: setMinutesFromStartOfDay(timeslot.start, end),
+                  });
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <MapPinIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+            <SelectNative
+              name="trackId"
+              label={t('common.track')}
+              value={trackId}
+              onChange={(e) => setTrackId(e.target.value)}
+              options={tracks.map((t) => ({ name: t.name, value: t.id }))}
+              srOnly
             />
           </div>
-        </div>
 
-        <div className="flex items-center gap-6">
-          <MapPinIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-          <SelectNative
-            name="trackId"
-            label={t('common.track')}
-            value={trackId}
-            onChange={(e) => setTrackId(e.target.value)}
-            options={tracks.map((t) => ({ name: t.name, value: t.id }))}
-            srOnly
-          />
-        </div>
+          <div className="flex items-center gap-6">
+            <LanguageIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+            <SelectNative
+              name="language"
+              label={t('common.language')}
+              value={language || ''}
+              placeholder={t('common.no-language')}
+              onChange={(e) => setLanguage(e.target.value as Language)}
+              options={LANGUAGES.map((lang) => ({ name: t(`common.languages.${lang}.label`), value: lang }))}
+              srOnly
+            />
+          </div>
 
-        <div className="flex items-center gap-6">
-          <LanguageIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-          <SelectNative
-            name="language"
-            label={t('common.language')}
-            value={language || ''}
-            placeholder={t('common.no-language')}
-            onChange={(e) => setLanguage(e.target.value as Language)}
-            options={LANGUAGES.map((lang) => ({ name: t(`common.languages.${lang}.label`), value: lang }))}
-            srOnly
-          />
-        </div>
+          <div className="flex items-center gap-6">
+            <PaintBrushIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+            <ColorInput
+              label={t('event-management.schedule.edit-session.color')}
+              nullable
+              value={color}
+              onChange={setColor}
+            />
+          </div>
 
-        <div className="flex items-center gap-6">
-          <PaintBrushIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-          <ColorInput
-            label={t('event-management.schedule.edit-session.color')}
-            nullable
-            value={color}
-            onChange={setColor}
-          />
-        </div>
+          <div className="flex items-center gap-6">
+            <FaceSmileIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+            <EmojiSelect emojis={SESSION_EMOJIS} selectedEmojis={emojis} onChangeEmojis={setEmojis} />
+          </div>
 
-        <div className="flex items-center gap-6">
-          <FaceSmileIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-          <EmojiSelect emojis={SESSION_EMOJIS} selectedEmojis={emojis} onChangeEmojis={setEmojis} />
-        </div>
-
-        {error ? (
-          <Callout variant="error" role="alert">
-            {error}
-          </Callout>
-        ) : null}
+          {error ? (
+            <Callout variant="error" role="alert">
+              {error}
+            </Callout>
+          ) : null}
+        </fieldset>
       </form>
 
       {/* Footer */}
       <div className="flex items-center justify-between gap-2 p-6">
         {mode === 'edit' ? (
-          <Button variant="important" iconLeft={TrashIcon} onClick={handleDelete}>
-            {t('common.remove')}
-          </Button>
+          <div className="flex gap-3">
+            {session.locked ? null : (
+              <Button variant="important" iconLeft={TrashIcon} onClick={handleDelete}>
+                {t('common.remove')}
+              </Button>
+            )}
+            <Button
+              variant="secondary"
+              iconLeft={session.locked ? LockOpenIcon : LockClosedIcon}
+              onClick={() => handleLock(!session.locked)}
+            >
+              {t(`event-management.schedule.edit-session.${session.locked ? 'unlock' : 'lock'}`)}
+            </Button>
+          </div>
         ) : (
           <span />
         )}
         <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={onFinish}>
-            {t('common.cancel')}
+            {session.locked ? t('common.close') : t('common.cancel')}
           </Button>
-          <Button form={formId} type="submit" disabled={!(name.trim() || proposal)}>
-            {t(`event-management.schedule.${mode}-session.submit`)}
-          </Button>
+          {session.locked ? null : (
+            <Button form={formId} type="submit" disabled={!(name.trim() || proposal)}>
+              {t(`event-management.schedule.${mode}-session.submit`)}
+            </Button>
+          )}
         </div>
       </div>
     </>

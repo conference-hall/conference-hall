@@ -9,6 +9,7 @@ export const SESSION_INTENTS = {
   update: 'update-session',
   switch: 'switch-sessions',
   delete: 'delete-session',
+  lock: 'toggle-lock',
 } as const;
 
 export type SessionMutation = { key?: string; formData: FormData };
@@ -36,7 +37,7 @@ export function pendingSessions(
         const pending = decodeSession(formData, scheduleTime);
         const current = sessionsById.get(pending.id);
         const proposal = current?.proposal?.id === pending.proposal?.id ? current?.proposal : pending.proposal;
-        sessionsById.set(pending.id, { ...pending, proposal });
+        sessionsById.set(pending.id, { ...pending, locked: current?.locked ?? false, proposal });
         break;
       }
       case SESSION_INTENTS.switch: {
@@ -51,6 +52,11 @@ export function pendingSessions(
       }
       case SESSION_INTENTS.delete: {
         sessionsById.delete(String(formData.get('id')));
+        break;
+      }
+      case SESSION_INTENTS.lock: {
+        const current = sessionsById.get(String(formData.get('id')));
+        if (current) sessionsById.set(current.id, { ...current, locked: formData.get('locked') === 'true' });
         break;
       }
     }
@@ -78,6 +84,7 @@ export class SessionMutations {
       language: null,
       color: null,
       emojis: [],
+      locked: false,
       proposal: null,
     };
   }
@@ -123,6 +130,14 @@ export class SessionMutations {
     await this.deps.submit({ formData });
   };
 
+  setLock = async (session: ScheduleSession, locked: boolean): Promise<void> => {
+    const formData = new FormData();
+    formData.set('intent', SESSION_INTENTS.lock);
+    formData.set('id', session.id);
+    formData.set('locked', String(locked));
+    await this.deps.submit({ formData });
+  };
+
   private async submitPlacement(session: ScheduleSession, outcome: PlacementOutcome): Promise<PlacementOutcome> {
     if (outcome.status === 'conflict') return outcome;
 
@@ -163,6 +178,7 @@ function decodeSession(formData: FormData, scheduleTime: ScheduleTime): Schedule
     name: String(formData.get('name') ?? '') || null,
     language: (String(formData.get('language') ?? '') || null) as Language | null,
     emojis: formData.getAll('emojis').map(String),
+    locked: false,
     proposal: proposalId
       ? {
           id: proposalId,

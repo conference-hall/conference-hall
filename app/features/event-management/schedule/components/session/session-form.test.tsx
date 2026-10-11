@@ -27,6 +27,7 @@ const session: ScheduleSession = {
   language: null,
   color: null,
   emojis: [],
+  locked: false,
   proposal: null,
 };
 
@@ -57,10 +58,15 @@ const conflict: PlacementOutcome = {
   conflictingSession: { id: 'session-2', trackId: 'track-1', timeslot },
 };
 
-function renderForm(mode: 'create' | 'edit', overrides: Partial<ScheduleContextValue> = {}) {
+function renderForm(
+  mode: 'create' | 'edit',
+  overrides: Partial<ScheduleContextValue> = {},
+  formSession: ScheduleSession = session,
+) {
   const addSession = vi.fn<ScheduleContextValue['addSession']>(async () => placed);
   const updateSession = vi.fn<ScheduleContextValue['updateSession']>(async () => placed);
   const deleteSession = vi.fn<ScheduleContextValue['deleteSession']>(async () => {});
+  const setSessionLock = vi.fn<ScheduleContextValue['setSessionLock']>(async () => {});
   const onFinish = vi.fn();
 
   const RouteStub = createRoutesStub([
@@ -80,9 +86,10 @@ function renderForm(mode: 'create' | 'edit', overrides: Partial<ScheduleContextV
             addSession={addSession}
             updateSession={updateSession}
             deleteSession={deleteSession}
+            setSessionLock={setSessionLock}
             {...overrides}
           >
-            <SessionForm mode={mode} session={session} categories={categories} onFinish={onFinish} />
+            <SessionForm mode={mode} session={formSession} categories={categories} onFinish={onFinish} />
           </ScheduleProviders>
         </I18nextProvider>
       ),
@@ -91,7 +98,7 @@ function renderForm(mode: 'create' | 'edit', overrides: Partial<ScheduleContextV
   ]);
 
   const rendered = page.render(<RouteStub initialEntries={['/team/t1/e1/schedule']} />);
-  return { rendered, addSession, updateSession, deleteSession, onFinish };
+  return { rendered, addSession, updateSession, deleteSession, setSessionLock, onFinish };
 }
 
 function optionsOf(select: ReturnType<typeof page.getByLabelText>) {
@@ -183,6 +190,40 @@ describe('SessionForm component', () => {
 
     expect(deleteSession).toHaveBeenCalledWith(session);
     expect(onFinish).toHaveBeenCalled();
+  });
+
+  it('locks the session in edit mode', async () => {
+    const { rendered, setSessionLock, onFinish } = renderForm('edit');
+    await rendered;
+
+    await page.getByRole('button', { name: 'Lock session' }).click();
+
+    expect(setSessionLock).toHaveBeenCalledWith(session, true);
+    expect(onFinish).toHaveBeenCalled();
+  });
+
+  it('shows a locked session read-only and offers to unlock it', async () => {
+    const locked = { ...session, locked: true };
+    const { rendered, setSessionLock, updateSession, onFinish } = renderForm('edit', {}, locked);
+    await rendered;
+
+    await expect.element(page.getByText('This session is locked.')).toBeVisible();
+    await expect.element(page.getByLabelText('Language')).toBeDisabled();
+    await expect.element(page.getByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Save session' })).not.toBeInTheDocument();
+
+    await page.getByRole('button', { name: 'Unlock session' }).click();
+
+    expect(setSessionLock).toHaveBeenCalledWith(locked, false);
+    expect(updateSession).not.toHaveBeenCalled();
+    expect(onFinish).toHaveBeenCalled();
+  });
+
+  it('does not offer to lock in create mode', async () => {
+    const { rendered } = renderForm('create');
+    await rendered;
+
+    await expect.element(page.getByRole('button', { name: 'Lock session' })).not.toBeInTheDocument();
   });
 
   it('does not offer to delete in create mode', async () => {

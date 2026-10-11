@@ -22,6 +22,7 @@ const session = (id: string, start: number, end: number): ScheduleSession => ({
   language: null,
   color: 'blue',
   emojis: [],
+  locked: false,
   proposal: null,
 });
 
