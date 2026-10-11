@@ -616,6 +616,7 @@
   "event-management.schedule.autofill.summary.cleared_one": "{{count}} filled session will be cleared",
   "event-management.schedule.autofill.summary.filled": "{{count}} sessions will be filled",
   "event-management.schedule.autofill.summary.filled_one": "{{count}} session will be filled",
+  "event-management.schedule.autofill.summary.filled_zero": "No session will be filled",
   "event-management.schedule.autofill.summary.label": "Summary",
   "event-management.schedule.autofill.summary.left-vacant": "{{count}} sessions will stay empty",
   "event-management.schedule.autofill.summary.left-vacant_one": "{{count}} session will stay empty",
