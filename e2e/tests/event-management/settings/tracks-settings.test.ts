@@ -4,7 +4,7 @@ import { expect, test } from '../../../fixtures.ts';
 import { userLoggedFactory } from '../../../helpers.ts';
 import { TracksSettingsPage } from './tracks-settings.page.ts';
 
-const PRESET_COLOR_NAME = /^Color: (Red|Orange|Yellow|Green|Teal|Light blue|Blue|Indigo|Purple|Pink)$/;
+const DEFAULT_COLOR_NAME = 'Color: #F3F4F6';
 
 test('adds, edits and removes a format', async ({ context, page }) => {
   const user = await userLoggedFactory(context);
@@ -20,7 +20,7 @@ test('adds, edits and removes a format', async ({ context, page }) => {
   await tracksPage.fill(tracksPage.nameInput, 'Quickie');
   await tracksPage.fill(tracksPage.descriptionInput, 'A short talk');
   await tracksPage.fill(tracksPage.durationInput, '15');
-  await expect(tracksPage.colorButton).toHaveAccessibleName(PRESET_COLOR_NAME);
+  await expect(tracksPage.colorButton).toHaveAccessibleName(DEFAULT_COLOR_NAME);
   await tracksPage.colorButton.click();
   await tracksPage.colorOption('Red').click();
   await expect(tracksPage.colorButton).toHaveAccessibleName('Color: Red');
@@ -81,7 +81,7 @@ test('adds, edits and removes a category', async ({ context, page }) => {
   await tracksPage.categoryModal.waitFor();
   await tracksPage.fill(tracksPage.nameInput, 'Beginner');
   await tracksPage.fill(tracksPage.descriptionInput, 'For beginners');
-  await expect(tracksPage.colorButton).toHaveAccessibleName(PRESET_COLOR_NAME);
+  await expect(tracksPage.colorButton).toHaveAccessibleName(DEFAULT_COLOR_NAME);
   await tracksPage.colorButton.click();
   await tracksPage.colorOption('Red').click();
   await expect(tracksPage.colorButton).toHaveAccessibleName('Color: Red');
