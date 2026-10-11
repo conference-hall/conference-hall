@@ -43,7 +43,10 @@ export type AutofillScope = {
   rules: AutofillRules;
 };
 
-export type AutofillRules = { formatDuration: boolean; speakerRest: 15 | 30 | 60 | 120 | null };
+export const SPEAKER_REST_MINUTES = [15, 30, 60, 120] as const;
+export type SpeakerRestMinutes = (typeof SPEAKER_REST_MINUTES)[number];
+
+export type AutofillRules = { formatDuration: boolean; speakerRest: SpeakerRestMinutes | null };
 
 type AutofillAssignment = { sessionId: string; proposalId: string };
 
@@ -72,20 +75,23 @@ const NO_VACANT_SESSION = 'no-vacant-session';
 
 const MINUTE = 60_000;
 
+const sharesSpeaker = (proposal: RuleProposal, busy: { speakerIds: Array<string> }) =>
+  busy.speakerIds.some((id) => proposal.speakerIds.includes(id));
+
 const speakerOverlap: AssignmentRule = {
   id: 'speaker-overlap',
   evaluate: (proposal, session, context) =>
-    !context.occupancy.some(
-      (busy) =>
-        areTimeSlotsOverlapping(session, busy) && busy.speakerIds.some((id) => proposal.speakerIds.includes(id)),
-    ),
+    !context.occupancy.some((busy) => areTimeSlotsOverlapping(session, busy) && sharesSpeaker(proposal, busy)),
 };
+
+const hasUnknownFormatDuration = ({ formatDurations }: RuleProposal) =>
+  formatDurations.length === 0 || formatDurations.some((duration) => duration === null);
 
 const formatDuration: AssignmentRule = {
   id: 'format-duration',
   evaluate: (proposal, session) => {
     const durations = proposal.formatDurations;
-    if (durations.length === 0 || durations.some((duration) => duration === null)) return true;
+    if (hasUnknownFormatDuration(proposal)) return true;
     return durations.includes((session.end.getTime() - session.start.getTime()) / MINUTE);
   },
 };
@@ -94,7 +100,7 @@ const speakerRest = (minutes: number): AssignmentRule => ({
   id: 'speaker-rest',
   evaluate: (proposal, session, context) =>
     !context.occupancy.some((busy) => {
-      if (!busy.speakerIds.some((id) => proposal.speakerIds.includes(id))) return false;
+      if (!sharesSpeaker(proposal, busy)) return false;
       const gap = Math.max(session.start.getTime() - busy.end.getTime(), busy.start.getTime() - session.end.getTime());
       return gap < minutes * MINUTE;
     }),
@@ -123,6 +129,12 @@ export function isEligibleProposal(proposal: AutofillProposal, state: ProposalSt
     case 'all':
       return proposal.deliberationStatus === 'PENDING' || proposal.deliberationStatus === 'ACCEPTED';
   }
+}
+
+export function proposalsWithoutFormatDuration(payload: AutofillPayload, state: ProposalState): number {
+  return payload.proposals.filter(
+    (proposal) => isEligibleProposal(proposal, state) && hasUnknownFormatDuration(proposal),
+  ).length;
 }
 
 export function vacantSessionCount(payload: AutofillPayload, scope: AutofillScope): number {
@@ -166,8 +178,10 @@ export function autofill(payload: AutofillPayload, scope: AutofillScope): Autofi
   for (const session of vacantSessions) {
     const picked = eligibleProposals
       .filter((proposal) => !context.assignedProposalIds.has(proposal.id) && accepts(proposal, session))
-      .toSorted(byDegree)
-      .at(0);
+      .reduce<AutofillProposal | undefined>(
+        (best, proposal) => (best && byDegree(best, proposal) <= 0 ? best : proposal),
+        undefined,
+      );
     if (!picked) continue;
 
     assignments.push({ sessionId: session.id, proposalId: picked.id });

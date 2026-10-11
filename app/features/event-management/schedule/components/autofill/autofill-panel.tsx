@@ -13,13 +13,15 @@ import { formatDate } from '~/shared/datetimes/datetimes.ts';
 import {
   type AutofillPayload,
   type AutofillReason,
-  type AutofillRules,
+  type SpeakerRestMinutes,
   type AutofillReport,
   type AutofillScope,
   type ProposalState,
   PROPOSAL_STATES,
+  SPEAKER_REST_MINUTES,
   autofill,
   isEligibleProposal,
+  proposalsWithoutFormatDuration,
 } from '../../models/autofill.ts';
 
 type Props = { payload: AutofillPayload; report: AutofillReport | null; onClose: VoidFunction };
@@ -222,14 +224,13 @@ const FIXED_RULE_LABELS = [
   'event-management.schedule.autofill.rules.speaker-overlap',
 ] as const;
 
-const SPEAKER_REST_MINUTES = [15, 30, 60, 120] as const;
 const DEFAULT_SPEAKER_REST = 30;
 
 const formatMinutes = (minutes: number) => (minutes < 60 ? `${minutes} min` : `${minutes / 60} h`);
 
 function RulesSection({ scope, onChange }: Pick<FilterProps, 'scope' | 'onChange'>) {
   const { t } = useTranslation();
-  const [speakerRest, setSpeakerRest] = useState<NonNullable<AutofillRules['speakerRest']>>(DEFAULT_SPEAKER_REST);
+  const [speakerRest, setSpeakerRest] = useState<SpeakerRestMinutes>(DEFAULT_SPEAKER_REST);
   const speakerRestEnabled = scope.rules.speakerRest !== null;
 
   return (
@@ -259,7 +260,8 @@ function RulesSection({ scope, onChange }: Pick<FilterProps, 'scope' | 'onChange
               value={speakerRest}
               disabled={!speakerRestEnabled}
               onChange={(event) => {
-                const minutes = Number(event.target.value) as typeof speakerRest;
+                const minutes = SPEAKER_REST_MINUTES.find((value) => String(value) === event.target.value);
+                if (!minutes) return;
                 setSpeakerRest(minutes);
                 onChange({ ...scope, rules: { ...scope.rules, speakerRest: minutes } });
               }}
@@ -296,11 +298,7 @@ function SummaryFooter({ payload, summary, scope, submitting, onCancel }: Summar
   const { t } = useTranslation();
 
   const unknownDurations = scope.rules.formatDuration
-    ? payload.proposals.filter(
-        (proposal) =>
-          isEligibleProposal(proposal, scope.proposalState) &&
-          (proposal.formatDurations.length === 0 || proposal.formatDurations.some((duration) => duration === null)),
-      ).length
+    ? proposalsWithoutFormatDuration(payload, scope.proposalState)
     : 0;
 
   const filled = summary.assignments.length;

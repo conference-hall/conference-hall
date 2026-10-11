@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { AutofillRules } from '../models/autofill.ts';
+import { SPEAKER_REST_MINUTES } from '../models/autofill.ts';
 
 // An unchecked box means an empty scope, never "all": absence is not a missing filter here.
 export const AutofillScopeSchema = z
@@ -9,9 +9,9 @@ export const AutofillScopeSchema = z
     proposalState: z.enum(['all', 'accepted', 'confirmed']).default('accepted'),
     reset: z.boolean().default(false),
     formatDuration: z.boolean().default(false),
-    speakerRest: z.enum(['15', '30', '60', '120']).optional(),
+    speakerRest: z.string().pipe(z.coerce.number()).pipe(z.literal(SPEAKER_REST_MINUTES)).optional(),
   })
   .transform(({ formatDuration, speakerRest, ...scope }) => ({
     ...scope,
-    rules: { formatDuration, speakerRest: speakerRest ? (Number(speakerRest) as AutofillRules['speakerRest']) : null },
+    rules: { formatDuration, speakerRest: speakerRest ?? null },
   }));
