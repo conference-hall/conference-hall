@@ -134,8 +134,8 @@ test('locks a session so the autofill leaves it alone', async ({ page, context }
   const unlock = schedulePage.sessionBlock('Reserved slot').getByRole('button', { name: 'Unlock session' });
   await expect(unlock).toBeVisible();
 
-  // A locked session opens read-only
-  await schedulePage.session('Reserved slot').click();
+  // A locked session opens read-only (its draggable wrapper is aria-disabled, so the click is forced)
+  await schedulePage.session('Reserved slot').click({ force: true });
   await expect(page.getByText('This session is locked.')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Save session' })).toBeHidden();
   await schedulePage.clickOnCloseSession();
