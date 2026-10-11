@@ -204,13 +204,14 @@ describe('AutofillPanel component', () => {
   it('shows the summary as a warning only when nothing would be filled', async () => {
     renderPanel();
 
+    await expect.element(page.getByText('Summary')).toBeVisible();
     const summary = page.getByText('Summary').element().closest('div.rounded-md');
     expect(summary?.className).toContain('bg-blue-50');
 
     await userEvent.click(page.getByRole('button', { name: 'Oct 5, 2024' }));
     await userEvent.click(page.getByRole('button', { name: 'Oct 6, 2024' }));
 
-    expect(summary?.className).toContain('bg-yellow-50');
+    await vi.waitFor(() => expect(summary?.className).toContain('bg-yellow-50'));
   });
 
   it('lowers the number of sessions to fill without the reset', async () => {
