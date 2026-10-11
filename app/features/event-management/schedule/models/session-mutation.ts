@@ -9,7 +9,7 @@ export const SESSION_INTENTS = {
   update: 'update-session',
   switch: 'switch-sessions',
   delete: 'delete-session',
-  lock: 'toggle-lock',
+  lock: 'set-lock',
 } as const;
 
 export type SessionMutation = { key?: string; formData: FormData };

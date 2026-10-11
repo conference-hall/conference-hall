@@ -656,18 +656,19 @@ describe('autofill', () => {
       expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-1', reason: 'speaker-overlap' }]);
     });
 
-    it('counts the locked sessions of the scope in the report', () => {
+    it('counts the locked sessions autofill would otherwise have touched', () => {
       const payload = payloadOf([
         locked(vacant('session-1', { trackId: 'track-1' })),
         locked(filled('session-2', 'proposal-9', { trackId: 'track-1', hour: 14 })),
         locked(vacant('session-3', { trackId: 'track-2' })),
         locked(vacant('session-4', { day: DAY_2 })),
-        vacant('session-5', { hour: 16 }),
+        locked(named('session-5', 'Keynote', { hour: 16 })),
+        vacant('session-6', { hour: 17 }),
       ]);
+      const scope = scopeOf({ days: [DAY_1], trackIds: ['track-1'] });
 
-      const report = autofill(payload, scopeOf({ days: [DAY_1], trackIds: ['track-1'] }));
-
-      expect(report.sessionsLocked).toBe(2);
+      expect(autofill(payload, scope).sessionsLocked).toBe(1);
+      expect(autofill(payload, { ...scope, reset: true }).sessionsLocked).toBe(2);
     });
   });
 

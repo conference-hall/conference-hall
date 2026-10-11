@@ -141,7 +141,7 @@ export class EventSchedule {
       const source = schedule.sessions.find((session) => session.id === sourceId);
       const target = schedule.sessions.find((session) => session.id === targetId);
       if (!source || !target) throw new NotFoundError('Schedule session not found');
-      if (source.locked || target.locked) throw new SessionLockedError();
+      ensureUnlocked(source, target);
 
       const outcome = placementFor(schedule.sessions).swap(toPlacedSession(source), toPlacedSession(target));
       if (outcome.status === 'conflict') throw new SessionConflictError();
@@ -189,10 +189,10 @@ export class EventSchedule {
 
   private async assertUnlocked(sessionIds: Array<string>, client: DbTransaction = db) {
     const schedule = await this.schedule(client);
-    const locked = await client.scheduleSession.count({
-      where: { id: { in: sessionIds }, scheduleId: schedule.id, locked: true },
+    const sessions = await client.scheduleSession.findMany({
+      where: { id: { in: sessionIds }, scheduleId: schedule.id },
     });
-    if (locked > 0) throw new SessionLockedError();
+    ensureUnlocked(...sessions);
   }
 
   async saveTracks(tracks: ScheduleTracksSaveData['tracks']) {
@@ -268,6 +268,10 @@ function toScheduleTracks(tracks: Array<ScheduleTrack>) {
   return tracks
     .toSorted((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
     .map((t) => ({ id: t.id, name: t.name }));
+}
+
+function ensureUnlocked(...sessions: Array<ScheduleSession>) {
+  if (sessions.some((session) => session.locked)) throw new SessionLockedError();
 }
 
 function toPlacedSession({ id, trackId, start, end }: ScheduleSession) {

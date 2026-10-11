@@ -117,6 +117,13 @@ test('locks a session so the autofill leaves it alone', async ({ page, context }
     start: new Date('2024-10-05T10:00:00.000Z'),
     end: new Date('2024-10-05T11:00:00.000Z'),
   });
+  await scheduleSessionFactory({
+    schedule,
+    track,
+    locked: true,
+    start: new Date('2024-10-05T11:00:00.000Z'),
+    end: new Date('2024-10-05T12:00:00.000Z'),
+  });
 
   const schedulePage = new SchedulePage(page);
   await schedulePage.gotoDay(team.slug, event.slug, '0');
@@ -124,7 +131,7 @@ test('locks a session so the autofill leaves it alone', async ({ page, context }
   // Lock the session from its modal
   await schedulePage.session('Reserved slot').click();
   await schedulePage.clickOnLockSession();
-  const unlock = page.getByRole('button', { name: 'Unlock session' });
+  const unlock = schedulePage.sessionBlock('Reserved slot').getByRole('button', { name: 'Unlock session' });
   await expect(unlock).toBeVisible();
 
   // A locked session opens read-only

@@ -228,7 +228,9 @@ function workingState(payload: AutofillPayload, scope: AutofillScope) {
   const trackIds = new Set(scope.trackIds);
   const inScope = (session: AutofillSession) => days.has(session.day) && trackIds.has(session.trackId);
 
-  const sessionsLocked = payload.sessions.filter((session) => inScope(session) && session.locked).length;
+  const sessionsLocked = payload.sessions.filter(
+    (session) => inScope(session) && session.locked && !session.name && (!session.proposalId || scope.reset),
+  ).length;
   const sessionsToClear = scope.reset
     ? payload.sessions
         .filter((session) => inScope(session) && !session.locked && session.proposalId && !session.name)
