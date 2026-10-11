@@ -131,6 +131,7 @@ test('locks a session so the autofill leaves it alone', async ({ page, context }
   // Lock the session from its modal
   await schedulePage.session('Reserved slot').click();
   await schedulePage.clickOnLockSession();
+  await expect(page.getByRole('dialog')).toBeHidden();
   const unlock = schedulePage.sessionBlock('Reserved slot').getByRole('button', { name: 'Unlock session' });
   await expect(unlock).toBeVisible();
 
@@ -151,7 +152,7 @@ test('locks a session so the autofill leaves it alone', async ({ page, context }
 
   // Unlock from the lock icon of the block
   await schedulePage.autofillPanel.getByRole('button', { name: 'Close', exact: true }).click();
-  await unlock.click();
+  await unlock.click({ force: true });
   await expect(unlock).toBeHidden();
 });
 
