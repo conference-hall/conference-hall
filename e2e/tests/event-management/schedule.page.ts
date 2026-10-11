@@ -59,11 +59,7 @@ export class SchedulePage extends PageObject {
   }
 
   async clickOnLockSession() {
-    await this.page.getByRole('button', { name: 'Lock session' }).click();
-  }
-
-  async clickOnUnlockSession() {
-    await this.page.getByRole('button', { name: 'Unlock session' }).click();
+    await this.page.getByRole('button', { name: 'Lock session', exact: true }).click();
   }
 
   async clickOnFillSessions() {
@@ -79,7 +75,7 @@ export class SchedulePage extends PageObject {
   }
 
   async clickOnCloseSession() {
-    await this.page.getByRole('button', { name: 'Close' }).click();
+    await this.page.getByRole('button', { name: 'Close', exact: true }).click();
   }
 
   async clickOnCancelSession() {
