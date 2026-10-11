@@ -321,9 +321,11 @@ function SummaryFooter({ payload, summary, scope, submitting, onCancel }: Summar
           ) : null}
           {summary.proposalsLeftUnscheduled.length > 0 ? (
             <li>
-              {t('event-management.schedule.autofill.summary.unplaced', {
-                count: summary.proposalsLeftUnscheduled.length,
-              })}
+              <span>
+                {t('event-management.schedule.autofill.summary.unplaced', {
+                  count: summary.proposalsLeftUnscheduled.length,
+                })}
+              </span>
               <ReasonList proposals={summary.proposalsLeftUnscheduled} />
             </li>
           ) : null}
@@ -384,9 +386,11 @@ function ReportFooter({ report, onClose }: { report: AutofillReport; onClose: Vo
           ) : null}
           {report.proposalsLeftUnscheduled.length > 0 ? (
             <li>
-              {t('event-management.schedule.autofill.report.unplaced', {
-                count: report.proposalsLeftUnscheduled.length,
-              })}
+              <span>
+                {t('event-management.schedule.autofill.report.unplaced', {
+                  count: report.proposalsLeftUnscheduled.length,
+                })}
+              </span>
               <ReasonList proposals={report.proposalsLeftUnscheduled} />
             </li>
           ) : null}

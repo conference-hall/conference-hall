@@ -324,9 +324,9 @@ describe('AutofillPanel component', () => {
     await userEvent.click(page.getByRole('switch', { name: FORMAT_DURATION_RULE }));
 
     await expect.element(page.getByText('0 sessions will be filled')).toBeVisible();
-    await expect.element(page.getByText('4 proposals will not be placed')).toBeVisible();
+    await expect.element(page.getByText('3 proposals will not be placed')).toBeVisible();
     await expect
-      .element(page.getByText('4 proposals set aside: no free session of their format duration'))
+      .element(page.getByText('3 proposals set aside: no free session of their format duration'))
       .toBeVisible();
   });
 
