@@ -308,7 +308,10 @@ function SummaryFooter({ payload, summary, scope, submitting, onCancel }: Summar
 
   return (
     <footer className="flex shrink-0 flex-col gap-4 p-4">
-      <Callout title={t('event-management.schedule.autofill.summary.label')}>
+      <Callout
+        title={t('event-management.schedule.autofill.summary.label')}
+        variant={filled === 0 ? 'warning' : 'default'}
+      >
         <ul>
           <li>{t('event-management.schedule.autofill.summary.filled', { count: filled })}</li>
           {scope.reset && cleared > 0 ? (
