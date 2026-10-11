@@ -58,13 +58,12 @@ function TagModalContent({ mode, initialValues, open, onClose }: TagModalContent
     <Modal title={TagPreview} size="m" open={open} onClose={onClose}>
       <Modal.Content>
         <Form id={formId} method="POST" onSubmit={onClose} className="space-y-4 lg:space-y-6">
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <input type="hidden" name="id" value={initialValues?.id} />
 
             <ColorInput
               name="color"
               label={t('event-management.settings.tags.pick-a-color')}
-              srOnly
               value={color}
               onChange={(value) => value && setColor(value)}
             />

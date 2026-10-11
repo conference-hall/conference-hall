@@ -20,24 +20,24 @@ describe('ColorInput component', () => {
   const trigger = () => page.getByRole('button', { name: /^Color/ });
   const hiddenInput = () => document.querySelector<HTMLInputElement>('input[type="hidden"][name="color"]');
 
-  it('shows the translated name of a preset', async () => {
+  it('names the button with the translated preset', async () => {
     await renderComponent({ value: '#FF5F5F' });
-    await expect.element(trigger()).toHaveTextContent('Red');
+    await expect.element(trigger()).toHaveAccessibleName('Color: Red');
   });
 
   it('matches a preset case-insensitively', async () => {
     await renderComponent({ value: '#ff5f5f' });
-    await expect.element(trigger()).toHaveTextContent('Red');
+    await expect.element(trigger()).toHaveAccessibleName('Color: Red');
   });
 
-  it('shows the hex of a color outside the palette', async () => {
+  it('names the button with the hex of a color outside the palette', async () => {
     await renderComponent({ value: '#123456' });
-    await expect.element(trigger()).toHaveTextContent('#123456');
+    await expect.element(trigger()).toHaveAccessibleName('Color: #123456');
   });
 
-  it('shows "No color" when empty', async () => {
+  it('names the button "No color" when empty', async () => {
     await renderComponent({ nullable: true });
-    await expect.element(trigger()).toHaveTextContent('No color');
+    await expect.element(trigger()).toHaveAccessibleName('Color: No color');
   });
 
   it('calls onChange with the hex of the picked preset', async () => {
@@ -82,10 +82,5 @@ describe('ColorInput component', () => {
   it('submits nothing when empty', async () => {
     await renderComponent({ value: null, nullable: true });
     expect(hiddenInput()).toBeNull();
-  });
-
-  it('hides the label visually when srOnly', async () => {
-    await renderComponent({ srOnly: true });
-    await expect.element(page.getByText('Color', { exact: true })).toHaveClass('sr-only');
   });
 });

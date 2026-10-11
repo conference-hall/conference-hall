@@ -105,6 +105,7 @@
   "common.charts.no-data": "No data to show",
   "common.choose-an-emoji": "Choose an emoji",
   "common.close": "Close",
+  "common.color.button-label": "{{label}}: {{value}}",
   "common.color.custom": "Custom color",
   "common.color.label": "Color",
   "common.color.name.blue": "Blue",

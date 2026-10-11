@@ -43,7 +43,9 @@ describe('TagModal component', () => {
     const nameInput = page.getByLabelText('Tag name');
     await expect.element(nameInput).toHaveValue('Existing Tag');
 
-    await expect.element(page.getByRole('button', { name: /Pick a color/ })).toHaveTextContent('#ff0000');
+    await expect
+      .element(page.getByRole('button', { name: /Pick a color/ }))
+      .toHaveAccessibleName('Pick a color: #ff0000');
 
     await expect.element(page.getByRole('button', { name: 'Save tag' })).toBeInTheDocument();
   });

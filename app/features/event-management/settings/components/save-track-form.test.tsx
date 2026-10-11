@@ -17,7 +17,7 @@ describe('SaveTrackForm component', () => {
 
     await userEvent.click(page.getByRole('button', { name: /New/ }));
 
-    await expect.element(page.getByRole('button', { name: /^Color/ })).toHaveTextContent('Gray');
+    await expect.element(page.getByRole('button', { name: /^Color/ })).toHaveAccessibleName('Color: Gray');
   });
 
   it('does not offer the "No color" option', async () => {
@@ -30,7 +30,7 @@ describe('SaveTrackForm component', () => {
     await expect.element(page.getByRole('menuitem', { name: 'No color' })).not.toBeInTheDocument();
   });
 
-  it('keeps the duration input next to the color for formats', async () => {
+  it('fills the duration and color when editing a format', async () => {
     await renderComponent(
       <EditTrackButton
         type="formats"
@@ -41,6 +41,6 @@ describe('SaveTrackForm component', () => {
     await userEvent.click(page.getByRole('button', { name: 'Edit' }));
 
     await expect.element(page.getByLabelText('Duration (minutes)')).toHaveValue(45);
-    await expect.element(page.getByRole('button', { name: /^Color/ })).toHaveTextContent('Red');
+    await expect.element(page.getByRole('button', { name: /^Color/ })).toHaveAccessibleName('Color: Red');
   });
 });

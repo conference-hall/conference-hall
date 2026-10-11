@@ -156,7 +156,6 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
           <ColorInput
             label={t('event-management.schedule.edit-session.color')}
             nullable
-            srOnly
             value={color}
             onChange={setColor}
           />

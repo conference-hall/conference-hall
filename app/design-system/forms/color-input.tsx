@@ -1,8 +1,8 @@
-import { Field, Label, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { SwatchIcon } from '@heroicons/react/16/solid';
-import { CheckIcon, ChevronUpDownIcon, NoSymbolIcon } from '@heroicons/react/20/solid';
+import { CheckIcon, NoSymbolIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
-import { useEffect, useId, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { COLORS, getContrastColor } from '~/shared/colors/colors.ts';
 import { menuItem, menuItemIcon, menuItems, menuSeparator } from '../styles/menu.styles.ts';
@@ -14,13 +14,10 @@ type ColorInputProps = {
   onChange: (color: string | null) => void;
   name?: string;
   nullable?: boolean;
-  srOnly?: boolean;
 };
 
-export function ColorInput({ label, value, onChange, name, nullable = false, srOnly = false }: ColorInputProps) {
+export function ColorInput({ label, value, onChange, name, nullable = false }: ColorInputProps) {
   const { t } = useTranslation();
-  const labelId = useId();
-  const buttonId = useId();
 
   const pickerRef = useRef<HTMLInputElement>(null);
 
@@ -35,6 +32,7 @@ export function ColorInput({ label, value, onChange, name, nullable = false, srO
 
   const preset = COLORS.find((color) => color.hex.toLowerCase() === value?.toLowerCase());
   const custom = value !== null && !preset;
+  const valueLabel = preset ? t(`common.color.name.${preset.name}`) : (value ?? t('common.color.none'));
 
   const openPicker = () => {
     const picker = pickerRef.current;
@@ -44,53 +42,37 @@ export function ColorInput({ label, value, onChange, name, nullable = false, srO
   };
 
   return (
-    <Field>
-      <Label id={labelId} className={cx('block text-sm leading-6 font-medium text-gray-900', { 'sr-only': srOnly })}>
-        {label}
-      </Label>
-
+    <>
       {name && value !== null ? <input type="hidden" name={name} value={value} /> : null}
       <input ref={pickerRef} type="color" tabIndex={-1} aria-hidden className="sr-only" defaultValue="#000000" />
 
       <Menu>
         <MenuButton
-          id={buttonId}
-          aria-labelledby={`${labelId} ${buttonId}`}
+          aria-label={t('common.color.button-label', {
+            label,
+            value: valueLabel,
+            interpolation: { escapeValue: false },
+          })}
+          title={valueLabel}
           className={cx(
-            'relative flex h-9 w-full min-w-48 items-center gap-2 rounded-md bg-white py-1.5 pr-10 pl-3 text-left text-sm leading-6 text-gray-900 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600 focus:outline-hidden',
-            { 'mt-1': !srOnly },
+            'size-8 shrink-0 cursor-pointer rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+            value ? 'ring-1 ring-black/10 ring-inset' : 'border border-dashed border-gray-400 bg-white',
           )}
-        >
-          <span
-            className={cx(
-              'size-4 shrink-0 rounded-sm',
-              value ? 'ring-1 ring-black/10 ring-inset' : 'border border-dashed border-gray-400',
-            )}
-            style={value ? { backgroundColor: value } : undefined}
-          />
-          {preset ? (
-            <span className="truncate">{t(`common.color.name.${preset.name}`)}</span>
-          ) : value ? (
-            <span className="truncate font-mono uppercase">{value}</span>
-          ) : (
-            <span className="truncate text-gray-500">{t('common.color.none')}</span>
-          )}
-          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-            <ChevronUpDownIcon className="size-5 text-gray-400" aria-hidden="true" />
-          </span>
-        </MenuButton>
+          style={value ? { backgroundColor: value } : undefined}
+        />
 
         <MenuTransition>
           <MenuItems anchor={{ to: 'bottom start', gap: '4px' }} className={cx(menuItems(), 'z-50')}>
-            <div className="grid grid-cols-5 gap-2 px-4 py-1">
+            <div className="flex gap-1.5 px-3 py-1.5">
               {COLORS.map((color) => (
                 <MenuItem
                   key={color.hex}
                   as="button"
                   type="button"
                   aria-label={t(`common.color.name.${color.name}`)}
+                  title={t(`common.color.name.${color.name}`)}
                   onClick={() => onChange(color.hex)}
-                  className="flex size-8 cursor-pointer items-center justify-center rounded-md data-focus:ring-2 data-focus:ring-gray-900 data-focus:ring-offset-1"
+                  className="flex size-6 cursor-pointer items-center justify-center rounded-sm data-focus:ring-2 data-focus:ring-gray-900 data-focus:ring-offset-1"
                   style={{ backgroundColor: color.hex }}
                 >
                   {color === preset ? (
@@ -125,6 +107,6 @@ export function ColorInput({ label, value, onChange, name, nullable = false, srO
           </MenuItems>
         </MenuTransition>
       </Menu>
-    </Field>
+    </>
   );
 }

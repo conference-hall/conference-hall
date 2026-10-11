@@ -79,7 +79,17 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
     >
       <Modal.Content>
         <Form id={formId} method="POST" onSubmit={onClose} className="space-y-4 lg:space-y-6">
-          <Input name="name" label="Name" defaultValue={initialValues?.name} required />
+          <div className="flex items-center gap-2">
+            <ColorInput name="color" label={t('common.color.label')} value={color} onChange={setColor} />
+            <Input
+              name="name"
+              aria-label={t('common.name')}
+              placeholder={t('common.name')}
+              defaultValue={initialValues?.name}
+              className="flex-1"
+              required
+            />
+          </div>
           <TextArea
             name="description"
             label={t('common.description')}
@@ -98,7 +108,6 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
               autoComplete="off"
             />
           ) : null}
-          <ColorInput name="color" label={t('common.color.label')} value={color} onChange={setColor} />
           <input type="hidden" name="id" value={initialValues?.id} />
         </Form>
       </Modal.Content>
