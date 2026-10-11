@@ -197,7 +197,7 @@ describe('AutofillPanel component', () => {
     await userEvent.click(page.getByRole('button', { name: 'Oct 5, 2024' }));
     await userEvent.click(page.getByRole('button', { name: 'Oct 6, 2024' }));
 
-    await expect.element(page.getByText('0 sessions will be filled')).toBeVisible();
+    await expect.element(page.getByText('No session will be filled')).toBeVisible();
     await expect.element(page.getByRole('button', { name: 'Fill the sessions' })).toBeDisabled();
   });
 
@@ -332,7 +332,7 @@ describe('AutofillPanel component', () => {
     };
     renderPanel({ payload });
 
-    await expect.element(page.getByText('0 sessions will be filled')).toBeVisible();
+    await expect.element(page.getByText('No session will be filled')).toBeVisible();
     await expect.element(page.getByText('4 proposals will not be placed')).toBeVisible();
     await expect
       .element(page.getByText('4 proposals set aside: no free session of their format duration'))
