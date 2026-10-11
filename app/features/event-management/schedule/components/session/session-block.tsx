@@ -19,18 +19,13 @@ type SessionBlockProps = {
   onOpen: VoidFunction;
 };
 
-// Everything but the tallest block truncates its text.
 const TRUNCATED = 'session-xs:truncate session-sm:truncate session-md:truncate session-lg:truncate';
-
-// The shortest block shows its colour and nothing else.
 const HIDDEN_WHEN_TINY = 'session-xs:hidden';
 
 export function SessionBlock({ session, onOpen }: SessionBlockProps) {
   const { scheduleTime } = useScheduleContext();
   const { timeslot, proposal, language, emojis } = session;
 
-  // The stored colour is a single hex; the pastel tile is mixed from it in CSS. Anything that is not
-  // a hex (a session never coloured, or a row the backfill did not convert) falls back to neutral.
   const color = isHexColor(session.color) ? session.color : null;
   const colorStyle = color
     ? {
@@ -92,7 +87,6 @@ function SessionSpeakers({ speakers }: SessionSpeakersProps) {
 
 type SessionTimeProps = { timeslot: TimeSlot; scheduleTime: ScheduleTime };
 
-// The start time is always there; the end time and the duration only once the block is tall enough for them.
 function SessionTime({ timeslot, scheduleTime }: SessionTimeProps) {
   const { i18n } = useTranslation();
   const locale = i18n.language;

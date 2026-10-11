@@ -137,13 +137,12 @@ export class SessionMutations {
     formData.set('trackId', session.trackId);
     formData.set('start', this.deps.scheduleTime.toUtc(session.timeslot.start).toISOString());
     formData.set('end', this.deps.scheduleTime.toUtc(session.timeslot.end).toISOString());
-    // An absent `color` means "no colour": the schema rejects an empty string.
-    if (session.color) formData.set('color', session.color);
     formData.set('name', session.name ?? '');
     formData.set('language', session.language ?? '');
     formData.set('proposalId', session.proposal?.id ?? '');
     formData.set('proposalTitle', session.proposal?.title ?? '');
     formData.set('proposalRouteId', session.proposal?.routeId ?? '');
+    if (session.color) formData.set('color', session.color);
     for (const emoji of session.emojis) {
       formData.append('emojis', emoji);
     }

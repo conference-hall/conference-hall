@@ -12,7 +12,6 @@ import type { ScheduleProposalData } from '../schedule.types.ts';
 import { highlightMatch } from './highlight-match.tsx';
 import { useProposalSearch } from './use-proposal-search.ts';
 
-// `categoryIds` only travels on a freshly picked proposal: it feeds the session colour and is not persisted.
 export type SessionIdentity = { name: string; proposal: ScheduleProposalData | null; categoryIds?: Array<string> };
 
 type OptionValue = { kind: 'raw' } | { kind: 'proposal'; proposal: ProposalResult };

@@ -226,8 +226,6 @@ export class EventSchedule {
         name: name,
         language: language as Language | null,
         emojis: emojis,
-        // A row the hex backfill has not converted yet reads as "no colour" rather than reaching
-        // the client, where it would fail the hex schema on the next write.
         color: isHexColor(color) ? color : null,
         proposal: proposal
           ? {
