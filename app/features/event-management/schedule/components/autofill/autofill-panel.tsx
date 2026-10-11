@@ -34,8 +34,8 @@ export function AutofillPanel({ payload, report, onClose }: Props) {
     days: payload.days,
     trackIds: payload.tracks.map((track) => track.id),
     proposalState: 'accepted',
-    reset: false,
-    rules: { formatDuration: false, speakerRest: null },
+    reset: true,
+    rules: { formatDuration: true, speakerRest: DEFAULT_SPEAKER_REST },
   }));
 
   const [submittedScope, setSubmittedScope] = useState<AutofillScope | null>(null);
@@ -77,7 +77,7 @@ export function AutofillPanel({ payload, report, onClose }: Props) {
           <TracksFilter payload={payload} scope={scope} onChange={setScope} />
           <ProposalStatesFilter payload={payload} scope={scope} onChange={setScope} />
           <RulesSection scope={scope} onChange={setScope} />
-          <div className="rounded-md border px-3 py-2">
+          <div className="flex min-h-14 flex-col justify-center rounded-md border px-3 py-2">
             <ToggleGroup
               label={t('event-management.schedule.autofill.reset')}
               value={scope.reset}

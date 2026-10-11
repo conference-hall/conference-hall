@@ -616,6 +616,7 @@
   "event-management.schedule.autofill.summary.cleared_one": "{{count}} session remplie sera vidée",
   "event-management.schedule.autofill.summary.filled": "{{count}} sessions seront remplies",
   "event-management.schedule.autofill.summary.filled_one": "{{count}} session sera remplie",
+  "event-management.schedule.autofill.summary.filled_zero": "Aucune session ne sera remplie",
   "event-management.schedule.autofill.summary.label": "Récapitulatif",
   "event-management.schedule.autofill.summary.left-vacant": "{{count}} sessions resteront vides",
   "event-management.schedule.autofill.summary.left-vacant_one": "{{count}} session restera vide",
