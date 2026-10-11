@@ -25,7 +25,7 @@ describe('getRandomColor', () => {
 
 describe('COLORS', () => {
   it('does not offer the neutral gray as a preset', () => {
-    expect(COLORS.map((c) => c.hex)).not.toContain('#9CA3AF');
+    expect(COLORS.map((c) => c.hex)).not.toContain('#F3F4F6');
   });
 });
 
