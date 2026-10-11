@@ -91,7 +91,7 @@ const PAYLOAD: AutofillPayload = {
   ],
 };
 
-const FORMAT_DURATION_RULE = "Session length must equal the proposal's format duration";
+const FORMAT_DURATION_RULE = "Session length must equal the proposal's format duration.";
 
 const REPORT: AutofillReport = {
   assignments: [

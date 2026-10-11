@@ -77,11 +77,13 @@ export function AutofillPanel({ payload, report, onClose }: Props) {
           <TracksFilter payload={payload} scope={scope} onChange={setScope} />
           <ProposalStatesFilter payload={payload} scope={scope} onChange={setScope} />
           <RulesSection scope={scope} onChange={setScope} />
-          <ToggleGroup
-            label={t('event-management.schedule.autofill.reset')}
-            value={scope.reset}
-            onChange={(reset) => setScope({ ...scope, reset })}
-          />
+          <div className="rounded-md border px-3 py-2">
+            <ToggleGroup
+              label={t('event-management.schedule.autofill.reset')}
+              value={scope.reset}
+              onChange={(reset) => setScope({ ...scope, reset })}
+            />
+          </div>
         </SlideOver.Content>
 
         {displayedReport ? (
@@ -239,12 +241,12 @@ function RulesSection({ scope, onChange }: Pick<FilterProps, 'scope' | 'onChange
 
       <ul className="flex flex-col divide-y rounded-md border">
         {FIXED_RULE_LABELS.map((key) => (
-          <li key={key} className="flex items-center justify-between gap-4 p-3">
+          <li key={key} className="flex min-h-14 items-center justify-between gap-4 px-3 py-2">
             <Subtitle size="xs">{t(key)}</Subtitle>
             <LockClosedIcon className="size-4 shrink-0 text-gray-400" aria-hidden="true" />
           </li>
         ))}
-        <li className="flex items-center justify-between gap-4 p-3">
+        <li className="flex min-h-14 items-center justify-between gap-4 px-3 py-2">
           <Subtitle size="xs">{t('event-management.schedule.autofill.rules.format-duration')}</Subtitle>
           <Toggle
             label={t('event-management.schedule.autofill.rules.format-duration')}
@@ -252,7 +254,7 @@ function RulesSection({ scope, onChange }: Pick<FilterProps, 'scope' | 'onChange
             onChange={(formatDuration) => onChange({ ...scope, rules: { ...scope.rules, formatDuration } })}
           />
         </li>
-        <li className="flex items-center justify-between gap-4 p-3">
+        <li className="flex min-h-14 items-center justify-between gap-4 px-3 py-2">
           <span className={cx('flex flex-wrap items-center gap-1.5', { 'text-gray-400': !speakerRestEnabled })}>
             <Subtitle size="xs">{t('event-management.schedule.autofill.rules.speaker-rest.before')}</Subtitle>
             <select
