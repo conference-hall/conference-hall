@@ -82,6 +82,7 @@ async function seed() {
     attributes: {
       name: 'Conference Talk',
       description: 'Standard conference presentation format (45 minutes including Q&A)',
+      durationInMinutes: 45,
     },
   });
   const format2 = await eventFormatFactory({
@@ -89,6 +90,7 @@ async function seed() {
     attributes: {
       name: 'Lightning Talk',
       description: 'Short and impactful presentation (5-10 minutes)',
+      durationInMinutes: 10,
     },
   });
   await eventFormatFactory({
@@ -96,6 +98,7 @@ async function seed() {
     attributes: {
       name: 'Workshop',
       description: 'Hands-on interactive session (2-3 hours)',
+      durationInMinutes: 120,
     },
   });
 

@@ -12,14 +12,12 @@ describe('SaveTrackForm component', () => {
     return page.render(<RouteStub />);
   };
 
-  it.each(['formats', 'categories'] as const)('starts a new %s track on a random preset color', async (type) => {
+  it.each(['formats', 'categories'] as const)('starts a new %s track on the default gray color', async (type) => {
     await renderComponent(<NewTrackButton type={type} />);
 
     await userEvent.click(page.getByRole('button', { name: /New/ }));
 
-    await expect
-      .element(page.getByRole('button', { name: /^Color/ }))
-      .toHaveAccessibleName(/^Color: (Red|Orange|Yellow|Green|Teal|Light blue|Blue|Indigo|Purple|Pink)$/);
+    await expect.element(page.getByRole('button', { name: /^Color/ })).toHaveAccessibleName('Color: #F3F4F6');
   });
 
   it('does not offer the "No color" option', async () => {
