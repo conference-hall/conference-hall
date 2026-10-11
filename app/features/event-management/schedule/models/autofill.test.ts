@@ -28,6 +28,7 @@ function vacant(
     name: null,
     proposalId: null,
     speakerIds: [],
+    locked: false,
   };
 }
 
@@ -41,6 +42,10 @@ function filled(
 
 function named(id: string, name: string, options: SlotOptions = {}): AutofillSession {
   return { ...vacant(id, options), name };
+}
+
+function locked(session: AutofillSession): AutofillSession {
+  return { ...session, locked: true };
 }
 
 function proposal(id: string, overrides: Partial<AutofillProposal> = {}): AutofillProposal {
@@ -115,6 +120,7 @@ describe('autofill', () => {
         sessionsLeftVacant: [],
         proposalsLeftUnscheduled: [{ proposalId: 'proposal-1', reason: 'no-vacant-session' }],
         sessionsToClear: [],
+        sessionsLocked: 0,
       });
     });
 
@@ -602,6 +608,70 @@ describe('autofill', () => {
     });
   });
 
+  describe('locked sessions', () => {
+    it('never fills a locked empty session', () => {
+      const payload = payloadOf(
+        [locked(vacant('session-1')), vacant('session-2', { hour: 14 })],
+        [proposal('proposal-1')],
+      );
+
+      const report = autofill(payload, scopeOf());
+
+      expect(report.assignments).toEqual([{ sessionId: 'session-2', proposalId: 'proposal-1' }]);
+      expect(report.sessionsLeftVacant).toEqual([]);
+    });
+
+    it('never clears a locked filled session on reset', () => {
+      const payload = payloadOf([
+        locked(filled('session-1', 'proposal-9')),
+        filled('session-2', 'proposal-8', { hour: 14 }),
+      ]);
+
+      const report = autofill(payload, scopeOf({ reset: true }));
+
+      expect(report.sessionsToClear).toEqual(['session-2']);
+    });
+
+    it('keeps the proposal of a locked session out of the candidates', () => {
+      const payload = payloadOf(
+        [locked(filled('session-1', 'proposal-1')), vacant('session-2', { hour: 14 })],
+        [proposal('proposal-1')],
+      );
+
+      const report = autofill(payload, scopeOf({ reset: true }));
+
+      expect(report.assignments).toEqual([]);
+      expect(report.proposalsLeftUnscheduled).toEqual([]);
+    });
+
+    it('counts the speakers of a locked session as busy', () => {
+      const payload = payloadOf(
+        [locked(filled('session-1', 'proposal-9', { speakerIds: ['alice'] })), vacant('session-2')],
+        [proposal('proposal-1', { speakerIds: ['alice'] })],
+      );
+
+      const report = autofill(payload, scopeOf({ reset: true }));
+
+      expect(report.assignments).toEqual([]);
+      expect(report.proposalsLeftUnscheduled).toEqual([{ proposalId: 'proposal-1', reason: 'speaker-overlap' }]);
+    });
+
+    it('counts the locked sessions autofill would otherwise have touched', () => {
+      const payload = payloadOf([
+        locked(vacant('session-1', { trackId: 'track-1' })),
+        locked(filled('session-2', 'proposal-9', { trackId: 'track-1', hour: 14 })),
+        locked(vacant('session-3', { trackId: 'track-2' })),
+        locked(vacant('session-4', { day: DAY_2 })),
+        locked(named('session-5', 'Keynote', { hour: 16 })),
+        vacant('session-6', { hour: 17 }),
+      ]);
+      const scope = scopeOf({ days: [DAY_1], trackIds: ['track-1'] });
+
+      expect(autofill(payload, scope).sessionsLocked).toBe(1);
+      expect(autofill(payload, { ...scope, reset: true }).sessionsLocked).toBe(2);
+    });
+  });
+
   describe('autofill report', () => {
     it('lists the vacant sessions left vacant', () => {
       const payload = payloadOf(
@@ -661,6 +731,12 @@ describe('autofill', () => {
 
       expect(vacantSessionCount(payload, scopeOf({ trackIds: ['track-1'] }))).toBe(1);
       expect(vacantSessionCount(payload, scopeOf({ trackIds: ['track-1'], reset: true }))).toBe(2);
+    });
+
+    it('ignores the locked sessions', () => {
+      const payload = payloadOf([locked(vacant('session-1')), locked(filled('session-2', 'proposal-9', { hour: 14 }))]);
+
+      expect(vacantSessionCount(payload, scopeOf({ reset: true }))).toBe(0);
     });
 
     it('counts only the days of the scope', () => {

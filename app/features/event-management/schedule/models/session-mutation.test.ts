@@ -17,6 +17,7 @@ const session = (overrides: Partial<ScheduleSession> = {}): ScheduleSession => (
   language: 'fr',
   color: 'blue',
   emojis: ['coffee', 'pizza'],
+  locked: false,
   proposal: null,
   ...overrides,
 });
@@ -30,6 +31,7 @@ const sessionData = (overrides: Partial<SessionData> = {}): SessionData => ({
   language: 'fr',
   color: 'blue',
   emojis: ['coffee', 'pizza'],
+  locked: false,
   proposal: null,
   ...overrides,
 });
@@ -214,6 +216,16 @@ describe('SessionMutations', () => {
     });
   });
 
+  describe('#setLock', () => {
+    it('submits the session id and the wanted lock without a key', async () => {
+      await mutations([session()]).setLock(session(), true);
+
+      const [{ key, formData }] = submitted;
+      expect(key).toBeUndefined();
+      expect(Object.fromEntries(formData)).toEqual({ intent: SESSION_INTENTS.lock, id: 'session-1', locked: 'true' });
+    });
+  });
+
   describe('.blank', () => {
     it('builds a colorless session with empty fields', () => {
       const timeslot = { start: local(9), end: local(9, 30) };
@@ -228,6 +240,7 @@ describe('SessionMutations', () => {
         language: null,
         color: null,
         emojis: [],
+        locked: false,
         proposal: null,
       });
     });
@@ -341,5 +354,23 @@ describe('pendingSessions', () => {
     const actual = pendingSessions([sessionData({ id: 'a' }), sessionData({ id: 'b' })], [{ formData }], scheduleTime);
 
     expect(actual).toEqual([session({ id: 'b' })]);
+  });
+
+  it('locks and unlocks a session', async () => {
+    await mutations.setLock(session({ id: 'a' }), true);
+    const [{ formData }] = submitted;
+
+    const locked = pendingSessions([sessionData({ id: 'a' })], [{ formData }], scheduleTime);
+
+    expect(locked).toEqual([session({ id: 'a', locked: true })]);
+  });
+
+  it('keeps the lock of the known session on an update', async () => {
+    await mutations.update(session({ name: 'Renamed' }));
+    const [{ formData }] = submitted;
+
+    const actual = pendingSessions([sessionData({ locked: true })], [{ formData }], scheduleTime);
+
+    expect(actual[0]).toMatchObject({ name: 'Renamed', locked: true });
   });
 });

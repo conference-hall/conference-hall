@@ -315,6 +315,9 @@ function SummaryFooter({ payload, summary, scope, submitting, onCancel }: Summar
           {scope.reset && cleared > 0 ? (
             <li>{t('event-management.schedule.autofill.summary.cleared', { count: cleared })}</li>
           ) : null}
+          {summary.sessionsLocked > 0 ? (
+            <li>{t('event-management.schedule.autofill.summary.locked', { count: summary.sessionsLocked })}</li>
+          ) : null}
           {summary.sessionsLeftVacant.length > 0 ? (
             <li>
               {t('event-management.schedule.autofill.summary.left-vacant', {
@@ -396,6 +399,9 @@ function ReportFooter({ report, onClose }: { report: AutofillReport; onClose: Vo
               </span>
               <ReasonList proposals={report.proposalsLeftUnscheduled} />
             </li>
+          ) : null}
+          {report.sessionsLocked > 0 ? (
+            <li>{t('event-management.schedule.autofill.report.locked', { count: report.sessionsLocked })}</li>
           ) : null}
           {report.sessionsToClear.length > 0 ? (
             <li>{t('event-management.schedule.autofill.report.cleared', { count: report.sessionsToClear.length })}</li>

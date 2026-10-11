@@ -7,6 +7,7 @@ import {
   ScheduleTrackNotFoundError,
   ScheduleTrackRequiredError,
   SessionConflictError,
+  SessionLockedError,
 } from '~/shared/errors.server.ts';
 import type { Language, Languages } from '~/shared/types/proposals.types.ts';
 import { db, type DbTransaction } from '../../../../../prisma/db.server.ts';
@@ -126,6 +127,7 @@ export class EventSchedule {
 
   async updateSession(data: ScheduleSessionUpdateData) {
     return db.$transaction(async (trx) => {
+      await this.assertUnlocked([data.id], trx);
       const { schedule, row } = await this.prepareSession(data, trx, data.id);
 
       return trx.scheduleSession.update({ data: row, where: { id: data.id, scheduleId: schedule.id } });
@@ -139,6 +141,7 @@ export class EventSchedule {
       const source = schedule.sessions.find((session) => session.id === sourceId);
       const target = schedule.sessions.find((session) => session.id === targetId);
       if (!source || !target) throw new NotFoundError('Schedule session not found');
+      ensureUnlocked(source, target);
 
       const outcome = placementFor(schedule.sessions).swap(toPlacedSession(source), toPlacedSession(target));
       if (outcome.status === 'conflict') throw new SessionConflictError();
@@ -171,7 +174,25 @@ export class EventSchedule {
   async deleteSession(sessionId: string) {
     const schedule = await this.schedule();
     if (!sessionId) return;
+    await this.assertUnlocked([sessionId]);
     await db.scheduleSession.deleteMany({ where: { id: sessionId, scheduleId: schedule.id } });
+  }
+
+  async setSessionLock(sessionId: string, locked: boolean) {
+    const schedule = await this.schedule();
+    const { count } = await db.scheduleSession.updateMany({
+      where: { id: sessionId, scheduleId: schedule.id },
+      data: { locked },
+    });
+    if (count === 0) throw new NotFoundError('Schedule session not found');
+  }
+
+  private async assertUnlocked(sessionIds: Array<string>, client: DbTransaction = db) {
+    const schedule = await this.schedule(client);
+    const sessions = await client.scheduleSession.findMany({
+      where: { id: { in: sessionIds }, scheduleId: schedule.id },
+    });
+    ensureUnlocked(...sessions);
   }
 
   async saveTracks(tracks: ScheduleTracksSaveData['tracks']) {
@@ -218,24 +239,27 @@ export class EventSchedule {
       displayStartMinutes: schedule.displayStartMinutes,
       displayEndMinutes: schedule.displayEndMinutes,
       tracks: toScheduleTracks(schedule.tracks),
-      sessions: schedule.sessions.map(({ id, trackId, start, end, name, language, color, emojis, proposal }) => ({
-        id: id,
-        trackId: trackId,
-        start: start,
-        end: end,
-        name: name,
-        language: language as Language | null,
-        emojis: emojis,
-        color: isHexColor(color) ? color : null,
-        proposal: proposal
-          ? {
-              id: proposal.id,
-              routeId: proposal.routeId,
-              title: proposal.title,
-              speakers: proposal.speakers.map((s) => ({ name: s.name, picture: s.picture })),
-            }
-          : null,
-      })),
+      sessions: schedule.sessions.map(
+        ({ id, trackId, start, end, name, language, color, emojis, locked, proposal }) => ({
+          id: id,
+          trackId: trackId,
+          start: start,
+          end: end,
+          name: name,
+          language: language as Language | null,
+          emojis: emojis,
+          color: isHexColor(color) ? color : null,
+          locked: locked,
+          proposal: proposal
+            ? {
+                id: proposal.id,
+                routeId: proposal.routeId,
+                title: proposal.title,
+                speakers: proposal.speakers.map((s) => ({ name: s.name, picture: s.picture })),
+              }
+            : null,
+        }),
+      ),
     };
   }
 }
@@ -244,6 +268,10 @@ function toScheduleTracks(tracks: Array<ScheduleTrack>) {
   return tracks
     .toSorted((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
     .map((t) => ({ id: t.id, name: t.name }));
+}
+
+function ensureUnlocked(...sessions: Array<ScheduleSession>) {
+  if (sessions.some((session) => session.locked)) throw new SessionLockedError();
 }
 
 function toPlacedSession({ id, trackId, start, end }: ScheduleSession) {

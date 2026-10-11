@@ -12,6 +12,7 @@ export type SessionActions = {
   resize: SessionMutations['resize'];
   swap: SessionMutations['swap'];
   delete: SessionMutations['delete'];
+  setLock: SessionMutations['setLock'];
 };
 
 export function useSessionMutations(
@@ -41,6 +42,7 @@ export function useSessionMutations(
       resize: (session, end) => current().resize(session, end),
       swap: (source, target) => current().swap(source, target),
       delete: (session) => current().delete(session),
+      setLock: (session, locked) => current().setLock(session, locked),
     };
   }, [store, scheduleTime, submitSession]);
 }

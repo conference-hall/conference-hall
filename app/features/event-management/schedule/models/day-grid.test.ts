@@ -32,6 +32,7 @@ const session = (id: string, trackId: string, start: Date, end: Date): ScheduleS
   timeslot: { start, end },
   color: 'stone',
   emojis: [],
+  locked: false,
   language: null,
 });
 

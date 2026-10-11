@@ -23,6 +23,7 @@ const session = (id: string, trackId: string, start: Date, end: Date): ScheduleS
   color: 'stone',
   emojis: [],
   language: null,
+  locked: false,
 });
 
 const grid = makeDayGrid(day, 0, { start: 8 * 60, end: 22 * 60 }, tracks);
@@ -106,6 +107,20 @@ describe('resolveMove', () => {
       slot: 72,
       span: 12,
     });
+  });
+
+  it('gives no target over a locked Session', () => {
+    const target = { ...session('target', 'track-2', at(14), at(15)), locked: true };
+    const gesture = resolveMove({
+      session: dragged,
+      column: { dayKey: grid.dayKey, trackId: 'track-2' },
+      columnRect,
+      grid,
+      draggedTop: yOfSlot(78),
+      sessions: [dragged, target],
+    });
+
+    expect(gesture).toBeNull();
   });
 
   it('moves rather than swaps over its own slots', () => {

@@ -8,11 +8,12 @@ type FactoryOptions = {
   end: Date;
   name?: string;
   color?: string;
+  locked?: boolean;
   proposal?: Proposal;
 };
 
 export const scheduleSessionFactory = async (options: FactoryOptions) => {
-  const { schedule, track, start, end, name, color, proposal } = options;
+  const { schedule, track, start, end, name, color, locked, proposal } = options;
 
   return db.scheduleSession.create({
     data: {
@@ -22,6 +23,7 @@ export const scheduleSessionFactory = async (options: FactoryOptions) => {
       end,
       name: name ?? null,
       color: color ?? null,
+      locked: locked ?? false,
       proposalId: proposal?.id ?? null,
     },
   });

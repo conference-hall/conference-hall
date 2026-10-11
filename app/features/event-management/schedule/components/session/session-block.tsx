@@ -1,3 +1,4 @@
+import { LockClosedIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
 import { differenceInMinutes } from 'date-fns';
 import type { CSSProperties } from 'react';
@@ -28,7 +29,8 @@ const TRUNCATED = 'session-xs:truncate session-sm:truncate session-md:truncate s
 const HIDDEN_WHEN_TINY = 'session-xs:hidden';
 
 export function SessionBlock({ session, onOpen }: SessionBlockProps) {
-  const { scheduleTime } = useScheduleContext();
+  const { t } = useTranslation();
+  const { scheduleTime, setSessionLock } = useScheduleContext();
   const { timeslot, proposal, language, emojis } = session;
 
   const color = isHexColor(session.color) ? session.color : null;
@@ -54,7 +56,7 @@ export function SessionBlock({ session, onOpen }: SessionBlockProps) {
         onOpen();
       }}
       className={cx(
-        'flex h-full w-full cursor-pointer flex-col rounded-sm border px-1 text-left',
+        'relative flex h-full w-full cursor-pointer flex-col rounded-sm border px-1 text-left',
         'session-sm:flex-row session-sm:items-center session-sm:gap-1 session-sm:text-[10px]',
         'session-md:flex-row session-md:items-baseline session-md:gap-1 session-md:text-[10px] session-md:leading-3',
         'session-lg:justify-between session-lg:text-xs session-lg:leading-3.5',
@@ -64,6 +66,21 @@ export function SessionBlock({ session, onOpen }: SessionBlockProps) {
       )}
       style={emptyStyle ?? colorStyle}
     >
+      {session.locked ? (
+        <button
+          type="button"
+          aria-label={t('event-management.schedule.edit-session.unlock')}
+          title={t('event-management.schedule.edit-session.unlock')}
+          onClick={(event) => {
+            event.stopPropagation();
+            setSessionLock(session, false);
+          }}
+          onKeyDown={(event) => event.stopPropagation()}
+          className="absolute top-0.5 right-0.5 z-10 cursor-pointer rounded-full bg-white/80 p-px opacity-90 hover:opacity-100"
+        >
+          <LockClosedIcon className="size-3" aria-hidden="true" />
+        </button>
+      ) : null}
       {title ? (
         <div className={cx(HIDDEN_WHEN_TINY, TRUNCATED)}>
           <p className={cx('line-clamp-3 font-semibold', TRUNCATED)}>{title}</p>

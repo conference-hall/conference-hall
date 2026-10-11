@@ -11,6 +11,7 @@ export type ScheduleSession = {
   language: Language | null;
   color: string | null;
   emojis: string[];
+  locked: boolean;
   proposal?: ScheduleProposalData | null;
   isCreating?: boolean;
 };
@@ -24,6 +25,7 @@ export type SessionData = {
   language: Language | null;
   color: string | null;
   emojis: string[];
+  locked: boolean;
   proposal?: ScheduleProposalData | null;
   isCreating?: boolean;
 };

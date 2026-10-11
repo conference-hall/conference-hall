@@ -431,6 +431,7 @@ model ScheduleSession {
   color      String?
   language   String?
   emojis     String[]      @default([])
+  locked     Boolean       @default(false)
   start      DateTime
   end        DateTime
   scheduleId String

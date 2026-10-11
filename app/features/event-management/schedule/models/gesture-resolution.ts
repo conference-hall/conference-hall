@@ -55,6 +55,7 @@ export function resolveMove({ session, column, columnRect, grid, draggedTop, ses
   const occupying = sessionAt(sessions, column.trackId, dateOfSlot(grid, slot));
 
   if (occupying && occupying.id !== session.id) {
+    if (occupying.locked) return null;
     const block = blockOf(grid, occupying);
     if (!block) return null;
     return {

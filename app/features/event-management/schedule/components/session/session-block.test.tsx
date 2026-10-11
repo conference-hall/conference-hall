@@ -22,6 +22,7 @@ const session: ScheduleSession = {
   language: null,
   color: null,
   emojis: [],
+  locked: false,
   proposal: null,
 };
 
@@ -211,5 +212,40 @@ describe('SessionBlock component', () => {
     await page.getByRole('button', { name: /Coffee break/ }).click();
 
     expect(onOpen).toHaveBeenCalled();
+  });
+});
+
+describe('SessionBlock locked', () => {
+  const renderLocked = (setSessionLock = vi.fn(), onOpen = vi.fn()) =>
+    page.render(
+      <I18nextProvider i18n={i18nTest}>
+        <ScheduleProviders
+          scheduleTime={scheduleTime}
+          scheduleDays={[day]}
+          displayedDays={[day]}
+          setSessionLock={setSessionLock}
+        >
+          <div style={{ containerName: 'session', containerType: 'size', height: '64px', width: '240px' }}>
+            <SessionBlock session={{ ...session, locked: true }} onOpen={onOpen} />
+          </div>
+        </ScheduleProviders>
+      </I18nextProvider>,
+    );
+
+  it('shows no lock on an unlocked session', async () => {
+    await renderBlock().rendered;
+
+    await expect.element(page.getByRole('button', { name: 'Unlock session' })).not.toBeInTheDocument();
+  });
+
+  it('shows a lock that unlocks the session without opening it', async () => {
+    const setSessionLock = vi.fn();
+    const onOpen = vi.fn();
+    await renderLocked(setSessionLock, onOpen);
+
+    await page.getByRole('button', { name: 'Unlock session' }).click();
+
+    expect(setSessionLock).toHaveBeenCalledWith({ ...session, locked: true }, false);
+    expect(onOpen).not.toHaveBeenCalled();
   });
 });

@@ -29,6 +29,7 @@ function buildScheduleContext(overrides: Partial<ScheduleContextValue> = {}): Sc
     resizeSession: async () => placed,
     swapSessions: async () => swapped,
     deleteSession: async () => {},
+    setSessionLock: async () => {},
     onOpenSession: () => {},
     onChangeDisplayDays: () => {},
     onChangeDisplayTimes: () => {},

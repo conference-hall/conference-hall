@@ -13,6 +13,7 @@ export type ScheduleContextValue = {
   resizeSession: (session: ScheduleSession, end: Date) => Promise<PlacementOutcome>;
   swapSessions: (source: ScheduleSession, target: ScheduleSession) => Promise<SwapOutcome>;
   deleteSession: (session: ScheduleSession) => Promise<void>;
+  setSessionLock: (session: ScheduleSession, locked: boolean) => Promise<void>;
   onOpenSession: (edited: EditedSession) => void;
   onChangeDisplayDays: (startIndex: number, endIndex: number) => void;
   onChangeDisplayTimes: (start: number, end: number) => void;

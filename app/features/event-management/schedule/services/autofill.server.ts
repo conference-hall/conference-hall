@@ -122,6 +122,7 @@ function toPayload(schedule: ScheduleWithSessions, proposals: EligibleProposals)
       start: session.start,
       end: session.end,
       name: session.name,
+      locked: session.locked,
       proposalId: session.proposalId,
       speakerIds: session.proposal?.speakers.map((speaker) => speaker.id) ?? [],
     })),

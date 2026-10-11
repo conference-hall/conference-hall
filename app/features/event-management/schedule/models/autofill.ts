@@ -15,6 +15,7 @@ export type AutofillSession = {
   name: string | null;
   proposalId: string | null;
   speakerIds: Array<string>;
+  locked: boolean;
 };
 
 export type AutofillProposal = {
@@ -54,6 +55,7 @@ export type AutofillReport = {
   sessionsLeftVacant: Array<string>;
   proposalsLeftUnscheduled: Array<{ proposalId: string; reason: AutofillReason }>;
   sessionsToClear: Array<string>;
+  sessionsLocked: number;
 };
 
 type RuleProposal = { id: string; speakerIds: Array<string>; formatDurations: Array<number | null> };
@@ -142,7 +144,7 @@ export function vacantSessionCount(payload: AutofillPayload, scope: AutofillScop
 
 // Assigns Proposals to the Vacant sessions of the scope. Never writes: the caller does.
 export function autofill(payload: AutofillPayload, scope: AutofillScope): AutofillReport {
-  const { sessions, vacantSessions, sessionsToClear } = workingState(payload, scope);
+  const { sessions, vacantSessions, sessionsToClear, sessionsLocked } = workingState(payload, scope);
 
   const scheduledProposalIds = new Set(sessions.filter((s) => s.proposalId).map((s) => s.proposalId));
 
@@ -214,7 +216,7 @@ export function autofill(payload: AutofillPayload, scope: AutofillScope): Autofi
     .filter((session) => !filledSessionIds.has(session.id))
     .map((session) => session.id);
 
-  return { assignments, sessionsLeftVacant, proposalsLeftUnscheduled, sessionsToClear };
+  return { assignments, sessionsLeftVacant, proposalsLeftUnscheduled, sessionsToClear, sessionsLocked };
 }
 
 type WorkingSession = AutofillSession & { trackOrder: number };
@@ -226,8 +228,13 @@ function workingState(payload: AutofillPayload, scope: AutofillScope) {
   const trackIds = new Set(scope.trackIds);
   const inScope = (session: AutofillSession) => days.has(session.day) && trackIds.has(session.trackId);
 
+  const sessionsLocked = payload.sessions.filter(
+    (session) => inScope(session) && session.locked && !session.name && (!session.proposalId || scope.reset),
+  ).length;
   const sessionsToClear = scope.reset
-    ? payload.sessions.filter((session) => inScope(session) && session.proposalId && !session.name).map((s) => s.id)
+    ? payload.sessions
+        .filter((session) => inScope(session) && !session.locked && session.proposalId && !session.name)
+        .map((s) => s.id)
     : [];
   const cleared = new Set(sessionsToClear);
 
@@ -239,10 +246,10 @@ function workingState(payload: AutofillPayload, scope: AutofillScope) {
   }));
 
   const vacantSessions = sessions
-    .filter((session) => inScope(session) && !session.proposalId && !session.name)
+    .filter((session) => inScope(session) && !session.locked && !session.proposalId && !session.name)
     .toSorted(bySessionOrder);
 
-  return { sessions, vacantSessions, sessionsToClear };
+  return { sessions, vacantSessions, sessionsToClear, sessionsLocked };
 }
 
 function bySessionOrder(a: WorkingSession, b: WorkingSession) {

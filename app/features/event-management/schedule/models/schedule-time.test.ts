@@ -33,6 +33,7 @@ describe('ScheduleTime', () => {
         language: null,
         color: 'stone',
         emojis: [],
+        locked: false,
         proposal,
       });
 
@@ -43,6 +44,7 @@ describe('ScheduleTime', () => {
         language: null,
         color: 'stone',
         emojis: [],
+        locked: false,
         proposal,
       });
       expect(timeslot.start.getTime()).toBe(new Date('2024-10-05T07:00:00.000Z').getTime());

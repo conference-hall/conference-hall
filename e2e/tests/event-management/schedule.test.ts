@@ -93,6 +93,69 @@ test('autofills the vacant sessions of the schedule', async ({ page, context }) 
   await expect(schedulePage.session('Autofilled talk')).toBeVisible();
 });
 
+test('locks a session so the autofill leaves it alone', async ({ page, context }) => {
+  const user = await userLoggedFactory(context);
+  const team = await teamFactory({ owners: [user] });
+  const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
+  const schedule = await scheduleFactory({ event });
+  const track = await scheduleTrackFactory({ name: 'Main stage', schedule });
+
+  const speaker = await userFactory();
+  const talk = await talkFactory({ speakers: [speaker], attributes: { title: 'Autofilled talk' } });
+  await proposalFactory({ event, talk, traits: ['accepted'] });
+
+  await scheduleSessionFactory({
+    schedule,
+    track,
+    start: new Date('2024-10-05T09:00:00.000Z'),
+    end: new Date('2024-10-05T10:00:00.000Z'),
+  });
+  await scheduleSessionFactory({
+    schedule,
+    track,
+    name: 'Reserved slot',
+    start: new Date('2024-10-05T10:00:00.000Z'),
+    end: new Date('2024-10-05T11:00:00.000Z'),
+  });
+  await scheduleSessionFactory({
+    schedule,
+    track,
+    locked: true,
+    start: new Date('2024-10-05T11:00:00.000Z'),
+    end: new Date('2024-10-05T12:00:00.000Z'),
+  });
+
+  const schedulePage = new SchedulePage(page);
+  await schedulePage.gotoDay(team.slug, event.slug, '0');
+
+  // Lock the session from its modal
+  await schedulePage.session('Reserved slot').click();
+  await schedulePage.clickOnLockSession();
+  await expect(page.getByRole('dialog')).toBeHidden();
+  const unlock = schedulePage.sessionBlock('Reserved slot').getByRole('button', { name: 'Unlock session' });
+  await expect(unlock).toBeVisible();
+
+  // A locked session opens read-only (its draggable wrapper is aria-disabled, so the click is forced)
+  await schedulePage.session('Reserved slot').click({ force: true });
+  await expect(page.getByText('This session is locked.')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Save session' })).toBeHidden();
+  await schedulePage.clickOnCloseSession();
+
+  // The autofill ignores it
+  await schedulePage.clickOnOptions();
+  await schedulePage.clickOnAutofillMenu();
+  await expect(schedulePage.autofillPanel.getByText('1 locked session will be ignored')).toBeVisible();
+  await schedulePage.clickOnFillSessions();
+  await expect(schedulePage.autofillPanel.getByText('1 session filled')).toBeVisible();
+  await expect(schedulePage.session('Autofilled talk')).toBeVisible();
+  await expect(schedulePage.session('Reserved slot')).toBeVisible();
+
+  // Unlock from the lock icon of the block
+  await schedulePage.autofillPanel.getByRole('contentinfo').getByRole('button', { name: 'Close' }).click();
+  await unlock.click({ force: true });
+  await expect(unlock).toBeHidden();
+});
+
 test.describe('as a team reviewer', () => {
   test('does not have access to publication', async ({ page, context }) => {
     const user = await userLoggedFactory(context);
