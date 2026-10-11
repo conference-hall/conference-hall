@@ -137,11 +137,23 @@ export function autofill(payload: AutofillPayload, scope: AutofillScope): Autofi
   const accepts = (proposal: AutofillProposal, session: RuleSession) =>
     rules.every((rule) => rule.evaluate(proposal, session, context));
 
+  // Vacant sessions a Proposal fits whatever the occupancy: the fewer, the more constrained.
+  const noOccupancy: RuleContext = { occupancy: [], assignedProposalIds: new Set() };
+  const degrees = new Map(
+    eligibleProposals.map((proposal) => [
+      proposal.id,
+      vacantSessions.filter((session) => rules.every((rule) => rule.evaluate(proposal, session, noOccupancy))).length,
+    ]),
+  );
+  const byDegree = (a: AutofillProposal, b: AutofillProposal) =>
+    (degrees.get(a.id) ?? 0) - (degrees.get(b.id) ?? 0) || byProposalOrder(a, b);
+
   const assignments: Array<AutofillAssignment> = [];
   for (const session of vacantSessions) {
-    const picked = eligibleProposals.find(
-      (proposal) => !context.assignedProposalIds.has(proposal.id) && accepts(proposal, session),
-    );
+    const picked = eligibleProposals
+      .filter((proposal) => !context.assignedProposalIds.has(proposal.id) && accepts(proposal, session))
+      .toSorted(byDegree)
+      .at(0);
     if (!picked) continue;
 
     assignments.push({ sessionId: session.id, proposalId: picked.id });

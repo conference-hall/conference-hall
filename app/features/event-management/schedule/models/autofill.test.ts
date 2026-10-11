@@ -342,6 +342,58 @@ describe('autofill', () => {
     });
   });
 
+  describe('most constrained proposal first', () => {
+    const slots = [vacant('session-1', { hour: 9, minutes: 20 }), vacant('session-2', { hour: 11, minutes: 60 })];
+    const proposals = [
+      proposal('proposal-1', { number: 1, formatDurations: [] }),
+      proposal('proposal-2', { number: 2, formatDurations: [20] }),
+    ];
+
+    it('keeps a flexible proposal from taking the session a single-duration proposal needs', () => {
+      const report = autofill(
+        payloadOf(slots, proposals),
+        scopeOf({ rules: { formatDuration: true, speakerRest: null } }),
+      );
+
+      expect(report.assignments).toEqual([
+        { sessionId: 'session-1', proposalId: 'proposal-2' },
+        { sessionId: 'session-2', proposalId: 'proposal-1' },
+      ]);
+      expect(report.proposalsLeftUnscheduled).toEqual([]);
+    });
+
+    it('keeps the proposal number order without the format duration rule', () => {
+      const report = autofill(payloadOf(slots, proposals), scopeOf());
+
+      expect(report.assignments).toEqual([
+        { sessionId: 'session-1', proposalId: 'proposal-1' },
+        { sessionId: 'session-2', proposalId: 'proposal-2' },
+      ]);
+    });
+
+    it('counts the vacant sessions of the scope only, after the reset', () => {
+      const payload = payloadOf(
+        [
+          vacant('session-1', { hour: 9, minutes: 20 }),
+          vacant('session-2', { hour: 11, minutes: 20, day: DAY_2 }),
+          vacant('session-3', { hour: 13, minutes: 60 }),
+        ],
+        [
+          proposal('proposal-1', { number: 1, formatDurations: [20, 60] }),
+          proposal('proposal-2', { number: 2, formatDurations: [20, 60] }),
+          proposal('proposal-3', { number: 3, formatDurations: [60] }),
+        ],
+      );
+
+      const report = autofill(payload, scopeOf({ days: [DAY_1], rules: { formatDuration: true, speakerRest: null } }));
+
+      expect(report.assignments).toEqual([
+        { sessionId: 'session-1', proposalId: 'proposal-1' },
+        { sessionId: 'session-3', proposalId: 'proposal-3' },
+      ]);
+    });
+  });
+
   describe('determinism', () => {
     it('returns the same report for two calls on the same inputs', () => {
       const payload = payloadOf(
