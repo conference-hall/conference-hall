@@ -135,10 +135,17 @@ test('keeps format settings when toggled in quick succession', async ({ context,
   const tracksPage = new TracksSettingsPage(page);
   await tracksPage.goto(team.slug, event.slug);
 
+  await page.route('**/settings/tracks.data', async (route) => {
+    if (route.request().method() !== 'POST') return route.continue();
+    await page.waitForTimeout(500);
+    await route.continue().catch(() => {});
+  });
+
   await tracksPage.formatsAllowMultipleSwitch.click();
   await tracksPage.formatsRequiredSwitch.click();
   await expect(tracksPage.formatsAllowMultipleSwitch).toBeChecked();
   await expect(tracksPage.formatsRequiredSwitch).toBeChecked();
+  await page.waitForLoadState('networkidle');
 
   await page.reload();
   await expect(tracksPage.formatsAllowMultipleSwitch).toBeChecked();

@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { useTranslation } from 'react-i18next';
-import { useFetcher } from 'react-router';
+import { useFetchers, useSubmit } from 'react-router';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
@@ -134,13 +134,16 @@ export default function EventTracksSettingsRoute() {
   );
 }
 
+const TRACK_SETTINGS_KEY_PREFIX = 'update-track-settings-';
+
 function useOptimisticTrackSettings(event: {
   formatsRequired: boolean;
   formatsAllowMultiple: boolean;
   categoriesRequired: boolean;
   categoriesAllowMultiple: boolean;
 }) {
-  const fetcher = useFetcher<typeof action>({ key: 'update-track-settings' });
+  const submit = useSubmit();
+  const fetchers = useFetchers();
 
   const optimisticSettings = {
     formatsRequired: event.formatsRequired,
@@ -149,7 +152,8 @@ function useOptimisticTrackSettings(event: {
     categoriesAllowMultiple: event.categoriesAllowMultiple,
   };
 
-  if (fetcher.formData?.get('intent') === 'update-track-settings') {
+  for (const fetcher of fetchers) {
+    if (!fetcher.key.startsWith(TRACK_SETTINGS_KEY_PREFIX) || !fetcher.formData) continue;
     for (const key of Object.keys(optimisticSettings) as Array<keyof typeof optimisticSettings>) {
       const value = fetcher.formData.get(key);
       if (value !== null) optimisticSettings[key] = value === 'true';
@@ -157,7 +161,10 @@ function useOptimisticTrackSettings(event: {
   }
 
   const handleUpdateSettings = (name: string, checked: boolean) => {
-    fetcher.submit({ intent: 'update-track-settings', [name]: String(checked) }, { method: 'POST' });
+    submit(
+      { intent: 'update-track-settings', [name]: String(checked) },
+      { method: 'POST', navigate: false, fetcherKey: `${TRACK_SETTINGS_KEY_PREFIX}${name}` },
+    );
   };
 
   return { optimisticSettings, handleUpdateSettings };
