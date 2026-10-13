@@ -19,10 +19,10 @@ export const FormatSaveSchema = TrackSaveSchema.extend({
 export type FormatSaveData = z.infer<typeof FormatSaveSchema>;
 
 export const TracksSettingsSchema = z.object({
-  formatsRequired: z.stringbool(),
-  formatsAllowMultiple: z.stringbool(),
-  categoriesRequired: z.stringbool(),
-  categoriesAllowMultiple: z.stringbool(),
+  formatsRequired: z.stringbool().optional(),
+  formatsAllowMultiple: z.stringbool().optional(),
+  categoriesRequired: z.stringbool().optional(),
+  categoriesAllowMultiple: z.stringbool().optional(),
 });
 
 export const TrackReorderSchema = z.object({
