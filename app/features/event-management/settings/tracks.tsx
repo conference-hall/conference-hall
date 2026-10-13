@@ -142,7 +142,7 @@ function useOptimisticTrackSettings(event: {
 }) {
   const fetcher = useFetcher<typeof action>({ key: 'update-track-settings' });
 
-  let optimisticSettings = {
+  const optimisticSettings = {
     formatsRequired: event.formatsRequired,
     formatsAllowMultiple: event.formatsAllowMultiple,
     categoriesRequired: event.categoriesRequired,
@@ -150,29 +150,14 @@ function useOptimisticTrackSettings(event: {
   };
 
   if (fetcher.formData?.get('intent') === 'update-track-settings') {
-    const formData = fetcher.formData;
-    optimisticSettings = {
-      formatsRequired: formData.get('formatsRequired') === 'true',
-      formatsAllowMultiple: formData.get('formatsAllowMultiple') === 'true',
-      categoriesRequired: formData.get('categoriesRequired') === 'true',
-      categoriesAllowMultiple: formData.get('categoriesAllowMultiple') === 'true',
-    };
+    for (const key of Object.keys(optimisticSettings) as Array<keyof typeof optimisticSettings>) {
+      const value = fetcher.formData.get(key);
+      if (value !== null) optimisticSettings[key] = value === 'true';
+    }
   }
 
   const handleUpdateSettings = (name: string, checked: boolean) => {
-    const currentSettings = optimisticSettings;
-
-    fetcher.submit(
-      {
-        intent: 'update-track-settings',
-        formatsRequired: currentSettings.formatsRequired,
-        formatsAllowMultiple: currentSettings.formatsAllowMultiple,
-        categoriesRequired: currentSettings.categoriesRequired,
-        categoriesAllowMultiple: currentSettings.categoriesAllowMultiple,
-        [name]: String(checked),
-      },
-      { method: 'POST' },
-    );
+    fetcher.submit({ intent: 'update-track-settings', [name]: String(checked) }, { method: 'POST' });
   };
 
   return { optimisticSettings, handleUpdateSettings };

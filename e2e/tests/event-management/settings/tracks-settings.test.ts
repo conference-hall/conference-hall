@@ -1,4 +1,5 @@
 import { eventFactory } from 'tests/factories/events.ts';
+import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { expect, test } from '../../../fixtures.ts';
 import { userLoggedFactory } from '../../../helpers.ts';
@@ -123,4 +124,23 @@ test('adds, edits and removes a category', async ({ context, page }) => {
   await category.getByRole('button', { name: 'Delete' }).click();
   await expect(tracksPage.toast).toContainText('Track setting updated.');
   await expect(tracksPage.formatsList).toHaveCount(0);
+});
+
+test('keeps format settings when toggled in quick succession', async ({ context, page }) => {
+  const user = await userLoggedFactory(context);
+  const team = await teamFactory({ owners: [user] });
+  const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
+  await eventFormatFactory({ event });
+
+  const tracksPage = new TracksSettingsPage(page);
+  await tracksPage.goto(team.slug, event.slug);
+
+  await tracksPage.formatsAllowMultipleSwitch.click();
+  await tracksPage.formatsRequiredSwitch.click();
+  await expect(tracksPage.formatsAllowMultipleSwitch).toBeChecked();
+  await expect(tracksPage.formatsRequiredSwitch).toBeChecked();
+
+  await page.reload();
+  await expect(tracksPage.formatsAllowMultipleSwitch).toBeChecked();
+  await expect(tracksPage.formatsRequiredSwitch).toBeChecked();
 });
