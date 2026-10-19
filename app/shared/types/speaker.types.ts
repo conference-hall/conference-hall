@@ -45,6 +45,10 @@ export const EventSpeakerSaveSchema = ProfileSchema.extend({
   email: z.email().trim().min(1),
 });
 
+export const AddExistingSpeakerSchema = z.object({
+  email: z.string().trim().pipe(z.email()),
+});
+
 export const FunnelSpeakerSchema = z.object({
   bio: z.string().trim().nullable().default(null),
 });

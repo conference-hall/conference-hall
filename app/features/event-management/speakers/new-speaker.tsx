@@ -54,7 +54,11 @@ export default function NewSpeakerRoute({ actionData, params }: Route.ComponentP
       <Page.Heading
         title={t('event-management.speakers.new.title')}
         subtitle={t('event-management.speakers.new.subtitle')}
-      />
+      >
+        <Button variant="secondary" to={href('/team/:team/:event/speakers/add', params)}>
+          {t('event-management.speakers.add-existing.title')}
+        </Button>
+      </Page.Heading>
 
       <Card>
         <Card.Content>

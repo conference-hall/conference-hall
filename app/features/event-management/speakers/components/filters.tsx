@@ -16,15 +16,20 @@ export function Filters() {
         placeholder={t('event-management.speakers.search')}
         ariaLabel={t('event-management.speakers.search')}
       />
-      <div className="flex justify-between gap-2">
+      <div className="flex flex-wrap items-center gap-2 sm:justify-end">
         <FiltersMenu />
 
         <SortMenu />
 
         {permissions.canCreateEventSpeaker && (
-          <Button iconLeft={PlusIcon} to="new" block>
-            {t('event-management.speakers.new-speaker')}
-          </Button>
+          <>
+            <Button variant="secondary" to="add">
+              {t('event-management.speakers.add-existing.title')}
+            </Button>
+            <Button iconLeft={PlusIcon} to="new">
+              {t('event-management.speakers.new-speaker')}
+            </Button>
+          </>
         )}
       </div>
     </div>
