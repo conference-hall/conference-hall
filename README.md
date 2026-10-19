@@ -23,6 +23,7 @@ https://conference-hall.io
 - 📣 Call for papers opens and closes automatically
 - ⚡️ Make it public or private
 - 👥 Use teams to share an event between organizers
+- 👤 Invite existing speakers with a personal message and let them accept or decline
 - 💡 Custom formats and categories for the talks
 - 📥 Custom survey for speakers
 - 📊 Dashboard and metrics on call for papers and reviews
