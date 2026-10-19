@@ -1,20 +1,13 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { z } from 'zod';
 import { ProposalSearchBuilder } from '~/features/event-management/proposals/services/proposal-search-builder.server.ts';
-import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import type { AuthorizedEvent } from '~/shared/authorization/types.ts';
-import {
-  ForbiddenOperationError,
-  NotFoundError,
-  SpeakerEmailAlreadyExistsError,
-  UserNotFoundError,
-} from '~/shared/errors.server.ts';
+import { ForbiddenOperationError, NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import { Pagination } from '~/shared/pagination/pagination.ts';
 import type { EventSpeakerSaveData, SocialLinks } from '~/shared/types/speaker.types.ts';
 import type { SurveyDetailedAnswer } from '~/shared/types/survey.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
-import { Prisma } from '../../../../../prisma/generated/client.ts';
 import type { EventSpeakerWhereInput } from '../../../../../prisma/generated/models.ts';
 
 const SpeakerSearchFiltersSchema = z.object({
@@ -203,44 +196,6 @@ export class EventSpeakers {
       references: speaker.references,
       socialLinks: speaker.socialLinks as SocialLinks,
     };
-  }
-
-  async addExisting(email: string) {
-    const { event, permissions } = this.authorizedEvent;
-    if (!permissions.canCreateEventSpeaker) throw new ForbiddenOperationError();
-
-    // Retried serializable transactions prevent duplicate records on concurrent additions.
-    for (let attempt = 1; ; attempt++) {
-      try {
-        return await db.$transaction(
-          async (trx) => {
-            const users = await trx.user.findMany({
-              where: { email: { equals: email.trim(), mode: 'insensitive' }, deletedAt: null },
-              take: 2,
-            });
-            if (users.length !== 1) throw new UserNotFoundError();
-            const user = users[0];
-
-            const existingSpeaker = await trx.eventSpeaker.findFirst({
-              where: { eventId: event.id, userId: user.id },
-            });
-            if (existingSpeaker) return existingSpeaker;
-
-            const emailConflict = await trx.eventSpeaker.findFirst({
-              where: { eventId: event.id, email: { equals: user.email, mode: 'insensitive' } },
-            });
-            if (emailConflict) throw new SpeakerEmailAlreadyExistsError();
-
-            return EventSpeakerForProposal.for(event.id, trx).upsertForUser(user);
-          },
-          { isolationLevel: 'Serializable' },
-        );
-      } catch (error) {
-        if (!(error instanceof Prisma.PrismaClientKnownRequestError) || error.code !== 'P2034' || attempt >= 3) {
-          throw error;
-        }
-      }
-    }
   }
 
   async update(speakerId: string, data: EventSpeakerSaveData) {

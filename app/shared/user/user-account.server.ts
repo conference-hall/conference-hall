@@ -109,6 +109,8 @@ export class UserAccount {
       // Delete Accounts
       await tx.account.deleteMany({ where: { userId: this.userId } });
 
+      await tx.eventSpeakerInvitation.deleteMany({ where: { userId: this.userId } });
+
       // Delete TeamMember records
       await tx.teamMember.deleteMany({ where: { memberId: this.userId } });
 

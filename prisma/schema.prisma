@@ -38,6 +38,8 @@ model User {
   conversationParticipants ConversationParticipant[]
   conversationReactions    ConversationReaction[]
   accounts                 Account[]
+  speakerInvitations       EventSpeakerInvitation[]  @relation("speaker_invitation_recipient")
+  sentSpeakerInvitations   EventSpeakerInvitation[]  @relation("speaker_invitation_sender")
 
   @@unique([email])
   @@index([uid])
@@ -164,6 +166,7 @@ model Event {
   emailCustomizations         EventEmailCustomization[]
   conversations               Conversation[]
   proposalCounter             EventProposalCounter?
+  speakerInvitations          EventSpeakerInvitation[]
 
   @@map("events")
 }
@@ -353,6 +356,35 @@ model EventSpeaker {
   @@index([userId])
   @@index([eventId])
   @@map("event_speakers")
+}
+
+enum EventSpeakerInvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  CANCELED
+}
+
+model EventSpeakerInvitation {
+  id          String                       @id @default(cuid())
+  eventId     String
+  event       Event                        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User                         @relation("speaker_invitation_recipient", fields: [userId], references: [id], onDelete: Cascade)
+  invitedById String?
+  invitedBy   User?                        @relation("speaker_invitation_sender", fields: [invitedById], references: [id], onDelete: SetNull)
+  email       String
+  message     String?
+  token       String?                      @unique
+  status      EventSpeakerInvitationStatus @default(PENDING)
+  expiresAt   DateTime
+  createdAt   DateTime                     @default(now())
+  updatedAt   DateTime                     @updatedAt
+
+  @@unique([eventId, userId])
+  @@index([userId])
+  @@index([invitedById])
+  @@map("event_speaker_invitations")
 }
 
 model Survey {

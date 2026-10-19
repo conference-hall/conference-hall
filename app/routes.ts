@@ -39,6 +39,7 @@ export default [
     route('invite/proposal/:code', './features/event-participation/proposal-invitation/proposal-invitation.tsx'),
     route('invite/talk/:code', './features/speaker/talk-invitation/talk-invitation.tsx'),
     route('invite/team/:code', './features/team-management/team-invitation/team-invitation.tsx'),
+    route('invite/event/:code', './features/event-participation/speaker-invitation/speaker-invitation.tsx'),
 
     // Notifications pages
     route('notifications', './features/notifications/notifications.tsx'),
@@ -95,7 +96,7 @@ export default [
       // Event speakers page
       route('speakers', './features/event-management/speakers/speakers.tsx'),
       route('speakers/new', './features/event-management/speakers/new-speaker.tsx'),
-      route('speakers/add', './features/event-management/speakers/add-existing-speaker.tsx'),
+      route('speakers/invite', './features/event-management/speakers/invite-speaker.tsx'),
       route('speakers/:speaker', './features/event-management/speakers/speaker.tsx'),
       route('speakers/:speaker/edit', './features/event-management/speakers/edit-speaker.tsx'),
 

@@ -31,6 +31,7 @@ export async function resetDB() {
     db.eventProposalTag.deleteMany(),
     db.eventIntegrationConfig.deleteMany(),
     db.eventEmailCustomization.deleteMany(),
+    db.eventSpeakerInvitation.deleteMany(),
     db.eventSpeaker.deleteMany(),
     db.event.deleteMany(),
     db.teamMember.deleteMany(),

@@ -151,3 +151,15 @@ export class SpeakerEmailAlreadyExistsError extends BadRequestError {
     super('Speaker email already exists');
   }
 }
+
+export class SpeakerInvitationAlreadyExistsError extends BadRequestError {
+  constructor() {
+    super('Speaker invitation already exists');
+  }
+}
+
+export class SpeakerInvitationDeliveryError extends Response {
+  constructor() {
+    super('Speaker invitation could not be sent', { status: 503 });
+  }
+}

@@ -23,8 +23,8 @@ export function Filters() {
 
         {permissions.canCreateEventSpeaker && (
           <>
-            <Button variant="secondary" to="add">
-              {t('event-management.speakers.add-existing.title')}
+            <Button variant="secondary" to="invite">
+              {t('event-management.speakers.invite.title')}
             </Button>
             <Button iconLeft={PlusIcon} to="new">
               {t('event-management.speakers.new-speaker')}
