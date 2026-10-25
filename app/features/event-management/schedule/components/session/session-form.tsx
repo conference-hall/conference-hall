@@ -9,7 +9,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import { differenceInMinutes } from 'date-fns';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, ComponentType, FormEvent, ReactNode } from 'react';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '~/design-system/badges.tsx';
@@ -20,7 +20,7 @@ import { ColorInput } from '~/design-system/forms/color-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { Label, Text } from '~/design-system/typography.tsx';
 import { LANGUAGES } from '~/shared/constants.ts';
 import {
   formatDuration,
@@ -36,10 +36,6 @@ import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_EMOJIS } from './constants.ts';
 import { SessionIdentityField } from './session-identity-field.tsx';
 
-const FIELD_ROW = 'flex items-start gap-3 sm:items-center';
-const FIELD_ICON = 'mt-0.5 h-5 w-5 shrink-0 text-gray-500 sm:mt-0';
-const FIELD_CONTENT = 'flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:gap-2.5';
-const FIELD_LABEL_PROPS = { weight: 'normal', variant: 'secondary', className: 'shrink-0 leading-6 sm:w-20' } as const;
 const FOOTER_BUTTON = 'flex-1 sm:flex-none';
 
 type Props = {
@@ -127,99 +123,75 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
             }}
           />
 
-          <div className={FIELD_ROW}>
-            <ClockIcon className={FIELD_ICON} aria-hidden="true" />
-            <div className={FIELD_CONTENT}>
-              <Text as="span" id={timeLabelId} {...FIELD_LABEL_PROPS}>
-                {t('event-management.schedule.edit-session.time')}
-              </Text>
-              <div role="group" aria-labelledby={timeLabelId} className="flex flex-wrap items-center gap-2">
-                <Input
-                  type="date"
-                  name="date"
-                  aria-label={t('common.date')}
-                  value={toDateInput(timeslot.start) ?? ''}
-                  min={toDateInput(scheduleDays.at(0)) ?? ''}
-                  max={toDateInput(scheduleDays.at(-1)) ?? ''}
-                  onChange={handleDateChange}
-                  className="w-full shrink-0 sm:w-auto"
-                  suppressHydrationWarning
-                />
-                <TimeRangeInput
-                  nameStart="start-local"
-                  nameEnd="end-local"
-                  start={getMinutesFromStartOfDay(timeslot.start)}
-                  end={getMinutesFromStartOfDay(timeslot.end)}
-                  min={displayedTimes.start}
-                  max={displayedTimes.end + 59}
-                  step={5}
-                  startRelative
-                  hideFromLabel
-                  onChange={(start, end) => {
-                    setTimeslot({
-                      start: setMinutesFromStartOfDay(timeslot.start, start),
-                      end: setMinutesFromStartOfDay(timeslot.start, end),
-                    });
-                  }}
-                />
-                <Badge>{formatDuration(differenceInMinutes(timeslot.end, timeslot.start), i18n.language)}</Badge>
-              </div>
+          <SessionFieldRow
+            icon={ClockIcon}
+            label={t('event-management.schedule.edit-session.time')}
+            labelId={timeLabelId}
+          >
+            <div role="group" aria-labelledby={timeLabelId} className="flex flex-wrap items-center gap-2">
+              <Input
+                type="date"
+                name="date"
+                aria-label={t('common.date')}
+                value={toDateInput(timeslot.start) ?? ''}
+                min={toDateInput(scheduleDays.at(0)) ?? ''}
+                max={toDateInput(scheduleDays.at(-1)) ?? ''}
+                onChange={handleDateChange}
+                className="w-full shrink-0 sm:w-auto"
+                suppressHydrationWarning
+              />
+              <TimeRangeInput
+                nameStart="start-local"
+                nameEnd="end-local"
+                start={getMinutesFromStartOfDay(timeslot.start)}
+                end={getMinutesFromStartOfDay(timeslot.end)}
+                min={displayedTimes.start}
+                max={displayedTimes.end + 59}
+                step={5}
+                startRelative
+                hideFromLabel
+                onChange={(start, end) => {
+                  setTimeslot({
+                    start: setMinutesFromStartOfDay(timeslot.start, start),
+                    end: setMinutesFromStartOfDay(timeslot.start, end),
+                  });
+                }}
+              />
+              <Badge>{formatDuration(differenceInMinutes(timeslot.end, timeslot.start), i18n.language)}</Badge>
             </div>
-          </div>
+          </SessionFieldRow>
 
-          <div className={FIELD_ROW}>
-            <MapPinIcon className={FIELD_ICON} aria-hidden="true" />
+          <SessionFieldRow icon={MapPinIcon} label={t('common.track')} htmlFor="trackId">
             <SelectNative
               name="trackId"
-              label={t('common.track')}
               value={trackId}
               onChange={(e) => setTrackId(e.target.value)}
               options={tracks.map((t) => ({ name: t.name, value: t.id }))}
-              labelProps={FIELD_LABEL_PROPS}
-              containerClassName={FIELD_CONTENT}
-              className="sm:w-auto"
             />
-          </div>
+          </SessionFieldRow>
 
-          <div className={FIELD_ROW}>
-            <LanguageIcon className={FIELD_ICON} aria-hidden="true" />
+          <SessionFieldRow icon={LanguageIcon} label={t('common.language')} htmlFor="language">
             <SelectNative
               name="language"
-              label={t('common.language')}
               value={language || ''}
               placeholder={t('common.no-language')}
               onChange={(e) => setLanguage(e.target.value as Language)}
               options={LANGUAGES.map((lang) => ({ name: t(`common.languages.${lang}.label`), value: lang }))}
-              labelProps={FIELD_LABEL_PROPS}
-              containerClassName={FIELD_CONTENT}
-              className="sm:w-auto"
             />
-          </div>
+          </SessionFieldRow>
 
-          <div className={FIELD_ROW}>
-            <PaintBrushIcon className={FIELD_ICON} aria-hidden="true" />
-            <div className={FIELD_CONTENT}>
-              <Text as="span" {...FIELD_LABEL_PROPS}>
-                {t('common.color.label')}
-              </Text>
-              <ColorInput
-                label={t('event-management.schedule.edit-session.color')}
-                nullable
-                value={color}
-                onChange={setColor}
-              />
-            </div>
-          </div>
+          <SessionFieldRow icon={PaintBrushIcon} label={t('common.color.label')}>
+            <ColorInput
+              label={t('event-management.schedule.edit-session.color')}
+              nullable
+              value={color}
+              onChange={setColor}
+            />
+          </SessionFieldRow>
 
-          <div className={FIELD_ROW}>
-            <FaceSmileIcon className={FIELD_ICON} aria-hidden="true" />
-            <div className={FIELD_CONTENT}>
-              <Text as="span" {...FIELD_LABEL_PROPS}>
-                {t('event-management.schedule.edit-session.emojis')}
-              </Text>
-              <EmojiSelect emojis={SESSION_EMOJIS} selectedEmojis={emojis} onChangeEmojis={setEmojis} />
-            </div>
-          </div>
+          <SessionFieldRow icon={FaceSmileIcon} label={t('event-management.schedule.edit-session.emojis')}>
+            <EmojiSelect emojis={SESSION_EMOJIS} selectedEmojis={emojis} onChangeEmojis={setEmojis} />
+          </SessionFieldRow>
 
           {error ? (
             <Callout variant="error" role="alert">
@@ -269,5 +241,34 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
         </div>
       </div>
     </>
+  );
+}
+
+type SessionFieldRowProps = {
+  icon: ComponentType<{ className?: string }>;
+  label: string;
+  htmlFor?: string;
+  labelId?: string;
+  children: ReactNode;
+};
+
+function SessionFieldRow({ icon: Icon, label, htmlFor, labelId, children }: SessionFieldRowProps) {
+  const labelClassName = 'shrink-0 leading-6 sm:w-20';
+  return (
+    <div className="flex items-start gap-3 sm:items-center">
+      <Icon className="mt-0.5 h-5 w-5 shrink-0 text-gray-500 sm:mt-0" aria-hidden="true" />
+      <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:gap-2.5">
+        {htmlFor ? (
+          <Label htmlFor={htmlFor} weight="normal" variant="secondary" className={labelClassName}>
+            {label}
+          </Label>
+        ) : (
+          <Text as="span" id={labelId} weight="normal" variant="secondary" className={labelClassName}>
+            {label}
+          </Text>
+        )}
+        {children}
+      </div>
+    </div>
   );
 }

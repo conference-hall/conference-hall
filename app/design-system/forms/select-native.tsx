@@ -1,37 +1,26 @@
 import { cx } from 'class-variance-authority';
-import type { ComponentProps, SelectHTMLAttributes } from 'react';
+import type { SelectHTMLAttributes } from 'react';
 import { Label } from '../typography.tsx';
 
 type Option = { name: string; value: string };
 
 type Props = {
   name: string;
-  label: string;
+  label?: string;
   options: Array<Option>;
   placeholder?: string;
   inline?: boolean;
   srOnly?: boolean;
-  labelProps?: ComponentProps<typeof Label>;
-  containerClassName?: string;
 } & SelectHTMLAttributes<HTMLSelectElement>;
 
-export function SelectNative({
-  name,
-  label,
-  options,
-  placeholder,
-  inline,
-  srOnly,
-  labelProps,
-  containerClassName,
-  className,
-  ...rest
-}: Props) {
+export function SelectNative({ name, label, options, placeholder, inline, srOnly, className, ...rest }: Props) {
   return (
-    <div className={containerClassName ?? cx({ 'space-y-1': !inline, 'flex items-center gap-2.5': inline })}>
-      <Label htmlFor={name} {...labelProps} className={cx({ 'sr-only': srOnly }, labelProps?.className)}>
-        {label}
-      </Label>
+    <div className={cx({ 'space-y-1': !inline, 'flex items-center gap-2.5': inline })}>
+      {label ? (
+        <Label htmlFor={name} className={cx({ 'sr-only': srOnly })}>
+          {label}
+        </Label>
+      ) : null}
 
       <select
         id={name}
