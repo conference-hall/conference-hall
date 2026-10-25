@@ -14,9 +14,9 @@ export function staticCacheHeaders(clientBuildDirectory: string): Pick<StaticOpt
   ];
 
   return {
-    setHeaders(res, filePath) {
+    setHeaders(reply, filePath) {
       const isImmutable = immutableDirectories.some((directory) => filePath.startsWith(directory + path.sep));
-      res.setHeader('cache-control', isImmutable ? ONE_YEAR_IMMUTABLE : ONE_HOUR);
+      reply.header('cache-control', isImmutable ? ONE_YEAR_IMMUTABLE : ONE_HOUR);
     },
   };
 }
