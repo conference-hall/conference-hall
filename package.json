@@ -57,7 +57,7 @@
     "@react-router/node": "~8.4.0",
     "@remix-run/form-data-parser": "^1.0.0",
     "@sindresorhus/slugify": "^3.0.1",
-    "@tanstack/react-hotkeys": "^0.13.0",
+    "@tanstack/react-hotkeys": "^0.16.0",
     "better-auth": "~1.7.12",
     "bullmq": "^6.4.0",
     "bullmq-otel": "^2.0.1",
