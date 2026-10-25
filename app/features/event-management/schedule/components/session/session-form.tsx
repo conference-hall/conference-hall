@@ -8,10 +8,11 @@ import {
   PaintBrushIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
+import { cx } from 'class-variance-authority';
 import { differenceInMinutes } from 'date-fns';
 import type { ChangeEvent, ComponentType, FormEvent, ReactNode } from 'react';
 import { useId, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -20,6 +21,7 @@ import { ColorInput } from '~/design-system/forms/color-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
+import { link } from '~/design-system/links.tsx';
 import { Label, Text } from '~/design-system/typography.tsx';
 import { LANGUAGES } from '~/shared/constants.ts';
 import {
@@ -216,7 +218,20 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
               label={t('event-management.schedule.edit-session.unlock')}
               onClick={() => handleLock(false)}
             />
-            <Text variant="secondary">{t('event-management.schedule.edit-session.locked')}</Text>
+            <Text variant="secondary">
+              <Trans
+                i18nKey="event-management.schedule.edit-session.locked"
+                components={[
+                  // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- Trans fills in the label.
+                  <button
+                    key="0"
+                    type="button"
+                    onClick={() => handleLock(false)}
+                    className={cx(link(), 'cursor-pointer')}
+                  />,
+                ]}
+              />
+            </Text>
           </div>
           <Button variant="secondary" onClick={onFinish}>
             {t('common.close')}

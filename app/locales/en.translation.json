@@ -644,7 +644,7 @@
   "event-management.schedule.edit-session.identity.create-raw": "Name session \"<0>{{name}}</0>\"",
   "event-management.schedule.edit-session.identity.placeholder": "Name this session, or search a proposal…",
   "event-management.schedule.edit-session.lock": "Lock",
-  "event-management.schedule.edit-session.locked": "Session locked. Unlock it to edit.",
+  "event-management.schedule.edit-session.locked": "Session locked. <0>Unlock it</0> to edit.",
   "event-management.schedule.edit-session.locked-label": "Locked",
   "event-management.schedule.edit-session.name": "Session name",
   "event-management.schedule.edit-session.proposal.see": "See proposal",

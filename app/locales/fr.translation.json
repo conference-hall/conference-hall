@@ -644,7 +644,7 @@
   "event-management.schedule.edit-session.identity.create-raw": "Nommer la session \"<0>{{name}}</0>\"",
   "event-management.schedule.edit-session.identity.placeholder": "Nommez cette session ou recherchez une proposition…",
   "event-management.schedule.edit-session.lock": "Verrouiller",
-  "event-management.schedule.edit-session.locked": "Session verrouillée. Déverrouillez-la pour la modifier.",
+  "event-management.schedule.edit-session.locked": "Session verrouillée. <0>Déverrouillez-la</0> pour la modifier.",
   "event-management.schedule.edit-session.locked-label": "Verrouillée",
   "event-management.schedule.edit-session.name": "Nom de la session",
   "event-management.schedule.edit-session.proposal.see": "Voir la proposition",
