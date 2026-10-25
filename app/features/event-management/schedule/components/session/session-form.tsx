@@ -8,9 +8,11 @@ import {
   PaintBrushIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
+import { differenceInMinutes } from 'date-fns';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { EmojiSelect } from '~/design-system/emojis/emoji-select.tsx';
@@ -18,8 +20,14 @@ import { ColorInput } from '~/design-system/forms/color-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
+import { Text } from '~/design-system/typography.tsx';
 import { LANGUAGES } from '~/shared/constants.ts';
-import { getMinutesFromStartOfDay, setMinutesFromStartOfDay, toDateInput } from '~/shared/datetimes/datetimes.ts';
+import {
+  formatDuration,
+  getMinutesFromStartOfDay,
+  setMinutesFromStartOfDay,
+  toDateInput,
+} from '~/shared/datetimes/datetimes.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
 import { useScheduleContext } from '../../context/schedule-context.tsx';
 import { categoryColor } from '../../models/category-color.ts';
@@ -27,6 +35,8 @@ import { useSettings } from '../../store/schedule-store.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_EMOJIS } from './constants.ts';
 import { SessionIdentityField } from './session-identity-field.tsx';
+
+const FIELD_LABEL_CLASS = 'w-20 shrink-0 leading-6';
 
 type Props = {
   mode: 'create' | 'edit';
@@ -36,11 +46,12 @@ type Props = {
 };
 
 export function SessionForm({ mode, session, categories, onFinish }: Props) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { tracks, scheduleDays, displayedTimes } = useSettings();
   const { addSession, updateSession, deleteSession, setSessionLock } = useScheduleContext();
 
   const formId = useId();
+  const timeLabelId = useId();
   const [name, setName] = useState(session.name ?? '');
   const [color, setColor] = useState(session.color);
   const [trackId, setTrackId] = useState(session.trackId);
@@ -114,35 +125,41 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
 
           <div className="flex items-center gap-6">
             <ClockIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-            <div className="flex w-full items-center gap-2">
-              <Input
-                type="date"
-                name="date"
-                aria-label={t('common.date')}
-                value={toDateInput(timeslot.start) ?? ''}
-                min={toDateInput(scheduleDays.at(0)) ?? ''}
-                max={toDateInput(scheduleDays.at(-1)) ?? ''}
-                onChange={handleDateChange}
-                className="shrink-0"
-                suppressHydrationWarning
-              />
-              <TimeRangeInput
-                nameStart="start-local"
-                nameEnd="end-local"
-                start={getMinutesFromStartOfDay(timeslot.start)}
-                end={getMinutesFromStartOfDay(timeslot.end)}
-                min={displayedTimes.start}
-                max={displayedTimes.end + 59}
-                step={5}
-                startRelative
-                hideFromLabel
-                onChange={(start, end) => {
-                  setTimeslot({
-                    start: setMinutesFromStartOfDay(timeslot.start, start),
-                    end: setMinutesFromStartOfDay(timeslot.start, end),
-                  });
-                }}
-              />
+            <div className="flex w-full items-center gap-2.5">
+              <Text as="span" id={timeLabelId} weight="medium" className={FIELD_LABEL_CLASS}>
+                {t('event-management.schedule.edit-session.time')}
+              </Text>
+              <div role="group" aria-labelledby={timeLabelId} className="flex flex-wrap items-center gap-2">
+                <Input
+                  type="date"
+                  name="date"
+                  aria-label={t('common.date')}
+                  value={toDateInput(timeslot.start) ?? ''}
+                  min={toDateInput(scheduleDays.at(0)) ?? ''}
+                  max={toDateInput(scheduleDays.at(-1)) ?? ''}
+                  onChange={handleDateChange}
+                  className="shrink-0"
+                  suppressHydrationWarning
+                />
+                <TimeRangeInput
+                  nameStart="start-local"
+                  nameEnd="end-local"
+                  start={getMinutesFromStartOfDay(timeslot.start)}
+                  end={getMinutesFromStartOfDay(timeslot.end)}
+                  min={displayedTimes.start}
+                  max={displayedTimes.end + 59}
+                  step={5}
+                  startRelative
+                  hideFromLabel
+                  onChange={(start, end) => {
+                    setTimeslot({
+                      start: setMinutesFromStartOfDay(timeslot.start, start),
+                      end: setMinutesFromStartOfDay(timeslot.start, end),
+                    });
+                  }}
+                />
+                <Badge>{formatDuration(differenceInMinutes(timeslot.end, timeslot.start), i18n.language)}</Badge>
+              </div>
             </div>
           </div>
 
@@ -154,7 +171,8 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
               value={trackId}
               onChange={(e) => setTrackId(e.target.value)}
               options={tracks.map((t) => ({ name: t.name, value: t.id }))}
-              srOnly
+              labelClassName={FIELD_LABEL_CLASS}
+              inline
             />
           </div>
 
@@ -167,23 +185,34 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
               placeholder={t('common.no-language')}
               onChange={(e) => setLanguage(e.target.value as Language)}
               options={LANGUAGES.map((lang) => ({ name: t(`common.languages.${lang}.label`), value: lang }))}
-              srOnly
+              labelClassName={FIELD_LABEL_CLASS}
+              inline
             />
           </div>
 
           <div className="flex items-center gap-6">
             <PaintBrushIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-            <ColorInput
-              label={t('event-management.schedule.edit-session.color')}
-              nullable
-              value={color}
-              onChange={setColor}
-            />
+            <div className="flex items-center gap-2.5">
+              <Text as="span" weight="medium" className={FIELD_LABEL_CLASS}>
+                {t('common.color.label')}
+              </Text>
+              <ColorInput
+                label={t('event-management.schedule.edit-session.color')}
+                nullable
+                value={color}
+                onChange={setColor}
+              />
+            </div>
           </div>
 
           <div className="flex items-center gap-6">
             <FaceSmileIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-            <EmojiSelect emojis={SESSION_EMOJIS} selectedEmojis={emojis} onChangeEmojis={setEmojis} />
+            <div className="flex items-center gap-2.5">
+              <Text as="span" weight="medium" className={FIELD_LABEL_CLASS}>
+                {t('event-management.schedule.edit-session.emojis')}
+              </Text>
+              <EmojiSelect emojis={SESSION_EMOJIS} selectedEmojis={emojis} onChangeEmojis={setEmojis} />
+            </div>
           </div>
 
           {error ? (
@@ -226,7 +255,7 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
             {locked ? t('common.close') : t('common.cancel')}
           </Button>
           {locked ? null : (
-            <Button form={formId} type="submit" disabled={!(name.trim() || proposal)}>
+            <Button form={formId} type="submit">
               {t(`event-management.schedule.${mode}-session.submit`)}
             </Button>
           )}

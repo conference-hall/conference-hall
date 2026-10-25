@@ -138,6 +138,16 @@ describe('SessionForm component', () => {
     expect(onFinish).toHaveBeenCalled();
   });
 
+  it('creates a session without name nor proposal', async () => {
+    const { rendered, addSession, onFinish } = renderForm('create', {}, { ...session, name: undefined });
+    await rendered;
+
+    await page.getByRole('button', { name: 'Create session' }).click();
+
+    expect(addSession).toHaveBeenCalledWith({ ...session, name: '' });
+    expect(onFinish).toHaveBeenCalled();
+  });
+
   it('takes the color of the first category of the proposal it links', async () => {
     const { rendered, addSession } = renderForm('create');
     await rendered;
@@ -268,6 +278,30 @@ describe('SessionForm component', () => {
     const fromOptions = optionsOf(page.getByLabelText('From'));
     expect(fromOptions.at(0)).toBe('09:00');
     expect(fromOptions.at(-1)).toBe('18:55');
+  });
+
+  it('shows the session duration as the time slot changes', async () => {
+    const { rendered } = renderForm('edit');
+    await rendered;
+
+    await expect.element(page.getByText('30m', { exact: true })).toBeVisible();
+
+    await userEvent.selectOptions(page.getByLabelText('To'), String(11 * 60 + 30));
+
+    await expect.element(page.getByText('1h 30m', { exact: true })).toBeVisible();
+  });
+
+  it('labels each field', async () => {
+    const { rendered } = renderForm('edit');
+    await rendered;
+
+    const time = page.getByRole('group', { name: 'Time' });
+    await expect.element(time.getByLabelText('Date')).toBeVisible();
+    await expect.element(time.getByLabelText('From')).toBeVisible();
+    await expect.element(time.getByLabelText('To')).toBeVisible();
+    for (const label of ['Time', 'Track', 'Language', 'Color', 'Emojis']) {
+      await expect.element(page.getByText(label, { exact: true })).toBeVisible();
+    }
   });
 
   it('finishes without mutation on cancel', async () => {
