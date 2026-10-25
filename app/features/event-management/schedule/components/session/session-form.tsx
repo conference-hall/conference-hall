@@ -8,9 +8,12 @@ import {
   PaintBrushIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-import type { ChangeEvent, FormEvent } from 'react';
+import { cx } from 'class-variance-authority';
+import { differenceInMinutes } from 'date-fns';
+import type { ChangeEvent, ComponentType, FormEvent, ReactNode } from 'react';
 import { useId, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { EmojiSelect } from '~/design-system/emojis/emoji-select.tsx';
@@ -18,8 +21,15 @@ import { ColorInput } from '~/design-system/forms/color-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
+import { link } from '~/design-system/links.tsx';
+import { Label, Text } from '~/design-system/typography.tsx';
 import { LANGUAGES } from '~/shared/constants.ts';
-import { getMinutesFromStartOfDay, setMinutesFromStartOfDay, toDateInput } from '~/shared/datetimes/datetimes.ts';
+import {
+  formatDuration,
+  getMinutesFromStartOfDay,
+  setMinutesFromStartOfDay,
+  toDateInput,
+} from '~/shared/datetimes/datetimes.ts';
 import type { Language } from '~/shared/types/proposals.types.ts';
 import { useScheduleContext } from '../../context/schedule-context.tsx';
 import { categoryColor } from '../../models/category-color.ts';
@@ -27,6 +37,9 @@ import { useSettings } from '../../store/schedule-store.ts';
 import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_EMOJIS } from './constants.ts';
 import { SessionIdentityField } from './session-identity-field.tsx';
+
+const FOOTER = 'flex items-center justify-between gap-3 border-t border-gray-200 px-6 py-4';
+const FOOTER_BUTTON = 'flex-1 sm:flex-none';
 
 type Props = {
   mode: 'create' | 'edit';
@@ -36,11 +49,12 @@ type Props = {
 };
 
 export function SessionForm({ mode, session, categories, onFinish }: Props) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { tracks, scheduleDays, displayedTimes } = useSettings();
   const { addSession, updateSession, deleteSession, setSessionLock } = useScheduleContext();
 
   const formId = useId();
+  const timeLabelId = useId();
   const [name, setName] = useState(session.name ?? '');
   const [color, setColor] = useState(session.color);
   const [trackId, setTrackId] = useState(session.trackId);
@@ -49,6 +63,7 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
   const [proposal, setProposal] = useState(session.proposal ?? null);
   const [emojis, setEmojis] = useState(session.emojis);
   const [error, setError] = useState<string | null>();
+  const [locked, setLocked] = useState(session.locked);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -62,12 +77,25 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
     }
   };
 
-  const handleLock = async (locked: boolean) => {
-    await setSessionLock(session, locked);
-    onFinish();
+  const handleLock = async (nextLocked: boolean) => {
+    await setSessionLock(session, nextLocked);
+    if (nextLocked) resetFields();
+    setLocked(nextLocked);
+  };
+
+  const resetFields = () => {
+    setName(session.name ?? '');
+    setColor(session.color);
+    setTrackId(session.trackId);
+    setLanguage(session.language);
+    setTimeslot(session.timeslot);
+    setProposal(session.proposal ?? null);
+    setEmojis(session.emojis);
+    setError(null);
   };
 
   const handleDelete = async () => {
+    if (!confirm(t('event-management.schedule.edit-session.delete-confirm'))) return;
     await deleteSession(session);
     onFinish();
   };
@@ -83,31 +111,30 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
 
   return (
     <>
+      <fieldset disabled={locked} className="min-w-0 border-b border-gray-200 px-6 py-6">
+        <SessionIdentityField
+          name={name}
+          proposal={proposal}
+          onChange={(identity) => {
+            setName(identity.name);
+            setProposal(identity.proposal);
+            if (identity.proposal) {
+              const linked = categories.filter((category) => identity.categoryIds?.includes(category.id));
+              const color = categoryColor(linked);
+              if (color) setColor(color);
+            }
+          }}
+        />
+      </fieldset>
+
       <form id={formId} className="px-6 py-6" onSubmit={handleSubmit}>
-        <fieldset disabled={session.locked} className="flex min-w-0 flex-col gap-6">
-          {session.locked ? (
-            <Callout icon={LockClosedIcon} variant="warning">
-              {t('event-management.schedule.edit-session.locked')}
-            </Callout>
-          ) : null}
-
-          <SessionIdentityField
-            name={name}
-            proposal={proposal}
-            onChange={(identity) => {
-              setName(identity.name);
-              setProposal(identity.proposal);
-              if (identity.proposal) {
-                const linked = categories.filter((category) => identity.categoryIds?.includes(category.id));
-                const color = categoryColor(linked);
-                if (color) setColor(color);
-              }
-            }}
-          />
-
-          <div className="flex items-center gap-6">
-            <ClockIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-            <div className="flex w-full items-center gap-2">
+        <fieldset disabled={locked} className="flex min-w-0 flex-col gap-6">
+          <SessionFieldRow
+            icon={ClockIcon}
+            label={t('event-management.schedule.edit-session.time')}
+            labelId={timeLabelId}
+          >
+            <div role="group" aria-labelledby={timeLabelId} className="flex flex-wrap items-center gap-2">
               <Input
                 type="date"
                 name="date"
@@ -116,7 +143,7 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
                 min={toDateInput(scheduleDays.at(0)) ?? ''}
                 max={toDateInput(scheduleDays.at(-1)) ?? ''}
                 onChange={handleDateChange}
-                className="shrink-0"
+                className="w-full shrink-0 sm:w-auto"
                 suppressHydrationWarning
               />
               <TimeRangeInput
@@ -136,48 +163,43 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
                   });
                 }}
               />
+              <span className="ml-2 flex">
+                <Badge>{formatDuration(differenceInMinutes(timeslot.end, timeslot.start), i18n.language)}</Badge>
+              </span>
             </div>
-          </div>
+          </SessionFieldRow>
 
-          <div className="flex items-center gap-6">
-            <MapPinIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+          <SessionFieldRow icon={MapPinIcon} label={t('common.track')} htmlFor="trackId">
             <SelectNative
               name="trackId"
-              label={t('common.track')}
               value={trackId}
               onChange={(e) => setTrackId(e.target.value)}
               options={tracks.map((t) => ({ name: t.name, value: t.id }))}
-              srOnly
             />
-          </div>
+          </SessionFieldRow>
 
-          <div className="flex items-center gap-6">
-            <LanguageIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+          <SessionFieldRow icon={LanguageIcon} label={t('common.language')} htmlFor="language">
             <SelectNative
               name="language"
-              label={t('common.language')}
               value={language || ''}
               placeholder={t('common.no-language')}
               onChange={(e) => setLanguage(e.target.value as Language)}
               options={LANGUAGES.map((lang) => ({ name: t(`common.languages.${lang}.label`), value: lang }))}
-              srOnly
             />
-          </div>
+          </SessionFieldRow>
 
-          <div className="flex items-center gap-6">
-            <PaintBrushIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+          <SessionFieldRow icon={PaintBrushIcon} label={t('common.color.label')}>
             <ColorInput
               label={t('event-management.schedule.edit-session.color')}
               nullable
               value={color}
               onChange={setColor}
             />
-          </div>
+          </SessionFieldRow>
 
-          <div className="flex items-center gap-6">
-            <FaceSmileIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+          <SessionFieldRow icon={FaceSmileIcon} label={t('event-management.schedule.edit-session.emojis')}>
             <EmojiSelect emojis={SESSION_EMOJIS} selectedEmojis={emojis} onChangeEmojis={setEmojis} />
-          </div>
+          </SessionFieldRow>
 
           {error ? (
             <Callout variant="error" role="alert">
@@ -187,37 +209,94 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
         </fieldset>
       </form>
 
-      {/* Footer */}
-      <div className="flex items-center justify-between gap-2 p-6">
-        {mode === 'edit' ? (
-          <div className="flex gap-3">
-            {session.locked ? null : (
-              <Button variant="important" iconLeft={TrashIcon} onClick={handleDelete}>
-                {t('common.remove')}
-              </Button>
-            )}
+      {locked ? (
+        <div className={FOOTER}>
+          <div className="flex items-center gap-2">
             <Button
-              variant="secondary"
-              iconLeft={session.locked ? LockOpenIcon : LockClosedIcon}
-              onClick={() => handleLock(!session.locked)}
-            >
-              {t(`event-management.schedule.edit-session.${session.locked ? 'unlock' : 'lock'}`)}
-            </Button>
+              variant="tertiary"
+              icon={LockClosedIcon}
+              label={t('event-management.schedule.edit-session.unlock')}
+              onClick={() => handleLock(false)}
+            />
+            <Text variant="secondary">
+              <Trans
+                i18nKey="event-management.schedule.edit-session.locked"
+                components={[
+                  // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- Trans fills in the label.
+                  <button
+                    key="0"
+                    type="button"
+                    onClick={() => handleLock(false)}
+                    className={cx(link(), 'cursor-pointer')}
+                  />,
+                ]}
+              />
+            </Text>
           </div>
-        ) : (
-          <span />
-        )}
-        <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={onFinish}>
-            {session.locked ? t('common.close') : t('common.cancel')}
+            {t('common.close')}
           </Button>
-          {session.locked ? null : (
-            <Button form={formId} type="submit" disabled={!(name.trim() || proposal)}>
+        </div>
+      ) : (
+        <div className={FOOTER}>
+          {mode === 'edit' ? (
+            <div className="flex items-center gap-1">
+              <Button
+                variant="tertiary"
+                icon={LockOpenIcon}
+                label={t('event-management.schedule.edit-session.lock')}
+                onClick={() => handleLock(true)}
+              />
+              <Button
+                variant="tertiary"
+                icon={TrashIcon}
+                label={t('common.remove')}
+                onClick={handleDelete}
+                className="hover:bg-red-50 hover:text-red-600"
+              />
+            </div>
+          ) : (
+            <span />
+          )}
+          <div className="flex flex-1 items-center justify-end gap-3 sm:flex-none">
+            <Button variant="secondary" onClick={onFinish} className={FOOTER_BUTTON}>
+              {t('common.cancel')}
+            </Button>
+            <Button form={formId} type="submit" className={FOOTER_BUTTON}>
               {t(`event-management.schedule.${mode}-session.submit`)}
             </Button>
-          )}
+          </div>
         </div>
-      </div>
+      )}
     </>
+  );
+}
+
+type SessionFieldRowProps = {
+  icon: ComponentType<{ className?: string }>;
+  label: string;
+  htmlFor?: string;
+  labelId?: string;
+  children: ReactNode;
+};
+
+function SessionFieldRow({ icon: Icon, label, htmlFor, labelId, children }: SessionFieldRowProps) {
+  const labelClassName = 'shrink-0 leading-6 sm:w-20';
+  return (
+    <div className="flex items-start gap-3 sm:items-center">
+      <Icon className="mt-0.5 h-5 w-5 shrink-0 text-gray-500 sm:mt-0" aria-hidden="true" />
+      <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:gap-2.5">
+        {htmlFor ? (
+          <Label htmlFor={htmlFor} weight="normal" variant="secondary" className={labelClassName}>
+            {label}
+          </Label>
+        ) : (
+          <Text as="span" id={labelId} weight="normal" variant="secondary" className={labelClassName}>
+            {label}
+          </Text>
+        )}
+        {children}
+      </div>
+    </div>
   );
 }

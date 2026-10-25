@@ -3,8 +3,7 @@ import { ArrowTopRightOnSquareIcon, XMarkIcon } from '@heroicons/react/16/solid'
 import { cx } from 'class-variance-authority';
 import { type ChangeEvent, type KeyboardEvent, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { href, useParams } from 'react-router';
-import { Button } from '~/design-system/button.tsx';
+import { href, Link, useParams } from 'react-router';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
 import type { ProposalResult } from '../../../autocomplete/types/autocomplete.types.ts';
@@ -61,9 +60,6 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
     if (e.key === 'Escape' && isOpen) {
       e.preventDefault();
       setDismissed(true);
-    } else if (e.key === 'Enter' && !isOpen) {
-      // Never let the field implicitly submit the modal form.
-      e.preventDefault();
     }
   };
 
@@ -86,7 +82,7 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
         value={null}
         onChange={handleSelect}
         className={cx(
-          'absolute inset-x-0 top-0 z-10 rounded-md bg-white transition-shadow',
+          'absolute inset-x-0 top-0 z-10 rounded-md bg-white transition-shadow has-disabled:bg-gray-50',
           isOpen ? 'shadow-lg ring-2 ring-indigo-600' : 'ring-1 ring-gray-300',
         )}
       >
@@ -107,7 +103,7 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
           onKeyDown={handleKeyDown}
           placeholder={t('event-management.schedule.edit-session.identity.placeholder')}
           aria-label={t('event-management.schedule.edit-session.name')}
-          className="h-11 w-full rounded-md border-0 bg-transparent pr-10 pl-3 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-0"
+          className="h-11 w-full rounded-md border-0 bg-transparent pr-10 pl-3 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-0 disabled:cursor-not-allowed disabled:text-gray-500"
         />
 
         {/* A ComboboxButton stays interactive while open (Headless inerts non-part siblings). */}
@@ -191,43 +187,42 @@ function LinkedProposalCard({ proposal, onDetach }: LinkedProposalCardProps) {
   const { t } = useTranslation();
   const { team, event } = useParams();
 
+  // Fixed to the input height so linking or detaching a proposal never shifts the layout.
   return (
-    <div className="flex items-start justify-between gap-4 rounded-md p-3 ring-1 ring-gray-300 ring-inset">
-      <div className="min-w-0">
-        <div className="flex gap-1">
-          <Text weight="medium" variant="secondary">
-            #{proposal.routeId}
-          </Text>
-          <Text weight="medium" truncate>
-            {proposal.title}
-          </Text>
-        </div>
-        <Subtitle size="xs" truncate>
+    <div className="flex h-11 min-w-0 flex-col justify-center">
+      <Link
+        to={href('/team/:team/:event/proposals/:proposal', {
+          team: team ?? '',
+          event: event ?? '',
+          proposal: proposal.routeId,
+        })}
+        target="_blank"
+        rel="noreferrer"
+        title={t('event-management.schedule.edit-session.proposal.see')}
+        className="group flex min-w-0 items-center gap-1.5"
+      >
+        <Text as="span" size="base" weight="semibold" variant="secondary">
+          #{proposal.routeId}
+        </Text>
+        <Text as="span" size="base" weight="semibold" truncate className="group-hover:underline">
+          {proposal.title}
+        </Text>
+        <ArrowTopRightOnSquareIcon className="size-4 shrink-0 text-gray-400" aria-hidden="true" />
+      </Link>
+      <div className="flex min-w-0 items-center gap-2">
+        <Subtitle size="xs" truncate className="leading-4">
           {t('common.by', { names: proposal.speakers.map((s) => s.name) })}
         </Subtitle>
-      </div>
-      <div className="flex shrink-0 gap-2">
-        <Button
-          icon={ArrowTopRightOnSquareIcon}
-          label={t('event-management.schedule.edit-session.proposal.see')}
-          to={href('/team/:team/:event/proposals/:proposal', {
-            team: team ?? '',
-            event: event ?? '',
-            proposal: proposal.routeId,
-          })}
-          variant="secondary"
-          target="_blank"
-          rel="noreferrer"
-          size="sm"
-        />
-        <Button
-          icon={XMarkIcon}
-          label={t('event-management.schedule.edit-session.identity.change')}
+        <span className="text-gray-300" aria-hidden="true">
+          ·
+        </span>
+        <button
           type="button"
           onClick={onDetach}
-          variant="secondary"
-          size="sm"
-        />
+          className="shrink-0 cursor-pointer text-xs text-indigo-600 hover:text-indigo-800 hover:underline disabled:pointer-events-none disabled:opacity-50"
+        >
+          {t('common.edit')}
+        </button>
       </div>
     </div>
   );

@@ -87,8 +87,7 @@ export function SessionBlock({ session, onOpen, className, ref }: SessionBlockPr
 function buildEmptyStyle(color: string): CSSProperties {
   return {
     color: TEXT_COLOR,
-    backgroundColor: 'white',
-    backgroundImage: `repeating-linear-gradient(135deg, color-mix(in srgb, ${color} 45%, transparent) 0 1px, transparent 1px 7px)`,
+    backgroundColor: `color-mix(in srgb, ${color} 6%, white)`,
     borderColor: borderOf(color),
   };
 }

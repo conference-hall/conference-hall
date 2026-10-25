@@ -55,7 +55,7 @@ export function ColorInput({ label, value, onChange, name, nullable = false }: C
           })}
           title={valueLabel}
           className={cx(
-            'size-8 shrink-0 cursor-pointer rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+            'size-8 shrink-0 cursor-pointer rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed disabled:opacity-50',
             value ? 'ring-1 ring-black/10 ring-inset' : 'border border-dashed border-gray-400 bg-white',
           )}
           style={value ? { backgroundColor: value } : undefined}

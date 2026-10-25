@@ -31,7 +31,7 @@ export function EmojiSelect({ emojis, selectedEmojis, onChangeEmojis }: EmojiRea
             type="button"
             onClick={() => handleSelect(emoji)}
             aria-label={`Remove emoji ${code}`}
-            className="cursor-pointer hover:opacity-50"
+            className="cursor-pointer hover:opacity-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {emoji?.skin}
           </button>

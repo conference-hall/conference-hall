@@ -138,6 +138,16 @@ describe('SessionForm component', () => {
     expect(onFinish).toHaveBeenCalled();
   });
 
+  it('creates a session without name nor proposal', async () => {
+    const { rendered, addSession, onFinish } = renderForm('create', {}, { ...session, name: undefined });
+    await rendered;
+
+    await page.getByRole('button', { name: 'Create session' }).click();
+
+    expect(addSession).toHaveBeenCalledWith({ ...session, name: '' });
+    expect(onFinish).toHaveBeenCalled();
+  });
+
   it('takes the color of the first category of the proposal it links', async () => {
     const { rendered, addSession } = renderForm('create');
     await rendered;
@@ -182,39 +192,83 @@ describe('SessionForm component', () => {
     expect(onFinish).toHaveBeenCalled();
   });
 
-  it('deletes a session in edit mode', async () => {
+  it('deletes a session in edit mode once confirmed', async () => {
+    const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true);
     const { rendered, deleteSession, onFinish } = renderForm('edit');
     await rendered;
 
     await page.getByRole('button', { name: 'Remove' }).click();
 
+    expect(confirm).toHaveBeenCalledWith('Remove this session from the schedule?');
     expect(deleteSession).toHaveBeenCalledWith(session);
     expect(onFinish).toHaveBeenCalled();
   });
 
-  it('locks the session in edit mode', async () => {
+  it('keeps the session when the deletion is not confirmed', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(false);
+    const { rendered, deleteSession, onFinish } = renderForm('edit');
+    await rendered;
+
+    await page.getByRole('button', { name: 'Remove' }).click();
+
+    expect(deleteSession).not.toHaveBeenCalled();
+    expect(onFinish).not.toHaveBeenCalled();
+  });
+
+  it('locks the session and keeps the form open with the saved values', async () => {
     const { rendered, setSessionLock, onFinish } = renderForm('edit');
     await rendered;
 
-    await page.getByRole('button', { name: 'Lock session' }).click();
+    await userEvent.selectOptions(page.getByLabelText('Language'), 'en');
+    await page.getByRole('button', { name: 'Lock', exact: true }).click();
 
     expect(setSessionLock).toHaveBeenCalledWith(session, true);
-    expect(onFinish).toHaveBeenCalled();
+    expect(onFinish).not.toHaveBeenCalled();
+    await expect.element(page.getByText('Session locked. Unlock it to edit.')).toBeVisible();
+    await expect.element(page.getByLabelText('Language')).toBeDisabled();
+    await expect.element(page.getByLabelText('Language')).toHaveValue('');
+    await expect.element(page.getByRole('button', { name: 'Unlock', exact: true })).toBeVisible();
   });
 
-  it('shows a locked session read-only and offers to unlock it', async () => {
+  it('shows a locked session read-only and unlocks it in place', async () => {
     const locked = { ...session, locked: true };
     const { rendered, setSessionLock, updateSession, onFinish } = renderForm('edit', {}, locked);
     await rendered;
 
-    await expect.element(page.getByText(/This session is locked/)).toBeVisible();
+    await expect.element(page.getByText('Session locked. Unlock it to edit.')).toBeVisible();
     await expect.element(page.getByLabelText('Language')).toBeDisabled();
+    await expect.element(page.getByRole('combobox', { name: 'Session name' })).toBeDisabled();
     await expect.element(page.getByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
     await expect.element(page.getByRole('button', { name: 'Save session' })).not.toBeInTheDocument();
 
-    await page.getByRole('button', { name: 'Unlock session' }).click();
+    await page.getByRole('button', { name: 'Unlock', exact: true }).click();
 
     expect(setSessionLock).toHaveBeenCalledWith(locked, false);
+    expect(updateSession).not.toHaveBeenCalled();
+    expect(onFinish).not.toHaveBeenCalled();
+    await expect.element(page.getByText('Session locked. Unlock it to edit.')).not.toBeInTheDocument();
+    await expect.element(page.getByLabelText('Language')).toBeEnabled();
+    await expect.element(page.getByRole('button', { name: 'Save session' })).toBeVisible();
+  });
+
+  it('unlocks a locked session from its locked message', async () => {
+    const locked = { ...session, locked: true };
+    const { rendered, setSessionLock } = renderForm('edit', {}, locked);
+    await rendered;
+
+    await page.getByRole('button', { name: 'Unlock it', exact: true }).click();
+
+    expect(setSessionLock).toHaveBeenCalledWith(locked, false);
+    await expect.element(page.getByLabelText('Language')).toBeEnabled();
+  });
+
+  it('closes a locked session without saving it', async () => {
+    const { rendered, updateSession, onFinish } = renderForm('edit', {}, { ...session, locked: true });
+    await rendered;
+
+    await expect.element(page.getByRole('button', { name: 'Cancel' })).not.toBeInTheDocument();
+    await page.getByRole('button', { name: 'Close' }).click();
+
     expect(updateSession).not.toHaveBeenCalled();
     expect(onFinish).toHaveBeenCalled();
   });
@@ -223,7 +277,7 @@ describe('SessionForm component', () => {
     const { rendered } = renderForm('create');
     await rendered;
 
-    await expect.element(page.getByRole('button', { name: 'Lock session' })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Lock', exact: true })).not.toBeInTheDocument();
   });
 
   it('does not offer to delete in create mode', async () => {
@@ -260,6 +314,30 @@ describe('SessionForm component', () => {
     const fromOptions = optionsOf(page.getByLabelText('From'));
     expect(fromOptions.at(0)).toBe('09:00');
     expect(fromOptions.at(-1)).toBe('18:55');
+  });
+
+  it('shows the session duration as the time slot changes', async () => {
+    const { rendered } = renderForm('edit');
+    await rendered;
+
+    await expect.element(page.getByText('30m', { exact: true })).toBeVisible();
+
+    await userEvent.selectOptions(page.getByLabelText('To'), String(11 * 60 + 30));
+
+    await expect.element(page.getByText('1h 30m', { exact: true })).toBeVisible();
+  });
+
+  it('labels each field', async () => {
+    const { rendered } = renderForm('edit');
+    await rendered;
+
+    const time = page.getByRole('group', { name: 'Time' });
+    await expect.element(time.getByLabelText('Date')).toBeVisible();
+    await expect.element(time.getByLabelText('From')).toBeVisible();
+    await expect.element(time.getByLabelText('To')).toBeVisible();
+    for (const label of ['Time', 'Track', 'Language', 'Color', 'Emojis']) {
+      await expect.element(page.getByText(label, { exact: true })).toBeVisible();
+    }
   });
 
   it('finishes without mutation on cancel', async () => {

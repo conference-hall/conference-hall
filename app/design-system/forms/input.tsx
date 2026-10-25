@@ -75,7 +75,7 @@ const containerStyle = cva(
   {
     variants: {
       color: {
-        light: 'bg-white ring-gray-300 focus-within:ring-indigo-600',
+        light: 'bg-white ring-gray-300 focus-within:ring-indigo-600 has-disabled:bg-gray-50 has-disabled:ring-gray-200',
         dark: 'bg-gray-700 ring-gray-700 focus-within:ring-white',
       },
       error: {
@@ -89,7 +89,7 @@ const containerStyle = cva(
 const inputStyle = cva('block flex-1 border-0 bg-transparent focus:ring-0', {
   variants: {
     color: {
-      light: 'text-gray-900 placeholder:text-gray-400',
+      light: 'text-gray-900 placeholder:text-gray-400 disabled:cursor-not-allowed disabled:text-gray-500',
       dark: 'font-semibold text-gray-300 placeholder:text-gray-400',
     },
     size: {
