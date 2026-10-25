@@ -12,6 +12,7 @@ type Props = {
   inline?: boolean;
   srOnly?: boolean;
   labelProps?: ComponentProps<typeof Label>;
+  containerClassName?: string;
 } & SelectHTMLAttributes<HTMLSelectElement>;
 
 export function SelectNative({
@@ -22,11 +23,12 @@ export function SelectNative({
   inline,
   srOnly,
   labelProps,
+  containerClassName,
   className,
   ...rest
 }: Props) {
   return (
-    <div className={cx({ 'space-y-1': !inline, 'flex items-center gap-2.5': inline })}>
+    <div className={containerClassName ?? cx({ 'space-y-1': !inline, 'flex items-center gap-2.5': inline })}>
       <Label htmlFor={name} {...labelProps} className={cx({ 'sr-only': srOnly }, labelProps?.className)}>
         {label}
       </Label>

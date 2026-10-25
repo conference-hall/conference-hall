@@ -36,7 +36,11 @@ import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_EMOJIS } from './constants.ts';
 import { SessionIdentityField } from './session-identity-field.tsx';
 
-const FIELD_LABEL_PROPS = { weight: 'normal', variant: 'secondary', className: 'w-20 shrink-0 leading-6' } as const;
+const FIELD_ROW = 'flex items-start gap-3 sm:items-center';
+const FIELD_ICON = 'mt-0.5 h-5 w-5 shrink-0 text-gray-500 sm:mt-0';
+const FIELD_CONTENT = 'flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:gap-2.5';
+const FIELD_LABEL_PROPS = { weight: 'normal', variant: 'secondary', className: 'shrink-0 leading-6 sm:w-20' } as const;
+const FOOTER_BUTTON = 'flex-1 sm:flex-none';
 
 type Props = {
   mode: 'create' | 'edit';
@@ -123,9 +127,9 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
             }}
           />
 
-          <div className="flex items-center gap-3">
-            <ClockIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-            <div className="flex w-full items-center gap-2.5">
+          <div className={FIELD_ROW}>
+            <ClockIcon className={FIELD_ICON} aria-hidden="true" />
+            <div className={FIELD_CONTENT}>
               <Text as="span" id={timeLabelId} {...FIELD_LABEL_PROPS}>
                 {t('event-management.schedule.edit-session.time')}
               </Text>
@@ -138,7 +142,7 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
                   min={toDateInput(scheduleDays.at(0)) ?? ''}
                   max={toDateInput(scheduleDays.at(-1)) ?? ''}
                   onChange={handleDateChange}
-                  className="shrink-0"
+                  className="w-full shrink-0 sm:w-auto"
                   suppressHydrationWarning
                 />
                 <TimeRangeInput
@@ -163,8 +167,8 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <MapPinIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+          <div className={FIELD_ROW}>
+            <MapPinIcon className={FIELD_ICON} aria-hidden="true" />
             <SelectNative
               name="trackId"
               label={t('common.track')}
@@ -172,12 +176,13 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
               onChange={(e) => setTrackId(e.target.value)}
               options={tracks.map((t) => ({ name: t.name, value: t.id }))}
               labelProps={FIELD_LABEL_PROPS}
-              inline
+              containerClassName={FIELD_CONTENT}
+              className="sm:w-auto"
             />
           </div>
 
-          <div className="flex items-center gap-3">
-            <LanguageIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+          <div className={FIELD_ROW}>
+            <LanguageIcon className={FIELD_ICON} aria-hidden="true" />
             <SelectNative
               name="language"
               label={t('common.language')}
@@ -186,13 +191,14 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
               onChange={(e) => setLanguage(e.target.value as Language)}
               options={LANGUAGES.map((lang) => ({ name: t(`common.languages.${lang}.label`), value: lang }))}
               labelProps={FIELD_LABEL_PROPS}
-              inline
+              containerClassName={FIELD_CONTENT}
+              className="sm:w-auto"
             />
           </div>
 
-          <div className="flex items-center gap-3">
-            <PaintBrushIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-            <div className="flex items-center gap-2.5">
+          <div className={FIELD_ROW}>
+            <PaintBrushIcon className={FIELD_ICON} aria-hidden="true" />
+            <div className={FIELD_CONTENT}>
               <Text as="span" {...FIELD_LABEL_PROPS}>
                 {t('common.color.label')}
               </Text>
@@ -205,9 +211,9 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <FaceSmileIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
-            <div className="flex items-center gap-2.5">
+          <div className={FIELD_ROW}>
+            <FaceSmileIcon className={FIELD_ICON} aria-hidden="true" />
+            <div className={FIELD_CONTENT}>
               <Text as="span" {...FIELD_LABEL_PROPS}>
                 {t('event-management.schedule.edit-session.emojis')}
               </Text>
@@ -231,11 +237,11 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
       ) : null}
 
       {/* Footer */}
-      <div className="flex items-center justify-between gap-2 p-6">
+      <div className="flex flex-col gap-3 p-6 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
         {mode === 'edit' ? (
           <div className="flex gap-3">
             {locked ? null : (
-              <Button variant="important" iconLeft={TrashIcon} onClick={handleDelete}>
+              <Button variant="important" iconLeft={TrashIcon} onClick={handleDelete} className={FOOTER_BUTTON}>
                 {t('common.remove')}
               </Button>
             )}
@@ -243,19 +249,20 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
               variant="secondary"
               iconLeft={locked ? LockOpenIcon : LockClosedIcon}
               onClick={() => handleLock(!locked)}
+              className={FOOTER_BUTTON}
             >
               {t(`event-management.schedule.edit-session.${locked ? 'unlock' : 'lock'}`)}
             </Button>
           </div>
         ) : (
-          <span />
+          <span className="hidden sm:block" />
         )}
         <div className="flex justify-end gap-3">
-          <Button variant="secondary" onClick={onFinish}>
+          <Button variant="secondary" onClick={onFinish} className={FOOTER_BUTTON}>
             {locked ? t('common.close') : t('common.cancel')}
           </Button>
           {locked ? null : (
-            <Button form={formId} type="submit">
+            <Button form={formId} type="submit" className={FOOTER_BUTTON}>
               {t(`event-management.schedule.${mode}-session.submit`)}
             </Button>
           )}
