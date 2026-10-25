@@ -113,6 +113,9 @@ export function ScheduleGrid({ zoomLevel }: ScheduleGridProps) {
     <DragDropProvider
       sensors={[PointerSensor]}
       modifiers={[RestrictToWindow]}
+      onBeforeDragStart={(event) => {
+        if (readDragSource(event.operation.source)?.session.locked) event.preventDefault();
+      }}
       onDragStart={(event) => {
         const source = readDragSource(event.operation.source);
         if (source?.kind === 'resize') resizeRef.current = startResize(source.session);

@@ -38,7 +38,7 @@ const inside = session('inside', 'Keynote', 'track-1', at(10), at(11));
 const truncated = session('truncated', 'Closing', 'track-2', at(18, 30), at(19, 30));
 const before = session('before', 'Breakfast', 'track-1', at(8), at(9, 30));
 
-function renderDay(sessions: Array<ScheduleSession>) {
+function renderDay(sessions: Array<ScheduleSession>, setSessionLock = async () => {}, onOpenSession = () => {}) {
   return page.render(
     <I18nextProvider i18n={i18nTest}>
       <ScheduleProviders
@@ -47,6 +47,8 @@ function renderDay(sessions: Array<ScheduleSession>) {
         scheduleDays={[day]}
         displayedDays={[day]}
         sessions={sessions}
+        setSessionLock={setSessionLock}
+        onOpenSession={onOpenSession}
       >
         <DragDropProvider>
           <div style={{ '--slot-height': `${slotHeight(1)}px` } as React.CSSProperties}>
@@ -92,6 +94,29 @@ describe('Day grid', () => {
 
     await expect.element(page.getByRole('button', { name: /Keynote/ }).last()).toBeVisible();
     await expect.element(page.getByRole('button', { name: /Closing/ }).last()).toBeVisible();
+  });
+
+  it('shows no lock on an unlocked Session', async () => {
+    await renderDay([inside]);
+
+    await expect.element(page.getByRole('button', { name: 'Unlock session' })).not.toBeInTheDocument();
+  });
+
+  it('unlocks a locked Session from a button outside its block, without opening it', async () => {
+    const locked = { ...inside, locked: true };
+    const setSessionLock = vi.fn(async () => {});
+    const onOpenSession = vi.fn();
+    await renderDay([locked], setSessionLock, onOpenSession);
+
+    const block = page.getByRole('button', { name: /Keynote/ });
+    await expect.element(block).not.toHaveAttribute('aria-disabled', 'true');
+
+    const unlock = page.getByRole('button', { name: 'Unlock session' });
+    expect(block.element().contains(unlock.element())).toBe(false);
+
+    await unlock.click();
+    expect(setSessionLock).toHaveBeenCalledWith(locked, false);
+    expect(onOpenSession).not.toHaveBeenCalled();
   });
 
   it('renders no element per slot', async () => {

@@ -1,7 +1,9 @@
 import { Feedback } from '@dnd-kit/dom';
 import { useDraggable } from '@dnd-kit/react';
+import { LockClosedIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
 import { type CSSProperties, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useScheduleContext } from '../../context/schedule-context.tsx';
 import { blockOf, type DayGrid } from '../../models/day-grid.ts';
 import { useGesture } from '../../store/gesture-store.ts';
@@ -26,9 +28,10 @@ export const SessionItem = memo(function SessionItem({ id, grid, origin }: Sessi
   const resizeEnd = useGesture((gesture) =>
     gesture?.kind === 'resize' && gesture.sessionId === id ? gesture.endSlot : null,
   );
-  const { onOpenSession } = useScheduleContext();
+  const { t } = useTranslation();
+  const { onOpenSession, setSessionLock } = useScheduleContext();
 
-  const disabled = !session || Boolean(session.isCreating) || session.locked;
+  const disabled = !session || Boolean(session.isCreating);
   const payload = { session: session as ScheduleSession } satisfies SessionPayload;
 
   const { ref: moveRef, isDragging } = useDraggable({
@@ -61,13 +64,32 @@ export const SessionItem = memo(function SessionItem({ id, grid, origin }: Sessi
       className="relative mx-px"
       style={{ ...gridArea(col, block.slot, span, origin), zIndex: isDragging ? 40 : 20 }}
     >
-      <div ref={moveRef} className={cx('session-frame overflow-hidden', { 'shadow-lg': isDragging })}>
-        <SessionBlock session={session} onOpen={() => onOpenSession({ mode: 'edit', session })} />
+      <div className="session-frame overflow-hidden">
+        <SessionBlock
+          ref={moveRef}
+          session={session}
+          onOpen={() => onOpenSession({ mode: 'edit', session })}
+          className={cx({ 'shadow-lg': isDragging })}
+        />
       </div>
+
+      {session.locked ? (
+        <button
+          type="button"
+          aria-label={t('event-management.schedule.edit-session.unlock')}
+          title={t('event-management.schedule.edit-session.unlock')}
+          onClick={() => setSessionLock(session, false)}
+          className="absolute top-0.5 right-0.5 z-10 cursor-pointer rounded-full bg-white/80 p-px opacity-90 hover:opacity-100"
+        >
+          <LockClosedIcon className="size-3" aria-hidden="true" />
+        </button>
+      ) : null}
 
       {/* resize handle, on the bottom edge of the block */}
       <div
         ref={resizeRef}
+        aria-hidden="true"
+        tabIndex={-1}
         className={cx('absolute z-40 h-1 w-full', { 'cursor-ns-resize': !session.locked })}
         style={{ top: 'calc(100% - 1px)' }}
       />
