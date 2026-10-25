@@ -97,17 +97,17 @@ describe('SessionBlock component', () => {
   describe('empty session', () => {
     const empty: ScheduleSession = { ...session, name: null };
 
-    it('draws a dashed hatched tile on white when there is no name and no proposal', async () => {
+    it('draws a dashed tile without hatching when there is no name and no proposal', async () => {
       await renderInContainer(64, <SessionBlock session={empty} onOpen={() => {}} />);
 
       const block = page.getByRole('button').element();
 
       expect(block.className).toContain('border-dashed');
-      expect(block.getAttribute('style')).toContain('repeating-linear-gradient');
+      expect(block.getAttribute('style')).not.toContain('repeating-linear-gradient');
       expect(block.className).not.toContain('bg-stone-50');
     });
 
-    it('keeps the colour of the session on the hatching', async () => {
+    it('keeps the colour of the session on the tile', async () => {
       await renderInContainer(64, <SessionBlock session={{ ...empty, color: '#ff5f5f' }} onOpen={() => {}} />);
 
       const block = page.getByRole('button').element();

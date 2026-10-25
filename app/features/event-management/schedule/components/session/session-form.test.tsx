@@ -192,38 +192,46 @@ describe('SessionForm component', () => {
     expect(onFinish).toHaveBeenCalled();
   });
 
-  it('locks the session in edit mode', async () => {
+  it('locks the session and keeps the form open with the saved values', async () => {
     const { rendered, setSessionLock, onFinish } = renderForm('edit');
     await rendered;
 
-    await page.getByRole('button', { name: 'Lock session' }).click();
+    await userEvent.selectOptions(page.getByLabelText('Language'), 'en');
+    await page.getByRole('button', { name: 'Lock', exact: true }).click();
 
     expect(setSessionLock).toHaveBeenCalledWith(session, true);
-    expect(onFinish).toHaveBeenCalled();
+    expect(onFinish).not.toHaveBeenCalled();
+    await expect.element(page.getByText('Session locked. Unlock it to edit.')).toBeVisible();
+    await expect.element(page.getByLabelText('Language')).toBeDisabled();
+    await expect.element(page.getByLabelText('Language')).toHaveValue('');
+    await expect.element(page.getByRole('button', { name: 'Unlock' })).toBeVisible();
   });
 
-  it('shows a locked session read-only and offers to unlock it', async () => {
+  it('shows a locked session read-only and unlocks it in place', async () => {
     const locked = { ...session, locked: true };
     const { rendered, setSessionLock, updateSession, onFinish } = renderForm('edit', {}, locked);
     await rendered;
 
-    await expect.element(page.getByText(/This session is locked/)).toBeVisible();
+    await expect.element(page.getByText('Session locked. Unlock it to edit.')).toBeVisible();
     await expect.element(page.getByLabelText('Language')).toBeDisabled();
     await expect.element(page.getByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
     await expect.element(page.getByRole('button', { name: 'Save session' })).not.toBeInTheDocument();
 
-    await page.getByRole('button', { name: 'Unlock session' }).click();
+    await page.getByRole('button', { name: 'Unlock' }).click();
 
     expect(setSessionLock).toHaveBeenCalledWith(locked, false);
     expect(updateSession).not.toHaveBeenCalled();
-    expect(onFinish).toHaveBeenCalled();
+    expect(onFinish).not.toHaveBeenCalled();
+    await expect.element(page.getByText('Session locked. Unlock it to edit.')).not.toBeInTheDocument();
+    await expect.element(page.getByLabelText('Language')).toBeEnabled();
+    await expect.element(page.getByRole('button', { name: 'Save session' })).toBeVisible();
   });
 
   it('does not offer to lock in create mode', async () => {
     const { rendered } = renderForm('create');
     await rendered;
 
-    await expect.element(page.getByRole('button', { name: 'Lock session' })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Lock', exact: true })).not.toBeInTheDocument();
   });
 
   it('does not offer to delete in create mode', async () => {

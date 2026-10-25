@@ -128,18 +128,17 @@ test('locks a session so the autofill leaves it alone', async ({ page, context }
   const schedulePage = new SchedulePage(page);
   await schedulePage.gotoDay(team.slug, event.slug, '0');
 
-  // Lock the session from its modal
+  // Lock the session from its modal, which stays open
   await schedulePage.session('Reserved slot').click();
   await schedulePage.clickOnLockSession();
-  await expect(page.getByRole('dialog')).toBeHidden();
-  const unlock = page
-    .locator('[data-session]', { has: schedulePage.session('Reserved slot') })
-    .getByRole('button', { name: 'Unlock session' });
-  await expect(unlock).toBeVisible();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(schedulePage.sessionLockedHint).toBeVisible();
+  await schedulePage.clickOnCloseSession();
+  await expect(schedulePage.sessionLockIcon('Reserved slot')).toBeVisible();
 
   // A locked session opens read-only
   await schedulePage.session('Reserved slot').click();
-  await expect(page.getByText('This session is locked.')).toBeVisible();
+  await expect(schedulePage.sessionLockedHint).toBeVisible();
   await expect(page.getByRole('button', { name: 'Save session' })).toBeHidden();
   await schedulePage.clickOnCloseSession();
 
@@ -152,10 +151,13 @@ test('locks a session so the autofill leaves it alone', async ({ page, context }
   await expect(schedulePage.session('Autofilled talk')).toBeVisible();
   await expect(schedulePage.session('Reserved slot')).toBeVisible();
 
-  // Unlock from the lock icon of the block
-  await schedulePage.autofillPanel.getByRole('contentinfo').getByRole('button', { name: 'Close' }).click();
-  await unlock.click();
-  await expect(unlock).toBeHidden();
+  // Unlock from its modal, which stays open
+  await schedulePage.closeAutofillPanel();
+  await schedulePage.session('Reserved slot').click();
+  await schedulePage.clickOnUnlockSession();
+  await expect(page.getByRole('button', { name: 'Save session' })).toBeVisible();
+  await schedulePage.clickOnCancelSession();
+  await expect(schedulePage.sessionLockIcon('Reserved slot')).toBeHidden();
 });
 
 test.describe('as a team reviewer', () => {

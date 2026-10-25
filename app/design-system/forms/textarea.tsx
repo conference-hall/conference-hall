@@ -15,10 +15,13 @@ const errorStyles =
   'border-red-300 text-red-900 placeholder-red-300 focus:outline-hidden focus:ring-red-500 focus:border-red-500';
 
 export function TextArea({ name, label, hint, description, className, error, ...rest }: Props) {
-  const styles = cx('block w-full rounded-md text-sm text-gray-900', {
-    [baseStyles]: !error,
-    [errorStyles]: !!error,
-  });
+  const styles = cx(
+    'block w-full rounded-md text-sm text-gray-900 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500',
+    {
+      [baseStyles]: !error,
+      [errorStyles]: !!error,
+    },
+  );
 
   return (
     <div className={className}>

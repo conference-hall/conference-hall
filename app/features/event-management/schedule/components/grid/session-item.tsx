@@ -29,7 +29,7 @@ export const SessionItem = memo(function SessionItem({ id, grid, origin }: Sessi
     gesture?.kind === 'resize' && gesture.sessionId === id ? gesture.endSlot : null,
   );
   const { t } = useTranslation();
-  const { onOpenSession, setSessionLock } = useScheduleContext();
+  const { onOpenSession } = useScheduleContext();
 
   const disabled = !session || Boolean(session.isCreating);
   const payload = { session: session as ScheduleSession } satisfies SessionPayload;
@@ -74,15 +74,14 @@ export const SessionItem = memo(function SessionItem({ id, grid, origin }: Sessi
       </div>
 
       {session.locked ? (
-        <button
-          type="button"
-          aria-label={t('event-management.schedule.edit-session.unlock')}
-          title={t('event-management.schedule.edit-session.unlock')}
-          onClick={() => setSessionLock(session, false)}
-          className="absolute top-0.5 right-0.5 z-10 cursor-pointer rounded-full bg-white/80 p-px opacity-90 hover:opacity-100"
+        <span
+          role="img"
+          aria-label={t('event-management.schedule.edit-session.locked-label')}
+          title={t('event-management.schedule.edit-session.locked-label')}
+          className="pointer-events-none absolute top-0.5 right-0.5 z-10 rounded-full bg-white/80 p-px opacity-90"
         >
           <LockClosedIcon className="size-3" aria-hidden="true" />
-        </button>
+        </span>
       ) : null}
 
       {/* resize handle, on the bottom edge of the block */}

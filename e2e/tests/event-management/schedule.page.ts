@@ -1,4 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
+import { expect } from '../../fixtures.ts';
 import { PageObject } from '../../page-object.ts';
 
 export class SchedulePage extends PageObject {
@@ -10,6 +11,7 @@ export class SchedulePage extends PageObject {
   readonly sessionNameInput: Locator;
   readonly sessionConflictError: Locator;
   readonly autofillPanel: Locator;
+  readonly sessionLockedHint: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -21,6 +23,7 @@ export class SchedulePage extends PageObject {
     this.endDateInput = page.getByLabel('End date');
     this.sessionNameInput = page.getByLabel('Session name');
     this.sessionConflictError = page.getByText('This session overlaps with an existing session on the same track.');
+    this.sessionLockedHint = page.getByText('Session locked. Unlock it to edit.');
   }
 
   async goto(team: string, event: string) {
@@ -59,7 +62,17 @@ export class SchedulePage extends PageObject {
   }
 
   async clickOnLockSession() {
-    await this.page.getByRole('button', { name: 'Lock session', exact: true }).click();
+    await this.page.getByRole('button', { name: 'Lock', exact: true }).click();
+  }
+
+  async clickOnUnlockSession() {
+    await this.page.getByRole('button', { name: 'Unlock', exact: true }).click();
+  }
+
+  async closeAutofillPanel() {
+    await this.autofillPanel.getByRole('contentinfo').getByRole('button', { name: 'Close' }).click();
+    // Forced clicks skip actionability checks, so the panel backdrop must have left the page.
+    await expect(this.page.locator('#headlessui-portal-root')).toHaveCount(0);
   }
 
   async clickOnFillSessions() {
@@ -89,5 +102,9 @@ export class SchedulePage extends PageObject {
   // The drag-and-drop library makes the wrapper of a Session block a button too: the block is the innermost one.
   sessionBlock(name: string) {
     return this.page.getByRole('button', { name }).last();
+  }
+
+  sessionLockIcon(name: string) {
+    return this.page.locator('[data-session]', { has: this.session(name) }).getByRole('img', { name: 'Locked' });
   }
 }

@@ -11,6 +11,7 @@ export const buttonStyles = cva(
   [
     'items-center justify-center',
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+    'disabled:pointer-events-none disabled:opacity-50',
   ],
   {
     variants: {

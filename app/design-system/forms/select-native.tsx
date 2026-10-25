@@ -24,7 +24,7 @@ export function SelectNative({ name, label, options, placeholder, inline, srOnly
         id={name}
         name={name}
         className={cx(
-          'block w-full rounded-md border-0 py-1.5 pr-10 pl-3 text-sm leading-6 text-gray-900 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600',
+          'block w-full rounded-md border-0 py-1.5 pr-10 pl-3 text-sm leading-6 text-gray-900 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200',
           className,
         )}
         {...rest}

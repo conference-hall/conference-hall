@@ -38,7 +38,7 @@ const inside = session('inside', 'Keynote', 'track-1', at(10), at(11));
 const truncated = session('truncated', 'Closing', 'track-2', at(18, 30), at(19, 30));
 const before = session('before', 'Breakfast', 'track-1', at(8), at(9, 30));
 
-function renderDay(sessions: Array<ScheduleSession>, setSessionLock = async () => {}, onOpenSession = () => {}) {
+function renderDay(sessions: Array<ScheduleSession>, onOpenSession = () => {}) {
   return page.render(
     <I18nextProvider i18n={i18nTest}>
       <ScheduleProviders
@@ -47,7 +47,6 @@ function renderDay(sessions: Array<ScheduleSession>, setSessionLock = async () =
         scheduleDays={[day]}
         displayedDays={[day]}
         sessions={sessions}
-        setSessionLock={setSessionLock}
         onOpenSession={onOpenSession}
       >
         <DragDropProvider>
@@ -99,24 +98,21 @@ describe('Day grid', () => {
   it('shows no lock on an unlocked Session', async () => {
     await renderDay([inside]);
 
-    await expect.element(page.getByRole('button', { name: 'Unlock session' })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('img', { name: 'Locked' })).not.toBeInTheDocument();
   });
 
-  it('unlocks a locked Session from a button outside its block, without opening it', async () => {
+  it('shows a lock icon on a locked Session that still opens on click', async () => {
     const locked = { ...inside, locked: true };
-    const setSessionLock = vi.fn(async () => {});
     const onOpenSession = vi.fn();
-    await renderDay([locked], setSessionLock, onOpenSession);
+    await renderDay([locked], onOpenSession);
+
+    await expect.element(page.getByRole('img', { name: 'Locked' })).toBeVisible();
 
     const block = page.getByRole('button', { name: /Keynote/ });
     await expect.element(block).not.toHaveAttribute('aria-disabled', 'true');
+    await block.click();
 
-    const unlock = page.getByRole('button', { name: 'Unlock session' });
-    expect(block.element().contains(unlock.element())).toBe(false);
-
-    await unlock.click();
-    expect(setSessionLock).toHaveBeenCalledWith(locked, false);
-    expect(onOpenSession).not.toHaveBeenCalled();
+    expect(onOpenSession).toHaveBeenCalledWith({ mode: 'edit', session: locked });
   });
 
   it('renders no element per slot', async () => {

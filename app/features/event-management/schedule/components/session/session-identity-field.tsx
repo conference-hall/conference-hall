@@ -86,7 +86,7 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
         value={null}
         onChange={handleSelect}
         className={cx(
-          'absolute inset-x-0 top-0 z-10 rounded-md bg-white transition-shadow',
+          'absolute inset-x-0 top-0 z-10 rounded-md bg-white transition-shadow has-disabled:bg-gray-50',
           isOpen ? 'shadow-lg ring-2 ring-indigo-600' : 'ring-1 ring-gray-300',
         )}
       >
@@ -107,7 +107,7 @@ export function SessionIdentityField({ name, proposal, onChange }: Props) {
           onKeyDown={handleKeyDown}
           placeholder={t('event-management.schedule.edit-session.identity.placeholder')}
           aria-label={t('event-management.schedule.edit-session.name')}
-          className="h-11 w-full rounded-md border-0 bg-transparent pr-10 pl-3 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-0"
+          className="h-11 w-full rounded-md border-0 bg-transparent pr-10 pl-3 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-0 disabled:cursor-not-allowed disabled:text-gray-500"
         />
 
         {/* A ComboboxButton stays interactive while open (Headless inerts non-part siblings). */}

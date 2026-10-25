@@ -49,6 +49,7 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
   const [proposal, setProposal] = useState(session.proposal ?? null);
   const [emojis, setEmojis] = useState(session.emojis);
   const [error, setError] = useState<string | null>();
+  const [locked, setLocked] = useState(session.locked);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -62,9 +63,21 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
     }
   };
 
-  const handleLock = async (locked: boolean) => {
-    await setSessionLock(session, locked);
-    onFinish();
+  const handleLock = async (nextLocked: boolean) => {
+    await setSessionLock(session, nextLocked);
+    if (nextLocked) resetFields();
+    setLocked(nextLocked);
+  };
+
+  const resetFields = () => {
+    setName(session.name ?? '');
+    setColor(session.color);
+    setTrackId(session.trackId);
+    setLanguage(session.language);
+    setTimeslot(session.timeslot);
+    setProposal(session.proposal ?? null);
+    setEmojis(session.emojis);
+    setError(null);
   };
 
   const handleDelete = async () => {
@@ -84,13 +97,7 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
   return (
     <>
       <form id={formId} className="px-6 py-6" onSubmit={handleSubmit}>
-        <fieldset disabled={session.locked} className="flex min-w-0 flex-col gap-6">
-          {session.locked ? (
-            <Callout icon={LockClosedIcon} variant="warning">
-              {t('event-management.schedule.edit-session.locked')}
-            </Callout>
-          ) : null}
-
+        <fieldset disabled={locked} className="flex min-w-0 flex-col gap-6">
           <SessionIdentityField
             name={name}
             proposal={proposal}
@@ -187,21 +194,28 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
         </fieldset>
       </form>
 
+      {locked ? (
+        <p className="flex items-center gap-2 px-6 text-sm text-gray-500">
+          <LockClosedIcon className="size-4 shrink-0" aria-hidden="true" />
+          {t('event-management.schedule.edit-session.locked')}
+        </p>
+      ) : null}
+
       {/* Footer */}
       <div className="flex items-center justify-between gap-2 p-6">
         {mode === 'edit' ? (
           <div className="flex gap-3">
-            {session.locked ? null : (
+            {locked ? null : (
               <Button variant="important" iconLeft={TrashIcon} onClick={handleDelete}>
                 {t('common.remove')}
               </Button>
             )}
             <Button
               variant="secondary"
-              iconLeft={session.locked ? LockOpenIcon : LockClosedIcon}
-              onClick={() => handleLock(!session.locked)}
+              iconLeft={locked ? LockOpenIcon : LockClosedIcon}
+              onClick={() => handleLock(!locked)}
             >
-              {t(`event-management.schedule.edit-session.${session.locked ? 'unlock' : 'lock'}`)}
+              {t(`event-management.schedule.edit-session.${locked ? 'unlock' : 'lock'}`)}
             </Button>
           </div>
         ) : (
@@ -209,9 +223,9 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
         )}
         <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={onFinish}>
-            {session.locked ? t('common.close') : t('common.cancel')}
+            {locked ? t('common.close') : t('common.cancel')}
           </Button>
-          {session.locked ? null : (
+          {locked ? null : (
             <Button form={formId} type="submit" disabled={!(name.trim() || proposal)}>
               {t(`event-management.schedule.${mode}-session.submit`)}
             </Button>
