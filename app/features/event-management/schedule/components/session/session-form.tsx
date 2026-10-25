@@ -36,7 +36,7 @@ import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_EMOJIS } from './constants.ts';
 import { SessionIdentityField } from './session-identity-field.tsx';
 
-const FIELD_LABEL_CLASS = 'w-20 shrink-0 leading-6';
+const FIELD_LABEL_PROPS = { weight: 'normal', variant: 'secondary', className: 'w-20 shrink-0 leading-6' } as const;
 
 type Props = {
   mode: 'create' | 'edit';
@@ -123,10 +123,10 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
             }}
           />
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
             <ClockIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
             <div className="flex w-full items-center gap-2.5">
-              <Text as="span" id={timeLabelId} weight="medium" className={FIELD_LABEL_CLASS}>
+              <Text as="span" id={timeLabelId} {...FIELD_LABEL_PROPS}>
                 {t('event-management.schedule.edit-session.time')}
               </Text>
               <div role="group" aria-labelledby={timeLabelId} className="flex flex-wrap items-center gap-2">
@@ -163,7 +163,7 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
             <MapPinIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
             <SelectNative
               name="trackId"
@@ -171,12 +171,12 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
               value={trackId}
               onChange={(e) => setTrackId(e.target.value)}
               options={tracks.map((t) => ({ name: t.name, value: t.id }))}
-              labelClassName={FIELD_LABEL_CLASS}
+              labelProps={FIELD_LABEL_PROPS}
               inline
             />
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
             <LanguageIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
             <SelectNative
               name="language"
@@ -185,15 +185,15 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
               placeholder={t('common.no-language')}
               onChange={(e) => setLanguage(e.target.value as Language)}
               options={LANGUAGES.map((lang) => ({ name: t(`common.languages.${lang}.label`), value: lang }))}
-              labelClassName={FIELD_LABEL_CLASS}
+              labelProps={FIELD_LABEL_PROPS}
               inline
             />
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
             <PaintBrushIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
             <div className="flex items-center gap-2.5">
-              <Text as="span" weight="medium" className={FIELD_LABEL_CLASS}>
+              <Text as="span" {...FIELD_LABEL_PROPS}>
                 {t('common.color.label')}
               </Text>
               <ColorInput
@@ -205,10 +205,10 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
             <FaceSmileIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
             <div className="flex items-center gap-2.5">
-              <Text as="span" weight="medium" className={FIELD_LABEL_CLASS}>
+              <Text as="span" {...FIELD_LABEL_PROPS}>
                 {t('event-management.schedule.edit-session.emojis')}
               </Text>
               <EmojiSelect emojis={SESSION_EMOJIS} selectedEmojis={emojis} onChangeEmojis={setEmojis} />
