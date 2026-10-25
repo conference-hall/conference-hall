@@ -36,6 +36,7 @@ import type { ScheduleSession } from '../schedule.types.ts';
 import { SESSION_EMOJIS } from './constants.ts';
 import { SessionIdentityField } from './session-identity-field.tsx';
 
+const FOOTER = 'flex items-center justify-between gap-3 border-t border-gray-200 px-6 py-4';
 const FOOTER_BUTTON = 'flex-1 sm:flex-none';
 
 type Props = {
@@ -92,6 +93,7 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
   };
 
   const handleDelete = async () => {
+    if (!confirm(t('event-management.schedule.edit-session.delete-confirm'))) return;
     await deleteSession(session);
     onFinish();
   };
@@ -107,22 +109,24 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
 
   return (
     <>
+      <fieldset disabled={locked} className="min-w-0 border-b border-gray-200 px-6 py-6">
+        <SessionIdentityField
+          name={name}
+          proposal={proposal}
+          onChange={(identity) => {
+            setName(identity.name);
+            setProposal(identity.proposal);
+            if (identity.proposal) {
+              const linked = categories.filter((category) => identity.categoryIds?.includes(category.id));
+              const color = categoryColor(linked);
+              if (color) setColor(color);
+            }
+          }}
+        />
+      </fieldset>
+
       <form id={formId} className="px-6 py-6" onSubmit={handleSubmit}>
         <fieldset disabled={locked} className="flex min-w-0 flex-col gap-6">
-          <SessionIdentityField
-            name={name}
-            proposal={proposal}
-            onChange={(identity) => {
-              setName(identity.name);
-              setProposal(identity.proposal);
-              if (identity.proposal) {
-                const linked = categories.filter((category) => identity.categoryIds?.includes(category.id));
-                const color = categoryColor(linked);
-                if (color) setColor(color);
-              }
-            }}
-          />
-
           <SessionFieldRow
             icon={ClockIcon}
             label={t('event-management.schedule.edit-session.time')}
@@ -157,7 +161,9 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
                   });
                 }}
               />
-              <Badge>{formatDuration(differenceInMinutes(timeslot.end, timeslot.start), i18n.language)}</Badge>
+              <span className="ml-2 flex">
+                <Badge>{formatDuration(differenceInMinutes(timeslot.end, timeslot.start), i18n.language)}</Badge>
+              </span>
             </div>
           </SessionFieldRow>
 
@@ -202,44 +208,51 @@ export function SessionForm({ mode, session, categories, onFinish }: Props) {
       </form>
 
       {locked ? (
-        <p className="flex items-center gap-2 px-6 text-sm text-gray-500">
-          <LockClosedIcon className="size-4 shrink-0" aria-hidden="true" />
-          {t('event-management.schedule.edit-session.locked')}
-        </p>
-      ) : null}
-
-      {/* Footer */}
-      <div className="flex flex-col gap-3 p-6 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
-        {mode === 'edit' ? (
-          <div className="flex gap-3">
-            {locked ? null : (
-              <Button variant="important" iconLeft={TrashIcon} onClick={handleDelete} className={FOOTER_BUTTON}>
-                {t('common.remove')}
-              </Button>
-            )}
+        <div className={FOOTER}>
+          <div className="flex items-center gap-2">
             <Button
-              variant="secondary"
-              iconLeft={locked ? LockOpenIcon : LockClosedIcon}
-              onClick={() => handleLock(!locked)}
-              className={FOOTER_BUTTON}
-            >
-              {t(`event-management.schedule.edit-session.${locked ? 'unlock' : 'lock'}`)}
-            </Button>
+              variant="tertiary"
+              icon={LockClosedIcon}
+              label={t('event-management.schedule.edit-session.unlock')}
+              onClick={() => handleLock(false)}
+            />
+            <Text variant="secondary">{t('event-management.schedule.edit-session.locked')}</Text>
           </div>
-        ) : (
-          <span className="hidden sm:block" />
-        )}
-        <div className="flex justify-end gap-3">
-          <Button variant="secondary" onClick={onFinish} className={FOOTER_BUTTON}>
-            {locked ? t('common.close') : t('common.cancel')}
+          <Button variant="secondary" onClick={onFinish}>
+            {t('common.close')}
           </Button>
-          {locked ? null : (
+        </div>
+      ) : (
+        <div className={FOOTER}>
+          {mode === 'edit' ? (
+            <div className="flex items-center gap-1">
+              <Button
+                variant="tertiary"
+                icon={LockOpenIcon}
+                label={t('event-management.schedule.edit-session.lock')}
+                onClick={() => handleLock(true)}
+              />
+              <Button
+                variant="tertiary"
+                icon={TrashIcon}
+                label={t('common.remove')}
+                onClick={handleDelete}
+                className="hover:bg-red-50 hover:text-red-600"
+              />
+            </div>
+          ) : (
+            <span />
+          )}
+          <div className="flex flex-1 items-center justify-end gap-3 sm:flex-none">
+            <Button variant="secondary" onClick={onFinish} className={FOOTER_BUTTON}>
+              {t('common.cancel')}
+            </Button>
             <Button form={formId} type="submit" className={FOOTER_BUTTON}>
               {t(`event-management.schedule.${mode}-session.submit`)}
             </Button>
-          )}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

@@ -192,14 +192,27 @@ describe('SessionForm component', () => {
     expect(onFinish).toHaveBeenCalled();
   });
 
-  it('deletes a session in edit mode', async () => {
+  it('deletes a session in edit mode once confirmed', async () => {
+    const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true);
     const { rendered, deleteSession, onFinish } = renderForm('edit');
     await rendered;
 
     await page.getByRole('button', { name: 'Remove' }).click();
 
+    expect(confirm).toHaveBeenCalledWith('Remove this session from the schedule?');
     expect(deleteSession).toHaveBeenCalledWith(session);
     expect(onFinish).toHaveBeenCalled();
+  });
+
+  it('keeps the session when the deletion is not confirmed', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(false);
+    const { rendered, deleteSession, onFinish } = renderForm('edit');
+    await rendered;
+
+    await page.getByRole('button', { name: 'Remove' }).click();
+
+    expect(deleteSession).not.toHaveBeenCalled();
+    expect(onFinish).not.toHaveBeenCalled();
   });
 
   it('locks the session and keeps the form open with the saved values', async () => {
@@ -224,6 +237,7 @@ describe('SessionForm component', () => {
 
     await expect.element(page.getByText('Session locked. Unlock it to edit.')).toBeVisible();
     await expect.element(page.getByLabelText('Language')).toBeDisabled();
+    await expect.element(page.getByRole('combobox', { name: 'Session name' })).toBeDisabled();
     await expect.element(page.getByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
     await expect.element(page.getByRole('button', { name: 'Save session' })).not.toBeInTheDocument();
 
@@ -235,6 +249,17 @@ describe('SessionForm component', () => {
     await expect.element(page.getByText('Session locked. Unlock it to edit.')).not.toBeInTheDocument();
     await expect.element(page.getByLabelText('Language')).toBeEnabled();
     await expect.element(page.getByRole('button', { name: 'Save session' })).toBeVisible();
+  });
+
+  it('closes a locked session without saving it', async () => {
+    const { rendered, updateSession, onFinish } = renderForm('edit', {}, { ...session, locked: true });
+    await rendered;
+
+    await expect.element(page.getByRole('button', { name: 'Cancel' })).not.toBeInTheDocument();
+    await page.getByRole('button', { name: 'Close' }).click();
+
+    expect(updateSession).not.toHaveBeenCalled();
+    expect(onFinish).toHaveBeenCalled();
   });
 
   it('does not offer to lock in create mode', async () => {

@@ -82,7 +82,10 @@ describe('SessionIdentityField component', () => {
     // The input is replaced by a linked card.
     await expect.element(page.getByText('React Performance Best Practices')).toBeVisible();
     await expect.element(page.getByRole('combobox')).not.toBeInTheDocument();
-    const changeButton = page.getByRole('button', { name: 'Change proposal' });
+    await expect
+      .element(page.getByRole('link', { name: /React Performance Best Practices/ }))
+      .toHaveAttribute('href', '/team/t1/e1/proposals/react-performance');
+    const changeButton = page.getByRole('button', { name: 'Edit' });
     await expect.element(changeButton).toBeVisible();
 
     await changeButton.click();
