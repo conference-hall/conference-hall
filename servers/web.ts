@@ -67,7 +67,7 @@ export async function createServer(vite?: ViteDevServer, options: CreateServerOp
   applyUrlCleaning(app);
 
   // Response compression
-  await app.register(fastifyCompress);
+  await app.register(fastifyCompress, { globalDecompression: false });
 
   // Security
   await applySecurity(app);
