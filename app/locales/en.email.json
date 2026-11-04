@@ -60,5 +60,12 @@
   "admin.new-team-request.subject": "New team access request",
   "admin.new-team-request.body.title": "New team access request",
   "admin.new-team-request.body.text1": "{{email}} has requested access to manage \"{{eventName}}\" on Conference Hall.",
-  "admin.new-team-request.body.cta": "Review in admin panel"
+  "admin.new-team-request.body.cta": "Review in admin panel",
+  "speakers.event-invitation.title": "Invitation to {{eventName}}",
+  "speakers.event-invitation.subject": "[{{eventName}}] Speaker invitation",
+  "speakers.event-invitation.introduction": "{{organizerName}} from {{teamName}} invites you to join {{eventName}} as a speaker.",
+  "speakers.event-invitation.message": "Message from the organizer",
+  "speakers.event-invitation.consent": "Your profile will only be shared with this event if you accept. You can review the invitation and choose to accept or decline.",
+  "speakers.event-invitation.cta": "Review invitation",
+  "speakers.event-invitation.expiration": "This invitation expires in seven days and must be answered using the invited account. You can ignore this email if you are not interested."
 }
