@@ -1,4 +1,4 @@
-# CONTEXT — Domain Glossary
+# Domain Glossary
 
 The ubiquitous language of Conference Hall: a SaaS platform for managing **CFPs**
 (Calls for Papers) and speaker submissions for conferences and meetups. Speakers
