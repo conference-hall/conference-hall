@@ -17,24 +17,27 @@ export const middleware = [requireAuth];
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
   const authUser = context.get(RequireAuthContext);
-  return SpeakerProposals.for(authUser.id, params.event).list();
+  const proposals = await SpeakerProposals.for(authUser.id, params.event).list();
+  return { proposals };
 };
 
-export default function EventSpeakerProposalsRoute({ loaderData: proposals }: Route.ComponentProps) {
+export default function EventSpeakerProposalsRoute({ loaderData }: Route.ComponentProps) {
+  const { proposals } = loaderData;
   const { t } = useTranslation();
   const event = useCurrentEvent();
+  const { canSubmit } = event.submissionAccess;
 
   return (
     <Page>
       <Page.Heading title={t('event.proposals.heading')}>
-        {event.cfpState === 'OPENED' && proposals.length > 0 ? (
+        {canSubmit && proposals.length > 0 ? (
           <Button to={href('/:event/submission', { event: event.slug })}>{t('event.nav.submit-proposal')}</Button>
         ) : null}
       </Page.Heading>
 
       {proposals.length === 0 ? (
         <EmptyState icon={InboxIcon} label={t('event.proposals.list.empty')}>
-          {event.cfpState === 'OPENED' ? (
+          {canSubmit ? (
             <Button to={href('/:event/submission', { event: event.slug })}>{t('event.nav.submit-proposal')}</Button>
           ) : null}
         </EmptyState>

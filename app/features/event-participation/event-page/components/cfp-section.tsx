@@ -15,12 +15,13 @@ import type { CfpState } from '~/shared/types/events.types.ts';
 type Props = {
   slug: string;
   cfpState: CfpState;
+  canSubmit: boolean;
   cfpStart: Date | null;
   cfpEnd: Date | null;
   className?: string;
 };
 
-export function CfpSection({ slug, cfpState, cfpStart, cfpEnd }: Props) {
+export function CfpSection({ slug, cfpState, canSubmit, cfpStart, cfpEnd }: Props) {
   const { t } = useTranslation();
 
   return (
@@ -45,9 +46,7 @@ export function CfpSection({ slug, cfpState, cfpStart, cfpEnd }: Props) {
         </ClientOnly>
       </div>
 
-      {cfpState === 'OPENED' && (
-        <Button to={href('/:event/submission', { event: slug })}>{t('event.nav.submit-proposal')}</Button>
-      )}
+      {canSubmit && <Button to={href('/:event/submission', { event: slug })}>{t('event.nav.submit-proposal')}</Button>}
     </section>
   );
 }

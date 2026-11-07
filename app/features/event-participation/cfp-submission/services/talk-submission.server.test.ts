@@ -2,6 +2,7 @@ import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
+import { submissionPassFactory } from 'tests/factories/submission-passes.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
@@ -194,6 +195,148 @@ describe('TalkSubmission', () => {
     });
   });
 
+  describe('#saveDraft with a submission pass', () => {
+    const data = {
+      title: 'Title',
+      abstract: 'Abstract',
+      references: null,
+      slidesUrl: null,
+      videoUrl: null,
+      languages: [],
+      level: null,
+    };
+
+    it('creates a draft when the CFP is not open yet', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-future'] });
+      const speaker = await userFactory();
+      await submissionPassFactory({ event, user: speaker });
+
+      const { talkId } = await TalkSubmission.for(speaker.id, event.slug).saveDraft('new', data);
+
+      const proposal = await db.proposal.findFirst({ where: { talkId } });
+      expect(proposal?.isDraft).toEqual(true);
+      expect(proposal?.eventId).toEqual(event.id);
+    });
+
+    it('throws an error when the user holds no pass for the event', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const otherEvent = await eventFactory({ traits: ['conference-cfp-past'] });
+      const speaker = await userFactory();
+      await submissionPassFactory({ event: otherEvent, user: speaker });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.saveDraft('new', data)).rejects.toThrow(CfpNotOpenError);
+    });
+
+    it('throws an error when the pass has been deleted', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const speaker = await userFactory();
+      const pass = await submissionPassFactory({ event, user: speaker });
+      await db.submissionPass.delete({ where: { id: pass.id } });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.saveDraft('new', data)).rejects.toThrow(CfpNotOpenError);
+    });
+
+    it('sets tracks when the CFP is finished', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const format = await eventFormatFactory({ event });
+      const speaker = await userFactory();
+      await submissionPassFactory({ event, user: speaker });
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk, traits: ['draft'] });
+
+      await TalkSubmission.for(speaker.id, event.slug).saveTracks(talk.id, { formats: [format.id], categories: [] });
+
+      const result = await db.proposal.findUnique({ where: { id: proposal.id }, include: { formats: true } });
+      expect(result?.formats.map((f) => f.id)).toEqual([format.id]);
+    });
+  });
+
+  describe('#submit with a submission pass', () => {
+    it.each(['conference-cfp-future', 'conference-cfp-past'] as const)(
+      'submits a draft with notifications when CFP is %s',
+      async (trait) => {
+        const event = await eventFactory({
+          traits: [trait],
+          attributes: {
+            emailOrganizer: 'ben@email.com',
+            emailNotifications: ['submitted'],
+            slackWebhookUrl: 'http://webhook.example.net',
+          },
+        });
+        const speaker = await userFactory();
+        await submissionPassFactory({ event, user: speaker });
+        const talk = await talkFactory({ speakers: [speaker] });
+        const proposal = await proposalFactory({ event, talk, traits: ['draft'] });
+
+        await TalkSubmission.for(speaker.id, event.slug).submit(talk.id);
+
+        const result = await db.proposal.findUnique({ where: { id: proposal.id } });
+        expect(result?.isDraft).toEqual(false);
+        expect(sendEmail.trigger).toHaveBeenCalledWith(
+          expect.objectContaining({ template: 'speakers-proposal-submitted' }),
+        );
+        expect(sendEmail.trigger).toHaveBeenCalledWith(
+          expect.objectContaining({ template: 'organizers-proposal-submitted' }),
+        );
+        expect(sendTalkToSlack.trigger).toHaveBeenCalledWith({ eventId: event.id, proposalId: proposal.id });
+      },
+    );
+
+    it('ignores max proposals when the CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'], attributes: { maxProposals: 1 } });
+      const speaker = await userFactory();
+      await submissionPassFactory({ event, user: speaker });
+      const talk1 = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk: talk1 });
+      const talk2 = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk: talk2, traits: ['draft'] });
+
+      await TalkSubmission.for(speaker.id, event.slug).submit(talk2.id);
+
+      const result = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(result?.isDraft).toEqual(false);
+    });
+
+    it('enforces max proposals when the CFP is open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'], attributes: { maxProposals: 1 } });
+      const speaker = await userFactory();
+      await submissionPassFactory({ event, user: speaker });
+      const talk1 = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk: talk1 });
+      const talk2 = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk: talk2, traits: ['draft'] });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.submit(talk2.id)).rejects.toThrow(MaxSubmittedProposalsReachedError);
+    });
+
+    it('throws an error when a co-speaker without pass submits', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const holder = await userFactory();
+      const coSpeaker = await userFactory();
+      await submissionPassFactory({ event, user: holder });
+      const talk = await talkFactory({ speakers: [holder, coSpeaker] });
+      await proposalFactory({ event, talk, traits: ['draft'] });
+
+      const submission = TalkSubmission.for(coSpeaker.id, event.slug);
+      await expect(submission.submit(talk.id)).rejects.toThrow(CfpNotOpenError);
+    });
+
+    it('throws an error when the pass has been deleted', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const speaker = await userFactory();
+      const pass = await submissionPassFactory({ event, user: speaker });
+      const talk = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk, traits: ['draft'] });
+      await db.submissionPass.delete({ where: { id: pass.id } });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.submit(talk.id)).rejects.toThrow(CfpNotOpenError);
+    });
+  });
+
   describe('#saveTracks', () => {
     it('set tracks of the proposal', async () => {
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
@@ -254,6 +397,19 @@ describe('TalkSubmission', () => {
       const submission = TalkSubmission.for(speaker.id, event.slug);
       await expect(submission.saveTracks('XXX', { formats: [], categories: [] })).rejects.toThrow(
         ProposalNotFoundError,
+      );
+    });
+
+    it('throws an error when CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const format = await eventFormatFactory({ event });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk, traits: ['draft'] });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.saveTracks(talk.id, { formats: [format.id], categories: [] })).rejects.toThrow(
+        CfpNotOpenError,
       );
     });
   });

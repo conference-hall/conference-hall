@@ -18,9 +18,9 @@ export const handle = { step: 'root' };
 
 export default function EventSubmissionRoute({ params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { slug, hasTracks, hasSurvey, isCfpOpen } = useCurrentEvent();
+  const { slug, hasTracks, hasSurvey, submissionAccess } = useCurrentEvent();
 
-  if (!isCfpOpen) {
+  if (!submissionAccess.canSubmit) {
     return (
       <EmptyState label={t('event.submission.cfp-not-open')} icon={LockClosedIcon}>
         <Button to={href('/:event', { event: slug })}>{t('common.go-back')}</Button>

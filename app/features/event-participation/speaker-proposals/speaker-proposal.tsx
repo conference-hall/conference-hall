@@ -110,7 +110,11 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
     <Page>
       <h1 className="sr-only">{t('event.proposal.heading')}</h1>
       <div className="space-y-4 lg:space-y-6">
-        <ProposalStatusSection proposal={proposal} event={currentEvent} />
+        <ProposalStatusSection
+          proposal={proposal}
+          event={currentEvent}
+          canSubmit={currentEvent.submissionAccess.canSubmit}
+        />
 
         <TalkSection
           talk={proposal}

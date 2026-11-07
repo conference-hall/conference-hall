@@ -30,7 +30,8 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
 export default function EventSubmitRoute({ loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
   const { proposalsCount, drafts, talks } = loaderData;
-  const { maxProposals } = useCurrentEvent();
+  const currentEvent = useCurrentEvent();
+  const maxProposals = !currentEvent.submissionAccess.viaPass ? currentEvent.maxProposals : null;
   const hasMaxProposals = maxProposals && proposalsCount >= maxProposals;
   const hasTalksToSubmit = drafts.length > 0 || talks.length > 0;
 

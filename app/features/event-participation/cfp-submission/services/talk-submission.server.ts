@@ -6,7 +6,6 @@ import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import OrganizerProposalSubmittedEmail from '~/shared/emails/templates/organizers/proposal-submitted.email.tsx';
 import SpeakerProposalSubmittedEmail from '~/shared/emails/templates/speakers/proposal-submitted.email.tsx';
 import {
-  CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
@@ -15,6 +14,7 @@ import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { TalkSaveData, TracksSaveData } from '~/shared/types/speaker-talk.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import { assertCanSubmit } from './submission-access.server.ts';
 
 export class TalkSubmission {
   constructor(
@@ -29,7 +29,7 @@ export class TalkSubmission {
   async saveDraft(talkId: string, data: TalkSaveData) {
     const event = await db.event.findUnique({ where: { slug: this.eventSlug } });
     if (!event) throw new EventNotFoundError();
-    if (!event.isCfpOpen) throw new CfpNotOpenError();
+    await assertCanSubmit(event, this.userId);
 
     const library = TalksLibrary.of(this.userId);
     const talk = talkId === 'new' ? await library.add(data) : await library.talk(talkId).update(data);
@@ -70,10 +70,11 @@ export class TalkSubmission {
 
   async saveTracks(talkId: string, data: TracksSaveData) {
     const proposal = await db.proposal.findFirst({
-      select: { id: true },
+      select: { id: true, event: true },
       where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { userId: this.userId } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
+    await assertCanSubmit(proposal.event, this.userId);
 
     await db.proposal.update({
       where: { id: proposal.id },
@@ -87,9 +88,9 @@ export class TalkSubmission {
   async submit(talkId: string) {
     const event = await db.event.findUnique({ where: { slug: this.eventSlug }, include: { team: true } });
     if (!event) throw new EventNotFoundError();
-    if (!event.isCfpOpen) throw new CfpNotOpenError();
+    const access = await assertCanSubmit(event, this.userId);
 
-    if (event.maxProposals) {
+    if (!access.viaPass && event.maxProposals) {
       const nbProposals = await db.proposal.count({
         where: {
           eventId: event.id,

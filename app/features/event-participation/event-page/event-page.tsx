@@ -1,4 +1,6 @@
+import { TicketIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import { Callout } from '~/design-system/callout.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '../event-page-context.tsx';
 import { CfpSection } from './components/cfp-section.tsx';
@@ -8,13 +10,17 @@ import { TrackSection } from './components/track-section.tsx';
 export default function EventRoute() {
   const { t } = useTranslation();
   const currentEvent = useCurrentEvent();
+  const access = currentEvent.submissionAccess;
 
   const hasTracks = currentEvent.formats.length > 0 || currentEvent.categories.length > 0;
 
   return (
     <Page className="space-y-4 lg:space-y-8">
+      {access.viaPass ? <Callout title={t('event.submission-pass.banner')} icon={TicketIcon} /> : null}
+
       <CfpSection
         slug={currentEvent.slug}
+        canSubmit={access.canSubmit}
         cfpState={currentEvent.cfpState}
         cfpStart={currentEvent.cfpStart}
         cfpEnd={currentEvent.cfpEnd}

@@ -10,6 +10,7 @@ import {
   StarIcon,
   SwatchIcon,
   TagIcon,
+  TicketIcon,
 } from '@heroicons/react/24/outline';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
@@ -82,6 +83,11 @@ const getMenuItems = (team: string, event: string, t: TFunction) => [
     to: `/team/${team}/${event}/settings/emails`,
     icon: EnvelopeIcon,
     label: t('event-management.settings.menu.emails'),
+  },
+  {
+    to: `/team/${team}/${event}/settings/submission-passes`,
+    icon: TicketIcon,
+    label: t('event-management.settings.menu.submission-passes'),
   },
   {
     to: `/team/${team}/${event}/settings/integrations`,

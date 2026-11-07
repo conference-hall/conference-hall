@@ -39,6 +39,7 @@ export default [
     route('invite/proposal/:code', './features/event-participation/proposal-invitation/proposal-invitation.tsx'),
     route('invite/talk/:code', './features/speaker/talk-invitation/talk-invitation.tsx'),
     route('invite/team/:code', './features/team-management/team-invitation/team-invitation.tsx'),
+    route('invite/pass/:code', './features/event-participation/submission-pass/submission-pass.tsx'),
 
     // Notifications pages
     route('notifications', './features/notifications/notifications.tsx'),
@@ -112,6 +113,7 @@ export default [
       route('settings', './features/event-management/settings/settings.tsx', [
         index('./features/event-management/settings/general.tsx'),
         route('cfp', './features/event-management/settings/cfp.tsx'),
+        route('submission-passes', './features/event-management/settings/submission-passes.tsx'),
         route('tracks', './features/event-management/settings/tracks.tsx'),
         route('tags', './features/event-management/settings/tags.tsx'),
         route('customize', './features/event-management/settings/customize.tsx'),
