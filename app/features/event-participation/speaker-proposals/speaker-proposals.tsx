@@ -7,6 +7,7 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import { getSubmissionAccessForSlug } from '~/features/event-participation/cfp-submission/services/submission-access.server.ts';
 import { SpeakerProposals } from '~/features/event-participation/speaker-proposals/services/speaker-proposals.server.ts';
 import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import { useCurrentEvent } from '../event-page-context.tsx';
@@ -17,24 +18,27 @@ export const middleware = [requireAuth];
 
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
   const authUser = context.get(RequireAuthContext);
-  return SpeakerProposals.for(authUser.id, params.event).list();
+  const proposals = await SpeakerProposals.for(authUser.id, params.event).list();
+  const access = await getSubmissionAccessForSlug(params.event, authUser.id);
+  return { proposals, access };
 };
 
-export default function EventSpeakerProposalsRoute({ loaderData: proposals }: Route.ComponentProps) {
+export default function EventSpeakerProposalsRoute({ loaderData }: Route.ComponentProps) {
+  const { proposals, access } = loaderData;
   const { t } = useTranslation();
   const event = useCurrentEvent();
 
   return (
     <Page>
       <Page.Heading title={t('event.proposals.heading')}>
-        {event.cfpState === 'OPENED' && proposals.length > 0 ? (
+        {access.canSubmit && proposals.length > 0 ? (
           <Button to={href('/:event/submission', { event: event.slug })}>{t('event.nav.submit-proposal')}</Button>
         ) : null}
       </Page.Heading>
 
       {proposals.length === 0 ? (
         <EmptyState icon={InboxIcon} label={t('event.proposals.list.empty')}>
-          {event.cfpState === 'OPENED' ? (
+          {access.canSubmit ? (
             <Button to={href('/:event/submission', { event: event.slug })}>{t('event.nav.submit-proposal')}</Button>
           ) : null}
         </EmptyState>

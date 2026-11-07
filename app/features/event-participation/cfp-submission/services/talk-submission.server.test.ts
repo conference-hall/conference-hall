@@ -256,6 +256,19 @@ describe('TalkSubmission', () => {
         ProposalNotFoundError,
       );
     });
+
+    it('throws an error when CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const format = await eventFormatFactory({ event });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk, traits: ['draft'] });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.saveTracks(talk.id, { formats: [format.id], categories: [] })).rejects.toThrow(
+        CfpNotOpenError,
+      );
+    });
   });
 
   describe('#submit', () => {

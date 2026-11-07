@@ -10,6 +10,7 @@ import { ProposalDeleteButton } from './proposal-delete.tsx';
 type Props = {
   proposal: { id: string; talkId: string | null; status: SpeakerProposalStatus };
   event: { name: string; slug: string; isCfpOpen: boolean };
+  canSubmit: boolean;
 };
 
 export function ProposalStatusSection(props: Props) {
@@ -35,20 +36,20 @@ export function ProposalStatusSection(props: Props) {
   }
 }
 
-function Draft({ proposal, event }: Props) {
+function Draft({ proposal, event, canSubmit }: Props) {
   const { t } = useTranslation();
   return (
     <Card as="section" p={8} className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between">
       <div>
         <H2 mb={1}>{t('speaker.proposal-status.draft.heading')}</H2>
-        {event.isCfpOpen ? (
+        {canSubmit ? (
           <Subtitle>{t('speaker.proposal-status.draft.cfp-open', { event: event.name })}</Subtitle>
         ) : (
           <Subtitle>{t('speaker.proposal-status.draft.cfp-close')}</Subtitle>
         )}
       </div>
       <div className="mt-5 flex gap-4">
-        {event.isCfpOpen ? (
+        {canSubmit ? (
           <>
             <ProposalDeleteButton />
             <Button to={`../submission/${proposal.talkId}`} iconRight={ArrowRightIcon}>
