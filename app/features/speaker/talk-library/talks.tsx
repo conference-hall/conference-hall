@@ -45,12 +45,13 @@ export default function SpeakerTalksRoute({ loaderData: talks }: Route.Component
       ) : (
         <List>
           <List.Header>
-            <Text weight="semibold">{t('talk.library.count', { count: talks.length })}</Text>
-            <div className="flex items-center gap-4">
+            <Text weight="semibold" className="flex h-9 items-center self-start sm:self-auto">
+              {t('talk.library.count', { count: talks.length })}
+            </Text>
+            <div className="flex flex-col-reverse items-end gap-4 sm:flex-row sm:items-center">
               <SearchParamSelector
                 param="filter"
                 defaultValue="active"
-                className="hidden sm:flex"
                 selectors={[
                   { value: 'archived', label: t('common.archived') },
                   { value: 'active', label: t('common.active') },
