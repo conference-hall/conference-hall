@@ -15,7 +15,6 @@ import {
   ConversationMessageReactSchema,
   ConversationMessageSaveSchema,
 } from '~/features/conversations/services/conversation.schema.server.ts';
-import { getSubmissionAccessForSlug } from '~/features/event-participation/cfp-submission/services/submission-access.server.ts';
 import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
@@ -38,8 +37,7 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
   const authUser = context.get(RequireAuthContext);
   const proposal = await SpeakerProposal.for(authUser.id, params.proposal).get();
   const conversation = await ConversationService.forSpeaker(authUser.id, params.proposal).getConversation();
-  const access = await getSubmissionAccessForSlug(params.event, authUser.id);
-  return { proposal, conversation, access };
+  return { proposal, conversation };
 };
 
 export const action = async ({ request, params, context }: Route.ActionArgs) => {
@@ -103,7 +101,7 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 
 export default function ProposalRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { proposal, conversation, access } = loaderData;
+  const { proposal, conversation } = loaderData;
   const currentEvent = useCurrentEvent();
   const canEdit = proposal.status === SpeakerProposalStatus.Submitted;
   const speakerConversationEnabled = useFlag('speakersCommunication') && currentEvent.speakersConversationEnabled;
@@ -112,7 +110,11 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
     <Page>
       <h1 className="sr-only">{t('event.proposal.heading')}</h1>
       <div className="space-y-4 lg:space-y-6">
-        <ProposalStatusSection proposal={proposal} event={currentEvent} canSubmit={access.canSubmit} />
+        <ProposalStatusSection
+          proposal={proposal}
+          event={currentEvent}
+          canSubmit={currentEvent.submissionAccess.canSubmit}
+        />
 
         <TalkSection
           talk={proposal}

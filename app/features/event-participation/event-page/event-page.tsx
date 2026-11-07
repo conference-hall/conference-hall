@@ -2,22 +2,15 @@ import { TicketIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Callout } from '~/design-system/callout.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { OptionalAuthContext } from '~/shared/authentication/auth.middleware.ts';
-import { getSubmissionAccessForSlug } from '../cfp-submission/services/submission-access.server.ts';
 import { useCurrentEvent } from '../event-page-context.tsx';
-import type { Route } from './+types/event-page.ts';
 import { CfpSection } from './components/cfp-section.tsx';
 import { DetailsSection } from './components/details-section.tsx';
 import { TrackSection } from './components/track-section.tsx';
 
-export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const user = context.get(OptionalAuthContext);
-  return getSubmissionAccessForSlug(params.event, user?.id);
-};
-
-export default function EventRoute({ loaderData: access }: Route.ComponentProps) {
+export default function EventRoute() {
   const { t } = useTranslation();
   const currentEvent = useCurrentEvent();
+  const access = currentEvent.submissionAccess;
 
   const hasTracks = currentEvent.formats.length > 0 || currentEvent.categories.length > 0;
 

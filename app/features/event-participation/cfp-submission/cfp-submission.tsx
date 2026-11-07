@@ -7,26 +7,20 @@ import { Button } from '~/design-system/button.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
-import { RequireAuthContext, requireAuth } from '~/shared/authentication/auth.middleware.ts';
+import { requireAuth } from '~/shared/authentication/auth.middleware.ts';
 import type { Route } from './+types/cfp-submission.ts';
 import { Steps } from './components/steps.tsx';
 import { SubmissionContextProvider } from './components/submission-context.tsx';
-import { getSubmissionAccessForSlug } from './services/submission-access.server.ts';
 
 export const middleware = [requireAuth];
 
 export const handle = { step: 'root' };
 
-export const loader = async ({ params, context }: Route.LoaderArgs) => {
-  const authUser = context.get(RequireAuthContext);
-  return getSubmissionAccessForSlug(params.event, authUser.id);
-};
-
-export default function EventSubmissionRoute({ params, loaderData: access }: Route.ComponentProps) {
+export default function EventSubmissionRoute({ params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { slug, hasTracks, hasSurvey } = useCurrentEvent();
+  const { slug, hasTracks, hasSurvey, submissionAccess } = useCurrentEvent();
 
-  if (!access.canSubmit) {
+  if (!submissionAccess.canSubmit) {
     return (
       <EmptyState label={t('event.submission.cfp-not-open')} icon={LockClosedIcon}>
         <Button to={href('/:event', { event: slug })}>{t('common.go-back')}</Button>

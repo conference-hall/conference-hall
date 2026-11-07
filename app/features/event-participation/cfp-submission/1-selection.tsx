@@ -13,7 +13,6 @@ import type { Route } from './+types/1-selection.ts';
 import { MaxProposalsReached } from './components/max-proposals.tsx';
 import { NoSubmissionState } from './components/no-submissions-state.tsx';
 import { SubmissionTalksList } from './components/submission-talks-list.tsx';
-import { getSubmissionAccessForSlug } from './services/submission-access.server.ts';
 
 export const handle = { step: 'selection' };
 
@@ -22,7 +21,6 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
   const speakerProposals = SpeakerProposals.for(authUser.id, params.event);
   const talkLibrary = TalksLibrary.of(authUser.id);
   return {
-    access: await getSubmissionAccessForSlug(params.event, authUser.id),
     proposalsCount: await speakerProposals.count(),
     drafts: await speakerProposals.drafts(),
     talks: await talkLibrary.listForEvent(params.event),
@@ -31,9 +29,9 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
 
 export default function EventSubmitRoute({ loaderData }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { access, proposalsCount, drafts, talks } = loaderData;
+  const { proposalsCount, drafts, talks } = loaderData;
   const currentEvent = useCurrentEvent();
-  const maxProposals = access.maxProposalsApplies ? currentEvent.maxProposals : null;
+  const maxProposals = currentEvent.submissionAccess.maxProposalsApplies ? currentEvent.maxProposals : null;
   const hasMaxProposals = maxProposals && proposalsCount >= maxProposals;
   const hasTalksToSubmit = drafts.length > 0 || talks.length > 0;
 

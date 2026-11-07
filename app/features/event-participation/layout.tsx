@@ -12,8 +12,10 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
+import { OptionalAuthContext } from '~/shared/authentication/auth.middleware.ts';
 import { useUser } from '../../app-platform/components/user-context.tsx';
 import type { Route } from './+types/layout.ts';
+import { getSubmissionAccess } from './cfp-submission/services/submission-access.server.ts';
 import { CurrentEventPageProvider } from './event-page-context.tsx';
 
 export const meta = (args: Route.MetaArgs) => {
@@ -27,9 +29,11 @@ export const meta = (args: Route.MetaArgs) => {
   ]);
 };
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
+  const user = context.get(OptionalAuthContext);
   const event = await EventPage.of(params.event).get();
-  return event;
+  const submissionAccess = await getSubmissionAccess(event, user?.id);
+  return { ...event, submissionAccess };
 };
 
 export default function EventRoute({ loaderData: event }: Route.ComponentProps) {
