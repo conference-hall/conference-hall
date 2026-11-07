@@ -112,6 +112,7 @@ export default [
       route('settings', './features/event-management/settings/settings.tsx', [
         index('./features/event-management/settings/general.tsx'),
         route('cfp', './features/event-management/settings/cfp.tsx'),
+        route('submission-passes', './features/event-management/settings/submission-passes.tsx'),
         route('tracks', './features/event-management/settings/tracks.tsx'),
         route('tags', './features/event-management/settings/tags.tsx'),
         route('customize', './features/event-management/settings/customize.tsx'),

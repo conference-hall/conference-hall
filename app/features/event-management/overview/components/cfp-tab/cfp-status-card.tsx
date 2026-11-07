@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { ArrowRightIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'react-i18next';
 import { href } from 'react-router';
 import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
@@ -22,6 +22,7 @@ type Props = {
 
 export function CfpStatusCard({ team, event, cfpState, cfpStart, cfpEnd, showActions }: Props) {
   const { t } = useTranslation();
+  const showSubmissionPassLink = showActions && cfpState !== 'OPENED';
   return (
     <ClientOnly fallback={<StatusCard.Fallback showActions={showActions} />}>
       {() => (
@@ -30,6 +31,16 @@ export function CfpStatusCard({ team, event, cfpState, cfpStart, cfpEnd, showAct
           label={<CallForPaperStatusLabel state={cfpState} start={cfpStart} end={cfpEnd} />}
           subtitle={<CallForPaperDateLabel state={cfpState} start={cfpStart} end={cfpEnd} format="short" />}
         >
+          {showSubmissionPassLink ? (
+            <Link
+              to={href('/team/:team/:event/settings/submission-passes', { team, event })}
+              iconLeft={PlusIcon}
+              weight="medium"
+              className="mr-auto"
+            >
+              {t('event-management.overview.submission-pass-link')}
+            </Link>
+          ) : null}
           {showActions ? (
             <Link
               to={href('/team/:team/:event/settings/cfp', { team, event })}

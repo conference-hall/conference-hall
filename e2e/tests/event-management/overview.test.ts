@@ -11,6 +11,7 @@ import { expect, test } from '../../fixtures.ts';
 import { userLoggedFactory } from '../../helpers.ts';
 import { OverviewPage } from './overview.page.ts';
 import { ProposalPage } from './proposal.page.ts';
+import { SubmissionPassesSettingsPage } from './settings/submission-passes-settings.page.ts';
 
 let user: User;
 let team: Team;
@@ -98,5 +99,33 @@ test.describe('As reviewer', () => {
     await expect(overviewPage.dashboardCardLink('The event is public', 'Change')).not.toBeVisible();
     await expect(overviewPage.dashboardCardLink('Reviews are enabled', 'Change')).not.toBeVisible();
     await expect(overviewPage.dashboardCard('Proposals reviewed by you.').getByText('0%')).toBeVisible();
+  });
+});
+
+test.describe('Submission pass link', () => {
+  test.beforeEach(async ({ context }) => {
+    user = await userLoggedFactory(context);
+    team = await teamFactory({ owners: [user] });
+  });
+
+  test('links to the submission passes settings when the CFP is closed', async ({ page }) => {
+    event = await eventFactory({ team, traits: ['conference-cfp-past'] });
+    const overviewPage = new OverviewPage(page);
+    await overviewPage.goto(team.slug, event.slug);
+
+    await overviewPage.dashboardCardLink('Call for papers closed', 'Create a submission pass').click();
+
+    const passesPage = new SubmissionPassesSettingsPage(page);
+    await passesPage.waitFor();
+    await expect(passesPage.labelInput).toBeFocused();
+  });
+
+  test('hides the link when the CFP is open', async ({ page }) => {
+    event = await eventFactory({ team, traits: ['conference-cfp-open'] });
+    const overviewPage = new OverviewPage(page);
+    await overviewPage.goto(team.slug, event.slug);
+
+    await expect(overviewPage.dashboardCardLink('Call for papers open', 'Change')).toBeVisible();
+    await expect(overviewPage.dashboardCardLink('Call for papers open', 'Create a submission pass')).not.toBeVisible();
   });
 });
