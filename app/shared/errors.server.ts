@@ -88,6 +88,18 @@ export class InvitationInvalidOrAccepted extends BadRequestError {
   }
 }
 
+export class SubmissionPassNotFoundError extends NotFoundError {
+  constructor() {
+    super('Submission pass invalid or deleted');
+  }
+}
+
+export class SubmissionPassAlreadyClaimedError extends ForbiddenError {
+  constructor() {
+    super('Submission pass already used by another speaker');
+  }
+}
+
 export class UserNotFoundError extends NotFoundError {
   constructor() {
     super('User not found');

@@ -39,6 +39,7 @@ export default [
     route('invite/proposal/:code', './features/event-participation/proposal-invitation/proposal-invitation.tsx'),
     route('invite/talk/:code', './features/speaker/talk-invitation/talk-invitation.tsx'),
     route('invite/team/:code', './features/team-management/team-invitation/team-invitation.tsx'),
+    route('invite/pass/:code', './features/event-participation/submission-pass/submission-pass.tsx'),
 
     // Notifications pages
     route('notifications', './features/notifications/notifications.tsx'),
