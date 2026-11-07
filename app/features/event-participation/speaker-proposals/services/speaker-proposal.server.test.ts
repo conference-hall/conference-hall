@@ -2,6 +2,7 @@ import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
+import { submissionPassFactory } from 'tests/factories/submission-passes.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
@@ -119,6 +120,28 @@ describe('SpeakerProposal', () => {
     it('throws an error when CFP is not open', async () => {
       const event = await eventFactory({ traits: ['conference-cfp-past'] });
       const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      await expect(
+        SpeakerProposal.for(speaker.id, proposal.id).update({
+          title: 'change',
+          abstract: 'change',
+          level: null,
+          languages: ['fr'],
+          references: '',
+          slidesUrl: null,
+          videoUrl: null,
+          formats: [],
+          categories: [],
+        }),
+      ).rejects.toThrow(CfpNotOpenError);
+    });
+
+    it('throws an error when a pass holder updates a submitted proposal while CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const speaker = await userFactory();
+      await submissionPassFactory({ event, user: speaker });
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
 

@@ -41,7 +41,14 @@ term as defined here and don't drift to synonyms.
 - **CFP** (Call for Papers) — The submission window, bounded by `cfpStart`/`cfpEnd`.
   **CFP-open semantics differ by event type**: a CONFERENCE is open only _between_
   start and end; a MEETUP is open from `cfpStart` onward with no end. Speakers cannot
-  submit when the CFP is closed.
+  submit when the CFP is closed, unless they hold a **Submission pass**.
+
+- **Submission pass**: An organizer-issued, single-use link that lets one speaker
+  submit to an event while its CFP is not open (before it opens or after it ends).
+  It belongs to the first User who confirms it after opening it, allows any number of submissions,
+  and stays valid until deleted. While the CFP is open it has
+  no effect and the event's usual rules apply. Distinct from an **Invitation code**,
+  which grants access to an existing Talk, Proposal or Team.
 
 - **Format** — An organizer-defined **presentation mode** for an event (e.g. Talk,
   Workshop, Lightning, Panel) — _how_ it's delivered. A proposal may require one,

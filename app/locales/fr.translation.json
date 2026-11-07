@@ -950,6 +950,7 @@
   "event.proposals.status.declined": "Refusé",
   "event.proposals.status.draft": "Brouillon",
   "event.proposals.status.submitted": "Soumise",
+  "event.submission-pass.banner": "Vous avez un submission pass : vous pouvez soumettre des propositions même si le call for papers est fermé.",
   "event.submission.cfp-not-open": "Le call for papers n'est pas encore ouvert.",
   "event.submission.proposal.heading": "Votre proposition",
   "event.submission.selection.description": "Sélectionnez un talk dans votre bibliothèque ou créez-en un nouveau.",
