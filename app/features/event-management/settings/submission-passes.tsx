@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod/v4';
 import { CheckIcon, ClipboardDocumentIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { data, Form, href, useNavigation, useParams } from 'react-router';
+import { data, Form, href, useNavigation } from 'react-router';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -52,7 +52,7 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
   return null;
 };
 
-export default function SubmissionPassesRoute({ loaderData, actionData }: Route.ComponentProps) {
+export default function SubmissionPassesRoute({ loaderData, actionData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
   const { unused, used } = loaderData;
   const resetForm = Boolean(actionData?.resetForm);
@@ -115,7 +115,7 @@ export default function SubmissionPassesRoute({ loaderData, actionData }: Route.
                     <div className="flex items-center gap-2">
                       <Avatar name={pass.holder.name} picture={pass.holder.picture} size="s" />
                       <div>
-                        <HolderName holder={pass.holder} />
+                        <HolderName holder={pass.holder} team={params.team} event={params.event} />
                         <Text variant="secondary" size="xs">
                           {pass.label}
                         </Text>
@@ -133,14 +133,15 @@ export default function SubmissionPassesRoute({ loaderData, actionData }: Route.
   );
 }
 
-function HolderName({ holder }: { holder: { name: string; eventSpeakerId: string | null } }) {
-  const params = useParams();
-  if (!holder.eventSpeakerId || !params.team || !params.event) return <Text weight="medium">{holder.name}</Text>;
+type HolderNameProps = { holder: { name: string; eventSpeakerId: string | null }; team: string; event: string };
+
+function HolderName({ holder, team, event }: HolderNameProps) {
+  if (!holder.eventSpeakerId) return <Text weight="medium">{holder.name}</Text>;
   return (
     <Link
       to={href('/team/:team/:event/speakers/:speaker', {
-        team: params.team,
-        event: params.event,
+        team,
+        event,
         speaker: holder.eventSpeakerId,
       })}
       weight="medium"
