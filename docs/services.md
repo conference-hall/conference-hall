@@ -13,6 +13,8 @@ Every service class exposes one or two static factory methods instead of public 
 
 - **`ClassName.for(authorizedContext, ...args)`** — when service needs authorization context (team or event)
 - **`ClassName.of(scalarId)`** — when service only needs scalar identifier (no authorization)
+- **`ClassName.with(token)`**: when service is built from a non-ID input without authorization, such as an invitation
+  code or search filters (`TeamMemberInvite.with(code)`, `EventsSearch.with(filters)`)
 
 ```typescript
 export class ProposalReview {
@@ -129,5 +131,7 @@ export type FeedItem = Feed[number];
 ## File Organization
 
 - One service class per file
+- A stateless rule shared by several services or loaders can be exported functions instead of a class
+  (`has-team-access.server.ts`, `submission-access.server.ts`)
 - File named after class in kebab-case: `EventCreation` → `event-creation.server.ts`
 - Keep services focused — split large services by responsibility
