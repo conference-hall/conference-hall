@@ -30,8 +30,9 @@
     "format:check": "oxfmt --check",
     "i18n:check": "x18n check --strict",
     "tsc": "react-router typegen && tsc -b",
-    "check": "pnpm format:check && pnpm lint && pnpm tsc && pnpm knip && pnpm i18n:check",
-    "knip": "knip"
+    "check": "pnpm format:check && pnpm lint && pnpm tsc && pnpm knip && pnpm i18n:check && pnpm agents:check",
+    "knip": "knip",
+    "agents:check": "node scripts/lint-agent-config.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1161.0",

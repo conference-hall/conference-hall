@@ -62,3 +62,8 @@ Every instruction removed, moved or rewritten during the Claude Code config rest
 - `AGENTS.md` "Never push to `main` or `production` directly" : conservé, garanti par `.claude/hooks/guard-bash.sh` (bloque aussi les force push et `prisma migrate reset`).
 - Ajouté : mention d'une ligne du formatage automatique (`format.sh`) et du hook Stop (`stop-check.sh`, lance `pnpm lint` + `pnpm format:check`, décision 8).
 - Plan : `verify-reminder.sh` remplacé par `stop-check.sh` (exécution réelle au lieu d'un rappel, décision 8). Pas de `deny Read(./.env.local)` : placeholders de dev (décision 4).
+
+## 2026-11-08: lint de config
+
+- Ajouté : `scripts/lint-agent-config.ts`, `pnpm agents:check` (aussi dans `pnpm check`), étape « Check agent config » du job CI `static-tests`. `AGENTS.md` cite les deux commandes.
+- Plan : pas d'entrée `knip.json`, knip détecte le script via `package.json`. Le skill citait `scripts/lint-claude-config.sh` ; le plan (TypeScript, comme le reste du repo) prime.
