@@ -50,7 +50,10 @@ Typical route file order:
 - Validate with **Conform v4 + Zod**: `parseWithZod(form, { schema: SomeSchema })`
 - Import: `import { parseWithZod } from '@conform-to/zod/v4'`
 - Check `result.status !== 'success'` before processing
-- Return `toast('error', message)` for error feedback or `null` on success
+- Return `result.error` when validation fails and the form displays field errors
+- Return `toast(type, message)` for feedback without navigation, or `null` when there is nothing to report
+- Return `data(payload, { headers: await toastHeaders(type, message) })` when the component needs state from the
+  action (e.g. resetting a form) along with a toast
 - Use `toastHeaders()` with `redirect()` to show toast after navigation
 
 ## Form Handling
