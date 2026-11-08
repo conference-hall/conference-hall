@@ -1,181 +1,177 @@
-# Checklist — configuration Claude Code (état de l'art, novembre 2026)
+# Checklist: Claude Code configuration (state of the art, November 2026)
 
-Source de vérité partagée par les skills `claude-config-audit`, `claude-config-restructure`
-et `claude-docs-maintain`. Chaque critère est formulé pour être vérifiable par un agent.
+Source of truth shared by the `claude-config-audit`, `claude-config-restructure` and
+`claude-docs-maintain` skills. Every criterion is phrased so an agent can verify it.
 
-Légende : **[MUST]** bloquant · **[SHOULD]** recommandé · **[MAY]** optionnel.
+Legend: **[MUST]** blocking · **[SHOULD]** recommended · **[MAY]** optional.
 
-Convention : ci-dessous, « `CLAUDE.md` » désigne le fichier d'instructions racine, qu'il
-s'appelle `CLAUDE.md` ou `AGENTS.md` (voir A1b).
-
----
-
-## A. Fichiers d'instructions
-
-- **A1 [MUST]** Un seul fichier d'instructions racine, source de vérité unique. Aucun autre
-  (`.cursorrules`, `GEMINI.md`, `copilot-instructions.md`) ne porte de contenu dupliqué ;
-  s'ils existent sans usage, les supprimer.
-- **A1b [SHOULD]** Ce fichier s'appelle `AGENTS.md`, pas `CLAUDE.md`. Claude Code ≥ 2.1.277
-  (sept. 2026) lit `AGENTS.md` nativement quand aucun `CLAUDE.md` n'existe dans le dossier ni
-  dans un parent. Le nom neutre évite un futur renommage et le contenu reste identique.
-  Conditions : `claude --version` ≥ 2.1.277, aucun `CLAUDE.md` résiduel dans un parent
-  (`~/` compris, hors `~/.claude/CLAUDE.md` qui reste la mémoire utilisateur), et
-  vérification après renommage que les imports `@` sont bien résolus ; sinon les convertir en
-  liens Markdown. Si la version est plus ancienne ou si l'équipe est sur Bedrock/Vertex/Foundry
-  (support non encore disponible à cette date), garder `CLAUDE.md`.
-- **A2 [MUST]** `CLAUDE.local.md` (overrides personnels) et `.claude/settings.local.json`
-  dans `.gitignore`.
-- **A3 [SHOULD]** Fichier d'instructions de sous-dossier (`apps/web/AGENTS.md`, même nom
-  que le racine) pour ce qui ne concerne qu'une zone : chargé seulement quand Claude y
-  travaille, jamais de répétition du racine. Ne jamais mélanger les deux noms dans un même
-  repo : un `CLAUDE.md` imbriqué ferait ignorer `AGENTS.md` dans tout son sous-arbre.
-- **A4 [MAY]** `~/.claude/CLAUDE.md` pour les préférences personnelles transverses (style de
-  réponse, langue) ; rien de projet n'y vit.
-
-## B. Taille et densité du fichier racine
-
-- **B1 [MUST]** `CLAUDE.md` ≤ 150 lignes et ≤ ~100 instructions impératives. Au-delà,
-  l'adhérence chute : ce qui est rarement utile part dans des fichiers chargés à la demande.
-- **B2 [MUST]** Chaque instruction est spécifique et vérifiable. Interdit : « écris du code
-  propre », « suis les bonnes pratiques ». Attendu : « `pnpm test --filter <pkg>` avant tout
-  commit », « jamais `any` sans commentaire `// why:` ».
-- **B3 [SHOULD]** Supprimer toute instruction que Claude respecte déjà sans elle (tester en
-  la retirant).
-- **B4 [SHOULD]** Pas de duplication avec ce qui est lisible ailleurs (README, package.json,
-  schéma) : pointer vers le fichier, ne pas recopier.
-- **B5 [SHOULD]** Instructions les plus importantes en tête ; formulation positive (« fais X »)
-  sauf interdits réels.
-- **B6 [SHOULD]** Style d'écriture des instructions (fichier racine, rules, corps des skills) :
-  - une instruction par ligne, verbe à l'impératif en tête (« Lance », « Utilise », « Ne commite jamais ») ;
-  - aucun modalisateur (« si possible », « généralement », « il serait préférable », « essaie de ») :
-    soit c'est une règle, soit ça n'est pas écrit ;
-  - voix active, pas de politesse, pas de phrase d'introduction (« Ce projet attache de
-    l'importance à… ») ;
-  - la raison reste, en une proposition courte après deux-points ou un tiret
-    (« jamais `any` — casse l'inférence en aval ») ;
-  - commandes, chemins, noms exacts conservés tels quels ; un exemple do/don't vaut mieux qu'un
-    adjectif.
-  - **Garde-fous** : simplifier n'autorise jamais à (a) remplacer un détail concret par un terme
-    générique (« lance les tests » à la place de la commande), (b) supprimer la raison d'une
-    règle, (c) fusionner deux règles en une phrase, (d) retirer un exemple. Si la version
-    courte perd une de ces informations, la version longue reste.
-  - Test de la ligne : elle commence par un verbe impératif, ou c'est une commande, un chemin, un
-    titre, un tableau ou une raison rattachée à la ligne précédente. Sinon, réécrire ou déplacer
-    en doc.
-- **B7 [MAY]** Docs chargées à la demande (`docs/**`, ADR, `references/` des skills) : ton
-  explicatif autorisé, mais conclusion d'abord puis justification, paragraphes ≤ 5 lignes,
-  un titre par idée pour que Claude puisse sauter ce qui ne le concerne pas.
-
-## C. Structure attendue de `CLAUDE.md`
-
-Sections dans cet ordre (omettre celles vides) :
-
-1. **Projet en une phrase** + stack (versions figées).
-2. **Commandes** : install, dev, build, test (unitaire / e2e / un seul fichier), lint,
-   typecheck, format. Exactes, copiables.
-3. **Architecture** : carte des dossiers (5–15 lignes), points d'entrée, frontières à ne pas
-   franchir.
-4. **Conventions** : nommage, structure d'un module type, erreurs, logs, i18n si pertinent.
-5. **Workflow Git** : branches, format de commit, contenu attendu d'une PR, ce qu'il ne faut
-   jamais commiter.
-6. **Vérification** : comment Claude prouve que le travail est fini (tests à lancer, captures,
-   checks CI). Section la plus rentable.
-7. **Workflow Claude Code** : plan mode pour les tâches > N fichiers, `/clear` entre tâches,
-   commit par étape, quand solliciter quel sous-agent ou skill.
-8. **Interdits** : liste courte, chaque ligne avec la raison.
-9. **Où aller chercher plus** : `@docs/architecture.md`, rules, skills.
-
-## D. Chargement progressif (progressive disclosure)
-
-- **D1 [MUST]** Les détails longs (guide de style complet, ADR, procédures de release,
-  schémas) vivent dans `docs/` ou dans des skills ; `CLAUDE.md` y renvoie par `@chemin`
-  (import inline) ou par lien Markdown selon qu'on veut le charger toujours ou à la demande.
-- **D2 [SHOULD]** `.claude/rules/<sujet>.md` avec frontmatter `paths: ["src/api/**"]` pour les
-  règles par zone de fichiers : chargées seulement quand Claude touche ces fichiers. Sans
-  `paths`, un fichier de `rules/` est chargé à chaque session : réserver aux règles vraiment
-  globales que l'on veut sortir de `CLAUDE.md` par thème.
-- **D3 [SHOULD]** Imports `@` : au plus 3–5 dans `CLAUDE.md`, uniquement pour ce qui est
-  utile à chaque session. Le reste en lien Markdown (Claude lit le fichier quand il en a besoin).
-- **D4 [MAY]** Profondeur d'import ≤ 2 (un fichier importé qui importe lui-même).
-
-## E. Skills (`.claude/skills/<nom>/SKILL.md`)
-
-- **E1 [MUST]** Frontmatter YAML `name` (kebab-case = nom du dossier) + `description`.
-- **E2 [MUST]** `description` dit _ce que fait_ le skill **et quand l'utiliser** : seul texte lu
-  avant déclenchement (~1 024 caractères max).
-- **E3 [SHOULD]** Corps < 500 lignes / ~5 000 tokens ; détail dans `references/`, `scripts/`,
-  `assets/` à un niveau de profondeur.
-- **E4 [SHOULD]** Candidats : toute procédure répétée > 2 fois (release, migration DB, ajout
-  d'un endpoint, revue selon la grille maison). Les anciens `.claude/commands/*.md` sont
-  migrés en skills (même invocation `/nom`, plus de capacités).
-- **E5 [MAY]** Pas de `README.md`/`CHANGELOG.md` dans un skill ; les scripts prennent des
-  arguments plutôt que d'être édités.
-
-## F. Déterminisme : hooks et permissions plutôt que prose
-
-- **F1 [MUST]** Toute règle qui _doit_ être respectée (formatage, interdiction de push sur
-  `main`, secrets, exécution des tests) est un hook ou un check CI, pas une phrase dans
-  `CLAUDE.md`. Fichier : `.claude/settings.json` → `hooks` (`PreToolUse`, `PostToolUse`,
-  `Stop`, `SessionStart`, `UserPromptSubmit`…).
-- **F2 [SHOULD]** `PostToolUse` (Edit|Write) → formateur ; `PreToolUse` (Bash) → bloque
-  `git push --force`, `rm -rf` hors du repo, commandes destructives du projet ; `Stop` →
-  rappel ou exécution des tests si des fichiers ont été modifiés.
-- **F3 [SHOULD]** `permissions.allow` / `deny` versionnées dans `.claude/settings.json`
-  (ex. `allow: ["Bash(pnpm test*)"]`, `deny: ["Read(.env*)"]`) ; le personnel dans
-  `settings.local.json`.
-- **F4 [SHOULD]** Secrets et gros fichiers exclus de la lecture (`.claudeignore` ou `deny`).
-- **F5 [MAY]** `SessionStart` qui affiche l'état du repo (branche, tests rouges, TODO) pour
-  éviter que Claude le redécouvre à chaque session.
-
-## G. Sous-agents (`.claude/agents/<nom>.md`)
-
-- **G1 [SHOULD]** Un sous-agent par rôle répété : `reviewer`, `test-writer`, `migrator`,
-  `explorer`. Frontmatter `name`, `description` (quand l'invoquer), `tools` (restreints),
-  `model` (haiku/sonnet pour les tâches mécaniques).
-- **G2 [SHOULD]** Dans `CLAUDE.md` section 7, une ligne par sous-agent : quand le solliciter.
-- **G3 [MAY]** Mémoire persistante (`memory: project`) seulement pour les agents qui en tirent
-  un bénéfice vérifié (ex. reviewer qui apprend les faux positifs).
-
-## H. Documentation projet orientée agent
-
-- **H1 [MUST]** `docs/` contient au minimum `architecture.md` (décisions structurantes, pas
-  un tutoriel), `conventions.md` (le guide complet que `CLAUDE.md` résume), `testing.md`
-  (stratégie, test type, fixtures).
-- **H2 [SHOULD]** Décisions d'architecture en ADR courts (`docs/adr/NNNN-titre.md`, 20–40
-  lignes : Contexte / Décision / Conséquences).
-- **H3 [SHOULD]** Chaque doc commence par `> Lis ce fichier quand : …`.
-- **H4 [SHOULD]** Aucune doc ne recopie le code (signatures, listes de fichiers) : décrire
-  l'intention, pointer vers le code.
-- **H5 [MAY]** `docs/agents/` : plan de migration, `CHANGELOG.md` des instructions
-  retirées/ajoutées et pourquoi, rapports de maintenance.
-
-## I. Hygiène et maintenance
-
-- **I1 [MUST]** `CLAUDE.md` mis à jour dans le même commit que tout changement de commande,
-  stack ou convention.
-- **I2 [SHOULD]** Revue mensuelle ou trimestrielle : retirer les instructions non
-  déclenchées, promouvoir en hook celles violées, convertir en skill les procédures répétées.
-- **I3 [SHOULD]** Lint minimal en CI : fichier présent, ≤ 150 lignes, pas de secret, imports
-  `@` et liens internes valides, frontmatter des skills et agents valide.
-- **I4 [MAY]** Utiliser `#` en session pour ajouter une instruction à `CLAUDE.md`, puis la
-  relire au prochain commit : ce qui entre vite doit être élagué vite.
+Convention: below, "`CLAUDE.md`" means the root instructions file, whether it is named
+`CLAUDE.md` or `AGENTS.md` (see A1b).
 
 ---
 
-## Anti-patterns à signaler systématiquement
+## A. Instructions files
 
-| Symptôme                                            | Problème                                      | Correctif                                   |
-| --------------------------------------------------- | --------------------------------------------- | ------------------------------------------- |
-| `CLAUDE.md` > 200 lignes                            | Règles noyées, adhérence faible               | Découper (D1, D2), élaguer (B3)             |
-| 10 imports `@` en tête                              | Tout chargé à chaque session, contexte saturé | Garder 3–5, le reste en lien (D3)           |
-| « Toujours lancer les tests » en prose, jamais fait | Pas déterministe                              | Hook `Stop`/`PreToolUse` (F1)               |
-| Liste de tous les fichiers du projet                | Se périme à chaque PR                         | Carte des dossiers (H4)                     |
-| Instructions de style vagues                        | Non vérifiables                               | Exemples do/don't concrets (B2)             |
-| Skill de 1 200 lignes                               | Jamais lu en entier                           | Corps court + `references/` (E3)            |
-| `description` de skill = son nom                    | Jamais déclenché                              | « Fait X. Utiliser quand Y. » (E2)          |
-| `.claude/commands/` et `.claude/skills/` coexistent | Doublon de mécanismes                         | Migrer en skills (E4)                       |
-| `.cursorrules` ou `GEMINI.md` orphelins             | Dérive silencieuse                            | Supprimer (A1)                              |
-| `CLAUDE.md` et `AGENTS.md` coexistent               | `AGENTS.md` ignoré, dérive garantie           | Un seul nom, `AGENTS.md` (A1b)              |
-| « Il serait préférable de… », « si possible »       | Règle lue comme suggestion                    | Impératif ou suppression (B6)               |
-| Règle raccourcie en « fais des tests »              | Précision perdue, non actionnable             | Rétablir la commande exacte (B6 garde-fous) |
-| Interdit sans raison                                | Ne se généralise pas aux cas non listés       | Ajouter la raison en une proposition (B6)   |
+- **A1 [MUST]** A single root instructions file, the only source of truth. No other file
+  (`.cursorrules`, `GEMINI.md`, `copilot-instructions.md`) carries duplicated content; if they
+  exist without use, delete them.
+- **A1b [SHOULD]** This file is named `AGENTS.md`, not `CLAUDE.md`. Claude Code ≥ 2.1.277
+  (Sept. 2026) reads `AGENTS.md` natively when no `CLAUDE.md` exists in the folder or in a
+  parent. The neutral name avoids a future rename and the content stays the same.
+  Conditions: `claude --version` ≥ 2.1.277, no leftover `CLAUDE.md` in a parent (`~/`
+  included, except `~/.claude/CLAUDE.md` which stays the user memory), and a check after the
+  rename that `@` imports still resolve; otherwise convert them to Markdown links. If the
+  version is older or the team uses Bedrock/Vertex/Foundry (not supported yet at that date),
+  keep `CLAUDE.md`.
+- **A2 [MUST]** `CLAUDE.local.md` (personal overrides) and `.claude/settings.local.json` in
+  `.gitignore`.
+- **A3 [SHOULD]** Subfolder instructions file (`apps/web/AGENTS.md`, same name as the root)
+  for what concerns only one area: loaded only when Claude works there, never repeating the
+  root. Never mix both names in one repo: a nested `CLAUDE.md` makes Claude ignore `AGENTS.md`
+  in its whole subtree.
+- **A4 [MAY]** `~/.claude/CLAUDE.md` for cross-project personal preferences (response style,
+  language); nothing project-specific lives there.
+
+## B. Size and density of the root file
+
+- **B1 [MUST]** `CLAUDE.md` ≤ 150 lines and ≤ ~100 imperative instructions. Beyond that,
+  adherence drops: what is rarely useful moves to files loaded on demand.
+- **B2 [MUST]** Every instruction is specific and verifiable. Forbidden: "write clean code",
+  "follow best practices". Expected: "`pnpm test --filter <pkg>` before every commit", "never
+  `any` without a `// why:` comment".
+- **B3 [SHOULD]** Remove every instruction Claude already follows without it (test by removing
+  it).
+- **B4 [SHOULD]** No duplication with what is readable elsewhere (README, package.json,
+  schema): point to the file, do not copy it.
+- **B5 [SHOULD]** Most important instructions first; positive phrasing ("do X") except for real
+  prohibitions.
+- **B6 [SHOULD]** Writing style of instructions (root file, rules, skill bodies):
+  - one instruction per line, leading imperative verb ("Run", "Use", "Never commit");
+  - no hedge words ("if possible", "generally", "it would be better", "try to"): either it is a
+    rule, or it is not written;
+  - active voice, no politeness, no introductory sentence ("This project cares about...");
+  - the reason stays, as a short clause after a colon ("never `any`: it breaks downstream
+    inference");
+  - exact commands, paths and names kept as is; a do/don't example beats an adjective.
+  - **Guardrails**: simplifying never allows (a) replacing a concrete detail with a generic
+    term ("run the tests" instead of the command), (b) removing the reason of a rule,
+    (c) merging two rules into one sentence, (d) removing an example. If the short version
+    loses one of these, the long version stays.
+  - Line test: it starts with an imperative verb, or it is a command, a path, a heading, a
+    table or a reason attached to the previous line. Otherwise, rewrite it or move it to docs.
+- **B7 [MAY]** Docs loaded on demand (`docs/**`, ADRs, skill `references/`): explanatory tone
+  allowed, but conclusion first then justification, paragraphs ≤ 5 lines, one heading per idea
+  so Claude can skip what does not concern it.
+
+## C. Expected structure of `CLAUDE.md`
+
+Sections in this order (omit empty ones):
+
+1. **Project in one sentence** + stack (pinned versions).
+2. **Commands**: install, dev, build, test (unit / e2e / single file), lint, typecheck,
+   format. Exact, copy-pasteable.
+3. **Architecture**: folder map (5 to 15 lines), entry points, boundaries not to cross.
+4. **Conventions**: naming, structure of a typical module, errors, logs, i18n if relevant.
+5. **Git workflow**: branches, commit format, expected PR content, what must never be
+   committed.
+6. **Verification**: how Claude proves the work is done (tests to run, screenshots, CI
+   checks). The most valuable section.
+7. **Claude Code workflow**: plan mode for tasks > N files, `/clear` between tasks, one commit
+   per step, when to call which subagent or skill.
+8. **Forbidden**: short list, each line with its reason.
+9. **Where to find more**: `@docs/architecture.md`, rules, skills.
+
+## D. Progressive disclosure
+
+- **D1 [MUST]** Long details (full style guide, ADRs, release procedures, schemas) live in
+  `docs/` or in skills; `CLAUDE.md` points to them with `@path` (inline import) or a Markdown
+  link depending on whether they should always load or load on demand.
+- **D2 [SHOULD]** `.claude/rules/<topic>.md` with a `paths: ["src/api/**"]` frontmatter for
+  rules scoped to file areas: loaded only when Claude touches those files. Without `paths`, a
+  `rules/` file loads on every session: keep that for truly global rules you want out of
+  `CLAUDE.md` by topic.
+- **D3 [SHOULD]** `@` imports: at most 3 to 5 in `CLAUDE.md`, only for what every session
+  needs. Everything else as a Markdown link (Claude reads the file when it needs it).
+- **D4 [MAY]** Import depth ≤ 2 (an imported file that imports another one).
+
+## E. Skills (`.claude/skills/<name>/SKILL.md`)
+
+- **E1 [MUST]** YAML frontmatter `name` (kebab-case = folder name) + `description`.
+- **E2 [MUST]** `description` says _what the skill does_ **and when to use it**: the only text
+  read before triggering (~1,024 characters max).
+- **E3 [SHOULD]** Body < 500 lines / ~5,000 tokens; detail in `references/`, `scripts/`,
+  `assets/`, one level deep.
+- **E4 [SHOULD]** Candidates: any procedure repeated > 2 times (release, DB migration, adding
+  an endpoint, review against the in-house grid). Old `.claude/commands/*.md` are migrated to
+  skills (same `/name` invocation, more capabilities).
+- **E5 [MAY]** No `README.md`/`CHANGELOG.md` in a skill; scripts take arguments instead of
+  being edited.
+
+## F. Determinism: hooks and permissions over prose
+
+- **F1 [MUST]** Every rule that _must_ be followed (formatting, no push to `main`, secrets,
+  running tests) is a hook or a CI check, not a sentence in `CLAUDE.md`. File:
+  `.claude/settings.json` → `hooks` (`PreToolUse`, `PostToolUse`, `Stop`, `SessionStart`,
+  `UserPromptSubmit`...).
+- **F2 [SHOULD]** `PostToolUse` (Edit|Write) → formatter; `PreToolUse` (Bash) → blocks
+  `git push --force`, `rm -rf` outside the repo, the project's destructive commands; `Stop` →
+  reminder or test run when files changed.
+- **F3 [SHOULD]** `permissions.allow` / `deny` under version control in
+  `.claude/settings.json` (e.g. `allow: ["Bash(pnpm test*)"]`, `deny: ["Read(.env*)"]`);
+  personal settings in `settings.local.json`.
+- **F4 [SHOULD]** Secrets and large files excluded from reading (`.claudeignore` or `deny`).
+- **F5 [MAY]** A `SessionStart` hook that prints the repo state (branch, failing tests, TODOs)
+  so Claude does not rediscover it on every session.
+
+## G. Subagents (`.claude/agents/<name>.md`)
+
+- **G1 [SHOULD]** One subagent per repeated role: `reviewer`, `test-writer`, `migrator`,
+  `explorer`. Frontmatter `name`, `description` (when to invoke it), `tools` (restricted),
+  `model` (haiku/sonnet for mechanical tasks).
+- **G2 [SHOULD]** In `CLAUDE.md` section 7, one line per subagent: when to call it.
+- **G3 [MAY]** Persistent memory (`memory: project`) only for agents with a proven benefit
+  (e.g. a reviewer that learns false positives).
+
+## H. Agent-oriented project documentation
+
+- **H1 [MUST]** `docs/` contains at least `architecture.md` (structural decisions, not a
+  tutorial), `conventions.md` (the full guide `CLAUDE.md` summarizes), `testing.md`
+  (strategy, typical test, fixtures).
+- **H2 [SHOULD]** Architecture decisions as short ADRs (`docs/adr/NNNN-title.md`, 20 to 40
+  lines: Context / Decision / Consequences).
+- **H3 [SHOULD]** Every doc starts with `> Read this file when: ...`.
+- **H4 [SHOULD]** No doc copies the code (signatures, file lists): describe the intent, point
+  to the code.
+- **H5 [MAY]** `docs/agents/`: migration plan, `CHANGELOG.md` of removed/added instructions
+  and why, maintenance reports.
+
+## I. Hygiene and maintenance
+
+- **I1 [MUST]** `CLAUDE.md` updated in the same commit as any command, stack or convention
+  change.
+- **I2 [SHOULD]** Monthly or quarterly review: remove instructions that never trigger, promote
+  violated ones to hooks, turn repeated procedures into skills.
+- **I3 [SHOULD]** Minimal CI lint: file present, ≤ 150 lines, no secret, valid `@` imports and
+  internal links, valid skill and agent frontmatter.
+- **I4 [MAY]** Use `#` during a session to add an instruction to `CLAUDE.md`, then review it
+  at the next commit: what gets in fast must be pruned fast.
+
+---
+
+## Anti-patterns to always report
+
+| Symptom                                           | Problem                                  | Fix                                       |
+| ------------------------------------------------- | ---------------------------------------- | ----------------------------------------- |
+| `CLAUDE.md` > 200 lines                           | Rules drowned, weak adherence            | Split (D1, D2), prune (B3)                |
+| 10 `@` imports at the top                         | Everything loaded each session, full ctx | Keep 3 to 5, the rest as links (D3)       |
+| "Always run the tests" in prose, never done       | Not deterministic                        | `Stop`/`PreToolUse` hook (F1)             |
+| List of every project file                        | Stale after every PR                     | Folder map (H4)                           |
+| Vague style instructions                          | Not verifiable                           | Concrete do/don't examples (B2)           |
+| 1,200-line skill                                  | Never read in full                       | Short body + `references/` (E3)           |
+| Skill `description` = its name                    | Never triggered                          | "Does X. Use when Y." (E2)                |
+| `.claude/commands/` and `.claude/skills/` coexist | Duplicate mechanisms                     | Migrate to skills (E4)                    |
+| Orphan `.cursorrules` or `GEMINI.md`              | Silent drift                             | Delete (A1)                               |
+| `CLAUDE.md` and `AGENTS.md` coexist               | `AGENTS.md` ignored, guaranteed drift    | A single name, `AGENTS.md` (A1b)          |
+| "It would be better to...", "if possible"         | Rule read as a suggestion                | Imperative or removal (B6)                |
+| Rule shortened to "write tests"                   | Precision lost, not actionable           | Restore the exact command (B6 guardrails) |
+| Prohibition without a reason                      | Does not generalize to unlisted cases    | Add the reason as a clause (B6)           |
