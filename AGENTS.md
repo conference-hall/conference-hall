@@ -33,6 +33,7 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 
 ## Conventions
 
+- Write everything committed to the repo in English (code, comments, tests, docs, ADRs, skills, subagents, commit messages, PR descriptions): it is the project language. Only `app/locales/fr.*.json` holds French.
 - Keep the `.ts`/`.tsx` extension in imports.
 - Keep DB access in `services/*.server.ts`, out of route modules and components.
 - Build services with `Class.for(authorizedContext)`, `Class.of(id)` or `Class.with(...)`, one class per file: see `docs/services.md`.
