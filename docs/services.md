@@ -5,14 +5,16 @@ paths:
   - app/shared/**/*.server.ts
 ---
 
+> Read this file when: you add or change a service class or business logic.
+
 # Service Layer Conventions
 
 ## Static Factory Pattern
 
 Every service class exposes one or two static factory methods instead of public constructor:
 
-- **`ClassName.for(authorizedContext, ...args)`** — when service needs authorization context (team or event)
-- **`ClassName.of(scalarId)`** — when service only needs scalar identifier (no authorization)
+- **`ClassName.for(authorizedContext, ...args)`**: when service needs authorization context (team or event)
+- **`ClassName.of(scalarId)`**: when service only needs scalar identifier (no authorization)
 - **`ClassName.with(token)`**: when service is built from a non-ID input without authorization, such as an invitation
   code or search filters (`TeamMemberInvite.with(code)`, `EventsSearch.with(filters)`)
 
@@ -43,7 +45,7 @@ export class TalksLibrary {
   already narrowed the context down to (`Event`, `userId`)
 - Make the constructor `private` when the factory checks permissions, so an unauthorized instance cannot be built
 - Store as `private` fields
-- Never inject DB — use `db` singleton directly
+- Never inject DB: use `db` singleton directly
 
 ## Database Access
 
@@ -53,7 +55,7 @@ Import `db` singleton from `prisma/db.server.ts`:
 import { db } from 'prisma/db.server.ts';
 ```
 
-Use Prisma methods directly — no repository abstraction layer.
+Use Prisma methods directly: no repository abstraction layer.
 
 ## Permission Checks
 
@@ -125,7 +127,7 @@ export type FeedItem = Feed[number];
 ## Error Handling
 
 - Throw domain-specific errors (e.g., `ForbiddenOperationError`, `NotFoundError`) from `~/shared/errors.server.ts`
-- Never catch and swallow errors — let propagate to route error boundaries
+- Never catch and swallow errors: let propagate to route error boundaries
 - Custom errors extend `Response` for proper HTTP status codes
 
 ## File Organization
@@ -134,4 +136,4 @@ export type FeedItem = Feed[number];
 - A stateless rule shared by several services or loaders can be exported functions instead of a class
   (`has-team-access.server.ts`, `submission-access.server.ts`)
 - File named after class in kebab-case: `EventCreation` → `event-creation.server.ts`
-- Keep services focused — split large services by responsibility
+- Keep services focused: split large services by responsibility

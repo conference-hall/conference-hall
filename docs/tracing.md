@@ -6,6 +6,8 @@ paths:
   - compose.yml
 ---
 
+> Read this file when: you add spans or change the OpenTelemetry setup.
+
 # Tracing
 
 Distributed tracing with OpenTelemetry, on the web and the jobs services, behind a single

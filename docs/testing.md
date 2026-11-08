@@ -6,29 +6,31 @@ paths:
   - '**/*.test.*'
 ---
 
+> Read this file when: you write or run a unit, component or e2e test.
+
 # Testing Conventions
 
 ## General
 
-- Unit/integration tests: Vitest — `pnpm test` runs `test:db` (push schema) then `test:unit` (Vitest)
-- Single test file: `pnpm test run "<file path>"`
+- Unit/integration tests: Vitest: `pnpm test` runs `test:db` (push schema) then `test:unit` (Vitest)
+- Single test file: `pnpm test:unit run "<file path>"`
 - E2E: Playwright (`pnpm test:e2e`), requires Docker running
-- All Vitest functions (`describe`, `it`, `expect`, `vi`, `beforeEach`, etc.) globally available — do not import them
+- All Vitest functions (`describe`, `it`, `expect`, `vi`, `beforeEach`, etc.) globally available: do not import them
 - Test names start with verbs, not "should" (e.g., `it('returns the profile')`)
-- No comments in tests — write clean, self-documenting code
+- No comments in tests: write clean, self-documenting code
 - All mocks auto-reset between tests (`mockReset: true`)
 - No need for `vi.clearAllMocks()` in beforeEach when mocking
 
 ## Unit/Integration Tests (`.test.ts`)
 
-- Use factory functions for test data — never create records with Prisma directly
-- DB globally truncated after each test — no manual cleanup or `TRUNCATE TABLE`
+- Use factory functions for test data: never create records with Prisma directly
+- DB globally truncated after each test: no manual cleanup or `TRUNCATE TABLE`
 - Import factories from `tests/factories/`: `import { userFactory } from 'tests/factories/users.ts'`
 - Mock dates: `vi.useFakeTimers()` + `vi.setSystemTime(new Date('2023-01-01'))`, restore with `vi.useRealTimers()` in `afterEach`
 - Mock modules: `vi.mock('~/path/to/module.ts', () => ({ ... }))`
-- Jobs globally mocked in `tests/setup.server.ts` — no per-test mocking needed
+- Jobs globally mocked in `tests/setup.server.ts`: no per-test mocking needed
 - Async error assertions: `rejects.toThrowError(ErrorClass)`
-- After creating test, ALWAYS execute: `pnpm test run "<file path>"`
+- After creating test, ALWAYS execute: `pnpm test:unit run "<file path>"`
 
 ## Component Tests (`.test.tsx`)
 
@@ -40,7 +42,7 @@ paths:
 - Semantic queries: `page.getByRole()`, `page.getByLabel()`, `page.getByText()`, `page.getByPlaceholder()`
 - Element assertions: `await expect.element(locator)` (not `expect(locator)`)
 - Interactions: `userEvent` from `vitest/browser`: `await userEvent.click()`, `await userEvent.type()`
-- After creating test, ALWAYS execute: `pnpm test run "<file path>"`
+- After creating test, ALWAYS execute: `pnpm test:unit run "<file path>"`
 
 ## Factories
 
@@ -54,7 +56,7 @@ paths:
 - In `e2e/` with Page Object pattern
 - Import `test` and `expect` from `e2e/fixtures.ts` (not Playwright directly)
 - DB reset before each test via custom fixture in `e2e/fixtures.ts`
-- Authenticated tests: `userLoggedFactory(context, options)` from `e2e/helpers.ts` — creates user + sets auth cookies via better-auth test utilities
+- Authenticated tests: `userLoggedFactory(context, options)` from `e2e/helpers.ts`: creates user + sets auth cookies via better-auth test utilities
 - Page objects extend `PageObject` base class from `e2e/page-object.ts`
 - Each page MUST have page object for locators, actions (never expectations)
 - New page element selectors → create locator or function in page object

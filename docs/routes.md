@@ -1,12 +1,14 @@
 ---
-description: React Router v7 routing conventions
+description: React Router v8 routing conventions
 paths:
   - app/routes.ts
   - app/features/**/*.tsx
   - app/app-platform/**/*.tsx
 ---
 
-# React Router v7 Conventions
+> Read this file when: you add or change a route module, loader, action or form.
+
+# React Router v8 Conventions
 
 ## Route Configuration
 
@@ -20,13 +22,13 @@ paths:
 
 Typical route file order:
 
-1. `meta` — page title and SEO metadata
-2. `middleware` — auth/authorization middleware array
-3. `loader` — server-side data fetching
-4. `action` — form mutation handling
-5. `handle` — route handle metadata (e.g., breadcrumbs)
-6. `default export` — React component
-7. `ErrorBoundary` — error handling UI
+1. `meta`: page title and SEO metadata
+2. `middleware`: auth/authorization middleware array
+3. `loader`: server-side data fetching
+4. `action`: form mutation handling
+5. `handle`: route handle metadata (e.g., breadcrumbs)
+6. `default export`: React component
+7. `ErrorBoundary`: error handling UI
 
 ## Type Safety
 

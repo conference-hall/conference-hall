@@ -6,6 +6,8 @@ paths:
   - app/features/admin/feature-flags/**
 ---
 
+> Read this file when: you add, read or remove a feature flag.
+
 # Feature Flag Conventions
 
 ## Flag Definition
@@ -27,8 +29,8 @@ paths:
 - Only `'frontend'`-tagged flags available in components
 - Loaded in root loader via `flags.withTag('frontend')`, passed to `<FlagsProvider>`
 - Hooks from `~/shared/feature-flags/flags-context.tsx`:
-  - `useFlag('flagName')` — get single flag value
-  - `useFlags()` — get all frontend flags
+  - `useFlag('flagName')`: get single flag value
+  - `useFlags()`: get all frontend flags
 
 ## Storage and Admin
 
@@ -41,4 +43,4 @@ paths:
 
 - Flags auto-reset to defaults before each test (E2E via fixtures, unit via setup)
 - Override for specific test: `await flags.set('flagName', true)`
-- No cleanup needed — reset happens before next test
+- No cleanup needed: reset happens before next test

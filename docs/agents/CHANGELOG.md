@@ -35,3 +35,18 @@ Every instruction removed, moved or rewritten during the Claude Code config rest
 ### Ajoutés
 
 - Stack avec versions (C1), `pnpm install`, `pnpm lint` / `pnpm format` (C2), sections Workflow Git (depuis `docs/contributing.md`), Vérification, Workflow Claude Code, Interdits (C5 à C8).
+
+## 2026-11-08: dérive des docs thématiques
+
+### Réécritures
+
+- `docs/testing.md` (3 occurrences) "`pnpm test run "<file path>"`" → "`pnpm test:unit run "<file path>"`": l'ancienne commande relançait le push du schéma à chaque test.
+- `docs/routes.md` "React Router v7" → "v8" (titre et `description`), `docs/authorization.md` "React Router v7 middleware" → "React Router middleware": `package.json` déclare `react-router ~8.5.1`.
+- `README.md` Stack "React router v7", "Express" → "React Router v8", "Fastify": le serveur est `servers/web.ts` (Fastify).
+- `docs/database.md` "Use `@default()` for sensible defaults: booleans, timestamps, JSON" → "Set `@default()` on booleans, timestamps and JSON columns". Conservé : exemples `@default("[]")`, `@default("{}")`.
+- `docs/database.md` "Add `@@index()` on foreign key columns when useful for optimization" → "... that queries filter or join on". Modalisateur remplacé par un critère.
+- `docs/components.md` "Prefer composition over prop drilling — extract sub-components when complexity grows" → "Use composition instead of prop drilling: extract sub-components when complexity grows".
+- `docs/i18n.md` "Keys must be **alphabetically sorted**" → "Keys must be **sorted** in translation files: x18n sorts them (`write.sort: 'binary'`)"; ajout de `pnpm i18n:check` (#870 n'avait pas mis la doc à jour).
+- `docs/GLOSSARY.md` renvoi `CLAUDE.md` → `AGENTS.md`.
+- 16 docs thématiques : ajout de `> Read this file when: ...` après le frontmatter (H3).
+- Em-dashes de `docs/*.md` (108) retirés (décision 10) : deux-points pour les motifs "terme — définition" et "règle — raison", réécriture ciblée pour 11 phrases (`authorization.md`, `emails.md`, `logging.md`, `GLOSSARY.md`). Aucun contenu retiré.
