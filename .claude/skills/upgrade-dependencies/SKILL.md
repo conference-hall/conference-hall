@@ -1,26 +1,26 @@
 ---
 name: upgrade-dependencies
-description: Met à jour les dépendances pnpm du projet (toutes ou une lib précise), adapte le code aux breaking changes, puis lance pnpm check et pnpm test. Utiliser quand on demande d'upgrader les dépendances, de bumper une lib, ou de traiter un pnpm outdated.
+description: Upgrades the project's pnpm dependencies (all of them or a single library), adapts the code to breaking changes, then runs pnpm check and pnpm test. Use when asked to upgrade dependencies, bump a library, or act on pnpm outdated.
 ---
 
-# Upgrade des dépendances
+# Dependency upgrade
 
-`pnpm-workspace.yaml` impose `minimumReleaseAge: 4320` (3 jours) : pnpm refuse une version publiée depuis moins longtemps. Ne contourne pas ce réglage.
+`pnpm-workspace.yaml` sets `minimumReleaseAge: 4320` (3 days): pnpm refuses a version published more recently. Do not bypass this setting.
 
-## Étapes
+## Steps
 
-1. Lance `pnpm outdated` et note les mises à jour majeures à part des mineures et patchs.
-2. Lance `pnpm update` pour les mises à jour compatibles avec les ranges de `package.json`.
-3. Pour chaque majeure, lance `pnpm add <pkg>@latest` (`-D` pour une devDependency), une lib à la fois :
-   - lis son changelog ou son guide de migration avant d'adapter le code ;
-   - garde le préfixe `~` des libs épinglées en mineure (`react-router`, `better-auth`) : monte leur mineure dans un commit dédié `chore: upgrade <lib> <version>`.
-4. Lance `pnpm exec prisma generate` si `prisma` ou `@prisma/*` a bougé.
-5. Lance `pnpm check`. Corrige jusqu'au vert.
-6. Lance `pnpm test` (Docker démarré). Corrige jusqu'au vert.
-7. Lance `pnpm test:e2e` si `react-router`, `better-auth`, `@playwright/test`, `fastify` ou une lib de formulaire a changé de mineure ou de majeure.
-8. Mets à jour `AGENTS.md` (ligne Stack) et la doc thématique concernée si une version citée change.
-9. Commite `package.json` et `pnpm-lock.yaml` avec `chore: upgrade dependencies`, et chaque adaptation de code liée à une majeure dans un commit séparé.
+1. Run `pnpm outdated` and list major upgrades separately from minors and patches.
+2. Run `pnpm update` for upgrades compatible with the ranges in `package.json`.
+3. For each major, run `pnpm add <pkg>@latest` (`-D` for a devDependency), one library at a time:
+   - read its changelog or migration guide before adapting the code;
+   - keep the `~` prefix of libraries pinned to a minor (`react-router`, `better-auth`): bump their minor in a dedicated commit `chore: upgrade <lib> <version>`.
+4. Run `pnpm exec prisma generate` if `prisma` or `@prisma/*` moved.
+5. Run `pnpm check`. Fix until green.
+6. Run `pnpm test` (Docker running). Fix until green.
+7. Run `pnpm test:e2e` if `react-router`, `better-auth`, `@playwright/test`, `fastify` or a form library changed minor or major.
+8. Update `AGENTS.md` (Stack line) and the matching topic doc if a cited version changes.
+9. Commit `package.json` and `pnpm-lock.yaml` as `chore: upgrade dependencies`, and each code adaptation for a major in a separate commit.
 
-## Rapport
+## Report
 
-Liste les libs montées en majeure, les adaptations faites, et toute lib laissée en arrière avec sa raison (release trop récente, breaking change à traiter à part).
+List the libraries bumped to a new major, the adaptations made, and every library left behind with its reason (release too recent, breaking change to handle separately).

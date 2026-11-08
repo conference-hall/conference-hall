@@ -1,28 +1,28 @@
 ---
 name: db-migration
-description: Modifie le modèle de données Prisma de bout en bout (schema.prisma, migration, client, factories de test, seed) puis vérifie avec les tests. Utiliser quand une tâche ajoute, renomme ou supprime un modèle, un champ, une relation, un index ou un enum.
+description: Changes the Prisma data model end to end (schema.prisma, migration, client, test factories, seed), then verifies with the tests. Use when a task adds, renames or removes a model, field, relation, index or enum.
 ---
 
-# Migration de base de données
+# Database migration
 
-Les conventions de schéma (CUID, `@@map` en snake_case, `createdAt`/`updatedAt`, relations, index) sont dans `docs/database.md`, chargé automatiquement sur `prisma/**`.
+Schema conventions (CUID, snake_case `@@map`, `createdAt`/`updatedAt`, relations, indexes) are in `docs/database.md`, loaded automatically on `prisma/**`.
 
-## Étapes
+## Steps
 
-1. Démarre Docker (`docker compose up`) si Postgres n'est pas déjà lancé.
-2. Modifie `prisma/schema.prisma`. Le hook `prisma-generate.sh` régénère le client à chaque édition.
-3. Crée la migration : `pnpm db:migrate:dev --name="<snake_case_description>"`, une seule par changement (ex. `add_submission_passes`).
-4. Ouvre le `migration.sql` généré dans `prisma/migrations/<timestamp>_<name>/` :
-   - vérifie qu'aucune colonne `NOT NULL` n'est ajoutée sans défaut sur une table existante ;
-   - ajoute le backfill SQL nécessaire quand une donnée existante doit être transformée.
-5. Mets à jour la factory du modèle dans `tests/factories/` (nouveau champ requis, trait si l'état est courant).
-6. Mets à jour `prisma/seed.ts` si le champ est requis ou utile pour la démo locale.
-7. Adapte les services et leurs schémas Zod (`*.schema.server.ts`) qui lisent ou écrivent le modèle.
-8. Lance `pnpm test:db` pour pousser le schéma vers la DB de test.
-9. Lance `pnpm test:unit run <fichier>` sur chaque test des services touchés, puis `pnpm check`.
-10. Commite le schéma, la migration, les factories et le seed ensemble.
+1. Start Docker (`docker compose up`) if Postgres is not already running.
+2. Edit `prisma/schema.prisma`. The `prisma-generate.sh` hook regenerates the client on every edit.
+3. Create the migration: `pnpm db:migrate:dev --name="<snake_case_description>"`, one per change (e.g. `add_submission_passes`).
+4. Open the generated `migration.sql` in `prisma/migrations/<timestamp>_<name>/`:
+   - check that no `NOT NULL` column is added without a default on an existing table;
+   - add the SQL backfill needed when existing data must be transformed.
+5. Update the model's factory in `tests/factories/` (new required field, a trait if the state is common).
+6. Update `prisma/seed.ts` if the field is required or useful for the local demo.
+7. Adapt the services and their Zod schemas (`*.schema.server.ts`) that read or write the model.
+8. Run `pnpm test:db` to push the schema to the test DB.
+9. Run `pnpm test:unit run <file>` on each test of the touched services, then `pnpm check`.
+10. Commit the schema, migration, factories and seed together.
 
-## Interdits
+## Forbidden
 
-- Ne lance jamais `pnpm db:reset` sans accord : il efface la DB de dev locale.
-- N'édite jamais une migration déjà sur `main` : crée une nouvelle migration.
+- Never run `pnpm db:reset` without approval: it wipes the local dev DB.
+- Never edit a migration already on `main`: create a new migration.

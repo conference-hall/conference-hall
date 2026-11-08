@@ -1,128 +1,126 @@
 ---
 name: claude-docs-maintain
-description: Entretien périodique de la configuration Claude Code d'un repo déjà restructuré — détecte la dérive entre CLAUDE.md/docs et le code, élague les instructions inutiles, promeut en hook les règles violées, propose skills et sous-agents pour les procédures répétées. Utiliser après un changement de stack, chaque mois, ou quand Claude répète les mêmes erreurs.
+description: Periodic upkeep of an already restructured Claude Code configuration. Detects drift between AGENTS.md/docs and the code, prunes useless instructions, promotes violated rules to hooks, proposes skills and subagents for repeated procedures. Use after a stack change, every month, or when Claude keeps making the same mistakes.
 ---
 
-# Maintenance de la configuration Claude Code
+# Claude Code configuration maintenance
 
-Lis `docs/agents/checklist-2026.md`. Ce skill suppose un `CLAUDE.md` déjà structuré ;
-sinon lance `claude-config-audit`.
+Read `docs/agents/checklist-2026.md`. This skill assumes an already structured root
+instructions file (`AGENTS.md` or `CLAUDE.md`); otherwise run `claude-config-audit`.
 
-Produis `docs/agents/maintenance-<AAAA-MM-JJ>.md` **et** applique directement les
-corrections sûres (voir « Autonomie »).
+Produce `docs/agents/maintenance-<YYYY-MM-DD>.md` **and** apply the safe fixes directly (see
+"Autonomy").
 
-## 0. Nom du fichier racine
+## 0. Root file name
 
-Si le fichier racine s'appelle encore `CLAUDE.md` et que `claude --version` ≥ 2.1.277,
-propose le renommage en `AGENTS.md` (critère A1b). Si `CLAUDE.md` et `AGENTS.md` coexistent,
-signale-le en premier : `AGENTS.md` est ignoré.
+If the root file is still named `CLAUDE.md` and `claude --version` ≥ 2.1.277, propose
+renaming it to `AGENTS.md` (criterion A1b). If `CLAUDE.md` and `AGENTS.md` coexist, report it
+first: `AGENTS.md` is ignored.
 
-## 1. Dérive commandes et stack
+## 1. Command and stack drift
 
-- Compare chaque commande citée dans `CLAUDE.md`, ses imports, `.claude/rules/**`, les
-  skills et `docs/**` avec les manifestes et la CI. Signale celles disparues ou aux flags
-  changés.
-- Compare les versions figées avec les manifestes.
-- Vérifie chaque import `@` et lien interne.
+- Compare every command cited in the root file, its imports, `.claude/rules/**`, the skills
+  and `docs/**` with the manifests and CI. Report the ones that disappeared or whose flags
+  changed.
+- Compare pinned versions with the manifests.
+- Check every `@` import and internal link.
 
-## 2. Dérive architecture
+## 2. Architecture drift
 
-- `git log --since="<date du dernier rapport ou 60 days ago>" --name-only --format=''` →
-  dossiers apparus/disparus. La carte des dossiers de `CLAUDE.md` et `docs/architecture.md`
-  doit les refléter.
-- Décisions structurantes récentes sans ADR : propose un ADR court pour chacune ; n'écris que
-  ce qui est visible dans le code.
+- `git log --since="<date of the last report or 60 days ago>" --name-only --format=''` →
+  folders added/removed. The folder map of the root file and `docs/architecture.md` must
+  reflect them.
+- Recent structural decisions without an ADR: propose a short ADR for each; write only what
+  is visible in the code.
 
-## 3. Charge par session
+## 3. Per-session load
 
-Recalcule `CLAUDE.md` + imports + rules sans `paths:`. Si > 200 lignes au total, propose ce
-qui part en lien à la demande, en rule avec `paths:`, ou en skill.
+Recompute root file + imports + rules without `paths:`. If the total is > 200 lines, propose
+what moves to an on-demand link, to a rule with `paths:`, or to a skill.
 
-## 4. Élagage et promotion
+## 4. Pruning and promotion
 
-Pour chaque instruction de `CLAUDE.md` et des rules :
+For each instruction of the root file and the rules:
 
-- **Inutile ?** Claude la respecterait sans elle → candidate au retrait.
-- **Violée ?** Preuve dans l'historique récent (commits, PR) → si impérative, promouvoir en
-  hook ou check CI et réduire à une ligne.
-- **Vague ?** Reformuler en instruction vérifiable avec exemple.
-- **Mal placée ?** Ne concerne qu'un sous-dossier → `.claude/rules/` avec `paths:` ou
-  `CLAUDE.md` du sous-dossier.
-- **Mal écrite (B6) ?** Pas de verbe impératif en tête, modalisateur, deux règles dans une
-  phrase, interdit sans raison → réécrire selon la procédure de `claude-config-restructure`
-  étape 1b, en vérifiant que la version réécrite garde chaque commande, chemin, nombre, exemple
-  et raison. Une ligne vague qui ne peut pas devenir vérifiable n'est pas raccourcie : elle est
-  remplacée par un exemple du repo ou proposée au retrait.
-- **Ajoutée via `#` en session ?** Les instructions récentes et courtes sont souvent des
-  réactions ponctuelles : vérifier qu'elles méritent de rester.
+- **Useless?** Claude would follow it without the line → candidate for removal.
+- **Violated?** Proof in recent history (commits, PRs) → if imperative, promote it to a hook
+  or CI check and reduce it to one line.
+- **Vague?** Rephrase as a verifiable instruction with an example.
+- **Misplaced?** Only concerns a subfolder → `.claude/rules/` with `paths:` or the subfolder's
+  instructions file.
+- **Badly written (B6)?** No leading imperative verb, hedge word, two rules in one sentence,
+  prohibition without a reason → rewrite with the procedure of `claude-config-restructure`
+  step 1b, checking that the rewritten version keeps every command, path, number, example and
+  reason. A vague line that cannot become verifiable is not shortened: replace it with an
+  example from the repo or propose its removal.
+- **Added with `#` during a session?** Recent short instructions are often one-off reactions:
+  check that they deserve to stay.
 
-Toute instruction retirée est consignée dans `docs/agents/CHANGELOG.md` avec sa raison.
+Log every removed instruction in `docs/agents/CHANGELOG.md` with its reason.
 
-## 5. Procédures répétées → skills et sous-agents
+## 5. Repeated procedures → skills and subagents
 
-- Dans l'historique récent, motifs ≥ 2 occurrences (mêmes fichiers touchés ensemble, mêmes
-  messages : « add migration », « bump deps », « release ») sans skill existant → propose un
-  skill (`name`, `description` « Fait X. Utiliser quand Y. », étapes). Crée-le seulement si
-  la procédure est entièrement reconstituable depuis le code/CI.
-- Tâches de revue ou d'exploration répétées sans sous-agent → propose `.claude/agents/<nom>.md`
-  (tools restreints, model adapté).
+- In recent history, patterns with ≥ 2 occurrences (same files changed together, same
+  messages: "add migration", "bump deps", "release") without an existing skill → propose a
+  skill (`name`, `description` "Does X. Use when Y.", steps). Create it only if the procedure
+  can be fully rebuilt from the code/CI.
+- Repeated review or exploration tasks without a subagent → propose `.claude/agents/<name>.md`
+  (restricted tools, suitable model).
 
-## 6. Santé des skills, agents, hooks
+## 6. Health of skills, agents, hooks
 
-- Chaque `SKILL.md` et `.claude/agents/*.md` : frontmatter valide, `name` = dossier/fichier,
-  description dit quand l'utiliser, corps < 500 lignes, commandes/chemins existants, pas de
-  README parasite.
-- `.claude/settings.json` : parsable ; chaque script de hook existe et est exécutable ;
-  chaque hook est testé avec un JSON d'exemple sur stdin.
-- `.claude/commands/` ne doit plus exister (migré en skills).
+- Each `SKILL.md` and `.claude/agents/*.md`: valid frontmatter, `name` = folder/file,
+  description says when to use it, body < 500 lines, existing commands/paths, no stray README.
+- `.claude/settings.json`: parsable; every hook script exists and is executable; every hook is
+  tested with a sample JSON on stdin.
+- `.claude/commands/` must no longer exist (migrated to skills).
 
 ## 7. Lint
 
-- `wc -l CLAUDE.md` ≤ 150. Lance `scripts/lint-claude-config.sh` s'il existe ; sinon
-  propose de le créer (cf. `claude-config-restructure`, étape 7).
+- Root file ≤ 150 lines (`wc -l AGENTS.md`). Run the repo's config lint (`pnpm agents:check`
+  here); if none exists, propose creating it (see `claude-config-restructure`, step 7).
 
-## Autonomie
+## Autonomy
 
-Applique **sans demander** : correction de commandes/versions/imports/liens, réécriture B6
-d'une ligne quand la version réécrite contient encore toutes ses informations (sinon c'est une
-proposition), mise à jour de la carte des dossiers, réparation d'un hook cassé
-sans en changer le comportement.
+Apply **without asking**: fixing commands/versions/imports/links, a one-line B6 rewrite when
+the rewritten version still holds all its information (otherwise it is a proposal), updating
+the folder map, repairing a broken hook without changing its behavior.
 
-**Demande avant** : retirer une instruction, créer ou modifier un hook ou une permission,
-créer un skill, un sous-agent ou un ADR, déplacer une règle. Regroupe ces demandes en une
-seule question à cases à cocher en fin de rapport.
+**Ask first**: removing an instruction, creating or changing a hook or a permission, creating
+a skill, a subagent or an ADR, moving a rule. Group these requests into a single checkbox
+question at the end of the report.
 
-## Rapport
+## Report
 
 ```markdown
-# Maintenance config Claude Code — <date>
+# Claude Code config maintenance: <date>
 
-> Lis ce fichier quand tu veux savoir ce qui a changé dans la config et pourquoi.
+> Read this file when: you want to know what changed in the config and why.
 
-## Appliqué automatiquement
+## Applied automatically
 
-## Proposé (en attente de validation)
+## Proposed (awaiting approval)
 
-### Instructions à retirer
+### Instructions to remove
 
-### Règles à promouvoir en hook
+### Rules to promote to hooks
 
-### Skills / sous-agents à créer
+### Skills / subagents to create
 
-### ADR à écrire
+### ADRs to write
 
-### Règles à déplacer
+### Rules to move
 
-## Indicateurs
+## Indicators
 
-| | Avant | Après |
-| Lignes CLAUDE.md | | |
-| Lignes chargées par session | | |
-| Instructions impératives | | |
-| Imports/liens cassés | | 0 |
-| Modalisateurs (grep B6) | | 0 |
-| Lignes sans verbe impératif (hors commandes/titres) | | |
-| Skills + agents valides / total | | |
+| | Before | After |
+| Root file lines | | |
+| Lines loaded per session | | |
+| Imperative instructions | | |
+| Broken imports/links | | 0 |
+| Hedge words (B6 grep) | | 0 |
+| Lines without an imperative verb (excluding commands/headings) | | |
+| Valid skills + agents / total | | |
 ```
 
-Conclus en 3 lignes : corrigé, en attente, prochaine échéance suggérée.
+Conclude in 3 lines: fixed, pending, suggested next review date.

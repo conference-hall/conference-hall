@@ -1,104 +1,101 @@
 ---
 name: claude-config-restructure
-description: Exécute docs/agents/MIGRATION-PLAN.md pour restructurer la configuration Claude Code d'un repo — CLAUDE.md court et vérifiable, rules par périmètre, skills, hooks et permissions dans settings.json, sous-agents, docs/ orientée agent. Utiliser après claude-config-audit, ou directement pour initialiser la config d'un repo qui n'en a pas.
+description: Executes docs/agents/MIGRATION-PLAN.md to restructure a repo's Claude Code configuration (short verifiable AGENTS.md, path-scoped rules, skills, hooks and permissions in settings.json, subagents, agent-oriented docs/). Use after claude-config-audit, or directly to bootstrap the config of a repo that has none.
 ---
 
-# Restructuration de la configuration Claude Code
+# Claude Code configuration restructuring
 
-Prérequis : `docs/agents/MIGRATION-PLAN.md` existe. Sinon, lance `claude-config-audit` puis
-arrête-toi pour laisser l'humain relire le plan.
+Prerequisite: `docs/agents/MIGRATION-PLAN.md` exists. Otherwise run `claude-config-audit`, then
+stop so the human can review the plan.
 
-Lis `docs/agents/checklist-2026.md`. Tout ce que tu écris respecte les MUST ; signale chaque
-SHOULD non respecté et pourquoi.
+Read `docs/agents/checklist-2026.md`. Everything you write follows the MUSTs; report every
+unmet SHOULD and why.
 
-## Règles d'exécution
+## Execution rules
 
-1. **Une étape du plan = un commit.** Message : celui du plan.
-2. **Jamais de perte de contenu.** Chaque instruction existante est conservée, déplacée
-   (docs/, rules/, skill, hook) ou supprimée _avec une justification_ dans
-   `docs/agents/CHANGELOG.md` (« retiré : “X” — Claude le fait déjà sans instruction /
-   doublon de Y / remplacé par le hook Z »).
-3. **Ne tranche pas les « Décisions à prendre par l'humain ».** Si une étape en dépend sans
-   réponse dans le plan, pose la question et attends.
-4. **Vérifie chaque étape** avec son critère avant la suivante.
-5. Branche `chore/claude-config` si le repo est propre ; sinon demande.
+1. **One plan step = one commit.** Message: the one from the plan.
+2. **Never lose content.** Every existing instruction is kept, moved (docs/, rules/, skill,
+   hook) or removed _with a justification_ in `docs/agents/CHANGELOG.md` ("removed: "X":
+   Claude already does it without the instruction / duplicate of Y / replaced by hook Z").
+3. **Do not settle the "Decisions for the human".** If a step depends on one without an answer
+   in the plan, ask and wait.
+4. **Verify each step** with its criterion before the next one.
+5. Branch `chore/claude-config` if the repo is clean; otherwise ask.
 
-## Ordre de référence (adapter au plan)
+## Reference order (adapt to the plan)
 
-### Étape 1 — Fichier d'instructions racine
+### Step 1: Root instructions file
 
-- Si le plan a validé le renommage (A1b) : `git mv CLAUDE.md AGENTS.md`. Vérifier qu'aucun
-  `CLAUDE.md` ne subsiste dans le repo ni dans un dossier parent, puis lancer une session et
-  confirmer que les instructions sont chargées et que les imports `@` sont résolus ; s'ils ne
-  le sont pas, les convertir en liens Markdown. Les `CLAUDE.md` de sous-dossiers prennent le
-  même nom.
-- Réécrire le fichier à partir du brouillon du plan. ≤ 150 lignes, sections C1→C9.
-- Chaque commande citée est vérifiée dans les manifestes.
-- Imports `@` : 3–5 maximum, seulement pour ce qui sert à chaque session. Le reste en lien
-  Markdown.
-- Supprimer les fichiers d'instructions d'autres outils devenus orphelins (`.cursorrules`,
-  `GEMINI.md`…) si le plan le prévoit.
-- `CLAUDE.local.md` et `.claude/settings.local.json` dans `.gitignore`.
+- If the plan approved the rename (A1b): `git mv CLAUDE.md AGENTS.md`. Check that no
+  `CLAUDE.md` remains in the repo or in a parent folder, then start a session and confirm the
+  instructions load and the `@` imports resolve; if they do not, convert them to Markdown
+  links. Subfolder `CLAUDE.md` files take the same name.
+- Rewrite the file from the plan's draft. ≤ 150 lines, sections C1→C9.
+- Check every cited command in the manifests.
+- `@` imports: 3 to 5 maximum, only for what every session needs. Everything else as a
+  Markdown link.
+- Delete instructions files of other tools that became orphans (`.cursorrules`, `GEMINI.md`...)
+  if the plan says so.
+- `CLAUDE.local.md` and `.claude/settings.local.json` in `.gitignore`.
 
-### Étape 1b — Passe de réécriture (B6)
+### Step 1b: Rewriting pass (B6)
 
-Applique-la à chaque fichier d'instructions écrit ou déplacé dans cette étape et les suivantes
-(racine, sous-dossiers, rules, corps des skills), jamais aux commandes ni aux exemples de code.
+Apply it to every instructions file written or moved in this step and the next ones (root,
+subfolders, rules, skill bodies), never to commands or code examples.
 
-Procédure, ligne par ligne :
+Procedure, line by line:
 
-1. Si la ligne est une commande, un chemin, un titre, un tableau ou une raison rattachée à la
-   ligne précédente : ne touche à rien.
-2. Sinon, réécris-la : verbe impératif en tête, une seule instruction, voix active, sans
-   modalisateur ni politesse, raison conservée en une proposition courte.
-3. Avant de valider la réécriture, vérifie que la nouvelle ligne contient encore **chaque**
-   commande, chemin, nombre, nom et exemple de l'ancienne, et sa raison. Si un élément manque,
-   reprends. Si la ligne contenait deux règles, produis deux lignes.
-4. Une ligne qui n'exprime aucune règle vérifiable après réécriture (« le code doit être
-   propre ») n'est pas raccourcie : elle est soit remplacée par un exemple do/don't tiré du
-   repo, soit retirée avec justification dans le CHANGELOG.
+1. If the line is a command, a path, a heading, a table or a reason attached to the previous
+   line: leave it as is.
+2. Otherwise, rewrite it: leading imperative verb, a single instruction, active voice, no hedge
+   word or politeness, reason kept as a short clause.
+3. Before accepting the rewrite, check that the new line still contains **every** command,
+   path, number, name and example of the old one, and its reason. If something is missing,
+   start again. If the line held two rules, produce two lines.
+4. A line that expresses no verifiable rule after the rewrite ("the code must be clean") is not
+   shortened: either replace it with a do/don't example from the repo, or remove it with a
+   justification in the CHANGELOG.
 
-Contrôle de la passe : `diff` avant/après ; pour chaque ligne supprimée ou modifiée, un
-commentaire d'une ligne dans le CHANGELOG sous « Réécritures » (« “X” → “Y”, conservé :
-commande, raison »). Les modalisateurs restants doivent être à zéro
-(`grep -ciE "si possible|généralement|préférable|essaie|idéalement|when possible|try to|ideally"`).
+Pass check: before/after `diff`; for every removed or changed line, a one-line comment in the
+CHANGELOG under "Rewrites" (""X" → "Y", kept: command, reason"). Remaining hedge words must be
+zero (`grep -ciE "si possible|généralement|préférable|essaie|idéalement|when possible|try to|ideally"`).
 
-### Étape 2 — Chargement progressif
+### Step 2: Progressive disclosure
 
-- `.claude/rules/<sujet>.md` pour chaque candidat rule du plan, frontmatter :
+- `.claude/rules/<topic>.md` for each rule candidate of the plan, frontmatter:
   ```yaml
   ---
   paths:
     - 'src/api/**'
   ---
   ```
-- `CLAUDE.md` de sous-dossiers pour les monorepos (section « Spécifique à ce package »,
-  jamais de répétition du racine).
+- Subfolder instructions files for monorepos ("Specific to this package" section, never
+  repeating the root file).
 
-### Étape 3 — Docs orientée agent
+### Step 3: Agent-oriented docs
 
-- `docs/architecture.md`, `docs/conventions.md`, `docs/testing.md` : créer ou refondre.
-  Première ligne : `> Lis ce fichier quand : …`.
-- Style B7 : conclusion d'abord, justification ensuite, paragraphes ≤ 5 lignes, un titre par
-  idée. Le ton explicatif est autorisé ici ; ne pas appliquer la passe B6 aux docs.
-- Tout paragraphe > 10 lignes de l'ancien `CLAUDE.md` sur un même sujet migre ici ;
-  `CLAUDE.md` garde résumé + lien ou import.
-- `docs/adr/0001-…` pour chaque décision structurante déjà visible dans le code (Contexte /
-  Décision / Conséquences, 20–40 lignes). N'invente rien.
-- Aucune doc ne recopie signatures ou listes de fichiers.
+- `docs/architecture.md`, `docs/conventions.md`, `docs/testing.md`: create or overhaul.
+  First line: `> Read this file when: ...`.
+- B7 style: conclusion first, justification after, paragraphs ≤ 5 lines, one heading per idea.
+  An explanatory tone is allowed here; do not apply the B6 pass to docs.
+- Every paragraph > 10 lines of the old root file on a single topic moves here; the root file
+  keeps a summary + link or import.
+- `docs/adr/0001-...` for each structural decision already visible in the code (Context /
+  Decision / Consequences, 20 to 40 lines). Invent nothing.
+- No doc copies signatures or file lists.
 
-### Étape 4 — Skills
+### Step 4: Skills
 
-- Migrer chaque `.claude/commands/<nom>.md` en `.claude/skills/<nom>/SKILL.md` (même
-  invocation `/nom`), puis supprimer `commands/`.
-- Pour chaque candidat skill du plan : frontmatter `name` (= dossier, kebab-case),
-  `description` « Fait X. Utiliser quand Y. », corps < 500 lignes, étapes numérotées avec
-  commandes exactes, `references/` pour le détail, `scripts/` pour ce qui s'exécute.
-- Vérifier : `head -5` montre un frontmatter valide ; aucun README dans le dossier.
+- Migrate each `.claude/commands/<name>.md` to `.claude/skills/<name>/SKILL.md` (same `/name`
+  invocation), then delete `commands/`.
+- For each skill candidate of the plan: frontmatter `name` (= folder, kebab-case),
+  `description` "Does X. Use when Y.", body < 500 lines, numbered steps with exact commands,
+  `references/` for detail, `scripts/` for what runs.
+- Check: `head -5` shows a valid frontmatter; no README in the folder.
 
-### Étape 5 — Hooks et permissions
+### Step 5: Hooks and permissions
 
-- `.claude/settings.json` versionné. Modèle minimal à adapter :
+- `.claude/settings.json` under version control. Minimal template to adapt:
   ```json
   {
     "permissions": {
@@ -110,7 +107,10 @@ commande, raison »). Les modalisateurs restants doivent être à zéro
         {
           "matcher": "Edit|Write",
           "hooks": [
-            { "type": "command", "command": "jq -r '.tool_input.file_path' | xargs -r <formatter> 2>/dev/null || true" }
+            {
+              "type": "command",
+              "command": "jq -r '.tool_input.file_path' | xargs -r <formatter> 2>/dev/null || true"
+            }
           ]
         }
       ],
@@ -118,43 +118,43 @@ commande, raison »). Les modalisateurs restants doivent être à zéro
     }
   }
   ```
-  Les scripts de hooks vivent dans `.claude/hooks/` et sont exécutables. Tester chaque hook à
-  la main (lancer la commande avec un JSON d'exemple sur stdin) avant de commiter.
-- Retirer de `CLAUDE.md` toute phrase désormais garantie par un hook ; la remplacer par une
-  mention d'une ligne (« formatage automatique via hook »).
+  Hook scripts live in `.claude/hooks/` and are executable. Test each hook by hand (run the
+  command with a sample JSON on stdin) before committing.
+- Remove from the root file every sentence now guaranteed by a hook; replace it with a one-line
+  mention ("automatic formatting via hook").
 
-### Étape 6 — Sous-agents
+### Step 6: Subagents
 
-- `.claude/agents/<nom>.md` pour chaque rôle du plan. Frontmatter : `name`, `description`
-  (quand l'invoquer), `tools` (liste restreinte), `model`. Corps : mission, entrées
-  attendues, format de sortie, ce qu'il ne doit pas faire.
-- Une ligne par sous-agent dans la section « Workflow Claude Code » de `CLAUDE.md`.
+- `.claude/agents/<name>.md` for each role of the plan. Frontmatter: `name`, `description`
+  (when to invoke it), `tools` (restricted list), `model`. Body: mission, expected input,
+  output format, what it must not do.
+- One line per subagent in the "Claude Code workflow" section of the root file.
 
-### Étape 7 — Lint et maintenance
+### Step 7: Lint and maintenance
 
-- `scripts/lint-claude-config.sh` : `CLAUDE.md` présent et ≤ 150 lignes, pas de pattern de
-  secret, imports `@` et liens internes valides, `settings.json` parsable, frontmatter de
-  chaque `SKILL.md` et `.claude/agents/*.md` présent, zéro modalisateur dans le fichier racine
-  et les rules (liste B6, en avertissement et non en erreur). Appelé en CI.
-- `docs/agents/CHANGELOG.md` complété avec toutes les instructions retirées (règle 2).
-- `docs/agents/MIGRATION-PLAN.md` marqué « exécuté le <date> ».
+- `scripts/lint-claude-config.sh` (or an equivalent in the repo's language): root file present
+  and ≤ 150 lines, no secret pattern, valid `@` imports and internal links, parsable
+  `settings.json`, frontmatter present in each `SKILL.md` and `.claude/agents/*.md`, zero hedge
+  words in the root file and the rules (B6 list, as a warning, not an error). Called in CI.
+- `docs/agents/CHANGELOG.md` completed with every removed instruction (rule 2).
+- `docs/agents/MIGRATION-PLAN.md` marked "executed on <date>".
 
-## Vérification finale
+## Final verification
 
-Exécute et rapporte :
+Run and report:
 
 ```bash
 wc -l AGENTS.md CLAUDE.md 2>/dev/null
 grep -c '^@' AGENTS.md CLAUDE.md 2>/dev/null
-find . -name CLAUDE.md -not -path '*/node_modules/*'   # vide si renommé
+find . -name CLAUDE.md -not -path '*/node_modules/*'   # empty if renamed
 find .claude/skills -name SKILL.md -exec head -4 {} \;
 find .claude/agents -name '*.md' -exec head -5 {} \; 2>/dev/null
 jq . .claude/settings.json > /dev/null && echo settings-ok
-scripts/lint-claude-config.sh
+scripts/lint-claude-config.sh   # or the repo's equivalent, e.g. pnpm agents:check
 ```
 
-Puis, en ne lisant que `CLAUDE.md`, réponds à « commande pour lancer un seul test ? » et
-« où ajouter un endpoint ? ». Si tu ne peux pas, corrige `CLAUDE.md`.
+Then, reading only the root file, answer "command to run a single test?" and "where to add an
+endpoint?". If you cannot, fix the root file.
 
-Conclus en 5 lignes : commits, fichiers supprimés, instructions retirées (nombre + renvoi
-CHANGELOG), SHOULD non respectés et pourquoi.
+Conclude in 5 lines: commits, deleted files, removed instructions (count + CHANGELOG
+reference), unmet SHOULDs and why.

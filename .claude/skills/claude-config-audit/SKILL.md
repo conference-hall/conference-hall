@@ -1,123 +1,122 @@
 ---
 name: claude-config-audit
-description: Audite la configuration Claude Code d'un repo (CLAUDE.md, .claude/rules, skills, agents, commands, settings/hooks, docs/) contre la checklist 2026 et produit un plan de migration sans rien modifier. Utiliser avant toute refonte de CLAUDE.md, ou quand Claude semble ignorer les instructions du projet.
+description: Audits a repo's Claude Code configuration (AGENTS.md/CLAUDE.md, .claude/rules, skills, agents, commands, settings/hooks, docs/) against the 2026 checklist and produces a migration plan without changing anything. Use before any overhaul of the root instructions file, or when Claude seems to ignore the project instructions.
 ---
 
-# Audit de la configuration Claude Code
+# Claude Code configuration audit
 
-Tu es en **lecture seule** : tu ne modifies aucun fichier du projet, tu produis un seul
-livrable, `docs/agents/MIGRATION-PLAN.md`.
+You are **read-only**: you change no project file and produce a single deliverable,
+`docs/agents/MIGRATION-PLAN.md`.
 
-Lis d'abord `docs/agents/checklist-2026.md` intégralement. Chaque constat du rapport cite
-l'identifiant du critère (ex. `B1`, `F1`).
+Read `docs/agents/checklist-2026.md` in full first. Every finding in the report cites the
+criterion id (e.g. `B1`, `F1`).
 
-## 1. Inventaire
+## 1. Inventory
 
-Localise et lis, s'ils existent :
+Locate and read, when they exist:
 
-- Racine : `CLAUDE.md`, `CLAUDE.local.md`, `.claudeignore`, et tout fichier d'instructions
-  d'un autre outil (`AGENTS.md`, `.cursorrules`, `GEMINI.md`, `.github/copilot-instructions.md`)
-- `.claude/` : `settings.json`, `settings.local.json`, `rules/`, `skills/`, `agents/`,
+- Root: `AGENTS.md`, `CLAUDE.md`, `CLAUDE.local.md`, `.claudeignore`, and any instructions file
+  for another tool (`.cursorrules`, `GEMINI.md`, `.github/copilot-instructions.md`)
+- `.claude/`: `settings.json`, `settings.local.json`, `rules/`, `skills/`, `agents/`,
   `commands/`
-- `CLAUDE.md` imbriqués : `find . -name CLAUDE.md -not -path '*/node_modules/*'`
-- Fichiers importés par `@` depuis `CLAUDE.md` (suis chaque import, profondeur 2)
-- Docs : `README.md`, `CONTRIBUTING.md`, `docs/**`, ADR
-- Contexte projet : manifestes (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`),
-  CI, `Makefile`/`justfile`, scripts lint/format/test
+- Nested instruction files: `find . \( -name CLAUDE.md -o -name AGENTS.md \) -not -path '*/node_modules/*'`
+- Files imported with `@` from the root file (follow each import, depth 2)
+- Docs: `README.md`, `CONTRIBUTING.md`, `docs/**`, ADRs
+- Project context: manifests (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`),
+  CI, `Makefile`/`justfile`, lint/format/test scripts
 
-Pour chaque fichier d'instructions, note : lignes, nombre d'instructions impératives (lignes
-commençant par un verbe, « always/never/toujours/jamais », puces), imports `@`, et doublons
-avec un autre fichier (comparaison paragraphe par paragraphe).
+For each instructions file, record: lines, number of imperative instructions (lines starting
+with a verb, "always/never", bullets), `@` imports, and duplicates with another file
+(paragraph by paragraph comparison).
 
-## 2. Nom du fichier racine
+## 2. Root file name
 
-- `claude --version` (ou demande-la si indisponible). Si ≥ 2.1.277 et que le fichier racine
-  s'appelle `CLAUDE.md` : note la recommandation A1b (renommer en `AGENTS.md`) et liste les
-  conditions à vérifier (aucun `CLAUDE.md` dans un parent, imports `@` résolus après
-  renommage, pas de Bedrock/Vertex/Foundry).
-- Si `CLAUDE.md` et `AGENTS.md` coexistent : `AGENTS.md` est ignoré par Claude Code ; signale-le
-  comme bloquant.
+- Run `claude --version` (or ask for it if unavailable). If ≥ 2.1.277 and the root file is
+  named `CLAUDE.md`: record recommendation A1b (rename to `AGENTS.md`) and list the conditions
+  to check (no `CLAUDE.md` in a parent folder, `@` imports resolved after the rename, no
+  Bedrock/Vertex/Foundry).
+- If `CLAUDE.md` and `AGENTS.md` coexist: Claude Code ignores `AGENTS.md`; report it as
+  blocking.
 
-## 3. Ce qui est chargé à chaque session
+## 3. What loads on every session
 
-Calcule la charge réelle : `CLAUDE.md` + imports `@` + `.claude/rules/*.md` sans `paths:` +
-`~/.claude/CLAUDE.md` si lisible. Donne le total en lignes et en tokens approximatifs
-(lignes × 12). Conclus en une phrase : « à chaque session Claude charge X lignes, dont Y
-rarement utiles ».
+Compute the real load: root file + `@` imports + `.claude/rules/*.md` without `paths:` +
+`~/.claude/CLAUDE.md` if readable. Give the total in lines and approximate tokens
+(lines × 12). Conclude in one sentence: "on every session Claude loads X lines, Y of which are
+rarely useful".
 
-## 4. Évaluation critère par critère
+## 4. Criterion by criterion evaluation
 
-Parcours les sections A → I de la checklist. Pour chaque MUST et SHOULD : ✅ / ⚠️ / ❌ / —
-avec une preuve d'une ligne (chemin:ligne ou commande exécutée).
+Walk through sections A → I of the checklist. For each MUST and SHOULD: ✅ / ⚠️ / ❌ / n/a
+with a one-line proof (path:line or command run).
 
-Teste concrètement, ne suppose pas :
+Test for real, do not assume:
 
-- Les commandes citées existent-elles ? (`grep` dans les manifestes ; n'exécute rien de
-  destructif.)
-- Les imports `@` et liens internes pointent-ils vers des fichiers existants ?
-- Les `description` de skills et d'agents disent-elles _quand_ les utiliser ?
-- Quelles règles « doit toujours » n'ont aucun hook ni check CI correspondant ?
-- `settings.json` est-il valide (JSON parsable, matchers de hooks cohérents) ?
-- Style (B6) : compte les lignes d'instruction qui ne commencent pas par un verbe impératif
-  (hors commandes, chemins, titres, tableaux), les modalisateurs (`grep -ciE "si possible|généralement|préférable|essaie|idéalement|when possible|try to|ideally|generally"`),
-  et les interdits sans raison. Donne les trois chiffres et deux exemples de lignes à réécrire,
-  chacun avec sa version réécrite **qui conserve** commande, raison et exemple.
+- Do the cited commands exist? (`grep` the manifests; run nothing destructive.)
+- Do `@` imports and internal links point to existing files?
+- Do skill and agent `description` fields say _when_ to use them?
+- Which "must always" rules have no matching hook or CI check?
+- Is `settings.json` valid (parsable JSON, consistent hook matchers)?
+- Style (B6): count instruction lines that do not start with an imperative verb (excluding
+  commands, paths, headings, tables), hedge words (`grep -ciE "si possible|généralement|préférable|essaie|idéalement|when possible|try to|ideally|generally"`),
+  and prohibitions without a reason. Give the three numbers and two example lines to rewrite,
+  each with its rewritten version that **keeps** command, reason and example.
 
-## 5. Candidats à extraction
+## 5. Extraction candidates
 
-À partir du contenu et de `git log --oneline -200` (messages récurrents, fichiers souvent
-modifiés ensemble) :
+From the content and `git log --oneline -200` (recurring messages, files often changed
+together):
 
-- Procédures répétées et `.claude/commands/*.md` → candidats **skills** (nom + description
-  « Fait X. Utiliser quand Y. »).
-- Rôles répétés (revue, tests, migrations) → candidats **sous-agents** (nom, tools, model).
-- Règles par zone de code → candidats **rules** avec glob `paths:`.
-- Règles impératives → candidats **hooks** (événement + matcher + commande).
-- Contenu long → candidats **docs/** (fichier cible + ligne « Lis ce fichier quand… »), avec
-  pour chacun : import `@` (toujours chargé) ou lien (à la demande).
+- Repeated procedures and `.claude/commands/*.md` → **skill** candidates (name + description
+  "Does X. Use when Y.").
+- Repeated roles (review, tests, migrations) → **subagent** candidates (name, tools, model).
+- Rules scoped to a code area → **rule** candidates with a `paths:` glob.
+- Imperative rules → **hook** candidates (event + matcher + command).
+- Long content → **docs/** candidates (target file + "Read this file when: ..." line), each
+  with: `@` import (always loaded) or link (on demand).
 
-## 6. Livrable : `docs/agents/MIGRATION-PLAN.md`
+## 6. Deliverable: `docs/agents/MIGRATION-PLAN.md`
 
-Structure imposée :
+Required structure:
 
 ```markdown
-# Plan de migration — configuration Claude Code
+# Migration plan: Claude Code configuration
 
-Généré le <date> par claude-config-audit. Lis ce fichier quand tu exécutes `claude-config-restructure`.
+Generated on <date> by claude-config-audit. Read this file when: you run `claude-config-restructure`.
 
-## Résumé (5 lignes max)
+## Summary (5 lines max)
 
-État actuel, charge par session, 3 problèmes principaux, effort estimé (S/M/L).
+Current state, per-session load, 3 main problems, estimated effort (S/M/L).
 
-## Score par section
+## Score per section
 
-| Section | MUST ok/total | SHOULD ok/total | Points bloquants |
+| Section | MUST ok/total | SHOULD ok/total | Blocking points |
 
-## Constats
+## Findings
 
-<un bloc par critère ❌/⚠️, avec preuve et correctif concret>
+<one block per ❌/⚠️ criterion, with proof and a concrete fix>
 
-## Arborescence cible
+## Target tree
 
-<tree complet de CLAUDE.md, .claude/ et docs/ après migration>
+<full tree of the root file, .claude/ and docs/ after migration>
 
-## Étapes ordonnées
+## Ordered steps
 
-Chaque étape : titre, fichiers touchés, commandes, critère de vérification, message de commit.
+Each step: title, files touched, commands, verification criterion, commit message.
 
-## Contenu proposé pour CLAUDE.md
+## Proposed root file content
 
-<brouillon complet ≤ 150 lignes, sections C1→C9, basé sur l'existant>
+<full draft ≤ 150 lines, sections C1→C9, based on the existing file>
 
-## Décisions à prendre par l'humain
+## Decisions for the human
 
-<questions ouvertes : renommer en AGENTS.md (oui/non, avec la version Claude Code constatée),
-garder/supprimer tel fichier, import vs lien, quel modèle pour tel agent…>
+<open questions: rename to AGENTS.md (yes/no, with the Claude Code version found),
+keep/delete a file, import vs link, which model for an agent...>
 ```
 
-## 7. Fin
+## 7. End
 
-Termine par 3 lignes : chemin du plan, nombre de MUST non respectés, invitation à relire
-« Décisions à prendre » avant de lancer `claude-config-restructure`.
+Finish with 3 lines: plan path, number of unmet MUSTs, an invitation to review "Decisions for
+the human" before running `claude-config-restructure`.
 
-Interdit : recommandations génériques. Chaque ligne du plan nomme un fichier de ce repo.
+Forbidden: generic recommendations. Every line of the plan names a file of this repo.
