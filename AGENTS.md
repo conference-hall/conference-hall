@@ -15,7 +15,7 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 - `pnpm test:e2e <file>`: one Playwright spec.
 - `pnpm tsc`: `react-router typegen` then `tsc -b`. Run it after adding or changing routes so `./+types/*` exist.
 - `pnpm lint` / `pnpm format`: oxlint / oxfmt.
-- `pnpm check`: the CI static job (format, lint, tsc, knip, i18n, agent config).
+- `pnpm check`: the CI static job (format, lint, tsc, knip, i18n).
 - `pnpm exec prisma generate`: regenerate the Prisma client. Runs automatically via hook after editing `prisma/schema.prisma`.
 - `pnpm db:migrate:dev --name="..."`: new migration.
 - `pnpm db:reset`: reseed the local dev DB (test users `superman@example.com` / `batman@example.com`, password `password`).
@@ -59,7 +59,7 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 ## Claude Code workflow
 
 - Enter plan mode for tasks touching more than 5 files or `prisma/schema.prisma`.
-- Use the `db-migration` skill for any schema change, `add-route` for a new page or action, `upgrade-dependencies` for dependency bumps.
+- Use the `db-migration` skill for any schema change and `add-route` for a new page or action.
 - Ask the `e2e-writer` subagent to write or fix Playwright specs and page objects.
 - Update `AGENTS.md` and the matching `docs/*.md` in the same commit as any command, stack or convention change.
 - Create git worktrees outside the repo: tools in the main checkout would scan them.
@@ -72,5 +72,5 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 
 ## More
 
-- [docs/architecture.md](docs/architecture.md), [docs/conventions.md](docs/conventions.md), [docs/GLOSSARY.md](docs/GLOSSARY.md))
+- [docs/architecture.md](docs/architecture.md), [docs/conventions.md](docs/conventions.md), [docs/GLOSSARY.md](docs/GLOSSARY.md)
 - Topic docs (auto-loaded as rules): `docs/{api,authentication,authorization,components,database,emails,flags,i18n,jobs,logging,redis,routes,services,storage,testing,tracing}.md`

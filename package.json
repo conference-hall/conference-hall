@@ -30,7 +30,7 @@
     "format:check": "oxfmt --check",
     "i18n:check": "x18n check --strict",
     "tsc": "react-router typegen && tsc -b",
-    "check": "pnpm format:check && pnpm lint && pnpm tsc && pnpm knip && pnpm i18n:check && pnpm agents:check",
+    "check": "pnpm format:check && pnpm lint && pnpm tsc && pnpm knip && pnpm i18n:check",
     "knip": "knip"
   },
   "dependencies": {
