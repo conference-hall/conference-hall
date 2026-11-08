@@ -1,5 +1,7 @@
 # Plan de migration : configuration Claude Code
 
+**Exécuté le 2026-11-08** sur `chore/setup-agents` (commits `01ac081f` à `652812c8`, puis journal). Écarts et retraits : `docs/agents/CHANGELOG.md`.
+
 Généré le 2026-11-08 par claude-config-audit. Lis ce fichier quand tu exécutes `claude-config-restructure`.
 
 ## Résumé

@@ -36,6 +36,12 @@ Every instruction removed, moved or rewritten during the Claude Code config rest
 
 - Stack avec versions (C1), `pnpm install`, `pnpm lint` / `pnpm format` (C2), sections Workflow Git (depuis `docs/contributing.md`), Vérification, Workflow Claude Code, Interdits (C5 à C8).
 
+## 2026-11-08: docs thématiques en rules
+
+- `.claude/rules/*.md` : 16 liens symboliques vers `docs/` (décision 3). Les `paths:` existants deviennent actifs ; vérifié en session (lire un service charge `services.md`, `database.md`, `logging.md`).
+- `docs/emails.md` `paths:` "`app/features/**/emails/**`" (aucun fichier suivi) → "`app/features/event-management/settings/emails*.tsx`" (pages de personnalisation des emails).
+- `docs/logging.md` `paths:` "`'**/*.ts'`" → "`servers/**`", "`app/**/*.server.ts`" (décision 7) : 91 lignes chargées à chaque `.ts` lu.
+
 ## 2026-11-08: dérive des docs thématiques
 
 ### Réécritures
@@ -45,11 +51,11 @@ Every instruction removed, moved or rewritten during the Claude Code config rest
 - `README.md` Stack "React router v7", "Express" → "React Router v8", "Fastify": le serveur est `servers/web.ts` (Fastify).
 - `docs/database.md` "Use `@default()` for sensible defaults: booleans, timestamps, JSON" → "Set `@default()` on booleans, timestamps and JSON columns". Conservé : exemples `@default("[]")`, `@default("{}")`.
 - `docs/database.md` "Add `@@index()` on foreign key columns when useful for optimization" → "... that queries filter or join on". Modalisateur remplacé par un critère.
-- `docs/components.md` "Prefer composition over prop drilling — extract sub-components when complexity grows" → "Use composition instead of prop drilling: extract sub-components when complexity grows".
+- `docs/components.md` "Prefer composition over prop drilling [tiret] extract sub-components when complexity grows" → "Use composition instead of prop drilling: extract sub-components when complexity grows".
 - `docs/i18n.md` "Keys must be **alphabetically sorted**" → "Keys must be **sorted** in translation files: x18n sorts them (`write.sort: 'binary'`)"; ajout de `pnpm i18n:check` (#870 n'avait pas mis la doc à jour).
 - `docs/GLOSSARY.md` renvoi `CLAUDE.md` → `AGENTS.md`.
 - 16 docs thématiques : ajout de `> Read this file when: ...` après le frontmatter (H3).
-- Em-dashes de `docs/*.md` (108) retirés (décision 10) : deux-points pour les motifs "terme — définition" et "règle — raison", réécriture ciblée pour 11 phrases (`authorization.md`, `emails.md`, `logging.md`, `GLOSSARY.md`). Aucun contenu retiré.
+- Em-dashes de `docs/*.md` (108) retirés (décision 10) : deux-points pour les motifs « terme, tiret, définition » et « règle, tiret, raison », réécriture ciblée pour 11 phrases (`authorization.md`, `emails.md`, `logging.md`, `GLOSSARY.md`). Aucun contenu retiré.
 
 ## 2026-11-08: architecture, conventions, ADR
 
@@ -62,6 +68,11 @@ Every instruction removed, moved or rewritten during the Claude Code config rest
 - `AGENTS.md` "Never push to `main` or `production` directly" : conservé, garanti par `.claude/hooks/guard-bash.sh` (bloque aussi les force push et `prisma migrate reset`).
 - Ajouté : mention d'une ligne du formatage automatique (`format.sh`) et du hook Stop (`stop-check.sh`, lance `pnpm lint` + `pnpm format:check`, décision 8).
 - Plan : `verify-reminder.sh` remplacé par `stop-check.sh` (exécution réelle au lieu d'un rappel, décision 8). Pas de `deny Read(./.env.local)` : placeholders de dev (décision 4).
+
+## 2026-11-08: skills et sous-agent
+
+- Ajoutés : skills `upgrade-dependencies`, `db-migration`, `add-route` (procédures répétées, voir plan E4).
+- Ajouté : sous-agent `e2e-writer` (`sonnet`). Pas de `reviewer` (décision 9) : la revue passe par `mattpocock-skills:code-review`. La ligne `reviewer` du brouillon d'`AGENTS.md` n'a pas été reprise et le commit s'appelle `chore: add e2e-writer subagent`.
 
 ## 2026-11-08: lint de config
 
