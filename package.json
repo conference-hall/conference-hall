@@ -18,7 +18,7 @@
     "jobs:build": "prisma generate",
     "test": "pnpm test:db && pnpm test:unit",
     "test:db": "NODE_ENV=test prisma db push --accept-data-loss",
-    "test:unit": "vitest --browser.headless",
+    "test:unit": "vitest",
     "test:browser": "vitest --project browser",
     "test:e2e": "NODE_ENV=test playwright test",
     "test:e2e:ui": "NODE_ENV=test playwright test --ui --ui-host=localhost",
@@ -28,8 +28,9 @@
     "lint": "oxlint",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "i18n:check": "x18n check",
+    "i18n:check": "x18n check --strict",
     "tsc": "react-router typegen && tsc -b",
+    "check": "pnpm format:check && pnpm lint && pnpm tsc && pnpm knip && pnpm i18n:check",
     "knip": "knip"
   },
   "dependencies": {

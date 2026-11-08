@@ -20,7 +20,7 @@ export default defineConfig({
       {
         test: {
           name: 'server',
-          include: ['./**/*.test.ts', './**/*.email.test.tsx', '!./e2e/**/*'],
+          include: ['./**/*.test.ts', './**/*.email.test.tsx', '!./e2e/**/*', '!./.claude/**/*'],
           setupFiles: ['./tests/setup.server.ts'],
           environment: 'node',
           isolate: false,
@@ -31,12 +31,13 @@ export default defineConfig({
       {
         test: {
           name: 'browser',
-          include: ['./**/*.test.tsx', '!./**/*.email.test.tsx'],
+          include: ['./**/*.test.tsx', '!./**/*.email.test.tsx', '!./.claude/**/*'],
           setupFiles: ['./tests/setup.browser.ts'],
           css: true,
           includeTaskLocation: true,
           browser: {
             enabled: true,
+            headless: true,
             provider: playwright({ contextOptions: { reducedMotion: 'reduce', timezoneId: 'America/New_York' } }),
             instances: [{ browser: 'chromium' }],
             viewport: { width: 1920, height: 1080 },

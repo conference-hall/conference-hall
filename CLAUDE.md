@@ -11,6 +11,7 @@ Docker (`docker compose up`) must be running for tests, e2e and the dev server (
 - `pnpm test:unit run <file>`: one test file, without the schema push (run `pnpm test:db` first if the schema changed).
 - `pnpm test:e2e <file>`: one Playwright spec.
 - `pnpm tsc`: runs `react-router typegen` then `tsc -b`. Run it after adding or changing routes so `./+types/*` exist.
+- `pnpm check`: the CI static job (format, lint, tsc, knip, i18n). Run it before handing work off.
 - `pnpm exec prisma generate` after any `prisma/schema.prisma` change; new migrations via `pnpm db:migrate:dev --name="..."`.
 - `pnpm db:reset` reseeds the local dev DB (test users `superman@example.com` / `batman@example.com`, password `password`). It is destructive, so ask before running it.
 
@@ -42,3 +43,4 @@ Each file in `docs/` with a `paths:` frontmatter is the convention reference for
 - Vitest has two projects: `*.test.ts` (and `*.email.test.tsx`) run in Node against the real test DB, serially, with the DB truncated after each test; `*.test.tsx` run in headless Chromium.
 - Create test data with `tests/factories/` (traits + attributes), not raw Prisma calls. Vitest globals are available without imports.
 - Test DB env comes from `tests/.env.test`.
+- Browser tests failing outside the diff with `Invalid hook call` or `useState` on null: stale Vite deps cache, run `rm -rf node_modules/.vite`. Create git worktrees outside the repo so tools in the main checkout do not scan them.
