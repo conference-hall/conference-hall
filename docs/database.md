@@ -21,7 +21,7 @@ paths:
 
 - Foreign keys must use explicit `@relation(fields: [...], references: [id])`
 - Use `onDelete: Cascade` for dependent child records
-- Add `@@index()` on all foreign key columns for JOIN optimization
+- Add `@@index()` on foreign key columns when useful for optimization
 - Use `@@unique()` for composite uniqueness constraints (e.g., `@@unique([talkId, eventId])`)
 - Use composite `@@id()` for junction tables (e.g., `@@id([memberId, teamId])`)
 
@@ -38,7 +38,7 @@ paths:
 
 ## Query Patterns
 
-- All DB code must be in `.server.ts` files — no client-side access
+- All DB code must be in `.server.ts` files. No client-side access
 - Use `select` for minimal fetching; `include` when related records needed
 - Use `db.$transaction()` for all multi-table writes
 - Reserve `$queryRaw` for complex analytics, metrics, or atomic ops (e.g., counters with `ON CONFLICT`)
