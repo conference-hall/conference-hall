@@ -1,7 +1,8 @@
 ---
 description: Logging on backend
 paths:
-  - '**/*.ts'
+  - servers/**
+  - app/**/*.server.ts
 ---
 
 # Logging

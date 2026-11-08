@@ -2,7 +2,7 @@
 description: Email system
 paths:
   - app/shared/emails/**
-  - app/features/**/emails/**
+  - app/features/event-management/settings/emails*.tsx
 ---
 
 # Email Conventions
