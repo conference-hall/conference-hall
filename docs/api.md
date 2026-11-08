@@ -9,6 +9,8 @@ paths:
   - servers/fastify/rate-limit.ts
 ---
 
+> Read this file when: you change the public Web API, its API keys or its rate limiting.
+
 # Web API
 
 Conference Hall exposes a read-only **Web API** so organizers can connect external

@@ -1,8 +1,11 @@
 ---
 description: Logging on backend
 paths:
-  - '**/*.ts'
+  - servers/**
+  - app/**/*.server.ts
 ---
+
+> Read this file when: you log from server code or the jobs worker.
 
 # Logging
 
@@ -32,24 +35,24 @@ The exported `logger` is context-aware:
 
 This works through `AsyncLocalStorage`: `runWithLogger(contextLogger, fn)` makes
 `contextLogger` the ambient logger for everything executed by `fn`. The Fastify server and the
-job worker set this up — application code just imports `logger`.
+job worker set this up, so application code just imports `logger`.
 
 ## Log Levels
 
-- `debug` — Verbose development info
-- `info` — Normal operations (startup, shutdown, completed jobs)
-- `warn` — Recoverable issues (auth failures, Firebase errors)
-- `error` — Failures requiring attention
+- `debug`: Verbose development info
+- `info`: Normal operations (startup, shutdown, completed jobs)
+- `warn`: Recoverable issues (auth failures, Firebase errors)
+- `error`: Failures requiring attention
 
 Configured via the `LOG_LEVEL` env var (`debug|info|warn|error|silent`). Defaults: `silent`
 when `NODE_ENV=test`, `info` otherwise.
 
 ## Error Logging
 
-Pass errors under the `error` key — always that key, never another. The pino serializer
+Pass errors under the `error` key, always that key and never another. The pino serializer
 (`errWithCause`) outputs `message`, `stack`, `type` and the full `cause` chain. The base
 config also serializes the `err` key the same way, but only because Fastify internals log
-errors under it — application code always uses `error`.
+errors under it. Application code always uses `error`.
 
 ```typescript
 } catch (error) {
@@ -75,16 +78,16 @@ The line's level follows the response status: `info` below 400, `warn` for 4xx, 
 
 ## Architecture
 
-- `app/shared/logger/logger.server.ts` — pino instance factory (`createLogger`), the
+- `app/shared/logger/logger.server.ts`: pino instance factory (`createLogger`), the
   context-aware `logger` export and `runWithLogger`
-- `servers/web.ts` — Fastify wiring: `loggerInstance`, request context hook, `request completed`
+- `servers/web.ts`: Fastify wiring: `loggerInstance`, request context hook, `request completed`
   hook, error handler
-- `app/shared/jobs/worker.ts` — job context wiring
+- `app/shared/jobs/worker.ts`: job context wiring
 
 ## Testing
 
 Don't spy on the shared `logger` (it's a Proxy). Capture log lines with the
-`createLogCapture()` helper from `tests/logger-helpers.ts` instead:
+`createLogCapture()` helper from `tests/server-helpers.ts` instead:
 
 ```typescript
 const { lines, loggerInstance } = createLogCapture();

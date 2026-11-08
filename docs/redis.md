@@ -6,6 +6,8 @@ paths:
   - compose.yml
 ---
 
+> Read this file when: you use Redis for cache, jobs or sessions.
+
 # Redis Conventions
 
 ## Client

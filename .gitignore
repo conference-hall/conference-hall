@@ -28,5 +28,6 @@ e2e/results
 
 # ai
 .scratch
-.claude
-CLAUDE.md
+.claude/settings.local.json
+.claude/worktrees/
+CLAUDE.local.md

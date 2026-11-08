@@ -5,13 +5,15 @@ paths:
   - app/features/**/components/**
 ---
 
+> Read this file when: you build or change a UI component or use the design system.
+
 # Component Conventions
 
 ## Styling
 
-- Use Tailwind CSS utility classes — no CSS-in-JS or custom CSS
+- Use Tailwind CSS utility classes: no CSS-in-JS or custom CSS
 - Use `class-variance-authority` (CVA): `cva()` for variant definitions, `cx()` for conditional class merging
-- Do not use `clsx` or `twMerge` — use `cx()` from CVA
+- Do not use `clsx` or `twMerge`: use `cx()` from CVA
 - Mobile-first responsive: `sm:`, `md:`, `lg:` breakpoints
 - Indigo primary brand color (`bg-indigo-600`, `focus-visible:outline-indigo-600`)
 
@@ -28,7 +30,7 @@ paths:
 - **Compound components** for complex UI: `Card.Title`, `Card.Content`, `Card.Actions`, `Modal.Content`, `List.Row`
 - **Polymorphic components** with `as` prop for tag flexibility (e.g., `<Text as="span">`)
 - Button: polymorphic, renders as `<button>`, React Router `<Link>`, or `<a>` based on props
-- Prefer composition over prop drilling — extract sub-components when complexity grows
+- Use composition instead of prop drilling: extract sub-components when complexity grows
 
 ## HeadlessUI
 
@@ -69,7 +71,7 @@ paths:
 
 ## Typography
 
-- Use `<Text>` component with `variant`, `size`, `weight` props — not raw HTML tags
+- Use `<Text>` component with `variant`, `size`, `weight` props: not raw HTML tags
 - Headings: `<H1>`, `<H2>`, `<H3>` with preset sizing
 - `<Label>` for form labels, `<Subtitle>` for secondary text
 - Truncate long text with `truncate` prop, not manual CSS

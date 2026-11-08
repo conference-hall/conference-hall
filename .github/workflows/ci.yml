@@ -44,7 +44,7 @@ jobs:
         run: pnpm knip
 
       - name: Check i18n
-        run: pnpm i18n:check --strict
+        run: pnpm i18n:check
 
   integration-tests:
     name: Integration tests

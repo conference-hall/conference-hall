@@ -7,6 +7,8 @@ paths:
   - servers/jobs.ts
 ---
 
+> Read this file when: you add or change a background job.
+
 # Background Job Conventions
 
 ## Job Definition
@@ -15,7 +17,7 @@ paths:
 - Job file naming: `{name}.job.ts`
 - Each job must have unique `name` string
 - Payload types must be serializable (no functions, symbols, class instances)
-- Keep payloads small — store large data in DB, pass only IDs
+- Keep payloads small: store large data in DB, pass only IDs
 
 ```typescript
 import { job } from '~/shared/jobs/job.ts';
@@ -33,7 +35,7 @@ export const myJob = job<MyPayload>({
 
 - Shared jobs (e.g., emails): `app/shared/emails/send-email.job.ts`
 - Feature-specific: `app/features/{feature}/services/jobs/{name}.job.ts`
-- All jobs must be explicitly registered in `servers/jobs.ts` — no auto-discovery
+- All jobs must be explicitly registered in `servers/jobs.ts`: no auto-discovery
 
 ## Triggering Jobs
 
@@ -53,12 +55,12 @@ await myJob.trigger(payload, {
 ## Error Handling
 
 - Jobs retry automatically: 5 attempts with exponential backoff (3s initial delay)
-- Guard clauses to return early when preconditions unmet — don't throw for expected states
-- Let unexpected errors throw — BullMQ handles retries
+- Guard clauses to return early when preconditions unmet: don't throw for expected states
+- Let unexpected errors throw: BullMQ handles retries
 
 ## Testing
 
-- Jobs globally mocked in `tests/setup.server.ts` — `trigger` is `vi.fn()` spy
+- Jobs globally mocked in `tests/setup.server.ts`: `trigger` is `vi.fn()` spy
 - Test job logic directly via `myJob.config.run(payload)`
 - Verify triggers: `expect(myJob.trigger).toHaveBeenCalledWith(expectedPayload)`
 - Test files: `{name}.job.test.ts`

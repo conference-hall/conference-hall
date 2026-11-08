@@ -7,6 +7,8 @@ paths:
   - tests/db-helpers.ts
 ---
 
+> Read this file when: you change the Prisma schema, write a query or add a migration.
+
 # Database Conventions
 
 ## Schema Design
@@ -15,13 +17,13 @@ paths:
 - Use `@@map("snake_case")` for table names and `@map("snake_case")` for columns
 - Model names PascalCase, DB table/column names snake_case
 - Every model must have `createdAt DateTime @default(now())` and `updatedAt DateTime @updatedAt`
-- Use `@default()` for sensible defaults: booleans, timestamps, JSON (`@default("[]")`, `@default("{}")`)
+- Set `@default()` on booleans, timestamps and JSON columns (`@default("[]")`, `@default("{}")`)
 
 ## Relations and Constraints
 
 - Foreign keys must use explicit `@relation(fields: [...], references: [id])`
 - Use `onDelete: Cascade` for dependent child records
-- Add `@@index()` on all foreign key columns for JOIN optimization
+- Add `@@index()` on foreign key columns that queries filter or join on
 - Use `@@unique()` for composite uniqueness constraints (e.g., `@@unique([talkId, eventId])`)
 - Use composite `@@id()` for junction tables (e.g., `@@id([memberId, teamId])`)
 
@@ -38,7 +40,7 @@ paths:
 
 ## Query Patterns
 
-- All DB code must be in `.server.ts` files — no client-side access
+- All DB code must be in `.server.ts` files. No client-side access
 - Use `select` for minimal fetching; `include` when related records needed
 - Use `db.$transaction()` for all multi-table writes
 - Reserve `$queryRaw` for complex analytics, metrics, or atomic ops (e.g., counters with `ON CONFLICT`)
@@ -59,4 +61,4 @@ paths:
 ## Testing
 
 - Use factory functions with traits for test data (see `tests/factories/`)
-- DB globally truncated after each test — no manual cleanup needed
+- DB globally truncated after each test: no manual cleanup needed

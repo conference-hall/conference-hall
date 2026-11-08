@@ -5,16 +5,18 @@ paths:
   - app/app-platform/storage/**
 ---
 
+> Read this file when: you upload, serve or delete files on S3.
+
 # File Storage Conventions
 
 ## Architecture
 
 - **S3-compatible storage**: Garage locally
-- **Client singleton**: `app/shared/storage/s3-client.server.ts` — single `S3Client` with `forcePathStyle: true`
-- **Service**: `app/shared/storage/storage.server.ts` — `StorageService` class with `upload`, `getObject`, `delete`, `deleteQuietly`
-- **URL resolution**: `app/shared/storage/storage-utils.ts` — `resolveStorageUrl()` converts bucket keys to proxy URLs
-- **Proxy route**: `app/app-platform/storage/storage.ts` — serves files from S3 with immutable cache headers
-- **Upload handler**: `app/app-platform/storage/services/storage.server.ts` — multipart form upload to S3, includes `generateStorageKey()` internally
+- **Client singleton**: `app/shared/storage/s3-client.server.ts`: single `S3Client` with `forcePathStyle: true`
+- **Service**: `app/shared/storage/storage.server.ts`: `StorageService` class with `upload`, `getObject`, `delete`, `deleteQuietly`
+- **URL resolution**: `app/shared/storage/storage-utils.ts`: `resolveStorageUrl()` converts bucket keys to proxy URLs
+- **Proxy route**: `app/app-platform/storage/storage.ts`: serves files from S3 with immutable cache headers
+- **Upload handler**: `app/app-platform/storage/services/storage.server.ts`: multipart form upload to S3, includes `generateStorageKey()` internally
 
 ## Storage Keys (not URLs)
 

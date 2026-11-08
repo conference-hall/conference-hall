@@ -6,21 +6,23 @@ paths:
   - app/features/**/layout.tsx
 ---
 
+> Read this file when: you add a protected route, a middleware or a permission check.
+
 # Authentication & Authorization
 
 ## Middleware Chain
 
-Authorization enforced via React Router v7 middleware arrays on route files. **Order matters** — each middleware reads from context set by previous:
+Authorization enforced via React Router middleware arrays on route files. **Order matters**, because each middleware reads from context set by previous:
 
 ```
 optionalAuth → requireAuth → requireAuthorizedTeam → requireAuthorizedEvent
 ```
 
-- **`optionalAuth`** — Resolves session if exists; sets `OptionalAuthContext` (may be `null`). App-level layout.
-- **`requireAuth`** — Reads `OptionalAuthContext`; redirects to `/auth/login` if no user. Sets `RequireAuthContext`.
-- **`requireAdmin`** — Reads `RequireAuthContext`; throws if not admin. Sets `AuthorizedAdminContext`.
-- **`requireAuthorizedTeam`** — Reads `RequireAuthContext` + `params.team`; verifies membership, loads role/permissions. Sets `AuthorizedTeamContext`.
-- **`requireAuthorizedEvent`** — Reads `AuthorizedTeamContext` + `params.event`; verifies event belongs to team. Sets `AuthorizedEventContext`.
+- **`optionalAuth`**: Resolves session if exists; sets `OptionalAuthContext` (may be `null`). App-level layout.
+- **`requireAuth`**: Reads `OptionalAuthContext`; redirects to `/auth/login` if no user. Sets `RequireAuthContext`.
+- **`requireAdmin`**: Reads `RequireAuthContext`; throws if not admin. Sets `AuthorizedAdminContext`.
+- **`requireAuthorizedTeam`**: Reads `RequireAuthContext` + `params.team`; verifies membership, loads role/permissions. Sets `AuthorizedTeamContext`.
+- **`requireAuthorizedEvent`**: Reads `AuthorizedTeamContext` + `params.event`; verifies event belongs to team. Sets `AuthorizedEventContext`.
 
 ## Context Pattern
 
@@ -51,11 +53,11 @@ export const loader = async ({ context }: Route.LoaderArgs) => {
 
 Defined in `app/shared/authorization/types.ts`:
 
-- **`TeamRole`** — `'OWNER' | 'MEMBER' | 'REVIEWER'`
-- **`TeamPermissions`** — Readonly object with boolean `canXxx` fields (e.g., `canEditTeam`, `canCreateEvent`, `canChangeProposalStatus`)
-- **`AuthorizedTeam`** — `{ userId, teamId, role, permissions }`
-- **`AuthorizedEvent`** — `AuthorizedTeam & { event: Event }`
-- **`AuthorizedApiEvent`** — `{ event: Event }` (API key auth, no user context)
+- **`TeamRole`**: `'OWNER' | 'MEMBER' | 'REVIEWER'`
+- **`TeamPermissions`**: Readonly object with boolean `canXxx` fields (e.g., `canEditTeam`, `canCreateEvent`, `canChangeProposalStatus`)
+- **`AuthorizedTeam`**: `{ userId, teamId, role, permissions }`
+- **`AuthorizedEvent`**: `AuthorizedTeam & { event: Event }`
+- **`AuthorizedApiEvent`**: `{ event: Event }` (API key auth, no user context)
 
 ## Role Permissions
 

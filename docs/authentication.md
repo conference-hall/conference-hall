@@ -5,6 +5,8 @@ paths:
   - app/features/auth/**
 ---
 
+> Read this file when: you touch login, signup, sessions or social providers (better-auth).
+
 # Authentication (better-auth)
 
 ## Server Configuration
@@ -23,12 +25,12 @@ Configured in `app/shared/authentication/auth.server.ts`:
 
 `app/shared/authentication/auth-client.ts` exports:
 
-- `authClient` — better-auth client (`createAuthClient()`)
+- `authClient`: better-auth client (`createAuthClient()`)
 
 Related modules in the same folder:
 
-- `auth-providers.ts` — `PROVIDERS`, array of social provider configs (id, label, icon)
-- `auth-errors.ts` — `getAuthError(error)`, maps better-auth error codes to i18n translation keys
+- `auth-providers.ts`: `PROVIDERS`, array of social provider configs (id, label, icon)
+- `auth-errors.ts`: `getAuthError(error)`, maps better-auth error codes to i18n translation keys
 
 Account-scoped client APIs (`unlinkAccount`, `accountInfo`) select an account with the
 local `account.id`, not the provider-side `accountId`.
@@ -55,11 +57,11 @@ Legacy Firebase scrypt password hashes supported for migration:
 
 better-auth tables (managed via Prisma migrations):
 
-- `users` — user accounts (`image` mapped to `picture`, additional `locale` field)
-- `accounts` — provider accounts (credential, google, github)
+- `users`: user accounts (`image` mapped to `picture`, additional `locale` field)
+- `accounts`: provider accounts (credential, google, github)
 
 Redis (secondary storage), all keys prefixed `auth:`:
 
-- `<session token>` — active sessions, plus `active-sessions-<userId>` indexes
-- `verification:<identifier>` — email verification and password reset tokens
+- `<session token>`: active sessions, plus `active-sessions-<userId>` indexes
+- `verification:<identifier>`: email verification and password reset tokens
 - rate limiting counters
