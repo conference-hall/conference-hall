@@ -27,7 +27,7 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 - `app/features/<area>/`: vertical slices (`event-management`, `event-participation`, `speaker`, `team-management`, `admin`, ...). Route modules at the top level, `components/`, `services/`, `models/` siblings.
 - `services/*.server.ts`: all business logic and DB access, using the `db` singleton from `prisma/db.server.ts` directly. Zod schemas live next to them in `*.schema.server.ts`.
 - Authorization: middleware chain on route modules (`requireAuth → requireAuthorizedTeam → requireAuthorizedEvent`) puts typed contexts on `context`; loaders and actions pass them to services, which check `permissions.canXxx`.
-- `app/shared/`: cross-feature infrastructure (auth, authorization, jobs, emails, i18n, cache, storage, feature flags, logger). `app/design-system/`: UI kit (Tailwind + CVA `cx()` + HeadlessUI). `app/app-platform/`: app shell, SEO, legal pages.
+- `app/shared/`: cross-feature infrastructure (auth, authorization, jobs, emails, i18n, cache, storage, feature flags, logger, otel). `app/design-system/`: UI kit (Tailwind + CVA `cx()` + HeadlessUI). `app/app-platform/`: app shell, SEO, legal pages.
 - Details and boundaries: [docs/architecture.md](docs/architecture.md).
 
 ## Conventions
@@ -53,7 +53,6 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 - Run `pnpm test:unit run <file>` on every Vitest file you create or change, `pnpm test:e2e <file>` on every Playwright spec.
 - Run `pnpm check` before handing work off: it mirrors the CI `static-tests` job.
 - Formatting (oxfmt) and `oxlint --fix` run via hook after each edit; `pnpm lint` and `pnpm format:check` run via the Stop hook at the end of each turn.
-- Run `pnpm tsc` after touching `app/routes.ts`.
 - Run `rm -rf node_modules/.vite` when browser tests fail outside the diff with `Invalid hook call` or `useState` on null: the Vite deps cache is stale.
 
 ## Claude Code workflow

@@ -34,10 +34,10 @@ paths:
 
 ## Component Tests (`.test.tsx`)
 
-- Use `render` from `vitest-browser-react` (imported via `tests/setup.browser.tsx`)
+- Use `render` from `vitest-browser-react` (imported via `tests/setup.browser.ts`)
 - Render: `page.render(<Component />)` from `vitest/browser`
 - Use `createRoutesStub` from `react-router` for routing-dependent components
-- Wrap i18n-dependent components with `<I18nextProvider i18n={i18nTest}>` (from `tests/i18n-helpers.tsx`)
+- Wrap i18n-dependent components with `<I18nextProvider i18n={i18nTest}>` (from `tests/i18n-helpers.ts`)
 - Check text with English i18n values, not translation keys
 - Semantic queries: `page.getByRole()`, `page.getByLabel()`, `page.getByText()`, `page.getByPlaceholder()`
 - Element assertions: `await expect.element(locator)` (not `expect(locator)`)

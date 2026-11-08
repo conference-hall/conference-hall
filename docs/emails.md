@@ -21,7 +21,7 @@ paths:
 - Templates in `app/shared/emails/templates/`, organized by audience: `auth/`, `speakers/`, `organizers/`
 - Each template is React component with static `buildPayload()` method and `PreviewProps` for development
 - Templates must be registered in `app/shared/emails/templates/templates.ts`: no auto-discovery
-- File naming: kebab-case (`proposal-accepted.tsx`), component naming: PascalCase (`ProposalAcceptedEmail`)
+- File naming: kebab-case (`proposal-accepted.email.tsx`), component naming: PascalCase (`ProposalAcceptedEmail`)
 
 ## Template Pattern
 
@@ -70,8 +70,7 @@ MyEmail.buildPayload = (data: TemplateData): EmailPayload => {
 
 ## Sending Emails
 
-- **Speaker notifications**: Emit domain events via `notifyDomainEvent.trigger()`, and the notification router handles email dispatch per speaker with correct locale. See `notifications.md` rule.
-- **Organizer emails**: Use `sendEmail.trigger(TemplateEmail.buildPayload(data))` directly
+- Use `sendEmail.trigger(TemplateEmail.buildPayload(data))` directly, for speaker and organizer emails alike (e.g. `ProposalAcceptedEmail` in `publication.server.ts`)
 - Bulk: `Promise.all(items.map(item => sendEmail.trigger(Template.buildPayload(item))))`
 - Fire-and-forget: `void sendEmail.trigger(...)` when no need to await
 

@@ -87,7 +87,7 @@ The line's level follows the response status: `info` below 400, `warn` for 4xx, 
 ## Testing
 
 Don't spy on the shared `logger` (it's a Proxy). Capture log lines with the
-`createLogCapture()` helper from `tests/logger-helpers.ts` instead:
+`createLogCapture()` helper from `tests/server-helpers.ts` instead:
 
 ```typescript
 const { lines, loggerInstance } = createLogCapture();
