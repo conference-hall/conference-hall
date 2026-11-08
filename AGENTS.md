@@ -36,7 +36,7 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 - Keep the `.ts`/`.tsx` extension in imports.
 - Keep DB access in `services/*.server.ts`, out of route modules and components.
 - Build services with `Class.for(authorizedContext)`, `Class.of(id)` or `Class.with(...)`, one class per file: see `docs/services.md`.
-- Add every translation key to both `app/locales/en.*.json` and `app/locales/fr.*.json`, sorted: `pnpm i18n:check` fails otherwise.
+- Change translation keys only through the x18n CLI (`pnpm exec x18n set|rename|delete`), never by editing `app/locales/*.json` by hand: it keeps keys sorted and placeholders intact. Every key needs an `en` and a `fr` value, or `pnpm i18n:check` fails.
 - Create test data with `tests/factories/` (traits + attributes), never raw Prisma calls: factories fill valid defaults and relations, so a schema change is fixed in one place and tests show only the attributes that matter.
 - Expect two Vitest projects: `*.test.ts` (and `*.email.test.tsx`) run in Node against the real test DB, serially, truncated after each test; `*.test.tsx` run in headless Chromium.
 - Read the topic docs: they load automatically from `.claude/rules/` when you touch matching files. Index: [docs/conventions.md](docs/conventions.md).
@@ -59,6 +59,7 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 
 - Enter plan mode for tasks touching more than 5 files or `prisma/schema.prisma`.
 - Use the `db-migration` skill for any schema change and `add-route` for a new page or action.
+- Use the `x18n` skill for translation keys: it links to `node_modules/@x18n/cli/skills/x18n`, so it follows the installed version.
 - Ask the `e2e-writer` subagent to write or fix Playwright specs and page objects.
 - Update `AGENTS.md` and the matching `docs/*.md` in the same commit as any command, stack or convention change.
 - Create git worktrees outside the repo: tools in the main checkout would scan them.
