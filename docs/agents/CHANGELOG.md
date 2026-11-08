@@ -50,3 +50,8 @@ Every instruction removed, moved or rewritten during the Claude Code config rest
 - `docs/GLOSSARY.md` renvoi `CLAUDE.md` → `AGENTS.md`.
 - 16 docs thématiques : ajout de `> Read this file when: ...` après le frontmatter (H3).
 - Em-dashes de `docs/*.md` (108) retirés (décision 10) : deux-points pour les motifs "terme — définition" et "règle — raison", réécriture ciblée pour 11 phrases (`authorization.md`, `emails.md`, `logging.md`, `GLOSSARY.md`). Aucun contenu retiré.
+
+## 2026-11-08: architecture, conventions, ADR
+
+- Créés : `docs/architecture.md` (développe la section Architecture d'`AGENTS.md`), `docs/conventions.md` (reçoit l'index commenté des docs thématiques, ex-`CLAUDE.md:30-39`, et la convention d'alias ex-`CLAUDE.md:26`), `docs/adr/0001-services-without-repositories.md`.
+- Non créés : ADR 0002 (node-redis, #824) et 0003 (Garage, #827) prévus par le plan. Ni le commit ni la PR ne donnent le motif, et l'humain a choisi de ne pas les écrire plutôt que d'inventer une raison.
