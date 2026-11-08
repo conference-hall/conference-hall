@@ -22,7 +22,7 @@ A request goes through three layers, and each one has a single job:
 
 Authorization is resolved before the loader runs. The middleware chain (`requireAuth → requireAuthorizedTeam → requireAuthorizedEvent`) puts typed contexts on `context`, and the route passes them to `Service.for(context)`. See `docs/authorization.md` and `docs/services.md`.
 
-There is no repository layer between services and Prisma: see [ADR 0001](adr/0001-services-without-repositories.md).
+There is no repository layer between services and Prisma.
 
 ## Feature folders are vertical slices
 

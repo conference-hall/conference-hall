@@ -16,7 +16,6 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 - `pnpm tsc`: `react-router typegen` then `tsc -b`. Run it after adding or changing routes so `./+types/*` exist.
 - `pnpm lint` / `pnpm format`: oxlint / oxfmt.
 - `pnpm check`: the CI static job (format, lint, tsc, knip, i18n, agent config).
-- `pnpm agents:check`: lint `AGENTS.md`, `.claude/` and doc links (`scripts/lint-agent-config.ts`).
 - `pnpm exec prisma generate`: regenerate the Prisma client. Runs automatically via hook after editing `prisma/schema.prisma`.
 - `pnpm db:migrate:dev --name="..."`: new migration.
 - `pnpm db:reset`: reseed the local dev DB (test users `superman@example.com` / `batman@example.com`, password `password`).
@@ -33,7 +32,7 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 
 ## Conventions
 
-- Write everything committed to the repo in English (code, comments, tests, docs, ADRs, skills, subagents, commit messages, PR descriptions): it is the project language. Only `app/locales/fr.*.json` holds French.
+- Write everything committed to the repo in English (code, comments, tests, docs, commit messages, PR descriptions): it is the project language. Only `app/locales/fr.*.json` holds French.
 - Keep the `.ts`/`.tsx` extension in imports.
 - Keep DB access in `services/*.server.ts`, out of route modules and components.
 - Build services with `Class.for(authorizedContext)`, `Class.of(id)` or `Class.with(...)`, one class per file: see `docs/services.md`.
@@ -68,10 +67,10 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 ## Forbidden
 
 - Never run `pnpm db:reset` without asking: it wipes the local dev DB.
-- Never add a repository layer over Prisma: Prisma is already the data-access abstraction, a repository would duplicate its typed API for no gain (see [ADR 0001](docs/adr/0001-services-without-repositories.md)).
+- Never add a repository layer over Prisma: Prisma is already the data-access abstraction, a repository would duplicate its typed API for no gain.
 - Never push to `main` or `production` directly: changes go through PRs and CI (enforced by `.claude/hooks/guard-bash.sh`, which also blocks force pushes and `prisma migrate reset`).
 
 ## More
 
-- [docs/architecture.md](docs/architecture.md), [docs/conventions.md](docs/conventions.md), [docs/GLOSSARY.md](docs/GLOSSARY.md), [docs/adr/](docs/adr/)
+- [docs/architecture.md](docs/architecture.md), [docs/conventions.md](docs/conventions.md), [docs/GLOSSARY.md](docs/GLOSSARY.md))
 - Topic docs (auto-loaded as rules): `docs/{api,authentication,authorization,components,database,emails,flags,i18n,jobs,logging,redis,routes,services,storage,testing,tracing}.md`
