@@ -28,6 +28,7 @@
     "lint": "oxlint",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
+    "i18n:check": "x18n check",
     "tsc": "react-router typegen && tsc -b",
     "knip": "knip"
   },
@@ -103,6 +104,8 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitest/browser-playwright": "^5.1.0",
+    "@x18n/cli": "^0.1.11",
+    "@x18n/core": "^0.1.11",
     "knip": "^6.44.1",
     "lefthook": "^2.2.2",
     "oxfmt": "^0.76.0",
