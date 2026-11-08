@@ -16,7 +16,7 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 - `pnpm tsc`: `react-router typegen` then `tsc -b`. Run it after adding or changing routes so `./+types/*` exist.
 - `pnpm lint` / `pnpm format`: oxlint / oxfmt.
 - `pnpm check`: the CI static job (format, lint, tsc, knip, i18n).
-- `pnpm exec prisma generate`: after any `prisma/schema.prisma` change.
+- `pnpm exec prisma generate`: regenerate the Prisma client. Runs automatically via hook after editing `prisma/schema.prisma`.
 - `pnpm db:migrate:dev --name="..."`: new migration.
 - `pnpm db:reset`: reseed the local dev DB (test users `superman@example.com` / `batman@example.com`, password `password`).
 
@@ -51,6 +51,7 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 
 - Run `pnpm test:unit run <file>` on every Vitest file you create or change, `pnpm test:e2e <file>` on every Playwright spec.
 - Run `pnpm check` before handing work off: it mirrors the CI `static-tests` job.
+- Formatting (oxfmt) and `oxlint --fix` run via hook after each edit; `pnpm lint` and `pnpm format:check` run via the Stop hook at the end of each turn.
 - Run `pnpm tsc` after touching `app/routes.ts`.
 - Run `rm -rf node_modules/.vite` when browser tests fail outside the diff with `Invalid hook call` or `useState` on null: the Vite deps cache is stale.
 
@@ -66,7 +67,7 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 
 - Never run `pnpm db:reset` without asking: it wipes the local dev DB.
 - Never add a repository layer over Prisma: Prisma is already the data-access abstraction, a repository would duplicate its typed API for no gain (see [ADR 0001](docs/adr/0001-services-without-repositories.md)).
-- Never push to `main` or `production` directly: changes go through PRs and CI.
+- Never push to `main` or `production` directly: changes go through PRs and CI (enforced by `.claude/hooks/guard-bash.sh`, which also blocks force pushes and `prisma migrate reset`).
 
 ## More
 

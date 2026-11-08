@@ -55,3 +55,10 @@ Every instruction removed, moved or rewritten during the Claude Code config rest
 
 - Créés : `docs/architecture.md` (développe la section Architecture d'`AGENTS.md`), `docs/conventions.md` (reçoit l'index commenté des docs thématiques, ex-`CLAUDE.md:30-39`, et la convention d'alias ex-`CLAUDE.md:26`), `docs/adr/0001-services-without-repositories.md`.
 - Non créés : ADR 0002 (node-redis, #824) et 0003 (Garage, #827) prévus par le plan. Ni le commit ni la PR ne donnent le motif, et l'humain a choisi de ne pas les écrire plutôt que d'inventer une raison.
+
+## 2026-11-08: permissions et hooks
+
+- `AGENTS.md` "`pnpm exec prisma generate`: after any `prisma/schema.prisma` change." : la commande reste, la règle est garantie par `.claude/hooks/prisma-generate.sh`.
+- `AGENTS.md` "Never push to `main` or `production` directly" : conservé, garanti par `.claude/hooks/guard-bash.sh` (bloque aussi les force push et `prisma migrate reset`).
+- Ajouté : mention d'une ligne du formatage automatique (`format.sh`) et du hook Stop (`stop-check.sh`, lance `pnpm lint` + `pnpm format:check`, décision 8).
+- Plan : `verify-reminder.sh` remplacé par `stop-check.sh` (exécution réelle au lieu d'un rappel, décision 8). Pas de `deny Read(./.env.local)` : placeholders de dev (décision 4).
