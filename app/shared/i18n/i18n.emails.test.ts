@@ -6,12 +6,12 @@ describe('getEmailI18n', () => {
     const t = getEmailI18n(locale);
 
     expect(typeof t).toBe('function');
-    expect(() => t('common.by')).not.toThrow();
+    expect(() => t('common.by', { names: ['Hello'] })).not.toThrow();
   });
 
   it('returned function accepts translation keys', () => {
     const t = getEmailI18n('en');
 
-    expect(() => t('common.by')).not.toThrow();
+    expect(() => t('common.by', { names: ['Hello'] })).not.toThrow();
   });
 });

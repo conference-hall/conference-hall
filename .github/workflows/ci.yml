@@ -43,11 +43,8 @@ jobs:
       - name: Knip checking
         run: pnpm knip
 
-      - name: Check i18n key orphans
-        run: ./tests/tools/check-i18n-key-orphans.sh app/locales app
-
-      - name: Check i18n key consistency
-        run: ./tests/tools/check-i18n-key-consistency.sh app/locales
+      - name: Check i18n
+        run: pnpm i18n:check --strict
 
   integration-tests:
     name: Integration tests
