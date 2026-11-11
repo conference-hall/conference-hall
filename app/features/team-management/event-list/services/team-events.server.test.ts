@@ -17,7 +17,7 @@ describe('TeamEvents', () => {
       await eventFactory({ traits: ['conference-cfp-open'], team: team2 });
 
       const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
-      const events = await TeamEvents.for(authorizedTeam).list(false);
+      const { events } = await TeamEvents.for(authorizedTeam).list('active');
 
       expect(events).toEqual([
         {
@@ -29,6 +29,7 @@ describe('TeamEvents', () => {
           cfpStart: event2.cfpStart,
           cfpEnd: event2.cfpEnd,
           cfpState: 'CLOSED',
+          archived: false,
         },
         {
           name: event1.name,
@@ -39,6 +40,7 @@ describe('TeamEvents', () => {
           cfpStart: event1.cfpStart,
           cfpEnd: event1.cfpEnd,
           cfpState: 'CLOSED',
+          archived: false,
         },
       ]);
     });
@@ -50,7 +52,7 @@ describe('TeamEvents', () => {
       await eventFactory({ attributes: { name: 'A' }, team, traits: ['conference'] });
 
       const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
-      const events = await TeamEvents.for(authorizedTeam).list(true);
+      const { events } = await TeamEvents.for(authorizedTeam).list('archived');
 
       expect(events).toEqual([
         {
@@ -62,8 +64,36 @@ describe('TeamEvents', () => {
           cfpStart: event.cfpStart,
           cfpEnd: event.cfpEnd,
           cfpState: 'CLOSED',
+          archived: true,
         },
       ]);
+    });
+
+    it('returns all events of the team, active ones first', async () => {
+      const user = await userFactory();
+      const team = await teamFactory({ owners: [user] });
+      const archived = await eventFactory({ team, traits: ['archived'] });
+      const active1 = await eventFactory({ team });
+      const active2 = await eventFactory({ team });
+
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+      const { events } = await TeamEvents.for(authorizedTeam).list('all');
+
+      expect(events.map((event) => event.slug)).toEqual([active2.slug, active1.slug, archived.slug]);
+    });
+
+    it('returns events count by status', async () => {
+      const user = await userFactory();
+      const team = await teamFactory({ owners: [user] });
+      await eventFactory({ team, traits: ['archived'] });
+      await eventFactory({ team });
+      await eventFactory({ team });
+      await eventFactory({ traits: ['archived'] });
+
+      const authorizedTeam = await getAuthorizedTeam(user.id, team.slug);
+      const { counts } = await TeamEvents.for(authorizedTeam).list('archived');
+
+      expect(counts).toEqual({ active: 2, archived: 1, all: 3 });
     });
   });
 });

@@ -31,6 +31,11 @@ test.describe('As a team owner', () => {
     await expect(teamHomePage.events).toHaveCount(1);
     await expect(teamHomePage.event(event3.name)).toBeVisible();
 
+    // All events list
+    await teamHomePage.clickOnAll();
+    await expect(teamHomePage.events).toHaveCount(3);
+    await expect(teamHomePage.events.nth(2)).toContainText('Archived');
+
     // When no events
     await teamHomePage.goto(team2.slug);
     await expect(page.getByText(`Welcome to "${team2.name}"`)).toBeVisible();

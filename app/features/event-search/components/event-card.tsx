@@ -1,6 +1,7 @@
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '~/design-system/avatar.tsx';
+import { Badge } from '~/design-system/badges.tsx';
 import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Card, CardLink } from '~/design-system/layouts/card.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
@@ -15,6 +16,7 @@ type CardContentProps = {
   cfpState: CfpState;
   cfpStart: Date | null;
   cfpEnd: Date | null;
+  archived?: boolean;
 };
 
 type EventCardLinkProps = { to: string } & CardContentProps;
@@ -35,7 +37,7 @@ export function EventCard(props: CardContentProps) {
   );
 }
 
-function CardContent({ name, type, logoUrl, cfpState, cfpStart, cfpEnd }: CardContentProps) {
+function CardContent({ name, type, logoUrl, cfpState, cfpStart, cfpEnd, archived }: CardContentProps) {
   const { t } = useTranslation();
 
   return (
@@ -46,9 +48,12 @@ function CardContent({ name, type, logoUrl, cfpState, cfpStart, cfpEnd }: CardCo
       <Avatar picture={logoUrl} name={name} size="2xl" square className="rounded-r-none lg:hidden" />
 
       <div className="flex flex-1 flex-col justify-between overflow-hidden px-4 py-2 lg:p-4">
-        <Text size="base" weight="semibold" className="lg:text-lg" truncate>
-          {name}
-        </Text>
+        <div className="flex items-center justify-between gap-2">
+          <Text size="base" weight="semibold" className="lg:text-lg" truncate>
+            {name}
+          </Text>
+          {archived ? <Badge>{t('common.archived')}</Badge> : null}
+        </div>
         <div className="flex flex-1 items-end justify-between truncate sm:flex-row-reverse lg:flex-col lg:items-start">
           <Subtitle weight="medium" className="hidden sm:block">
             {t(`common.event.type.label.${type}`)}
