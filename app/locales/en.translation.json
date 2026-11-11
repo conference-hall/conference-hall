@@ -924,6 +924,7 @@
   "event-management.speakers.stats.accepted": "Accepted",
   "event-management.speakers.stats.confirmed": "Confirmed",
   "event-management.speakers.stats.declined": "Declined",
+  "event.nav.manage": "Manage",
   "event.nav.proposals": "Your proposals",
   "event.nav.submit-proposal": "Submit a proposal",
   "event.nav.survey": "Survey",

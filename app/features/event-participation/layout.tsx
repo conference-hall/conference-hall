@@ -1,3 +1,4 @@
+import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useTranslation } from 'react-i18next';
 import { href, Outlet, useMatch } from 'react-router';
@@ -6,6 +7,7 @@ import { NavbarEvent } from '~/app-platform/components/navbar/navbar-event.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { eventSocialCard } from '~/app-platform/seo/utils/social-cards.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
+import { Button } from '~/design-system/button.tsx';
 import { BG_COLOR } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -42,6 +44,7 @@ export default function EventRoute({ loaderData: event }: Route.ComponentProps) 
   const isEventRoute = useMatch({ path: '/:event', end: true });
   const isSubmissionRoute = useMatch('/:event/submission/*');
   const isAuthenticated = Boolean(user);
+  const isTeamMember = Boolean(user?.teams.some((team) => team.slug === event.teamSlug));
 
   return (
     <>
@@ -84,6 +87,18 @@ export default function EventRoute({ loaderData: event }: Route.ComponentProps) 
               <NavTab to={href('/:event/survey', { event: event.slug })}>{t('event.nav.survey')}</NavTab>
             ) : null}
           </NavTabs>
+
+          {isTeamMember ? (
+            <Button
+              to={href('/team/:team/:event', { team: event.teamSlug, event: event.slug })}
+              variant="tertiary"
+              size="sm"
+              iconLeft={Cog6ToothIcon}
+              className="ml-4 shrink-0"
+            >
+              {t('event.nav.manage')}
+            </Button>
+          ) : null}
         </Page.NavHeader>
       ) : null}
 
