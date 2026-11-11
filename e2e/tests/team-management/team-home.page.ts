@@ -33,7 +33,11 @@ export class TeamHomePage extends PageObject {
   }
 
   async clickOnArchived() {
-    return this.page.getByRole('link', { name: 'Archived' }).click();
+    return this.page.getByRole('link', { name: /^Archived \d+$/ }).click();
+  }
+
+  async clickOnAll() {
+    return this.page.getByRole('link', { name: /^All \d+$/ }).click();
   }
 
   async clickOnNewEvent() {
