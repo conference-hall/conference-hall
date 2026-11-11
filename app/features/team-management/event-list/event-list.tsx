@@ -11,32 +11,34 @@ import { EventCardLink } from '~/features/event-search/components/event-card.tsx
 import { useCurrentTeam } from '~/features/team-management/team-context.tsx';
 import { AuthorizedTeamContext } from '~/shared/authorization/authorization.middleware.ts';
 import type { Route } from './+types/event-list.ts';
+import { TeamEventsStatusSchema } from './services/team-events.schema.server.ts';
 import { TeamEvents } from './services/team-events.server.ts';
 
 export const loader = async ({ context, url }: Route.LoaderArgs) => {
-  const archived = url.searchParams.get('archived') === 'true';
+  const status = TeamEventsStatusSchema.parse(url.searchParams.get('status'));
 
   const authorizedTeam = context.get(AuthorizedTeamContext);
-  return TeamEvents.for(authorizedTeam).list(archived);
+  return TeamEvents.for(authorizedTeam).list(status);
 };
 
-export default function TeamEventsRoute({ loaderData: events }: Route.ComponentProps) {
+export default function TeamEventsRoute({ loaderData: { events, counts } }: Route.ComponentProps) {
   const { t } = useTranslation();
   const currentTeam = useCurrentTeam();
   const permissions = useUserTeamPermissions();
   const [searchParams] = useSearchParams();
-  const archived = searchParams.get('archived') === 'true';
+  const archived = searchParams.get('status') === 'archived';
   const hasEvent = events.length > 0;
 
   return (
     <Page>
       <Page.Heading title={t('team.events-list.heading')} subtitle={t('team.events-list.description')}>
         <SearchParamSelector
-          param="archived"
-          defaultValue="false"
+          param="status"
+          defaultValue="active"
           selectors={[
-            { value: 'true', label: t('common.archived') },
-            { value: 'false', label: t('common.active') },
+            { value: 'active', label: t('common.active'), count: counts.active },
+            { value: 'archived', label: t('common.archived'), count: counts.archived },
+            { value: 'all', label: t('common.all'), count: counts.all },
           ]}
         />
         {permissions.canCreateEvent ? (
@@ -58,6 +60,7 @@ export default function TeamEventsRoute({ loaderData: events }: Route.ComponentP
               cfpState={event.cfpState}
               cfpStart={event.cfpStart}
               cfpEnd={event.cfpEnd}
+              archived={event.archived}
             />
           ))}
         </ul>
