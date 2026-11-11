@@ -7,6 +7,7 @@ export class EventPage extends PageObject {
   readonly contactsLink: Locator;
   readonly codeOfConductLink: Locator;
   readonly submitButton: Locator;
+  readonly manageLink: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -14,6 +15,7 @@ export class EventPage extends PageObject {
     this.contactsLink = this.page.getByRole('link', { name: 'Contacts' });
     this.codeOfConductLink = this.page.getByRole('link', { name: 'Code of conduct' });
     this.submitButton = this.page.getByRole('link', { name: 'Submit a proposal' });
+    this.manageLink = this.page.getByRole('link', { name: 'Manage', exact: true });
   }
 
   async goto(slug: string, name: string) {
