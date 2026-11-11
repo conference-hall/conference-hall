@@ -32,6 +32,7 @@ export class EventPage {
       type: event.type,
       name: event.name,
       teamName: event.team.name,
+      teamSlug: event.team.slug,
       description: event.description,
       onlineEvent: event.onlineEvent,
       location: event.location,

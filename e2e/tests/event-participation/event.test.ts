@@ -1,17 +1,19 @@
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
-import type { Event } from '../../../prisma/generated/client.ts';
+import { teamFactory } from 'tests/factories/team.ts';
+import type { Event, User } from '../../../prisma/generated/client.ts';
 import { expect, test } from '../../fixtures.ts';
 import { userLoggedFactory } from '../../helpers.ts';
 import { EventPage } from './event.page.ts';
 
+let user: User;
 let eventOpen: Event;
 let eventFuture: Event;
 let eventPast: Event;
 
 test.beforeEach(async ({ context, page }) => {
-  await userLoggedFactory(context);
+  user = await userLoggedFactory(context);
   eventOpen = await eventFactory({
     attributes: {
       name: 'Devfest Nantes',
@@ -74,4 +76,24 @@ test('displays event page', async ({ page }) => {
     await page.goto('/not-fount-event');
     await expect(page.getByText('Event not found')).toBeVisible();
   });
+});
+
+test('displays the manage link to team members', async ({ page }) => {
+  const team = await teamFactory({ reviewers: [user] });
+  const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
+  const eventPage = new EventPage(page);
+
+  await eventPage.goto(event.slug, event.name);
+  await expect(eventPage.manageLink).toBeVisible();
+
+  await eventPage.manageLink.click();
+  await expect(page).toHaveURL(`/team/${team.slug}/${event.slug}/overview`);
+});
+
+test('does not display the manage link to non team members', async ({ page }) => {
+  const eventPage = new EventPage(page);
+
+  await eventPage.goto(eventOpen.slug, eventOpen.name);
+  await expect(eventPage.submitButton).toBeVisible();
+  await expect(eventPage.manageLink).toBeHidden();
 });

@@ -23,6 +23,7 @@ describe('EventPage', () => {
         type: event.type,
         name: event.name,
         teamName: team.name,
+        teamSlug: team.slug,
         onlineEvent: event.onlineEvent,
         location: event.location,
         timezone: event.timezone,
