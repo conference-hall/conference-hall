@@ -2,7 +2,7 @@ import { cx } from 'class-variance-authority';
 import { useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router';
 
-type Selector = { label: string; value: string };
+type Selector = { label: string; value: string; count?: number };
 
 type SearchParamSelectorProps = {
   param: string;
@@ -31,13 +31,18 @@ export function SearchParamSelector({ param, defaultValue, className, selectors 
           key={selector.value}
           to={{ search: paramsFor(selector.value) }}
           className={cx(
-            'flex items-center rounded-md px-3 py-1 text-sm font-semibold outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
+            'flex items-center gap-2 rounded-md px-3 py-1 text-sm font-semibold outline-hidden focus-within:ring-2 focus-within:ring-indigo-500',
             {
               'bg-white shadow-sm': current === selector.value,
             },
           )}
         >
           {selector.label}
+          {selector.count !== undefined ? (
+            <span className="rounded-full bg-gray-200/70 px-1.5 text-xs font-medium text-gray-600 tabular-nums">
+              {selector.count}
+            </span>
+          ) : null}
         </Link>
       ))}
     </div>
