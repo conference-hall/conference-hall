@@ -310,7 +310,7 @@ test('blocks the speakers step when max speakers per proposal is exceeded', asyn
   await expect(submissionPage.speaker(cospeaker.name)).not.toBeVisible();
 
   await expect(submissionPage.maxSpeakersInfo).toBeVisible();
-  await expect(submissionPage.maxSpeakersReached).toBeVisible();
+  await expect(submissionPage.maxSpeakersReachedText).toBeVisible();
   await expect(submissionPage.continueButton).toBeEnabled();
 });
 

@@ -17,7 +17,7 @@ export class SubmissionPage extends PageObject {
   readonly inviteCoSpeaker: Locator;
   readonly maxSpeakersInfo: Locator;
   readonly maxSpeakersError: Locator;
-  readonly maxSpeakersReached: Locator;
+  readonly maxSpeakersReachedText: Locator;
   readonly continueButton: Locator;
 
   constructor(page: Page) {
@@ -34,7 +34,7 @@ export class SubmissionPage extends PageObject {
     this.inviteCoSpeaker = page.getByRole('heading', { name: 'Invite a co-speaker' });
     this.maxSpeakersInfo = page.getByText('You can have a maximum of 1 speakers on a proposal, including you.');
     this.maxSpeakersError = page.getByText('Your proposal has more than 1 speakers. Remove co-speakers to continue.');
-    this.maxSpeakersReached = page.getByText('Maximum number of speakers reached');
+    this.maxSpeakersReachedText = page.getByText('Maximum number of speakers reached');
     this.continueButton = page.getByRole('button', { name: 'Continue' });
   }
 

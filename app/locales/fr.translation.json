@@ -976,7 +976,7 @@
   "event.submission.speakers.co-speakers.description": "Lorsque le co-speaker accepte l'invitation, il est automatiquement ajouté à la proposition.",
   "event.submission.speakers.heading": "Détails du speaker",
   "event.submission.speakers.max-exceeded": "Votre proposition compte plus de {{maxSpeakers}} speakers. Retirez des co-speakers pour continuer.",
-  "event.submission.speakers.max-limit": "Vous pouvez avoir un maximum de {{maxSpeakers}} speakers sur une proposition, vous compris.",
+  "event.submission.speakers.max-info": "Vous pouvez avoir un maximum de {{maxSpeakers}} speakers sur une proposition, vous compris.",
   "event.submission.steps.nav.label": "Progression",
   "event.submission.steps.nav.progress": "Étape {{current}} sur {{total}}",
   "event.submission.steps.proposal": "Proposition",

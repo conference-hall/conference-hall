@@ -15,6 +15,7 @@ import {
   ConversationMessageReactSchema,
   ConversationMessageSaveSchema,
 } from '~/features/conversations/services/conversation.schema.server.ts';
+import { isMaxSpeakersReached } from '~/features/event-participation/cfp-submission/models/max-speakers.ts';
 import { EventPage } from '~/features/event-participation/event-page/services/event-page.server.ts';
 import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { TalkEditButton } from '~/features/speaker/talk-library/components/talk-forms/talk-form-drawer.tsx';
@@ -104,8 +105,7 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
   const { proposal, conversation } = loaderData;
   const currentEvent = useCurrentEvent();
   const canEdit = proposal.status === SpeakerProposalStatus.Submitted;
-  const { maxSpeakersPerProposal } = currentEvent;
-  const maxSpeakersReached = Boolean(maxSpeakersPerProposal && proposal.speakers.length >= maxSpeakersPerProposal);
+  const maxSpeakersReached = isMaxSpeakersReached(proposal.speakers.length, currentEvent.maxSpeakersPerProposal);
   const speakerConversationEnabled = useFlag('speakersCommunication') && currentEvent.speakersConversationEnabled;
 
   return (

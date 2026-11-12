@@ -1,3 +1,4 @@
+import { isMaxSpeakersReached } from '~/features/event-participation/cfp-submission/models/max-speakers.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import {
   InvitationInvalidOrAccepted,
@@ -21,8 +22,6 @@ export class CoSpeakerProposalInvite {
     });
     if (!proposal) throw new InvitationNotFoundError();
 
-    const { maxSpeakersPerProposal } = proposal.event;
-
     return {
       id: proposal.id,
       title: proposal.title,
@@ -31,7 +30,7 @@ export class CoSpeakerProposalInvite {
         name: speaker.name,
         picture: speaker.picture,
       })),
-      maxSpeakersReached: Boolean(maxSpeakersPerProposal && proposal.speakers.length >= maxSpeakersPerProposal),
+      maxSpeakersReached: isMaxSpeakersReached(proposal.speakers.length, proposal.event.maxSpeakersPerProposal),
       event: {
         id: proposal.event.id,
         name: proposal.event.name,

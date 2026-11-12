@@ -15,6 +15,7 @@ import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { TalkSaveData, TracksSaveData } from '~/shared/types/speaker-talk.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import { isMaxSpeakersExceeded } from '../models/max-speakers.ts';
 import { assertCanSubmit } from './submission-access.server.ts';
 
 export class TalkSubmission {
@@ -109,7 +110,7 @@ export class TalkSubmission {
     });
     if (!proposal) throw new ProposalNotFoundError();
 
-    if (event.maxSpeakersPerProposal && proposal.speakers.length > event.maxSpeakersPerProposal) {
+    if (isMaxSpeakersExceeded(proposal.speakers.length, event.maxSpeakersPerProposal)) {
       throw new MaxSpeakersPerProposalReachedError();
     }
 
