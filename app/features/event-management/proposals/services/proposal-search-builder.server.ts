@@ -59,10 +59,15 @@ export class ProposalSearchBuilder {
   userId: string;
   filters: ProposalsFilters;
   options: SearchOptions;
-  filteredSpeaker: { name: string } | null = null;
-  speakersFilterIgnored = false;
 
-  private constructor(eventId: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
+  private constructor(
+    eventId: string,
+    userId: string,
+    filters: ProposalsFilters,
+    options?: SearchOptions,
+    readonly filteredSpeaker: { name: string } | null = null,
+    readonly speakersFilterIgnored = false,
+  ) {
     this.eventId = eventId;
     this.userId = userId;
     this.filters = filters;
@@ -85,10 +90,14 @@ export class ProposalSearchBuilder {
         ? await db.eventSpeaker.findFirst({ where: { id: speakers, eventId: event.id }, select: { name: true } })
         : null;
 
-    const search = new ProposalSearchBuilder(event.id, userId, filteredSpeaker ? filters : otherFilters, options);
-    search.filteredSpeaker = filteredSpeaker;
-    search.speakersFilterIgnored = Boolean(speakers) && !filteredSpeaker;
-    return search;
+    return new ProposalSearchBuilder(
+      event.id,
+      userId,
+      filteredSpeaker ? filters : otherFilters,
+      options,
+      filteredSpeaker,
+      Boolean(speakers) && !filteredSpeaker,
+    );
   }
 
   async statistics() {
