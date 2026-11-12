@@ -1,6 +1,7 @@
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { expect, test } from '../../fixtures.ts';
@@ -281,6 +282,36 @@ test('cannot submit a talk when max proposal reached', async ({ page, context })
   ).toBeVisible();
   await submissionPage.clickOnCheckMyProposals();
   await proposalList.waitFor();
+});
+
+test('blocks the speakers step when max speakers per proposal is exceeded', async ({ page, context }) => {
+  const speaker = await userLoggedFactory(context);
+  const cospeaker = await userFactory();
+  const talk = await talkFactory({ speakers: [speaker, cospeaker] });
+  const event = await eventFactory({
+    traits: ['conference-cfp-open'],
+    attributes: { maxSpeakersPerProposal: 1 },
+  });
+  await proposalFactory({ event, talk, traits: ['draft'] });
+
+  const submissionPage = new SubmissionPage(page);
+  await submissionPage.goto(event.slug);
+  await submissionPage.clickOnDraft(talk.title);
+  await submissionPage.proposalStep.waitFor();
+  await submissionPage.clickOnContinue();
+
+  await submissionPage.speakerStep.waitFor();
+  await expect(submissionPage.maxSpeakersError).toBeVisible();
+  await expect(submissionPage.continueButton).toBeDisabled();
+
+  const cospeakerModal = await submissionPage.clickOnSpeaker(cospeaker.name);
+  await cospeakerModal.waitFor();
+  await cospeakerModal.clickOnRemoveSpeaker(cospeaker.name);
+  await expect(submissionPage.speaker(cospeaker.name)).not.toBeVisible();
+
+  await expect(submissionPage.maxSpeakersInfo).toBeVisible();
+  await expect(submissionPage.maxSpeakersReached).toBeVisible();
+  await expect(submissionPage.continueButton).toBeEnabled();
 });
 
 test('cannot submit a talk when CFP is not open yet', async ({ page, context }) => {
