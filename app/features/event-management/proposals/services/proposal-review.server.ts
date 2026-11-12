@@ -120,7 +120,7 @@ export class ProposalReview {
 
   async getPreviousAndNextReviews(filters: ProposalsFilters) {
     const { event, userId } = this.authorizedEvent;
-    const search = new ProposalSearchBuilder(event.id, userId, filters);
+    const search = await ProposalSearchBuilder.withValidatedSpeaker(event, userId, filters);
 
     const { total, reviewed } = await search.statistics();
     const proposalRouteIds = await search.proposalRouteIds();

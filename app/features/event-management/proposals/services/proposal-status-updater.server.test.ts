@@ -487,6 +487,42 @@ describe('ProposalStatusUpdater', () => {
       expect(updated2?.deliberationStatus).toBe('ACCEPTED'); // Unchanged
     });
 
+    it('updates nothing when the filtered speaker is not from the event', async () => {
+      const otherEvent = await eventFactory({ team });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const otherProposal = await proposalFactory({
+        event: otherEvent,
+        talk: await talkFactory({ speakers: [speaker] }),
+      });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
+      const result = await proposalStatus.updateAll({ speakers: otherProposal.speakers[0].id }, 'ACCEPTED');
+
+      expect(result).toBe(0);
+      const updated = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(updated?.deliberationStatus).toBe('PENDING');
+    });
+
+    it('applies the speakers filter when speakers are hidden', async () => {
+      const blindEvent = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
+      const proposal = await proposalFactory({ event: blindEvent, talk: await talkFactory({ speakers: [speaker] }) });
+      const otherProposal = await proposalFactory({
+        event: blindEvent,
+        talk: await talkFactory({ speakers: [owner] }),
+      });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, blindEvent.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
+      const result = await proposalStatus.updateAll({ speakers: proposal.speakers[0].id }, 'ACCEPTED');
+
+      expect(result).toBe(1);
+      const updated = await db.proposal.findUnique({ where: { id: otherProposal.id } });
+      expect(updated?.deliberationStatus).toBe('PENDING');
+    });
+
     it('resets publication and confirmation statuses when changing to PENDING', async () => {
       await proposalFactory({
         event,

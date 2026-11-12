@@ -137,6 +137,18 @@ describe('ProposalsExport', () => {
       expect(result.proposals[0].id).toBe(proposal.id);
     });
 
+    it('applies the speakers filter when speakers are hidden', async () => {
+      const blindEvent = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
+      const proposal = await proposalFactory({ event: blindEvent, talk: await talkFactory({ speakers: [speaker] }) });
+      await proposalFactory({ event: blindEvent, talk: await talkFactory({ speakers: [owner] }) });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, blindEvent.slug);
+      const result = await ProposalsExport.forUser(authorizedEvent).toJson({ speakers: proposal.speakers[0].id });
+
+      expect(result.proposals.map((p) => p.id)).toEqual([proposal.id]);
+    });
+
     it('includes speaker survey data when available', async () => {
       const speaker1 = await userFactory();
       const speaker2 = await userFactory();

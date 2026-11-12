@@ -35,7 +35,7 @@ export class Autocomplete {
   }
 
   async #searchProposals(event: Event, query: string): Promise<ProposalResult[]> {
-    const search = new ProposalSearchBuilder(
+    const search = ProposalSearchBuilder.with(
       this.authorizedEvent.event.id,
       this.authorizedEvent.userId,
       { query },

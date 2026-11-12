@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { PlusIcon } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
-import { href } from 'react-router';
+import { href, redirect } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { SearchInput } from '~/design-system/forms/search-input.tsx';
@@ -25,7 +25,15 @@ export const loader = async ({ context, url }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
   const filters = parseUrlFilters(url);
   const page = parseUrlPage(url);
-  return CfpReviewsSearch.for(authorizedEvent).search(filters, page);
+  const { speakersFilterIgnored, ...result } = await CfpReviewsSearch.for(authorizedEvent).search(filters, page);
+
+  if (speakersFilterIgnored) {
+    const cleanUrl = new URL(url);
+    cleanUrl.searchParams.delete('speakers');
+    throw redirect(`${cleanUrl.pathname}${cleanUrl.search}`);
+  }
+
+  return result;
 };
 
 export const action = async ({ request, context, url }: Route.ActionArgs) => {
@@ -53,7 +61,7 @@ export const action = async ({ request, context, url }: Route.ActionArgs) => {
 
 export default function ReviewsRoute({ loaderData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { results, filters, pagination, statistics } = loaderData;
+  const { results, filters, filteredSpeaker, pagination, statistics } = loaderData;
   const filtersHash = getObjectHash(filters);
   const permissions = useUserTeamPermissions();
 
@@ -81,7 +89,7 @@ export default function ReviewsRoute({ loaderData, params }: Route.ComponentProp
               )}
             </div>
           </div>
-          <FiltersTags filters={filters} />
+          <FiltersTags filters={filters} filteredSpeaker={filteredSpeaker} />
         </div>
 
         <ProposalsList

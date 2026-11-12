@@ -4,15 +4,17 @@ import { Text } from '~/design-system/typography.tsx';
 import { useCurrentEventTeam } from '~/features/event-management/event-team-context.tsx';
 import type { ProposalsFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 
-type FiltersBadgesProps = { filters: ProposalsFilters };
+type FiltersBadgesProps = { filters: ProposalsFilters; filteredSpeaker: { name: string } | null };
 
-export function FiltersTags({ filters }: FiltersBadgesProps) {
+export function FiltersTags({ filters, filteredSpeaker }: FiltersBadgesProps) {
   const { t } = useTranslation();
   const { event } = useCurrentEventTeam();
 
   const { query, reviews, status, confirmation, messages, formats, categories, tags } = filters;
 
-  const hasFilters = Boolean(query || reviews || status || confirmation || messages || formats || categories || tags);
+  const hasFilters = Boolean(
+    query || reviews || status || confirmation || messages || formats || categories || tags || filteredSpeaker,
+  );
   if (!hasFilters) return null;
 
   return (
@@ -30,6 +32,7 @@ export function FiltersTags({ filters }: FiltersBadgesProps) {
       <FilterTag name="formats" value={event.formats.find((format) => format.id === formats)?.name} />
       <FilterTag name="categories" value={event.categories.find((category) => category.id === categories)?.name} />
       <FilterTag name="tags" value={event.tags.find((tag) => tag.id === tags)?.name} />
+      <FilterTag name="speakers" value={filteredSpeaker?.name} />
     </div>
   );
 }

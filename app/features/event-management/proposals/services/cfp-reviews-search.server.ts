@@ -15,7 +15,7 @@ export class CfpReviewsSearch {
   async search(filters: ProposalsFilters, page = 1) {
     const { event, userId } = this.authorizedEvent;
 
-    const search = new ProposalSearchBuilder(event.id, userId, filters, {
+    const search = await ProposalSearchBuilder.withValidatedSpeaker(event, userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
       withReviews: true,
       withMessages: true,
@@ -25,7 +25,9 @@ export class CfpReviewsSearch {
     const proposals = await search.proposalsByPage(pagination);
 
     return {
-      filters,
+      filters: search.filters,
+      filteredSpeaker: search.filteredSpeaker,
+      speakersFilterIgnored: search.speakersFilterIgnored,
       statistics: { ...statistics, hasNewMessages },
       pagination: { current: pagination.page, total: pagination.pageCount },
       results: proposals.map((proposal) => ({

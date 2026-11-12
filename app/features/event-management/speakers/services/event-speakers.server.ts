@@ -105,7 +105,7 @@ export class EventSpeakers {
 
     if (!speaker) return null;
 
-    const search = new ProposalSearchBuilder(
+    const search = ProposalSearchBuilder.with(
       event.id,
       userId,
       { speakers: speakerId },

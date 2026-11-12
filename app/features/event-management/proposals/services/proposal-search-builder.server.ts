@@ -4,6 +4,7 @@ import { db } from '../../../../../prisma/db.server.ts';
 import {
   ConfirmationStatus,
   DeliberationStatus,
+  type Event,
   Prisma,
   PublicationStatus,
   ReviewFeeling,
@@ -59,11 +60,44 @@ export class ProposalSearchBuilder {
   filters: ProposalsFilters;
   options: SearchOptions;
 
-  constructor(eventId: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
+  private constructor(
+    eventId: string,
+    userId: string,
+    filters: ProposalsFilters,
+    options?: SearchOptions,
+    readonly filteredSpeaker: { name: string } | null = null,
+    readonly speakersFilterIgnored = false,
+  ) {
     this.eventId = eventId;
     this.userId = userId;
     this.filters = filters;
     this.options = options || { withSpeakers: true, withReviews: true };
+  }
+
+  static with(eventId: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
+    return new ProposalSearchBuilder(eventId, userId, filters, options);
+  }
+
+  static async withValidatedSpeaker(
+    event: Pick<Event, 'id' | 'displayProposalsSpeakers'>,
+    userId: string,
+    filters: ProposalsFilters,
+    options?: SearchOptions,
+  ) {
+    const { speakers, ...otherFilters } = filters;
+    const filteredSpeaker =
+      speakers && event.displayProposalsSpeakers
+        ? await db.eventSpeaker.findFirst({ where: { id: speakers, eventId: event.id }, select: { name: true } })
+        : null;
+
+    return new ProposalSearchBuilder(
+      event.id,
+      userId,
+      filteredSpeaker ? filters : otherFilters,
+      options,
+      filteredSpeaker,
+      Boolean(speakers) && !filteredSpeaker,
+    );
   }
 
   async statistics() {
