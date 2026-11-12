@@ -61,7 +61,12 @@ export default function EventCfpSettingsRoute({ actionData: errors }: Route.Comp
         <MeetupCfpOpening cfpStart={event.cfpStart} timezone={event.timezone} />
       )}
 
-      <CommonCfpSetting maxProposals={event.maxProposals} codeOfConductUrl={event.codeOfConductUrl} errors={errors} />
+      <CommonCfpSetting
+        maxProposals={event.maxProposals}
+        maxSpeakersPerProposal={event.maxSpeakersPerProposal}
+        codeOfConductUrl={event.codeOfConductUrl}
+        errors={errors}
+      />
     </>
   );
 }

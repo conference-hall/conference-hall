@@ -35,6 +35,7 @@ describe('EventPage', () => {
         codeOfConductUrl: event.codeOfConductUrl,
         logoUrl: resolveStorageUrl(event.logo),
         maxProposals: event.maxProposals,
+        maxSpeakersPerProposal: event.maxSpeakersPerProposal,
         cfpStart: event.cfpStart,
         cfpEnd: event.cfpEnd,
         cfpState: 'OPENED',

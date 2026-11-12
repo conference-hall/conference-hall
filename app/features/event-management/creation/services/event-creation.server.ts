@@ -69,6 +69,7 @@ export class EventCreation {
       location: eventTemplate.location,
       onlineEvent: eventTemplate.onlineEvent,
       maxProposals: eventTemplate.maxProposals,
+      maxSpeakersPerProposal: eventTemplate.maxSpeakersPerProposal,
       displayProposalsReviews: eventTemplate.displayProposalsReviews,
       displayProposalsSpeakers: eventTemplate.displayProposalsSpeakers,
       speakersConversationEnabled: eventTemplate.speakersConversationEnabled,
