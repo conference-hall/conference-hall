@@ -68,7 +68,7 @@ export class ProposalSearchBuilder {
     this.options = options || { withSpeakers: true, withReviews: true };
   }
 
-  static async for(
+  static async with(
     event: Pick<Event, 'id' | 'displayProposalsSpeakers'>,
     userId: string,
     filters: ProposalsFilters,

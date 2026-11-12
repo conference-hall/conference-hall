@@ -15,7 +15,7 @@ export class CfpReviewsSearch {
   async search(filters: ProposalsFilters, page = 1) {
     const { event, userId } = this.authorizedEvent;
 
-    const search = await ProposalSearchBuilder.for(event, userId, filters, {
+    const search = await ProposalSearchBuilder.with(event, userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
       withReviews: true,
       withMessages: true,
