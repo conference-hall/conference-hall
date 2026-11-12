@@ -140,6 +140,18 @@ test.describe('As owner', () => {
     await proposalPage.waitFor(proposal1.title);
   });
 
+  test('drops an ignored speakers filter from the URL and keeps other filters', async ({ page }) => {
+    const proposalsPage = new ProposalsListPage(page);
+    await page.goto(`/team/${team.slug}/${event.slug}/proposals?speakers=unknown-speaker&status=pending`);
+    await proposalsPage.waitFor();
+
+    await expect(page).not.toHaveURL(/speakers=/);
+    await expect(page).toHaveURL(/status=pending/);
+    await expect(proposalsPage.proposals).toHaveCount(2);
+    await expect(proposalsPage.proposal(proposal1.title)).toBeVisible();
+    await expect(proposalsPage.proposal(proposal3.title)).toBeVisible();
+  });
+
   test('changes proposal statuses', async ({ page }) => {
     const proposalsPage = new ProposalsListPage(page);
 
