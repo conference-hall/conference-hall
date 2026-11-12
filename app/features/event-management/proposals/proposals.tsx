@@ -53,7 +53,7 @@ export const action = async ({ request, context, url }: Route.ActionArgs) => {
 
 export default function ReviewsRoute({ loaderData, params }: Route.ComponentProps) {
   const { t } = useTranslation();
-  const { results, filters, pagination, statistics } = loaderData;
+  const { results, filters, filteredSpeaker, pagination, statistics } = loaderData;
   const filtersHash = getObjectHash(filters);
   const permissions = useUserTeamPermissions();
 
@@ -81,7 +81,7 @@ export default function ReviewsRoute({ loaderData, params }: Route.ComponentProp
               )}
             </div>
           </div>
-          <FiltersTags filters={filters} />
+          <FiltersTags filters={filters} filteredSpeaker={filteredSpeaker} />
         </div>
 
         <ProposalsList
