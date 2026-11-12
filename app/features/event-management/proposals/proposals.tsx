@@ -25,9 +25,9 @@ export const loader = async ({ context, url }: Route.LoaderArgs) => {
   const authorizedEvent = context.get(AuthorizedEventContext);
   const filters = parseUrlFilters(url);
   const page = parseUrlPage(url);
-  const result = await CfpReviewsSearch.for(authorizedEvent).search(filters, page);
+  const { speakersFilterIgnored, ...result } = await CfpReviewsSearch.for(authorizedEvent).search(filters, page);
 
-  if (filters.speakers && !result.filters.speakers) {
+  if (speakersFilterIgnored) {
     const cleanUrl = new URL(url);
     cleanUrl.searchParams.delete('speakers');
     throw redirect(`${cleanUrl.pathname}${cleanUrl.search}`);

@@ -27,6 +27,7 @@ export class CfpReviewsSearch {
     return {
       filters: search.filters,
       filteredSpeaker: search.filteredSpeaker,
+      speakersFilterIgnored: search.speakersFilterIgnored,
       statistics: { ...statistics, hasNewMessages },
       pagination: { current: pagination.page, total: pagination.pageCount },
       results: proposals.map((proposal) => ({

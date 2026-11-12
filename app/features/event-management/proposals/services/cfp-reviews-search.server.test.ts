@@ -108,6 +108,7 @@ describe('CfpReviewsSearch', () => {
         expect(proposals.results.map(({ id }) => id)).toEqual([proposal.id]);
         expect(proposals.filters).toEqual({ speakers: proposal.speakers[0].id });
         expect(proposals.filteredSpeaker).toEqual({ name: speaker.name });
+        expect(proposals.speakersFilterIgnored).toBe(false);
       });
 
       it('ignores the speakers filter when display proposal speakers is false', async () => {
@@ -122,6 +123,7 @@ describe('CfpReviewsSearch', () => {
         expect(proposals.results.length).toEqual(2);
         expect(proposals.filters).toEqual({});
         expect(proposals.filteredSpeaker).toBeNull();
+        expect(proposals.speakersFilterIgnored).toBe(true);
       });
 
       it('ignores the speakers filter when the speaker is not from the event', async () => {
@@ -143,6 +145,7 @@ describe('CfpReviewsSearch', () => {
         expect(proposals.results.length).toEqual(1);
         expect(proposals.filters).toEqual({ status: 'pending' });
         expect(proposals.filteredSpeaker).toBeNull();
+        expect(proposals.speakersFilterIgnored).toBe(true);
       });
     });
 

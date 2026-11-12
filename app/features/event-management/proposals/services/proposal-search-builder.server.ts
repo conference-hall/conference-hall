@@ -60,6 +60,7 @@ export class ProposalSearchBuilder {
   filters: ProposalsFilters;
   options: SearchOptions;
   filteredSpeaker: { name: string } | null = null;
+  speakersFilterIgnored = false;
 
   constructor(eventId: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
     this.eventId = eventId;
@@ -82,6 +83,7 @@ export class ProposalSearchBuilder {
 
     const search = new ProposalSearchBuilder(event.id, userId, filteredSpeaker ? filters : otherFilters, options);
     search.filteredSpeaker = filteredSpeaker;
+    search.speakersFilterIgnored = Boolean(speakers) && !filteredSpeaker;
     return search;
   }
 
