@@ -4,6 +4,7 @@ import { db } from '../../../../../prisma/db.server.ts';
 import { Prisma } from '../../../../../prisma/generated/client.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
+import { resolveSpeakerFilter } from './speaker-filter.server.ts';
 
 export class CfpReviewsSearch {
   constructor(private authorizedEvent: AuthorizedEvent) {}
@@ -12,8 +13,9 @@ export class CfpReviewsSearch {
     return new CfpReviewsSearch(authorizedEvent);
   }
 
-  async search(filters: ProposalsFilters, page = 1) {
+  async search(urlFilters: ProposalsFilters, page = 1) {
     const { event, userId } = this.authorizedEvent;
+    const { filters, speaker: filteredSpeaker } = await resolveSpeakerFilter(event, urlFilters);
 
     const search = new ProposalSearchBuilder(event.id, userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
@@ -26,6 +28,7 @@ export class CfpReviewsSearch {
 
     return {
       filters,
+      filteredSpeaker,
       statistics: { ...statistics, hasNewMessages },
       pagination: { current: pagination.page, total: pagination.pageCount },
       results: proposals.map((proposal) => ({

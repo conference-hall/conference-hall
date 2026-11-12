@@ -95,6 +95,57 @@ describe('CfpReviewsSearch', () => {
       expect(proposals.results[0].reviews.summary).toBeUndefined();
     });
 
+    describe('speakers filter', () => {
+      it('returns the filtered speaker', async () => {
+        const event = await eventFactory({ team });
+        const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+        await proposalFactory({ event, talk: await talkFactory({ speakers: [member] }) });
+
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposals = await CfpReviewsSearch.for(authorizedEvent).search({ speakers: proposal.speakers[0].id });
+
+        expect(proposals.results.map(({ id }) => id)).toEqual([proposal.id]);
+        expect(proposals.filters).toEqual({ speakers: proposal.speakers[0].id });
+        expect(proposals.filteredSpeaker).toEqual({ name: speaker.name });
+      });
+
+      it('ignores the speakers filter when display proposal speakers is false', async () => {
+        const event = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
+        const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+        await proposalFactory({ event, talk: await talkFactory({ speakers: [member] }) });
+
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposals = await CfpReviewsSearch.for(authorizedEvent).search({ speakers: proposal.speakers[0].id });
+
+        expect(proposals.results.length).toEqual(2);
+        expect(proposals.filters).toEqual({});
+        expect(proposals.filteredSpeaker).toBeNull();
+      });
+
+      it('ignores the speakers filter when the speaker is not from the event', async () => {
+        const event = await eventFactory({ team });
+        const otherEvent = await eventFactory({ team });
+        await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+        const otherProposal = await proposalFactory({
+          event: otherEvent,
+          talk: await talkFactory({ speakers: [speaker] }),
+        });
+
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+        const proposals = await CfpReviewsSearch.for(authorizedEvent).search({
+          status: 'pending',
+          speakers: otherProposal.speakers[0].id,
+        });
+
+        expect(proposals.results.length).toEqual(1);
+        expect(proposals.filters).toEqual({ status: 'pending' });
+        expect(proposals.filteredSpeaker).toBeNull();
+      });
+    });
+
     it('returns empty results of an event without proposals', async () => {
       const event = await eventFactory({ team });
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);

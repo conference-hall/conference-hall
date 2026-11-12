@@ -487,6 +487,24 @@ describe('ProposalStatusUpdater', () => {
       expect(updated2?.deliberationStatus).toBe('ACCEPTED'); // Unchanged
     });
 
+    it('ignores the speakers filter when the speaker is not from the event', async () => {
+      const otherEvent = await eventFactory({ team });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const otherProposal = await proposalFactory({
+        event: otherEvent,
+        talk: await talkFactory({ speakers: [speaker] }),
+      });
+
+      const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+      const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+      const proposalStatus = ProposalStatusUpdater.for(authorizedEvent);
+      const result = await proposalStatus.updateAll({ speakers: otherProposal.speakers[0].id }, 'ACCEPTED');
+
+      expect(result).toBe(1);
+      const updated = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(updated?.deliberationStatus).toBe('ACCEPTED');
+    });
+
     it('resets publication and confirmation statuses when changing to PENDING', async () => {
       await proposalFactory({
         event,

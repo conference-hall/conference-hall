@@ -5,6 +5,7 @@ import type { DeliberationStatus } from '~/shared/types/proposals.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
+import { resolveSpeakerFilter } from './speaker-filter.server.ts';
 
 export const ProposalStatusSchema = z.object({
   deliberationStatus: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']).optional(),
@@ -53,7 +54,8 @@ export class ProposalStatusUpdater {
     const { event, userId, permissions } = this.authorizedEvent;
     if (!permissions.canChangeProposalStatus) throw new ForbiddenOperationError();
 
-    const search = new ProposalSearchBuilder(event.id, userId, filters);
+    const resolved = await resolveSpeakerFilter(event, filters);
+    const search = new ProposalSearchBuilder(event.id, userId, resolved.filters);
     const proposalIds = await search.proposalIds();
 
     return this.update(proposalIds, { deliberationStatus });
