@@ -110,9 +110,7 @@ test('submits an existing talk', async ({ page, context }) => {
   // Step: speaker
   await submissionPage.speakerStep.waitFor();
   await expect(submissionPage.speaker(speaker2.name)).toBeVisible();
-  const cospeaker = await submissionPage.clickOnSpeaker(speaker2.name);
-  await cospeaker.waitFor();
-  await cospeaker.clickOnRemoveSpeaker(speaker2.name);
+  await submissionPage.clickOnRemoveSpeaker(speaker2.name);
   await expect(submissionPage.speaker(speaker2.name)).not.toBeVisible();
   await submissionPage.clickOnAddSpeaker();
   await expect(submissionPage.inviteCoSpeaker).toBeVisible();
@@ -301,16 +299,13 @@ test('blocks the speakers step when max speakers per proposal is exceeded', asyn
   await submissionPage.clickOnContinue();
 
   await submissionPage.speakerStep.waitFor();
-  await expect(submissionPage.maxSpeakersError).toBeVisible();
+  await expect(submissionPage.maxSpeakersExceeded).toBeVisible();
   await expect(submissionPage.continueButton).toBeDisabled();
 
-  const cospeakerModal = await submissionPage.clickOnSpeaker(cospeaker.name);
-  await cospeakerModal.waitFor();
-  await cospeakerModal.clickOnRemoveSpeaker(cospeaker.name);
+  await submissionPage.clickOnRemoveSpeaker(cospeaker.name);
   await expect(submissionPage.speaker(cospeaker.name)).not.toBeVisible();
 
-  await expect(submissionPage.maxSpeakersInfo).toBeVisible();
-  await expect(submissionPage.maxSpeakersReachedText).toBeVisible();
+  await expect(submissionPage.maxSpeakersCannotInvite).toBeVisible();
   await expect(submissionPage.continueButton).toBeEnabled();
 });
 

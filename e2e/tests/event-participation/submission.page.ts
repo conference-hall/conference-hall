@@ -1,5 +1,4 @@
 import type { Locator, Page } from '@playwright/test';
-import { CoSpeakerComponent } from '../../common/co-speaker.component.ts';
 import { TalkFormComponent } from '../../common/talk-form.component.ts';
 import { PageObject } from '../../page-object.ts';
 import { ProposalListPage } from './proposal-list.page.ts';
@@ -15,9 +14,8 @@ export class SubmissionPage extends PageObject {
   readonly speakers: Locator;
   readonly alreadySubmittedError: Locator;
   readonly inviteCoSpeaker: Locator;
-  readonly maxSpeakersInfo: Locator;
-  readonly maxSpeakersError: Locator;
-  readonly maxSpeakersReachedText: Locator;
+  readonly maxSpeakersCannotInvite: Locator;
+  readonly maxSpeakersExceeded: Locator;
   readonly continueButton: Locator;
 
   constructor(page: Page) {
@@ -32,9 +30,12 @@ export class SubmissionPage extends PageObject {
     this.speakers = page.getByRole('list', { name: 'Speakers' }).locator('>li');
     this.alreadySubmittedError = page.getByRole('heading', { name: 'Talk already submitted' });
     this.inviteCoSpeaker = page.getByRole('heading', { name: 'Invite a co-speaker' });
-    this.maxSpeakersInfo = page.getByText('You can have a maximum of 1 speakers on a proposal, including you.');
-    this.maxSpeakersError = page.getByText('Your proposal has more than 1 speakers. Remove co-speakers to continue.');
-    this.maxSpeakersReachedText = page.getByText('Maximum number of speakers reached');
+    this.maxSpeakersCannotInvite = page.getByText(
+      'The event accepts up to 1 speaker per proposal, including you. You cannot invite more co-speakers.',
+    );
+    this.maxSpeakersExceeded = page.getByText(
+      'The event accepts up to 1 speaker per proposal, including you. Remove 1 co-speaker to continue.',
+    );
     this.continueButton = page.getByRole('button', { name: 'Continue' });
   }
 
@@ -61,12 +62,11 @@ export class SubmissionPage extends PageObject {
   }
 
   speaker(name: string) {
-    return this.page.getByLabel(`View ${name} profile`);
+    return this.speakers.filter({ hasText: name });
   }
 
-  async clickOnSpeaker(name: string) {
-    await this.speaker(name).click();
-    return new CoSpeakerComponent(this.page);
+  async clickOnRemoveSpeaker(name: string) {
+    await this.page.getByRole('button', { name: `Remove "${name}" from the talk` }).click();
   }
 
   async clickOnAddSpeaker() {
