@@ -33,7 +33,7 @@ export class ProposalsExport {
   }
 
   async toJson(filters: ProposalsFilters) {
-    const search = await ProposalSearchBuilder.for(this.event, this.userId, filters, {
+    const search = new ProposalSearchBuilder(this.event.id, this.userId, filters, {
       withSpeakers: true,
       withReviews: true,
     });
@@ -106,7 +106,7 @@ export class ProposalsExport {
   }
 
   async toCards(filters: ProposalsFilters) {
-    const search = await ProposalSearchBuilder.for(this.event, this.userId, filters, {
+    const search = new ProposalSearchBuilder(this.event.id, this.userId, filters, {
       withSpeakers: true,
       withReviews: true,
     });
@@ -127,8 +127,7 @@ export class ProposalsExport {
   }
 
   async toOpenPlanner(filters: ProposalsFilters) {
-    const search = await ProposalSearchBuilder.for(this.event, this.userId, filters);
-    await exportToOpenPlanner.trigger({ userId: this.userId, eventId: this.event.id, filters: search.filters });
+    await exportToOpenPlanner.trigger({ userId: this.userId, eventId: this.event.id, filters });
   }
 
   static sampleJson(): ProposalsExportJson {

@@ -53,7 +53,7 @@ export class ProposalStatusUpdater {
     const { event, userId, permissions } = this.authorizedEvent;
     if (!permissions.canChangeProposalStatus) throw new ForbiddenOperationError();
 
-    const search = await ProposalSearchBuilder.for(event, userId, filters);
+    const search = new ProposalSearchBuilder(event.id, userId, filters);
     const proposalIds = await search.proposalIds();
 
     return this.update(proposalIds, { deliberationStatus });
