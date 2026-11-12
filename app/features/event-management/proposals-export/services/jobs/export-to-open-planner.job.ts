@@ -21,7 +21,7 @@ export const exportToOpenPlanner = job<ExportToOpenPlannerPayload>({
     const openPlanner = await EventIntegrations.getConfiguration(eventId, 'OPEN_PLANNER');
     if (openPlanner?.name !== 'OPEN_PLANNER') return;
 
-    const search = new ProposalSearchBuilder(eventId, userId, filters, { withSpeakers: true, withReviews: false });
+    const search = ProposalSearchBuilder.with(eventId, userId, filters, { withSpeakers: true, withReviews: false });
 
     const proposals = await search.proposals();
 

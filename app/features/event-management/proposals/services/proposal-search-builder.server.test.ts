@@ -132,7 +132,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
   describe('#search.statisics', () => {
     it('returns statistics search info', async () => {
-      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+      const search = ProposalSearchBuilder.with(event.id, owner.id, {});
 
       const statistics = await search.statistics();
       expect(statistics.total).toEqual(5);
@@ -142,7 +142,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
   describe('#search.proposalsByPage', () => {
     it('returns proposals according the page index', async () => {
-      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+      const search = ProposalSearchBuilder.with(event.id, owner.id, {});
 
       const statistics = await search.statistics();
       expect(statistics.total).toEqual(5);
@@ -159,14 +159,14 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
   describe('searchs with filters and sorting', () => {
     it('default search', async () => {
-      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+      const search = ProposalSearchBuilder.with(event.id, owner.id, {});
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
     });
 
     it('filters proposals by title', async () => {
       const filters = { query: 'world' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].title).toBe(proposal1.title);
@@ -174,21 +174,21 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by speaker name', async () => {
       const filters = { query: 'parker' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(4);
     });
 
     it('filters proposals by speaker name scoped to the event', async () => {
       const filters = { query: 'parker' };
-      const search = new ProposalSearchBuilder(event2.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event2.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
     });
 
     it('does not filter proposals by speaker name when withSpeakers option is false', async () => {
       const filters = { query: 'parker' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters, {
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters, {
         withSpeakers: false,
         withReviews: false,
       });
@@ -198,7 +198,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by proposal number', async () => {
       const filters = { query: '123' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals.some((p) => p.id === proposal1.id)).toBe(true);
@@ -206,7 +206,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by proposal number with hash prefix', async () => {
       const filters = { query: '#123' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals.some((p) => p.id === proposal1.id)).toBe(true);
@@ -214,7 +214,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by proposal number with whitespace around proposal number', async () => {
       const filters = { query: '  123  ' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals.some((p) => p.id === proposal1.id)).toBe(true);
@@ -222,7 +222,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('searches proposal number OR title OR speaker with numeric query', async () => {
       const filters = { query: '456' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(2);
       expect(proposals.some((p) => p.id === proposal2.id)).toBe(true);
@@ -231,21 +231,21 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('escapes ILIKE special characters in search query', async () => {
       const filters = { query: 'Awe%me' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(0);
     });
 
     it('escapes underscore wildcard in search query', async () => {
       const filters = { query: 'Awe_ome' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(0);
     });
 
     it('does not search by proposal number when query contains non-numeric characters', async () => {
       const filters = { query: 'talk 456' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal3.id);
@@ -253,7 +253,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by formats', async () => {
       const filters = { formats: format.id };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal1.id);
@@ -261,7 +261,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by categories', async () => {
       const filters = { categories: category.id };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal2.id);
@@ -269,7 +269,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by tags', async () => {
       const filters = { tags: tag.id };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal3.id);
@@ -277,7 +277,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by speakers', async () => {
       const filters = { speakers: eventSpeaker.id };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(4);
       expect(proposals[0].id).toBe(proposal5.id);
@@ -288,7 +288,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by status pending', async () => {
       const filters: ProposalsFilters = { status: 'pending' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal1.id);
@@ -296,7 +296,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by status accepted', async () => {
       const filters: ProposalsFilters = { status: 'accepted' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(3);
       expect(proposals[0].id).toBe(proposal5.id);
@@ -306,7 +306,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by status rejected', async () => {
       const filters: ProposalsFilters = { status: 'rejected' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal3.id);
@@ -314,7 +314,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by confirmation not-answered', async () => {
       const filters: ProposalsFilters = { confirmation: 'not-answered' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal4.id);
@@ -322,7 +322,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by confirmation confirmed', async () => {
       const filters: ProposalsFilters = { confirmation: 'confirmed' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal2.id);
@@ -330,7 +330,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by confirmation declined', async () => {
       const filters: ProposalsFilters = { confirmation: 'declined' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal5.id);
@@ -338,7 +338,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('shows only archived proposals with status=archived', async () => {
       const filters: ProposalsFilters = { status: 'archived' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal6.id);
@@ -346,7 +346,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('combines status and confirmation filters with AND logic', async () => {
       const filters: ProposalsFilters = { status: 'accepted', confirmation: 'confirmed' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal2.id);
@@ -354,7 +354,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by user not reviewed only', async () => {
       const filters: ProposalsFilters = { reviews: ['not-reviewed'] };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(2);
       expect(proposals[0].id).toBe(proposal5.id);
@@ -363,7 +363,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by user positive reviews only', async () => {
       const filters: ProposalsFilters = { reviews: ['positive'] };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal1.id);
@@ -371,28 +371,28 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('filters proposals by user negative reviews only', async () => {
       const filters: ProposalsFilters = { reviews: ['negative'] };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(0);
     });
 
     it('filters proposals by user no-opinion reviews only', async () => {
       const filters: ProposalsFilters = { reviews: ['no-opinion'] };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(0);
     });
 
     it('filters proposals by user neutral reviews with exact star match', async () => {
       const filters: ProposalsFilters = { reviews: ['neutral-1'] };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal3.id);
     });
 
     it('sorts by newest (default)', async () => {
-      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+      const search = ProposalSearchBuilder.with(event.id, owner.id, {});
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
       expect(proposals[0].id).toBe(proposal5.id);
@@ -404,7 +404,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('sorts by oldest', async () => {
       const filters: ProposalsFilters = { sort: 'date', order: 'asc' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
       expect(proposals[0].id).toBe(proposal1.id);
@@ -416,7 +416,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('sort by highest reviews', async () => {
       const filters: ProposalsFilters = { sort: 'reviews', order: 'desc' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
       expect(proposals[0].id).toBe(proposal2.id);
@@ -428,7 +428,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('sort by lowest reviews and no reviews last', async () => {
       const filters: ProposalsFilters = { sort: 'reviews', order: 'asc' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
       expect(proposals[0].id).toBe(proposal3.id);
@@ -440,7 +440,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('sort by most favorites', async () => {
       const filters: ProposalsFilters = { sort: 'favorites', order: 'desc' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
       expect(proposals[0].id).toBe(proposal2.id); // 1 favorite
@@ -452,7 +452,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('sort by fewest favorites', async () => {
       const filters: ProposalsFilters = { sort: 'favorites', order: 'asc' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
       expect(proposals[0].id).toBe(proposal3.id); // 0 favorites
@@ -464,7 +464,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('sort by most comments', async () => {
       const filters: ProposalsFilters = { sort: 'comments', order: 'desc' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
       expect(proposals[0].id).toBe(proposal3.id);
@@ -476,7 +476,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('sort by fewest comments and no comments last', async () => {
       const filters: ProposalsFilters = { sort: 'comments', order: 'asc' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
       expect(proposals[0].id).toBe(proposal2.id);
@@ -488,7 +488,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('sort by my best review first, not reviewed last', async () => {
       const filters: ProposalsFilters = { sort: 'my-review', order: 'desc' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
       expect(proposals[0].id).toBe(proposal1.id); // POSITIVE, note 5
@@ -500,7 +500,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('sort by my worst review first, not reviewed last', async () => {
       const filters: ProposalsFilters = { sort: 'my-review', order: 'asc' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
       expect(proposals[0].id).toBe(proposal3.id); // NEUTRAL, note 1
@@ -513,7 +513,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
   describe('#search.proposalIds', () => {
     it('returns array of proposal IDs only', async () => {
-      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+      const search = ProposalSearchBuilder.with(event.id, owner.id, {});
 
       const ids = await search.proposalIds();
 
@@ -523,7 +523,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('respects filters when returning proposal IDs', async () => {
       const filters = { query: 'world' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
 
       const ids = await search.proposalIds();
 
@@ -533,7 +533,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('respects sorting when returning proposal IDs', async () => {
       const filters: ProposalsFilters = { sort: 'date', order: 'asc' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
 
       const ids = await search.proposalIds();
 
@@ -543,7 +543,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('returns empty array when no proposals match filters', async () => {
       const filters = { query: 'nonexistent' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
 
       const ids = await search.proposalIds();
 
@@ -553,7 +553,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
   describe('#search.proposalRouteIds', () => {
     it('returns array of objects with id and routeId', async () => {
-      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+      const search = ProposalSearchBuilder.with(event.id, owner.id, {});
 
       const routeIds = await search.proposalRouteIds();
 
@@ -565,7 +565,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
     });
 
     it('returns routeId as proposal number when available', async () => {
-      const search = new ProposalSearchBuilder(event.id, owner.id, {});
+      const search = ProposalSearchBuilder.with(event.id, owner.id, {});
       const routeIds = await search.proposalRouteIds();
 
       const proposal1RouteId = routeIds.find((item) => item.id === proposal1.id);
@@ -574,7 +574,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('respects filters when returning route IDs', async () => {
       const filters = { query: 'world' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
 
       const routeIds = await search.proposalRouteIds();
 
@@ -585,7 +585,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('respects sorting when returning route IDs', async () => {
       const filters: ProposalsFilters = { sort: 'date', order: 'asc' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
 
       const routeIds = await search.proposalRouteIds();
 
@@ -596,7 +596,7 @@ describe('EventProposalsSearch', { tags: ['no-teardown'] }, () => {
 
     it('returns empty array when no proposals match filters', async () => {
       const filters = { query: 'nonexistent' };
-      const search = new ProposalSearchBuilder(event.id, owner.id, filters);
+      const search = ProposalSearchBuilder.with(event.id, owner.id, filters);
 
       const routeIds = await search.proposalRouteIds();
 
@@ -708,7 +708,7 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
   });
 
   it('returns hasNewMessages=false for review comments when organizer has no participant record', async () => {
-    const search = new ProposalSearchBuilder(
+    const search = ProposalSearchBuilder.with(
       event.id,
       organizer.id,
       { query: proposalNoConversation.title },
@@ -720,7 +720,7 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
   });
 
   it('returns hasNewMessages=true when messages are newer than organizer lastSeenAt', async () => {
-    const search = new ProposalSearchBuilder(
+    const search = ProposalSearchBuilder.with(
       event.id,
       organizer.id,
       { query: proposalWithUnseenMessages.title },
@@ -732,7 +732,7 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
   });
 
   it('returns hasNewMessages=true for review comments when organizer is a participant with unseen messages', async () => {
-    const search = new ProposalSearchBuilder(
+    const search = ProposalSearchBuilder.with(
       event.id,
       organizer.id,
       { query: proposalWithUnseenReviewComments.title },
@@ -744,7 +744,7 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
   });
 
   it('returns hasNewMessages=true for speaker conversation when organizer has no participant record', async () => {
-    const search = new ProposalSearchBuilder(
+    const search = ProposalSearchBuilder.with(
       event.id,
       organizer.id,
       { query: proposalOrganizerNeverJoined.title },
@@ -756,7 +756,7 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
   });
 
   it('returns hasNewMessages=false when proposal has no messages', async () => {
-    const search = new ProposalSearchBuilder(
+    const search = ProposalSearchBuilder.with(
       event.id,
       organizer.id,
       { query: proposalWithConversationNoMessages.title },
@@ -768,7 +768,7 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
   });
 
   it('returns hasNewMessages=false when organizer lastSeenAt is after the latest message', async () => {
-    const search = new ProposalSearchBuilder(
+    const search = ProposalSearchBuilder.with(
       event.id,
       organizer.id,
       { query: proposalWithSeenMessages.title },
@@ -780,14 +780,14 @@ describe('ProposalSearchBuilder hasNewMessages', { tags: ['no-teardown'] }, () =
   });
 
   it('returns hasNewMessages=false when withMessages option is not set', async () => {
-    const search = new ProposalSearchBuilder(event.id, organizer.id, { query: proposalWithUnseenMessages.title });
+    const search = ProposalSearchBuilder.with(event.id, organizer.id, { query: proposalWithUnseenMessages.title });
     const proposals = await search.proposals();
     expect(proposals.length).toBe(1);
     expect(proposals[0].hasNewMessages).toBe(false);
   });
 
   it('filters only proposals with new messages when messages=new filter is set', async () => {
-    const search = new ProposalSearchBuilder(
+    const search = ProposalSearchBuilder.with(
       event.id,
       organizer.id,
       { messages: 'new' },

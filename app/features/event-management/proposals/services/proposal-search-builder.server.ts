@@ -62,14 +62,18 @@ export class ProposalSearchBuilder {
   filteredSpeaker: { name: string } | null = null;
   speakersFilterIgnored = false;
 
-  constructor(eventId: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
+  private constructor(eventId: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
     this.eventId = eventId;
     this.userId = userId;
     this.filters = filters;
     this.options = options || { withSpeakers: true, withReviews: true };
   }
 
-  static async with(
+  static with(eventId: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
+    return new ProposalSearchBuilder(eventId, userId, filters, options);
+  }
+
+  static async withValidatedSpeaker(
     event: Pick<Event, 'id' | 'displayProposalsSpeakers'>,
     userId: string,
     filters: ProposalsFilters,

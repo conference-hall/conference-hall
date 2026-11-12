@@ -33,7 +33,7 @@ export class ProposalsExport {
   }
 
   async toJson(filters: ProposalsFilters) {
-    const search = new ProposalSearchBuilder(this.event.id, this.userId, filters, {
+    const search = ProposalSearchBuilder.with(this.event.id, this.userId, filters, {
       withSpeakers: true,
       withReviews: true,
     });
@@ -106,7 +106,7 @@ export class ProposalsExport {
   }
 
   async toCards(filters: ProposalsFilters) {
-    const search = new ProposalSearchBuilder(this.event.id, this.userId, filters, {
+    const search = ProposalSearchBuilder.with(this.event.id, this.userId, filters, {
       withSpeakers: true,
       withReviews: true,
     });
