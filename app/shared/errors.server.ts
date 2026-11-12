@@ -70,6 +70,12 @@ export class MaxSubmittedProposalsReachedError extends BadRequestError {
   }
 }
 
+export class MaxSpeakersPerProposalReachedError extends BadRequestError {
+  constructor() {
+    super('The proposal has reached the maximum number of speakers.');
+  }
+}
+
 export class SurveyNotEnabledError extends BadRequestError {
   constructor() {
     super('Survey not enabled');

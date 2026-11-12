@@ -1,5 +1,9 @@
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
-import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/shared/errors.server.ts';
+import {
+  InvitationInvalidOrAccepted,
+  InvitationNotFoundError,
+  MaxSpeakersPerProposalReachedError,
+} from '~/shared/errors.server.ts';
 import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 
@@ -17,6 +21,8 @@ export class CoSpeakerProposalInvite {
     });
     if (!proposal) throw new InvitationNotFoundError();
 
+    const { maxSpeakersPerProposal } = proposal.event;
+
     return {
       id: proposal.id,
       title: proposal.title,
@@ -25,6 +31,7 @@ export class CoSpeakerProposalInvite {
         name: speaker.name,
         picture: speaker.picture,
       })),
+      maxSpeakersReached: Boolean(maxSpeakersPerProposal && proposal.speakers.length >= maxSpeakersPerProposal),
       event: {
         id: proposal.event.id,
         name: proposal.event.name,
@@ -40,6 +47,7 @@ export class CoSpeakerProposalInvite {
 
   async addCoSpeaker(userId: string) {
     const proposal = await this.check();
+    if (proposal.maxSpeakersReached) throw new MaxSpeakersPerProposalReachedError();
 
     try {
       await db.$transaction(async (trx) => {

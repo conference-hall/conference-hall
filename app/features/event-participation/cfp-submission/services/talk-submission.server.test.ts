@@ -10,6 +10,7 @@ import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import {
   CfpNotOpenError,
   EventNotFoundError,
+  MaxSpeakersPerProposalReachedError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
   TalkNotFoundError,
@@ -312,6 +313,18 @@ describe('TalkSubmission', () => {
       await expect(submission.submit(talk2.id)).rejects.toThrow(MaxSubmittedProposalsReachedError);
     });
 
+    it('enforces max speakers per proposal', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'], attributes: { maxSpeakersPerProposal: 1 } });
+      const speaker = await userFactory();
+      const coSpeaker = await userFactory();
+      await submissionPassFactory({ event, user: speaker });
+      const talk = await talkFactory({ speakers: [speaker, coSpeaker] });
+      await proposalFactory({ event, talk, traits: ['draft'] });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.submit(talk.id)).rejects.toThrow(MaxSpeakersPerProposalReachedError);
+    });
+
     it('throws an error when a co-speaker without pass submits', async () => {
       const event = await eventFactory({ traits: ['conference-cfp-past'] });
       const holder = await userFactory();
@@ -491,6 +504,30 @@ describe('TalkSubmission', () => {
 
       const submission = TalkSubmission.for(speaker.id, event.slug);
       await expect(submission.submit(talk2.id)).rejects.toThrow(MaxSubmittedProposalsReachedError);
+    });
+
+    it('submits when speakers count equals the max speakers per proposal', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'], attributes: { maxSpeakersPerProposal: 2 } });
+      const speaker = await userFactory();
+      const coSpeaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker, coSpeaker] });
+      const proposal = await proposalFactory({ event, talk, traits: ['draft'] });
+
+      await TalkSubmission.for(speaker.id, event.slug).submit(talk.id);
+
+      const result = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(result?.isDraft).toEqual(false);
+    });
+
+    it('throws an error when speakers count exceeds the max speakers per proposal', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'], attributes: { maxSpeakersPerProposal: 1 } });
+      const speaker = await userFactory();
+      const coSpeaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker, coSpeaker] });
+      await proposalFactory({ event, talk, traits: ['draft'] });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.submit(talk.id)).rejects.toThrow(MaxSpeakersPerProposalReachedError);
     });
 
     it('throws an error when talk not belong to the user', async () => {

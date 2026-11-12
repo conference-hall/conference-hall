@@ -7,6 +7,7 @@ import OrganizerProposalSubmittedEmail from '~/shared/emails/templates/organizer
 import SpeakerProposalSubmittedEmail from '~/shared/emails/templates/speakers/proposal-submitted.email.tsx';
 import {
   EventNotFoundError,
+  MaxSpeakersPerProposalReachedError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
 } from '~/shared/errors.server.ts';
@@ -107,6 +108,10 @@ export class TalkSubmission {
       include: { speakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
+
+    if (event.maxSpeakersPerProposal && proposal.speakers.length > event.maxSpeakersPerProposal) {
+      throw new MaxSpeakersPerProposalReachedError();
+    }
 
     await db.$transaction(async (trx) => {
       const proposalNumber = await getNextProposalNumber(event.id, trx);
