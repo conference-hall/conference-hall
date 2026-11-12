@@ -10,7 +10,6 @@ import { ReviewDetails } from '../models/review-details.ts';
 import type { ReviewUpdateData } from './proposal-review.schema.server.ts';
 import type { ProposalsFilters } from './proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.server.ts';
-import { resolveSpeakerFilter } from './speaker-filter.server.ts';
 
 export type ProposalReviewData = Awaited<ReturnType<typeof ProposalReview.prototype.get>>;
 
@@ -121,8 +120,7 @@ export class ProposalReview {
 
   async getPreviousAndNextReviews(filters: ProposalsFilters) {
     const { event, userId } = this.authorizedEvent;
-    const resolved = await resolveSpeakerFilter(event, filters);
-    const search = new ProposalSearchBuilder(event.id, userId, resolved.filters);
+    const search = await ProposalSearchBuilder.for(event, userId, filters);
 
     const { total, reviewed } = await search.statistics();
     const proposalRouteIds = await search.proposalRouteIds();

@@ -1,6 +1,5 @@
 import type { ProposalsFilters } from '~/features/event-management/proposals/services/proposal-search-builder.schema.server.ts';
 import { ProposalSearchBuilder } from '~/features/event-management/proposals/services/proposal-search-builder.server.ts';
-import { resolveSpeakerFilter } from '~/features/event-management/proposals/services/speaker-filter.server.ts';
 import { SpeakerSurvey } from '~/features/event-participation/speaker-survey/services/speaker-survey.server.ts';
 import type { AuthorizedApiEvent, AuthorizedEvent } from '~/shared/authorization/types.ts';
 import { ForbiddenOperationError } from '~/shared/errors.server.ts';
@@ -34,8 +33,7 @@ export class ProposalsExport {
   }
 
   async toJson(filters: ProposalsFilters) {
-    const resolved = await resolveSpeakerFilter(this.event, filters);
-    const search = new ProposalSearchBuilder(this.event.id, this.userId, resolved.filters, {
+    const search = await ProposalSearchBuilder.for(this.event, this.userId, filters, {
       withSpeakers: true,
       withReviews: true,
     });
@@ -108,8 +106,7 @@ export class ProposalsExport {
   }
 
   async toCards(filters: ProposalsFilters) {
-    const resolved = await resolveSpeakerFilter(this.event, filters);
-    const search = new ProposalSearchBuilder(this.event.id, this.userId, resolved.filters, {
+    const search = await ProposalSearchBuilder.for(this.event, this.userId, filters, {
       withSpeakers: true,
       withReviews: true,
     });
@@ -130,8 +127,8 @@ export class ProposalsExport {
   }
 
   async toOpenPlanner(filters: ProposalsFilters) {
-    const resolved = await resolveSpeakerFilter(this.event, filters);
-    await exportToOpenPlanner.trigger({ userId: this.userId, eventId: this.event.id, filters: resolved.filters });
+    const search = await ProposalSearchBuilder.for(this.event, this.userId, filters);
+    await exportToOpenPlanner.trigger({ userId: this.userId, eventId: this.event.id, filters: search.filters });
   }
 
   static sampleJson(): ProposalsExportJson {

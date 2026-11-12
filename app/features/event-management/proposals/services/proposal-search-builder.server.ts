@@ -4,6 +4,7 @@ import { db } from '../../../../../prisma/db.server.ts';
 import {
   ConfirmationStatus,
   DeliberationStatus,
+  type Event,
   Prisma,
   PublicationStatus,
   ReviewFeeling,
@@ -58,12 +59,30 @@ export class ProposalSearchBuilder {
   userId: string;
   filters: ProposalsFilters;
   options: SearchOptions;
+  filteredSpeaker: { name: string } | null = null;
 
   constructor(eventId: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
     this.eventId = eventId;
     this.userId = userId;
     this.filters = filters;
     this.options = options || { withSpeakers: true, withReviews: true };
+  }
+
+  static async for(
+    event: Pick<Event, 'id' | 'displayProposalsSpeakers'>,
+    userId: string,
+    filters: ProposalsFilters,
+    options?: SearchOptions,
+  ) {
+    const { speakers, ...otherFilters } = filters;
+    const filteredSpeaker =
+      speakers && event.displayProposalsSpeakers
+        ? await db.eventSpeaker.findFirst({ where: { id: speakers, eventId: event.id }, select: { name: true } })
+        : null;
+
+    const search = new ProposalSearchBuilder(event.id, userId, filteredSpeaker ? filters : otherFilters, options);
+    search.filteredSpeaker = filteredSpeaker;
+    return search;
   }
 
   async statistics() {
