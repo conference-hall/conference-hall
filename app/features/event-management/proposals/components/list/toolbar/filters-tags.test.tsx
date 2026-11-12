@@ -14,13 +14,13 @@ function CurrentSearch() {
 }
 
 describe('FiltersTags component', () => {
-  const renderComponent = () => {
+  const renderComponent = (filteredSpeaker: { name: string } | null = { name: 'Ada Lovelace' }) => {
     const RouteStub = createRoutesStub([
       {
         path: '/',
         Component: () => (
           <I18nextProvider i18n={i18nTest}>
-            <FiltersTags filters={{ speakers: 'speaker-1' }} filteredSpeaker={{ name: 'Ada Lovelace' }} />
+            <FiltersTags filters={{ speakers: 'speaker-1' }} filteredSpeaker={filteredSpeaker} />
             <CurrentSearch />
           </I18nextProvider>
         ),
@@ -41,5 +41,11 @@ describe('FiltersTags component', () => {
     await userEvent.click(page.getByRole('button', { name: 'Remove Ada Lovelace' }));
 
     await expect.element(page.getByText('search:', { exact: true })).toBeInTheDocument();
+  });
+
+  it('displays nothing when the speakers filter has no filtered speaker', async () => {
+    await renderComponent(null);
+
+    await expect.element(page.getByText('Filters:')).not.toBeInTheDocument();
   });
 });

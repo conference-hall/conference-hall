@@ -10,10 +10,10 @@ export function FiltersTags({ filters, filteredSpeaker }: FiltersBadgesProps) {
   const { t } = useTranslation();
   const { event } = useCurrentEventTeam();
 
-  const { query, reviews, status, confirmation, messages, formats, categories, tags, speakers } = filters;
+  const { query, reviews, status, confirmation, messages, formats, categories, tags } = filters;
 
   const hasFilters = Boolean(
-    query || reviews || status || confirmation || messages || formats || categories || tags || speakers,
+    query || reviews || status || confirmation || messages || formats || categories || tags || filteredSpeaker,
   );
   if (!hasFilters) return null;
 
