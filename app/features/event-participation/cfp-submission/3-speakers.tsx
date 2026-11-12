@@ -4,11 +4,13 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, redirect } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { TalkSubmission } from '~/features/event-participation/cfp-submission/services/talk-submission.server.ts';
+import { useCurrentEvent } from '~/features/event-participation/event-page-context.tsx';
 import { ProfileFetcher } from '~/features/speaker/services/profile-fetcher.server.ts';
 import { SpeakerProfile } from '~/features/speaker/settings/services/speaker-profile.server.ts';
 import { Speakers } from '~/features/speaker/talk-library/components/speakers.tsx';
@@ -55,6 +57,10 @@ export default function SubmissionSpeakerRoute({ loaderData, actionData: errors 
   const { speaker, speakers, isOwner, invitationLink } = loaderData;
   const formId = useId();
   const { previousPath, nextPath } = useSubmissionNavigation();
+  const { maxSpeakersPerProposal: maxSpeakers } = useCurrentEvent();
+  const speakersCount = speakers.length + 1;
+  const maxSpeakersReached = Boolean(maxSpeakers && speakersCount >= maxSpeakers);
+  const maxSpeakersExceeded = Boolean(maxSpeakers && speakersCount > maxSpeakers);
 
   return (
     <Page>
@@ -77,7 +83,24 @@ export default function SubmissionSpeakerRoute({ loaderData, actionData: errors 
           <div className="mt-4">
             <H2>{t('event.submission.speakers.co-speakers')}</H2>
             <Subtitle>{t('event.submission.speakers.co-speakers.description')}</Subtitle>
-            <Speakers speakers={speakers} invitationLink={invitationLink} canEdit={isOwner} className="mt-6" />
+            {maxSpeakers ? (
+              <Callout
+                variant={maxSpeakersExceeded ? 'error' : 'default'}
+                title={
+                  maxSpeakersExceeded
+                    ? t('event.submission.speakers.max-exceeded', { maxSpeakers })
+                    : t('event.submission.speakers.max-limit', { maxSpeakers })
+                }
+                className="mt-4"
+              />
+            ) : null}
+            <Speakers
+              speakers={speakers}
+              invitationLink={invitationLink}
+              canEdit={isOwner}
+              maxSpeakersReached={maxSpeakersReached}
+              className="mt-6"
+            />
           </div>
         </Card.Content>
 
@@ -85,7 +108,14 @@ export default function SubmissionSpeakerRoute({ loaderData, actionData: errors 
           <Button to={previousPath} variant="secondary">
             {t('common.go-back')}
           </Button>
-          <Button type="submit" form={formId} name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
+          <Button
+            type="submit"
+            form={formId}
+            name="redirectTo"
+            value={nextPath}
+            iconRight={ArrowRightIcon}
+            disabled={maxSpeakersExceeded}
+          >
             {t('common.continue')}
           </Button>
         </Card.Actions>

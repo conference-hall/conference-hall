@@ -3,6 +3,7 @@ import { Form, href, redirect } from 'react-router';
 import { FullscreenPage } from '~/app-platform/components/fullscreen-page.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
 import { Button } from '~/design-system/button.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
@@ -55,11 +56,15 @@ export default function InvitationRoute({ loaderData: proposal }: Route.Componen
             </ul>
 
             <Markdown className="line-clamp-6">{proposal.description}</Markdown>
+
+            {proposal.maxSpeakersReached ? <Callout variant="error" title={t('talk.invitation.max-reached')} /> : null}
           </Card.Content>
 
           <Card.Actions>
             <Form method="POST">
-              <Button type="submit">{t('common.accept-invitation')}</Button>
+              <Button type="submit" disabled={proposal.maxSpeakersReached}>
+                {t('common.accept-invitation')}
+              </Button>
             </Form>
           </Card.Actions>
         </Card>

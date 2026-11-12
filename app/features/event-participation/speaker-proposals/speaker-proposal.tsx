@@ -104,6 +104,8 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
   const { proposal, conversation } = loaderData;
   const currentEvent = useCurrentEvent();
   const canEdit = proposal.status === SpeakerProposalStatus.Submitted;
+  const { maxSpeakersPerProposal } = currentEvent;
+  const maxSpeakersReached = Boolean(maxSpeakersPerProposal && proposal.speakers.length >= maxSpeakersPerProposal);
   const speakerConversationEnabled = useFlag('speakersCommunication') && currentEvent.speakersConversationEnabled;
 
   return (
@@ -119,6 +121,7 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
         <TalkSection
           talk={proposal}
           canEditSpeakers={canEdit}
+          maxSpeakersReached={maxSpeakersReached}
           action={canEdit ? <TalkEditButton initialValues={proposal} event={currentEvent} errors={errors} /> : null}
           showSpeakers
         />

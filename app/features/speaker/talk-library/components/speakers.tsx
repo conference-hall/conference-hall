@@ -32,10 +32,11 @@ type CoSpeakersProps = {
   speakers: Array<SpeakerProps>;
   invitationLink?: string;
   canEdit: boolean;
+  maxSpeakersReached?: boolean;
   className?: string;
 };
 
-export function Speakers({ speakers, invitationLink, canEdit, className }: CoSpeakersProps) {
+export function Speakers({ speakers, invitationLink, canEdit, maxSpeakersReached, className }: CoSpeakersProps) {
   const { t } = useTranslation();
   return (
     <ul aria-label={t('speaker.list')} className={cx('flex flex-row flex-wrap gap-3', className)}>
@@ -46,7 +47,13 @@ export function Speakers({ speakers, invitationLink, canEdit, className }: CoSpe
       ))}
       {canEdit && invitationLink && (
         <li>
-          <AddCoSpeakerButton invitationLink={invitationLink} />
+          {maxSpeakersReached ? (
+            <Text variant="secondary" size="xs" className="p-1">
+              {t('speaker.max-reached')}
+            </Text>
+          ) : (
+            <AddCoSpeakerButton invitationLink={invitationLink} />
+          )}
         </li>
       )}
     </ul>

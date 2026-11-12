@@ -38,6 +38,7 @@ type Props = {
   action?: ReactNode;
   children?: ReactNode;
   canEditSpeakers?: boolean;
+  maxSpeakersReached?: boolean;
   showSpeakers?: boolean;
   referencesOpen?: boolean;
 };
@@ -48,6 +49,7 @@ export function TalkSection({
   action,
   actions,
   canEditSpeakers = false,
+  maxSpeakersReached = false,
   showSpeakers = false,
   referencesOpen = false,
 }: Props) {
@@ -85,6 +87,7 @@ export function TalkSection({
             speakers={talk.speakers}
             invitationLink={talk.invitationLink}
             canEdit={canEditSpeakers && !talk.archived}
+            maxSpeakersReached={maxSpeakersReached}
             className="grow"
           />
         ) : null}
