@@ -13,6 +13,7 @@ import {
   MaxSpeakersPerProposalReachedError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
+  TalkAlreadySubmittedError,
   TalkNotFoundError,
 } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
@@ -251,6 +252,51 @@ describe('TalkSubmission', () => {
 
       const result = await db.proposal.findUnique({ where: { id: proposal.id }, include: { formats: true } });
       expect(result?.formats.map((f) => f.id)).toEqual([format.id]);
+    });
+
+    it('throws an error when updating a submitted proposal while the CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const speaker = await userFactory();
+      await submissionPassFactory({ event, user: speaker });
+      const talk = await talkFactory({ speakers: [speaker], attributes: { title: 'Original' } });
+      await proposalFactory({ event, talk });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.saveDraft(talk.id, data)).rejects.toThrow(CfpNotOpenError);
+
+      const result = await submission.get(talk.id);
+      expect(result.title).toEqual('Original');
+    });
+
+    it('updates a submitted proposal when the CFP is not open and speakers can edit after CFP close', async () => {
+      const event = await eventFactory({
+        traits: ['conference-cfp-past'],
+        attributes: { speakersCanEditAfterCfpClose: true },
+      });
+      const speaker = await userFactory();
+      await submissionPassFactory({ event, user: speaker });
+      const talk = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await submission.saveDraft(talk.id, data);
+
+      const result = await submission.get(talk.id);
+      expect(result.title).toEqual('Title');
+    });
+
+    it('throws an error when setting tracks of a submitted proposal while the CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const format = await eventFormatFactory({ event });
+      const speaker = await userFactory();
+      await submissionPassFactory({ event, user: speaker });
+      const talk = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.saveTracks(talk.id, { formats: [format.id], categories: [] })).rejects.toThrow(
+        CfpNotOpenError,
+      );
     });
   });
 
@@ -530,6 +576,20 @@ describe('TalkSubmission', () => {
       await expect(submission.submit(talk.id)).rejects.toThrow(MaxSpeakersPerProposalReachedError);
     });
 
+    it('throws an error when the proposal is already submitted', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'] });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.submit(talk.id)).rejects.toThrow(TalkAlreadySubmittedError);
+
+      const result = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(result?.proposalNumber).toEqual(proposal.proposalNumber);
+      expect(sendEmail.trigger).not.toHaveBeenCalled();
+    });
+
     it('throws an error when talk not belong to the user', async () => {
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
@@ -631,7 +691,7 @@ describe('TalkSubmission', () => {
 
   describe('#removeCoSpeaker', () => {
     it('removes a cospeaker from the proposal', async () => {
-      const event = await eventFactory();
+      const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
       const cospeaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker, cospeaker] });
@@ -647,6 +707,32 @@ describe('TalkSubmission', () => {
       const speakers = proposalUpdated?.speakers.map(({ userId }) => userId);
       expect(speakers?.length).toBe(1);
       expect(speakers).toContain(speaker.id);
+    });
+
+    it('removes a cospeaker from a draft proposal when the CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const speaker = await userFactory();
+      const cospeaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker, cospeaker] });
+      await proposalFactory({ event, talk, traits: ['draft'] });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await submission.removeCoSpeaker(talk.id, cospeaker.id);
+
+      const result = await submission.get(talk.id);
+      expect(result.speakers).toHaveLength(1);
+    });
+
+    it('throws an error when removing a cospeaker from a submitted proposal while the CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const speaker = await userFactory();
+      const cospeaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker, cospeaker] });
+      await proposalFactory({ event, talk });
+
+      await expect(TalkSubmission.for(speaker.id, event.slug).removeCoSpeaker(talk.id, cospeaker.id)).rejects.toThrow(
+        CfpNotOpenError,
+      );
     });
 
     it('throws an error when talk doesnt belong to the speaker', async () => {

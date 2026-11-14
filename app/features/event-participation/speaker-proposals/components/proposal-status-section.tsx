@@ -8,7 +8,7 @@ import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { ProposalDeleteButton } from './proposal-delete.tsx';
 
 type Props = {
-  proposal: { id: string; talkId: string | null; status: SpeakerProposalStatus };
+  proposal: { id: string; talkId: string | null; status: SpeakerProposalStatus; canDelete: boolean };
   event: { name: string; slug: string; isCfpOpen: boolean };
   canSubmit: boolean;
 };
@@ -64,7 +64,7 @@ function Draft({ proposal, event, canSubmit }: Props) {
   );
 }
 
-function Submitted({ event }: Props) {
+function Submitted({ proposal, event }: Props) {
   const { t } = useTranslation();
   return (
     <Card as="section" p={8} className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between">
@@ -76,7 +76,7 @@ function Submitted({ event }: Props) {
           <Subtitle>{t('speaker.proposal-status.submitted.cfp-close')}</Subtitle>
         )}
       </div>
-      {event.isCfpOpen && (
+      {proposal.canDelete && (
         <div className="flex gap-4">
           <ProposalDeleteButton />
         </div>

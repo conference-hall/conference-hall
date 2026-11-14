@@ -1,6 +1,8 @@
+import { parseWithZod } from '@conform-to/zod/v4';
 import { z } from 'zod';
 import {
   CfpConferenceOpeningSchema,
+  CfpPreferencesSchema,
   EventDetailsSettingsSchema,
   EventGeneralSettingsSchema,
 } from './event-settings.schema.server.ts';
@@ -114,6 +116,23 @@ describe('UserEvent types', () => {
       expect(z.flattenError(result.error!).fieldErrors).toEqual({
         cfpStart: ['Call for papers start date must be after the end date.'],
       });
+    });
+  });
+
+  describe('#CfpPreferencesSchema', () => {
+    it('enables speakers editing after CFP close when the toggle is checked', () => {
+      const form = new FormData();
+      form.append('speakersCanEditAfterCfpClose', 'on');
+
+      const result = parseWithZod(form, { schema: CfpPreferencesSchema });
+
+      expect(result.status === 'success' && result.value.speakersCanEditAfterCfpClose).toBe(true);
+    });
+
+    it('disables speakers editing after CFP close when the toggle is unchecked', () => {
+      const result = parseWithZod(new FormData(), { schema: CfpPreferencesSchema });
+
+      expect(result.status === 'success' && result.value.speakersCanEditAfterCfpClose).toBe(false);
     });
   });
 });

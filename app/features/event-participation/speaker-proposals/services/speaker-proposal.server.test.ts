@@ -50,6 +50,8 @@ describe('SpeakerProposal', () => {
         ],
         categories: [{ id: category.id, name: category.name, description: category.description }],
         isOwner: true,
+        canEditSubmitted: true,
+        canDelete: true,
         speakers: [
           {
             userId: speaker.id,
@@ -61,6 +63,33 @@ describe('SpeakerProposal', () => {
           },
         ],
       });
+    });
+
+    it('allows editing but not deletion of a submitted proposal when CFP is not open and speakers can edit after CFP close', async () => {
+      const event = await eventFactory({
+        traits: ['conference-cfp-past'],
+        attributes: { speakersCanEditAfterCfpClose: true },
+      });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      const result = await SpeakerProposal.for(speaker.id, proposal.id).get();
+
+      expect(result.canEditSubmitted).toBe(true);
+      expect(result.canDelete).toBe(false);
+    });
+
+    it('denies editing and deletion of a submitted proposal when CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      const result = await SpeakerProposal.for(speaker.id, proposal.id).get();
+
+      expect(result.canEditSubmitted).toBe(false);
+      expect(result.canDelete).toBe(false);
     });
 
     it('throws an error when the proposal does not exist', async () => {
@@ -122,6 +151,59 @@ describe('SpeakerProposal', () => {
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
+
+      await expect(
+        SpeakerProposal.for(speaker.id, proposal.id).update({
+          title: 'change',
+          abstract: 'change',
+          level: null,
+          languages: ['fr'],
+          references: '',
+          slidesUrl: null,
+          videoUrl: null,
+          formats: [],
+          categories: [],
+        }),
+      ).rejects.toThrow(CfpNotOpenError);
+    });
+
+    it('updates the proposal when CFP is not open and speakers can edit after CFP close', async () => {
+      const event = await eventFactory({
+        traits: ['conference-cfp-past'],
+        attributes: { speakersCanEditAfterCfpClose: true },
+      });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({
+        event,
+        talk,
+        attributes: { deliberationStatus: 'REJECTED', publicationStatus: 'PUBLISHED' },
+      });
+
+      await SpeakerProposal.for(speaker.id, proposal.id).update({
+        title: 'Title changed',
+        abstract: 'change',
+        level: null,
+        languages: ['fr'],
+        references: '',
+        slidesUrl: null,
+        videoUrl: null,
+        formats: [],
+        categories: [],
+      });
+
+      const result = await SpeakerProposal.for(speaker.id, proposal.id).get();
+      expect(result.title).toEqual('Title changed');
+    });
+
+    it('throws an error when the proposal is a draft and CFP is not open', async () => {
+      const event = await eventFactory({
+        traits: ['conference-cfp-past'],
+        attributes: { speakersCanEditAfterCfpClose: true },
+      });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk, traits: ['draft'] });
 
       await expect(
         SpeakerProposal.for(speaker.id, proposal.id).update({
@@ -203,7 +285,7 @@ describe('SpeakerProposal', () => {
 
   describe('#removeCoSpeaker', () => {
     it('removes a cospeaker from the proposal', async () => {
-      const event = await eventFactory();
+      const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
       const cospeaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker, cospeaker] });
@@ -219,6 +301,34 @@ describe('SpeakerProposal', () => {
       const speakers = proposalUpdated?.speakers.map(({ userId }) => userId);
       expect(speakers?.length).toBe(1);
       expect(speakers).toContain(speaker.id);
+    });
+
+    it('removes a cospeaker when CFP is not open and speakers can edit after CFP close', async () => {
+      const event = await eventFactory({
+        traits: ['conference-cfp-past'],
+        attributes: { speakersCanEditAfterCfpClose: true },
+      });
+      const speaker = await userFactory();
+      const cospeaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker, cospeaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      await SpeakerProposal.for(speaker.id, proposal.id).removeCoSpeaker(cospeaker.id);
+
+      const result = await SpeakerProposal.for(speaker.id, proposal.id).get();
+      expect(result.speakers.map(({ userId }) => userId)).toEqual([speaker.id]);
+    });
+
+    it('throws an error when CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const speaker = await userFactory();
+      const cospeaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker, cospeaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      await expect(SpeakerProposal.for(speaker.id, proposal.id).removeCoSpeaker(cospeaker.id)).rejects.toThrow(
+        CfpNotOpenError,
+      );
     });
 
     it('throws an error when proposal doesnt belong to the speaker', async () => {
@@ -244,31 +354,54 @@ describe('SpeakerProposal', () => {
   });
 
   describe('#delete', () => {
-    it('deletes a proposal', async () => {
-      const event = await eventFactory();
+    it('deletes a submitted proposal when CFP is open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
 
       await SpeakerProposal.for(speaker.id, proposal.id).delete();
 
-      const deleted = await db.proposal.findUnique({ where: { id: proposal.id } });
-
-      expect(deleted).toBe(null);
+      await expect(SpeakerProposal.for(speaker.id, proposal.id).get()).rejects.toThrow(ProposalNotFoundError);
     });
 
-    it('does not delete a proposal if not belonging to user', async () => {
-      const event = await eventFactory();
+    it('deletes a draft proposal when CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk, traits: ['draft'] });
+
+      await SpeakerProposal.for(speaker.id, proposal.id).delete();
+
+      await expect(SpeakerProposal.for(speaker.id, proposal.id).get()).rejects.toThrow(ProposalNotFoundError);
+    });
+
+    it('throws an error when deleting a submitted proposal while CFP is not open, even if speakers can edit after CFP close', async () => {
+      const event = await eventFactory({
+        traits: ['conference-cfp-past'],
+        attributes: { speakersCanEditAfterCfpClose: true },
+      });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      await expect(SpeakerProposal.for(speaker.id, proposal.id).delete()).rejects.toThrow(CfpNotOpenError);
+
+      const result = await SpeakerProposal.for(speaker.id, proposal.id).get();
+      expect(result.id).toEqual(proposal.id);
+    });
+
+    it('throws an error when proposal does not belong to user', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
       const otherSpeaker = await userFactory();
       const talk = await talkFactory({ speakers: [otherSpeaker] });
       const proposal = await proposalFactory({ event, talk });
 
-      await SpeakerProposal.for(speaker.id, proposal.id).delete();
+      await expect(SpeakerProposal.for(speaker.id, proposal.id).delete()).rejects.toThrow(ProposalNotFoundError);
 
-      const deleted = await db.proposal.findUnique({ where: { id: proposal.id } });
-
-      expect(deleted).not.toBe(1);
+      const result = await SpeakerProposal.for(otherSpeaker.id, proposal.id).get();
+      expect(result.id).toEqual(proposal.id);
     });
   });
 

@@ -1,4 +1,5 @@
 import { sendTalkToSlack } from '~/features/event-participation/cfp-submission/services/send-talk-to-slack.job.ts';
+import { canEdit } from '~/features/event-participation/speaker-proposals/models/proposal-editability.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import { TalksLibrary } from '~/features/speaker/talk-library/services/talks-library.server.ts';
 import { getNextProposalNumber } from '~/shared/counters/proposal-counter.server.ts';
@@ -6,10 +7,12 @@ import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import OrganizerProposalSubmittedEmail from '~/shared/emails/templates/organizers/proposal-submitted.email.tsx';
 import SpeakerProposalSubmittedEmail from '~/shared/emails/templates/speakers/proposal-submitted.email.tsx';
 import {
+  CfpNotOpenError,
   EventNotFoundError,
   MaxSpeakersPerProposalReachedError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
+  TalkAlreadySubmittedError,
 } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
@@ -32,6 +35,14 @@ export class TalkSubmission {
     const event = await db.event.findUnique({ where: { slug: this.eventSlug } });
     if (!event) throw new EventNotFoundError();
     await assertCanSubmit(event, this.userId);
+
+    if (talkId !== 'new') {
+      const proposal = await db.proposal.findUnique({
+        select: { isDraft: true },
+        where: { talkId_eventId: { talkId, eventId: event.id } },
+      });
+      if (proposal && !canEdit({ ...proposal, event })) throw new CfpNotOpenError();
+    }
 
     const library = TalksLibrary.of(this.userId);
     const talk = talkId === 'new' ? await library.add(data) : await library.talk(talkId).update(data);
@@ -72,11 +83,16 @@ export class TalkSubmission {
 
   async saveTracks(talkId: string, data: TracksSaveData) {
     const proposal = await db.proposal.findFirst({
-      select: { id: true, event: true },
+      select: {
+        id: true,
+        isDraft: true,
+        event: { select: { id: true, isCfpOpen: true, speakersCanEditAfterCfpClose: true } },
+      },
       where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { userId: this.userId } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
     await assertCanSubmit(proposal.event, this.userId);
+    if (!canEdit(proposal)) throw new CfpNotOpenError();
 
     await db.proposal.update({
       where: { id: proposal.id },
@@ -109,6 +125,7 @@ export class TalkSubmission {
       include: { speakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
+    if (!proposal.isDraft) throw new TalkAlreadySubmittedError();
 
     if (isMaxSpeakersExceeded(proposal.speakers.length, event.maxSpeakersPerProposal)) {
       throw new MaxSpeakersPerProposalReachedError();
@@ -179,10 +196,16 @@ export class TalkSubmission {
 
   async removeCoSpeaker(talkId: string, userId: string) {
     const proposal = await db.proposal.findFirst({
-      select: { id: true, eventId: true },
+      select: {
+        id: true,
+        eventId: true,
+        isDraft: true,
+        event: { select: { isCfpOpen: true, speakersCanEditAfterCfpClose: true } },
+      },
       where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { userId: this.userId } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
+    if (!canEdit(proposal)) throw new CfpNotOpenError();
 
     await EventSpeakerForProposal.for(proposal.eventId).removeSpeakerFromProposal(proposal.id, userId);
   }

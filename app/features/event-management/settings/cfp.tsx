@@ -64,6 +64,7 @@ export default function EventCfpSettingsRoute({ actionData: errors }: Route.Comp
       <CommonCfpSetting
         maxProposals={event.maxProposals}
         maxSpeakersPerProposal={event.maxSpeakersPerProposal}
+        speakersCanEditAfterCfpClose={event.speakersCanEditAfterCfpClose}
         codeOfConductUrl={event.codeOfConductUrl}
         errors={errors}
       />

@@ -43,6 +43,7 @@ describe('EventFetcher', () => {
         logoUrl: resolveStorageUrl(event.logo),
         maxProposals: event.maxProposals,
         maxSpeakersPerProposal: event.maxSpeakersPerProposal,
+        speakersCanEditAfterCfpClose: event.speakersCanEditAfterCfpClose,
         reviewEnabled: event.reviewEnabled,
         displayProposalsReviews: event.displayProposalsReviews,
         displayProposalsSpeakers: event.displayProposalsSpeakers,

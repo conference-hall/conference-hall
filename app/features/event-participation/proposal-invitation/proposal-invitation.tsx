@@ -58,11 +58,12 @@ export default function InvitationRoute({ loaderData: proposal }: Route.Componen
             <Markdown className="line-clamp-6">{proposal.description}</Markdown>
 
             {proposal.maxSpeakersReached ? <Callout variant="error" title={t('talk.invitation.max-reached')} /> : null}
+            {!proposal.canEdit ? <Callout variant="error" title={t('talk.invitation.cfp-closed')} /> : null}
           </Card.Content>
 
           <Card.Actions>
             <Form method="POST">
-              <Button type="submit" disabled={proposal.maxSpeakersReached}>
+              <Button type="submit" disabled={proposal.maxSpeakersReached || !proposal.canEdit}>
                 {t('common.accept-invitation')}
               </Button>
             </Form>
