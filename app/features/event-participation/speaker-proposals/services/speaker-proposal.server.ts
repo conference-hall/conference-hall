@@ -1,4 +1,7 @@
-import { canDelete, canEdit } from '~/features/event-participation/speaker-proposals/models/proposal-editability.ts';
+import {
+  canDelete,
+  canEditSubmitted,
+} from '~/features/event-participation/speaker-proposals/models/proposal-editability.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ProposalConfirmedEmail from '~/shared/emails/templates/organizers/proposal-confirmed.email.tsx';
@@ -54,7 +57,7 @@ export class SpeakerProposal {
       categories: proposal.categories.map(({ id, name, description }) => ({ id, name, description })),
       invitationLink: proposal.invitationLink,
       isOwner: this.userId === proposal?.talk?.creatorId,
-      canEdit: canEdit(proposal),
+      canEditSubmitted: canEditSubmitted(proposal),
       canDelete: canDelete(proposal),
       speakers: proposal.speakers.map((speaker) => ({
         userId: speaker.userId,
@@ -73,7 +76,7 @@ export class SpeakerProposal {
       include: { event: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
-    if (!canEdit(proposal)) throw new CfpNotOpenError();
+    if (!canEditSubmitted(proposal)) throw new CfpNotOpenError();
 
     const { formats, categories, ...talk } = data;
     await db.proposal.update({
@@ -96,10 +99,14 @@ export class SpeakerProposal {
   async removeCoSpeaker(coSpeakerUserId: string) {
     const proposal = await db.proposal.findFirst({
       where: { id: this.proposalId, speakers: { some: { userId: this.userId } } },
-      include: { event: true },
+      select: {
+        eventId: true,
+        isDraft: true,
+        event: { select: { isCfpOpen: true, speakersCanEditAfterCfpClose: true } },
+      },
     });
     if (!proposal) throw new ProposalNotFoundError();
-    if (!canEdit(proposal)) throw new CfpNotOpenError();
+    if (!canEditSubmitted(proposal)) throw new CfpNotOpenError();
 
     await EventSpeakerForProposal.for(proposal.eventId).removeSpeakerFromProposal(this.proposalId, coSpeakerUserId);
   }
@@ -107,7 +114,7 @@ export class SpeakerProposal {
   async delete() {
     const proposal = await db.proposal.findFirst({
       where: { id: this.proposalId, speakers: { some: { userId: this.userId } } },
-      include: { event: true },
+      select: { isDraft: true, event: { select: { isCfpOpen: true, speakersCanEditAfterCfpClose: true } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
     if (!canDelete(proposal)) throw new CfpNotOpenError();

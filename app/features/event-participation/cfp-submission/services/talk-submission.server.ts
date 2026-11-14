@@ -40,7 +40,7 @@ export class TalkSubmission {
         select: { isDraft: true },
         where: { talkId_eventId: { talkId, eventId: event.id } },
       });
-      if (proposal && !proposal.isDraft && !canEdit({ ...proposal, event })) throw new CfpNotOpenError();
+      if (proposal && !canEdit({ ...proposal, event })) throw new CfpNotOpenError();
     }
 
     const library = TalksLibrary.of(this.userId);
@@ -82,12 +82,16 @@ export class TalkSubmission {
 
   async saveTracks(talkId: string, data: TracksSaveData) {
     const proposal = await db.proposal.findFirst({
-      select: { id: true, isDraft: true, event: true },
+      select: {
+        id: true,
+        isDraft: true,
+        event: { select: { id: true, isCfpOpen: true, speakersCanEditAfterCfpClose: true } },
+      },
       where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { userId: this.userId } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
     await assertCanSubmit(proposal.event, this.userId);
-    if (!proposal.isDraft && !canEdit(proposal)) throw new CfpNotOpenError();
+    if (!canEdit(proposal)) throw new CfpNotOpenError();
 
     await db.proposal.update({
       where: { id: proposal.id },
@@ -190,11 +194,16 @@ export class TalkSubmission {
 
   async removeCoSpeaker(talkId: string, userId: string) {
     const proposal = await db.proposal.findFirst({
-      select: { id: true, eventId: true, isDraft: true, event: true },
+      select: {
+        id: true,
+        eventId: true,
+        isDraft: true,
+        event: { select: { isCfpOpen: true, speakersCanEditAfterCfpClose: true } },
+      },
       where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { userId: this.userId } } },
     });
     if (!proposal) throw new ProposalNotFoundError();
-    if (!proposal.isDraft && !canEdit(proposal)) throw new CfpNotOpenError();
+    if (!canEdit(proposal)) throw new CfpNotOpenError();
 
     await EventSpeakerForProposal.for(proposal.eventId).removeSpeakerFromProposal(proposal.id, userId);
   }

@@ -27,7 +27,7 @@ describe('CoSpeakerProposalInvite', () => {
         description: proposal.abstract,
         speakers: [{ name: speaker.name, picture: speaker.picture }],
         maxSpeakersReached: false,
-        canJoin: true,
+        canEdit: true,
         event: {
           id: proposal.event.id,
           name: proposal.event.name,
@@ -60,7 +60,7 @@ describe('CoSpeakerProposalInvite', () => {
 
       const result = await CoSpeakerProposalInvite.with(proposal.invitationCode).check();
 
-      expect(result.canJoin).toBe(false);
+      expect(result.canEdit).toBe(false);
     });
 
     it('returns throws an error when invitation code not found', async () => {

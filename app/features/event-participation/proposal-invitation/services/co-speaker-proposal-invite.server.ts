@@ -1,5 +1,5 @@
 import { isMaxSpeakersReached } from '~/features/event-participation/cfp-submission/models/max-speakers.ts';
-import { canJoin } from '~/features/event-participation/speaker-proposals/models/proposal-editability.ts';
+import { canEdit } from '~/features/event-participation/speaker-proposals/models/proposal-editability.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import {
   CfpNotOpenError,
@@ -33,7 +33,7 @@ export class CoSpeakerProposalInvite {
         picture: speaker.picture,
       })),
       maxSpeakersReached: isMaxSpeakersReached(proposal.speakers.length, proposal.event.maxSpeakersPerProposal),
-      canJoin: canJoin(proposal),
+      canEdit: canEdit(proposal),
       event: {
         id: proposal.event.id,
         name: proposal.event.name,
@@ -49,7 +49,7 @@ export class CoSpeakerProposalInvite {
 
   async addCoSpeaker(userId: string) {
     const proposal = await this.check();
-    if (!proposal.canJoin) throw new CfpNotOpenError();
+    if (!proposal.canEdit) throw new CfpNotOpenError();
     if (proposal.maxSpeakersReached) throw new MaxSpeakersPerProposalReachedError();
 
     try {

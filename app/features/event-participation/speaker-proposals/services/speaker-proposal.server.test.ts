@@ -50,7 +50,7 @@ describe('SpeakerProposal', () => {
         ],
         categories: [{ id: category.id, name: category.name, description: category.description }],
         isOwner: true,
-        canEdit: true,
+        canEditSubmitted: true,
         canDelete: true,
         speakers: [
           {
@@ -76,7 +76,7 @@ describe('SpeakerProposal', () => {
 
       const result = await SpeakerProposal.for(speaker.id, proposal.id).get();
 
-      expect(result.canEdit).toBe(true);
+      expect(result.canEditSubmitted).toBe(true);
       expect(result.canDelete).toBe(false);
     });
 
@@ -88,7 +88,7 @@ describe('SpeakerProposal', () => {
 
       const result = await SpeakerProposal.for(speaker.id, proposal.id).get();
 
-      expect(result.canEdit).toBe(false);
+      expect(result.canEditSubmitted).toBe(false);
       expect(result.canDelete).toBe(false);
     });
 

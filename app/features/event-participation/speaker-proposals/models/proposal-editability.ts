@@ -1,16 +1,16 @@
-type ProposalEditability = {
+type ProposalWithCfpState = {
   isDraft: boolean;
   event: { isCfpOpen: boolean; speakersCanEditAfterCfpClose: boolean };
 };
 
-export function canEdit({ isDraft, event }: ProposalEditability) {
+export function canEditSubmitted({ isDraft, event }: ProposalWithCfpState) {
   return !isDraft && (event.isCfpOpen || event.speakersCanEditAfterCfpClose);
 }
 
-export function canDelete({ isDraft, event }: ProposalEditability) {
-  return isDraft || event.isCfpOpen;
+export function canEdit(proposal: ProposalWithCfpState) {
+  return proposal.isDraft || canEditSubmitted(proposal);
 }
 
-export function canJoin({ isDraft, event }: ProposalEditability) {
-  return isDraft || event.isCfpOpen || event.speakersCanEditAfterCfpClose;
+export function canDelete({ isDraft, event }: ProposalWithCfpState) {
+  return isDraft || event.isCfpOpen;
 }
