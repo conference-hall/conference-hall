@@ -11,6 +11,6 @@ export function canDelete({ isDraft, event }: ProposalEditability) {
   return isDraft || event.isCfpOpen;
 }
 
-export function canAcceptInvitation({ isDraft, event }: ProposalEditability) {
+export function canJoin({ isDraft, event }: ProposalEditability) {
   return isDraft || event.isCfpOpen || event.speakersCanEditAfterCfpClose;
 }

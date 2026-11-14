@@ -1,5 +1,5 @@
 import { isMaxSpeakersReached } from '~/features/event-participation/cfp-submission/models/max-speakers.ts';
-import { canAcceptInvitation } from '~/features/event-participation/speaker-proposals/models/proposal-editability.ts';
+import { canJoin } from '~/features/event-participation/speaker-proposals/models/proposal-editability.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import {
   CfpNotOpenError,
@@ -33,7 +33,7 @@ export class CoSpeakerProposalInvite {
         picture: speaker.picture,
       })),
       maxSpeakersReached: isMaxSpeakersReached(proposal.speakers.length, proposal.event.maxSpeakersPerProposal),
-      canJoin: canAcceptInvitation(proposal),
+      canJoin: canJoin(proposal),
       event: {
         id: proposal.event.id,
         name: proposal.event.name,

@@ -52,10 +52,10 @@ term as defined here and don't drift to synonyms.
 
 - **Edit after CFP close** (`speakersCanEditAfterCfpClose`, off by default): an event
   setting that lets speakers keep editing their submitted proposals (talk, tracks,
-  co-speakers) while the CFP is not open, whatever their status. The same rule applies
-  to accepting a co-speaker invitation on a submitted proposal (a draft can always be
-  joined). Speakers can still
-  delete a submitted proposal only while the CFP is open. A Submission pass never
+  co-speakers) after the CFP closes, whatever their status. Technically it applies
+  whenever the CFP is not open. The same rule applies to accepting a co-speaker
+  invitation on a submitted proposal (a draft can always be joined). Speakers can
+  delete a submitted proposal only while the CFP is open, and a Submission pass never
   grants editing on its own.
 
 - **Format**: An organizer-defined **presentation mode** for an event (e.g. Talk,
