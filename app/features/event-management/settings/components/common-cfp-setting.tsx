@@ -31,6 +31,12 @@ export function CommonCfpSetting({
 
       <Form method="POST">
         <Card.Content>
+          <ToggleGroup
+            name="speakersCanEditAfterCfpClose"
+            label={t('event-management.settings.cfp.preferences.speakers-can-edit-after-cfp-close.label')}
+            description={t('event-management.settings.cfp.preferences.speakers-can-edit-after-cfp-close.description')}
+            value={speakersCanEditAfterCfpClose}
+          />
           <Input
             name="maxProposals"
             label={t('event-management.settings.cfp.preferences.max-proposals.label')}
@@ -57,12 +63,6 @@ export function CommonCfpSetting({
             description={t('event-management.settings.cfp.preferences.coc-url.description')}
             defaultValue={codeOfConductUrl || ''}
             error={errors?.codeOfConductUrl}
-          />
-          <ToggleGroup
-            name="speakersCanEditAfterCfpClose"
-            label={t('event-management.settings.cfp.preferences.speakers-can-edit-after-cfp-close.label')}
-            description={t('event-management.settings.cfp.preferences.speakers-can-edit-after-cfp-close.description')}
-            value={speakersCanEditAfterCfpClose}
           />
         </Card.Content>
 
