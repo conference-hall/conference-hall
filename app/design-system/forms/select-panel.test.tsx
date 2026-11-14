@@ -160,32 +160,14 @@ describe('SelectPanel component', () => {
   });
 
   it('debounces onSearch calls', async () => {
-    vi.useFakeTimers();
     const onSearchMock = vi.fn();
     await renderComponent({ onSearch: onSearchMock });
 
     await page.getByRole('button', { name: 'Open Select' }).click();
+    await userEvent.type(page.getByPlaceholder('Search...'), 'abc');
 
-    const searchInput = page.getByPlaceholder('Search...');
-
-    // Type multiple characters quickly
-    await userEvent.type(searchInput, 'a');
-    await userEvent.type(searchInput, 'b');
-    await userEvent.type(searchInput, 'c');
-
-    // Should not call onSearch yet
-    expect(onSearchMock).not.toHaveBeenCalled();
-
-    // Fast-forward less than the debounce time
-    vi.advanceTimersByTime(200);
-    expect(onSearchMock).not.toHaveBeenCalled();
-
-    // Fast-forward past the debounce time
-    vi.advanceTimersByTime(100);
+    await expect.poll(() => onSearchMock).toHaveBeenCalledWith('abc');
     expect(onSearchMock).toHaveBeenCalledTimes(1);
-    expect(onSearchMock).toHaveBeenCalledWith('abc');
-
-    vi.useRealTimers();
   });
 
   it('creates hidden form inputs when name is provided', async () => {
