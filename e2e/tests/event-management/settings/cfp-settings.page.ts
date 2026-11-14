@@ -10,6 +10,7 @@ export class CfpSettingsPage extends PageObject {
   readonly cfpActivationSwitch = this.page.getByRole('switch', { name: 'Call for papers activation' });
 
   readonly maxProposalsInput = this.page.getByLabel('Maximum of proposals per speaker');
+  readonly maxSpeakersInput = this.page.getByLabel('Maximum of speakers per proposal');
   readonly codeOfConductUrlInput = this.page.getByLabel('Code of conduct URL');
   readonly savePreferencesButton = this.page.getByRole('button', { name: 'Update CFP preferences' });
 

@@ -7,6 +7,7 @@ import OrganizerProposalSubmittedEmail from '~/shared/emails/templates/organizer
 import SpeakerProposalSubmittedEmail from '~/shared/emails/templates/speakers/proposal-submitted.email.tsx';
 import {
   EventNotFoundError,
+  MaxSpeakersPerProposalReachedError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
 } from '~/shared/errors.server.ts';
@@ -14,6 +15,7 @@ import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { TalkSaveData, TracksSaveData } from '~/shared/types/speaker-talk.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
+import { isMaxSpeakersExceeded } from '../models/max-speakers.ts';
 import { assertCanSubmit } from './submission-access.server.ts';
 
 export class TalkSubmission {
@@ -107,6 +109,10 @@ export class TalkSubmission {
       include: { speakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
+
+    if (isMaxSpeakersExceeded(proposal.speakers.length, event.maxSpeakersPerProposal)) {
+      throw new MaxSpeakersPerProposalReachedError();
+    }
 
     await db.$transaction(async (trx) => {
       const proposalNumber = await getNextProposalNumber(event.id, trx);

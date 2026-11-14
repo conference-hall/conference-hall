@@ -2,7 +2,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
-import { InvitationNotFoundError } from '~/shared/errors.server.ts';
+import { InvitationNotFoundError, MaxSpeakersPerProposalReachedError } from '~/shared/errors.server.ts';
 import { resolveStorageUrl } from '~/shared/storage/storage-utils.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import { CoSpeakerProposalInvite } from './co-speaker-proposal-invite.server.ts';
@@ -22,6 +22,7 @@ describe('CoSpeakerProposalInvite', () => {
         title: proposal.title,
         description: proposal.abstract,
         speakers: [{ name: speaker.name, picture: speaker.picture }],
+        maxSpeakersReached: false,
         event: {
           id: proposal.event.id,
           name: proposal.event.name,
@@ -33,6 +34,17 @@ describe('CoSpeakerProposalInvite', () => {
           cfpEnd: proposal.event.cfpEnd,
         },
       });
+    });
+
+    it('tells when the proposal has reached the max speakers per proposal', async () => {
+      const event = await eventFactory({ attributes: { maxSpeakersPerProposal: 1 } });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      const result = await CoSpeakerProposalInvite.with(proposal.invitationCode).check();
+
+      expect(result.maxSpeakersReached).toBe(true);
     });
 
     it('returns throws an error when invitation code not found', async () => {
@@ -67,6 +79,18 @@ describe('CoSpeakerProposalInvite', () => {
       expect(speakersTalk?.length).toBe(2);
       expect(speakersTalk).toContain(speaker.id);
       expect(speakersTalk).toContain(cospeaker.id);
+    });
+
+    it('throws an error when the proposal has reached the max speakers per proposal', async () => {
+      const event = await eventFactory({ attributes: { maxSpeakersPerProposal: 1 } });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+      const cospeaker = await userFactory();
+
+      await expect(CoSpeakerProposalInvite.with(proposal.invitationCode).addCoSpeaker(cospeaker.id)).rejects.toThrow(
+        MaxSpeakersPerProposalReachedError,
+      );
     });
 
     it('returns throws an error when invitation code not found', async () => {

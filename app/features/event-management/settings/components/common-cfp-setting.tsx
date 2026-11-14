@@ -8,11 +8,12 @@ import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 
 type Props = {
   maxProposals: number | null;
+  maxSpeakersPerProposal: number | null;
   codeOfConductUrl: string | null;
   errors: SubmissionErrors;
 };
 
-export function CommonCfpSetting({ maxProposals, codeOfConductUrl, errors }: Props) {
+export function CommonCfpSetting({ maxProposals, maxSpeakersPerProposal, codeOfConductUrl, errors }: Props) {
   const { t } = useTranslation();
   return (
     <Card as="section">
@@ -31,6 +32,16 @@ export function CommonCfpSetting({ maxProposals, codeOfConductUrl, errors }: Pro
             min={1}
             autoComplete="off"
             error={errors?.maxProposals}
+          />
+          <Input
+            name="maxSpeakersPerProposal"
+            label={t('event-management.settings.cfp.preferences.max-speakers-per-proposal.label')}
+            description={t('event-management.settings.cfp.preferences.max-speakers-per-proposal.description')}
+            type="number"
+            defaultValue={maxSpeakersPerProposal || ''}
+            min={1}
+            autoComplete="off"
+            error={errors?.maxSpeakersPerProposal}
           />
           <Input
             name="codeOfConductUrl"

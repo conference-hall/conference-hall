@@ -21,6 +21,7 @@ test('updates conference CFP settings', async ({ context, page }) => {
   // Update CFP preferences
   await cfpPage.goto(team.slug, event.slug);
   await cfpPage.fill(cfpPage.maxProposalsInput, '3');
+  await cfpPage.fill(cfpPage.maxSpeakersInput, '2');
   await cfpPage.fill(cfpPage.codeOfConductUrlInput, 'https://example.com');
   await cfpPage.savePreferencesButton.click();
   await expect(cfpPage.toast).toHaveText('Call for papers updated.');
@@ -30,6 +31,7 @@ test('updates conference CFP settings', async ({ context, page }) => {
   await expect(cfpPage.startInput).toHaveValue('2022-01-01');
   await expect(cfpPage.endInput).toHaveValue('2022-02-02');
   await expect(cfpPage.maxProposalsInput).toHaveValue('3');
+  await expect(cfpPage.maxSpeakersInput).toHaveValue('2');
   await expect(cfpPage.codeOfConductUrlInput).toHaveValue('https://example.com');
 });
 

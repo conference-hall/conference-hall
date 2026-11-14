@@ -48,6 +48,7 @@ export class EventPage {
       codeOfConductUrl: event.codeOfConductUrl,
       logoUrl: resolveStorageUrl(event.logo),
       maxProposals: event.maxProposals,
+      maxSpeakersPerProposal: event.maxSpeakersPerProposal,
       hasSurvey: isActiveForEvent,
       hasTracks: event.categories.length > 0 || event.formats.length > 0,
       formats: event.formats.map((f) => ({

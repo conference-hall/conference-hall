@@ -128,6 +128,7 @@ describe('EventCreation', () => {
           location: 'Template City',
           onlineEvent: true,
           maxProposals: 5,
+          maxSpeakersPerProposal: 2,
           displayProposalsReviews: true,
           displayProposalsSpeakers: false,
           speakersConversationEnabled: true,
@@ -180,6 +181,7 @@ describe('EventCreation', () => {
       expect(event?.location).toBe('Template City');
       expect(event?.onlineEvent).toBe(true);
       expect(event?.maxProposals).toBe(5);
+      expect(event?.maxSpeakersPerProposal).toBe(2);
       expect(event?.displayProposalsReviews).toBe(true);
       expect(event?.displayProposalsSpeakers).toBe(false);
       expect(event?.speakersConversationEnabled).toBe(true);

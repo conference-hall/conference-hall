@@ -141,6 +141,7 @@ model Event {
   categoriesRequired          Boolean                   @default(false)
   categoriesAllowMultiple     Boolean                   @default(false)
   maxProposals                Int?
+  maxSpeakersPerProposal      Int?
   creatorId                   String
   creator                     User                      @relation(fields: [creatorId], references: [id])
   archived                    Boolean                   @default(false)

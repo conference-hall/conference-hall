@@ -43,6 +43,7 @@ export class EventFetcher {
       contactEmail: fullEvent.contactEmail,
       logoUrl: resolveStorageUrl(fullEvent.logo),
       maxProposals: fullEvent.maxProposals,
+      maxSpeakersPerProposal: fullEvent.maxSpeakersPerProposal,
       reviewEnabled: fullEvent.reviewEnabled,
       displayProposalsReviews: fullEvent.displayProposalsReviews,
       displayProposalsSpeakers: fullEvent.displayProposalsSpeakers,
