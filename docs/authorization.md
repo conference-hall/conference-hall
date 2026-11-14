@@ -4,9 +4,10 @@ paths:
   - app/shared/authentication/**
   - app/shared/authorization/**
   - app/features/**/layout.tsx
+  - app/features/event-participation/**/services/**
 ---
 
-> Read this file when: you add a protected route, a middleware or a permission check.
+> Read this file when: you add a protected route, a middleware or a permission check, or a speaker write on a proposal.
 
 # Authentication & Authorization
 
@@ -72,6 +73,14 @@ Permissions computed via `UserTeamPermissions.getPermissions(role)` in `app/shar
 | Manage conversations   | yes   | no     | no       |
 | Export proposals       | yes   | no     | no       |
 | Leave team             | no    | yes    | yes      |
+
+## Speaker Access to Proposals
+
+Speakers have no team role: what they may do on a Proposal depends on the CFP state. `canEdit`, `canEditSubmitted` and `canDelete` in `app/features/event-participation/speaker-proposals/models/proposal-editability.ts` hold these rules (GLOSSARY: **Edit after CFP close**). Every speaker write on a Proposal checks them, and any new write path must too. The write paths today:
+
+- `SpeakerProposal` (`speaker-proposals/services/`): update, co-speaker removal, delete.
+- `TalkSubmission` (`cfp-submission/services/`): submission funnel steps, also gated by `assertCanSubmit` (Submission pass).
+- `CoSpeakerProposalInvite` (`proposal-invitation/services/`): joining a proposal as co-speaker.
 
 ## API Authentication
 
