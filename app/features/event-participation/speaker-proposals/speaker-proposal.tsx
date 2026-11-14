@@ -25,7 +25,6 @@ import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast, toastHeaders } from '~/shared/toasts/toast.server.ts';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { ProposalParticipationSchema, TalkSaveSchema } from '~/shared/types/speaker-talk.types.ts';
-import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { TalkSection } from '../../speaker/talk-library/components/talk-section.tsx';
 import { TracksSection } from '../../speaker/talk-library/components/tracks-section.tsx';
 import { useCurrentEvent } from '../event-page-context.tsx';
@@ -104,7 +103,6 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
   const { t } = useTranslation();
   const { proposal, conversation } = loaderData;
   const currentEvent = useCurrentEvent();
-  const canEdit = proposal.status === SpeakerProposalStatus.Submitted;
   const maxSpeakersReached = isMaxSpeakersReached(proposal.speakers.length, currentEvent.maxSpeakersPerProposal);
   const speakerConversationEnabled = useFlag('speakersCommunication') && currentEvent.speakersConversationEnabled;
 
@@ -120,9 +118,11 @@ export default function ProposalRoute({ loaderData, actionData: errors }: Route.
 
         <TalkSection
           talk={proposal}
-          canEditSpeakers={canEdit}
+          canEditSpeakers={proposal.canEdit}
           maxSpeakersReached={maxSpeakersReached}
-          action={canEdit ? <TalkEditButton initialValues={proposal} event={currentEvent} errors={errors} /> : null}
+          action={
+            proposal.canEdit ? <TalkEditButton initialValues={proposal} event={currentEvent} errors={errors} /> : null
+          }
           showSpeakers
         />
 

@@ -50,6 +50,12 @@ term as defined here and don't drift to synonyms.
   no effect and the event's usual rules apply. Distinct from an **Invitation code**,
   which grants access to an existing Talk, Proposal or Team.
 
+- **Edit after CFP close** (`speakersCanEditAfterCfpClose`, off by default): an event
+  setting that lets speakers keep editing their submitted proposals (talk, tracks,
+  co-speakers) while the CFP is not open, whatever their status. Speakers can still
+  delete a submitted proposal only while the CFP is open. A Submission pass never
+  grants edition on its own.
+
 - **Format**: An organizer-defined **presentation mode** for an event (e.g. Talk,
   Workshop, Lightning, Panel), _how_ it's delivered. A proposal may require one,
   allow several, or none (`formatsRequired` / `formatsAllowMultiple`). A format may
