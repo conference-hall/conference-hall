@@ -142,7 +142,8 @@ model Event {
   categoriesAllowMultiple     Boolean                   @default(false)
   maxProposals                Int?
   maxSpeakersPerProposal      Int?
-  creatorId                   String
+  speakersCanEditAfterCfpClose Boolean                  @default(false)
+  creatorId                  String
   creator                     User                      @relation(fields: [creatorId], references: [id])
   archived                    Boolean                   @default(false)
   reviewEnabled               Boolean                   @default(true)
