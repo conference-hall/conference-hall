@@ -1149,6 +1149,7 @@
   "talk.formats.empty": "No format selected",
   "talk.formats_one": "Format",
   "talk.formats_other": "Formats",
+  "talk.invitation.cfp-closed": "The CFP is closed, you can no longer join this proposal.",
   "talk.invitation.for-event": "You have been invited to be co-speaker on a talk for the {{event}} event.",
   "talk.invitation.for-talk": "You have been invited to be co-speaker on a talk.",
   "talk.invitation.heading": "Talk invitation.",

@@ -1149,6 +1149,7 @@
   "talk.formats.empty": "Aucun format sélectionné",
   "talk.formats_one": "Format",
   "talk.formats_other": "Formats",
+  "talk.invitation.cfp-closed": "Le CFP est clos, vous ne pouvez plus rejoindre cette proposition.",
   "talk.invitation.for-event": "Vous avez été invité à participer à un talk dans le cadre de l'événement {{event}}.",
   "talk.invitation.for-talk": "Vous avez été invité à être co-speaker sur un talk.",
   "talk.invitation.heading": "Invitation co-speaker.",
