@@ -13,7 +13,7 @@ Start Docker (`docker compose up`) before `pnpm test`, `pnpm test:e2e` or `pnpm 
 - `pnpm test:e2e <file>`: one Playwright spec.
 - `pnpm tsc`: `react-router typegen` then `tsc -b`. Run it after adding or changing routes so `./+types/*` exist.
 - `pnpm check`: the CI static job (format, lint, tsc, knip, i18n).
-- `pnpm exec prisma generate`: regenerate the Prisma client. Runs automatically via hook after editing `prisma/schema.prisma`.
+- `pnpm exec prisma generate`: regenerate the Prisma client. Runs automatically via hook after editing `prisma/schema.prisma`, after `prisma format`.
 - `pnpm db:migrate:dev --name="..."`: new migration.
 - `pnpm db:reset`: reseed the local dev DB (test users `superman@example.com` / `batman@example.com`, password `password`).
 

@@ -29,7 +29,6 @@ paths:
 - Mock dates: `vi.useFakeTimers()` + `vi.setSystemTime(new Date('2023-01-01'))`, restore with `vi.useRealTimers()` in `afterEach`
 - Mock modules: `vi.mock('~/path/to/module.ts', () => ({ ... }))`
 - Jobs globally mocked in `tests/setup.server.ts`: no per-test mocking needed
-- Async error assertions: `rejects.toThrowError(ErrorClass)`
 - After creating test, ALWAYS execute: `pnpm test:unit run "<file path>"`
 
 ## Component Tests (`.test.tsx`)
