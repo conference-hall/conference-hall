@@ -13,6 +13,7 @@ import {
   MaxSpeakersPerProposalReachedError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
+  TalkAlreadySubmittedError,
   TalkNotFoundError,
 } from '~/shared/errors.server.ts';
 import { db } from '../../../../../prisma/db.server.ts';
@@ -573,6 +574,20 @@ describe('TalkSubmission', () => {
 
       const submission = TalkSubmission.for(speaker.id, event.slug);
       await expect(submission.submit(talk.id)).rejects.toThrow(MaxSpeakersPerProposalReachedError);
+    });
+
+    it('throws an error when the proposal is already submitted', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'] });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.submit(talk.id)).rejects.toThrow(TalkAlreadySubmittedError);
+
+      const result = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(result?.proposalNumber).toEqual(proposal.proposalNumber);
+      expect(sendEmail.trigger).not.toHaveBeenCalled();
     });
 
     it('throws an error when talk not belong to the user', async () => {

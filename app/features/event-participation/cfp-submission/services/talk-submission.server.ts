@@ -12,6 +12,7 @@ import {
   MaxSpeakersPerProposalReachedError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
+  TalkAlreadySubmittedError,
 } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
@@ -124,6 +125,7 @@ export class TalkSubmission {
       include: { speakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
+    if (!proposal.isDraft) throw new TalkAlreadySubmittedError();
 
     if (isMaxSpeakersExceeded(proposal.speakers.length, event.maxSpeakersPerProposal)) {
       throw new MaxSpeakersPerProposalReachedError();
