@@ -1,3 +1,4 @@
+import { canDelete, canEdit } from '~/features/event-participation/speaker-proposals/models/proposal-editability.ts';
 import { EventSpeakerForProposal } from '~/features/event-participation/speaker-proposals/services/event-speaker-for-proposal.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ProposalConfirmedEmail from '~/shared/emails/templates/organizers/proposal-confirmed.email.tsx';
@@ -143,17 +144,4 @@ export class SpeakerProposal {
       await sendEmail.trigger(ProposalDeclinedEmail.buildPayload({ event: proposal.event, proposal }));
     }
   }
-}
-
-type ProposalRules = {
-  isDraft: boolean;
-  event: { isCfpOpen: boolean; speakersCanEditAfterCfpClose: boolean };
-};
-
-function canEdit({ isDraft, event }: ProposalRules) {
-  return !isDraft && (event.isCfpOpen || event.speakersCanEditAfterCfpClose);
-}
-
-function canDelete({ isDraft, event }: ProposalRules) {
-  return isDraft || event.isCfpOpen;
 }
