@@ -65,7 +65,7 @@ describe('SpeakerProposal', () => {
       });
     });
 
-    it('allows edition but not deletion of a submitted proposal when CFP is not open and speakers can edit after CFP close', async () => {
+    it('allows editing but not deletion of a submitted proposal when CFP is not open and speakers can edit after CFP close', async () => {
       const event = await eventFactory({
         traits: ['conference-cfp-past'],
         attributes: { speakersCanEditAfterCfpClose: true },
@@ -80,7 +80,7 @@ describe('SpeakerProposal', () => {
       expect(result.canDelete).toBe(false);
     });
 
-    it('denies edition and deletion of a submitted proposal when CFP is not open', async () => {
+    it('denies editing and deletion of a submitted proposal when CFP is not open', async () => {
       const event = await eventFactory({ traits: ['conference-cfp-past'] });
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });

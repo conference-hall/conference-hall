@@ -54,7 +54,7 @@ term as defined here and don't drift to synonyms.
   setting that lets speakers keep editing their submitted proposals (talk, tracks,
   co-speakers) while the CFP is not open, whatever their status. Speakers can still
   delete a submitted proposal only while the CFP is open. A Submission pass never
-  grants edition on its own.
+  grants editing on its own.
 
 - **Format**: An organizer-defined **presentation mode** for an event (e.g. Talk,
   Workshop, Lightning, Panel), _how_ it's delivered. A proposal may require one,

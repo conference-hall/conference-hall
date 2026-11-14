@@ -120,7 +120,7 @@ describe('UserEvent types', () => {
   });
 
   describe('#CfpPreferencesSchema', () => {
-    it('enables speakers edition after CFP close when the toggle is checked', () => {
+    it('enables speakers editing after CFP close when the toggle is checked', () => {
       const form = new FormData();
       form.append('speakersCanEditAfterCfpClose', 'on');
 
@@ -129,7 +129,7 @@ describe('UserEvent types', () => {
       expect(result.status === 'success' && result.value.speakersCanEditAfterCfpClose).toBe(true);
     });
 
-    it('disables speakers edition after CFP close when the toggle is unchecked', () => {
+    it('disables speakers editing after CFP close when the toggle is unchecked', () => {
       const result = parseWithZod(new FormData(), { schema: CfpPreferencesSchema });
 
       expect(result.status === 'success' && result.value.speakersCanEditAfterCfpClose).toBe(false);

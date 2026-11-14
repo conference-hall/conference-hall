@@ -143,7 +143,7 @@ model Event {
   maxProposals                Int?
   maxSpeakersPerProposal      Int?
   speakersCanEditAfterCfpClose Boolean                  @default(false)
-  creatorId                  String
+  creatorId                   String
   creator                     User                      @relation(fields: [creatorId], references: [id])
   archived                    Boolean                   @default(false)
   reviewEnabled               Boolean                   @default(true)
