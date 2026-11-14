@@ -32,4 +32,4 @@ Imports keep the `.ts`/`.tsx` extension. Use the `~/` alias for `app/` and `test
 
 ## Formatting and lint
 
-oxfmt and oxlint own the style; `pnpm check` runs both plus `tsc`, `knip` and `pnpm i18n:check`, as in CI.
+oxfmt, `prisma format` and oxlint own the style; `pnpm check` runs them plus `tsc`, `knip` and `pnpm i18n:check`, as in CI.
