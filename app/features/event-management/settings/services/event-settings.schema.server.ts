@@ -40,6 +40,7 @@ export const CfpPreferencesSchema = z.object({
   codeOfConductUrl: z.url().trim().nullable().default(null),
   maxProposals: z.number().min(1).nullable().default(null),
   maxSpeakersPerProposal: z.number().min(1).nullable().default(null),
+  speakersCanEditAfterCfpClose: z.boolean().default(false),
 });
 
 export const CfpMeetupOpeningSchema = z.object({

@@ -70,6 +70,7 @@ export class EventCreation {
       onlineEvent: eventTemplate.onlineEvent,
       maxProposals: eventTemplate.maxProposals,
       maxSpeakersPerProposal: eventTemplate.maxSpeakersPerProposal,
+      speakersCanEditAfterCfpClose: eventTemplate.speakersCanEditAfterCfpClose,
       displayProposalsReviews: eventTemplate.displayProposalsReviews,
       displayProposalsSpeakers: eventTemplate.displayProposalsSpeakers,
       speakersConversationEnabled: eventTemplate.speakersConversationEnabled,

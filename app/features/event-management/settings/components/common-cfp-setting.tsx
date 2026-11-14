@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
@@ -9,11 +10,18 @@ import type { SubmissionErrors } from '~/shared/types/errors.types.ts';
 type Props = {
   maxProposals: number | null;
   maxSpeakersPerProposal: number | null;
+  speakersCanEditAfterCfpClose: boolean;
   codeOfConductUrl: string | null;
   errors: SubmissionErrors;
 };
 
-export function CommonCfpSetting({ maxProposals, maxSpeakersPerProposal, codeOfConductUrl, errors }: Props) {
+export function CommonCfpSetting({
+  maxProposals,
+  maxSpeakersPerProposal,
+  speakersCanEditAfterCfpClose,
+  codeOfConductUrl,
+  errors,
+}: Props) {
   const { t } = useTranslation();
   return (
     <Card as="section">
@@ -49,6 +57,12 @@ export function CommonCfpSetting({ maxProposals, maxSpeakersPerProposal, codeOfC
             description={t('event-management.settings.cfp.preferences.coc-url.description')}
             defaultValue={codeOfConductUrl || ''}
             error={errors?.codeOfConductUrl}
+          />
+          <ToggleGroup
+            name="speakersCanEditAfterCfpClose"
+            label={t('event-management.settings.cfp.preferences.speakers-can-edit-after-cfp-close.label')}
+            description={t('event-management.settings.cfp.preferences.speakers-can-edit-after-cfp-close.description')}
+            value={speakersCanEditAfterCfpClose}
           />
         </Card.Content>
 

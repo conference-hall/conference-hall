@@ -129,6 +129,7 @@ describe('EventCreation', () => {
           onlineEvent: true,
           maxProposals: 5,
           maxSpeakersPerProposal: 2,
+          speakersCanEditAfterCfpClose: true,
           displayProposalsReviews: true,
           displayProposalsSpeakers: false,
           speakersConversationEnabled: true,
@@ -182,6 +183,7 @@ describe('EventCreation', () => {
       expect(event?.onlineEvent).toBe(true);
       expect(event?.maxProposals).toBe(5);
       expect(event?.maxSpeakersPerProposal).toBe(2);
+      expect(event?.speakersCanEditAfterCfpClose).toBe(true);
       expect(event?.displayProposalsReviews).toBe(true);
       expect(event?.displayProposalsSpeakers).toBe(false);
       expect(event?.speakersConversationEnabled).toBe(true);

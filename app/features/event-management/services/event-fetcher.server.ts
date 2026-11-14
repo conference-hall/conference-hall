@@ -44,6 +44,7 @@ export class EventFetcher {
       logoUrl: resolveStorageUrl(fullEvent.logo),
       maxProposals: fullEvent.maxProposals,
       maxSpeakersPerProposal: fullEvent.maxSpeakersPerProposal,
+      speakersCanEditAfterCfpClose: fullEvent.speakersCanEditAfterCfpClose,
       reviewEnabled: fullEvent.reviewEnabled,
       displayProposalsReviews: fullEvent.displayProposalsReviews,
       displayProposalsSpeakers: fullEvent.displayProposalsSpeakers,

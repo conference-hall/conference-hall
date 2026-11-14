@@ -677,6 +677,8 @@
   "event-management.settings.cfp.preferences.max-proposals.label": "Maximum of proposals per speaker",
   "event-management.settings.cfp.preferences.max-speakers-per-proposal.description": "Optional. Limits the number of speakers on a proposal, co-speakers included.",
   "event-management.settings.cfp.preferences.max-speakers-per-proposal.label": "Maximum of speakers per proposal",
+  "event-management.settings.cfp.preferences.speakers-can-edit-after-cfp-close.description": "Speakers still cannot delete their submitted proposals. Organizers are not notified of the changes.",
+  "event-management.settings.cfp.preferences.speakers-can-edit-after-cfp-close.label": "Allow speakers to edit proposals after the CFP closes",
   "event-management.settings.cfp.preferences.submit": "Update CFP preferences",
   "event-management.settings.customize.errors.max-size": "The file is too large: {{size}}. The maximum allowed size is {{maxSize}}.",
   "event-management.settings.customize.feedbacks.logo-updated": "Logo updated.",
