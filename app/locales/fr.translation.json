@@ -972,7 +972,7 @@
   "event.submission.selection.max-reached.button": "Vérifier les propositions soumises",
   "event.submission.selection.new-proposal": "Nouvelle proposition",
   "event.submission.selection.talks": "Bibliothèque des talks",
-  "event.submission.speakers.cannot-invite": "Vous ne pouvez plus inviter de co-speaker.",
+  "event.submission.speakers.cannot-invite": "Vous ne pouvez pas inviter de co-speaker.",
   "event.submission.speakers.co-speakers": "Co-speakers",
   "event.submission.speakers.co-speakers.description": "Lorsque le co-speaker accepte l'invitation, il est automatiquement ajouté à la proposition.",
   "event.submission.speakers.heading": "Détails du speaker",

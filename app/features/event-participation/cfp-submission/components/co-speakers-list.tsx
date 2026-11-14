@@ -32,12 +32,14 @@ export function CoSpeakersList({ speakers, maxSpeakersPerProposal, invitationLin
           })}
         >
           <Avatar name={speaker.name} picture={speaker.picture} size="s" />
-          <Text weight="medium">{speaker.name}</Text>
-          {speaker.isCurrentUser ? (
-            <Text variant="secondary" size="xs">
-              {t('event.submission.speakers.you')}
-            </Text>
-          ) : null}
+          <div className="flex items-baseline gap-2">
+            <Text weight="medium">{speaker.name}</Text>
+            {speaker.isCurrentUser ? (
+              <Text variant="secondary" size="xs">
+                {t('event.submission.speakers.you')}
+              </Text>
+            ) : null}
+          </div>
           {canEdit && !speaker.isCurrentUser && speaker.userId ? (
             <Form method="POST" className="ml-auto">
               <input type="hidden" name="_speakerId" value={speaker.userId} />
@@ -57,7 +59,7 @@ export function CoSpeakersList({ speakers, maxSpeakersPerProposal, invitationLin
 
       <li className="px-4 py-3">
         {maxSpeakersPerProposal !== null && reached ? (
-          <Text size="s" className={cx({ 'text-red-700': exceeded })} variant={exceeded ? undefined : 'secondary'}>
+          <Text size="xs" className={cx({ 'text-red-700': exceeded })} variant={exceeded ? undefined : 'secondary'}>
             {t('event.submission.speakers.limit', { count: maxSpeakersPerProposal })}{' '}
             {exceeded
               ? t('event.submission.speakers.remove-to-continue', {
