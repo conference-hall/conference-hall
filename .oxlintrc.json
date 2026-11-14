@@ -17,6 +17,7 @@
   "rules": {
     "import/no-cycle": "error",
     "import/no-duplicates": "error",
+    "vitest/no-alias-methods": "error",
     "vitest/require-mock-type-parameters": "off",
     "vitest/valid-describe-callback": "off",
     "prefer-tag-over-role": "off",
