@@ -9,6 +9,7 @@ import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { ReviewsProgress } from '../shared/reviews-progress.tsx';
+import { isFocusedOutsidePage } from './is-focused-outside-page.ts';
 
 type Props = {
   team: string;
@@ -21,11 +22,6 @@ type Props = {
   pageRef: React.RefObject<HTMLElement | null>;
   activityPromise: Promise<[Array<Message>, Array<Message>]>;
 };
-
-function isFocusedOutsidePage(pageRef: React.RefObject<HTMLElement | null>): boolean {
-  const active = document.activeElement;
-  return !!active && active !== document.body && !pageRef.current?.contains(active);
-}
 
 export function NavigationHeader({
   team,
