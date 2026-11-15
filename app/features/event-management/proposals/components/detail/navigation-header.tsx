@@ -46,20 +46,22 @@ export function NavigationHeader({
 
   useHotkey(
     'N',
-    () => {
+    (keyboardEvent) => {
       if (isFocusedOutsidePage(pageRef)) return;
+      keyboardEvent.preventDefault();
       navigate({ pathname: nextPath, search: searchParams.toString() });
     },
-    { enabled: !!nextPath },
+    { enabled: !!nextPath, preventDefault: false, stopPropagation: false },
   );
 
   useHotkey(
     'P',
-    () => {
+    (keyboardEvent) => {
       if (isFocusedOutsidePage(pageRef)) return;
+      keyboardEvent.preventDefault();
       navigate({ pathname: previousPath, search: searchParams.toString() });
     },
-    { enabled: !!previousPath },
+    { enabled: !!previousPath, preventDefault: false, stopPropagation: false },
   );
 
   return (
