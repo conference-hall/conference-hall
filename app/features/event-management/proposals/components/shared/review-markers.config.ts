@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next';
 import type { MarkerOption } from '~/design-system/forms/marker-group.tsx';
 import type { ReviewFeeling } from '~/shared/types/proposals.types.ts';
 
-type MarkerValue =
+export type MarkerValue =
   | 'no-opinion'
   | 'negative'
   | 'neutral-1'
@@ -19,6 +19,17 @@ type MarkerConfig = {
   fill: string;
   cumulative?: boolean;
 };
+
+export const REVIEW_MARKER_HOTKEYS = {
+  'no-opinion': 'X',
+  negative: '0',
+  'neutral-1': '1',
+  'neutral-2': '2',
+  'neutral-3': '3',
+  'neutral-4': '4',
+  'neutral-5': '5',
+  positive: 'F',
+} as const satisfies Record<MarkerValue, string>;
 
 const markerConfigs: MarkerConfig[] = [
   { value: 'no-opinion', icon: NoSymbolIcon, fill: 'stroke-gray-400' },

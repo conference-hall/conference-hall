@@ -1,4 +1,5 @@
 import { MinusIcon } from '@heroicons/react/20/solid';
+import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
@@ -7,16 +8,21 @@ import { ReviewNote } from '../../shared/review-note.tsx';
 import { ProposalStatusSelect } from './proposal-status-select.tsx';
 import { ReviewForm } from './review-form.tsx';
 
-type Props = { proposal: ProposalData; reviewEnabled: boolean; canDeliberate: boolean };
+type Props = {
+  proposal: ProposalData;
+  reviewEnabled: boolean;
+  canDeliberate: boolean;
+  pageRef: React.RefObject<HTMLElement | null>;
+};
 
-export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate }: Props) {
+export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate, pageRef }: Props) {
   const { t } = useTranslation();
 
   const { you, summary } = proposal.reviews || {};
 
   return (
     <Card as="section" className="divide-y divide-gray-200">
-      {reviewEnabled ? <ReviewForm key={proposal.id} initialValues={proposal.reviews.you} /> : null}
+      {reviewEnabled ? <ReviewForm key={proposal.id} initialValues={proposal.reviews.you} pageRef={pageRef} /> : null}
 
       {!reviewEnabled || summary ? (
         <div className="space-y-4 p-4 lg:px-6 lg:py-4">

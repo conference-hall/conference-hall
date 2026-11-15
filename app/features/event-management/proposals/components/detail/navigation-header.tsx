@@ -9,6 +9,7 @@ import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { ReviewsProgress } from '../shared/reviews-progress.tsx';
+import { isFocusedOutsidePage } from './is-focused-outside-page.ts';
 
 type Props = {
   team: string;
@@ -21,11 +22,6 @@ type Props = {
   pageRef: React.RefObject<HTMLElement | null>;
   activityPromise: Promise<[Array<Message>, Array<Message>]>;
 };
-
-function isFocusedOutsidePage(pageRef: React.RefObject<HTMLElement | null>): boolean {
-  const active = document.activeElement;
-  return !!active && active !== document.body && !pageRef.current?.contains(active);
-}
 
 export function NavigationHeader({
   team,
@@ -50,20 +46,22 @@ export function NavigationHeader({
 
   useHotkey(
     'N',
-    () => {
+    (keyboardEvent) => {
       if (isFocusedOutsidePage(pageRef)) return;
+      keyboardEvent.preventDefault();
       navigate({ pathname: nextPath, search: searchParams.toString() });
     },
-    { enabled: !!nextPath },
+    { enabled: !!nextPath, preventDefault: false, stopPropagation: false },
   );
 
   useHotkey(
     'P',
-    () => {
+    (keyboardEvent) => {
       if (isFocusedOutsidePage(pageRef)) return;
+      keyboardEvent.preventDefault();
       navigate({ pathname: previousPath, search: searchParams.toString() });
     },
-    { enabled: !!previousPath },
+    { enabled: !!previousPath, preventDefault: false, stopPropagation: false },
   );
 
   return (

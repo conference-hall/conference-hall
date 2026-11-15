@@ -36,6 +36,7 @@ import { NavigationHeader } from './components/detail/navigation-header.tsx';
 import { OtherProposalsDisclosure } from './components/detail/other-proposals-disclosure.tsx';
 import { ProposalActionsMenu } from './components/detail/proposal-actions-menu.tsx';
 import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
+import { REVIEW_MARKER_HOTKEYS } from './components/shared/review-markers.config.ts';
 import { resolveProposalId } from './services/proposal-id-resolver.server.ts';
 import {
   ProposalSaveCategoriesSchema,
@@ -270,6 +271,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
             proposal={proposal}
             reviewEnabled={event.reviewEnabled}
             canDeliberate={permissions.canChangeProposalStatus}
+            pageRef={pageRef}
           />
 
           <Card as="section">
@@ -362,11 +364,26 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
             />
           </Card>
 
-          <footer className="hidden gap-1 text-xs text-gray-500 lg:flex lg:items-center lg:justify-center lg:pb-4">
-            <Trans
-              i18nKey="event-management.proposal-page.keyboard-shortcuts.hint"
-              components={[<Kbd key="0">n</Kbd>, <Kbd key="1">p</Kbd>]}
-            />
+          <footer className="hidden space-y-2 text-center text-xs text-gray-500 lg:block lg:pb-4">
+            <p>
+              <Trans
+                i18nKey="event-management.proposal-page.keyboard-shortcuts.hint"
+                components={[<Kbd key="0">n</Kbd>, <Kbd key="1">p</Kbd>]}
+              />
+            </p>
+            {event.reviewEnabled ? (
+              <p>
+                <Trans
+                  i18nKey="event-management.proposal-page.keyboard-shortcuts.review-hint"
+                  components={[
+                    <Kbd key="0">{REVIEW_MARKER_HOTKEYS.negative}</Kbd>,
+                    <Kbd key="1">{REVIEW_MARKER_HOTKEYS['neutral-5']}</Kbd>,
+                    <Kbd key="2">{REVIEW_MARKER_HOTKEYS.positive.toLowerCase()}</Kbd>,
+                    <Kbd key="3">{REVIEW_MARKER_HOTKEYS['no-opinion'].toLowerCase()}</Kbd>,
+                  ]}
+                />
+              </p>
+            ) : null}
           </footer>
         </div>
       </div>
