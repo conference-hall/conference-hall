@@ -6,7 +6,7 @@ import { EventSpeakerForProposal } from '~/features/event-participation/speaker-
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import ProposalConfirmedEmail from '~/shared/emails/templates/organizers/proposal-confirmed.email.tsx';
 import ProposalDeclinedEmail from '~/shared/emails/templates/organizers/proposal-declined.email.tsx';
-import { CfpNotOpenError, ProposalNotFoundError } from '~/shared/errors.server.ts';
+import { CfpNotOpenError, ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/shared/types/events.types.ts';
 import type { Languages } from '~/shared/types/proposals.types.ts';
 import type { TalkSaveData, TracksSaveData } from '~/shared/types/speaker-talk.types.ts';
@@ -97,6 +97,8 @@ export class SpeakerProposal {
   }
 
   async removeCoSpeaker(coSpeakerUserId: string) {
+    if (coSpeakerUserId === this.userId) throw new ForbiddenOperationError();
+
     const proposal = await db.proposal.findFirst({
       where: { id: this.proposalId, speakers: { some: { userId: this.userId } } },
       select: {

@@ -9,6 +9,7 @@ import SpeakerProposalSubmittedEmail from '~/shared/emails/templates/speakers/pr
 import {
   CfpNotOpenError,
   EventNotFoundError,
+  ForbiddenOperationError,
   MaxSpeakersPerProposalReachedError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
@@ -75,7 +76,6 @@ export class TalkSubmission {
           speakers: { connect: speakers.map(({ id }) => ({ id })) },
         },
       });
-      // TODO: check event speakers to delete from event ?
     });
 
     return { talkId: talk.id };
@@ -195,6 +195,8 @@ export class TalkSubmission {
   }
 
   async removeCoSpeaker(talkId: string, userId: string) {
+    if (userId === this.userId) throw new ForbiddenOperationError();
+
     const proposal = await db.proposal.findFirst({
       select: {
         id: true,

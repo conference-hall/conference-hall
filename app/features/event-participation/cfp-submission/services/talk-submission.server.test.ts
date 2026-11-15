@@ -10,6 +10,7 @@ import { sendEmail } from '~/shared/emails/send-email.job.ts';
 import {
   CfpNotOpenError,
   EventNotFoundError,
+  ForbiddenOperationError,
   MaxSpeakersPerProposalReachedError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
@@ -690,6 +691,20 @@ describe('TalkSubmission', () => {
   });
 
   describe('#removeCoSpeaker', () => {
+    it('throws an error when the speaker removes themselves', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'] });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      await expect(TalkSubmission.for(speaker.id, event.slug).removeCoSpeaker(talk.id, speaker.id)).rejects.toThrow(
+        ForbiddenOperationError,
+      );
+
+      const result = await db.proposal.findUnique({ where: { id: proposal.id }, include: { speakers: true } });
+      expect(result?.speakers.map(({ userId }) => userId)).toEqual([speaker.id]);
+    });
+
     it('removes a cospeaker from the proposal', async () => {
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();
