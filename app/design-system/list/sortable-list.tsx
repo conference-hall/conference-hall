@@ -2,6 +2,7 @@ import type { Customizable, Plugins } from '@dnd-kit/abstract';
 import { Accessibility, PointerActivationConstraints } from '@dnd-kit/dom';
 import { DragDropProvider, PointerSensor } from '@dnd-kit/react';
 import { isSortable, useSortable } from '@dnd-kit/react/sortable';
+import { autoUpdate, FloatingPortal, flip, offset, shift, useFloating } from '@floating-ui/react';
 import { cx } from 'class-variance-authority';
 import { type KeyboardEvent, type ReactNode, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -210,6 +211,13 @@ function SortableRow({
 }: SortableRowProps) {
   const { t } = useTranslation();
   const { ref, handleRef: dndHandleRef, isDragging } = useSortable({ id, index, disabled: !sortable });
+  const [focusVisible, setFocusVisible] = useState(false);
+  const { refs, floatingStyles } = useFloating({
+    placement: 'bottom-start',
+    strategy: 'fixed',
+    middleware: [offset(4), flip(), shift({ padding: 8 })],
+    whileElementsMounted: autoUpdate,
+  });
 
   return (
     <li
@@ -221,28 +229,39 @@ function SortableRow({
       )}
     >
       {sortable ? (
-        <div className="relative shrink-0">
+        <div className="shrink-0">
           <button
             ref={(element) => {
               dndHandleRef(element);
               handleRef(element);
+              refs.setReference(element);
             }}
             type="button"
             aria-label={t('common.sortable.handle-label', { label, interpolation: { escapeValue: false } })}
             aria-describedby={instructionsId}
             onKeyDown={onKeyDown}
-            onBlur={onBlur}
-            className="peer flex h-8 w-5 cursor-grab touch-none items-center justify-center rounded-sm text-gray-300 hover:text-gray-600 focus-visible:text-gray-600 focus-visible:outline-2 focus-visible:outline-indigo-600 active:cursor-grabbing"
+            onFocus={(event) => setFocusVisible(event.currentTarget.matches(':focus-visible'))}
+            onBlur={() => {
+              setFocusVisible(false);
+              onBlur();
+            }}
+            className="flex h-8 w-5 cursor-grab touch-none items-center justify-center rounded-sm text-gray-300 hover:text-gray-600 focus-visible:text-gray-600 focus-visible:outline-2 focus-visible:outline-indigo-600 active:cursor-grabbing"
           >
             <GripIcon className="h-4 w-2.5" />
           </button>
-          {!grabbed ? (
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute top-full left-0 z-10 mt-1 hidden rounded-lg bg-gray-800 px-2 py-1 text-xs font-medium whitespace-nowrap text-white peer-focus-visible:block"
-            >
-              {t('common.sortable.tooltip')}
-            </span>
+          {focusVisible && !grabbed && !isDragging ? (
+            <FloatingPortal>
+              <span
+                // `refs.setFloating` is a callback ref, it does not read `.current` during render.
+                // oxlint-disable-next-line react/refs
+                ref={refs.setFloating}
+                style={floatingStyles}
+                aria-hidden="true"
+                className="pointer-events-none z-50 rounded-lg bg-gray-800 px-2 py-1 text-xs font-medium whitespace-nowrap text-white"
+              >
+                {t('common.sortable.tooltip')}
+              </span>
+            </FloatingPortal>
           ) : null}
         </div>
       ) : null}
