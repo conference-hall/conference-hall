@@ -4,6 +4,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { EventNotFoundError, ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { Event, Team, User } from '../../../../../prisma/generated/client.ts';
@@ -173,6 +174,7 @@ describe('Autocomplete for event management', () => {
         });
 
         it('returns only speakers with a submitted proposal or created by organizers', async () => {
+          const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
           const submitter = await userFactory({ attributes: { name: 'John Submitter' } });
           const drafter = await userFactory({ attributes: { name: 'John Drafter' } });
           const withoutProposal = await userFactory({ attributes: { name: 'John Without proposal' } });
@@ -180,6 +182,13 @@ describe('Autocomplete for event management', () => {
           await proposalFactory({ event, talk: await talkFactory({ speakers: [drafter] }), traits: ['draft'] });
           await eventSpeakerFactory({ event, user: withoutProposal });
           await eventSpeakerFactory({ event, attributes: { name: 'John Manual' } });
+          const deleter = await userFactory({ attributes: { name: 'John Deleter' } });
+          const deleted = await proposalFactory({ event, talk: await talkFactory({ speakers: [deleter] }) });
+          await SpeakerProposal.for(deleter.id, deleted.id).delete();
+          const remover = await userFactory({ attributes: { name: 'Remover' } });
+          const removed = await userFactory({ attributes: { name: 'John Removed co-speaker' } });
+          const shared = await proposalFactory({ event, talk: await talkFactory({ speakers: [remover, removed] }) });
+          await SpeakerProposal.for(remover.id, shared.id).removeCoSpeaker(removed.id);
           const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
           const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 

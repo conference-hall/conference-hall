@@ -9,6 +9,7 @@ import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { ForbiddenOperationError, NotFoundError, SpeakerEmailAlreadyExistsError } from '~/shared/errors.server.ts';
 import type { EventSpeakerSaveData } from '~/shared/types/speaker.types.ts';
@@ -386,7 +387,7 @@ describe('EventSpeakers', () => {
       });
 
       it('returns only speakers with a submitted proposal or created by organizers', async () => {
-        const otherEvent = await eventFactory({ team });
+        const otherEvent = await eventFactory({ team, traits: ['conference-cfp-open'] });
         const submitter = await userFactory({ attributes: { name: 'Submitter' } });
         const drafter = await userFactory({ attributes: { name: 'Drafter' } });
         const withoutProposal = await userFactory({ attributes: { name: 'Without proposal' } });
@@ -398,13 +399,23 @@ describe('EventSpeakers', () => {
         });
         await eventSpeakerFactory({ event: otherEvent, user: withoutProposal });
         await eventSpeakerFactory({ event: otherEvent, attributes: { name: 'Manual' } });
+        const deleter = await userFactory({ attributes: { name: 'Deleter' } });
+        const deleted = await proposalFactory({ event: otherEvent, talk: await talkFactory({ speakers: [deleter] }) });
+        await SpeakerProposal.for(deleter.id, deleted.id).delete();
+        const remover = await userFactory({ attributes: { name: 'Remover' } });
+        const removed = await userFactory({ attributes: { name: 'Removed co-speaker' } });
+        const shared = await proposalFactory({
+          event: otherEvent,
+          talk: await talkFactory({ speakers: [remover, removed] }),
+        });
+        await SpeakerProposal.for(remover.id, shared.id).removeCoSpeaker(removed.id);
         const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, otherEvent.slug);
 
         const result = await EventSpeakers.for(authorizedEvent).search({});
 
-        expect(result.speakers.map((s) => s.name)).toEqual(['Manual', 'Submitter']);
-        expect(result.statistics).toEqual({ total: 2 });
+        expect(result.speakers.map((s) => s.name)).toEqual(['Manual', 'Remover', 'Submitter']);
+        expect(result.statistics).toEqual({ total: 3 });
       });
 
       it('returns empty array when displayProposalsSpeakers is false even when speakers exist', async () => {
