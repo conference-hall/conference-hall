@@ -40,6 +40,10 @@ export class ProposalPage extends PageObject {
     await this.page.getByRole('heading', { name }).waitFor();
   }
 
+  async pressReviewShortcut(key: string) {
+    await this.page.keyboard.press(key);
+  }
+
   async clickOnEdit() {
     await this.actionsMenuButton.click();
     await this.page.getByRole('menu', { name: 'Proposal action menu' }).waitFor();

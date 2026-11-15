@@ -111,6 +111,19 @@ test.describe('As owner', () => {
     });
   });
 
+  test('reviews the proposal with a keyboard shortcut', async ({ page }) => {
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    await expect(page.getByLabel('Global review = 3')).toBeVisible();
+    await proposalPage.pressReviewShortcut('1');
+    await expect(page.getByLabel('Global review = 2')).toBeVisible();
+
+    await page.reload();
+    await proposalPage.waitFor(proposal.title);
+    await expect(page.getByLabel('Global review = 2')).toBeVisible();
+  });
+
   test('displays proposal data and review the proposal', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
     await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
