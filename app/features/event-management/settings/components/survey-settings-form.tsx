@@ -1,11 +1,12 @@
-import { ArrowDownIcon, ArrowUpIcon, PlusIcon } from '@heroicons/react/16/solid';
+import { PlusIcon } from '@heroicons/react/16/solid';
 import { Trans, useTranslation } from 'react-i18next';
-import { useFetcher } from 'react-router';
+import { useFetcher, useSubmit } from 'react-router';
 import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { List } from '~/design-system/list/list.tsx';
+import { SortableList } from '~/design-system/list/sortable-list.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import type { SerializeFrom } from '~/shared/types/react-router.types.ts';
 import type { action, loader } from '../survey.tsx';
@@ -20,11 +21,11 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
   const { questions } = config;
 
   const toggleSurveyFetcher = useFetcher<typeof action>({ key: 'toggle-survey' });
-  const moveQuestionFetcher = useFetcher<typeof action>({ key: 'move-question' });
+  const submit = useSubmit();
   const removeQuestionFetcher = useFetcher<typeof action>({ key: 'remove-question' });
 
-  const handleMoveQuestion = (id: string, targetIndex: number) => () => {
-    moveQuestionFetcher.submit({ intent: 'move-question', id, targetIndex }, { method: 'POST' });
+  const handleMoveQuestion = (id: string, targetIndex: number) => {
+    submit({ intent: 'move-question', id, targetIndex }, { method: 'POST', navigate: false });
   };
 
   const handleRemoveQuestion = (id: string) => () => {
@@ -71,12 +72,22 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
             </SurveyQuestionModal>
           </List.Header>
 
-          <List.Content aria-label={t('event-management.settings.survey.list.label')}>
-            {questions.map((question, index) => (
-              <List.Row
-                key={question.id}
-                className="flex flex-col items-start gap-4 p-4 sm:flex-row sm:justify-between"
-              >
+          <SortableList
+            items={questions}
+            getLabel={(question) => question.label}
+            onReorder={handleMoveQuestion}
+            aria-label={t('event-management.settings.survey.list.label')}
+            footer={
+              <Text size="xs" variant="secondary">
+                <Trans
+                  i18nKey="event-management.settings.survey.required-questions"
+                  components={[<span key="1" className="text-red-600" />]}
+                />
+              </Text>
+            }
+          >
+            {(question) => (
+              <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="grow space-y-0.5">
                   <div className="flex gap-2">
                     <Text>
@@ -95,22 +106,6 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button
-                    label="Move up"
-                    icon={ArrowUpIcon}
-                    onClick={handleMoveQuestion(question.id, index - 1)}
-                    disabled={index === 0}
-                    variant="secondary"
-                    size="sm"
-                  />
-                  <Button
-                    label="Move down"
-                    icon={ArrowDownIcon}
-                    onClick={handleMoveQuestion(question.id, index + 1)}
-                    disabled={index === questions.length - 1}
-                    variant="secondary"
-                    size="sm"
-                  />
                   <SurveyQuestionModal initialValues={question}>
                     {({ onOpen }) => (
                       <Button onClick={onOpen} variant="secondary" size="sm">
@@ -122,18 +117,9 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                     {t('common.delete')}
                   </Button>
                 </div>
-              </List.Row>
-            ))}
-          </List.Content>
-
-          <List.Footer>
-            <Text size="xs" variant="secondary">
-              <Trans
-                i18nKey="event-management.settings.survey.required-questions"
-                components={[<span key="1" className="text-red-600" />]}
-              />
-            </Text>
-          </List.Footer>
+              </div>
+            )}
+          </SortableList>
         </List>
       </Card.Content>
     </Card>
