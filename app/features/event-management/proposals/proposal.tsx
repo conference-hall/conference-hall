@@ -377,10 +377,9 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                   i18nKey="event-management.proposal-page.keyboard-shortcuts.review-hint"
                   components={[
                     <Kbd key="0">{REVIEW_MARKER_HOTKEYS.negative}</Kbd>,
-                    <Kbd key="1">{REVIEW_MARKER_HOTKEYS['neutral-1']}</Kbd>,
-                    <Kbd key="2">{REVIEW_MARKER_HOTKEYS['neutral-5']}</Kbd>,
-                    <Kbd key="3">{REVIEW_MARKER_HOTKEYS.positive}</Kbd>,
-                    <Kbd key="4">{REVIEW_MARKER_HOTKEYS['no-opinion']}</Kbd>,
+                    <Kbd key="1">{REVIEW_MARKER_HOTKEYS['neutral-5']}</Kbd>,
+                    <Kbd key="2">{REVIEW_MARKER_HOTKEYS.positive.toLowerCase()}</Kbd>,
+                    <Kbd key="3">{REVIEW_MARKER_HOTKEYS['no-opinion'].toLowerCase()}</Kbd>,
                   ]}
                 />
               </p>

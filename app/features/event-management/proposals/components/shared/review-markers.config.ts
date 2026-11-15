@@ -21,14 +21,14 @@ type MarkerConfig = {
 };
 
 export const REVIEW_MARKER_HOTKEYS = {
-  'no-opinion': '-',
+  'no-opinion': 'X',
   negative: '0',
   'neutral-1': '1',
   'neutral-2': '2',
   'neutral-3': '3',
   'neutral-4': '4',
   'neutral-5': '5',
-  positive: '+',
+  positive: 'F',
 } as const satisfies Record<MarkerValue, string>;
 
 const markerConfigs: MarkerConfig[] = [

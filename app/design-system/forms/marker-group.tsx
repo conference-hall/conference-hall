@@ -127,7 +127,7 @@ export function MarkerGroup(props: MarkerGroupProps) {
                 option.hotkey ? (
                   <span className="flex items-center gap-2">
                     {option.label}
-                    <Kbd>{option.hotkey}</Kbd>
+                    <Kbd variant="dark">{option.hotkey}</Kbd>
                   </span>
                 ) : (
                   option.label

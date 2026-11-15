@@ -21,13 +21,13 @@ export function ReviewForm({ initialValues, pageRef }: Props) {
   const { optimisticMarker, handleSubmit } = useOptimisticReview(initialValues);
   const markerOptions = getReviewMarkerOptions(t).map((option) => ({
     ...option,
-    hotkey: REVIEW_MARKER_HOTKEYS[option.value as MarkerValue],
+    hotkey: REVIEW_MARKER_HOTKEYS[option.value as MarkerValue].toLowerCase(),
   }));
   const currentOption = markerOptions.find((option) => option.value === optimisticMarker);
 
   useHotkeys(
-    markerOptions.map(({ value, hotkey }) => ({
-      hotkey,
+    markerOptions.map(({ value }) => ({
+      hotkey: REVIEW_MARKER_HOTKEYS[value as MarkerValue],
       callback: (event) => {
         if (isFocusedOutsidePage(pageRef)) return;
         event.preventDefault();

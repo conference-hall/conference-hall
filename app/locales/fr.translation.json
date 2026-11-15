@@ -491,7 +491,7 @@
   "event-management.proposal-page.feedbacks.restored": "Proposition restaurée.",
   "event-management.proposal-page.feedbacks.saved": "Proposition sauvegardée.",
   "event-management.proposal-page.keyboard-shortcuts.hint": "Astuce : <0/> suivant, <1/> précédent",
-  "event-management.proposal-page.keyboard-shortcuts.review-hint": "Noter : <0/> pas pour moi, <1/> à <2/> étoiles, <3/> favori, <4/> pas d'avis",
+  "event-management.proposal-page.keyboard-shortcuts.review-hint": "Score <0/> à <1/>, <2/> Favoris, <3/> Sans avis",
   "event-management.proposal-page.new-messages_one": "1 nouveau message",
   "event-management.proposal-page.new-messages_other": "{{count}} nouveaux messages",
   "event-management.proposal-page.next": "Proposition suivante",

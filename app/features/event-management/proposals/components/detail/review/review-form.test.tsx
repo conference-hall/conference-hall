@@ -50,14 +50,14 @@ describe('ReviewForm', () => {
     expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NEUTRAL', note: key });
   });
 
-  it('reviews as positive with + and no opinion with -', async () => {
+  it('reviews as positive with f and no opinion with x', async () => {
     await renderComponent();
 
-    await userEvent.keyboard('+');
+    await userEvent.keyboard('f');
     expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'POSITIVE', note: '5' });
 
     action.mockClear();
-    await userEvent.keyboard('-');
+    await userEvent.keyboard('x');
     expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NO_OPINION', note: '' });
   });
 
