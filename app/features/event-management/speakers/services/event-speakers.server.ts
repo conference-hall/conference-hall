@@ -40,7 +40,10 @@ export class EventSpeakers {
 
     const { query, proposalStatus, order = 'asc' } = filters;
 
-    const whereClause: EventSpeakerWhereInput = { eventId: event.id };
+    const whereClause: EventSpeakerWhereInput = {
+      eventId: event.id,
+      AND: [{ OR: [{ userId: null }, { proposals: { some: { isDraft: false } } }] }],
+    };
 
     if (query) {
       whereClause.OR = [

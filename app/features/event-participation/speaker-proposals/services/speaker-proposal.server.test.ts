@@ -6,7 +6,7 @@ import { submissionPassFactory } from 'tests/factories/submission-passes.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { sendEmail } from '~/shared/emails/send-email.job.ts';
-import { CfpNotOpenError, ProposalNotFoundError } from '~/shared/errors.server.ts';
+import { CfpNotOpenError, ForbiddenOperationError, ProposalNotFoundError } from '~/shared/errors.server.ts';
 import { SpeakerProposalStatus } from '~/shared/types/speaker.types.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import { getSharedServerEnv } from '../../../../../servers/environment.server.ts';
@@ -284,6 +284,20 @@ describe('SpeakerProposal', () => {
   });
 
   describe('#removeCoSpeaker', () => {
+    it('throws an error when the speaker removes themselves', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'] });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      await expect(SpeakerProposal.for(speaker.id, proposal.id).removeCoSpeaker(speaker.id)).rejects.toThrow(
+        ForbiddenOperationError,
+      );
+
+      const result = await db.proposal.findUnique({ where: { id: proposal.id }, include: { speakers: true } });
+      expect(result?.speakers.map(({ userId }) => userId)).toEqual([speaker.id]);
+    });
+
     it('removes a cospeaker from the proposal', async () => {
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const speaker = await userFactory();

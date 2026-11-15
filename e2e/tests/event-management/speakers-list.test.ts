@@ -1,4 +1,3 @@
-import { eventSpeakerFactory } from 'tests/factories/event-speakers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
@@ -226,7 +225,7 @@ test('pagination works with many speakers', async ({ page }) => {
       },
     });
     additionalSpeakers.push(speaker);
-    await eventSpeakerFactory({ event, user: speaker });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
   }
 
   const speakersPage = new SpeakersListPage(page);

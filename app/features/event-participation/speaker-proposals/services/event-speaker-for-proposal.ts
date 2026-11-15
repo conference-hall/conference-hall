@@ -78,14 +78,9 @@ export class EventSpeakerForProposal {
   async removeSpeakerFromProposal(proposalId: string, userId: string) {
     const newSpeaker = await this.trx.eventSpeaker.findFirst({ where: { userId, eventId: this.eventId } });
 
-    // TODO: throw error if speaker not found ?
-    // TODO: check remains at least one speaker
-
     await this.trx.proposal.update({
       where: { id: proposalId },
       data: { speakers: newSpeaker ? { disconnect: { id: newSpeaker.id } } : undefined },
     });
-
-    // TODO: check event speakers to delete from event ?
   }
 }

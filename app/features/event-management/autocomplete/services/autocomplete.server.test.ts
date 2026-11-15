@@ -4,6 +4,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { SpeakerProposal } from '~/features/event-participation/speaker-proposals/services/speaker-proposal.server.ts';
 import { getAuthorizedEvent, getAuthorizedTeam } from '~/shared/authorization/authorization.server.ts';
 import { EventNotFoundError, ForbiddenOperationError } from '~/shared/errors.server.ts';
 import type { Event, Team, User } from '../../../../../prisma/generated/client.ts';
@@ -169,6 +170,49 @@ describe('Autocomplete for event management', () => {
               company: eventSpeaker.company,
               picture: eventSpeaker.picture,
             },
+          ]);
+        });
+
+        it('excludes speakers whose proposals are all drafts', async () => {
+          const submitter = await userFactory({ attributes: { name: 'John Submitter' } });
+          const drafter = await userFactory({ attributes: { name: 'John Drafter' } });
+          await proposalFactory({ event, talk: await talkFactory({ speakers: [submitter] }) });
+          await proposalFactory({ event, talk: await talkFactory({ speakers: [drafter] }), traits: ['draft'] });
+          await eventSpeakerFactory({ event, attributes: { name: 'John Manual' } });
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({ query: 'John', kind: ['speakers'] });
+
+          expect(results).toEqual([
+            expect.objectContaining({ name: 'John Manual' }),
+            expect.objectContaining({ name: 'John Submitter' }),
+          ]);
+        });
+
+        it('returns speakers left without any proposal so they can be added back', async () => {
+          const cfpOpenEvent = await eventFactory({ team, traits: ['conference-cfp-open'] });
+          const deleter = await userFactory({ attributes: { name: 'John Deleter' } });
+          const deleted = await proposalFactory({
+            event: cfpOpenEvent,
+            talk: await talkFactory({ speakers: [deleter] }),
+          });
+          await SpeakerProposal.for(deleter.id, deleted.id).delete();
+          const remover = await userFactory({ attributes: { name: 'Remover' } });
+          const removed = await userFactory({ attributes: { name: 'John Removed co-speaker' } });
+          const shared = await proposalFactory({
+            event: cfpOpenEvent,
+            talk: await talkFactory({ speakers: [remover, removed] }),
+          });
+          await SpeakerProposal.for(remover.id, shared.id).removeCoSpeaker(removed.id);
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, cfpOpenEvent.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({ query: 'John', kind: ['speakers'] });
+
+          expect(results).toEqual([
+            expect.objectContaining({ name: 'John Deleter' }),
+            expect.objectContaining({ name: 'John Removed co-speaker' }),
           ]);
         });
 

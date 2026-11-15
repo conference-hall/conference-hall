@@ -62,6 +62,7 @@ export class Autocomplete {
     const speakers = await db.eventSpeaker.findMany({
       where: {
         eventId: event.id,
+        AND: [{ OR: [{ userId: null }, { proposals: { none: {} } }, { proposals: { some: { isDraft: false } } }] }],
         OR: [{ name: { contains: query, mode: 'insensitive' } }, { email: { equals: query, mode: 'insensitive' } }],
       },
       orderBy: { name: 'asc' },
