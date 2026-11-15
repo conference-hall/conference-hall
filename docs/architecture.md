@@ -26,7 +26,9 @@ There is no repository layer between services and Prisma.
 
 ## Feature folders are vertical slices
 
-`app/features/<area>/` groups everything for one product area: route modules at the top level, then `components/`, `services/`, `models/` (pure logic, no DB, unit-tested on its own), and sometimes `context/` or `store/` for client state.
+`app/features/<area>/` groups everything for one product area: route modules at the top level, then `components/`, `services/`, `models/` (pure domain logic, no DB, unit-tested on its own), and sometimes `context/` or `store/` for client state.
+
+Technical helpers used by a single route module (a `shouldRevalidate` function, a `meta` builder) are not domain models: put them next to that route module as `<route>.<topic>.ts`, with their test beside them (e.g. `layout.revalidation.ts` for `layout.tsx`).
 
 Routes are not discovered from the file system: `app/routes.ts` declares them all and points to the route modules. Run `pnpm tsc` after editing it so the generated `./+types/*` exist.
 
