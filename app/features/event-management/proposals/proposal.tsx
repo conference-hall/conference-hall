@@ -270,6 +270,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
             proposal={proposal}
             reviewEnabled={event.reviewEnabled}
             canDeliberate={permissions.canChangeProposalStatus}
+            pageRef={pageRef}
           />
 
           <Card as="section">
@@ -362,11 +363,27 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
             />
           </Card>
 
-          <footer className="hidden gap-1 text-xs text-gray-500 lg:flex lg:items-center lg:justify-center lg:pb-4">
-            <Trans
-              i18nKey="event-management.proposal-page.keyboard-shortcuts.hint"
-              components={[<Kbd key="0">n</Kbd>, <Kbd key="1">p</Kbd>]}
-            />
+          <footer className="hidden space-y-2 text-center text-xs text-gray-500 lg:block lg:pb-4">
+            <p>
+              <Trans
+                i18nKey="event-management.proposal-page.keyboard-shortcuts.hint"
+                components={[<Kbd key="0">n</Kbd>, <Kbd key="1">p</Kbd>]}
+              />
+            </p>
+            {event.reviewEnabled ? (
+              <p>
+                <Trans
+                  i18nKey="event-management.proposal-page.keyboard-shortcuts.review-hint"
+                  components={[
+                    <Kbd key="0">0</Kbd>,
+                    <Kbd key="1">1</Kbd>,
+                    <Kbd key="2">5</Kbd>,
+                    <Kbd key="3">+</Kbd>,
+                    <Kbd key="4">-</Kbd>,
+                  ]}
+                />
+              </p>
+            ) : null}
           </footer>
         </div>
       </div>

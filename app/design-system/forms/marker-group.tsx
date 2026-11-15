@@ -1,6 +1,7 @@
 import type { VariantProps } from 'class-variance-authority';
 import { cva, cx } from 'class-variance-authority';
 import type { ComponentType } from 'react';
+import { Kbd } from '~/design-system/kbd.tsx';
 import { Tooltip } from '~/design-system/tooltip.tsx';
 
 export type MarkerOption = {
@@ -9,6 +10,7 @@ export type MarkerOption = {
   fill: string;
   label: string;
   cumulative?: boolean;
+  hotkey?: string;
 };
 
 const markerButtonStyles = cva('flex cursor-pointer items-center justify-center transition-colors duration-150', {
@@ -109,6 +111,7 @@ export function MarkerGroup(props: MarkerGroupProps) {
             key={option.value}
             type="button"
             aria-label={option.label}
+            aria-keyshortcuts={option.hotkey}
             title={withTooltip ? undefined : option.label}
             onClick={() => handleClick(option.value)}
             className={markerButtonStyles({ variant, size, active, first: isFirst, last: isLast })}
@@ -119,7 +122,19 @@ export function MarkerGroup(props: MarkerGroupProps) {
 
         if (withTooltip) {
           return (
-            <Tooltip key={option.value} text={option.label}>
+            <Tooltip
+              key={option.value}
+              text={
+                option.hotkey ? (
+                  <span className="flex items-center gap-2">
+                    {option.label}
+                    <Kbd>{option.hotkey}</Kbd>
+                  </span>
+                ) : (
+                  option.label
+                )
+              }
+            >
               {button}
             </Tooltip>
           );

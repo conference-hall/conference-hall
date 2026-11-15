@@ -1,3 +1,5 @@
+import { useHotkeys } from '@tanstack/react-hotkeys';
+import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFetcher, useParams } from 'react-router';
 import { MarkerGroup } from '~/design-system/forms/marker-group.tsx';
@@ -8,13 +10,39 @@ import {
   markerToFeelingAndNote,
 } from '~/features/event-management/proposals/components/shared/review-markers.config.ts';
 import type { ReviewFeeling, UserReview } from '~/shared/types/proposals.types.ts';
+import { isFocusedOutsidePage } from '../is-focused-outside-page.ts';
 
-type Props = { initialValues: UserReview };
+const MARKER_HOTKEYS = {
+  'no-opinion': '-',
+  negative: '0',
+  'neutral-1': '1',
+  'neutral-2': '2',
+  'neutral-3': '3',
+  'neutral-4': '4',
+  'neutral-5': '5',
+  positive: '+',
+} as const;
 
-export function ReviewForm({ initialValues }: Props) {
+type Props = { initialValues: UserReview; pageRef: React.RefObject<HTMLElement | null> };
+
+export function ReviewForm({ initialValues, pageRef }: Props) {
   const { t } = useTranslation();
   const { optimisticMarker, handleSubmit } = useOptimisticReview(initialValues);
-  const markerOptions = getReviewMarkerOptions(t);
+  const markerOptions = getReviewMarkerOptions(t).map((option) => ({
+    ...option,
+    hotkey: MARKER_HOTKEYS[option.value as keyof typeof MARKER_HOTKEYS],
+  }));
+  const currentOption = markerOptions.find((option) => option.value === optimisticMarker);
+
+  useHotkeys(
+    markerOptions.map(({ value, hotkey }) => ({
+      hotkey,
+      callback: () => {
+        if (isFocusedOutsidePage(pageRef)) return;
+        handleSubmit(optimisticMarker === value ? null : value);
+      },
+    })),
+  );
 
   return (
     <div className="space-y-2 p-4 lg:px-6 lg:py-4">
@@ -27,6 +55,9 @@ export function ReviewForm({ initialValues }: Props) {
         variant="ghost"
         withTooltip
       />
+      <p role="status" className="sr-only">
+        {currentOption?.label}
+      </p>
     </div>
   );
 }
