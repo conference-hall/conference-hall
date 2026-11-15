@@ -62,6 +62,12 @@ describe('EventSpeakers', () => {
 
   describe('#search', () => {
     describe('when user has access to event', () => {
+      beforeEach(async () => {
+        for (const speaker of [speaker1, speaker2, speaker3]) {
+          await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+        }
+      });
+
       it('returns all speakers for the event by default', async () => {
         const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
         const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
@@ -74,21 +80,21 @@ describe('EventSpeakers', () => {
           name: 'Alice Johnson',
           picture: eventSpeaker2.picture,
           company: 'Tech Corp',
-          proposals: [],
+          proposals: [expect.objectContaining({ deliberationStatus: 'PENDING' })],
         });
         expect(result.speakers[1]).toEqual({
           id: eventSpeaker3.id,
           name: 'Bob Wilson',
           picture: eventSpeaker3.picture,
           company: 'Dev Inc',
-          proposals: [],
+          proposals: [expect.objectContaining({ deliberationStatus: 'PENDING' })],
         });
         expect(result.speakers[2]).toEqual({
           id: eventSpeaker1.id,
           name: 'Peter Parker',
           picture: eventSpeaker1.picture,
           company: speaker1.company,
-          proposals: [],
+          proposals: [expect.objectContaining({ deliberationStatus: 'PENDING' })],
         });
       });
 
@@ -371,14 +377,34 @@ describe('EventSpeakers', () => {
         const result = await EventSpeakers.for(authorizedEvent).search({});
 
         const speakerWithProposal = result.speakers.find((s) => s.id === eventSpeaker1.id);
-        expect(speakerWithProposal?.proposals).toEqual([
-          {
-            id: proposal.id,
-            title: 'Great Talk',
-            deliberationStatus: 'ACCEPTED',
-            confirmationStatus: 'CONFIRMED',
-          },
-        ]);
+        expect(speakerWithProposal?.proposals).toContainEqual({
+          id: proposal.id,
+          title: 'Great Talk',
+          deliberationStatus: 'ACCEPTED',
+          confirmationStatus: 'CONFIRMED',
+        });
+      });
+
+      it('returns only speakers with a submitted proposal or created by organizers', async () => {
+        const otherEvent = await eventFactory({ team });
+        const submitter = await userFactory({ attributes: { name: 'Submitter' } });
+        const drafter = await userFactory({ attributes: { name: 'Drafter' } });
+        const withoutProposal = await userFactory({ attributes: { name: 'Without proposal' } });
+        await proposalFactory({ event: otherEvent, talk: await talkFactory({ speakers: [submitter] }) });
+        await proposalFactory({
+          event: otherEvent,
+          talk: await talkFactory({ speakers: [drafter] }),
+          traits: ['draft'],
+        });
+        await eventSpeakerFactory({ event: otherEvent, user: withoutProposal });
+        await eventSpeakerFactory({ event: otherEvent, attributes: { name: 'Manual' } });
+        const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+        const authorizedEvent = await getAuthorizedEvent(authorizedTeam, otherEvent.slug);
+
+        const result = await EventSpeakers.for(authorizedEvent).search({});
+
+        expect(result.speakers.map((s) => s.name)).toEqual(['Manual', 'Submitter']);
+        expect(result.statistics).toEqual({ total: 2 });
       });
 
       it('returns empty array when displayProposalsSpeakers is false even when speakers exist', async () => {

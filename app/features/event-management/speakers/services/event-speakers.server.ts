@@ -19,6 +19,10 @@ const SpeakerSearchFiltersSchema = z.object({
 
 type SpeakerSearchFilters = z.infer<typeof SpeakerSearchFiltersSchema>;
 
+export const LISTED_EVENT_SPEAKERS: EventSpeakerWhereInput = {
+  OR: [{ userId: null }, { proposals: { some: { isDraft: false } } }],
+};
+
 export class EventSpeakers {
   constructor(private authorizedEvent: AuthorizedEvent) {}
 
@@ -40,7 +44,7 @@ export class EventSpeakers {
 
     const { query, proposalStatus, order = 'asc' } = filters;
 
-    const whereClause: EventSpeakerWhereInput = { eventId: event.id };
+    const whereClause: EventSpeakerWhereInput = { eventId: event.id, AND: [LISTED_EVENT_SPEAKERS] };
 
     if (query) {
       whereClause.OR = [

@@ -172,6 +172,25 @@ describe('Autocomplete for event management', () => {
           ]);
         });
 
+        it('returns only speakers with a submitted proposal or created by organizers', async () => {
+          const submitter = await userFactory({ attributes: { name: 'John Submitter' } });
+          const drafter = await userFactory({ attributes: { name: 'John Drafter' } });
+          const withoutProposal = await userFactory({ attributes: { name: 'John Without proposal' } });
+          await proposalFactory({ event, talk: await talkFactory({ speakers: [submitter] }) });
+          await proposalFactory({ event, talk: await talkFactory({ speakers: [drafter] }), traits: ['draft'] });
+          await eventSpeakerFactory({ event, user: withoutProposal });
+          await eventSpeakerFactory({ event, attributes: { name: 'John Manual' } });
+          const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
+          const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
+
+          const results = await Autocomplete.for(authorizedEvent).search({ query: 'John', kind: ['speakers'] });
+
+          expect(results).toEqual([
+            expect.objectContaining({ name: 'John Manual' }),
+            expect.objectContaining({ name: 'John Submitter' }),
+          ]);
+        });
+
         it('returns matching speakers when searching by exact email (case insensitive)', async () => {
           const eventSpeaker = await eventSpeakerFactory({
             event,

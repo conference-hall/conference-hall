@@ -4,6 +4,7 @@ import { sortBy } from '~/shared/utils/arrays-sort-by.ts';
 import { db } from '../../../../../prisma/db.server.ts';
 import type { Event } from '../../../../../prisma/generated/client.ts';
 import { ProposalSearchBuilder } from '../../proposals/services/proposal-search-builder.server.ts';
+import { LISTED_EVENT_SPEAKERS } from '../../speakers/services/event-speakers.server.ts';
 import type {
   AutocompleteFilters,
   AutocompleteResult,
@@ -62,6 +63,7 @@ export class Autocomplete {
     const speakers = await db.eventSpeaker.findMany({
       where: {
         eventId: event.id,
+        AND: [LISTED_EVENT_SPEAKERS],
         OR: [{ name: { contains: query, mode: 'insensitive' } }, { email: { equals: query, mode: 'insensitive' } }],
       },
       orderBy: { name: 'asc' },
