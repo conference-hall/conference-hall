@@ -99,21 +99,21 @@ export class EventTracksSettings {
     if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
     await db.$transaction(async (tx) => {
-      const currentTrack = await tx.eventFormat.findFirst({ where: { id: formatId, eventId: event.id } });
-      if (!currentTrack) return;
+      const format = await tx.eventFormat.findFirst({ where: { id: formatId, eventId: event.id } });
+      if (!format) return;
 
       const count = await tx.eventFormat.count({ where: { eventId: event.id } });
       const targetOrder = Math.min(Math.max(targetIndex, 0), count - 1);
-      if (targetOrder === currentTrack.order) return;
+      if (targetOrder === format.order) return;
 
-      if (targetOrder < currentTrack.order) {
+      if (targetOrder < format.order) {
         await tx.eventFormat.updateMany({
-          where: { eventId: event.id, order: { gte: targetOrder, lt: currentTrack.order } },
+          where: { eventId: event.id, order: { gte: targetOrder, lt: format.order } },
           data: { order: { increment: 1 } },
         });
       } else {
         await tx.eventFormat.updateMany({
-          where: { eventId: event.id, order: { gt: currentTrack.order, lte: targetOrder } },
+          where: { eventId: event.id, order: { gt: format.order, lte: targetOrder } },
           data: { order: { decrement: 1 } },
         });
       }
@@ -126,21 +126,21 @@ export class EventTracksSettings {
     if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
     await db.$transaction(async (tx) => {
-      const currentTrack = await tx.eventCategory.findFirst({ where: { id: categoryId, eventId: event.id } });
-      if (!currentTrack) return;
+      const category = await tx.eventCategory.findFirst({ where: { id: categoryId, eventId: event.id } });
+      if (!category) return;
 
       const count = await tx.eventCategory.count({ where: { eventId: event.id } });
       const targetOrder = Math.min(Math.max(targetIndex, 0), count - 1);
-      if (targetOrder === currentTrack.order) return;
+      if (targetOrder === category.order) return;
 
-      if (targetOrder < currentTrack.order) {
+      if (targetOrder < category.order) {
         await tx.eventCategory.updateMany({
-          where: { eventId: event.id, order: { gte: targetOrder, lt: currentTrack.order } },
+          where: { eventId: event.id, order: { gte: targetOrder, lt: category.order } },
           data: { order: { increment: 1 } },
         });
       } else {
         await tx.eventCategory.updateMany({
-          where: { eventId: event.id, order: { gt: currentTrack.order, lte: targetOrder } },
+          where: { eventId: event.id, order: { gt: category.order, lte: targetOrder } },
           data: { order: { decrement: 1 } },
         });
       }

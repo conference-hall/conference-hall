@@ -384,7 +384,7 @@ describe('EventTracksSettings', () => {
   });
 
   describe('#reorderFormat', () => {
-    const orderedIds = async (eventId: string) => {
+    const orderedRows = async (eventId: string) => {
       const rows = await db.eventFormat.findMany({ where: { eventId }, orderBy: { order: 'asc' } });
       return rows.map((row) => [row.id, row.order]);
     };
@@ -402,7 +402,7 @@ describe('EventTracksSettings', () => {
 
       await (await settingsForOwner()).reorderFormat(t3.id, 0);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t3.id, 0],
         [t1.id, 1],
         [t2.id, 2],
@@ -416,7 +416,7 @@ describe('EventTracksSettings', () => {
 
       await (await settingsForOwner()).reorderFormat(t1.id, 2);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t2.id, 0],
         [t3.id, 1],
         [t1.id, 2],
@@ -429,7 +429,7 @@ describe('EventTracksSettings', () => {
 
       await (await settingsForOwner()).reorderFormat(t2.id, 1);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t1.id, 0],
         [t2.id, 1],
       ]);
@@ -442,7 +442,7 @@ describe('EventTracksSettings', () => {
 
       await (await settingsForOwner()).reorderFormat(t1.id, 10);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t2.id, 0],
         [t3.id, 1],
         [t1.id, 2],
@@ -455,7 +455,7 @@ describe('EventTracksSettings', () => {
 
       await (await settingsForOwner()).reorderFormat('unknown', 0);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t1.id, 0],
         [t2.id, 1],
       ]);
@@ -472,11 +472,11 @@ describe('EventTracksSettings', () => {
       await settings.reorderFormat(t2.id, 0);
       await settings.reorderFormat(other2.id, 0);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t2.id, 0],
         [t1.id, 1],
       ]);
-      expect(await orderedIds(otherEvent.id)).toEqual([
+      expect(await orderedRows(otherEvent.id)).toEqual([
         [other1.id, 0],
         [other2.id, 1],
       ]);
@@ -493,7 +493,7 @@ describe('EventTracksSettings', () => {
   });
 
   describe('#reorderCategory', () => {
-    const orderedIds = async (eventId: string) => {
+    const orderedRows = async (eventId: string) => {
       const rows = await db.eventCategory.findMany({ where: { eventId }, orderBy: { order: 'asc' } });
       return rows.map((row) => [row.id, row.order]);
     };
@@ -511,7 +511,7 @@ describe('EventTracksSettings', () => {
 
       await (await settingsForOwner()).reorderCategory(t3.id, 0);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t3.id, 0],
         [t1.id, 1],
         [t2.id, 2],
@@ -525,7 +525,7 @@ describe('EventTracksSettings', () => {
 
       await (await settingsForOwner()).reorderCategory(t1.id, 2);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t2.id, 0],
         [t3.id, 1],
         [t1.id, 2],
@@ -538,7 +538,7 @@ describe('EventTracksSettings', () => {
 
       await (await settingsForOwner()).reorderCategory(t2.id, 1);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t1.id, 0],
         [t2.id, 1],
       ]);
@@ -551,7 +551,7 @@ describe('EventTracksSettings', () => {
 
       await (await settingsForOwner()).reorderCategory(t1.id, 10);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t2.id, 0],
         [t3.id, 1],
         [t1.id, 2],
@@ -564,7 +564,7 @@ describe('EventTracksSettings', () => {
 
       await (await settingsForOwner()).reorderCategory('unknown', 0);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t1.id, 0],
         [t2.id, 1],
       ]);
@@ -581,11 +581,11 @@ describe('EventTracksSettings', () => {
       await settings.reorderCategory(t2.id, 0);
       await settings.reorderCategory(other2.id, 0);
 
-      expect(await orderedIds(event.id)).toEqual([
+      expect(await orderedRows(event.id)).toEqual([
         [t2.id, 0],
         [t1.id, 1],
       ]);
-      expect(await orderedIds(otherEvent.id)).toEqual([
+      expect(await orderedRows(otherEvent.id)).toEqual([
         [other1.id, 0],
         [other2.id, 1],
       ]);

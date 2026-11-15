@@ -5,6 +5,8 @@ import { isSortable, useSortable } from '@dnd-kit/react/sortable';
 import { cx } from 'class-variance-authority';
 import { type KeyboardEvent, type ReactNode, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { GripIcon } from '../icons/grip-icon.tsx';
+import { Text } from '../typography.tsx';
 import { List } from './list.tsx';
 
 type SortableItem = { id: string };
@@ -43,13 +45,13 @@ export function SortableList<T extends SortableItem>({
   const { t } = useTranslation();
   const instructionsId = useId();
 
-  const [serverItems, setServerItems] = useState(items);
+  const [prevItems, setPrevItems] = useState(items);
   const [order, setOrder] = useState(() => items.map((item) => item.id));
   const [grabbed, setGrabbed] = useState<Grabbed | null>(null);
   const [announcement, setAnnouncement] = useState('');
 
-  if (items !== serverItems) {
-    setServerItems(items);
+  if (items !== prevItems) {
+    setPrevItems(items);
     setOrder(items.map((item) => item.id));
     setGrabbed(null);
   }
@@ -79,7 +81,7 @@ export function SortableList<T extends SortableItem>({
     const index = order.indexOf(item.id);
     const isGrabbed = grabbed?.id === item.id;
 
-    if (event.key === ' ' || event.key === 'Enter') {
+    if (event.key === ' ') {
       event.preventDefault();
       if (!isGrabbed) {
         setGrabbed({ id: item.id, initialOrder: order });
@@ -158,10 +160,12 @@ export function SortableList<T extends SortableItem>({
 
       {grabbed ? (
         <List.Footer>
-          <p className="text-xs text-gray-500">{t('common.sortable.footer.shortcuts')}</p>
-          <p className="text-xs font-medium text-gray-700">
+          <Text size="xs" variant="secondary">
+            {t('common.sortable.footer.shortcuts')}
+          </Text>
+          <Text size="xs" weight="medium">
             {t('common.sortable.footer.position', { position: grabbedPosition, total })}
-          </p>
+          </Text>
         </List.Footer>
       ) : footer ? (
         <List.Footer>{footer}</List.Footer>
@@ -226,12 +230,11 @@ function SortableRow({
             type="button"
             aria-label={t('common.sortable.handle-label', { label, interpolation: { escapeValue: false } })}
             aria-describedby={instructionsId}
-            aria-pressed={grabbed}
             onKeyDown={onKeyDown}
             onBlur={onBlur}
             className="peer flex h-8 w-5 cursor-grab touch-none items-center justify-center rounded-sm text-gray-300 hover:text-gray-600 focus-visible:text-gray-600 focus-visible:outline-2 focus-visible:outline-indigo-600 active:cursor-grabbing"
           >
-            <GripIcon />
+            <GripIcon className="h-4 w-2.5" />
           </button>
           {!grabbed ? (
             <span
@@ -245,18 +248,5 @@ function SortableRow({
       ) : null}
       <div className="min-w-0 flex-1">{children}</div>
     </li>
-  );
-}
-
-function GripIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 10 16" fill="currentColor" className="h-4 w-2.5">
-      <circle cx="2" cy="3" r="1.5" />
-      <circle cx="8" cy="3" r="1.5" />
-      <circle cx="2" cy="8" r="1.5" />
-      <circle cx="8" cy="8" r="1.5" />
-      <circle cx="2" cy="13" r="1.5" />
-      <circle cx="8" cy="13" r="1.5" />
-    </svg>
   );
 }
