@@ -6,7 +6,7 @@ import { db } from '../../../../../prisma/db.server.ts';
 import { SurveyConfig } from '../models/survey-config.ts';
 
 export const SurveyRemoveQuestionSchema = z.object({ id: z.string() });
-export const SurveyMoveQuestionSchema = z.object({ id: z.string(), direction: z.enum(['up', 'down']) });
+export const SurveyMoveQuestionSchema = z.object({ id: z.string(), targetIndex: z.coerce.number().int().min(0) });
 export type SurveyMoveQuestion = z.infer<typeof SurveyMoveQuestionSchema>;
 
 export class EventSurveySettings {
@@ -66,11 +66,11 @@ export class EventSurveySettings {
     await db.event.update({ data: { surveyConfig: survey.toConfig() }, where: { id: event.id } });
   }
 
-  async moveQuestion({ id, direction }: SurveyMoveQuestion) {
+  async moveQuestion({ id, targetIndex }: SurveyMoveQuestion) {
     const { event, permissions } = this.authorizedEvent;
     if (!permissions.canEditEvent) throw new ForbiddenOperationError();
     const survey = new SurveyConfig(event.surveyConfig);
-    survey.moveQuestion(id, direction);
+    survey.moveQuestion(id, targetIndex);
     await db.event.update({ data: { surveyConfig: survey.toConfig() }, where: { id: event.id } });
   }
 }

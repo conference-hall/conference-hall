@@ -184,54 +184,48 @@ describe('EventSurveySettings', () => {
   });
 
   describe('moveQuestion', () => {
-    it('moves a question in the survey', async () => {
-      const moveParams: SurveyMoveQuestion = { id: 'info', direction: 'up' };
-
+    const moveQuestion = async (params: SurveyMoveQuestion) => {
       const authorizedTeam = await getAuthorizedTeam(owner.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
-      const surveySettings = EventSurveySettings.for(authorizedEvent);
-      await surveySettings.moveQuestion(moveParams);
-
+      await EventSurveySettings.for(authorizedEvent).moveQuestion(params);
       const result = await db.event.findUnique({ where: { id: event.id } });
-      const survey = new SurveyConfig(result!.surveyConfig);
-      expect(survey.questions).toEqual([
-        {
-          id: 'accomodation',
-          label: 'Do you need accommodation funding? (Hotel, AirBnB...)',
-          type: 'radio',
-          required: false,
-          options: [
-            { id: 'yes', label: 'Yes' },
-            { id: 'no', label: 'No' },
-          ],
-        },
-        {
-          id: 'info',
-          label: 'Do you have specific information to share?',
-          type: 'text',
-          required: false,
-        },
-        {
-          id: 'transports',
-          label: 'Do you need transports funding?',
-          type: 'checkbox',
-          required: false,
-          options: [
-            { id: 'taxi', label: 'Taxi' },
-            { id: 'train', label: 'Train' },
-            { id: 'plane', label: 'Plane' },
-          ],
-        },
+      return new SurveyConfig(result!.surveyConfig).questions.map((question) => question.id);
+    };
+
+    it('moves a question up to the target index', async () => {
+      expect(await moveQuestion({ id: 'info', targetIndex: 0 })).toEqual(['info', 'accomodation', 'transports']);
+    });
+
+    it('moves a question down to the target index', async () => {
+      expect(await moveQuestion({ id: 'accomodation', targetIndex: 2 })).toEqual([
+        'transports',
+        'info',
+        'accomodation',
       ]);
     });
 
+    it('does nothing when the target index is the current position', async () => {
+      expect(await moveQuestion({ id: 'transports', targetIndex: 1 })).toEqual(['accomodation', 'transports', 'info']);
+    });
+
+    it('clamps an out of range target index to the last position', async () => {
+      expect(await moveQuestion({ id: 'accomodation', targetIndex: 10 })).toEqual([
+        'transports',
+        'info',
+        'accomodation',
+      ]);
+    });
+
+    it('does nothing for an unknown question', async () => {
+      expect(await moveQuestion({ id: 'unknown', targetIndex: 0 })).toEqual(['accomodation', 'transports', 'info']);
+    });
+
     it('throws an error when user not authorized', async () => {
-      const moveParams: SurveyMoveQuestion = { id: 'info', direction: 'up' };
       const authorizedTeam = await getAuthorizedTeam(reviewer.id, team.slug);
       const authorizedEvent = await getAuthorizedEvent(authorizedTeam, event.slug);
 
       await expect(async () => {
-        await EventSurveySettings.for(authorizedEvent).moveQuestion(moveParams);
+        await EventSurveySettings.for(authorizedEvent).moveQuestion({ id: 'info', targetIndex: 0 });
       }).rejects.toThrow(ForbiddenOperationError);
     });
   });

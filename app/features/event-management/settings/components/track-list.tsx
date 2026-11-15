@@ -1,9 +1,9 @@
-import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/16/solid';
 import { useTranslation } from 'react-i18next';
-import { useFetcher } from 'react-router';
+import { useFetcher, useSubmit } from 'react-router';
 import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/button.tsx';
 import { List } from '~/design-system/list/list.tsx';
+import { SortableList } from '~/design-system/list/sortable-list.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
 import { formatDuration } from '~/shared/datetimes/datetimes.ts';
 import { EditTrackButton, NewTrackButton } from './save-track-form.tsx';
@@ -21,10 +21,11 @@ type TrackListProps = {
 
 export function TrackList({ type, tracks }: TrackListProps) {
   const { t, i18n } = useTranslation();
-  const fetcher = useFetcher({ key: `reorder-${type}` });
+  const submit = useSubmit();
+  const deleteFetcher = useFetcher({ key: `delete-${type}` });
 
-  const handleReorder = (trackId: string, direction: 'up' | 'down') => {
-    fetcher.submit({ intent: `reorder-${type}`, trackId, direction }, { method: 'POST' });
+  const handleReorder = (id: string, targetIndex: number) => {
+    submit({ intent: `reorder-${type}`, id, targetIndex }, { method: 'POST', navigate: false });
   };
 
   return (
@@ -36,56 +37,41 @@ export function TrackList({ type, tracks }: TrackListProps) {
         <NewTrackButton type={type} />
       </List.Header>
 
-      <List.Content aria-label={`${type} list`}>
-        {tracks.map((track, index) => (
-          <List.Row key={track.id} className="flex items-center justify-between p-4">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="truncate">
-                <Text weight="medium" truncate>
-                  <Badge hexColor={track.color} pill>
-                    <span className="truncate">{track.name}</span>
-                  </Badge>
-                </Text>
-                <Subtitle size="xs" className="mt-1" truncate>
-                  {track.durationInMinutes ? (
-                    <span className="mx-1 font-normal text-gray-500">
-                      {formatDuration(track.durationInMinutes, i18n.language)} –
-                    </span>
-                  ) : null}
-                  {track.description}
-                </Subtitle>
-              </div>
+      <SortableList
+        items={tracks}
+        getLabel={(track) => track.name}
+        onReorder={handleReorder}
+        aria-label={`${type} list`}
+      >
+        {(track) => (
+          <div className="flex items-center justify-between">
+            <div className="min-w-0 truncate">
+              <Text weight="medium" truncate>
+                <Badge hexColor={track.color} pill>
+                  <span className="truncate">{track.name}</span>
+                </Badge>
+              </Text>
+              <Subtitle size="xs" className="mt-1" truncate>
+                {track.durationInMinutes ? (
+                  <span className="mx-1 font-normal text-gray-500">
+                    {formatDuration(track.durationInMinutes, i18n.language)} –
+                  </span>
+                ) : null}
+                {track.description}
+              </Subtitle>
             </div>
             <div className="ml-4 flex shrink-0 gap-2">
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                icon={ArrowUpIcon}
-                aria-label={t('event-management.settings.tracks.reorder.up')}
-                disabled={index === 0}
-                onClick={() => handleReorder(track.id, 'up')}
-              />
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                icon={ArrowDownIcon}
-                aria-label={t('event-management.settings.tracks.reorder.down')}
-                disabled={index === tracks.length - 1}
-                onClick={() => handleReorder(track.id, 'down')}
-              />
               <EditTrackButton type={type} initialValues={track} />
-              <fetcher.Form method="POST">
+              <deleteFetcher.Form method="POST">
                 <input type="hidden" name="trackId" value={track.id} />
                 <Button type="submit" name="intent" value={`delete-${type}`} variant="important" size="sm">
                   {t('common.delete')}
                 </Button>
-              </fetcher.Form>
+              </deleteFetcher.Form>
             </div>
-          </List.Row>
-        ))}
-      </List.Content>
+          </div>
+        )}
+      </SortableList>
     </List>
   );
 }

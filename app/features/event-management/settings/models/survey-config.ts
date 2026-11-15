@@ -52,11 +52,11 @@ export class SurveyConfig {
     this.questions = this.questions.filter((question) => question.id !== questionId);
   }
 
-  moveQuestion(questionId: string, direction: 'up' | 'down') {
+  moveQuestion(questionId: string, targetIndex: number) {
     const index = this.questions.findIndex((q) => q.id === questionId);
     if (index === -1) return;
-    const newIndex = direction === 'up' ? index - 1 : index + 1;
-    if (newIndex < 0 || newIndex >= this.questions.length) return;
+    const newIndex = Math.min(Math.max(targetIndex, 0), this.questions.length - 1);
+    if (newIndex === index) return;
     const [question] = this.questions.splice(index, 1);
     this.questions.splice(newIndex, 0, question);
   }

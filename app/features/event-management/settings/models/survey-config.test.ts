@@ -46,20 +46,20 @@ describe('SurveyConfig', () => {
     expect(config.questions).toHaveLength(0);
   });
 
-  it('moves a question up', () => {
+  it('moves a question up to the target index', () => {
     const question2: SurveyQuestion = { id: 'q2', label: 'Second question', type: 'text', required: false };
-    const config = new SurveyConfig({ enabled: true, questions: [question, question2] });
-    config.moveQuestion(question2.id, 'up');
-    expect(config.questions[0]).toEqual(question2);
-    expect(config.questions[1]).toEqual(question);
+    const question3: SurveyQuestion = { id: 'q3', label: 'Third question', type: 'text', required: false };
+    const config = new SurveyConfig({ enabled: true, questions: [question, question2, question3] });
+    config.moveQuestion(question3.id, 0);
+    expect(config.questions).toEqual([question3, question, question2]);
   });
 
-  it('moves a question down', () => {
+  it('moves a question down to the target index', () => {
     const question2: SurveyQuestion = { id: 'q2', label: 'Second question', type: 'text', required: false };
-    const config = new SurveyConfig({ enabled: true, questions: [question, question2] });
-    config.moveQuestion(question.id, 'down');
-    expect(config.questions[0]).toEqual(question2);
-    expect(config.questions[1]).toEqual(question);
+    const question3: SurveyQuestion = { id: 'q3', label: 'Third question', type: 'text', required: false };
+    const config = new SurveyConfig({ enabled: true, questions: [question, question2, question3] });
+    config.moveQuestion(question.id, 2);
+    expect(config.questions).toEqual([question2, question3, question]);
   });
 
   it('returns a valid config', () => {

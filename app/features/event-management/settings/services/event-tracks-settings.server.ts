@@ -94,30 +94,26 @@ export class EventTracksSettings {
     });
   }
 
-  async reorderFormat(formatId: string, direction: 'up' | 'down') {
+  async reorderFormat(formatId: string, targetIndex: number) {
     const { event, permissions } = this.authorizedEvent;
     if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
-    const currentTrack = await db.eventFormat.findUnique({ where: { id: formatId } });
-    if (!currentTrack) return;
-
-    const targetOrder = direction === 'up' ? currentTrack.order - 1 : currentTrack.order + 1;
-    if (targetOrder < 0) return;
-
-    const maxOrder = await db.eventFormat.aggregate({ where: { eventId: event.id }, _max: { order: true } });
-    if (maxOrder._max.order !== null && targetOrder > maxOrder._max.order) return;
-
     await db.$transaction(async (tx) => {
-      if (targetOrder < currentTrack.order) {
-        // Moving UP: increment tracks in range
+      const format = await tx.eventFormat.findFirst({ where: { id: formatId, eventId: event.id } });
+      if (!format) return;
+
+      const count = await tx.eventFormat.count({ where: { eventId: event.id } });
+      const targetOrder = Math.min(Math.max(targetIndex, 0), count - 1);
+      if (targetOrder === format.order) return;
+
+      if (targetOrder < format.order) {
         await tx.eventFormat.updateMany({
-          where: { eventId: event.id, order: { gte: targetOrder, lt: currentTrack.order } },
+          where: { eventId: event.id, order: { gte: targetOrder, lt: format.order } },
           data: { order: { increment: 1 } },
         });
       } else {
-        // Moving DOWN: decrement tracks in range
         await tx.eventFormat.updateMany({
-          where: { eventId: event.id, order: { gt: currentTrack.order, lte: targetOrder } },
+          where: { eventId: event.id, order: { gt: format.order, lte: targetOrder } },
           data: { order: { decrement: 1 } },
         });
       }
@@ -125,30 +121,26 @@ export class EventTracksSettings {
     });
   }
 
-  async reorderCategory(categoryId: string, direction: 'up' | 'down') {
+  async reorderCategory(categoryId: string, targetIndex: number) {
     const { event, permissions } = this.authorizedEvent;
     if (!permissions.canEditEvent) throw new ForbiddenOperationError();
 
-    const currentTrack = await db.eventCategory.findUnique({ where: { id: categoryId } });
-    if (!currentTrack) return;
-
-    const targetOrder = direction === 'up' ? currentTrack.order - 1 : currentTrack.order + 1;
-    if (targetOrder < 0) return;
-
-    const maxOrder = await db.eventCategory.aggregate({ where: { eventId: event.id }, _max: { order: true } });
-    if (maxOrder._max.order !== null && targetOrder > maxOrder._max.order) return;
-
     await db.$transaction(async (tx) => {
-      if (targetOrder < currentTrack.order) {
-        // Moving UP: increment tracks in range
+      const category = await tx.eventCategory.findFirst({ where: { id: categoryId, eventId: event.id } });
+      if (!category) return;
+
+      const count = await tx.eventCategory.count({ where: { eventId: event.id } });
+      const targetOrder = Math.min(Math.max(targetIndex, 0), count - 1);
+      if (targetOrder === category.order) return;
+
+      if (targetOrder < category.order) {
         await tx.eventCategory.updateMany({
-          where: { eventId: event.id, order: { gte: targetOrder, lt: currentTrack.order } },
+          where: { eventId: event.id, order: { gte: targetOrder, lt: category.order } },
           data: { order: { increment: 1 } },
         });
       } else {
-        // Moving DOWN: decrement tracks in range
         await tx.eventCategory.updateMany({
-          where: { eventId: event.id, order: { gt: currentTrack.order, lte: targetOrder } },
+          where: { eventId: event.id, order: { gt: category.order, lte: targetOrder } },
           data: { order: { decrement: 1 } },
         });
       }
