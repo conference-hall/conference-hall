@@ -25,10 +25,13 @@ import {
 } from '~/shared/authorization/authorization.middleware.ts';
 import { TeamFetcher } from '../team-management/services/team-fetcher.server.ts';
 import type { Route } from './+types/layout.ts';
+import { shouldRevalidateEventLayout } from './event-layout-revalidation.ts';
 import { useScheduleFullscreen } from './schedule/components/header/use-schedule-fullscreen.tsx';
 import { EventFetcher } from './services/event-fetcher.server.ts';
 
 export const middleware = [requireAuth, requireAuthorizedTeam, requireAuthorizedEvent];
+
+export const shouldRevalidate = shouldRevalidateEventLayout;
 
 export const meta = (args: Route.MetaArgs) => {
   return mergeMeta(args.matches, [
