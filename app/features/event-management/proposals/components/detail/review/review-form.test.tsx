@@ -10,7 +10,6 @@ describe('ReviewForm', () => {
   const action = vi.fn();
 
   beforeEach(() => {
-    action.mockReset();
     action.mockResolvedValue(null);
   });
 
@@ -23,11 +22,18 @@ describe('ReviewForm', () => {
             <ReviewForm initialValues={initialValues} pageRef={pageRef} />
             <input aria-label="Comment" />
           </main>
+          <button type="button">Outside</button>
         </I18nextProvider>
       );
     }
     const RouteStub = createRoutesStub([{ path: '/team/:team/:event/proposals/:proposal', Component: Page, action }]);
     return page.render(<RouteStub initialEntries={['/team/t1/e1/proposals/p1']} />);
+  };
+
+  const press = (key: string, code: string, target: EventTarget = document, repeat = false) => {
+    const event = new KeyboardEvent('keydown', { key, code, repeat, bubbles: true, cancelable: true });
+    target.dispatchEvent(event);
+    return event;
   };
 
   const submitted = async () => {
@@ -36,15 +42,15 @@ describe('ReviewForm', () => {
     return Object.fromEntries(await request.formData());
   };
 
-  it('rates with 3 stars when pressing 3', async () => {
+  it.each(['1', '2', '3', '4', '5'])('gives a note of %s stars when pressing %s', async (key) => {
     await renderComponent();
 
-    await userEvent.keyboard('3');
+    await userEvent.keyboard(key);
 
-    expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NEUTRAL', note: '3' });
+    expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NEUTRAL', note: key });
   });
 
-  it('rates as positive with + and no opinion with -', async () => {
+  it('reviews as positive with + and no opinion with -', async () => {
     await renderComponent();
 
     await userEvent.keyboard('+');
@@ -55,7 +61,7 @@ describe('ReviewForm', () => {
     expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NO_OPINION', note: '' });
   });
 
-  it('rates as negative with 0', async () => {
+  it('reviews as negative with 0', async () => {
     await renderComponent();
 
     await userEvent.keyboard('0');
@@ -63,7 +69,7 @@ describe('ReviewForm', () => {
     expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NEGATIVE', note: '0' });
   });
 
-  it('clears the review when pressing the key of the current rating', async () => {
+  it('clears the review when pressing the key of the current note', async () => {
     await renderComponent({ feeling: 'NEUTRAL', note: 3 });
 
     await userEvent.keyboard('3');
@@ -71,12 +77,32 @@ describe('ReviewForm', () => {
     expect(await submitted()).toEqual({ intent: 'clear-review' });
   });
 
-  it('rates from the digit row of an AZERTY keyboard without Shift', async () => {
+  it('submits once when the key is held down', async () => {
     await renderComponent();
 
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: '&', code: 'Digit1', bubbles: true }));
+    press('3', 'Digit3');
+    press('3', 'Digit3', document, true);
+    press('3', 'Digit3', document, true);
+
+    expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NEUTRAL', note: '3' });
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(action).toHaveBeenCalledTimes(1);
+  });
+
+  it('reviews from the digit row of an AZERTY keyboard without Shift', async () => {
+    await renderComponent();
+
+    press('&', 'Digit1');
 
     expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NEUTRAL', note: '1' });
+  });
+
+  it('reviews from the numeric keypad', async () => {
+    await renderComponent();
+
+    press('2', 'Numpad2');
+
+    expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NEUTRAL', note: '2' });
   });
 
   it('ignores keys typed in a text field', async () => {
@@ -88,18 +114,32 @@ describe('ReviewForm', () => {
     expect(action).not.toHaveBeenCalled();
   });
 
-  it('exposes the shortcut of each rating', async () => {
+  it('lets keys through when the focus is outside the page', async () => {
     await renderComponent();
+    const outside = page.getByRole('button', { name: 'Outside' }).element() as HTMLElement;
+    outside.focus();
 
-    await expect.element(page.getByRole('button', { name: '3 stars' })).toHaveAttribute('aria-keyshortcuts', '3');
+    const event = press('3', 'Digit3', outside);
+
+    expect(event.defaultPrevented).toBe(false);
+    expect(action).not.toHaveBeenCalled();
   });
 
-  it('announces the rating to screen readers', async () => {
+  it('announces the note to screen readers', async () => {
     action.mockReturnValue(new Promise(() => {}));
     await renderComponent();
 
     await userEvent.keyboard('4');
 
     await expect.element(page.getByRole('status')).toHaveTextContent('4 stars');
+  });
+
+  it('announces when the review is cleared', async () => {
+    action.mockReturnValue(new Promise(() => {}));
+    await renderComponent({ feeling: 'NEUTRAL', note: 3 });
+
+    await userEvent.keyboard('3');
+
+    await expect.element(page.getByRole('status')).toHaveTextContent('Not reviewed');
   });
 });

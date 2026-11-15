@@ -36,6 +36,7 @@ import { NavigationHeader } from './components/detail/navigation-header.tsx';
 import { OtherProposalsDisclosure } from './components/detail/other-proposals-disclosure.tsx';
 import { ProposalActionsMenu } from './components/detail/proposal-actions-menu.tsx';
 import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
+import { REVIEW_MARKER_HOTKEYS } from './components/shared/review-markers.config.ts';
 import { resolveProposalId } from './services/proposal-id-resolver.server.ts';
 import {
   ProposalSaveCategoriesSchema,
@@ -375,11 +376,11 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                 <Trans
                   i18nKey="event-management.proposal-page.keyboard-shortcuts.review-hint"
                   components={[
-                    <Kbd key="0">0</Kbd>,
-                    <Kbd key="1">1</Kbd>,
-                    <Kbd key="2">5</Kbd>,
-                    <Kbd key="3">+</Kbd>,
-                    <Kbd key="4">-</Kbd>,
+                    <Kbd key="0">{REVIEW_MARKER_HOTKEYS.negative}</Kbd>,
+                    <Kbd key="1">{REVIEW_MARKER_HOTKEYS['neutral-1']}</Kbd>,
+                    <Kbd key="2">{REVIEW_MARKER_HOTKEYS['neutral-5']}</Kbd>,
+                    <Kbd key="3">{REVIEW_MARKER_HOTKEYS.positive}</Kbd>,
+                    <Kbd key="4">{REVIEW_MARKER_HOTKEYS['no-opinion']}</Kbd>,
                   ]}
                 />
               </p>

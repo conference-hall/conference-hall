@@ -111,7 +111,6 @@ export function MarkerGroup(props: MarkerGroupProps) {
             key={option.value}
             type="button"
             aria-label={option.label}
-            aria-keyshortcuts={option.hotkey}
             title={withTooltip ? undefined : option.label}
             onClick={() => handleClick(option.value)}
             className={markerButtonStyles({ variant, size, active, first: isFirst, last: isLast })}

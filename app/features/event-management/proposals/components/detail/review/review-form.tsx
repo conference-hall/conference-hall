@@ -7,21 +7,12 @@ import { H2 } from '~/design-system/typography.tsx';
 import {
   feelingAndNoteToMarker,
   getReviewMarkerOptions,
+  type MarkerValue,
   markerToFeelingAndNote,
+  REVIEW_MARKER_HOTKEYS,
 } from '~/features/event-management/proposals/components/shared/review-markers.config.ts';
 import type { ReviewFeeling, UserReview } from '~/shared/types/proposals.types.ts';
 import { isFocusedOutsidePage } from '../is-focused-outside-page.ts';
-
-const MARKER_HOTKEYS = {
-  'no-opinion': '-',
-  negative: '0',
-  'neutral-1': '1',
-  'neutral-2': '2',
-  'neutral-3': '3',
-  'neutral-4': '4',
-  'neutral-5': '5',
-  positive: '+',
-} as const;
 
 type Props = { initialValues: UserReview; pageRef: React.RefObject<HTMLElement | null> };
 
@@ -30,17 +21,19 @@ export function ReviewForm({ initialValues, pageRef }: Props) {
   const { optimisticMarker, handleSubmit } = useOptimisticReview(initialValues);
   const markerOptions = getReviewMarkerOptions(t).map((option) => ({
     ...option,
-    hotkey: MARKER_HOTKEYS[option.value as keyof typeof MARKER_HOTKEYS],
+    hotkey: REVIEW_MARKER_HOTKEYS[option.value as MarkerValue],
   }));
   const currentOption = markerOptions.find((option) => option.value === optimisticMarker);
 
   useHotkeys(
     markerOptions.map(({ value, hotkey }) => ({
       hotkey,
-      callback: () => {
+      callback: (event) => {
         if (isFocusedOutsidePage(pageRef)) return;
+        event.preventDefault();
         handleSubmit(optimisticMarker === value ? null : value);
       },
+      options: { requireReset: true, preventDefault: false, stopPropagation: false },
     })),
   );
 
@@ -56,7 +49,7 @@ export function ReviewForm({ initialValues, pageRef }: Props) {
         withTooltip
       />
       <p role="status" className="sr-only">
-        {currentOption?.label}
+        {currentOption?.label ?? t('common.review.status.not-reviewed')}
       </p>
     </div>
   );
