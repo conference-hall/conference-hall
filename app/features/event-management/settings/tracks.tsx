@@ -58,14 +58,14 @@ export const action = async ({ request, context }: Route.ActionArgs) => {
     }
     case 'reorder-formats': {
       const result = parseWithZod(form, { schema: TrackReorderSchema });
-      if (result.status !== 'success') return result.error;
-      await tracks.reorderFormat(result.value.trackId, result.value.direction);
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      await tracks.reorderFormat(result.value.id, result.value.targetIndex);
       break;
     }
     case 'reorder-categories': {
       const result = parseWithZod(form, { schema: TrackReorderSchema });
-      if (result.status !== 'success') return result.error;
-      await tracks.reorderCategory(result.value.trackId, result.value.direction);
+      if (result.status !== 'success') return toast('error', i18n.t('error.global'));
+      await tracks.reorderCategory(result.value.id, result.value.targetIndex);
       break;
     }
   }

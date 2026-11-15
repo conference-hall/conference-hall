@@ -26,6 +26,6 @@ export const TracksSettingsSchema = z.object({
 });
 
 export const TrackReorderSchema = z.object({
-  trackId: z.string(),
-  direction: z.enum(['up', 'down']),
+  id: z.string(),
+  targetIndex: z.coerce.number().int().min(0),
 });

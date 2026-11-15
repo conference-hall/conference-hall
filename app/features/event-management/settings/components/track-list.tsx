@@ -23,8 +23,8 @@ export function TrackList({ type, tracks }: TrackListProps) {
   const { t, i18n } = useTranslation();
   const fetcher = useFetcher({ key: `reorder-${type}` });
 
-  const handleReorder = (trackId: string, direction: 'up' | 'down') => {
-    fetcher.submit({ intent: `reorder-${type}`, trackId, direction }, { method: 'POST' });
+  const handleReorder = (id: string, targetIndex: number) => {
+    fetcher.submit({ intent: `reorder-${type}`, id, targetIndex }, { method: 'POST' });
   };
 
   return (
@@ -64,7 +64,7 @@ export function TrackList({ type, tracks }: TrackListProps) {
                 icon={ArrowUpIcon}
                 aria-label={t('event-management.settings.tracks.reorder.up')}
                 disabled={index === 0}
-                onClick={() => handleReorder(track.id, 'up')}
+                onClick={() => handleReorder(track.id, index - 1)}
               />
               <Button
                 type="button"
@@ -73,7 +73,7 @@ export function TrackList({ type, tracks }: TrackListProps) {
                 icon={ArrowDownIcon}
                 aria-label={t('event-management.settings.tracks.reorder.down')}
                 disabled={index === tracks.length - 1}
-                onClick={() => handleReorder(track.id, 'down')}
+                onClick={() => handleReorder(track.id, index + 1)}
               />
               <EditTrackButton type={type} initialValues={track} />
               <fetcher.Form method="POST">

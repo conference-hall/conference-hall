@@ -23,8 +23,8 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
   const moveQuestionFetcher = useFetcher<typeof action>({ key: 'move-question' });
   const removeQuestionFetcher = useFetcher<typeof action>({ key: 'remove-question' });
 
-  const handleMoveQuestion = (id: string, direction: 'up' | 'down') => () => {
-    moveQuestionFetcher.submit({ intent: 'move-question', id, direction }, { method: 'POST' });
+  const handleMoveQuestion = (id: string, targetIndex: number) => () => {
+    moveQuestionFetcher.submit({ intent: 'move-question', id, targetIndex }, { method: 'POST' });
   };
 
   const handleRemoveQuestion = (id: string) => () => {
@@ -98,7 +98,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                   <Button
                     label="Move up"
                     icon={ArrowUpIcon}
-                    onClick={handleMoveQuestion(question.id, 'up')}
+                    onClick={handleMoveQuestion(question.id, index - 1)}
                     disabled={index === 0}
                     variant="secondary"
                     size="sm"
@@ -106,7 +106,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                   <Button
                     label="Move down"
                     icon={ArrowDownIcon}
-                    onClick={handleMoveQuestion(question.id, 'down')}
+                    onClick={handleMoveQuestion(question.id, index + 1)}
                     disabled={index === questions.length - 1}
                     variant="secondary"
                     size="sm"

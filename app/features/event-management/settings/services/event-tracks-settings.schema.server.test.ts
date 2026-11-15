@@ -1,4 +1,4 @@
-import { CategorySaveSchema, FormatSaveSchema } from './event-tracks-settings.schema.server.ts';
+import { CategorySaveSchema, FormatSaveSchema, TrackReorderSchema } from './event-tracks-settings.schema.server.ts';
 
 describe.each([
   ['CategorySaveSchema', CategorySaveSchema],
@@ -18,5 +18,21 @@ describe.each([
 
   it('rejects an invalid color', () => {
     expect(schema.safeParse({ ...track, color: 'red' }).success).toBe(false);
+  });
+});
+
+describe('#TrackReorderSchema', () => {
+  it('parses the target index', () => {
+    const result = TrackReorderSchema.safeParse({ id: 'track-1', targetIndex: '2' });
+
+    expect(result.data).toEqual({ id: 'track-1', targetIndex: 2 });
+  });
+
+  it('rejects a negative target index', () => {
+    expect(TrackReorderSchema.safeParse({ id: 'track-1', targetIndex: '-1' }).success).toBe(false);
+  });
+
+  it('rejects a missing target index', () => {
+    expect(TrackReorderSchema.safeParse({ id: 'track-1' }).success).toBe(false);
   });
 });
