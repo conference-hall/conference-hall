@@ -109,7 +109,7 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
               >
                 <option.icon
                   className={cx(
-                    'hidden size-5 shrink-0 min-[360px]:block short:hidden short:md:block',
+                    'hidden size-5 shrink-0 min-[380px]:block short:hidden short:md:block',
                     selected ? (styles.icon ?? option.fill) : 'stroke-gray-500',
                   )}
                   aria-hidden="true"

@@ -348,12 +348,12 @@ describe('ReviewBar', () => {
       expectNoOverflow(320);
     });
 
-    it('fits the text buttons with their icon on a 360 px wide phone', async () => {
+    it('fits the text buttons without their icon on a 360 px wide phone', async () => {
       await page.viewport(360, 640);
       await renderTranslated();
 
       await expect.element(region()).toBeVisible();
-      expect(icons()).toEqual([20, 20, 20]);
+      expect(icons()).toEqual([0, 0, 0]);
       expectNoOverflow(360);
       expect(starWidth()).toBeGreaterThanOrEqual(44);
     });
