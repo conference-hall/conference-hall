@@ -6,7 +6,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { CommentsPanel } from './comments-panel.tsx';
 import type { ReviewMember, ReviewSummary } from './reviews-panel.tsx';
-import { ReviewsPanel } from './reviews-panel.tsx';
+import { countActiveReviews, ReviewsPanel } from './reviews-panel.tsx';
 import { SpeakersPanel } from './speakers-panel.tsx';
 
 export type DiscussionTab = 'comments' | 'reviews' | 'speakers';
@@ -48,7 +48,7 @@ export function DiscussionCard({
           id: 'reviews' as const,
           label: t('event-management.proposal-page.discussion.tabs.reviews'),
           icon: StarIcon,
-          count: reviews.filter((review) => review.dismissedAt === null).length,
+          count: countActiveReviews(reviews),
           newCount: 0,
           panel: <ReviewsPanel reviews={reviews} summary={reviewsSummary} canDismissReviews={canDismissReviews} />,
         }

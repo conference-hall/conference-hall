@@ -5,6 +5,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import type { ProposalData } from '../../../proposal.tsx';
 import { ReviewNote } from '../../shared/review-note.tsx';
+import { countActiveReviews } from '../discussion/reviews-panel.tsx';
 import { ProposalStatusSelect } from './proposal-status-select.tsx';
 import { ReviewForm } from './review-form.tsx';
 
@@ -47,9 +48,7 @@ export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate, pageRef,
                   onClick={onShowReviews}
                   className="mr-auto cursor-pointer text-xs font-medium text-indigo-700 underline hover:text-indigo-600"
                 >
-                  {t('event-management.proposal-page.reviews.count', {
-                    count: members.filter((review) => review.dismissedAt === null).length,
-                  })}
+                  {t('event-management.proposal-page.reviews.count', { count: countActiveReviews(members) })}
                 </button>
               ) : null}
               {summary?.average !== null ? (

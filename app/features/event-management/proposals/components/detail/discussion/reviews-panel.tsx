@@ -27,6 +27,10 @@ export type ReviewSummary = {
   negatives: number;
 };
 
+export function countActiveReviews(reviews: Array<ReviewMember>) {
+  return reviews.filter((review) => review.dismissedAt === null).length;
+}
+
 type Props = {
   reviews: Array<ReviewMember>;
   summary: ReviewSummary | null;
