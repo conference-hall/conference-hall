@@ -4,6 +4,7 @@ import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page, userEvent } from 'vitest/browser';
 import type { UserReview } from '~/shared/types/proposals.types.ts';
+import { ReviewBar } from './review-bar.tsx';
 import { ReviewForm } from './review-form.tsx';
 
 describe('ReviewForm', () => {
@@ -21,6 +22,7 @@ describe('ReviewForm', () => {
           <main ref={pageRef}>
             <ReviewForm initialValues={initialValues} pageRef={pageRef} />
             <input aria-label="Comment" />
+            <ReviewBar team="t1" event="e1" initialValues={initialValues} />
           </main>
           <button type="button">Outside</button>
         </I18nextProvider>
@@ -141,5 +143,19 @@ describe('ReviewForm', () => {
     await userEvent.keyboard('3');
 
     await expect.element(page.getByRole('status')).toHaveTextContent('Not reviewed');
+  });
+
+  it('applies one review per key press on a phone, where the review bar replaces the form', async () => {
+    await page.viewport(390, 844);
+    action.mockReturnValue(new Promise(() => {}));
+    await renderComponent();
+    await expect.element(page.getByRole('button', { name: 'Favorite' })).toHaveTextContent('Favorite');
+
+    await userEvent.keyboard('3');
+
+    expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NEUTRAL', note: '3' });
+    await expect.element(page.getByRole('status')).toHaveTextContent('3 stars');
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(action).toHaveBeenCalledTimes(1);
   });
 });

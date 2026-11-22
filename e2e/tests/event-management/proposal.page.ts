@@ -13,6 +13,8 @@ export class ProposalPage extends PageObject {
   readonly speakersTab = this.page.getByRole('tab', { name: /^Speakers/ });
   readonly tablist = this.page.getByRole('tablist');
   readonly yourReviewHeading = this.page.getByRole('heading', { name: 'Your review' });
+  readonly reviewBar = this.page.getByRole('region', { name: 'Your review' });
+  readonly reviewBarStatus = this.reviewBar.getByRole('status');
   readonly discussionPanel = this.page.getByRole('tabpanel');
   readonly comments = this.page.getByRole('list', { name: 'Comments' }).locator('> li');
   readonly reviews = this.page.getByRole('list', { name: 'Reviews' }).getByRole('listitem');
@@ -70,6 +72,15 @@ export class ProposalPage extends PageObject {
   async top(locator: Locator) {
     const box = await locator.boundingBox();
     return box?.y ?? Number.NaN;
+  }
+
+  async bottom(locator: Locator) {
+    const box = await locator.boundingBox();
+    return box ? box.y + box.height : Number.NaN;
+  }
+
+  viewportHeight() {
+    return this.page.evaluate(() => window.innerHeight);
   }
 
   async hasHorizontalScroll() {

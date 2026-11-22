@@ -7,6 +7,8 @@
   --font-sans: 'Inter', 'Inter Fallback';
 }
 
+@custom-variant short (@media (height < 480px) and (width >= 560px));
+
 /* The size of a Session block is CSS-driven: the grid item wrapping it is a `session` size container and the block
    picks what it shows from the container height, so a zoom change resizes every block without a React render.
    The five ranges are disjoint and mirror the thresholds the schedule used when the height was a prop. */

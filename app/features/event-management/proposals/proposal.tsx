@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod/v4';
+import { cx } from 'class-variance-authority';
 import { Suspense, useRef, useState } from 'react';
 import { Trans } from 'react-i18next';
 import { Await } from 'react-router';
@@ -32,6 +33,7 @@ import { TagsSection } from './components/detail/metadata/tags-section.tsx';
 import { NavigationHeader } from './components/detail/navigation-header.tsx';
 import { OtherProposalsDisclosure } from './components/detail/other-proposals-disclosure.tsx';
 import { ProposalActionsMenu } from './components/detail/proposal-actions-menu.tsx';
+import { REVIEW_BAR_PAGE_STYLES, ReviewBar } from './components/detail/review/review-bar.tsx';
 import { ReviewSidebar } from './components/detail/review/review-sidebar.tsx';
 import { REVIEW_MARKER_HOTKEYS } from './components/shared/review-markers.config.ts';
 import { resolveProposalId } from './services/proposal-id-resolver.server.ts';
@@ -215,7 +217,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
     useFlag('speakersCommunication') && event.speakersConversationEnabled && speakersWithAccount.length > 0;
 
   return (
-    <Page ref={pageRef}>
+    <Page ref={pageRef} className={cx({ [REVIEW_BAR_PAGE_STYLES]: event.reviewEnabled })}>
       <NavigationHeader
         team={params.team}
         event={params.event}
@@ -223,6 +225,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
         pageRef={pageRef}
         activityPromise={activityPromise}
         speakersConversationEnabled={speakersConversationEnabled}
+        navigationInReviewBar={event.reviewEnabled}
         onSelectDiscussionTab={(tab) => setDiscussion({ proposalId: proposal.id, tab })}
       />
 
@@ -375,6 +378,17 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
           </Suspense>
         </div>
       </div>
+
+      {event.reviewEnabled ? (
+        <ReviewBar
+          key={proposal.id}
+          team={params.team}
+          event={params.event}
+          previous={pagination.previous}
+          next={pagination.next}
+          initialValues={proposal.reviews.you}
+        />
+      ) : null}
     </Page>
   );
 }

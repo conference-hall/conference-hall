@@ -1,4 +1,5 @@
 import { MinusIcon } from '@heroicons/react/20/solid';
+import { cx } from 'class-variance-authority';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -22,8 +23,10 @@ export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate, pageRef,
 
   const { you, summary, members } = proposal.reviews || {};
 
+  const hasOnlyReviewForm = reviewEnabled && !summary && !canDeliberate;
+
   return (
-    <Card as="section" className="divide-y divide-gray-200">
+    <Card as="section" className={cx('divide-y divide-gray-200', { 'max-lg:hidden': hasOnlyReviewForm })}>
       {reviewEnabled ? <ReviewForm key={proposal.id} initialValues={proposal.reviews.you} pageRef={pageRef} /> : null}
 
       {!reviewEnabled || summary ? (
