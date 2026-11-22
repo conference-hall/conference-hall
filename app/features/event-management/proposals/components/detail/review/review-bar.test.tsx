@@ -1,5 +1,5 @@
 import { I18nextProvider } from 'react-i18next';
-import { createRoutesStub } from 'react-router';
+import { createRoutesStub, useLocation } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page } from 'vitest/browser';
 import type { UserReview } from '~/shared/types/proposals.types.ts';
@@ -17,16 +17,27 @@ describe('ReviewBar', () => {
     await page.viewport(1920, 1080);
   });
 
-  const renderComponent = (initialValues: UserReview = { feeling: null, note: null }) => {
+  const renderComponent = (
+    initialValues: UserReview = { feeling: null, note: null },
+    navigation: { previous?: string; next?: string } = { previous: 'p1', next: 'p3' },
+  ) => {
     function Page() {
       return (
         <I18nextProvider i18n={i18nTest}>
-          <ReviewBar initialValues={initialValues} />
+          <ReviewBar team="t1" event="e1" {...navigation} initialValues={initialValues} />
         </I18nextProvider>
       );
     }
-    const RouteStub = createRoutesStub([{ path: '/team/:team/:event/proposals/:proposal', Component: Page, action }]);
-    return page.render(<RouteStub initialEntries={['/team/t1/e1/proposals/p1']} />);
+    function OtherProposal() {
+      const { pathname, search } = useLocation();
+      return <h1>{`${pathname}${search}`}</h1>;
+    }
+    const RouteStub = createRoutesStub([
+      { path: '/team/:team/:event/proposals/p1', Component: OtherProposal },
+      { path: '/team/:team/:event/proposals/p3', Component: OtherProposal },
+      { path: '/team/:team/:event/proposals/:proposal', Component: Page, action },
+    ]);
+    return page.render(<RouteStub initialEntries={['/team/t1/e1/proposals/p2?query=mutation']} />);
   };
 
   const bar = () => page.getByRole('region', { name: 'Your review' });
@@ -124,6 +135,57 @@ describe('ReviewBar', () => {
 
     await expect.element(bar().getByRole('status')).toHaveTextContent('Not reviewed');
     await expect.element(bar().getByRole('button', { name: 'Not for me' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('goes to the previous proposal and keeps the list filters', async () => {
+    await renderComponent();
+
+    await bar().getByRole('link', { name: 'Previous proposal' }).click();
+
+    await expect
+      .element(page.getByRole('heading', { name: '/team/t1/e1/proposals/p1?query=mutation' }))
+      .toBeInTheDocument();
+  });
+
+  it('goes to the next proposal and keeps the list filters', async () => {
+    await renderComponent();
+
+    await bar().getByRole('link', { name: 'Next proposal' }).click();
+
+    await expect
+      .element(page.getByRole('heading', { name: '/team/t1/e1/proposals/p3?query=mutation' }))
+      .toBeInTheDocument();
+  });
+
+  it('disables the previous link on the first proposal', async () => {
+    await renderComponent(undefined, { next: 'p3' });
+
+    await expect
+      .element(bar().getByRole('link', { name: 'Previous proposal' }))
+      .toHaveAttribute('aria-disabled', 'true');
+    await expect.element(bar().getByRole('link', { name: 'Next proposal' })).not.toHaveAttribute('aria-disabled');
+  });
+
+  it('disables the next link on the last proposal', async () => {
+    await renderComponent(undefined, { previous: 'p1' });
+
+    await expect.element(bar().getByRole('link', { name: 'Next proposal' })).toHaveAttribute('aria-disabled', 'true');
+    await expect.element(bar().getByRole('link', { name: 'Previous proposal' })).not.toHaveAttribute('aria-disabled');
+  });
+
+  it('puts the previous and next links on each side of the stars', async () => {
+    await renderComponent();
+
+    const previous = bar().getByRole('link', { name: 'Previous proposal' }).element().getBoundingClientRect();
+    const next = bar().getByRole('link', { name: 'Next proposal' }).element().getBoundingClientRect();
+    const firstStar = bar().getByRole('button', { name: '1 star' }).element().getBoundingClientRect();
+    const lastStar = bar().getByRole('button', { name: '5 stars' }).element().getBoundingClientRect();
+    expect(previous.width).toBeGreaterThanOrEqual(44);
+    expect(next.width).toBeGreaterThanOrEqual(44);
+    expect(previous.right).toBeLessThanOrEqual(firstStar.left);
+    expect(next.left).toBeGreaterThanOrEqual(lastStar.right);
+    expect(previous.top).toBeLessThan(firstStar.bottom);
+    expect(previous.bottom).toBeGreaterThan(firstStar.top);
   });
 
   it('stays at the bottom of the screen on a phone', async () => {

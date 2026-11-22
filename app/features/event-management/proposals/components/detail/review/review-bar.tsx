@@ -1,12 +1,15 @@
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
 import { H2 } from '~/design-system/typography.tsx';
 import {
   getReviewMarkerOptions,
   type MarkerValue,
 } from '~/features/event-management/proposals/components/shared/review-markers.config.ts';
 import type { UserReview } from '~/shared/types/proposals.types.ts';
+import { useProposalNavigation } from '../use-proposal-navigation.ts';
 import { useOptimisticReview } from './use-optimistic-review.ts';
 
 const SELECTED_STYLES: Partial<Record<MarkerValue, { button: string; icon: string }>> = {
@@ -15,10 +18,14 @@ const SELECTED_STYLES: Partial<Record<MarkerValue, { button: string; icon: strin
   positive: { button: 'border-rose-400 bg-rose-50 text-rose-700', icon: 'fill-red-400 stroke-red-400' },
 };
 
-type Props = { initialValues: UserReview };
+const NAVIGATION_STYLES =
+  'flex h-13 w-11 shrink-0 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 aria-disabled:pointer-events-none aria-disabled:opacity-50';
 
-export function ReviewBar({ initialValues }: Props) {
+type Props = { team: string; event: string; previous?: string; next?: string; initialValues: UserReview };
+
+export function ReviewBar({ team, event, previous, next, initialValues }: Props) {
   const { t } = useTranslation();
+  const { previousPath, nextPath, search } = useProposalNavigation({ team, event, previous, next });
   const titleId = useId();
   const { optimisticMarker, handleSubmit } = useOptimisticReview(initialValues);
   const options = getReviewMarkerOptions(t);
@@ -44,22 +51,47 @@ export function ReviewBar({ initialValues }: Props) {
           </p>
         </div>
 
-        <div className="flex h-13 rounded-lg border border-gray-200 bg-gray-50 px-1">
-          {stars.map((option, index) => {
-            const filled = index < filledStars;
-            return (
-              <button
-                key={option.value}
-                type="button"
-                aria-label={option.label}
-                aria-pressed={filled}
-                onClick={() => toggle(option.value)}
-                className="flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-lg"
-              >
-                <option.icon className={cx('size-8.5', filled ? option.fill : 'stroke-gray-400')} aria-hidden="true" />
-              </button>
-            );
-          })}
+        <div className="flex items-center gap-2">
+          <Link
+            to={{ pathname: previousPath, search }}
+            aria-disabled={previousPath ? undefined : 'true'}
+            tabIndex={previousPath ? undefined : -1}
+            className={NAVIGATION_STYLES}
+          >
+            <ChevronLeftIcon className="size-5" aria-hidden="true" />
+            <span className="sr-only">{t('event-management.proposal-page.previous')}</span>
+          </Link>
+
+          <div className="flex h-13 min-w-0 flex-1 rounded-lg border border-gray-200 bg-gray-50 px-1">
+            {stars.map((option, index) => {
+              const filled = index < filledStars;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  aria-label={option.label}
+                  aria-pressed={filled}
+                  onClick={() => toggle(option.value)}
+                  className="flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-lg"
+                >
+                  <option.icon
+                    className={cx('size-8.5', filled ? option.fill : 'stroke-gray-400')}
+                    aria-hidden="true"
+                  />
+                </button>
+              );
+            })}
+          </div>
+
+          <Link
+            to={{ pathname: nextPath, search }}
+            aria-disabled={nextPath ? undefined : 'true'}
+            tabIndex={nextPath ? undefined : -1}
+            className={NAVIGATION_STYLES}
+          >
+            <ChevronRightIcon className="size-5" aria-hidden="true" />
+            <span className="sr-only">{t('event-management.proposal-page.next')}</span>
+          </Link>
         </div>
 
         <div className="flex gap-2">

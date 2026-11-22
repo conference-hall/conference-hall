@@ -378,7 +378,16 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
         </div>
       </div>
 
-      {event.reviewEnabled ? <ReviewBar key={proposal.id} initialValues={proposal.reviews.you} /> : null}
+      {event.reviewEnabled ? (
+        <ReviewBar
+          key={proposal.id}
+          team={params.team}
+          event={params.event}
+          previous={pagination.previous}
+          next={pagination.next}
+          initialValues={proposal.reviews.you}
+        />
+      ) : null}
     </Page>
   );
 }
