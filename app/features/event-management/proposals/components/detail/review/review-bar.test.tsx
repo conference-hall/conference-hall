@@ -134,6 +134,7 @@ describe('ReviewBar', () => {
     expect(box.left).toBe(0);
     expect(box.width).toBe(390);
     expect(box.bottom).toBe(844);
+    expect(box.height).toBeLessThanOrEqual(160);
   });
 
   it('keeps its controls centered and narrow on a tablet in portrait', async () => {
