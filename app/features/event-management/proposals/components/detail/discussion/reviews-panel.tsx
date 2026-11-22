@@ -47,7 +47,10 @@ export function ReviewsPanel({ reviews, summary, canDismissReviews }: Props) {
       </Text>
 
       {reviews.length > 0 ? (
-        <ul className="divide-y divide-gray-200 overflow-hidden rounded-md border border-gray-200">
+        <ul
+          aria-label={t('event-management.proposal-page.discussion.tabs.reviews')}
+          className="divide-y divide-gray-200 overflow-hidden rounded-md border border-gray-200"
+        >
           {reviews.map((review) => (
             <ReviewRow key={review.id} review={review} canDismissReviews={canDismissReviews} />
           ))}

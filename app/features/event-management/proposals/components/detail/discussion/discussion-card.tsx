@@ -86,7 +86,7 @@ export function DiscussionCard({
                 key={id}
                 className="flex h-12 shrink-0 grow cursor-pointer items-center justify-center gap-1 border-b-2 border-transparent px-1.5 text-[13px] font-semibold whitespace-nowrap text-gray-500 hover:text-gray-700 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 data-selected:border-indigo-600 data-selected:text-indigo-600 sm:grow-0 sm:gap-2 sm:px-2 sm:text-sm"
               >
-                <Icon className="size-4 max-sm:hidden" aria-hidden />
+                <Icon className="hidden size-4 sm:block" aria-hidden />
                 {label}
                 <span className="rounded-full bg-gray-100 px-1.5 text-xs font-medium text-gray-700 max-[359px]:hidden sm:px-2">
                   {count}

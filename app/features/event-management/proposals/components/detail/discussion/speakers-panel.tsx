@@ -33,10 +33,10 @@ export function SpeakersPanel({ messages, recipients, canManageConversations }: 
       </Text>
 
       {optimisticMessages.length > 0 ? (
-        <ul className="space-y-4">
+        <ul aria-label={t('event-management.proposal-page.discussion.speakers.messages')} className="space-y-4">
           {optimisticMessages.map((message) => (
             <li key={message.id} className="flex gap-3">
-              <Avatar picture={message.sender.picture} name={message.sender.name} className="max-sm:hidden" />
+              <Avatar picture={message.sender.picture} name={message.sender.name} className="hidden sm:flex" />
               <MessageBlock
                 channel="speaker"
                 message={message}
@@ -57,7 +57,7 @@ export function SpeakersPanel({ messages, recipients, canManageConversations }: 
       )}
 
       <div className="flex gap-3">
-        <Avatar picture={user?.picture} name={user?.name} className="max-sm:hidden" />
+        <Avatar picture={user?.picture} name={user?.name} className="hidden sm:flex" />
         <MessageInputForm
           channel="speaker"
           inputLabel={sendMessageLabel}

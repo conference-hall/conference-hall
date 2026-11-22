@@ -475,6 +475,7 @@
   "event-management.proposal-page.discussion.reviews.empty": "Aucune évaluation",
   "event-management.proposal-page.discussion.speakers.hint_one": "{{names, list}} voit ces messages et sera notifié.",
   "event-management.proposal-page.discussion.speakers.hint_other": "{{names, list}} voient ces messages et seront notifiés.",
+  "event-management.proposal-page.discussion.speakers.messages": "Messages avec les speakers",
   "event-management.proposal-page.discussion.speakers.submit": "Envoyer aux speakers",
   "event-management.proposal-page.discussion.tabs.comments": "Commentaires",
   "event-management.proposal-page.discussion.tabs.reviews": "Évaluations",

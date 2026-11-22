@@ -19,10 +19,10 @@ export function CommentsPanel({ comments, canManageConversations }: Props) {
       </Text>
 
       {comments.length > 0 ? (
-        <ul className="space-y-4">
+        <ul aria-label={t('event-management.proposal-page.discussion.tabs.comments')} className="space-y-4">
           {comments.map((message) => (
             <li key={message.id} className="flex gap-3">
-              <Avatar picture={message.sender.picture} name={message.sender.name} className="max-sm:hidden" />
+              <Avatar picture={message.sender.picture} name={message.sender.name} className="hidden sm:flex" />
               <MessageBlock
                 channel="comment"
                 message={message}
@@ -37,7 +37,7 @@ export function CommentsPanel({ comments, canManageConversations }: Props) {
       ) : null}
 
       <div className="flex gap-3">
-        <Avatar picture={user?.picture} name={user?.name} className="max-sm:hidden" />
+        <Avatar picture={user?.picture} name={user?.name} className="hidden sm:flex" />
         <MessageInputForm
           channel="comment"
           inputLabel={t('event-management.proposal-page.comment.label')}
