@@ -17,10 +17,6 @@ describe('NavigationHeader', () => {
     isNew,
   });
 
-  afterEach(async () => {
-    await page.viewport(1920, 1080);
-  });
-
   const renderComponent = (
     activity: [Array<Message>, Array<Message>] = [[], []],
     onSelectDiscussionTab: (tab: DiscussionTab) => void = vi.fn(),

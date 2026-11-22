@@ -14,10 +14,6 @@ describe('ReviewForm', () => {
     action.mockResolvedValue(null);
   });
 
-  afterEach(async () => {
-    await page.viewport(1920, 1080);
-  });
-
   const renderComponent = (initialValues: UserReview = { feeling: null, note: null }) => {
     function Page() {
       const pageRef = useRef<HTMLElement>(null);

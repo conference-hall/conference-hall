@@ -19,10 +19,6 @@ describe('ReviewSidebar component', () => {
     updatedAt: new Date(),
   });
 
-  afterEach(async () => {
-    await page.viewport(1920, 1080);
-  });
-
   const renderComponent = (reviews: Pick<ProposalData['reviews'], 'summary' | 'members'>, reviewEnabled = false) => {
     const proposal = { id: 'p1', reviews: { you: { feeling: null, note: null }, ...reviews } } as ProposalData;
     const RouteStub = createRoutesStub([
