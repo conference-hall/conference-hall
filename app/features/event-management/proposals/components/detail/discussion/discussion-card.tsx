@@ -75,18 +75,22 @@ export function DiscussionCard({
   return (
     <Card id="discussion-card">
       <TabGroup selectedIndex={selectedIndex} onChange={(index) => onSelectTab(tabs[index].id)}>
-        <TabList className="flex gap-2 border-b border-gray-200 px-4">
-          {tabs.map(({ id, label, icon: Icon, count }) => (
-            <Tab
-              key={id}
-              className="-mb-px flex h-12 cursor-pointer items-center gap-2 border-b-2 border-transparent px-2 text-sm font-semibold text-gray-500 hover:text-gray-700 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 data-selected:border-indigo-600 data-selected:text-indigo-600"
-            >
-              <Icon className="size-4" aria-hidden />
-              {label}
-              <span className="rounded-full bg-gray-100 px-2 text-xs font-medium text-gray-700">{count}</span>
-            </Tab>
-          ))}
-        </TabList>
+        <div className="border-b border-gray-200">
+          <TabList className="-mb-px flex overflow-x-auto sm:gap-2 sm:px-4">
+            {tabs.map(({ id, label, icon: Icon, count }) => (
+              <Tab
+                key={id}
+                className="flex h-12 shrink-0 grow cursor-pointer items-center justify-center gap-1 border-b-2 border-transparent px-1.5 text-[13px] font-semibold whitespace-nowrap text-gray-500 hover:text-gray-700 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 data-selected:border-indigo-600 data-selected:text-indigo-600 sm:grow-0 sm:gap-2 sm:px-2 sm:text-sm"
+              >
+                <Icon className="size-4 max-sm:hidden" aria-hidden />
+                {label}
+                <span className="rounded-full bg-gray-100 px-1.5 text-xs font-medium text-gray-700 max-[359px]:hidden sm:px-2">
+                  {count}
+                </span>
+              </Tab>
+            ))}
+          </TabList>
+        </div>
         <TabPanels>
           {tabs.map(({ id, panel }) => (
             <TabPanel key={id}>{panel}</TabPanel>
