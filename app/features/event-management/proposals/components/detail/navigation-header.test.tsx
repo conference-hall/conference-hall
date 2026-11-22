@@ -20,6 +20,7 @@ describe('NavigationHeader', () => {
   const renderComponent = (
     activity: [Array<Message>, Array<Message>] = [[], []],
     onSelectDiscussionTab: (tab: DiscussionTab) => void = vi.fn(),
+    speakersConversationEnabled = true,
   ) => {
     const activityPromise = Promise.resolve(activity);
 
@@ -38,6 +39,7 @@ describe('NavigationHeader', () => {
               previous="p1"
               pageRef={pageRef}
               activityPromise={activityPromise}
+              speakersConversationEnabled={speakersConversationEnabled}
               onSelectDiscussionTab={onSelectDiscussionTab}
             />
           </main>
@@ -97,5 +99,21 @@ describe('NavigationHeader', () => {
     await page.getByRole('button', { name: '1 new message' }).click();
 
     expect(onSelectDiscussionTab).toHaveBeenCalledWith('speakers');
+  });
+
+  it('ignores new speaker messages when the Speakers tab is hidden', async () => {
+    const onSelectDiscussionTab = vi.fn();
+    await renderComponent([[message('c1', true)], [message('m1', true)]], onSelectDiscussionTab, false);
+
+    await page.getByRole('button', { name: '1 new message' }).click();
+
+    expect(onSelectDiscussionTab).toHaveBeenCalledWith('comments');
+  });
+
+  it('shows no new messages pill when only speaker messages are new and the Speakers tab is hidden', async () => {
+    await renderComponent([[message('c1', false)], [message('m1', true)]], vi.fn(), false);
+
+    await expect.element(page.getByText('2/3')).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: /new message/ })).not.toBeInTheDocument();
   });
 });

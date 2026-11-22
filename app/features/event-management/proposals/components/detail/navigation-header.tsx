@@ -23,6 +23,7 @@ type Props = {
   previous?: string;
   pageRef: React.RefObject<HTMLElement | null>;
   activityPromise: Promise<[Array<Message>, Array<Message>]>;
+  speakersConversationEnabled: boolean;
   onSelectDiscussionTab: (tab: DiscussionTab) => void;
 };
 
@@ -36,6 +37,7 @@ export function NavigationHeader({
   previous,
   pageRef,
   activityPromise,
+  speakersConversationEnabled,
   onSelectDiscussionTab,
 }: Props) {
   const { t } = useTranslation();
@@ -96,7 +98,7 @@ export function NavigationHeader({
             {([comments, speakerConversation]) => (
               <NewMessagesPill
                 comments={comments}
-                speakerConversation={speakerConversation}
+                speakerConversation={speakersConversationEnabled ? speakerConversation : []}
                 onSelectDiscussionTab={onSelectDiscussionTab}
               />
             )}

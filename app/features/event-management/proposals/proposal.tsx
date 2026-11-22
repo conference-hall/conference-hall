@@ -222,6 +222,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
         {...pagination}
         pageRef={pageRef}
         activityPromise={activityPromise}
+        speakersConversationEnabled={speakersConversationEnabled}
         onSelectDiscussionTab={(tab) => setDiscussion({ proposalId: proposal.id, tab })}
       />
 
