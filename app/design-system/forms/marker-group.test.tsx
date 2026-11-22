@@ -117,4 +117,23 @@ describe('MarkerGroup multiple mode', () => {
     await expect.element(page.getByRole('button', { name: 'Star 2' })).not.toHaveClass(/bg-indigo-100/);
     await expect.element(page.getByRole('button', { name: 'Star 3' })).toHaveClass(/bg-indigo-100/);
   });
+
+  it('fits eight medium markers in a narrow container', async () => {
+    const eightOptions: MarkerOption[] = [
+      ...options.slice(0, 5),
+      { value: 'neutral-4', icon: StarIcon, fill: 'fill-yellow-400', label: 'Star 4', cumulative: true },
+      { value: 'neutral-5', icon: StarIcon, fill: 'fill-yellow-400', label: 'Star 5', cumulative: true },
+      options[5],
+    ];
+
+    await page.render(
+      <div data-testid="container" style={{ width: 256 }}>
+        <MarkerGroup options={eightOptions} value={null} onChange={() => {}} size="md" variant="ghost" withTooltip />
+      </div>,
+    );
+
+    const container = page.getByTestId('container').element().getBoundingClientRect();
+    const lastMarker = page.getByRole('button', { name: 'Positive' }).element().getBoundingClientRect();
+    expect(lastMarker.right).toBeLessThanOrEqual(container.right);
+  });
 });

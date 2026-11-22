@@ -140,9 +140,10 @@ function EventTabs() {
         target="_blank"
         iconRight={ArrowTopRightOnSquareIcon}
         weight="medium"
-        className="hidden! lg:inline-flex!"
+        title={t('event-management.nav.event-page-link')}
+        className="hidden! shrink-0 lg:inline-flex!"
       >
-        {t('event-management.nav.event-page-link')}
+        <span className="sr-only xl:not-sr-only">{t('event-management.nav.event-page-link')}</span>
       </Link>
     </Page.NavHeader>
   );
