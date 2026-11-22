@@ -26,7 +26,7 @@ describe('ReviewForm', () => {
           <main ref={pageRef}>
             <ReviewForm initialValues={initialValues} pageRef={pageRef} />
             <input aria-label="Comment" />
-            <ReviewBar initialValues={initialValues} />
+            <ReviewBar team="t1" event="e1" initialValues={initialValues} />
           </main>
           <button type="button">Outside</button>
         </I18nextProvider>
