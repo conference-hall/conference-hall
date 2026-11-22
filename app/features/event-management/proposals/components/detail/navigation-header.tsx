@@ -69,7 +69,7 @@ export function NavigationHeader({
   );
 
   return (
-    <header className="flex items-center justify-between gap-4 pb-4 lg:-mt-4">
+    <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 pb-4 lg:-mt-4">
       <nav className="flex grow items-center justify-between gap-2 sm:justify-start lg:gap-4">
         <Button
           to={{ pathname: previousPath, search }}
@@ -92,7 +92,7 @@ export function NavigationHeader({
         />
       </nav>
 
-      <div className="flex items-center gap-8">
+      <div className="ml-auto flex items-center gap-4 sm:gap-8">
         <Suspense fallback={null}>
           <Await resolve={activityPromise}>
             {([comments, speakerConversation]) => (
@@ -104,7 +104,7 @@ export function NavigationHeader({
             )}
           </Await>
         </Suspense>
-        <ReviewsProgress reviewed={reviewed} total={total} />
+        <ReviewsProgress reviewed={reviewed} total={total} className="flex" />
       </div>
     </header>
   );

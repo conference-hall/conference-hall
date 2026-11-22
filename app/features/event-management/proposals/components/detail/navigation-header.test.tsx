@@ -82,6 +82,7 @@ describe('NavigationHeader', () => {
 
       await expect.element(page.getByText('2/3')).toBeVisible();
       await expect.element(page.getByRole('button', { name: '1 new message' })).toBeVisible();
+      await expect.element(page.getByText('33% reviewed')).toBeVisible();
       await expect.element(page.getByRole('link', { name: 'Previous proposal' })).not.toBeInTheDocument();
       await expect.element(page.getByRole('link', { name: 'Next proposal' })).not.toBeInTheDocument();
     });
