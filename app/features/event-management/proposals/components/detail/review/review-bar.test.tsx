@@ -209,6 +209,36 @@ describe('ReviewBar', () => {
     expect(first.left).toBeCloseTo(768 - last.right, 0);
   });
 
+  it('shrinks to a single row on a phone in landscape', async () => {
+    await page.viewport(667, 375);
+    await renderComponent({ feeling: 'NEUTRAL', note: 4 });
+
+    const link = (name: string) => bar().getByRole('link', { name }).element().getBoundingClientRect();
+    const button = (name: string) => bar().getByRole('button', { name }).element().getBoundingClientRect();
+    const controls = [
+      { left: 0, right: 0, top: 0, bottom: 375, height: 375 },
+      link('Previous proposal'),
+      ...['No opinion', 'Not for me', 'Favorite', '1 star', '2 stars', '3 stars', '4 stars', '5 stars'].map(button),
+      link('Next proposal'),
+    ];
+    const middle = (controls[1].top + controls[1].bottom) / 2;
+    controls.forEach((control, index) => {
+      expect(control.top).toBeLessThan(middle);
+      expect(control.bottom).toBeGreaterThan(middle);
+      expect(control.height).toBeGreaterThanOrEqual(44);
+      expect(control.left).toBeGreaterThanOrEqual(controls[Math.max(index - 1, 0)].right);
+    });
+    expect(controls[10].right).toBeLessThanOrEqual(667);
+
+    const region = bar().element().getBoundingClientRect();
+    expect(region.bottom).toBe(375);
+    expect(region.height).toBeLessThanOrEqual(68);
+    const label = bar().getByRole('status').element().parentElement!.getBoundingClientRect();
+    expect(label.width).toBeLessThanOrEqual(1);
+    expect(label.height).toBeLessThanOrEqual(1);
+    await expect.element(bar().getByRole('status')).toHaveTextContent('4 stars');
+  });
+
   it('is hidden on a desktop', async () => {
     await page.viewport(1280, 800);
     await renderComponent();

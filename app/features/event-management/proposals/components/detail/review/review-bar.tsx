@@ -19,7 +19,7 @@ const SELECTED_STYLES: Partial<Record<MarkerValue, { button: string; icon: strin
 };
 
 const NAVIGATION_STYLES =
-  'flex h-13 w-11 shrink-0 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 aria-disabled:pointer-events-none aria-disabled:opacity-50';
+  'flex h-13 w-11 shrink-0 short:h-12 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 aria-disabled:pointer-events-none aria-disabled:opacity-50';
 
 type Props = { team: string; event: string; previous?: string; next?: string; initialValues: UserReview };
 
@@ -41,8 +41,8 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
       aria-labelledby={titleId}
       className="fixed inset-x-0 bottom-0 z-20 border-t border-gray-200 bg-white shadow-[0_-4px_16px_rgb(17_24_39/0.08)] lg:hidden"
     >
-      <div className="mx-auto flex max-w-md flex-col gap-2 px-3 pt-2.5 pb-4">
-        <div className="flex items-baseline justify-between px-1">
+      <div className="mx-auto flex max-w-md flex-col gap-2 px-3 pt-2.5 pb-4 short:max-w-3xl short:flex-row short:items-center short:py-2">
+        <div className="flex items-baseline justify-between px-1 short:sr-only">
           <H2 id={titleId} size="s">
             {t('event-management.proposal-page.your-review')}
           </H2>
@@ -51,7 +51,7 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 short:contents">
           <Link
             to={{ pathname: previousPath, search }}
             aria-disabled={previousPath ? undefined : 'true'}
@@ -62,7 +62,7 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
             <span className="sr-only">{t('event-management.proposal-page.previous')}</span>
           </Link>
 
-          <div className="flex h-13 min-w-0 flex-1 rounded-lg border border-gray-200 bg-gray-50 px-1">
+          <div className="flex h-13 min-w-0 flex-1 rounded-lg border border-gray-200 bg-gray-50 px-1 short:order-2 short:h-12">
             {stars.map((option, index) => {
               const filled = index < filledStars;
               return (
@@ -75,7 +75,7 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
                   className="flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-lg"
                 >
                   <option.icon
-                    className={cx('size-8.5', filled ? option.fill : 'stroke-gray-400')}
+                    className={cx('size-8.5 short:size-7', filled ? option.fill : 'stroke-gray-400')}
                     aria-hidden="true"
                   />
                 </button>
@@ -87,14 +87,14 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
             to={{ pathname: nextPath, search }}
             aria-disabled={nextPath ? undefined : 'true'}
             tabIndex={nextPath ? undefined : -1}
-            className={NAVIGATION_STYLES}
+            className={cx(NAVIGATION_STYLES, 'short:order-2')}
           >
             <ChevronRightIcon className="size-5" aria-hidden="true" />
             <span className="sr-only">{t('event-management.proposal-page.next')}</span>
           </Link>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 short:order-1">
           {options.map((option) => {
             const styles = SELECTED_STYLES[option.value as MarkerValue];
             if (!styles) return null;
@@ -111,7 +111,7 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
                 )}
               >
                 <option.icon
-                  className={cx('size-5 shrink-0', selected ? styles.icon : 'stroke-gray-500')}
+                  className={cx('size-5 shrink-0 short:max-md:hidden', selected ? styles.icon : 'stroke-gray-500')}
                   aria-hidden="true"
                 />
                 {option.label}
