@@ -309,6 +309,7 @@ describe('ReviewBar', () => {
     const renderTranslated = () => renderComponent(undefined, undefined, i18nTest.cloneInstance({ lng: language }));
     const region = () => page.getByRole('region', { name: title });
     const textButton = (name: string) => region().getByRole('button', { name }).element();
+    const starWidth = () => region().getByRole('button').first().element().getBoundingClientRect().width;
     const icons = () => textButtons.map((name) => textButton(name).querySelector('svg')!.getBoundingClientRect().width);
 
     const expectNoOverflow = (width: number) => {
@@ -347,11 +348,33 @@ describe('ReviewBar', () => {
       expectNoOverflow(320);
     });
 
+    it('fits the text buttons with their icon on a 360 px wide phone', async () => {
+      await page.viewport(360, 640);
+      await renderTranslated();
+
+      await expect.element(region()).toBeVisible();
+      expect(icons()).toEqual([20, 20, 20]);
+      expectNoOverflow(360);
+      expect(starWidth()).toBeGreaterThanOrEqual(44);
+    });
+
+    it('keeps two rows on a 360 px wide phone under 480 px of height', async () => {
+      await page.viewport(360, 400);
+      await renderTranslated();
+
+      await expect.element(region()).toBeVisible();
+      expectNoOverflow(360);
+      expect(starWidth()).toBeGreaterThanOrEqual(44);
+      const star = region().getByRole('button').first().element().getBoundingClientRect();
+      expect(star.bottom).toBeLessThanOrEqual(textButton(textButtons[0]).getBoundingClientRect().top);
+    });
+
     it('fits the single row on a small phone in landscape', async () => {
       await page.viewport(568, 320);
       await renderTranslated();
 
       await expect.element(region()).toBeVisible();
+      expect(icons()).toEqual([0, 0, 0]);
       expectNoOverflow(568);
     });
   });
