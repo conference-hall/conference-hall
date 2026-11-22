@@ -14,8 +14,10 @@ export class ProposalPage extends PageObject {
   readonly tablist = this.page.getByRole('tablist');
   readonly yourReviewHeading = this.page.getByRole('heading', { name: 'Your review' });
   readonly discussionPanel = this.page.getByRole('tabpanel');
-  readonly comments = this.discussionPanel.locator('> div > ul > li');
-  readonly reviews = this.discussionPanel.locator('> div > ul > li');
+  readonly comments = this.page.getByRole('list', { name: 'Comments' }).locator('> li');
+  readonly reviews = this.page.getByRole('list', { name: 'Reviews' }).getByRole('listitem');
+  readonly speakerMessages = this.page.getByRole('list', { name: 'Messages with speakers' }).locator('> li');
+  readonly newMessagesPill = this.page.getByRole('button', { name: /new messages?$/ });
   readonly reviewsLink = this.page.getByRole('button', { name: /^\d+ reviews?$/ });
   readonly commentInput = this.page.getByRole('textbox', { name: 'Add your comment' });
   readonly commentButton = this.page.getByRole('button', { name: 'Comment' });
@@ -47,6 +49,22 @@ export class ProposalPage extends PageObject {
   async waitFor(name: string) {
     await this.waitForHydration();
     await this.page.getByRole('heading', { name }).waitFor();
+  }
+
+  proposalTitle(name: string) {
+    return this.page.getByRole('heading', { name });
+  }
+
+  globalReview(note: number) {
+    return this.page.getByLabel(`Global review = ${note}`);
+  }
+
+  dismissReviewButton(reviewerName: string) {
+    return this.reviews.filter({ hasText: reviewerName }).getByRole('button', { name: 'Dismiss review' });
+  }
+
+  speakerMessage(content: string) {
+    return this.speakerMessages.filter({ hasText: content });
   }
 
   async top(locator: Locator) {
@@ -96,7 +114,7 @@ export class ProposalPage extends PageObject {
   }
 
   async getSpeakerMessages() {
-    const messages = await this.discussionPanel.locator('ul > li').all();
+    const messages = await this.speakerMessages.all();
     return messages.map((message) => new MessageBlockComponent(message, this.page));
   }
 }

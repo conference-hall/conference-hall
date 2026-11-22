@@ -134,15 +134,12 @@ test.describe('As owner', () => {
     await proposalPage.reviewsTab.click();
     await expect(proposalPage.reviewsTab).toHaveAccessibleName('Reviews 2');
 
-    await proposalPage.reviews
-      .filter({ hasText: 'Bruce Wayne' })
-      .getByRole('button', { name: 'Dismiss review' })
-      .click();
+    await proposalPage.dismissReviewButton('Bruce Wayne').click();
     await expect(proposalPage.reviewsTab).toHaveAccessibleName('Reviews 1');
     await expect(proposalPage.reviewsTab).toHaveAttribute('aria-selected', 'true');
 
     await proposalPage.previousProposal.click();
-    await expect(page.getByRole('heading', { name: 'Talk 2' })).toBeVisible();
+    await expect(proposalPage.proposalTitle('Talk 2')).toBeVisible();
     await expect(proposalPage.commentsTab).toHaveAttribute('aria-selected', 'true');
   });
 
@@ -156,10 +153,10 @@ test.describe('As owner', () => {
     await expect(proposalPage.reviewsTab).toBeFocused();
 
     await proposalPage.pressReviewShortcut('1');
-    await expect(page.getByLabel('Global review = 2')).toHaveCount(2);
+    await expect(proposalPage.globalReview(2)).toHaveCount(2);
 
     await proposalPage.pressReviewShortcut('p');
-    await expect(page.getByRole('heading', { name: 'Talk 2' })).toBeVisible();
+    await expect(proposalPage.proposalTitle('Talk 2')).toBeVisible();
   });
 
   test('opens the Reviews tab from the reviews link of the sidebar', async ({ page }) => {
@@ -206,7 +203,6 @@ test.describe('As owner', () => {
     await page.getByRole('button', { name: 'Favorite' }).click();
     await expect(page.getByLabel('Global review = 4')).toBeVisible();
 
-    // Check comments tab
     await expect(proposalPage.commentsTab).toHaveAttribute('aria-selected', 'true');
     await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 1');
     await expect(proposalPage.comments).toHaveCount(1);
@@ -235,7 +231,6 @@ test.describe('As owner', () => {
     await expect(proposalPage.comments).toHaveCount(1);
     await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 1');
 
-    // Check reviews tab
     await proposalPage.reviewsTab.click();
     await expect(proposalPage.reviewsTab).toHaveAccessibleName('Reviews 2');
     await expect(proposalPage.reviews).toHaveCount(3);
@@ -491,7 +486,7 @@ test.describe('As owner', () => {
     const proposalPage = new ProposalPage(page);
     await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
-    const talkY = await proposalPage.top(page.getByRole('heading', { name: 'Talk 1' }));
+    const talkY = await proposalPage.top(proposalPage.proposalTitle('Talk 1'));
     const metadataY = await proposalPage.top(proposalPage.tagsButton);
     const reviewY = await proposalPage.top(proposalPage.yourReviewHeading);
     const discussionY = await proposalPage.top(proposalPage.tablist);
@@ -519,6 +514,37 @@ test.describe('As owner', () => {
     );
     expect(new Set(tabsY).size).toBe(1);
     await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 1 new message');
+  });
+
+  test('shows the new speaker message from the new messages pill', async ({ page }) => {
+    await flags.set('speakersCommunication', true);
+    await page.setViewportSize({ width: 1280, height: 400 });
+
+    const otherProposal = await proposalFactory({
+      event,
+      talk: await talkFactory({ attributes: { title: 'Talk 4' }, speakers: [speaker1] }),
+    });
+    const conversation = await conversationFactory({
+      event,
+      proposalId: otherProposal.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
+    await conversationMessageFactory({
+      conversation,
+      sender: speaker1,
+      role: 'SPEAKER',
+      attributes: { content: 'Hello from speaker' },
+    });
+
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, otherProposal.routeId, otherProposal.title);
+
+    await expect(proposalPage.newMessagesPill).toHaveText('1 new message');
+    await expect(proposalPage.tablist).not.toBeInViewport();
+
+    await proposalPage.newMessagesPill.click();
+    await expect(proposalPage.speakersTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.speakerMessage('Hello from speaker')).toBeInViewport();
   });
 
   test('manages speaker conversation in the speakers tab', async ({ page }) => {
