@@ -36,7 +36,7 @@ export function ReviewForm({ initialValues, pageRef }: Props) {
   );
 
   return (
-    <div className="space-y-2 p-4 lg:px-6 lg:py-4">
+    <div className="space-y-2 px-6 py-4 max-lg:hidden">
       <H2 size="s">{t('event-management.proposal-page.your-review')}</H2>
       <MarkerGroup
         options={markerOptions}
