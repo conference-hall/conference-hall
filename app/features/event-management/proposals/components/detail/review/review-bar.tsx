@@ -13,10 +13,10 @@ import type { UserReview } from '~/shared/types/proposals.types.ts';
 import { useProposalNavigation } from '../use-proposal-navigation.ts';
 import { useOptimisticReview } from './use-optimistic-review.ts';
 
-const SELECTED_STYLES: Partial<Record<MarkerValue, { button: string; icon: string }>> = {
+const SELECTED_STYLES: Partial<Record<MarkerValue, { button: string; icon?: string }>> = {
   'no-opinion': { button: 'border-gray-500 bg-gray-100 text-gray-900', icon: 'stroke-gray-600' },
-  negative: { button: 'border-red-400 bg-red-50 text-red-700', icon: 'stroke-red-600' },
-  positive: { button: 'border-rose-400 bg-rose-50 text-rose-700', icon: 'fill-red-400 stroke-red-400' },
+  negative: { button: 'border-red-400 bg-red-50 text-red-700' },
+  positive: { button: 'border-rose-400 bg-rose-50 text-rose-700' },
 };
 
 const NAVIGATION_STYLES =
@@ -109,8 +109,8 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
               >
                 <option.icon
                   className={cx(
-                    'size-5 shrink-0 max-[360px]:hidden short:max-md:hidden',
-                    selected ? styles.icon : 'stroke-gray-500',
+                    'hidden size-5 shrink-0 min-[360px]:block short:hidden short:md:block',
+                    selected ? (styles.icon ?? option.fill) : 'stroke-gray-500',
                   )}
                   aria-hidden="true"
                 />
