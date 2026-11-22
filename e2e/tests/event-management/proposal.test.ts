@@ -124,6 +124,43 @@ test.describe('As owner', () => {
     await expect(page.getByLabel('Global review = 2')).toBeVisible();
   });
 
+  test('keeps the selected tab after an action and resets it on navigation', async ({ page }) => {
+    await reviewFactory({ proposal, user, attributes: { note: 4, feeling: 'POSITIVE' } });
+
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    await proposalPage.reviewsTab.click();
+    await expect(proposalPage.reviewsTab).toHaveAccessibleName('Reviews 2');
+
+    await proposalPage.reviews
+      .filter({ hasText: 'Bruce Wayne' })
+      .getByRole('button', { name: 'Dismiss review' })
+      .click();
+    await expect(proposalPage.reviewsTab).toHaveAccessibleName('Reviews 1');
+    await expect(proposalPage.reviewsTab).toHaveAttribute('aria-selected', 'true');
+
+    await proposalPage.previousProposal.click();
+    await expect(page.getByRole('heading', { name: 'Talk 2' })).toBeVisible();
+    await expect(proposalPage.commentsTab).toHaveAttribute('aria-selected', 'true');
+  });
+
+  test('switches tabs with the keyboard and keeps hotkeys working', async ({ page }) => {
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    await proposalPage.commentsTab.focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(proposalPage.reviewsTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.reviewsTab).toBeFocused();
+
+    await proposalPage.pressReviewShortcut('1');
+    await expect(page.getByLabel('Global review = 2')).toHaveCount(2);
+
+    await proposalPage.pressReviewShortcut('p');
+    await expect(page.getByRole('heading', { name: 'Talk 2' })).toBeVisible();
+  });
+
   test('displays proposal data and review the proposal', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
     await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
@@ -155,15 +192,11 @@ test.describe('As owner', () => {
     await page.getByRole('button', { name: 'Favorite' }).click();
     await expect(page.getByLabel('Global review = 4')).toBeVisible();
 
-    // Check activity feed
-    await expect(proposalPage.activityFeed).toHaveCount(4);
-    const reviewsGroup = proposalPage.activityFeed.nth(1);
-    const commentEntry = proposalPage.activityFeed.nth(2);
-    await expect(reviewsGroup).toContainText('Organizer reviews');
-    await expect(reviewsGroup).toContainText('2 reviews');
-    await reviewsGroup.getByRole('button', { name: /Organizer reviews/ }).click();
-    await expect(reviewsGroup).toContainText('Bruce Wayne');
-    await expect(reviewsGroup).toContainText('Clark Kent');
+    // Check comments tab
+    await expect(proposalPage.commentsTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 1');
+    await expect(proposalPage.comments).toHaveCount(1);
+    const commentEntry = proposalPage.comments.first();
     await expect(commentEntry).toContainText('Bruce Wayne');
     await expect(commentEntry).toContainText('Hello world');
 
@@ -175,15 +208,26 @@ test.describe('As owner', () => {
     // Add a comment
     await proposalPage.fill(proposalPage.commentInput, 'This is a new comment');
     await proposalPage.commentButton.click();
-    await expect(proposalPage.activityFeed).toHaveCount(5);
-    const newComment = proposalPage.activityFeed.nth(3);
+    await expect(proposalPage.comments).toHaveCount(2);
+    await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 2');
+    await expect(proposalPage.commentsTab).toHaveAttribute('aria-selected', 'true');
+    const newComment = proposalPage.comments.nth(1);
     await expect(newComment).toContainText('Clark Kent');
     await expect(newComment).toContainText('This is a new comment');
 
     // Delete a comment
     const comment = new MessageBlockComponent(newComment, page);
     await comment.clickDelete();
-    await expect(proposalPage.activityFeed).toHaveCount(4);
+    await expect(proposalPage.comments).toHaveCount(1);
+    await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 1');
+
+    // Check reviews tab
+    await proposalPage.reviewsTab.click();
+    await expect(proposalPage.reviewsTab).toHaveAccessibleName('Reviews 2');
+    await expect(proposalPage.reviews).toHaveCount(3);
+    await expect(proposalPage.reviews.filter({ hasText: 'Bruce Wayne' })).toBeVisible();
+    await expect(proposalPage.reviews.filter({ hasText: 'Clark Kent' })).toBeVisible();
+    await expect(proposalPage.reviews.last()).toContainText('Global review');
 
     // Check speaker profile
     const speakerDrawer = await proposalPage.clickOnSpeaker('Marie Jane');
@@ -398,6 +442,8 @@ test.describe('As owner', () => {
     await expect(page.getByRole('heading', { name: 'Global review' })).not.toBeVisible();
     await expect(page.getByText('Marie Jane')).not.toBeVisible();
     await expect(page.getByText('Robin')).not.toBeVisible();
+    await expect(proposalPage.commentsTab).toBeVisible();
+    await expect(proposalPage.reviewsTab).not.toBeVisible();
   });
 
   test('opens speaker details and edit pages from drawer', async ({ page }) => {

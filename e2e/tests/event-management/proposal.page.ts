@@ -8,7 +8,11 @@ export class ProposalPage extends PageObject {
   readonly referencesToggle = this.page.getByRole('button', { name: 'References' });
   readonly otherProposalsToggle = this.page.getByRole('button', { name: 'Other proposals by speakers' });
 
-  readonly activityFeed = this.page.getByRole('list', { name: 'Activity feed' }).locator('>li');
+  readonly commentsTab = this.page.getByRole('tab', { name: /^Comments/ });
+  readonly reviewsTab = this.page.getByRole('tab', { name: /^Reviews/ });
+  readonly discussionPanel = this.page.getByRole('tabpanel');
+  readonly comments = this.discussionPanel.locator('> div > ul > li');
+  readonly reviews = this.discussionPanel.locator('> div > ul > li');
   readonly commentInput = this.page.getByRole('textbox', { name: 'Add your comment' });
   readonly commentButton = this.page.getByRole('button', { name: 'Comment' });
 
