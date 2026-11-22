@@ -65,7 +65,7 @@ export function MessageBlock({
         <EmojiPicker icon={FaceSmileIcon} variant="tertiary" emojis={MESSAGE_EMOJIS} onSelectEmoji={onChangeReaction} />
       </div>
 
-      <div className="flex flex-wrap items-baseline gap-x-1">
+      <div className="flex flex-wrap items-baseline gap-x-1 pr-14">
         {showAvatarOnMobile ? (
           <Avatar
             picture={message.sender.picture}
