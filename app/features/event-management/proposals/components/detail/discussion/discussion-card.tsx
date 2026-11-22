@@ -37,22 +37,12 @@ export function DiscussionCard({
   const tabs = [
     {
       id: 'comments' as const,
-      label: t('event-management.proposal-page.discussion.tabs.comments'),
+      label: t('event-management.proposal-page.discussion.tabs.team'),
       icon: LockClosedIcon,
       count: comments.length,
       newCount: comments.filter((message) => message.isNew).length,
       panel: <CommentsPanel comments={comments} canManageConversations={canManageConversations} />,
     },
-    reviews
-      ? {
-          id: 'reviews' as const,
-          label: t('event-management.proposal-page.discussion.tabs.reviews'),
-          icon: StarIcon,
-          count: countActiveReviews(reviews),
-          newCount: 0,
-          panel: <ReviewsPanel reviews={reviews} summary={reviewsSummary} canDismissReviews={canDismissReviews} />,
-        }
-      : null,
     speakerConversation
       ? {
           id: 'speakers' as const,
@@ -69,6 +59,16 @@ export function DiscussionCard({
           ),
         }
       : null,
+    reviews
+      ? {
+          id: 'reviews' as const,
+          label: t('event-management.proposal-page.discussion.tabs.reviews'),
+          icon: StarIcon,
+          count: countActiveReviews(reviews),
+          newCount: 0,
+          panel: <ReviewsPanel reviews={reviews} summary={reviewsSummary} canDismissReviews={canDismissReviews} />,
+        }
+      : null,
   ].filter((tab) => tab !== null);
 
   const selectedIndex = Math.max(
@@ -76,29 +76,39 @@ export function DiscussionCard({
     0,
   );
 
+  // Wait for the selected panel to render, so the scroll uses its height.
+  const scrollToCard = () => {
+    requestAnimationFrame(() => {
+      document.getElementById('discussion-card')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  };
+
   return (
     <Card id="discussion-card">
       <TabGroup selectedIndex={selectedIndex} onChange={(index) => onSelectTab(tabs[index].id)}>
         <div className="border-b border-gray-200">
-          <TabList className="-mb-px flex overflow-x-auto sm:gap-2 sm:px-4">
+          <TabList className="-mb-px flex overflow-x-auto sm:gap-1 sm:px-3">
             {tabs.map(({ id, label, icon: Icon, count, newCount }) => (
               <Tab
                 key={id}
-                className="flex h-12 shrink-0 grow cursor-pointer items-center justify-center gap-1 border-b-2 border-transparent px-1.5 text-[13px] font-semibold whitespace-nowrap text-gray-500 hover:text-gray-700 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 data-selected:border-indigo-600 data-selected:text-indigo-600 sm:grow-0 sm:gap-2 sm:px-2 sm:text-sm"
+                onClick={scrollToCard}
+                className="group flex h-12 shrink-0 grow cursor-pointer items-center justify-center border-b-2 border-transparent text-[13px] font-semibold whitespace-nowrap text-gray-500 outline-hidden hover:text-gray-700 data-selected:border-indigo-600 data-selected:text-indigo-600 sm:grow-0 sm:text-sm"
               >
-                <Icon className="hidden size-4 sm:block" aria-hidden />
-                {label}
-                <span className="rounded-full bg-gray-100 px-1.5 text-xs font-medium text-gray-700 max-[359px]:hidden sm:px-2">
-                  {count}
-                </span>
-                {newCount > 0 ? (
-                  <span className="flex items-center">
-                    <StatusPill status="info" size="sm" />
-                    <span className="sr-only">
-                      {t('event-management.proposal-page.new-messages', { count: newCount })}
-                    </span>
+                <span className="flex items-center gap-1 rounded-md px-1.5 py-1.5 group-focus-visible:bg-gray-100 sm:gap-2 sm:px-2">
+                  <Icon className="hidden size-4 sm:block" aria-hidden />
+                  {label}
+                  <span className="rounded-full bg-gray-100 px-1.5 text-xs font-medium text-gray-700 group-focus-visible:bg-gray-200 max-[359px]:hidden sm:px-2">
+                    {count}
                   </span>
-                ) : null}
+                  {newCount > 0 ? (
+                    <span className="flex items-center">
+                      <StatusPill status="info" size="sm" />
+                      <span className="sr-only">
+                        {t('event-management.proposal-page.new-messages', { count: newCount })}
+                      </span>
+                    </span>
+                  ) : null}
+                </span>
               </Tab>
             ))}
           </TabList>
@@ -122,7 +132,7 @@ function Loading() {
       </div>
       <div className="flex animate-pulse gap-3 p-4">
         <div className="size-8 shrink-0 rounded-full bg-gray-200" />
-        <div className="w-full space-y-2 rounded-md border border-gray-200 p-4">
+        <div className="w-full space-y-2 py-2">
           <div className="h-2.5 w-2/3 rounded-full bg-gray-200" />
           <div className="h-2.5 w-1/3 rounded-full bg-gray-200" />
           <div className="h-2.5 w-1/3 rounded-full bg-gray-200" />

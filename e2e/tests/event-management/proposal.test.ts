@@ -140,14 +140,14 @@ test.describe('As owner', () => {
 
     await proposalPage.previousProposal.click();
     await expect(proposalPage.proposalTitle('Talk 2')).toBeVisible();
-    await expect(proposalPage.commentsTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.teamTab).toHaveAttribute('aria-selected', 'true');
   });
 
   test('switches tabs with the keyboard and keeps hotkeys working', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
     await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
-    await proposalPage.commentsTab.focus();
+    await proposalPage.teamTab.focus();
     await page.keyboard.press('ArrowRight');
     await expect(proposalPage.reviewsTab).toHaveAttribute('aria-selected', 'true');
     await expect(proposalPage.reviewsTab).toBeFocused();
@@ -163,7 +163,7 @@ test.describe('As owner', () => {
     const proposalPage = new ProposalPage(page);
     await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
-    await expect(proposalPage.commentsTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.teamTab).toHaveAttribute('aria-selected', 'true');
     await expect(proposalPage.reviewsLink).toHaveText('1 review');
 
     await proposalPage.reviewsLink.click();
@@ -203,8 +203,8 @@ test.describe('As owner', () => {
     await page.getByRole('button', { name: 'Favorite' }).click();
     await expect(page.getByLabel('Global review = 4')).toBeVisible();
 
-    await expect(proposalPage.commentsTab).toHaveAttribute('aria-selected', 'true');
-    await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 1');
+    await expect(proposalPage.teamTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 1');
     await expect(proposalPage.comments).toHaveCount(1);
     const commentEntry = proposalPage.comments.first();
     await expect(commentEntry).toContainText('Bruce Wayne');
@@ -219,8 +219,8 @@ test.describe('As owner', () => {
     await proposalPage.fill(proposalPage.commentInput, 'This is a new comment');
     await proposalPage.commentButton.click();
     await expect(proposalPage.comments).toHaveCount(2);
-    await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 2');
-    await expect(proposalPage.commentsTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 2');
+    await expect(proposalPage.teamTab).toHaveAttribute('aria-selected', 'true');
     const newComment = proposalPage.comments.nth(1);
     await expect(newComment).toContainText('Clark Kent');
     await expect(newComment).toContainText('This is a new comment');
@@ -229,7 +229,7 @@ test.describe('As owner', () => {
     const comment = new MessageBlockComponent(newComment, page);
     await comment.clickDelete();
     await expect(proposalPage.comments).toHaveCount(1);
-    await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 1');
+    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 1');
 
     await proposalPage.reviewsTab.click();
     await expect(proposalPage.reviewsTab).toHaveAccessibleName('Reviews 2');
@@ -453,7 +453,7 @@ test.describe('As owner', () => {
     await expect(page.getByRole('heading', { name: 'Global review' })).not.toBeVisible();
     await expect(page.getByText('Marie Jane')).not.toBeVisible();
     await expect(page.getByText('Robin')).not.toBeVisible();
-    await expect(proposalPage.commentsTab).toBeVisible();
+    await expect(proposalPage.teamTab).toBeVisible();
     await expect(proposalPage.reviewsTab).not.toBeVisible();
     await expect(proposalPage.speakersTab).not.toBeVisible();
     await expect(proposalPage.reviewsLink).not.toBeVisible();
@@ -495,10 +495,10 @@ test.describe('As owner', () => {
     expect(reviewY).toBeLessThan(discussionY);
 
     const tabsY = await Promise.all(
-      [proposalPage.commentsTab, proposalPage.reviewsTab, proposalPage.speakersTab].map((tab) => proposalPage.top(tab)),
+      [proposalPage.teamTab, proposalPage.reviewsTab, proposalPage.speakersTab].map((tab) => proposalPage.top(tab)),
     );
     expect(new Set(tabsY).size).toBe(1);
-    await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 1 1 new message');
+    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 1 1 new message');
   });
 
   test('keeps the page usable on a very narrow viewport', async ({ page }) => {
@@ -510,10 +510,10 @@ test.describe('As owner', () => {
 
     expect(await proposalPage.hasHorizontalScroll()).toBe(false);
     const tabsY = await Promise.all(
-      [proposalPage.commentsTab, proposalPage.reviewsTab, proposalPage.speakersTab].map((tab) => proposalPage.top(tab)),
+      [proposalPage.teamTab, proposalPage.reviewsTab, proposalPage.speakersTab].map((tab) => proposalPage.top(tab)),
     );
     expect(new Set(tabsY).size).toBe(1);
-    await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 1 new message');
+    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 1 new message');
   });
 
   test('shows the new speaker message from the new messages pill', async ({ page }) => {

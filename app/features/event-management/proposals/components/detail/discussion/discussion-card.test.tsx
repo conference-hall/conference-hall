@@ -76,13 +76,13 @@ describe('DiscussionCard component', () => {
     return page.render(<RouteStub initialEntries={['/']} />);
   };
 
-  it('shows the review comments and the comment form under the Comments tab', async () => {
+  it('shows the review comments and the comment form under the Team tab', async () => {
     await renderComponent();
 
-    await expect.element(page.getByRole('tab', { name: /Comments/ })).toHaveAttribute('aria-selected', 'true');
+    await expect.element(page.getByRole('tab', { name: /Team/ })).toHaveAttribute('aria-selected', 'true');
     await expect.element(page.getByRole('tab', { name: /Reviews/ })).toHaveAttribute('aria-selected', 'false');
 
-    const panel = page.getByRole('tabpanel', { name: /Comments/ });
+    const panel = page.getByRole('tabpanel', { name: /Team/ });
     await expect.element(panel.getByText('Visible only to the organizing team.')).toBeInTheDocument();
     await expect.element(panel.getByText('Great talk')).toBeInTheDocument();
     await expect.element(panel.getByText('Too generic')).toBeInTheDocument();
@@ -120,7 +120,7 @@ describe('DiscussionCard component', () => {
     await renderComponent({ reviews: null, reviewsSummary: null, selectedTab: 'reviews' });
 
     await expect.element(page.getByRole('tab', { name: /Reviews/ })).not.toBeInTheDocument();
-    await expect.element(page.getByRole('tab', { name: /Comments/ })).toHaveAttribute('aria-selected', 'true');
+    await expect.element(page.getByRole('tab', { name: /Team/ })).toHaveAttribute('aria-selected', 'true');
     await expect.element(page.getByText('Great talk')).toBeInTheDocument();
   });
 
@@ -130,11 +130,11 @@ describe('DiscussionCard component', () => {
       comments: [comment('c1', 'Bruce Wayne', 'Great talk')],
     });
 
-    await expect.element(page.getByRole('tab', { name: 'Comments 1' })).toBeInTheDocument();
+    await expect.element(page.getByRole('tab', { name: 'Team 1' })).toBeInTheDocument();
     await expect.element(page.getByRole('tab', { name: 'Reviews 2' })).toBeInTheDocument();
   });
 
-  it('shows a dot on the Comments tab when review comments are new', async () => {
+  it('shows a dot on the Team tab when review comments are new', async () => {
     await renderComponent({
       comments: [
         comment('c1', 'Bruce Wayne', 'Great talk'),
@@ -143,14 +143,14 @@ describe('DiscussionCard component', () => {
       ],
     });
 
-    await expect.element(page.getByRole('tab', { name: 'Comments 3 2 new messages' })).toBeInTheDocument();
+    await expect.element(page.getByRole('tab', { name: 'Team 3 2 new messages' })).toBeInTheDocument();
     await expect.element(page.getByRole('tab', { name: 'Reviews 2', exact: true })).toBeInTheDocument();
   });
 
-  it('shows no dot on the Comments tab when no review comment is new', async () => {
+  it('shows no dot on the Team tab when no review comment is new', async () => {
     await renderComponent();
 
-    await expect.element(page.getByRole('tab', { name: 'Comments 2', exact: true })).toBeInTheDocument();
+    await expect.element(page.getByRole('tab', { name: 'Team 2', exact: true })).toBeInTheDocument();
   });
 
   it('shows a dot on the Speakers tab when speaker messages are new, even when it is not selected', async () => {
@@ -165,7 +165,7 @@ describe('DiscussionCard component', () => {
     });
 
     await expect.element(page.getByRole('tab', { name: 'Speakers 2 1 new message' })).toBeInTheDocument();
-    await expect.element(page.getByRole('tab', { name: 'Comments 2', exact: true })).toBeInTheDocument();
+    await expect.element(page.getByRole('tab', { name: 'Team 2', exact: true })).toBeInTheDocument();
   });
 
   it('shows no dot on the Speakers tab when no speaker message is new', async () => {
@@ -201,7 +201,7 @@ describe('DiscussionCard component', () => {
   it('shows only the comment form when there is no review comment', async () => {
     await renderComponent({ comments: [] });
 
-    await expect.element(page.getByRole('tab', { name: 'Comments 0' })).toBeInTheDocument();
+    await expect.element(page.getByRole('tab', { name: 'Team 0' })).toBeInTheDocument();
     await expect.element(page.getByRole('tabpanel').getByRole('listitem')).not.toBeInTheDocument();
     await expect.element(page.getByRole('textbox', { name: 'Add your comment' })).toBeInTheDocument();
   });
@@ -231,8 +231,8 @@ describe('DiscussionCard component', () => {
     });
 
     const tabs = page.getByRole('tab');
-    await expect.element(tabs.nth(2)).toHaveAccessibleName('Speakers 2');
-    await expect.element(tabs.nth(2)).toHaveAttribute('aria-selected', 'true');
+    await expect.element(tabs.nth(1)).toHaveAccessibleName('Speakers 2');
+    await expect.element(tabs.nth(1)).toHaveAttribute('aria-selected', 'true');
 
     const panel = page.getByRole('tabpanel', { name: /Speakers/ });
     await expect
@@ -254,7 +254,7 @@ describe('DiscussionCard component', () => {
     await renderComponent({ speakerConversation: null, selectedTab: 'speakers' });
 
     await expect.element(page.getByRole('tab', { name: /Speakers/ })).not.toBeInTheDocument();
-    await expect.element(page.getByRole('tab', { name: /Comments/ })).toHaveAttribute('aria-selected', 'true');
+    await expect.element(page.getByRole('tab', { name: /Team/ })).toHaveAttribute('aria-selected', 'true');
   });
 
   it('invites to start a conversation when there is no speaker message', async () => {

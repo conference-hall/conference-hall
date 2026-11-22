@@ -83,7 +83,7 @@ describe('NavigationHeader', () => {
     await expect.element(page.getByRole('button', { name: 'Outside' })).toBeInTheDocument();
   });
 
-  it('selects the Comments tab from the new messages pill when a review comment is new', async () => {
+  it('selects the Team tab from the new messages pill when a review comment is new', async () => {
     const onSelectDiscussionTab = vi.fn();
     await renderComponent([[message('c1', true)], [message('m1', true)]], onSelectDiscussionTab);
 

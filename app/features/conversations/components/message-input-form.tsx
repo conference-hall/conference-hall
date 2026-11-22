@@ -12,7 +12,6 @@ type Props = {
   inputLabel: string;
   placeholder?: string;
   buttonLabel?: string;
-  buttonVariant?: 'primary' | 'secondary';
   message?: Message;
   autoFocus?: boolean;
   onOptimisticSave?: (data: { id?: string; content: string }) => void;
@@ -28,7 +27,6 @@ export function MessageInputForm({
   message,
   autoFocus = false,
   onClose,
-  buttonVariant = onClose ? 'primary' : 'secondary',
 }: Props) {
   const { t } = useTranslation();
   const inputId = useId();
@@ -49,6 +47,9 @@ export function MessageInputForm({
     await fetcher.submit(formData, { method: 'POST', preventScrollReset: true, flushSync: true });
     formRef.current?.reset();
     setCharCount(message?.content?.length ?? 0);
+    if (!message) {
+      requestAnimationFrame(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
+    }
   };
 
   const isLoading = fetcher.state === 'submitting';
@@ -57,7 +58,7 @@ export function MessageInputForm({
   useHotkey('Escape', () => onClose?.(), { target: textareaRef, enabled: !!onClose });
 
   return (
-    <Form ref={formRef} className="relative w-full" navigate={false} onSubmit={handleSubmit}>
+    <Form ref={formRef} className="relative w-full scroll-mb-4" navigate={false} onSubmit={handleSubmit}>
       <Label htmlFor={inputId} className="sr-only">
         {inputLabel}
       </Label>
@@ -89,12 +90,17 @@ export function MessageInputForm({
           if (e.target === e.currentTarget) textareaRef.current?.focus();
         }}
       >
-        <Button type="submit" variant={buttonVariant} size={onClose ? 'sm' : 'base'} disabled={isLoading}>
+        <Button
+          type="submit"
+          variant={onClose ? 'primary' : 'secondary'}
+          size={onClose ? 'sm' : 'base'}
+          disabled={isLoading}
+        >
           {buttonLabel || t('common.save')}
           <kbd
             className={cx('ml-2 hidden font-sans font-normal sm:inline', {
-              'text-white': buttonVariant === 'primary',
-              'text-gray-500': buttonVariant === 'secondary',
+              'text-white': Boolean(onClose),
+              'text-gray-500': !onClose,
             })}
           >
             {formatForDisplay('Mod+Enter')}

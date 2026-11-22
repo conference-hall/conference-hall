@@ -41,20 +41,20 @@ export function ReviewsPanel({ reviews, summary, canDismissReviews }: Props) {
   const { t } = useTranslation();
 
   return (
-    <div className="space-y-4 p-3 sm:p-4">
-      <Text size="xs" variant="secondary">
+    <div>
+      <Text size="xs" variant="secondary" className="p-3 sm:px-4">
         {t('event-management.proposal-page.discussion.team-only-hint')}
       </Text>
 
       {reviews.length > 0 ? (
         <ul
           aria-label={t('event-management.proposal-page.discussion.tabs.reviews')}
-          className="divide-y divide-gray-200 overflow-hidden rounded-md border border-gray-200"
+          className="divide-y divide-gray-200 border-t border-gray-200"
         >
           {reviews.map((review) => (
             <ReviewRow key={review.id} review={review} canDismissReviews={canDismissReviews} />
           ))}
-          <li className="flex items-center justify-between gap-2 bg-gray-50 px-3 py-2.5">
+          <li className="flex items-center justify-between gap-2 rounded-b-lg bg-gray-50 p-3 sm:px-4">
             <Text size="s" weight="semibold">
               {t('event-management.proposal-page.reviews.global')}
             </Text>
@@ -66,7 +66,7 @@ export function ReviewsPanel({ reviews, summary, canDismissReviews }: Props) {
           </li>
         </ul>
       ) : (
-        <Text size="s" variant="secondary">
+        <Text size="s" variant="secondary" className="px-3 pb-3 sm:px-4 sm:pb-4">
           {t('event-management.proposal-page.discussion.reviews.empty')}
         </Text>
       )}
@@ -84,7 +84,7 @@ function ReviewRow({ review, canDismissReviews }: ReviewRowProps) {
   const dismissedStyle = dismissed ? 'opacity-40' : '';
 
   return (
-    <li className="flex items-center gap-2 px-3 py-2">
+    <li className="flex items-center gap-2 px-3 py-2.5 sm:px-4">
       <Avatar picture={review.picture} name={review.name} size="xs" aria-hidden className={dismissedStyle} />
       <div className={cx('flex min-w-0 items-baseline gap-1', dismissedStyle)}>
         <Text size="s" weight="semibold" truncate>

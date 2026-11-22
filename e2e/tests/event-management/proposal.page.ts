@@ -8,7 +8,7 @@ export class ProposalPage extends PageObject {
   readonly referencesToggle = this.page.getByRole('button', { name: 'References' });
   readonly otherProposalsToggle = this.page.getByRole('button', { name: 'Other proposals by speakers' });
 
-  readonly commentsTab = this.page.getByRole('tab', { name: /^Comments/ });
+  readonly teamTab = this.page.getByRole('tab', { name: /^Team/ });
   readonly reviewsTab = this.page.getByRole('tab', { name: /^Reviews/ });
   readonly speakersTab = this.page.getByRole('tab', { name: /^Speakers/ });
   readonly tablist = this.page.getByRole('tablist');
