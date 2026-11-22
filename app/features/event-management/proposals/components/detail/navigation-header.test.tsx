@@ -17,10 +17,15 @@ describe('NavigationHeader', () => {
     isNew,
   });
 
+  afterEach(async () => {
+    await page.viewport(1920, 1080);
+  });
+
   const renderComponent = (
     activity: [Array<Message>, Array<Message>] = [[], []],
     onSelectDiscussionTab: (tab: DiscussionTab) => void = vi.fn(),
     speakersConversationEnabled = true,
+    navigationInReviewBar = false,
   ) => {
     const activityPromise = Promise.resolve(activity);
 
@@ -40,6 +45,7 @@ describe('NavigationHeader', () => {
               pageRef={pageRef}
               activityPromise={activityPromise}
               speakersConversationEnabled={speakersConversationEnabled}
+              navigationInReviewBar={navigationInReviewBar}
               onSelectDiscussionTab={onSelectDiscussionTab}
             />
           </main>
@@ -69,6 +75,64 @@ describe('NavigationHeader', () => {
     await userEvent.keyboard('p');
 
     await expect.element(page.getByRole('heading', { name: 'Previous proposal' })).toBeInTheDocument();
+  });
+
+  describe('when the review bar owns the navigation', () => {
+    const renderWithReviewBar = () => renderComponent([[message('c1', true)], []], vi.fn(), true, true);
+
+    it('hides the previous and next links on a phone and keeps the rest of the header', async () => {
+      await page.viewport(390, 844);
+      await renderWithReviewBar();
+
+      await expect.element(page.getByText('2/3')).toBeVisible();
+      await expect.element(page.getByRole('button', { name: '1 new message' })).toBeVisible();
+      await expect.element(page.getByRole('link', { name: 'Previous proposal' })).not.toBeInTheDocument();
+      await expect.element(page.getByRole('link', { name: 'Next proposal' })).not.toBeInTheDocument();
+    });
+
+    it('hides the previous and next links on a tablet in portrait and keeps the review progress', async () => {
+      await page.viewport(768, 1024);
+      await renderWithReviewBar();
+
+      await expect.element(page.getByText('2/3')).toBeVisible();
+      await expect.element(page.getByText('33% reviewed')).toBeVisible();
+      await expect.element(page.getByRole('link', { name: 'Previous proposal' })).not.toBeInTheDocument();
+      await expect.element(page.getByRole('link', { name: 'Next proposal' })).not.toBeInTheDocument();
+    });
+
+    it('shows the previous and next links on a desktop', async () => {
+      await page.viewport(1280, 800);
+      await renderWithReviewBar();
+
+      await expect.element(page.getByRole('link', { name: 'Previous proposal' })).toBeVisible();
+      await expect.element(page.getByRole('link', { name: 'Next proposal' })).toBeVisible();
+    });
+
+    it('goes to the next proposal with n on a phone', async () => {
+      await page.viewport(390, 844);
+      await renderWithReviewBar();
+
+      await userEvent.keyboard('n');
+
+      await expect.element(page.getByRole('heading', { name: 'Next proposal' })).toBeInTheDocument();
+    });
+
+    it('goes to the previous proposal with p on a phone', async () => {
+      await page.viewport(390, 844);
+      await renderWithReviewBar();
+
+      await userEvent.keyboard('p');
+
+      await expect.element(page.getByRole('heading', { name: 'Previous proposal' })).toBeInTheDocument();
+    });
+  });
+
+  it('keeps the previous and next links on a phone when reviews are disabled', async () => {
+    await page.viewport(390, 844);
+    await renderComponent();
+
+    await expect.element(page.getByRole('link', { name: 'Previous proposal' })).toBeVisible();
+    await expect.element(page.getByRole('link', { name: 'Next proposal' })).toBeVisible();
   });
 
   it('lets keys through when the focus is outside the page', async () => {

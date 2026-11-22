@@ -1,5 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/16/solid';
 import { useHotkey } from '@tanstack/react-hotkeys';
+import { cx } from 'class-variance-authority';
 import type React from 'react';
 import { Suspense } from 'react';
 import { flushSync } from 'react-dom';
@@ -25,6 +26,7 @@ type Props = {
   pageRef: React.RefObject<HTMLElement | null>;
   activityPromise: Promise<[Array<Message>, Array<Message>]>;
   speakersConversationEnabled: boolean;
+  navigationInReviewBar: boolean;
   onSelectDiscussionTab: (tab: DiscussionTab) => void;
 };
 
@@ -39,6 +41,7 @@ export function NavigationHeader({
   pageRef,
   activityPromise,
   speakersConversationEnabled,
+  navigationInReviewBar,
   onSelectDiscussionTab,
 }: Props) {
   const { t } = useTranslation();
@@ -75,6 +78,7 @@ export function NavigationHeader({
           variant="secondary"
           size="sm"
           disabled={!previousPath}
+          className={cx({ 'max-lg:hidden': navigationInReviewBar })}
         />
         <Text weight="medium">{`${current}/${total}`}</Text>
         <Button
@@ -84,6 +88,7 @@ export function NavigationHeader({
           variant="secondary"
           size="sm"
           disabled={!nextPath}
+          className={cx({ 'max-lg:hidden': navigationInReviewBar })}
         />
       </nav>
 
