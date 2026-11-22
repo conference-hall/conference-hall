@@ -101,6 +101,7 @@ test.describe('As owner', () => {
         displayProposalsReviews: false,
         displayProposalsSpeakers: false,
         reviewEnabled: false,
+        speakersConversationEnabled: false,
       },
     });
     proposal2 = await proposalFactory({
@@ -436,6 +437,8 @@ test.describe('As owner', () => {
   });
 
   test('hides reviews, speakers following event settings', async ({ page }) => {
+    await flags.set('speakersCommunication', true);
+
     const proposalPage = new ProposalPage(page);
     await proposalPage.goto(team.slug, event2.slug, proposal2.routeId, proposal2.title);
 
@@ -444,6 +447,7 @@ test.describe('As owner', () => {
     await expect(page.getByText('Robin')).not.toBeVisible();
     await expect(proposalPage.commentsTab).toBeVisible();
     await expect(proposalPage.reviewsTab).not.toBeVisible();
+    await expect(proposalPage.speakersTab).not.toBeVisible();
   });
 
   test('opens speaker details and edit pages from drawer', async ({ page }) => {
@@ -466,7 +470,7 @@ test.describe('As owner', () => {
     await expect(page.getByRole('heading', { name: 'Edit speaker Marie Jane' })).toBeVisible();
   });
 
-  test('manages speaker conversation in drawer', async ({ page }) => {
+  test('manages speaker conversation in the speakers tab', async ({ page }) => {
     await flags.set('speakersCommunication', true);
 
     const proposalPage = new ProposalPage(page);
@@ -490,22 +494,29 @@ test.describe('As owner', () => {
 
     await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
-    const drawer = await proposalPage.openConversationDrawer();
-    await expect(drawer.getByText('Hello from speaker')).toBeVisible();
-    await expect(drawer.getByText('Hello from organizer')).toBeVisible();
+    await proposalPage.speakersTab.click();
+    await expect(proposalPage.speakersTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.speakersTab).toHaveAccessibleName('Speakers 2');
+    const panel = proposalPage.discussionPanel;
+    await expect(panel.getByText('Hello from speaker')).toBeVisible();
+    await expect(panel.getByText('Hello from organizer')).toBeVisible();
 
-    await proposalPage.sendMessageInDrawer(drawer, 'New message from organizer');
-    await expect(drawer.getByText('New message from organizer')).toBeVisible();
+    await proposalPage.sendSpeakerMessage('New message from organizer');
+    await expect(panel.getByText('New message from organizer')).toBeVisible();
+    await expect(proposalPage.speakersTab).toHaveAccessibleName('Speakers 3');
 
     // We test edit and delete on second message because optimistic rendering
     // make it flaky with playwright automation tests
-    const messages = await proposalPage.getConversationMessages(drawer);
+    const messages = await proposalPage.getSpeakerMessages();
 
     await messages[1].editMessage('Updated message from organizer');
-    await expect(drawer.getByText('Updated message from organizer')).toBeVisible();
+    await expect(panel.getByText('Updated message from organizer')).toBeVisible();
+    await expect(proposalPage.speakersTab).toHaveAttribute('aria-selected', 'true');
 
     await messages[1].clickDelete();
-    await expect(drawer.getByText('Updated message from organizer')).not.toBeVisible();
+    await expect(panel.getByText('Updated message from organizer')).not.toBeVisible();
+    await expect(proposalPage.speakersTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.speakersTab).toHaveAccessibleName('Speakers 2');
   });
 
   test('archives and restores a proposal', async ({ page }) => {

@@ -1,4 +1,3 @@
-import type { Locator } from '@playwright/test';
 import { MessageBlockComponent } from '../../common/message-block.component.ts';
 import { SpeakerPanelComponent } from '../../common/speaker-panel.component.ts';
 import { TalkFormComponent } from '../../common/talk-form.component.ts';
@@ -10,11 +9,14 @@ export class ProposalPage extends PageObject {
 
   readonly commentsTab = this.page.getByRole('tab', { name: /^Comments/ });
   readonly reviewsTab = this.page.getByRole('tab', { name: /^Reviews/ });
+  readonly speakersTab = this.page.getByRole('tab', { name: /^Speakers/ });
   readonly discussionPanel = this.page.getByRole('tabpanel');
   readonly comments = this.discussionPanel.locator('> div > ul > li');
   readonly reviews = this.discussionPanel.locator('> div > ul > li');
   readonly commentInput = this.page.getByRole('textbox', { name: 'Add your comment' });
   readonly commentButton = this.page.getByRole('button', { name: 'Comment' });
+  readonly speakerMessageInput = this.discussionPanel.getByRole('textbox', { name: /^Send a message to/ });
+  readonly sendToSpeakersButton = this.discussionPanel.getByRole('button', { name: 'Send to speakers' });
 
   readonly nextProposal = this.page.getByRole('link', { name: 'Next proposal' });
   readonly previousProposal = this.page.getByRole('link', { name: 'Previous proposal' });
@@ -31,7 +33,6 @@ export class ProposalPage extends PageObject {
   readonly formatsButton = this.page.getByRole('button', { name: 'Formats', exact: true });
   readonly categoriesButton = this.page.getByRole('button', { name: 'Categories', exact: true });
 
-  readonly conversationDrawerButton = this.page.getByRole('button').filter({ hasText: /Conversation/ });
   readonly actionsMenuButton = this.page.getByRole('button', { name: 'Proposal action menu' });
 
   async goto(team: string, event: string, routeId: string, title: string) {
@@ -76,21 +77,13 @@ export class ProposalPage extends PageObject {
     return this.page.getByRole('dialog', { name });
   }
 
-  async openConversationDrawer() {
-    await this.conversationDrawerButton.click();
-    const drawer = this.page.getByRole('dialog');
-    await drawer.getByRole('button', { name: 'Send' }).waitFor();
-    return drawer;
+  async sendSpeakerMessage(content: string) {
+    await this.speakerMessageInput.fill(content);
+    await this.sendToSpeakersButton.click();
   }
 
-  async getConversationMessages(drawer: Locator) {
-    const messages = await drawer.locator('ul > li').all();
+  async getSpeakerMessages() {
+    const messages = await this.discussionPanel.locator('ul > li').all();
     return messages.map((message) => new MessageBlockComponent(message, this.page));
-  }
-
-  async sendMessageInDrawer(drawer: Locator, content: string) {
-    const input = drawer.getByRole('textbox');
-    await input.fill(content);
-    await drawer.getByRole('button', { name: 'Send' }).click();
   }
 }
