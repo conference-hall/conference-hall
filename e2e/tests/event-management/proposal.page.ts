@@ -13,6 +13,7 @@ export class ProposalPage extends PageObject {
   readonly discussionPanel = this.page.getByRole('tabpanel');
   readonly comments = this.discussionPanel.locator('> div > ul > li');
   readonly reviews = this.discussionPanel.locator('> div > ul > li');
+  readonly reviewsLink = this.page.getByRole('button', { name: /^\d+ reviews?$/ });
   readonly commentInput = this.page.getByRole('textbox', { name: 'Add your comment' });
   readonly commentButton = this.page.getByRole('button', { name: 'Comment' });
   readonly speakerMessageInput = this.discussionPanel.getByRole('textbox', { name: /^Send a message to/ });

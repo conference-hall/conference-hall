@@ -494,6 +494,8 @@
   "event-management.proposal-page.proposal-status.confirmation": "Attention: The proposal result has already been published. Any modifications will require re-publishing for the speakers' visibility.",
   "event-management.proposal-page.publication.notify": "Notify speakers via email",
   "event-management.proposal-page.publication.submit": "Publish result to speakers",
+  "event-management.proposal-page.reviews.count_one": "{{count}} review",
+  "event-management.proposal-page.reviews.count_other": "{{count}} reviews",
   "event-management.proposal-page.reviews.dismiss-review": "Dismiss review",
   "event-management.proposal-page.reviews.global": "Global review",
   "event-management.proposal-page.reviews.restore-review": "Restore review",

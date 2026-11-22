@@ -73,7 +73,7 @@ export function DiscussionCard({
   );
 
   return (
-    <Card>
+    <Card id="discussion-card">
       <TabGroup selectedIndex={selectedIndex} onChange={(index) => onSelectTab(tabs[index].id)}>
         <TabList className="flex gap-2 border-b border-gray-200 px-4">
           {tabs.map(({ id, label, icon: Icon, count }) => (

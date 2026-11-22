@@ -162,6 +162,19 @@ test.describe('As owner', () => {
     await expect(page.getByRole('heading', { name: 'Talk 2' })).toBeVisible();
   });
 
+  test('opens the Reviews tab from the reviews link of the sidebar', async ({ page }) => {
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    await expect(proposalPage.commentsTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.reviewsLink).toHaveText('1 review');
+
+    await proposalPage.reviewsLink.click();
+    await expect(proposalPage.reviewsTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.reviews.filter({ hasText: 'Bruce Wayne' })).toBeVisible();
+    await expect(proposalPage.discussionPanel).toBeInViewport();
+  });
+
   test('displays proposal data and review the proposal', async ({ page }) => {
     const proposalPage = new ProposalPage(page);
     await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
@@ -448,6 +461,7 @@ test.describe('As owner', () => {
     await expect(proposalPage.commentsTab).toBeVisible();
     await expect(proposalPage.reviewsTab).not.toBeVisible();
     await expect(proposalPage.speakersTab).not.toBeVisible();
+    await expect(proposalPage.reviewsLink).not.toBeVisible();
   });
 
   test('opens speaker details and edit pages from drawer', async ({ page }) => {

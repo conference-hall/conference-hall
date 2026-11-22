@@ -277,6 +277,10 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
             reviewEnabled={event.reviewEnabled}
             canDeliberate={permissions.canChangeProposalStatus}
             pageRef={pageRef}
+            onShowReviews={() => {
+              setDiscussion({ proposalId: proposal.id, tab: 'reviews' });
+              document.getElementById('discussion-card')?.scrollIntoView({ behavior: 'smooth' });
+            }}
           />
 
           <Card as="section">

@@ -13,12 +13,13 @@ type Props = {
   reviewEnabled: boolean;
   canDeliberate: boolean;
   pageRef: React.RefObject<HTMLElement | null>;
+  onShowReviews: VoidFunction;
 };
 
-export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate, pageRef }: Props) {
+export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate, pageRef, onShowReviews }: Props) {
   const { t } = useTranslation();
 
-  const { you, summary } = proposal.reviews || {};
+  const { you, summary, members } = proposal.reviews || {};
 
   return (
     <Card as="section" className="divide-y divide-gray-200">
@@ -40,6 +41,17 @@ export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate, pageRef 
           {summary && (
             <div className="flex items-center justify-between gap-4">
               <H2 size="s">{t('event-management.proposal-page.reviews.global')}</H2>
+              {members ? (
+                <button
+                  type="button"
+                  onClick={onShowReviews}
+                  className="mr-auto cursor-pointer text-xs font-medium text-indigo-700 underline hover:text-indigo-600"
+                >
+                  {t('event-management.proposal-page.reviews.count', {
+                    count: members.filter((review) => review.dismissedAt === null).length,
+                  })}
+                </button>
+              ) : null}
               {summary?.average !== null ? (
                 <ReviewNote
                   feeling="NEUTRAL"
