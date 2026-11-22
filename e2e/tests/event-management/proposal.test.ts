@@ -101,6 +101,7 @@ test.describe('As owner', () => {
         displayProposalsReviews: false,
         displayProposalsSpeakers: false,
         reviewEnabled: false,
+        speakersConversationEnabled: false,
       },
     });
     proposal2 = await proposalFactory({
@@ -122,6 +123,53 @@ test.describe('As owner', () => {
     await page.reload();
     await proposalPage.waitFor(proposal.title);
     await expect(page.getByLabel('Global review = 2')).toBeVisible();
+  });
+
+  test('keeps the selected tab after an action and resets it on navigation', async ({ page }) => {
+    await reviewFactory({ proposal, user, attributes: { note: 4, feeling: 'POSITIVE' } });
+
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    await proposalPage.reviewsTab.click();
+    await expect(proposalPage.reviewsTab).toHaveAccessibleName('Reviews 2');
+
+    await proposalPage.dismissReviewButton('Bruce Wayne').click();
+    await expect(proposalPage.reviewsTab).toHaveAccessibleName('Reviews 1');
+    await expect(proposalPage.reviewsTab).toHaveAttribute('aria-selected', 'true');
+
+    await proposalPage.previousProposal.click();
+    await expect(proposalPage.proposalTitle('Talk 2')).toBeVisible();
+    await expect(proposalPage.teamTab).toHaveAttribute('aria-selected', 'true');
+  });
+
+  test('switches tabs with the keyboard and keeps hotkeys working', async ({ page }) => {
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    await proposalPage.teamTab.focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(proposalPage.reviewsTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.reviewsTab).toBeFocused();
+
+    await proposalPage.pressReviewShortcut('1');
+    await expect(proposalPage.globalReview(2)).toHaveCount(2);
+
+    await proposalPage.pressReviewShortcut('p');
+    await expect(proposalPage.proposalTitle('Talk 2')).toBeVisible();
+  });
+
+  test('opens the Reviews tab from the reviews link of the sidebar', async ({ page }) => {
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    await expect(proposalPage.teamTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.reviewsLink).toHaveText('1 review');
+
+    await proposalPage.reviewsLink.click();
+    await expect(proposalPage.reviewsTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.reviews.filter({ hasText: 'Bruce Wayne' })).toBeVisible();
+    await expect(proposalPage.discussionPanel).toBeInViewport();
   });
 
   test('displays proposal data and review the proposal', async ({ page }) => {
@@ -155,15 +203,10 @@ test.describe('As owner', () => {
     await page.getByRole('button', { name: 'Favorite' }).click();
     await expect(page.getByLabel('Global review = 4')).toBeVisible();
 
-    // Check activity feed
-    await expect(proposalPage.activityFeed).toHaveCount(4);
-    const reviewsGroup = proposalPage.activityFeed.nth(1);
-    const commentEntry = proposalPage.activityFeed.nth(2);
-    await expect(reviewsGroup).toContainText('Organizer reviews');
-    await expect(reviewsGroup).toContainText('2 reviews');
-    await reviewsGroup.getByRole('button', { name: /Organizer reviews/ }).click();
-    await expect(reviewsGroup).toContainText('Bruce Wayne');
-    await expect(reviewsGroup).toContainText('Clark Kent');
+    await expect(proposalPage.teamTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 1');
+    await expect(proposalPage.comments).toHaveCount(1);
+    const commentEntry = proposalPage.comments.first();
     await expect(commentEntry).toContainText('Bruce Wayne');
     await expect(commentEntry).toContainText('Hello world');
 
@@ -175,15 +218,25 @@ test.describe('As owner', () => {
     // Add a comment
     await proposalPage.fill(proposalPage.commentInput, 'This is a new comment');
     await proposalPage.commentButton.click();
-    await expect(proposalPage.activityFeed).toHaveCount(5);
-    const newComment = proposalPage.activityFeed.nth(3);
+    await expect(proposalPage.comments).toHaveCount(2);
+    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 2');
+    await expect(proposalPage.teamTab).toHaveAttribute('aria-selected', 'true');
+    const newComment = proposalPage.comments.nth(1);
     await expect(newComment).toContainText('Clark Kent');
     await expect(newComment).toContainText('This is a new comment');
 
     // Delete a comment
     const comment = new MessageBlockComponent(newComment, page);
     await comment.clickDelete();
-    await expect(proposalPage.activityFeed).toHaveCount(4);
+    await expect(proposalPage.comments).toHaveCount(1);
+    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 1');
+
+    await proposalPage.reviewsTab.click();
+    await expect(proposalPage.reviewsTab).toHaveAccessibleName('Reviews 2');
+    await expect(proposalPage.reviews).toHaveCount(3);
+    await expect(proposalPage.reviews.filter({ hasText: 'Bruce Wayne' })).toBeVisible();
+    await expect(proposalPage.reviews.filter({ hasText: 'Clark Kent' })).toBeVisible();
+    await expect(proposalPage.reviews.last()).toContainText('Global review');
 
     // Check speaker profile
     const speakerDrawer = await proposalPage.clickOnSpeaker('Marie Jane');
@@ -392,12 +445,18 @@ test.describe('As owner', () => {
   });
 
   test('hides reviews, speakers following event settings', async ({ page }) => {
+    await flags.set('speakersCommunication', true);
+
     const proposalPage = new ProposalPage(page);
     await proposalPage.goto(team.slug, event2.slug, proposal2.routeId, proposal2.title);
 
     await expect(page.getByRole('heading', { name: 'Global review' })).not.toBeVisible();
     await expect(page.getByText('Marie Jane')).not.toBeVisible();
     await expect(page.getByText('Robin')).not.toBeVisible();
+    await expect(proposalPage.teamTab).toBeVisible();
+    await expect(proposalPage.reviewsTab).not.toBeVisible();
+    await expect(proposalPage.speakersTab).not.toBeVisible();
+    await expect(proposalPage.reviewsLink).not.toBeVisible();
   });
 
   test('opens speaker details and edit pages from drawer', async ({ page }) => {
@@ -420,7 +479,75 @@ test.describe('As owner', () => {
     await expect(page.getByRole('heading', { name: 'Edit speaker Marie Jane' })).toBeVisible();
   });
 
-  test('manages speaker conversation in drawer', async ({ page }) => {
+  test('stacks the blocks on a mobile viewport', async ({ page }) => {
+    await flags.set('speakersCommunication', true);
+    await page.setViewportSize({ width: 390, height: 900 });
+
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    const talkY = await proposalPage.top(proposalPage.proposalTitle('Talk 1'));
+    const metadataY = await proposalPage.top(proposalPage.tagsButton);
+    const reviewY = await proposalPage.top(proposalPage.yourReviewHeading);
+    const discussionY = await proposalPage.top(proposalPage.tablist);
+    expect(talkY).toBeLessThan(metadataY);
+    expect(metadataY).toBeLessThan(reviewY);
+    expect(reviewY).toBeLessThan(discussionY);
+
+    const tabsY = await Promise.all(
+      [proposalPage.teamTab, proposalPage.reviewsTab, proposalPage.speakersTab].map((tab) => proposalPage.top(tab)),
+    );
+    expect(new Set(tabsY).size).toBe(1);
+    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 1 1 new message');
+  });
+
+  test('keeps the page usable on a very narrow viewport', async ({ page }) => {
+    await flags.set('speakersCommunication', true);
+    await page.setViewportSize({ width: 340, height: 900 });
+
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    expect(await proposalPage.hasHorizontalScroll()).toBe(false);
+    const tabsY = await Promise.all(
+      [proposalPage.teamTab, proposalPage.reviewsTab, proposalPage.speakersTab].map((tab) => proposalPage.top(tab)),
+    );
+    expect(new Set(tabsY).size).toBe(1);
+    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 1 new message');
+  });
+
+  test('shows the new speaker message from the new messages pill', async ({ page }) => {
+    await flags.set('speakersCommunication', true);
+    await page.setViewportSize({ width: 1280, height: 400 });
+
+    const otherProposal = await proposalFactory({
+      event,
+      talk: await talkFactory({ attributes: { title: 'Talk 4' }, speakers: [speaker1] }),
+    });
+    const conversation = await conversationFactory({
+      event,
+      proposalId: otherProposal.id,
+      type: 'PROPOSAL_SPEAKER_CONVERSATION',
+    });
+    await conversationMessageFactory({
+      conversation,
+      sender: speaker1,
+      role: 'SPEAKER',
+      attributes: { content: 'Hello from speaker' },
+    });
+
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, otherProposal.routeId, otherProposal.title);
+
+    await expect(proposalPage.newMessagesPill).toHaveText('1 new message');
+    await expect(proposalPage.tablist).not.toBeInViewport();
+
+    await proposalPage.newMessagesPill.click();
+    await expect(proposalPage.speakersTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.speakerMessage('Hello from speaker')).toBeInViewport();
+  });
+
+  test('manages speaker conversation in the speakers tab', async ({ page }) => {
     await flags.set('speakersCommunication', true);
 
     const proposalPage = new ProposalPage(page);
@@ -444,22 +571,29 @@ test.describe('As owner', () => {
 
     await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
 
-    const drawer = await proposalPage.openConversationDrawer();
-    await expect(drawer.getByText('Hello from speaker')).toBeVisible();
-    await expect(drawer.getByText('Hello from organizer')).toBeVisible();
+    await proposalPage.speakersTab.click();
+    await expect(proposalPage.speakersTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.speakersTab).toHaveAccessibleName('Speakers 2 1 new message');
+    const panel = proposalPage.discussionPanel;
+    await expect(panel.getByText('Hello from speaker')).toBeVisible();
+    await expect(panel.getByText('Hello from organizer')).toBeVisible();
 
-    await proposalPage.sendMessageInDrawer(drawer, 'New message from organizer');
-    await expect(drawer.getByText('New message from organizer')).toBeVisible();
+    await proposalPage.sendSpeakerMessage('New message from organizer');
+    await expect(panel.getByText('New message from organizer')).toBeVisible();
+    await expect(proposalPage.speakersTab).toHaveAccessibleName('Speakers 3');
 
     // We test edit and delete on second message because optimistic rendering
     // make it flaky with playwright automation tests
-    const messages = await proposalPage.getConversationMessages(drawer);
+    const messages = await proposalPage.getSpeakerMessages();
 
     await messages[1].editMessage('Updated message from organizer');
-    await expect(drawer.getByText('Updated message from organizer')).toBeVisible();
+    await expect(panel.getByText('Updated message from organizer')).toBeVisible();
+    await expect(proposalPage.speakersTab).toHaveAttribute('aria-selected', 'true');
 
     await messages[1].clickDelete();
-    await expect(drawer.getByText('Updated message from organizer')).not.toBeVisible();
+    await expect(panel.getByText('Updated message from organizer')).not.toBeVisible();
+    await expect(proposalPage.speakersTab).toHaveAttribute('aria-selected', 'true');
+    await expect(proposalPage.speakersTab).toHaveAccessibleName('Speakers 2');
   });
 
   test('archives and restores a proposal', async ({ page }) => {

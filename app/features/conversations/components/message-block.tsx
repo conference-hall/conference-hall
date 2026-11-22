@@ -3,7 +3,9 @@ import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUser } from '~/app-platform/components/user-context.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
 import { Badge } from '~/design-system/badges.tsx';
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { EmojiPicker } from '~/design-system/emojis/emoji-picker.tsx';
 import { EmojiReactions } from '~/design-system/emojis/emoji-reactions.tsx';
 import { Text, typography } from '~/design-system/typography.tsx';
@@ -21,7 +23,9 @@ type Props = {
   onOptimisticDelete?: (id: string) => void;
   canManageConversations?: boolean;
   showRoleBadge?: boolean;
+  showAvatarOnMobile?: boolean;
   isNew?: boolean;
+  plain?: boolean;
   className?: string;
 };
 
@@ -32,7 +36,9 @@ export function MessageBlock({
   onOptimisticDelete,
   canManageConversations = false,
   showRoleBadge = true,
+  showAvatarOnMobile = false,
   isNew = false,
+  plain = false,
   className,
 }: Props) {
   const { t } = useTranslation();
@@ -45,12 +51,14 @@ export function MessageBlock({
     <div
       id={message.id}
       className={cx(
-        'group relative w-full space-y-1.5 rounded-md bg-white p-4 ring-1 ring-inset',
-        isNew ? 'ring-blue-400' : 'ring-gray-200',
+        'group relative w-full',
+        plain
+          ? 'space-y-0.5'
+          : ['space-y-1.5 rounded-md bg-white p-4 ring-1 ring-inset', isNew ? 'ring-blue-400' : 'ring-gray-200'],
         className,
       )}
     >
-      <div className="absolute top-0 right-0 flex gap-x-1 p-2 text-gray-500">
+      <div className={cx('absolute top-0 right-0 flex gap-x-1 text-gray-500', plain ? '-mt-1.5' : 'p-2')}>
         <MessageActionsMenu
           message={message}
           channel={channel}
@@ -62,7 +70,16 @@ export function MessageBlock({
         <EmojiPicker icon={FaceSmileIcon} variant="tertiary" emojis={MESSAGE_EMOJIS} onSelectEmoji={onChangeReaction} />
       </div>
 
-      <div className="flex items-baseline gap-x-1">
+      <div className="flex flex-wrap items-baseline gap-x-1 pr-14">
+        {showAvatarOnMobile ? (
+          <Avatar
+            picture={message.sender.picture}
+            name={message.sender.name}
+            size="xs"
+            aria-hidden
+            className="mr-1 self-center sm:hidden"
+          />
+        ) : null}
         <Text size="xs" weight="semibold">
           {message.sender.name}
         </Text>
@@ -73,6 +90,12 @@ export function MessageBlock({
           <TimeDistance date={message.sentAt} tooltip="right" />
         </a>
         {showRoleBadge && message.sender.role ? <Badge compact>{message.sender.role}</Badge> : null}
+        {plain && isNew ? (
+          <span className="ml-1 flex items-center gap-1 self-center text-xs font-semibold text-blue-700">
+            <StatusPill status="info" size="sm" />
+            {t('common.new')}
+          </span>
+        ) : null}
       </div>
 
       {isEditing ? (

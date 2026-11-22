@@ -85,6 +85,14 @@ describe('MessageBlock component', () => {
     expect(messageEl?.className).not.toContain('ring-blue-400');
   });
 
+  it('drops the ring and labels a new message when plain', async () => {
+    await renderComponent({ plain: true, isNew: true });
+
+    const messageEl = page.getByText('Test message content').element().closest(`#${message.id}`);
+    expect(messageEl?.className).not.toContain('ring-');
+    await expect.element(page.getByText('New', { exact: true })).toBeInTheDocument();
+  });
+
   it('renders message with reactions', async () => {
     const messageWithReactions: Message = {
       ...message,

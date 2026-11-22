@@ -1,17 +1,13 @@
 import { parseWithZod } from '@conform-to/zod/v4';
-import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
-import { Suspense, useRef } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { Suspense, useRef, useState } from 'react';
+import { Trans } from 'react-i18next';
 import { Await } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
-import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Kbd } from '~/design-system/kbd.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { Text } from '~/design-system/typography.tsx';
-import { ConversationDrawer } from '~/features/conversations/components/conversation-drawer.tsx';
 import { ConversationService } from '~/features/conversations/services/conversation-service.server.ts';
 import {
   ConversationMessageDeleteWithChannelSchema,
@@ -27,7 +23,8 @@ import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
 import type { Route } from './+types/proposal.ts';
-import { ProposalActivityFeed } from './components/detail/activity/proposal-activity-feed.tsx';
+import type { DiscussionTab } from './components/detail/discussion/discussion-card.tsx';
+import { DiscussionCard } from './components/detail/discussion/discussion-card.tsx';
 import { CategoriesSection } from './components/detail/metadata/categories-section.tsx';
 import { FormatsSection } from './components/detail/metadata/formats-section.tsx';
 import { SpeakersSection } from './components/detail/metadata/speakers-section.tsx';
@@ -201,11 +198,13 @@ export const action = async ({ request, params, context }: Route.ActionArgs) => 
 };
 
 export default function ProposalReviewLayoutRoute({ params, loaderData, actionData: errors }: Route.ComponentProps) {
-  const { t } = useTranslation();
   const { event } = useCurrentEventTeam();
   const permissions = useUserTeamPermissions();
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
   const pageRef = useRef<HTMLElement>(null);
+
+  const [discussion, setDiscussion] = useState<{ proposalId: string; tab: DiscussionTab }>();
+  const selectedTab = discussion?.proposalId === proposal.id ? discussion.tab : 'comments';
 
   const hasSpeakers = proposal.speakers.length > 0;
   const hasFormats = event.formats && event.formats.length > 0;
@@ -223,9 +222,11 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
         {...pagination}
         pageRef={pageRef}
         activityPromise={activityPromise}
+        speakersConversationEnabled={speakersConversationEnabled}
+        onSelectDiscussionTab={(tab) => setDiscussion({ proposalId: proposal.id, tab })}
       />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-6">
         <div className="lg:col-span-8">
           <TalkSection
             talk={proposal}
@@ -248,30 +249,18 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
               </Await>
             </Suspense>
           </TalkSection>
-
-          <Suspense fallback={<ActivityFeed.Loading className="pl-4" />}>
-            <Await resolve={activityPromise}>
-              {([comments, speakerConversation]) => (
-                <ProposalActivityFeed
-                  comments={comments}
-                  reviews={proposal.reviews.members}
-                  reviewsSummary={proposal.reviews.summary}
-                  speakerConversation={speakerConversation}
-                  speakers={proposal.speakers}
-                  canManageConversations={permissions.canManageConversations}
-                  canDismissReviews={permissions.canDismissReviews}
-                />
-              )}
-            </Await>
-          </Suspense>
         </div>
 
-        <div className="flex flex-col-reverse gap-4 lg:col-span-4 lg:flex-col">
+        <div className="flex flex-col-reverse gap-4 lg:col-span-4 lg:row-span-2 lg:flex-col">
           <ReviewSidebar
             proposal={proposal}
             reviewEnabled={event.reviewEnabled}
             canDeliberate={permissions.canChangeProposalStatus}
             pageRef={pageRef}
+            onShowReviews={() => {
+              setDiscussion({ proposalId: proposal.id, tab: 'reviews' });
+              document.getElementById('discussion-card')?.scrollIntoView({ behavior: 'smooth' });
+            }}
           />
 
           <Card as="section">
@@ -288,30 +277,6 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
                     canEditSpeaker={permissions.canEditEventSpeaker}
                     className="space-y-3 px-4 lg:px-6"
                   />
-
-                  {speakersConversationEnabled ? (
-                    <Suspense fallback={null}>
-                      <Await resolve={activityPromise}>
-                        {([, speakersConversation]) => (
-                          <ConversationDrawer
-                            messages={speakersConversation}
-                            recipients={speakersWithAccount}
-                            canManageConversations={permissions.canManageConversations}
-                            className="flex cursor-pointer gap-2 px-4 hover:underline lg:px-6"
-                          >
-                            <ChatBubbleLeftRightIcon className="h-4 w-4" aria-hidden />
-                            <Text size="xs" weight="semibold">
-                              {speakersConversation.length === 0
-                                ? t('event-management.proposal-page.conversation.start')
-                                : t('event-management.proposal-page.conversation.started', {
-                                    count: speakersConversation.length,
-                                  })}
-                            </Text>
-                          </ConversationDrawer>
-                        )}
-                      </Await>
-                    </Suspense>
-                  ) : null}
                 </div>
 
                 <Divider />
@@ -385,6 +350,29 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
               </p>
             ) : null}
           </footer>
+        </div>
+
+        <div className="lg:col-span-8">
+          <Suspense fallback={<DiscussionCard.Loading />}>
+            <Await resolve={activityPromise}>
+              {([comments, speakerConversation]) => (
+                <DiscussionCard
+                  selectedTab={selectedTab}
+                  onSelectTab={(tab) => setDiscussion({ proposalId: proposal.id, tab })}
+                  comments={comments}
+                  reviews={proposal.reviews.members}
+                  reviewsSummary={proposal.reviews.summary}
+                  speakerConversation={
+                    speakersConversationEnabled
+                      ? { messages: speakerConversation, recipients: speakersWithAccount }
+                      : null
+                  }
+                  canManageConversations={permissions.canManageConversations}
+                  canDismissReviews={permissions.canDismissReviews}
+                />
+              )}
+            </Await>
+          </Suspense>
         </div>
       </div>
     </Page>

@@ -1,6 +1,5 @@
 import { cva, cx } from 'class-variance-authority';
 import { generateGradientColor } from '~/shared/colors/colors.ts';
-import { Tooltip } from './tooltip.tsx';
 import { Text } from './typography.tsx';
 
 const sizes = {
@@ -165,47 +164,6 @@ function AvatarColor({ name, size, className }: { name?: string | null; size: Av
       style={{ height: sizes[size], width: sizes[size], background: gradient }}
     >
       {initial}
-    </div>
-  );
-}
-
-const overflowBadgeStyles = cva(
-  'flex items-center justify-center rounded-full bg-gray-200 font-medium text-gray-600 ring-2 ring-white',
-  {
-    variants: {
-      size: {
-        xs: 'h-6 w-6 text-xs',
-        s: 'h-8 w-8 text-xs',
-        m: 'h-10 w-10 text-sm',
-        l: 'h-12 w-12 text-sm',
-        xl: 'h-16 w-16 text-base',
-        '2xl': 'h-20 w-20 text-lg',
-        '4xl': 'h-32 w-32 text-2xl',
-      },
-    },
-    defaultVariants: { size: 's' },
-  },
-);
-
-type AvatarGroupProps = {
-  avatars: Array<{ picture?: string | null; name?: string | null }>;
-  size?: AvatarSize;
-  max?: number;
-  className?: string;
-};
-
-export function AvatarGroup({ avatars, size, max, className }: AvatarGroupProps) {
-  const visible = max !== undefined ? avatars.slice(0, max) : avatars;
-  const overflow = max !== undefined ? avatars.length - max : 0;
-
-  return (
-    <div className={cx('flex shrink-0 flex-nowrap -space-x-1 overflow-hidden', className)}>
-      {visible.map((avatar, index) => (
-        <Tooltip key={index} text={avatar.name}>
-          <Avatar name={avatar.name} picture={avatar.picture} size={size} className="ring-2 ring-white" />
-        </Tooltip>
-      ))}
-      {overflow > 0 && <div className={overflowBadgeStyles({ size })}>+{overflow}</div>}
     </div>
   );
 }

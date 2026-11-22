@@ -21,7 +21,7 @@ const markerButtonStyles = cva('flex cursor-pointer items-center justify-center 
     },
     size: {
       sm: 'h-7 px-1.5',
-      md: 'h-9 px-1.5',
+      md: 'h-9 px-0.5 min-[390px]:px-1.5',
     },
     active: { true: '', false: '' },
     first: { true: '', false: '' },

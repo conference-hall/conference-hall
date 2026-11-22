@@ -3,10 +3,27 @@ import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
 import { page, userEvent } from 'vitest/browser';
+import type { Message } from '~/shared/types/conversation.types.ts';
+import type { DiscussionTab } from './discussion/discussion-card.tsx';
 import { NavigationHeader } from './navigation-header.tsx';
 
 describe('NavigationHeader', () => {
-  const renderComponent = () => {
+  const message = (id: string, isNew: boolean): Message => ({
+    id,
+    sender: { userId: 'u1', name: 'Bruce Wayne', picture: null },
+    content: 'Hello',
+    reactions: [],
+    sentAt: new Date(),
+    isNew,
+  });
+
+  const renderComponent = (
+    activity: [Array<Message>, Array<Message>] = [[], []],
+    onSelectDiscussionTab: (tab: DiscussionTab) => void = vi.fn(),
+    speakersConversationEnabled = true,
+  ) => {
+    const activityPromise = Promise.resolve(activity);
+
     function Page() {
       const pageRef = useRef<HTMLElement>(null);
       return (
@@ -21,7 +38,9 @@ describe('NavigationHeader', () => {
               next="p3"
               previous="p1"
               pageRef={pageRef}
-              activityPromise={Promise.resolve([[], []])}
+              activityPromise={activityPromise}
+              speakersConversationEnabled={speakersConversationEnabled}
+              onSelectDiscussionTab={onSelectDiscussionTab}
             />
           </main>
           <button type="button">Outside</button>
@@ -62,5 +81,39 @@ describe('NavigationHeader', () => {
 
     expect(event.defaultPrevented).toBe(false);
     await expect.element(page.getByRole('button', { name: 'Outside' })).toBeInTheDocument();
+  });
+
+  it('selects the Team tab from the new messages pill when a review comment is new', async () => {
+    const onSelectDiscussionTab = vi.fn();
+    await renderComponent([[message('c1', true)], [message('m1', true)]], onSelectDiscussionTab);
+
+    await page.getByRole('button', { name: '2 new messages' }).click();
+
+    expect(onSelectDiscussionTab).toHaveBeenCalledWith('comments');
+  });
+
+  it('selects the Speakers tab from the new messages pill when only speaker messages are new', async () => {
+    const onSelectDiscussionTab = vi.fn();
+    await renderComponent([[message('c1', false)], [message('m1', true)]], onSelectDiscussionTab);
+
+    await page.getByRole('button', { name: '1 new message' }).click();
+
+    expect(onSelectDiscussionTab).toHaveBeenCalledWith('speakers');
+  });
+
+  it('ignores new speaker messages when the Speakers tab is hidden', async () => {
+    const onSelectDiscussionTab = vi.fn();
+    await renderComponent([[message('c1', true)], [message('m1', true)]], onSelectDiscussionTab, false);
+
+    await page.getByRole('button', { name: '1 new message' }).click();
+
+    expect(onSelectDiscussionTab).toHaveBeenCalledWith('comments');
+  });
+
+  it('shows no new messages pill when only speaker messages are new and the Speakers tab is hidden', async () => {
+    await renderComponent([[message('c1', false)], [message('m1', true)]], vi.fn(), false);
+
+    await expect.element(page.getByText('2/3')).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: /new message/ })).not.toBeInTheDocument();
   });
 });

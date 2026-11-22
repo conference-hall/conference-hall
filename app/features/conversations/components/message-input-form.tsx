@@ -47,6 +47,9 @@ export function MessageInputForm({
     await fetcher.submit(formData, { method: 'POST', preventScrollReset: true, flushSync: true });
     formRef.current?.reset();
     setCharCount(message?.content?.length ?? 0);
+    if (!message) {
+      requestAnimationFrame(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
+    }
   };
 
   const isLoading = fetcher.state === 'submitting';
@@ -55,7 +58,7 @@ export function MessageInputForm({
   useHotkey('Escape', () => onClose?.(), { target: textareaRef, enabled: !!onClose });
 
   return (
-    <Form ref={formRef} className="relative w-full" navigate={false} onSubmit={handleSubmit}>
+    <Form ref={formRef} className="relative w-full scroll-mb-4" navigate={false} onSubmit={handleSubmit}>
       <Label htmlFor={inputId} className="sr-only">
         {inputLabel}
       </Label>

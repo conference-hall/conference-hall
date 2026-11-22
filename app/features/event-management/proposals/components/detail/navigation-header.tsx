@@ -2,6 +2,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/16/solid';
 import { useHotkey } from '@tanstack/react-hotkeys';
 import type React from 'react';
 import { Suspense } from 'react';
+import { flushSync } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Await, href, useNavigate, useSearchParams } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
@@ -9,6 +10,7 @@ import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { ReviewsProgress } from '../shared/reviews-progress.tsx';
+import type { DiscussionTab } from './discussion/discussion-card.tsx';
 import { isFocusedOutsidePage } from './is-focused-outside-page.ts';
 
 type Props = {
@@ -21,6 +23,8 @@ type Props = {
   previous?: string;
   pageRef: React.RefObject<HTMLElement | null>;
   activityPromise: Promise<[Array<Message>, Array<Message>]>;
+  speakersConversationEnabled: boolean;
+  onSelectDiscussionTab: (tab: DiscussionTab) => void;
 };
 
 export function NavigationHeader({
@@ -33,6 +37,8 @@ export function NavigationHeader({
   previous,
   pageRef,
   activityPromise,
+  speakersConversationEnabled,
+  onSelectDiscussionTab,
 }: Props) {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
@@ -90,7 +96,11 @@ export function NavigationHeader({
         <Suspense fallback={null}>
           <Await resolve={activityPromise}>
             {([comments, speakerConversation]) => (
-              <NewMessagesPill comments={comments} speakerConversation={speakerConversation} />
+              <NewMessagesPill
+                comments={comments}
+                speakerConversation={speakersConversationEnabled ? speakerConversation : []}
+                onSelectDiscussionTab={onSelectDiscussionTab}
+              />
             )}
           </Await>
         </Suspense>
@@ -100,9 +110,13 @@ export function NavigationHeader({
   );
 }
 
-type NewMessagesPillProps = { comments: Array<Message>; speakerConversation: Array<Message> };
+type NewMessagesPillProps = {
+  comments: Array<Message>;
+  speakerConversation: Array<Message>;
+  onSelectDiscussionTab: (tab: DiscussionTab) => void;
+};
 
-function NewMessagesPill({ comments, speakerConversation }: NewMessagesPillProps) {
+function NewMessagesPill({ comments, speakerConversation, onSelectDiscussionTab }: NewMessagesPillProps) {
   const { t } = useTranslation();
 
   const newComments = comments.filter((m) => m.isNew);
@@ -112,13 +126,10 @@ function NewMessagesPill({ comments, speakerConversation }: NewMessagesPillProps
   if (totalNew === 0) return null;
 
   const scrollToFirstNew = () => {
-    const firstNewComment = newComments[0];
-    if (firstNewComment) {
-      document.getElementById(firstNewComment.id)?.scrollIntoView({ behavior: 'smooth' });
-      return;
-    }
-    // Only speaker messages are unread — scroll to the speaker conversation entry
-    document.getElementById('speaker-conversation-entry')?.scrollIntoView({ behavior: 'smooth' });
+    const tab = newComments.length > 0 ? 'comments' : 'speakers';
+    const firstNew = tab === 'comments' ? newComments[0] : newSpeakerMessages[0];
+    flushSync(() => onSelectDiscussionTab(tab));
+    document.getElementById(firstNew.id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
