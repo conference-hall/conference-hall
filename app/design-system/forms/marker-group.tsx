@@ -39,6 +39,13 @@ const markerButtonStyles = cva('flex cursor-pointer items-center justify-center 
   defaultVariants: { variant: 'outline', size: 'sm', active: false, first: false, last: false },
 });
 
+const markerGroupStyles = cva('', {
+  variants: {
+    size: { sm: 'inline-flex', md: 'flex w-full *:max-w-10 *:min-w-0 *:flex-1' },
+  },
+  defaultVariants: { size: 'sm' },
+});
+
 const markerIconStyles = cva('', {
   variants: {
     size: { sm: 'h-4 w-4', md: 'h-7 w-7 min-w-0' },
@@ -98,7 +105,7 @@ export function MarkerGroup(props: MarkerGroupProps) {
   };
 
   return (
-    <div className={size === 'md' ? 'flex w-full *:max-w-10 *:min-w-0 *:flex-1' : 'inline-flex'}>
+    <div className={markerGroupStyles({ size })}>
       {name && !props.multiple && <input type="hidden" name={name} value={props.value ?? ''} />}
       {options.map((option, index) => {
         const active = isActive(option, index);
