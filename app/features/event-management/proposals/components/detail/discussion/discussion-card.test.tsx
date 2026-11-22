@@ -134,6 +134,51 @@ describe('DiscussionCard component', () => {
     await expect.element(page.getByRole('tab', { name: 'Reviews 2' })).toBeInTheDocument();
   });
 
+  it('shows a dot on the Comments tab when review comments are new', async () => {
+    await renderComponent({
+      comments: [
+        comment('c1', 'Bruce Wayne', 'Great talk'),
+        { ...comment('c2', 'Diana Prince', 'Too generic'), isNew: true },
+        { ...comment('c3', 'Barry Allen', 'Too fast'), isNew: true },
+      ],
+    });
+
+    await expect.element(page.getByRole('tab', { name: 'Comments 3 2 new messages' })).toBeInTheDocument();
+    await expect.element(page.getByRole('tab', { name: 'Reviews 2', exact: true })).toBeInTheDocument();
+  });
+
+  it('shows no dot on the Comments tab when no review comment is new', async () => {
+    await renderComponent();
+
+    await expect.element(page.getByRole('tab', { name: 'Comments 2', exact: true })).toBeInTheDocument();
+  });
+
+  it('shows a dot on the Speakers tab when speaker messages are new, even when it is not selected', async () => {
+    await renderComponent({
+      speakerConversation: {
+        recipients,
+        messages: [
+          speakerMessage('m1', 'Clark Kent', 'ORGANIZER', 'Hello from organizer'),
+          { ...speakerMessage('m2', 'Peter Parker', 'SPEAKER', 'Hello from speaker'), isNew: true },
+        ],
+      },
+    });
+
+    await expect.element(page.getByRole('tab', { name: 'Speakers 2 1 new message' })).toBeInTheDocument();
+    await expect.element(page.getByRole('tab', { name: 'Comments 2', exact: true })).toBeInTheDocument();
+  });
+
+  it('shows no dot on the Speakers tab when no speaker message is new', async () => {
+    await renderComponent({
+      speakerConversation: {
+        recipients,
+        messages: [speakerMessage('m1', 'Peter Parker', 'SPEAKER', 'Hello from speaker')],
+      },
+    });
+
+    await expect.element(page.getByRole('tab', { name: 'Speakers 1', exact: true })).toBeInTheDocument();
+  });
+
   it('offers to dismiss or restore a review when the user can dismiss reviews', async () => {
     await renderComponent({
       selectedTab: 'reviews',

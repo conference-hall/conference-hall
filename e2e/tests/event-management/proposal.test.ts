@@ -510,7 +510,7 @@ test.describe('As owner', () => {
 
     await proposalPage.speakersTab.click();
     await expect(proposalPage.speakersTab).toHaveAttribute('aria-selected', 'true');
-    await expect(proposalPage.speakersTab).toHaveAccessibleName('Speakers 2');
+    await expect(proposalPage.speakersTab).toHaveAccessibleName('Speakers 2 1 new message');
     const panel = proposalPage.discussionPanel;
     await expect(panel.getByText('Hello from speaker')).toBeVisible();
     await expect(panel.getByText('Hello from organizer')).toBeVisible();
