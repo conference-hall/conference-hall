@@ -12,6 +12,7 @@ type Props = {
   inputLabel: string;
   placeholder?: string;
   buttonLabel?: string;
+  buttonVariant?: 'primary' | 'secondary';
   message?: Message;
   autoFocus?: boolean;
   onOptimisticSave?: (data: { id?: string; content: string }) => void;
@@ -27,6 +28,7 @@ export function MessageInputForm({
   message,
   autoFocus = false,
   onClose,
+  buttonVariant = onClose ? 'primary' : 'secondary',
 }: Props) {
   const { t } = useTranslation();
   const inputId = useId();
@@ -87,17 +89,12 @@ export function MessageInputForm({
           if (e.target === e.currentTarget) textareaRef.current?.focus();
         }}
       >
-        <Button
-          type="submit"
-          variant={onClose ? 'primary' : 'secondary'}
-          size={onClose ? 'sm' : 'base'}
-          disabled={isLoading}
-        >
+        <Button type="submit" variant={buttonVariant} size={onClose ? 'sm' : 'base'} disabled={isLoading}>
           {buttonLabel || t('common.save')}
           <kbd
             className={cx('ml-2 hidden font-sans font-normal sm:inline', {
-              'text-white': Boolean(onClose),
-              'text-gray-500': !onClose,
+              'text-white': buttonVariant === 'primary',
+              'text-gray-500': buttonVariant === 'secondary',
             })}
           >
             {formatForDisplay('Mod+Enter')}

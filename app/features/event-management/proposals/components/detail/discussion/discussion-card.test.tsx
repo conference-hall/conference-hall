@@ -30,6 +30,13 @@ describe('DiscussionCard component', () => {
     sentAt: new Date(),
   });
 
+  const speakerMessage = (id: string, name: string, role: 'SPEAKER' | 'ORGANIZER', content: string): Message => ({
+    ...comment(id, name, content),
+    sender: { userId: `user-${id}`, name, picture: null, role },
+  });
+
+  const recipients = [{ name: 'Peter Parker' }, { name: 'Marie Jane' }];
+
   const review = (id: string, name: string, note: number, dismissedAt: Date | null = null): ReviewMember => ({
     id,
     userId: `user-${id}`,
@@ -47,6 +54,7 @@ describe('DiscussionCard component', () => {
     comments: [comment('c1', 'Bruce Wayne', 'Great talk'), comment('c2', 'Diana Prince', 'Too generic')],
     reviews: [review('r1', 'Bruce Wayne', 4), review('r2', 'Diana Prince', 2)],
     reviewsSummary: { average: 3, positives: 0, negatives: 0 },
+    speakerConversation: null,
     canManageConversations: false,
     canDismissReviews: false,
   };
@@ -163,5 +171,71 @@ describe('DiscussionCard component', () => {
     await expect.element(page.getByRole('tab', { name: 'Reviews 0' })).toBeInTheDocument();
     await expect.element(page.getByRole('tabpanel').getByText('No reviews')).toBeInTheDocument();
     await expect.element(page.getByText('Global review')).not.toBeInTheDocument();
+  });
+
+  it('shows the speaker conversation and the message form under the Speakers tab', async () => {
+    await renderComponent({
+      selectedTab: 'speakers',
+      speakerConversation: {
+        recipients,
+        messages: [
+          speakerMessage('m1', 'Peter Parker', 'SPEAKER', 'Hello from speaker'),
+          speakerMessage('m2', 'Clark Kent', 'ORGANIZER', 'Hello from organizer'),
+        ],
+      },
+    });
+
+    const tabs = page.getByRole('tab');
+    await expect.element(tabs.nth(2)).toHaveAccessibleName('Speakers 2');
+    await expect.element(tabs.nth(2)).toHaveAttribute('aria-selected', 'true');
+
+    const panel = page.getByRole('tabpanel', { name: /Speakers/ });
+    await expect
+      .element(panel.getByText('Peter Parker and Marie Jane see these messages and will be notified.'))
+      .toBeInTheDocument();
+    const messages = panel.getByRole('listitem');
+    await expect.element(messages.nth(0).getByText('Hello from speaker')).toBeInTheDocument();
+    await expect.element(messages.nth(0).getByText('SPEAKER', { exact: true })).toBeInTheDocument();
+    await expect.element(messages.nth(1).getByText('Hello from organizer')).toBeInTheDocument();
+    await expect.element(messages.nth(1).getByText('ORGANIZER', { exact: true })).toBeInTheDocument();
+    await expect
+      .element(panel.getByRole('textbox', { name: 'Send a message to Peter Parker and Marie Jane' }))
+      .toHaveAttribute('placeholder', 'Send a message to Peter Parker and Marie Jane');
+    await expect.element(panel.getByRole('button', { name: /Send to speakers/ })).toBeInTheDocument();
+    await expect.element(panel.getByText('Start a conversation with speakers')).not.toBeInTheDocument();
+  });
+
+  it('hides the Speakers tab when the speaker conversation is unavailable', async () => {
+    await renderComponent({ speakerConversation: null, selectedTab: 'speakers' });
+
+    await expect.element(page.getByRole('tab', { name: /Speakers/ })).not.toBeInTheDocument();
+    await expect.element(page.getByRole('tab', { name: /Comments/ })).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('invites to start a conversation when there is no speaker message', async () => {
+    await renderComponent({
+      selectedTab: 'speakers',
+      speakerConversation: { recipients: [{ name: 'Peter Parker' }], messages: [] },
+    });
+
+    const panel = page.getByRole('tabpanel');
+    await expect.element(page.getByRole('tab', { name: 'Speakers 0' })).toBeInTheDocument();
+    await expect.element(panel.getByText('Peter Parker sees these messages and will be notified.')).toBeInTheDocument();
+    await expect.element(panel.getByText('Start a conversation with speaker', { exact: true })).toBeInTheDocument();
+    await expect.element(panel.getByRole('listitem')).not.toBeInTheDocument();
+    await expect.element(panel.getByRole('textbox', { name: 'Send a message to Peter Parker' })).toBeInTheDocument();
+  });
+
+  it('shows a sent speaker message at once', async () => {
+    await renderComponent({ selectedTab: 'speakers', speakerConversation: { recipients, messages: [] } });
+
+    const panel = page.getByRole('tabpanel');
+    await panel.getByRole('textbox').fill('First message to speakers');
+    await panel.getByRole('button', { name: /Send to speakers/ }).click();
+
+    await expect.element(panel.getByRole('listitem').getByText('First message to speakers')).toBeInTheDocument();
+    await expect.element(panel.getByRole('listitem').getByText('ORGANIZER', { exact: true })).toBeInTheDocument();
+    await expect.element(page.getByRole('tab', { name: 'Speakers 1' })).toBeInTheDocument();
+    await expect.element(panel.getByText('Start a conversation with speakers')).not.toBeInTheDocument();
   });
 });

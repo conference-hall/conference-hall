@@ -1,13 +1,14 @@
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
-import { LockClosedIcon, StarIcon } from '@heroicons/react/24/outline';
+import { ChatBubbleLeftRightIcon, LockClosedIcon, StarIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Card } from '~/design-system/layouts/card.tsx';
 import type { Message } from '~/shared/types/conversation.types.ts';
 import { CommentsPanel } from './comments-panel.tsx';
 import type { ReviewMember, ReviewSummary } from './reviews-panel.tsx';
 import { ReviewsPanel } from './reviews-panel.tsx';
+import { SpeakersPanel } from './speakers-panel.tsx';
 
-export type DiscussionTab = 'comments' | 'reviews';
+export type DiscussionTab = 'comments' | 'reviews' | 'speakers';
 
 type Props = {
   selectedTab: DiscussionTab;
@@ -15,6 +16,7 @@ type Props = {
   comments: Array<Message>;
   reviews: Array<ReviewMember> | null;
   reviewsSummary: ReviewSummary | null;
+  speakerConversation: { messages: Array<Message>; recipients: Array<{ name: string }> } | null;
   canManageConversations: boolean;
   canDismissReviews: boolean;
 };
@@ -25,6 +27,7 @@ export function DiscussionCard({
   comments,
   reviews,
   reviewsSummary,
+  speakerConversation,
   canManageConversations,
   canDismissReviews,
 }: Props) {
@@ -45,6 +48,21 @@ export function DiscussionCard({
           icon: StarIcon,
           count: reviews.filter((review) => review.dismissedAt === null).length,
           panel: <ReviewsPanel reviews={reviews} summary={reviewsSummary} canDismissReviews={canDismissReviews} />,
+        }
+      : null,
+    speakerConversation
+      ? {
+          id: 'speakers' as const,
+          label: t('event-management.proposal-page.discussion.tabs.speakers'),
+          icon: ChatBubbleLeftRightIcon,
+          count: speakerConversation.messages.length,
+          panel: (
+            <SpeakersPanel
+              messages={speakerConversation.messages}
+              recipients={speakerConversation.recipients}
+              canManageConversations={canManageConversations}
+            />
+          ),
         }
       : null,
   ].filter((tab) => tab !== null);
