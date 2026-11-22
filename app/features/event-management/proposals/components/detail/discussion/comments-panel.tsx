@@ -13,7 +13,7 @@ export function CommentsPanel({ comments, canManageConversations }: Props) {
   const { t } = useTranslation();
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-4 p-3 sm:p-4">
       <Text size="xs" variant="secondary">
         {t('event-management.proposal-page.discussion.team-only-hint')}
       </Text>
@@ -22,11 +22,12 @@ export function CommentsPanel({ comments, canManageConversations }: Props) {
         <ul className="space-y-4">
           {comments.map((message) => (
             <li key={message.id} className="flex gap-3">
-              <Avatar picture={message.sender.picture} name={message.sender.name} />
+              <Avatar picture={message.sender.picture} name={message.sender.name} className="max-sm:hidden" />
               <MessageBlock
                 channel="comment"
                 message={message}
                 canManageConversations={canManageConversations}
+                showAvatarOnMobile
                 showRoleBadge={false}
                 isNew={message.isNew}
               />
@@ -36,7 +37,7 @@ export function CommentsPanel({ comments, canManageConversations }: Props) {
       ) : null}
 
       <div className="flex gap-3">
-        <Avatar picture={user?.picture} name={user?.name} />
+        <Avatar picture={user?.picture} name={user?.name} className="max-sm:hidden" />
         <MessageInputForm
           channel="comment"
           inputLabel={t('event-management.proposal-page.comment.label')}

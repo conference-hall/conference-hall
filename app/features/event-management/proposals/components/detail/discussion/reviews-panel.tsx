@@ -37,7 +37,7 @@ export function ReviewsPanel({ reviews, summary, canDismissReviews }: Props) {
   const { t } = useTranslation();
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-4 p-3 sm:p-4">
       <Text size="xs" variant="secondary">
         {t('event-management.proposal-page.discussion.team-only-hint')}
       </Text>

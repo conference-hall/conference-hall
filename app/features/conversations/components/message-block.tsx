@@ -3,6 +3,7 @@ import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUser } from '~/app-platform/components/user-context.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
 import { Badge } from '~/design-system/badges.tsx';
 import { EmojiPicker } from '~/design-system/emojis/emoji-picker.tsx';
 import { EmojiReactions } from '~/design-system/emojis/emoji-reactions.tsx';
@@ -21,6 +22,7 @@ type Props = {
   onOptimisticDelete?: (id: string) => void;
   canManageConversations?: boolean;
   showRoleBadge?: boolean;
+  showAvatarOnMobile?: boolean;
   isNew?: boolean;
   className?: string;
 };
@@ -32,6 +34,7 @@ export function MessageBlock({
   onOptimisticDelete,
   canManageConversations = false,
   showRoleBadge = true,
+  showAvatarOnMobile = false,
   isNew = false,
   className,
 }: Props) {
@@ -62,7 +65,16 @@ export function MessageBlock({
         <EmojiPicker icon={FaceSmileIcon} variant="tertiary" emojis={MESSAGE_EMOJIS} onSelectEmoji={onChangeReaction} />
       </div>
 
-      <div className="flex items-baseline gap-x-1">
+      <div className="flex flex-wrap items-baseline gap-x-1">
+        {showAvatarOnMobile ? (
+          <Avatar
+            picture={message.sender.picture}
+            name={message.sender.name}
+            size="xs"
+            aria-hidden
+            className="mr-1 self-center sm:hidden"
+          />
+        ) : null}
         <Text size="xs" weight="semibold">
           {message.sender.name}
         </Text>

@@ -27,7 +27,7 @@ export function SpeakersPanel({ messages, recipients, canManageConversations }: 
   const sendMessageLabel = t('common.conversation.send.label-with-recipients', { names });
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-4 p-3 sm:p-4">
       <Text size="xs" variant="secondary">
         {t('event-management.proposal-page.discussion.speakers.hint', { names, count: names.length })}
       </Text>
@@ -36,11 +36,12 @@ export function SpeakersPanel({ messages, recipients, canManageConversations }: 
         <ul className="space-y-4">
           {optimisticMessages.map((message) => (
             <li key={message.id} className="flex gap-3">
-              <Avatar picture={message.sender.picture} name={message.sender.name} />
+              <Avatar picture={message.sender.picture} name={message.sender.name} className="max-sm:hidden" />
               <MessageBlock
                 channel="speaker"
                 message={message}
                 canManageConversations={canManageConversations}
+                showAvatarOnMobile
                 isNew={message.isNew}
                 onOptimisticSave={onOptimisticSaveMessage}
                 onOptimisticDelete={onOptimisticDeleteMessage}
@@ -56,7 +57,7 @@ export function SpeakersPanel({ messages, recipients, canManageConversations }: 
       )}
 
       <div className="flex gap-3">
-        <Avatar picture={user?.picture} name={user?.name} />
+        <Avatar picture={user?.picture} name={user?.name} className="max-sm:hidden" />
         <MessageInputForm
           channel="speaker"
           inputLabel={sendMessageLabel}
