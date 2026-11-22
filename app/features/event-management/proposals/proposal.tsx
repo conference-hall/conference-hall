@@ -225,8 +225,8 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
         onSelectDiscussionTab={(tab) => setDiscussion({ proposalId: proposal.id, tab })}
       />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <div className="space-y-6 lg:col-span-8">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-6">
+        <div className="lg:col-span-8">
           <TalkSection
             talk={proposal}
             action={
@@ -248,30 +248,9 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
               </Await>
             </Suspense>
           </TalkSection>
-
-          <Suspense fallback={<DiscussionCard.Loading />}>
-            <Await resolve={activityPromise}>
-              {([comments, speakerConversation]) => (
-                <DiscussionCard
-                  selectedTab={selectedTab}
-                  onSelectTab={(tab) => setDiscussion({ proposalId: proposal.id, tab })}
-                  comments={comments}
-                  reviews={proposal.reviews.members}
-                  reviewsSummary={proposal.reviews.summary}
-                  speakerConversation={
-                    speakersConversationEnabled
-                      ? { messages: speakerConversation, recipients: speakersWithAccount }
-                      : null
-                  }
-                  canManageConversations={permissions.canManageConversations}
-                  canDismissReviews={permissions.canDismissReviews}
-                />
-              )}
-            </Await>
-          </Suspense>
         </div>
 
-        <div className="flex flex-col-reverse gap-4 lg:col-span-4 lg:flex-col">
+        <div className="flex flex-col-reverse gap-4 lg:col-span-4 lg:row-span-2 lg:flex-col">
           <ReviewSidebar
             proposal={proposal}
             reviewEnabled={event.reviewEnabled}
@@ -370,6 +349,29 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
               </p>
             ) : null}
           </footer>
+        </div>
+
+        <div className="lg:col-span-8">
+          <Suspense fallback={<DiscussionCard.Loading />}>
+            <Await resolve={activityPromise}>
+              {([comments, speakerConversation]) => (
+                <DiscussionCard
+                  selectedTab={selectedTab}
+                  onSelectTab={(tab) => setDiscussion({ proposalId: proposal.id, tab })}
+                  comments={comments}
+                  reviews={proposal.reviews.members}
+                  reviewsSummary={proposal.reviews.summary}
+                  speakerConversation={
+                    speakersConversationEnabled
+                      ? { messages: speakerConversation, recipients: speakersWithAccount }
+                      : null
+                  }
+                  canManageConversations={permissions.canManageConversations}
+                  canDismissReviews={permissions.canDismissReviews}
+                />
+              )}
+            </Await>
+          </Suspense>
         </div>
       </div>
     </Page>
