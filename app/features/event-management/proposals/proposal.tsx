@@ -1,11 +1,10 @@
 import { parseWithZod } from '@conform-to/zod/v4';
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
-import { Suspense, useRef } from 'react';
+import { Suspense, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Await } from 'react-router';
 import { useUserTeamPermissions } from '~/app-platform/components/user-context.tsx';
 import { mergeMeta } from '~/app-platform/seo/utils/merge-meta.ts';
-import { ActivityFeed } from '~/design-system/activity-feed/activity-feed.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Kbd } from '~/design-system/kbd.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -27,7 +26,9 @@ import { getI18n } from '~/shared/i18n/i18n.middleware.ts';
 import { toast } from '~/shared/toasts/toast.server.ts';
 import { Publication } from '../publication/services/publication.server.ts';
 import type { Route } from './+types/proposal.ts';
-import { ProposalActivityFeed } from './components/detail/activity/proposal-activity-feed.tsx';
+import { SpeakerConversationEntry } from './components/detail/activity/speaker-conversation-entry.tsx';
+import type { DiscussionTab } from './components/detail/discussion/discussion-card.tsx';
+import { DiscussionCard } from './components/detail/discussion/discussion-card.tsx';
 import { CategoriesSection } from './components/detail/metadata/categories-section.tsx';
 import { FormatsSection } from './components/detail/metadata/formats-section.tsx';
 import { SpeakersSection } from './components/detail/metadata/speakers-section.tsx';
@@ -207,6 +208,9 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
   const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
   const pageRef = useRef<HTMLElement>(null);
 
+  const [discussion, setDiscussion] = useState<{ proposalId: string; tab: DiscussionTab }>();
+  const selectedTab = discussion?.proposalId === proposal.id ? discussion.tab : 'comments';
+
   const hasSpeakers = proposal.speakers.length > 0;
   const hasFormats = event.formats && event.formats.length > 0;
   const hasCategories = event.categories && event.categories.length > 0;
@@ -226,7 +230,7 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
       />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <div className="lg:col-span-8">
+        <div className="space-y-6 lg:col-span-8">
           <TalkSection
             talk={proposal}
             action={
@@ -249,18 +253,27 @@ export default function ProposalReviewLayoutRoute({ params, loaderData, actionDa
             </Suspense>
           </TalkSection>
 
-          <Suspense fallback={<ActivityFeed.Loading className="pl-4" />}>
+          <Suspense fallback={<DiscussionCard.Loading />}>
             <Await resolve={activityPromise}>
               {([comments, speakerConversation]) => (
-                <ProposalActivityFeed
-                  comments={comments}
-                  reviews={proposal.reviews.members}
-                  reviewsSummary={proposal.reviews.summary}
-                  speakerConversation={speakerConversation}
-                  speakers={proposal.speakers}
-                  canManageConversations={permissions.canManageConversations}
-                  canDismissReviews={permissions.canDismissReviews}
-                />
+                <>
+                  {speakerConversation.length > 0 ? (
+                    <SpeakerConversationEntry
+                      messages={speakerConversation}
+                      speakers={proposal.speakers}
+                      canManageConversations={permissions.canManageConversations}
+                    />
+                  ) : null}
+                  <DiscussionCard
+                    selectedTab={selectedTab}
+                    onSelectTab={(tab) => setDiscussion({ proposalId: proposal.id, tab })}
+                    comments={comments}
+                    reviews={proposal.reviews.members}
+                    reviewsSummary={proposal.reviews.summary}
+                    canManageConversations={permissions.canManageConversations}
+                    canDismissReviews={permissions.canDismissReviews}
+                  />
+                </>
               )}
             </Await>
           </Suspense>
