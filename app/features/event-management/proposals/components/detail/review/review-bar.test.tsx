@@ -14,10 +14,6 @@ describe('ReviewBar', () => {
     await page.viewport(390, 844);
   });
 
-  afterEach(async () => {
-    await page.viewport(1920, 1080);
-  });
-
   const renderComponent = (
     initialValues: UserReview = { feeling: null, note: null },
     navigation: { previous?: string; next?: string } = { previous: 'p1', next: 'p3' },
@@ -28,6 +24,7 @@ describe('ReviewBar', () => {
         <I18nextProvider i18n={i18n}>
           <PageLayout className={REVIEW_BAR_PAGE_STYLES}>
             <textarea aria-label="Comment" />
+            <p>{`Location ${useLocation().key}`}</p>
             <p style={{ height: 1200 }}>Talk abstract</p>
             <p>Last comment</p>
             <ReviewBar team="t1" event="e1" {...navigation} initialValues={initialValues} />
@@ -48,6 +45,12 @@ describe('ReviewBar', () => {
   };
 
   const bar = () => page.getByRole('region', { name: 'Your review' });
+
+  const filledStars = () =>
+    bar()
+      .getByRole('button', { name: /stars?$/ })
+      .elements()
+      .filter((star) => getComputedStyle(star.querySelector('svg')!).fill !== 'none');
 
   const submitted = async () => {
     await vi.waitFor(() => expect(action).toHaveBeenCalledTimes(1));
@@ -95,18 +98,29 @@ describe('ReviewBar', () => {
   it('fills the stars up to the note', async () => {
     await renderComponent({ feeling: 'NEUTRAL', note: 4 });
 
-    await expect.element(bar().getByRole('button', { pressed: true })).toHaveLength(4);
-    await expect.element(bar().getByRole('button', { name: '4 stars' })).toHaveAttribute('aria-pressed', 'true');
-    await expect.element(bar().getByRole('button', { name: '5 stars' })).toHaveAttribute('aria-pressed', 'false');
     await expect.element(bar().getByRole('status')).toHaveTextContent('4 stars');
+    expect(filledStars()).toHaveLength(4);
+  });
+
+  it('presses only the star of the note', async () => {
+    await renderComponent({ feeling: 'NEUTRAL', note: 4 });
+
+    await expect.element(bar().getByRole('button', { pressed: true })).toHaveLength(1);
+    await expect.element(bar().getByRole('button', { name: '4 stars' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('fills the five stars for a favorite', async () => {
     await renderComponent({ feeling: 'POSITIVE', note: 5 });
 
-    await expect.element(bar().getByRole('button', { name: /stars?$/, pressed: true })).toHaveLength(5);
-    await expect.element(bar().getByRole('button', { name: 'Favorite' })).toHaveAttribute('aria-pressed', 'true');
     await expect.element(bar().getByRole('status')).toHaveTextContent('Favorite');
+    expect(filledStars()).toHaveLength(5);
+  });
+
+  it('presses only the favorite button for a favorite', async () => {
+    await renderComponent({ feeling: 'POSITIVE', note: 5 });
+
+    await expect.element(bar().getByRole('button', { pressed: true })).toHaveLength(1);
+    await expect.element(bar().getByRole('button', { name: 'Favorite' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('presses only the selected text button', async () => {
@@ -115,6 +129,7 @@ describe('ReviewBar', () => {
     await expect.element(bar().getByRole('button', { pressed: true })).toHaveLength(1);
     await expect.element(bar().getByRole('button', { name: 'No opinion' })).toHaveAttribute('aria-pressed', 'true');
     await expect.element(bar().getByRole('status')).toHaveTextContent('No opinion');
+    expect(filledStars()).toHaveLength(0);
   });
 
   it('says when the proposal is not reviewed', async () => {
@@ -122,6 +137,7 @@ describe('ReviewBar', () => {
 
     await expect.element(bar().getByRole('status')).toHaveTextContent('Not reviewed');
     await expect.element(bar().getByRole('button', { pressed: true })).toHaveLength(0);
+    expect(filledStars()).toHaveLength(0);
   });
 
   it('shows the review before the server answers', async () => {
@@ -131,7 +147,7 @@ describe('ReviewBar', () => {
     await bar().getByRole('button', { name: '3 stars' }).click();
 
     await expect.element(bar().getByRole('status')).toHaveTextContent('3 stars');
-    await expect.element(bar().getByRole('button', { pressed: true })).toHaveLength(3);
+    expect(filledStars()).toHaveLength(3);
   });
 
   it('shows the cleared review before the server answers', async () => {
@@ -178,6 +194,46 @@ describe('ReviewBar', () => {
 
     await expect.element(bar().getByRole('link', { name: 'Next proposal' })).toHaveAttribute('aria-disabled', 'true');
     await expect.element(bar().getByRole('link', { name: 'Previous proposal' })).not.toHaveAttribute('aria-disabled');
+  });
+
+  it('stays on the proposal when the disabled previous link is activated', async () => {
+    await renderComponent(undefined, { next: 'p3' });
+    await expect.element(page.getByText('Location default')).toBeInTheDocument();
+
+    (bar().getByRole('link', { name: 'Previous proposal' }).element() as HTMLElement).click();
+    await bar().getByRole('button', { name: '1 star' }).click();
+
+    expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NEUTRAL', note: '1' });
+    await expect.element(page.getByText('Location default')).toBeInTheDocument();
+  });
+
+  it('stays on the proposal when the disabled next link is activated', async () => {
+    await renderComponent(undefined, { previous: 'p1' });
+    await expect.element(page.getByText('Location default')).toBeInTheDocument();
+
+    (bar().getByRole('link', { name: 'Next proposal' }).element() as HTMLElement).click();
+    await bar().getByRole('button', { name: '1 star' }).click();
+
+    expect(await submitted()).toEqual({ intent: 'add-review', feeling: 'NEUTRAL', note: '1' });
+    await expect.element(page.getByText('Location default')).toBeInTheDocument();
+  });
+
+  it('skips the disabled previous link with Tab', async () => {
+    await renderComponent(undefined, { next: 'p3' });
+    (bar().getByRole('button', { name: '1 star' }).element() as HTMLElement).focus();
+
+    await userEvent.tab({ shift: true });
+
+    await expect.element(page.getByRole('textbox', { name: 'Comment' })).toHaveFocus();
+  });
+
+  it('skips the disabled next link with Tab', async () => {
+    await renderComponent(undefined, { previous: 'p1' });
+    (bar().getByRole('button', { name: '5 stars' }).element() as HTMLElement).focus();
+
+    await userEvent.tab();
+
+    await expect.element(bar().getByRole('button', { name: 'No opinion' })).toHaveFocus();
   });
 
   it('puts the previous and next links on each side of the stars', async () => {

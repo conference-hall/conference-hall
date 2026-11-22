@@ -1,8 +1,9 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/16/solid';
 import { cx } from 'class-variance-authority';
+import type React from 'react';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { Link, type To } from 'react-router';
 import { H2 } from '~/design-system/typography.tsx';
 import {
   getReviewMarkerOptions,
@@ -55,15 +56,10 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
         </div>
 
         <div className="flex items-center gap-2 short:contents">
-          <Link
-            to={{ pathname: previousPath, search }}
-            aria-disabled={previousPath ? undefined : 'true'}
-            tabIndex={previousPath ? undefined : -1}
-            className={NAVIGATION_STYLES}
-          >
+          <NavigationLink to={previousPath && { pathname: previousPath, search }} className={NAVIGATION_STYLES}>
             <ChevronLeftIcon className="size-5" aria-hidden="true" />
             <span className="sr-only">{t('event-management.proposal-page.previous')}</span>
-          </Link>
+          </NavigationLink>
 
           <div className="flex h-13 min-w-0 flex-1 rounded-lg border border-gray-200 bg-gray-50 px-1 short:order-2 short:h-12">
             {stars.map((option, index) => {
@@ -73,7 +69,7 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
                   key={option.value}
                   type="button"
                   aria-label={option.label}
-                  aria-pressed={filled}
+                  aria-pressed={option.value === optimisticMarker}
                   onClick={() => toggle(option.value)}
                   className="flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-lg"
                 >
@@ -86,15 +82,13 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
             })}
           </div>
 
-          <Link
-            to={{ pathname: nextPath, search }}
-            aria-disabled={nextPath ? undefined : 'true'}
-            tabIndex={nextPath ? undefined : -1}
+          <NavigationLink
+            to={nextPath && { pathname: nextPath, search }}
             className={cx(NAVIGATION_STYLES, 'short:order-2')}
           >
             <ChevronRightIcon className="size-5" aria-hidden="true" />
             <span className="sr-only">{t('event-management.proposal-page.next')}</span>
-          </Link>
+          </NavigationLink>
         </div>
 
         <div className="flex gap-2 short:order-1">
@@ -127,5 +121,22 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
         </div>
       </div>
     </section>
+  );
+}
+
+type NavigationLinkProps = { to?: To; className: string; children: React.ReactNode };
+
+function NavigationLink({ to, className, children }: NavigationLinkProps) {
+  if (!to) {
+    return (
+      <span role="link" aria-disabled="true" className={className}>
+        {children}
+      </span>
+    );
+  }
+  return (
+    <Link to={to} className={className}>
+      {children}
+    </Link>
   );
 }
