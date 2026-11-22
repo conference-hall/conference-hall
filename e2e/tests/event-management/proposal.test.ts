@@ -488,17 +488,24 @@ test.describe('As owner', () => {
 
     const talkY = await proposalPage.top(proposalPage.proposalTitle('Talk 1'));
     const metadataY = await proposalPage.top(proposalPage.tagsButton);
-    const reviewY = await proposalPage.top(proposalPage.yourReviewHeading);
     const discussionY = await proposalPage.top(proposalPage.tablist);
     expect(talkY).toBeLessThan(metadataY);
-    expect(metadataY).toBeLessThan(reviewY);
-    expect(reviewY).toBeLessThan(discussionY);
+    expect(metadataY).toBeLessThan(discussionY);
+
+    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 1 1 new message');
+
+    await expect(proposalPage.reviewBar).toBeVisible();
+    await proposalPage.tablist.scrollIntoViewIfNeeded();
+    await expect(proposalPage.reviewBar).toBeInViewport();
+    expect(await proposalPage.bottom(proposalPage.reviewBar)).toBe(await proposalPage.viewportHeight());
+
+    await proposalPage.reviewBar.getByRole('button', { name: '4 stars' }).click();
+    await expect(proposalPage.reviewBarStatus).toHaveText('4 stars');
 
     const tabsY = await Promise.all(
       [proposalPage.teamTab, proposalPage.reviewsTab, proposalPage.speakersTab].map((tab) => proposalPage.top(tab)),
     );
     expect(new Set(tabsY).size).toBe(1);
-    await expect(proposalPage.teamTab).toHaveAccessibleName('Team 1 1 new message');
   });
 
   test('keeps the page usable on a very narrow viewport', async ({ page }) => {
