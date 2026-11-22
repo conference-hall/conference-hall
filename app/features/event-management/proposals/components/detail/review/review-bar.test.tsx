@@ -20,10 +20,11 @@ describe('ReviewBar', () => {
   const renderComponent = (
     initialValues: UserReview = { feeling: null, note: null },
     navigation: { previous?: string; next?: string } = { previous: 'p1', next: 'p3' },
+    i18n = i18nTest,
   ) => {
     function Page() {
       return (
-        <I18nextProvider i18n={i18nTest}>
+        <I18nextProvider i18n={i18n}>
           <ReviewBar team="t1" event="e1" {...navigation} initialValues={initialValues} />
         </I18nextProvider>
       );
@@ -237,6 +238,60 @@ describe('ReviewBar', () => {
     expect(label.width).toBeLessThanOrEqual(1);
     expect(label.height).toBeLessThanOrEqual(1);
     await expect.element(bar().getByRole('status')).toHaveTextContent('4 stars');
+  });
+
+  describe.each([
+    { language: 'en', title: 'Your review', textButtons: ['No opinion', 'Not for me', 'Favorite'] },
+    { language: 'fr', title: 'Votre note', textButtons: ["Pas d'avis", 'Pas pour moi', 'Favori'] },
+  ])('in "$language"', ({ language, title, textButtons }) => {
+    const renderTranslated = () => renderComponent(undefined, undefined, i18nTest.cloneInstance({ lng: language }));
+    const region = () => page.getByRole('region', { name: title });
+    const textButton = (name: string) => region().getByRole('button', { name }).element();
+    const icons = () => textButtons.map((name) => textButton(name).querySelector('svg')!.getBoundingClientRect().width);
+
+    const expectNoOverflow = (width: number) => {
+      const controls = [...region().getByRole('link').elements(), ...region().getByRole('button').elements()];
+      expect(controls).toHaveLength(10);
+      for (const control of controls) {
+        const box = control.getBoundingClientRect();
+        expect(box.left).toBeGreaterThanOrEqual(0);
+        expect(box.right).toBeLessThanOrEqual(width);
+        expect(box.width).toBeGreaterThanOrEqual(28);
+        expect(control.scrollWidth).toBeLessThanOrEqual(control.clientWidth);
+      }
+      const boxes = textButtons.map((name) => textButton(name).getBoundingClientRect());
+      expect(boxes[1].top).toBe(boxes[0].top);
+      expect(boxes[2].top).toBe(boxes[0].top);
+      expect(boxes[1].left).toBeGreaterThanOrEqual(boxes[0].right);
+      expect(boxes[2].left).toBeGreaterThanOrEqual(boxes[1].right);
+      expect(Math.max(...boxes.map((box) => box.height))).toBeLessThanOrEqual(48);
+    };
+
+    it('shows the icon of the text buttons on a phone', async () => {
+      await renderTranslated();
+
+      await expect.element(region()).toBeVisible();
+      expect(icons()).toEqual([20, 20, 20]);
+      expectNoOverflow(390);
+    });
+
+    it('fits the text buttons without their icon on a 320 px wide phone', async () => {
+      await page.viewport(320, 568);
+      await renderTranslated();
+
+      await expect.element(region()).toBeVisible();
+      expect(textButtons.map((name) => textButton(name).textContent)).toEqual(textButtons);
+      expect(icons()).toEqual([0, 0, 0]);
+      expectNoOverflow(320);
+    });
+
+    it('fits the single row on a small phone in landscape', async () => {
+      await page.viewport(568, 320);
+      await renderTranslated();
+
+      await expect.element(region()).toBeVisible();
+      expectNoOverflow(568);
+    });
   });
 
   it('is hidden on a desktop', async () => {

@@ -111,7 +111,10 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
                 )}
               >
                 <option.icon
-                  className={cx('size-5 shrink-0 short:max-md:hidden', selected ? styles.icon : 'stroke-gray-500')}
+                  className={cx(
+                    'size-5 shrink-0 max-[360px]:hidden short:max-md:hidden',
+                    selected ? styles.icon : 'stroke-gray-500',
+                  )}
                   aria-hidden="true"
                 />
                 {option.label}
