@@ -484,6 +484,43 @@ test.describe('As owner', () => {
     await expect(page.getByRole('heading', { name: 'Edit speaker Marie Jane' })).toBeVisible();
   });
 
+  test('stacks the blocks on a mobile viewport', async ({ page }) => {
+    await flags.set('speakersCommunication', true);
+    await page.setViewportSize({ width: 390, height: 900 });
+
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    const talkY = await proposalPage.top(page.getByRole('heading', { name: 'Talk 1' }));
+    const metadataY = await proposalPage.top(proposalPage.tagsButton);
+    const reviewY = await proposalPage.top(proposalPage.yourReviewHeading);
+    const discussionY = await proposalPage.top(proposalPage.tablist);
+    expect(talkY).toBeLessThan(metadataY);
+    expect(metadataY).toBeLessThan(reviewY);
+    expect(reviewY).toBeLessThan(discussionY);
+
+    const tabsY = await Promise.all(
+      [proposalPage.commentsTab, proposalPage.reviewsTab, proposalPage.speakersTab].map((tab) => proposalPage.top(tab)),
+    );
+    expect(new Set(tabsY).size).toBe(1);
+    await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 1 1 new message');
+  });
+
+  test('keeps the page usable on a very narrow viewport', async ({ page }) => {
+    await flags.set('speakersCommunication', true);
+    await page.setViewportSize({ width: 340, height: 900 });
+
+    const proposalPage = new ProposalPage(page);
+    await proposalPage.goto(team.slug, event.slug, proposal.routeId, proposal.title);
+
+    expect(await proposalPage.hasHorizontalScroll()).toBe(false);
+    const tabsY = await Promise.all(
+      [proposalPage.commentsTab, proposalPage.reviewsTab, proposalPage.speakersTab].map((tab) => proposalPage.top(tab)),
+    );
+    expect(new Set(tabsY).size).toBe(1);
+    await expect(proposalPage.commentsTab).toHaveAccessibleName('Comments 1 new message');
+  });
+
   test('manages speaker conversation in the speakers tab', async ({ page }) => {
     await flags.set('speakersCommunication', true);
 

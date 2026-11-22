@@ -1,3 +1,4 @@
+import type { Locator } from '@playwright/test';
 import { MessageBlockComponent } from '../../common/message-block.component.ts';
 import { SpeakerPanelComponent } from '../../common/speaker-panel.component.ts';
 import { TalkFormComponent } from '../../common/talk-form.component.ts';
@@ -10,6 +11,8 @@ export class ProposalPage extends PageObject {
   readonly commentsTab = this.page.getByRole('tab', { name: /^Comments/ });
   readonly reviewsTab = this.page.getByRole('tab', { name: /^Reviews/ });
   readonly speakersTab = this.page.getByRole('tab', { name: /^Speakers/ });
+  readonly tablist = this.page.getByRole('tablist');
+  readonly yourReviewHeading = this.page.getByRole('heading', { name: 'Your review' });
   readonly discussionPanel = this.page.getByRole('tabpanel');
   readonly comments = this.discussionPanel.locator('> div > ul > li');
   readonly reviews = this.discussionPanel.locator('> div > ul > li');
@@ -44,6 +47,15 @@ export class ProposalPage extends PageObject {
   async waitFor(name: string) {
     await this.waitForHydration();
     await this.page.getByRole('heading', { name }).waitFor();
+  }
+
+  async top(locator: Locator) {
+    const box = await locator.boundingBox();
+    return box?.y ?? Number.NaN;
+  }
+
+  async hasHorizontalScroll() {
+    return this.page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
   }
 
   async pressReviewShortcut(key: string) {
