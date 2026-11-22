@@ -4,7 +4,7 @@ import type React from 'react';
 import { Suspense } from 'react';
 import { flushSync } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { Await, href, useNavigate, useSearchParams } from 'react-router';
+import { Await, useNavigate } from 'react-router';
 import { Button } from '~/design-system/button.tsx';
 import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Text } from '~/design-system/typography.tsx';
@@ -12,6 +12,7 @@ import type { Message } from '~/shared/types/conversation.types.ts';
 import { ReviewsProgress } from '../shared/reviews-progress.tsx';
 import type { DiscussionTab } from './discussion/discussion-card.tsx';
 import { isFocusedOutsidePage } from './is-focused-outside-page.ts';
+import { useProposalNavigation } from './use-proposal-navigation.ts';
 
 type Props = {
   team: string;
@@ -41,21 +42,15 @@ export function NavigationHeader({
   onSelectDiscussionTab,
 }: Props) {
   const { t } = useTranslation();
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
-  const previousPath = previous
-    ? href('/team/:team/:event/proposals/:proposal', { team, event, proposal: previous })
-    : undefined;
-
-  const nextPath = next ? href('/team/:team/:event/proposals/:proposal', { team, event, proposal: next }) : undefined;
+  const { previousPath, nextPath, search } = useProposalNavigation({ team, event, previous, next });
 
   useHotkey(
     'N',
     (keyboardEvent) => {
       if (isFocusedOutsidePage(pageRef)) return;
       keyboardEvent.preventDefault();
-      navigate({ pathname: nextPath, search: searchParams.toString() });
+      navigate({ pathname: nextPath, search });
     },
     { enabled: !!nextPath, preventDefault: false, stopPropagation: false },
   );
@@ -65,7 +60,7 @@ export function NavigationHeader({
     (keyboardEvent) => {
       if (isFocusedOutsidePage(pageRef)) return;
       keyboardEvent.preventDefault();
-      navigate({ pathname: previousPath, search: searchParams.toString() });
+      navigate({ pathname: previousPath, search });
     },
     { enabled: !!previousPath, preventDefault: false, stopPropagation: false },
   );
@@ -74,7 +69,7 @@ export function NavigationHeader({
     <header className="flex items-center justify-between gap-4 pb-4 lg:-mt-4">
       <nav className="flex grow items-center justify-between gap-2 sm:justify-start lg:gap-4">
         <Button
-          to={{ pathname: previousPath, search: searchParams.toString() }}
+          to={{ pathname: previousPath, search }}
           icon={ChevronLeftIcon}
           label={t('event-management.proposal-page.previous')}
           variant="secondary"
@@ -83,7 +78,7 @@ export function NavigationHeader({
         />
         <Text weight="medium">{`${current}/${total}`}</Text>
         <Button
-          to={{ pathname: nextPath, search: searchParams.toString() }}
+          to={{ pathname: nextPath, search }}
           icon={ChevronRightIcon}
           label={t('event-management.proposal-page.next')}
           variant="secondary"
