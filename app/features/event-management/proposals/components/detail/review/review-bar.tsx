@@ -21,6 +21,9 @@ const SELECTED_STYLES: Partial<Record<MarkerValue, { button: string; icon: strin
 const NAVIGATION_STYLES =
   'flex h-13 w-11 shrink-0 short:h-12 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 aria-disabled:pointer-events-none aria-disabled:opacity-50';
 
+// Goes on the page container: bottom padding of the bar height, and the group the bar reads to hide itself.
+export const REVIEW_BAR_PAGE_STYLES = 'group/review-page max-lg:pb-40 max-lg:short:pb-18';
+
 type Props = { team: string; event: string; previous?: string; next?: string; initialValues: UserReview };
 
 export function ReviewBar({ team, event, previous, next, initialValues }: Props) {
@@ -39,7 +42,7 @@ export function ReviewBar({ team, event, previous, next, initialValues }: Props)
   return (
     <section
       aria-labelledby={titleId}
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-gray-200 bg-white shadow-[0_-4px_16px_rgb(17_24_39/0.08)] lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-gray-200 bg-white shadow-[0_-4px_16px_rgb(17_24_39/0.08)] group-has-[textarea:focus]/review-page:hidden lg:hidden"
     >
       <div className="mx-auto flex max-w-md flex-col gap-2 px-3 pt-2.5 pb-4 short:max-w-3xl short:flex-row short:items-center short:py-2">
         <div className="flex items-baseline justify-between px-1 short:sr-only">

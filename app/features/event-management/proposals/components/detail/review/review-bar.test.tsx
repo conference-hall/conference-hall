@@ -1,9 +1,10 @@
 import { I18nextProvider } from 'react-i18next';
 import { createRoutesStub, useLocation } from 'react-router';
 import { i18nTest } from 'tests/i18n-helpers.ts';
-import { page } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
+import { Page as PageLayout } from '~/design-system/layouts/page.tsx';
 import type { UserReview } from '~/shared/types/proposals.types.ts';
-import { ReviewBar } from './review-bar.tsx';
+import { REVIEW_BAR_PAGE_STYLES, ReviewBar } from './review-bar.tsx';
 
 describe('ReviewBar', () => {
   const action = vi.fn();
@@ -25,7 +26,12 @@ describe('ReviewBar', () => {
     function Page() {
       return (
         <I18nextProvider i18n={i18n}>
-          <ReviewBar team="t1" event="e1" {...navigation} initialValues={initialValues} />
+          <PageLayout className={REVIEW_BAR_PAGE_STYLES}>
+            <textarea aria-label="Comment" />
+            <p style={{ height: 1200 }}>Talk abstract</p>
+            <p>Last comment</p>
+            <ReviewBar team="t1" event="e1" {...navigation} initialValues={initialValues} />
+          </PageLayout>
         </I18nextProvider>
       );
     }
@@ -294,8 +300,35 @@ describe('ReviewBar', () => {
     });
   });
 
-  it('is hidden on a desktop', async () => {
-    await page.viewport(1280, 800);
+  it('hides while the reviewer writes in a text field', async () => {
+    await renderComponent();
+    await expect.element(bar()).toBeVisible();
+
+    await page.getByRole('textbox', { name: 'Comment' }).click();
+    await expect.element(bar()).not.toBeInTheDocument();
+
+    await userEvent.tab();
+    await expect.element(bar()).toBeVisible();
+  });
+
+  it.each([
+    { layout: 'two rows', width: 390, height: 844 },
+    { layout: 'single row', width: 667, height: 375 },
+  ])('keeps the end of the page above the bar in the $layout layout', async ({ width, height }) => {
+    await page.viewport(width, height);
+    await renderComponent();
+
+    const lastComment = page.getByText('Last comment').element();
+    lastComment.scrollIntoView({ block: 'end' });
+    window.scrollTo(0, document.documentElement.scrollHeight);
+
+    const barTop = bar().element().getBoundingClientRect().top;
+    expect(lastComment.getBoundingClientRect().bottom).toBeLessThanOrEqual(barTop);
+    expect(barTop - lastComment.getBoundingClientRect().bottom).toBeLessThanOrEqual(32);
+  });
+
+  it.each([800, 400])('is hidden on a desktop window %i px high', async (height) => {
+    await page.viewport(1280, height);
     await renderComponent();
 
     await expect.element(page.getByText('Your review')).toBeInTheDocument();
